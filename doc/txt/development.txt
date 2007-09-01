@@ -1,0 +1,395 @@
+Table Of Contents
+
+       1.0 Tiny Tools Project Introduction
+           1.1 Audience
+           1.2 Sourceforge described
+           1.3 Description
+
+       2.0 Source forge account information
+           2.1 File Releases
+           2.2 Reporting Sourceforge problems
+           2.3 Downloading CVSTREE for editing
+           2.4 Using CVS without passwords through SSH tunnel
+           2.5 Project web page locations
+           2.6 Project documentation
+
+       3.0 Development environment setup information
+           3.1 CVS and Win32 development - getting Cygwin
+           3.2 Setting up OpenSSH
+           3.3 Sourceforge SSH access
+           3.4 Setting up CVS
+           3.5 Bash admin files
+
+       4.0 Debian package development
+           4.1 How to create a debian package
+
+1.0 Tiny Tools Project Introduction
+
+        #T2HTML-TITLE Emacs Tiny Tools information for developers
+	#T2HTML-METAKEYWORDS Emacs, Emacs Lisp, Tiny Tools Documentation
+        #T2HTML-OPTION --css-code-bg
+        #T2HTML-OPTION --css-code-note
+        #T2HTML-OPTION Note:
+        #T2HTML-OPTION --html-frame
+
+    1.1 Audience
+
+        This paper documents the usage of sourceforge account to a
+        possible follower of the tiny-tools project or to a new project
+        member who wishes to participate in developing the tools at the
+        sourceforge.
+
+    1.2 Sourceforge described
+
+        The http://www.sourceforge.net/ is open community where
+        non-commercial project can have their own development space
+        and it serves as independent and central place for all
+        developers world wide.
+
+2.0 Source forge account information
+
+    2.1 Making releases
+
+        To make a new file releases, follow these steps. We
+        suppose that the file where the complete release is named as
+        `tiny-tools-YYYY.MMDD.zip' following the ISO 8601 date
+        standard and the universal de facto file packaging standard
+        PACKAGENAME-VERSION.VERSION[.VERSION]*
+
+        o   Upload the file to ftp://upload.sourceforge.net/incoming/
+            PLEASE DO THIS FIRST - YOU WILL PICK FILE LATER.
+        o   Login in to your sourceforge account
+        o   Go to project page
+        o   Select page "Admin" => "File Releases" from the menus at top
+        o   Scroll to the end where you see "File Release Packages"
+        o   Select "Add Release" button.
+            Fill in "Create new release" with the timestamp YYYY.MMDD.
+            Select "Create this release".
+
+        New page opens:
+
+        o   Step 1: Fill in the description to "Release notes"
+            Click the button "submit/refresh"
+        o   Step 2: Select tiny-tools-YYYY.MMDD.zip
+            Click button "add Files and/or Refresh View"
+        o   Step 3:
+            Processor => Platform independent
+            file Type => Source .gz
+            Click button "update/refresh"
+        o   Step 4: Send message to people monitoring the package.
+
+        RETURN by pressing button "Summary" at the beginning of page.
+
+    2.2 Reporting Sourceforge problems
+
+        File a bug report with:
+
+        o   Login as administrator of project
+        o   Select left hand frame and see topic "Sourceforge" where you
+            find link "Contact support"
+        o   Select text button "Support manager"
+        o   Select "Submit a request"
+
+    2.3 Downloading CVSTREE for editing
+
+        o   You need SSH and CVS tools installed in your hard disk.
+            To develop under Win32, see Cygwin http://www.cygwin.com/ => See
+            link at the right hand corner and download `setup.exe' to your
+            hard disk and start the program.
+        o   At sourceforge, the CVS `pserver' is not supported for
+            editing the files. The connection must go through ssh. Be
+            sure to set environment variable CVS_RSH to the location
+            of ssh binary.
+
+    2.4 Using CVS without passwords through SSH tunnel
+
+        You must generate a host key for your machine and copy/paste
+        the generated key to sourceforge.
+
+            $ ssh-generate
+            $ cat ~/.ssh/identity.pub
+
+        IT IS NOT ENOUGH TO ADD the host key to file
+        `account@shell.sourceforge.net:~/.ssh/authorized_keys'. See these:
+
+        o   There is documentation about ssh in "Site Docs" "CVS
+            Documentation". which instructs you how to generate keys, and
+            how to not need to retype passwords. See "Sourceforge CVS/SSH FAQ"
+            http://sourceforge.net/docman/display_doc.php?docid=763&group_id=1
+        o   You have to sync a key into the "LOG in via SSL (upper left)"
+            => "My Projects (lower right)" => "account options (text link
+            at the top)" => You are now at account maintenance tool, scroll to
+            the end of page under Shell Account Information => "edit keys",
+            and add your SSH key there. Only then it gets synched to the cvs
+            server.
+
+        To start using the cvs, run these command:
+
+            $ ssh-agent bash
+            $ ssh-add
+            $ export CVS_RSH=/bin/ssh
+
+        Now the cvs commands shouldn't ask any pass phrases any more from the
+        command line.
+
+        If you see "MAN IN THE MIDDLE" message when you log into the
+        sourceforge you have to do this:
+
+        o   The SSH host keys have been changed within the last two months.
+            Updated host key fingerprints may be found at:
+            https://sourceforge.net/docman/display_doc.php?docid=3088&group_id=1
+        o   To resolve this immediate issue, edit your
+            (local machine from where you connect to sourceforge)
+             ~/.ssh/known_hosts file and remove the entry for
+            cvs.<PROJECT-NAME>.sourceforge.net
+
+    2.5 Project web page locations
+
+        At sourceforge, web sites are located under /home/groups
+        Project FTP Sites are located in
+        /home/groups/ftp/pub/p/pr/ROJECT-NAME and can be seen by visiting
+        ftp://PROJECT-NAME.sourceforge.net/pub/<project name>
+
+            /home/users   : User Based Quota 2MB Soft 4MB Hard
+            /home/groups  : Group Based Quota 100MB Soft 125MB Hard
+
+    2.6 Project documentation
+
+        Visit the project main page
+        http://sourceforge.net/projects/PROJECT-NAME (make sure you
+        have logged in) and select from the left hand list *project*
+        *admin*. You arrive to the new page, Scroll to the bottom to
+        "Tool Admin" and go to *DocManagerAdmin* and fill in the
+        project documentation. BEFORE anything else, you must define a
+        document group like _General_.
+
+        Here is the current project documentation group [General]
+        at http://sourceforge.net/docman/index.php?group_id=11049
+        Must be in HTML format. Don't forget to mark the document
+        *active* or it will not be shown to users visiting
+        the page.
+
+            <HTML>
+            <BODY>
+            <P>
+            You will find the introduction documentation
+            form the project WWW home page at
+            http://tiny-tools.sourceforge.net/
+
+            <P>
+            If you have already downloaded the kit, you will
+            find all the documentation from the /doc directory
+            or running the Perl utilities with ---help or
+            --help-html. To debug, use, --debug 2 and send
+            problems to maintainer.
+
+            <P>
+            Please contact using mailing list: suggestions,
+            bug reports, new feature requests etc. The address is
+            tiny-tools-users@lists.sourceforge.net
+
+            </BODY>
+            <HTML>
+
+3.0 Development environment setup information
+
+    3.1 CVS and Win32 development - getting Cygwin
+
+        If you plan to develop code in Win32 platform, the easiest thing
+        that you can do is to get CVS distribution from
+        http://www.cygwin.com/ See link to the "setup.exe" program and
+        download it. Cygwin's CVS is bets, because it track all the time
+        the current CVS development and you can automatically update the
+        latest CVS version by running the install again (It only fetches
+        the newest packages)
+
+        o   _Download_ *setup.exe* to your local hard drive.
+        o   Run *setup.exe* from your local disk by double clicking it.
+        o   Select "Download from Internet" ie. load the files to your local
+            disk first.
+        o   Direct "local Package Directory" to e.g c:\unix\cygwin-install
+        o   You probably can use "Direct connection" for dial-up.
+        o   The download will start and _finish_
+        o   Start the *setup.exe* AGAIN and now install the packages to,
+            say c:\unix\cygwin
+
+        After Cygwin install, you want to add couple of paths to your
+        PATH environment variable. In Win9x you modify c:\autoexec.bat
+        and reboot. In WinME/NT/w2k you modify
+        Control Panel/System/Environment/Variables.
+
+            set CYGWIN_ROOT_DIR=c:\unix\cygwin
+            set PATH=%CYGWIN_ROOT_DIR%\bin;%PATH%
+            set PATH=%CYGWIN_ROOT_DIR%\usr\local\bin;%PATH%
+            set PATH=%CYGWIN_ROOT_DIR%\sbin;%PATH%
+
+    3.2 Setting up OpenSSH
+
+          For Unix, get SSH from <http://www.openssh.org/>. OpenSSH is
+          already include in the Win32/Cygwin.
+
+        Using SSH is not the most straight forward thing, especially with
+        all the protocol version numbers involved. You can easily go wrong or
+        wonder why things are not working. Here are some basic instructions
+        for OpenSSH, which is different form all other ssh version out
+        there. Cygwin includes OpenSSH.
+
+            $ ssh -V        # display ssh version
+
+        Generate two keys, the SSH1 key first:
+
+            $ ssh-keygen    # Proceed as the command suggests
+
+        Then the SSH2 key:
+
+            $ ssh-keygen -f ~/.ssh/id_dsa -t dsa
+
+        Configure SSH by editing ~/.ssh/config, the protocol line is
+        very important.
+
+            Host *
+                Protocol                    1,2
+                UsePrivilegedPort           no
+                Compression                 yes
+                CompressionLevel            9
+                KeepAlive                   yes
+                RhostsAuthentication        yes
+                RSAAuthentication           yes
+                PubkeyAuthentication        yes
+                PasswordAuthentication      yes
+                FallBackToRsh               yes
+                ForwardX11                  yes
+                ForwardAgent                yes
+
+        For Win32, you're set. But if this is Unix, you need to set
+        file and directory permission to correct values as well. SSH is
+        very picky and won't work correctly if it thinks that the
+        permissions are too loose.
+
+            $ chmod 700 ~/.ssh
+            $ chmod 600 ~/.ssh/identity* ~/.ssh/config ~/.ssh/id_dsa*
+
+        Final thing, to connect a remote site, you have to CARRY the key
+        there. The keys that you will copy to remote site are the SSH1 and
+        SSH2 keys you just generated. The files are:
+
+            From (A) site               Copy to (B) site
+            ~/.ssh/identity.pub         ~/.ssh/known_hosts
+            ~/.ssh/id_dsa.pub           ~/.ssh/id_dsa_A_site.pub
+
+        Again, remember to set chmod 600 permission in remote (B) site.
+        Now you should be all set to be ready to connect to remote site.
+        One final thing, always run all programs under agent, which
+        remembers and passes forward your keys (ssh1 and aah2):
+
+            $ ssh-add ~/.ssh/identity ~/.ssh/id_dsa
+
+        After that you can connect to remote site without password, because
+        agent makes the hand shake for your with your keys. Run *verbose*
+        mode on to pinpoint any troubles with the connection:
+
+            $ ssh -l LOGIN shell.sourceforge.net
+
+        If that works, you can expect that the CVS works without password
+        under ssh-agent for your project (REMEMBER: you have to send the
+        ~/.ssh/identity.pub through sourceforge WWW-user-admin page,
+        described earlier in this document for CVS to work)
+
+    3.3 Sourceforge SSH access
+
+        Copy SSH1 protocol key:
+
+             ~/.ssh/identity.pub
+
+        This is the file you must copy to your sourceforge account.
+
+            Log into sourceforge
+            Navigate to "Account options"
+            => Scroll to the end of page
+            => {Edit Keys] => copy/paste content of identity.pub
+
+        You must wait for the sourceforge account to see the key (some hours)
+        and after that, try to login to your SF shell:
+
+            ssh -l YOUR-SF-LOGNAME shell.sourceforge.net
+
+        If that succeeds, you know that the identity.pub fiel was uploaded
+        correctly to sourceforge.
+
+    3.4 Setting up CVS
+
+          For Unix, get CVS from <http://www.cvshome.org/>. CVS is
+          already include in the Win32/Cygwin.
+
+        There is not much to do with CVS. Compile the package and
+        add install it. The only binary which is in the package
+        is the program "cvs". See if you can run it:
+
+            $ cvs -v
+            Concurrent Versions System (CVS) 1.11 (client/server)
+
+        In order to connect to remote servers via SSH, you have add
+        this code to your shell's startup file:
+
+            BASH: ~/.bashrc
+            export CVS_RSH=ssh
+
+            TCSH/CSH: ~/.cshrc
+            setenv CVS_RSH ssh
+
+        Provided that you could log into your sourceforge shell account
+        described in earlier chapter, you should now be ready to
+        make a connection to the sourceforge CVS server with your
+        sourceforge login name.
+
+        First, activate agent, which remembers your SSH passwords:
+
+            $ ssh-agent $SHELL
+
+        Add SSH keys to the agent. It will hand the keys to anyone that
+        asks them transparently to you:
+
+            $ ssh-add
+
+        Now you're ready to attempt a connection:
+
+            $ cvs -d LOGIN@cvs.tiny-tools.sourceforge.net:/cvsroot/tiny-tools co tiny-tools
+
+        at this point CVS server donwnloads files to your current directory
+        you can start working with the project.
+
+            $ cd tiny-tools
+            $ cvs -nq up            # Check if any files have changed
+
+    3.5 Bash admin files
+
+        Under `bin/admin.bashrc' there is administrative file that
+        automates project tasks. Follow the instruction in the file
+        how to install and how to use the administrative command. In
+        short, you should set up few variables and just "import" the
+        file to your $HOME/.bashrc with:
+
+            # $HOME/.bashrc
+
+            ...set variables and call...
+
+            source path-to-the-cvstree-directory/tiny-tools/bin/admin.bashrc
+
+            # End of file
+
+4.0 Debian packages
+
+    4.1 How to create a debian package
+
+        First, become a debian developer by reading this document
+        http://www.debian.org/doc/developers-reference/index.en.html
+
+        The initial debian package skeleton was generated with following manner
+
+            <download the latest release>
+            $ mv tiny-NNNN.NNNN emacs-tiny-tools-NNNN.NNNN
+            $ cd emacs-tiny-tools-NNNN.NNNN
+            $ export DEBFULLNAME="Firstname Surname"
+            $ dh_make --single --email EMAIL --copyright gpl
+
+End

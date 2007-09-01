@@ -1,0 +1,15 @@
+Hi there. Here is a quickstart to use the tiny-path:
+
+1) Create ~/elisp and put your personal .el stuff there;
+
+2) Add to your .emacs the following line:
+
+   (require 'tinypath)
+
+3) Enjoy. 
+
+If you prefer another directory than the default ~/elisp, replace 2) by:
+
+   (debian-tinypath "/wherever/your/el/files/are/located")
+
+More documentation in /usr/share/doc/emacs-tiny-tools.

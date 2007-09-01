@@ -1,0 +1,40 @@
+;;
+;; Emacs-tiny-tools startup file for Debian
+;;
+
+;; Add it to load-path :
+
+(debian-pkg-add-load-path-item "/usr/share/emacs/site-lisp/emacs-tiny-tools/tiny")
+(debian-pkg-add-load-path-item "/usr/share/emacs/site-lisp/emacs-tiny-tools/other")
+
+;; Auto-loads
+
+(autoload 'tiny-setup "tiny-setup" "Tiny Tools initial setup controller" t)
+
+;; Customized startup function
+
+(defun debian-tinypath (root-list) 
+  "Set the tinypath root directory list: ROOT-LIST.
+The entry can be a single directory or list of directories.
+
+You're encouraged to run \\[tinypath-cache-regenerate] if you
+make any modificatios to your Emacs installation.
+
+See function `tiny-setup' how to activate all Tiny Tools packages."
+  (defvar tinypath-:extra-path-root nil)  ;; Predefine
+  (cond
+   ((stringp root-list)
+    ;; Single directory
+    (setq tinypath-:load-path-root (list root-list)))
+   ((listp root-list)
+    (setq-default tinypath-:load-path-root root-list))
+   (t
+    (error "debian-tinypath: invalid root-list value `%s'" root-list)))
+  ;;  Predefine this function if not yet exists.
+  (unless (fboundp 'font-lock-mode)
+    (defun turn-off-font-lock () 
+      "Turn off Font-Lock-Mode"
+      (font-lock-mode -1)))
+  (require 'tinypath))
+
+;;; End of file

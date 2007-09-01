@@ -1,0 +1,98 @@
+ANNOUNCE: instant Java language call syntax help (tinytag.el)
+
+    Hi, [2000-02-17]
+
+    I decided to update one of my packages to support Java call syntax
+    in echo-area while you you program. Years ago I had coded the
+    support mainly for C/C++, but now I currently code with Java and
+    thought it was time to wipe dust off from the old engine.
+
+    What is tinytag.el ? The name "tag" comes from analogy to
+    the emacs TAGS packages that cache various language syntax information
+
+    Suppose we have code:
+
+	Runtime rt = Runtime.getRuntime();
+	long total = rt.totalMemory();
+                        *
+                        Your cursor is over this function
+
+    After few seconds the modeline will inform you:
+
+        1: java.lang.Runtime  long totalMemory() throws IOException
+
+    What you need:
+
+        1. http://tiny-tools.soourceforge.net/
+        2. Perl
+
+    What do you do to get instant help working? Generate Java database:
+
+        You must generate the Java function call database. In Tiny Tools
+	kit you find java-function-list.pl which extracts the functions
+	out of the standard JDK javadoc pages. This is the database that you
+	will be using.
+
+            perl java-function-list.pl --recurse java/sun/jdk1.2.2/docs \
+	      > ~/elisp/config/emacs-config-tinytag-jdk1.2.2
+
+        And it generates database in following format. You can edit
+        the lines as you wish to supply additional information. There
+        is no required line format:
+
+            java.lang.StringBuffer  StringBuffer insert(int offset, Object obj)
+            java.lang.StringBuffer  StringBuffer insert(int offset, String str)
+            ...
+            java.lang.String  String substring(int beginIndex, int endIndex) throws UnsupportedEncodingException
+            ...
+
+            NOTICE: The System.out.print* functions are not generated (Java
+            does not have page for them because they are inherited functions)
+            See comments in Perl script's --help and copy the defaults form
+            there to the end of generated database.
+
+    Let tinytag.el know that you now have java database available
+
+          ;;  Define two of your own variables
+
+          ;;  The emacs-config-tinytag-jdk1.2.2 file must be located
+          ;;  under tinytag-:database-dir which is by default
+          ;;  ~/elisp/config or ~/ if config dir did not exist.
+
+          (defconst my-tinytag-:db-map-java
+            '((func       "emacs-config-tinytag-jdk1.2.2"))
+            "Java database.")
+
+          (defconst my-tinytag-:db-re-java
+            '(("."        (func)))
+            "Java database.")
+
+          ;;  Now glue your variables to tinytag.el
+
+
+          (defconst tinytag-:database-setup-table
+            (list
+
+             '("code-java\\|java"
+               (my-tinytag-:db-map-java my-tinytag-:db-re-java))
+
+              ;; ...other supported languages))
+
+    If everything went ok, you're ready to code with java and "instant help".
+    Loading the tinytag.el and configuring the `tinytag-:database-setup-table'
+    is enough to activate the package. You can also keep following window
+    visible if the echo-area display is not enough:
+
+        *tinytag-output*
+
+    In case of error or nothing happens, please turn on debug:
+
+        M-x tinytag-debug-toggle
+
+    And observe the printed messages in buffer
+
+        *tinytag-debug*
+
+    Please try and give feedback, this is first java support implementation.
+
+    Jari

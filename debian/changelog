@@ -1,0 +1,30 @@
+emacs-tiny-tools (2002.1218-cvs-1) unstable; urgency=low
+
+  * lots of changes, cf main changelog for that
+  * debianization is "official"
+  * sf-index.html disappeared somehow. Don't put it in the -doc package
+    anymore.
+
+ -- Vincent Beffara <vbeffara@free.fr>  Wed, 18 Dec 2002 23:05:31 +0100
+
+emacs-tiny-tools (2002.0805-1) unstable; urgency=low
+
+  * New upstream release.
+  * Define turn-off-font-lock (for use with emacs). 
+
+ -- Vincent Beffara <vbeffara@free.fr>  Sat, 19 Oct 2002 11:54:52 +0200
+
+emacs-tiny-tools (2002.0607-cvs-1) unstable; urgency=low
+
+  * tiny/tinyigrep.el (tinyigrep-db-push-elt-package-texi): 
+    Added `file-name-as-directory' which fixes the not-found
+    texi/ directories in most of the packages.
+
+ -- Vincent Beffara <vbeffara@free.fr>  Fri,  7 Jun 2002 12:03:10 +0200
+
+emacs-tiny-tools (2002.0502-cvs-1) unstable; urgency=low
+
+  * Initial Release.
+
+ -- Vincent Beffara <vbeffara@free.fr>  Sat,  1 Jun 2002 11:49:40 +0200
+
