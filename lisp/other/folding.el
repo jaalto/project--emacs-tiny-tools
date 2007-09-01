@@ -1,5 +1,7 @@
 ;;; folding.el --- A folding-editor-like minor mode.
 
+;; This file is not part of Emacs
+
 ;; Copyright (C) 2000-2007
 ;;           Jari Aalto
 ;; Copyright (C) 1995-1999
@@ -32,7 +34,12 @@
 ;; MERCHANTABILITY or FITNESS FOR A PARTICULAR PURPOSE. See the
 ;; GNU General Public License for more details.
 ;;
-;; See <http://www.gnu.org/copyleft/gpl.html> for details.
+;; You should have received a copy of the GNU General Public License
+;; along with program; see the file COPYING. If not, write to the
+;; Free Software Foundation, Inc., 51 Franklin Street, Fifth Floor,
+;; Boston, MA 02110-1301, USA.
+;;
+;; Visit <http://www.gnu.org/copyleft/gpl.html> for more information
 
 ;;}}}
 
@@ -291,7 +298,7 @@
 ;;      natural markers are hard to find, except if you're happy with
 ;;      one function per fold.
 ;;
-;;  Future development ideas 
+;;  Future development ideas
 ;;
 ;;      The plan was from the beginning to rewrite the entire package.
 ;;      Including replacing the core of the program, written using
@@ -628,9 +635,9 @@
 ;; [person version] = developer and his revision tree number.
 ;;
 ;; May  06  2007  21.4             [jari 3.38-3.41 2007.0506]
-;; - Cleanup. Eol whitespaces removed, extra newlines cleaned. 
+;; - Cleanup. Eol whitespaces removed, extra newlines cleaned.
 ;;   Paren positions corrected.
-;; - 'Personal reflections by Anders Lindgren' topic 
+;; - 'Personal reflections by Anders Lindgren' topic
 ;;   rephrased 'Future development ideas'
 ;;
 ;; Nov  16  2006  21.4             [jari 3.36-3.37 2006.1118]

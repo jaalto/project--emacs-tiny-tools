@@ -1,6 +1,5 @@
 ;;; dired-sort.el --- Sort by by size, date, field, name and type
 
-;; $Id: dired-sort.el,v 2.14 2007/05/07 10:50:05 jaalto Exp $
 ;; This file is not part of Emacs
 
 ;; {{{ Id
@@ -9,9 +8,6 @@
 ;; Created:         1989-03
 ;; Keywords:        extensions
 ;;
-;; To get information on this program use ident(1).
-;; Look at the code with folding.el, tinybm.el
-
 ;; This program is free software; you can redistribute it and/or modify it
 ;; under the terms of the GNU General Public License as published by the Free
 ;; Software Foundation; either version 2 of the License, or (at your option)
@@ -22,9 +18,12 @@
 ;; or FITNESS FOR A PARTICULAR PURPOSE.  See the GNU General Public License
 ;; for more details.
 ;;
-;; You should have received a copy of the GNU General Public License along
-;; with GNU Emacs.  If you did not, write to the Free Software Foundation,
-;; Inc., 675 Mass Ave., Cambridge, MA 02139, USA.
+;; You should have received a copy of the GNU General Public License
+;; along with program; see the file COPYING. If not, write to the
+;; Free Software Foundation, Inc., 51 Franklin Street, Fifth Floor,
+;; Boston, MA 02110-1301, USA.
+;;
+;; Visit <http://www.gnu.org/copyleft/gpl.html> for more information
 
 ;; }}}
 ;; {{{ Install
