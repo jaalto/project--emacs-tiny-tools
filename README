@@ -1,0 +1,3 @@
+bin/	Project administration utilities and helper scripts
+doc/ 	Documentation. Start at doc/txt/README.txt
+lisp/ 	Emacs add-on modules i.e. extensions ("The Code")
