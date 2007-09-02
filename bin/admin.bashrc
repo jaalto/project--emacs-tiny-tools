@@ -2,11 +2,7 @@
 #
 #   File id
 #
-#       $Id: admin.bashrc,v 1.23 2007/05/01 17:20:27 jaalto Exp $
-#
-#       Copyright (C)   2000-2007 Jari Aalto
-#       Created:        2000-01
-#       Keywords:       Bash, administrative
+#       Copyright (C) 2000-2007 Jari Aalto
 #
 #       This program is free software; you can redistribute it and/or
 #       modify it under the terms of the GNU General Public License as
@@ -18,11 +14,12 @@
 #       MERCHANTABILITY or FITNESS FOR A PARTICULAR PURPOSE.  See the GNU
 #       General Public License for more details.
 #
-#       You should have received a copy of the GNU General Public License along
-#       with this program; if not, write to the Free Software Foundation,
-#       Inc., 675 Mass Ave, Cambridge, MA 02139, USA.
+#       You should have received a copy of the GNU General Public License
+#       along with program; see the file COPYING. If not, write to the
+#       Free Software Foundation, Inc., 51 Franklin Street, Fifth Floor,
+#       Boston, MA 02110-1301, USA.
 #
-#       Visit http://www.gnu.org/copyleft/gpl.html
+#       Visit <http://www.gnu.org/copyleft/gpl.html> for more information
 #
 #   Documentation
 #

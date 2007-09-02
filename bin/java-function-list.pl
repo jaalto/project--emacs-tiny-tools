@@ -1,13 +1,10 @@
-#! perl
+#!/usr/bin/perl
 #
 # java-function-list.pl -- Perl, Grep all JDK/SDK Java funtions to a list
-# $Id: java-function-list.pl,v 2.11 2007/05/01 17:20:30 jaalto Exp $
 #
 #  File id
 #
-#       Copyright (C)  2000-2007 Jari Aalto
-#       Created:       2000-01
-#       Keywords:      Perl, tiny tools, Java function ripper
+#       Copyright (C) 2000-2007 Jari Aalto
 #
 #       This program is free software; you can redistribute it and/or
 #       modify it under the terms of the GNU General Public License as
@@ -19,11 +16,12 @@
 #       MERCHANTABILITY or FITNESS FOR A PARTICULAR PURPOSE.  See the GNU
 #       General Public License for more details.
 #
-#       You should have received a copy of the GNU General Public License along
-#       with this program; if not, write to the Free Software Foundation,
-#       Inc., 675 Mass Ave, Cambridge, MA 02139, USA.
+#	You should have received a copy of the GNU General Public License
+#	along with program; see the file COPYING. If not, write to the
+#	Free Software Foundation, Inc., 51 Franklin Street, Fifth Floor,
+#	Boston, MA 02110-1301, USA.
 #
-#       Visit http://www.gnu.org/copyleft/gpl.html
+#	Visit <http://www.gnu.org/copyleft/gpl.html> for more information
 #
 #   About program layout
 #
@@ -75,7 +73,7 @@ use File::Find;
     #   The following variable is updated by my Emacs setup whenever
     #   this file is saved
 
-    $VERSION = '2001.1213';
+    $VERSION = '2007.0902.0850';
 
 
 # {{{ Initial setup

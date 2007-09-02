@@ -2,25 +2,24 @@
 #
 #   File id
 #
-#       .Copyright (C)  2001-2007 Jari Aalto
-#       .Created:       2001-10
-#       Keywords:       Perl, Emacs, Makefile, Tiny Tools
+#	Copyright (C)  2001-2007 Jari Aalto
 #
-#       This program is free software; you can redistribute it and/or
-#       modify it under the terms of the GNU General Public License as
-#       published by the Free Software Foundation; either version 2 of
-#       the License, or (at your option) any later version.
+#	This program is free software; you can redistribute it and/or
+#	modify it under the terms of the GNU General Public License as
+#	published by the Free Software Foundation; either version 2 of
+#	the License, or (at your option) any later version.
 #
-#       This program is distributed in the hope that it will be useful, but
-#       WITHOUT ANY WARRANTY; without even the implied warranty of
-#       MERCHANTABILITY or FITNESS FOR A PARTICULAR PURPOSE.  See the GNU
-#       General Public License for more details.
+#	This program is distributed in the hope that it will be useful, but
+#	WITHOUT ANY WARRANTY; without even the implied warranty of
+#	MERCHANTABILITY or FITNESS FOR A PARTICULAR PURPOSE.  See the GNU
+#	General Public License for more details.
 #
-#       You should have received a copy of the GNU General Public License along
-#       with this program; if not, write to the Free Software Foundation,
-#       Inc., 675 Mass Ave, Cambridge, MA 02139, USA.
+#	You should have received a copy of the GNU General Public License
+#	along with program; see the file COPYING. If not, write to the
+#	Free Software Foundation, Inc., 51 Franklin Street, Fifth Floor,
+#	Boston, MA 02110-1301, USA.
 #
-#       Visit http://www.gnu.org/copyleft/gpl.html
+#	Visit <http://www.gnu.org/copyleft/gpl.html> for more information
 #
 #   Description
 #
@@ -57,11 +56,11 @@ MAKEFILE    = Makefile
 SHELL	    =	sh
 EMACS	    =	emacs
 # EMACSVER    =	`${EMACS} -batch -version`
-PERL	    =   perl
-LIB	    =   --load ../lisp/tiny/load-path.el
+PERL	    =	perl
+LIB	    =	--load ../lisp/tiny/load-path.el
 
 FILE_DOC_MAKE =	perl ripdoc.pl
-README      = ../doc/txt/README.txt
+README	    = ../doc/txt/README.txt
 
 # ############################################################ &rules ###
 
@@ -73,7 +72,7 @@ README      = ../doc/txt/README.txt
 	@cat $<
 
 # Rule: all - Make and Compile all. Cleans everything first
-all:    clean
+all:	clean
 	perl makefile.pl --binary "$(EMACS)" $(LIB) all
 
 # Rule: autoload - Make autoload files
@@ -95,7 +94,7 @@ rules:
 
 # Rule: clean - Delete compiled files, backups and CVS cruft
 clean:
-	-rm ../lisp/other/*.elc  		\
+	-rm ../lisp/other/*.elc			\
 	    ../lisp/other/*~			\
 	    ../lisp/other/*#			\
 	    ../lisp/other/.#*			\
@@ -106,10 +105,10 @@ clean:
 	    ../doc/txt/*.html
 
 install:
-	@echo "  There is no automatic install."
-	@echo "  Please copy whole tiny-tools/ tree to suitable hierarchy"
-	@echo "  e.g. to /usr/share/emacs/site-lisp/packages"
-	@echo "  Refer to doc/README.txt for site wide and personal setup."
+	@echo "	 There is no automatic install."
+	@echo "	 Please copy whole tiny-tools/ tree to suitable hierarchy"
+	@echo "	 e.g. to /usr/share/emacs/site-lisp/packages"
+	@echo "	 Refer to doc/README.txt for site wide and personal setup."
 
 link-check:
 	files=`ls ../doc/txt/*.txt`; \

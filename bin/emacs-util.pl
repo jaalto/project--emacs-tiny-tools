@@ -5,7 +5,6 @@
 #  File id
 #
 #       Copyright (C)  2000-2007 Jari Aalto
-#       Keywords:      Perl, Emacs, load-path, Cygwin
 #
 #       This program is free software; you can redistribute it and/or
 #       modify it under the terms of the GNU General Public License as
@@ -17,11 +16,12 @@
 #       MERCHANTABILITY or FITNESS FOR A PARTICULAR PURPOSE.  See the GNU
 #       General Public License for more details.
 #
-#       You should have received a copy of the GNU General Public License along
-#       with this program; if not, write to the Free Software Foundation,
-#       Inc., 675 Mass Ave, Cambridge, MA 02139, USA.
+#	You should have received a copy of the GNU General Public License
+#	along with program; see the file COPYING. If not, write to the
+#	Free Software Foundation, Inc., 51 Franklin Street, Fifth Floor,
+#	Boston, MA 02110-1301, USA.
 #
-#       Visit http://www.gnu.org/copyleft/gpl.html
+#	Visit <http://www.gnu.org/copyleft/gpl.html> for more information
 #
 #   Change Log:
 #
@@ -55,7 +55,7 @@ use Cwd;
     #   The following variable is updated by Emacs setup whenever
     #   this file is saved
 
-    $VERSION = '2007.0902.1141';
+    $VERSION = '2007.0902.0849';
 
 # ****************************************************************************
 #
