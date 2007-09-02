@@ -1,3 +1,8 @@
+Emacs Tiny Tools
+
 bin/	Project administration utilities and helper scripts
-doc/ 	Documentation. Start at doc/txt/README.txt
+doc/ 	Documentation.
 lisp/ 	Emacs add-on modules i.e. extensions ("The Code")
+
+Start at doc/txt/README.txt for install, licence and
+other project information.
