@@ -42,7 +42,7 @@ use Getopt::Long;
     #   The following variable is updated by Emacs setup whenever
     #   this file is saved
 
-    $VERSION = '2005.0519';
+    $VERSION = '2007.0902.1142';
 
 # ****************************************************************************
 #
@@ -573,4 +573,3 @@ Main();
 
 0;
 __END__
-

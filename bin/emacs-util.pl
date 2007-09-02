@@ -55,7 +55,7 @@ use Cwd;
     #   The following variable is updated by Emacs setup whenever
     #   this file is saved
 
-    $VERSION = '2005.0519';
+    $VERSION = '2007.0902.1141';
 
 # ****************************************************************************
 #
@@ -247,10 +247,10 @@ Display man directories found.
 Type of scanning. This option is relevant only under Win32, where
 there can be both Native Win32 version of Emacs and Cygwin version
 of Emacs. Under Cygwin, it is possible to make symlinks to file,
-but the Native Win32 Emacs (20.3.x) is unable to follow them. 
+but the Native Win32 Emacs (20.3.x) is unable to follow them.
 
 However, this program may be run under Cygwin Perl, which *does*
-understand them. The dilemma is that symlinked files should 
+understand them. The dilemma is that symlinked files should
 not be returned if Native Win32 Emacs needs them. Thus the need
 for this option.
 
@@ -792,11 +792,11 @@ sub wanted ()
         $File::Find::prune = 1;
         return;
     }
-    elsif ( defined $OPT_SCAN_TYPE  
-	    and  $OPT_SCAN_TYPE =~ /no-symlinks/  
+    elsif ( defined $OPT_SCAN_TYPE
+	    and  $OPT_SCAN_TYPE =~ /no-symlinks/
 	    and  -l $ARG  )
     {
-        $debug > 2  and  print "$id: DEBUG excluded symlink $ARG\n";	
+        $debug > 2  and  print "$id: DEBUG excluded symlink $ARG\n";
 	return;
     }
     elsif ( not $WIN32  and  -d $ARG  and  -l $ARG  )
