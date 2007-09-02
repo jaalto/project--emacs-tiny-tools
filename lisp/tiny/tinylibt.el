@@ -1,5 +1,4 @@
 ;;; tinylibt.el --- Library for handling text properties.
-;; $Id: tinylibt.el,v 2.46 2007/05/06 23:15:20 jaalto Exp $
 
 ;; This file is not part of Emacs
 
@@ -25,32 +24,32 @@
 ;; or FITNESS FOR A PARTICULAR PURPOSE.  See the GNU General Public License
 ;; for more details.
 ;;
-;; You should have received a copy of the GNU General Public License along
-;; with GNU Emacs.  If you did not, write to the Free Software Foundation,
-;; Inc., 675 Mass Ave., Cambridge, MA 02139, USA.
+;; You should have received a copy of the GNU General Public License
+;; along with program; see the file COPYING. If not, write to the
+;; Free Software Foundation, Inc., 51 Franklin Street, Fifth Floor,
+;; Boston, MA 02110-1301, USA.
+;;
+;; Visit <http://www.gnu.org/copyleft/gpl.html> for more information
 
 ;;}}}
 ;;{{{ Install
 
 ;; ....................................................... &t-install ...
-;; Put this file on your Emacs-Lisp load path, add following into your
-;; ~/.emacs startup file. Rip code with with tinylib.el/ti::package-rip-magic
+;; Put this file on your Emacs-Lisp load path, add following into
+;; ~/.emacs startup file.
 ;;
-;;
-;;* (require 'tinylibt)
-;;* _
+;;  (require 'tinylibt)
 ;;
 ;; No autoload is suggested, because almost every function would have
-;; needed to be in autoload state :-) It's easier to use require.
-;; Suggested keybings for interactive use. Bind the mouse functions too
+;; to be in autoload state. It's easier to use require. Here are
+;; suggested keybings for interactive use.
 ;;
-;;* (global-unset-key "\C-z")
-;;* (global-set-key "\C-ztm" 'ti::text-mark-region)   ;; e.g. permanent 'mark'
-;;* (global-set-key "\C-ztu" 'ti::text-unmark-region) ;; remove 'mark'
-;;* (global-set-key "\C-ztc" 'ti::text-clear-buffer-properties)
-;;* (global-set-key "\C-ztb" 'ti::text-buffer)
-;;* (global-set-key "\C-ztU" 'ti::text-undo)
-;;* _
+;;  (global-unset-key "\C-z")
+;;  (global-set-key "\C-ztm" 'ti::text-mark-region)   ;; e.g. permanent 'mark'
+;;  (global-set-key "\C-ztu" 'ti::text-unmark-region) ;; remove 'mark'
+;;  (global-set-key "\C-ztc" 'ti::text-clear-buffer-properties)
+;;  (global-set-key "\C-ztb" 'ti::text-buffer)
+;;  (global-set-key "\C-ztU" 'ti::text-undo)
 ;;
 ;; If you have any questions or feedback, use this function
 ;;

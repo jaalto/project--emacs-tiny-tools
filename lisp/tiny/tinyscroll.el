@@ -1,5 +1,4 @@
 ;;; tinyscroll.el --- Enable or disable auto-scroll for any buffer.
-;; $Id: tinyscroll.el,v 2.41 2007/05/01 17:21:00 jaalto Exp $
 
 ;; This file is not part of Emacs
 
@@ -25,19 +24,21 @@
 ;; or FITNESS FOR A PARTICULAR PURPOSE.  See the GNU General Public License
 ;; for more details.
 ;;
-;; You should have received a copy of the GNU General Public License along
-;; with GNU Emacs.  If you did not, write to the Free Software Foundation,
-;; Inc., 675 Mass Ave., Cambridge, MA 02139, USA.
+;; You should have received a copy of the GNU General Public License
+;; along with program; see the file COPYING. If not, write to the
+;; Free Software Foundation, Inc., 51 Franklin Street, Fifth Floor,
+;; Boston, MA 02110-1301, USA.
+;;
+;; Visit <http://www.gnu.org/copyleft/gpl.html> for more information
 
 ;;}}}
 ;;{{{ Install
 
 ;; ....................................................... &t-install ...
 ;; Put this file on your Emacs-Lisp load path, add following into your
-;; ~/.emacs startup file. Rip code with tinylib.el/ti::package-rip-magic
+;; ~/.emacs startup file.
 ;;
-;;* _
-;;*   (require 'tinyscroll)
+;;    (require 'tinyscroll)
 ;;
 ;; or use autoload; your .emacs loads up a bit quicker. In this package
 ;; however the above method is preferred, since it automatically
@@ -45,11 +46,10 @@
 ;; puts the scroll in effect only when you add entry to scroll list
 ;; with M-x tinyscroll-control.
 ;;
-;;* _
-;;*   (autoload 'tinyscroll-control                  "tinyscroll" "" t)
-;;*   (autoload 'tinyscroll-list                     "tinyscroll" "" t)
-;;*   (autoload 'tinyscroll-timer-process-control    "tinyscroll" "" t)
-;;*   (eval-after-load "compile" '(require 'tinyscroll))
+;;    (autoload 'tinyscroll-control                  "tinyscroll" "" t)
+;;    (autoload 'tinyscroll-list                     "tinyscroll" "" t)
+;;    (autoload 'tinyscroll-timer-process-control    "tinyscroll" "" t)
+;;    (eval-after-load "compile" '(require 'tinyscroll))
 ;;
 ;; To activate/deactivate scrolling for a buffer or to check list, call
 ;;

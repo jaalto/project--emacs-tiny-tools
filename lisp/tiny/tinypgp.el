@@ -1,5 +1,4 @@
 ;;; tinypgp.el --- PGP minor mode, remailing, keyring management
-;; $Id: tinypgp.el,v 2.57 2007/05/07 10:50:10 jaalto Exp $
 
 ;; This file is not part of Emacs
 
@@ -24,10 +23,7 @@
 ;; WITHOUT ANY WARRANTY; without even the implied warranty of MERCHANTABILITY
 ;; or FITNESS FOR A PARTICULAR PURPOSE.  See the GNU General Public License
 ;; for more details.
-;;
-;; You should have received a copy of the GNU General Public License along
-;; with GNU Emacs.  If you did not, write to the Free Software Foundation,
-;; Inc., 675 Mass Ave., Cambridge, MA 02139, USA.
+;; This file is not part of Emacs
 
 ;;}}}
 ;;{{{ Install
@@ -35,51 +31,51 @@
 ;;; Install:
 
 ;; ....................................................... &t-install ...
-;;  Put this file on your Emacs-Lisp load path, add following into your
-;;  ~/.emacs startup file. Rip code with tinylib.el/ti::package-rip-magic
 ;;
-;;* _
-;;*     (require 'tinypgp)
+;;  THIS FILE IS UNMAINTAINED - AND NOT WORKING IN ANY WAY
+;;
+;;  Put this file on your Emacs-Lisp load path, add following into your
+;;  ~/.emacs startup file.
+;;
+;;      (require 'tinypgp)
 ;;
 ;;  or use this; your ~/.emacs loads quicker
 ;;
-;;* _
-;;*     (autoload 'tinypgp-mode                 "tinypgp" "" t)
-;;*     (autoload 'turn-on-tinypgp-mode         "tinypgp" "" t)
-;;*     (autoload 'turn-off-tinypgp-mode        "tinypgp" "" t)
-;;*     (autoload 'tinypgp-install              "tinypgp" "" t)
-;;* _
-;;*     (add-hook 'message-mode-hook      'turn-on-tinypgp-mode)
-;;*     (add-hook 'mail-mode-hook         'turn-on-tinypgp-mode)
-;;*     (add-hook 'rmail-mode-hook        'turn-on-tinypgp-mode)
-;;*     (add-hook 'vm-mode-hook           'turn-on-tinypgp-mode)
-;;*     (add-hook 'gnus-startup-hook      'tinypgp-install)
-;;*     (add-hook 'gnus-article-edit-mode 'turn-on-tinypgp-mode)
+;;      (autoload 'tinypgp-mode                 "tinypgp" "" t)
+;;      (autoload 'turn-on-tinypgp-mode         "tinypgp" "" t)
+;;      (autoload 'turn-off-tinypgp-mode        "tinypgp" "" t)
+;;      (autoload 'tinypgp-install              "tinypgp" "" t)
+;;
+;;      (add-hook 'message-mode-hook      'turn-on-tinypgp-mode)
+;;      (add-hook 'mail-mode-hook         'turn-on-tinypgp-mode)
+;;      (add-hook 'rmail-mode-hook        'turn-on-tinypgp-mode)
+;;      (add-hook 'vm-mode-hook           'turn-on-tinypgp-mode)
+;;      (add-hook 'gnus-startup-hook      'tinypgp-install)
+;;      (add-hook 'gnus-article-edit-mode 'turn-on-tinypgp-mode)
 ;;
 ;;  Put your customizations to separate file and add this.
 ;;
-;;*  (setq tinypgp-:load-hook
-;;*    '(lambda () (require 'rc-tinypgp  "~/elisp/rc/emacs-rc-tinypgp")))
-;;* _
+;;   (setq tinypgp-:load-hook
+;;     '(lambda () (require 'rc-tinypgp  "~/elisp/rc/emacs-rc-tinypgp")))
 ;;
 ;;  to automatically sign all your outgoing mail, add this to your .emacs
 ;;  For more personal signing, see manual
 ;;
-;;*     (add-hook 'mail-send-hook    'tinypgp-sign-mail-auto-mode-on)
-;;*     (add-hook 'message-send-hook 'tinypgp-sign-mail-auto-mode-on)
+;;      (add-hook 'mail-send-hook    'tinypgp-sign-mail-auto-mode-on)
+;;      (add-hook 'message-send-hook 'tinypgp-sign-mail-auto-mode-on)
 ;;
 ;;  Suggested mode binding, "m" prefix for all minor mode toggles.
 ;;  If these are occupied, then choose some other bindings.
 ;;
-;;*     ;; note, Mailcrypt's prefix key is C-c / which is also
-;;*     ;; this package's prefix key unless you use the setq below.
-;;*     ;;
-;;*     ;; Personally I like the "-" because it's easier to reach than "/"
-;;*     ;; in my keyboard.
-;;*     ;;
-;;*     (setq tinypgp-:mode-prefix-key    "\C-c-")
-;;*     (global-set-key "\C-cm-"        'tinypgp-mode)
-;;*     (global-set-key "\C-cm'"        'tinypgp-key-mode)
+;;      ;; note, Mailcrypt's prefix key is C-c / which is also
+;;      ;; this package's prefix key unless you use the setq below.
+;;      ;;
+;;      ;; Personally I like the "-" because it's easier to reach than "/"
+;;      ;; in my keyboard.
+;;      ;;
+;;      (setq tinypgp-:mode-prefix-key    "\C-c-")
+;;      (global-set-key "\C-cm-"        'tinypgp-mode)
+;;      (global-set-key "\C-cm'"        'tinypgp-key-mode)
 ;;
 ;;  See the end of file for additional examples.
 ;;  If you want to contact maintainer, always use this function

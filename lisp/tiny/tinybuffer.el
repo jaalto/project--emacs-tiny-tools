@@ -1,5 +1,4 @@
 ;;; tinybuffer.el --- Change buffers in current window.
-;; $Id: tinybuffer.el,v 2.41 2007/05/01 17:20:42 jaalto Exp $
 
 ;; This file is not part of Emacs.
 
@@ -23,9 +22,12 @@
 ;; or FITNESS FOR A PARTICULAR PURPOSE.  See the GNU General Public License
 ;; for more details.
 ;;
-;; You should have received a copy of the GNU General Public License along
-;; with GNU Emacs.  If you did not, write to the Free Software Foundation,
-;; Inc., 675 Mass Ave., Cambridge, MA 02139, USA.
+;; You should have received a copy of the GNU General Public License
+;; along with program; see the file COPYING. If not, write to the
+;; Free Software Foundation, Inc., 51 Franklin Street, Fifth Floor,
+;; Boston, MA 02110-1301, USA.
+;;
+;; Visit <http://www.gnu.org/copyleft/gpl.html> for more information
 
 ;;}}}
 ;;{{{ Install
@@ -119,9 +121,9 @@
 ;;          be slow due to fontification which happens every time you
 ;;          switch over a buffer.
 ;;
-;;      In iswitch mode, the command prompt looks like following. The mode name is
-;;      put last if buffer has and associated file name, so that filename gets
-;;      as much display as possible.
+;;      In iswitch mode, the command prompt looks like following. The
+;;      mode name is put last if buffer has and associated file name,
+;;      so that filename gets as much display as possible.
 ;;
 ;;              "TinyIswitch: my-lisp.el     ~/elisp/my-lisp.el <Emacs lisp>"
 ;;              "TinyIswitch: test           <dired> ~/tmp/test"

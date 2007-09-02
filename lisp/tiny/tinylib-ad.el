@@ -1,5 +1,4 @@
 ;;; tinylib-ad.el --- Library of adviced functions. Backward compatibility
-;; $Id: tinylib-ad.el,v 2.45 2007/05/01 17:20:44 jaalto Exp $
 
 ;;{{{ Id
 
@@ -9,7 +8,6 @@
 ;; Maintainer:      Jari Aalto
 ;;
 ;; To get information on this program, call M-x tinylib-ad-version
-;; Look at the code with folding.el
 
 ;; COPYRIGHT NOTICE
 ;;
@@ -23,9 +21,12 @@
 ;; or FITNESS FOR A PARTICULAR PURPOSE.  See the GNU General Public License
 ;; for more details.
 ;;
-;; You should have received a copy of the GNU General Public License along
-;; with GNU Emacs.  If you did not, write to the Free Software Foundation,
-;; Inc., 675 Mass Ave., Cambridge, MA 02139, USA.
+;; You should have received a copy of the GNU General Public License
+;; along with program; see the file COPYING. If not, write to the
+;; Free Software Foundation, Inc., 51 Franklin Street, Fifth Floor,
+;; Boston, MA 02110-1301, USA.
+;;
+;; Visit <http://www.gnu.org/copyleft/gpl.html> for more information
 
 ;;}}}
 ;;{{{ Install

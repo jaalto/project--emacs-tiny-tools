@@ -1,5 +1,4 @@
 ;;; tinyvc.el --- CVS and RCS log minor mode. Checkout, Check-in...
-;; $Id: tinyvc.el,v 2.47 2007/05/01 17:21:01 jaalto Exp $
 
 ;; This file is not part of Emacs
 
@@ -25,9 +24,12 @@
 ;; or FITNESS FOR A PARTICULAR PURPOSE.  See the GNU General Public License
 ;; for more details.
 ;;
-;; You should have received a copy of the GNU General Public License along
-;; with GNU Emacs.  If you did not, write to the Free Software Foundation,
-;; Inc., 675 Mass Ave., Cambridge, MA 02139, USA.
+;; You should have received a copy of the GNU General Public License
+;; along with program; see the file COPYING. If not, write to the
+;; Free Software Foundation, Inc., 51 Franklin Street, Fifth Floor,
+;; Boston, MA 02110-1301, USA.
+;;
+;; Visit <http://www.gnu.org/copyleft/gpl.html> for more information
 
 ;;}}}
 ;;{{{ Install
@@ -37,26 +39,21 @@
 ;; ....................................................... &t-install ...
 ;; Put this file on your Emacs-Lisp load path, add following into your
 ;; ~/.emacs startup file. Before doing require see tinyvc-:load-hook.
-;; Code can be easily ripped with tinylib.el / ti::package-rip-magic
 ;;
-;;* _
-;;*     (require 'tinyvc)
+;;      (require 'tinyvc)
 ;;
 ;; Or prefer autoload: your emacs loads this package only when you
 ;; need it. This is for 19.30+
 ;;
-;;* _
-;;*     (eval-after-load "vc" '(progn (require 'tinyvc)))
+;;      (eval-after-load "vc" '(progn (require 'tinyvc)))
 ;;
 ;; In very old Emacs releases which have different `eval-after-load' or none
 ;; at all, use this code:
 ;;
-;;* _
-;;* (defadvice vc-print-log (after tirl act)
-;;*   "Run hook tinyvc-:vc-print-log-hook."
-;;*   (require 'tinyvc)
-;;*   (run-hooks 'tinyvc-:vc-print-log-hook))
-;;
+;;      (defadvice vc-print-log (after tirl act)
+;;        "Run hook tinyvc-:vc-print-log-hook."
+;;        (require 'tinyvc)
+;;        (run-hooks 'tinyvc-:vc-print-log-hook))
 ;;
 ;; If you define your own bindings and use menu, Update following variable
 ;; and call M-x `tinyvc-install-mode'.

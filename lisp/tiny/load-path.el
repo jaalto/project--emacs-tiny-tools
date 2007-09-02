@@ -1,17 +1,28 @@
 ;;; load-path.el --- Used for compiling Emacs lisp files
-;;; $Id: load-path.el,v 2.39 2007/05/01 17:20:41 jaalto Exp $
 
 ;;; Commentary:
 
 ;;
 ;;  File id
 ;;
-;;      Copyright (C)  1997-2007 Jari Aalto
-;;      Keywords:      extensions
-;;      Author:        Jari Aalto
-;;      Maintainer:    Jari Aalto
+;;      Copyright (C) 1997-2007 Jari Aalto
 ;;
-;;      This code is free software in terms of GNU Gen. pub. Lic. v2 or later
+;;      This program is free software; you can redistribute it and/or
+;;      modify it under the terms of the GNU General Public License as
+;;      published by the Free Software Foundation; either version 2 of
+;;      the License, or (at your option) any later version.
+;;
+;;      This program is distributed in the hope that it will be
+;;      useful, but WITHOUT ANY WARRANTY; without even the implied
+;;      warranty of MERCHANTABILITY or FITNESS FOR A PARTICULAR
+;;      PURPOSE. See the GNU General Public License for more details.
+;;
+;;      You should have received a copy of the GNU General Public
+;;      License along with program; see the file COPYING. If not,
+;;      write to the Free Software Foundation, Inc., 51 Franklin
+;;      Street, Fifth Floor, Boston, MA 02110-1301, USA.
+;;
+;;      Visit <http://www.gnu.org/copyleft/gpl.html> for more information
 ;;
 ;;  Description
 ;;
@@ -22,8 +33,6 @@
 ;;      defines correct load path in order to find the files that are needed
 ;;      in compilation. If your private directory is not in ~/elisp or
 ;;      ~/lisp then add new path to the place shown below.
-
-;;; Change Log:
 
 ;;; Code:
 

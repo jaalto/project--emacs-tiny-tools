@@ -1,5 +1,4 @@
 ;;; tinybookmark.el --- Keep file in organized sections
-;; $Id: tinybookmark.el,v 2.42 2007/05/01 17:20:42 jaalto Exp $
 
 ;; This file is not part of Emacs
 
@@ -25,9 +24,12 @@
 ;; or FITNESS FOR A PARTICULAR PURPOSE.  See the GNU General Public License
 ;; for more details.
 ;;
-;; You should have received a copy of the GNU General Public License along
-;; with GNU Emacs.  If you did not, write to the Free Software Foundation,
-;; Inc., 675 Mass Ave., Cambridge, MA 02139, USA.
+;; You should have received a copy of the GNU General Public License
+;; along with program; see the file COPYING. If not, write to the
+;; Free Software Foundation, Inc., 51 Franklin Street, Fifth Floor,
+;; Boston, MA 02110-1301, USA.
+;;
+;; Visit <http://www.gnu.org/copyleft/gpl.html> for more information
 
 ;;}}}
 ;;{{{ Installation
@@ -40,57 +42,49 @@
 ;;
 ;;      (require 'tinybookmark)
 ;;
-;; or use autoload, your emacs starts up faster, prefered.
-;; All these commands can easily be ripped of with
-;; tinylib.el / ti::package-rip-magic. Select area and call it.
+;; or use autoload, your emacs starts up faster, prefered:
 ;;
-;;* _
-;;*     (autoload 'tinybookmark-insert   "tinybookmark" "" t)
-;;*     (autoload 'tinybookmark-repeat   "tinybookmark" "" t)
-;;*     (autoload 'tinybookmark-parse    "tinybookmark" "" t)
-;;*     (autoload 'tinybookmark-forward  "tinybookmark" "" t)
-;;*     (autoload 'tinybookmark-backward "tinybookmark" "" t)
-;;*     (autoload 'tinybookmark-keyboard         "tinybookmark" "" t)
-;;*     (autoload 'tinybookmark-keyboard-parse   "tinybookmark" "" t)
-;;*
-;;*     (when (ti::compat-window-system)
-;;*       (autoload 'tinybookmark-mouse          "tinybookmark" "" t)
-;;*       (autoload 'tinybookmark-mouse-parse    "tinybookmark" "" t))
-;;* _
+;;      (autoload 'tinybookmark-insert   "tinybookmark" "" t)
+;;      (autoload 'tinybookmark-repeat   "tinybookmark" "" t)
+;;      (autoload 'tinybookmark-parse    "tinybookmark" "" t)
+;;      (autoload 'tinybookmark-forward  "tinybookmark" "" t)
+;;      (autoload 'tinybookmark-backward "tinybookmark" "" t)
+;;      (autoload 'tinybookmark-keyboard         "tinybookmark" "" t)
+;;      (autoload 'tinybookmark-keyboard-parse   "tinybookmark" "" t)
 ;;
-;; Probably you want to use 'M-x bm' for quick book mark command, so
-;; add this too:
+;;      (when (ti::compat-window-system)
+;;        (autoload 'tinybookmark-mouse          "tinybookmark" "" t)
+;;        (autoload 'tinybookmark-mouse-parse    "tinybookmark" "" t))
 ;;
-;;* _
-;;*     (defalias 'tinybookmark-insert 'bm)
-;;* _
+;; To use  'M-x bm' for quick book mark command:
 ;;
-;; And suggested keybindings
+;;      (defalias 'tinybookmark-insert 'bm)
 ;;
-;;* _
-;;*     ;;  This is for windowed Emacs. It brings up nice pop up menu
-;;*     ;;  In XEmacs tou must use different mouse events: `mouse1down'
-;;* _
-;;*     (global-set-key [(?\e) (control mouse-1)]        'tinybookmark-mouse)
-;;*     (global-set-key [(?\e) (control shift mouse-1)]  'tinybookmark-mouse-parse)
-;;* _
-;;*     ;;  Keyboard users can move between book marks with these
-;;* _
-;;*     (global-set-key [(shift left)]  'tinybookmark-backward)
-;;*     (global-set-key [(shift right)] 'tinybookmark-forward)
-;;* _
-;;*     ;;  Or to bavigate with complete menu
-;;*_
-;;*     (global-set-key [(shift right)] 'tinybookmark-keyboard)
+;; Suggested keybindings
+;;
+;;      ;;  This is for windowed Emacs. It brings up nice pop up menu
+;;      ;;  In XEmacs tou must use different mouse events: `mouse1down'
+;;
+;;      (global-set-key [(?\e) (control mouse-1)]        'tinybookmark-mouse)
+;;      (global-set-key [(?\e) (control shift mouse-1)]  'tinybookmark-mouse-parse)
+;;
+;;      ;;  Keyboard users can move between book marks with these
+;;
+;;      (global-set-key [(shift left)]  'tinybookmark-backward)
+;;      (global-set-key [(shift right)] 'tinybookmark-forward)
+;;
+;;      ;;  Or to bavigate with complete menu
+;;
+;;      (global-set-key [(shift right)] 'tinybookmark-keyboard)
 ;;
 ;; BE SURE THAT
 ;;
 ;;      you have defined comment syntax, otherwise the inserted field
 ;;      won't have proper prefix + endings
 ;;
-;; If you have any questions, use this function
+;; If you have any questions, use function:
 ;;
-;;      M-x tinybookmark-submit-bug-report          submit bug report or feedback
+;;      M-x tinybookmark-submit-bug-report
 
 ;;}}}
 ;;{{{ Documentation

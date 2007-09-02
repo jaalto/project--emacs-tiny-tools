@@ -1,5 +1,4 @@
 ;;; tinyindent.el --- Like indented-text-mode, but minor-mode.
-;; $Id: tinyindent.el,v 2.42 2007/05/01 17:20:44 jaalto Exp $
 
 ;; This file is not part of Emacs
 
@@ -25,40 +24,40 @@
 ;; or FITNESS FOR A PARTICULAR PURPOSE.  See the GNU General Public License
 ;; for more details.
 ;;
-;; You should have received a copy of the GNU General Public License along
-;; with GNU Emacs.  If you did not, write to the Free Software Foundation,
-;; Inc., 675 Mass Ave., Cambridge, MA 02139, USA.
+;; You should have received a copy of the GNU General Public License
+;; along with program; see the file COPYING. If not, write to the
+;; Free Software Foundation, Inc., 51 Franklin Street, Fifth Floor,
+;; Boston, MA 02110-1301, USA.
+;;
+;; Visit <http://www.gnu.org/copyleft/gpl.html> for more information
 
 ;;}}}
 ;;{{{ Installation
 
 ;; ....................................................... &t-install ...
-;; Put this file on your Emacs-Lisp load path, add following into your
-;;  ~/.emacs startup file. Rip code with with tinylib.el/ti::package-rip-magic
+;; Put this file on your Emacs-Lisp load path, add following into
+;;  ~/.emacs startup file:
 ;;
-;;* _
-;;*     (require 'tinyindent)
+;;      (require 'tinyindent)
 ;;
 ;; OR use this; your .emacs loads quicker
 ;;
-;;* _
-;;*     (autoload 'tinyindent-mode    "tinyindent" "" t)
-;;*     (autoload 'tinyindent-tt-mode "tinyindent" "" t)
+;;      (autoload 'tinyindent-mode    "tinyindent" "" t)
+;;      (autoload 'tinyindent-tt-mode "tinyindent" "" t)
 ;;
 ;; Suggested keybindings, you're going to use them a lot..
 ;;
-;;* _
-;;*     (global-set-key [C-tab]     'tinyindent-tt-mode) ;; this is toggle
-;;* _
-;;*     ;;;  the first one is for some PC machines (XCeed emulated X)
-;;*     (global-set-key [S-kp-tab]  'tinyindent-mode)
-;;*     (global-set-key [S-backtab] 'tinyindent-mode)    ;; this is on/off mode
+;;      (global-set-key [C-tab]     'tinyindent-tt-mode) ;; this is toggle
+;;
+;;      ;;;  the first one is for some PC machines (XCeed emulated X)
+;;      (global-set-key [S-kp-tab]  'tinyindent-mode)
+;;      (global-set-key [S-backtab] 'tinyindent-mode)    ;; this is on/off mode
 ;;
 ;;      For some PC:s in nonWindowed, this is same as S-tab
 ;;      --> check out with C-h l
 ;;
-;;* _
-;;*     (define-key esc-map  "OI" 'tinyindent-mode)
+;;
+;;      (define-key esc-map  "OI" 'tinyindent-mode)
 ;;
 ;; If you have any questions, use this function
 ;;

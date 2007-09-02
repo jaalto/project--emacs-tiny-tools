@@ -1,5 +1,4 @@
 ;;; tinymail.el --- Mail add-ons. Report incoming mail, passwd, BBDB complete.
-;; $Id: tinymail.el,v 2.88 2007/08/03 20:16:25 jaalto Exp $
 
 ;; This file is not part of Emacs
 
@@ -25,9 +24,12 @@
 ;; or FITNESS FOR A PARTICULAR PURPOSE.  See the GNU General Public License
 ;; for more details.
 ;;
-;; You should have received a copy of the GNU General Public License along
-;; with GNU Emacs.  If you did not, write to the Free Software Foundation,
-;; Inc., 675 Mass Ave., Cambridge, MA 02139, USA.
+;; You should have received a copy of the GNU General Public License
+;; along with program; see the file COPYING. If not, write to the
+;; Free Software Foundation, Inc., 51 Franklin Street, Fifth Floor,
+;; Boston, MA 02110-1301, USA.
+;;
+;; Visit <http://www.gnu.org/copyleft/gpl.html> for more information
 
 ;;}}}
 ;;{{{ Install

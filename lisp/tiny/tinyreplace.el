@@ -1,5 +1,4 @@
 ;;; tinyreplace.el --- Handy query-replace, area, case preserve, words
-;; $Id: tinyreplace.el,v 2.59 2007/05/07 10:50:13 jaalto Exp $
 
 ;; This file is not part of Emacs
 
@@ -25,17 +24,19 @@
 ;; or FITNESS FOR A PARTICULAR PURPOSE.  See the GNU General Public License
 ;; for more details.
 ;;
-;; You should have received a copy of the GNU General Public License along
-;; with GNU Emacs.  If you did not, write to the Free Software Foundation,
-;; Inc., 675 Mass Ave., Cambridge, MA 02139, USA.
+;; You should have received a copy of the GNU General Public License
+;; along with program; see the file COPYING. If not, write to the
+;; Free Software Foundation, Inc., 51 Franklin Street, Fifth Floor,
+;; Boston, MA 02110-1301, USA.
+;;
+;; Visit <http://www.gnu.org/copyleft/gpl.html> for more information
 
 ;;}}}
 ;;{{{ Install
 
 ;; ....................................................... &t-install ...
-;; - Put this file on your Emacs-Lisp load path, add following into your
-;;   ~/.emacs startup file
-;; - Code can be easily extracted with tinylib.el / ti::package-rip-magic
+;; Put this file on your Emacs-Lisp load path, add following into your
+;; ~/.emacs startup file
 ;;
 ;;      (require 'tinyreplace)
 ;;

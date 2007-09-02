@@ -1,5 +1,4 @@
 ;;; tinycygwin.el --- Cygwin utilities (bug reports, administrative tasks).
-;; $Id: tinycygwin.el,v 2.27 2007/09/01 14:45:02 jaalto Exp $
 
 ;;{{{ Id
 
@@ -22,9 +21,12 @@
 ;; or FITNESS FOR A PARTICULAR PURPOSE.  See the GNU General Public License
 ;; for more details.
 ;;
-;; You should have received a copy of the GNU General Public License along
-;; with GNU Emacs.  If you did not, write to the Free Software Foundation,
-;; Inc., 675 Mass Ave., Cambridge, MA 02139, USA.
+;; You should have received a copy of the GNU General Public License
+;; along with program; see the file COPYING. If not, write to the
+;; Free Software Foundation, Inc., 51 Franklin Street, Fifth Floor,
+;; Boston, MA 02110-1301, USA.
+;;
+;; Visit <http://www.gnu.org/copyleft/gpl.html> for more information
 
 ;;}}}
 ;;{{{ Install
@@ -1024,7 +1026,7 @@ Possible values for variable MODE
         (message "Couldn't read version information. Please insert manually."))
        (t
         (let ((action (if (eq mode 'ask)
-                          (if (y-or-n-p 
+                          (if (y-or-n-p
                                "Insert at point or to the end of buffer? ")
                               nil
                             'end)

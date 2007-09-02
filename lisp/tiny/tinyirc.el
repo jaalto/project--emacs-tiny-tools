@@ -1,5 +1,4 @@
 ;;; tinyirc.el --- IRC related utilities for Emacs
-;; $Id: tinyirc.el,v 2.17 2007/09/01 14:45:02 jaalto Exp $
 
 ;; This file is not part of Emacs
 
@@ -9,8 +8,6 @@
 ;; Keywords:        tools
 ;; Author:          Jari Aalto
 ;; Maintainer:      Jari Aalto
-;;
-;; Look at the code with folding.el.
 
 ;; COPYRIGHT NOTICE
 ;;
@@ -24,9 +21,12 @@
 ;; or FITNESS FOR A PARTICULAR PURPOSE.  See the GNU General Public License
 ;; for more details.
 ;;
-;; You should have received a copy of the GNU General Public License along
-;; with GNU Emacs.  If you did not, write to the Free Software Foundation,
-;; Inc., 675 Mass Ave., Cambridge, MA 02139, USA.
+;; You should have received a copy of the GNU General Public License
+;; along with program; see the file COPYING. If not, write to the
+;; Free Software Foundation, Inc., 51 Franklin Street, Fifth Floor,
+;; Boston, MA 02110-1301, USA.
+;;
+;; Visit <http://www.gnu.org/copyleft/gpl.html> for more information
 
 ;;}}}
 ;;{{{ Install
@@ -37,14 +37,14 @@
 ;;
 ;; Requirements:
 ;;
-;; o    Only paste services powered by de facto
+;; o    Only paste services that use de facto
 ;;      <http://sourceforge.net/projects/pastebot> servers
 ;;      are supported.
 ;; o    Perl must have been installed
 ;; o    External program pbotutil.pl must have been installed
 ;;      See `tinyirc-:pastebot-program-url'.
 ;;
-;; Put this file on your Emacs-Lisp load path, add following into your
+;; Put this file on your Emacs-Lisp load path, add following into
 ;; ~/.emacs startup file.
 ;;
 ;;      (require 'tinyirc)

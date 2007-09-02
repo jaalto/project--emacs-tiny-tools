@@ -1,5 +1,6 @@
 ;;; tinycache.el --- Maintain a cache of visited files [compile,dired]
-;; $Id: tinycache.el,v 2.45 2007/05/06 23:15:19 jaalto Exp $
+
+;; This file is not part of Emacs
 
 ;;{{{ Id
 
@@ -21,24 +22,30 @@
 ;; or FITNESS FOR A PARTICULAR PURPOSE.  See the GNU General Public License
 ;; for more details.
 ;;
-;; You should have received a copy of the GNU General Public License along
-;; with GNU Emacs.  If you did not, write to the Free Software Foundation,
-;; Inc., 675 Mass Ave., Cambridge, MA 02139, USA.
+;; You should have received a copy of the GNU General Public License
+;; along with program; see the file COPYING. If not, write to the
+;; Free Software Foundation, Inc., 51 Franklin Street, Fifth Floor,
+;; Boston, MA 02110-1301, USA.
+;;
+;; Visit <http://www.gnu.org/copyleft/gpl.html> for more information
 
 ;;}}}
 ;;{{{ Install
 
-;;   Put this file on your Emacs-Lisp load path, add following into your
-;;   ~/.emacs startup file. Rip code with with tinylib.el/ti::package-rip-magic
+;;   Put this file on your Emacs-Lisp load path, add following into
+;;   ~/.emacs startup file:
 ;;
 ;;       (add-hook tinycache-:load-hook 'tinycache-install-msb)
 ;;       (require 'tinycache)
 ;;
-;;   or prefer this; your $HOME/.emacs loads up quicker
+;;   Or use quicker autoload:
 ;;
 ;;       (add-hook tinycache-:load-hook 'tinycache-install-msb)
 ;;       (eval-after-load "compile" '(progn (require 'tinycache)))
 ;;       (eval-after-load "dired"   '(progn (require 'tinycache)))
+;;
+;;   If you use *gnuserv.el*, be sure that to load the packages in order:
+;;   gnuserv, tinycache.
 ;;
 ;;   To disable this package:
 ;;
@@ -47,9 +54,6 @@
 ;;   If you have any questions, use this function
 ;;
 ;;      M-x tinycache-submit-bug-report
-;;
-;;   If you use *gnuserv.el*, be sure that to load the packages with order:
-;;   GNUSERV, TINYCACHE.
 
 ;;}}}
 ;;{{{ Documentation

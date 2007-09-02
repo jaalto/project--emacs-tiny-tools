@@ -1,5 +1,4 @@
 ;;; tinydebian.el --- Debian utilities.
-;; $Id: tinydebian.el,v 1.97 2007/08/04 10:09:46 jaalto Exp $
 
 ;;{{{ Id
 
@@ -23,9 +22,12 @@
 ;; or FITNESS FOR A PARTICULAR PURPOSE.  See the GNU General Public License
 ;; for more details.
 ;;
-;; You should have received a copy of the GNU General Public License along
-;; with GNU Emacs.  If you did not, write to the Free Software Foundation,
-;; Inc., 675 Mass Ave., Cambridge, MA 02139, USA.
+;; You should have received a copy of the GNU General Public License
+;; along with program; see the file COPYING. If not, write to the
+;; Free Software Foundation, Inc., 51 Franklin Street, Fifth Floor,
+;; Boston, MA 02110-1301, USA.
+;;
+;; Visit <http://www.gnu.org/copyleft/gpl.html> for more information
 
 ;;}}}
 ;;{{{ Install
@@ -2741,7 +2743,7 @@ In this case, the package is unknown."
   "Consult dpkg -S FILE
 In this case, the package is unknown."
   (with-temp-buffer
-    (message "TinyDebian: Running ... apt-cache show %s (takes a while)" 
+    (message "TinyDebian: Running ... apt-cache show %s (takes a while)"
              package)
     (apply 'tinydebian-call-process "apt-cache" nil (list "show" package))
     (message "Done.")
