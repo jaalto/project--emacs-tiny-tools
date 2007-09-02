@@ -32,8 +32,6 @@ Table of contents
         #T2HTML-OPTION --css-code-bg
         #T2HTML-OPTION --html-frame
 
-        .$Id: emacs-package-make.txt,v 2.11 2007/05/01 17:20:34 jaalto Exp $
-
         This document explains how you construct a good Emacs Lisp package.
         Document serves as a checklist where you can refer back after you
         have made your first lisp package. Check that are pieces are in
@@ -559,9 +557,6 @@ Table of contents
             ;; or FITNESS FOR A PARTICULAR PURPOSE. See the GNU General Public License
             ;; for more details.
             ;;
-            ;; You should have received a copy of the GNU General Public License along
-            ;; with GNU Emacs. If you did not, write to the Free Software Foundation,
-            ;; Inc., 675 Mass Ave., Cambridge, MA 02139, USA.
 
             ;;; Install:
 
