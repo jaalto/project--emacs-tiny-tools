@@ -19,23 +19,23 @@
   <meta http-equiv="description"
 	content="">
 
-
-  <meta http-equiv="Content-Type" content="text/html; charset=utf-8">
-
-  <meta http-equiv="Expires" content="Fri, 24 Mar 2006 12:08:39 GMT">
+<meta http-equiv="Content-Type" content="text/html; charset=utf-8">
+  <meta http-equiv="Expires" content="Thu,  1 Nov 2007 09:02:41 GMT">
 
   <meta http-equiv="Author"
-	content="Jari Aalto">
+	content="jaalto">
 
 
 
   <meta name="Generator"
-	content="2006-01-23 14:08 Perl program t2html.pl v2005.0208 http://perl-text2html.sourceforge.net/">
+	content="2007-09-02 12:02 Perl program t2html.pl v2007.0526 http://perl-text2html.sourceforge.net/">
 
 
   <base target="body">
 
+
     <style type="text/css">
+
 
 
         /*
@@ -208,7 +208,7 @@
 
         blockquote
         {
-            margin-right: 0;
+            margin-right: 2em;
         }
 
         @media print   { BLOCKQUOTE
@@ -221,10 +221,18 @@
             color: Navy;
         }
 
+        hr.special
+        {
+            width: 50%;
+            text-align; left;
+        }
+
         pre
         {
             font-family:   "Courier New", monospace;
             font-size:     0.8em;
+            margin-top:    1em;
+            margin-bottom: 1em;
         }
 
         pre.code
@@ -242,11 +250,18 @@
 
             font-family:    "Courier New", monospace;
             font-size:      0.8em;
-
             color:          Navy;
         }
 
         /* //////////////////////// tables /////////////////////////// */
+
+        table
+        {
+            border: none;
+            width: 100%;
+            cellpadding: 10px;
+            cellspacing: 0px;
+        }
 
         table.basic
         {
@@ -322,6 +337,13 @@
             background: #FFFFCC;
         }
 
+        table tr td pre
+        {
+                /*  Make PRE tables "airy" */
+                margin-top:    1em;
+                margin-bottom: 1em;
+        }
+
         table.shade-normal
         {
                 font-family:    "Courier New", monospace;
@@ -347,11 +369,6 @@
         .shade-normal2-attrib
         {
             background: #E0E0F0;
-        }
-
-        table.shade-note
-        {
-            /* nothing special */
         }
 
         .shade-note-attrib
@@ -661,7 +678,7 @@
             font-size: 0.9em;
         }
 
-
+    
 
     </style>
 
@@ -689,7 +706,7 @@
 
     </script>
 
-</head>
+        </head>
 <body>
 <div class="TOC">
 <a href="emacs-elisp-body.html#description" class="toc">
@@ -716,7 +733,7 @@
            </a>
            <br>
 <li>
-           <a href="emacs-elisp-body.html#other_lisp_related_documents_and" class="toc">
+           <a href="emacs-elisp-body.html#other_lisp_related_documents_and_resources" class="toc">
                2.2 Other Lisp related documents and resources
            </a>
            <br>
@@ -804,7 +821,7 @@
            </a>
            <br>
 <li>
-           <a href="emacs-elisp-body.html#loading_files_from_.emacs" class="toc">
+           <a href="emacs-elisp-body.html#loading_files_from_emacs" class="toc">
                6.2 Loading files from .emacs
            </a>
            <br>
@@ -880,7 +897,7 @@
 
 <ul>
 <li>
-           <a href="emacs-elisp-body.html#cedet_collection_of_emacs_dev" class="toc">
+           <a href="emacs-elisp-body.html#cedet_collection_of_emacs_dev_env_tools" class="toc">
                9.1 CEDET, Collection of Emacs Dev Env Tools
            </a>
            <br>
@@ -907,102 +924,102 @@
            </a>
            <br>
 <li>
-           <a href="emacs-elisp-body.html#gnuseyecandy.el" class="toc">
+           <a href="emacs-elisp-body.html#gnuseyecandy_el" class="toc">
                10.2 Gnus-eyecandy.el
            </a>
            <br>
 <li>
-           <a href="emacs-elisp-body.html#gnusbbdb.el" class="toc">
+           <a href="emacs-elisp-body.html#gnusbbdb_el" class="toc">
                10.3 Gnus-bbdb.el (*)
            </a>
            <br>
 <li>
-           <a href="emacs-elisp-body.html#gnusfilterhist.el" class="toc">
+           <a href="emacs-elisp-body.html#gnusfilterhist_el" class="toc">
                10.4 Gnus-filterhist.el
            </a>
            <br>
 <li>
-           <a href="emacs-elisp-body.html#gnusjunk.el_send_ube_complaint" class="toc">
+           <a href="emacs-elisp-body.html#gnusjunk_el_send_ube_complaint" class="toc">
                10.5 Gnus-junk.el, Send UBE complaint
            </a>
            <br>
 <li>
-           <a href="emacs-elisp-body.html#gnusml.el_mailing_list_minor_mode" class="toc">
+           <a href="emacs-elisp-body.html#gnusml_el_mailing_list_minor_mode_for_gnus" class="toc">
                10.6 Gnus-ml.el, Mailing list minor mode for gnus (*)
            </a>
            <br>
 <li>
-           <a href="emacs-elisp-body.html#gnustodo.el" class="toc">
+           <a href="emacs-elisp-body.html#gnustodo_el" class="toc">
                10.7 Gnus-todo.el
            </a>
            <br>
 <li>
-           <a href="emacs-elisp-body.html#deja.el_search_dejanews_with_nnweb" class="toc">
+           <a href="emacs-elisp-body.html#deja_el_search_dejanews_with_nnweb" class="toc">
                10.8 Deja.el, Search dejanews with nnweb
            </a>
            <br>
 <li>
-           <a href="emacs-elisp-body.html#messageutils.el" class="toc">
+           <a href="emacs-elisp-body.html#messageutils_el" class="toc">
                10.9 Message-utils.el
            </a>
            <br>
 <li>
-           <a href="emacs-elisp-body.html#messagex.el_customizable_completion_in_message" class="toc">
+           <a href="emacs-elisp-body.html#messagex_el_customizable_completion_in_message_headers" class="toc">
                10.10 Message-x.el, customizable completion in message headers
            </a>
            <br>
 <li>
-           <a href="emacs-elisp-body.html#messkeyw.el_automatic_keyword_support_during" class="toc">
+           <a href="emacs-elisp-body.html#messkeyw_el_automatic_keyword_support_during_composition" class="toc">
                10.11 Messkeyw.el, automatic keyword support during composition
            </a>
            <br>
 <li>
-           <a href="emacs-elisp-body.html#ngn.el_insert_newsgroup_name_into" class="toc">
+           <a href="emacs-elisp-body.html#ngn_el_insert_newsgroup_name_into_buffer_using_completion" class="toc">
                10.12 Ngn.el, insert newsgroup name into buffer using completion
            </a>
            <br>
 <li>
-           <a href="emacs-elisp-body.html#nnmaildir.el_one_group_per_maildir" class="toc">
+           <a href="emacs-elisp-body.html#nnmaildir_el_one_group_per_maildir" class="toc">
                10.13 Nnmaildir.el, one group per maildir
            </a>
            <br>
 <li>
-           <a href="emacs-elisp-body.html#nnir.el_search_mail_with_various" class="toc">
+           <a href="emacs-elisp-body.html#nnir_el_search_mail_with_various_search_engines" class="toc">
                10.14 Nnir.el, search mail with various search engines
            </a>
            <br>
 <li>
-           <a href="emacs-elisp-body.html#nnirgrepmail.el_a_grepmail_plugin_for" class="toc">
+           <a href="emacs-elisp-body.html#nnirgrepmail_el_a_grepmail_plugin_for_nnir_el" class="toc">
                10.15 Nnir-grepmail.el, A grepmail plugin for nnir.el
            </a>
            <br>
 <li>
-           <a href="emacs-elisp-body.html#fogeysubscribe.el" class="toc">
+           <a href="emacs-elisp-body.html#fogeysubscribe_el" class="toc">
                10.16 Fogey-subscribe.el
            </a>
            <br>
 <li>
-           <a href="emacs-elisp-body.html#rmailspamfilter.el" class="toc">
+           <a href="emacs-elisp-body.html#rmailspamfilter_el" class="toc">
                10.17 Rmail-spam-filter.el
            </a>
            <br>
 <li>
-           <a href="emacs-elisp-body.html#tinygnus.el_additional_gnus_utilities" class="toc">
+           <a href="emacs-elisp-body.html#tinygnus_el_additional_gnus_utilities" class="toc">
                10.18 TinyGnus.el, additional gnus utilities
            </a>
            <br>
 <li>
-           <a href="emacs-elisp-body.html#uce.el_reply_to_unsolicited_commercial" class="toc">
+           <a href="emacs-elisp-body.html#uce_el_reply_to_unsolicited_commercial_email" class="toc">
                10.19 Uce.el, reply to unsolicited commercial email
            </a>
            <br>
 <li>
-           <a href="emacs-elisp-body.html#spamprod.el_generate_spam_complaint_email" class="toc">
+           <a href="emacs-elisp-body.html#spamprod_el_generate_spam_complaint_email" class="toc">
                10.20 Spamprod.el, generate spam complaint email
            </a>
            <br>
 <li>
-           <a href="emacs-elisp-body.html#vcard.el" class="toc">
+           <a href="emacs-elisp-body.html#vcard_el" class="toc">
                10.21 Vcard.el (*)
            </a>
            <br>
@@ -1019,57 +1036,57 @@
            </a>
            <br>
 <li>
-           <a href="emacs-elisp-body.html#bbdb.el_email_database" class="toc">
+           <a href="emacs-elisp-body.html#bbdb_el_email_database" class="toc">
                11.2 Bbdb.el, email database (*)
            </a>
            <br>
 <li>
-           <a href="emacs-elisp-body.html#bbdbpgp.el" class="toc">
+           <a href="emacs-elisp-body.html#bbdbpgp_el" class="toc">
                11.3 Bbdb-pgp.el (*)
            </a>
            <br>
 <li>
-           <a href="emacs-elisp-body.html#bbdbmailfolders.el" class="toc">
+           <a href="emacs-elisp-body.html#bbdbmailfolders_el" class="toc">
                11.4 Bbdb-mail-folders.el
            </a>
            <br>
 <li>
-           <a href="emacs-elisp-body.html#bbdbexpire.el_expiry_and_expireproof_entries" class="toc">
+           <a href="emacs-elisp-body.html#bbdbexpire_el_expiry_and_expireproof_entries_for_the_bbdb" class="toc">
                11.5 Bbdb-expire.el, expiry and expire-proof entries for the BBDB
            </a>
            <br>
 <li>
-           <a href="emacs-elisp-body.html#blackbook.el_manage_email_aliases_easily" class="toc">
+           <a href="emacs-elisp-body.html#blackbook_el_manage_email_aliases_easily" class="toc">
                11.6 Blackbook.el, manage email aliases easily
            </a>
            <br>
 <li>
-           <a href="emacs-elisp-body.html#eudc_the_emacs_unified_directory" class="toc">
+           <a href="emacs-elisp-body.html#eudc_the_emacs_unified_directory_client_ldap" class="toc">
                11.7 EUDC, the Emacs Unified Directory Client (LDAP)
            </a>
            <br>
 <li>
-           <a href="emacs-elisp-body.html#epop.el_general_pop_support_for" class="toc">
+           <a href="emacs-elisp-body.html#epop_el_general_pop_support_for_all_muas" class="toc">
                11.8 Epop.el, General POP support for all MUAs
            </a>
            <br>
 <li>
-           <a href="emacs-elisp-body.html#footnote.el" class="toc">
+           <a href="emacs-elisp-body.html#footnote_el" class="toc">
                11.9 Footnote.el (*)
            </a>
            <br>
 <li>
-           <a href="emacs-elisp-body.html#fortunesig.el" class="toc">
+           <a href="emacs-elisp-body.html#fortunesig_el" class="toc">
                11.10 Fortunesig.el
            </a>
            <br>
 <li>
-           <a href="emacs-elisp-body.html#feedmail.el_replacement_for_sendmail" class="toc">
+           <a href="emacs-elisp-body.html#feedmail_el_replacement_for_sendmail" class="toc">
                11.11 Feedmail.el, replacement for sendmail (*)
            </a>
            <br>
 <li>
-           <a href="emacs-elisp-body.html#ldbdb.el_little_brothers_database_interface" class="toc">
+           <a href="emacs-elisp-body.html#ldbdb_el_little_brothers_database_interface" class="toc">
                11.12 Ldbdb.el, Little Brother's Database interface
            </a>
            <br>
@@ -1079,32 +1096,32 @@
            </a>
            <br>
 <li>
-           <a href="emacs-elisp-body.html#rmailextras.el_support_remote_inboxes" class="toc">
+           <a href="emacs-elisp-body.html#rmailextras_el_support_remote_inboxes" class="toc">
                11.14 Rmail-extras.el, support remote inboxes
            </a>
            <br>
 <li>
-           <a href="emacs-elisp-body.html#signature.el" class="toc">
+           <a href="emacs-elisp-body.html#signature_el" class="toc">
                11.15 Signature.el
            </a>
            <br>
 <li>
-           <a href="emacs-elisp-body.html#tc.el_a_lightweight_to_supercite" class="toc">
+           <a href="emacs-elisp-body.html#tc_el_a_lightweight_to_supercite" class="toc">
                11.16 Tc.el, a lightweight to supercite
            </a>
            <br>
 <li>
-           <a href="emacs-elisp-body.html#tinymail.el_email_minor_mode_email" class="toc">
+           <a href="emacs-elisp-body.html#tinymail_el_email_minor_mode_email_notification_package" class="toc">
                11.17 TinyMail.el, email minor mode + email notification package
            </a>
            <br>
 <li>
-           <a href="emacs-elisp-body.html#unmunge.el" class="toc">
+           <a href="emacs-elisp-body.html#unmunge_el" class="toc">
                11.18 Unmunge.el
            </a>
            <br>
 <li>
-           <a href="emacs-elisp-body.html#vmcomplain.el_send_spam_complaint" class="toc">
+           <a href="emacs-elisp-body.html#vmcomplain_el_send_spam_complaint" class="toc">
                11.19 Vm-complain.el, send spam complaint
            </a>
            <br>
@@ -1116,7 +1133,7 @@
 
 <ul>
 <li>
-           <a href="emacs-elisp-body.html#rmime.el" class="toc">
+           <a href="emacs-elisp-body.html#rmime_el" class="toc">
                12.1 Rmime.el
            </a>
            <br>
@@ -1133,27 +1150,27 @@
 
 <ul>
 <li>
-           <a href="emacs-elisp-body.html#apachemode.el" class="toc">
+           <a href="emacs-elisp-body.html#apachemode_el" class="toc">
                13.1 Apache-mode.el
            </a>
            <br>
 <li>
-           <a href="emacs-elisp-body.html#browsehelp.el_www_contextsensitive_help" class="toc">
+           <a href="emacs-elisp-body.html#browsehelp_el_www_contextsensitive_help" class="toc">
                13.2 Browse-help.el, WWW context-sensitive help
            </a>
            <br>
 <li>
-           <a href="emacs-elisp-body.html#cssmode.el_cascading_style_sheet_handling" class="toc">
+           <a href="emacs-elisp-body.html#cssmode_el_cascading_style_sheet_handling" class="toc">
                13.3 Css-mode.el, Cascading style sheet handling
            </a>
            <br>
 <li>
-           <a href="emacs-elisp-body.html#emacswiki.el_emacsfriendly_markup" class="toc">
+           <a href="emacs-elisp-body.html#emacswiki_el_emacsfriendly_markup" class="toc">
                13.4 Emacs-wiki.el, Emacs-friendly markup
            </a>
            <br>
 <li>
-           <a href="emacs-elisp-body.html#hbmk.el_manage_bookmarks_in_html" class="toc">
+           <a href="emacs-elisp-body.html#hbmk_el_manage_bookmarks_in_html" class="toc">
                13.5 Hbmk.el, Manage bookmarks in HTML
            </a>
            <br>
@@ -1163,37 +1180,37 @@
            </a>
            <br>
 <li>
-           <a href="emacs-elisp-body.html#htmlhelpermode.el_visual_basic_asp_jsp" class="toc">
+           <a href="emacs-elisp-body.html#htmlhelpermode_el_visual_basic_asp_jsp" class="toc">
                13.7 Html-helper-mode.el - Visual basic, ASP, JSP
            </a>
            <br>
 <li>
-           <a href="emacs-elisp-body.html#htmltoc.el" class="toc">
+           <a href="emacs-elisp-body.html#htmltoc_el" class="toc">
                13.8 Html-toc.el
            </a>
            <br>
 <li>
-           <a href="emacs-elisp-body.html#htmlize.el_fontlock_to_html_converter" class="toc">
+           <a href="emacs-elisp-body.html#htmlize_el_fontlock_to_html_converter_xemacs" class="toc">
                13.9 Htmlize.el, font-lock to html converter (*), XEmacs
            </a>
            <br>
 <li>
-           <a href="emacs-elisp-body.html#httpd.el_emacs_inetd_webserver" class="toc">
+           <a href="emacs-elisp-body.html#httpd_el_emacs_inetd_webserver" class="toc">
                13.10 Httpd.el, Emacs inetd webserver
            </a>
            <br>
 <li>
-           <a href="emacs-elisp-body.html#isosgml.el" class="toc">
+           <a href="emacs-elisp-body.html#isosgml_el" class="toc">
                13.11 Iso-sgml.el
            </a>
            <br>
 <li>
-           <a href="emacs-elisp-body.html#mkhtml.el_create_html_with_links" class="toc">
+           <a href="emacs-elisp-body.html#mkhtml_el_create_html_with_links" class="toc">
                13.12 Mkhtml.el, Create HTML with links
            </a>
            <br>
 <li>
-           <a href="emacs-elisp-body.html#psgmlmode.el_html_xml_sgml" class="toc">
+           <a href="emacs-elisp-body.html#psgmlmode_el_html_xml_sgml" class="toc">
                13.13 Psgml-mode.el, HTML, XML, SGML (*)
            </a>
            <br>
@@ -1203,7 +1220,7 @@
            </a>
            <br>
 <li>
-           <a href="emacs-elisp-body.html#quickurl.el_insert_url_at_point" class="toc">
+           <a href="emacs-elisp-body.html#quickurl_el_insert_url_at_point" class="toc">
                13.15 Quickurl.el, insert URL at point
            </a>
            <br>
@@ -1213,17 +1230,17 @@
            </a>
            <br>
 <li>
-           <a href="emacs-elisp-body.html#watson.el_query_search_engines" class="toc">
+           <a href="emacs-elisp-body.html#watson_el_query_search_engines" class="toc">
                13.17 Watson.el, query search engines
            </a>
            <br>
 <li>
-           <a href="emacs-elisp-body.html#webmode.el_cvsweb" class="toc">
+           <a href="emacs-elisp-body.html#webmode_el_cvsweb" class="toc">
                13.18 Web-mode.el, cvsweb
            </a>
            <br>
 <li>
-           <a href="emacs-elisp-body.html#wup.el_web_page_distribution" class="toc">
+           <a href="emacs-elisp-body.html#wup_el_web_page_distribution" class="toc">
                13.19 Wup.el, web page distribution
            </a>
            <br>
@@ -1233,7 +1250,7 @@
            </a>
            <br>
 <li>
-           <a href="emacs-elisp-body.html#xmllite.el_an_indentationengine_for_xml" class="toc">
+           <a href="emacs-elisp-body.html#xmllite_el_an_indentationengine_for_xml" class="toc">
                13.21 Xml-lite.el, an indentation-engine for XML
            </a>
            <br>
@@ -1305,7 +1322,7 @@
            </a>
            <br>
 <li>
-           <a href="emacs-elisp-body.html#borland_star_team_source_control" class="toc">
+           <a href="emacs-elisp-body.html#borland_star_team_source_control_system" class="toc">
                14.12 Borland Star Team source control system
            </a>
            <br>
@@ -1332,22 +1349,22 @@
 
 <ul>
 <li>
-           <a href="emacs-elisp-body.html#ascii.el" class="toc">
+           <a href="emacs-elisp-body.html#ascii_el" class="toc">
                15.1 Ascii.el
            </a>
            <br>
 <li>
-           <a href="emacs-elisp-body.html#c_and_java_code_browser" class="toc">
+           <a href="emacs-elisp-body.html#c_and_java_code_browser_xrefspeller" class="toc">
                15.2 C and Java code browser (Xref-Speller)
            </a>
            <br>
 <li>
-           <a href="emacs-elisp-body.html#cmodeaddons.el_some_addon_functions_for" class="toc">
+           <a href="emacs-elisp-body.html#cmodeaddons_el_some_addon_functions_for_cmode" class="toc">
                15.3 C-mode-addons.el, some addon functions for c-mode
            </a>
            <br>
 <li>
-           <a href="emacs-elisp-body.html#cincludes.el" class="toc">
+           <a href="emacs-elisp-body.html#cincludes_el" class="toc">
                15.4 C-includes.el
            </a>
            <br>
@@ -1362,12 +1379,12 @@
            </a>
            <br>
 <li>
-           <a href="emacs-elisp-body.html#cctempoelectric.el" class="toc">
+           <a href="emacs-elisp-body.html#cctempoelectric_el" class="toc">
                15.7 Cc-tempo-electric.el
            </a>
            <br>
 <li>
-           <a href="emacs-elisp-body.html#cperlmode.el" class="toc">
+           <a href="emacs-elisp-body.html#cperlmode_el" class="toc">
                15.8 Cperl-mode.el (*), [X]Emacs
            </a>
            <br>
@@ -1387,17 +1404,17 @@
            </a>
            <br>
 <li>
-           <a href="emacs-elisp-body.html#eiffelmode.el" class="toc">
+           <a href="emacs-elisp-body.html#eiffelmode_el" class="toc">
                15.12 Eiffel-mode.el
            </a>
            <br>
 <li>
-           <a href="emacs-elisp-body.html#elsemode.el_language_sensitive_editing_package" class="toc">
+           <a href="emacs-elisp-body.html#elsemode_el_language_sensitive_editing_package" class="toc">
                15.13 Else-mode.el, language sensitive editing package
            </a>
            <br>
 <li>
-           <a href="emacs-elisp-body.html#glasses.el_makethis_make_this" class="toc">
+           <a href="emacs-elisp-body.html#glasses_el_makethis_make_this" class="toc">
                15.14 Glasses.el, MakeThis Make_This
            </a>
            <br>
@@ -1407,7 +1424,7 @@
            </a>
            <br>
 <li>
-           <a href="emacs-elisp-body.html#java_buffi.el_compile_multiple_java" class="toc">
+           <a href="emacs-elisp-body.html#java_buffi_el_compile_multiple_java_projects" class="toc">
                15.16 Java buffi.el, compile multiple java projects
            </a>
            <br>
@@ -1417,47 +1434,47 @@
            </a>
            <br>
 <li>
-           <a href="emacs-elisp-body.html#java_jdok.el_javadoc_template_generator" class="toc">
+           <a href="emacs-elisp-body.html#java_jdok_el_javadoc_template_generator" class="toc">
                15.18 Java Jdok.el, Javadoc template generator
            </a>
            <br>
 <li>
-           <a href="emacs-elisp-body.html#javafind.el_find_and_visit_java" class="toc">
+           <a href="emacs-elisp-body.html#javafind_el_find_and_visit_java_source_files" class="toc">
                15.19 Java-Find.el, find and visit Java source files
            </a>
            <br>
 <li>
-           <a href="emacs-elisp-body.html#javafontlock20.el" class="toc">
+           <a href="emacs-elisp-body.html#javafontlock20_el" class="toc">
                15.20 Java-Font-Lock20.el
            </a>
            <br>
 <li>
-           <a href="emacs-elisp-body.html#javahelp.el_contextual_java_help" class="toc">
+           <a href="emacs-elisp-body.html#javahelp_el_contextual_java_help" class="toc">
                15.21 Javahelp.el, Contextual java help
            </a>
            <br>
 <li>
-           <a href="emacs-elisp-body.html#jcall.el_call_java_from_elisp" class="toc">
+           <a href="emacs-elisp-body.html#jcall_el_call_java_from_elisp" class="toc">
                15.22 Jcall.el, call Java from Elisp
            </a>
            <br>
 <li>
-           <a href="emacs-elisp-body.html#jde.el_java_development_environment_jde" class="toc">
+           <a href="emacs-elisp-body.html#jde_el_java_development_environment_jde_or_jdee" class="toc">
                15.23 Jde.el, Java Development Environment (JDE or JDEE)
            </a>
            <br>
 <li>
-           <a href="emacs-elisp-body.html#javaopen.el" class="toc">
+           <a href="emacs-elisp-body.html#javaopen_el" class="toc">
                15.24 Java-open.el
            </a>
            <br>
 <li>
-           <a href="emacs-elisp-body.html#java_template_jtemplate.el" class="toc">
+           <a href="emacs-elisp-body.html#java_template_jtemplate_el" class="toc">
                15.25 Java Template, jtemplate.el
            </a>
            <br>
 <li>
-           <a href="emacs-elisp-body.html#lazylook.el_contextsensitive_language_help" class="toc">
+           <a href="emacs-elisp-body.html#lazylook_el_contextsensitive_language_help" class="toc">
                15.26 Lazy-look.el, context-sensitive language help
            </a>
            <br>
@@ -1472,22 +1489,22 @@
            </a>
            <br>
 <li>
-           <a href="emacs-elisp-body.html#maplev.el_maple_code" class="toc">
+           <a href="emacs-elisp-body.html#maplev_el_maple_code" class="toc">
                15.29 Maplev.el, Maple code
            </a>
            <br>
 <li>
-           <a href="emacs-elisp-body.html#mathlabmode.el" class="toc">
+           <a href="emacs-elisp-body.html#mathlabmode_el" class="toc">
                15.30 Mathlab-mode.el
            </a>
            <br>
 <li>
-           <a href="emacs-elisp-body.html#m56k.el_mode_for_motorolas_dsp56300" class="toc">
+           <a href="emacs-elisp-body.html#m56k_el_mode_for_motorolas_dsp56300_assembly_code" class="toc">
                15.31 M56k.el, mode for Motorola's DSP56300 assembly code
            </a>
            <br>
 <li>
-           <a href="emacs-elisp-body.html#multiple_major_modes_in_same" class="toc">
+           <a href="emacs-elisp-body.html#multiple_major_modes_in_same_buffer" class="toc">
                15.32 Multiple major modes in same buffer
            </a>
            <br>
@@ -1509,52 +1526,52 @@
 
 <ul>
 <li>
-           <a href="emacs-elisp-body.html#writing_portable_xemacs_and_emacs" class="toc">
+           <a href="emacs-elisp-body.html#writing_portable_xemacs_and_emacs_code" class="toc">
                16.1 Writing portable XEmacs and Emacs code
            </a>
            <br>
 <li>
-           <a href="emacs-elisp-body.html#autolisp.el_edit_autocad_autolisp_files" class="toc">
+           <a href="emacs-elisp-body.html#autolisp_el_edit_autocad_autolisp_files" class="toc">
                16.2 Autolisp.el, edit AutoCAD AutoLISP files
            </a>
            <br>
 <li>
-           <a href="emacs-elisp-body.html#bmhcmplt.el_facility_to_display_descriptions" class="toc">
+           <a href="emacs-elisp-body.html#bmhcmplt_el_facility_to_display_descriptions_of_completions" class="toc">
                16.3 Bm-hcmplt.el, facility to display descriptions of completions
            </a>
            <br>
 <li>
-           <a href="emacs-elisp-body.html#checkdoc.el_emacs" class="toc">
+           <a href="emacs-elisp-body.html#checkdoc_el_emacs" class="toc">
                16.4 Checkdoc.el (*), Emacs
            </a>
            <br>
 <li>
-           <a href="emacs-elisp-body.html#clarray.el_cls_multidimensional_arrays" class="toc">
+           <a href="emacs-elisp-body.html#clarray_el_cls_multidimensional_arrays" class="toc">
                16.5 Cl-array.el, CL's multi-dimensional arrays
            </a>
            <br>
 <li>
-           <a href="emacs-elisp-body.html#closure.el_emacs" class="toc">
+           <a href="emacs-elisp-body.html#closure_el_emacs" class="toc">
                16.6 Closure.el (*), Emacs
            </a>
            <br>
 <li>
-           <a href="emacs-elisp-body.html#crm.el_completing_read_multiple_emacs" class="toc">
+           <a href="emacs-elisp-body.html#crm_el_completing_read_multiple_emacs" class="toc">
                16.7 Crm.el, completing read multiple (*), Emacs
            </a>
            <br>
 <li>
-           <a href="emacs-elisp-body.html#eieio_subset_of_clos_common" class="toc">
+           <a href="emacs-elisp-body.html#eieio_subset_of_clos_common_lisp_object_system" class="toc">
                16.8 Eieio, subset of CLOS (Common Lisp Object System)
            </a>
            <br>
 <li>
-           <a href="emacs-elisp-body.html#elder.el_emacs_lisp_document_writer" class="toc">
+           <a href="emacs-elisp-body.html#elder_el_emacs_lisp_document_writer" class="toc">
                16.9 Elder.el, emacs lisp document writer
            </a>
            <br>
 <li>
-           <a href="emacs-elisp-body.html#eldoc.el_show_emacs_lisp_function" class="toc">
+           <a href="emacs-elisp-body.html#eldoc_el_show_emacs_lisp_function_arglist" class="toc">
                16.10 Eldoc.el, show Emacs lisp function arglist (*), [X]Emacs
            </a>
            <br>
@@ -1564,77 +1581,77 @@
            </a>
            <br>
 <li>
-           <a href="emacs-elisp-body.html#ell.el_browse_the_emacs_lisp" class="toc">
+           <a href="emacs-elisp-body.html#ell_el_browse_the_emacs_lisp_list" class="toc">
                16.12 Ell.el, Browse the Emacs Lisp List
            </a>
            <br>
 <li>
-           <a href="emacs-elisp-body.html#elp.el_emacs_lisp_profiler" class="toc">
+           <a href="emacs-elisp-body.html#elp_el_emacs_lisp_profiler" class="toc">
                16.13 Elp.el, emacs lisp profiler (*), [X]Emacs
            </a>
            <br>
 <li>
-           <a href="emacs-elisp-body.html#evalexpr.el_better_eval_expression_prompt" class="toc">
+           <a href="emacs-elisp-body.html#evalexpr_el_better_eval_expression_prompt" class="toc">
                16.14 Eval-expr.el, Better eval expression prompt
            </a>
            <br>
 <li>
-           <a href="emacs-elisp-body.html#extre.el_extended_regular_expression_syntax" class="toc">
+           <a href="emacs-elisp-body.html#extre_el_extended_regular_expression_syntax_support" class="toc">
                16.15 Extre.el, extended regular expression syntax support
            </a>
            <br>
 <li>
-           <a href="emacs-elisp-body.html#findfunc.el_find_func_definition_near" class="toc">
+           <a href="emacs-elisp-body.html#findfunc_el_find_func_definition_near_point" class="toc">
                16.16 Find-func.el, find func definition near point (*) [X]Emacs
            </a>
            <br>
 <li>
-           <a href="emacs-elisp-body.html#getdoc.el" class="toc">
+           <a href="emacs-elisp-body.html#getdoc_el" class="toc">
                16.17 Getdoc.el
            </a>
            <br>
 <li>
-           <a href="emacs-elisp-body.html#gnueval.el_fill_out_gnu_evaluation" class="toc">
+           <a href="emacs-elisp-body.html#gnueval_el_fill_out_gnu_evaluation_form" class="toc">
                16.18 Gnueval.el, fill out GNU evaluation form
            </a>
            <br>
 <li>
-           <a href="emacs-elisp-body.html#hyperspec.el_browse_common_lisp_specs" class="toc">
+           <a href="emacs-elisp-body.html#hyperspec_el_browse_common_lisp_specs" class="toc">
                16.19 Hyperspec.el, browse Common Lisp specs
            </a>
            <br>
 <li>
-           <a href="emacs-elisp-body.html#ilisp.el_inferior_lisp_replacement" class="toc">
+           <a href="emacs-elisp-body.html#ilisp_el_inferior_lisp_replacement" class="toc">
                16.20 Ilisp.el, Inferior Lisp replacement
            </a>
            <br>
 <li>
-           <a href="emacs-elisp-body.html#lispindex.el_index_lisp_files_with" class="toc">
+           <a href="emacs-elisp-body.html#lispindex_el_index_lisp_files_with_descriptions" class="toc">
                16.21 Lisp-index.el, Index Lisp files, with descriptions
            </a>
            <br>
 <li>
-           <a href="emacs-elisp-body.html#lispdir.el" class="toc">
+           <a href="emacs-elisp-body.html#lispdir_el" class="toc">
                16.22 Lispdir.el
            </a>
            <br>
 <li>
-           <a href="emacs-elisp-body.html#regexpopt.el_emacs" class="toc">
+           <a href="emacs-elisp-body.html#regexpopt_el_emacs" class="toc">
                16.23 Regexp-opt.el (*), Emacs
            </a>
            <br>
 <li>
-           <a href="emacs-elisp-body.html#minibuffercompletecycle.el_cycle_completion_buffer" class="toc">
+           <a href="emacs-elisp-body.html#minibuffercompletecycle_el_cycle_completion_buffer" class="toc">
                16.24 Minibuffer-complete-cycle.el, cycle Completion buffer
            </a>
            <br>
 <li>
-           <a href="emacs-elisp-body.html#obarrayfns.el_obarraymanipulating_routines" class="toc">
+           <a href="emacs-elisp-body.html#obarrayfns_el_obarraymanipulating_routines" class="toc">
                16.25 Obarray-fns.el, obarray-manipulating routines
            </a>
            <br>
 <li>
-           <a href="emacs-elisp-body.html#regress.el" class="toc">
+           <a href="emacs-elisp-body.html#regress_el" class="toc">
                16.26 Regress.el
            </a>
            <br>
@@ -1644,37 +1661,37 @@
            </a>
            <br>
 <li>
-           <a href="emacs-elisp-body.html#runcommand.el_lib_for_running_external" class="toc">
+           <a href="emacs-elisp-body.html#runcommand_el_lib_for_running_external_commands" class="toc">
                16.28 Run-command.el, lib for running external commands
            </a>
            <br>
 <li>
-           <a href="emacs-elisp-body.html#sregex.el" class="toc">
+           <a href="emacs-elisp-body.html#sregex_el" class="toc">
                16.29 Sregex.el (*)
            </a>
            <br>
 <li>
-           <a href="emacs-elisp-body.html#texidoc.el_have_texi_embedded_in" class="toc">
+           <a href="emacs-elisp-body.html#texidoc_el_have_texi_embedded_in_defvar" class="toc">
                16.30 Texidoc.el, have texi embedded in defvar
            </a>
            <br>
 <li>
-           <a href="emacs-elisp-body.html#timerfunction.el" class="toc">
+           <a href="emacs-elisp-body.html#timerfunction_el" class="toc">
                16.31 Timerfunction.el
            </a>
            <br>
 <li>
-           <a href="emacs-elisp-body.html#tmenu.el_a_text_based_interface" class="toc">
+           <a href="emacs-elisp-body.html#tmenu_el_a_text_based_interface_to_the_menubar" class="toc">
                16.32 Tmenu.el, a text based interface to the menubar
            </a>
            <br>
 <li>
-           <a href="emacs-elisp-body.html#working.el_show_progress_while_working" class="toc">
+           <a href="emacs-elisp-body.html#working_el_show_progress_while_working" class="toc">
                16.33 Working.el, show progress while working
            </a>
            <br>
 <li>
-           <a href="emacs-elisp-body.html#xray.el_display_internal_object_structures" class="toc">
+           <a href="emacs-elisp-body.html#xray_el_display_internal_object_structures" class="toc">
                16.34 Xray.el, display internal object structures
            </a>
            <br>
@@ -1686,7 +1703,7 @@
 
 <ul>
 <li>
-           <a href="emacs-elisp-body.html#masonmode.el" class="toc">
+           <a href="emacs-elisp-body.html#masonmode_el" class="toc">
                17.1 Mason-mode.el
            </a>
            <br>
@@ -1696,47 +1713,47 @@
            </a>
            <br>
 <li>
-           <a href="emacs-elisp-body.html#projectam.el_a_project_mode_for" class="toc">
+           <a href="emacs-elisp-body.html#projectam_el_a_project_mode_for_emacs_based_on" class="toc">
                17.3 Project-am.el, a project mode for emacs based on automake
            </a>
            <br>
 <li>
-           <a href="emacs-elisp-body.html#psmode.el_mode_for_editing_postscript" class="toc">
+           <a href="emacs-elisp-body.html#psmode_el_mode_for_editing_postscript_code" class="toc">
                17.4 Ps-mode.el, mode for editing postscript code
            </a>
            <br>
 <li>
-           <a href="emacs-elisp-body.html#tmmofl.el_toggles_other_minor_modes" class="toc">
+           <a href="emacs-elisp-body.html#tmmofl_el_toggles_other_minor_modes_based_on_font" class="toc">
                17.5 Tmmofl.el, toggles other minor modes based on font lock info
            </a>
            <br>
 <li>
-           <a href="emacs-elisp-body.html#smbmode.el_editing_samba_files" class="toc">
+           <a href="emacs-elisp-body.html#smbmode_el_editing_samba_files" class="toc">
                17.6 Smb-mode.el, editing SAMBA files
            </a>
            <br>
 <li>
-           <a href="emacs-elisp-body.html#sawmill.el" class="toc">
+           <a href="emacs-elisp-body.html#sawmill_el" class="toc">
                17.7 Sawmill.el
            </a>
            <br>
 <li>
-           <a href="emacs-elisp-body.html#smlmode.el" class="toc">
+           <a href="emacs-elisp-body.html#smlmode_el" class="toc">
                17.8 SML-mode.el
            </a>
            <br>
 <li>
-           <a href="emacs-elisp-body.html#verilogmode.el" class="toc">
+           <a href="emacs-elisp-body.html#verilogmode_el" class="toc">
                17.9 Verilog-mode.el
            </a>
            <br>
 <li>
-           <a href="emacs-elisp-body.html#winmgrmode.el_generic_window_manager_mode" class="toc">
+           <a href="emacs-elisp-body.html#winmgrmode_el_generic_window_manager_mode" class="toc">
                17.10 Winmgr-mode.el, generic window manager mode
            </a>
            <br>
 <li>
-           <a href="emacs-elisp-body.html#w32help.el" class="toc">
+           <a href="emacs-elisp-body.html#w32help_el" class="toc">
                17.11 W32-help.el
            </a>
            <br>
@@ -1748,22 +1765,22 @@
 
 <ul>
 <li>
-           <a href="emacs-elisp-body.html#ansicolor.el_translate_ansi_into_textproperties" class="toc">
+           <a href="emacs-elisp-body.html#ansicolor_el_translate_ansi_into_textproperties" class="toc">
                18.1 ANSI-color.el, translate ANSI into text-properties (*)
            </a>
            <br>
 <li>
-           <a href="emacs-elisp-body.html#dircolors.el_provide_the_same_facility" class="toc">
+           <a href="emacs-elisp-body.html#dircolors_el_provide_the_same_facility_of_ls_color" class="toc">
                18.2 Dircolors.el, provide the same facility of ls --color inside emacs
            </a>
            <br>
 <li>
-           <a href="emacs-elisp-body.html#eshell.el_emacs_shell" class="toc">
+           <a href="emacs-elisp-body.html#eshell_el_emacs_shell" class="toc">
                18.3 Eshell.el, Emacs shell (*)
            </a>
            <br>
 <li>
-           <a href="emacs-elisp-body.html#fshell.el" class="toc">
+           <a href="emacs-elisp-body.html#fshell_el" class="toc">
                18.4 Fshell.el
            </a>
            <br>
@@ -1773,7 +1790,7 @@
            </a>
            <br>
 <li>
-           <a href="emacs-elisp-body.html#which.el_where_is_command" class="toc">
+           <a href="emacs-elisp-body.html#which_el_where_is_command" class="toc">
                18.6 Which.el, where is command
            </a>
            <br>
@@ -1785,27 +1802,27 @@
 
 <ul>
 <li>
-           <a href="emacs-elisp-body.html#analog.el_monitor_lists_of_files" class="toc">
+           <a href="emacs-elisp-body.html#analog_el_monitor_lists_of_files_or_command_output" class="toc">
                19.1 Analog.el, monitor lists of files or command output
            </a>
            <br>
 <li>
-           <a href="emacs-elisp-body.html#df.el_show_disk_usage" class="toc">
+           <a href="emacs-elisp-body.html#df_el_show_disk_usage" class="toc">
                19.2 Df.el, show disk usage
            </a>
            <br>
 <li>
-           <a href="emacs-elisp-body.html#runcommand.el_running_external_commands" class="toc">
+           <a href="emacs-elisp-body.html#runcommand_el_running_external_commands" class="toc">
                19.3 Run-command.el, running external commands
            </a>
            <br>
 <li>
-           <a href="emacs-elisp-body.html#top.el_running_top1_in_emacs" class="toc">
+           <a href="emacs-elisp-body.html#top_el_running_top1_in_emacs_window" class="toc">
                19.4 Top.el, running top(1) in emacs window
            </a>
            <br>
 <li>
-           <a href="emacs-elisp-body.html#wget.el_wget_interface_for_emacs" class="toc">
+           <a href="emacs-elisp-body.html#wget_el_wget_interface_for_emacs" class="toc">
                19.5 Wget.el, wget interface for emacs
            </a>
            <br>
@@ -1822,27 +1839,27 @@
            </a>
            <br>
 <li>
-           <a href="emacs-elisp-body.html#dig.el_domain_name_system_dig" class="toc">
+           <a href="emacs-elisp-body.html#dig_el_domain_name_system_dig_interface_gnus" class="toc">
                20.2 Dig.el, Domain Name System dig interface (*), Gnus
            </a>
            <br>
 <li>
-           <a href="emacs-elisp-body.html#firewall.el_a_tunnel_for_network" class="toc">
+           <a href="emacs-elisp-body.html#firewall_el_a_tunnel_for_network_connection" class="toc">
                20.3 Firewall.el, A tunnel for network connection
            </a>
            <br>
 <li>
-           <a href="emacs-elisp-body.html#icq_i_seek_you_xemacs" class="toc">
+           <a href="emacs-elisp-body.html#icq_i_seek_you_xemacs_and_linux_only_eicq" class="toc">
                20.4 ICQ - I Seek You, XEmacs and Linux ONLY (eicq)
            </a>
            <br>
 <li>
-           <a href="emacs-elisp-body.html#junkbust.el_configuring_the_internet_junkbuster" class="toc">
+           <a href="emacs-elisp-body.html#junkbust_el_configuring_the_internet_junkbuster_proxy" class="toc">
                20.5 Junkbust.el, configuring the Internet Junkbuster Proxy
            </a>
            <br>
 <li>
-           <a href="emacs-elisp-body.html#lookup.el_electronic_dictionaries" class="toc">
+           <a href="emacs-elisp-body.html#lookup_el_electronic_dictionaries" class="toc">
                20.6 Lookup.el, electronic dictionaries
            </a>
            <br>
@@ -1854,17 +1871,17 @@
 
 <ul>
 <li>
-           <a href="emacs-elisp-body.html#aptsources.el_debian_editing_mode" class="toc">
+           <a href="emacs-elisp-body.html#aptsources_el_debian_editing_mode" class="toc">
                21.1 Apt-sources.el, Debian editing mode
            </a>
            <br>
 <li>
-           <a href="emacs-elisp-body.html#protocols.el_reading_the_contents_of" class="toc">
+           <a href="emacs-elisp-body.html#protocols_el_reading_the_contents_of_etcprotocols" class="toc">
                21.2 Protocols.el, reading the contents of /etc/protocols
            </a>
            <br>
 <li>
-           <a href="emacs-elisp-body.html#services.el_reading_the_contents_of" class="toc">
+           <a href="emacs-elisp-body.html#services_el_reading_the_contents_of_etcservices" class="toc">
                21.3 Services.el, reading the contents of /etc/services
            </a>
            <br>
@@ -1881,37 +1898,37 @@
            </a>
            <br>
 <li>
-           <a href="emacs-elisp-body.html#filecache.el_files_using_a_preloaded" class="toc">
+           <a href="emacs-elisp-body.html#filecache_el_files_using_a_preloaded_cache" class="toc">
                22.2 Filecache.el, files using a pre-loaded cache (*)
            </a>
            <br>
 <li>
-           <a href="emacs-elisp-body.html#fff.el_fast_file_finder" class="toc">
+           <a href="emacs-elisp-body.html#fff_el_fast_file_finder" class="toc">
                22.3 Fff.el, fast file finder
            </a>
            <br>
 <li>
-           <a href="emacs-elisp-body.html#ffpaths.el_searches_certain_paths_to" class="toc">
+           <a href="emacs-elisp-body.html#ffpaths_el_searches_certain_paths_to_find_files" class="toc">
                22.4 Ff-paths.el, searches certain paths to find files
            </a>
            <br>
 <li>
-           <a href="emacs-elisp-body.html#iman.el_man_and_info_page" class="toc">
+           <a href="emacs-elisp-body.html#iman_el_man_and_info_page_completion" class="toc">
                22.5 Iman.el, man and info page completion
            </a>
            <br>
 <li>
-           <a href="emacs-elisp-body.html#suretags.el" class="toc">
+           <a href="emacs-elisp-body.html#suretags_el" class="toc">
                22.6 Sure-tags.el
            </a>
            <br>
 <li>
-           <a href="emacs-elisp-body.html#thumbs.el_thumbnail_images_files" class="toc">
+           <a href="emacs-elisp-body.html#thumbs_el_thumbnail_images_files" class="toc">
                22.7 Thumbs.el,  thumbnail images files
            </a>
            <br>
 <li>
-           <a href="emacs-elisp-body.html#tramp.el_transparent_remote_accs_ssh" class="toc">
+           <a href="emacs-elisp-body.html#tramp_el_transparent_remote_accs_ssh" class="toc">
                22.8 Tramp.el, transparent remote accs, ssh (*)
            </a>
            <br>
@@ -1923,22 +1940,22 @@
 
 <ul>
 <li>
-           <a href="emacs-elisp-body.html#autosave.el" class="toc">
+           <a href="emacs-elisp-body.html#autosave_el" class="toc">
                23.1 Auto-save.el (*)
            </a>
            <br>
 <li>
-           <a href="emacs-elisp-body.html#backupdir.el_place_backups_to_separate" class="toc">
+           <a href="emacs-elisp-body.html#backupdir_el_place_backups_to_separate_dir" class="toc">
                23.2 Backup-dir.el, place backups to separate dir (*)
            </a>
            <br>
 <li>
-           <a href="emacs-elisp-body.html#backupsubdir.el_backup_files_in_separate" class="toc">
+           <a href="emacs-elisp-body.html#backupsubdir_el_backup_files_in_separate_directory" class="toc">
                23.3 Backup-subdir.el, backup files in separate directory
            </a>
            <br>
 <li>
-           <a href="emacs-elisp-body.html#ebackup.el_enhanced_backup_operation_for" class="toc">
+           <a href="emacs-elisp-body.html#ebackup_el_enhanced_backup_operation_for_emacs" class="toc">
                23.4 Ebackup.el, Enhanced backup operation for Emacs
            </a>
            <br>
@@ -1950,7 +1967,7 @@
 
 <ul>
 <li>
-           <a href="emacs-elisp-body.html#browsetar.el" class="toc">
+           <a href="emacs-elisp-body.html#browsetar_el" class="toc">
                24.1 Browse-tar.el
            </a>
            <br>
@@ -1960,22 +1977,22 @@
            </a>
            <br>
 <li>
-           <a href="emacs-elisp-body.html#mailcrypt.el" class="toc">
+           <a href="emacs-elisp-body.html#mailcrypt_el" class="toc">
                24.3 Mailcrypt.el (*)
            </a>
            <br>
 <li>
-           <a href="emacs-elisp-body.html#mcsafesignmessage.el" class="toc">
+           <a href="emacs-elisp-body.html#mcsafesignmessage_el" class="toc">
                24.4 Mc-safe-sign-message.el
            </a>
            <br>
 <li>
-           <a href="emacs-elisp-body.html#sslhacks.el" class="toc">
+           <a href="emacs-elisp-body.html#sslhacks_el" class="toc">
                24.5 Ssl-hacks.el
            </a>
            <br>
 <li>
-           <a href="emacs-elisp-body.html#tinypgp.el" class="toc">
+           <a href="emacs-elisp-body.html#tinypgp_el" class="toc">
                24.6 TinyPgp.el
            </a>
            <br>
@@ -1987,17 +2004,17 @@
 
 <ul>
 <li>
-           <a href="emacs-elisp-body.html#direda.el_extensions_to_dired" class="toc">
+           <a href="emacs-elisp-body.html#direda_el_extensions_to_dired" class="toc">
                25.1 Dired-a.el, extensions to dired
            </a>
            <br>
 <li>
-           <a href="emacs-elisp-body.html#diredsingle.el_reuse_the_current_dired" class="toc">
+           <a href="emacs-elisp-body.html#diredsingle_el_reuse_the_current_dired_buffer" class="toc">
                25.2 Dired-single.el, reuse the current dired buffer
            </a>
            <br>
 <li>
-           <a href="emacs-elisp-body.html#jsdired.el_lisp_ls_emulation_for" class="toc">
+           <a href="emacs-elisp-body.html#jsdired_el_lisp_ls_emulation_for_win32" class="toc">
                25.3 Js-dired.el, lisp ls emulation for win32
            </a>
            <br>
@@ -2007,42 +2024,42 @@
            </a>
            <br>
 <li>
-           <a href="emacs-elisp-body.html#mc.el_midnight_commander_emulation" class="toc">
+           <a href="emacs-elisp-body.html#mc_el_midnight_commander_emulation" class="toc">
                25.5 Mc.el, Midnight commander emulation
            </a>
            <br>
 <li>
-           <a href="emacs-elisp-body.html#md5dired.el_make_dired_sensitive_to" class="toc">
+           <a href="emacs-elisp-body.html#md5dired_el_make_dired_sensitive_to_file_changes" class="toc">
                25.6 Md5-dired.el, make dired sensitive to file changes
            </a>
            <br>
 <li>
-           <a href="emacs-elisp-body.html#direddd.el_dired_drag_and_drop" class="toc">
+           <a href="emacs-elisp-body.html#direddd_el_dired_drag_and_drop" class="toc">
                25.7 Dired-dd.el, Dired Drag and Drop
            </a>
            <br>
 <li>
-           <a href="emacs-elisp-body.html#diredsingle.el" class="toc">
+           <a href="emacs-elisp-body.html#diredsingle_el" class="toc">
                25.8 Dired-single.el
            </a>
            <br>
 <li>
-           <a href="emacs-elisp-body.html#diredsort.el_sort_by_datetypesizefield" class="toc">
+           <a href="emacs-elisp-body.html#diredsort_el_sort_by_datetypesizefield" class="toc">
                25.9 Dired-sort.el, sort by date-type-size-field
            </a>
            <br>
 <li>
-           <a href="emacs-elisp-body.html#diredsortmenu.el" class="toc">
+           <a href="emacs-elisp-body.html#diredsortmenu_el" class="toc">
                25.10 Dired-sort-menu.el,
            </a>
            <br>
 <li>
-           <a href="emacs-elisp-body.html#diredtar.el" class="toc">
+           <a href="emacs-elisp-body.html#diredtar_el" class="toc">
                25.11 Dired-tar.el
            </a>
            <br>
 <li>
-           <a href="emacs-elisp-body.html#wdired.el_rename_files_in_dired" class="toc">
+           <a href="emacs-elisp-body.html#wdired_el_rename_files_in_dired" class="toc">
                25.12 Wdired.el, rename files in dired
            </a>
            <br>
@@ -2054,32 +2071,32 @@
 
 <ul>
 <li>
-           <a href="emacs-elisp-body.html#artist.el_hitech_character_based_drawing" class="toc">
+           <a href="emacs-elisp-body.html#artist_el_hitech_character_based_drawing_package" class="toc">
                26.1 Artist.el, hi-tech character based drawing package (*)
            </a>
            <br>
 <li>
-           <a href="emacs-elisp-body.html#boxquote.el_wrapping_text" class="toc">
+           <a href="emacs-elisp-body.html#boxquote_el_wrapping_text" class="toc">
                26.2 Boxquote.el, wrapping text
            </a>
            <br>
 <li>
-           <a href="emacs-elisp-body.html#gnuplot.el_mouse_driven_gui_for" class="toc">
+           <a href="emacs-elisp-body.html#gnuplot_el_mouse_driven_gui_for_gnuplot_program" class="toc">
                26.3 Gnuplot.el, mouse driven GUI for gnuplot program
            </a>
            <br>
 <li>
-           <a href="emacs-elisp-body.html#rebox.el_handling_of_comment_boxes" class="toc">
+           <a href="emacs-elisp-body.html#rebox_el_handling_of_comment_boxes_in_various_styles" class="toc">
                26.4 Rebox.el, Handling of comment boxes in various styles
            </a>
            <br>
 <li>
-           <a href="emacs-elisp-body.html#rectmark.el_deletingmanipulatingmoving_rectangles" class="toc">
+           <a href="emacs-elisp-body.html#rectmark_el_deletingmanipulatingmoving_rectangles" class="toc">
                26.5 Rect-mark.el, deleting-manipulating-moving rectangles
            </a>
            <br>
 <li>
-           <a href="emacs-elisp-body.html#table.el" class="toc">
+           <a href="emacs-elisp-body.html#table_el" class="toc">
                26.6 Table.el,
            </a>
            <br>
@@ -2096,7 +2113,7 @@
            </a>
            <br>
 <li>
-           <a href="emacs-elisp-body.html#autocapitalize.el_capitalize_the_first_word" class="toc">
+           <a href="emacs-elisp-body.html#autocapitalize_el_capitalize_the_first_word" class="toc">
                27.2 Auto-capitalize.el, capitalize the first word
            </a>
            <br>
@@ -2106,12 +2123,12 @@
            </a>
            <br>
 <li>
-           <a href="emacs-elisp-body.html#clipper.el_save_strings_of_data" class="toc">
+           <a href="emacs-elisp-body.html#clipper_el_save_strings_of_data_for_further_use" class="toc">
                27.4 Clipper.el, save strings of data for further use
            </a>
            <br>
 <li>
-           <a href="emacs-elisp-body.html#blankmode.el_minor_mode_to_visualize" class="toc">
+           <a href="emacs-elisp-body.html#blankmode_el_minor_mode_to_visualize_whitespace" class="toc">
                27.5 Blank-mode.el, Minor mode to visualize whitespace
            </a>
            <br>
@@ -2121,7 +2138,7 @@
            </a>
            <br>
 <li>
-           <a href="emacs-elisp-body.html#dict.el_retrieving_definitions_of_words" class="toc">
+           <a href="emacs-elisp-body.html#dict_el_retrieving_definitions_of_words" class="toc">
                27.7 Dict.el, retrieving definitions of words
            </a>
            <br>
@@ -2136,77 +2153,77 @@
            </a>
            <br>
 <li>
-           <a href="emacs-elisp-body.html#flyspell.el_and_ispell" class="toc">
+           <a href="emacs-elisp-body.html#flyspell_el_and_ispell" class="toc">
                27.10 Flyspell.el and Ispell (*), [X]Emacs
            </a>
            <br>
 <li>
-           <a href="emacs-elisp-body.html#glyphhighlight.el_display_nonascii_chars" class="toc">
+           <a href="emacs-elisp-body.html#glyphhighlight_el_display_nonascii_chars" class="toc">
                27.11 Glyph-highlight.el, display non-ascii chars
            </a>
            <br>
 <li>
-           <a href="emacs-elisp-body.html#ietf.el_ietf_document_retrieval" class="toc">
+           <a href="emacs-elisp-body.html#ietf_el_ietf_document_retrieval" class="toc">
                27.12 Ietf.el, IETF Document Retrieval
            </a>
            <br>
 <li>
-           <a href="emacs-elisp-body.html#longlines.el_automatically_wrap_long_lines" class="toc">
+           <a href="emacs-elisp-body.html#longlines_el_automatically_wrap_long_lines_some_text" class="toc">
                27.13 Longlines.el, automatically wrap long lines Some text
            </a>
            <br>
 <li>
-           <a href="emacs-elisp-body.html#maniac.el_fill_like_maniac" class="toc">
+           <a href="emacs-elisp-body.html#maniac_el_fill_like_maniac" class="toc">
                27.14 Maniac.el, fill like maniac
            </a>
            <br>
 <li>
-           <a href="emacs-elisp-body.html#multpress.el_home_end_keymagic" class="toc">
+           <a href="emacs-elisp-body.html#multpress_el_home_end_keymagic" class="toc">
                27.15 Mult-press.el, home, end key-magic
            </a>
            <br>
 <li>
-           <a href="emacs-elisp-body.html#pckeys.el_smart_home_and_end" class="toc">
+           <a href="emacs-elisp-body.html#pckeys_el_smart_home_and_end_keys" class="toc">
                27.16 Pc-keys.el, Smart home and end keys
            </a>
            <br>
 <li>
-           <a href="emacs-elisp-body.html#rewrite.el_rewrite_text_files_with" class="toc">
+           <a href="emacs-elisp-body.html#rewrite_el_rewrite_text_files_with_regexps" class="toc">
                27.17 Rewrite.el, rewrite text files with regexps
            </a>
            <br>
 <li>
-           <a href="emacs-elisp-body.html#rfc.el" class="toc">
+           <a href="emacs-elisp-body.html#rfc_el" class="toc">
                27.18 RFC.el
            </a>
            <br>
 <li>
-           <a href="emacs-elisp-body.html#rfcpage.el" class="toc">
+           <a href="emacs-elisp-body.html#rfcpage_el" class="toc">
                27.19 Rfc-page.el
            </a>
            <br>
 <li>
-           <a href="emacs-elisp-body.html#rfcutil.el_rfcutil_interface_for_emacs" class="toc">
+           <a href="emacs-elisp-body.html#rfcutil_el_rfcutil_interface_for_emacs" class="toc">
                27.20 Rfc-util.el, RFC-util interface for emacs
            </a>
            <br>
 <li>
-           <a href="emacs-elisp-body.html#rfcview.el_view_ietf_rfcs" class="toc">
+           <a href="emacs-elisp-body.html#rfcview_el_view_ietf_rfcs" class="toc">
                27.21 Rfcview.el, view IETF RFCs
            </a>
            <br>
 <li>
-           <a href="emacs-elisp-body.html#translation.el_translation_minor_mode" class="toc">
+           <a href="emacs-elisp-body.html#translation_el_translation_minor_mode" class="toc">
                27.22 Translation.el, translation minor mode
            </a>
            <br>
 <li>
-           <a href="emacs-elisp-body.html#qa.el" class="toc">
+           <a href="emacs-elisp-body.html#qa_el" class="toc">
                27.23 QA.el
            </a>
            <br>
 <li>
-           <a href="emacs-elisp-body.html#tinytf.el_white_paper_minor_mode" class="toc">
+           <a href="emacs-elisp-body.html#tinytf_el_white_paper_minor_mode" class="toc">
                27.24 TinyTf.el, white paper minor mode
            </a>
            <br>
@@ -2228,37 +2245,37 @@
 
 <ul>
 <li>
-           <a href="emacs-elisp-body.html#bookmarkmenu.el_setup_a_menu_of" class="toc">
+           <a href="emacs-elisp-body.html#bookmarkmenu_el_setup_a_menu_of_bookmarks" class="toc">
                28.1 Bookmark-menu.el, setup a menu of bookmarks
            </a>
            <br>
 <li>
-           <a href="emacs-elisp-body.html#desire.el_emacs_startup_file_organir" class="toc">
+           <a href="emacs-elisp-body.html#desire_el_emacs_startup_file_organir" class="toc">
                28.2 Desire.el, Emacs startup file organir
            </a>
            <br>
 <li>
-           <a href="emacs-elisp-body.html#ee.el_categorizing_information_manager_for" class="toc">
+           <a href="emacs-elisp-body.html#ee_el_categorizing_information_manager_for_emacs" class="toc">
                28.3 Ee.el, categorizing information manager for Emacs
            </a>
            <br>
 <li>
-           <a href="emacs-elisp-body.html#esheet.el_emacs_spreadsheet" class="toc">
+           <a href="emacs-elisp-body.html#esheet_el_emacs_spreadsheet" class="toc">
                28.4 Esheet.el, Emacs spreadsheet
            </a>
            <br>
 <li>
-           <a href="emacs-elisp-body.html#hideshow.el_display_blocks_of_code" class="toc">
+           <a href="emacs-elisp-body.html#hideshow_el_display_blocks_of_code_xemacs_emacs" class="toc">
                28.5 Hideshow.el, display blocks of code (*), XEmacs, Emacs
            </a>
            <br>
 <li>
-           <a href="emacs-elisp-body.html#hierimenu.el_hierarchical_index_menu_for" class="toc">
+           <a href="emacs-elisp-body.html#hierimenu_el_hierarchical_index_menu_for_emacs" class="toc">
                28.6 Hier-imenu.el, Hierarchical index menu for emacs
            </a>
            <br>
 <li>
-           <a href="emacs-elisp-body.html#folding.el_keep_your_text_or" class="toc">
+           <a href="emacs-elisp-body.html#folding_el_keep_your_text_or_code_organised_xemacs" class="toc">
                28.7 Folding.el, keep your text or code organised (*), XEmacs
            </a>
            <br>
@@ -2268,7 +2285,7 @@
            </a>
            <br>
 <li>
-           <a href="emacs-elisp-body.html#outlineimenu.el" class="toc">
+           <a href="emacs-elisp-body.html#outlineimenu_el" class="toc">
                28.9 Outline-imenu.el
            </a>
            <br>
@@ -2285,127 +2302,127 @@
 
 <ul>
 <li>
-           <a href="emacs-elisp-body.html#autorevert.el_emacs" class="toc">
+           <a href="emacs-elisp-body.html#autorevert_el_emacs" class="toc">
                29.1 Autorevert.el (*), Emacs
            </a>
            <br>
 <li>
-           <a href="emacs-elisp-body.html#blinkingcursor.el_xemacs" class="toc">
+           <a href="emacs-elisp-body.html#blinkingcursor_el_xemacs" class="toc">
                29.2 Blinking-cursor.el (*), XEmacs
            </a>
            <br>
 <li>
-           <a href="emacs-elisp-body.html#changemode.el_changes_made_get_highlighted" class="toc">
+           <a href="emacs-elisp-body.html#changemode_el_changes_made_get_highlighted" class="toc">
                29.3 Change-mode.el, changes made get highlighted (*)
            </a>
            <br>
 <li>
-           <a href="emacs-elisp-body.html#csdiff.el_component_software_diff" class="toc">
+           <a href="emacs-elisp-body.html#csdiff_el_component_software_diff" class="toc">
                29.4 Csdiff.el, component software diff
            </a>
            <br>
 <li>
-           <a href="emacs-elisp-body.html#etail.el_tail_f" class="toc">
+           <a href="emacs-elisp-body.html#etail_el_tail_f" class="toc">
                29.5 Etail.el, tail -f
            </a>
            <br>
 <li>
-           <a href="emacs-elisp-body.html#himark.el" class="toc">
+           <a href="emacs-elisp-body.html#himark_el" class="toc">
                29.6 Himark.el
            </a>
            <br>
 <li>
-           <a href="emacs-elisp-body.html#hilock.el_highlight_words_emacs_21" class="toc">
+           <a href="emacs-elisp-body.html#hilock_el_highlight_words_emacs_21" class="toc">
                29.7 Hi-lock.el, highlight words (*), Emacs 21
            </a>
            <br>
 <li>
-           <a href="emacs-elisp-body.html#highlightcurrentline.el" class="toc">
+           <a href="emacs-elisp-body.html#highlightcurrentline_el" class="toc">
                29.8 Highlight-current-line.el
            </a>
            <br>
 <li>
-           <a href="emacs-elisp-body.html#hlline.el_highlight_the_current_line" class="toc">
+           <a href="emacs-elisp-body.html#hlline_el_highlight_the_current_line_emacs" class="toc">
                29.9 Hl-line.el, highlight the current line (*), Emacs
            </a>
            <br>
 <li>
-           <a href="emacs-elisp-body.html#highline.el_minor_mode_to_highlight" class="toc">
+           <a href="emacs-elisp-body.html#highline_el_minor_mode_to_highlight_current_line_in" class="toc">
                29.10 Highline.el, Minor mode to highlight current line in buffer
            </a>
            <br>
 <li>
-           <a href="emacs-elisp-body.html#linemenu.el_highlight_current_line" class="toc">
+           <a href="emacs-elisp-body.html#linemenu_el_highlight_current_line" class="toc">
                29.11 Linemenu.el, highlight current line
            </a>
            <br>
 <li>
-           <a href="emacs-elisp-body.html#livemode.el_periodically_revertfile" class="toc">
+           <a href="emacs-elisp-body.html#livemode_el_periodically_revertfile" class="toc">
                29.12 Live-mode.el, periodically revert-file
            </a>
            <br>
 <li>
-           <a href="emacs-elisp-body.html#micparen.el_highlight_sexps_xemacs" class="toc">
+           <a href="emacs-elisp-body.html#micparen_el_highlight_sexps_xemacs" class="toc">
                29.13 Mic-paren.el, highlight sexps (*), Xemacs
            </a>
            <br>
 <li>
-           <a href="emacs-elisp-body.html#notesmode.el_indexing_system_for_online" class="toc">
+           <a href="emacs-elisp-body.html#notesmode_el_indexing_system_for_online_notetaking" class="toc">
                29.14 Notes-mode.el, indexing system for on-line note-taking
            </a>
            <br>
 <li>
-           <a href="emacs-elisp-body.html#records.el" class="toc">
+           <a href="emacs-elisp-body.html#records_el" class="toc">
                29.15 Records.el
            </a>
            <br>
 <li>
-           <a href="emacs-elisp-body.html#remember.el_mode_for_remembering_data" class="toc">
+           <a href="emacs-elisp-body.html#remember_el_mode_for_remembering_data" class="toc">
                29.16 Remember.el, mode for remembering data
            </a>
            <br>
 <li>
-           <a href="emacs-elisp-body.html#simplemerge.el_resolving_cvs_conflicts_emacs" class="toc">
+           <a href="emacs-elisp-body.html#simplemerge_el_resolving_cvs_conflicts_emacs" class="toc">
                29.17 Simplemerge.el, resolving CVS conflicts (*), Emacs
            </a>
            <br>
 <li>
-           <a href="emacs-elisp-body.html#tail.el_tail_f" class="toc">
+           <a href="emacs-elisp-body.html#tail_el_tail_f" class="toc">
                29.18 Tail.el, tail -f
            </a>
            <br>
 <li>
-           <a href="emacs-elisp-body.html#tinymy.el_yornp_autorevert_by_timer" class="toc">
+           <a href="emacs-elisp-body.html#tinymy_el_yornp_autorevert_by_timer_process" class="toc">
                29.19 Tinymy.el, y-or-n-p autorevert by timer process
            </a>
            <br>
 <li>
-           <a href="emacs-elisp-body.html#time_timecardmode.el" class="toc">
+           <a href="emacs-elisp-body.html#time_timecardmode_el" class="toc">
                29.20 Time - Timecard-mode.el
            </a>
            <br>
 <li>
-           <a href="emacs-elisp-body.html#time_timeclock.el" class="toc">
+           <a href="emacs-elisp-body.html#time_timeclock_el" class="toc">
                29.21 Time - Timeclock.el (*)
            </a>
            <br>
 <li>
-           <a href="emacs-elisp-body.html#time_timelog.el" class="toc">
+           <a href="emacs-elisp-body.html#time_timelog_el" class="toc">
                29.22 Time - Timelog.el
            </a>
            <br>
 <li>
-           <a href="emacs-elisp-body.html#todoo.el_editing_todo_files" class="toc">
+           <a href="emacs-elisp-body.html#todoo_el_editing_todo_files" class="toc">
                29.23 Todoo.el, editing todo files
            </a>
            <br>
 <li>
-           <a href="emacs-elisp-body.html#todomode.el_emacs" class="toc">
+           <a href="emacs-elisp-body.html#todomode_el_emacs" class="toc">
                29.24 Todo-mode.el (*), Emacs
            </a>
            <br>
 <li>
-           <a href="emacs-elisp-body.html#worklogmode.el_keep_track_of_stuff" class="toc">
+           <a href="emacs-elisp-body.html#worklogmode_el_keep_track_of_stuff_you_do" class="toc">
                29.25 Worklog-mode.el, keep track of stuff you do
            </a>
            <br>
@@ -2427,12 +2444,12 @@
            </a>
            <br>
 <li>
-           <a href="emacs-elisp-body.html#popup_menu_based_buffer_selection" class="toc">
+           <a href="emacs-elisp-body.html#popup_menu_based_buffer_selection_utilities" class="toc">
                30.2 Popup menu based buffer selection utilities
            </a>
            <br>
 <li>
-           <a href="emacs-elisp-body.html#typing_buffer_name_in_echo" class="toc">
+           <a href="emacs-elisp-body.html#typing_buffer_name_in_echo_area" class="toc">
                30.3 Typing buffer name in echo area
            </a>
            <br>
@@ -2452,7 +2469,7 @@
            </a>
            <br>
 <li>
-           <a href="emacs-elisp-body.html#demax.el_delete_too_narrow_windows" class="toc">
+           <a href="emacs-elisp-body.html#demax_el_delete_too_narrow_windows" class="toc">
                30.7 Demax.el, Delete too narrow windows
            </a>
            <br>
@@ -2464,37 +2481,37 @@
 
 <ul>
 <li>
-           <a href="emacs-elisp-body.html#overview_of_to_state_change" class="toc">
+           <a href="emacs-elisp-body.html#overview_of_to_state_change_packages" class="toc">
                31.1 Overview of to state change packages
            </a>
            <br>
 <li>
-           <a href="emacs-elisp-body.html#desktop.el_and_extensions_to_it" class="toc">
+           <a href="emacs-elisp-body.html#desktop_el_and_extensions_to_it" class="toc">
                31.2 Desktop.el and extensions to it
            </a>
            <br>
 <li>
-           <a href="emacs-elisp-body.html#grabbox.el_project_bookmarks" class="toc">
+           <a href="emacs-elisp-body.html#grabbox_el_project_bookmarks" class="toc">
                31.3 Grabbox.el, project bookmarks
            </a>
            <br>
 <li>
-           <a href="emacs-elisp-body.html#protbuf.el_protect_buffers_from_accidental" class="toc">
+           <a href="emacs-elisp-body.html#protbuf_el_protect_buffers_from_accidental_killing" class="toc">
                31.4 Protbuf.el, protect buffers from accidental killing
            </a>
            <br>
 <li>
-           <a href="emacs-elisp-body.html#session.el" class="toc">
+           <a href="emacs-elisp-body.html#session_el" class="toc">
                31.5 Session.el
            </a>
            <br>
 <li>
-           <a href="emacs-elisp-body.html#tinydesk.el_simple_file_and_dir" class="toc">
+           <a href="emacs-elisp-body.html#tinydesk_el_simple_file_and_dir_information_saver" class="toc">
                31.6 TinyDesk.el, simple file and dir information saver
            </a>
            <br>
 <li>
-           <a href="emacs-elisp-body.html#windows.el" class="toc">
+           <a href="emacs-elisp-body.html#windows_el" class="toc">
                31.7 Windows.el
            </a>
            <br>
@@ -2506,37 +2523,37 @@
 
 <ul>
 <li>
-           <a href="emacs-elisp-body.html#escreen.el_mimic_suns_screen1" class="toc">
+           <a href="emacs-elisp-body.html#escreen_el_mimic_suns_screen1" class="toc">
                32.1 Escreen.el, mimic sun's screen(1)
            </a>
            <br>
 <li>
-           <a href="emacs-elisp-body.html#followmouse.el" class="toc">
+           <a href="emacs-elisp-body.html#followmouse_el" class="toc">
                32.2 Follow-mouse.el
            </a>
            <br>
 <li>
-           <a href="emacs-elisp-body.html#resizehelpwindow.el" class="toc">
+           <a href="emacs-elisp-body.html#resizehelpwindow_el" class="toc">
                32.3 Resize-help-window.el
            </a>
            <br>
 <li>
-           <a href="emacs-elisp-body.html#screenlines.el_minor_mode" class="toc">
+           <a href="emacs-elisp-body.html#screenlines_el_minor_mode" class="toc">
                32.4 Screen-lines.el, minor mode
            </a>
            <br>
 <li>
-           <a href="emacs-elisp-body.html#screenline.el" class="toc">
+           <a href="emacs-elisp-body.html#screenline_el" class="toc">
                32.5 Screenline.el
            </a>
            <br>
 <li>
-           <a href="emacs-elisp-body.html#winner.el_restore_old_window_configurations" class="toc">
+           <a href="emacs-elisp-body.html#winner_el_restore_old_window_configurations" class="toc">
                32.6 Winner.el, restore old window configurations
            </a>
            <br>
 <li>
-           <a href="emacs-elisp-body.html#winring.el_window_configuration_rings_emacs" class="toc">
+           <a href="emacs-elisp-body.html#winring_el_window_configuration_rings_emacs_20_4" class="toc">
                32.7 Winring.el, Window configuration rings (*), Emacs 20.4
            </a>
            <br>
@@ -2548,22 +2565,22 @@
 
 <ul>
 <li>
-           <a href="emacs-elisp-body.html#mousecopy.el" class="toc">
+           <a href="emacs-elisp-body.html#mousecopy_el" class="toc">
                33.1 Mouse-copy.el
            </a>
            <br>
 <li>
-           <a href="emacs-elisp-body.html#mouseextra.el_oneclick_text_copy_and" class="toc">
+           <a href="emacs-elisp-body.html#mouseextra_el_oneclick_text_copy_and_move" class="toc">
                33.2 Mouse-extra.el, one-click text copy and move
            </a>
            <br>
 <li>
-           <a href="emacs-elisp-body.html#strokes.el_mouse_stroke_commands_xemacs" class="toc">
+           <a href="emacs-elisp-body.html#strokes_el_mouse_stroke_commands_xemacs" class="toc">
                33.3 Strokes.el, mouse stroke commands (*), XEmacs
            </a>
            <br>
 <li>
-           <a href="emacs-elisp-body.html#xtmouse.el_mouse_support_for_nonwindowed" class="toc">
+           <a href="emacs-elisp-body.html#xtmouse_el_mouse_support_for_nonwindowed_emacs" class="toc">
                33.4 Xt-mouse.el, mouse support for non-windowed emacs (*), [X]Emacs
            </a>
            <br>
@@ -2580,7 +2597,7 @@
            </a>
            <br>
 <li>
-           <a href="emacs-elisp-body.html#comics.el_read_www.comics.com" class="toc">
+           <a href="emacs-elisp-body.html#comics_el_read_www_comics_com" class="toc">
                34.2 Comics.el, read www.comics.com
            </a>
            <br>
@@ -2590,22 +2607,22 @@
            </a>
            <br>
 <li>
-           <a href="emacs-elisp-body.html#faith.el_spread_the_word_of" class="toc">
+           <a href="emacs-elisp-body.html#faith_el_spread_the_word_of_emacs" class="toc">
                34.4 Faith.el, Spread the word of Emacs
            </a>
            <br>
 <li>
-           <a href="emacs-elisp-body.html#thinks.el_draw_bubbles" class="toc">
+           <a href="emacs-elisp-body.html#thinks_el_draw_bubbles" class="toc">
                34.5 Thinks.el, draw bubbles
            </a>
            <br>
 <li>
-           <a href="emacs-elisp-body.html#zone.el_screen_saver" class="toc">
+           <a href="emacs-elisp-body.html#zone_el_screen_saver" class="toc">
                34.6 Zone.el, screen saver
            </a>
            <br>
 <li>
-           <a href="emacs-elisp-body.html#paperclipmode.el" class="toc">
+           <a href="emacs-elisp-body.html#paperclipmode_el" class="toc">
                34.7 Paperclip-mode.el
            </a>
            <br>
@@ -2617,32 +2634,32 @@
 
 <ul>
 <li>
-           <a href="emacs-elisp-body.html#cddb.el_cd_database_interface" class="toc">
+           <a href="emacs-elisp-body.html#cddb_el_cd_database_interface" class="toc">
                35.1 Cddb.el, CD DataBase interface
            </a>
            <br>
 <li>
-           <a href="emacs-elisp-body.html#cda.el_interface_to_cd_players" class="toc">
+           <a href="emacs-elisp-body.html#cda_el_interface_to_cd_players" class="toc">
                35.2 Cda.el, interface to CD players
            </a>
            <br>
 <li>
-           <a href="emacs-elisp-body.html#cdrw.el_frontend_to_various_commandline" class="toc">
+           <a href="emacs-elisp-body.html#cdrw_el_frontend_to_various_commandline_cdrom" class="toc">
                35.3 Cdrw.el, frontend to various commandline CDROM
            </a>
            <br>
 <li>
-           <a href="emacs-elisp-body.html#mp3tools.el_a_simple_linux_mp3" class="toc">
+           <a href="emacs-elisp-body.html#mp3tools_el_a_simple_linux_mp3_tag_editor" class="toc">
                35.4 Mp3-tools.el A simple Linux MP3 Tag Editor
            </a>
            <br>
 <li>
-           <a href="emacs-elisp-body.html#mp3player.el_interface_to_mpg123_and" class="toc">
+           <a href="emacs-elisp-body.html#mp3player_el_interface_to_mpg123_and_winamp" class="toc">
                35.5 Mp3player.el, Interface to mpg123 and winamp
            </a>
            <br>
 <li>
-           <a href="emacs-elisp-body.html#workbone.el_cd_player_for_program" class="toc">
+           <a href="emacs-elisp-body.html#workbone_el_cd_player_for_program_workbone" class="toc">
                35.6 Workbone.el, CD player for program workbone
            </a>
            <br>
@@ -2654,117 +2671,117 @@
 
 <ul>
 <li>
-           <a href="emacs-elisp-body.html#aftersavecommands.el_update_xrdb1_after_save" class="toc">
+           <a href="emacs-elisp-body.html#aftersavecommands_el_update_xrdb1_after_save" class="toc">
                36.1 After-save-commands.el, update xrdb(1) after save
            </a>
            <br>
 <li>
-           <a href="emacs-elisp-body.html#align.el" class="toc">
+           <a href="emacs-elisp-body.html#align_el" class="toc">
                36.2 Align.el (*)
            </a>
            <br>
 <li>
-           <a href="emacs-elisp-body.html#apm.el_power_management_from_within" class="toc">
+           <a href="emacs-elisp-body.html#apm_el_power_management_from_within_xemacs" class="toc">
                36.3 Apm.el, Power Management From Within (X)Emacs
            </a>
            <br>
 <li>
-           <a href="emacs-elisp-body.html#archie.el_archie_server_search" class="toc">
+           <a href="emacs-elisp-body.html#archie_el_archie_server_search" class="toc">
                36.4 Archie.el, archie server search
            </a>
            <br>
 <li>
-           <a href="emacs-elisp-body.html#autoarg.el_easy_arguent_passing_to" class="toc">
+           <a href="emacs-elisp-body.html#autoarg_el_easy_arguent_passing_to_commands" class="toc">
                36.5 Autoarg.el, easy arguent passing to commands
            </a>
            <br>
 <li>
-           <a href="emacs-elisp-body.html#autoarg.el_passing_arguents_easily_to" class="toc">
+           <a href="emacs-elisp-body.html#autoarg_el_passing_arguents_easily_to_commands" class="toc">
                36.6 Auto-arg.el, passing arguents easily to commands
            </a>
            <br>
 <li>
-           <a href="emacs-elisp-body.html#bmman.el_unix_man_page_completion" class="toc">
+           <a href="emacs-elisp-body.html#bmman_el_unix_man_page_completion" class="toc">
                36.7 Bm-man.el, unix man page completion
            </a>
            <br>
 <li>
-           <a href="emacs-elisp-body.html#bufferpermmap.el" class="toc">
+           <a href="emacs-elisp-body.html#bufferpermmap_el" class="toc">
                36.8 Buffer-perm-map.el
            </a>
            <br>
 <li>
-           <a href="emacs-elisp-body.html#calc.el" class="toc">
+           <a href="emacs-elisp-body.html#calc_el" class="toc">
                36.9 Calc.el
            </a>
            <br>
 <li>
-           <a href="emacs-elisp-body.html#calculator.el_a_simple_pocket_calculator" class="toc">
+           <a href="emacs-elisp-body.html#calculator_el_a_simple_pocket_calculator_for_emacs" class="toc">
                36.10 Calculator.el, A simple pocket calculator for Emacs
            </a>
            <br>
 <li>
-           <a href="emacs-elisp-body.html#colormode.el" class="toc">
+           <a href="emacs-elisp-body.html#colormode_el" class="toc">
                36.11 Color-mode.el
            </a>
            <br>
 <li>
-           <a href="emacs-elisp-body.html#colorthemes.el_preview_and_install_color" class="toc">
+           <a href="emacs-elisp-body.html#colorthemes_el_preview_and_install_color_themes" class="toc">
                36.12 Color-themes.el, preview and install color themes
            </a>
            <br>
 <li>
-           <a href="emacs-elisp-body.html#comment.el" class="toc">
+           <a href="emacs-elisp-body.html#comment_el" class="toc">
                36.13 Comment.el
            </a>
            <br>
 <li>
-           <a href="emacs-elisp-body.html#cib.el_complete_into_buffer_for" class="toc">
+           <a href="emacs-elisp-body.html#cib_el_complete_into_buffer_for_emacs" class="toc">
                36.14 Cib.el, Complete into Buffer for Emacs
            </a>
            <br>
 <li>
-           <a href="emacs-elisp-body.html#completemenu.el_complete_items_from_xpopup" class="toc">
+           <a href="emacs-elisp-body.html#completemenu_el_complete_items_from_xpopup" class="toc">
                36.15 Complete-menu.el, complete items from x-popup
            </a>
            <br>
 <li>
-           <a href="emacs-elisp-body.html#ctypes.el_custom_defined_types_for" class="toc">
+           <a href="emacs-elisp-body.html#ctypes_el_custom_defined_types_for_font_lock" class="toc">
                36.16 Ctypes.el, custom defined types for font lock
            </a>
            <br>
 <li>
-           <a href="emacs-elisp-body.html#dekeys_disable_and_enable_keys" class="toc">
+           <a href="emacs-elisp-body.html#dekeys_disable_and_enable_keys_without_modifying_keymaps" class="toc">
                36.17 Dekeys, disable and enable keys without modifying keymaps
            </a>
            <br>
 <li>
-           <a href="emacs-elisp-body.html#diminishmode.el_modeline_display_help" class="toc">
+           <a href="emacs-elisp-body.html#diminishmode_el_modeline_display_help" class="toc">
                36.18 Diminish-mode.el, modeline display help
            </a>
            <br>
 <li>
-           <a href="emacs-elisp-body.html#etalk_run_talk1_in_emacs" class="toc">
+           <a href="emacs-elisp-body.html#etalk_run_talk1_in_emacs_buffer" class="toc">
                36.19 Etalk, run talk(1) in emacs buffer
            </a>
            <br>
 <li>
-           <a href="emacs-elisp-body.html#filelog.el_keep_change_information_for" class="toc">
+           <a href="emacs-elisp-body.html#filelog_el_keep_change_information_for_each_file" class="toc">
                36.20 File-log.el, keep change information for each file.
            </a>
            <br>
 <li>
-           <a href="emacs-elisp-body.html#gdialog.el_widget_frontend_for_directoryrecursive" class="toc">
+           <a href="emacs-elisp-body.html#gdialog_el_widget_frontend_for_directoryrecursive_text_searches" class="toc">
                36.21 Gdialog.el, Widget frontend for directory-recursive text searches
            </a>
            <br>
 <li>
-           <a href="emacs-elisp-body.html#igrep.el_an_improved_interface_to" class="toc">
+           <a href="emacs-elisp-body.html#igrep_el_an_improved_interface_to_grep" class="toc">
                36.22 Igrep.el, an improved interface to grep
            </a>
            <br>
 <li>
-           <a href="emacs-elisp-body.html#initsplit_code_to_split_customizations" class="toc">
+           <a href="emacs-elisp-body.html#initsplit_code_to_split_customizations_into_different_files" class="toc">
                36.23 Initsplit, code to split customizations into different files
            </a>
            <br>
@@ -2774,47 +2791,47 @@
            </a>
            <br>
 <li>
-           <a href="emacs-elisp-body.html#ishl.el_incremental_search_highlighting_emacs" class="toc">
+           <a href="emacs-elisp-body.html#ishl_el_incremental_search_highlighting_emacs" class="toc">
                36.25 Ishl.el, incremental search highlighting (*), Emacs
            </a>
            <br>
 <li>
-           <a href="emacs-elisp-body.html#lprint_print_to_your_local" class="toc">
+           <a href="emacs-elisp-body.html#lprint_print_to_your_local_printer" class="toc">
                36.26 Lprint, print to your local printer
            </a>
            <br>
 <li>
-           <a href="emacs-elisp-body.html#mathlab.el" class="toc">
+           <a href="emacs-elisp-body.html#mathlab_el" class="toc">
                36.27 Mathlab.el
            </a>
            <br>
 <li>
-           <a href="emacs-elisp-body.html#master.el_scroll_other_buffer" class="toc">
+           <a href="emacs-elisp-body.html#master_el_scroll_other_buffer" class="toc">
                36.28 Master.el, scroll other buffer
            </a>
            <br>
 <li>
-           <a href="emacs-elisp-body.html#mss.el_make_smart_win32_shortcuts" class="toc">
+           <a href="emacs-elisp-body.html#mss_el_make_smart_win32_shortcuts" class="toc">
                36.29 Mss.el, Make smart Win32 shortcuts
            </a>
            <br>
 <li>
-           <a href="emacs-elisp-body.html#multiterm.el_manage_multiple_term_buffers" class="toc">
+           <a href="emacs-elisp-body.html#multiterm_el_manage_multiple_term_buffers" class="toc">
                36.30 Multi-term.el, manage multiple term buffers
            </a>
            <br>
 <li>
-           <a href="emacs-elisp-body.html#narrowstack.el_recursive_narrow" class="toc">
+           <a href="emacs-elisp-body.html#narrowstack_el_recursive_narrow" class="toc">
                36.31 Narrow-stack.el, recursive narrow
            </a>
            <br>
 <li>
-           <a href="emacs-elisp-body.html#nextscreenline.el_move_logical_next_line" class="toc">
+           <a href="emacs-elisp-body.html#nextscreenline_el_move_logical_next_line_even_if_long" class="toc">
                36.32 Next-screen-line.el, Move logical next line even if long display
            </a>
            <br>
 <li>
-           <a href="emacs-elisp-body.html#pager.el_keep_page_up_and" class="toc">
+           <a href="emacs-elisp-body.html#pager_el_keep_page_up_and_down_position" class="toc">
                36.33 Pager.el, Keep page up and down position
            </a>
            <br>
@@ -2824,22 +2841,22 @@
            </a>
            <br>
 <li>
-           <a href="emacs-elisp-body.html#powermacros.el_assign_macro_to_key" class="toc">
+           <a href="emacs-elisp-body.html#powermacros_el_assign_macro_to_key" class="toc">
                36.35 Power-macros.el, assign macro to key
            </a>
            <br>
 <li>
-           <a href="emacs-elisp-body.html#printing.el_printing_utilities." class="toc">
+           <a href="emacs-elisp-body.html#printing_el_printing_utilities" class="toc">
                36.36 Printing.el, Printing utilities.
            </a>
            <br>
 <li>
-           <a href="emacs-elisp-body.html#redo.el_redoundo_system_xemacs" class="toc">
+           <a href="emacs-elisp-body.html#redo_el_redoundo_system_xemacs" class="toc">
                36.37 Redo.el, Redo/undo system (*), XEmacs
            </a>
            <br>
 <li>
-           <a href="emacs-elisp-body.html#rpm.el_redhat_linux_package_browser" class="toc">
+           <a href="emacs-elisp-body.html#rpm_el_redhat_linux_package_browser" class="toc">
                36.38 Rpm.el, Redhat Linux package browser
            </a>
            <br>
@@ -2849,12 +2866,12 @@
            </a>
            <br>
 <li>
-           <a href="emacs-elisp-body.html#rpmspecmode.el" class="toc">
+           <a href="emacs-elisp-body.html#rpmspecmode_el" class="toc">
                36.40 Rpm-spec-mode.el
            </a>
            <br>
 <li>
-           <a href="emacs-elisp-body.html#setnu.el_permanent_line_numbers_xemacs" class="toc">
+           <a href="emacs-elisp-body.html#setnu_el_permanent_line_numbers_xemacs" class="toc">
                36.41 Setnu.el, permanent line numbers (*), XEmacs
            </a>
            <br>
@@ -2864,17 +2881,17 @@
            </a>
            <br>
 <li>
-           <a href="emacs-elisp-body.html#sqlplushtml.el_render_sqlplus_html_output" class="toc">
+           <a href="emacs-elisp-body.html#sqlplushtml_el_render_sqlplus_html_output_onthefly" class="toc">
                36.43 Sqlplus-html.el, Render SQL*Plus HTML output on-the-fly.
            </a>
            <br>
 <li>
-           <a href="emacs-elisp-body.html#tablaturemode.el" class="toc">
+           <a href="emacs-elisp-body.html#tablaturemode_el" class="toc">
                36.44 Tablature-mode.el
            </a>
            <br>
 <li>
-           <a href="emacs-elisp-body.html#vidot.el_repeat_the_preceding_command" class="toc">
+           <a href="emacs-elisp-body.html#vidot_el_repeat_the_preceding_command" class="toc">
                36.45 Vi-dot.el, repeat the preceding command
            </a>
            <br>
@@ -2886,42 +2903,42 @@
 
 <ul>
 <li>
-           <a href="emacs-elisp-body.html#crisp.el_xemacs_brief_editor_emulation" class="toc">
+           <a href="emacs-elisp-body.html#crisp_el_xemacs_brief_editor_emulation" class="toc">
                37.1 Crisp.el, xemacs brief editor emulation
            </a>
            <br>
 <li>
-           <a href="emacs-elisp-body.html#pcselect.el_select_region_with_cursor" class="toc">
+           <a href="emacs-elisp-body.html#pcselect_el_select_region_with_cursor_keys_emacs" class="toc">
                37.2 Pc-select.el, select region with cursor keys (*), Emacs
            </a>
            <br>
 <li>
-           <a href="emacs-elisp-body.html#ffap.el_find_file_at_point" class="toc">
+           <a href="emacs-elisp-body.html#ffap_el_find_file_at_point_emacs" class="toc">
                37.3 Ffap.el, find file at point (*), Emacs
            </a>
            <br>
 <li>
-           <a href="emacs-elisp-body.html#printing.el" class="toc">
+           <a href="emacs-elisp-body.html#printing_el" class="toc">
                37.4 Printing.el
            </a>
            <br>
 <li>
-           <a href="emacs-elisp-body.html#print_a2psprint.el" class="toc">
+           <a href="emacs-elisp-body.html#print_a2psprint_el" class="toc">
                37.5 Print - a2ps-print.el
            </a>
            <br>
 <li>
-           <a href="emacs-elisp-body.html#psprint.el_print_font_lock_color" class="toc">
+           <a href="emacs-elisp-body.html#psprint_el_print_font_lock_color_buffers" class="toc">
                37.6 Ps-print.el, print font lock color buffers (*)
            </a>
            <br>
 <li>
-           <a href="emacs-elisp-body.html#psprintinterface.el" class="toc">
+           <a href="emacs-elisp-body.html#psprintinterface_el" class="toc">
                37.7 Ps-print-interface.el
            </a>
            <br>
 <li>
-           <a href="emacs-elisp-body.html#uptimes.el_emacs_uptime" class="toc">
+           <a href="emacs-elisp-body.html#uptimes_el_emacs_uptime" class="toc">
                37.8 Uptimes.el, Emacs uptime
            </a>
            <br>
@@ -2933,74 +2950,74 @@
 
 <ul>
 <li>
-           <a href="emacs-elisp-body.html#cua.el_windows_keybindings" class="toc">
+           <a href="emacs-elisp-body.html#cua_el_windows_keybindings" class="toc">
                38.1 Cua.el, Windows key-bindings
            </a>
            <br>
 <li>
-           <a href="emacs-elisp-body.html#fsfmouse.el_fsf_mouse_emulation_in" class="toc">
+           <a href="emacs-elisp-body.html#fsfmouse_el_fsf_mouse_emulation_in_xemacs" class="toc">
                38.2 Fsf-mouse.el, FSF mouse emulation in XEmacs
            </a>
            <br>
 <li>
-           <a href="emacs-elisp-body.html#fsfcompat_fsf_function_library_in" class="toc">
+           <a href="emacs-elisp-body.html#fsfcompat_fsf_function_library_in_xemacs" class="toc">
                38.3 Fsf-compat, FSF function library in XEmacs
            </a>
            <br>
 </ul>
-<a href="emacs-elisp-body.html#ancient_packages_or_included_in" class="toc">
+<a href="emacs-elisp-body.html#ancient_packages_or_included_in_emacs" class="toc">
                39.0 Ancient packages or included in Emacs
            </a>
            <br>
 
 <ul>
 <li>
-           <a href="emacs-elisp-body.html#browseurl.el_delegate_url_to_www" class="toc">
+           <a href="emacs-elisp-body.html#browseurl_el_delegate_url_to_www_browsers" class="toc">
                39.1 Browse-url.el, delegate url to www browsers (*)
            </a>
            <br>
 <li>
-           <a href="emacs-elisp-body.html#custom.el_emacs_and_xemacs" class="toc">
+           <a href="emacs-elisp-body.html#custom_el_emacs_and_xemacs" class="toc">
                39.2 Custom.el (*), Emacs and XEmacs
            </a>
            <br>
 <li>
-           <a href="emacs-elisp-body.html#fdb.el_ignore_emacs_error_signals" class="toc">
+           <a href="emacs-elisp-body.html#fdb_el_ignore_emacs_error_signals" class="toc">
                39.3 Fdb.el, ignore emacs error signals
            </a>
            <br>
 <li>
-           <a href="emacs-elisp-body.html#filladapt.el_adaptive_filling" class="toc">
+           <a href="emacs-elisp-body.html#filladapt_el_adaptive_filling" class="toc">
                39.4 Filladapt.el, adaptive filling
            </a>
            <br>
 <li>
-           <a href="emacs-elisp-body.html#mview.el_view_minor_mode" class="toc">
+           <a href="emacs-elisp-body.html#mview_el_view_minor_mode" class="toc">
                39.5 Mview.el, view minor mode
            </a>
            <br>
 <li>
-           <a href="emacs-elisp-body.html#suggbind.el_keybind_command_reminder" class="toc">
+           <a href="emacs-elisp-body.html#suggbind_el_keybind_command_reminder" class="toc">
                39.6 Suggbind.el, keybind command reminder
            </a>
            <br>
 <li>
-           <a href="emacs-elisp-body.html#smtpmail.el" class="toc">
+           <a href="emacs-elisp-body.html#smtpmail_el" class="toc">
                39.7 Smtpmail.el (*)
            </a>
            <br>
 <li>
-           <a href="emacs-elisp-body.html#supercite.el_mail_citing_package" class="toc">
+           <a href="emacs-elisp-body.html#supercite_el_mail_citing_package" class="toc">
                39.8 Supercite.el, mail citing package (*)
            </a>
            <br>
 <li>
-           <a href="emacs-elisp-body.html#term.el" class="toc">
+           <a href="emacs-elisp-body.html#term_el" class="toc">
                39.9 Term.el (*)
            </a>
            <br>
 <li>
-           <a href="emacs-elisp-body.html#w3.el_browser" class="toc">
+           <a href="emacs-elisp-body.html#w3_el_browser" class="toc">
                39.10 W3.el browser (*)
            </a>
            <br>
@@ -3013,6 +3030,8 @@
                11.0 End
            </a>
            <br>
+</ul>
+
 </div>
 </body>
 </html>

@@ -21,15 +21,13 @@ Emacs lisp coding checklist
   <meta http-equiv="description"
 	content="">
 
-
-  <meta http-equiv="Content-Type" content="text/html; charset=utf-8">
-
-  <meta http-equiv="Expires" content="Tue, 31 May 2005 07:03:20 GMT">
+<meta http-equiv="Content-Type" content="text/html; charset=utf-8">
+  <meta http-equiv="Expires" content="Thu,  1 Nov 2007 09:03:56 GMT">
 
 
 
   <meta name="Generator"
-	content="2005-04-01 09:03 Perl program t2html.pl v2005.0208 http://perl-text2html.sourceforge.net/">
+	content="2007-09-02 12:03 Perl program t2html.pl v2007.0526 http://perl-text2html.sourceforge.net/">
 
 
 
@@ -39,7 +37,9 @@ Emacs lisp coding checklist
 -->
 
 
+
     <style type="text/css">
+
 
 
         /*
@@ -212,7 +212,7 @@ Emacs lisp coding checklist
 
         blockquote
         {
-            margin-right: 0;
+            margin-right: 2em;
         }
 
         @media print   { BLOCKQUOTE
@@ -225,10 +225,18 @@ Emacs lisp coding checklist
             color: Navy;
         }
 
+        hr.special
+        {
+            width: 50%;
+            text-align; left;
+        }
+
         pre
         {
             font-family:   "Courier New", monospace;
             font-size:     0.8em;
+            margin-top:    1em;
+            margin-bottom: 1em;
         }
 
         pre.code
@@ -246,11 +254,18 @@ Emacs lisp coding checklist
 
             font-family:    "Courier New", monospace;
             font-size:      0.8em;
-
             color:          Navy;
         }
 
         /* //////////////////////// tables /////////////////////////// */
+
+        table
+        {
+            border: none;
+            width: 100%;
+            cellpadding: 10px;
+            cellspacing: 0px;
+        }
 
         table.basic
         {
@@ -326,6 +341,13 @@ Emacs lisp coding checklist
             background: #FFFFCC;
         }
 
+        table tr td pre
+        {
+                /*  Make PRE tables "airy" */
+                margin-top:    1em;
+                margin-bottom: 1em;
+        }
+
         table.shade-normal
         {
                 font-family:    "Courier New", monospace;
@@ -351,11 +373,6 @@ Emacs lisp coding checklist
         .shade-normal2-attrib
         {
             background: #E0E0F0;
-        }
-
-        table.shade-note
-        {
-            /* nothing special */
         }
 
         .shade-note-attrib
@@ -665,7 +682,7 @@ Emacs lisp coding checklist
             font-size: 0.9em;
         }
 
-
+    
 
     </style>
 
@@ -693,22 +710,20 @@ Emacs lisp coding checklist
 
     </script>
 
-</head>
+        </head>
 
 <body >
-</blockquote>
-           <hr>
+<hr>
                <A name="document_id"  id="document_id"></A>
                <h1>
                1.0 Document id
                
                </h1>
-           <blockquote>
 
 
 
 <p class="column8">
-        <EM><STRONG>$Id: emacs-package-make-body.html,v 2.16 2007/05/01 17:20:33 jaalto Exp $</STRONG></EM><br>
+        <EM><STRONG>$Id: emacs-package-make.txt,v 2.11 2007/05/01 17:20:34 jaalto Exp $</STRONG></EM><br>
 
 
 <p class="column8">
@@ -727,31 +742,35 @@ Emacs lisp coding checklist
 
 <ol>
 	<li>Variable and function naming &ndash; without this your package is messy.
-	<li>Correct first line      &ndash; it helps getting right summaries
-	<li>'provide' command       &ndash; don't ever leave it out
-	<li>LCD entry               &ndash; make sure it's in right format
-	<li>Check code with Byte Compiler &ndash; Nobody wants leaking code.
-	<li>Offer autoload choice   &ndash; nobody wants to load all when
+<li>Correct first line      &ndash; it helps getting right summaries
+	</li>
+<li>'provide' command       &ndash; don't ever leave it out
+	</li>
+<li>LCD entry               &ndash; make sure it's in right format
+	</li>
+<li>Check code with Byte Compiler &ndash; Nobody wants leaking code.
+	</li>
+<li>Offer autoload choice   &ndash; nobody wants to load all when
             emacs starts
-	<li>Use dynamic compilation &ndash; reduces memory in 19.29+
-	<li>Version number          &ndash; preferrably accessible from variable
-	<li>Correct keywords tag    &ndash; See finder.el in Emacs distribution
+	</li>
+<li>Use dynamic compilation &ndash; reduces memory in 19.29+
+	</li>
+<li>Version number          &ndash; preferrably accessible from variable
+	<li>Correct keywords tag    &ndash; See finder.el in Emacs distribution</li>
 </ol>
 
 
 
-</blockquote>
-           <hr>
+<hr>
                <A name="checklist_items"  id="checklist_items"></A>
                <h1>
                2.0 Checklist items
                
                </h1>
-           <blockquote>
 
 
 
-  <a name="select_unique_prefix_for_all" id="select_unique_prefix_for_all"></a>
+  <a name="select_unique_prefix_for_all_functions_and_all_variables" id="select_unique_prefix_for_all_functions_and_all_variables"></a>
   <h2>
       2.1 Select unique prefix for all functions and all variables
       
@@ -760,16 +779,13 @@ Emacs lisp coding checklist
 
 
 
+<p>
+<p class="column8">
         Say, you have created package XXX.el, then all in it should
         be inform
 
 <P>
-<TABLE  class="shade-normal"
-        width="94%"
-        border="0"
-        cellpadding="10"
-        cellspacing="0"
-        >
+<TABLE class="shade-normal">
     <TR>
     <TD class="shade-normal-attrib" valign="top">
     <PRE>
@@ -787,12 +803,7 @@ Emacs lisp coding checklist
         double dash or colon.
 
 <P>
-<TABLE  class="shade-normal"
-        width="94%"
-        border="0"
-        cellpadding="10"
-        cellspacing="0"
-        >
+<TABLE class="shade-normal">
     <TR>
     <TD class="shade-normal-attrib" valign="top">
     <PRE>
@@ -819,14 +830,9 @@ Emacs lisp coding checklist
 
 
 
-
+<p>
 <P>
-<TABLE  class="shade-normal"
-        width="94%"
-        border="0"
-        cellpadding="10"
-        cellspacing="0"
-        >
+<TABLE class="shade-normal">
     <TR>
     <TD class="shade-normal-attrib" valign="top">
     <PRE>
@@ -840,7 +846,7 @@ Emacs lisp coding checklist
 
 
 
-  <a name="put_provide_command_at_the" id="put_provide_command_at_the"></a>
+  <a name="put_provide_command_at_the_end_of_file" id="put_provide_command_at_the_end_of_file"></a>
   <h2>
       3.3 Put 'provide' command at the end of file
       
@@ -849,6 +855,8 @@ Emacs lisp coding checklist
 
 
 
+<p>
+<p class="column8">
         If you want be backward compatible, do it like that. Up till 19.28
         there was a bug which didn't undo the definitions if error happened
         during the loading. --&gt; the feature was &quot;provided&quot;, when it really
@@ -862,7 +870,7 @@ Emacs lisp coding checklist
 
 
 
-  <a name="use_valid_lcd_format_which" id="use_valid_lcd_format_which"></a>
+  <a name="use_valid_lcd_format_which_doesnt_tolerate_changes_in" id="use_valid_lcd_format_which_doesnt_tolerate_changes_in"></a>
   <h2>
       2.3 Use valid LCD format, which doesn't tolerate changes in format
       
@@ -871,17 +879,14 @@ Emacs lisp coding checklist
 
 
 
+<p>
+<p class="column8">
         No triple ';;;' or more comments at the beginning. You don't
         have to wait to get the correct LCD entry from OHIO, use
         ~/misc/ if you're not sure where the package belongs.
 
 <P>
-<TABLE  class="shade-normal"
-        width="94%"
-        border="0"
-        cellpadding="10"
-        cellspacing="0"
-        >
+<TABLE class="shade-normal">
     <TR>
     <TD class="shade-normal-attrib" valign="top">
     <PRE>
@@ -900,7 +905,7 @@ Emacs lisp coding checklist
 
 
 
-  <a name="check_the_code_layout_with" id="check_the_code_layout_with"></a>
+  <a name="check_the_code_layout_with_lispmnt_el" id="check_the_code_layout_with_lispmnt_el"></a>
   <h2>
       2.4 Check the code layout with lisp-mnt.el
       
@@ -909,17 +914,14 @@ Emacs lisp coding checklist
 
 
 
+<p>
+<p class="column8">
         Use function <samp class="word">lm-verify</samp>. It tells you if you have proper tags in
         your package. Pay attention to the count of comment markers with
         these lines:
 
 <P>
-<TABLE  class="shade-normal"
-        width="94%"
-        border="0"
-        cellpadding="10"
-        cellspacing="0"
-        >
+<TABLE class="shade-normal">
     <TR>
     <TD class="shade-normal-attrib" valign="top">
     <PRE>
@@ -945,7 +947,7 @@ Emacs lisp coding checklist
 
 
 
-  <a name="check_the_documentation_strings_which" id="check_the_documentation_strings_which"></a>
+  <a name="check_the_documentation_strings_which_checkdoc_el" id="check_the_documentation_strings_which_checkdoc_el"></a>
   <h2>
       2.5 Check the documentation strings which checkdoc.el
       
@@ -954,6 +956,8 @@ Emacs lisp coding checklist
 
 
 
+<p>
+<p class="column8">
         In addition to <samp class="word">lm-verify</samp>, the checkdoc will parse all your
         variable and function documentation and show you the points
         where the documentation does not follow the conventions
@@ -961,12 +965,7 @@ Emacs lisp coding checklist
         which is distributed latest Emacs
 
 <P>
-<TABLE  class="shade-normal"
-        width="94%"
-        border="0"
-        cellpadding="10"
-        cellspacing="0"
-        >
+<TABLE class="shade-normal">
     <TR>
     <TD class="shade-normal-attrib" valign="top">
     <PRE>
@@ -976,7 +975,7 @@ Emacs lisp coding checklist
 
 
 
-  <a name="check_the_code_with_elint.el" id="check_the_code_with_elint.el"></a>
+  <a name="check_the_code_with_elint_el" id="check_the_code_with_elint_el"></a>
   <h2>
       2.6 Check the code with Elint.el
       
@@ -985,6 +984,8 @@ Emacs lisp coding checklist
 
 
 
+<p>
+<p class="column8">
         A lisp syntax checker is also your friend. Run it through your code
         and check code for unused variables and that functions are called
         with right arguments. You find this package also in latest Emacs
@@ -995,7 +996,7 @@ Emacs lisp coding checklist
 
 
 
-  <a name="always_include_gnu_copyright." id="always_include_gnu_copyright."></a>
+  <a name="always_include_gnu_copyright" id="always_include_gnu_copyright"></a>
   <h2>
       2.7 Always include GNU copyright.
       
@@ -1004,17 +1005,14 @@ Emacs lisp coding checklist
 
 
 
+<p>
+<p class="column8">
         See your emacs distribution and copy one from there
         and mention link <a href="http://www.gnu.org/copyleft/gpl.html" >http://www.gnu.org/copyleft/gpl.html</A> Here is
         the <em class="word">de</em> <em class="word">facto</em> standard for Emacs Lisp files:
 
 <P>
-<TABLE  class="shade-normal"
-        width="94%"
-        border="0"
-        cellpadding="10"
-        cellspacing="0"
-        >
+<TABLE class="shade-normal">
     <TR>
     <TD class="shade-normal-attrib" valign="top">
     <PRE>
@@ -1028,17 +1026,13 @@ Emacs lisp coding checklist
       ;; This program is distributed in the hope that it will be useful, but
       ;; WITHOUT ANY WARRANTY; without even the implied warranty of MERCHANTABILITY
       ;; or FITNESS FOR A PARTICULAR PURPOSE. See the GNU General Public License
-      ;; for more details. <a href="http://www.gnu.org/copyleft/gpl.html" >http://www.gnu.org/copyleft/gpl.html</a>
-      ;;
-      ;; You should have received a copy of the GNU General Public License along
-      ;; with GNU Emacs. If you did not, write to the Free Software Foundation,
-      ;; Inc., 675 Mass Ave., Cambridge, MA 02139, USA.    </PRE></TD>
+      ;; for more details. <a href="http://www.gnu.org/copyleft/gpl.html" >http://www.gnu.org/copyleft/gpl.html</a>    </PRE></TD>
     </TR>
 </TABLE>
 
 
 
-  <a name="always_include_installation_instructions." id="always_include_installation_instructions."></a>
+  <a name="always_include_installation_instructions" id="always_include_installation_instructions"></a>
   <h2>
       2.8 Always include installation instructions.
       
@@ -1047,18 +1041,15 @@ Emacs lisp coding checklist
 
 
 
+<p>
+<p class="column8">
         If file installs itself, it should tell how it behaves after the
         installation (when the commands take in effect, in what modes
         etc.). In addition to installation, include examples how to use the
         package, if it offers some handy functions.
 
 <P>
-<TABLE  class="shade-normal"
-        width="94%"
-        border="0"
-        cellpadding="10"
-        cellspacing="0"
-        >
+<TABLE class="shade-normal">
     <TR>
     <TD class="shade-normal-attrib" valign="top">
     <PRE>
@@ -1078,7 +1069,7 @@ Emacs lisp coding checklist
 
 
 
-  <a name="always_use_rcs_or_other" id="always_use_rcs_or_other"></a>
+  <a name="always_use_rcs_or_other_version_tool_to_manage" id="always_use_rcs_or_other_version_tool_to_manage"></a>
   <h2>
       2.9 Always use RCS or other version tool to manage your files.
       
@@ -1087,27 +1078,24 @@ Emacs lisp coding checklist
 
 
 
+<p>
+<p class="column8">
         Be sure to include the full version string in your package:
 
 <P>
-<TABLE  class="shade-normal"
-        width="94%"
-        border="0"
-        cellpadding="10"
-        cellspacing="0"
-        >
+<TABLE class="shade-normal">
     <TR>
     <TD class="shade-normal-attrib" valign="top">
     <PRE>
       ;;  Include this ...
       ;;
-      (defvar XXX-version (substring &quot;$Revision: 2.16 $&quot; 11 15)
+      (defvar XXX-version (substring &quot;$Revision: 2.11 $&quot; 11 15)
        &quot;Version number&quot;)
 
       ;;  ...Or include this
       ;;
       (defvar XXX-version-id
-       &quot;&lt;EM&gt;&lt;STRONG&gt;$Id: emacs-package-make-body.html,v 2.16 2007/05/01 17:20:33 jaalto Exp $&lt;/STRONG&gt;&lt;/EM&gt;&quot;
+       &quot;&lt;EM&gt;&lt;STRONG&gt;$Id: emacs-package-make.txt,v 2.11 2007/05/01 17:20:34 jaalto Exp $&lt;/STRONG&gt;&lt;/EM&gt;&quot;
        &quot;Latest modification time and version number.&quot;)    </PRE></TD>
     </TR>
 </TABLE>
@@ -1120,7 +1108,7 @@ Emacs lisp coding checklist
 
 
 
-  <a name="always_check_your_file_with" id="always_check_your_file_with"></a>
+  <a name="always_check_your_file_with_byte_compiler" id="always_check_your_file_with_byte_compiler"></a>
   <h2>
       2.10 Always check your file with byte compiler
       
@@ -1129,6 +1117,8 @@ Emacs lisp coding checklist
 
 
 
+<p>
+<p class="column8">
         Don't leave leaks in your code. Use Byte compiler to catch any
         variable leaks or missing functions that you should load with
         (require 'xxx) in the beginning of your file. If possible prefer
@@ -1138,14 +1128,14 @@ Emacs lisp coding checklist
 
 <ul>
 	<li>Start fresh emacs: emacs -q -no-site-file
-	<li>M-x byte-compile-file XXX.el
+	<li>M-x byte-compile-file XXX.el</li>
 </ul>
 
 
 
 
 
-  <a name="more_details_dont_just_require" id="more_details_dont_just_require"></a>
+  <a name="more_details_dont_just_require_other_packages" id="more_details_dont_just_require_other_packages"></a>
   <h2>
       2.11 More details &ndash; don't just 'require' other packages
       
@@ -1154,16 +1144,13 @@ Emacs lisp coding checklist
 
 
 
+<p>
+<p class="column8">
         When you include packages with <samp class="word">require</samp> command, don't
         do it like this:
 
 <P>
-<TABLE  class="shade-normal"
-        width="94%"
-        border="0"
-        cellpadding="10"
-        cellspacing="0"
-        >
+<TABLE class="shade-normal">
     <TR>
     <TD class="shade-normal-attrib" valign="top">
     <PRE>
@@ -1181,12 +1168,7 @@ Emacs lisp coding checklist
         other packages need not to be required beforehand.
 
 <P>
-<TABLE  class="shade-normal"
-        width="94%"
-        border="0"
-        cellpadding="10"
-        cellspacing="0"
-        >
+<TABLE class="shade-normal">
     <TR>
     <TD class="shade-normal-attrib" valign="top">
     <PRE>
@@ -1207,17 +1189,14 @@ Emacs lisp coding checklist
 
 
 
+<p>
+<p class="column8">
         Newer Emacs versions can load only the functions to memory that are
         really and not just slurp the whole file. Put this in your
         packages, near the first require command in your package.
 
 <P>
-<TABLE  class="shade-normal"
-        width="94%"
-        border="0"
-        cellpadding="10"
-        cellspacing="0"
-        >
+<TABLE class="shade-normal">
     <TR>
     <TD class="shade-normal-attrib" valign="top">
     <PRE>
@@ -1234,12 +1213,7 @@ Emacs lisp coding checklist
         If you don't care about support for old emacs version, use:
 
 <P>
-<TABLE  class="shade-normal"
-        width="94%"
-        border="0"
-        cellpadding="10"
-        cellspacing="0"
-        >
+<TABLE class="shade-normal">
     <TR>
     <TD class="shade-normal-attrib" valign="top">
     <PRE>
@@ -1255,12 +1229,7 @@ Emacs lisp coding checklist
         &quot;File: elisp, Node: Dynamic Loading&quot;.
 
 <P>
-<TABLE  class="shade-normal"
-        width="94%"
-        border="0"
-        cellpadding="10"
-        cellspacing="0"
-        >
+<TABLE class="shade-normal">
     <TR>
     <TD class="shade-normal-attrib" valign="top">
     <PRE>
@@ -1270,7 +1239,7 @@ Emacs lisp coding checklist
 
 
 
-  <a name="how_to_deal_with_variables" id="how_to_deal_with_variables"></a>
+  <a name="how_to_deal_with_variables_from_other_packages" id="how_to_deal_with_variables_from_other_packages"></a>
   <h2>
       2.13 How to deal with variables from other packages
       
@@ -1279,17 +1248,14 @@ Emacs lisp coding checklist
 
 
 
+<p>
+<p class="column8">
         Let's say you use <samp class="word">ediff-number-of-differences</samp> variable in function
         <samp class="word">xxx-my-ediff-call</samp>. This is the only place where ediff is used and
         for that reason you haven't used
 
 <P>
-<TABLE  class="shade-normal"
-        width="94%"
-        border="0"
-        cellpadding="10"
-        cellspacing="0"
-        >
+<TABLE class="shade-normal">
     <TR>
     <TD class="shade-normal-attrib" valign="top">
     <PRE>
@@ -1302,12 +1268,7 @@ Emacs lisp coding checklist
         but used the more lighter version
 
 <P>
-<TABLE  class="shade-normal"
-        width="94%"
-        border="0"
-        cellpadding="10"
-        cellspacing="0"
-        >
+<TABLE class="shade-normal">
     <TR>
     <TD class="shade-normal-attrib" valign="top">
     <PRE>
@@ -1322,12 +1283,7 @@ Emacs lisp coding checklist
         is unknown variable. Ok, let's tell byte compiler about it with:
 
 <P>
-<TABLE  class="shade-normal"
-        width="94%"
-        border="0"
-        cellpadding="10"
-        cellspacing="0"
-        >
+<TABLE class="shade-normal">
     <TR>
     <TD class="shade-normal-attrib" valign="top">
     <PRE>
@@ -1345,12 +1301,7 @@ Emacs lisp coding checklist
         bound.
 
 <P>
-<TABLE  class="shade-normal"
-        width="94%"
-        border="0"
-        cellpadding="10"
-        cellspacing="0"
-        >
+<TABLE class="shade-normal">
     <TR>
     <TD class="shade-normal-attrib" valign="top">
     <PRE>
@@ -1370,12 +1321,7 @@ Emacs lisp coding checklist
         okay:
 
 <P>
-<TABLE  class="shade-normal"
-        width="94%"
-        border="0"
-        cellpadding="10"
-        cellspacing="0"
-        >
+<TABLE class="shade-normal">
     <TR>
     <TD class="shade-normal-attrib" valign="top">
     <PRE>
@@ -1386,7 +1332,7 @@ Emacs lisp coding checklist
 
 
 
-  <a name="arrange_the_installation_so_that" id="arrange_the_installation_so_that"></a>
+  <a name="arrange_the_installation_so_that_it_can_be_autoloaded" id="arrange_the_installation_so_that_it_can_be_autoloaded"></a>
   <h2>
       2.14 Arrange the installation so that it can be autoloaded
       
@@ -1395,16 +1341,13 @@ Emacs lisp coding checklist
 
 
 
+<p>
+<p class="column8">
         Try to avoid this form of loading if you can. Do not say that
         this is the only way to use the package:
 
 <P>
-<TABLE  class="shade-normal"
-        width="94%"
-        border="0"
-        cellpadding="10"
-        cellspacing="0"
-        >
+<TABLE class="shade-normal">
     <TR>
     <TD class="shade-normal-attrib" valign="top">
     <PRE>
@@ -1423,11 +1366,11 @@ Emacs lisp coding checklist
 <ul>
 	<li>Autoload statements in one's <samp class="word">$HOME/.emacs</samp> are fast!
             Emacs starts up instantly without loading the package.
-	<li>The package is only loaded when user calls
+<li>The package is only loaded when user calls
             some of your functions. Someday he may be using
             them all the time, other times he works differently
             and doesn't use the functions. Don't assume that
-	            the package is always <em class="word">on</em>.
+	            the package is always <em class="word">on</em>.</li>
 </ul>
 
 
@@ -1441,12 +1384,7 @@ Emacs lisp coding checklist
         and only these lines are needed in for user setup:
 
 <P>
-<TABLE  class="shade-normal"
-        width="94%"
-        border="0"
-        cellpadding="10"
-        cellspacing="0"
-        >
+<TABLE class="shade-normal">
     <TR>
     <TD class="shade-normal-attrib" valign="top">
     <PRE>
@@ -1459,12 +1397,7 @@ Emacs lisp coding checklist
         Other times, you can just instruct for interactive functions
 
 <P>
-<TABLE  class="shade-normal"
-        width="94%"
-        border="0"
-        cellpadding="10"
-        cellspacing="0"
-        >
+<TABLE class="shade-normal">
     <TR>
     <TD class="shade-normal-attrib" valign="top">
     <PRE>
@@ -1479,12 +1412,7 @@ Emacs lisp coding checklist
         to mention couple of keybindings:
 
 <P>
-<TABLE  class="shade-normal"
-        width="94%"
-        border="0"
-        cellpadding="10"
-        cellspacing="0"
-        >
+<TABLE class="shade-normal">
     <TR>
     <TD class="shade-normal-attrib" valign="top">
     <PRE>
@@ -1503,7 +1431,7 @@ Emacs lisp coding checklist
 
 
 
-  <a name="do_not_change_any_emacs" id="do_not_change_any_emacs"></a>
+  <a name="do_not_change_any_emacs_bindings_directly" id="do_not_change_any_emacs_bindings_directly"></a>
   <h2>
       2.15 Do not change any emacs bindings directly
       
@@ -1512,16 +1440,13 @@ Emacs lisp coding checklist
 
 
 
+<p>
+<p class="column8">
         Put bindings behind a function, and allow user to customize them.
         Like this:
 
 <P>
-<TABLE  class="shade-normal"
-        width="94%"
-        border="0"
-        cellpadding="10"
-        cellspacing="0"
-        >
+<TABLE class="shade-normal">
     <TR>
     <TD class="shade-normal-attrib" valign="top">
     <PRE>
@@ -1540,12 +1465,7 @@ Emacs lisp coding checklist
         statement if he wants to use the default bindings.
 
 <P>
-<TABLE  class="shade-normal"
-        width="94%"
-        border="0"
-        cellpadding="10"
-        cellspacing="0"
-        >
+<TABLE class="shade-normal">
     <TR>
     <TD class="shade-normal-attrib" valign="top">
     <PRE>
@@ -1559,12 +1479,7 @@ Emacs lisp coding checklist
         it this way:
 
 <P>
-<TABLE  class="shade-normal"
-        width="94%"
-        border="0"
-        cellpadding="10"
-        cellspacing="0"
-        >
+<TABLE class="shade-normal">
     <TR>
     <TD class="shade-normal-attrib" valign="top">
     <PRE>
@@ -1579,12 +1494,7 @@ Emacs lisp coding checklist
         statement into your .emacs&quot;.
 
 <P>
-<TABLE  class="shade-normal"
-        width="94%"
-        border="0"
-        cellpadding="10"
-        cellspacing="0"
-        >
+<TABLE class="shade-normal">
     <TR>
     <TD class="shade-normal-attrib" valign="top">
     <PRE>
@@ -1600,7 +1510,7 @@ Emacs lisp coding checklist
 
 
 
-  <a name="dont_forget_to_add_autoload" id="dont_forget_to_add_autoload"></a>
+  <a name="dont_forget_to_add_autoload_statements" id="dont_forget_to_add_autoload_statements"></a>
   <h2>
       2.16 Don't forget to add ###autoload statements
       
@@ -1609,17 +1519,14 @@ Emacs lisp coding checklist
 
 
 
+<p>
+<p class="column8">
         Someday, perhaps your package may be included into emacs
         distribution, or some system administrator may want to include your
         package to <samp class="word">site-init.el</samp>.
 
 <P>
-<TABLE  class="shade-normal"
-        width="94%"
-        border="0"
-        cellpadding="10"
-        cellspacing="0"
-        >
+<TABLE class="shade-normal">
     <TR>
     <TD class="shade-normal-attrib" valign="top">
     <PRE>
@@ -1634,12 +1541,7 @@ Emacs lisp coding checklist
         functions should have it. See emacs info pages for more.
 
 <P>
-<TABLE  class="shade-normal"
-        width="94%"
-        border="0"
-        cellpadding="10"
-        cellspacing="0"
-        >
+<TABLE class="shade-normal">
     <TR>
     <TD class="shade-normal-attrib" valign="top">
     <PRE>
@@ -1649,7 +1551,7 @@ Emacs lisp coding checklist
 
 
 
-  <a name="document_all_your_variables_and" id="document_all_your_variables_and"></a>
+  <a name="document_all_your_variables_and_functions_well" id="document_all_your_variables_and_functions_well"></a>
   <h2>
       2.17 Document all your variables and functions well
       
@@ -1658,18 +1560,15 @@ Emacs lisp coding checklist
 
 
 
+<p>
+<p class="column8">
         They should be as clear as crystal, so that they contain
         descriptive <em class="word">documentation</em> string. Use &quot;*&quot; for user variables
         (File: elisp, Node: Defining Variables). The more documentation the
         better, because user wants to do
 
 <P>
-<TABLE  class="shade-normal"
-        width="94%"
-        border="0"
-        cellpadding="10"
-        cellspacing="0"
-        >
+<TABLE class="shade-normal">
     <TR>
     <TD class="shade-normal-attrib" valign="top">
     <PRE>
@@ -1699,12 +1598,7 @@ Emacs lisp coding checklist
         out internal function description:
 
 <P>
-<TABLE  class="shade-normal"
-        width="94%"
-        border="0"
-        cellpadding="10"
-        cellspacing="0"
-        >
+<TABLE class="shade-normal">
     <TR>
     <TD class="shade-normal-attrib" valign="top">
     <PRE>
@@ -1724,7 +1618,7 @@ Emacs lisp coding checklist
 
 
 
-  <a name="provide_a_xxxloadhook_at_the" id="provide_a_xxxloadhook_at_the"></a>
+  <a name="provide_a_xxxloadhook_at_the_end_of_file" id="provide_a_xxxloadhook_at_the_end_of_file"></a>
   <h2>
       2.18 Provide a xxx-load-hook at the end of file
       
@@ -1733,17 +1627,14 @@ Emacs lisp coding checklist
 
 
 
+<p>
+<p class="column8">
         If you think that user may want to change some default settings add
         the last hook. The load hook runs <em class="word">after</em> provide. Like this.
         Include ending line as a last line
 
 <P>
-<TABLE  class="shade-normal"
-        width="94%"
-        border="0"
-        cellpadding="10"
-        cellspacing="0"
-        >
+<TABLE class="shade-normal">
     <TR>
     <TD class="shade-normal-attrib" valign="top">
     <PRE>
@@ -1766,7 +1657,7 @@ Emacs lisp coding checklist
 
 
 
-  <a name="clean_up_all_whitespaces_from" id="clean_up_all_whitespaces_from"></a>
+  <a name="clean_up_all_whitespaces_from_the_end_of_lines" id="clean_up_all_whitespaces_from_the_end_of_lines"></a>
   <h2>
       2.19 Clean up all whitespaces from the end of lines.
       
@@ -1775,18 +1666,15 @@ Emacs lisp coding checklist
 
 
 
+<p>
+<p class="column8">
         This is important, because if someone sends you patches, the diff
         command would count the whitespace differences too. Well, there
         is options to bypass that, but removing extra whitespace is good
         idea anyway.
 
 <P>
-<TABLE  class="shade-normal"
-        width="94%"
-        border="0"
-        cellpadding="10"
-        cellspacing="0"
-        >
+<TABLE class="shade-normal">
     <TR>
     <TD class="shade-normal-attrib" valign="top">
     <PRE>
@@ -1826,6 +1714,8 @@ Emacs lisp coding checklist
 
 
 
+<p>
+<p class="column8">
         Just for the curious reader, if you have www page where you can
         describe your emacs packages, you could format your documentation
         so that it can be easily ripped out and turned into HTML page. For
@@ -1836,12 +1726,7 @@ Emacs lisp coding checklist
         that can be turned into HTML with
 
 <P>
-<TABLE  class="shade-normal"
-        width="94%"
-        border="0"
-        cellpadding="10"
-        cellspacing="0"
-        >
+<TABLE class="shade-normal">
     <TR>
     <TD class="shade-normal-attrib" valign="top">
     <PRE>
@@ -1872,7 +1757,7 @@ Emacs lisp coding checklist
 
 
 
-  <a name="here_is_sample_skeleton_for" id="here_is_sample_skeleton_for"></a>
+  <a name="here_is_sample_skeleton_for_a_package_fill_it" id="here_is_sample_skeleton_for_a_package_fill_it"></a>
   <h2>
       2.21 Here is sample skeleton for a package. Fill it in.
       
@@ -1881,6 +1766,8 @@ Emacs lisp coding checklist
 
 
 
+<p>
+<p class="column8">
         Don't mind the expanded ID or REVISION strings. They'll get
         replaced by your RCS when you put your package into rcs control for
         the first time. See ident(1) why there is so many <EM><STRONG>$IdentifierName$</STRONG></EM>
@@ -1893,17 +1780,12 @@ Emacs lisp coding checklist
         called book marks and handled by <em class="word">tinybm.el</em>
 
 <P>
-<TABLE  class="shade-normal"
-        width="94%"
-        border="0"
-        cellpadding="10"
-        cellspacing="0"
-        >
+<TABLE class="shade-normal">
     <TR>
     <TD class="shade-normal-attrib" valign="top">
     <PRE>
       ;;; @(#) XXX.el --- one line description string for the package
-      ;;; @(#) &lt;EM&gt;&lt;STRONG&gt;$Id: emacs-package-make-body.html,v 2.16 2007/05/01 17:20:33 jaalto Exp $&lt;/STRONG&gt;&lt;/EM&gt;
+      ;;; @(#) &lt;EM&gt;&lt;STRONG&gt;$Id: emacs-package-make.txt,v 2.11 2007/05/01 17:20:34 jaalto Exp $&lt;/STRONG&gt;&lt;/EM&gt;
 
       ;; This file is not part of Emacs
 
@@ -2017,7 +1899,7 @@ Emacs lisp coding checklist
       ;;; .......................................................... version ...
 
       (defconst XXX-version-id
-        &quot;&lt;EM&gt;&lt;STRONG&gt;$Id: emacs-package-make-body.html,v 2.16 2007/05/01 17:20:33 jaalto Exp $&lt;/STRONG&gt;&lt;/EM&gt;&quot;
+        &quot;&lt;EM&gt;&lt;STRONG&gt;$Id: emacs-package-make.txt,v 2.11 2007/05/01 17:20:34 jaalto Exp $&lt;/STRONG&gt;&lt;/EM&gt;&quot;
         &quot;Latest modification time and version number.&quot;)
 
 
@@ -2044,20 +1926,19 @@ Emacs lisp coding checklist
     ......................................................................
 -->
 
-</blockquote>
 <hr>
 <em    class="footer">
 <p>
-Copyright &copy; 2005 by Jari Aalto. This material may be
+Copyright &copy; 2007 by jaalto. This material may be
 distributed subject to the terms and conditions set forth
 in the Creative commons Attribution-ShareAlike License.
 See http://creativecommons.org/
 <p>
 This file has been automatically generated from plain text file
-with Perl script <strong>t2html.pl v2005.0208</strong><br>
-Document author: Jari Aalto<br>
+with Perl script <strong>t2html.pl v2007.0526</strong><br>
+Document author: jaalto<br>
 Url: <a href="http://tiny-tools.sourceforge.net">http://tiny-tools.sourceforge.net</a><br>
-Last updated: 2005-04-01 09:03<br>
+Last updated: 2007-09-02 12:03<br>
 </em    class="footer">
 </body>
 </html>

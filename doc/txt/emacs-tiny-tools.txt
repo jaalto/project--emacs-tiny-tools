@@ -3,11 +3,12 @@ Document id
         #T2HTML-TITLE Emacs Tiny Tools package documentation
         #T2HTML-METAKEYWORDS Emacs, Emacs Lisp, Tiny Tools Documentation
         #T2HTML-OPTION --css-code-bg
-        #T2HTML-OPTION --css-code-note=Note:
+        #T2HTML-OPTION --css-code-note
+	#T2HTML-OPTION Note:
         #T2HTML-OPTION --name-uniq
         #T2HTML-OPTION --html-frame
 
-        .$Id: emacs-tiny-tools.txt,v 2.13 2004/04/05 13:17:06 jaalto Exp $
+        .$Id: emacs-tiny-tools-part1.src,v 1.4 2004/04/05 13:17:06 jaalto Exp $
 
         This page contains manual pages from each Emacs tiny*.el module in
         alphabetical order. The tools initially started around 1994 and
@@ -107,6 +108,34 @@ Document id
         o   _TinyNbr_ - oct/bin/hex/dec number conversion minor mode.
 
         And more...which are not listed in these
+
+Load-path.el --- Used for compiling Emacs lisp files
+
+    File id
+  
+        .Copyright (C)  1997-2007 Jari Aalto
+        .$keywords:     extensions $
+  
+        This code is free software in terms of GNU Gen. pub. Lic. v2 or later
+  
+    Description
+  
+  	This file part of the Tiny Tools Kit for Emacs: collection of
+  	various utilities.
+  
+  	Before compiling, this file is included via -l FILE switch and it
+  	defines correct load path in order to find the files that are needed
+        in compilation. If your private directory is not in ~/elisp or
+        ~/lisp then add new path to the place shown below.
+  
+    Note for older 19.xx Emacs
+  
+        If you're compiling with custom support, please include
+        you custom directory to the list too. Like ~/elisp/custom
+  
+        See the doc/README.txt for starter compiling instructions for
+  	the Tiny Tools kit.
+  
 
 Tiny-setup.el --- Tiny Tools configure center.
 
@@ -6211,7 +6240,7 @@ Tinyperl.el --- Grab-bag of Perl related utilities. Pod documentation
         (a) version control software's number at the beginning of file
         inside comments and the (b) release number to a perl variable.
   
-  	    # @(#) $Id: emacs-tiny-tools.txt,v 2.13 2004/04/05 13:17:06 jaalto Exp $
+  	    # @(#) $Id: emacs-tiny-tools-part2.src,v 1.8 2007/05/01 17:20:35 jaalto Exp $
   
             use vars qw ( $VERSION );
   

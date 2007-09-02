@@ -1,13 +1,13 @@
-<!DOCTYPE HTML PUBLIC "-//W3C//DTD HTML 4.0 Frameset//EN"
-          "http://www.w3.org/TR/REC-html40/frameset.dtd">
+<!DOCTYPE HTML PUBLIC "-//W3C//DTD HTML 4.01 Transitional//EN">
 
-<HTML>
 
-<HEAD>
+<html>
 
-    <TITLE>
+<head>
+
+    <title>
     Navigation
-    </TITLE>
+    </title>
 
 
 
@@ -16,26 +16,26 @@
     ......................................................................
 -->
 
-  <META HTTP-EQUIV="description"
-	CONTENT="">
+  <meta http-equiv="description"
+	content="">
 
+<meta http-equiv="Content-Type" content="text/html; charset=utf-8">
+  <meta http-equiv="Expires" content="Thu,  1 Nov 2007 09:03:19 GMT">
 
-  <META HTTP-EQUIV="Content-Type" CONTENT="text/html; CHARSET=utf-8">
-
-  <META HTTP-EQUIV="Expires" CONTENT="Mon, 18 Oct 2004 09:06:15 GMT">
-
-  <META HTTP-EQUIV="Author"
-	CONTENT="Jari Aalto">
+  <meta http-equiv="Author"
+	content="jaalto">
 
 
 
-  <META NAME="Generator"
-	CONTENT="2004-08-19 12:06 Perl program t2html.pl v2004.0428 http://perl-text2html.sourceforge.net/">
+  <meta name="Generator"
+	content="2007-09-02 12:03 Perl program t2html.pl v2007.0526 http://perl-text2html.sourceforge.net/">
 
 
-  <BASE TARGET="body">
+  <base target="body">
 
-    <STYLE TYPE="text/css">
+
+    <style type="text/css">
+
 
 
         /*
@@ -118,7 +118,6 @@
             padding-top: 10pt;
         }
 
-
         h2.default
         {
             font-family: bold large Arial,Helvetica,Sans-serif;
@@ -133,7 +132,6 @@
         {
             font-family: medium Arial,Helvetica,Sans-serif;
         }
-
 
         /*   ////////////////////////// Make pointing AHREF more visual */
 
@@ -210,7 +208,7 @@
 
         blockquote
         {
-            margin-right: 0;
+            margin-right: 2em;
         }
 
         @media print   { BLOCKQUOTE
@@ -223,10 +221,18 @@
             color: Navy;
         }
 
+        hr.special
+        {
+            width: 50%;
+            text-align; left;
+        }
+
         pre
         {
             font-family:   "Courier New", monospace;
             font-size:     0.8em;
+            margin-top:    1em;
+            margin-bottom: 1em;
         }
 
         pre.code
@@ -244,18 +250,24 @@
 
             font-family:    "Courier New", monospace;
             font-size:      0.8em;
-
             color:          Navy;
         }
 
         /* //////////////////////// tables /////////////////////////// */
+
+        table
+        {
+            border: none;
+            width: 100%;
+            cellpadding: 10px;
+            cellspacing: 0px;
+        }
 
         table.basic
         {
                 font-family:    "Courier New", monospace;
                 color: Navy;
         }
-
 
         table.dashed
         {
@@ -276,7 +288,6 @@
                 /* line-height: 105%; */
         }
 
-
         table.solid
         {
                 font-family:    "Courier New", monospace;
@@ -293,7 +304,6 @@
                 border-bottom:  1px #666666 solid; /* dark grey */
                 /* line-height: 105%; */
         }
-
 
         /* Make 3D styled layout by thickening the boton + right. */
 
@@ -314,7 +324,6 @@
                 /* line-height: 105%; */
         }
 
-
         .shade-3d-attrib
         {
             /*
@@ -328,6 +337,12 @@
             background: #FFFFCC;
         }
 
+        table tr td pre
+        {
+                /*  Make PRE tables "airy" */
+                margin-top:    1em;
+                margin-bottom: 1em;
+        }
 
         table.shade-normal
         {
@@ -341,10 +356,10 @@
             /*  grey: EAEAEA, F0F0F0 FFFFCC
                 lime: F7F7DE CCFFCC
                 pinkish: E6F1FD D8E9FB C6DEFA FFEEFF (light ... darker)
+                slightly darker than F1F1F1: #EFEFEF;
             */
-            background: #EFEFEF;
+            background: #F1F1F1;
         }
-
 
         table.shade-normal2
         {
@@ -356,19 +371,13 @@
             background: #E0E0F0;
         }
 
-
-        table.shade-note
-        {
-            /* nothing special */
-        }
-
-
         .shade-note-attrib
         {
             /*  darker is #E0E0F0; */
             /* background: #E5ECF3; */
             background: #E5ECF3;
-            font-family: Georgia, Palatino, Verdana, Arial, Helvetica;
+            font-family: Georgia, "New Century Schoolbook",
+                         Palatino, Verdana, Helvetica, serif;
             font-size: 0.8em;
         }
 
@@ -414,12 +423,17 @@
             background: #FAFACA;
         }
 
+        .color-beige3
+        {
+            color: Navy;
+            background: #F5F5E9;
+        }
+
         .color-beige-dark
         {
             color: Navy;
             background: #CFEFBD;
         }
-
 
         .color-pink-dark
         {
@@ -445,6 +459,15 @@
             background: #FFEEFF;
         }
 
+        .color-blue-light
+        {
+            background: #F0F0FF;
+        }
+
+        .color-blue-medium
+        {
+            background: #4A88BE;
+        }
 
         /* ////////////////////////////////////////////// Format columns */
 
@@ -469,7 +492,8 @@
             font-family: "Goudy Old Style"
             */
             margin-left: 3em;
-            font-family: Georgia, Palatino, Verdana, Arial, Helvetica;
+            font-family: Georgia, "New Century Schoolbook",
+                         Palatino, Verdana, Arial, Helvetica;
             font-size:  0.9em;
         }
 
@@ -602,7 +626,6 @@
             font-size: 0.8em;
         }
 
-
         span.word-ref
         {
             color: teal;
@@ -623,7 +646,7 @@
 
         /* /////////////////////////////////////////////// Format other */
 
-                /* 7th column starting with double quote */
+        /* 7th column starting with double quote */
 
         span.quote7
         {
@@ -634,38 +657,35 @@
             font-size: 1em;
         }
 
-                /* This appears in FRAME version: xxx-toc.html */
+        /* This appears in FRAME version: xxx-toc.html */
 
         div.toc
         {
             font-size: 0.8em;
         }
 
-                /* This appears in picture: the acption text beneath */
+        /* This appears in picture: the acption text beneath */
 
         div.picture
         {
             font-style: italic;
         }
 
-
-                /* This is the document info footer */
+        /* This is the document info footer */
 
         em.footer
         {
             font-size: 0.9em;
         }
 
-        END: Hide from older browsers
+    
 
-
-
-    </STYLE>
+    </style>
 
 
     <!-- ...................................................... Java code -->
 
-    <SCRIPT TYPE="text/javascript">
+    <script type="text/javascript">
 
         function MakeVisual(obj)
         {
@@ -684,351 +704,353 @@
 
         window.onerror = IgnoreErrors;
 
-    </SCRIPT>
+    </script>
 
-</HEAD>
-<BODY>
-<DIV class="TOC">
-<A HREF="emacs-font-body.html#general_info_about_fontifying_with" class="toc" >
+        </head>
+<body>
+<div class="TOC">
+<a href="emacs-font-body.html#general_info_about_fontifying_with_fontlock_and_lazylock" class="toc">
                1.0 General info about fontifying with font-lock and lazy-lock
-           </A>
-           <BR>
+           </a>
+           <br>
 
-<UL>
-<LI>
-           <A HREF="emacs-font-body.html#lazy_lock_mode" class="toc" >
+<ul>
+<li>
+           <a href="emacs-font-body.html#lazy_lock_mode" class="toc">
                1.1 Lazy Lock mode
-           </A>
-           <BR>
-<LI>
-           <A HREF="emacs-font-body.html#fontlock_lazylock_deferlock_fastlock_say" class="toc" >
+           </a>
+           <br>
+<li>
+           <a href="emacs-font-body.html#fontlock_lazylock_deferlock_fastlock_say_what" class="toc">
                1.2 Font-lock, lazy-lock, defer-lock, fast-lock -- say what ?
-           </A>
-           <BR>
-</UL>
-<A HREF="emacs-font-body.html#lazy_fontification_for_fast_font" class="toc" >
+           </a>
+           <br>
+</ul>
+<a href="emacs-font-body.html#lazy_fontification_for_fast_font_lock_mode" class="toc">
                2.0 Lazy fontification for fast Font Lock mode
-           </A>
-           <BR>
+           </a>
+           <br>
 
-<UL>
-<LI>
-           <A HREF="emacs-font-body.html#announcement_of_lazylock.el_v2.04" class="toc" >
+<ul>
+<li>
+           <a href="emacs-font-body.html#announcement_of_lazylock_el_v2_04" class="toc">
                2.1 Announcement of lazy-lock.el v2.04
-           </A>
-           <BR>
-<LI>
-           <A HREF="emacs-font-body.html#fontlockextra.el" class="toc" >
+           </a>
+           <br>
+<li>
+           <a href="emacs-font-body.html#fontlockextra_el" class="toc">
                2.2 Font-lock-extra.el
-           </A>
-           <BR>
-</UL>
-<A HREF="emacs-font-body.html#fontlock_and_lazylock_questions_and" class="toc" >
+           </a>
+           <br>
+</ul>
+<a href="emacs-font-body.html#fontlock_and_lazylock_questions_and_answers" class="toc">
                3.0 Font-lock and lazy-lock: questions and answers
-           </A>
-           <BR>
+           </a>
+           <br>
 
-<UL>
-<LI>
-           <A HREF="emacs-font-body.html#fast_fontification" class="toc" >
+<ul>
+<li>
+           <a href="emacs-font-body.html#fast_fontification" class="toc">
                3.1 Fast fontification
-           </A>
-           <BR>
-<LI>
-           <A HREF="emacs-font-body.html#fontlock_is_pain_slow_with" class="toc" >
+           </a>
+           <br>
+<li>
+           <a href="emacs-font-body.html#fontlock_is_pain_slow_with_big_files__use_lazylock" class="toc">
                3.2 Font-lock is pain slow with big files.. -- use lazy-lock
-           </A>
-           <BR>
-<LI>
-           <A HREF="emacs-font-body.html#fontlock_in_non_windowed_emacs" class="toc" >
+           </a>
+           <br>
+<li>
+           <a href="emacs-font-body.html#fontlock_in_non_windowed_emacs" class="toc">
                3.3 Font-lock in non windowed Emacs
-           </A>
-           <BR>
-<LI>
-           <A HREF="emacs-font-body.html#ascii_terminal_highlighting" class="toc" >
+           </a>
+           <br>
+<li>
+           <a href="emacs-font-body.html#ascii_terminal_highlighting" class="toc">
                3.4 Ascii terminal highlighting
-           </A>
-           <BR>
-<LI>
-           <A HREF="emacs-font-body.html#lazy_lock_doesnt_work_for" class="toc" >
+           </a>
+           <br>
+<li>
+           <a href="emacs-font-body.html#lazy_lock_doesnt_work_for_small_buffers" class="toc">
                3.5 Lazy lock doesn't work for small buffers ?
-           </A>
-           <BR>
-<LI>
-           <A HREF="emacs-font-body.html#postscript_printing" class="toc" >
+           </a>
+           <br>
+<li>
+           <a href="emacs-font-body.html#postscript_printing" class="toc">
                3.6 Postscript printing
-           </A>
-           <BR>
-<LI>
-           <A HREF="emacs-font-body.html#internalfacep_error" class="toc" >
+           </a>
+           <br>
+<li>
+           <a href="emacs-font-body.html#internalfacep_error" class="toc">
                3.7 Internal-facep error
-           </A>
-           <BR>
-<LI>
-           <A HREF="emacs-font-body.html#gnus_article_highlighting" class="toc" >
+           </a>
+           <br>
+<li>
+           <a href="emacs-font-body.html#gnus_article_highlighting" class="toc">
                3.8 GNUS article highlighting
-           </A>
-           <BR>
-<LI>
-           <A HREF="emacs-font-body.html#id_like_to_be_able" class="toc" >
+           </a>
+           <br>
+<li>
+           <a href="emacs-font-body.html#id_like_to_be_able_to_change_the_colours" class="toc">
                3.9 I'd like to be able to change the colours for the comments
-           </A>
-           <BR>
-<LI>
-           <A HREF="emacs-font-body.html#fontlock_colours_how_to_change" class="toc" >
+           </a>
+           <br>
+<li>
+           <a href="emacs-font-body.html#fontlock_colours_how_to_change_defaults" class="toc">
                3.10 Font-lock colours - how to change defaults?
-           </A>
-           <BR>
-<LI>
-           <A HREF="emacs-font-body.html#customizing_faces" class="toc" >
+           </a>
+           <br>
+<li>
+           <a href="emacs-font-body.html#customizing_faces" class="toc">
                3.11 Customizing faces
-           </A>
-           <BR>
-<LI>
-           <A HREF="emacs-font-body.html#different_face_setup" class="toc" >
+           </a>
+           <br>
+<li>
+           <a href="emacs-font-body.html#different_face_setup" class="toc">
                3.12 Different face setup
-           </A>
-           <BR>
-<LI>
-           <A HREF="emacs-font-body.html#highlight_specific_words" class="toc" >
+           </a>
+           <br>
+<li>
+           <a href="emacs-font-body.html#highlight_specific_words" class="toc">
                3.13 Highlight specific words
-           </A>
-           <BR>
-</UL>
-<A HREF="emacs-font-body.html#some_more_answers" class="toc" >
+           </a>
+           <br>
+</ul>
+<a href="emacs-font-body.html#some_more_answers" class="toc">
                4.0 Some more answers
-           </A>
-           <BR>
+           </a>
+           <br>
 
-<UL>
-<LI>
-           <A HREF="emacs-font-body.html#the_ulrik_dickow_way" class="toc" >
+<ul>
+<li>
+           <a href="emacs-font-body.html#the_ulrik_dickow_way" class="toc">
                4.1 The Ulrik Dickow way
-           </A>
-           <BR>
-<LI>
-           <A HREF="emacs-font-body.html#fontmode_colours_how_to_change" class="toc" >
+           </a>
+           <br>
+<li>
+           <a href="emacs-font-body.html#fontmode_colours_how_to_change_defaults" class="toc">
                4.2 Font-mode colours - how to change defaults?
-           </A>
-           <BR>
-<LI>
-           <A HREF="emacs-font-body.html#fontlock_for_different_modes" class="toc" >
+           </a>
+           <br>
+<li>
+           <a href="emacs-font-body.html#fontlock_for_different_modes" class="toc">
                4.3 Font-lock for different modes ?
-           </A>
-           <BR>
-<LI>
-           <A HREF="emacs-font-body.html#fontlock_wont_fontify_multiline_cstyle" class="toc" >
+           </a>
+           <br>
+<li>
+           <a href="emacs-font-body.html#fontlock_wont_fontify_multiline_cstyle_comments" class="toc">
                4.4 Font-lock won't fontify multi-line c-style comments?
-           </A>
-           <BR>
-<LI>
-           <A HREF="emacs-font-body.html#colours_for_monochrome_monitor_while" class="toc" >
+           </a>
+           <br>
+<li>
+           <a href="emacs-font-body.html#colours_for_monochrome_monitor_while_emacs_thinks_it_is" class="toc">
                4.5 Colours for monochrome monitor while emacs thinks it is colour ?
-           </A>
-           <BR>
-<LI>
-           <A HREF="emacs-font-body.html#enable_fontlockmode_for_a_whole" class="toc" >
+           </a>
+           <br>
+<li>
+           <a href="emacs-font-body.html#enable_fontlockmode_for_a_whole_list_of_modes" class="toc">
                4.6 Enable font-lock-mode for a whole list of modes ?
-           </A>
-           <BR>
-<LI>
-           <A HREF="emacs-font-body.html#locking_regions_of_text_answer" class="toc" >
+           </a>
+           <br>
+<li>
+           <a href="emacs-font-body.html#locking_regions_of_text_answer_summary" class="toc">
                4.7 Locking Regions of Text (Answer + Summary)
-           </A>
-           <BR>
-</UL>
-<A HREF="emacs-font-body.html#fontlock_keywords" class="toc" >
+           </a>
+           <br>
+</ul>
+<a href="emacs-font-body.html#fontlock_keywords" class="toc">
                5.0 Font-lock keywords
-           </A>
-           <BR>
+           </a>
+           <br>
 
-<UL>
-<LI>
-           <A HREF="emacs-font-body.html#dired" class="toc" >
+<ul>
+<li>
+           <a href="emacs-font-body.html#dired" class="toc">
                5.1 Dired
-           </A>
-           <BR>
-<LI>
-           <A HREF="emacs-font-body.html#gnus" class="toc" >
+           </a>
+           <br>
+<li>
+           <a href="emacs-font-body.html#gnus" class="toc">
                5.2 GNUS
-           </A>
-           <BR>
-<LI>
-           <A HREF="emacs-font-body.html#java" class="toc" >
+           </a>
+           <br>
+<li>
+           <a href="emacs-font-body.html#java" class="toc">
                5.3 Java
-           </A>
-           <BR>
-<LI>
-           <A HREF="emacs-font-body.html#latex" class="toc" >
+           </a>
+           <br>
+<li>
+           <a href="emacs-font-body.html#latex" class="toc">
                5.4 LaTeX
-           </A>
-           <BR>
-<LI>
-           <A HREF="emacs-font-body.html#motorola_56000_dsp_assembly_language" class="toc" >
+           </a>
+           <br>
+<li>
+           <a href="emacs-font-body.html#motorola_56000_dsp_assembly_language" class="toc">
                5.5 Motorola 56000 DSP assembly language
-           </A>
-           <BR>
-<LI>
-           <A HREF="emacs-font-body.html#procmail" class="toc" >
+           </a>
+           <br>
+<li>
+           <a href="emacs-font-body.html#procmail" class="toc">
                5.6 Procmail
-           </A>
-           <BR>
-<LI>
-           <A HREF="emacs-font-body.html#rmail_headers" class="toc" >
+           </a>
+           <br>
+<li>
+           <a href="emacs-font-body.html#rmail_headers" class="toc">
                5.7 Rmail headers
-           </A>
-           <BR>
-<LI>
-           <A HREF="emacs-font-body.html#example_for_c" class="toc" >
+           </a>
+           <br>
+<li>
+           <a href="emacs-font-body.html#example_for_c" class="toc">
                5.8 Example for C++
-           </A>
-           <BR>
-<LI>
-           <A HREF="emacs-font-body.html#c_and_new_data_types" class="toc" >
+           </a>
+           <br>
+<li>
+           <a href="emacs-font-body.html#c_and_new_data_types" class="toc">
                5.9 C++ and new data types
-           </A>
-           <BR>
-<LI>
-           <A HREF="emacs-font-body.html#objectivec" class="toc" >
+           </a>
+           <br>
+<li>
+           <a href="emacs-font-body.html#objectivec" class="toc">
                5.10 Objective-c
-           </A>
-           <BR>
-<LI>
-           <A HREF="emacs-font-body.html#outline" class="toc" >
+           </a>
+           <br>
+<li>
+           <a href="emacs-font-body.html#outline" class="toc">
                5.11 Outline
-           </A>
-           <BR>
-<LI>
-           <A HREF="emacs-font-body.html#sqlmode" class="toc" >
+           </a>
+           <br>
+<li>
+           <a href="emacs-font-body.html#sqlmode" class="toc">
                5.12 Sqlmode
-           </A>
-           <BR>
-<LI>
-           <A HREF="emacs-font-body.html#sql" class="toc" >
+           </a>
+           <br>
+<li>
+           <a href="emacs-font-body.html#sql" class="toc">
                5.13 SQL
-           </A>
-           <BR>
-<LI>
-           <A HREF="emacs-font-body.html#tcl" class="toc" >
+           </a>
+           <br>
+<li>
+           <a href="emacs-font-body.html#tcl" class="toc">
                5.14 TCL
-           </A>
-           <BR>
-<LI>
-           <A HREF="emacs-font-body.html#vhdl_an_adalike_language" class="toc" >
+           </a>
+           <br>
+<li>
+           <a href="emacs-font-body.html#vhdl_an_adalike_language" class="toc">
                5.15 VHDL (an Ada-like) language
-           </A>
-           <BR>
-<LI>
-           <A HREF="emacs-font-body.html#another_set_of_vhdl_keywords" class="toc" >
+           </a>
+           <br>
+<li>
+           <a href="emacs-font-body.html#another_set_of_vhdl_keywords" class="toc">
                5.16 Another set of VHDL keywords
-           </A>
-           <BR>
-</UL>
-<A HREF="emacs-font-body.html#emacs_html_writing_tools_and" class="toc" >
+           </a>
+           <br>
+</ul>
+<a href="emacs-font-body.html#emacs_html_writing_tools_and_font_lock" class="toc">
                6.0 Emacs HTML writing tools and font lock
-           </A>
-           <BR>
+           </a>
+           <br>
 
-<UL>
-<LI>
-           <A HREF="emacs-font-body.html#htmlhelpermode" class="toc" >
+<ul>
+<li>
+           <a href="emacs-font-body.html#htmlhelpermode" class="toc">
                6.1 Html-helper-mode
-           </A>
-           <BR>
-<LI>
-           <A HREF="emacs-font-body.html#htmlmode" class="toc" >
+           </a>
+           <br>
+<li>
+           <a href="emacs-font-body.html#htmlmode" class="toc">
                6.2 Html-mode
-           </A>
-           <BR>
-</UL>
-<A HREF="emacs-font-body.html#font_lock_and_hilit19" class="toc" >
+           </a>
+           <br>
+</ul>
+<a href="emacs-font-body.html#font_lock_and_hilit19" class="toc">
                7.0 Font lock and hilit19
-           </A>
-           <BR>
+           </a>
+           <br>
 
-<UL>
-<LI>
-           <A HREF="emacs-font-body.html#hilit19_description_old" class="toc" >
+<ul>
+<li>
+           <a href="emacs-font-body.html#hilit19_description_old" class="toc">
                7.1 Hilit19 description (old)
-           </A>
-           <BR>
-<LI>
-           <A HREF="emacs-font-body.html#dont_use_hilit19_any_more" class="toc" >
+           </a>
+           <br>
+<li>
+           <a href="emacs-font-body.html#dont_use_hilit19_any_more" class="toc">
                7.2 Don't use hilit19 any more
-           </A>
-           <BR>
-<LI>
-           <A HREF="emacs-font-body.html#fontlock_and_hilit19_cooperation" class="toc" >
+           </a>
+           <br>
+<li>
+           <a href="emacs-font-body.html#fontlock_and_hilit19_cooperation" class="toc">
                7.3 Font-lock and hilit19 co-operation
-           </A>
-           <BR>
-</UL>
-<A HREF="emacs-font-body.html#x_resource_settings" class="toc" >
+           </a>
+           <br>
+</ul>
+<a href="emacs-font-body.html#x_resource_settings" class="toc">
                8.0 X resource settings
-           </A>
-           <BR>
+           </a>
+           <br>
 
-<UL>
-<LI>
-           <A HREF="emacs-font-body.html#menu_bar_font_in_.xinitrc" class="toc" >
+<ul>
+<li>
+           <a href="emacs-font-body.html#menu_bar_font_in_xinitrc" class="toc">
                8.1 Menu bar font in .xinitrc
-           </A>
-           <BR>
-<LI>
-           <A HREF="emacs-font-body.html#emacs_colour_resources" class="toc" >
+           </a>
+           <br>
+<li>
+           <a href="emacs-font-body.html#emacs_colour_resources" class="toc">
                8.2 Emacs colour resources
-           </A>
-           <BR>
-<LI>
-           <A HREF="emacs-font-body.html#no_fonts_matching_patters_are" class="toc" >
+           </a>
+           <br>
+<li>
+           <a href="emacs-font-body.html#no_fonts_matching_patters_are_same_size_as_comment" class="toc">
                8.3 No fonts matching patters are same size as comment
-           </A>
-           <BR>
-</UL>
-<A HREF="emacs-font-body.html#why_all_the_fonts_are" class="toc" >
+           </a>
+           <br>
+</ul>
+<a href="emacs-font-body.html#why_all_the_fonts_are_not_available_in_emacs" class="toc">
                9.0 Why all the fonts are not available in emacs ?
-           </A>
-           <BR>
+           </a>
+           <br>
 
-<UL>
-<LI>
-           <A HREF="emacs-font-body.html#code_xf.el" class="toc" >
+<ul>
+<li>
+           <a href="emacs-font-body.html#code_xf_el" class="toc">
                9.1 Code xf.el
-           </A>
-           <BR>
-</UL>
-<A HREF="emacs-font-body.html#code_linemenu.el_highlighting_current_line" class="toc" >
+           </a>
+           <br>
+</ul>
+<a href="emacs-font-body.html#code_linemenu_el_highlighting_current_line" class="toc">
                10.0 Code: linemenu.el, Highlighting current line
-           </A>
-           <BR>
-<A HREF="emacs-font-body.html#msdos_emacs_19_port" class="toc" >
+           </a>
+           <br>
+<a href="emacs-font-body.html#msdos_emacs_19_port" class="toc">
                11.0 MS-DOS Emacs 19 port
-           </A>
-           <BR>
+           </a>
+           <br>
 
-<UL>
-<LI>
-           <A HREF="emacs-font-body.html#setting_background_colour" class="toc" >
+<ul>
+<li>
+           <a href="emacs-font-body.html#setting_background_colour" class="toc">
                11.1 Setting background colour
-           </A>
-           <BR>
-<LI>
-           <A HREF="emacs-font-body.html#code_pcwin.el" class="toc" >
+           </a>
+           <br>
+<li>
+           <a href="emacs-font-body.html#code_pcwin_el" class="toc">
                11.2 Code: pc-win.el
-           </A>
-           <BR>
-</UL>
-<A HREF="emacs-font-body.html#xtmotif_programming_and_fontlock" class="toc" >
+           </a>
+           <br>
+</ul>
+<a href="emacs-font-body.html#xtmotif_programming_and_fontlock" class="toc">
                12.0 Xt/Motif programming and font-lock
-           </A>
-           <BR>
+           </a>
+           <br>
 
-<UL>
-<LI>
-           <A HREF="emacs-font-body.html#code_xtfontlock.el" class="toc" >
+<ul>
+<li>
+           <a href="emacs-font-body.html#code_xtfontlock_el" class="toc">
                12.1 Code: xt-font-lock.el
-           </A>
-           <BR>
-</DIV>
-</BODY>
-</HTML>
+           </a>
+           <br>
+</ul>
+
+</div>
+</body>
+</html>

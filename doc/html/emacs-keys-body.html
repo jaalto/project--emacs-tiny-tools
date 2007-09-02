@@ -21,15 +21,13 @@ Emacs keybinfing help
   <meta http-equiv="description"
 	content="">
 
-
-  <meta http-equiv="Content-Type" content="text/html; charset=utf-8">
-
-  <meta http-equiv="Expires" content="Tue, 31 May 2005 07:01:38 GMT">
+<meta http-equiv="Content-Type" content="text/html; charset=utf-8">
+  <meta http-equiv="Expires" content="Thu,  1 Nov 2007 09:03:43 GMT">
 
 
 
   <meta name="Generator"
-	content="2005-04-01 09:01 Perl program t2html.pl v2005.0208 http://perl-text2html.sourceforge.net/">
+	content="2007-09-02 12:03 Perl program t2html.pl v2007.0526 http://perl-text2html.sourceforge.net/">
 
 
 
@@ -39,7 +37,9 @@ Emacs keybinfing help
 -->
 
 
+
     <style type="text/css">
+
 
 
         /*
@@ -212,7 +212,7 @@ Emacs keybinfing help
 
         blockquote
         {
-            margin-right: 0;
+            margin-right: 2em;
         }
 
         @media print   { BLOCKQUOTE
@@ -225,10 +225,18 @@ Emacs keybinfing help
             color: Navy;
         }
 
+        hr.special
+        {
+            width: 50%;
+            text-align; left;
+        }
+
         pre
         {
             font-family:   "Courier New", monospace;
             font-size:     0.8em;
+            margin-top:    1em;
+            margin-bottom: 1em;
         }
 
         pre.code
@@ -246,11 +254,18 @@ Emacs keybinfing help
 
             font-family:    "Courier New", monospace;
             font-size:      0.8em;
-
             color:          Navy;
         }
 
         /* //////////////////////// tables /////////////////////////// */
+
+        table
+        {
+            border: none;
+            width: 100%;
+            cellpadding: 10px;
+            cellspacing: 0px;
+        }
 
         table.basic
         {
@@ -326,6 +341,13 @@ Emacs keybinfing help
             background: #FFFFCC;
         }
 
+        table tr td pre
+        {
+                /*  Make PRE tables "airy" */
+                margin-top:    1em;
+                margin-bottom: 1em;
+        }
+
         table.shade-normal
         {
                 font-family:    "Courier New", monospace;
@@ -351,11 +373,6 @@ Emacs keybinfing help
         .shade-normal2-attrib
         {
             background: #E0E0F0;
-        }
-
-        table.shade-note
-        {
-            /* nothing special */
         }
 
         .shade-note-attrib
@@ -665,7 +682,7 @@ Emacs keybinfing help
             font-size: 0.9em;
         }
 
-
+    
 
     </style>
 
@@ -693,17 +710,15 @@ Emacs keybinfing help
 
     </script>
 
-</head>
+        </head>
 
 <body >
-</blockquote>
-           <hr>
+<hr>
                <A name="document_id"  id="document_id"></A>
                <h1>
                1.0 Document id
                
                </h1>
-           <blockquote>
 
 
 
@@ -717,9 +732,9 @@ Emacs keybinfing help
 
 
 
-
+<p>
 <p class="column8">
-        <EM><STRONG>$Id: emacs-keys-body.html,v 2.10 2005/04/17 10:55:18 jaalto Exp $</STRONG></EM><br>
+        <EM><STRONG>$Id: emacs-keys.txt,v 2.12 2004/11/12 07:27:44 jaalto Exp $</STRONG></EM><br>
 
 
 <p class="column8">
@@ -742,6 +757,8 @@ Emacs keybinfing help
 
 
 
+<p>
+<p class="column8">
         You have to know enough about basic emacs commands; E.g. what is
         <samp class="word">local-set-key</samp> <samp class="word">global-set-key</samp> and what's that <samp class="word">M-x</samp>. Refer to
         Emacs info pages (C-h i) for these matters. For the case study: I
@@ -759,19 +776,19 @@ Emacs keybinfing help
 
 
 
+<p>
+<p class="column8">
         Many thanks to a fellow worker Uwe Geuder, who explained me how
         to deal with keys in X-environment. Without him I would be still
         using remote, but crippled emacs interface and you wouldn't be
         reading the case study results or the xmodmap explanation.
 
-</blockquote>
-           <hr>
+<hr>
                <A name="various_binding_methods"  id="various_binding_methods"></A>
                <h1>
                2.0 Various binding methods
                
                </h1>
-           <blockquote>
 
 
 
@@ -784,15 +801,12 @@ Emacs keybinfing help
 
 
 
+<p>
+<p class="column8">
         The old Emacs C-A-S-H-M modifiers map to new syntax like this:
 
 <P>
-<TABLE  class="shade-normal"
-        width="94%"
-        border="0"
-        cellpadding="10"
-        cellspacing="0"
-        >
+<TABLE class="shade-normal">
     <TR>
     <TD class="shade-normal-attrib" valign="top">
     <PRE>
@@ -811,12 +825,7 @@ Emacs keybinfing help
         symbol names for mouse differ:
 
 <P>
-<TABLE  class="shade-normal"
-        width="94%"
-        border="0"
-        cellpadding="10"
-        cellspacing="0"
-        >
+<TABLE class="shade-normal">
     <TR>
     <TD class="shade-normal-attrib" valign="top">
     <PRE>
@@ -827,7 +836,7 @@ Emacs keybinfing help
 
 
 
-  <a name="emacs_versions_and_key_binding" id="emacs_versions_and_key_binding"></a>
+  <a name="emacs_versions_and_key_binding_syntax_compatibility_table" id="emacs_versions_and_key_binding_syntax_compatibility_table"></a>
   <h2>
       2.2 Emacs versions and key binding syntax compatibility table:
       
@@ -835,14 +844,9 @@ Emacs keybinfing help
 
 
 
-
+<p>
 <P>
-<TABLE  class="shade-normal"
-        width="94%"
-        border="0"
-        cellpadding="10"
-        cellspacing="0"
-        >
+<TABLE class="shade-normal">
     <TR>
     <TD class="shade-normal-attrib" valign="top">
     <PRE>
@@ -877,7 +881,7 @@ Emacs keybinfing help
 
 
 
-  <a name="ethics_what_is_the_correct" id="ethics_what_is_the_correct"></a>
+  <a name="ethics_what_is_the_correct_way" id="ethics_what_is_the_correct_way"></a>
   <h2>
       2.3 Ethics &ndash; what is the correct way?
       
@@ -886,7 +890,7 @@ Emacs keybinfing help
 
 
 
-
+<p>
 <p class="column10"><em class="quote10">
           I'm totally confused. What binding method should I use?</em>
 
@@ -899,12 +903,7 @@ Emacs keybinfing help
         these bindings.
 
 <P>
-<TABLE  class="shade-normal"
-        width="94%"
-        border="0"
-        cellpadding="10"
-        cellspacing="0"
-        >
+<TABLE class="shade-normal">
     <TR>
     <TD class="shade-normal-attrib" valign="top">
     <PRE>
@@ -934,12 +933,7 @@ Emacs keybinfing help
         WindowsNT, Unix etc.
 
 <P>
-<TABLE  class="shade-normal"
-        width="94%"
-        border="0"
-        cellpadding="10"
-        cellspacing="0"
-        >
+<TABLE class="shade-normal">
     <TR>
     <TD class="shade-normal-attrib" valign="top">
     <PRE>
@@ -952,12 +946,7 @@ Emacs keybinfing help
         Next best is new bracket style binding:
 
 <P>
-<TABLE  class="shade-normal"
-        width="94%"
-        border="0"
-        cellpadding="10"
-        cellspacing="0"
-        >
+<TABLE class="shade-normal">
     <TR>
     <TD class="shade-normal-attrib" valign="top">
     <PRE>
@@ -972,12 +961,7 @@ Emacs keybinfing help
         best to write separate code for Emacs and XEmacs:
 
 <P>
-<TABLE  class="shade-normal"
-        width="94%"
-        border="0"
-        cellpadding="10"
-        cellspacing="0"
-        >
+<TABLE class="shade-normal">
     <TR>
     <TD class="shade-normal-attrib" valign="top">
     <PRE>
@@ -997,14 +981,12 @@ Emacs keybinfing help
         The <samp class="word">kbd</samp> was slightly buggy in WinNT 19.34. Expect this syntax to
         be reliable in Emacs 20.x and up.
 
-</blockquote>
-           <hr>
+<hr>
                <A name="finding_the_key_syntax"  id="finding_the_key_syntax"></A>
                <h1>
                3.0 Finding the key syntax
                
                </h1>
-           <blockquote>
 
 
 
@@ -1017,6 +999,8 @@ Emacs keybinfing help
 
 
 
+<p>
+<p class="column8">
         Running Emacs in window system is different from running Emacs in
         console mode: meaning that Emacs has been started either with <samp class="word">-nw</samp>
         or from telnet over vt100 like terminal (No X or other window
@@ -1024,12 +1008,7 @@ Emacs keybinfing help
         bindings as your windowed Emacs. An example from Emacs:
 
 <P>
-<TABLE  class="shade-normal"
-        width="94%"
-        border="0"
-        cellpadding="10"
-        cellspacing="0"
-        >
+<TABLE class="shade-normal">
     <TR>
     <TD class="shade-normal-attrib" valign="top">
     <PRE>
@@ -1052,7 +1031,7 @@ Emacs keybinfing help
 
 
 
-  <a name="the_mx_viewlossage_command_helps" id="the_mx_viewlossage_command_helps"></a>
+  <a name="the_mx_viewlossage_command_helps_you" id="the_mx_viewlossage_command_helps_you"></a>
   <h2>
       3.2 The M-x view-lossage command helps you
       
@@ -1061,17 +1040,14 @@ Emacs keybinfing help
 
 
 
+<p>
+<p class="column8">
         Just press a &lt;key or sequence&gt; and immediately execute <samp class="word">C-h</samp> <samp class="word">l</samp>,
         or <samp class="word">M-x</samp> <samp class="word">view-lossage</samp> Then you can look at the key definition it
         produced. E.g. For <samp class="word">C-c</samp> <samp class="word">C-S-f1</samp> lossage buffer may show:
 
 <P>
-<TABLE  class="shade-normal"
-        width="94%"
-        border="0"
-        cellpadding="10"
-        cellspacing="0"
-        >
+<TABLE class="shade-normal">
     <TR>
     <TD class="shade-normal-attrib" valign="top">
     <PRE>
@@ -1086,12 +1062,7 @@ Emacs keybinfing help
         That is the exact form you can use:
 
 <P>
-<TABLE  class="shade-normal"
-        width="94%"
-        border="0"
-        cellpadding="10"
-        cellspacing="0"
-        >
+<TABLE class="shade-normal">
     <TR>
     <TD class="shade-normal-attrib" valign="top">
     <PRE>
@@ -1110,17 +1081,14 @@ Emacs keybinfing help
 
 
 
+<p>
+<p class="column8">
         Anonymous mentioned in gnu.emacs.help 1998-04-05
         in Message-ID: &lt;6g7obg$207@basement.replay.com&gt; that you can find
         the <samp class="word">read-kbd-macro</samp> syntax with following command:
 
 <P>
-<TABLE  class="shade-normal"
-        width="94%"
-        border="0"
-        cellpadding="10"
-        cellspacing="0"
-        >
+<TABLE class="shade-normal">
     <TR>
     <TD class="shade-normal-attrib" valign="top">
     <PRE>
@@ -1137,12 +1105,7 @@ Emacs keybinfing help
         It will also evaluate at compile-time.
 
 <P>
-<TABLE  class="shade-normal"
-        width="94%"
-        border="0"
-        cellpadding="10"
-        cellspacing="0"
-        >
+<TABLE class="shade-normal">
     <TR>
     <TD class="shade-normal-attrib" valign="top">
     <PRE>
@@ -1159,12 +1122,7 @@ Emacs keybinfing help
         So:
 
 <P>
-<TABLE  class="shade-normal"
-        width="94%"
-        border="0"
-        cellpadding="10"
-        cellspacing="0"
-        >
+<TABLE class="shade-normal">
     <TR>
     <TD class="shade-normal-attrib" valign="top">
     <PRE>
@@ -1184,12 +1142,7 @@ Emacs keybinfing help
         example:
 
 <P>
-<TABLE  class="shade-normal"
-        width="94%"
-        border="0"
-        cellpadding="10"
-        cellspacing="0"
-        >
+<TABLE class="shade-normal">
     <TR>
     <TD class="shade-normal-attrib" valign="top">
     <PRE>
@@ -1218,12 +1171,7 @@ Emacs keybinfing help
 
 
 <P>
-<TABLE  class="shade-normal"
-        width="94%"
-        border="0"
-        cellpadding="10"
-        cellspacing="0"
-        >
+<TABLE class="shade-normal">
     <TR>
     <TD class="shade-normal-attrib" valign="top">
     <PRE>
@@ -1285,12 +1233,7 @@ Emacs keybinfing help
         sends them while vt100 doesn't.
 
 <P>
-<TABLE  class="shade-normal"
-        width="94%"
-        border="0"
-        cellpadding="10"
-        cellspacing="0"
-        >
+<TABLE class="shade-normal">
     <TR>
     <TD class="shade-normal-attrib" valign="top">
     <PRE>
@@ -1306,12 +1249,7 @@ Emacs keybinfing help
         And the same with the syntax that works in Emacs and XEmacs:
 
 <P>
-<TABLE  class="shade-normal"
-        width="94%"
-        border="0"
-        cellpadding="10"
-        cellspacing="0"
-        >
+<TABLE class="shade-normal">
     <TR>
     <TD class="shade-normal-attrib" valign="top">
     <PRE>
@@ -1329,7 +1267,7 @@ Emacs keybinfing help
 
 
 
-  <a name="very_easy_way_just_go" id="very_easy_way_just_go"></a>
+  <a name="very_easy_way_just_go_and_use_mx_globalsetkey" id="very_easy_way_just_go_and_use_mx_globalsetkey"></a>
   <h2>
       3.4 Very easy way: just go and use M-x global-set-key
       
@@ -1338,6 +1276,8 @@ Emacs keybinfing help
 
 
 
+<p>
+<p class="column8">
         ...and hit the keys you want. Then go back and recall that previous
         command with <samp class="word">C-x</samp> <samp class="word">ESC</samp> <samp class="word">ESC</samp> and copy the output you see, and
         there is the full lisp command which does the binding.
@@ -1359,17 +1299,14 @@ Emacs keybinfing help
 
 
 
+<p>
+<p class="column8">
         One more way to find out some cryptic emacs key bindings is to use
         function <samp class="word">key-description</samp>. See how following binding can be
         converted into human readable format
 
 <P>
-<TABLE  class="shade-normal"
-        width="94%"
-        border="0"
-        cellpadding="10"
-        cellspacing="0"
-        >
+<TABLE class="shade-normal">
     <TR>
     <TD class="shade-normal-attrib" valign="top">
     <PRE>
@@ -1391,18 +1328,16 @@ Emacs keybinfing help
     </TR>
 </TABLE>
 
-</blockquote>
-           <hr>
-               <A name="how_do_i_give_argument"  id="how_do_i_give_argument"></A>
+<hr>
+               <A name="how_do_i_give_argument_to_command_when_i"  id="how_do_i_give_argument_to_command_when_i"></A>
                <h1>
                4.0 How do I give argument to command when I bind it to key?
                
                </h1>
-           <blockquote>
 
 
 
-  <a name="printing_a_string_by_pressing" id="printing_a_string_by_pressing"></a>
+  <a name="printing_a_string_by_pressing_a_key" id="printing_a_string_by_pressing_a_key"></a>
   <h2>
       4.1 Printing a string by pressing a key
       
@@ -1411,15 +1346,12 @@ Emacs keybinfing help
 
 
 
+<p>
+<p class="column8">
         You can make a key print arbitrary strings, like this
 
 <P>
-<TABLE  class="shade-normal"
-        width="94%"
-        border="0"
-        cellpadding="10"
-        cellspacing="0"
-        >
+<TABLE class="shade-normal">
     <TR>
     <TD class="shade-normal-attrib" valign="top">
     <PRE>
@@ -1437,7 +1369,7 @@ Emacs keybinfing help
 
 
 
-  <a name="running_macro_by_pressing_a" id="running_macro_by_pressing_a"></a>
+  <a name="running_macro_by_pressing_a_key" id="running_macro_by_pressing_a_key"></a>
   <h2>
       4.2 Running macro by pressing a key
       
@@ -1446,6 +1378,8 @@ Emacs keybinfing help
 
 
 
+<p>
+<p class="column8">
         You can also put macro into a key, but I'm not going to teach
         macros here. Macros are fine for ad-hoc tasks, but if you need
         something complex and which can be handed to someone else, please
@@ -1472,12 +1406,7 @@ Emacs keybinfing help
         uncomfortable.
 
 <P>
-<TABLE  class="shade-normal"
-        width="94%"
-        border="0"
-        cellpadding="10"
-        cellspacing="0"
-        >
+<TABLE class="shade-normal">
     <TR>
     <TD class="shade-normal-attrib" valign="top">
     <PRE>
@@ -1516,18 +1445,15 @@ Emacs keybinfing help
 
 
 
+<p>
+<p class="column8">
         Your key can run only <strong class="word">one</strong> command, and the attribute you give in
         key-binding must constitute of function symbol, self-insert command
         or vector macro. You denote symbols with prefixing name with a
         tick(').
 
 <P>
-<TABLE  class="shade-normal"
-        width="94%"
-        border="0"
-        cellpadding="10"
-        cellspacing="0"
-        >
+<TABLE class="shade-normal">
     <TR>
     <TD class="shade-normal-attrib" valign="top">
     <PRE>
@@ -1546,12 +1472,7 @@ Emacs keybinfing help
         forward-word).
 
 <P>
-<TABLE  class="shade-normal"
-        width="94%"
-        border="0"
-        cellpadding="10"
-        cellspacing="0"
-        >
+<TABLE class="shade-normal">
     <TR>
     <TD class="shade-normal-attrib" valign="top">
     <PRE>
@@ -1576,17 +1497,14 @@ Emacs keybinfing help
 
 
 
+<p>
+<p class="column8">
         When you may want to do more than call one function you have to
         start writing lisp. Because this paper is not about lisp, I'll just
         show simple example and how the command is attached to key.
 
 <P>
-<TABLE  class="shade-normal"
-        width="94%"
-        border="0"
-        cellpadding="10"
-        cellspacing="0"
-        >
+<TABLE class="shade-normal">
     <TR>
     <TD class="shade-normal-attrib" valign="top">
     <PRE>
@@ -1610,20 +1528,15 @@ Emacs keybinfing help
             your initials in front of function names, because if you
             later post the solution, people do not like seeing 'joe-func,
             bill-func ...
-	<li>Remember to put (interactive) command in your function: all
+<li>Remember to put (interactive) command in your function: all
             keyboard commands are &quot;interactive&quot;. The following error
-	            normally signifies if you forgot the interactive command:
+	            normally signifies if you forgot the interactive command:</li>
 </ul>
 
 
 
 <P>
-<TABLE  class="shade-normal"
-        width="94%"
-        border="0"
-        cellpadding="10"
-        cellspacing="0"
-        >
+<TABLE class="shade-normal">
     <TR>
     <TD class="shade-normal-attrib" valign="top">
     <PRE>
@@ -1642,16 +1555,13 @@ Emacs keybinfing help
 
 
 
+<p>
+<p class="column8">
         For mouse commands, you need &quot;e&quot; flag; memorize it from (e)vent.
         Substitute mouse-3 with button3 in XEmacs.
 
 <P>
-<TABLE  class="shade-normal"
-        width="94%"
-        border="0"
-        cellpadding="10"
-        cellspacing="0"
-        >
+<TABLE class="shade-normal">
     <TR>
     <TD class="shade-normal-attrib" valign="top">
     <PRE>
@@ -1681,7 +1591,7 @@ Emacs keybinfing help
 
 
 
-  <a name="calling_function_with_different_default" id="calling_function_with_different_default"></a>
+  <a name="calling_function_with_different_default_argument" id="calling_function_with_different_default_argument"></a>
   <h2>
       4.6 Calling function with different default argument
       
@@ -1690,6 +1600,8 @@ Emacs keybinfing help
 
 
 
+<p>
+<p class="column8">
         Say you want different scroll command: you want to pass argument 1.
         In this simple case, when you aren't needing any additional
         commands, we use short lambda notation. Now I hear &quot;What on earth
@@ -1699,12 +1611,7 @@ Emacs keybinfing help
         &quot;lambda&quot;, otherwise writing the function is no different.
 
 <P>
-<TABLE  class="shade-normal"
-        width="94%"
-        border="0"
-        cellpadding="10"
-        cellspacing="0"
-        >
+<TABLE class="shade-normal">
     <TR>
     <TD class="shade-normal-attrib" valign="top">
     <PRE>
@@ -1729,12 +1636,7 @@ Emacs keybinfing help
         to be strict, the format
 
 <P>
-<TABLE  class="shade-normal"
-        width="94%"
-        border="0"
-        cellpadding="10"
-        cellspacing="0"
-        >
+<TABLE class="shade-normal">
     <TR>
     <TD class="shade-normal-attrib" valign="top">
     <PRE>
@@ -1749,12 +1651,7 @@ Emacs keybinfing help
         way is:
 
 <P>
-<TABLE  class="shade-normal"
-        width="94%"
-        border="0"
-        cellpadding="10"
-        cellspacing="0"
-        >
+<TABLE class="shade-normal">
     <TR>
     <TD class="shade-normal-attrib" valign="top">
     <PRE>
@@ -1769,12 +1666,7 @@ Emacs keybinfing help
         compared to this direct call with no arguments:
 
 <P>
-<TABLE  class="shade-normal"
-        width="94%"
-        border="0"
-        cellpadding="10"
-        cellspacing="0"
-        >
+<TABLE class="shade-normal">
     <TR>
     <TD class="shade-normal-attrib" valign="top">
     <PRE>
@@ -1784,7 +1676,7 @@ Emacs keybinfing help
 
 
 
-  <a name="using_complex_lambda_function_in" id="using_complex_lambda_function_in"></a>
+  <a name="using_complex_lambda_function_in_key_binding" id="using_complex_lambda_function_in_key_binding"></a>
   <h2>
       4.7 Using complex lambda function in key binding
       
@@ -1793,15 +1685,12 @@ Emacs keybinfing help
 
 
 
+<p>
+<p class="column8">
         See the following example, which is more complicated.
 
 <P>
-<TABLE  class="shade-normal"
-        width="94%"
-        border="0"
-        cellpadding="10"
-        cellspacing="0"
-        >
+<TABLE class="shade-normal">
     <TR>
     <TD class="shade-normal-attrib" valign="top">
     <PRE>
@@ -1823,12 +1712,7 @@ Emacs keybinfing help
         function then? It goes like this:
 
 <P>
-<TABLE  class="shade-normal"
-        width="94%"
-        border="0"
-        cellpadding="10"
-        cellspacing="0"
-        >
+<TABLE class="shade-normal">
     <TR>
     <TD class="shade-normal-attrib" valign="top">
     <PRE>
@@ -1844,18 +1728,16 @@ Emacs keybinfing help
     </TR>
 </TABLE>
 
-</blockquote>
-           <hr>
+<hr>
                <A name="about_key_maps"  id="about_key_maps"></A>
                <h1>
                5.0 About key maps
                
                </h1>
-           <blockquote>
 
 
 
-  <a name="before_defining_the_key_you" id="before_defining_the_key_you"></a>
+  <a name="before_defining_the_key_you_should_know_about_key" id="before_defining_the_key_you_should_know_about_key"></a>
   <h2>
       5.1 Before defining the key, you should know about key maps
       
@@ -1864,6 +1746,8 @@ Emacs keybinfing help
 
 
 
+<p>
+<p class="column8">
         File: emacs, Node: Keymaps, Node: Prefix Keymaps,<br>
         File: emacs, Node: Minibuffer Maps<br>
 
@@ -1873,12 +1757,7 @@ Emacs keybinfing help
         So you can't do this in your .emacs:
 
 <P>
-<TABLE  class="shade-normal"
-        width="94%"
-        border="0"
-        cellpadding="10"
-        cellspacing="0"
-        >
+<TABLE class="shade-normal">
     <TR>
     <TD class="shade-normal-attrib" valign="top">
     <PRE>
@@ -1895,12 +1774,7 @@ Emacs keybinfing help
         is around:
 
 <P>
-<TABLE  class="shade-normal"
-        width="94%"
-        border="0"
-        cellpadding="10"
-        cellspacing="0"
-        >
+<TABLE class="shade-normal">
     <TR>
     <TD class="shade-normal-attrib" valign="top">
     <PRE>
@@ -1918,7 +1792,7 @@ Emacs keybinfing help
 
 
 
-  <a name="default_emacs_key_maps_and" id="default_emacs_key_maps_and"></a>
+  <a name="default_emacs_key_maps_and_packages_key_maps" id="default_emacs_key_maps_and_packages_key_maps"></a>
   <h2>
       5.2 Default emacs key maps and packages' key maps
       
@@ -1927,15 +1801,12 @@ Emacs keybinfing help
 
 
 
+<p>
+<p class="column8">
         These are predefined keypmaps which are always present
 
 <P>
-<TABLE  class="shade-normal"
-        width="94%"
-        border="0"
-        cellpadding="10"
-        cellspacing="0"
-        >
+<TABLE class="shade-normal">
     <TR>
     <TD class="shade-normal-attrib" valign="top">
     <PRE>
@@ -1951,12 +1822,7 @@ Emacs keybinfing help
         Which gives you the ability to use commands like:
 
 <P>
-<TABLE  class="shade-normal"
-        width="94%"
-        border="0"
-        cellpadding="10"
-        cellspacing="0"
-        >
+<TABLE class="shade-normal">
     <TR>
     <TD class="shade-normal-attrib" valign="top">
     <PRE>
@@ -1981,12 +1847,7 @@ Emacs keybinfing help
         hooks are usually named according to mode, like:
 
 <P>
-<TABLE  class="shade-normal"
-        width="94%"
-        border="0"
-        cellpadding="10"
-        cellspacing="0"
-        >
+<TABLE class="shade-normal">
     <TR>
     <TD class="shade-normal-attrib" valign="top">
     <PRE>
@@ -2000,12 +1861,7 @@ Emacs keybinfing help
         modes are also named similarly:
 
 <P>
-<TABLE  class="shade-normal"
-        width="94%"
-        border="0"
-        cellpadding="10"
-        cellspacing="0"
-        >
+<TABLE class="shade-normal">
     <TR>
     <TD class="shade-normal-attrib" valign="top">
     <PRE>
@@ -2019,12 +1875,7 @@ Emacs keybinfing help
         <samp class="word">c++-mode</samp>:
 
 <P>
-<TABLE  class="shade-normal"
-        width="94%"
-        border="0"
-        cellpadding="10"
-        cellspacing="0"
-        >
+<TABLE class="shade-normal">
     <TR>
     <TD class="shade-normal-attrib" valign="top">
     <PRE>
@@ -2062,7 +1913,7 @@ Emacs keybinfing help
 
 
 
-  <a name="prefix_keymaps_in_new_emacs" id="prefix_keymaps_in_new_emacs"></a>
+  <a name="prefix_keymaps_in_new_emacs_versions" id="prefix_keymaps_in_new_emacs_versions"></a>
   <h2>
       5.3 Prefix keymaps in new emacs versions.
       
@@ -2071,6 +1922,8 @@ Emacs keybinfing help
 
 
 
+<p>
+<p class="column8">
         In Emacs, I consider key <samp class="word">C-z</samp> pretty useless. In X it runs command
         <samp class="word">iconify-or-deiconify-frame</samp> which I never use. The C-z key is near
         the Shift modifier, so it's a perfect candidate for user's own
@@ -2083,12 +1936,7 @@ Emacs keybinfing help
         In new emacs, defining a prefix key is pretty simple:
 
 <P>
-<TABLE  class="shade-normal"
-        width="94%"
-        border="0"
-        cellpadding="10"
-        cellspacing="0"
-        >
+<TABLE class="shade-normal">
     <TR>
     <TD class="shade-normal-attrib" valign="top">
     <PRE>
@@ -2119,7 +1967,7 @@ Emacs keybinfing help
 
 
 
-  <a name="prefix_key_maps_in_old" id="prefix_key_maps_in_old"></a>
+  <a name="prefix_key_maps_in_old_emacs_versions" id="prefix_key_maps_in_old_emacs_versions"></a>
   <h2>
       5.4 Prefix key maps in old emacs versions.
       
@@ -2128,17 +1976,14 @@ Emacs keybinfing help
 
 
 
+<p>
+<p class="column8">
         In older emacs versions you cannot define key maps so easily, like
         just giving keys after another in string notation: &quot;KeyKeyKey&quot;. You
         have to create a key map and put your keys there.
 
 <P>
-<TABLE  class="shade-normal"
-        width="94%"
-        border="0"
-        cellpadding="10"
-        cellspacing="0"
-        >
+<TABLE class="shade-normal">
     <TR>
     <TD class="shade-normal-attrib" valign="top">
     <PRE>
@@ -2170,12 +2015,7 @@ Emacs keybinfing help
         have to change the prefix to relocate the map:
 
 <P>
-<TABLE  class="shade-normal"
-        width="94%"
-        border="0"
-        cellpadding="10"
-        cellspacing="0"
-        >
+<TABLE class="shade-normal">
     <TR>
     <TD class="shade-normal-attrib" valign="top">
     <PRE>
@@ -2191,7 +2031,7 @@ Emacs keybinfing help
 
 
 
-  <a name="functionkeymap_where_do_i_need" id="functionkeymap_where_do_i_need"></a>
+  <a name="functionkeymap_where_do_i_need_it" id="functionkeymap_where_do_i_need_it"></a>
   <h2>
       5.5 Function-key-map &ndash; where do I need it?
       
@@ -2200,18 +2040,15 @@ Emacs keybinfing help
 
 
 
+<p>
+<p class="column8">
         When making bindings in <samp class="word">function-key-map</samp>, other bindings that
         affect a key will be bound automatically. <samp class="word">keyboard-translate-table</samp>
         also <strong class="word">remaps</strong> similarly. See following, where we make f10 key to
         work like C-x
 
 <P>
-<TABLE  class="shade-normal"
-        width="94%"
-        border="0"
-        cellpadding="10"
-        cellspacing="0"
-        >
+<TABLE class="shade-normal">
     <TR>
     <TD class="shade-normal-attrib" valign="top">
     <PRE>
@@ -2225,12 +2062,7 @@ Emacs keybinfing help
         or use the following, which work only in X winsowed Emacs
 
 <P>
-<TABLE  class="shade-normal"
-        width="94%"
-        border="0"
-        cellpadding="10"
-        cellspacing="0"
-        >
+<TABLE class="shade-normal">
     <TR>
     <TD class="shade-normal-attrib" valign="top">
     <PRE>
@@ -2241,7 +2073,7 @@ Emacs keybinfing help
 
 
 
-  <a name="how_to_generate_cashm_modifiers" id="how_to_generate_cashm_modifiers"></a>
+  <a name="how_to_generate_cashm_modifiers_from_keyboard_keys" id="how_to_generate_cashm_modifiers_from_keyboard_keys"></a>
   <h2>
       5.6 How to generate C-A-S-H-M modifiers from keyboard keys
       
@@ -2250,16 +2082,13 @@ Emacs keybinfing help
 
 
 
+<p>
+<p class="column8">
         <span class="word-ref">[Mohsin Ahmed <EM><a href="mailto:mosh@sasi.com" >mosh@sasi.com</A></EM>]</span> You can generate the modifiers
         if your emacs doesn't generate them by default:
 
 <P>
-<TABLE  class="shade-normal"
-        width="94%"
-        border="0"
-        cellpadding="10"
-        cellspacing="0"
-        >
+<TABLE class="shade-normal">
     <TR>
     <TD class="shade-normal-attrib" valign="top">
     <PRE>
@@ -2284,18 +2113,15 @@ Emacs keybinfing help
 
 
 
+<p>
+<p class="column8">
         &quot;File: elisp, Node: Key Binding Commands&quot; Because you can run into
         deep troubles when trying to set some key-bindings, it's always
         good to try them out first; choose a mode that you don't use
         normally, like <samp class="word">pascal-mode</samp> and and use command:
 
 <P>
-<TABLE  class="shade-normal"
-        width="94%"
-        border="0"
-        cellpadding="10"
-        cellspacing="0"
-        >
+<TABLE class="shade-normal">
     <TR>
     <TD class="shade-normal-attrib" valign="top">
     <PRE>
@@ -2308,14 +2134,12 @@ Emacs keybinfing help
         If you happend to mix up emacs somehow, don't panic, you only
         altered keys in the <samp class="word">pascal-mode-map</samp>.
 
-</blockquote>
-           <hr>
+<hr>
                <A name="ascii_and_nonascii_keys"  id="ascii_and_nonascii_keys"></A>
                <h1>
                6.0 Ascii and non-ascii keys
                
                </h1>
-           <blockquote>
 
 
 
@@ -2328,6 +2152,8 @@ Emacs keybinfing help
 
 
 
+<p>
+<p class="column8">
         File: elisp, Node: Character Type
 
 
@@ -2336,12 +2162,7 @@ Emacs keybinfing help
         control equivalent of <samp class="word">?</samp>:
 
 <P>
-<TABLE  class="shade-normal"
-        width="94%"
-        border="0"
-        cellpadding="10"
-        cellspacing="0"
-        >
+<TABLE class="shade-normal">
     <TR>
     <TD class="shade-normal-attrib" valign="top">
     <PRE>
@@ -2367,6 +2188,8 @@ Emacs keybinfing help
 
 
 
+<p>
+<p class="column8">
         Your keyboard normally has qwerty keys, that has known ascii
         codes. You can use shift-key to double the keys, but they are still
         known ascii codes. But if you use any other modifier, the program
@@ -2384,12 +2207,7 @@ Emacs keybinfing help
         the lisp command, we would see some strange code for it:
 
 <P>
-<TABLE  class="shade-normal"
-        width="94%"
-        border="0"
-        cellpadding="10"
-        cellspacing="0"
-        >
+<TABLE class="shade-normal">
     <TR>
     <TD class="shade-normal-attrib" valign="top">
     <PRE>
@@ -2404,12 +2222,7 @@ Emacs keybinfing help
         more portable alternative:
 
 <P>
-<TABLE  class="shade-normal"
-        width="94%"
-        border="0"
-        cellpadding="10"
-        cellspacing="0"
-        >
+<TABLE class="shade-normal">
     <TR>
     <TD class="shade-normal-attrib" valign="top">
     <PRE>
@@ -2436,6 +2249,8 @@ Emacs keybinfing help
 
 
 
+<p>
+<p class="column8">
         File: emacs, Node: Named ASCII Chars
 
 
@@ -2444,12 +2259,7 @@ Emacs keybinfing help
         I had written all my bindings using the vector notation:
 
 <P>
-<TABLE  class="shade-normal"
-        width="94%"
-        border="0"
-        cellpadding="10"
-        cellspacing="0"
-        >
+<TABLE class="shade-normal">
     <TR>
     <TD class="shade-normal-attrib" valign="top">
     <PRE>
@@ -2463,12 +2273,7 @@ Emacs keybinfing help
         <em class="word">windowed</em>. Now, I started the emacs like this in Xterm:
 
 <P>
-<TABLE  class="shade-normal"
-        width="94%"
-        border="0"
-        cellpadding="10"
-        cellspacing="0"
-        >
+<TABLE class="shade-normal">
     <TR>
     <TD class="shade-normal-attrib" valign="top">
     <PRE>
@@ -2483,12 +2288,7 @@ Emacs keybinfing help
         bindings
 
 <P>
-<TABLE  class="shade-normal"
-        width="94%"
-        border="0"
-        cellpadding="10"
-        cellspacing="0"
-        >
+<TABLE class="shade-normal">
     <TR>
     <TD class="shade-normal-attrib" valign="top">
     <PRE>
@@ -2512,7 +2312,7 @@ Emacs keybinfing help
 
 
 
-  <a name="case_study_why_cant_i" id="case_study_why_cant_i"></a>
+  <a name="case_study_why_cant_i_assign_key_esc_c" id="case_study_why_cant_i_assign_key_esc_c"></a>
   <h2>
       6.4 Case study: Why can't I assign key &lt;ESC C-'&gt; ?
       
@@ -2521,19 +2321,14 @@ Emacs keybinfing help
 
 
 
-
+<p>
 <p class="column10"><em class="quote10">
           ...I tried all these choices. What I'm doing wrong?
           None of these work..</em>
 
 
 <P>
-<TABLE  class="shade-normal"
-        width="94%"
-        border="0"
-        cellpadding="10"
-        cellspacing="0"
-        >
+<TABLE class="shade-normal">
     <TR>
     <TD class="shade-normal-attrib" valign="top">
     <PRE>
@@ -2553,12 +2348,7 @@ Emacs keybinfing help
         of M anywhere. The solution is first to look at what C-h l gives:
 
 <P>
-<TABLE  class="shade-normal"
-        width="94%"
-        border="0"
-        cellpadding="10"
-        cellspacing="0"
-        >
+<TABLE class="shade-normal">
     <TR>
     <TD class="shade-normal-attrib" valign="top">
     <PRE>
@@ -2571,12 +2361,7 @@ Emacs keybinfing help
         So, let's turn it into key.
 
 <P>
-<TABLE  class="shade-normal"
-        width="94%"
-        border="0"
-        cellpadding="10"
-        cellspacing="0"
-        >
+<TABLE class="shade-normal">
     <TR>
     <TD class="shade-normal-attrib" valign="top">
     <PRE>
@@ -2605,12 +2390,7 @@ Emacs keybinfing help
         Ctrl-' isn't valid ascii code.
 
 <P>
-<TABLE  class="shade-normal"
-        width="94%"
-        border="0"
-        cellpadding="10"
-        cellspacing="0"
-        >
+<TABLE class="shade-normal">
     <TR>
     <TD class="shade-normal-attrib" valign="top">
     <PRE>
@@ -2620,7 +2400,7 @@ Emacs keybinfing help
 
 
 
-  <a name="case_study_how_to_bind" id="case_study_how_to_bind"></a>
+  <a name="case_study_how_to_bind_a_function_to_ctrl" id="case_study_how_to_bind_a_function_to_ctrl"></a>
   <h2>
       6.5 Case study: How to bind a function to Ctrl-?
       
@@ -2629,16 +2409,13 @@ Emacs keybinfing help
 
 
 
+<p>
+<p class="column8">
         Hrvoje Niksic <EM><a href="mailto:hniksic@srce.hr" >hniksic@srce.hr</A></EM> In new emacs where you can use the
         XEmacs style binding, this is easy
 
 <P>
-<TABLE  class="shade-normal"
-        width="94%"
-        border="0"
-        cellpadding="10"
-        cellspacing="0"
-        >
+<TABLE class="shade-normal">
     <TR>
     <TD class="shade-normal-attrib" valign="top">
     <PRE>
@@ -2652,12 +2429,7 @@ Emacs keybinfing help
         where the following Emacs binding, while valid, does not work
 
 <P>
-<TABLE  class="shade-normal"
-        width="94%"
-        border="0"
-        cellpadding="10"
-        cellspacing="0"
-        >
+<TABLE class="shade-normal">
     <TR>
     <TD class="shade-normal-attrib" valign="top">
     <PRE>
@@ -2667,7 +2439,7 @@ Emacs keybinfing help
 
 
 
-  <a name="portable_keybindings_command_emacs_nw" id="portable_keybindings_command_emacs_nw"></a>
+  <a name="portable_keybindings_command_emacs_nw_is_your_friend" id="portable_keybindings_command_emacs_nw_is_your_friend"></a>
   <h2>
       6.6 Portable keybindings &ndash; command 'emacs -nw' is your friend
       
@@ -2676,6 +2448,8 @@ Emacs keybinfing help
 
 
 
+<p>
+<p class="column8">
         To have portable bindings, the key settings should work in any
         environment, no matter how you start your emacs. But if you're used
         to X environment, you probably haven't paid much attention in
@@ -2683,12 +2457,7 @@ Emacs keybinfing help
         non-Windowed emacs, e.g. there is no equivalent for this:
 
 <P>
-<TABLE  class="shade-normal"
-        width="94%"
-        border="0"
-        cellpadding="10"
-        cellspacing="0"
-        >
+<TABLE class="shade-normal">
     <TR>
     <TD class="shade-normal-attrib" valign="top">
     <PRE>
@@ -2702,12 +2471,7 @@ Emacs keybinfing help
         obvious:
 
 <P>
-<TABLE  class="shade-normal"
-        width="94%"
-        border="0"
-        cellpadding="10"
-        cellspacing="0"
-        >
+<TABLE class="shade-normal">
     <TR>
     <TD class="shade-normal-attrib" valign="top">
     <PRE>
@@ -2725,12 +2489,7 @@ Emacs keybinfing help
         that there are sections like:
 
 <P>
-<TABLE  class="shade-normal"
-        width="94%"
-        border="0"
-        cellpadding="10"
-        cellspacing="0"
-        >
+<TABLE class="shade-normal">
     <TR>
     <TD class="shade-normal-attrib" valign="top">
     <PRE>
@@ -2752,12 +2511,7 @@ Emacs keybinfing help
         ~/.emacs
 
 <P>
-<TABLE  class="shade-normal"
-        width="94%"
-        border="0"
-        cellpadding="10"
-        cellspacing="0"
-        >
+<TABLE class="shade-normal">
     <TR>
     <TD class="shade-normal-attrib" valign="top">
     <PRE>
@@ -2785,12 +2539,7 @@ Emacs keybinfing help
         non-windowed emacs. This example is identical to above one.
 
 <P>
-<TABLE  class="shade-normal"
-        width="94%"
-        border="0"
-        cellpadding="10"
-        cellspacing="0"
-        >
+<TABLE class="shade-normal">
     <TR>
     <TD class="shade-normal-attrib" valign="top">
     <PRE>
@@ -2807,14 +2556,12 @@ Emacs keybinfing help
     </TR>
 </TABLE>
 
-</blockquote>
-           <hr>
+<hr>
                <A name="emacs_backspace_binding_problem"  id="emacs_backspace_binding_problem"></A>
                <h1>
                7.0 Emacs backspace binding problem
                
                </h1>
-           <blockquote>
 
 
 
@@ -2827,15 +2574,12 @@ Emacs keybinfing help
 
 
 
+<p>
+<p class="column8">
         In XEmacs 20.3 you can just set
 
 <P>
-<TABLE  class="shade-normal"
-        width="94%"
-        border="0"
-        cellpadding="10"
-        cellspacing="0"
-        >
+<TABLE class="shade-normal">
     <TR>
     <TD class="shade-normal-attrib" valign="top">
     <PRE>
@@ -2858,14 +2602,9 @@ Emacs keybinfing help
 
 
 
-
+<p>
 <P>
-<TABLE  class="shade-normal"
-        width="94%"
-        border="0"
-        cellpadding="10"
-        cellspacing="0"
-        >
+<TABLE class="shade-normal">
     <TR>
     <TD class="shade-normal-attrib" valign="top">
     <PRE>
@@ -2882,12 +2621,7 @@ Emacs keybinfing help
         particular lines and the associated comments:
 
 <P>
-<TABLE  class="shade-normal"
-        width="94%"
-        border="0"
-        cellpadding="10"
-        cellspacing="0"
-        >
+<TABLE class="shade-normal">
     <TR>
     <TD class="shade-normal-attrib" valign="top">
     <PRE>
@@ -2913,12 +2647,7 @@ Emacs keybinfing help
         definition:
 
 <P>
-<TABLE  class="shade-normal"
-        width="94%"
-        border="0"
-        cellpadding="10"
-        cellspacing="0"
-        >
+<TABLE class="shade-normal">
     <TR>
     <TD class="shade-normal-attrib" valign="top">
     <PRE>
@@ -2992,12 +2721,7 @@ Emacs keybinfing help
         function delete-char. Add the following to your .emacs file:
 
 <P>
-<TABLE  class="shade-normal"
-        width="94%"
-        border="0"
-        cellpadding="10"
-        cellspacing="0"
-        >
+<TABLE class="shade-normal">
     <TR>
     <TD class="shade-normal-attrib" valign="top">
     <PRE>
@@ -3024,16 +2748,13 @@ Emacs keybinfing help
 
 
 
+<p>
+<p class="column8">
 <span class="quote7">Jari Aalto</span><BR>
         First we detect if emacs can differentiate them. Do following:
 
 <P>
-<TABLE  class="shade-normal"
-        width="94%"
-        border="0"
-        cellpadding="10"
-        cellspacing="0"
-        >
+<TABLE class="shade-normal">
     <TR>
     <TD class="shade-normal-attrib" valign="top">
     <PRE>
@@ -3047,12 +2768,7 @@ Emacs keybinfing help
         If you see something like
 
 <P>
-<TABLE  class="shade-normal"
-        width="94%"
-        border="0"
-        cellpadding="10"
-        cellspacing="0"
-        >
+<TABLE class="shade-normal">
     <TR>
     <TD class="shade-normal-attrib" valign="top">
     <PRE>
@@ -3068,12 +2784,7 @@ Emacs keybinfing help
         emacs setup:
 
 <P>
-<TABLE  class="shade-normal"
-        width="94%"
-        border="0"
-        cellpadding="10"
-        cellspacing="0"
-        >
+<TABLE class="shade-normal">
     <TR>
     <TD class="shade-normal-attrib" valign="top">
     <PRE>
@@ -3088,12 +2799,7 @@ Emacs keybinfing help
         gnu.emacs.help, that the following works in Windows 95.
 
 <P>
-<TABLE  class="shade-normal"
-        width="94%"
-        border="0"
-        cellpadding="10"
-        cellspacing="0"
-        >
+<TABLE class="shade-normal">
     <TR>
     <TD class="shade-normal-attrib" valign="top">
     <PRE>
@@ -3125,12 +2831,7 @@ Emacs keybinfing help
         me under SunOS/X11R6:
 
 <P>
-<TABLE  class="shade-normal"
-        width="94%"
-        border="0"
-        cellpadding="10"
-        cellspacing="0"
-        >
+<TABLE class="shade-normal">
     <TR>
     <TD class="shade-normal-attrib" valign="top">
     <PRE>
@@ -3148,12 +2849,7 @@ Emacs keybinfing help
         backspace to work
 
 <P>
-<TABLE  class="shade-normal"
-        width="94%"
-        border="0"
-        cellpadding="10"
-        cellspacing="0"
-        >
+<TABLE class="shade-normal">
     <TR>
     <TD class="shade-normal-attrib" valign="top">
     <PRE>
@@ -3172,6 +2868,8 @@ Emacs keybinfing help
 
 
 
+<p>
+<p class="column8">
         This is my favorite, If you use both X and non-X, it'll detect the
         non-X, where the troubles usually start. After this code; the
         <samp class="word">delete</samp> key is out and produces the <samp class="word">C-h</samp> code. That's not a loss
@@ -3179,12 +2877,7 @@ Emacs keybinfing help
         <samp class="word">backspace</samp> key.
 
 <P>
-<TABLE  class="shade-normal"
-        width="94%"
-        border="0"
-        cellpadding="10"
-        cellspacing="0"
-        >
+<TABLE class="shade-normal">
     <TR>
     <TD class="shade-normal-attrib" valign="top">
     <PRE>
@@ -3212,7 +2905,7 @@ Emacs keybinfing help
 
 
 
-
+<p>
 <p class="column10"><em class="quote10">
           <EM><a href="mailto:marc@watson.ibm.com" >marc@watson.ibm.com</A></EM> (Marc Auslander),  04 Jan 1996</em>
 
@@ -3222,12 +2915,7 @@ Emacs keybinfing help
         The following works. I'll say more below.
 
 <P>
-<TABLE  class="shade-normal"
-        width="94%"
-        border="0"
-        cellpadding="10"
-        cellspacing="0"
-        >
+<TABLE class="shade-normal">
     <TR>
     <TD class="shade-normal-attrib" valign="top">
     <PRE>
@@ -3270,18 +2958,16 @@ Emacs keybinfing help
         please. Of course, you could modify it to use <span class="word-ref">[delete]</span> as DEL and
         <span class="word-ref">[backspace]</span> as something else if you prefer.
 
-</blockquote>
-           <hr>
+<hr>
                <A name="some_article_snippets_qa"  id="some_article_snippets_qa"></A>
                <h1>
                8.0 Some article snippets, Q/A
                
                </h1>
-           <blockquote>
 
 
 
-  <a name="i_cant_use_cs_and" id="i_cant_use_cs_and"></a>
+  <a name="i_cant_use_cs_and_cq_in_emacs_due" id="i_cant_use_cs_and_cq_in_emacs_due"></a>
   <h2>
       8.1 I can't use C-s and C-q in emacs due to control flow.
       
@@ -3290,6 +2976,8 @@ Emacs keybinfing help
 
 
 
+<p>
+<p class="column8">
         You have to call <samp class="word">M-x</samp> <samp class="word">enable-flow-control</samp>. When handling is
         enabled, user can type C-s as C-\, and C-q as C-^. With arg, enable
         flow control mode if arg is positive, otherwise disable.
@@ -3305,7 +2993,7 @@ Emacs keybinfing help
 
 
 
-
+<p>
 <p class="column10"><em class="quote10">
           Yes, I've read the FAQ but it just doesn't work. It would still
           freeze the screen after I typed either &quot;stty -ixon&quot; or &quot;stty
@@ -3330,16 +3018,13 @@ Emacs keybinfing help
 
 
 
+<p>
+<p class="column8">
         I am trying to get a function key <samp class="word">kp-f3</samp> to act just like
         C-s does...
 
 <P>
-<TABLE  class="shade-normal"
-        width="94%"
-        border="0"
-        cellpadding="10"
-        cellspacing="0"
-        >
+<TABLE class="shade-normal">
     <TR>
     <TD class="shade-normal-attrib" valign="top">
     <PRE>
@@ -3355,7 +3040,7 @@ Emacs keybinfing help
 
 
 
-  <a name="im_in_emacs_that_doesnt" id="im_in_emacs_that_doesnt"></a>
+  <a name="im_in_emacs_that_doesnt_recognize_my_function_keys" id="im_in_emacs_that_doesnt_recognize_my_function_keys"></a>
   <h2>
       8.4 I'm in emacs that doesn't recognize my function keys?
       
@@ -3364,6 +3049,8 @@ Emacs keybinfing help
 
 
 
+<p>
+<p class="column8">
         Suppose you have heavily programmed your function keys (or any
         vector notation keys) and now you're in environment where these
         keys are not recognized. You don't want to remap your function
@@ -3377,12 +3064,7 @@ Emacs keybinfing help
         command that does it:
 
 <P>
-<TABLE  class="shade-normal"
-        width="94%"
-        border="0"
-        cellpadding="10"
-        cellspacing="0"
-        >
+<TABLE class="shade-normal">
     <TR>
     <TD class="shade-normal-attrib" valign="top">
     <PRE>
@@ -3397,12 +3079,7 @@ Emacs keybinfing help
         we want to have one key to run multiple keys we'd do it like this:
 
 <P>
-<TABLE  class="shade-normal"
-        width="94%"
-        border="0"
-        cellpadding="10"
-        cellspacing="0"
-        >
+<TABLE class="shade-normal">
     <TR>
     <TD class="shade-normal-attrib" valign="top">
     <PRE>
@@ -3421,12 +3098,7 @@ Emacs keybinfing help
         put the tick there like this:
 
 <P>
-<TABLE  class="shade-normal"
-        width="94%"
-        border="0"
-        cellpadding="10"
-        cellspacing="0"
-        >
+<TABLE class="shade-normal">
     <TR>
     <TD class="shade-normal-attrib" valign="top">
     <PRE>
@@ -3442,12 +3114,7 @@ Emacs keybinfing help
         other self quoting types are:
 
 <P>
-<TABLE  class="shade-normal"
-        width="94%"
-        border="0"
-        cellpadding="10"
-        cellspacing="0"
-        >
+<TABLE class="shade-normal">
     <TR>
     <TD class="shade-normal-attrib" valign="top">
     <PRE>
@@ -3458,7 +3125,7 @@ Emacs keybinfing help
 
 
 
-  <a name="i_dont_seem_to_see" id="i_dont_seem_to_see"></a>
+  <a name="i_dont_seem_to_see_the_controlspace_sequence" id="i_dont_seem_to_see_the_controlspace_sequence"></a>
   <h2>
       8.5 I don't seem to see the Control-Space sequence
       
@@ -3467,7 +3134,7 @@ Emacs keybinfing help
 
 
 
-
+<p>
 <p class="column10"><em class="quote10">
           <EM><a href="mailto:hunger@hitech.com" >hunger@hitech.com</A></EM> (Henry Unger)</em>
 
@@ -3483,12 +3150,7 @@ Emacs keybinfing help
         if the problem is in your Xterm.
 
 <P>
-<TABLE  class="shade-normal"
-        width="94%"
-        border="0"
-        cellpadding="10"
-        cellspacing="0"
-        >
+<TABLE class="shade-normal">
     <TR>
     <TD class="shade-normal-attrib" valign="top">
     <PRE>
@@ -3500,7 +3162,7 @@ Emacs keybinfing help
 
 
 
-  <a name="to_get_xterm_work_with" id="to_get_xterm_work_with"></a>
+  <a name="to_get_xterm_work_with_mouse" id="to_get_xterm_work_with_mouse"></a>
   <h2>
       8.6 To get Xterm work with mouse
       
@@ -3509,14 +3171,16 @@ Emacs keybinfing help
 
 
 
-        <span class="word-ref">[Olaf Rogalsky &lt;rogalsky@theorie1.physik.uni-erlangen.de&gt;]</span> After
+<p>
+<p class="column8">
+        <span class="word-ref">[Olaf Rogalsky <EM><a href="mailto:rogalsky@theorie1.physik.uni-erlangen.de" >rogalsky@theorie1.physik.uni-erlangen.de</A></EM>]</span> After
         sending the escape sequence &quot;ESC [ 1000 h&quot; to a xterm, the xterm
         responds with an appropriate escape sequence to every mouse
         press/release, telling on wich character cell this has happened.
 
 
 
-  <a name="does_these_vector_notations_work" id="does_these_vector_notations_work"></a>
+  <a name="does_these_vector_notations_work_only_under_x" id="does_these_vector_notations_work_only_under_x"></a>
   <h2>
       8.7 Does these vector notations work only under X ?
       
@@ -3525,7 +3189,7 @@ Emacs keybinfing help
 
 
 
-
+<p>
 <p class="column10"><em class="quote10">
           <EM><a href="mailto:abraham@ssv4.dina.kvl.dk" >abraham@ssv4.dina.kvl.dk</A></EM> (Per Abrahamsen)</em>
 
@@ -3542,12 +3206,7 @@ Emacs keybinfing help
         not you can load it yourself with e.g.
 
 <P>
-<TABLE  class="shade-normal"
-        width="94%"
-        border="0"
-        cellpadding="10"
-        cellspacing="0"
-        >
+<TABLE class="shade-normal">
     <TR>
     <TD class="shade-normal-attrib" valign="top">
     <PRE>
@@ -3566,12 +3225,7 @@ Emacs keybinfing help
         by some common keyboards. If one is using Emacs 19, he could try
 
 <P>
-<TABLE  class="shade-normal"
-        width="94%"
-        border="0"
-        cellpadding="10"
-        cellspacing="0"
-        >
+<TABLE class="shade-normal">
     <TR>
     <TD class="shade-normal-attrib" valign="top">
     <PRE>
@@ -3585,7 +3239,7 @@ Emacs keybinfing help
 
 
 
-  <a name="i_have_troubles_running_screen" id="i_have_troubles_running_screen"></a>
+  <a name="i_have_troubles_running_screen_sunos_virtual_term_and" id="i_have_troubles_running_screen_sunos_virtual_term_and"></a>
   <h2>
       8.8 I have troubles running 'screen' (SUN-OS virtual term) and emacs
       
@@ -3594,7 +3248,7 @@ Emacs keybinfing help
 
 
 
-
+<p>
 <p class="column10"><em class="quote10">
           Kai Grossjohann <EM><a href="mailto:grossjoh@ls6.informatik.uni-dortmund.de" >grossjoh@ls6.informatik.uni-dortmund.de</A></EM></em>
 
@@ -3633,7 +3287,7 @@ Emacs keybinfing help
 
 
 
-
+<p>
 <p class="column10"><em class="quote10">
           <EM><a href="mailto:psmith@lemming.wellfleet.com" >psmith@lemming.wellfleet.com</A></EM> (Paul D. Smith)</em>
 
@@ -3653,12 +3307,7 @@ Emacs keybinfing help
         you start X (in your ~/.xinitrc or wherever).
 
 <P>
-<TABLE  class="shade-normal"
-        width="94%"
-        border="0"
-        cellpadding="10"
-        cellspacing="0"
-        >
+<TABLE class="shade-normal">
     <TR>
     <TD class="shade-normal-attrib" valign="top">
     <PRE>
@@ -3668,7 +3317,7 @@ Emacs keybinfing help
 
 
 
-  <a name="swap_the_control_and_cap" id="swap_the_control_and_cap"></a>
+  <a name="swap_the_control_and_cap_keys_on_sun_sparc" id="swap_the_control_and_cap_keys_on_sun_sparc"></a>
   <h2>
       8.10 Swap the control and cap keys on Sun sparc 20 machine?
       
@@ -3677,7 +3326,7 @@ Emacs keybinfing help
 
 
 
-
+<p>
 <p class="column10"><em class="quote10">
           <EM><a href="mailto:richter@taylor.math.nwu.edu" >richter@taylor.math.nwu.edu</A></EM> (Bill Richter)</em>
 
@@ -3688,12 +3337,7 @@ Emacs keybinfing help
         related Sun kbd stunt to get 2 more Meta keys &amp; 1 more Control
 
 <P>
-<TABLE  class="shade-normal"
-        width="94%"
-        border="0"
-        cellpadding="10"
-        cellspacing="0"
-        >
+<TABLE class="shade-normal">
     <TR>
     <TD class="shade-normal-attrib" valign="top">
     <PRE>
@@ -3715,7 +3359,7 @@ Emacs keybinfing help
 
 
 
-  <a name="xterm_aix_meta_key_missing" id="xterm_aix_meta_key_missing"></a>
+  <a name="xterm_aix_meta_key_missing_in_emacs_nw" id="xterm_aix_meta_key_missing_in_emacs_nw"></a>
   <h2>
       8.11 Xterm &ndash; AIX: Meta key missing in emacs -nw
       
@@ -3724,7 +3368,7 @@ Emacs keybinfing help
 
 
 
-
+<p>
 <p class="column10"><em class="quote10">
           Okay, here's a weird one. If I run an xterm on my local AIX 4.1.4
           machine and do an xemacs -nw in it, it doesn't recognize the meta
@@ -3747,12 +3391,7 @@ Emacs keybinfing help
         what is making the meta key work thereafter.
 
 <P>
-<TABLE  class="shade-normal"
-        width="94%"
-        border="0"
-        cellpadding="10"
-        cellspacing="0"
-        >
+<TABLE class="shade-normal">
     <TR>
     <TD class="shade-normal-attrib" valign="top">
     <PRE>
@@ -3766,7 +3405,7 @@ Emacs keybinfing help
 
 
 
-  <a name="hp_meta_key_missing_on" id="hp_meta_key_missing_on"></a>
+  <a name="hp_meta_key_missing_on_715_and_712" id="hp_meta_key_missing_on_715_and_712"></a>
   <h2>
       8.12 HP: meta key missing on 715 and 712?
       
@@ -3775,7 +3414,7 @@ Emacs keybinfing help
 
 
 
-
+<p>
 <p class="column10"><em class="quote10">
           <EM><a href="mailto:jquinn@nortel.ca" >jquinn@nortel.ca</A></EM> (Jerry Quinn)</em>
 
@@ -3785,12 +3424,7 @@ Emacs keybinfing help
         The meta key problem on HP's can be fixed by using xmodmap. Do:
 
 <P>
-<TABLE  class="shade-normal"
-        width="94%"
-        border="0"
-        cellpadding="10"
-        cellspacing="0"
-        >
+<TABLE class="shade-normal">
     <TR>
     <TD class="shade-normal-attrib" valign="top">
     <PRE>
@@ -3814,6 +3448,8 @@ Emacs keybinfing help
 
 
 
+<p>
+<p class="column8">
         I'm using Hp console with its original Keyboard And As you know
         there's no Meta key and I'm using ESC key instead But it's really
         inconvenient... So i want to remap some key like caps lock or other
@@ -3830,12 +3466,7 @@ Emacs keybinfing help
         ~/.xsession (~/.startxrc), so that it is automatically performed.
 
 <P>
-<TABLE  class="shade-normal"
-        width="94%"
-        border="0"
-        cellpadding="10"
-        cellspacing="0"
-        >
+<TABLE class="shade-normal">
     <TR>
     <TD class="shade-normal-attrib" valign="top">
     <PRE>
@@ -3859,12 +3490,7 @@ Emacs keybinfing help
         that.
 
 <P>
-<TABLE  class="shade-normal"
-        width="94%"
-        border="0"
-        cellpadding="10"
-        cellspacing="0"
-        >
+<TABLE class="shade-normal">
     <TR>
     <TD class="shade-normal-attrib" valign="top">
     <PRE>
@@ -3878,7 +3504,7 @@ Emacs keybinfing help
 
 
 
-  <a name="hp_xmodmap_settings_in_pc" id="hp_xmodmap_settings_in_pc"></a>
+  <a name="hp_xmodmap_settings_in_pc_xceed" id="hp_xmodmap_settings_in_pc_xceed"></a>
   <h2>
       8.14 HP: xmodmap settings in PC XCeed
       
@@ -3887,6 +3513,8 @@ Emacs keybinfing help
 
 
 
+<p>
+<p class="column8">
         I used to have HP console in front of me, but then we changed to
         Windows Nt machines running commercial X emulator XCeed, which has
         very nice keyboard layout configuration tools. However, if you're
@@ -3894,12 +3522,7 @@ Emacs keybinfing help
         the X programs, here is the layout:
 
 <P>
-<TABLE  class="shade-normal"
-        width="94%"
-        border="0"
-        cellpadding="10"
-        cellspacing="0"
-        >
+<TABLE class="shade-normal">
     <TR>
     <TD class="shade-normal-attrib" valign="top">
     <PRE>
@@ -3922,12 +3545,7 @@ Emacs keybinfing help
         Below you see my <samp class="word">xmodmap</samp> settings and edited <samp class="word">xev</samp> results.
 
 <P>
-<TABLE  class="shade-normal"
-        width="94%"
-        border="0"
-        cellpadding="10"
-        cellspacing="0"
-        >
+<TABLE class="shade-normal">
     <TR>
     <TD class="shade-normal-attrib" valign="top">
     <PRE>
@@ -3966,7 +3584,7 @@ Emacs keybinfing help
 
 
 
-  <a name="could_anyone_tell_me_how" id="could_anyone_tell_me_how"></a>
+  <a name="could_anyone_tell_me_how_i_could_change_the" id="could_anyone_tell_me_how_i_could_change_the"></a>
   <h2>
       8.15 Could anyone tell me how I could change the meta-key ?
       
@@ -3975,7 +3593,7 @@ Emacs keybinfing help
 
 
 
-
+<p>
 <p class="column10"><em class="quote10">
           <EM><a href="mailto:sasdjb@unx.sas.com" >sasdjb@unx.sas.com</A></EM> (David Biesack)</em>
 
@@ -3985,12 +3603,7 @@ Emacs keybinfing help
         In HP system, you can rebind it:
 
 <P>
-<TABLE  class="shade-normal"
-        width="94%"
-        border="0"
-        cellpadding="10"
-        cellspacing="0"
-        >
+<TABLE class="shade-normal">
     <TR>
     <TD class="shade-normal-attrib" valign="top">
     <PRE>
@@ -4005,7 +3618,7 @@ Emacs keybinfing help
 
 
 
-  <a name="how_can_i_set_meta" id="how_can_i_set_meta"></a>
+  <a name="how_can_i_set_meta_key_to_alt" id="how_can_i_set_meta_key_to_alt"></a>
   <h2>
       8.16 How can I set Meta key to Alt?
       
@@ -4014,7 +3627,7 @@ Emacs keybinfing help
 
 
 
-
+<p>
 <p class="column10"><em class="quote10">
           <EM><a href="mailto:kwak@gloria.postech.ac.kr" >kwak@gloria.postech.ac.kr</A></EM> (Kwak Jong-Geun)</em>
 
@@ -4025,12 +3638,7 @@ Emacs keybinfing help
         your xsession to read it using xmodmap promgram.
 
 <P>
-<TABLE  class="shade-normal"
-        width="94%"
-        border="0"
-        cellpadding="10"
-        cellspacing="0"
-        >
+<TABLE class="shade-normal">
     <TR>
     <TD class="shade-normal-attrib" valign="top">
     <PRE>
@@ -4048,7 +3656,7 @@ Emacs keybinfing help
 
 
 
-  <a name="how_can_i_make_the" id="how_can_i_make_the"></a>
+  <a name="how_can_i_make_the_alt_key_work_as" id="how_can_i_make_the_alt_key_work_as"></a>
   <h2>
       8.17 How can I make the alt key work as the meta key?
       
@@ -4057,7 +3665,7 @@ Emacs keybinfing help
 
 
 
-
+<p>
 <p class="column10"><em class="quote10">
           <EM><a href="mailto:kwak@gloria.postech.ac.kr" >kwak@gloria.postech.ac.kr</A></EM> (Kwak Jong-Geun):</em>
 
@@ -4068,12 +3676,7 @@ Emacs keybinfing help
         invoke the file using xmodmap program.
 
 <P>
-<TABLE  class="shade-normal"
-        width="94%"
-        border="0"
-        cellpadding="10"
-        cellspacing="0"
-        >
+<TABLE class="shade-normal">
     <TR>
     <TD class="shade-normal-attrib" valign="top">
     <PRE>
@@ -4087,7 +3690,7 @@ Emacs keybinfing help
 
 
 
-  <a name="on_x_window_cspc_says" id="on_x_window_cspc_says"></a>
+  <a name="on_x_window_cspc_says_args_out_of_range" id="on_x_window_cspc_says_args_out_of_range"></a>
   <h2>
       8.18 On X window C-SPC says Args out of range #^[nil nil nil
       
@@ -4096,6 +3699,8 @@ Emacs keybinfing help
 
 
 
+<p>
+<p class="column8">
         We just install the emacs 19.30 on Dec Alpha running DUnix 3.2C.
         When we use the emacs on X window, the C-SPC does not work by
         saying: Args out of range: #^[nil nil nil nil nil nil nil nil nil
@@ -4113,7 +3718,7 @@ Emacs keybinfing help
 
 
 
-  <a name="carpal_tunnel_syndrome_any_way" id="carpal_tunnel_syndrome_any_way"></a>
+  <a name="carpal_tunnel_syndrome_any_way_to_reduce_left_wrist" id="carpal_tunnel_syndrome_any_way_to_reduce_left_wrist"></a>
   <h2>
       8.19 Carpal tunnel syndrome: Any way to reduce left wrist pain?
       
@@ -4122,7 +3727,7 @@ Emacs keybinfing help
 
 
 
-
+<p>
 <p class="column10"><em class="quote10">
           Bill Richter <EM><a href="mailto:richter@conley.math.nwu.edu" >richter@conley.math.nwu.edu</A></EM></em>
 
@@ -4134,12 +3739,7 @@ Emacs keybinfing help
         <samp class="word">C-h</samp>. In my .xinitrc:
 
 <P>
-<TABLE  class="shade-normal"
-        width="94%"
-        border="0"
-        cellpadding="10"
-        cellspacing="0"
-        >
+<TABLE class="shade-normal">
     <TR>
     <TD class="shade-normal-attrib" valign="top">
     <PRE>
@@ -4157,12 +3757,7 @@ Emacs keybinfing help
         and in my .emacs
 
 <P>
-<TABLE  class="shade-normal"
-        width="94%"
-        border="0"
-        cellpadding="10"
-        cellspacing="0"
-        >
+<TABLE class="shade-normal">
     <TR>
     <TD class="shade-normal-attrib" valign="top">
     <PRE>
@@ -4199,12 +3794,7 @@ Emacs keybinfing help
         default Sun keysyms are dead keys over the modem:
 
 <P>
-<TABLE  class="shade-normal"
-        width="94%"
-        border="0"
-        cellpadding="10"
-        cellspacing="0"
-        >
+<TABLE class="shade-normal">
     <TR>
     <TD class="shade-normal-attrib" valign="top">
     <PRE>
@@ -4245,6 +3835,8 @@ Emacs keybinfing help
 
 
 
+<p>
+<p class="column8">
         I have an xterm which I telnet from to get access to the internet
         service provider from work. I would like to map the keys in the
         xterm like they are mapped in X or in Presentation manager. I want
@@ -4271,12 +3863,7 @@ Emacs keybinfing help
         following to shell settings when you use the xterm (not aixterm):
 
 <P>
-<TABLE  class="shade-normal"
-        width="94%"
-        border="0"
-        cellpadding="10"
-        cellspacing="0"
-        >
+<TABLE class="shade-normal">
     <TR>
     <TD class="shade-normal-attrib" valign="top">
     <PRE>
@@ -4326,18 +3913,13 @@ Emacs keybinfing help
 
 
 
-
+<p>
 <p class="column10"><em class="quote10">
           Qing Long:</em>
 
 
 <P>
-<TABLE  class="shade-normal"
-        width="94%"
-        border="0"
-        cellpadding="10"
-        cellspacing="0"
-        >
+<TABLE class="shade-normal">
     <TR>
     <TD class="shade-normal-attrib" valign="top">
     <PRE>
@@ -4350,7 +3932,7 @@ Emacs keybinfing help
 
 
 
-  <a name="linux_i_cant_rebind_cup" id="linux_i_cant_rebind_cup"></a>
+  <a name="linux_i_cant_rebind_cup_in_terminal_window" id="linux_i_cant_rebind_cup_in_terminal_window"></a>
   <h2>
       8.22 Linux: I can't rebind C-up in terminal window?
       
@@ -4359,7 +3941,7 @@ Emacs keybinfing help
 
 
 
-
+<p>
 <p class="column10"><em class="quote10">
           Kai Grossjohann <EM><a href="mailto:grossjoh@ls6.informatik.uni-dortmund.de" >grossjoh@ls6.informatik.uni-dortmund.de</A></EM></em>
 
@@ -4384,9 +3966,9 @@ Emacs keybinfing help
 
 
 
-
+<p>
 <p class="column10"><em class="quote10">
-          Emilio Lopes &lt;ecl@fnpc21.if.usp.br&gt;</em>
+          Emilio Lopes <EM><a href="mailto:ecl@fnpc21.if.usp.br" >ecl@fnpc21.if.usp.br</A></EM></em>
 
 
 
@@ -4400,12 +3982,7 @@ Emacs keybinfing help
         To make cursor keys available again you have to do this:
 
 <P>
-<TABLE  class="shade-normal"
-        width="94%"
-        border="0"
-        cellpadding="10"
-        cellspacing="0"
-        >
+<TABLE class="shade-normal">
     <TR>
     <TD class="shade-normal-attrib" valign="top">
     <PRE>
@@ -4429,14 +4006,12 @@ Emacs keybinfing help
     </TR>
 </TABLE>
 
-</blockquote>
-           <hr>
-               <A name="xmodmap_introduction_changing_your_x"  id="xmodmap_introduction_changing_your_x"></A>
+<hr>
+               <A name="xmodmap_introduction_changing_your_x_environment"  id="xmodmap_introduction_changing_your_x_environment"></A>
                <h1>
                9.0 Xmodmap introduction &ndash; Changing your X environment
                
                </h1>
-           <blockquote>
 
 
 
@@ -4449,6 +4024,8 @@ Emacs keybinfing help
 
 
 
+<p>
+<p class="column8">
         This may not be very through explanation, but it intends to give
         you basic understanding. Let's start our journey as explained
         by fellow worker Uwe Geuder.
@@ -4466,12 +4043,7 @@ Emacs keybinfing help
 
 
 <P>
-<TABLE  class="shade-normal"
-        width="94%"
-        border="0"
-        cellpadding="10"
-        cellspacing="0"
-        >
+<TABLE class="shade-normal">
     <TR>
     <TD class="shade-normal-attrib" valign="top">
     <PRE>
@@ -4492,12 +4064,7 @@ Emacs keybinfing help
         gets its response from X-server.
 
 <P>
-<TABLE  class="shade-normal"
-        width="94%"
-        border="0"
-        cellpadding="10"
-        cellspacing="0"
-        >
+<TABLE class="shade-normal">
     <TR>
     <TD class="shade-normal-attrib" valign="top">
     <PRE>
@@ -4515,12 +4082,7 @@ Emacs keybinfing help
         in this document. In my HP it tells for right alt key:
 
 <P>
-<TABLE  class="shade-normal"
-        width="94%"
-        border="0"
-        cellpadding="10"
-        cellspacing="0"
-        >
+<TABLE class="shade-normal">
     <TR>
     <TD class="shade-normal-attrib" valign="top">
     <PRE>
@@ -4534,12 +4096,7 @@ Emacs keybinfing help
         move right alt to mean something else:
 
 <P>
-<TABLE  class="shade-normal"
-        width="94%"
-        border="0"
-        cellpadding="10"
-        cellspacing="0"
-        >
+<TABLE class="shade-normal">
     <TR>
     <TD class="shade-normal-attrib" valign="top">
     <PRE>
@@ -4554,12 +4111,7 @@ Emacs keybinfing help
         console
 
 <P>
-<TABLE  class="shade-normal"
-        width="94%"
-        border="0"
-        cellpadding="10"
-        cellspacing="0"
-        >
+<TABLE class="shade-normal">
     <TR>
     <TD class="shade-normal-attrib" valign="top">
     <PRE>
@@ -4588,12 +4140,7 @@ Emacs keybinfing help
         key-codes which you can see form the xmodmap -pk listing
 
 <P>
-<TABLE  class="shade-normal"
-        width="94%"
-        border="0"
-        cellpadding="10"
-        cellspacing="0"
-        >
+<TABLE class="shade-normal">
     <TR>
     <TD class="shade-normal-attrib" valign="top">
     <PRE>
@@ -4622,12 +4169,7 @@ Emacs keybinfing help
         right Alt and Control keys to mean A- and H- modifiers in emacs.
 
 <P>
-<TABLE  class="shade-normal"
-        width="94%"
-        border="0"
-        cellpadding="10"
-        cellspacing="0"
-        >
+<TABLE class="shade-normal">
     <TR>
     <TD class="shade-normal-attrib" valign="top">
     <PRE>
@@ -4721,7 +4263,7 @@ Emacs keybinfing help
 
 
 
-  <a name="xmodmap_and_keysyms_as_explained" id="xmodmap_and_keysyms_as_explained"></a>
+  <a name="xmodmap_and_keysyms_as_explained_in_the_xkeycaps" id="xmodmap_and_keysyms_as_explained_in_the_xkeycaps"></a>
   <h2>
       9.2 Xmodmap and keysyms &ndash; as explained in the 'xkeycaps'
       
@@ -4730,17 +4272,14 @@ Emacs keybinfing help
 
 
 
+<p>
+<p class="column8">
         An exellent english explanation (but hard for non-English people)
         about the Mode_switch and and other modifiers can be found from
         xkeycaps(1) program's man page.
 
 <P>
-<TABLE  class="shade-normal"
-        width="94%"
-        border="0"
-        cellpadding="10"
-        cellspacing="0"
-        >
+<TABLE class="shade-normal">
     <TR>
     <TD class="shade-normal-attrib" valign="top">
     <PRE>
@@ -4871,12 +4410,7 @@ Emacs keybinfing help
 
 
 <P>
-<TABLE  class="shade-normal"
-        width="94%"
-        border="0"
-        cellpadding="10"
-        cellspacing="0"
-        >
+<TABLE class="shade-normal">
     <TR>
     <TD class="shade-normal-attrib" valign="top">
     <PRE>
@@ -4920,7 +4454,7 @@ Emacs keybinfing help
 
 
 
-  <a name="example_xmodmap_for_select_and" id="example_xmodmap_for_select_and"></a>
+  <a name="example_xmodmap_for_select_and_kpf1" id="example_xmodmap_for_select_and_kpf1"></a>
   <h2>
       9.3 Example &ndash; xmodmap for select and kp-f1
       
@@ -4929,7 +4463,7 @@ Emacs keybinfing help
 
 
 
-
+<p>
 <p class="column10"><em class="quote10">
           By Yigal Hochberg <EM><a href="mailto:hochberg@cisco.com" >hochberg@cisco.com</A></EM></em>
 
@@ -4941,12 +4475,7 @@ Emacs keybinfing help
         how you can get emacs to see them as separate keys.
 
 <P>
-<TABLE  class="shade-normal"
-        width="94%"
-        border="0"
-        cellpadding="10"
-        cellspacing="0"
-        >
+<TABLE class="shade-normal">
     <TR>
     <TD class="shade-normal-attrib" valign="top">
     <PRE>
@@ -4961,12 +4490,7 @@ Emacs keybinfing help
         And in my emacs I can now do:
 
 <P>
-<TABLE  class="shade-normal"
-        width="94%"
-        border="0"
-        cellpadding="10"
-        cellspacing="0"
-        >
+<TABLE class="shade-normal">
     <TR>
     <TD class="shade-normal-attrib" valign="top">
     <PRE>
@@ -4989,7 +4513,7 @@ Emacs keybinfing help
 
 
 
-
+<p>
 <p class="column10"><em class="quote10">
           <EM><a href="mailto:pogrell@informatik.hu-berlin.de" >pogrell@informatik.hu-berlin.de</A></EM> (Lutz Pogrell),</em>
 
@@ -5004,12 +4528,7 @@ Emacs keybinfing help
         few hex key codes are used, which are system specific):
 
 <P>
-<TABLE  class="shade-normal"
-        width="94%"
-        border="0"
-        cellpadding="10"
-        cellspacing="0"
-        >
+<TABLE class="shade-normal">
     <TR>
     <TD class="shade-normal-attrib" valign="top">
     <PRE>
@@ -5083,12 +4602,7 @@ Emacs keybinfing help
         So my modifiers look like this:
 
 <P>
-<TABLE  class="shade-normal"
-        width="94%"
-        border="0"
-        cellpadding="10"
-        cellspacing="0"
-        >
+<TABLE class="shade-normal">
     <TR>
     <TD class="shade-normal-attrib" valign="top">
     <PRE>
@@ -5126,7 +4640,7 @@ Emacs keybinfing help
 
 
 
-
+<p>
 <p class="column10"><em class="quote10">
           how to remap the control key to live above the shift key and
           either get rid of caps lock entirely or move it below the shift
@@ -5150,12 +4664,7 @@ Emacs keybinfing help
 
 
 <P>
-<TABLE  class="shade-normal"
-        width="94%"
-        border="0"
-        cellpadding="10"
-        cellspacing="0"
-        >
+<TABLE class="shade-normal">
     <TR>
     <TD class="shade-normal-attrib" valign="top">
     <PRE>
@@ -5171,14 +4680,12 @@ Emacs keybinfing help
     </TR>
 </TABLE>
 
-</blockquote>
-           <hr>
+<hr>
                <A name="code"  id="code"></A>
                <h1>
                10.0 Code
                
                </h1>
-           <blockquote>
 
 
 
@@ -5191,17 +4698,14 @@ Emacs keybinfing help
 
 
 
+<p>
+<p class="column8">
         This code is from  Steffen Risser &lt;c0033016@rzsrv2.rz.tu-bs.de&gt;
         1 Dec 1997 where he used it to map several people's HP-UX
         to the &quot;standard&quot; key configuration.
 
 <P>
-<TABLE  class="shade-normal"
-        width="94%"
-        border="0"
-        cellpadding="10"
-        cellspacing="0"
-        >
+<TABLE class="shade-normal">
     <TR>
     <TD class="shade-normal-attrib" valign="top">
     <PRE>
@@ -5279,14 +4783,12 @@ Emacs keybinfing help
     </TR>
 </TABLE>
 
-</blockquote>
-           <hr>
-               <A name="case_study_connection_to_remote"  id="case_study_connection_to_remote"></A>
+<hr>
+               <A name="case_study_connection_to_remote_emacs_through_xterm"  id="case_study_connection_to_remote_emacs_through_xterm"></A>
                <h1>
                11.0 CASE STUDY &ndash; Connection to remote emacs through Xterm
                
                </h1>
-           <blockquote>
 
 
 
@@ -5299,6 +4801,8 @@ Emacs keybinfing help
 
 
 
+<p>
+<p class="column8">
         I was accessing my university's machine from my work machine. I was
         sitting next to my X-tube and making telnet connection through
         normal xterm. The window was identified as &quot;vt100&quot; in remote site,
@@ -5306,12 +4810,7 @@ Emacs keybinfing help
         command to make it recognize right width and hight of the window.
 
 <P>
-<TABLE  class="shade-normal"
-        width="94%"
-        border="0"
-        cellpadding="10"
-        cellspacing="0"
-        >
+<TABLE class="shade-normal">
     <TR>
     <TD class="shade-normal-attrib" valign="top">
     <PRE>
@@ -5329,7 +4828,7 @@ Emacs keybinfing help
 
 
 
-  <a name="the_connection_does_not_know" id="the_connection_does_not_know"></a>
+  <a name="the_connection_does_not_know_my_keyboard" id="the_connection_does_not_know_my_keyboard"></a>
   <h2>
       11.2 The connection does not know my keyboard
       
@@ -5338,6 +4837,8 @@ Emacs keybinfing help
 
 
 
+<p>
+<p class="column8">
         When I opened my emacs, it started fine in a xterm box, but when I
         tried to use my favorite key bindings I quickly noticed, that the
         X- environment extensions that allowed interpreting Ctrl-Fkey
@@ -5360,12 +4861,7 @@ Emacs keybinfing help
         while we're talking to remote host:
 
 <P>
-<TABLE  class="shade-normal"
-        width="94%"
-        border="0"
-        cellpadding="10"
-        cellspacing="0"
-        >
+<TABLE class="shade-normal">
     <TR>
     <TD class="shade-normal-attrib" valign="top">
     <PRE>
@@ -5382,7 +4878,7 @@ Emacs keybinfing help
 
 
 
-  <a name="how_do_i_know_what" id="how_do_i_know_what"></a>
+  <a name="how_do_i_know_what_a_key_produces_ascii" id="how_do_i_know_what_a_key_produces_ascii"></a>
   <h2>
       11.3 How do I know what a key produces (ascii sequences?)
       
@@ -5391,17 +4887,14 @@ Emacs keybinfing help
 
 
 
+<p>
+<p class="column8">
         The od(1) has ability to record keys and print their <strong class="word">true</strong>
         nature. Let's find out what the F2 and C-F2 keys produces in our
         environment. ('-t' for keys and 'a' for char output )
 
 <P>
-<TABLE  class="shade-normal"
-        width="94%"
-        border="0"
-        cellpadding="10"
-        cellspacing="0"
-        >
+<TABLE class="shade-normal">
     <TR>
     <TD class="shade-normal-attrib" valign="top">
     <PRE>
@@ -5415,12 +4908,7 @@ Emacs keybinfing help
         used to separate the keys.
 
 <P>
-<TABLE  class="shade-normal"
-        width="94%"
-        border="0"
-        cellpadding="10"
-        cellspacing="0"
-        >
+<TABLE class="shade-normal">
     <TR>
     <TD class="shade-normal-attrib" valign="top">
     <PRE>
@@ -5434,12 +4922,7 @@ Emacs keybinfing help
         out the codes:
 
 <P>
-<TABLE  class="shade-normal"
-        width="94%"
-        border="0"
-        cellpadding="10"
-        cellspacing="0"
-        >
+<TABLE class="shade-normal">
     <TR>
     <TD class="shade-normal-attrib" valign="top">
     <PRE>
@@ -5475,12 +4958,7 @@ Emacs keybinfing help
         For example If I press Alt-backspace in od(1)
 
 <P>
-<TABLE  class="shade-normal"
-        width="94%"
-        border="0"
-        cellpadding="10"
-        cellspacing="0"
-        >
+<TABLE class="shade-normal">
     <TR>
     <TD class="shade-normal-attrib" valign="top">
     <PRE>
@@ -5497,12 +4975,7 @@ Emacs keybinfing help
         immediately look at the lossage C-h l, it tells me:
 
 <P>
-<TABLE  class="shade-normal"
-        width="94%"
-        border="0"
-        cellpadding="10"
-        cellspacing="0"
-        >
+<TABLE class="shade-normal">
     <TR>
     <TD class="shade-normal-attrib" valign="top">
     <PRE>
@@ -5526,16 +4999,13 @@ Emacs keybinfing help
 
 
 
+<p>
+<p class="column8">
         The xmodmap(1) tells you how programs see your hardware keys, the
         definition of the entries are quite simple. e.g. My map shows:
 
 <P>
-<TABLE  class="shade-normal"
-        width="94%"
-        border="0"
-        cellpadding="10"
-        cellspacing="0"
-        >
+<TABLE class="shade-normal">
     <TR>
     <TD class="shade-normal-attrib" valign="top">
     <PRE>
@@ -5576,18 +5046,15 @@ Emacs keybinfing help
 
 
 
+<p>
+<p class="column8">
         This 'xev' program is Distributed with X11R5 (or any X-dist.). When
         you run it, it'll open a window which starts reading any events you
         generate: moving mouse, clicking, pressing shift,
         alt... E.g. pressing Alt gives:
 
 <P>
-<TABLE  class="shade-normal"
-        width="94%"
-        border="0"
-        cellpadding="10"
-        cellspacing="0"
-        >
+<TABLE class="shade-normal">
     <TR>
     <TD class="shade-normal-attrib" valign="top">
     <PRE>
@@ -5616,7 +5083,7 @@ Emacs keybinfing help
 
 
 
-  <a name="xterms_xrm_switch_for_key" id="xterms_xrm_switch_for_key"></a>
+  <a name="xterms_xrm_switch_for_key_settings_where_are_the" id="xterms_xrm_switch_for_key_settings_where_are_the"></a>
   <h2>
       11.6 Xterm's -xrm switch for key settings, where are the key names?
       
@@ -5625,17 +5092,14 @@ Emacs keybinfing help
 
 
 
+<p>
+<p class="column8">
         We're going to program Xterm soon, so you you must learn to find
         your symbolic key names: they are located along the Xlib path,
         similar to mine:
 
 <P>
-<TABLE  class="shade-normal"
-        width="94%"
-        border="0"
-        cellpadding="10"
-        cellspacing="0"
-        >
+<TABLE class="shade-normal">
     <TR>
     <TD class="shade-normal-attrib" valign="top">
     <PRE>
@@ -5649,12 +5113,7 @@ Emacs keybinfing help
         switch. A excerpt of the keysymdef.h file:
 
 <P>
-<TABLE  class="shade-normal"
-        width="94%"
-        border="0"
-        cellpadding="10"
-        cellspacing="0"
-        >
+<TABLE class="shade-normal">
     <TR>
     <TD class="shade-normal-attrib" valign="top">
     <PRE>
@@ -5674,7 +5133,7 @@ Emacs keybinfing help
 
 
 
-  <a name="custom_xterm_making_xterm_to" id="custom_xterm_making_xterm_to"></a>
+  <a name="custom_xterm_making_xterm_to_translate_character_for_connection" id="custom_xterm_making_xterm_to_translate_character_for_connection"></a>
   <h2>
       11.7 Custom xterm &ndash; making xterm to translate character for connection
       
@@ -5683,18 +5142,15 @@ Emacs keybinfing help
 
 
 
+<p>
+<p class="column8">
         Xterm can accept regular motif commands, so let's use its -xrm
         switch to &quot;program&quot; it. This little shell file launches up
         specially configured xterm session: it converts pressed keys to
         another key sequences.
 
 <P>
-<TABLE  class="shade-normal"
-        width="94%"
-        border="0"
-        cellpadding="10"
-        cellspacing="0"
-        >
+<TABLE class="shade-normal">
     <TR>
     <TD class="shade-normal-attrib" valign="top">
     <PRE>
@@ -5728,6 +5184,8 @@ Emacs keybinfing help
 
 
 
+<p>
+<p class="column8">
         Now I can pass the C-F2 to my university's machine by using special
         xterm. Now I have to set up target emacs so, that it can understand
         these new key sequences. The &quot;C-t&quot; was just an example of a
@@ -5744,12 +5202,7 @@ Emacs keybinfing help
         (Ja)ri (Aa)lto.
 
 <P>
-<TABLE  class="shade-normal"
-        width="94%"
-        border="0"
-        cellpadding="10"
-        cellspacing="0"
-        >
+<TABLE class="shade-normal">
     <TR>
     <TD class="shade-normal-attrib" valign="top">
     <PRE>
@@ -5783,12 +5236,7 @@ Emacs keybinfing help
         In Emacs; you can now check the environment variable
 
 <P>
-<TABLE  class="shade-normal"
-        width="94%"
-        border="0"
-        cellpadding="10"
-        cellspacing="0"
-        >
+<TABLE class="shade-normal">
     <TR>
     <TD class="shade-normal-attrib" valign="top">
     <PRE>
@@ -5808,12 +5256,7 @@ Emacs keybinfing help
         following in remote emacs's lossage buffer, <samp class="word">M-x</samp> <samp class="word">view-lossage</samp>
 
 <P>
-<TABLE  class="shade-normal"
-        width="94%"
-        border="0"
-        cellpadding="10"
-        cellspacing="0"
-        >
+<TABLE class="shade-normal">
     <TR>
     <TD class="shade-normal-attrib" valign="top">
     <PRE>
@@ -5823,7 +5266,7 @@ Emacs keybinfing help
 
 
 
-  <a name="testing_the_special_xterm_and" id="testing_the_special_xterm_and"></a>
+  <a name="testing_the_special_xterm_and_remote_emacs_cooperation" id="testing_the_special_xterm_and_remote_emacs_cooperation"></a>
   <h2>
       11.9 Testing the special Xterm and remote emacs co-operation
       
@@ -5832,16 +5275,13 @@ Emacs keybinfing help
 
 
 
+<p>
+<p class="column8">
         Before we do telnet, we can test the configuration in X Start xtu
         shell script. If you made mistakes in in -xrm commands, it says:
 
 <P>
-<TABLE  class="shade-normal"
-        width="94%"
-        border="0"
-        cellpadding="10"
-        cellspacing="0"
-        >
+<TABLE class="shade-normal">
     <TR>
     <TD class="shade-normal-attrib" valign="top">
     <PRE>
@@ -5859,12 +5299,7 @@ Emacs keybinfing help
         appeared to check that the C-F2 is translated correctly.
 
 <P>
-<TABLE  class="shade-normal"
-        width="94%"
-        border="0"
-        cellpadding="10"
-        cellspacing="0"
-        >
+<TABLE class="shade-normal">
     <TR>
     <TD class="shade-normal-attrib" valign="top">
     <PRE>
@@ -5878,12 +5313,7 @@ Emacs keybinfing help
         If od(1) test succeeds, start emacs for final test
 
 <P>
-<TABLE  class="shade-normal"
-        width="94%"
-        border="0"
-        cellpadding="10"
-        cellspacing="0"
-        >
+<TABLE class="shade-normal">
     <TR>
     <TD class="shade-normal-attrib" valign="top">
     <PRE>
@@ -5898,12 +5328,7 @@ Emacs keybinfing help
         buffer:
 
 <P>
-<TABLE  class="shade-normal"
-        width="94%"
-        border="0"
-        cellpadding="10"
-        cellspacing="0"
-        >
+<TABLE class="shade-normal">
     <TR>
     <TD class="shade-normal-attrib" valign="top">
     <PRE>
@@ -5929,7 +5354,7 @@ Emacs keybinfing help
 
 
 
-  <a name="complete_live_setup_modify_to" id="complete_live_setup_modify_to"></a>
+  <a name="complete_live_setup_modify_to_personal_needs" id="complete_live_setup_modify_to_personal_needs"></a>
   <h2>
       11.10 Complete, live, setup &ndash; Modify to personal needs
       
@@ -5938,6 +5363,8 @@ Emacs keybinfing help
 
 
 
+<p>
+<p class="column8">
         Offered &quot;as is&quot;, no code will be explained via email. Peter von der
         Ahe <EM><a href="mailto:pahe@daimi.aau.dk" >pahe@daimi.aau.dk</A></EM> kindly sent more Bindings to &quot;xte&quot; script.
         All the string(0x1b) codes that enable M-&gt; and M-&lt; are from him.
@@ -5969,19 +5396,19 @@ Emacs keybinfing help
      ([?\e ?O ?C]         [right])
      ([?\e ?O ?D]         [left])
      ([?\e ?O ?D]         [left])
-     ([?\e ?\ ?2 ?~     [insert])
-     ([?\e ?\ ?5 ?~     [next])
-     ([?\e ?\ ?6 ?~     [prior])
+     ([?\e ?\<span class="super"> ?2 ?~</span>     [insert])
+     ([?\e ?\<span class="super"> ?5 ?~</span>     [next])
+     ([?\e ?\<span class="super"> ?6 ?~</span>     [prior])
      ([?\e ?O ?\C-@]      [end])
-     ([?\e ?\ ?1 ?1 ?~  [f1])
-     ([?\e ?\ ?1 ?2 ?~  [f2])
-     ([?\e ?\ ?1 ?3 ?~  [f3])
-     ([?\e ?\ ?1 ?4 ?~  [f4])
-     ([?\e ?\ ?1 ?5 ?~  [f5])
-     ([?\e ?\ ?1 ?6 ?~  [f6])
-     ([?\e ?\ ?1 ?7 ?~  [f7])
-     ([?\e ?\ ?1 ?8 ?~  [f8])
-     ([?\e ?\ ?1 ?9 ?~  [f9])))
+     ([?\e ?\<span class="super"> ?1 ?1 ?~</span>  [f1])
+     ([?\e ?\<span class="super"> ?1 ?2 ?~</span>  [f2])
+     ([?\e ?\<span class="super"> ?1 ?3 ?~</span>  [f3])
+     ([?\e ?\<span class="super"> ?1 ?4 ?~</span>  [f4])
+     ([?\e ?\<span class="super"> ?1 ?5 ?~</span>  [f5])
+     ([?\e ?\<span class="super"> ?1 ?6 ?~</span>  [f6])
+     ([?\e ?\<span class="super"> ?1 ?7 ?~</span>  [f7])
+     ([?\e ?\<span class="super"> ?1 ?8 ?~</span>  [f8])
+     ([?\e ?\<span class="super"> ?1 ?9 ?~</span>  [f9])))
 
   (defun my-special-xterm ()
     &quot;Accept special keysequences sent by Xterm. Prefix map C-t used.
@@ -6394,20 +5821,19 @@ Emacs keybinfing help
     ......................................................................
 -->
 
-</blockquote>
 <hr>
 <em    class="footer">
 <p>
-Copyright &copy; 2005 by Jari Aalto. This material may be
+Copyright &copy; 2007 by jaalto. This material may be
 distributed subject to the terms and conditions set forth
 in the Creative commons Attribution-ShareAlike License.
 See http://creativecommons.org/
 <p>
 This file has been automatically generated from plain text file
-with Perl script <strong>t2html.pl v2005.0208</strong><br>
-Document author: Jari Aalto<br>
+with Perl script <strong>t2html.pl v2007.0526</strong><br>
+Document author: jaalto<br>
 Url: <a href="http://tiny-tools.sourceforge.net">http://tiny-tools.sourceforge.net</a><br>
-Last updated: 2005-04-01 09:01<br>
+Last updated: 2007-09-02 12:03<br>
 </em    class="footer">
 </body>
 </html>

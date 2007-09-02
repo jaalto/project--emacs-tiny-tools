@@ -19,23 +19,23 @@
   <meta http-equiv="description"
 	content="">
 
-
-  <meta http-equiv="Content-Type" content="text/html; charset=utf-8">
-
-  <meta http-equiv="Expires" content="Tue, 31 May 2005 07:03:20 GMT">
+<meta http-equiv="Content-Type" content="text/html; charset=utf-8">
+  <meta http-equiv="Expires" content="Thu,  1 Nov 2007 09:03:56 GMT">
 
   <meta http-equiv="Author"
-	content="Jari Aalto">
+	content="jaalto">
 
 
 
   <meta name="Generator"
-	content="2005-04-01 09:03 Perl program t2html.pl v2005.0208 http://perl-text2html.sourceforge.net/">
+	content="2007-09-02 12:03 Perl program t2html.pl v2007.0526 http://perl-text2html.sourceforge.net/">
 
 
   <base target="body">
 
+
     <style type="text/css">
+
 
 
         /*
@@ -208,7 +208,7 @@
 
         blockquote
         {
-            margin-right: 0;
+            margin-right: 2em;
         }
 
         @media print   { BLOCKQUOTE
@@ -221,10 +221,18 @@
             color: Navy;
         }
 
+        hr.special
+        {
+            width: 50%;
+            text-align; left;
+        }
+
         pre
         {
             font-family:   "Courier New", monospace;
             font-size:     0.8em;
+            margin-top:    1em;
+            margin-bottom: 1em;
         }
 
         pre.code
@@ -242,11 +250,18 @@
 
             font-family:    "Courier New", monospace;
             font-size:      0.8em;
-
             color:          Navy;
         }
 
         /* //////////////////////// tables /////////////////////////// */
+
+        table
+        {
+            border: none;
+            width: 100%;
+            cellpadding: 10px;
+            cellspacing: 0px;
+        }
 
         table.basic
         {
@@ -322,6 +337,13 @@
             background: #FFFFCC;
         }
 
+        table tr td pre
+        {
+                /*  Make PRE tables "airy" */
+                margin-top:    1em;
+                margin-bottom: 1em;
+        }
+
         table.shade-normal
         {
                 font-family:    "Courier New", monospace;
@@ -347,11 +369,6 @@
         .shade-normal2-attrib
         {
             background: #E0E0F0;
-        }
-
-        table.shade-note
-        {
-            /* nothing special */
         }
 
         .shade-note-attrib
@@ -661,7 +678,7 @@
             font-size: 0.9em;
         }
 
-
+    
 
     </style>
 
@@ -689,7 +706,7 @@
 
     </script>
 
-</head>
+        </head>
 <body>
 <div class="TOC">
 <a href="emacs-package-make-body.html#document_id" class="toc">
@@ -703,7 +720,7 @@
 
 <ul>
 <li>
-           <a href="emacs-package-make-body.html#select_unique_prefix_for_all" class="toc">
+           <a href="emacs-package-make-body.html#select_unique_prefix_for_all_functions_and_all_variables" class="toc">
                2.1 Select unique prefix for all functions and all variables
            </a>
            <br>
@@ -713,52 +730,52 @@
            </a>
            <br>
 <li>
-           <a href="emacs-package-make-body.html#put_provide_command_at_the" class="toc">
+           <a href="emacs-package-make-body.html#put_provide_command_at_the_end_of_file" class="toc">
                3.3 Put 'provide' command at the end of file
            </a>
            <br>
 <li>
-           <a href="emacs-package-make-body.html#use_valid_lcd_format_which" class="toc">
+           <a href="emacs-package-make-body.html#use_valid_lcd_format_which_doesnt_tolerate_changes_in" class="toc">
                2.3 Use valid LCD format, which doesn't tolerate changes in format
            </a>
            <br>
 <li>
-           <a href="emacs-package-make-body.html#check_the_code_layout_with" class="toc">
+           <a href="emacs-package-make-body.html#check_the_code_layout_with_lispmnt_el" class="toc">
                2.4 Check the code layout with lisp-mnt.el
            </a>
            <br>
 <li>
-           <a href="emacs-package-make-body.html#check_the_documentation_strings_which" class="toc">
+           <a href="emacs-package-make-body.html#check_the_documentation_strings_which_checkdoc_el" class="toc">
                2.5 Check the documentation strings which checkdoc.el
            </a>
            <br>
 <li>
-           <a href="emacs-package-make-body.html#check_the_code_with_elint.el" class="toc">
+           <a href="emacs-package-make-body.html#check_the_code_with_elint_el" class="toc">
                2.6 Check the code with Elint.el
            </a>
            <br>
 <li>
-           <a href="emacs-package-make-body.html#always_include_gnu_copyright." class="toc">
+           <a href="emacs-package-make-body.html#always_include_gnu_copyright" class="toc">
                2.7 Always include GNU copyright.
            </a>
            <br>
 <li>
-           <a href="emacs-package-make-body.html#always_include_installation_instructions." class="toc">
+           <a href="emacs-package-make-body.html#always_include_installation_instructions" class="toc">
                2.8 Always include installation instructions.
            </a>
            <br>
 <li>
-           <a href="emacs-package-make-body.html#always_use_rcs_or_other" class="toc">
+           <a href="emacs-package-make-body.html#always_use_rcs_or_other_version_tool_to_manage" class="toc">
                2.9 Always use RCS or other version tool to manage your files.
            </a>
            <br>
 <li>
-           <a href="emacs-package-make-body.html#always_check_your_file_with" class="toc">
+           <a href="emacs-package-make-body.html#always_check_your_file_with_byte_compiler" class="toc">
                2.10 Always check your file with byte compiler
            </a>
            <br>
 <li>
-           <a href="emacs-package-make-body.html#more_details_dont_just_require" class="toc">
+           <a href="emacs-package-make-body.html#more_details_dont_just_require_other_packages" class="toc">
                2.11 More details -- don't just 'require' other packages
            </a>
            <br>
@@ -768,37 +785,37 @@
            </a>
            <br>
 <li>
-           <a href="emacs-package-make-body.html#how_to_deal_with_variables" class="toc">
+           <a href="emacs-package-make-body.html#how_to_deal_with_variables_from_other_packages" class="toc">
                2.13 How to deal with variables from other packages
            </a>
            <br>
 <li>
-           <a href="emacs-package-make-body.html#arrange_the_installation_so_that" class="toc">
+           <a href="emacs-package-make-body.html#arrange_the_installation_so_that_it_can_be_autoloaded" class="toc">
                2.14 Arrange the installation so that it can be autoloaded
            </a>
            <br>
 <li>
-           <a href="emacs-package-make-body.html#do_not_change_any_emacs" class="toc">
+           <a href="emacs-package-make-body.html#do_not_change_any_emacs_bindings_directly" class="toc">
                2.15 Do not change any emacs bindings directly
            </a>
            <br>
 <li>
-           <a href="emacs-package-make-body.html#dont_forget_to_add_autoload" class="toc">
+           <a href="emacs-package-make-body.html#dont_forget_to_add_autoload_statements" class="toc">
                2.16 Don't forget to add ###autoload statements
            </a>
            <br>
 <li>
-           <a href="emacs-package-make-body.html#document_all_your_variables_and" class="toc">
+           <a href="emacs-package-make-body.html#document_all_your_variables_and_functions_well" class="toc">
                2.17 Document all your variables and functions well
            </a>
            <br>
 <li>
-           <a href="emacs-package-make-body.html#provide_a_xxxloadhook_at_the" class="toc">
+           <a href="emacs-package-make-body.html#provide_a_xxxloadhook_at_the_end_of_file" class="toc">
                2.18 Provide a xxx-load-hook at the end of file
            </a>
            <br>
 <li>
-           <a href="emacs-package-make-body.html#clean_up_all_whitespaces_from" class="toc">
+           <a href="emacs-package-make-body.html#clean_up_all_whitespaces_from_the_end_of_lines" class="toc">
                2.19 Clean up all whitespaces from the end of lines.
            </a>
            <br>
@@ -808,10 +825,12 @@
            </a>
            <br>
 <li>
-           <a href="emacs-package-make-body.html#here_is_sample_skeleton_for" class="toc">
+           <a href="emacs-package-make-body.html#here_is_sample_skeleton_for_a_package_fill_it" class="toc">
                2.21 Here is sample skeleton for a package. Fill it in.
            </a>
            <br>
+</ul>
+
 </div>
 </body>
 </html>

@@ -1,16 +1,12 @@
-<!DOCTYPE HTML PUBLIC "-//W3C//DTD HTML 4.0 Frameset//EN"
-  "http://www.w3.org/TR/REC-html40/frameset.dtd">
-<HTML>
+<!DOCTYPE HTML PUBLIC "-//W3C//DTD HTML 4.01 Transitional//EN">
+<html>
 <!--
-        See RCS ident(1) why these funny tags
-        $Document:  $
-        $Contact:   $
         Note: the LINK tags are used by advanced browsers.
 -->
-<HEAD>
-<TITLE>
+<head>
+<title>
 Emacs highlighting and fonts
-</TITLE>
+</title>
 
 
 
@@ -19,21 +15,19 @@ Emacs highlighting and fonts
     ......................................................................
 -->
 
-  <META HTTP-EQUIV="keywords"
+  <meta http-equiv="keywords"
 	CONTENT="Emacs, Emacs Lisp, color, Resource page">
 
-  <META HTTP-EQUIV="description"
-	CONTENT="">
+  <meta http-equiv="description"
+	content="">
 
-
-  <META HTTP-EQUIV="Content-Type" CONTENT="text/html; CHARSET=utf-8">
-
-  <META HTTP-EQUIV="Expires" CONTENT="Mon, 18 Oct 2004 09:06:15 GMT">
+<meta http-equiv="Content-Type" content="text/html; charset=utf-8">
+  <meta http-equiv="Expires" content="Thu,  1 Nov 2007 09:03:19 GMT">
 
 
 
-  <META NAME="Generator"
-	CONTENT="2004-08-19 12:06 Perl program t2html.pl v2004.0428 http://perl-text2html.sourceforge.net/">
+  <meta name="Generator"
+	content="2007-09-02 12:03 Perl program t2html.pl v2007.0526 http://perl-text2html.sourceforge.net/">
 
 
 
@@ -43,7 +37,9 @@ Emacs highlighting and fonts
 -->
 
 
-    <STYLE TYPE="text/css">
+
+    <style type="text/css">
+
 
 
         /*
@@ -126,7 +122,6 @@ Emacs highlighting and fonts
             padding-top: 10pt;
         }
 
-
         h2.default
         {
             font-family: bold large Arial,Helvetica,Sans-serif;
@@ -141,7 +136,6 @@ Emacs highlighting and fonts
         {
             font-family: medium Arial,Helvetica,Sans-serif;
         }
-
 
         /*   ////////////////////////// Make pointing AHREF more visual */
 
@@ -218,7 +212,7 @@ Emacs highlighting and fonts
 
         blockquote
         {
-            margin-right: 0;
+            margin-right: 2em;
         }
 
         @media print   { BLOCKQUOTE
@@ -231,10 +225,18 @@ Emacs highlighting and fonts
             color: Navy;
         }
 
+        hr.special
+        {
+            width: 50%;
+            text-align; left;
+        }
+
         pre
         {
             font-family:   "Courier New", monospace;
             font-size:     0.8em;
+            margin-top:    1em;
+            margin-bottom: 1em;
         }
 
         pre.code
@@ -252,18 +254,24 @@ Emacs highlighting and fonts
 
             font-family:    "Courier New", monospace;
             font-size:      0.8em;
-
             color:          Navy;
         }
 
         /* //////////////////////// tables /////////////////////////// */
+
+        table
+        {
+            border: none;
+            width: 100%;
+            cellpadding: 10px;
+            cellspacing: 0px;
+        }
 
         table.basic
         {
                 font-family:    "Courier New", monospace;
                 color: Navy;
         }
-
 
         table.dashed
         {
@@ -284,7 +292,6 @@ Emacs highlighting and fonts
                 /* line-height: 105%; */
         }
 
-
         table.solid
         {
                 font-family:    "Courier New", monospace;
@@ -301,7 +308,6 @@ Emacs highlighting and fonts
                 border-bottom:  1px #666666 solid; /* dark grey */
                 /* line-height: 105%; */
         }
-
 
         /* Make 3D styled layout by thickening the boton + right. */
 
@@ -322,7 +328,6 @@ Emacs highlighting and fonts
                 /* line-height: 105%; */
         }
 
-
         .shade-3d-attrib
         {
             /*
@@ -336,6 +341,12 @@ Emacs highlighting and fonts
             background: #FFFFCC;
         }
 
+        table tr td pre
+        {
+                /*  Make PRE tables "airy" */
+                margin-top:    1em;
+                margin-bottom: 1em;
+        }
 
         table.shade-normal
         {
@@ -349,10 +360,10 @@ Emacs highlighting and fonts
             /*  grey: EAEAEA, F0F0F0 FFFFCC
                 lime: F7F7DE CCFFCC
                 pinkish: E6F1FD D8E9FB C6DEFA FFEEFF (light ... darker)
+                slightly darker than F1F1F1: #EFEFEF;
             */
-            background: #EFEFEF;
+            background: #F1F1F1;
         }
-
 
         table.shade-normal2
         {
@@ -364,19 +375,13 @@ Emacs highlighting and fonts
             background: #E0E0F0;
         }
 
-
-        table.shade-note
-        {
-            /* nothing special */
-        }
-
-
         .shade-note-attrib
         {
             /*  darker is #E0E0F0; */
             /* background: #E5ECF3; */
             background: #E5ECF3;
-            font-family: Georgia, Palatino, Verdana, Arial, Helvetica;
+            font-family: Georgia, "New Century Schoolbook",
+                         Palatino, Verdana, Helvetica, serif;
             font-size: 0.8em;
         }
 
@@ -422,12 +427,17 @@ Emacs highlighting and fonts
             background: #FAFACA;
         }
 
+        .color-beige3
+        {
+            color: Navy;
+            background: #F5F5E9;
+        }
+
         .color-beige-dark
         {
             color: Navy;
             background: #CFEFBD;
         }
-
 
         .color-pink-dark
         {
@@ -453,6 +463,15 @@ Emacs highlighting and fonts
             background: #FFEEFF;
         }
 
+        .color-blue-light
+        {
+            background: #F0F0FF;
+        }
+
+        .color-blue-medium
+        {
+            background: #4A88BE;
+        }
 
         /* ////////////////////////////////////////////// Format columns */
 
@@ -477,7 +496,8 @@ Emacs highlighting and fonts
             font-family: "Goudy Old Style"
             */
             margin-left: 3em;
-            font-family: Georgia, Palatino, Verdana, Arial, Helvetica;
+            font-family: Georgia, "New Century Schoolbook",
+                         Palatino, Verdana, Arial, Helvetica;
             font-size:  0.9em;
         }
 
@@ -610,7 +630,6 @@ Emacs highlighting and fonts
             font-size: 0.8em;
         }
 
-
         span.word-ref
         {
             color: teal;
@@ -631,7 +650,7 @@ Emacs highlighting and fonts
 
         /* /////////////////////////////////////////////// Format other */
 
-                /* 7th column starting with double quote */
+        /* 7th column starting with double quote */
 
         span.quote7
         {
@@ -642,38 +661,35 @@ Emacs highlighting and fonts
             font-size: 1em;
         }
 
-                /* This appears in FRAME version: xxx-toc.html */
+        /* This appears in FRAME version: xxx-toc.html */
 
         div.toc
         {
             font-size: 0.8em;
         }
 
-                /* This appears in picture: the acption text beneath */
+        /* This appears in picture: the acption text beneath */
 
         div.picture
         {
             font-style: italic;
         }
 
-
-                /* This is the document info footer */
+        /* This is the document info footer */
 
         em.footer
         {
             font-size: 0.9em;
         }
 
-        END: Hide from older browsers
+    
 
-
-
-    </STYLE>
+    </style>
 
 
     <!-- ...................................................... Java code -->
 
-    <SCRIPT TYPE="text/javascript">
+    <script type="text/javascript">
 
         function MakeVisual(obj)
         {
@@ -692,28 +708,25 @@ Emacs highlighting and fonts
 
         window.onerror = IgnoreErrors;
 
-    </SCRIPT>
+    </script>
 
-</HEAD>
+        </head>
 
-<BODY >
-</P>
-</BLOCKQUOTE>
-<HR>
-    <A name="general_info_about_fontifying_with"  id="general_info_about_fontifying_with"></A>
-    <H1>
-    1.0 General info about fontifying with font-lock and lazy-lock
-    
-    </H1>
-<BLOCKQUOTE>
+<body >
+<hr>
+               <A name="general_info_about_fontifying_with_fontlock_and_lazylock"  id="general_info_about_fontifying_with_fontlock_and_lazylock"></A>
+               <h1>
+               1.0 General info about fontifying with font-lock and lazy-lock
+               
+               </h1>
 
 
 
-<P class="column8">
-        <EM><STRONG>$Id: emacs-font-body.html,v 2.9 2004/08/27 22:29:46 jaalto Exp $</STRONG></EM><BR>
+<p class="column8">
+        <EM><STRONG>$Id: emacs-font.txt,v 2.5 2004/01/26 02:08:08 jaalto Exp $</STRONG></EM><br>
 
 
-<P class="column8">
+<p class="column8">
         This document is compiled from Usenet postings that concern Emacs's
         coloring support, often referred as fontification. The document is
         constantly kept up to date whenever interesting articles appear in
@@ -721,16 +734,18 @@ Emacs highlighting and fonts
         contains very old information))
 
 
-</P>
-  <A name="lazy_lock_mode" id="lazy_lock_mode"></A>
-  <H2>
+
+  <a name="lazy_lock_mode" id="lazy_lock_mode"></a>
+  <h2>
       1.1 Lazy Lock mode
       
-  </H2>
+  </h2>
 
 
 
 
+<p>
+<p class="column8">
         Highlighting is done (1) on a demand-driven basis, and (2) when
         Emacs is idle. Demand-driven means that fontification occurs in
         only the visible part of the buffer (the window), and only when and
@@ -739,46 +754,41 @@ Emacs highlighting and fonts
         is no input).
 
 <P>
-<TABLE  class="shade-normal"
-        width="94%"
-        border="0"
-        cellpadding="10"
-        cellspacing="0"
-        >
+<TABLE class="shade-normal">
     <TR>
     <TD class="shade-normal-attrib" valign="top">
-    <PRE>      <A HREF="ftp://archive.cis.ohio-state.edu:pub/gnu/emacs/elisp-archive/" target="_top">ftp://archive.cis.ohio-state.edu:pub/gnu/emacs/elisp-archive/</A>
+    <PRE>
+      <a href="ftp://archive.cis.ohio-state.edu:pub/gnu/emacs/elisp-archive/" >ftp://archive.cis.ohio-state.edu:pub/gnu/emacs/elisp-archive/</a>
       ;; LCD Archive Entry:
       ;; lazy-lock|Simon Marshall|simon@gnu.ai.mit.edu|
       ;; Lazy Font Lock mode (for fast demand-driven fontification).|
-      ;; 25-Jan-95|1.10|~/modes/lazy-lock.el.Z|
-    </TD>
+      ;; 25-Jan-95|1.10|~/modes/lazy-lock.el.Z|    </PRE></TD>
     </TR>
 </TABLE>
 
 
-</P>
-  <A name="fontlock_lazylock_deferlock_fastlock_say" id="fontlock_lazylock_deferlock_fastlock_say"></A>
-  <H2>
+
+  <a name="fontlock_lazylock_deferlock_fastlock_say_what" id="fontlock_lazylock_deferlock_fastlock_say_what"></a>
+  <h2>
       1.2 Font-lock, lazy-lock, defer-lock, fast-lock &ndash; say what ?
       
-  </H2>
+  </h2>
 
 
 
 
-
-<P class="column10"><EM class="quote10">
+<p>
+<p class="column10"><em class="quote10">
           How do font-lock with lazy-lock, defer-lock and fast-lock work
-          together and which combination is the best respectively ?</EM>
+          together and which combination is the best respectively ?</em>
 
 
 
-<P class="column8">
-        Simon Marshall <EM><A HREF="mailto:Simon.Marshall@esrin.esa.it" >Simon.Marshall@esrin.esa.it</A></EM>
+<p class="column8">
+        Simon Marshall <EM><a href="mailto:Simon.Marshall@esrin.esa.it" >Simon.Marshall@esrin.esa.it</A></EM>
 
 
-<P class="column8">
+<p class="column8">
         The difference is that fast-lock.el caches fontification in files.
         Thus visiting a file is very quick. It does not affect anything
         else. However, lazy-lock.el version 2 (for Emacs 19.30 and up) does
@@ -789,288 +799,284 @@ Emacs highlighting and fonts
         fast-lock.el).
 
 
-<P class="column8">
+<p class="column8">
         So, if having lots of cache files bothers you, use lazy-lock.el.
         If you find that font-lock.el is too slow when typing, use
         lazy-lock.el. If you find that lazy-lock.el is too slow when
         scrolling, use fast-lock.el. Try them out; the choice is yours. I
         think lazy-lock.el is probably used more than fast-lock.el.
 
-</P>
-</BLOCKQUOTE>
-<HR>
-    <A name="lazy_fontification_for_fast_font"  id="lazy_fontification_for_fast_font"></A>
-    <H1>
-    2.0 Lazy fontification for fast Font Lock mode
-    
-    </H1>
-<BLOCKQUOTE>
+<hr>
+               <A name="lazy_fontification_for_fast_font_lock_mode"  id="lazy_fontification_for_fast_font_lock_mode"></A>
+               <h1>
+               2.0 Lazy fontification for fast Font Lock mode
+               
+               </h1>
 
 
-</P>
-  <A name="announcement_of_lazylock.el_v2.04" id="announcement_of_lazylock.el_v2.04"></A>
-  <H2>
+
+  <a name="announcement_of_lazylock_el_v2_04" id="announcement_of_lazylock_el_v2_04"></a>
+  <h2>
       2.1 Announcement of lazy-lock.el v2.04
       
-  </H2>
+  </h2>
 
 
 
 
-        Hi folks, <EM><A HREF="mailto:Simon.Marshall@esrin.esa.it" >Simon.Marshall@esrin.esa.it</A></EM>
+<p>
+<p class="column8">
+        Hi folks, <EM><a href="mailto:Simon.Marshall@esrin.esa.it" >Simon.Marshall@esrin.esa.it</A></EM>
 
 
-<P class="column8">
+<p class="column8">
         Here is version 2.04 of lazy-lock.el. This version works with Emacs
         19.30 and later. (Currently XEmacs does not have the features to
         support lazy-lock.el.) See also fast-lock.el, now distributed with
         both Emacs and XEmacs, but use one or the other!
 
 
-<P class="column8">
+<p class="column8">
         Lazy Lock mode speeds up Font Lock mode in a number of ways:
 
-<UL>
-	<LI>Buffer fontification can be demand-driven. This means that
+<ul>
+	<li>Buffer fontification can be demand-driven. This means that
             initial fontification of the buffer does not occur if the
             buffer is larger than a certain size (default 25K
             bytes). Instead, fontification occurs when necessary, such as
             when scrolling through the buffer would otherwise reveal
             unfontified areas. This is useful if buffer fontification is
             too slow for large buffers.
-	<LI>On-the-fly fontification can be deferred. This means that
+<li>On-the-fly fontification can be deferred. This means that
             on-the-fly fontification does not occur as you type. Instead,
             fontification is deferred until Emacs has been idle for a
             certain amount of time (default 0.25 seconds). This is useful
             if on-the-fly fontification is too slow to keep up with your
             typing.
-	<LI>Buffer fontification can be stealthy. This means that remaining
+	</li>
+<li>Buffer fontification can be stealthy. This means that remaining
             unfontified areas of buffers are fontified if Emacs has been
             idle for a certain amount of time (default 30 seconds). This is
-	            useful if any buffer has demand-driven fontification.
-</UL>
+	            useful if any buffer has demand-driven fontification.</li>
+</ul>
 
 
 
 
-<P class="column8">
+<p class="column8">
         Changes since the previous version:
 
-<UL>
-	<LI>Deferral can be specified on a mode-by-mode basis. This means
+<ul>
+	<li>Deferral can be specified on a mode-by-mode basis. This means
             that you can specify that deferral is used in only modes where
             you find on-the-fly fontification is too slow to keep up with
             your typing.
-	<LI>Emacs 19.31 idle timers are used to implement deferral and
+<li>Emacs 19.31 idle timers are used to implement deferral and
             stealth. This means that problems or oddities experienced when
             using Transient Mark mode and Shell mode (and other modes based
             on Comint mode) have gone away.
-	<LI>Fixed bug whereby changing the window buffer before deferral
+	</li>
+<li>Fixed bug whereby changing the window buffer before deferral
             occurred would result in the newly visible buffer being
             unconditionally fontified.
-	<LI>Fixed bug whereby scrolling after inserting a large amount of
+	</li>
+<li>Fixed bug whereby scrolling after inserting a large amount of
             text into a small buffer would result in the new text being
             seen unfontified.
-	<LI>Fixed feature whereby stealth fontification would not be
+	</li>
+<li>Fixed feature whereby stealth fontification would not be
             interruptible when searching for, but failing to find, a buffer
-	            that required fontification.
-</UL>
+	            that required fontification.</li>
+</ul>
 
 
 
 
-<P class="column8">
+<p class="column8">
         Version 2 of lazy-lock.el is a drop-in replacement for lazy-lock.el
         version 1 and defer-lock.el, only it is much better than both of
-        them put together. Actually, if you use <EM class="word">either</EM> of these packages
+        them put together. Actually, if you use <em class="word">either</em> of these packages
         with Emacs 19.30 and later you should change to version 2 of
         lazy-lock.el.
 
 
-<P class="column8">
+<p class="column8">
         Note that this version will not be placed on the Emacs Lisp
         Archive, because I want to leave version 1 there for pre-Emacs
         19.30 users. Eventually, version 2 of lazy-lock.el will be
         distributed with some future version of Emacs.
 
 
-<P class="column8">
+<p class="column8">
         See the comment header for more information and installation
         instructions, and the comment header and command 'lazy-lock-mode'
         for usage instructions.
 
 
-<P class="column8">
+<p class="column8">
         Please report problems, etc., via M-x lazy-lock-submit-bug-report
         RET. Enjoy, Simon.
 
 
-</P>
-  <A name="fontlockextra.el" id="fontlockextra.el"></A>
-  <H2>
+
+  <a name="fontlockextra_el" id="fontlockextra_el"></a>
+  <h2>
       2.2 Font-lock-extra.el
       
-  </H2>
+  </h2>
 
 
 
 
-        Ilya Zakharevich (ilya@math.ohio-state.edu)<BR>
-        <A HREF="ftp://ftp.math.ohio-state.edu/pub/users/ilya/emacs" target="_top">ftp://ftp.math.ohio-state.edu/pub/users/ilya/emacs</A><BR>
+<p>
+<p class="column8">
+        Ilya Zakharevich (ilya@math.ohio-state.edu)<br>
+        <a href="ftp://ftp.math.ohio-state.edu/pub/users/ilya/emacs" >ftp://ftp.math.ohio-state.edu/pub/users/ilya/emacs</A><br>
 
 
-<P class="column8">
+<p class="column8">
         It is designed for mostly package writers. It is documented that the
         only benefits you get without tuning your .emacs are in CPerl-mode.
         You can also use -3 and -4 keywords for C and C++ (for -4 you would
         better get ctypedefs too. And if you want to tune-up faces,
         you will appreciate this package.
 
-</P>
-</BLOCKQUOTE>
-<HR>
-    <A name="fontlock_and_lazylock_questions_and"  id="fontlock_and_lazylock_questions_and"></A>
-    <H1>
-    3.0 Font-lock and lazy-lock: questions and answers
-    
-    </H1>
-<BLOCKQUOTE>
+<hr>
+               <A name="fontlock_and_lazylock_questions_and_answers"  id="fontlock_and_lazylock_questions_and_answers"></A>
+               <h1>
+               3.0 Font-lock and lazy-lock: questions and answers
+               
+               </h1>
 
 
-</P>
-  <A name="fast_fontification" id="fast_fontification"></A>
-  <H2>
+
+  <a name="fast_fontification" id="fast_fontification"></a>
+  <h2>
       3.1 Fast fontification
       
-  </H2>
+  </h2>
 
 
 
 
+<p>
+<p class="column8">
         If you want fast fontification don't use the function
         'font-lock-mode' your small redraw function can simply be
-        <SAMP class="word">font-lock-fontify-buffer</SAMP> (but if you bind it to <SPAN class="word-ref">[return]</SPAN> then you
+        <samp class="word">font-lock-fontify-buffer</samp> (but if you bind it to <span class="word-ref">[return]</span> then you
         should use lazy-lock too)
 
 
-</P>
-  <A name="fontlock_is_pain_slow_with" id="fontlock_is_pain_slow_with"></A>
-  <H2>
+
+  <a name="fontlock_is_pain_slow_with_big_files__use_lazylock" id="fontlock_is_pain_slow_with_big_files__use_lazylock"></a>
+  <h2>
       3.2 Font-lock is pain slow with big files.. &ndash; use lazy-lock
       
-  </H2>
+  </h2>
 
 
 
 
+<p>
+<p class="column8">
         The lazy-lock.el it's a &quot;must&quot; for font-lock
 
 
-<P class="column8">
-        (setq font-lock-verbose nil)         ; to avoid the annoying messages<BR>
-        (setq lazy-lock-continuity-time 0.3) ; refontify after 0.3 inactivity<BR>
+<p class="column8">
+        (setq font-lock-verbose nil)         ; to avoid the annoying messages<br>
+        (setq lazy-lock-continuity-time 0.3) ; refontify after 0.3 inactivity<br>
 
 
-</P>
-  <A name="fontlock_in_non_windowed_emacs" id="fontlock_in_non_windowed_emacs"></A>
-  <H2>
+
+  <a name="fontlock_in_non_windowed_emacs" id="fontlock_in_non_windowed_emacs"></a>
+  <h2>
       3.3 Font-lock in non windowed Emacs
       
-  </H2>
+  </h2>
 
 
 
 
-
-<P class="column10"><EM class="quote10">
+<p>
+<p class="column10"><em class="quote10">
           I have added customizations to emacs to start on the Font Lock
           mode and also colors for the hook &quot;window-setup-hook&quot;. It works fine
           when I start emacs in the usual way (emacs). However when I start in
           the No Window mode by using &quot;emacs -nw&quot; I get the following error:
-          &quot;Symbol's function definition is void: set-face-foreground&quot;</EM>
+          &quot;Symbol's function definition is void: set-face-foreground&quot;</em>
 
 
 
-<P class="column8">
-        <EM><A HREF="mailto:bouzas@physics.ucla.edu" >bouzas@physics.ucla.edu</A></EM> (Antonio Bouzas)
+<p class="column8">
+        <EM><a href="mailto:bouzas@physics.ucla.edu" >bouzas@physics.ucla.edu</A></EM> (Antonio Bouzas)
 
 
-<P class="column8">
+<p class="column8">
         I have the following code in my .emacs, to avoid that problem,
 
 <P>
-<TABLE  class="shade-normal"
-        width="94%"
-        border="0"
-        cellpadding="10"
-        cellspacing="0"
-        >
+<TABLE class="shade-normal">
     <TR>
     <TD class="shade-normal-attrib" valign="top">
-    <PRE>      (cond
+    <PRE>
+      (cond
        (window-system
         (set-default-font
          &quot;-ncd-terminal-medium-r-normal-*-23-180-*-*-*-*-*-*&quot;)
-        ))
-    </TD>
+        ))    </PRE></TD>
     </TR>
 </TABLE>
 
 
-</P>
-  <A name="ascii_terminal_highlighting" id="ascii_terminal_highlighting"></A>
-  <H2>
+
+  <a name="ascii_terminal_highlighting" id="ascii_terminal_highlighting"></a>
+  <h2>
       3.4 Ascii terminal highlighting
       
-  </H2>
+  </h2>
 
 
 
 
-
-<P class="column10"><EM class="quote10">
+<p>
+<p class="column10"><em class="quote10">
           Please, does anyone have any ideas about how or if I can persuade
-          emacs to fontify?</EM>
+          emacs to fontify?</em>
 
 
 
-<P class="column7"><EM><STRONG>
-       <EM><A HREF="mailto:hchau@landau.ucdavis.edu" >hchau@landau.ucdavis.edu</A></EM></STRONG></EM>
+<p class="column7"><em><strong>
+       <EM><a href="mailto:hchau@landau.ucdavis.edu" >hchau@landau.ucdavis.edu</A></EM></strong></em>
 
 
 
-<P class="column8">
+<p class="column8">
         Not that I know of. I heard that XEmacs does some basic
         fontification. But if you really want syntax coloring over
         the serial line, use Jed. It available at
 
 <P>
-<TABLE  class="shade-normal"
-        width="94%"
-        border="0"
-        cellpadding="10"
-        cellspacing="0"
-        >
+<TABLE class="shade-normal">
     <TR>
     <TD class="shade-normal-attrib" valign="top">
-    <PRE>      <A HREF="ftp://space.mit.edu/pub/davis/jed/" target="_top">ftp://space.mit.edu/pub/davis/jed/</A>
-    </TD>
+    <PRE>
+      <a href="ftp://space.mit.edu/pub/davis/jed/" >ftp://space.mit.edu/pub/davis/jed/</a>    </PRE></TD>
     </TR>
 </TABLE>
 
 
-<P class="column8">
+<p class="column8">
         It is an emacs clone so you would have no problem if you know
         emacs. Then if you want a newsreader that also does coloring pick
         up slrn too. This is what I use when I am over the serial
         line. Emacs and vim at work and Jed and vim at home.
 
 
-<P class="column6">
-      Steven L. Baur <EM><A HREF="mailto:Asteve@diana.miranova.com" >Asteve@diana.miranova.com</A></EM>
+<p class="column6">
+      Steven L. Baur <EM><a href="mailto:Asteve@diana.miranova.com" >Asteve@diana.miranova.com</A></EM>
 
 
-<P class="column8">
+<p class="column8">
         Font-lock-mode in XEmacs 19.14 is supposed to have full colour ANSI
         terminal support. 19.13 has terminal font-lock in only black &amp;
         white at present.If you're running on limited memory for Linux,
@@ -1078,37 +1084,37 @@ Emacs highlighting and fonts
         turned on, it grows a lot slower then GNU Emacs does.
 
 
-<P class="column8">
+<p class="column8">
         19.13 can't do colors, but it can do the attributes highlight
         (bold), dim, and underline (if your tty can)
 
 
 
-<P class="column8">
-        Vladimir Alexiev <EM><A HREF="mailto:vladimir@cs.ualberta.ca" >vladimir@cs.ualberta.ca</A></EM><BR>
-        <A HREF="ftp://ftp.iesd.auc.dk/pub/emacs-lisp/" target="_top">ftp://ftp.iesd.auc.dk/pub/emacs-lisp/</A><BR>
-        emacs-19.25.90-termcap_faces.tar.gz<BR>
+<p class="column8">
+        Vladimir Alexiev <EM><a href="mailto:vladimir@cs.ualberta.ca" >vladimir@cs.ualberta.ca</A></EM><br>
+        <a href="ftp://ftp.iesd.auc.dk/pub/emacs-lisp/" >ftp://ftp.iesd.auc.dk/pub/emacs-lisp/</A><br>
+        emacs-19.25.90-termcap_faces.tar.gz<br>
 
 
-<P class="column8">
+<p class="column8">
         This includes patches for 11 of the emacs source (.c) files, so
         perhaps you'll need root privileges to use it.
 
 
-<P class="column8">
+<p class="column8">
         Font-lock-mode in XEmacs 19.14 (still beta as of 25 Apr 1995) has
         full color ANSI terminal support. 19.13 has terminal font-lock in
         only black &amp; white (highlight, dim and underline).
 
 
-<P class="column8">
+<p class="column8">
         XEmacs can emit the following TTY attributes: blinking dim
         highlight reverse underline. You set these with
         set-face-***-p. Also, make-face-bold and make-face-italic map to
         highlight and underline respectively.
 
 
-<P class="column8">
+<p class="column8">
         You'll also need to see what colours/attributes your terminal
         emulator can display, and choose how to map the above to them. I
         have a mono CGA that basically can display three &quot;colours&quot;: normal,
@@ -1123,22 +1129,18 @@ Emacs highlighting and fonts
         by definition.
 
 
-<P class="column8">
+<p class="column8">
         You do the mapping by tweaking termcap. The ANSI tty command &quot;set
         attributes&quot; is of the form \E[*m where * is a string of attribute
         numbers n1;..;nk. num tc face
 
 
 <P>
-<TABLE  class="shade-normal"
-        width="94%"
-        border="0"
-        cellpadding="10"
-        cellspacing="0"
-        >
+<TABLE class="shade-normal">
     <TR>
     <TD class="shade-normal-attrib" valign="top">
-    <PRE>      --- -- ------------------------------
+    <PRE>
+      --- -- ------------------------------
       0  me default (does NOT reset colour.
          In kermit say &quot;SET TERMINAL COLOUR 20&quot; to have it reset it.)
       1  md highlight=bold
@@ -1149,61 +1151,50 @@ Emacs highlighting and fonts
       7  mr --not used--
       2* turn * off (I know the tc for only 23=se and 24=ue)
       3* set foreground (1=red + 2=green + 4=blue)
-      4* set background (1=red + 2=green + 4=blue)
-    </TD>
+      4* set background (1=red + 2=green + 4=blue)    </PRE></TD>
     </TR>
 </TABLE>
 
 
-<P class="column8">
+<p class="column8">
         E.g., I use this for my mono CGA:
 
 <P>
-<TABLE  class="shade-normal"
-        width="94%"
-        border="0"
-        cellpadding="10"
-        cellspacing="0"
-        >
+<TABLE class="shade-normal">
     <TR>
     <TD class="shade-normal-attrib" valign="top">
-    <PRE>      mh=\E[1;30m:so=\E[7m:se=\E[m:us=\E[1;30m:ue=\E[m
-    </TD>
+    <PRE>
+      mh=\E[1;30m:so=\E[7m:se=\E[m:us=\E[1;30m:ue=\E[m    </PRE></TD>
     </TR>
 </TABLE>
 
 
-<P class="column8">
-        mh=dim and us=underline are gray-on-black, <SAMP class="word">so</SAMP> is mapped to
+<p class="column8">
+        mh=dim and us=underline are gray-on-black, <samp class="word">so</samp> is mapped to
         \E[7m because kermit does not understand \E[3m. Find the
         termcap for your tty and append that line. In &quot;screen&quot;, use
         the command
 
 <P>
-<TABLE  class="shade-normal"
-        width="94%"
-        border="0"
-        cellpadding="10"
-        cellspacing="0"
-        >
+<TABLE class="shade-normal">
     <TR>
     <TD class="shade-normal-attrib" valign="top">
-    <PRE>      termcap vt100 LP:mh=\E[1;30m:so=\E[7m:se=\E[m:us=\E[1;30m:ue=\E[m
-    </TD>
+    <PRE>
+      termcap vt100 LP:mh=\E[1;30m:so=\E[7m:se=\E[m:us=\E[1;30m:ue=\E[m    </PRE></TD>
     </TR>
 </TABLE>
 
 
-<P class="column8">
-        A patch is available from <EM><A HREF="mailto:vladimir@cs.ualberta.ca" >vladimir@cs.ualberta.ca</A></EM> that makes
+<p class="column8">
+        A patch is available from <EM><a href="mailto:vladimir@cs.ualberta.ca" >vladimir@cs.ualberta.ca</A></EM> that makes
         edit-faces.el more useful for ttys.
 
 
-<P class="column6">
-      Alex Ott <EM><A HREF="mailto:ottalex@narod.ru" >ottalex@narod.ru</A></EM>
+<p class="column6">
+      Alex Ott <EM><a href="mailto:ottalex@narod.ru" >ottalex@narod.ru</A></EM>
 
 
-<P class="column8">
+<p class="column8">
         GNU Emacs since version 21 provides support for font-lock on
         text terminals with color support (like xterm or linux console
         terminal).  For comfortable job with font-lock, user may
@@ -1211,94 +1202,91 @@ Emacs highlighting and fonts
         for window system use and terminal use.
 
 
-</P>
-  <A name="lazy_lock_doesnt_work_for" id="lazy_lock_doesnt_work_for"></A>
-  <H2>
+
+  <a name="lazy_lock_doesnt_work_for_small_buffers" id="lazy_lock_doesnt_work_for_small_buffers"></a>
+  <h2>
       3.5 Lazy lock doesn't work for small buffers ?
       
-  </H2>
+  </h2>
 
 
 
 
+<p>
+<p class="column8">
         (setq lazy-lock-minimum-size nil) for small buffers Otherwise it's
         never refontified in small buffers
 
 
-</P>
-  <A name="postscript_printing" id="postscript_printing"></A>
-  <H2>
+
+  <a name="postscript_printing" id="postscript_printing"></a>
+  <h2>
       3.6 Postscript printing
       
-  </H2>
+  </h2>
 
 
 
 
-
-<P class="column10"><EM class="quote10">
+<p>
+<p class="column10"><em class="quote10">
           I've been using font-lock modes for editing C, C++, and Tcl
           sources and I like it so much that I would like to produce
           PostScript listings of those programs with the same nice
           font-locked format. Has anyone done this before? A:
-          jcolman@lehman.com (Jake Colman)</EM>
+          jcolman@lehman.com (Jake Colman)</em>
 
 
 
-<P class="column8">
-        Try <SAMP class="word">ps-print.el</SAMP> available from the ohio-state archives in the
+<p class="column8">
+        Try <samp class="word">ps-print.el</samp> available from the ohio-state archives in the
         packages subdirectory. It purports to print a file the same way it
         looks with font-lock.
 
 
-</P>
-  <A name="internalfacep_error" id="internalfacep_error"></A>
-  <H2>
+
+  <a name="internalfacep_error" id="internalfacep_error"></a>
+  <h2>
       3.7 Internal-facep error
       
-  </H2>
+  </h2>
 
 
 
 
-
-<P class="column10"><EM class="quote10">
+<p>
+<p class="column10"><em class="quote10">
           When I bring up a file (say .emacs) up in emacs, I get an error
-          message: &quot;Error in init <A HREF="file:Wrong" target="_top">file:Wrong</A> type argument:internal-facep,
-          font-lock-comment-face&quot;</EM>
+          message: &quot;Error in init <a href="file:Wrong" >file:Wrong</A> type argument:internal-facep,
+          font-lock-comment-face&quot;</em>
 
 
 
-<P class="column10"><EM class="quote10">
-          My font settings are:</EM>
+<p class="column10"><em class="quote10">
+          My font settings are:</em>
 
 
 <P>
-<TABLE  class="shade-normal"
-        width="94%"
-        border="0"
-        cellpadding="10"
-        cellspacing="0"
-        >
+<TABLE class="shade-normal">
     <TR>
     <TD class="shade-normal-attrib" valign="top">
-    <PRE>      (setq font-lock-use-fonts t)
+    <PRE>
+      (setq font-lock-use-fonts t)
       (setq font-lock-use-colours nil)
       (setq font-lock-use-maximal-decoration t)
       ;; After font-lock is loaded, you can set the colours and still use
       ;; italic &amp; bold fonts as chosen.
       (set-face-foreground 'font-lock-comment-face       &quot;Violet&quot;)
-      (set-face-foreground 'font-lock-keyword-face       &quot;White&quot;)
-    </TD>
+      (set-face-foreground 'font-lock-keyword-face       &quot;White&quot;)    </PRE></TD>
     </TR>
 </TABLE>
 
 
-<P class="column8">
-        <EM><A HREF="mailto:Simon.Marshall@esrin.esa.it" >Simon.Marshall@esrin.esa.it</A></EM>
+<p class="column8">
+        <EM><a href="mailto:Simon.Marshall@esrin.esa.it" >Simon.Marshall@esrin.esa.it</A></EM>
 
 
-<P class="column8">
+<p class="column8">
         The first two are specific to XEmacs; you don't need them in Emacs
         as it works out whether your display is colour or not. The last two
         are failing because at that time your ~/.emacs is loaded, the faces
@@ -1306,298 +1294,265 @@ Emacs highlighting and fonts
         follows:
 
 
-<P class="column8">
+<p class="column8">
         . Modify the variable font-lock-face-attributes in your ~/.emacs.
         . Use X resources (see the doc-string of font-lock-face-attributes).
         . Call font-lock-make-faces in your .emacs and then do the
       above code.
 
 
-<P class="column8">
+<p class="column8">
         Don't use (3); in fact you don't need to preload font-lock at all.
         Remove your require from your ~/.emacs and just do things like:
 
 <P>
-<TABLE  class="shade-normal"
-        width="94%"
-        border="0"
-        cellpadding="10"
-        cellspacing="0"
-        >
+<TABLE class="shade-normal">
     <TR>
     <TD class="shade-normal-attrib" valign="top">
-    <PRE>      (add-hook 'foo-mode-hook 'turn-on-font-lock)
-      (setq font-lock-face-attributes '((font-lock-comment-face ..) ..))
-    </TD>
+    <PRE>
+      (add-hook 'foo-mode-hook 'turn-on-font-lock)
+      (setq font-lock-face-attributes '((font-lock-comment-face ..) ..))    </PRE></TD>
     </TR>
 </TABLE>
 
 
-<P class="column8">
+<p class="column8">
         though it's probably cleaner to do (2) than to do (1).
 
 
-</P>
-  <A name="gnus_article_highlighting" id="gnus_article_highlighting"></A>
-  <H2>
+
+  <a name="gnus_article_highlighting" id="gnus_article_highlighting"></a>
+  <h2>
       3.8 GNUS article highlighting
       
-  </H2>
+  </h2>
 
 
 
 
-
-<P class="column10"><EM class="quote10">
+<p>
+<p class="column10"><em class="quote10">
           Nowhere in the font-lock-keywords list for gnus-article-mode it says
           to highlight strings but they highlit anyway. How do I turn this
-          off?</EM>
+          off?</em>
 
 
 
-<P class="column8">
-        <EM><A HREF="mailto:Simon.Marshall@esrin.esa.it" >Simon.Marshall@esrin.esa.it</A></EM> Make sure that the value of
-        <SAMP class="word">font-lock-no-comments</SAMP> is t in the buffer.
+<p class="column8">
+        <EM><a href="mailto:Simon.Marshall@esrin.esa.it" >Simon.Marshall@esrin.esa.it</A></EM> Make sure that the value of
+        <samp class="word">font-lock-no-comments</samp> is t in the buffer.
 
 
-</P>
-  <A name="id_like_to_be_able" id="id_like_to_be_able"></A>
-  <H2>
+
+  <a name="id_like_to_be_able_to_change_the_colours" id="id_like_to_be_able_to_change_the_colours"></a>
+  <h2>
       3.9 I'd like to be able to change the colours for the comments
       
-  </H2>
+  </h2>
 
 
 
 
-        Alf-Ivar Holm <EM><A HREF="mailto:alfh@gyda.ifi.uio.no" >alfh@gyda.ifi.uio.no</A></EM>
+<p>
+<p class="column8">
+        Alf-Ivar Holm <EM><a href="mailto:alfh@gyda.ifi.uio.no" >alfh@gyda.ifi.uio.no</A></EM>
 
 <P>
-<TABLE  class="shade-normal"
-        width="94%"
-        border="0"
-        cellpadding="10"
-        cellspacing="0"
-        >
+<TABLE class="shade-normal">
     <TR>
     <TD class="shade-normal-attrib" valign="top">
-    <PRE>      (setq font-lock-face-attributes
+    <PRE>
+      (setq font-lock-face-attributes
        '((font-lock-comment-face &quot;DarkGoldenrod&quot; nil nil t)
-       (font-lock-string-face &quot;red&quot;)))
-    </TD>
+       (font-lock-string-face &quot;red&quot;)))    </PRE></TD>
     </TR>
 </TABLE>
 
 
-<P class="column8">
+<p class="column8">
         Look at the documentation of font-lock-face-attributes (C-h v) for
         more info.
 
 
-</P>
-  <A name="fontlock_colours_how_to_change" id="fontlock_colours_how_to_change"></A>
-  <H2>
+
+  <a name="fontlock_colours_how_to_change_defaults" id="fontlock_colours_how_to_change_defaults"></a>
+  <h2>
       3.10 Font-lock colours - how to change defaults?
       
-  </H2>
+  </h2>
 
 
 
 
-        Kai Grossjohann <EM><A HREF="mailto:grossjoh@ls6.informatik.uni-dortmund.de" >grossjoh@ls6.informatik.uni-dortmund.de</A></EM>
+<p>
+<p class="column8">
+        Kai Grossjohann <EM><a href="mailto:grossjoh@ls6.informatik.uni-dortmund.de" >grossjoh@ls6.informatik.uni-dortmund.de</A></EM>
 
 
-<P class="column8">
+<p class="column8">
         With Emacs 19.30 and up you can set font-lock-face-attributes which is
         rather simple to understand, I think.
 
 <P>
-<TABLE  class="shade-normal"
-        width="94%"
-        border="0"
-        cellpadding="10"
-        cellspacing="0"
-        >
+<TABLE class="shade-normal">
     <TR>
     <TD class="shade-normal-attrib" valign="top">
-    <PRE>      (setq font-lock-face-attributes
+    <PRE>
+      (setq font-lock-face-attributes
           '(
             ;; FACE              FORE    BACK BOLD? IT? UNDERLINE?
             (font-lock-type-face &quot;green&quot; nil  nil   t   nil)
-            ;; ...more lines like this...))
-    </TD>
+            ;; ...more lines like this...))    </PRE></TD>
     </TR>
 </TABLE>
 
 
-</P>
-  <A name="customizing_faces" id="customizing_faces"></A>
-  <H2>
+
+  <a name="customizing_faces" id="customizing_faces"></a>
+  <h2>
       3.11 Customizing faces
       
-  </H2>
+  </h2>
 
 
 
 
-
-<P class="column10"><EM class="quote10">
+<p>
+<p class="column10"><em class="quote10">
           I'm unable to correctly customize font-lock to display certain faces
-          in bold and/or italic.</EM>
+          in bold and/or italic.</em>
 
 
 
-<P class="column8">
-        Ulrik Dickow <EM><A HREF="mailto:dickow@nbi.dk" >dickow@nbi.dk</A></EM> Don't use a hook. Just do for example
+<p class="column8">
+        Ulrik Dickow <EM><a href="mailto:dickow@nbi.dk" >dickow@nbi.dk</A></EM> Don't use a hook. Just do for example
         something like this in your .emacs:
 
 <P>
-<TABLE  class="shade-normal"
-        width="94%"
-        border="0"
-        cellpadding="10"
-        cellspacing="0"
-        >
+<TABLE class="shade-normal">
     <TR>
     <TD class="shade-normal-attrib" valign="top">
-    <PRE>      (copy-face 'italic  'font-lock-comment-face)
+    <PRE>
+      (copy-face 'italic  'font-lock-comment-face)
       (set-face-foreground 'font-lock-comment-face &quot;FireBrick&quot;)
-      (setq font-lock-comment-face 'font-lock-comment-face)
-    </TD>
+      (setq font-lock-comment-face 'font-lock-comment-face)    </PRE></TD>
     </TR>
 </TABLE>
 
 
-<P class="column8">
+<p class="column8">
         This works whether font-lock.el has been loaded already or not.
-        It doesn't even require that <SAMP class="word">window-system</SAMP> is non-nil.
-        See also <A HREF="http://www.nbi.dk/~dickow/emacs/" target="_top">http://www.nbi.dk/~dickow/emacs/</A> for working examples.
+        It doesn't even require that <samp class="word">window-system</samp> is non-nil.
+        See also <a href="http://www.nbi.dk/~dickow/emacs/" >http://www.nbi.dk/~dickow/emacs/</A> for working examples.
 
 
-</P>
-  <A name="different_face_setup" id="different_face_setup"></A>
-  <H2>
+
+  <a name="different_face_setup" id="different_face_setup"></a>
+  <h2>
       3.12 Different face setup
       
-  </H2>
+  </h2>
 
 
 
 
-
-<P class="column10"><EM class="quote10">
+<p>
+<p class="column10"><em class="quote10">
           How do I set up different colours for the different faces in my
-          emacs file. For instance I want to change the colour of<BR>
-          font-lock-comment-face at start up.</EM>
+          emacs file. For instance I want to change the colour of<br>
+          font-lock-comment-face at start up.</em>
 
 
 
-<P class="column8">
-        Kai Grossjohann <EM><A HREF="mailto:grossjoh@ls6.informatik.uni-dortmund.de" >grossjoh@ls6.informatik.uni-dortmund.de</A></EM>
+<p class="column8">
+        Kai Grossjohann <EM><a href="mailto:grossjoh@ls6.informatik.uni-dortmund.de" >grossjoh@ls6.informatik.uni-dortmund.de</A></EM>
 
 <P>
-<TABLE  class="shade-normal"
-        width="94%"
-        border="0"
-        cellpadding="10"
-        cellspacing="0"
-        >
+<TABLE class="shade-normal">
     <TR>
     <TD class="shade-normal-attrib" valign="top">
-    <PRE>      ;; create a new face
+    <PRE>
+      ;; create a new face
       (make-face 'sg-comment-face)
       ;; set its foreground and background colour
       (set-face-foreground 'sg-comment-face &quot;blue&quot;)
       (set-face-background 'sg-comment-face &quot;green&quot;)
       ;; let the new face be the font-lock-comment-face
-      (setq font-lock-comment-face 'sg-comment-face)
-    </TD>
+      (setq font-lock-comment-face 'sg-comment-face)    </PRE></TD>
     </TR>
 </TABLE>
 
 
-<P class="column8">
-        If there is an existing face you like (try <SPAN class="word-small">M-x</SPAN>
-        <SPAN class="word-small">list-faces-display</SPAN> for a list), you can just use the setq
+<p class="column8">
+        If there is an existing face you like (try <span class="word-small">M-x</span>
+        <span class="word-small">list-faces-display</span> for a list), you can just use the setq
         line with that face instead of sg-comment-face.
 
 
-</P>
-  <A name="highlight_specific_words" id="highlight_specific_words"></A>
-  <H2>
+
+  <a name="highlight_specific_words" id="highlight_specific_words"></a>
+  <h2>
       3.13 Highlight specific words
       
-  </H2>
+  </h2>
 
 
 
 
-
-<P class="column10"><EM class="quote10">
+<p>
+<p class="column10"><em class="quote10">
           In a specific mode I want to highlight some specified words,
-          but not strings. I do I accomplish this?</EM>
+          but not strings. I do I accomplish this?</em>
 
 
 
-<P class="column6">
-      Alf-Ivar Holm <EM><A HREF="mailto:alfh@gyda.ifi.uio.no" >alfh@gyda.ifi.uio.no</A></EM>
+<p class="column6">
+      Alf-Ivar Holm <EM><a href="mailto:alfh@gyda.ifi.uio.no" >alfh@gyda.ifi.uio.no</A></EM>
 
 
-<P class="column6">
-      <SPAN class="word-ref">[latest font-lock only]</SPAN> There is a variable called
+<p class="column6">
+      <span class="word-ref">[latest font-lock only]</span> There is a variable called
       font-lock-keywords-only (C-h v) that you can set directly, or
       indirectly with font-lock-defaults like:
 
 <P>
-<TABLE  class="shade-normal"
-        width="94%"
-        border="0"
-        cellpadding="10"
-        cellspacing="0"
-        >
+<TABLE class="shade-normal">
     <TR>
     <TD class="shade-normal-attrib" valign="top">
-    <PRE>      (add-hook
+    <PRE>
+      (add-hook
        'modename-mode-hook
        '(lambda ()
           (make-local-variable 'font-lock-defaults)
            (setq font-lock-defaults
-                 '(modename-font-lock-keywords t nil))))
-    </TD>
+                 '(modename-font-lock-keywords t nil))))    </PRE></TD>
     </TR>
 </TABLE>
 
-</P>
-</BLOCKQUOTE>
-<HR>
-    <A name="some_more_answers"  id="some_more_answers"></A>
-    <H1>
-    4.0 Some more answers
-    
-    </H1>
-<BLOCKQUOTE>
+<hr>
+               <A name="some_more_answers"  id="some_more_answers"></A>
+               <h1>
+               4.0 Some more answers
+               
+               </h1>
 
 
-</P>
-  <A name="the_ulrik_dickow_way" id="the_ulrik_dickow_way"></A>
-  <H2>
+
+  <a name="the_ulrik_dickow_way" id="the_ulrik_dickow_way"></a>
+  <h2>
       4.1 The Ulrik Dickow way
       
-  </H2>
+  </h2>
 
 
 
-
+<p>
 <P>
-<TABLE  class="shade-normal"
-        width="94%"
-        border="0"
-        cellpadding="10"
-        cellspacing="0"
-        >
+<TABLE class="shade-normal">
     <TR>
     <TD class="shade-normal-attrib" valign="top">
-    <PRE>      ;;  For fine tuning freaks...
+    <PRE>
+      ;;  For fine tuning freaks...
       ;;
       (defun my-small-font-lock-after-change-function (beg end old-len)
         &quot;Just removes the properties that will be
@@ -1616,39 +1571,36 @@ Emacs highlighting and fonts
       (add-hook 'post-command-hook
                 'lazy-lock-post-command-fontify-windows)
       (add-hook 'post-command-hook
-                'lazy-lock-post-command-fontify-stealthily)
-    </TD>
+                'lazy-lock-post-command-fontify-stealthily)    </PRE></TD>
     </TR>
 </TABLE>
 
 
-</P>
-  <A name="fontmode_colours_how_to_change" id="fontmode_colours_how_to_change"></A>
-  <H2>
+
+  <a name="fontmode_colours_how_to_change_defaults" id="fontmode_colours_how_to_change_defaults"></a>
+  <h2>
       4.2 Font-mode colours - how to change defaults?
       
-  </H2>
+  </h2>
 
 
 
 
-        Mosur K. Mohan <EM><A HREF="mailto:mmohan@dtthp144.intel.com" >mmohan@dtthp144.intel.com</A></EM>
+<p>
+<p class="column8">
+        Mosur K. Mohan <EM><a href="mailto:mmohan@dtthp144.intel.com" >mmohan@dtthp144.intel.com</A></EM>
 
 
-<P class="column8">
+<p class="column8">
         Here's a snippet of my startup file which resets my colours (works for
         19.28 and 19.29, don't know about other versions):
 
 <P>
-<TABLE  class="shade-normal"
-        width="94%"
-        border="0"
-        cellpadding="10"
-        cellspacing="0"
-        >
+<TABLE class="shade-normal">
     <TR>
     <TD class="shade-normal-attrib" valign="top">
-    <PRE>      ;; Customization for the font-lock package
+    <PRE>
+      ;; Customization for the font-lock package
       (if (&gt; emacs-minor-version 28)
         (setq
           font-lock-face-attributes
@@ -1678,47 +1630,42 @@ Emacs highlighting and fonts
             font-lock-function-name-face 'yellow
             font-lock-variable-name-face 'black
             font-lock-type-face 'royalblue
-            font-lock-reference-face 'firebrick)))
-    </TD>
+            font-lock-reference-face 'firebrick)))    </PRE></TD>
     </TR>
 </TABLE>
 
 
-</P>
-  <A name="fontlock_for_different_modes" id="fontlock_for_different_modes"></A>
-  <H2>
+
+  <a name="fontlock_for_different_modes" id="fontlock_for_different_modes"></a>
+  <h2>
       4.3 Font-lock for different modes ?
       
-  </H2>
+  </h2>
 
 
 
 
-
-<P class="column10"><EM class="quote10">
+<p>
+<p class="column10"><em class="quote10">
           Is it possible to have different fonts in different modes? for
           example, I'd like to use one font as default, and another when i call
-          cc-mode.</EM>
+          cc-mode.</em>
 
 
 
-<P class="column8">
-        Joe Jackson <EM><A HREF="mailto:jackson@shoeless.lanl.gov" >jackson@shoeless.lanl.gov</A></EM>
+<p class="column8">
+        Joe Jackson <EM><a href="mailto:jackson@shoeless.lanl.gov" >jackson@shoeless.lanl.gov</A></EM>
 
 
-<P class="column8">
+<p class="column8">
         Try a construct like the following;
 
 <P>
-<TABLE  class="shade-normal"
-        width="94%"
-        border="0"
-        cellpadding="10"
-        cellspacing="0"
-        >
+<TABLE class="shade-normal">
     <TR>
     <TD class="shade-normal-attrib" valign="top">
-    <PRE>      (add-hook 'lisp-mode-hook 'my-font-lock-for-lisp)
+    <PRE>
+      (add-hook 'lisp-mode-hook 'my-font-lock-for-lisp)
 
       (defun my-font-lock-common ()
         &quot;Common settings for all modes.&quot;
@@ -1750,33 +1697,34 @@ Emacs highlighting and fonts
         (set-face-foreground  'bold        &quot;blue&quot;)
         (set-face-foreground  'underline   &quot;maroon&quot;)
         (set-face-underline-p 'underline   nil)
-        (set-face-background  'region      &quot;powder blue&quot;))
-    </TD>
+        (set-face-background  'region      &quot;powder blue&quot;))    </PRE></TD>
     </TR>
 </TABLE>
 
 
-<P class="column8">
+<p class="column8">
         Every mode has a mode-hook so you can set the fonts for each mode
         separately and achieve the look you desire. This is also a good way
         to customize other emacs behaviors such as auto-fill-mode and
         fill-column.
 
 
-</P>
-  <A name="fontlock_wont_fontify_multiline_cstyle" id="fontlock_wont_fontify_multiline_cstyle"></A>
-  <H2>
+
+  <a name="fontlock_wont_fontify_multiline_cstyle_comments" id="fontlock_wont_fontify_multiline_cstyle_comments"></a>
+  <h2>
       4.4 Font-lock won't fontify multi-line c-style comments?
       
-  </H2>
+  </h2>
 
 
 
 
-        Paul D. Smith <EM><A HREF="mailto:psmith@baynetworks.com" >psmith@baynetworks.com</A></EM> answers:
+<p>
+<p class="column8">
+        Paul D. Smith <EM><a href="mailto:psmith@baynetworks.com" >psmith@baynetworks.com</A></EM> answers:
 
 
-<P class="column8">
+<p class="column8">
         You don't specify what version of Emacs you're using, so I'll
         assume Emacs 19.30. Look at the elisp file defining the major
         mode. See if it installs its own syntax table; it should. It'll
@@ -1784,19 +1732,15 @@ Emacs highlighting and fonts
         sql-mode.
 
 
-<P class="column8">
+<p class="column8">
         So, you'll see a syntax table definition, something like this:
 
 <P>
-<TABLE  class="shade-normal"
-        width="94%"
-        border="0"
-        cellpadding="10"
-        cellspacing="0"
-        >
+<TABLE class="shade-normal">
     <TR>
     <TD class="shade-normal-attrib" valign="top">
-    <PRE>      ;; Set up our syntax table
+    <PRE>
+      ;; Set up our syntax table
       ;;
       (defvar sql-mode-syntax-table nil
         &quot;Syntax table in use in sql-mode buffers.&quot;)
@@ -1805,98 +1749,80 @@ Emacs highlighting and fonts
           ()
         (setq sql-mode-syntax-table (make-syntax-table))
         (modify-syntax-entry ?\\  &quot;\\&quot;   sql-mode-syntax-table)
-          ...)
-    </TD>
+          ...)    </PRE></TD>
     </TR>
 </TABLE>
 
 
-<P class="column8">
+<p class="column8">
         You want to add the following lines to the list of modifications to the
         syntax table:
 
 <P>
-<TABLE  class="shade-normal"
-        width="94%"
-        border="0"
-        cellpadding="10"
-        cellspacing="0"
-        >
+<TABLE class="shade-normal">
     <TR>
     <TD class="shade-normal-attrib" valign="top">
-    <PRE>      (modify-syntax-entry ?/ &quot;. 14&quot; sql-mode-syntax-table)
-      (modify-syntax-entry ?* &quot;. 23&quot; sql-mode-syntax-table)
-    </TD>
+    <PRE>
+      (modify-syntax-entry ?/ &quot;. 14&quot; sql-mode-syntax-table)
+      (modify-syntax-entry ?* &quot;. 23&quot; sql-mode-syntax-table)    </PRE></TD>
     </TR>
 </TABLE>
 
 
-<P class="column8">
+<p class="column8">
         Remove any other settings of ?/ or ?* you see there. Make sure the
         darn thing gets installed! Look in the function sql-mode and make
         sure something like this is in there:
 
 <P>
-<TABLE  class="shade-normal"
-        width="94%"
-        border="0"
-        cellpadding="10"
-        cellspacing="0"
-        >
+<TABLE class="shade-normal">
     <TR>
     <TD class="shade-normal-attrib" valign="top">
-    <PRE>      (set-syntax-table sql-mode-syntax-table)
-    </TD>
+    <PRE>
+      (set-syntax-table sql-mode-syntax-table)    </PRE></TD>
     </TR>
 </TABLE>
 
 
-<P class="column8">
+<p class="column8">
         And make sure font-lock is on. Voila! Fontification of comments
         should work just fine. If you want to do it in a mode hook rather
         than change the source for the mode, add this (assuming the hook is
         sql-mode-hook, of course :)
 
 <P>
-<TABLE  class="shade-normal"
-        width="94%"
-        border="0"
-        cellpadding="10"
-        cellspacing="0"
-        >
+<TABLE class="shade-normal">
     <TR>
     <TD class="shade-normal-attrib" valign="top">
-    <PRE>      (add-hook 'sql-mode-hook
+    <PRE>
+      (add-hook 'sql-mode-hook
         '(lambda ()
            (modify-syntax-entry ?/ &quot;. 14&quot;)
-           (modify-syntax-entry ?* &quot;. 23&quot;)))
-    </TD>
+           (modify-syntax-entry ?* &quot;. 23&quot;)))    </PRE></TD>
     </TR>
 </TABLE>
 
 
-</P>
-  <A name="colours_for_monochrome_monitor_while" id="colours_for_monochrome_monitor_while"></A>
-  <H2>
+
+  <a name="colours_for_monochrome_monitor_while_emacs_thinks_it_is" id="colours_for_monochrome_monitor_while_emacs_thinks_it_is"></a>
+  <h2>
       4.5 Colours for monochrome monitor while emacs thinks it is colour ?
       
-  </H2>
+  </h2>
 
 
 
 
+<p>
+<p class="column8">
         &lt;Mohsin-Ahmed&gt; mosh@ramanujan.cs.albany.edu
 
 <P>
-<TABLE  class="shade-normal"
-        width="94%"
-        border="0"
-        cellpadding="10"
-        cellspacing="0"
-        >
+<TABLE class="shade-normal">
     <TR>
     <TD class="shade-normal-attrib" valign="top">
-    <PRE>      (defun my-set-mono-colours ()
+    <PRE>
+      (defun my-set-mono-colours ()
         &quot;Set-up grey colours for grey monitor
       Check with list-faces-display.
       &quot;
@@ -1918,58 +1844,50 @@ Emacs highlighting and fonts
 
         (set-face-foreground 'underline &quot;grey10&quot;)
         (set-face-background 'underline &quot;grey55&quot;)
-        )
-    </TD>
+        )    </PRE></TD>
     </TR>
 </TABLE>
 
 
-</P>
-  <A name="enable_fontlockmode_for_a_whole" id="enable_fontlockmode_for_a_whole"></A>
-  <H2>
+
+  <a name="enable_fontlockmode_for_a_whole_list_of_modes" id="enable_fontlockmode_for_a_whole_list_of_modes"></a>
+  <h2>
       4.6 Enable font-lock-mode for a whole list of modes ?
       
-  </H2>
+  </h2>
 
 
 
 
-        Ulrik Dickow <EM><A HREF="mailto:dickow@nbi.dk" >dickow@nbi.dk</A></EM>
+<p>
+<p class="column8">
+        Ulrik Dickow <EM><a href="mailto:dickow@nbi.dk" >dickow@nbi.dk</A></EM>
 
 
-<P class="column8">
+<p class="column8">
         Please take a look at my home page for more font goodies
 
 <P>
-<TABLE  class="shade-normal"
-        width="94%"
-        border="0"
-        cellpadding="10"
-        cellspacing="0"
-        >
+<TABLE class="shade-normal">
     <TR>
     <TD class="shade-normal-attrib" valign="top">
-    <PRE>      <A HREF="http://www.nbi.dk/~dickow" target="_top">http://www.nbi.dk/~dickow</A>
-    </TD>
+    <PRE>
+      <a href="http://www.nbi.dk/~dickow" >http://www.nbi.dk/~dickow</a>    </PRE></TD>
     </TR>
 </TABLE>
 
 
-<P class="column8">
+<p class="column8">
         I use the following piece of elisp to automatically enable
         font-lock-mode for a whole list of modes, unless the file is larger
         than a given limit:
 
 <P>
-<TABLE  class="shade-normal"
-        width="94%"
-        border="0"
-        cellpadding="10"
-        cellspacing="0"
-        >
+<TABLE class="shade-normal">
     <TR>
     <TD class="shade-normal-attrib" valign="top">
-    <PRE>      ;; (excerpt from nbi-faces.el 19-Jan-1995 U.Dickow)
+    <PRE>
+      ;; (excerpt from nbi-faces.el 19-Jan-1995 U.Dickow)
 
       (defvar font-lock-maybe-enable-list nil
           &quot;List of modes for which to automatically turn on font
@@ -2010,26 +1928,27 @@ Emacs highlighting and fonts
         (mapcar '(lambda (x)
                    (add-hook (intern (concat (symbol-name x) &quot;-hook&quot;))
                              (function font-lock-maybe-enable)))
-                font-lock-maybe-enable-list)
-    </TD>
+                font-lock-maybe-enable-list)    </PRE></TD>
     </TR>
 </TABLE>
 
 
-</P>
-  <A name="locking_regions_of_text_answer" id="locking_regions_of_text_answer"></A>
-  <H2>
+
+  <a name="locking_regions_of_text_answer_summary" id="locking_regions_of_text_answer_summary"></a>
+  <h2>
       4.7 Locking Regions of Text (Answer + Summary)
       
-  </H2>
+  </h2>
 
 
 
 
-        <EM><A HREF="mailto:aep@world.std.com" >aep@world.std.com</A></EM> (Andrew E Page):
+<p>
+<p class="column8">
+        <EM><a href="mailto:aep@world.std.com" >aep@world.std.com</A></EM> (Andrew E Page):
 
 
-<P class="column8">
+<p class="column8">
         In summary, regions of read-only text can be accomplished with
         emacs scripts that use the text properties functions available in
         the language. Basically most of the information necessary can be
@@ -2037,66 +1956,57 @@ Emacs highlighting and fonts
         Properties).
 
 
-<P class="column8">
+<p class="column8">
         The text affected is either a buffer or a string that you specify
         in the &lt;object&gt; argument (See below). If no &lt;object&gt; is specified
         then the it works on the current buffer.
 
 
-<P class="column8">
+<p class="column8">
         The pertinent command is:
 
 <P>
-<TABLE  class="shade-normal"
-        width="94%"
-        border="0"
-        cellpadding="10"
-        cellspacing="0"
-        >
+<TABLE class="shade-normal">
     <TR>
     <TD class="shade-normal-attrib" valign="top">
-    <PRE>      add-text-properties &lt;start&gt; &lt;end&gt; &lt;props&gt; &amp;optional &lt;object&gt;
-    </TD>
+    <PRE>
+      add-text-properties &lt;start&gt; &lt;end&gt; &lt;props&gt; &amp;optional &lt;object&gt;    </PRE></TD>
     </TR>
 </TABLE>
 
-<UL>
-	<LI>&lt;start&gt; Absolute character position of the start of the text
+<ul>
+	<li>&lt;start&gt; Absolute character position of the start of the text
             that you wish to add the property to.
-	<LI>&lt;end&gt; Absolute character position of the end of the text
+<li>&lt;end&gt; Absolute character position of the end of the text
             that you wish to add the property to.
-	<LI>&lt;props&gt; Property/value pairs that you wish to add to the text.
-	            Examples:
-</UL>
+	</li>
+<li>&lt;props&gt; Property/value pairs that you wish to add to the text.
+	            Examples:</li>
+</ul>
 
 
 
 <P>
-<TABLE  class="shade-normal"
-        width="94%"
-        border="0"
-        cellpadding="10"
-        cellspacing="0"
-        >
+<TABLE class="shade-normal">
     <TR>
     <TD class="shade-normal-attrib" valign="top">
-    <PRE>      '(read-only t)   Makes the text read-only
+    <PRE>
+      '(read-only t)   Makes the text read-only
       '(read-only nil) Reverses the above
       '(face bold)     Makes the text appear emboldened
       '(face italic)   Set the text to italic
       '(face default)  Sets the text back to the default face
       '(intangible t)  Sets the text so that the insert point
-                       cannot be set between &lt;start&gt; and &lt;end&gt;
-    </TD>
+                       cannot be set between &lt;start&gt; and &lt;end&gt;    </PRE></TD>
     </TR>
 </TABLE>
 
 
-<P class="column8">
-        <EM class="word">Cautionary</EM> <EM class="word">notes:</EM>
+<p class="column8">
+        <em class="word">Cautionary</em> <em class="word">notes:</em>
 
 
-<P class="column8">
+<p class="column8">
         Apparently this does not work for all version of Emacs. In My case
         I'm using 19.27. Setting the text proper 'intangible' makes the
         text invisible to searches. So if you are searching for text with
@@ -2104,34 +2014,29 @@ Emacs highlighting and fonts
         intangible will be ignored by the search.
 
 
-<P class="column8">
+<p class="column8">
         When specifying several properties at once to be added to text that
         includes 'read-only t' make sure that 'read-only' is the LAST
         property to be added, otherwise the rest will fail:
 
 <P>
-<TABLE  class="shade-normal"
-        width="94%"
-        border="0"
-        cellpadding="10"
-        cellspacing="0"
-        >
+<TABLE class="shade-normal">
     <TR>
     <TD class="shade-normal-attrib" valign="top">
-    <PRE>      ;; this will FAIL since the text becomes read-only first
+    <PRE>
+      ;; this will FAIL since the text becomes read-only first
       ;;
       '(read-only t face bold)
 
       ;; this will succeed since the face is set then the t
       ;; ext is made read-only
       ;;
-      '(face bold read-only t)
-    </TD>
+      '(face bold read-only t)    </PRE></TD>
     </TR>
 </TABLE>
 
 
-<P class="column8">
+<p class="column8">
         If you specify a face that is not available for the font that has
         been loaded the command will fail. So if 'bold' or 'italic' text is
         not available for the font that is being used. the command will
@@ -2139,54 +2044,40 @@ Emacs highlighting and fonts
         X11/lib/app-defaults/Emacs file for font was as follows:
 
 <P>
-<TABLE  class="shade-normal"
-        width="94%"
-        border="0"
-        cellpadding="10"
-        cellspacing="0"
-        >
+<TABLE class="shade-normal">
     <TR>
     <TD class="shade-normal-attrib" valign="top">
-    <PRE>      Emacs*font:6x13
-    </TD>
+    <PRE>
+      Emacs*font:6x13    </PRE></TD>
     </TR>
 </TABLE>
 
 
-<P class="column8">
+<p class="column8">
         Setting the text to bold or italic will cause the script to fail
         since neither mode is available for this font. I got better results
         with the following:
 
 <P>
-<TABLE  class="shade-normal"
-        width="94%"
-        border="0"
-        cellpadding="10"
-        cellspacing="0"
-        >
+<TABLE class="shade-normal">
     <TR>
     <TD class="shade-normal-attrib" valign="top">
-    <PRE>      Emacs*font:-adobe-courier-medium-r-*-*-16-*-*-*-*-*-*-*
-    </TD>
+    <PRE>
+      Emacs*font:-adobe-courier-medium-r-*-*-16-*-*-*-*-*-*-*    </PRE></TD>
     </TR>
 </TABLE>
 
 
-<P class="column8">
+<p class="column8">
         which allowed me to set both bold and italic text. Example: Here's
         some code that sets a C comment to be read-only and intangible:
 
 <P>
-<TABLE  class="shade-normal"
-        width="94%"
-        border="0"
-        cellpadding="10"
-        cellspacing="0"
-        >
+<TABLE class="shade-normal">
     <TR>
     <TD class="shade-normal-attrib" valign="top">
-    <PRE>      ;; 1. goto the the top of the file
+    <PRE>
+      ;; 1. goto the the top of the file
       ;; 2. get the start of the comment
       ;; 3. get the end of the comment
       ;;
@@ -2194,44 +2085,38 @@ Emacs highlighting and fonts
       (setq ro-text-start (- (search-forward &quot;/*&quot;) 2))
       (setq ro-text-end (search-forward &quot;*/&quot;)) ;
       (add-text-properties ro-text-start ro-text-end
-        '(intangible t read-only t))
-    </TD>
+        '(intangible t read-only t))    </PRE></TD>
     </TR>
 </TABLE>
 
-</P>
-</BLOCKQUOTE>
-<HR>
-    <A name="fontlock_keywords"  id="fontlock_keywords"></A>
-    <H1>
-    5.0 Font-lock keywords
-    
-    </H1>
-<BLOCKQUOTE>
+<hr>
+               <A name="fontlock_keywords"  id="fontlock_keywords"></A>
+               <h1>
+               5.0 Font-lock keywords
+               
+               </h1>
 
 
-</P>
-  <A name="dired" id="dired"></A>
-  <H2>
+
+  <a name="dired" id="dired"></a>
+  <h2>
       5.1 Dired
       
-  </H2>
+  </h2>
 
 
 
 
-        Mosur K. Mohan <EM><A HREF="mailto:mmohan@dtthp144.intel.com" >mmohan@dtthp144.intel.com</A></EM>
+<p>
+<p class="column8">
+        Mosur K. Mohan <EM><a href="mailto:mmohan@dtthp144.intel.com" >mmohan@dtthp144.intel.com</A></EM>
 
 <P>
-<TABLE  class="shade-normal"
-        width="94%"
-        border="0"
-        cellpadding="10"
-        cellspacing="0"
-        >
+<TABLE class="shade-normal">
     <TR>
     <TD class="shade-normal-attrib" valign="top">
-    <PRE>      (setq dired-font-lock-keywords
+    <PRE>
+      (setq dired-font-lock-keywords
         '(
            ;; Directory headers are defun's
            (&quot;^  \\(/.+\\)&quot; 1 font-lock-function-name-face)
@@ -2240,39 +2125,36 @@ Emacs highlighting and fonts
            ;; Marks are keywords
            (&quot;^[^ ]&quot; . font-lock-keyword-face)
            ;; Subdirectories are defun's
-           (&quot;^..d.* \\([^ ]+\\)$&quot; 1 font-lock-function-name-face)))
-    </TD>
+           (&quot;^..d.* \\([^ ]+\\)$&quot; 1 font-lock-function-name-face)))    </PRE></TD>
     </TR>
 </TABLE>
 
 
-</P>
-  <A name="gnus" id="gnus"></A>
-  <H2>
+
+  <a name="gnus" id="gnus"></a>
+  <h2>
       5.2 GNUS
       
-  </H2>
+  </h2>
 
 
 
 
-        Terry T Tateyama <EM><A HREF="mailto:ttateyam@defmacro.cs.utah.edu" >ttateyam@defmacro.cs.utah.edu</A></EM>
+<p>
+<p class="column8">
+        Terry T Tateyama <EM><a href="mailto:ttateyam@defmacro.cs.utah.edu" >ttateyam@defmacro.cs.utah.edu</A></EM>
 
 
-<P class="column8">
+<p class="column8">
         Please note that new Gnus ding 5.x has native font lock support
         already. Ding will be available in FSF emacs 19.30+
 
 <P>
-<TABLE  class="shade-normal"
-        width="94%"
-        border="0"
-        cellpadding="10"
-        cellspacing="0"
-        >
+<TABLE class="shade-normal">
     <TR>
     <TD class="shade-normal-attrib" valign="top">
-    <PRE>      (setq gnus-article-font-lock-keywords
+    <PRE>
+      (setq gnus-article-font-lock-keywords
        '(
           (&quot;^:\\(.*\\)&quot;
            1 font-lock-type-face t) ; non-supercite type
@@ -2291,66 +2173,65 @@ Emacs highlighting and fonts
               (progn
                 (setq font-lock-keywords gnus-article-font-lock-keywords)
                 (font-lock-mode 1)
-                (font-lock-fontify-buffer)))))
-    </TD>
+                (font-lock-fontify-buffer)))))    </PRE></TD>
     </TR>
 </TABLE>
 
 
-</P>
-  <A name="java" id="java"></A>
-  <H2>
+
+  <a name="java" id="java"></a>
+  <h2>
       5.3 Java
       
-  </H2>
+  </h2>
 
 
 
 
-        <A HREF="ftp://ftp.std.com/pub/fwhite/java-flock.el" target="_top">ftp://ftp.std.com/pub/fwhite/java-flock.el</A>.
+<p>
+<p class="column8">
+        <a href="ftp://ftp.std.com/pub/fwhite/java-flock.el" >ftp://ftp.std.com/pub/fwhite/java-flock.el</A>.
 
 
-<P class="column8">
-        <EM><A HREF="mailto:joeyGibson@mindspring.com" >joeyGibson@mindspring.com</A></EM> (Joey Gibson), 06 Apr 1997
+<p class="column8">
+        <EM><a href="mailto:joeyGibson@mindspring.com" >joeyGibson@mindspring.com</A></EM> (Joey Gibson), 06 Apr 1997
         gnu.emacs.help ...A couple of weeks ago I posted an ELISP file that
         added font-lock info for colourizing JAVA code. Do a deja-news
         search for my name under gnu.emacs.help and you should find it. It
         was a .zip file.
 
 
-<P class="column8">
-        <A HREF="http://www.csd.uu.se/~andersl/emacs.shtml" target="_top">http://www.csd.uu.se/~andersl/emacs.shtml</A>
+<p class="column8">
+        <a href="http://www.csd.uu.se/~andersl/emacs.shtml" >http://www.csd.uu.se/~andersl/emacs.shtml</A>
 
 
-</P>
-  <A name="latex" id="latex"></A>
-  <H2>
+
+  <a name="latex" id="latex"></a>
+  <h2>
       5.4 LaTeX
       
-  </H2>
+  </h2>
 
 
 
 
-        Jaap Henk Hoepman <EM><A HREF="mailto:jhh@cwi.nl" >jhh@cwi.nl</A></EM>
+<p>
+<p class="column8">
+        Jaap Henk Hoepman <EM><a href="mailto:jhh@cwi.nl" >jhh@cwi.nl</A></EM>
 
 
-<P class="column8">
+<p class="column8">
         As I'm not sure whether the default installation of Emacs gives any
         useful font-locking for TeX or LaTeX files, I'll tell how I
         installed it for Emacs 19.27. You will have to put the following
         lines into your .emacs file:
 
 <P>
-<TABLE  class="shade-normal"
-        width="94%"
-        border="0"
-        cellpadding="10"
-        cellspacing="0"
-        >
+<TABLE class="shade-normal">
     <TR>
     <TD class="shade-normal-attrib" valign="top">
-    <PRE>      ;; ~~~~~~~~~~~~ This is in your .emacs ~~~~~~~~~~~~~~~~~~~
+    <PRE>
+      ;; ~~~~~~~~~~~~ This is in your .emacs ~~~~~~~~~~~~~~~~~~~
       (font-lock-mode 0) ;; force loading of the font-lock package
 
       ;; specify the colours and underlining of the different standard
@@ -2389,71 +2270,65 @@ Emacs highlighting and fonts
           2 font-lock-string-face t)
 
          (&quot;\\\\\\[\\(\\([^]]\\|^\\)*\\)\\\\\\]&quot;
-          1 font-lock-string-face t)))
-    </TD>
+          1 font-lock-string-face t)))    </PRE></TD>
     </TR>
 </TABLE>
 
 
-</P>
-  <A name="motorola_56000_dsp_assembly_language" id="motorola_56000_dsp_assembly_language"></A>
-  <H2>
+
+  <a name="motorola_56000_dsp_assembly_language" id="motorola_56000_dsp_assembly_language"></a>
+  <h2>
       5.5 Motorola 56000 DSP assembly language
       
-  </H2>
+  </h2>
 
 
 
 
-        Luis Fernandes <EM><A HREF="mailto:elf@ee.ryerson.ca" >elf@ee.ryerson.ca</A></EM> recalled:
+<p>
+<p class="column8">
+        Luis Fernandes <EM><a href="mailto:elf@ee.ryerson.ca" >elf@ee.ryerson.ca</A></EM> recalled:
 
 <P>
-<TABLE  class="shade-normal"
-        width="94%"
-        border="0"
-        cellpadding="10"
-        cellspacing="0"
-        >
+<TABLE class="shade-normal">
     <TR>
     <TD class="shade-normal-attrib" valign="top">
-    <PRE>      ;; Version: asm56k-f-lck.el       1.0 20 Sep 1995
+    <PRE>
+      ;; Version: asm56k-f-lck.el       1.0 20 Sep 1995
       ;; Font Lock Keywords for Motorola 56000 DSP assembly language
       ;;
-      ;; Author: Mitch Chapman
-    </TD>
+      ;; Author: Mitch Chapman    </PRE></TD>
     </TR>
 </TABLE>
 
 
-</P>
-  <A name="procmail" id="procmail"></A>
-  <H2>
+
+  <a name="procmail" id="procmail"></a>
+  <h2>
       5.6 Procmail
       
-  </H2>
+  </h2>
 
 
 
 
-        Andrew Cosgriff <EM><A HREF="mailto:ajc@unico.com.au" >ajc@unico.com.au</A></EM>
+<p>
+<p class="column8">
+        Andrew Cosgriff <EM><a href="mailto:ajc@unico.com.au" >ajc@unico.com.au</A></EM>
 
 
-<P class="column8">
+<p class="column8">
         here's all you need to do to highlight your .procmailrc - (i put
         a -*- procmail -*- at the top of my .procmailrc to activate this
         &quot;mode&quot;. If anybody has a real indenting mode for procmailrc's,
         i'd love to see it.). Works for me under XEmacs 19.14.
 
 <P>
-<TABLE  class="shade-normal"
-        width="94%"
-        border="0"
-        cellpadding="10"
-        cellspacing="0"
-        >
+<TABLE class="shade-normal">
     <TR>
     <TD class="shade-normal-attrib" valign="top">
-    <PRE>      (defun procmail-mode ()
+    <PRE>
+      (defun procmail-mode ()
         &quot;Mode for highlighting procmailrc files&quot;
         (interactive)
         (setq mode-name &quot;Procmail&quot;
@@ -2469,55 +2344,50 @@ Emacs highlighting and fonts
                   '(&quot;^[\t ]*\\*.*&quot;
                     . font-lock-doc-string-face)
                   '(&quot;\$[A-Za-z0-9_]+&quot;
-                    . font-lock-function-name-face)))
-    </TD>
+                    . font-lock-function-name-face)))    </PRE></TD>
     </TR>
 </TABLE>
 
 
-<P class="column8">
+<p class="column8">
         note that you just have to setq MODE-font-lock-keywords, and
         font-lock will automatically trigger for that mode.
 
 
-</P>
-  <A name="rmail_headers" id="rmail_headers"></A>
-  <H2>
+
+  <a name="rmail_headers" id="rmail_headers"></a>
+  <h2>
       5.7 Rmail headers
       
-  </H2>
+  </h2>
 
 
 
 
-
-<P class="column10"><EM class="quote10">
+<p>
+<p class="column10"><em class="quote10">
           I am using emacs 19.33.1 and font-lock/lazy-lock which came
           along. The typical problem for me is: if I want to highlight headers
           in an RMAIL-buffer (like &quot;^From:&quot;, &quot;^Date:&quot;, ...) and I want to
           highlight those headers ONLY from the beginning of the buffer and
-          before &quot;^--text follows this line--&quot;, I don't know how to do it.</EM>
+          before &quot;^--text follows this line--&quot;, I don't know how to do it.</em>
 
 
 
-<P class="column8">
-        Simon Marshall <EM><A HREF="mailto:Simon.Marshall@esrin.esa.it" >Simon.Marshall@esrin.esa.it</A></EM>
+<p class="column8">
+        Simon Marshall <EM><a href="mailto:Simon.Marshall@esrin.esa.it" >Simon.Marshall@esrin.esa.it</A></EM>
 
 
-<P class="column8">
+<p class="column8">
         What you want to do is write a special rmail-fontify-region
         function that uses two different regexps vars, something like:
 
 <P>
-<TABLE  class="shade-normal"
-        width="94%"
-        border="0"
-        cellpadding="10"
-        cellspacing="0"
-        >
+<TABLE class="shade-normal">
     <TR>
     <TD class="shade-normal-attrib" valign="top">
-    <PRE>      (defvar rmail-font-lock-header-keywords
+    <PRE>
+      (defvar rmail-font-lock-header-keywords
         '((&quot;^\\(From\\|Sender\\):&quot;
               . font-lock-function-name-face)
           (&quot;^Reply-To:.*$&quot;
@@ -2529,40 +2399,35 @@ Emacs highlighting and fonts
 
       (defvar rmail-font-lock-message-keywords
         '((&quot;^[        ]*\\([A-Za-z]+[A-Za-z0-9_.@-]*\\)?[&gt;|}].*&quot;
-         . font-lock-reference-face)))
-    </TD>
+         . font-lock-reference-face)))    </PRE></TD>
     </TR>
 </TABLE>
 
 
-<P class="column8">
+<p class="column8">
         or somesuch. But it only uses the former for the region containing
         the header, and the latter for the region containing the message.
         You would then make the value of font-lock-fontify-region-function
         be the symbol rmail-fontify-region in Rmail mode. You would do
-        something similar for <SPAN class="word-small">mail-mode</SPAN>.
+        something similar for <span class="word-small">mail-mode</span>.
 
 
-</P>
-  <A name="example_for_c" id="example_for_c"></A>
-  <H2>
+
+  <a name="example_for_c" id="example_for_c"></a>
+  <h2>
       5.8 Example for C++
       
-  </H2>
+  </h2>
 
 
 
-
+<p>
 <P>
-<TABLE  class="shade-normal"
-        width="94%"
-        border="0"
-        cellpadding="10"
-        cellspacing="0"
-        >
+<TABLE class="shade-normal">
     <TR>
     <TD class="shade-normal-attrib" valign="top">
-    <PRE>      (setq c++-mode-hook  'my-c++-mode-hook)
+    <PRE>
+      (setq c++-mode-hook  'my-c++-mode-hook)
 
       (defun my-c++-settings ()
         &quot;C++ for my style.&quot;
@@ -2572,43 +2437,38 @@ Emacs highlighting and fonts
         (setq c-font-lock-keywords    c-font-lock-keywords-2)
         (setq lisp-font-lock-keywords lisp-font-lock-keywords-2)
         (font-lock-mode 'run-it-for-me-Simon!)
-        (font-lock-fontify-buffer))
-    </TD>
+        (font-lock-fontify-buffer))    </PRE></TD>
     </TR>
 </TABLE>
 
 
-</P>
-  <A name="c_and_new_data_types" id="c_and_new_data_types"></A>
-  <H2>
+
+  <a name="c_and_new_data_types" id="c_and_new_data_types"></a>
+  <h2>
       5.9 C++ and new data types
       
-  </H2>
+  </h2>
 
 
 
 
-
-<P class="column10"><EM class="quote10">
+<p>
+<p class="column10"><em class="quote10">
           I would like to add some new datatypes (toto, tutu for instance)
           in c-mode to have them highlighted in the same way that the
-          classical ones (float, double, ...). What should I do?</EM>
+          classical ones (float, double, ...). What should I do?</em>
 
 
 
-<P class="column8">
-        Ullrich Hafner <EM><A HREF="mailto:hafner@informatik.uni-wuerzburg.de" >hafner@informatik.uni-wuerzburg.de</A></EM>
+<p class="column8">
+        Ullrich Hafner <EM><a href="mailto:hafner@informatik.uni-wuerzburg.de" >hafner@informatik.uni-wuerzburg.de</A></EM>
 
 <P>
-<TABLE  class="shade-normal"
-        width="94%"
-        border="0"
-        cellpadding="10"
-        cellspacing="0"
-        >
+<TABLE class="shade-normal">
     <TR>
     <TD class="shade-normal-attrib" valign="top">
-    <PRE>      (make-local-variable 'font-lock-defaults)
+    <PRE>
+      (make-local-variable 'font-lock-defaults)
 
       (setq my-c-type-types                 ; fill in new types
             (concat &quot;auto\\|c\\(har\\|onst\\)\\|&quot;
@@ -2648,26 +2508,27 @@ Emacs highlighting and fonts
                         font-lock-variable-name-face)))))
                c-font-lock-keywords-2))
 
-      (setq font-lock-defaults '(my-c-font-lock-keywords nil))
-    </TD>
+      (setq font-lock-defaults '(my-c-font-lock-keywords nil))    </PRE></TD>
     </TR>
 </TABLE>
 
 
-</P>
-  <A name="objectivec" id="objectivec"></A>
-  <H2>
+
+  <a name="objectivec" id="objectivec"></a>
+  <h2>
       5.10 Objective-c
       
-  </H2>
+  </h2>
 
 
 
 
-        Stephen Peters <EM><A HREF="mailto:speters%samsun@us.oracle.com" >speters%samsun@us.oracle.com</A></EM>
+<p>
+<p class="column8">
+        Stephen Peters <EM><a href="mailto:speters%samsun@us.oracle.com" >speters%samsun@us.oracle.com</A></EM>
 
 
-<P class="column8">
+<p class="column8">
         At the end of this message is a hack I threw together for simple
         Objective-C font-locking, although I'll confess I haven't cleaned
         it up nor looked at it in far too long a time. It's mostly based on
@@ -2677,15 +2538,11 @@ Emacs highlighting and fonts
         font-lock-defaults-alist. One of these days I'll have to do that.
 
 <P>
-<TABLE  class="shade-normal"
-        width="94%"
-        border="0"
-        cellpadding="10"
-        cellspacing="0"
-        >
+<TABLE class="shade-normal">
     <TR>
     <TD class="shade-normal-attrib" valign="top">
-    <PRE>      ;; add keywords to font-lock-defaults-alist
+    <PRE>
+      ;; add keywords to font-lock-defaults-alist
       (setq
        font-lock-defaults-alist
        (append font-lock-defaults-alist
@@ -2822,34 +2679,31 @@ Emacs highlighting and fonts
       (defvar objc-font-lock-keywords (if font-lock-maximum-decoration
                                           objc-font-lock-keywords-2
                                         objc-font-lock-keywords-1)
-        &quot;Additional expressions to highlight in Objective-C mode.&quot;)
-    </TD>
+        &quot;Additional expressions to highlight in Objective-C mode.&quot;)    </PRE></TD>
     </TR>
 </TABLE>
 
 
-</P>
-  <A name="outline" id="outline"></A>
-  <H2>
+
+  <a name="outline" id="outline"></a>
+  <h2>
       5.11 Outline
       
-  </H2>
+  </h2>
 
 
 
 
-        David Fox <EM><A HREF="mailto:fox@graphics.cs.nyu.edu" >fox@graphics.cs.nyu.edu</A></EM>
+<p>
+<p class="column8">
+        David Fox <EM><a href="mailto:fox@graphics.cs.nyu.edu" >fox@graphics.cs.nyu.edu</A></EM>
 
 <P>
-<TABLE  class="shade-normal"
-        width="94%"
-        border="0"
-        cellpadding="10"
-        cellspacing="0"
-        >
+<TABLE class="shade-normal">
     <TR>
     <TD class="shade-normal-attrib" valign="top">
-    <PRE>      ;; Its nice to hilight the number differently than the header:
+    <PRE>
+      ;; Its nice to hilight the number differently than the header:
       (defvar outline-font-lock-keywords
         '(;; Highlight headings according to the level.
           (&quot;^\\([*%]+\\)\\([ ]*[0-9]*[ \t]*\\)\\([^\n\r]+\\)?[ \t]*[\n\r]&quot;
@@ -2871,56 +2725,54 @@ Emacs highlighting and fonts
           ;(&quot;\\[\\([A-Z][A-Za-z]+\\)*[0-9]+\\]&quot; . font-lock-type-face)
           (&quot;\\(&lt;&lt;[^\n\r]*&gt;&gt;=\\)[\n\r]&quot; . font-lock-type-face)
           (&quot;\\(&lt;&lt;[^\n\r]*&gt;&gt;\\)&quot; . font-lock-reference-face))
-        &quot;Additional expressions to highlight in Outline mode.&quot;)
-    </TD>
+        &quot;Additional expressions to highlight in Outline mode.&quot;)    </PRE></TD>
     </TR>
 </TABLE>
 
 
-</P>
-  <A name="sqlmode" id="sqlmode"></A>
-  <H2>
+
+  <a name="sqlmode" id="sqlmode"></a>
+  <h2>
       5.12 Sqlmode
       
-  </H2>
+  </h2>
 
 
 
 
-        David Worenklein <EM><A HREF="mailto:dcw@gcm.com" >dcw@gcm.com</A></EM> There's an sql package that does
+<p>
+<p class="column8">
+        David Worenklein <EM><a href="mailto:dcw@gcm.com" >dcw@gcm.com</A></EM> There's an sql package that does
         just about anything you could want, including font-locking. It's
-        maintained by <EM><A HREF="mailto:sql-mode-help@atlantic2.sbi.com" >sql-mode-help@atlantic2.sbi.com</A></EM>. Peter Breton
-        <EM><A HREF="mailto:pbreton@pbreton.highway1.com" >pbreton@pbreton.highway1.com</A></EM> also suggests looking at following
+        maintained by <EM><a href="mailto:sql-mode-help@atlantic2.sbi.com" >sql-mode-help@atlantic2.sbi.com</A></EM>. Peter Breton
+        <EM><a href="mailto:pbreton@pbreton.highway1.com" >pbreton@pbreton.highway1.com</A></EM> also suggests looking at following
 
 <P>
-<TABLE  class="shade-normal"
-        width="94%"
-        border="0"
-        cellpadding="10"
-        cellspacing="0"
-        >
+<TABLE class="shade-normal">
     <TR>
     <TD class="shade-normal-attrib" valign="top">
-    <PRE>      <A HREF="ftp://ftp.xemacs.org/pub/contrib/sql-mode.tar.gz" target="_top">ftp://ftp.xemacs.org/pub/contrib/sql-mode.tar.gz</A>
-    </TD>
+    <PRE>
+      <a href="ftp://ftp.xemacs.org/pub/contrib/sql-mode.tar.gz" >ftp://ftp.xemacs.org/pub/contrib/sql-mode.tar.gz</a>    </PRE></TD>
     </TR>
 </TABLE>
 
 
-</P>
-  <A name="sql" id="sql"></A>
-  <H2>
+
+  <a name="sql" id="sql"></a>
+  <h2>
       5.13 SQL
       
-  </H2>
+  </h2>
 
 
 
 
-        David S. Masterson <EM><A HREF="mailto:davidm@prism.kla.com" >davidm@prism.kla.com</A></EM>
+<p>
+<p class="column8">
+        David S. Masterson <EM><a href="mailto:davidm@prism.kla.com" >davidm@prism.kla.com</A></EM>
 
 
-<P class="column8">
+<p class="column8">
         I use the SQL mode I pulled off the Ohio State archives and then
         added the following to teach it about highlights:
 
@@ -2932,27 +2784,27 @@ Emacs highlighting and fonts
    (interactive)
 
 
-<P class="column3">
+<p class="column3">
    (modify-syntax-entry ?\_ &quot;w&quot;)         ; make _ a regular &quot;in-word&quot; char
 
 
-<P class="column3">
+<p class="column3">
    (local-set-key &quot;\C-cc&quot; 'comment-region)
    (setq comment-start &quot;REM &quot;)
 
 
-<P class="column3">
+<p class="column3">
    (site/define-sql-abbrevs)             ; sql-mode Abbreviations
 
 
-<P class="column3">
+<p class="column3">
    (if (device-type)                     ; window only type stuff
        (progn
-         (site/set-sql-menu)</STRONG>
+         (site/set-sql-menu)</strong>
 
 
 
-<P class="column9"><STRONG>
+<p class="column9"><strong>
          (if (not (boundp 'my-site-sql-font-lock-keywords))
        (progn
          (setq my-site-sql-font-lock-keywords
@@ -3139,28 +2991,26 @@ Emacs highlighting and fonts
  ;; End
 
 
-</P>
-  <A name="tcl" id="tcl"></A>
-  <H2>
+
+  <a name="tcl" id="tcl"></a>
+  <h2>
       5.14 TCL
       
-  </H2>
+  </h2>
 
 
 
 
-        Stephen Peters <EM><A HREF="mailto:speters@samsun.us.oracle.com" >speters@samsun.us.oracle.com</A></EM>
+<p>
+<p class="column8">
+        Stephen Peters <EM><a href="mailto:speters@samsun.us.oracle.com" >speters@samsun.us.oracle.com</A></EM>
 
 <P>
-<TABLE  class="shade-normal"
-        width="94%"
-        border="0"
-        cellpadding="10"
-        cellspacing="0"
-        >
+<TABLE class="shade-normal">
     <TR>
     <TD class="shade-normal-attrib" valign="top">
-    <PRE>      (defvar tcl-font-lock-keywords
+    <PRE>
+      (defvar tcl-font-lock-keywords
        (list
         (list
          ;; the full list of tcl 7.3 keywords
@@ -3199,23 +3049,24 @@ Emacs highlighting and fonts
         '(&quot;proc[ \t]*\\([a-zA-Z0-9_]+\\)&quot;
            1 font-lock-function-name-face))
        &quot;Additional expressions to highlight in Tcl mode.&quot;)
-      ;; End
-    </TD>
+      ;; End    </PRE></TD>
     </TR>
 </TABLE>
 
 
-</P>
-  <A name="vhdl_an_adalike_language" id="vhdl_an_adalike_language"></A>
-  <H2>
+
+  <a name="vhdl_an_adalike_language" id="vhdl_an_adalike_language"></a>
+  <h2>
       5.15 VHDL (an Ada-like) language
       
-  </H2>
+  </h2>
 
 
 
 
-        Terry T Tateyama <EM><A HREF="mailto:ttateyam@defmacro.cs.utah.edu" >ttateyam@defmacro.cs.utah.edu</A></EM>
+<p>
+<p class="column8">
+        Terry T Tateyama <EM><a href="mailto:ttateyam@defmacro.cs.utah.edu" >ttateyam@defmacro.cs.utah.edu</A></EM>
 
  (if (and (string-match &quot;Emacs 19&quot; (emacs-version))
           (eq window-system 'x))
@@ -3370,17 +3221,19 @@ Emacs highlighting and fonts
  ;; End
 
 
-</P>
-  <A name="another_set_of_vhdl_keywords" id="another_set_of_vhdl_keywords"></A>
-  <H2>
+
+  <a name="another_set_of_vhdl_keywords" id="another_set_of_vhdl_keywords"></a>
+  <h2>
       5.16 Another set of VHDL keywords
       
-  </H2>
+  </h2>
 
 
 
 
-        Terry T Tateyama <EM><A HREF="mailto:ttateyam@defmacro.cs.utah.edu" >ttateyam@defmacro.cs.utah.edu</A></EM>
+<p>
+<p class="column8">
+        Terry T Tateyama <EM><a href="mailto:ttateyam@defmacro.cs.utah.edu" >ttateyam@defmacro.cs.utah.edu</A></EM>
 
  ;; Here's what I did to get it to work with FSF GNU Emacs 19.29:
  (defun ttt-vhdl-font-lock-setups ()
@@ -3402,39 +3255,39 @@ Emacs highlighting and fonts
      ;; Highlight names of common constructs
      (list
       (concat
-<SPAN class="quote7">^[ \t]*\\(entity\\|architecture\\|configuration\\|function\\|</SPAN><BR>
-<SPAN class="quote7">procedure\\|component\\|package[ \t]+body\\|package\\|end[ \t]+</SPAN><BR>
-<SPAN class="quote7">\\(block\\|process\\|case\\|generate\\|loop\\|configuration\\|</SPAN><BR>
-<SPAN class="quote7">architecture\\|entity\\|component\\|package\\|function\\)\\)[ \t]+</SPAN><BR>
-<SPAN class="quote7">\\(\\(\\w\\|\\s_\\)+\\)</SPAN><BR>
+<span class="quote7">^[ \t]*\\(entity\\|architecture\\|configuration\\|function\\|</span><BR>
+<span class="quote7">procedure\\|component\\|package[ \t]+body\\|package\\|end[ \t]+</span><BR>
+<span class="quote7">\\(block\\|process\\|case\\|generate\\|loop\\|configuration\\|</span><BR>
+<span class="quote7">architecture\\|entity\\|component\\|package\\|function\\)\\)[ \t]+</span><BR>
+<span class="quote7">\\(\\(\\w\\|\\s_\\)+\\)</span><BR>
       3 'font-lock-function-name-face)
      ;;
      ;; Highlight labels of common constructs
      ;;
      (list
       (concat
-<SPAN class="quote7">^[ \t]*\\(\\(\\w\\|\\s_\\)+\\)[ \t]*:[ \t\n]*</SPAN><BR>
-<SPAN class="quote7">\\(block\\|process\\|if\\|for\\|case\\|exit\\|loop\\|next\\|</SPAN><BR>
-<SPAN class="quote7">null\\|with\\|\\(\\w\\|\\s_\\)+[ \t\n]+port[ \t]+map\\)</SPAN><BR>
-<SPAN class="quote7">\\&gt;[^_]</SPAN><BR>
+<span class="quote7">^[ \t]*\\(\\(\\w\\|\\s_\\)+\\)[ \t]*:[ \t\n]*</span><BR>
+<span class="quote7">\\(block\\|process\\|if\\|for\\|case\\|exit\\|loop\\|next\\|</span><BR>
+<span class="quote7">null\\|with\\|\\(\\w\\|\\s_\\)+[ \t\n]+port[ \t]+map\\)</span><BR>
+<span class="quote7">\\&gt;[^_]</span><BR>
       1 'font-lock-function-name-face)
      ;;
      ;; Highlight of labels
      ;;
      (list
       (concat
-<SPAN class="quote7">^[ \t]*\\(configuration\\|architecture\\|attribute\\)[ \t]+</SPAN><BR>
-<SPAN class="quote7">\\(\\(\\w\\|\\s_\\)+\\)[ \t]+of[ \t]+\\(\\(\\w\\|\\s_\\)+\\)</SPAN><BR>
+<span class="quote7">^[ \t]*\\(configuration\\|architecture\\|attribute\\)[ \t]+</span><BR>
+<span class="quote7">\\(\\(\\w\\|\\s_\\)+\\)[ \t]+of[ \t]+\\(\\(\\w\\|\\s_\\)+\\)</span><BR>
       4 'font-lock-function-name-face)
      ;;
      ;; Fontify library usage clauses.
      ;;
      (list
       (concat
-<SPAN class="quote7">\\(^\\|[^\\s_]\\)</SPAN><BR>
-<SPAN class="quote7">\\&lt;\\(library\\|use\\)[ \t\n]+</SPAN><BR>
-<SPAN class="quote7">\\(entity[ \t\n]+\\)?</SPAN><BR>
-<SPAN class="quote7">\\(\\(\\w\\|\\s_\\|[\.()]\\)+\\)</SPAN><BR>
+<span class="quote7">\\(^\\|[^\\s_]\\)</span><BR>
+<span class="quote7">\\&lt;\\(library\\|use\\)[ \t\n]+</span><BR>
+<span class="quote7">\\(entity[ \t\n]+\\)?</span><BR>
+<span class="quote7">\\(\\(\\w\\|\\s_\\|[\.()]\\)+\\)</span><BR>
       4 'font-lock-function-name-face)
      )))
  ;;
@@ -3544,202 +3397,169 @@ Emacs highlighting and fonts
  (setq vhdl-font-lock-keywords vhdl-font-lock-keywords-2)
  ;; End
 
-</P>
-</BLOCKQUOTE>
-<HR>
-    <A name="emacs_html_writing_tools_and"  id="emacs_html_writing_tools_and"></A>
-    <H1>
-    6.0 Emacs HTML writing tools and font lock
-    
-    </H1>
-<BLOCKQUOTE>
+<hr>
+               <A name="emacs_html_writing_tools_and_font_lock"  id="emacs_html_writing_tools_and_font_lock"></A>
+               <h1>
+               6.0 Emacs HTML writing tools and font lock
+               
+               </h1>
 
 
-</P>
-  <A name="htmlhelpermode" id="htmlhelpermode"></A>
-  <H2>
+
+  <a name="htmlhelpermode" id="htmlhelpermode"></a>
+  <h2>
       6.1 Html-helper-mode
       
-  </H2>
+  </h2>
 
 
 
 
-
-<P class="column10"><EM class="quote10">
-          ...In article &lt;ytg2h70x8l.fsf@Marvin.fkphy.uni-duesseldorf.de&gt;</EM>
+<p>
+<p class="column10"><em class="quote10">
+          ...In article &lt;ytg2h70x8l.fsf@Marvin.fkphy.uni-duesseldorf.de&gt;</em>
 
 
 <P>
-<TABLE  class="shade-normal"
-        width="94%"
-        border="0"
-        cellpadding="10"
-        cellspacing="0"
-        >
+<TABLE class="shade-normal">
     <TR>
     <TD class="shade-normal-attrib" valign="top">
-    <PRE>      (eval-after-load &quot;html-helper-mode&quot; '(load &quot;html-font&quot;))
-    </TD>
+    <PRE>
+      (eval-after-load &quot;html-helper-mode&quot; '(load &quot;html-font&quot;))    </PRE></TD>
     </TR>
 </TABLE>
 
 
-<P class="column10"><EM class="quote10">
+<p class="column10"><em class="quote10">
           to your .emacs. Works fine for me with 19.28 but produces an
           error File mode specification error: (void-variable
           font-lock-doc-string-face) with 19.29. This is not really a
-          problem, highlighting still works.</EM>
+          problem, highlighting still works.</em>
 
 
 
-<P class="column8">
+<p class="column8">
         This has been fixed. If you want to stay with the old 1994 non-beta
         html-helper-mode.el (without menus), you should get the latest
-        version of <SAMP class="word">html-font.el</SAMP> (4.01 19-Sep-1995) from
+        version of <samp class="word">html-font.el</samp> (4.01 19-Sep-1995) from
 
 <P>
-<TABLE  class="shade-normal"
-        width="94%"
-        border="0"
-        cellpadding="10"
-        cellspacing="0"
-        >
+<TABLE class="shade-normal">
     <TR>
     <TD class="shade-normal-attrib" valign="top">
-    <PRE>      <A HREF="http://www.nbi.dk/TOOLS/emacs/lisp/html-font.el" target="_top">http://www.nbi.dk/TOOLS/emacs/lisp/html-font.el</A>
-    </TD>
+    <PRE>
+      <a href="http://www.nbi.dk/TOOLS/emacs/lisp/html-font.el" >http://www.nbi.dk/TOOLS/emacs/lisp/html-font.el</a>    </PRE></TD>
     </TR>
 </TABLE>
 
 
-<P class="column8">
+<p class="column8">
         Otherwise upgrade to the latest beta of html-helper-mode.el (2.16
         21-Sep-1995)
 
 <P>
-<TABLE  class="shade-normal"
-        width="94%"
-        border="0"
-        cellpadding="10"
-        cellspacing="0"
-        >
+<TABLE class="shade-normal">
     <TR>
     <TD class="shade-normal-attrib" valign="top">
-    <PRE>      <A HREF="http://www.santafe.edu/~nelson/hhm-beta/html-helper-mode.el" target="_top">http://www.santafe.edu/~nelson/hhm-beta/html-helper-mode.el</A>
-    </TD>
+    <PRE>
+      <a href="http://www.santafe.edu/~nelson/hhm-beta/html-helper-mode.el" >http://www.santafe.edu/~nelson/hhm-beta/html-helper-mode.el</a>    </PRE></TD>
     </TR>
 </TABLE>
 
 
-<P class="column8">
+<p class="column8">
         which has all of html-font built-in (and a bit more). You can then
         delete html-font.el. I recommend this latter solution.
 
 
-<P class="column10"><EM class="quote10">
+<p class="column10"><em class="quote10">
           ..I am running 19.27 and it does not work. It flashed an error
-          message but it was to fast for me to read. Still no colours.</EM>
+          message but it was to fast for me to read. Still no colours.</em>
 
 
 
-<P class="column8">
-        First upgrade your html-font <STRONG class="word">or</STRONG> html-helper-mode as explained
+<p class="column8">
+        First upgrade your html-font <strong class="word">or</strong> html-helper-mode as explained
         above. For Emacsen older than 19.29 you need a bit more to get
         colours with font-lock in general. The easiest way to obtain that is
         to get Simon Marshall's face-lock.el from the Emacs Lisp Archive,
         e.g.,
 
- <A HREF="ftp://archive.cis.ohio-state.edu/pub/gnu/emacs/elisp-archive/misc/face-lock.el.Z" target="_top">ftp://archive.cis.ohio-state.edu/pub/gnu/emacs/elisp-archive/misc/face-lock.el.Z</A>
+ <a href="ftp://archive.cis.ohio-state.edu/pub/gnu/emacs/elisp-archive/misc/face-lock.el.Z" >ftp://archive.cis.ohio-state.edu/pub/gnu/emacs/elisp-archive/misc/face-lock.el.Z</A>
 
 
-<P class="column8">
+<p class="column8">
         and then add something like this to your ~/.emacs:
 
 <P>
-<TABLE  class="shade-normal"
-        width="94%"
-        border="0"
-        cellpadding="10"
-        cellspacing="0"
-        >
+<TABLE class="shade-normal">
     <TR>
     <TD class="shade-normal-attrib" valign="top">
-    <PRE>      (cond
+    <PRE>
+      (cond
        (window-system
         ;;  don't do this for 19.29+
         ;;
         (if (string-lessp emacs-version &quot;19.28.90&quot;)
             (require 'face-lock)) ; or e.g., `(load &quot;face-lock&quot; t)'
           (add-hook 'html-helper-mode-hook
-                     (lambda () (font-lock-mode 1)))))
-    </TD>
+                     (lambda () (font-lock-mode 1)))))    </PRE></TD>
     </TR>
 </TABLE>
 
 
-<P class="column8">
+<p class="column8">
         and finally I recommend (for Emacs &lt;19.29) adding a line like this
         to your X resources (perhaps ~/.Xdefaults or ~/.Xresources):
 
 <P>
-<TABLE  class="shade-normal"
-        width="94%"
-        border="0"
-        cellpadding="10"
-        cellspacing="0"
-        >
+<TABLE class="shade-normal">
     <TR>
     <TD class="shade-normal-attrib" valign="top">
-    <PRE>      Emacs.font-lock-doc-string-face.attributeForeground:    DarkOrange3
-    </TD>
+    <PRE>
+      Emacs.font-lock-doc-string-face.attributeForeground:    DarkOrange3    </PRE></TD>
     </TR>
 </TABLE>
 
 
-<P class="column8">
+<p class="column8">
         since face-lock.el unfortunately by default gives this face the
-        same colour as <SAMP class="word">font-lock-string-face</SAMP>.
+        same colour as <samp class="word">font-lock-string-face</samp>.
 
 
-</P>
-  <A name="htmlmode" id="htmlmode"></A>
-  <H2>
+
+  <a name="htmlmode" id="htmlmode"></a>
+  <h2>
       6.2 Html-mode
       
-  </H2>
+  </h2>
 
 
 
 
-
-<P class="column10"><EM class="quote10">
+<p>
+<p class="column10"><em class="quote10">
           ...Anybody know of a html-mode.el that would work with hilite.
           There is a html-mode but it doesn't work with hilite and that
           is actually the &gt; only thing that I would need, that way you
-          could read the text a lot &gt; easier than what is the case now.</EM>
+          could read the text a lot &gt; easier than what is the case now.</em>
 
 
 
-<P class="column8">
+<p class="column8">
         I have been using the from
 
 <P>
-<TABLE  class="shade-normal"
-        width="94%"
-        border="0"
-        cellpadding="10"
-        cellspacing="0"
-        >
+<TABLE class="shade-normal">
     <TR>
     <TD class="shade-normal-attrib" valign="top">
-    <PRE>      <A HREF="ftp://sunsite.unc.edu/pub/Linux/apps/editors/emacs" target="_top">ftp://sunsite.unc.edu/pub/Linux/apps/editors/emacs</A>
-    </TD>
+    <PRE>
+      <a href="ftp://sunsite.unc.edu/pub/Linux/apps/editors/emacs" >ftp://sunsite.unc.edu/pub/Linux/apps/editors/emacs</a>    </PRE></TD>
     </TR>
 </TABLE>
 
 
-<P class="column8">
+<p class="column8">
         in the archive /hm--html-menus-4.0.tar.gz Its not too recent but it
         hasn't had any problems with maintaining any of the HTML documents
         I've written. It will re-configure the menu with HTML and that drop
@@ -3751,153 +3571,131 @@ Emacs highlighting and fonts
         location though so it shouldn't be to hard to find it. (version
         19.30)
 
-</P>
-</BLOCKQUOTE>
-<HR>
-    <A name="font_lock_and_hilit19"  id="font_lock_and_hilit19"></A>
-    <H1>
-    7.0 Font lock and hilit19
-    
-    </H1>
-<BLOCKQUOTE>
+<hr>
+               <A name="font_lock_and_hilit19"  id="font_lock_and_hilit19"></A>
+               <h1>
+               7.0 Font lock and hilit19
+               
+               </h1>
 
 
-</P>
-  <A name="hilit19_description_old" id="hilit19_description_old"></A>
-  <H2>
+
+  <a name="hilit19_description_old" id="hilit19_description_old"></a>
+  <h2>
       7.1 Hilit19 description (old)
       
-  </H2>
+  </h2>
 
 
 
 
-
-<P class="column10"><EM class="quote10">
+<p>
+<p class="column10"><em class="quote10">
           ...I've tried font-lock, because I heard it highlights as you
           type. This is very nice, but it supports relatively few modes
           out of the box, and is relatively hard, or rather, time
-          consuming to extend to new modes.</EM>
+          consuming to extend to new modes.</em>
 
 
 
-<P class="column8">
-        Henrique Martins <EM><A HREF="mailto:martins@hpl.hp.com" >martins@hpl.hp.com</A></EM>
+<p class="column8">
+        Henrique Martins <EM><a href="mailto:martins@hpl.hp.com" >martins@hpl.hp.com</A></EM>
 
 
-<P class="column8">
+<p class="column8">
         Deja vu! I went through the same steps, and gave up for the same
         reason, i.e., not all modes out of the box, and also different
         colours from what I got used to in hilit19. I'm still hoping for
         someone to post a conversion kit from hilit19 to font-lock.
 
 
-<P class="column10"><EM class="quote10">
+<p class="column10"><em class="quote10">
           I've also heard of a hilit319.el or somesuch, but I haven't been
           able to find it. What improvements does it make over hilit19, and
-          where can I find it?</EM>
+          where can I find it?</em>
 
 
 
-<P class="column8">
+<p class="column8">
         It is called hl319.el, and it should be available as:
 
 <P>
-<TABLE  class="shade-normal"
-        width="94%"
-        border="0"
-        cellpadding="10"
-        cellspacing="0"
-        >
+<TABLE class="shade-normal">
     <TR>
     <TD class="shade-normal-attrib" valign="top">
-    <PRE>      <A HREF="ftp://netcom.com/pub/stig/src/" target="_top">ftp://netcom.com/pub/stig/src/</A>  {Beta,Release}/hl319.el.gz
-    </TD>
+    <PRE>
+      <a href="ftp://netcom.com/pub/stig/src/" >ftp://netcom.com/pub/stig/src/</a>  {Beta,Release}/hl319.el.gz    </PRE></TD>
     </TR>
 </TABLE>
 
 
-<P class="column8">
+<p class="column8">
         Among its new features are user-customizable colours, via the variable
         hilit-user-face-table, e.g.,
 
 <P>
-<TABLE  class="shade-normal"
-        width="94%"
-        border="0"
-        cellpadding="10"
-        cellspacing="0"
-        >
+<TABLE class="shade-normal">
     <TR>
     <TD class="shade-normal-attrib" valign="top">
-    <PRE>      (setq hilit-user-face-table
+    <PRE>
+      (setq hilit-user-face-table
         '((comment firebrick-italic moccasin  italic)
           (string  grey40           orange    underline)
           (decl    RoyalBlue        cyan      bold)
           (type    nil              yellow    nil)
           (label   cyan-bold        cyan-bold underline)
-          (keyword RoyalBlue        cyan      bold-italic)))
-    </TD>
+          (keyword RoyalBlue        cyan      bold-italic)))    </PRE></TD>
     </TR>
 </TABLE>
 
 
-<P class="column8">
+<p class="column8">
         and better on the fly re-highlighting via:
 
 <P>
-<TABLE  class="shade-normal"
-        width="94%"
-        border="0"
-        cellpadding="10"
-        cellspacing="0"
-        >
+<TABLE class="shade-normal">
     <TR>
     <TD class="shade-normal-attrib" valign="top">
-    <PRE>      (add-hook 'find-file-hooks
-        '(lambda () (hilit-install-line-hooks)))
-    </TD>
+    <PRE>
+      (add-hook 'find-file-hooks
+        '(lambda () (hilit-install-line-hooks)))    </PRE></TD>
     </TR>
 </TABLE>
 
 
-</P>
-  <A name="dont_use_hilit19_any_more" id="dont_use_hilit19_any_more"></A>
-  <H2>
+
+  <a name="dont_use_hilit19_any_more" id="dont_use_hilit19_any_more"></a>
+  <h2>
       7.2 Don't use hilit19 any more
       
-  </H2>
+  </h2>
 
 
 
 
-
-<P class="column10"><EM class="quote10">
+<p>
+<p class="column10"><em class="quote10">
           I've been recently convinced it would be good to use one of those
           packages, so I'm trying to figure out why there are two packages
           dedicated to hiliting and what are their pros and cons. I've
           seen a few differences (see below), but I'd like to know why you
-          like hilit19 or why you prefer font-lock.</EM>
+          like hilit19 or why you prefer font-lock.</em>
 
 
 
-<P class="column8">
-        Ulrik Dickow  <EM><A HREF="mailto:dickow@nbi.dk" >dickow@nbi.dk</A></EM>
+<p class="column8">
+        Ulrik Dickow  <EM><a href="mailto:dickow@nbi.dk" >dickow@nbi.dk</A></EM>
 
 
-<P class="column8">
+<p class="column8">
         I prefer font-lock. Reasons follow.
 
 <P>
-<TABLE  class="shade-normal"
-        width="94%"
-        border="0"
-        cellpadding="10"
-        cellspacing="0"
-        >
+<TABLE class="shade-normal">
     <TR>
     <TD class="shade-normal-attrib" valign="top">
-    <PRE>      &gt; differences I could see:
+    <PRE>
+      &gt; differences I could see:
       &gt;
       &gt; 1 - font-lock fontifies immediately and is hence slower.
       &gt; 2 - hilit19 fontifies also info/gnus/vm/rmail/etc.. buffers
@@ -3910,109 +3708,89 @@ Emacs highlighting and fonts
       &gt;     of emacs19's ?)
       &gt;
       &gt; I don't really care about the second point (hiliting info is not
-      &gt; too important to me
-    </TD>
+      &gt; too important to me    </PRE></TD>
     </TR>
 </TABLE>
 
 
-<P class="column8">
+<p class="column8">
         Info is already bold/italic without hilit19/font-lock.
 
 <P>
-<TABLE  class="shade-normal"
-        width="94%"
-        border="0"
-        cellpadding="10"
-        cellspacing="0"
-        >
+<TABLE class="shade-normal">
     <TR>
     <TD class="shade-normal-attrib" valign="top">
-    <PRE>      &gt; and I don't read my mail nor my news from emacs (of course, this
-      &gt; might change))
-    </TD>
+    <PRE>
+      &gt; and I don't read my mail nor my news from emacs (of course, this
+      &gt; might change))    </PRE></TD>
     </TR>
 </TABLE>
 
 
-<P class="column8">
+<p class="column8">
         I do both.
 
 
-<P class="column8">
-        Rmail-buffers (rmail-mode &amp; rmail-summary-mode) <STRONG class="word">are</STRONG> known to
+<p class="column8">
+        Rmail-buffers (rmail-mode &amp; rmail-summary-mode) <strong class="word">are</strong> known to
         font-lock.el. The next version of the news reader ((ding) gnus)
         has extremely fancy highlighting built-in (I'm using an alpha
         version).
 
 <P>
-<TABLE  class="shade-normal"
-        width="94%"
-        border="0"
-        cellpadding="10"
-        cellspacing="0"
-        >
+<TABLE class="shade-normal">
     <TR>
     <TD class="shade-normal-attrib" valign="top">
-    <PRE>      &gt; The first point on another hand seems important at first. But
+    <PRE>
+      &gt; The first point on another hand seems important at first. But
       &gt; hilit19 has extensions to make it highlight immediately and
       &gt; font-lock can be sped up by removing the after-change-function
-      &gt; and replace it by a small redraw function called by ^L or &lt;ret&gt;.
-    </TD>
+      &gt; and replace it by a small redraw function called by ^L or &lt;ret&gt;.    </PRE></TD>
     </TR>
 </TABLE>
 
 
-<P class="column8">
+<p class="column8">
         font-lock can do it easier than that, when you don't want on-the-fly:
 
-<UL>
-	<LI>don't use the function <SAMP class="word">font-lock-mode</SAMP>
-	<LI>your small redraw function can simply be <SAMP class="word">font-lock-fontify-buffer</SAMP>
-	            (but if you bind it to <SPAN class="word-ref">[return]</SPAN> then you should use lazy-lock too)
-</UL>
+<ul>
+	<li>don't use the function <samp class="word">font-lock-mode</samp>
+<li>your small redraw function can simply be <samp class="word">font-lock-fontify-buffer</samp>
+	            (but if you bind it to <span class="word-ref">[return]</span> then you should use lazy-lock too)</li>
+</ul>
 
 
 
 
-<P class="column8">
+<p class="column8">
         However, I don't feel font-lock to be slow in general; on the
         contrary. Here's my summary of &quot;font-lock v.s. hilit19&quot; as I
         happened to post it privately a few weeks ago --- note that I don't
-        claim to be strictly objective and that I <EM class="word">do</EM> use lazy-lock by now
+        claim to be strictly objective and that I <em class="word">do</em> use lazy-lock by now
         (with tuned defaults):
 
 <P>
-<TABLE  class="shade-normal"
-        width="94%"
-        border="0"
-        cellpadding="10"
-        cellspacing="0"
-        >
+<TABLE class="shade-normal">
     <TR>
     <TD class="shade-normal-attrib" valign="top">
-    <PRE>      &gt; So which is better, font-lock.el or hilit19.el (both in 19.28
-      &gt; distribution)?
-    </TD>
+    <PRE>
+      &gt; So which is better, font-lock.el or hilit19.el (both in 19.28
+      &gt; distribution)?    </PRE></TD>
     </TR>
 </TABLE>
 
 
-<P class="column8">
+<p class="column8">
         It's largely a matter of taste, currently. I'll try to summarize
-        the diffs as of 19.28 (h.l.=highlight, N/A=not available), as <EM class="word">I</EM>
+        the diffs as of 19.28 (h.l.=highlight, N/A=not available), as <em class="word">I</em>
         see them:
 
 <P>
-<TABLE  class="shade-normal"
-        width="94%"
-        border="0"
-        cellpadding="10"
-        cellspacing="0"
-        >
+<TABLE class="shade-normal">
     <TR>
     <TD class="shade-normal-attrib" valign="top">
-    <PRE>                                font-lock         hilit19
+    <PRE>
+                                font-lock         hilit19
 
       highlight-as-you-type:        Yes (opt)     N/A     1)
       Partial h.l. of big files:    No      2)    Yes
@@ -4020,70 +3798,73 @@ Emacs highlighting and fonts
       Speed:                        ...better     Sometimes *slow*
       Infinite loops seen by me:    No :-)  4)    Yes :-( 5)
       Easily customized:            No      6)    Yes!!   7)
-      Being improved on:            Yes           ?
-    </TD>
+      Being improved on:            Yes           ?    </PRE></TD>
     </TR>
 </TABLE>
 
 
-<P class="column8">
+<p class="column8">
         Notes:
 
-<OL>
-	<LI>Is in &quot;hl319&quot;, a beta release of new hilit19. But I think
+<ol>
+	<li>Is in &quot;hl319&quot;, a beta release of new hilit19. But I think
             development on hilit has stopped.
-	<LI>Possible with lazy-lock add-on (see LCD). Some users are very
+<li>Possible with lazy-lock add-on (see LCD). Some users are very
             happy about this and say it's a &quot;must&quot; for font-lock. I don't
             edit big files much --- and/or the computers I use are
             blindingly fast :-). I've made my own simple approach to this:
             no automatic fontification for files bigger than given limit;
             i.e., &quot;nothing or everything&quot;. The latter approach will be
             included in 19.29.
-	<LI>User contributions for many more modes exist. E.g., mine for HTML
+	</li>
+<li>User contributions for many more modes exist. E.g., mine for HTML
             and Fortran. In 19.29, more modes will be supported by default,
             I think.
-	<LI>Well, there's something weird when fortran-auto-fill-mode is
+	</li>
+<li>Well, there's something weird when fortran-auto-fill-mode is
             used with my Fortran font-lock. The loop is far from infinite
             though, and I think it's more a problem with
             fortran-auto-fill-mode than with font-lock as such.
-	<LI>In the early days, when I used hilit19, this really annoyed me.
+	</li>
+<li>In the early days, when I used hilit19, this really annoyed me.
             Seemed to be rooted in hilit19's rather complex way of
-            <EM class="word">un</EM>highlighting a buffer before it re-highlights it. Never got
+            <em class="word">un</em>highlighting a buffer before it re-highlights it. Never got
             anything reproducible, though. Seemed like &quot;when switching from
             a GNUS buffer to a Elisp buffer or somesuch...&quot;
-	<LI>font-lock will become easier to customize in 19.29 (will
+	</li>
+<li>font-lock will become easier to customize in 19.29 (will
             incorporate good parts of Simon Marshall's face-lock code, for
             example).
-	<LI>Very good user interface, easy for new users.
-</OL>
+	<li>Very good user interface, easy for new users.</li>
+</ol>
 
 
 
 
-</P>
-  <A name="fontlock_and_hilit19_cooperation" id="fontlock_and_hilit19_cooperation"></A>
-  <H2>
+
+  <a name="fontlock_and_hilit19_cooperation" id="fontlock_and_hilit19_cooperation"></a>
+  <h2>
       7.3 Font-lock and hilit19 co-operation
       
-  </H2>
+  </h2>
 
 
 
 
-
-<P class="column10"><EM class="quote10">
+<p>
+<p class="column10"><em class="quote10">
           ...It seems, that 'font-lock'+'defer-lock'+'lazy-lock' are better
           then 'hilit19'. could anybody help me, how should i change my
           '.emacs' to use the 'font-lock' method instead of 'hilit19', and
-          tell me, what to do besides this ?</EM>
+          tell me, what to do besides this ?</em>
 
 
 
-<P class="column8">
-        L.G. &quot;Ted&quot; Stern <EM><A HREF="mailto:stern@amath.washington.edu" >stern@amath.washington.edu</A></EM>
+<p class="column8">
+        L.G. &quot;Ted&quot; Stern <EM><a href="mailto:stern@amath.washington.edu" >stern@amath.washington.edu</A></EM>
 
 
-<P class="column8">
+<p class="column8">
         I have found that some packages do better with font-lock and some
         still &quot;prefer&quot; hiliting. I also found that the default setting for
         hilit19 is to &quot;take over&quot; some keys, so I have turned that
@@ -4093,15 +3874,11 @@ Emacs highlighting and fonts
 
 
 <P>
-<TABLE  class="shade-normal"
-        width="94%"
-        border="0"
-        cellpadding="10"
-        cellspacing="0"
-        >
+<TABLE class="shade-normal">
     <TR>
     <TD class="shade-normal-attrib" valign="top">
-    <PRE>      ;; To make font-lock and hilit19 coexist comfortably, I make
+    <PRE>
+      ;; To make font-lock and hilit19 coexist comfortably, I make
       ;; sure that hilit19 does not rebind keys. To re-highlight the
       ;; buffer you can still do S-C-l (Shift-Control-l). I then
       ;; define a new function (which is basically copied verbatim
@@ -4194,61 +3971,55 @@ Emacs highlighting and fonts
          ;; ^^^^^^^                                ^^^^^^^^^^^^^^^
          ;; type of syntax                     colour and/or attribute
          ;;
-         ))
-    </TD>
+         ))    </PRE></TD>
     </TR>
 </TABLE>
 
-</P>
-</BLOCKQUOTE>
-<HR>
-    <A name="x_resource_settings"  id="x_resource_settings"></A>
-    <H1>
-    8.0 X resource settings
-    
-    </H1>
-<BLOCKQUOTE>
+<hr>
+               <A name="x_resource_settings"  id="x_resource_settings"></A>
+               <h1>
+               8.0 X resource settings
+               
+               </h1>
 
 
-</P>
-  <A name="menu_bar_font_in_.xinitrc" id="menu_bar_font_in_.xinitrc"></A>
-  <H2>
+
+  <a name="menu_bar_font_in_xinitrc" id="menu_bar_font_in_xinitrc"></a>
+  <h2>
       8.1 Menu bar font in .xinitrc
       
-  </H2>
+  </h2>
 
 
 
 
- Emacs.pane.menubar.font: -*-courier-bold-r-normal-*-12-*-*-*-*-*-iso8859-1
+ <p>Emacs.pane.menubar.font: -*-courier-bold-r-normal-*-12-*-*-*-*-*-iso8859-1
 
 
-</P>
-  <A name="emacs_colour_resources" id="emacs_colour_resources"></A>
-  <H2>
+
+  <a name="emacs_colour_resources" id="emacs_colour_resources"></a>
+  <h2>
       8.2 Emacs colour resources
       
-  </H2>
+  </h2>
 
 
 
 
-        James Sterbenz <EM><A HREF="mailto:jpgs@roger.gte.com" >jpgs@roger.gte.com</A></EM> this works at least for hilit19
+<p>
+<p class="column8">
+        James Sterbenz <EM><a href="mailto:jpgs@roger.gte.com" >jpgs@roger.gte.com</A></EM> this works at least for hilit19
         You can't configure it through your .emacs. But you can with X
         (file .Xdefaults or .Xresources). Valid colours are those from
         /usr/lib/X11/rgb.txt
 
 
 <P>
-<TABLE  class="shade-normal"
-        width="94%"
-        border="0"
-        cellpadding="10"
-        cellspacing="0"
-        >
+<TABLE class="shade-normal">
     <TR>
     <TD class="shade-normal-attrib" valign="top">
-    <PRE>         emacs*foreground:                       #90e0ff
+    <PRE>
+         emacs*foreground:                       #90e0ff
          emacs*background:                       #003040
          emacs*pointerColour:                     #ffffff
          emacs*cursorColour:                      #ffffff
@@ -4258,25 +4029,20 @@ Emacs highlighting and fonts
          emacs.modeline.attributeBackground:     #0080ff
          emacs.bold.attributeForeground:         #00ffff
          emacs.highlight.attributeForeground:    #ff0000
-         emacs.secondary-selection:              #ffff00
-    </TD>
+         emacs.secondary-selection:              #ffff00    </PRE></TD>
     </TR>
 </TABLE>
 
 
-<P class="column8">
-        Philippe Troin <EM><A HREF="mailto:ptroin@lugny.sophia.compass-da.com" >ptroin@lugny.sophia.compass-da.com</A></EM> gives:
+<p class="column8">
+        Philippe Troin <EM><a href="mailto:ptroin@lugny.sophia.compass-da.com" >ptroin@lugny.sophia.compass-da.com</A></EM> gives:
 
 <P>
-<TABLE  class="shade-normal"
-        width="94%"
-        border="0"
-        cellpadding="10"
-        cellspacing="0"
-        >
+<TABLE class="shade-normal">
     <TR>
     <TD class="shade-normal-attrib" valign="top">
-    <PRE>         !
+    <PRE>
+         !
          ! Emacs Colours and backgrounds.
          !
          Emacs*Foreground:                    Black
@@ -4296,34 +4062,33 @@ Emacs highlighting and fonts
          Emacs*popup*Font:-*-helvetica-bold-r-*-*-*-120-*-*-*-*-iso8859-*
          Emacs*modeline.attributeForeground:  Black
          Emacs*modeline.attributeBackground:  Gray80
-         Emacs*font:                          screen
-    </TD>
+         Emacs*font:                          screen    </PRE></TD>
     </TR>
 </TABLE>
 
 
-</P>
-  <A name="no_fonts_matching_patters_are" id="no_fonts_matching_patters_are"></A>
-  <H2>
+
+  <a name="no_fonts_matching_patters_are_same_size_as_comment" id="no_fonts_matching_patters_are_same_size_as_comment"></a>
+  <h2>
       8.3 No fonts matching patters are same size as comment
       
-  </H2>
+  </h2>
 
 
 
 
-
-<P class="column10"><EM class="quote10">
+<p>
+<p class="column10"><em class="quote10">
           Why doesn't the following give error: (set-face-font
-          'comment &quot;italic&quot;)</EM>
+          'comment &quot;italic&quot;)</em>
 
 
 
-<P class="column8">
+<p class="column8">
         Marc Girod &lt;girod@dshp01.trs.ntc.nokia.com&gt;
 
 
-<P class="column8">
+<p class="column8">
         It is a restriction of emacs that all fonts used in a frame must be
         the same size. In addition, they must be fixed spaced. Your
         make-face created a face named comment, and assigned to it you
@@ -4331,13 +4096,13 @@ Emacs highlighting and fonts
         a font of a size different from this of your default font.
 
 
-<P class="column8">
+<p class="column8">
         You have to select a default font for which exist on your system
         variants for bold, italic, and optionally bold-italic in the same
         size, and in fixed spaced fonts.
 
 
-<P class="column8">
+<p class="column8">
         Then your code will work. I suggest however that you specify all
         your fonts through X resources. I guess that the solution Kai
         suggests in an other posting will work, if there is on your system
@@ -4351,47 +4116,37 @@ Emacs highlighting and fonts
   -adobe-courier-medium-o-normal--12-120-75-75-m-70-iso8859-1
 
 
-<P class="column8">
+<p class="column8">
         The point is that no trivial change in the pattern would switch the
         one from the other:
 
 <P>
-<TABLE  class="shade-normal"
-        width="94%"
-        border="0"
-        cellpadding="10"
-        cellspacing="0"
-        >
+<TABLE class="shade-normal">
     <TR>
     <TD class="shade-normal-attrib" valign="top">
-    <PRE>      &quot;*-i-*&quot;
-    </TD>
+    <PRE>
+      &quot;*-i-*&quot;    </PRE></TD>
     </TR>
 </TABLE>
 
 
-<P class="column8">
+<p class="column8">
         ...or something like that, even correct (I didn't check that this
         could work). In this italic font, the italic property is encoded in
         the 'o' (for oblique I guess). In other fonts, it is with an 'i',
         as in:
 
 <P>
-<TABLE  class="shade-normal"
-        width="94%"
-        border="0"
-        cellpadding="10"
-        cellspacing="0"
-        >
+<TABLE class="shade-normal">
     <TR>
     <TD class="shade-normal-attrib" valign="top">
-    <PRE>      -adobe-times-medium-i-normal-*-17-*-*-*-*-*-iso8859-1
-    </TD>
+    <PRE>
+      -adobe-times-medium-i-normal-*-17-*-*-*-*-*-iso8859-1    </PRE></TD>
     </TR>
 </TABLE>
 
 
-<P class="column8">
+<p class="column8">
         (unfortunately proportional!) Ok. Now, my settings (working for me,
         if anything)
 
@@ -4415,20 +4170,16 @@ Emacs highlighting and fonts
 
 
 
-<P class="column8">
+<p class="column8">
         and to use these from font-lock, this's what I use, although there
         may be more elegant ways:
 
 <P>
-<TABLE  class="shade-normal"
-        width="94%"
-        border="0"
-        cellpadding="10"
-        cellspacing="0"
-        >
+<TABLE class="shade-normal">
     <TR>
     <TD class="shade-normal-attrib" valign="top">
-    <PRE>      (setq font-lock-string-face 'font-lock-string-face)
+    <PRE>
+      (setq font-lock-string-face 'font-lock-string-face)
       (make-face font-lock-string-face)
 
       (setq font-lock-comment-face 'font-lock-comment-face)
@@ -4438,46 +4189,42 @@ Emacs highlighting and fonts
       (make-face font-lock-type-face)
 
       (setq font-lock-keyword-face 'font-lock-keyword-face)
-      (make-face font-lock-keyword-face)
-    </TD>
+      (make-face font-lock-keyword-face)    </PRE></TD>
     </TR>
 </TABLE>
 
-</P>
-</BLOCKQUOTE>
-<HR>
-    <A name="why_all_the_fonts_are"  id="why_all_the_fonts_are"></A>
-    <H1>
-    9.0 Why all the fonts are not available in emacs ?
-    
-    </H1>
-<BLOCKQUOTE>
+<hr>
+               <A name="why_all_the_fonts_are_not_available_in_emacs"  id="why_all_the_fonts_are_not_available_in_emacs"></A>
+               <h1>
+               9.0 Why all the fonts are not available in emacs ?
+               
+               </h1>
 
 
-<P class="column10"><EM class="quote10">
+<p class="column10"><em class="quote10">
           Where is all the font I have many fonts which are accessible
           (/usr/lib/X11/fonts/*) which don't pop up in the pop-up menu
           (C-mouse 3 on my platform).I was unable to find info in the FAQ's
           and online info. Can anyone tell me a font-path to change, or
-          another fix?</EM>
+          another fix?</em>
 
 
 
-<P class="column8">
-        Piotr Filip Sawicki <EM><A HREF="mailto:pfs@mimuw.edu.pl" >pfs@mimuw.edu.pl</A></EM><BR>
-        Subject: xf.el - create mouse font menu (C-m-3) on-line (UPDATED)<BR>
-        Date:    Mon, 31 Oct 1994<BR>
+<p class="column8">
+        Piotr Filip Sawicki <EM><a href="mailto:pfs@mimuw.edu.pl" >pfs@mimuw.edu.pl</A></EM><br>
+        Subject: xf.el - create mouse font menu (C-m-3) on-line (UPDATED)<br>
+        Date:    Mon, 31 Oct 1994<br>
 
 
-<P class="column8">
+<p class="column8">
         (Updated version: smaller code and more instructions how to use it)
 
 
-<P class="column8">
+<p class="column8">
         Hey!
 
 
-<P class="column8">
+<p class="column8">
         Writing ISO Latin 2 support for Emacs (now gone to testing, will be
         out in two weeks or so) I found myself in the dire need for
         checking the existence of Latin 2 fonts on the server... and then
@@ -4485,52 +4232,52 @@ Emacs highlighting and fonts
         is).
 
 
-<P class="column8">
+<p class="column8">
         Also, being fed up with enhancing manually x-fixed-font-alist of
         every single emacs version released, I decided to write a general
         function to do this for me. Here is the result, after 3 days of
         work.
 
 
-<P class="column8">
+<p class="column8">
         Upon loading this code just queries the server; to update list, you
         have to call xf-load-fonts function yourself. See comments for more
         information.
 
 
-<P class="column8">
-        <EM class="word">WARNING:</EM>
+<p class="column8">
+        <em class="word">WARNING:</em>
 
 
-<P class="column8">
+<p class="column8">
         Querying server takes enormous time... To save time when you run
         emacs on one type of x-server only, e.g., your workstation, either
         ask your administrator for help, or help yourself in the way
         described in the file header.
 
 
-<P class="column8">
+<p class="column8">
         What else? Regular expressions used for font parsing are more
         general than those used in faces.el. Whether I can cope with
         strange fonts, is quite a different matter, though.
 
 
-<P class="column8">
+<p class="column8">
         P.S.: If emacs authors already created that kind of code and do not
         release it for some reason, I hope Gods will forgive them.
 
 
-</P>
-  <A name="code_xf.el" id="code_xf.el"></A>
-  <H2>
+
+  <a name="code_xf_el" id="code_xf_el"></a>
+  <h2>
       9.1 Code xf.el
       
-  </H2>
+  </h2>
 
 
 
 
- ;;; xf.el --- dynamically create x-fixed-font-alist of ISO Latin fonts
+ <p>;;; xf.el --- dynamically create x-fixed-font-alist of ISO Latin fonts
 
  ;;; Copyright &copy; 1994 Piotr Filip Sawicki
 
@@ -4550,11 +4297,6 @@ Emacs highlighting and fonts
  ;;; but WITHOUT ANY WARRANTY; without even the implied warranty of
  ;;; MERCHANTABILITY or FITNESS FOR A PARTICULAR PURPOSE. See the
  ;;; GNU General Public License for more details.
-
- ;;; You should have received a copy of the GNU General Public License
- ;;; along with GNU Emacs; see the file COPYING. If not, write to
- ;;; the Free Software Foundation, 675 Mass Ave, Cambridge, MA 02139, USA.
- ;;; Commentary:
 
  ;; This code creates dynamically x-fixed-font-alist of all ISO Latin fonts.
 
@@ -4610,7 +4352,7 @@ Emacs highlighting and fonts
 
  (defvar xf-latin-fonts
    (and (eq window-system-version 11)
-        (append (x-list-fonts &quot;<EM class="word">-m-</EM>-iso8859-*&quot;)
+        (append (x-list-fonts &quot;*-m-*-iso8859-*&quot;)
           (x-list-fonts &quot;*-c-*-iso8859-*&quot;)))
    &quot;List of all appropriate Latin fonts.&quot;)
 
@@ -4763,21 +4505,18 @@ Emacs highlighting and fonts
           ;; End
  ;;; The end
 
-</P>
-</BLOCKQUOTE>
-<HR>
-    <A name="code_linemenu.el_highlighting_current_line"  id="code_linemenu.el_highlighting_current_line"></A>
-    <H1>
-    10.0 Code: linemenu.el, Highlighting current line
-    
-    </H1>
-<BLOCKQUOTE>
+<hr>
+               <A name="code_linemenu_el_highlighting_current_line"  id="code_linemenu_el_highlighting_current_line"></A>
+               <h1>
+               10.0 Code: linemenu.el, Highlighting current line
+               
+               </h1>
 
  ;;; linemenu.el - Hook function to highlight current line in buffer
 
- ;; Author:   Bill Brodie <EM><A HREF="mailto:wbrodie@panix.com" >wbrodie@panix.com</A></EM>
- ;; Version:  $Revision: 2.9 $
- ;; Date:     $Date: 2004/08/27 22:29:46 $
+ ;; Author:   Bill Brodie <EM><a href="mailto:wbrodie@panix.com" >wbrodie@panix.com</A></EM>
+ ;; Version:  $Revision: 2.5 $
+ ;; Date:     $Date: 2004/01/26 02:08:08 $
  ;;
  ;; To try it out, put this in your .emacs file:
  ;;  Turn on highlighting for Dired (C-x d) and list-buffers (C-x C-b)
@@ -4820,44 +4559,39 @@ Emacs highlighting and fonts
 
  ;;; End of linemenu.el
 
-</P>
-</BLOCKQUOTE>
-<HR>
-    <A name="msdos_emacs_19_port"  id="msdos_emacs_19_port"></A>
-    <H1>
-    11.0 MS-DOS Emacs 19 port
-    
-    </H1>
-<BLOCKQUOTE>
+<hr>
+               <A name="msdos_emacs_19_port"  id="msdos_emacs_19_port"></A>
+               <h1>
+               11.0 MS-DOS Emacs 19 port
+               
+               </h1>
 
 
-</P>
-  <A name="setting_background_colour" id="setting_background_colour"></A>
-  <H2>
+
+  <a name="setting_background_colour" id="setting_background_colour"></a>
+  <h2>
       11.1 Setting background colour
       
-  </H2>
+  </h2>
 
 
 
 
-        <EM><A HREF="mailto:rollintumb@aol.com" >rollintumb@aol.com</A></EM> RollinTumb:
+<p>
+<p class="column8">
+        <EM><a href="mailto:rollintumb@aol.com" >rollintumb@aol.com</A></EM> RollinTumb:
 
 
-<P class="column8">
+<p class="column8">
         Put into your startup file (I call mine emacs.ini):
         In DOS, you have only 16 colours to choose from.
 
 <P>
-<TABLE  class="shade-normal"
-        width="94%"
-        border="0"
-        cellpadding="10"
-        cellspacing="0"
-        >
+<TABLE class="shade-normal">
     <TR>
     <TD class="shade-normal-attrib" valign="top">
-    <PRE>      (set-face-foreground 'default  &quot;white&quot;)
+    <PRE>
+      (set-face-foreground 'default  &quot;white&quot;)
       (set-face-background 'default &quot;blue&quot;)
 
       You can also set colours for other objects/modes:
@@ -4872,26 +4606,27 @@ Emacs highlighting and fonts
       (set-face-foreground 'msdos-menu-select-face &quot;cyan&quot;)
       (set-face-background 'msdos-menu-select-face &quot;black&quot;)
       (set-face-foreground 'region &quot;cyan&quot;)
-      (set-face-background 'region &quot;black&quot;)
-    </TD>
+      (set-face-background 'region &quot;black&quot;)    </PRE></TD>
     </TR>
 </TABLE>
 
 
-</P>
-  <A name="code_pcwin.el" id="code_pcwin.el"></A>
-  <H2>
+
+  <a name="code_pcwin_el" id="code_pcwin_el"></a>
+  <h2>
       11.2 Code: pc-win.el
       
-  </H2>
+  </h2>
 
 
 
 
-        Eli Zaretskii <EM><A HREF="mailto:eliz@is.elta.co.il" >eliz@is.elta.co.il</A></EM>
+<p>
+<p class="column8">
+        Eli Zaretskii <EM><a href="mailto:eliz@is.elta.co.il" >eliz@is.elta.co.il</A></EM>
 
 
-<P class="column8">
+<p class="column8">
         Attached please find a replacement for lisp/term/pc-win.el and a
         few lines to put into your _emacs file. Don't forget to
         byte-compile pc-win.el once you install it. The defaults as they
@@ -4905,7 +4640,7 @@ Emacs highlighting and fonts
 
  ;; Copyright &copy; 1994 Free Software Foundation, Inc.
 
- ;; Author: Morten Welinder <EM><A HREF="mailto:terra@diku.dk" >terra@diku.dk</A></EM>
+ ;; Author: Morten Welinder <EM><a href="mailto:terra@diku.dk" >terra@diku.dk</A></EM>
  ;; Version: 1,00
 
  ;; This file is part of GNU Emacs.
@@ -4919,10 +4654,6 @@ Emacs highlighting and fonts
  ;; but WITHOUT ANY WARRANTY; without even the implied warranty of
  ;; MERCHANTABILITY or FITNESS FOR A PARTICULAR PURPOSE. See the
  ;; GNU General Public License for more details.
-
- ;; You should have received a copy of the GNU General Public License
- ;; along with GNU Emacs; see the file COPYING. If not, write to
- ;; the Free Software Foundation, 675 Mass Ave, Cambridge, MA 02139, USA.
 
  (load &quot;term/internal&quot; nil t)
 
@@ -5128,7 +4859,7 @@ Emacs highlighting and fonts
         hilit-auto-rehighlight-fallback '(25000 . 60))
 
 
-<P class="column8">
+<p class="column8">
         (require 'hilit19)
         ))
  ;;
@@ -5201,32 +4932,31 @@ Emacs highlighting and fonts
 
  ;; pc-win.el ends here.
 
-</P>
-</BLOCKQUOTE>
-<HR>
-    <A name="xtmotif_programming_and_fontlock"  id="xtmotif_programming_and_fontlock"></A>
-    <H1>
-    12.0 Xt/Motif programming and font-lock
-    
-    </H1>
-<BLOCKQUOTE>
-
-        M. Melgazzi <EM><A HREF="mailto:marco@vcldec1.polito.it" >marco@vcldec1.polito.it</A></EM><BR>
+<hr>
+               <A name="xtmotif_programming_and_fontlock"  id="xtmotif_programming_and_fontlock"></A>
+               <h1>
+               12.0 Xt/Motif programming and font-lock
+               
+               </h1>
 
 
-<P class="column8">
+<p class="column8">
+        M. Melgazzi <EM><a href="mailto:marco@vcldec1.polito.it" >marco@vcldec1.polito.it</A></EM><br>
+
+
+<p class="column8">
         I like quite a lot font-lock and, for my thesis work, I use mainly
         c and Xt/Motif. Unluckily, in this package there is no support for
         X keywords so I had to add it myself :)
 
 
-<P class="column8">
+<p class="column8">
         This uuencoded file is a snipped down version of my .emacs that
         made me achieve exactly what I wanted: colour syntax highlighting of
         the majority of X types and costants.
 
 
-<P class="column8">
+<p class="column8">
         To use it you'll have to edit a little your emacs file: it
         shouldn't be too difficult anyway ( I'm a newbie so don't flame me
         for my efforts :). I had to gzip+uuencode the code because there
@@ -5234,28 +4964,28 @@ Emacs highlighting and fonts
         compile them on the fly, see the code for info ).
 
 
-<P class="column8">
+<p class="column8">
         Of course, if you don't have a very fast machine, I strongly recommend
         fast-lock: especially if you plan to use this file :)
 
 
-<P class="column8">
+<p class="column8">
         Happy X Programming
         &ndash; Marco
 
 
-</P>
-  <A name="code_xtfontlock.el" id="code_xtfontlock.el"></A>
-  <H2>
+
+  <a name="code_xtfontlock_el" id="code_xtfontlock_el"></a>
+  <h2>
       12.1 Code: xt-font-lock.el
       
-  </H2>
+  </h2>
 
 
 
 
- ;;;   @(#) xt-font-lock.el &ndash; Xt/Motif font lock aid
- ;;;   25 Sep 1996, <EM><A HREF="mailto:marco@vcldec1.polito.it" >marco@vcldec1.polito.it</A></EM> (M. Melgazzi)
+ <p>;;;   @(#) xt-font-lock.el &ndash; Xt/Motif font lock aid
+ ;;;   25 Sep 1996, <EM><a href="mailto:marco@vcldec1.polito.it" >marco@vcldec1.polito.it</A></EM> (M. Melgazzi)
  ;;;
  ;;;   With these snippets you can achieve the results described in ;;; the
  ;;;   article Of course all this is under GPL, I decline ;;;
@@ -5508,15 +5238,11 @@ Emacs highlighting and fonts
                               (cons (concat &quot;\\&lt;&quot; my-new-X-and-normal-c-function-names &quot;\\&gt;&quot;) 'font-lock-keyword-face)
 
 <P>
-<TABLE  class="shade-normal"
-        width="94%"
-        border="0"
-        cellpadding="10"
-        cellspacing="0"
-        >
+<TABLE class="shade-normal">
     <TR>
     <TD class="shade-normal-attrib" valign="top">
-    <PRE>                              ;; Fontify all storage classes and type specifiers, plus their items.
+    <PRE>
+                              ;; Fontify all storage classes and type specifiers, plus their items.
                               (list (concat &quot;\\&lt;&quot; my-new-X-and-normal-c-type-types &quot;\\&gt;&quot;
                                                             &quot;\\([ \t*&amp;]+\\sw+\\&gt;\\)*&quot;)
                                             ;; Fontify each declaration item.
@@ -5548,8 +5274,7 @@ Emacs highlighting and fonts
                                      (1 (if (match-beginning 4)
                                                     font-lock-function-name-face
                                               font-lock-variable-name-face))))
-                              )))))
-    </TD>
+                              )))))    </PRE></TD>
     </TR>
 </TABLE>
 
@@ -5602,25 +5327,19 @@ Emacs highlighting and fonts
     ......................................................................
 -->
 
-</BLOCKQUOTE>
-<HR>
-<EM    class="footer">
-<P>
-Copyright &copy; 2004 by Jari Aalto. This material may be
-distributed only subject to the terms and conditions set forth
-in the Open Publication License, v1.0 or later (the latest
-version is presently available at
-http://www.opencontent.org/). Distribution of the work
-or derivative of the work for commercial purposes in any
-form is prohibited unless prior permission is obtained from
-the copyright holder. (VI.B LICENSE OPTIONS)
-</P>
-<P>
+<hr>
+<em    class="footer">
+<p>
+Copyright &copy; 2007 by jaalto. This material may be
+distributed subject to the terms and conditions set forth
+in the Creative commons Attribution-ShareAlike License.
+See http://creativecommons.org/
+<p>
 This file has been automatically generated from plain text file
-with Perl script <STRONG>t2html.pl v2004.0428</STRONG><BR>
-Document author: Jari Aalto<BR>
-Url: <A HREF="http://tiny-tools.sourceforge.net">http://tiny-tools.sourceforge.net</A><BR>
-Last updated: 2004-08-19 12:06<BR>
-</EM    class="footer">
-</BODY>
-</HTML>
+with Perl script <strong>t2html.pl v2007.0526</strong><br>
+Document author: jaalto<br>
+Url: <a href="http://tiny-tools.sourceforge.net">http://tiny-tools.sourceforge.net</a><br>
+Last updated: 2007-09-02 12:03<br>
+</em    class="footer">
+</body>
+</html>

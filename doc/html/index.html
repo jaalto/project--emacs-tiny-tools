@@ -1,32 +1,17 @@
+<!DOCTYPE HTML PUBLIC "-//W3C//DTD HTML 4.01 Transitional//EN">
 <HTML>
-<!--
-
-    $Id: index.html,v 2.45 2005/04/17 10:55:19 jaalto Exp $
-
-    This is the sourceforge home page at http://tiny-tools.sourceforge.net/
-
-    ...........................................................................
-    Developers: Copy this page to sourceforge with command:
-
-    scp index.html jaalto@shell.sourceforge.net:/home/groups/t/ti/tiny-tools/htdocs
-    scp emacs-*.html jaalto@shell.sourceforge.net:/home/groups/t/ti/tiny-tools/htdocs/
-
-    ...........................................................................
--->
-
 
 <HEAD>
-
 
     <TITLE>
         Emacs Tiny Tools Project homepage
     </TITLE>
 
 
-    <!---   ................................................................
+    <!--   ................................................................
             META TAGS (FOR SEARCH ENGINES)
             ................................................................
-    --->
+    -->
 
 
 
@@ -35,10 +20,6 @@
 
   <META HTTP-EQUIV="description"
         CONTENT="Emacs Tiny Tools Project. Emacs is powerful programming environment for which there are many plug-in tools available. This Tools collection includes support for all Emacs platforms: Win32/Unix/Emacs/XEmacs and contains utilities for automatic mail handling, UBE fighting, Emacs startup configuration, URL handling and much more. Over 50+ utilities to select from.">
-
-
-  <META NAME="Version"
-        CONTENT="$Id: index.html,v 2.45 2005/04/17 10:55:19 jaalto Exp $">
 
 
     <STYLE TYPE="text/css">
@@ -153,9 +134,10 @@
     </STYLE>
 
 
-    <SCRIPT SRC="http://js-tools.sourceforge.net/lib/libtime-bmt.js"></SCRIPT>
+    <SCRIPT SRC="http://js-tools.sourceforge.net/lib/libtime-bmt.js"
+            type="text/javascript"></SCRIPT>
 
-    <SCRIPT>
+    <SCRIPT type="text/javascript">
         var bmt = new LibTimeBMT();
         bmt.activate(7000);
     </SCRIPT>
@@ -175,18 +157,18 @@
 
 <HR NOSHADE SIZE=1>
 
-        <TABLE BORDER=0
+        <TABLE BORDER="0"
                bgcolor="#EEEEF8"
-               WIDTH=100%
-               CELLPADDING=2
-               CELLSPACING=0
+               WIDTH="100%"
+               CELLPADDING="2"
+               CELLSPACING="0"
                >
 
             <TR>
-            <TD ALIGN=center>
+            <TD ALIGN="center">
 
             </TD>
-            <TD ALIGN=center>
+            <TD ALIGN="center">
 
                     <SPAN class="title">
                         Emacs Tiny Tools Project
@@ -195,7 +177,7 @@
             </TR>
         </TABLE>
 
-<HR NOSHADE SIZE=1>
+<HR NOSHADE SIZE="1">
 
 <!--  .......................................................................
       START OF BODY TEXT
@@ -206,12 +188,11 @@
 
 
 Download, install instrustions and manuals. <SPAN class="note"> Note, that
-the most up to date version is in CVS. </SPAN> See instructions at the end
-of this page.
+the most up to date version is in version control. </SPAN> See instructions
+at the end of this page.
 
-<P>There hasn't been official releases for a long time, and the use of
-CVS is highly encouraged due to numerous changes. When the new
-installation method is ready, a new release will be published.
+<P>The use of version control repository is highly encouraged due to
+numerous changes.
 
 <UL>
 
@@ -276,7 +257,7 @@ Links and more information about Emacs
 
 <UL>
 
-    <LI>  <FONT COLOR=#228B00> <EM> Emacs resource page at </EM> </FONT>
+    <LI>  <FONT COLOR="#228B00"> <EM> Emacs resource page at </EM> </FONT>
 
         <A HREF="emacs-elisp.html"
         class="main">
@@ -387,18 +368,18 @@ Foreword
 
 
     <TABLE>
-        <TR> <TD align="left" valign="left">
+        <TR> <TD align="left" valign="middle">
                  <IMG src="pic/emacs-tinypath.jpg"
-                      border=0
+                      border="0"
                       alt="[Picture. Emacs 21.2 tinypath.el package in action]"
                       >
              </TD>
         </TR>
 
 
-        <TR> <TD align="left" valign="left">
+        <TR> <TD align="left" valign="middle">
                  <IMG src="pic/emacs-tinypath-diagram.jpg"
-                      border=0
+                      border="0"
                       alt="[Picture. Emacs 21.2 tinypath.el package in action]"
                       >
              </TD>
@@ -432,7 +413,7 @@ Foreword
     <TABLE>
         <TR> <TD align="left" valign="middle">
                  <IMG src="pic/emacs-tinyirc.jpg"
-                      border=0
+                      border="0"
                       alt="[Picture. Emacs 21.2 tinyirc.el package in action]"
                       >
              </TD>
@@ -476,6 +457,10 @@ News
         Utilities can be activated one by one basis. Monolithic
         tiny-setup.el will be phased out and split into separate
         files.
+
+        <P>
+        2007-08: Sourcefoge project was shut down. Project was moved
+        to Savannah under more powerful Git version control sofware.
 
         <P>
         2003-05: Library cleanup continues. More functions have been
@@ -665,16 +650,17 @@ CVS update method
 </PRE>
 
 
-<!--  .......................................................................
+<!--
+      .......................................................................
 
-      FOOTER -- The sourceforge button.
+      FOOTER: The sourceforge button.
 
       .......................................................................
 -->
 
 
 
-<HR NOSHADE SIZE=1>
+<HR NOSHADE SIZE="1">
 
     <TABLE BORDER        = "0"
            WIDTH         = "100%"
@@ -685,70 +671,83 @@ CVS update method
         <TR>
 
             <TD>
-                <A REL="license" HREF="http://creativecommons.org/licenses/by-nc-sa/2.0/">
-                <IMG ALT    = "Creative Commons License"
+                <A REL="license" HREF="http://www.gnu.org/licenses">
+                <IMG ALT    = "GNU GPL"
                      BORDER = "0"
-                     SRC    = "http://creativecommons.org/images/public/somerights20.gif">
+                     width  = "100"
+                     height = "40"
+                     SRC    = "http://www.gnu.org/graphics/behroze/behroze-gnu-button2.png">
                 </A>
             </TD>
 
             <TD WIDTH="100%">
-                This page and project's other pages and texts are licensed under a <A REL="license"
-                HREF="http://creativecommons.org/licenses/by-nc-sa/2.0/">
-                Creative Commons License</A>.
+                All files in this project are licensed under
+                <A REL="license"
+                HREF="http://www.gnu.org/licenses/">
+                GNU GPL</A>.
             </TD>
 
         </TR>
     </TABLE>
 
-
-    <TABLE BORDER=0
+    <TABLE BORDER="0"
            bgcolor="#EEEEF8"
-           WIDTH=100%
-           CELLPADDING=2
-           CELLSPACING=0
+           WIDTH="100%"
+           CELLPADDING="2"
+           CELLSPACING="0"
            >
-
         <TR>
           <TD>
 
-              <A HREF="http://sourceforge.net">
-              <IMG SRC="http://sourceforge.net/sflogo.php?group_id=4467&amp;type=1"
-                  width="88" height="31" border="0"
-                  alt="SourceForge Logo"
-                  ALT=""></A>
+              <A HREF="http://www.sanannah.org">
+              <IMG SRC      ="http://www.gnu.org/graphics/meditate-tiny.jpg"
+                  width     ="60"
+                  height    ="60"
+                  border    ="0"
+                  alt       ="Savannah Logo"
+                  >
               </A>
 
           </TD>
-          <TD WIDTH=100%>
-              <FONT SIZE=-1>
+          <TD WIDTH="100%">
+              <FONT SIZE="-1">
                   <I>
-                  This site, as well as many other opensource projects
+                  This project, as well as many other opensource projects
                   is hosted by
-                  <A HREF="http://sourceforge.net/">sourceforge.net</A>.
+                  <A HREF="http://www.savannah.org">Savannah</A>.
                   </I>
               </FONT>
           </TD>
         </TR>
+    </TABLE>
 
+    <TABLE BORDER="0"
+           bgcolor="#EEEEF8"
+           WIDTH="100%"
+           CELLPADDING="2"
+           CELLSPACING="0"
+           >
         <TR>
           <TD>
-
-
-              <A HREF="http://www.opensource.org">
-              <IMG SRC="http://www.opensource.org/trademarks/opensource/web/opensource-75x65.png"
-                  alt="Open Source Logo"
-                  ALT=""></A>
+              <A HREF="http://validator.w3.org/check?uri=referer">
+              <IMG SRC      ="http://www.w3.org/Icons/valid-html401-blue"
+                  width     ="81"
+                  height    ="31"
+                  border    ="0"
+                  alt       ="Savannah Logo"
+                  >
               </A>
 
-
           </TD>
-          <TD>
-            All programs are Open Source. More Emacs information can be found at
-            <a href="http://www.emacswiki.org/">
-            Emacs Wiki site
-            </a>
-
+          <TD WIDTH="100%">
+              <FONT SIZE="-1">
+                  <I>
+                  <A HREF="http://www.w3c.org">
+                  W3C
+                  </A>
+                  validated.
+                  </I>
+              </FONT>
           </TD>
         </TR>
     </TABLE>

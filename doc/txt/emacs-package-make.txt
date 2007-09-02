@@ -179,10 +179,6 @@ Table of contents
             ;; WITHOUT ANY WARRANTY; without even the implied warranty of MERCHANTABILITY
             ;; or FITNESS FOR A PARTICULAR PURPOSE. See the GNU General Public License
             ;; for more details. http://www.gnu.org/copyleft/gpl.html
-            ;;
-            ;; You should have received a copy of the GNU General Public License along
-            ;; with GNU Emacs. If you did not, write to the Free Software Foundation,
-            ;; Inc., 675 Mass Ave., Cambridge, MA 02139, USA.
 
     2.8 Always include installation instructions.
 

@@ -21,15 +21,13 @@ Emacs Tiny Tools Project README
   <meta http-equiv="description"
 	content="">
 
-
-  <meta http-equiv="Content-Type" content="text/html; charset=utf-8">
-
-  <meta http-equiv="Expires" content="Tue, 31 May 2005 07:00:35 GMT">
+<meta http-equiv="Content-Type" content="text/html; charset=utf-8">
+  <meta http-equiv="Expires" content="Thu,  1 Nov 2007 09:00:56 GMT">
 
 
 
   <meta name="Generator"
-	content="2005-04-01 09:00 Perl program t2html.pl v2005.0208 http://perl-text2html.sourceforge.net/">
+	content="2007-09-02 12:00 Perl program t2html.pl v2007.0526 http://perl-text2html.sourceforge.net/">
 
 
 
@@ -39,7 +37,9 @@ Emacs Tiny Tools Project README
 -->
 
 
+
     <style type="text/css">
+
 
 
         /*
@@ -212,7 +212,7 @@ Emacs Tiny Tools Project README
 
         blockquote
         {
-            margin-right: 0;
+            margin-right: 2em;
         }
 
         @media print   { BLOCKQUOTE
@@ -225,10 +225,18 @@ Emacs Tiny Tools Project README
             color: Navy;
         }
 
+        hr.special
+        {
+            width: 50%;
+            text-align; left;
+        }
+
         pre
         {
             font-family:   "Courier New", monospace;
             font-size:     0.8em;
+            margin-top:    1em;
+            margin-bottom: 1em;
         }
 
         pre.code
@@ -246,11 +254,18 @@ Emacs Tiny Tools Project README
 
             font-family:    "Courier New", monospace;
             font-size:      0.8em;
-
             color:          Navy;
         }
 
         /* //////////////////////// tables /////////////////////////// */
+
+        table
+        {
+            border: none;
+            width: 100%;
+            cellpadding: 10px;
+            cellspacing: 0px;
+        }
 
         table.basic
         {
@@ -326,6 +341,13 @@ Emacs Tiny Tools Project README
             background: #FFFFCC;
         }
 
+        table tr td pre
+        {
+                /*  Make PRE tables "airy" */
+                margin-top:    1em;
+                margin-bottom: 1em;
+        }
+
         table.shade-normal
         {
                 font-family:    "Courier New", monospace;
@@ -351,11 +373,6 @@ Emacs Tiny Tools Project README
         .shade-normal2-attrib
         {
             background: #E0E0F0;
-        }
-
-        table.shade-note
-        {
-            /* nothing special */
         }
 
         .shade-note-attrib
@@ -665,7 +682,7 @@ Emacs Tiny Tools Project README
             font-size: 0.9em;
         }
 
-
+    
 
     </style>
 
@@ -693,7 +710,7 @@ Emacs Tiny Tools Project README
 
     </script>
 
-</head>
+        </head>
 
 <body >
 
@@ -704,15 +721,12 @@ Emacs Tiny Tools Project README
 -->
 
 
+<div class="toc" id="toc">
+<A name="toc" id="toc" class="name"></A>
 <h1>
-    <A name="toc" id="toc" class="name"></A>
-
     Table of Contents
     
 </h1>
-
-<BLOCKQUOTE>
-
 
 <a href="#kit_installation_instructions" class="toc">
                1.0 Kit installation instructions
@@ -741,7 +755,7 @@ Emacs Tiny Tools Project README
            </a>
            <br>
 <li>
-           <a href="#install_from_scratch_without_prior" class="toc">
+           <a href="#install_from_scratch_without_prior_emacs_lisp_package_directory" class="toc">
                1.5 Install from scratch -- without prior Emacs lisp package directory
            </a>
            <br>
@@ -761,7 +775,7 @@ Emacs Tiny Tools Project README
            </a>
            <br>
 <li>
-           <a href="#makefile.mak_obsolete" class="toc">
+           <a href="#makefile_mak_obsolete" class="toc">
                1.9 Makefile.mak (obsolete)
            </a>
            <br>
@@ -810,7 +824,7 @@ Emacs Tiny Tools Project README
            </a>
            <br>
 </ul>
-<a href="#appendix_a_win32_and_unix" class="toc">
+<a href="#appendix_a_win32_and_unix_beginners" class="toc">
                4.0 Appendix A - Win32 and Unix beginners
            </a>
            <br>
@@ -836,8 +850,9 @@ Emacs Tiny Tools Project README
                4.4 Changing environment settings
            </a>
            <br>
-</blockquote>
+</ul>
 
+</div>
 
 
 <!--    ......................................................................
@@ -845,15 +860,12 @@ Emacs Tiny Tools Project README
     ......................................................................
 -->
 
-<blockquote>
-</blockquote>
-           <hr>
+<hr>
                <A name="kit_installation_instructions"  id="kit_installation_instructions"></A>
                <h1>
                1.0 Kit installation instructions
                
                </h1>
-           <blockquote>
 
 
 
@@ -868,9 +880,9 @@ Emacs Tiny Tools Project README
 
 
 
-
+<p>
 <p class="column8">
-        <EM><STRONG>$Id: README.html,v 2.21 2005/04/17 10:55:17 jaalto Exp $</STRONG></EM><br>
+        <EM><STRONG>$Id: README.txt,v 2.36 2006/01/23 12:15:07 jaalto Exp $</STRONG></EM><br>
 
 
 <p class="column8">
@@ -895,20 +907,19 @@ Emacs Tiny Tools Project README
 
 
 
+<p>
+<p class="column8">
         Extract the kit and it will create directory according to the
         version number.
 
 <P>
-<TABLE  class="shade-normal"
-        width="94%"
-        border="0"
-        cellpadding="10"
-        cellspacing="0"
-        >
+<TABLE class="shade-normal">
     <TR>
     <TD class="shade-normal-attrib" valign="top">
     <PRE>
       $ mkdir -p $HOME/elisp/packages/
+      $ mkdir -p $HOME/elisp/config       # configuration settings
+      $ mkdir -p $HOME/tmp                # for temporary files
       $ cd $HOME/elisp/packages/
       $ gzip -dc ~/tmp/download/emacs-tiny-tools*.gz | tar xvf -    </PRE></TD>
     </TR>
@@ -930,7 +941,7 @@ Emacs Tiny Tools Project README
 
 
 
-
+<p>
 <p class="column7"><em><strong>
        1.3.1 Activating the packages</strong></em>
 
@@ -946,17 +957,12 @@ Emacs Tiny Tools Project README
         periodically kept up to date without manual tweaking.
 
 <P>
-<TABLE  class="shade-normal"
-        width="94%"
-        border="0"
-        cellpadding="10"
-        cellspacing="0"
-        >
+<TABLE class="shade-normal">
     <TR>
     <TD class="shade-normal-attrib" valign="top">
     <PRE>
       ;; $HOME/.emacs
-      ;; This line loads package &quot;tinypath.el&quot;. Notice, no file 
+      ;; This line loads package &quot;tinypath.el&quot;. Notice, no file
       ;; extension &quot;.el&quot; is used, it's implicit.
 
       (load &quot;~/elisp/packages/tiny-tools/lisp/tiny/tinypath&quot;)
@@ -994,12 +1000,7 @@ Emacs Tiny Tools Project README
         Let's suppose the hierarchy of lisp files look something like this:
 
 <P>
-<TABLE  class="shade-normal"
-        width="94%"
-        border="0"
-        cellpadding="10"
-        cellspacing="0"
-        >
+<TABLE class="shade-normal">
     <TR>
     <TD class="shade-normal-attrib" valign="top">
     <PRE>
@@ -1025,12 +1026,7 @@ Emacs Tiny Tools Project README
         <em class="word">utility.el</em> and its setup instructions, something like:
 
 <P>
-<TABLE  class="shade-normal"
-        width="94%"
-        border="0"
-        cellpadding="10"
-        cellspacing="0"
-        >
+<TABLE class="shade-normal">
     <TR>
     <TD class="shade-normal-attrib" valign="top">
     <PRE>
@@ -1056,6 +1052,8 @@ Emacs Tiny Tools Project README
 
 
 
+<p>
+<p class="column8">
         If you are owner of your own workstation or administrate the
         current host and you have both XEmacs and Emacs installations; plus
         you have lot of extra Emacs packages that are available form the
@@ -1074,12 +1072,7 @@ Emacs Tiny Tools Project README
         changes will be noticed automatically.
 
 <P>
-<TABLE  class="shade-normal"
-        width="94%"
-        border="0"
-        cellpadding="10"
-        cellspacing="0"
-        >
+<TABLE class="shade-normal">
     <TR>
     <TD class="shade-normal-attrib" valign="top">
     <PRE>
@@ -1109,7 +1102,7 @@ Emacs Tiny Tools Project README
 
 
 
-  <a name="install_from_scratch_without_prior" id="install_from_scratch_without_prior"></a>
+  <a name="install_from_scratch_without_prior_emacs_lisp_package_directory" id="install_from_scratch_without_prior_emacs_lisp_package_directory"></a>
   <h2>
       1.5 Install from scratch &ndash; without prior Emacs lisp package directory
       
@@ -1118,7 +1111,7 @@ Emacs Tiny Tools Project README
 
 
 
-
+<p>
 <p class="column7"><em><strong>
        1.5.1 Preconditions for Unix</strong></em>
 
@@ -1130,18 +1123,12 @@ Emacs Tiny Tools Project README
         packages. Traditionally this has been <samp class="word">$HOME/elisp</samp>. Run command:
 
 <P>
-<TABLE  class="shade-normal"
-        width="94%"
-        border="0"
-        cellpadding="10"
-        cellspacing="0"
-        >
+<TABLE class="shade-normal">
     <TR>
     <TD class="shade-normal-attrib" valign="top">
     <PRE>
-      $ mkdir $HOME/elisp
-      $ mkdir $HOME/elisp/config  # for configuration settings
-      $ mkdir $HOME/tmp           # Make sure this exists for temp files    </PRE></TD>
+      $ mkdir -p $HOME/elisp/config  # for configuration settings
+      $ mkdir -p $HOME/tmp           # for temporary files    </PRE></TD>
     </TR>
 </TABLE>
 
@@ -1157,18 +1144,12 @@ Emacs Tiny Tools Project README
         something like:
 
 <P>
-<TABLE  class="shade-normal"
-        width="94%"
-        border="0"
-        cellpadding="10"
-        cellspacing="0"
-        >
+<TABLE class="shade-normal">
     <TR>
     <TD class="shade-normal-attrib" valign="top">
     <PRE>
-      C:/emacs/emacs-19.34/       # your old Emacs
-      C:/emacs/emacs-20.7.1/      # the new Emacs
-      C:/emacs/emacs-21.3/        # more newer Emacs
+      C:/emacs/emacs-20.7.1/      # some version of Emacs
+      C:/emacs/emacs-21.3/        # newer Emacs
       C:/home/elisp               # your private lisp package dir
 
       dos&gt; c:
@@ -1186,12 +1167,7 @@ Emacs Tiny Tools Project README
         to your <samp class="word">c:\autoexec.bat</samp>:
 
 <P>
-<TABLE  class="shade-normal"
-        width="94%"
-        border="0"
-        cellpadding="10"
-        cellspacing="0"
-        >
+<TABLE class="shade-normal">
     <TR>
     <TD class="shade-normal-attrib" valign="top">
     <PRE>
@@ -1213,12 +1189,7 @@ Emacs Tiny Tools Project README
         would be:
 
 <P>
-<TABLE  class="shade-normal"
-        width="94%"
-        border="0"
-        cellpadding="10"
-        cellspacing="0"
-        >
+<TABLE class="shade-normal">
     <TR>
     <TD class="shade-normal-attrib" valign="top">
     <PRE>
@@ -1237,6 +1208,8 @@ Emacs Tiny Tools Project README
 
 
 
+<p>
+<p class="column8">
         If you choose not to use file <em class="word">tiny-setup.el</em> and function
         <samp class="word">tiny-setup</samp>, you could add following statements to your Emacs
         startup file in <samp class="word">$HOME/.emacs</samp>. The autoload file provide
@@ -1245,12 +1218,7 @@ Emacs Tiny Tools Project README
         commands, because it makes your Emacs start faster.
 
 <P>
-<TABLE  class="shade-normal"
-        width="94%"
-        border="0"
-        cellpadding="10"
-        cellspacing="0"
-        >
+<TABLE class="shade-normal">
     <TR>
     <TD class="shade-normal-attrib" valign="top">
     <PRE>
@@ -1286,6 +1254,8 @@ Emacs Tiny Tools Project README
 
 
 
+<p>
+<p class="column8">
         If you are tight of space or otherwise do not need all the tools or
         if you're only interested in specific package, here are the
         instructions how you use minimum installation. The basic idea is to
@@ -1294,12 +1264,7 @@ Emacs Tiny Tools Project README
         compatibility.
 
 <P>
-<TABLE  class="shade-normal"
-        width="94%"
-        border="0"
-        cellpadding="10"
-        cellspacing="0"
-        >
+<TABLE class="shade-normal">
     <TR>
     <TD class="shade-normal-attrib" valign="top">
     <PRE>
@@ -1324,7 +1289,9 @@ Emacs Tiny Tools Project README
 
 
 
-        FIXME: This will change radically in next release.
+<p>
+<p class="column8">
+        FIXME: This will change future release.
 
 
 <p class="column10"><em class="quote10">
@@ -1332,10 +1299,7 @@ Emacs Tiny Tools Project README
           compile the packages. <strong class="word">Save</strong> <strong class="word">your</strong> <strong class="word">modified</strong> <strong class="word">copy</strong> for
           next installation and use the <samp class="word">-l</samp> switch for the perl
           <em class="word">makefile.pl</em>. It is not strictly needed to compile
-          anything. in fact the maintainer would prefer if you used
-          non-compiled versions of the lisp files. Bug reports from
-          compiled files are useless for tracking the cause of an
-          error.</em>
+          anything, because all lisp files continue to work uncompiled.</em>
 
 
 
@@ -1359,12 +1323,7 @@ Emacs Tiny Tools Project README
         <samp class="word">xemacs</samp> if you're compiling for XEmacs.
 
 <P>
-<TABLE  class="shade-normal"
-        width="94%"
-        border="0"
-        cellpadding="10"
-        cellspacing="0"
-        >
+<TABLE class="shade-normal">
     <TR>
     <TD class="shade-normal-attrib" valign="top">
     <PRE>
@@ -1389,12 +1348,7 @@ Emacs Tiny Tools Project README
         character, in Win32, you just type everything as one line.
 
 <P>
-<TABLE  class="shade-normal"
-        width="94%"
-        border="0"
-        cellpadding="10"
-        cellspacing="0"
-        >
+<TABLE class="shade-normal">
     <TR>
     <TD class="shade-normal-attrib" valign="top">
     <PRE>
@@ -1412,7 +1366,7 @@ Emacs Tiny Tools Project README
 
 
 
-  <a name="makefile.mak_obsolete" id="makefile.mak_obsolete"></a>
+  <a name="makefile_mak_obsolete" id="makefile_mak_obsolete"></a>
   <h2>
       1.9 Makefile.mak (obsolete)
       
@@ -1421,6 +1375,8 @@ Emacs Tiny Tools Project README
 
 
 
+<p>
+<p class="column8">
         The old <em class="word">makefile.mak</em> from very early Unix-only releases has been
         included, but it is not used and no fixes are
         incorporated even if suggested. The file has been kept in the
@@ -1438,6 +1394,8 @@ Emacs Tiny Tools Project README
 
 
 
+<p>
+<p class="column8">
         IT IS IMPORTANT THAT YOU USE NON-COMPILED FILES AND SUBMIT THE
         <em class="word">BACKTRACE</em> Each lisp package has one or two contact functions.
         When you find an error, immediately contact maintainer with the
@@ -1445,17 +1403,12 @@ Emacs Tiny Tools Project README
         <samp class="word">tinyurl</samp> for <em class="word">tinyurl.el</em>
 
 <P>
-<TABLE  class="shade-normal"
-        width="94%"
-        border="0"
-        cellpadding="10"
-        cellspacing="0"
-        >
+<TABLE class="shade-normal">
     <TR>
     <TD class="shade-normal-attrib" valign="top">
     <PRE>
-      M-x load-library RET package.el RET             # load non-compiled
-      M-x turn-on-emacs-debug RET                     # From tinyliba.el
+      M-x load-library RET package.el RET    # load non-compiled
+      M-x turn-on-emacs-debug RET            # From tinyliba.el
 
       ...  repeat what you did until the point of error ...
 
@@ -1467,14 +1420,12 @@ Emacs Tiny Tools Project README
     </TR>
 </TABLE>
 
-</blockquote>
-           <hr>
+<hr>
                <A name="project_information"  id="project_information"></A>
                <h1>
                2.0 Project information
                
                </h1>
-           <blockquote>
 
 
 
@@ -1487,6 +1438,8 @@ Emacs Tiny Tools Project README
 
 
 
+<p>
+<p class="column8">
         The first package made was <em class="word">tinyappend.el</em>, a simple utility to
         gather selected areas of text somewhere convenient. Since then the
         prefix &quot;tiny&quot; has been preserved in front of every lisp file. The
@@ -1503,6 +1456,8 @@ Emacs Tiny Tools Project README
 
 
 
+<p>
+<p class="column8">
         The life with Emacs evolved in the direction called &quot;Tiny Tools&quot;;
         modules that got initially written in the past years starting with
         Emacs 18.59 and after that with 19.28. The current code is aimed to
@@ -1515,9 +1470,10 @@ Emacs Tiny Tools Project README
 	<li>Henk SPG &lt;tank AT xs4all.nl&gt; who had courage to take early v1.6x
             TinyPgp in XEmacs. I got very good feedback and bug tracing
             assistance from him.
-	<li>Samuel Tardieu &lt;sam AT inf.enst.fr&gt; has been a key figure
+<li>Samuel Tardieu &lt;sam AT inf.enst.fr&gt; has been a key figure
             in  testing the PGP interfaces with 2.6.x and 5.x in Unix.
-	<li>Dan Rich &lt;drich AT cisco.com&gt; who assisted me with solving the
+	</li>
+<li>Dan Rich &lt;drich AT cisco.com&gt; who assisted me with solving the
             XEmacs 20-21.x incompatibility problems. The correction cycle
             rolled out changes that caused rewriting my other packages too.
             In addition he suggested many other new features I didn't think
@@ -1525,34 +1481,35 @@ Emacs Tiny Tools Project README
             maintainers and if that's not all, he also made sure the
             packages worked in VM. I'm very happy that Dan came into
             picture.
-	<li>Sami Khoury &lt;skhoury AT omnisig.com&gt; tried every new tiny tools
+	</li>
+<li>Sami Khoury &lt;skhoury AT omnisig.com&gt; tried every new tiny tools
             release and reported any byte compiler errors with latest Emacs
             releases. He also suggested many improvements, many new
             features to add and sent patches. Without Sami, I would have
             not been able to know how things work in Emacs 20.x and 21.x.
             Sami was the ears and eyes in the bleeding edge Emacs
             development till the FSF opened their Emacs CVS server.
-	<li>David x callaway &lt;dxc AT xprt.net&gt; joined the team somewhere 2000-10
+	</li>
+<li>David x callaway &lt;dxc AT xprt.net&gt; joined the team somewhere 2000-10
             and kept asking, suggesting and reporting improvements in rapid
             fashion. That's what is needed to make all tools better. Thank
             you David, Don't stop bugging the maintainer <em class="word">smile</em>.
-	<li>Luis Miguel Hernanz Iglesias &lt;luish AT germinus.com&gt; got
+	</li>
+<li>Luis Miguel Hernanz Iglesias &lt;luish AT germinus.com&gt; got
             interested in 2000-10 and was fascinated with the TinyPath
             (new utility) which made Emacs lisp package path configuration
             a joy. He joined the development and sent lof of patches and
-	            squeezed many bugs from TinyPath. I'm impressed!
+	            squeezed many bugs from TinyPath. I'm impressed!</li>
 </ul>
 
 
 
-</blockquote>
-           <hr>
+<hr>
                <A name="further_reading_about_loading_packages"  id="further_reading_about_loading_packages"></A>
                <h1>
                3.0 Further reading &ndash; about loading packages
                
                </h1>
-           <blockquote>
 
 
 
@@ -1565,11 +1522,11 @@ Emacs Tiny Tools Project README
 
 
 
-
+<p>
 <p class="column10"><em class="quote10">
           Please read these instructions with some salt, because the
-          maintainer is not 100% sure of the accuracy of this explanation.
-          Please feel free to suggest corrections to this text.</em>
+          they may not be 100% accurate for later Emacs versions.
+          Feel free to suggest corrections to this text.</em>
 
 
 
@@ -1581,12 +1538,7 @@ Emacs Tiny Tools Project README
         the normal compilation. If you say
 
 <P>
-<TABLE  class="shade-normal"
-        width="94%"
-        border="0"
-        cellpadding="10"
-        cellspacing="0"
-        >
+<TABLE class="shade-normal">
     <TR>
     <TD class="shade-normal-attrib" valign="top">
     <PRE>
@@ -1617,12 +1569,7 @@ Emacs Tiny Tools Project README
         don't do this:
 
 <P>
-<TABLE  class="shade-normal"
-        width="94%"
-        border="0"
-        cellpadding="10"
-        cellspacing="0"
-        >
+<TABLE class="shade-normal">
     <TR>
     <TD class="shade-normal-attrib" valign="top">
     <PRE>
@@ -1636,12 +1583,7 @@ Emacs Tiny Tools Project README
         library:
 
 <P>
-<TABLE  class="shade-normal"
-        width="94%"
-        border="0"
-        cellpadding="10"
-        cellspacing="0"
-        >
+<TABLE class="shade-normal">
     <TR>
     <TD class="shade-normal-attrib" valign="top">
     <PRE>
@@ -1657,12 +1599,7 @@ Emacs Tiny Tools Project README
         have to worry about the location of a particular function
 
 <P>
-<TABLE  class="shade-normal"
-        width="94%"
-        border="0"
-        cellpadding="10"
-        cellspacing="0"
-        >
+<TABLE class="shade-normal">
     <TR>
     <TD class="shade-normal-attrib" valign="top">
     <PRE>
@@ -1683,16 +1620,13 @@ Emacs Tiny Tools Project README
 
 
 
+<p>
+<p class="column8">
         When you install packages, try to avoid loading them from your
         $HOME/.emacs like this
 
 <P>
-<TABLE  class="shade-normal"
-        width="94%"
-        border="0"
-        cellpadding="10"
-        cellspacing="0"
-        >
+<TABLE class="shade-normal">
     <TR>
     <TD class="shade-normal-attrib" valign="top">
     <PRE>
@@ -1736,6 +1670,8 @@ Emacs Tiny Tools Project README
 
 
 
+<p>
+<p class="column8">
         New Emacs releases 19.34+ come with the package <em class="word">defcustom.el</em>
         bundled. If you have limited lisp skills or if you want an
         easy interface to packages' variables, then you can customize
@@ -1743,12 +1679,7 @@ Emacs Tiny Tools Project README
         key:
 
 <P>
-<TABLE  class="shade-normal"
-        width="94%"
-        border="0"
-        cellpadding="10"
-        cellspacing="0"
-        >
+<TABLE class="shade-normal">
     <TR>
     <TD class="shade-normal-attrib" valign="top">
     <PRE>
@@ -1756,14 +1687,12 @@ Emacs Tiny Tools Project README
     </TR>
 </TABLE>
 
-</blockquote>
-           <hr>
-               <A name="appendix_a_win32_and_unix"  id="appendix_a_win32_and_unix"></A>
+<hr>
+               <A name="appendix_a_win32_and_unix_beginners"  id="appendix_a_win32_and_unix_beginners"></A>
                <h1>
                4.0 Appendix A - Win32 and Unix beginners
                
                </h1>
-           <blockquote>
 
 
 
@@ -1776,17 +1705,14 @@ Emacs Tiny Tools Project README
 
 
 
+<p>
+<p class="column8">
         If you're just starting to use Windows or have never heard of Unix,
         here is a short course of the terms and lingo you see all the time
         in the documentation:
 
 <P>
-<TABLE  class="shade-normal"
-        width="94%"
-        border="0"
-        cellpadding="10"
-        cellspacing="0"
-        >
+<TABLE class="shade-normal">
     <TR>
     <TD class="shade-normal-attrib" valign="top">
     <PRE>
@@ -1807,17 +1733,14 @@ Emacs Tiny Tools Project README
 
 
 
+<p>
+<p class="column8">
         The shell (DOS in Win32) where you type the command does not usually
         matter, but the command you see may not be available in Win32. A crash
         course would be:
 
 <P>
-<TABLE  class="shade-normal"
-        width="94%"
-        border="0"
-        cellpadding="10"
-        cellspacing="0"
-        >
+<TABLE class="shade-normal">
     <TR>
     <TD class="shade-normal-attrib" valign="top">
     <PRE>
@@ -1842,12 +1765,7 @@ Emacs Tiny Tools Project README
         double quotes.
 
 <P>
-<TABLE  class="shade-normal"
-        width="94%"
-        border="0"
-        cellpadding="10"
-        cellspacing="0"
-        >
+<TABLE class="shade-normal">
     <TR>
     <TD class="shade-normal-attrib" valign="top">
     <PRE>
@@ -1866,17 +1784,14 @@ Emacs Tiny Tools Project README
 
 
 
+<p>
+<p class="column8">
         In Win32, the perl file (.pl) must be called differently than in
         Unix. In Unix you must make the files executable and it can be
         called directly using the name.
 
 <P>
-<TABLE  class="shade-normal"
-        width="94%"
-        border="0"
-        cellpadding="10"
-        cellspacing="0"
-        >
+<TABLE class="shade-normal">
     <TR>
     <TD class="shade-normal-attrib" valign="top">
     <PRE>
@@ -1896,12 +1811,7 @@ Emacs Tiny Tools Project README
         following calls would also work in any environment:
 
 <P>
-<TABLE  class="shade-normal"
-        width="94%"
-        border="0"
-        cellpadding="10"
-        cellspacing="0"
-        >
+<TABLE class="shade-normal">
     <TR>
     <TD class="shade-normal-attrib" valign="top">
     <PRE>
@@ -1921,16 +1831,13 @@ Emacs Tiny Tools Project README
 
 
 
+<p>
+<p class="column8">
         The environment variables in Unix are prefixed with dollar and
         written in all caps, like talking about $PATH. Read it like this:
 
 <P>
-<TABLE  class="shade-normal"
-        width="94%"
-        border="0"
-        cellpadding="10"
-        cellspacing="0"
-        >
+<TABLE class="shade-normal">
     <TR>
     <TD class="shade-normal-attrib" valign="top">
     <PRE>
@@ -1944,12 +1851,7 @@ Emacs Tiny Tools Project README
         is different:
 
 <P>
-<TABLE  class="shade-normal"
-        width="94%"
-        border="0"
-        cellpadding="10"
-        cellspacing="0"
-        >
+<TABLE class="shade-normal">
     <TR>
     <TD class="shade-normal-attrib" valign="top">
     <PRE>
@@ -1971,20 +1873,19 @@ Emacs Tiny Tools Project README
     ......................................................................
 -->
 
-</blockquote>
 <hr>
 <em    class="footer">
 <p>
-Copyright &copy; 2005 by Jari Aalto. This material may be
+Copyright &copy; 2007 by jaalto. This material may be
 distributed subject to the terms and conditions set forth
 in the Creative commons Attribution-ShareAlike License.
 See http://creativecommons.org/
 <p>
 This file has been automatically generated from plain text file
-with Perl script <strong>t2html.pl v2005.0208</strong><br>
-Document author: Jari Aalto<br>
+with Perl script <strong>t2html.pl v2007.0526</strong><br>
+Document author: jaalto<br>
 Url: <a href="http://tiny-tools.sourceforge.net">http://tiny-tools.sourceforge.net</a><br>
-Last updated: 2005-04-01 09:00<br>
+Last updated: 2007-09-02 12:00<br>
 </em    class="footer">
 </body>
 </html>

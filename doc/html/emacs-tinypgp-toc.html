@@ -1,13 +1,13 @@
-<!DOCTYPE HTML PUBLIC "-//W3C//DTD HTML 4.0 Frameset//EN"
-          "http://www.w3.org/TR/REC-html40/frameset.dtd">
+<!DOCTYPE HTML PUBLIC "-//W3C//DTD HTML 4.01 Transitional//EN">
 
-<HTML>
 
-<HEAD>
+<html>
 
-    <TITLE>
+<head>
+
+    <title>
     Navigation
-    </TITLE>
+    </title>
 
 
 
@@ -16,29 +16,26 @@
     ......................................................................
 -->
 
-  <META HTTP-EQUIV="description"
-	CONTENT="">
+  <meta http-equiv="description"
+	content="">
+
+<meta http-equiv="Content-Type" content="text/html; charset=utf-8">
+  <meta http-equiv="Expires" content="Thu,  1 Nov 2007 09:05:36 GMT">
+
+  <meta http-equiv="Author"
+	content="jaalto">
 
 
-  <META HTTP-EQUIV="Content-Type" CONTENT="text/html; CHARSET=utf-8">
 
-  <META HTTP-EQUIV="Expires" CONTENT="Fri,  4 Jun 2004 12:00:14 GMT">
-
-  <META HTTP-EQUIV="Author"
-	CONTENT="Jari Aalto">
+  <meta name="Generator"
+	content="2007-09-02 12:05 Perl program t2html.pl v2007.0526 http://perl-text2html.sourceforge.net/">
 
 
-  <META HTTP-EQUIV="Made"
-	CONTENT="mailto:jari dot aalto A T cante dt net">
+  <base target="body">
 
 
-  <META NAME="Generator"
-	CONTENT="2004-04-05 12:00 Perl program t2html.pl v2004.0330 http://perl-text2html.sourceforge.net/">
+    <style type="text/css">
 
-
-  <BASE TARGET="body">
-
-    <STYLE TYPE="text/css">
 
 
         /*
@@ -121,7 +118,6 @@
             padding-top: 10pt;
         }
 
-
         h2.default
         {
             font-family: bold large Arial,Helvetica,Sans-serif;
@@ -136,7 +132,6 @@
         {
             font-family: medium Arial,Helvetica,Sans-serif;
         }
-
 
         /*   ////////////////////////// Make pointing AHREF more visual */
 
@@ -213,7 +208,7 @@
 
         blockquote
         {
-            margin-right: 0;
+            margin-right: 2em;
         }
 
         @media print   { BLOCKQUOTE
@@ -226,10 +221,18 @@
             color: Navy;
         }
 
+        hr.special
+        {
+            width: 50%;
+            text-align; left;
+        }
+
         pre
         {
             font-family:   "Courier New", monospace;
             font-size:     0.8em;
+            margin-top:    1em;
+            margin-bottom: 1em;
         }
 
         pre.code
@@ -247,18 +250,24 @@
 
             font-family:    "Courier New", monospace;
             font-size:      0.8em;
-
             color:          Navy;
         }
 
         /* //////////////////////// tables /////////////////////////// */
+
+        table
+        {
+            border: none;
+            width: 100%;
+            cellpadding: 10px;
+            cellspacing: 0px;
+        }
 
         table.basic
         {
                 font-family:    "Courier New", monospace;
                 color: Navy;
         }
-
 
         table.dashed
         {
@@ -279,7 +288,6 @@
                 /* line-height: 105%; */
         }
 
-
         table.solid
         {
                 font-family:    "Courier New", monospace;
@@ -296,7 +304,6 @@
                 border-bottom:  1px #666666 solid; /* dark grey */
                 /* line-height: 105%; */
         }
-
 
         /* Make 3D styled layout by thickening the boton + right. */
 
@@ -317,7 +324,6 @@
                 /* line-height: 105%; */
         }
 
-
         .shade-3d-attrib
         {
             /*
@@ -331,6 +337,12 @@
             background: #FFFFCC;
         }
 
+        table tr td pre
+        {
+                /*  Make PRE tables "airy" */
+                margin-top:    1em;
+                margin-bottom: 1em;
+        }
 
         table.shade-normal
         {
@@ -344,10 +356,10 @@
             /*  grey: EAEAEA, F0F0F0 FFFFCC
                 lime: F7F7DE CCFFCC
                 pinkish: E6F1FD D8E9FB C6DEFA FFEEFF (light ... darker)
+                slightly darker than F1F1F1: #EFEFEF;
             */
-            background: #EFEFEF;
+            background: #F1F1F1;
         }
-
 
         table.shade-normal2
         {
@@ -359,19 +371,13 @@
             background: #E0E0F0;
         }
 
-
-        table.shade-note
-        {
-            /* nothing special */
-        }
-
-
         .shade-note-attrib
         {
             /*  darker is #E0E0F0; */
             /* background: #E5ECF3; */
             background: #E5ECF3;
-            font-family: Georgia, Palatino, Verdana, Arial, Helvetica;
+            font-family: Georgia, "New Century Schoolbook",
+                         Palatino, Verdana, Helvetica, serif;
             font-size: 0.8em;
         }
 
@@ -417,12 +423,17 @@
             background: #FAFACA;
         }
 
+        .color-beige3
+        {
+            color: Navy;
+            background: #F5F5E9;
+        }
+
         .color-beige-dark
         {
             color: Navy;
             background: #CFEFBD;
         }
-
 
         .color-pink-dark
         {
@@ -448,6 +459,15 @@
             background: #FFEEFF;
         }
 
+        .color-blue-light
+        {
+            background: #F0F0FF;
+        }
+
+        .color-blue-medium
+        {
+            background: #4A88BE;
+        }
 
         /* ////////////////////////////////////////////// Format columns */
 
@@ -472,7 +492,8 @@
             font-family: "Goudy Old Style"
             */
             margin-left: 3em;
-            font-family: Georgia, Palatino, Verdana, Arial, Helvetica;
+            font-family: Georgia, "New Century Schoolbook",
+                         Palatino, Verdana, Arial, Helvetica;
             font-size:  0.9em;
         }
 
@@ -605,7 +626,6 @@
             font-size: 0.8em;
         }
 
-
         span.word-ref
         {
             color: teal;
@@ -626,7 +646,7 @@
 
         /* /////////////////////////////////////////////// Format other */
 
-                /* 7th column starting with double quote */
+        /* 7th column starting with double quote */
 
         span.quote7
         {
@@ -637,38 +657,35 @@
             font-size: 1em;
         }
 
-                /* This appears in FRAME version: xxx-toc.html */
+        /* This appears in FRAME version: xxx-toc.html */
 
         div.toc
         {
             font-size: 0.8em;
         }
 
-                /* This appears in picture: the acption text beneath */
+        /* This appears in picture: the acption text beneath */
 
         div.picture
         {
             font-style: italic;
         }
 
-
-                /* This is the document info footer */
+        /* This is the document info footer */
 
         em.footer
         {
             font-size: 0.9em;
         }
 
-        END: Hide from older browsers
+    
 
-
-
-    </STYLE>
+    </style>
 
 
     <!-- ...................................................... Java code -->
 
-    <SCRIPT TYPE="text/javascript">
+    <script type="text/javascript">
 
         function MakeVisual(obj)
         {
@@ -687,638 +704,640 @@
 
         window.onerror = IgnoreErrors;
 
-    </SCRIPT>
+    </script>
 
-</HEAD>
-<BODY>
-<DIV class="TOC">
-<A HREF="emacs-tinypgp-body.html#document_id" class="toc" >
+        </head>
+<body>
+<div class="TOC">
+<a href="emacs-tinypgp-body.html#document_id" class="toc">
                1.0 Document id
-           </A>
-           <BR>
+           </a>
+           <br>
 
-<UL>
-<LI>
-           <A HREF="emacs-tinypgp-body.html#description_of_this_document" class="toc" >
+<ul>
+<li>
+           <a href="emacs-tinypgp-body.html#description_of_this_document" class="toc">
                1.1 Description of this document
-           </A>
-           <BR>
-<LI>
-           <A HREF="emacs-tinypgp-body.html#latest_news" class="toc" >
+           </a>
+           <br>
+<li>
+           <a href="emacs-tinypgp-body.html#latest_news" class="toc">
                1.2 Latest news
-           </A>
-           <BR>
-<LI>
-           <A HREF="emacs-tinypgp-body.html#just_added_features" class="toc" >
+           </a>
+           <br>
+<li>
+           <a href="emacs-tinypgp-body.html#just_added_features" class="toc">
                1.3 Just added features
-           </A>
-           <BR>
-<LI>
-           <A HREF="emacs-tinypgp-body.html#overview_of_general_features" class="toc" >
+           </a>
+           <br>
+<li>
+           <a href="emacs-tinypgp-body.html#overview_of_general_features" class="toc">
                1.4 Overview of general features
-           </A>
-           <BR>
-<LI>
-           <A HREF="emacs-tinypgp-body.html#overview_of_advanced_features" class="toc" >
+           </a>
+           <br>
+<li>
+           <a href="emacs-tinypgp-body.html#overview_of_advanced_features" class="toc">
                1.5 Overview of advanced features
-           </A>
-           <BR>
-<LI>
-           <A HREF="emacs-tinypgp-body.html#supported_packages" class="toc" >
+           </a>
+           <br>
+<li>
+           <a href="emacs-tinypgp-body.html#supported_packages" class="toc">
                1.6 Supported packages
-           </A>
-           <BR>
-<LI>
-           <A HREF="emacs-tinypgp-body.html#support_for_anonymous_accounts" class="toc" >
+           </a>
+           <br>
+<li>
+           <a href="emacs-tinypgp-body.html#support_for_anonymous_accounts" class="toc">
                1.7 Support for anonymous accounts
-           </A>
-           <BR>
-<LI>
-           <A HREF="emacs-tinypgp-body.html#preface" class="toc" >
+           </a>
+           <br>
+<li>
+           <a href="emacs-tinypgp-body.html#preface" class="toc">
                1.8 Preface
-           </A>
-           <BR>
-</UL>
-<A HREF="emacs-tinypgp-body.html#installation" class="toc" >
+           </a>
+           <br>
+</ul>
+<a href="emacs-tinypgp-body.html#installation" class="toc">
                2.0 Installation
-           </A>
-           <BR>
+           </a>
+           <br>
 
-<UL>
-<LI>
-           <A HREF="emacs-tinypgp-body.html#download" class="toc" >
+<ul>
+<li>
+           <a href="emacs-tinypgp-body.html#download" class="toc">
                2.1 Download
-           </A>
-           <BR>
-<LI>
-           <A HREF="emacs-tinypgp-body.html#before_you_install_anything" class="toc" >
+           </a>
+           <br>
+<li>
+           <a href="emacs-tinypgp-body.html#before_you_install_anything" class="toc">
                2.2 Before you install anything
-           </A>
-           <BR>
-<LI>
-           <A HREF="emacs-tinypgp-body.html#how_to_debug_and_send" class="toc" >
+           </a>
+           <br>
+<li>
+           <a href="emacs-tinypgp-body.html#how_to_debug_and_send_good_bug_reports" class="toc">
                2.3 How to debug and send good bug reports
-           </A>
-           <BR>
-<LI>
-           <A HREF="emacs-tinypgp-body.html#install_to_emacs" class="toc" >
+           </a>
+           <br>
+<li>
+           <a href="emacs-tinypgp-body.html#install_to_emacs" class="toc">
                2.4 Install: to emacs
-           </A>
-           <BR>
-<LI>
-           <A HREF="emacs-tinypgp-body.html#install_pgp_win32_binaries_download" class="toc" >
+           </a>
+           <br>
+<li>
+           <a href="emacs-tinypgp-body.html#install_pgp_win32_binaries_download" class="toc">
                2.5 Install: PGP win32 binaries download
-           </A>
-           <BR>
-<LI>
-           <A HREF="emacs-tinypgp-body.html#install_pgp_win32_settings" class="toc" >
+           </a>
+           <br>
+<li>
+           <a href="emacs-tinypgp-body.html#install_pgp_win32_settings" class="toc">
                2.6 Install: PGP win32 settings
-           </A>
-           <BR>
-<LI>
-           <A HREF="emacs-tinypgp-body.html#install_pgp_5.x" class="toc" >
+           </a>
+           <br>
+<li>
+           <a href="emacs-tinypgp-body.html#install_pgp_5_x" class="toc">
                2.7 Install: PGP 5.x
-           </A>
-           <BR>
-<LI>
-           <A HREF="emacs-tinypgp-body.html#install_gnu_privacy_guard_gpg" class="toc" >
+           </a>
+           <br>
+<li>
+           <a href="emacs-tinypgp-body.html#install_gnu_privacy_guard_gpg" class="toc">
                2.8 Install: Gnu Privacy Guard GPG
-           </A>
-           <BR>
-<LI>
-           <A HREF="emacs-tinypgp-body.html#install_gnus" class="toc" >
+           </a>
+           <br>
+<li>
+           <a href="emacs-tinypgp-body.html#install_gnus" class="toc">
                2.9 Install: GNUS
-           </A>
-           <BR>
-<LI>
-           <A HREF="emacs-tinypgp-body.html#install_vm" class="toc" >
+           </a>
+           <br>
+<li>
+           <a href="emacs-tinypgp-body.html#install_vm" class="toc">
                2.10 Install: VM
-           </A>
-           <BR>
-<LI>
-           <A HREF="emacs-tinypgp-body.html#install_remailers" class="toc" >
+           </a>
+           <br>
+<li>
+           <a href="emacs-tinypgp-body.html#install_remailers" class="toc">
                2.11 Install: remailers
-           </A>
-           <BR>
-<LI>
-           <A HREF="emacs-tinypgp-body.html#using_custom.el" class="toc" >
+           </a>
+           <br>
+<li>
+           <a href="emacs-tinypgp-body.html#using_custom_el" class="toc">
                2.12 Using custom.el
-           </A>
-           <BR>
-<LI>
-           <A HREF="emacs-tinypgp-body.html#using_customization_file_for_package" class="toc" >
+           </a>
+           <br>
+<li>
+           <a href="emacs-tinypgp-body.html#using_customization_file_for_package_setup" class="toc">
                2.13 Using customization file for package setup
-           </A>
-           <BR>
-<LI>
-           <A HREF="emacs-tinypgp-body.html#express_customization" class="toc" >
+           </a>
+           <br>
+<li>
+           <a href="emacs-tinypgp-body.html#express_customization" class="toc">
                2.14 Express customization
-           </A>
-           <BR>
-<LI>
-           <A HREF="emacs-tinypgp-body.html#cooperating_with_bbdb" class="toc" >
+           </a>
+           <br>
+<li>
+           <a href="emacs-tinypgp-body.html#cooperating_with_bbdb" class="toc">
                2.15 Co-operating with BBDB
-           </A>
-           <BR>
-</UL>
-<A HREF="emacs-tinypgp-body.html#about_security" class="toc" >
+           </a>
+           <br>
+</ul>
+<a href="emacs-tinypgp-body.html#about_security" class="toc">
                3.0 About security
-           </A>
-           <BR>
+           </a>
+           <br>
 
-<UL>
-<LI>
-           <A HREF="emacs-tinypgp-body.html#pass_phrases" class="toc" >
+<ul>
+<li>
+           <a href="emacs-tinypgp-body.html#pass_phrases" class="toc">
                3.1 Pass phrases
-           </A>
-           <BR>
-<LI>
-           <A HREF="emacs-tinypgp-body.html#locking_your_emacs" class="toc" >
+           </a>
+           <br>
+<li>
+           <a href="emacs-tinypgp-body.html#locking_your_emacs" class="toc">
                3.2 Locking your Emacs
-           </A>
-           <BR>
-<LI>
-           <A HREF="emacs-tinypgp-body.html#special_password_protection" class="toc" >
+           </a>
+           <br>
+<li>
+           <a href="emacs-tinypgp-body.html#special_password_protection" class="toc">
                3.3 Special password protection
-           </A>
-           <BR>
-<LI>
-           <A HREF="emacs-tinypgp-body.html#temporary_files_used" class="toc" >
+           </a>
+           <br>
+<li>
+           <a href="emacs-tinypgp-body.html#temporary_files_used" class="toc">
                3.4 Temporary files used
-           </A>
-           <BR>
-</UL>
-<A HREF="emacs-tinypgp-body.html#feature_description_pgp" class="toc" >
+           </a>
+           <br>
+</ul>
+<a href="emacs-tinypgp-body.html#feature_description_pgp" class="toc">
                4.0 Feature description: PGP
-           </A>
-           <BR>
+           </a>
+           <br>
 
-<UL>
-<LI>
-           <A HREF="emacs-tinypgp-body.html#modeline_indicators" class="toc" >
+<ul>
+<li>
+           <a href="emacs-tinypgp-body.html#modeline_indicators" class="toc">
                4.1 Modeline indicators
-           </A>
-           <BR>
-<LI>
-           <A HREF="emacs-tinypgp-body.html#label_indicators" class="toc" >
+           </a>
+           <br>
+<li>
+           <a href="emacs-tinypgp-body.html#label_indicators" class="toc">
                4.2 Label indicators
-           </A>
-           <BR>
-<LI>
-           <A HREF="emacs-tinypgp-body.html#automating_message_signing_and_encrypting" class="toc" >
+           </a>
+           <br>
+<li>
+           <a href="emacs-tinypgp-body.html#automating_message_signing_and_encrypting" class="toc">
                4.3 Automating message signing and encrypting
-           </A>
-           <BR>
-<LI>
-           <A HREF="emacs-tinypgp-body.html#automating_bulk_message_encrypting" class="toc" >
+           </a>
+           <br>
+<li>
+           <a href="emacs-tinypgp-body.html#automating_bulk_message_encrypting" class="toc">
                4.4 Automating bulk message encrypting
-           </A>
-           <BR>
-<LI>
-           <A HREF="emacs-tinypgp-body.html#signing_headers" class="toc" >
+           </a>
+           <br>
+<li>
+           <a href="emacs-tinypgp-body.html#signing_headers" class="toc">
                4.5 Signing: headers
-           </A>
-           <BR>
-<LI>
-           <A HREF="emacs-tinypgp-body.html#signing_what_headers_to_sign." class="toc" >
+           </a>
+           <br>
+<li>
+           <a href="emacs-tinypgp-body.html#signing_what_headers_to_sign" class="toc">
                4.6 Signing: What headers to sign.
-           </A>
-           <BR>
-<LI>
-           <A HREF="emacs-tinypgp-body.html#signing_header_signing_control" class="toc" >
+           </a>
+           <br>
+<li>
+           <a href="emacs-tinypgp-body.html#signing_header_signing_control" class="toc">
                4.7 Signing: header signing control
-           </A>
-           <BR>
-<LI>
-           <A HREF="emacs-tinypgp-body.html#about_passing_prefix_argument_to" class="toc" >
+           </a>
+           <br>
+<li>
+           <a href="emacs-tinypgp-body.html#about_passing_prefix_argument_to_commands" class="toc">
                4.8 About passing prefix argument to commands
-           </A>
-           <BR>
-<LI>
-           <A HREF="emacs-tinypgp-body.html#decrypting_and_prefix_arg" class="toc" >
+           </a>
+           <br>
+<li>
+           <a href="emacs-tinypgp-body.html#decrypting_and_prefix_arg" class="toc">
                4.9 Decrypting and prefix arg
-           </A>
-           <BR>
-<LI>
-           <A HREF="emacs-tinypgp-body.html#decrypting_and_active_user" class="toc" >
+           </a>
+           <br>
+<li>
+           <a href="emacs-tinypgp-body.html#decrypting_and_active_user" class="toc">
                4.10 Decrypting and active user
-           </A>
-           <BR>
-<LI>
-           <A HREF="emacs-tinypgp-body.html#hiding_the_regular_pgp_signature" class="toc" >
+           </a>
+           <br>
+<li>
+           <a href="emacs-tinypgp-body.html#hiding_the_regular_pgp_signature_automatically" class="toc">
                4.11 Hiding the regular pgp signature automatically
-           </A>
-           <BR>
-<LI>
-           <A HREF="emacs-tinypgp-body.html#keyserver_various_ways_to_get" class="toc" >
+           </a>
+           <br>
+<li>
+           <a href="emacs-tinypgp-body.html#keyserver_various_ways_to_get_pgp_public_keys" class="toc">
                4.12 Keyserver: various ways to get PGP public keys
-           </A>
-           <BR>
-<LI>
-           <A HREF="emacs-tinypgp-body.html#keyserver_uploading_your_key_or" class="toc" >
+           </a>
+           <br>
+<li>
+           <a href="emacs-tinypgp-body.html#keyserver_uploading_your_key_or_send_key_revoke_certificate" class="toc">
                4.13 Keyserver: uploading your key or send key revoke certificate
-           </A>
-           <BR>
-<LI>
-           <A HREF="emacs-tinypgp-body.html#pubring_and_user_control" class="toc" >
+           </a>
+           <br>
+<li>
+           <a href="emacs-tinypgp-body.html#pubring_and_user_control" class="toc">
                4.14 Pubring and User control
-           </A>
-           <BR>
-<LI>
-           <A HREF="emacs-tinypgp-body.html#pubring_management" class="toc" >
+           </a>
+           <br>
+<li>
+           <a href="emacs-tinypgp-body.html#pubring_management" class="toc">
                4.15 Pubring management
-           </A>
-           <BR>
-<LI>
-           <A HREF="emacs-tinypgp-body.html#mode_encrypted_secring" class="toc" >
+           </a>
+           <br>
+<li>
+           <a href="emacs-tinypgp-body.html#mode_encrypted_secring" class="toc">
                4.16 Mode: encrypted secring
-           </A>
-           <BR>
-<LI>
-           <A HREF="emacs-tinypgp-body.html#mode_auto_signing" class="toc" >
+           </a>
+           <br>
+<li>
+           <a href="emacs-tinypgp-body.html#mode_auto_signing" class="toc">
                4.17 Mode: auto signing
-           </A>
-           <BR>
-<LI>
-           <A HREF="emacs-tinypgp-body.html#mode_auto_signing_more_finer" class="toc" >
+           </a>
+           <br>
+<li>
+           <a href="emacs-tinypgp-body.html#mode_auto_signing_more_finer_control" class="toc">
                4.18 Mode: auto signing, more finer control
-           </A>
-           <BR>
-<LI>
-           <A HREF="emacs-tinypgp-body.html#mode_email_substitution" class="toc" >
+           </a>
+           <br>
+<li>
+           <a href="emacs-tinypgp-body.html#mode_email_substitution" class="toc">
                4.19 Mode: email substitution
-           </A>
-           <BR>
-<LI>
-           <A HREF="emacs-tinypgp-body.html#mode_selected_headers_are_signed" class="toc" >
+           </a>
+           <br>
+<li>
+           <a href="emacs-tinypgp-body.html#mode_selected_headers_are_signed" class="toc">
                4.20 Mode: selected headers are signed
-           </A>
-           <BR>
-<LI>
-           <A HREF="emacs-tinypgp-body.html#anonymizing_message_headers" class="toc" >
+           </a>
+           <br>
+<li>
+           <a href="emacs-tinypgp-body.html#anonymizing_message_headers" class="toc">
                4.21 Anonymizing message headers
-           </A>
-           <BR>
-</UL>
-<A HREF="emacs-tinypgp-body.html#feature_description_remailers" class="toc" >
+           </a>
+           <br>
+</ul>
+<a href="emacs-tinypgp-body.html#feature_description_remailers" class="toc">
                5.0 Feature description: remailers
-           </A>
-           <BR>
+           </a>
+           <br>
 
-<UL>
-<LI>
-           <A HREF="emacs-tinypgp-body.html#enabling_remailer_support" class="toc" >
+<ul>
+<li>
+           <a href="emacs-tinypgp-body.html#enabling_remailer_support" class="toc">
                5.1 Enabling remailer support
-           </A>
-           <BR>
-<LI>
-           <A HREF="emacs-tinypgp-body.html#before_you_use_remailer_interface" class="toc" >
+           </a>
+           <br>
+<li>
+           <a href="emacs-tinypgp-body.html#before_you_use_remailer_interface" class="toc">
                5.2 Before you use remailer interface
-           </A>
-           <BR>
-<LI>
-           <A HREF="emacs-tinypgp-body.html#reply_block_do_you_need" class="toc" >
+           </a>
+           <br>
+<li>
+           <a href="emacs-tinypgp-body.html#reply_block_do_you_need_it" class="toc">
                5.3 Reply block: do you need it?
-           </A>
-           <BR>
-<LI>
-           <A HREF="emacs-tinypgp-body.html#reply_block_basics" class="toc" >
+           </a>
+           <br>
+<li>
+           <a href="emacs-tinypgp-body.html#reply_block_basics" class="toc">
                5.4 Reply block: basics
-           </A>
-           <BR>
-<LI>
-           <A HREF="emacs-tinypgp-body.html#about_properties_cpunk_ek_pgp" class="toc" >
+           </a>
+           <br>
+<li>
+           <a href="emacs-tinypgp-body.html#about_properties_cpunk_ek_pgp" class="toc">
                5.5 About properties: cpunk ek pgp
-           </A>
-           <BR>
-<LI>
-           <A HREF="emacs-tinypgp-body.html#remailer_list_levien_list" class="toc" >
+           </a>
+           <br>
+<li>
+           <a href="emacs-tinypgp-body.html#remailer_list_levien_list" class="toc">
                5.6 Remailer list: levien list
-           </A>
-           <BR>
-<LI>
-           <A HREF="emacs-tinypgp-body.html#reply_block_creating" class="toc" >
+           </a>
+           <br>
+<li>
+           <a href="emacs-tinypgp-body.html#reply_block_creating" class="toc">
                5.7 Reply block: creating
-           </A>
-           <BR>
-<LI>
-           <A HREF="emacs-tinypgp-body.html#reply_block_testing" class="toc" >
+           </a>
+           <br>
+<li>
+           <a href="emacs-tinypgp-body.html#reply_block_testing" class="toc">
                5.8 Reply block: testing
-           </A>
-           <BR>
-<LI>
-           <A HREF="emacs-tinypgp-body.html#sending_as_anonymous_remailer_usenet" class="toc" >
+           </a>
+           <br>
+<li>
+           <a href="emacs-tinypgp-body.html#sending_as_anonymous_remailer_usenet_or_private_mail" class="toc">
                5.9 Sending as anonymous: remailer, usenet, or private mail
-           </A>
-           <BR>
-<LI>
-           <A HREF="emacs-tinypgp-body.html#chaining" class="toc" >
+           </a>
+           <br>
+<li>
+           <a href="emacs-tinypgp-body.html#chaining" class="toc">
                5.10 Chaining
-           </A>
-           <BR>
-</UL>
-<A HREF="emacs-tinypgp-body.html#newnym_type_account_handling" class="toc" >
+           </a>
+           <br>
+</ul>
+<a href="emacs-tinypgp-body.html#newnym_type_account_handling" class="toc">
                6.0 Newnym type account handling
-           </A>
-           <BR>
+           </a>
+           <br>
 
-<UL>
-<LI>
-           <A HREF="emacs-tinypgp-body.html#enabling_newnym_support" class="toc" >
+<ul>
+<li>
+           <a href="emacs-tinypgp-body.html#enabling_newnym_support" class="toc">
                6.1 Enabling newnym support
-           </A>
-           <BR>
-<LI>
-           <A HREF="emacs-tinypgp-body.html#newnym_addresses" class="toc" >
+           </a>
+           <br>
+<li>
+           <a href="emacs-tinypgp-body.html#newnym_addresses" class="toc">
                6.2 Newnym addresses
-           </A>
-           <BR>
-<LI>
-           <A HREF="emacs-tinypgp-body.html#newnym_echo_menu" class="toc" >
+           </a>
+           <br>
+<li>
+           <a href="emacs-tinypgp-body.html#newnym_echo_menu" class="toc">
                6.3 Newnym echo menu
-           </A>
-           <BR>
-<LI>
-           <A HREF="emacs-tinypgp-body.html#ordering_newnym_help_file" class="toc" >
+           </a>
+           <br>
+<li>
+           <a href="emacs-tinypgp-body.html#ordering_newnym_help_file" class="toc">
                6.4 Ordering newnym help file
-           </A>
-           <BR>
-<LI>
-           <A HREF="emacs-tinypgp-body.html#ordering_newnym_servers_public_key" class="toc" >
+           </a>
+           <br>
+<li>
+           <a href="emacs-tinypgp-body.html#ordering_newnym_servers_public_key" class="toc">
                6.5 Ordering newnym server's public key
-           </A>
-           <BR>
-<LI>
-           <A HREF="emacs-tinypgp-body.html#asking_used_newnym_account_names" class="toc" >
+           </a>
+           <br>
+<li>
+           <a href="emacs-tinypgp-body.html#asking_used_newnym_account_names" class="toc">
                6.6 Asking used newnym account names
-           </A>
-           <BR>
-<LI>
-           <A HREF="emacs-tinypgp-body.html#opening_newnym_account" class="toc" >
+           </a>
+           <br>
+<li>
+           <a href="emacs-tinypgp-body.html#opening_newnym_account" class="toc">
                6.7 Opening newnym account
-           </A>
-           <BR>
-<LI>
-           <A HREF="emacs-tinypgp-body.html#newnym_account_management" class="toc" >
+           </a>
+           <br>
+<li>
+           <a href="emacs-tinypgp-body.html#newnym_account_management_nym_mode" class="toc">
                6.8 Newnym Account management; *nym* mode
-           </A>
-           <BR>
-<LI>
-           <A HREF="emacs-tinypgp-body.html#newnym_auto_action" class="toc" >
+           </a>
+           <br>
+<li>
+           <a href="emacs-tinypgp-body.html#newnym_auto_action" class="toc">
                6.9 Newnym auto action
-           </A>
-           <BR>
-<LI>
-           <A HREF="emacs-tinypgp-body.html#sending_mail_from_your_newnym" class="toc" >
+           </a>
+           <br>
+<li>
+           <a href="emacs-tinypgp-body.html#sending_mail_from_your_newnym_account" class="toc">
                6.10 Sending mail from your newnym account
-           </A>
-           <BR>
-<LI>
-           <A HREF="emacs-tinypgp-body.html#sending_email_to_usenet_from" class="toc" >
+           </a>
+           <br>
+<li>
+           <a href="emacs-tinypgp-body.html#sending_email_to_usenet_from_your_newnym_account" class="toc">
                6.11 Sending email to usenet from your newnym account
-           </A>
-           <BR>
-<LI>
-           <A HREF="emacs-tinypgp-body.html#newnym_request_commands" class="toc" >
+           </a>
+           <br>
+<li>
+           <a href="emacs-tinypgp-body.html#newnym_request_commands" class="toc">
                6.12 Newnym request commands
-           </A>
-           <BR>
-<LI>
-           <A HREF="emacs-tinypgp-body.html#newnym_account_expirarion_status" class="toc" >
+           </a>
+           <br>
+<li>
+           <a href="emacs-tinypgp-body.html#newnym_account_expirarion_status" class="toc">
                6.13 Newnym account expirarion status
-           </A>
-           <BR>
-<LI>
-           <A HREF="emacs-tinypgp-body.html#newnym_multiple_account_management" class="toc" >
+           </a>
+           <br>
+<li>
+           <a href="emacs-tinypgp-body.html#newnym_multiple_account_management" class="toc">
                6.14 Newnym multiple account management
-           </A>
-           <BR>
-</UL>
-<A HREF="emacs-tinypgp-body.html#nymserver_type_account_handling" class="toc" >
+           </a>
+           <br>
+</ul>
+<a href="emacs-tinypgp-body.html#nymserver_type_account_handling" class="toc">
                7.0 Nymserver type account handling
-           </A>
-           <BR>
+           </a>
+           <br>
 
-<UL>
-<LI>
-           <A HREF="emacs-tinypgp-body.html#nymserver_address" class="toc" >
+<ul>
+<li>
+           <a href="emacs-tinypgp-body.html#nymserver_address" class="toc">
                7.1 Nymserver address
-           </A>
-           <BR>
-<LI>
-           <A HREF="emacs-tinypgp-body.html#opening_nymserver_account" class="toc" >
+           </a>
+           <br>
+<li>
+           <a href="emacs-tinypgp-body.html#opening_nymserver_account" class="toc">
                7.2 Opening nymserver account
-           </A>
-           <BR>
-<LI>
-           <A HREF="emacs-tinypgp-body.html#checking_your_account_status" class="toc" >
+           </a>
+           <br>
+<li>
+           <a href="emacs-tinypgp-body.html#checking_your_account_status_finger" class="toc">
                7.3 Checking your account status; finger
-           </A>
-           <BR>
-<LI>
-           <A HREF="emacs-tinypgp-body.html#sending_nymserver_commands_in_encrypted" class="toc" >
+           </a>
+           <br>
+<li>
+           <a href="emacs-tinypgp-body.html#sending_nymserver_commands_in_encrypted_format" class="toc">
                7.4 Sending nymserver commands in encrypted format
-           </A>
-           <BR>
-<LI>
-           <A HREF="emacs-tinypgp-body.html#using_pgp_with_the_account" class="toc" >
+           </a>
+           <br>
+<li>
+           <a href="emacs-tinypgp-body.html#using_pgp_with_the_account" class="toc">
                7.5 Using PGP with the account
-           </A>
-           <BR>
-<LI>
-           <A HREF="emacs-tinypgp-body.html#nymserver_and_auto_action" class="toc" >
+           </a>
+           <br>
+<li>
+           <a href="emacs-tinypgp-body.html#nymserver_and_auto_action" class="toc">
                7.6 Nymserver and auto action
-           </A>
-           <BR>
-<LI>
-           <A HREF="emacs-tinypgp-body.html#uploading_pgp_key_to_your" class="toc" >
+           </a>
+           <br>
+<li>
+           <a href="emacs-tinypgp-body.html#uploading_pgp_key_to_your_account" class="toc">
                7.7 Uploading PGP key to your account
-           </A>
-           <BR>
-<LI>
-           <A HREF="emacs-tinypgp-body.html#sending_as_anonymous_nymserver_usenet" class="toc" >
+           </a>
+           <br>
+<li>
+           <a href="emacs-tinypgp-body.html#sending_as_anonymous_nymserver_usenet_or_private_mail" class="toc">
                7.8 Sending as anonymous: nymserver, usenet, or private mail
-           </A>
-           <BR>
-<LI>
-           <A HREF="emacs-tinypgp-body.html#sending_as_anonymous_from_different" class="toc" >
+           </a>
+           <br>
+<li>
+           <a href="emacs-tinypgp-body.html#sending_as_anonymous_from_different_accounts" class="toc">
                7.9 Sending as anonymous: from different accounts
-           </A>
-           <BR>
-<LI>
-           <A HREF="emacs-tinypgp-body.html#sending_as_anonymous_usenet_problems" class="toc" >
+           </a>
+           <br>
+<li>
+           <a href="emacs-tinypgp-body.html#sending_as_anonymous_usenet_problems" class="toc">
                7.10 Sending as anonymous: usenet problems
-           </A>
-           <BR>
-<LI>
-           <A HREF="emacs-tinypgp-body.html#special_ccing_to_multiple_recipients" class="toc" >
+           </a>
+           <br>
+<li>
+           <a href="emacs-tinypgp-body.html#special_ccing_to_multiple_recipients" class="toc">
                7.11 Special: cc'ing to multiple recipients
-           </A>
-           <BR>
-</UL>
-<A HREF="emacs-tinypgp-body.html#general_pgp_guidelines" class="toc" >
+           </a>
+           <br>
+</ul>
+<a href="emacs-tinypgp-body.html#general_pgp_guidelines" class="toc">
                8.0 General PGP guidelines
-           </A>
-           <BR>
+           </a>
+           <br>
 
-<UL>
-<LI>
-           <A HREF="emacs-tinypgp-body.html#about_including_the_public_key" class="toc" >
+<ul>
+<li>
+           <a href="emacs-tinypgp-body.html#about_including_the_public_key_in_the_mail_message" class="toc">
                8.1 About including the public key in the mail message
-           </A>
-           <BR>
-</UL>
-<A HREF="emacs-tinypgp-body.html#development_notes" class="toc" >
+           </a>
+           <br>
+</ul>
+<a href="emacs-tinypgp-body.html#development_notes" class="toc">
                9.0 Development notes
-           </A>
-           <BR>
+           </a>
+           <br>
 
-<UL>
-<LI>
-           <A HREF="emacs-tinypgp-body.html#more_about_installation" class="toc" >
+<ul>
+<li>
+           <a href="emacs-tinypgp-body.html#more_about_installation" class="toc">
                9.1 More about Installation
-           </A>
-           <BR>
-<LI>
-           <A HREF="emacs-tinypgp-body.html#development_note_using_comint_to" class="toc" >
+           </a>
+           <br>
+<li>
+           <a href="emacs-tinypgp-body.html#development_note_using_comint_to_talk_to_pgp_interacively" class="toc">
                9.2 Development note: Using comint to talk to PGP interacively
-           </A>
-           <BR>
-<LI>
-           <A HREF="emacs-tinypgp-body.html#about_error_we_need_to" class="toc" >
+           </a>
+           <br>
+<li>
+           <a href="emacs-tinypgp-body.html#about_error_we_need_to_generate_xxx_random_bits" class="toc">
                9.3 About error &quot;We need to generate XXX random bits.&quot;
-           </A>
-           <BR>
-<LI>
-           <A HREF="emacs-tinypgp-body.html#about_platforms" class="toc" >
+           </a>
+           <br>
+<li>
+           <a href="emacs-tinypgp-body.html#about_platforms" class="toc">
                9.4 About Platforms
-           </A>
-           <BR>
-</UL>
-<A HREF="emacs-tinypgp-body.html#notes_problems_and_solutions_faq" class="toc" >
+           </a>
+           <br>
+</ul>
+<a href="emacs-tinypgp-body.html#notes_problems_and_solutions_faq" class="toc">
                10.0 Notes, problems and solutions, FAQ
-           </A>
-           <BR>
+           </a>
+           <br>
 
-<UL>
-<LI>
-           <A HREF="emacs-tinypgp-body.html#why_are_the_nymserv_menu" class="toc" >
+<ul>
+<li>
+           <a href="emacs-tinypgp-body.html#why_are_the_nymserv_menu_choices_disabled" class="toc">
                10.1 Why are the nymserv menu choices disabled?
-           </A>
-           <BR>
-<LI>
-           <A HREF="emacs-tinypgp-body.html#gnus_45_i_cant_see" class="toc" >
+           </a>
+           <br>
+<li>
+           <a href="emacs-tinypgp-body.html#gnus_45_i_cant_see_tinypgp_turned_on_for" class="toc">
                10.2 GNUS 4/5: I can't see TinyPgp turned on for article buffer?
-           </A>
-           <BR>
-<LI>
-           <A HREF="emacs-tinypgp-body.html#rmail_error_happens_while_you" class="toc" >
+           </a>
+           <br>
+<li>
+           <a href="emacs-tinypgp-body.html#rmail_error_happens_while_you_encrypt_message" class="toc">
                10.3 RMAIL: error happens while you encrypt message
-           </A>
-           <BR>
-<LI>
-           <A HREF="emacs-tinypgp-body.html#vm6_applicationpgpencrypted_support" class="toc" >
+           </a>
+           <br>
+<li>
+           <a href="emacs-tinypgp-body.html#vm6_applicationpgpencrypted_support" class="toc">
                10.4 VM6: application/pgp-encrypted support
-           </A>
-           <BR>
-<LI>
-           <A HREF="emacs-tinypgp-body.html#you_have_several_user_ids." class="toc" >
+           </a>
+           <br>
+<li>
+           <a href="emacs-tinypgp-body.html#you_have_several_user_ids_which_to_use" class="toc">
                10.5 You have several user id's. Which to use?
-           </A>
-           <BR>
-<LI>
-           <A HREF="emacs-tinypgp-body.html#someone_else_has_several_user" class="toc" >
+           </a>
+           <br>
+<li>
+           <a href="emacs-tinypgp-body.html#someone_else_has_several_user_ids_which_to_use" class="toc">
                10.6 Someone else has several user IDs. Which to use?
-           </A>
-           <BR>
-<LI>
-           <A HREF="emacs-tinypgp-body.html#someones_email_address_is_not" class="toc" >
+           </a>
+           <br>
+<li>
+           <a href="emacs-tinypgp-body.html#someones_email_address_is_not_listed_in_his_keyid" class="toc">
                10.7 Someone's email address is not listed in his key-id?
-           </A>
-           <BR>
-<LI>
-           <A HREF="emacs-tinypgp-body.html#key_add_error_bad_ascii" class="toc" >
+           </a>
+           <br>
+<li>
+           <a href="emacs-tinypgp-body.html#key_add_error_bad_ascii_armor_character" class="toc">
                10.8 Key add error:  bad ascii armor character
-           </A>
-           <BR>
-<LI>
-           <A HREF="emacs-tinypgp-body.html#too_cryptic_verify_message_good" class="toc" >
+           </a>
+           <br>
+<li>
+           <a href="emacs-tinypgp-body.html#too_cryptic_verify_message_good_sig_from_0x00fffff" class="toc">
                10.9 Too cryptic verify message: Good sig from 0x00fffff
-           </A>
-           <BR>
-<LI>
-           <A HREF="emacs-tinypgp-body.html#how_do_i_copy_key" class="toc" >
+           </a>
+           <br>
+<li>
+           <a href="emacs-tinypgp-body.html#how_do_i_copy_key_to_some_other_keyring" class="toc">
                10.10 How do I copy key to some other keyring?
-           </A>
-           <BR>
-<LI>
-           <A HREF="emacs-tinypgp-body.html#advanced_you_want_to_do" class="toc" >
+           </a>
+           <br>
+<li>
+           <a href="emacs-tinypgp-body.html#advanced_you_want_to_do_something_before_encrypting" class="toc">
                10.11 Advanced: you want to do something before encrypting
-           </A>
-           <BR>
-</UL>
-<A HREF="emacs-tinypgp-body.html#about_implementation" class="toc" >
+           </a>
+           <br>
+</ul>
+<a href="emacs-tinypgp-body.html#about_implementation" class="toc">
                11.0 About implementation
-           </A>
-           <BR>
+           </a>
+           <br>
 
-<UL>
-<LI>
-           <A HREF="emacs-tinypgp-body.html#encrypted_secring" class="toc" >
+<ul>
+<li>
+           <a href="emacs-tinypgp-body.html#encrypted_secring" class="toc">
                11.1 Encrypted secring
-           </A>
-           <BR>
-</UL>
-<A HREF="emacs-tinypgp-body.html#thank_you" class="toc" >
+           </a>
+           <br>
+</ul>
+<a href="emacs-tinypgp-body.html#thank_you" class="toc">
                12.0 Thank you
-           </A>
-           <BR>
+           </a>
+           <br>
 
-<UL>
-<LI>
-           <A HREF="emacs-tinypgp-body.html#program_beta_testers_and_manual" class="toc" >
+<ul>
+<li>
+           <a href="emacs-tinypgp-body.html#program_beta_testers_and_manual_fixes" class="toc">
                12.1 Program beta testers and manual fixes
-           </A>
-           <BR>
-<LI>
-           <A HREF="emacs-tinypgp-body.html#pgp_packet_format_experts" class="toc" >
+           </a>
+           <br>
+<li>
+           <a href="emacs-tinypgp-body.html#pgp_packet_format_experts" class="toc">
                12.2 PGP packet format experts
-           </A>
-           <BR>
-<LI>
-           <A HREF="emacs-tinypgp-body.html#others" class="toc" >
+           </a>
+           <br>
+<li>
+           <a href="emacs-tinypgp-body.html#others" class="toc">
                12.3 Others
-           </A>
-           <BR>
-</UL>
-<A HREF="emacs-tinypgp-body.html#articles_and_notes_on_pgp" class="toc" >
+           </a>
+           <br>
+</ul>
+<a href="emacs-tinypgp-body.html#articles_and_notes_on_pgp_data_format_and_keyrings" class="toc">
                13.0 Articles and notes on PGP data format and keyrings
-           </A>
-           <BR>
+           </a>
+           <br>
 
-<UL>
-<LI>
-           <A HREF="emacs-tinypgp-body.html#multiple_keyrings_it_breaks_web" class="toc" >
+<ul>
+<li>
+           <a href="emacs-tinypgp-body.html#multiple_keyrings_it_breaks_web_of_trust" class="toc">
                13.1 Multiple keyrings -- it breaks web of trust
-           </A>
-           <BR>
-<LI>
-           <A HREF="emacs-tinypgp-body.html#keyring_bottlenecks" class="toc" >
+           </a>
+           <br>
+<li>
+           <a href="emacs-tinypgp-body.html#keyring_bottlenecks" class="toc">
                13.2 Keyring bottlenecks
-           </A>
-           <BR>
-</UL>
-<A HREF="emacs-tinypgp-body.html#pgps_ascii_armor" class="toc" >
+           </a>
+           <br>
+</ul>
+<a href="emacs-tinypgp-body.html#pgps_ascii_armor" class="toc">
                14.0 PGP's Ascii Armor
-           </A>
-           <BR>
+           </a>
+           <br>
 
-<UL>
-<LI>
-           <A HREF="emacs-tinypgp-body.html#rfc1991_pgp_message_exchange_formats" class="toc" >
+<ul>
+<li>
+           <a href="emacs-tinypgp-body.html#rfc1991_pgp_message_exchange_formats" class="toc">
                14.1 RFC1991 -- PGP Message Exchange Formats
-           </A>
-           <BR>
-</DIV>
-</BODY>
-</HTML>
+           </a>
+           <br>
+</ul>
+
+</div>
+</body>
+</html>

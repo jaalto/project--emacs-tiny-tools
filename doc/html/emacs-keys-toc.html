@@ -19,23 +19,23 @@
   <meta http-equiv="description"
 	content="">
 
-
-  <meta http-equiv="Content-Type" content="text/html; charset=utf-8">
-
-  <meta http-equiv="Expires" content="Tue, 31 May 2005 07:01:38 GMT">
+<meta http-equiv="Content-Type" content="text/html; charset=utf-8">
+  <meta http-equiv="Expires" content="Thu,  1 Nov 2007 09:03:43 GMT">
 
   <meta http-equiv="Author"
-	content="Jari Aalto">
+	content="jaalto">
 
 
 
   <meta name="Generator"
-	content="2005-04-01 09:01 Perl program t2html.pl v2005.0208 http://perl-text2html.sourceforge.net/">
+	content="2007-09-02 12:03 Perl program t2html.pl v2007.0526 http://perl-text2html.sourceforge.net/">
 
 
   <base target="body">
 
+
     <style type="text/css">
+
 
 
         /*
@@ -208,7 +208,7 @@
 
         blockquote
         {
-            margin-right: 0;
+            margin-right: 2em;
         }
 
         @media print   { BLOCKQUOTE
@@ -221,10 +221,18 @@
             color: Navy;
         }
 
+        hr.special
+        {
+            width: 50%;
+            text-align; left;
+        }
+
         pre
         {
             font-family:   "Courier New", monospace;
             font-size:     0.8em;
+            margin-top:    1em;
+            margin-bottom: 1em;
         }
 
         pre.code
@@ -242,11 +250,18 @@
 
             font-family:    "Courier New", monospace;
             font-size:      0.8em;
-
             color:          Navy;
         }
 
         /* //////////////////////// tables /////////////////////////// */
+
+        table
+        {
+            border: none;
+            width: 100%;
+            cellpadding: 10px;
+            cellspacing: 0px;
+        }
 
         table.basic
         {
@@ -322,6 +337,13 @@
             background: #FFFFCC;
         }
 
+        table tr td pre
+        {
+                /*  Make PRE tables "airy" */
+                margin-top:    1em;
+                margin-bottom: 1em;
+        }
+
         table.shade-normal
         {
                 font-family:    "Courier New", monospace;
@@ -347,11 +369,6 @@
         .shade-normal2-attrib
         {
             background: #E0E0F0;
-        }
-
-        table.shade-note
-        {
-            /* nothing special */
         }
 
         .shade-note-attrib
@@ -661,7 +678,7 @@
             font-size: 0.9em;
         }
 
-
+    
 
     </style>
 
@@ -689,7 +706,7 @@
 
     </script>
 
-</head>
+        </head>
 <body>
 <div class="TOC">
 <a href="emacs-keys-body.html#document_id" class="toc">
@@ -726,12 +743,12 @@
            </a>
            <br>
 <li>
-           <a href="emacs-keys-body.html#emacs_versions_and_key_binding" class="toc">
+           <a href="emacs-keys-body.html#emacs_versions_and_key_binding_syntax_compatibility_table" class="toc">
                2.2 Emacs versions and key binding syntax compatibility table:
            </a>
            <br>
 <li>
-           <a href="emacs-keys-body.html#ethics_what_is_the_correct" class="toc">
+           <a href="emacs-keys-body.html#ethics_what_is_the_correct_way" class="toc">
                2.3 Ethics -- what is the correct way?
            </a>
            <br>
@@ -748,7 +765,7 @@
            </a>
            <br>
 <li>
-           <a href="emacs-keys-body.html#the_mx_viewlossage_command_helps" class="toc">
+           <a href="emacs-keys-body.html#the_mx_viewlossage_command_helps_you" class="toc">
                3.2 The M-x view-lossage command helps you
            </a>
            <br>
@@ -758,7 +775,7 @@
            </a>
            <br>
 <li>
-           <a href="emacs-keys-body.html#very_easy_way_just_go" class="toc">
+           <a href="emacs-keys-body.html#very_easy_way_just_go_and_use_mx_globalsetkey" class="toc">
                3.4 Very easy way: just go and use M-x global-set-key
            </a>
            <br>
@@ -768,19 +785,19 @@
            </a>
            <br>
 </ul>
-<a href="emacs-keys-body.html#how_do_i_give_argument" class="toc">
+<a href="emacs-keys-body.html#how_do_i_give_argument_to_command_when_i" class="toc">
                4.0 How do I give argument to command when I bind it to key?
            </a>
            <br>
 
 <ul>
 <li>
-           <a href="emacs-keys-body.html#printing_a_string_by_pressing" class="toc">
+           <a href="emacs-keys-body.html#printing_a_string_by_pressing_a_key" class="toc">
                4.1 Printing a string by pressing a key
            </a>
            <br>
 <li>
-           <a href="emacs-keys-body.html#running_macro_by_pressing_a" class="toc">
+           <a href="emacs-keys-body.html#running_macro_by_pressing_a_key" class="toc">
                4.2 Running macro by pressing a key
            </a>
            <br>
@@ -800,12 +817,12 @@
            </a>
            <br>
 <li>
-           <a href="emacs-keys-body.html#calling_function_with_different_default" class="toc">
+           <a href="emacs-keys-body.html#calling_function_with_different_default_argument" class="toc">
                4.6 Calling function with different default argument
            </a>
            <br>
 <li>
-           <a href="emacs-keys-body.html#using_complex_lambda_function_in" class="toc">
+           <a href="emacs-keys-body.html#using_complex_lambda_function_in_key_binding" class="toc">
                4.7 Using complex lambda function in key binding
            </a>
            <br>
@@ -817,32 +834,32 @@
 
 <ul>
 <li>
-           <a href="emacs-keys-body.html#before_defining_the_key_you" class="toc">
+           <a href="emacs-keys-body.html#before_defining_the_key_you_should_know_about_key" class="toc">
                5.1 Before defining the key, you should know about key maps
            </a>
            <br>
 <li>
-           <a href="emacs-keys-body.html#default_emacs_key_maps_and" class="toc">
+           <a href="emacs-keys-body.html#default_emacs_key_maps_and_packages_key_maps" class="toc">
                5.2 Default emacs key maps and packages' key maps
            </a>
            <br>
 <li>
-           <a href="emacs-keys-body.html#prefix_keymaps_in_new_emacs" class="toc">
+           <a href="emacs-keys-body.html#prefix_keymaps_in_new_emacs_versions" class="toc">
                5.3 Prefix keymaps in new emacs versions.
            </a>
            <br>
 <li>
-           <a href="emacs-keys-body.html#prefix_key_maps_in_old" class="toc">
+           <a href="emacs-keys-body.html#prefix_key_maps_in_old_emacs_versions" class="toc">
                5.4 Prefix key maps in old emacs versions.
            </a>
            <br>
 <li>
-           <a href="emacs-keys-body.html#functionkeymap_where_do_i_need" class="toc">
+           <a href="emacs-keys-body.html#functionkeymap_where_do_i_need_it" class="toc">
                5.5 Function-key-map -- where do I need it?
            </a>
            <br>
 <li>
-           <a href="emacs-keys-body.html#how_to_generate_cashm_modifiers" class="toc">
+           <a href="emacs-keys-body.html#how_to_generate_cashm_modifiers_from_keyboard_keys" class="toc">
                5.6 How to generate C-A-S-H-M modifiers from keyboard keys
            </a>
            <br>
@@ -874,17 +891,17 @@
            </a>
            <br>
 <li>
-           <a href="emacs-keys-body.html#case_study_why_cant_i" class="toc">
+           <a href="emacs-keys-body.html#case_study_why_cant_i_assign_key_esc_c" class="toc">
                6.4 Case study: Why can't I assign key &lt;ESC C-'&gt; ?
            </a>
            <br>
 <li>
-           <a href="emacs-keys-body.html#case_study_how_to_bind" class="toc">
+           <a href="emacs-keys-body.html#case_study_how_to_bind_a_function_to_ctrl" class="toc">
                6.5 Case study: How to bind a function to Ctrl-?
            </a>
            <br>
 <li>
-           <a href="emacs-keys-body.html#portable_keybindings_command_emacs_nw" class="toc">
+           <a href="emacs-keys-body.html#portable_keybindings_command_emacs_nw_is_your_friend" class="toc">
                6.6 Portable keybindings -- command 'emacs -nw' is your friend
            </a>
            <br>
@@ -928,7 +945,7 @@
 
 <ul>
 <li>
-           <a href="emacs-keys-body.html#i_cant_use_cs_and" class="toc">
+           <a href="emacs-keys-body.html#i_cant_use_cs_and_cq_in_emacs_due" class="toc">
                8.1 I can't use C-s and C-q in emacs due to control flow.
            </a>
            <br>
@@ -943,27 +960,27 @@
            </a>
            <br>
 <li>
-           <a href="emacs-keys-body.html#im_in_emacs_that_doesnt" class="toc">
+           <a href="emacs-keys-body.html#im_in_emacs_that_doesnt_recognize_my_function_keys" class="toc">
                8.4 I'm in emacs that doesn't recognize my function keys?
            </a>
            <br>
 <li>
-           <a href="emacs-keys-body.html#i_dont_seem_to_see" class="toc">
+           <a href="emacs-keys-body.html#i_dont_seem_to_see_the_controlspace_sequence" class="toc">
                8.5 I don't seem to see the Control-Space sequence
            </a>
            <br>
 <li>
-           <a href="emacs-keys-body.html#to_get_xterm_work_with" class="toc">
+           <a href="emacs-keys-body.html#to_get_xterm_work_with_mouse" class="toc">
                8.6 To get Xterm work with mouse
            </a>
            <br>
 <li>
-           <a href="emacs-keys-body.html#does_these_vector_notations_work" class="toc">
+           <a href="emacs-keys-body.html#does_these_vector_notations_work_only_under_x" class="toc">
                8.7 Does these vector notations work only under X ?
            </a>
            <br>
 <li>
-           <a href="emacs-keys-body.html#i_have_troubles_running_screen" class="toc">
+           <a href="emacs-keys-body.html#i_have_troubles_running_screen_sunos_virtual_term_and" class="toc">
                8.8 I have troubles running 'screen' (SUN-OS virtual term) and emacs
            </a>
            <br>
@@ -973,17 +990,17 @@
            </a>
            <br>
 <li>
-           <a href="emacs-keys-body.html#swap_the_control_and_cap" class="toc">
+           <a href="emacs-keys-body.html#swap_the_control_and_cap_keys_on_sun_sparc" class="toc">
                8.10 Swap the control and cap keys on Sun sparc 20 machine?
            </a>
            <br>
 <li>
-           <a href="emacs-keys-body.html#xterm_aix_meta_key_missing" class="toc">
+           <a href="emacs-keys-body.html#xterm_aix_meta_key_missing_in_emacs_nw" class="toc">
                8.11 Xterm -- AIX: Meta key missing in emacs -nw
            </a>
            <br>
 <li>
-           <a href="emacs-keys-body.html#hp_meta_key_missing_on" class="toc">
+           <a href="emacs-keys-body.html#hp_meta_key_missing_on_715_and_712" class="toc">
                8.12 HP: meta key missing on 715 and 712?
            </a>
            <br>
@@ -993,32 +1010,32 @@
            </a>
            <br>
 <li>
-           <a href="emacs-keys-body.html#hp_xmodmap_settings_in_pc" class="toc">
+           <a href="emacs-keys-body.html#hp_xmodmap_settings_in_pc_xceed" class="toc">
                8.14 HP: xmodmap settings in PC XCeed
            </a>
            <br>
 <li>
-           <a href="emacs-keys-body.html#could_anyone_tell_me_how" class="toc">
+           <a href="emacs-keys-body.html#could_anyone_tell_me_how_i_could_change_the" class="toc">
                8.15 Could anyone tell me how I could change the meta-key ?
            </a>
            <br>
 <li>
-           <a href="emacs-keys-body.html#how_can_i_set_meta" class="toc">
+           <a href="emacs-keys-body.html#how_can_i_set_meta_key_to_alt" class="toc">
                8.16 How can I set Meta key to Alt?
            </a>
            <br>
 <li>
-           <a href="emacs-keys-body.html#how_can_i_make_the" class="toc">
+           <a href="emacs-keys-body.html#how_can_i_make_the_alt_key_work_as" class="toc">
                8.17 How can I make the alt key work as the meta key?
            </a>
            <br>
 <li>
-           <a href="emacs-keys-body.html#on_x_window_cspc_says" class="toc">
+           <a href="emacs-keys-body.html#on_x_window_cspc_says_args_out_of_range" class="toc">
                8.18 On X window C-SPC says Args out of range #^[nil nil nil
            </a>
            <br>
 <li>
-           <a href="emacs-keys-body.html#carpal_tunnel_syndrome_any_way" class="toc">
+           <a href="emacs-keys-body.html#carpal_tunnel_syndrome_any_way_to_reduce_left_wrist" class="toc">
                8.19 Carpal tunnel syndrome: Any way to reduce left wrist pain?
            </a>
            <br>
@@ -1033,7 +1050,7 @@
            </a>
            <br>
 <li>
-           <a href="emacs-keys-body.html#linux_i_cant_rebind_cup" class="toc">
+           <a href="emacs-keys-body.html#linux_i_cant_rebind_cup_in_terminal_window" class="toc">
                8.22 Linux: I can't rebind C-up in terminal window?
            </a>
            <br>
@@ -1043,7 +1060,7 @@
            </a>
            <br>
 </ul>
-<a href="emacs-keys-body.html#xmodmap_introduction_changing_your_x" class="toc">
+<a href="emacs-keys-body.html#xmodmap_introduction_changing_your_x_environment" class="toc">
                9.0 Xmodmap introduction -- Changing your X environment
            </a>
            <br>
@@ -1055,12 +1072,12 @@
            </a>
            <br>
 <li>
-           <a href="emacs-keys-body.html#xmodmap_and_keysyms_as_explained" class="toc">
+           <a href="emacs-keys-body.html#xmodmap_and_keysyms_as_explained_in_the_xkeycaps" class="toc">
                9.2 Xmodmap and keysyms -- as explained in the 'xkeycaps'
            </a>
            <br>
 <li>
-           <a href="emacs-keys-body.html#example_xmodmap_for_select_and" class="toc">
+           <a href="emacs-keys-body.html#example_xmodmap_for_select_and_kpf1" class="toc">
                9.3 Example -- xmodmap for select and kp-f1
            </a>
            <br>
@@ -1087,7 +1104,7 @@
            </a>
            <br>
 </ul>
-<a href="emacs-keys-body.html#case_study_connection_to_remote" class="toc">
+<a href="emacs-keys-body.html#case_study_connection_to_remote_emacs_through_xterm" class="toc">
                11.0 CASE STUDY -- Connection to remote emacs through Xterm
            </a>
            <br>
@@ -1099,12 +1116,12 @@
            </a>
            <br>
 <li>
-           <a href="emacs-keys-body.html#the_connection_does_not_know" class="toc">
+           <a href="emacs-keys-body.html#the_connection_does_not_know_my_keyboard" class="toc">
                11.2 The connection does not know my keyboard
            </a>
            <br>
 <li>
-           <a href="emacs-keys-body.html#how_do_i_know_what" class="toc">
+           <a href="emacs-keys-body.html#how_do_i_know_what_a_key_produces_ascii" class="toc">
                11.3 How do I know what a key produces (ascii sequences?)
            </a>
            <br>
@@ -1119,12 +1136,12 @@
            </a>
            <br>
 <li>
-           <a href="emacs-keys-body.html#xterms_xrm_switch_for_key" class="toc">
+           <a href="emacs-keys-body.html#xterms_xrm_switch_for_key_settings_where_are_the" class="toc">
                11.6 Xterm's -xrm switch for key settings, where are the key names?
            </a>
            <br>
 <li>
-           <a href="emacs-keys-body.html#custom_xterm_making_xterm_to" class="toc">
+           <a href="emacs-keys-body.html#custom_xterm_making_xterm_to_translate_character_for_connection" class="toc">
                11.7 Custom xterm -- making xterm to translate character for connection
            </a>
            <br>
@@ -1134,15 +1151,17 @@
            </a>
            <br>
 <li>
-           <a href="emacs-keys-body.html#testing_the_special_xterm_and" class="toc">
+           <a href="emacs-keys-body.html#testing_the_special_xterm_and_remote_emacs_cooperation" class="toc">
                11.9 Testing the special Xterm and remote emacs co-operation
            </a>
            <br>
 <li>
-           <a href="emacs-keys-body.html#complete_live_setup_modify_to" class="toc">
+           <a href="emacs-keys-body.html#complete_live_setup_modify_to_personal_needs" class="toc">
                11.10 Complete, live, setup -- Modify to personal needs
            </a>
            <br>
+</ul>
+
 </div>
 </body>
 </html>
