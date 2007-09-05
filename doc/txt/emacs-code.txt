@@ -142,7 +142,9 @@ Table of contents
         #T2HTML-OPTION --css-code-bg
         #T2HTML-OPTION --html-frame
 
-        .$Id: emacs-code.txt,v 2.6 2004/08/19 08:30:48 jaalto Exp $
+        License: You can redistribute and/or modify this under the
+        terms of Gnu General Public license v2, or (at your option)
+        any later version.
 
         This document contains Unix Emacs Lisp programming information. It
         addresses the coding style of Emacs lisp and also presents notes

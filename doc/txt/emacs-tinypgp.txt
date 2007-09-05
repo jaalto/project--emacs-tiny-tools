@@ -148,7 +148,9 @@ Table of contents
         #T2HTML-OPTION --css-code-bg
         #T2HTML-OPTION --html-frame
 
-        $Id: emacs-tinypgp.txt,v 2.11 2004/08/19 08:30:49 jaalto Exp $
+        License: You can redistribute and/or modify this under the
+        terms of Gnu General Public license v2, or (at your option)
+        any later version.
 
         This document is the manual for PGP handling package
         TinyPgp.el, software that runs in Unix Emacs 19.30+/20+;

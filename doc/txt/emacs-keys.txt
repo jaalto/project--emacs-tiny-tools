@@ -108,7 +108,9 @@ Table of contents
         #T2HTML-OPTION --css-code-bg
         #T2HTML-OPTION --html-frame
 
-        .$Id: emacs-keys.txt,v 2.12 2004/11/12 07:27:44 jaalto Exp $
+        License: You can redistribute and/or modify this under the
+        terms of Gnu General Public license v2, or (at your option)
+        any later version.
 
         This document explains how do you deal with Emacs key bindings. In
         addition, you will find step by step how you use your X window's

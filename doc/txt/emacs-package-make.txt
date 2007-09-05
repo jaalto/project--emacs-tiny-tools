@@ -32,6 +32,10 @@ Table of contents
         #T2HTML-OPTION --css-code-bg
         #T2HTML-OPTION --html-frame
 
+        License: You can redistribute and/or modify this under the
+        terms of Gnu General Public license v2, or (at your option)
+        any later version.
+
         This document explains how you construct a good Emacs Lisp package.
         Document serves as a checklist where you can refer back after you
         have made your first lisp package. Check that are pieces are in

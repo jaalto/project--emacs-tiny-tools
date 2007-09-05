@@ -32,6 +32,10 @@ Table Of Contents
         #T2HTML-OPTION Note:
         #T2HTML-OPTION --html-frame
 
+        License: You can redistribute and/or modify this under the
+        terms of Gnu General Public license v2, or (at your option)
+        any later version.
+
     1.1 Audience
 
         This paper documents the usage of sourceforge account to a

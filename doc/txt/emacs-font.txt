@@ -88,7 +88,9 @@ Table of contents
         #T2HTML-OPTION --css-code-bg
         #T2HTML-OPTION --html-frame
 
-        .$Id: emacs-font.txt,v 2.5 2004/01/26 02:08:08 jaalto Exp $
+        License: You can redistribute and/or modify this under the
+        terms of Gnu General Public license v2, or (at your option)
+        any later version.
 
         This document is compiled from Usenet postings that concern Emacs's
         coloring support, often referred as fontification. The document is

@@ -537,7 +537,9 @@ Table of Contents
         #T2HTML-OPTION Note:
         #T2HTML-OPTION --html-frame
 
-        .$Id: emacs-elisp.txt,v 2.95 2006/01/23 12:15:07 jaalto Exp $
+        License: You can redistribute and/or modify this under the
+        terms of Gnu General Public license v2, or (at your option)
+        any later version.
 
           This document contains Emacs Lisp (elisp) information:
           links to some papers, Emacs lisp developer sites, notes

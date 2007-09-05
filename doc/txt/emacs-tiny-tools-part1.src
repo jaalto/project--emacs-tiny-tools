@@ -8,7 +8,9 @@ Document id
         #T2HTML-OPTION --name-uniq
         #T2HTML-OPTION --html-frame
 
-        .$Id: emacs-tiny-tools-part1.src,v 1.4 2004/04/05 13:17:06 jaalto Exp $
+        License: You can redistribute and/or modify this under the
+        terms of Gnu General Public license v2, or (at your option)
+        any later version.
 
         This page contains manual pages from each Emacs tiny*.el module in
         alphabetical order. The tools initially started around 1994 and
