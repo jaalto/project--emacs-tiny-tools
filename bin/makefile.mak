@@ -1,13 +1,30 @@
-# makefile.mak -- Makefile for the Emacs lisp. Tiny tools distribution
-# $Id: makefile.mak,v 2.14 2007/05/01 17:20:30 jaalto Exp $
+#!/usr/bin/make -f
+# -*- makefile -*-
+#
+# makefile.mk -- Makefile for the Emacs lisp. Tiny tools distribution
 #
 #   File id
 #
-#       .Copyright (C)  1997-2007 Jari Aalto
-#       .Created:       1997-09
-#       .Keywords:      elisp makefile TinyTools
+#	Copyright (C) 1997-2007 Jari Aalto
 #
-#       This code is free software in terms of GNU Gen. pub. Lic. v2 or later
+#	This program is free software; you can redistribute it and/or
+#	modify it under the terms of the GNU General Public License as
+#	published by the Free Software Foundation; either version 2 of
+#	the License, or (at your option) any later version.
+#
+#	This program is distributed in the hope that it will be useful, but
+#	WITHOUT ANY WARRANTY; without even the implied warranty of
+#	MERCHANTABILITY or FITNESS FOR A PARTICULAR PURPOSE.  See the GNU
+#	General Public License for more details.
+#
+#	You should have received a copy of the GNU General Public
+#	License along with program; see the file COPYING. If not,
+#	write to the Free Software Foundation, Inc., 51 Franklin
+#	Street, Fifth Floor, Boston, MA 02110-1301, USA.
+#
+#	Visit <http://www.gnu.org/copyleft/gpl.html> for more information
+#
+#   Description
 #
 #	************************************************************************
 #
@@ -75,80 +92,80 @@
 #
 #   Requirements
 #
-#       You need Emacs 19.30+, XEmacs 19.15+ or never in order to use this
-#       Lakefile and the Lisp files included in the kit.
+#	You need Emacs 19.30+, XEmacs 19.15+ or never in order to use this
+#	Lakefile and the Lisp files included in the kit.
 #
-#       Your private lisp files are supposed to reside in ~/elisp or
-#       ~/lisp. _Important_: Modify this fle to include relevant lisp
-#       paths during compilation:
+#	Your private lisp files are supposed to reside in ~/elisp or
+#	~/lisp. _Important_: Modify this fle to include relevant lisp
+#	paths during compilation:
 #
 #	    emacs-lisp/load-path.el
 #
-#       Make a copy, modify and save it for later use; You need it when you
-#       install new versions.
+#	Make a copy, modify and save it for later use; You need it when you
+#	install new versions.
 #
 #   Quick start
 #
 #	Tired of reading Makefile instructions in text format? Do this now
-#       and read the produced html with your favourite web browser.
+#	and read the produced html with your favourite web browser.
 #
-#           % env URL_BASE=`pwd` make -e -f *.mak ema-tiny.mak
+#	    % env URL_BASE=`pwd` make -e -f *.mak ema-tiny.mak
 #
-#       If you don't care to read further, here is what you do. This only
-#       works if a) You want to leave out newest custom.el support and c)
-#       You want to install files to ~/elisp/tiny and your private Emacs
-#       lisp packages reside in ~/elisp.
+#	If you don't care to read further, here is what you do. This only
+#	works if a) You want to leave out newest custom.el support and c)
+#	You want to install files to ~/elisp/tiny and your private Emacs
+#	lisp packages reside in ~/elisp.
 #
-#           % ln -s ~/elisp/tiny ~/junk   # let link point to anywhere
-#           % cd ~/elisp/tiny-YYMMDD
+#	    % ln -s ~/elisp/tiny ~/junk	  # let link point to anywhere
+#	    % cd ~/elisp/tiny-YYMMDD
 #
 #      default Emacs install command
 #
-#           % make -f *.mak Makefile config all install-ln help list-ini
+#	    % make -f *.mak Makefile config all install-ln help list-ini
 #
 #      default XEmacs install command
 #
-#           % make EMACS=xemacs -f *.mak \
-#                 config all install-ln help list-ini
+#	    % make EMACS=xemacs -f *.mak \
+#		  config all install-ln help list-ini
 #
-#       [compilation errors]
+#	[compilation errors]
 #
-#       If there were compilation errors, use following to send the compile
-#       log to the maintainer. Before doing this, investigate if they really
-#       were errors: An *infomational* *message* is not an error.
+#	If there were compilation errors, use following to send the compile
+#	log to the maintainer. Before doing this, investigate if they really
+#	were errors: An *infomational* *message* is not an error.
 #
-#           % make -f *.mak email-clog
+#	    % make -f *.mak email-clog
 #
-#       Also send your current configuration (*.el version numbers) with
+#	Also send your current configuration (*.el version numbers) with
 #
-#           % make -f *.mak email-ver
+#	    % make -f *.mak email-ver
 #
 #   Makefile usage for starters
 #
-#       You run makefile by using standard `make' program. Before you do
-#       anything else, please print help which will explain everyhing you
-#       need to know. You can also pipe the output to `more' or `lpr'
-#       programs if you don't have `less'.
+#	You run makefile by using standard `make' program. Before you do
+#	anything else, please print help which will explain everyhing you
+#	need to know. You can also pipe the output to `more' or `lpr'
+#	programs if you don't have `less'.
 #
-#           % make -f *.mak help | less
+#	    % make -f *.mak help | less
 #
-#       If you're installing current kit for the first time, select
-#       rule `config' and after that build everything using rule `all'. You
-#       can give multiple rules in the command line. Once you have run
-#       `config', you don't need to run it again for the current
-#       distribution.
+#	If you're installing current kit for the first time, select
+#	rule `config' and after that build everything using rule `all'. You
+#	can give multiple rules in the command line. Once you have run
+#	`config', you don't need to run it again for the current
+#	distribution.
 #
-#           % make -f *.mak Makefile config all
+#	    % make -f *.mak Makefile config all
 #
 #	Print also sample Emacs rc files to printer and have nice
-#       cup of coffee near you when you read the _long_ output.
+#	cup of coffee near you when you read the _long_ output.
 #
-#           % make print-ini | lpr
+#	    % make print-ini | lpr
 #
-#       If you have updated some Emacs lisp file; select rule `elc'
-#       to recompile files that are newer.
+#	If you have updated some Emacs lisp file; select rule `elc'
+#	to recompile files that are newer.
 #
-#           % mak elc
+#	    % mak elc
 #
 #   Some lisp files are not compiled
 #
@@ -161,14 +178,14 @@
 #
 #   Compiling for different Emacs versions
 #
-#       Check that you have run `config' rule already. Change the *EMACS*
-#       varaible if you want to compile for other Emacs version:
+#	Check that you have run `config' rule already. Change the *EMACS*
+#	varaible if you want to compile for other Emacs version:
 #
-#           % make EMACS=xemacs -f *mak elc
+#	    % make EMACS=xemacs -f *mak elc
 #
-#       You can override any variable setting in the Makefile in similar
-#       manner. Here the variable *EMACS* was substituted (default value in
-#       the makefile is "emacs").
+#	You can override any variable setting in the Makefile in similar
+#	manner. Here the variable *EMACS* was substituted (default value in
+#	the makefile is "emacs").
 #
 #   Compiling in custom.el support
 #
@@ -181,24 +198,24 @@
 #	    % make EMACS=emacs-19.30 ELFLAGS='-l cust-stub' elc
 #
 #	If you insist having custom.el for old Emacs, read on. Emacs versions
-#       19.34, XEmacs 19.15, XEmacs 20.2 don't have the latest custom.el
-#       libraries. Please get the newest custom libraries first:
+#	19.34, XEmacs 19.15, XEmacs 20.2 don't have the latest custom.el
+#	libraries. Please get the newest custom libraries first:
 #
 #	    % grep /custom ../doc/elisp.txt
 #
-#       If you have older Emacs than 19.34 or XEmacs 19.15/20.2, then you
-#       can't use the new custom libraries and you should not compile the
-#       custom code in. The new custom works only with newest Emacs
-#       releases.
+#	If you have older Emacs than 19.34 or XEmacs 19.15/20.2, then you
+#	can't use the new custom libraries and you should not compile the
+#	custom code in. The new custom works only with newest Emacs
+#	releases.
 #
-#       Please check that the *custom* distribution is compiled, it can't
-#       be used otherwise. Custom package support is enabled for all
-#       tiny*el packages, but it is not necessary to have custom in order
-#       to _use_ or _compile_ files in this kit.
+#	Please check that the *custom* distribution is compiled, it can't
+#	be used otherwise. Custom package support is enabled for all
+#	tiny*el packages, but it is not necessary to have custom in order
+#	to _use_ or _compile_ files in this kit.
 #
-#       If you have latest custom, define new flags which instruct loading
-#       custom. Best if you modify the included *load-path.el* and
-#       uses it always for next compile sessions:
+#	If you have latest custom, define new flags which instruct loading
+#	custom. Best if you modify the included *load-path.el* and
+#	uses it always for next compile sessions:
 #
 #	    % make  PATHFLAGS='-l ~/elisp/my-tiny-load-path.el' \
 #		    ELFLAGS='-l custom.elc' \
@@ -206,83 +223,83 @@
 #
 #   Case study: Emacs 19.34 and private custom library
 #
-#       Suppose you have 19.28 and 19.30 and 19.34. Your private directory
-#       is ~/elisp and you have installed the newest custom to
-#       ~/elisp/custom and you have byte compiled custom files. Now you
-#       want to build all tiny*.el lisp files in the current distribution
-#       directory using the newest custom support for 19.34. You have also
-#       added the custom path to the beginning of the load path by
-#       modifying the `load-path.el'. Like this:
+#	Suppose you have 19.28 and 19.30 and 19.34. Your private directory
+#	is ~/elisp and you have installed the newest custom to
+#	~/elisp/custom and you have byte compiled custom files. Now you
+#	want to build all tiny*.el lisp files in the current distribution
+#	directory using the newest custom support for 19.34. You have also
+#	added the custom path to the beginning of the load path by
+#	modifying the `load-path.el'. Like this:
 #
-#           (dolist (path
-#             '(
-#               ;; Define any new path HERE
-#               ;;
-#               "~/elisp/custom"
-#               ...
+#	    (dolist (path
+#	      '(
+#		;; Define any new path HERE
+#		;;
+#		"~/elisp/custom"
+#		...
 #
-#       Here is the make command
+#	Here is the make command
 #
 #	    % make EMACS=emacs-19.34 ELFLAGS='-l custom.elc' -f *.mak elc
 #
 #   Using suffix rules
 #
-#       In this makefile there are some suffix rules that you may want to
-#       use. Suffix rules mean, that the by chaging the file extension, an
-#       alternative rule is used for that file. Here are *some* of the
-#       rules for .el extensions
+#	In this makefile there are some suffix rules that you may want to
+#	use. Suffix rules mean, that the by chaging the file extension, an
+#	alternative rule is used for that file. Here are *some* of the
+#	rules for .el extensions
 #
-#           .doc        Get documentation
-#           .html       Make html documentation from text or shell files.
-#           .htmlx      (extra) Make html documentation by reading file
-#           .prn        Display the file
-#           .ver        Print version information
+#	    .doc	Get documentation
+#	    .html	Make html documentation from text or shell files.
+#	    .htmlx	(extra) Make html documentation by reading file
+#	    .prn	Display the file
+#	    .ver	Print version information
 #
-#       For example if you want to generate html documentation out of *main*
-#       library tinylib.el, you change the extension of the file name to match
-#       a suffix rule. Here .el --> .html suffix rule is used:
+#	For example if you want to generate html documentation out of *main*
+#	library tinylib.el, you change the extension of the file name to match
+#	a suffix rule. Here .el --> .html suffix rule is used:
 #
-#           % make -f *.mak tinylib.html
+#	    % make -f *.mak tinylib.html
 #
-#       To see available suffix rules, run Makefile with `rule' keyword.
+#	To see available suffix rules, run Makefile with `rule' keyword.
 #
 #   Making html documentation from the source files.
 #
-#       By using the suffix rule .html you can rip the documentation out of
-#       the file and convert it to html page. The top button of the page
-#       always refers to the ssjaaa.html page, but you may want to change
-#       that. The location of the url uses protocol `file' and the top
-#       button points to file:/$INSTAL_DIR/ssjaaa.html
+#	By using the suffix rule .html you can rip the documentation out of
+#	the file and convert it to html page. The top button of the page
+#	always refers to the ssjaaa.html page, but you may want to change
+#	that. The location of the url uses protocol `file' and the top
+#	button points to file:/$INSTAL_DIR/ssjaaa.html
 #
-#           % make -f *.mak tinyef.html
+#	    % make -f *.mak tinyef.html
 #
-#       To change the location of the button, you would redefine
-#       *URL_TOP_PAGE* variable, like this
+#	To change the location of the button, you would redefine
+#	*URL_TOP_PAGE* variable, like this
 #
 #	    % make URL_TOP_PAGE=http://foo_localhost/emacs/tiny/index.html \
-#              -f *.mak html
+#	       -f *.mak html
 #
-#       And then write the index.html. It is not usually necessary to make
-#       html documentation out of each emacs lisp file. The ema-tiny.txt
-#       contains all documentation for each lisp file. You simply convert this
-#       file into html.
+#	And then write the index.html. It is not usually necessary to make
+#	html documentation out of each emacs lisp file. The ema-tiny.txt
+#	contains all documentation for each lisp file. You simply convert this
+#	file into html.
 #
-#           % make -f .mak ../doc/ema-tiny.html
+#	    % make -f .mak ../doc/ema-tiny.html
 #
 #   Html documentation and correct url references
 #
-#       Making an html page is quite easy with the attached perl script,
-#       but getting the links and [toc] references right, you must tell
-#       where you're going to keep the html pages. The default variable
-#       *URL_BASE* points to *INSTALL_DIR*, which is by default:
+#	Making an html page is quite easy with the attached perl script,
+#	but getting the links and [toc] references right, you must tell
+#	where you're going to keep the html pages. The default variable
+#	*URL_BASE* points to *INSTALL_DIR*, which is by default:
 #
-#           /usr/local/share/emacs/site-lisp/tiny
+#	    /usr/local/share/emacs/site-lisp/tiny
 #
-#       If you're installing the pages somewhere else, eg to your
-#       ~/elisp/tiny directory, you must change URL_BASE like this
+#	If you're installing the pages somewhere else, eg to your
+#	~/elisp/tiny directory, you must change URL_BASE like this
 #
 #	    % make URL_BASE=file:/users/foo/elisp/tiny \
-#                  -f *.mak ema-tiny.htmlx
+#		   -f *.mak ema-tiny.htmlx
 #
 #	Here is short way to contruct the references so that they point
 #	to the files in current directory. This uses rule *html* which
@@ -296,43 +313,43 @@
 #
 #   Distribution install
 #
-#       [rule install-ln]
+#	[rule install-ln]
 #
-#       After you have compiled all the files, there is couple of install
-#       rules that you may want to use. The firat rule `install-ln' is the
-#       most simple installation. It supposes that you always want to point
-#       a directory symlink to the current distribution.
+#	After you have compiled all the files, there is couple of install
+#	rules that you may want to use. The firat rule `install-ln' is the
+#	most simple installation. It supposes that you always want to point
+#	a directory symlink to the current distribution.
 #
-#           ../tiny --> your_current_unpack_directory
+#	    ../tiny --> your_current_unpack_directory
 #
-#       This rule removes old link, that may be pointing to previous
-#       distribution and re(sym)links current directory to *INSTALL_DIR_LINK*,
-#       which defaults to `../tiny'.
+#	This rule removes old link, that may be pointing to previous
+#	distribution and re(sym)links current directory to *INSTALL_DIR_LINK*,
+#	which defaults to `../tiny'.
 #
-#       [rule install-cp]
+#	[rule install-cp]
 #
-#       If you want to permanently move the files to another directory, use
-#       this *copy* installation method. Beware, this runs rm -rf in your
-#       *INSTALL_DIR* prior copying the files. But before it does that, it
-#       gives you 20 second chance to cancel the operation before engaging
-#       and destroying all below *INSTALL_DIR*. It may be possible that your
-#       environment variable *INSTALL_DIR* had old gargage like "/". Hm;
-#       so there!
+#	If you want to permanently move the files to another directory, use
+#	this *copy* installation method. Beware, this runs rm -rf in your
+#	*INSTALL_DIR* prior copying the files. But before it does that, it
+#	gives you 20 second chance to cancel the operation before engaging
+#	and destroying all below *INSTALL_DIR*. It may be possible that your
+#	environment variable *INSTALL_DIR* had old gargage like "/". Hm;
+#	so there!
 #
-#       Anyway, please do not set environment variables directly, but set
-#       them through `env' program and you should be safe. Here is the
-#       command to do the copy install
+#	Anyway, please do not set environment variables directly, but set
+#	them through `env' program and you should be safe. Here is the
+#	command to do the copy install
 #
-#           % mkdir ~/elisp/tiny;    # Directory must exist first
-#           % make INSTALL_DIR=~/elisp/tiny -f *.mak install-cp
+#	    % mkdir ~/elisp/tiny;    # Directory must exist first
+#	    % make INSTALL_DIR=~/elisp/tiny -f *.mak install-cp
 #
 #   Lisp byte Compiler error notes
 #
-#       [at least appears in XEmacs 19.14] If you see this error in, don't
-#       pay attention to it. It is a bug in cl-macs::ignore-errors
-#       macro. In Emacs this message is not displayed.
+#	[at least appears in XEmacs 19.14] If you see this error in, don't
+#	pay attention to it. It is a bug in cl-macs::ignore-errors
+#	macro. In Emacs this message is not displayed.
 #
-#           ** variable G3000 bound but not referenced
+#	    ** variable G3000 bound but not referenced
 #
 #	If you get following error, then you have somewhere Emacs and XEmacs
 #	byte compiled files mixed. This may be due to some module that is
@@ -344,12 +361,12 @@
 #
 #   Trouble shooting make errors
 #
-#       [Bad character > (octal 76), line 2Make: .  Stop]
+#	[Bad character > (octal 76), line 2Make: .  Stop]
 #
-#       Ooops, you propably run command make -f *.mak with the star
-#       windcard. Please check that the *mak files in the directory
-#       are really make files. You should find only one makefile for
-#       this kit.
+#	Ooops, you propably run command make -f *.mak with the star
+#	windcard. Please check that the *mak files in the directory
+#	are really make files. You should find only one makefile for
+#	this kit.
 #
 #	[sh-test] *** Error exit code 1
 #
@@ -386,11 +403,6 @@
 #		do
 #	    fi
 
-
-# Change Log:
-
-# Code:
-
 ############################################################# &code ###
 
 AUTHOR	    = "Jari Aalto"
@@ -402,7 +414,7 @@ MAKEFILE1   = Makefile				# Generated
 # ########################################################### &basic ###
 
 SHELL	    =	/bin/sh
-TEST	    =   /bin/test
+TEST	    =	/bin/test
 SRCDIR	    =	.
 EMACS	    =	emacs
 EMACSVER    =	`${EMACS} -batch -version`
@@ -411,9 +423,9 @@ EMACSVER    =	`${EMACS} -batch -version`
 TT_KIT	    =	tiny-tools.zip
 KIT	    =	$(TT_KIT)
 
-DIR_PERL    =   ../bin
-DIR_DOC	    =   ../doc
-DIR_EMACS_RC=   ../lisp/rc
+DIR_PERL    =	../bin
+DIR_DOC	    =	../doc
+DIR_EMACS_RC=	../lisp/rc
 
 # ######################################################### &install ###
 
@@ -429,18 +441,18 @@ INSTALL_DIR_HTML    = $(INSTALL_DIR)
 
 # ######################################################## &programs ###
 
-URL_BASE    =   file:$(INSTALL_DIR_HTML)
+URL_BASE    =	file:$(INSTALL_DIR_HTML)
 URL_TOP_PAGE=	$(URL)/ssjaaa.html
 
 HTML_PRG    =	$(DIR_PERL)/t2html.pl
-HTML_OPTS   =	--name-uniq                                                 \
-		--author $(AUTHOR)                                          \
-		--email "$(EMAIL_TO)"                                       \
-		--base  $(URL_BASE)                                         \
+HTML_OPTS   =	--name-uniq						    \
+		--author $(AUTHOR)					    \
+		--email "$(EMAIL_TO)"					    \
+		--base	$(URL_BASE)					    \
 		--button-top $(URL_TOP_PAGE)
 
 HTML_DO	    =	$(HTML_PRG) $(HTML_OPTS)
-HTML_EXT    =   .html
+HTML_EXT    =	.html
 HTML_EXT2   =	.htmlx
 
 FILE_DOC_MAKE =	$(DIR_PERL)/ripdoc.pl
@@ -475,7 +487,7 @@ LIST_MISC   = `ls  |							    \
 
 FLAG_IGERR  =	1  # If 0, then stop on error
 LIBFLAGS    =	-l ./tinyliba.el -l ./tinylibb.el \
-                -l ./tinylibm.el -l ./tinylib.el
+		-l ./tinylibm.el -l ./tinylib.el
 INIFLAGS    =	-batch -q -no-site-file
 
 # - The prefix "ELPATH" is in every path variable name to refer
@@ -515,62 +527,62 @@ TT_EL_LIB	=			\
 #	tinyad.el	- Advice collection
 #	tinyezip	- Special .el.gz compress support module.
 
-TT_EL_TINY_NOCOMPILE =                  \
-	tinyad.el                       \
+TT_EL_TINY_NOCOMPILE =			\
+	tinyad.el			\
 	tinyezip.el
 
-TT_EL_TINY =                            \
-	tinyappend.el                   \
-	tinybm.el                       \
-	tinycache.el                    \
-	tinybuffer.el                   \
-	tinychist.el                    \
-	tinycom.el                      \
-	tinycompile.el                  \
-	tinydesk.el                     \
-	tinydiff.el                     \
-	tinydired.el                    \
-	tinyeat.el                      \
-	tinyef.el                       \
-	tinyezip.el                     \
-	tinygnus.el                     \
-	tinyhotlist.el                  \
-	tinyigrep.el                    \
-	tinyindent.el                   \
-	tinylisp.el                     \
-	tinyload.el                     \
-	tinylock.el                     \
-	tinylpr.el                      \
-	tinymacro.el                    \
-	tinymail.el                     \
-	tinymbx.el                      \
-	tinymy.el                       \
-	tinynbr.el                      \
-	tinypad.el                      \
-	tinypage.el                     \
-	tinypair.el                     \
-	tinypath.el                     \
-	tinypgp.el                      \
+TT_EL_TINY =				\
+	tinyappend.el			\
+	tinybm.el			\
+	tinycache.el			\
+	tinybuffer.el			\
+	tinychist.el			\
+	tinycom.el			\
+	tinycompile.el			\
+	tinydesk.el			\
+	tinydiff.el			\
+	tinydired.el			\
+	tinyeat.el			\
+	tinyef.el			\
+	tinyezip.el			\
+	tinygnus.el			\
+	tinyhotlist.el			\
+	tinyigrep.el			\
+	tinyindent.el			\
+	tinylisp.el			\
+	tinyload.el			\
+	tinylock.el			\
+	tinylpr.el			\
+	tinymacro.el			\
+	tinymail.el			\
+	tinymbx.el			\
+	tinymy.el			\
+	tinynbr.el			\
+	tinypad.el			\
+	tinypage.el			\
+	tinypair.el			\
+	tinypath.el			\
+	tinypgp.el			\
 	tinyperl.el			\
-        tinypm.el			\
-	tinyreplace.el                  \
-	tinyrlog.el                     \
-	tinyrmail.el                    \
-	tinyscroll.el                   \
-	tinysearch.el                   \
-	tinytab.el                      \
-	tinytag.el                      \
-	tinytf.el                       \
-	tinyurl.el                      \
+	tinypm.el			\
+	tinyreplace.el			\
+	tinyrlog.el			\
+	tinyrmail.el			\
+	tinyscroll.el			\
+	tinysearch.el			\
+	tinytab.el			\
+	tinytag.el			\
+	tinytf.el			\
+	tinyurl.el			\
 	tinyxreg.el
 
 
-TT_EL_OTHER_MODULES =                   \
+TT_EL_OTHER_MODULES =			\
 	alist.el			\
-	c-comment-edit2.el              \
-	complete-menu.el                \
-	fnexpand.el                     \
-	dired-sort.el                   \
+	c-comment-edit2.el		\
+	complete-menu.el		\
+	fnexpand.el			\
+	dired-sort.el			\
 	date-parse.el
 
 #   Emacs Rc files (init file examples)
@@ -590,22 +602,22 @@ TT_EL_RC	=			\
 
 #   Text files
 
-TT_TEXT	=                               \
-	$(DIR_DOC)/GNU-licence.txt      \
-	$(DIR_DOC)/OLD.txt              \
+TT_TEXT	=				\
+	$(DIR_DOC)/GNU-licence.txt	\
+	$(DIR_DOC)/OLD.txt		\
 	$(DIR_DOC)/ema-expect.txt	\
 	$(DIR_DOC)/bookmark.txt		\
 	$(DIR_DOC)/t2html.txt		\
-	$(DIR_DOC)/elisp.txt            \
-	$(DIR_DOC)/ema-code.gui         \
-	$(DIR_DOC)/ema-font.gui         \
-	$(DIR_DOC)/ema-keys.gui         \
-	$(DIR_DOC)/ema-pkg.gui          \
-	$(DIR_DOC)/ema-tipgp.txt        \
-	$(DIR_DOC)/pm-tips.txt          \
-	$(DIR_DOC)/pm-code.txt          \
-	$(DIR_DOC)/ema-tiny.txt         \
-	$(DIR_DOC)/ema-tiny.mak         \
+	$(DIR_DOC)/elisp.txt		\
+	$(DIR_DOC)/ema-code.gui		\
+	$(DIR_DOC)/ema-font.gui		\
+	$(DIR_DOC)/ema-keys.gui		\
+	$(DIR_DOC)/ema-pkg.gui		\
+	$(DIR_DOC)/ema-tipgp.txt	\
+	$(DIR_DOC)/pm-tips.txt		\
+	$(DIR_DOC)/pm-code.txt		\
+	$(DIR_DOC)/ema-tiny.txt		\
+	$(DIR_DOC)/ema-tiny.mak		\
 	$(DIR_DOC)/versions.txt
 
 
@@ -651,18 +663,18 @@ SUFFIX_KILL = *.elc *.prn *.doc *.html *.htmlx
 
 # Rule: suffix .el  => .elc - Compile Emacs lisp file
 .el.elc:
-	@r="[.el.elc]";                                                     \
-	echo "Compiling $< ...";                                            \
-	if ( $(TEST) -e $< ); then                                          \
-	    if (  $(TEST) $(FLAG_IGERR) -ne 0 ); then                       \
-		( $(EMACS) $(FLAGS) -f batch-byte-compile $< |              \
-	          tee $(CLOG_TMP));                                         \
-	    else                                                            \
+	@r="[.el.elc]";							    \
+	echo "Compiling $< ...";					    \
+	if ( $(TEST) -e $< ); then					    \
+	    if (  $(TEST) $(FLAG_IGERR) -ne 0 ); then			    \
+		( $(EMACS) $(FLAGS) -f batch-byte-compile $< |		    \
+		  tee $(CLOG_TMP));					    \
+	    else							    \
 		$(EMACS) $(FLAGS) -f batch-byte-compile $< |tee $(CLOG_TMP);\
-	    fi ;                                                            \
-	    cat $(CLOG_TMP) >> $(CLOG);                                     \
-	else                                                                \
-	    echo "  Hm. This file does not exist. Skipped.";                \
+	    fi ;							    \
+	    cat $(CLOG_TMP) >> $(CLOG);					    \
+	else								    \
+	    echo "  Hm. This file does not exist. Skipped.";		    \
 	fi
 
 
@@ -727,18 +739,18 @@ SUFFIX_KILL = *.elc *.prn *.doc *.html *.htmlx
 
 .pl.html:
 	echo "$< --> $*$(HTML_EXT)"
-	$(FILE_DOC_PRG) $< | $(HTML_DO) > $*$(HTML_EXT)  ;
+	$(FILE_DOC_PRG) $< | $(HTML_DO) > $*$(HTML_EXT)	 ;
 
 .mak.html:
 	echo "$< --> $*$(HTML_EXT)"
-	$(FILE_DOC_PRG) $< | $(HTML_DO) > $*$(HTML_EXT)  ;
+	$(FILE_DOC_PRG) $< | $(HTML_DO) > $*$(HTML_EXT)	 ;
 
 
 # Rule: suffix .mak => .htmlx - Make html out of *.mak file
 .mak.htmlx:
 	echo "$< --> $*$(HTML_EXT2)";
-	$(FILE_DOC_PRG) $< |                                                \
-	$(HTML_DO) -base $(URL_BASE)/$*$(HTML_EXT2)                         \
+	$(FILE_DOC_PRG) $< |						    \
+	$(HTML_DO) -base $(URL_BASE)/$*$(HTML_EXT2)			    \
 	> $*$(HTML_EXT2) ;
 
 
@@ -782,8 +794,8 @@ elc-compile-check:
 # Rule: clobber - ...You should run rule `makefile' after this.
 
 clobber:    clean clean-tmp
-	- rm -f                                                             \
-	$(SUFFIX_KILL)                                                      \
+	- rm -f								    \
+	$(SUFFIX_KILL)							    \
 	$(MAKEFILE1)
 
 # Rule: clean - Remove compiled lisp files
@@ -808,19 +820,19 @@ config:		configure
 configure:	sh-test fix clobber makefile
 
 clog-clean:
-	r="[clog-clean] $(CLOG)"; echo $$r;                                 \
-	if ( $(TEST) -e $(CLOG) ); then                                     \
-	   rm $(CLOG);                                                      \
+	r="[clog-clean] $(CLOG)"; echo $$r;				    \
+	if ( $(TEST) -e $(CLOG) ); then					    \
+	   rm $(CLOG);							    \
 	fi
 
 # Rule: email-clog - Email recent compile log to the Author of the kit
 email-clog:
-	@r="[clog-email]";                                                  \
-	if ( $(TEST) -f $(CLOG) ); then                                     \
-	    mail $(EMAIL_TO) < $(CLOG);                                     \
-	    echo Compile information email set.                             \
-	else                                                                \
-	    echo "$$r No $(CLOG) to send to $(EMAIL)";                      \
+	@r="[clog-email]";						    \
+	if ( $(TEST) -f $(CLOG) ); then					    \
+	    mail $(EMAIL_TO) < $(CLOG);					    \
+	    echo Compile information email set.				    \
+	else								    \
+	    echo "$$r No $(CLOG) to send to $(EMAIL)";			    \
 	fi
 
 # Rule: email-ver - Email package versions to the Author of the kit
@@ -837,11 +849,11 @@ email-ver:
 #	Spurious backslash ignored a...
 #
 fix:
-	echo                                                                \
-	  cd $(DIR_PERL);                                                   \
-	  perl -i.bak -p                                                    \
-	  -e 'chop ( $$prg = `which perl` ) if $$. == 1;'                   \
-	  -e 's,/bin/perl5,/bin/perl, ; s,/usr/local/bin/perl,$$prg, ;'     \
+	echo								    \
+	  cd $(DIR_PERL);						    \
+	  perl -i.bak -p						    \
+	  -e 'chop ( $$prg = `which perl` ) if $$. == 1;'		    \
+	  -e 's,/bin/perl5,/bin/perl, ; s,/usr/local/bin/perl,$$prg, ;'	    \
 	  $(DIR_PERL)/*pl ;
 	rm -f $(DIR_PERL)/*.bak
 
@@ -850,15 +862,15 @@ help:	print-readme print-make rule
 
 # Rule: htm - move .html files to .htm extension
 htm:
-	@for file in `ls *.html`;                                           \
-	do                                                                  \
-	    if ( $(TEST) -d $$file ); then                                  \
-		echo > /dev/null;                                           \
-	    else                                                            \
-		name=`echo $$file | sed 's/.html/.htm/' ` ;                 \
-		echo "$$file --> $$name";                                   \
-		mv $$file $$name;                                           \
-	    fi                                                              \
+	@for file in `ls *.html`;					    \
+	do								    \
+	    if ( $(TEST) -d $$file ); then				    \
+		echo > /dev/null;					    \
+	    else							    \
+		name=`echo $$file | sed 's/.html/.htm/' ` ;		    \
+		echo "$$file --> $$name";				    \
+		mv $$file $$name;					    \
+	    fi								    \
 	done
 
 
@@ -870,19 +882,19 @@ html:	$(HTML)
 # ident(1) dies if there is directory as argument. We have to use for loop.
 
 ident:
-	-prg=`which ident`; yes=`expr "$$prg" : "no"`;                      \
-	echo ident status $$yes;                                            \
-	for file in `ls`;                                                   \
-	do                                                                  \
-	if ( $(TEST) -r $$file && $(TEST) -f $$file ); then                 \
-	    if ( $$yes ); then                                              \
-		ident $$file;                                               \
-	    else                                                            \
-		echo $$file;                                                \
-		grep '\$$[A-Za-z].* \$$$$' $$file;                          \
-	    fi                                                              \
-	exit;                                                               \
-	fi                                                                  \
+	-prg=`which ident`; yes=`expr "$$prg" : "no"`;			    \
+	echo ident status $$yes;					    \
+	for file in `ls`;						    \
+	do								    \
+	if ( $(TEST) -r $$file && $(TEST) -f $$file ); then		    \
+	    if ( $$yes ); then						    \
+		ident $$file;						    \
+	    else							    \
+		echo $$file;						    \
+		grep '\$$[A-Za-z].* \$$$$' $$file;			    \
+	    fi								    \
+	exit;								    \
+	fi								    \
 	done
 
 # Rule: install - List Install choices
@@ -891,37 +903,37 @@ install:
 
 # Rule: install-ln - softlink current dir to INSTALL_DIR_LINK
 install-ln:
-	r="[install-ln]";                                                   \
-	if ( $(TEST) -e $(INSTALL_DIR_LINK) ); then                         \
-	    if ( $(TEST)  -h $(INSTALL_DIR_LINK) ); then                    \
-		 dir=`pwd`;                                                 \
-		 rm $(INSTALL_DIR_LINK);                                    \
-		 ln -s $$dir $(INSTALL_DIR_LINK);                           \
-		 echo linked  $$dir to $(INSTALL_DIR_LINK);                 \
-	    else                                                            \
+	r="[install-ln]";						    \
+	if ( $(TEST) -e $(INSTALL_DIR_LINK) ); then			    \
+	    if ( $(TEST)  -h $(INSTALL_DIR_LINK) ); then		    \
+		 dir=`pwd`;						    \
+		 rm $(INSTALL_DIR_LINK);				    \
+		 ln -s $$dir $(INSTALL_DIR_LINK);			    \
+		 echo linked  $$dir to $(INSTALL_DIR_LINK);		    \
+	    else							    \
 		echo "$$r $(INSTALL_DIR_ABOVE) is not a softlink. Skipped.";\
-	    fi                                                              \
-	else                                                                \
+	    fi								    \
+	else								    \
 	    echo "$$r $(INSTALL_DIR_LINK) does not exist. Rule skipped.";   \
 	fi
 
 # Rule: install-check - Creating install directory INSTALL_DIR if needed
 install-check:
-	if (  $(TEST) "X$(INSTALL_DIR)" = "X" ); then                       \
-	    echo "$rr INSTALL_DIR is not defined."; exit 1;                 \
-	else                                                                \
-	if ( $(TEST) -e $(INSTALL_DIR) ); then                              \
-	    if ( $(TEST) -d $(INSTALL_DIR) ); then                          \
-		echo > /dev/null;                                           \
-	    else                                                            \
-		echo "$$r $(INSTALL_DIR) is not a directory."  exit 1 ;     \
-	    fi                                                              \
-	else                                                                \
-	    echo "$$r $(INSTALL_DIR) does not exist.";                      \
-	    echo Making one within 10 seconds, precc C-c to abort;          \
-	    sleep 10;                                                       \
-	    mkdir $(INSTALL_DIR);                                           \
-	fi                                                                  \
+	if (  $(TEST) "X$(INSTALL_DIR)" = "X" ); then			    \
+	    echo "$rr INSTALL_DIR is not defined."; exit 1;		    \
+	else								    \
+	if ( $(TEST) -e $(INSTALL_DIR) ); then				    \
+	    if ( $(TEST) -d $(INSTALL_DIR) ); then			    \
+		echo > /dev/null;					    \
+	    else							    \
+		echo "$$r $(INSTALL_DIR) is not a directory."  exit 1 ;	    \
+	    fi								    \
+	else								    \
+	    echo "$$r $(INSTALL_DIR) does not exist.";			    \
+	    echo Making one within 10 seconds, precc C-c to abort;	    \
+	    sleep 10;							    \
+	    mkdir $(INSTALL_DIR);					    \
+	fi								    \
 	fi
 
 # Rule: install-clean: Clean all unnecessary files (tgz) from INSTALL_DIR
@@ -942,9 +954,9 @@ install-cp: install-check
 
 # Rule: list - List compile source modules.
 list:
-	@for file in  $(SRCS);                                              \
-	do                                                                  \
-	    echo $$file;                                                    \
+	@for file in  $(SRCS);						    \
+	do								    \
+	    echo $$file;						    \
 	done
 
 # Rule: list-ini - List all included Emacs startup file examples.
@@ -967,23 +979,23 @@ list-lisp-other:
 
 # Rule: list-txt2html - List all files that can be converted to html
 list-txt2html:
-	@for file in $(LIST_T2HTML) ;                                       \
-	do                                                                  \
-	    if ( $(TEST) -d $$file ); then                                  \
-		echo > /dev/null;                                           \
-	    else                                                            \
-		echo $$file ;                                               \
-	    fi                                                              \
+	@for file in $(LIST_T2HTML) ;					    \
+	do								    \
+	    if ( $(TEST) -d $$file ); then				    \
+		echo > /dev/null;					    \
+	    else							    \
+		echo $$file ;						    \
+	    fi								    \
 	done
 
 # Rule: makefile - make Makefile (softlink to distribution's .mak file)
 makefile:
-	@if ( $(TEST) -f $(MAKEFILE1) ); then                               \
-	    echo .. There is already $(MAKEFILE1),                          \
-	    Ignoring rule [makefile];                                       \
-	else                                                                \
-	    ln -s $(MAKEFILE) $(MAKEFILE1);                                 \
-	    echo created $(MAKEFILE1);                                      \
+	@if ( $(TEST) -f $(MAKEFILE1) ); then				    \
+	    echo .. There is already $(MAKEFILE1),			    \
+	    Ignoring rule [makefile];					    \
+	else								    \
+	    ln -s $(MAKEFILE) $(MAKEFILE1);				    \
+	    echo created $(MAKEFILE1);					    \
 	fi
 
 # rule: mkmf: update Emacs lisp targets in the Makefile
@@ -1048,10 +1060,10 @@ rule:
 
 # Rule: sh-test - Check if program 'test' is valid.
 sh-test:
-        echo "Testing if your test(1) is working correctly...";             \
-	r="[sh-test]"; f=/tmp/test$$$$.tmp;                                 \
-	touch $$f;                                                          \
-	echo "$$r 'test' ... $(TEST) -e $$f";                               \
+	echo "Testing if your test(1) is working correctly...";		    \
+	r="[sh-test]"; f=/tmp/test$$$$.tmp;				    \
+	touch $$f;							    \
+	echo "$$r 'test' ... $(TEST) -e $$f";				    \
 	$(TEST) -e $$f;
 
 # Rule: tags - Run etags on SRCS (lisp) files
@@ -1066,17 +1078,17 @@ tags:
 # binary (causes overflow)
 
 ver:
-	for file in `file * | grep 'ascii text' | sed 's/:.*//'`;           \
-	do                                                                  \
-	if ( $(TEST)  -r $$file ); then                                     \
-	awk '                                                               \
-	    { gsub("^;+", ""); gsub("@.#.", "");                            \
-	      gsub("^[ \t]", "");                                           \
-	    }                                                               \
-	    /\$$\Docid:/{ printf("%s:\n\t%s\n", FILENAME, $$0);exit; }      \
-	    /\$$\Id:/	 { printf("%s:\n\t%s\n", FILENAME, $$0);exit; }     \
-	    ' $$file;                                                       \
-	fi                                                                  \
+	for file in `file * | grep 'ascii text' | sed 's/:.*//'`;	    \
+	do								    \
+	if ( $(TEST)  -r $$file ); then					    \
+	awk '								    \
+	    { gsub("^;+", ""); gsub("@.#.", "");			    \
+	      gsub("^[ \t]", "");					    \
+	    }								    \
+	    /\$$\Docid:/{ printf("%s:\n\t%s\n", FILENAME, $$0);exit; }	    \
+	    /\$$\Id:/	 { printf("%s:\n\t%s\n", FILENAME, $$0);exit; }	    \
+	    ' $$file;							    \
+	fi								    \
 	done
 
 
@@ -1093,11 +1105,11 @@ ver-lisp:  $(SRCS:.el=.ver)
 # print to stderr, which is not captured by grep.
 
 what:
-	-@prg=`what /dev/null| grep .`;                                     \
-	if ( $(TEST) "X$$prg" = "X" ); then                                 \
-	    grep '@.#.' * ;                                                 \
-	else                                                                \
-	    what *;                                                         \
+	-@prg=`what /dev/null| grep .`;					    \
+	if ( $(TEST) "X$$prg" = "X" ); then				    \
+	    grep '@.#.' * ;						    \
+	else								    \
+	    what *;							    \
 	fi
 
 # Rule: wc - Run wc (lines;characters) on SRCS files and sort by size
@@ -1120,17 +1132,17 @@ depend:
 # Rule: exist - [maint] Display files that do not exist in current dir
 # Search broken symlinks
 exist:
-	@for file in `ls` ;                                                 \
-	do                                                                  \
-	if [ -d $$file ]; then                                              \
-	    echo > /dev/null;                                               \
-	else                                                                \
-	    if [ -f $$file ]; then                                          \
-		echo > /dev/null;                                           \
-	    else                                                            \
-		echo $$file;                                                \
-	    fi                                                              \
-	fi                                                                  \
+	@for file in `ls` ;						    \
+	do								    \
+	if [ -d $$file ]; then						    \
+	    echo > /dev/null;						    \
+	else								    \
+	    if [ -f $$file ]; then					    \
+		echo > /dev/null;					    \
+	    else							    \
+		echo $$file;						    \
+	    fi								    \
+	fi								    \
 	done
 
 # Rule: maint - [maint] Display maintenance rules
@@ -1141,13 +1153,13 @@ maint:
 
 # Rule: list-sym -  [maint] List symlink files
 list-sym:
-	@for file in `ls` ;                                                 \
-	do                                                                  \
-	if [ -d $$file ]; then                                              \
-	    echo > /dev/null;                                               \
-	else                                                                \
-	    echo $$file;                                                    \
-	fi                                                                  \
+	@for file in `ls` ;						    \
+	do								    \
+	if [ -d $$file ]; then						    \
+	    echo > /dev/null;						    \
+	else								    \
+	    echo $$file;						    \
+	fi								    \
 	done
 
 
@@ -1164,29 +1176,29 @@ list-nsym:
 
 # Rule: soft - [maint] make softlink one dir up for every SRCS file.
 soft:
-	@for file in $(SRCS_ALL);                                           \
-	do                                                                  \
-	if [ -f ../$$file ]; then                                           \
-	    if [ ! -f $$file ]; then                                        \
-		echo "linking $$file...";                                   \
-		ln -s ../$$file $$file;                                     \
-	    else                                                            \
-		if [ ! -h $$file ]; then                                    \
-		    echo "   Regular file: $$file";                         \
-		fi                                                          \
-	    fi                                                              \
-	else                                                                \
-	    echo "No ../$$file";                                            \
-	fi                                                                  \
+	@for file in $(SRCS_ALL);					    \
+	do								    \
+	if [ -f ../$$file ]; then					    \
+	    if [ ! -f $$file ]; then					    \
+		echo "linking $$file...";				    \
+		ln -s ../$$file $$file;					    \
+	    else							    \
+		if [ ! -h $$file ]; then				    \
+		    echo "   Regular file: $$file";			    \
+		fi							    \
+	    fi								    \
+	else								    \
+	    echo "No ../$$file";					    \
+	fi								    \
 	done
 
 # Rule: soft - [maint] Test if all kit files exist before building kit.
 test:
-	@for file in $(SRCS_ALL) $(TT_TEXT);                                \
-	do                                                                  \
-	if [ ! -f $$file ]; then                                            \
-	    echo $$file missing;                                            \
-	fi                                                                  \
+	@for file in $(SRCS_ALL) $(TT_TEXT);				    \
+	do								    \
+	if [ ! -f $$file ]; then					    \
+	    echo $$file missing;					    \
+	fi								    \
 	done
 
 
@@ -1195,7 +1207,7 @@ test:
 #   $(MKMF) Perl script writes after this '###' tag
 #   It is a standard mkmf(1) tag
 #
-#	Y O U    MUST NOT EDIT THIS BY HAND
+#	Y O U	 MUST NOT EDIT THIS BY HAND
 #
 #   use makefile rule instead:
 #
@@ -1208,7 +1220,7 @@ tinyad.elc:  \
 	tinylibm.el
 
 
-tinyappend.elc:  \
+tinyappend.elc:	 \
 	tinylibm.el
 
 
@@ -1216,7 +1228,7 @@ tinybm.elc:  \
 	tinylibm.el
 
 
-tinycache.elc:  \
+tinycache.elc:	\
 	tinylibm.el
 
 
@@ -1224,7 +1236,7 @@ tinycb.elc:  \
 	tinylibm.el
 
 
-tinychist.elc:  \
+tinychist.elc:	\
 	tinylibm.el
 
 
@@ -1241,11 +1253,11 @@ tinydesk.elc:  \
 
 
 tinydiff.elc:  \
-	tinylibm.el         \
+	tinylibm.el	    \
 	tinymy.el
 
 
-tinydired.elc:  \
+tinydired.elc:	\
 	tinylibm.el
 
 
@@ -1267,12 +1279,12 @@ tinyhotlist.elc:  \
 	tinylibm.el
 
 
-tinyigrep.elc:  \
-	tinylibm.el         \
+tinyigrep.elc:	\
+	tinylibm.el	    \
 	tinycache.el
 
 
-tinyindent.elc:  \
+tinyindent.elc:	 \
 	tinylibm.el
 
 
@@ -1288,7 +1300,7 @@ tinylibb.elc:  \
 
 tinylibck.elc:
 
-tinylibid.elc:  \
+tinylibid.elc:	\
 	tinylibm.el
 
 
@@ -1300,7 +1312,7 @@ tinylibmenu.elc:  \
 	tinylibm.el
 
 
-tinylibmt.elc:  \
+tinylibmt.elc:	\
 	tinylibm.el
 
 
@@ -1312,7 +1324,7 @@ tinylibt.elc:  \
 	tinylibm.el
 
 
-tinylibxe.elc:  \
+tinylibxe.elc:	\
 	tinylibm.el
 
 
@@ -1325,7 +1337,7 @@ tinylisp.elc:  \
 
 
 tinyload.elc:  \
-	tinylibm.el         \
+	tinylibm.el	    \
 	tinyload.el
 
 
@@ -1337,12 +1349,12 @@ tinylpr.elc:  \
 	tinylibm.el
 
 
-tinymacro.elc:  \
+tinymacro.elc:	\
 	tinylibm.el
 
 
 tinymail.elc:  \
-	tinylibm.el         \
+	tinylibm.el	    \
 	tinylibmt.el
 
 
@@ -1377,8 +1389,8 @@ tinyperl.elc:  \
 
 
 tinypgp.elc:  \
-	tinylib.el          \
-	tinylibmt.el        \
+	tinylib.el	    \
+	tinylibmt.el	    \
 	tinylibm.el
 
 
@@ -1394,15 +1406,15 @@ tinyrlog.elc:  \
 	tinylibm.el
 
 
-tinyrmail.elc:  \
+tinyrmail.elc:	\
 	tinylibm.el
 
 
-tinyscroll.elc:  \
+tinyscroll.elc:	 \
 	tinylibm.el
 
 
-tinysearch.elc:  \
+tinysearch.elc:	 \
 	tinylibm.el
 
 

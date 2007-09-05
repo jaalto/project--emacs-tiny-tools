@@ -1,6 +1,6 @@
 #!/usr/bin/perl
 #
-# ripdoc.pl -- Perl, Rip file's documentation to Technical text format
+# ripdoc.pl -- Rip file's documentation to Technical text format
 #
 #   File id
 #
@@ -41,7 +41,7 @@ use Getopt::Long;
     #   The following variable is updated by Emacs setup whenever
     #   this file is saved
 
-    $VERSION = '2007.0902.0851';
+    $VERSION = '2007.0905.2137';
 
 # ****************************************************************************
 #

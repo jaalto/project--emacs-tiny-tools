@@ -1,3 +1,8 @@
+2007-09-04  Jari Aalto  <jari.aalto@cante.net>
+
+	* other/folding.el: (at the end): removed local variables for
+	security reasons.
+
 2007-08-29 Wed  Jari Aalto  <jari dot aalto A T cante dot net>
 
 	* tiny/tinyirc.el (tinyirc-pastebot-install-example-servers): 2.16

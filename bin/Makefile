@@ -37,12 +37,6 @@
 #	    % make EMACS=xemacs LIB="--load ~/elisp/load-path.el"
 #
 #	This Makefile is designed to work only with GNU bash(1)
-#
-#	*********************************************************************
-#
-# Change Log:
-#
-# Code:
 
 ############################################################# &code ###
 

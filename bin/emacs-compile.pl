@@ -22,8 +22,6 @@
 #	Boston, MA 02110-1301, USA.
 #
 #	Visit <http://www.gnu.org/copyleft/gpl.html> for more information
-#
-#   Change Log:
 
 use autouse 'Pod::Text'     => qw( pod2text );
 use autouse 'Pod::Html'     => qw( pod2html );
@@ -45,7 +43,7 @@ use File::Basename;
     #   The following variable is updated by my Emacs setup whenever
     #   this file is saved
 
-    $VERSION = '2007.0902.0848';
+    $VERSION = '2007.0905.2133';
 
 # ****************************************************************************
 #

@@ -5352,11 +5352,6 @@ And from END t `point-min'. If ARG is nil, delete overlays."
 
 ;;{{{ code: end of file tag, provide
 
-;; Local variables:
-;; folded-file: t
-;; folding-internal-margins: nil
-;; end:
-
 (folding-install)
 
 (provide 'folding)

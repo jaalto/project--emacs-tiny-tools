@@ -22,10 +22,6 @@
 #	Boston, MA 02110-1301, USA.
 #
 #	Visit <http://www.gnu.org/copyleft/gpl.html> for more information
-#
-#   Change Log:
-#
-#       None. See separate file 'ChangeLog' in for the project.
 
 BEGIN
 {
@@ -55,7 +51,7 @@ use Cwd;
     #   The following variable is updated by Emacs setup whenever
     #   this file is saved
 
-    $VERSION = '2007.0902.0849';
+    $VERSION = '2007.0905.2134';
 
 # ****************************************************************************
 #

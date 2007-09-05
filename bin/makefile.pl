@@ -1,6 +1,6 @@
 #!/usr/bin/perl
 #
-# makefile.pl -- Perl, Makefile for Tiny Tools kit
+# makefile.pl -- Makefile for Tiny Tools kit
 #
 #  File id
 #
@@ -62,7 +62,7 @@ IMPORT:
     #	The following variable is updated by my Emacs setup whenever
     #	this file is saved
 
-    $VERSION = '2007.0902.0851';
+    $VERSION = '2007.0905.2137';
 }
 
 # ****************************************************************************

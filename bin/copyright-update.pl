@@ -4,9 +4,7 @@
 #
 #   File id
 #
-#       Copyright (C)   2000-2007 Jari Aalto
-#       Created:        2000-01
-#       Keywords:       Perl, copyright, update
+#       Copyright (C) 2000-2007 Jari Aalto
 #
 #       This program is free software; you can redistribute it and/or
 #       modify it under the terms of the GNU General Public License as
@@ -68,7 +66,7 @@ use File::Find;
     #   The following variable is updated by Emacs setup whenever
     #   this file is saved. See http//tiny-tools.sourceforge.net/
 
-    my $VERSION = '2005.0519';
+    my $VERSION = '2007.0906';
 
 # ****************************************************************************
 #

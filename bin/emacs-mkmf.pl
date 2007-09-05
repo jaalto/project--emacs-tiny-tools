@@ -1,8 +1,6 @@
 #!/usr/bin/perl
 #
-# Perl -- Like mkmf(1) - update Emacs lisp Makefile dependencies
-#
-# {{{ Documentation
+# Perl -- Like mkmf(1) to update Emacs lisp Makefile dependencies
 #
 #  File id
 #
@@ -41,7 +39,6 @@ use English;
 use File::Basename;
 use Getopt::Long;
 
-# }}}
 # {{{ Initial setup
 
 # ****************************************************************************
