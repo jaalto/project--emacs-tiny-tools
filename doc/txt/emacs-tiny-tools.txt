@@ -16,9 +16,7 @@ Document id
         alphabetical order. The tools initially started around 1994 and
         they include many Emacs related utilities ranging from Emacs path
         configuration, email, Gnus spam reply functions, diffing, patching,
-        URL jumping, eating text and many more. Installation, Mailing list
-        and other information is available at the main WWW page at
-        http://tiny-tools.sourceforge.net/
+        URL jumping, eating text and many more.
 
             Note: you cannot download single files or install only a single
             file. the minimum requirement are all libraries _tinylib*.el_ plus
@@ -5068,7 +5066,7 @@ Tinypath.el --- Manage Emacs startup dynamically.
         to download all known lisp tools that does not come with Emacs. If
         you have lot of disk space and you're interested in getting more
         lisp tools to go with your Emacs, follow the instruction laid out
-        in sourceforge project page.
+        in mywebget.pl's project page.
 
   	If you are further interested in Emacs packages, see CVS version
         available for Unix at <http://www.cvshome.com/> and for Win32

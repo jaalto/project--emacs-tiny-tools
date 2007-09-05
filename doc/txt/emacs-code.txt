@@ -1856,7 +1856,6 @@ Table of contents
        "tinybookmark.el"
         .(b)ook(m)ark package "straight lines with names"
         .provides also X-popup for bookmarks
-        .http://tiny-tools.sourceforge.net/
 
        "imenu.el"
         .finding specific funtion, more detailed control.

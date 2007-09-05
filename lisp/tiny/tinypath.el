@@ -397,7 +397,7 @@
 ;;      to download all known lisp tools that do not come with Emacs. If
 ;;      you have lot of disk space and you're interested in getting more
 ;;      tools to go with your Emacs, follow the instruction laid out
-;;      in the above project's sourceforge page.
+;;      in the above project's page.
 ;;
 ;;      If you are further interested in Emacs packages, see Cvs
 ;;      version control program available for Unix at

@@ -88,10 +88,6 @@
 ;; ..................................................... &t-commentary ...
 ;;; Commentary:
 
-;;
-;;      The manual of this package is located at
-;;      http://tiny-tools.sourceforge.net/
-
 ;;}}}
 
 ;;; History:

@@ -217,7 +217,7 @@ Tinypath.el --- Manage Emacs startup dynamically
         to download all known lisp tools that does not come with Emacs. If
         you have lot of disk space and you're interested in getting more
         lisp tools to go with your Emacs, follow the instruction laid out
-        in this project's sourceforge page.
+        in this mywebget.pl's project page.
 
         If you are further interested in Emacs packages, see CVS
         version control program available for Unix at

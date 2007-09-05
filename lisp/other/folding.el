@@ -18,7 +18,7 @@
 ;; Created:     1992
 ;; Version:     2007.0506
 ;; VCS-Version: $Revision: 3.42 $
-;; VCS-URL:     http://tiny-tools.cvs.sourceforge.net/tiny-tools/tiny-tools/lisp/other/
+;; VCS-URL:     http://nongnu.org/projects/emacs-tiny-tools/
 ;; VCS-Date:    $Date: 2007/05/07 10:50:05 $
 ;; Keywords:    tools
 

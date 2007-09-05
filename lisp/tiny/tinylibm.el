@@ -3604,7 +3604,7 @@ Input:
      ;; You could also use (url-link "mailto:foo.bar@example.com")
 
      :link '(url-link :tag "Update site"
-                      "http://tiny-tools.sourceforge.net")
+                      "http://nongnu.org/projects/emacs-tiny-tools/")
      :prefix (symbol-name (quote (, prefix)))
      :group  (quote (, group))
 
