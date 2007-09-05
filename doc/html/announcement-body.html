@@ -22,12 +22,12 @@ Emacs Tiny Tools announce history
 	content="">
 
 <meta http-equiv="Content-Type" content="text/html; charset=utf-8">
-  <meta http-equiv="Expires" content="Thu,  1 Nov 2007 09:01:06 GMT">
+  <meta http-equiv="Expires" content="Sun,  4 Nov 2007 21:53:38 GMT">
 
 
 
   <meta name="Generator"
-	content="2007-09-02 12:01 Perl program t2html.pl v2007.0526 http://perl-text2html.sourceforge.net/">
+	content="2007-09-06 00:53 Perl program t2html.pl v2007.0526 http://perl-text2html.sourceforge.net/">
 
 
 
@@ -714,6 +714,12 @@ Emacs Tiny Tools announce history
 
 <body >
 
+
+<p class="column8">
+        License: You can redistribute and/or modify this under the
+        terms of Gnu General Public license v2, or (at your option)
+        any later version.
+
 2003-08-07 Announcement as posted to gnu.emacs.sources
 
 
@@ -734,7 +740,7 @@ Emacs Tiny Tools announce history
     <TR>
     <TD class="shade-normal-attrib" valign="top">
     <PRE>
-       IRC is very poplar method of getting to getter with all sorts
+       IRC is very popular method of getting to getter with all sorts
        of activities. For programmers alike, IRC is like 'all united'
        where you get invaluable help from people that happen to be
        online. No need to scratch your head alone; let's scratch
@@ -928,7 +934,7 @@ Emacs Tiny Tools announce history
         a complete release including the bin/ doc/ and lip/
         directories. Start at doc/REAME.txt, which unfortunately
         refers to old develoment site and it's practises. Just ignore
-        those comments for now. - 2000-09-09 
+        those comments for now. - 2000-09-09
 
 
 <p class="column8">
@@ -1401,6 +1407,187 @@ Emacs Tiny Tools announce history
 <p class="column8">
         Happy experimenting, Jari
 
+2000-02-17 ANNOUNCE: instant Java language call syntax help (tinytag.el)
+
+
+<p class="column8">
+        Hi, [2000-02-17]
+
+
+<p class="column8">
+        I decided to update one of my packages to support Java call syntax
+        in echo-area while you you program. Years ago I had coded the
+        support mainly for C/C++, but now I currently code with Java and
+        thought it was time to wipe dust off from the old engine.
+
+
+<p class="column8">
+        What is tinytag.el ? The name &quot;tag&quot; comes from analogy to
+        the emacs TAGS packages that cache various language syntax information
+
+
+<p class="column8">
+        Suppose we have code:
+
+<P>
+<TABLE class="shade-normal">
+    <TR>
+    <TD class="shade-normal-attrib" valign="top">
+    <PRE>
+      Runtime rt = Runtime.getRuntime();
+      long total = rt.totalMemory();
+                      *
+                      Your cursor is over this function    </PRE></TD>
+    </TR>
+</TABLE>
+
+
+<p class="column8">
+        After few seconds the modeline will inform you:
+
+<P>
+<TABLE class="shade-normal">
+    <TR>
+    <TD class="shade-normal-attrib" valign="top">
+    <PRE>
+      1: java.lang.Runtime  long totalMemory() throws IOException    </PRE></TD>
+    </TR>
+</TABLE>
+
+
+<p class="column8">
+        What you need:
+
+<P>
+<TABLE class="shade-normal">
+    <TR>
+    <TD class="shade-normal-attrib" valign="top">
+    <PRE>
+      1. <a href="http://tiny-tools.soourceforge.net/" >http://tiny-tools.soourceforge.net/</a>
+      2. Perl    </PRE></TD>
+    </TR>
+</TABLE>
+
+
+<p class="column8">
+        What do you do to get instant help working? Generate Java database:
+
+<P>
+<TABLE class="shade-normal">
+    <TR>
+    <TD class="shade-normal-attrib" valign="top">
+    <PRE>
+      You must generate the Java function call database. In Tiny Tools
+      kit you find java-function-list.pl which extracts the functions
+      out of the standard JDK javadoc pages. This is the database that you
+      will be using.
+
+          perl java-function-list.pl --recurse java/sun/jdk1.2.2/docs \
+            &gt; ~/elisp/config/emacs-config-tinytag-jdk1.2.2
+
+      And it generates database in following format. You can edit
+      the lines as you wish to supply additional information. There
+      is no required line format:
+
+          java.lang.StringBuffer  StringBuffer insert(int offset, Object obj)
+          java.lang.StringBuffer  StringBuffer insert(int offset, String str)
+          ...
+          java.lang.String  String substring(int beginIndex, int endIndex) throws UnsupportedEncodingException
+          ...
+
+          NOTICE: The System.out.print* functions are not generated (Java
+          does not have page for them because they are inherited functions)
+          See comments in Perl script's --help and copy the defaults form
+          there to the end of generated database.    </PRE></TD>
+    </TR>
+</TABLE>
+
+
+<p class="column8">
+        Let tinytag.el know that you now have java database available
+
+<P>
+<TABLE class="shade-normal">
+    <TR>
+    <TD class="shade-normal-attrib" valign="top">
+    <PRE>
+        ;;  Define two of your own variables
+
+        ;;  The emacs-config-tinytag-jdk1.2.2 file must be located
+        ;;  under tinytag-:database-dir which is by default
+        ;;  ~/elisp/config or ~/ if config dir did not exist.
+
+        (defconst my-tinytag-:db-map-java
+          '((func       &quot;emacs-config-tinytag-jdk1.2.2&quot;))
+          &quot;Java database.&quot;)
+
+        (defconst my-tinytag-:db-re-java
+          '((&quot;.&quot;        (func)))
+          &quot;Java database.&quot;)
+
+        ;;  Now glue your variables to tinytag.el
+
+
+        (defconst tinytag-:database-setup-table
+          (list
+
+           '(&quot;code-java\\|java&quot;
+             (my-tinytag-:db-map-java my-tinytag-:db-re-java))
+
+            ;; ...other supported languages))    </PRE></TD>
+    </TR>
+</TABLE>
+
+
+<p class="column8">
+        If everything went ok, you're ready to code with java and &quot;instant help&quot;.
+        Loading the tinytag.el and configuring the <samp class="word">tinytag-:database-setup-table</samp>
+        is enough to activate the package. You can also keep following window
+        visible if the echo-area display is not enough:
+
+<P>
+<TABLE class="shade-normal">
+    <TR>
+    <TD class="shade-normal-attrib" valign="top">
+    <PRE>
+      *tinytag-output*    </PRE></TD>
+    </TR>
+</TABLE>
+
+
+<p class="column8">
+        In case of error or nothing happens, please turn on debug:
+
+<P>
+<TABLE class="shade-normal">
+    <TR>
+    <TD class="shade-normal-attrib" valign="top">
+    <PRE>
+      M-x tinytag-debug-toggle    </PRE></TD>
+    </TR>
+</TABLE>
+
+
+<p class="column8">
+        And observe the printed messages in buffer
+
+<P>
+<TABLE class="shade-normal">
+    <TR>
+    <TD class="shade-normal-attrib" valign="top">
+    <PRE>
+      *tinytag-debug*    </PRE></TD>
+    </TR>
+</TABLE>
+
+
+<p class="column8">
+        Please try and give feedback, this is first java support implementation.
+
+
+<p class="column8">
+        Jari
+
 
 
 <!--    ......................................................................
@@ -1420,7 +1607,7 @@ This file has been automatically generated from plain text file
 with Perl script <strong>t2html.pl v2007.0526</strong><br>
 Document author: jaalto<br>
 Url: <a href="http://tiny-tools.sourceforge.net">http://tiny-tools.sourceforge.net</a><br>
-Last updated: 2007-09-02 12:01<br>
+Last updated: 2007-09-06 00:53<br>
 </em    class="footer">
 </body>
 </html>

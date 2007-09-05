@@ -19,12 +19,12 @@ No title
 	content="">
 
 <meta http-equiv="Content-Type" content="text/html; charset=utf-8">
-  <meta http-equiv="Expires" content="Thu,  1 Nov 2007 09:05:12 GMT">
+  <meta http-equiv="Expires" content="Sun,  4 Nov 2007 21:55:40 GMT">
 
 
 
   <meta name="Generator"
-	content="2007-09-02 12:05 Perl program t2html.pl v2007.0526 http://perl-text2html.sourceforge.net/">
+	content="2007-09-06 00:55 Perl program t2html.pl v2007.0526 http://perl-text2html.sourceforge.net/">
 
 
 
@@ -848,7 +848,7 @@ No title
            <br>
 <li>
            <a href="#code_note_elp_profiling_results" class="toc">
-               Code note: Elp profiling results 
+               Code note: Elp profiling results
            </a>
            <br>
 <li>
@@ -865,6 +865,13 @@ No title
     TABLE OF CONTENT END
     ......................................................................
 -->
+
+
+
+<p class="column8">
+        License: You can redistribute and/or modify this under the
+        terms of Gnu General Public license v2, or (at your option)
+        any later version.
 
 <hr>
                <A name="tinypath_el_manage_emacs_startup_dynamically"  id="tinypath_el_manage_emacs_startup_dynamically"></A>
@@ -883,7 +890,7 @@ No title
 
 
 
-  
+
 <p>
 <p class="column8">
         When you have set up your Emacs installation to your liking, a day
@@ -891,7 +898,7 @@ No title
         directory structure of your installed lisp packages. At start, it
         is customary to use simple file hierarchy where all private
         packages are installed under:
-  
+
 <P>
 <TABLE class="shade-normal">
     <TR>
@@ -900,11 +907,11 @@ No title
       ~/elisp   ;; some people also prefer ~/lisp    </PRE></TD>
     </TR>
 </TABLE>
-  
+
 
 <p class="column8">
         Complete kits are usually installed directly under the root:
-  
+
 <P>
 <TABLE class="shade-normal">
     <TR>
@@ -915,14 +922,14 @@ No title
       ~/elisp/packages/pcl-cvs-2.9.2/    </PRE></TD>
     </TR>
 </TABLE>
-  
+
 
 <p class="column8">
         A more sophisticated way is to use symlinks to the latest
         versions, so that you don't have to change <samp class="word">load-path</samp> every
         time you install a new version. It is only matter of updating
         the symlink:
-  
+
 <P>
 <TABLE class="shade-normal">
     <TR>
@@ -933,12 +940,12 @@ No title
       This path is in the `load-path'    </PRE></TD>
     </TR>
 </TABLE>
-  
+
 
 <p class="column8">
         In networked, where Windows ic oupled with Unix workstations via SAMBA,
         you may have mapped the <strong class="word">H:</strong> disk to you Unix <strong class="word">$HOME</strong>:
-  
+
 <P>
 <TABLE class="shade-normal">
     <TR>
@@ -947,7 +954,7 @@ No title
       H:  --&gt; Unix $HOME  \\SERVER\DIRECTORY\YOUR-LOGIN-DIR    </PRE></TD>
     </TR>
 </TABLE>
-  
+
 
 <p class="column8">
         Now, there is a catch when you use Unix symlinks in <samp class="word">$HOME/elisp</samp>
@@ -960,12 +967,12 @@ No title
         symlinked directories from real directories, so all symlinked Unix
         directories in <samp class="word">load-path</samp> are dead. And that's why most of the
         files cannot be found any more.
-  
+
 
 <p class="column7"><em><strong>
        The conclusions</strong></em>
 
-  
+
 
 <p class="column8">
         For cross platform solution it is best not to rely on symlinks,
@@ -975,7 +982,7 @@ No title
         directory structure change, etc. A dream package would solve this
         all and do the hard work: &quot;There, that is the root(s) of all Emacs
         lisp, go and sniff all the directories and update <samp class="word">load-path</samp>&quot;
-  
+
 
 <p class="column8">
         That was what this package originally was all about. Nowadays it
@@ -988,7 +995,7 @@ No title
         <samp class="word">load</samp> commands execute also faster than previously, because the
         information about existing files is immediately available. The
         speedup is helped through advised functions.
-  
+
 
 
   <a name="overview_of_features" id="overview_of_features"></a>
@@ -999,12 +1006,12 @@ No title
 
 
 
-  
+
 <p>
 <p class="column7"><em><strong>
        Automatic load-path configuration</strong></em>
 
-  
+
 <ul>
 	<li>Define list of <samp class="word">root</samp> directories of your Emacs lisp and this
             package will recursively add directories which contain .el or
@@ -1034,12 +1041,12 @@ No title
 </ul>
 
 
-  
+
 
 <p class="column7"><em><strong>
        Automatic Info-default-directory-list configuration</strong></em>
 
-  
+
 <ul>
 	<li>If you download packages that include Emacs info files,
             the <samp class="word">Info-default-directory-list</samp> is updated at the same time
@@ -1052,19 +1059,19 @@ No title
 </ul>
 
 
-  
+
 
 <p class="column8">
         If you have added new info files by hand, just call function
         <samp class="word">tinypath-info-handler</samp> to update your Emacs and update the
         <samp class="word">dir</samp> entry. After that reset infor with <samp class="word">M-x</samp>
         <samp class="word">tinypath-info-initialize</samp>
-  
+
 
 <p class="column7"><em><strong>
        Win32 automatic manpath configuration</strong></em>
 
-  
+
 <ul>
 	<li>In Unix systems the MANPATH enavironment variable contains
             directories where to find manual pages, but in Win32,
@@ -1076,12 +1083,12 @@ No title
 </ul>
 
 
-  
+
 
 <p class="column7"><em><strong>
        Win32 Cygwin environment support</strong></em>
 
-  
+
 <ul>
 	<li>If <em class="word">cygwin1.dll</em> (&lt;<a href="http://www.cygwin.com/" >http://www.cygwin.com/</A>&gt;) is in your path,
             automatic detection tries to find the Cygwin root and scan
@@ -1092,18 +1099,18 @@ No title
 </ul>
 
 
-  
+
 
 <p class="column7"><em><strong>
        Compressed lisp file support</strong></em>
 
-  
+
 <ul>
 	<li>Overloads commands load, load-library, load-file, require
             and autoload to accept <samp class="word">jka-compr</samp> compressed lisp .el files.
 <li>Primarily meant to be used in low quota accounts.
 	</li>
-<li>Compress or decompress lisp files. You don't have to change 
+<li>Compress or decompress lisp files. You don't have to change
             a thing in your Emacs startup file, all will work as usual.
 	</li>
 <li>Correctly handles aliased commands that turn out to be
@@ -1111,7 +1118,7 @@ No title
 </ul>
 
 
-  
+
 
 
   <a name="how_to_set_up_your_load_path" id="how_to_set_up_your_load_path"></a>
@@ -1122,7 +1129,7 @@ No title
 
 
 
-  
+
 <p>
 <p class="column8">
         The <samp class="word">tinypath-:load-hook</samp> contains function <samp class="word">tinypath-setup</samp> which
@@ -1132,7 +1139,7 @@ No title
         files under <em class="word">$HOME/elisp</em>, then you do not need to configure anything
         for this package to work. Your <samp class="word">load-path</samp> has been updated after
         this statement at the beginning of your <em class="word">$HOME/.emacs</em>
-  
+
 <P>
 <TABLE class="shade-normal">
     <TR>
@@ -1141,18 +1148,18 @@ No title
       (load &quot;~/elisp/tiny/tinypath&quot;) ;; Or anywhere you have it installed    </PRE></TD>
     </TR>
 </TABLE>
-  
+
 
 <p class="column8">
         If you have <strong class="word">many</strong> separate Emacs lisp root directories, like one
         for <em class="word">site-lisp</em> and one for <em class="word">site-packages</em> and one for your
         <em class="word">personal</em> <em class="word">lisp</em> files, then you have add those to variable
         <samp class="word">tinypath-:load-path-root</samp>. Below there is an example for PC users,
-        where the E: partition replicates identical Unix tree structure. 
+        where the E: partition replicates identical Unix tree structure.
         We suppose for the moment that Cygwin is installed there.
         The following actually works for Unix too, because non-existing
         directories will be ignored:
-  
+
 <P>
 <TABLE class="shade-normal">
     <TR>
@@ -1163,7 +1170,7 @@ No title
       (load &quot;~/elisp/tiny/tinypath&quot;)    </PRE></TD>
     </TR>
 </TABLE>
-  
+
 
 
   <a name="xemacs_and_emacs_specific_directories" id="xemacs_and_emacs_specific_directories"></a>
@@ -1174,7 +1181,7 @@ No title
 
 
 
-  
+
 <p>
 <p class="column8">
         In spite of great effort from developers to make packages
@@ -1182,7 +1189,7 @@ No title
         that only works with Emacs or XEmacs. It is assumed that the site
         admin has created directories like these to keep the <em class="word">site-lisp</em>
         installation clean:
-  
+
 <P>
 <TABLE class="shade-normal">
     <TR>
@@ -1191,20 +1198,20 @@ No title
       ;;   This might be also under /opt/share/site-lisp
       ;;   Refer to file hierarchy standard at
       ;;   <a href="http://www.pathname.com/fhs/" >http://www.pathname.com/fhs/</a>
-  
+
       /usr/share/emacs/site-lisp/common/   .. XEmacs and Emacs
       /usr/share/emacs/site-lisp/emacs/    .. only for Emacs
       /usr/share/emacs/site-lisp/xemacs/   .. only for XEmacs    </PRE></TD>
     </TR>
 </TABLE>
-  
+
 
 <p class="column8">
         To take care of the Emacs specific <samp class="word">load-path</samp> setting, use code
         similar to this snippet. If you load the setup multiple times, the
         <samp class="word">pushnew</samp> ensures that the directories are not added multiple
         times.
-  
+
 <P>
 <TABLE class="shade-normal">
     <TR>
@@ -1219,14 +1226,14 @@ No title
                        &quot;/usr/share/site-lisp/emacs&quot;)))
         (when (stringp path)
           (pushnew path tinypath-:load-path-root :test 'string=)))
-  
+
       ;; PLEASE COPY VERBATIM. THERE ARE OPTIMIZATIONS
       ;; THAT ACTIVATE If YOU ADD THE PATH
       (pushnew &quot;~/elisp/tiny/lisp&quot; load-path :test 'stringp=)
       (load &quot;tinypath.el&quot;)    </PRE></TD>
     </TR>
 </TABLE>
-  
+
 
 <p class="column8">
         In fact this package will check current emacs version and make
@@ -1235,23 +1242,23 @@ No title
         site-lisp root <samp class="word">/usr/local/share/site-lisp</samp>, and current emacs
         binary is &quot;emacs&quot;, then all directories that contain path
         portion <samp class="word">/xemacs</samp>  woudl have been automatically ignored.
-  
+
 
 <p class="column7"><em><strong>
        Building part of site-lisp using Net</strong></em>
 
-  
+
 
 <p class="column8">
         If we continue talking a bit more about site-lisp, there is utility
-        <em class="word">mywebget.pl</em> at &lt;<a href="http://perl-webget.sourceforge.net/" >http://perl-webget.sourceforge.net/</A>&gt;. It 
+        <em class="word">mywebget.pl</em> at &lt;<a href="http://perl-webget.sourceforge.net/" >http://perl-webget.sourceforge.net/</A>&gt;. It
         includes a <em class="word">mywebget-emacs.conf</em> which contains
         knowledge where the various lisp developers' home pages are and how
         to download all known lisp tools that does not come with Emacs. If
         you have lot of disk space and you're interested in getting more
         lisp tools to go with your Emacs, follow the instruction laid out
         in this project's sourceforge page.
-  
+
 
 <p class="column8">
         If you are further interested in Emacs packages, see CVS
@@ -1262,7 +1269,7 @@ No title
         Mailcrypt etc.  Cvs is minimizing network traffic by
         transferring only changes.  Here is one suggestion where you
         could put all your Emacs Lisp Version control downloads:
-  
+
 <P>
 <TABLE class="shade-normal">
     <TR>
@@ -1271,12 +1278,12 @@ No title
        /usr/share/emacs/site-lisp/net/cvs-packages    </PRE></TD>
     </TR>
 </TABLE>
-  
+
 
 <p class="column8">
         Now, the overall structure of whole site-lisp looks something like
         this:
-  
+
 <P>
 <TABLE class="shade-normal">
     <TR>
@@ -1324,12 +1331,12 @@ No title
                         +--xemacs-packages/    </PRE></TD>
     </TR>
 </TABLE>
-  
+
 
 <p class="column7"><em><strong>
        XEmacs 21.2+ core packages</strong></em>
 
-  
+
 
 <p class="column8">
         The latest XEmacs versions ship with only the very basic
@@ -1338,7 +1345,7 @@ No title
         also <em class="word">mule-packages</em> and <em class="word">site-packages</em> archives. A built-in
         heuristics tries to guess the location of these by looking under and
         near your XEmacs installation:
-  
+
 <P>
 <TABLE class="shade-normal">
     <TR>
@@ -1348,7 +1355,7 @@ No title
       .../XEmacs/xemacs-packages    </PRE></TD>
     </TR>
 </TABLE>
-  
+
 
 <p class="column8">
         If the archives have been installed elsewhere, you have to tell the
@@ -1356,7 +1363,7 @@ No title
         can't put these to <samp class="word">tinypath-:load-path-root</samp> because this is
         special information that needs to present during the very initial
         boot-up to find crucial packages like <em class="word">jka-compr.el</em>.
-  
+
 <P>
 <TABLE class="shade-normal">
     <TR>
@@ -1368,7 +1375,7 @@ No title
               &quot;/usr/share/site-lisp/xemacs/site-packages&quot;))    </PRE></TD>
     </TR>
 </TABLE>
-  
+
 
 
   <a name="finding_loadpath_directories" id="finding_loadpath_directories"></a>
@@ -1379,7 +1386,7 @@ No title
 
 
 
-  
+
 <p>
 <p class="column8">
         If you only used default <em class="word">$HOME/elisp</em> directory for your files, the
@@ -1388,10 +1395,10 @@ No title
         directories are counted in when the search descends below the root(s).
         Variable <samp class="word">tinypath-:load-path-ignore-regexp</samp> decides if the directory
         should be ignored. By default:
-  
+
 <ul>
 	<li>Package's additional subdirectories like texinfo, tex, doc, etc,
-            misc, RCS, CVS, .svn (Subversion), MT (monotone version control), 
+            misc, RCS, CVS, .svn (Subversion), MT (monotone version control),
             zip are ignored.
 <li>Any temporary directories named .../t/ .../T/ .../tmp* .../temp*
             are ignored.
@@ -1401,7 +1408,7 @@ No title
 </ul>
 
 
-  
+
 
 
   <a name="gnus_and_other_3rd_party_packages" id="gnus_and_other_3rd_party_packages"></a>
@@ -1412,7 +1419,7 @@ No title
 
 
 
-  
+
 <p>
 <p class="column8">
         <strong class="word">Note:</strong> In latest version of this utility <em class="word">Gnus</em> is treated
@@ -1423,12 +1430,12 @@ No title
         newest for you. You actually do not have to do anything else,
         but to drop latest Gnus somewhere, to be able to use it
         immediately.
-  
+
 
 <p class="column9"><strong>
          Under the hood - What follows, is old documentation.</strong>
 
-  
+
 
 <p class="column8">
         It is important to understand how this package works: It caches
@@ -1441,19 +1448,19 @@ No title
         work because everything goes through cache. What you need to do
         instead, is to tell that the &quot;other&quot; Gnus should be ignored during
         cache creation, so that it is completely unknown.
-  
+
 
 <p class="column7"><em><strong>
        Solution: ignoring directories</strong></em>
 
-  
+
 
 <p class="column8">
         There is very simple way. Put your regular expression to
         <samp class="word">tinypath-:ignore-file-regexp-extra</samp> and it will tell which
         directories to ignore.  Naturally you must put the lisp code
         <strong class="word">before</strong> you load package.
-  
+
 <P>
 <TABLE class="shade-normal">
     <TR>
@@ -1468,7 +1475,7 @@ No title
       (load &quot;tinypath.el&quot;)    </PRE></TD>
     </TR>
 </TABLE>
-  
+
 
 <p class="column8">
         <span class="word-ref">[For advanced Lisp programmers]</span> You can add ignored gnus directory
@@ -1482,7 +1489,7 @@ No title
         regexp compatible with both Unix and win32 paths. System
         directories in Unix are typically /emacs/NN.NN/ and in win32
         /emacs-NN.NN/, that's why added &quot;-&quot;.
-  
+
 <P>
 <TABLE class="shade-normal">
     <TR>
@@ -1490,7 +1497,7 @@ No title
     <PRE>
       (add-hook 'tinypath-:load-path-ignore-regexp-hook
                 'my-tinypath-:load-path-ignore-regexp-hook)
-  
+
       (defun my-tinypath-:load-path-ignore-regexp-hook ()
         ;;  Do this only once
         (unless (get 'my-tinypath-:load-path-ignore-regexp-hook 'set)
@@ -1502,11 +1509,11 @@ No title
                  &quot;[/\\]x?emacs[/\\0-9.]+[/\\]lisp[/\\]gnus&quot;))))    </PRE></TD>
     </TR>
 </TABLE>
-  
+
 
 <p class="column8">
         #todo: What about XEmacs public/private Gnus installations?
-  
+
 
 
   <a name="updating_new_lisp_packages" id="updating_new_lisp_packages"></a>
@@ -1517,11 +1524,11 @@ No title
 
 
 
-  
+
 <p>
 <p class="column8">
         Suppose you have installed a new version of a package:
-  
+
 <P>
 <TABLE class="shade-normal">
     <TR>
@@ -1531,7 +1538,7 @@ No title
       ~/elisp/gnus/pgnus-0.95/    ;; NEW    </PRE></TD>
     </TR>
 </TABLE>
-  
+
 
 <p class="column8">
         Both these directories end up being added to the <samp class="word">load-path</samp>,
@@ -1541,7 +1548,7 @@ No title
         is recommended that a backup of previous packages are renamed
         to start with a word &quot;tmp-&quot;. All directories that start with
         prefix <em class="word">tmp</em> are ignored.
-  
+
 <P>
 <TABLE class="shade-normal">
     <TR>
@@ -1551,7 +1558,7 @@ No title
                                                  ====    </PRE></TD>
     </TR>
 </TABLE>
-  
+
 
 <p class="column8">
         However if you update package in a site-lisp directory, there
@@ -1559,7 +1566,7 @@ No title
         the package. If you made the backup like above, that user
         cannot load the old package any more, because it doesn't show
         up in <samp class="word">load-path</samp>
-  
+
 
 <p class="column8">
         There is no easy answer to keep old packages. Admin could
@@ -1569,7 +1576,7 @@ No title
         their setup. The statement below adds the old directory to the
         <em class="word">beginning</em> of <samp class="word">load-path</samp> and thus load commands would find the
         old version of the package first.
-  
+
 <P>
 <TABLE class="shade-normal">
     <TR>
@@ -1580,13 +1587,13 @@ No title
       (tinypath-cache-regenerate)    </PRE></TD>
     </TR>
 </TABLE>
-  
+
 
 <p class="column8">
         Remember to mention to users that they need to update cache with
         <samp class="word">tinypath-cache-regenerate</samp> (called with prefix argument) to see
         the changes.
-  
+
 
 
   <a name="duplicate_files_in_path" id="duplicate_files_in_path"></a>
@@ -1597,7 +1604,7 @@ No title
 
 
 
-  
+
 <p>
 <p class="column8">
         If you have accustomed to putting your path to specific order, you
@@ -1608,7 +1615,7 @@ No title
         where you install a library or package that contains a file, which
         has already been installed to your hierarchy. Take for example,
         <em class="word">smtpmail.el</em>:
-  
+
 <P>
 <TABLE class="shade-normal">
     <TR>
@@ -1618,7 +1625,7 @@ No title
       /usr/share/site-lisp/common/packages/semi/flim-1.12.1/smtpmail.el    </PRE></TD>
     </TR>
 </TABLE>
-  
+
 
 <p class="column8">
         We have a problem here if FLIM's <em class="word">smtpmail.el</em> is not compatible with
@@ -1627,7 +1634,7 @@ No title
         know that before you get error &quot;function smtpmail-xxxx not defined&quot;
         and you start investigating with (locate-library &quot;smtpmail&quot;) which
         package is actually active.
-  
+
 
 <p class="column8">
         Acer activating this package, please investigate your path
@@ -1638,7 +1645,7 @@ No title
         <em class="word">flim-smtpmail.el</em> so that it doesn't get loaded with (require
         'smtpmail). The best is to contact the maintainer(s) and tell them
         about conflicts. Here is a sample of one generated problem report:
-  
+
 <P>
 <TABLE class="shade-normal">
     <TR>
@@ -1653,7 +1660,7 @@ No title
         807  9892 1999-11-15 00:00:12 /usr/share/site-lisp/common/packages/w3-4.0pre.46/lisp/    </PRE></TD>
     </TR>
 </TABLE>
-  
+
 
 <p class="column8">
         <strong class="word">Explanation:</strong> User had used <em class="word">imenu</em> as a separate package
@@ -1669,7 +1676,7 @@ No title
         <samp class="word">tinypath-report-mode</samp> is turned on to manipulate reported
         lines.  Unnecessary files can be deleted with
         <samp class="word">Control-shift-mouse-1</samp> or <samp class="word">C-c</samp> <samp class="word">C-d</samp>.
-  
+
 
 
   <a name="symlinked_directories_are_ignored" id="symlinked_directories_are_ignored"></a>
@@ -1680,13 +1687,13 @@ No title
 
 
 
-  
+
 <p>
 <p class="column8">
         It has been the tradition to use symlinks a lot in Unix to
         arrange easy access to versioned packages. Like how to
         ~/elisp/gnus/ no matter what version is currently installed.
-  
+
 <P>
 <TABLE class="shade-normal">
     <TR>
@@ -1695,7 +1702,7 @@ No title
       ln -s ~/elisp/packages/gnus-N.NN  ~/elisp/packages/gnus    </PRE></TD>
     </TR>
 </TABLE>
-  
+
 
 <p class="column8">
         This package however <em class="word">skips</em> those symlinks and records the
@@ -1706,12 +1713,12 @@ No title
         directory and c) symlinks don'e work in heterogenous environments
         where Win32 and Linux and Unix is networked together. To migrate to
         this package you need to examine your symlinks and remove them.
-  
+
 
 <p class="column8">
         If you have drawn a symlink to the the current directory from
         <em class="word">SEPARATE</em> directory, then that directory will never be seen:
-  
+
 <P>
 <TABLE class="shade-normal">
     <TR>
@@ -1720,7 +1727,7 @@ No title
       ln -s ~/some-disk/elisp/artist-1.1/ ~/elisp/packages/artist-1.1    </PRE></TD>
     </TR>
 </TABLE>
-  
+
 
 <p class="column8">
         To solve this, instead either <strong class="word">a)</strong> move the package physically
@@ -1728,7 +1735,7 @@ No title
         recursive search will record it or <strong class="word">b)</strong> add the separate
         directory <em class="word">~/some-disk/elisp</em> to the variable
         <samp class="word">tinypath-:load-path-root</samp>.
-  
+
 
 
   <a name="using_cache" id="using_cache"></a>
@@ -1739,13 +1746,13 @@ No title
 
 
 
-  
+
 <p>
 <p class="column8">
         Now when you're freed from update burden of the directories in your
         disk, you can concentrate organizing the files under sensible
         directories. Here is an example how the organizing could go:
-  
+
 <P>
 <TABLE class="shade-normal">
     <TR>
@@ -1762,7 +1769,7 @@ No title
       ~/elisp/other/              All single add-on packages    </PRE></TD>
     </TR>
 </TABLE>
-  
+
 
 <p class="column8">
         All these paths in <samp class="word">load-path</samp> and you can imagine how slow a
@@ -1777,13 +1784,13 @@ No title
         non-expiry days, it is best to call <samp class="word">C-u</samp> <samp class="word">M-x</samp>
         <samp class="word">tinypath-cache-regenerate</samp> to build up to date image of your files
         and <samp class="word">load-path</samp> directories.
-  
+
 
 <p class="column10"><em class="quote10">
           If you want one short advice: always call <samp class="word">tinypath-cache-regenerate</samp>
           after any lisp file or directory update.</em>
 
-  
+
 
 
   <a name="cache_file_and_different_emacs_versions" id="cache_file_and_different_emacs_versions"></a>
@@ -1794,13 +1801,13 @@ No title
 
 
 
-  
+
 <p>
 <p class="column8">
         It is important that each Emacs loads correct cache file. The cache
         file's name is derived from the emacs version and emacs type, which
         can be &quot;xemacs&quot;, &quot;win32-xemacs&quot;, &quot;emacs&quot; or &quot;win32-emacs&quot;.
-  
+
 <P>
 <TABLE class="shade-normal">
     <TR>
@@ -1811,18 +1818,18 @@ No title
       + HOST
       + EMACS-VERSION
       + tinypath-:cache-file-postfix
-  
+
       ~/elisp/config/emacs-config-tinypath-cache-win32-HOST-emacs-20.4.1.el.gz
       ==========================================                        ======
       prefix                                                           postfix    </PRE></TD>
     </TR>
 </TABLE>
-  
+
 
 <p class="column7"><em><strong>
        Unix hosts and NFS mounts</strong></em>
 
-  
+
 
 <p class="column8">
         In Unix environment, it is also common that several hosts are NFS
@@ -1842,7 +1849,7 @@ No title
         see the same programs and site-lisp directories and there would not
         be need for host specific cache files. In that case, disable the
         <em class="word">HOST</em> word by setting this variable to nil:
-  
+
 <P>
 <TABLE class="shade-normal">
     <TR>
@@ -1851,7 +1858,7 @@ No title
       (setq tinypath-:cache-file-hostname-function nil)    </PRE></TD>
     </TR>
 </TABLE>
-  
+
 
 
   <a name="info_file_support" id="info_file_support"></a>
@@ -1862,7 +1869,7 @@ No title
 
 
 
-  
+
 <p>
 <p class="column8">
         In addition to updating the <samp class="word">load-path</samp>, the recursive function
@@ -1870,7 +1877,7 @@ No title
         keep all your site lisp under one directory, it is not uncommon
         that the bigger packages include documentation files in info format
         as well. Like:
-  
+
 <P>
 <TABLE class="shade-normal">
     <TR>
@@ -1880,7 +1887,7 @@ No title
       /usr/share/site-lisp/common/packages/psgml-1.2.1/    </PRE></TD>
     </TR>
 </TABLE>
-  
+
 
 <p class="column8">
         One possibility is that after you download and uncompress a
@@ -1891,7 +1898,7 @@ No title
         same job by looking for directories that either have info files or
         a central info repository called <samp class="word">dir</samp>. If the <samp class="word">dir</samp> file
         has all the info files up to date, nothing is done. In other cases:
-  
+
 <ul>
 	<li>If the central <samp class="word">dir</samp> in the directory does not exits,
             it is created.
@@ -1900,7 +1907,7 @@ No title
 </ul>
 
 
-  
+
 
 <p class="column8">
         The <samp class="word">Info-default-directory-list</samp> is updated to include any new
@@ -1913,7 +1920,7 @@ No title
         update your info files with <samp class="word">M-x</samp>
         <samp class="word">tinypath-info-scan-Info-default-directory-list</samp>. This is also
         called if you call: <samp class="word">C-u</samp> <samp class="word">M-x</samp> <samp class="word">tinypath-cache-regenerate</samp>
-  
+
 
 
   <a name="cygwin_support_win32_and_woman_el" id="cygwin_support_win32_and_woman_el"></a>
@@ -1924,7 +1931,7 @@ No title
 
 
 
-  
+
 <p>
 <p class="column8">
         It is common that Emacs in Win32 environment is coupled with
@@ -1937,7 +1944,7 @@ No title
         settings at your OS level before this package is started. If Cygwin
         /bin directory in in PATH, <samp class="word">tinypath-:extra-path-root</samp> will get set
         to a correct value at boot time.
-  
+
 
 <p class="column8">
         If you have more places where you keep Unix tools which contain
@@ -1946,7 +1953,7 @@ No title
         <samp class="word">tinypath-:extra-path-root</samp> to the list of search root directories.
         If you set this yourself, you <strong class="word">must</strong> also include the cygwin
         installation root directory
-  
+
 <P>
 <TABLE class="shade-normal">
     <TR>
@@ -1958,7 +1965,7 @@ No title
               ...))    </PRE></TD>
     </TR>
 </TABLE>
-  
+
 
 <p class="column8">
         Package <em class="word">woman.el</em> will be configured automatically if it is along
@@ -1969,7 +1976,7 @@ No title
         Search you startup files for anything that looks like <samp class="word">setq</samp>,
         <samp class="word">defvar</samp>, <samp class="word">defconst</samp>: (setq woman-manpath ... and change the code
         to <strong class="word">add</strong> to the variable instead:
-  
+
 <P>
 <TABLE class="shade-normal">
     <TR>
@@ -1980,7 +1987,7 @@ No title
         (pushnew (expand-file-name path) woman-manpath :test 'string))    </PRE></TD>
     </TR>
 </TABLE>
-  
+
 
 
   <a name="faster_emacs_configuration_perl_emacsutil_pl" id="faster_emacs_configuration_perl_emacsutil_pl"></a>
@@ -1991,13 +1998,13 @@ No title
 
 
 
-  
+
 <p>
 <p class="column8">
         Indication of this feature at startup is following message, where
         EXT refers to externally launched process which must be waited
         until further processing is done.
-  
+
 <P>
 <TABLE class="shade-normal">
     <TR>
@@ -2006,7 +2013,7 @@ No title
       TinyPath: EXT Process running ... [may take a while]    </PRE></TD>
     </TR>
 </TABLE>
-  
+
 
 <p class="column8">
         As this package evolved and more support was added to various
@@ -2017,7 +2024,7 @@ No title
         which can traverse directory hierarchies to find relevant
         directories for the setup. This interface is automatically used
         if two conditions are met in current environment:
-  
+
 <ul>
 	<li>Binary <em class="word">perl</em> must be along PATH. (according  <samp class="word">executable-find</samp>)
 <li>perl script <em class="word">emacs-util.pl</em> must be along PATH. Either copy
@@ -2027,7 +2034,7 @@ No title
 </ul>
 
 
-  
+
 
 <p class="column8">
         If all goes well, a <samp class="word">call-process</samp> to the utility script will
@@ -2038,7 +2045,7 @@ No title
         <em class="word">Message</em> buffer and you can run the program yourself if you think
         that it returns incorrect listing. Print the script help with
         following command:
-  
+
 <P>
 <TABLE class="shade-normal">
     <TR>
@@ -2047,12 +2054,12 @@ No title
       % perl emacs-util.pl --help    </PRE></TD>
     </TR>
 </TABLE>
-  
+
 
 <p class="column8">
         Here are some performance statistics of the perl script in action.
         (Use --verbose argument to see the statistics)
-  
+
 <ul>
 	<li>Intel 400MHz, IBM GXP 80G IDE disk, whole Cygwin installation
             scan: 3 min 46 sec, dirs: 2373, files: 35 271
@@ -2062,7 +2069,7 @@ No title
 </ul>
 
 
-  
+
 
 <p class="column8">
         Let's consider one scenario that you may encounter if you intend to
@@ -2070,7 +2077,7 @@ No title
         you have dedicated a disk portion where you intend to duplicate
         whole Linux-like directory hierarchy. You have ROOT under which you
         keep all the files, including anything that is Cygwin-related.
-  
+
 <P>
 <TABLE class="shade-normal">
     <TR>
@@ -2082,7 +2089,7 @@ No title
       E:/usr/share/site-cvs  Various other external CVS C-packages    </PRE></TD>
     </TR>
 </TABLE>
-  
+
 
 <p class="column8">
         The default heuristics <samp class="word">ti::win32-cygwin-p</samp> should find
@@ -2094,7 +2101,7 @@ No title
         that this combination means that the hierarchies would be
         traversed multiple times, since the Cygwin root already
         includes all the rest:
-  
+
 <P>
 <TABLE class="shade-normal">
     <TR>
@@ -2105,7 +2112,7 @@ No title
       E:/usr/share/site-lisp/common   Emacs and XEmacs compatible tree    </PRE></TD>
     </TR>
 </TABLE>
-  
+
 
 <p class="column8">
         Don't worry. The Perl utility is smart enough to reduce this to
@@ -2113,7 +2120,7 @@ No title
         other lisp files are found <strong class="word">outside</strong> of the
         <em class="word">E:/usr/share/site-lisp/</em>, because it searches every dir starting
         from <em class="word">E:/</em> Say:
-  
+
 <P>
 <TABLE class="shade-normal">
     <TR>
@@ -2122,7 +2129,7 @@ No title
       E:/tmp/try/some-file.el    </PRE></TD>
     </TR>
 </TABLE>
-  
+
 
 <p class="column8">
         Will the directory <em class="word">E:/tmp/try/</em> reported as lisp <samp class="word">load-path</samp>
@@ -2133,7 +2140,7 @@ No title
         messages labeled &quot;candidate&quot; to indicate those rejections. Only files
         that reside under <samp class="word">tinypath-:load-path-root</samp> directories are counted
         in.
-  
+
 
 
   <a name="updating_running_emacs" id="updating_running_emacs"></a>
@@ -2144,12 +2151,12 @@ No title
 
 
 
-  
+
 <p>
 <p class="column8">
         Suppose you have downloaded the latest versions of packages X, Y and Z
         and you want your current emacs's paths updated, call this function:
-  
+
 <P>
 <TABLE class="shade-normal">
     <TR>
@@ -2158,7 +2165,7 @@ No title
       M-x tinypath-cache-regenerate    </PRE></TD>
     </TR>
 </TABLE>
-  
+
 
 <p class="column8">
         Take a bit of skepticism: It is a fortunate event if it all
@@ -2169,7 +2176,7 @@ No title
         bizarre dependency problems. I recommend that after any major
         package update, which contains <strong class="word">several</strong> of files (like Gnus),
         you:
-  
+
 <ul>
 	<li> Install package and regenerate cache in current Emacs session
              with <samp class="word">M-x</samp> <samp class="word">tinypach-cache-regenerate</samp>.
@@ -2178,7 +2185,7 @@ No title
 </ul>
 
 
-  
+
 
 
   <a name="compressed_lisp_file_support" id="compressed_lisp_file_support"></a>
@@ -2189,26 +2196,26 @@ No title
 
 
 
-  
+
 <p>
 <p class="column8">
         In order to use the full compression support for autoload functions
         as well, set variable <samp class="word">tinypath-:compression-support</samp> to symbol
         <samp class="word">all</samp>. the default support only handles <samp class="word">require</samp> and <samp class="word">load</samp> commands.
         the variable must be set before rhis utility package is loaded.
-  
+
 
 <p class="column7"><em><strong>
        Jka-compr and this package</strong></em>
 
-  
+
 
 <p class="column8">
         jka-compr has native support to un/compress any file that have
         specific extensions. The handling is done via
         <samp class="word">file-name-handler-alist</samp> and commands like these will load
         properly including any autoloads.
-  
+
 <P>
 <TABLE class="shade-normal">
     <TR>
@@ -2217,7 +2224,7 @@ No title
       (load &quot;my-el.gz&quot;)    </PRE></TD>
     </TR>
 </TABLE>
-  
+
 
 <p class="column8">
         The obvious problem is that you have to manually go and change all
@@ -2230,7 +2237,7 @@ No title
         about; you don't have to worry if the file is compressed or not
         when these advised functions are in effect. The following statement
         will always work:
-  
+
 <P>
 <TABLE class="shade-normal">
     <TR>
@@ -2239,12 +2246,12 @@ No title
       (load &quot;my-el&quot;)    </PRE></TD>
     </TR>
 </TABLE>
-  
+
 
 <p class="column7"><em><strong>
        How the compressed loading works</strong></em>
 
-  
+
 <ul>
 	<li>When user request <samp class="word">load</samp> FILE, try to find some compressed file
             that JKA knows about by adding extensions &quot;.gz&quot; and &quot;.Z&quot; and
@@ -2264,12 +2271,12 @@ No title
 </ul>
 
 
-  
+
 
 <p class="column7"><em><strong>
        Note: Why you should not prefer compressed .elc files</strong></em>
 
-  
+
 
 <p class="column8">
         The purpose of compression support is to make it possible to
@@ -2277,7 +2284,7 @@ No title
         disk space (quota). Many Unicersity student accounts have this
         limitation. Keeping lisp files in compressed format
         saves quite a much disk space.
-  
+
 <ul>
 	<li>Plain text, lisp <samp class="word">.el</samp>, files may compress better.
 <li>The documentation in comments is important, e.g all the
@@ -2292,12 +2299,12 @@ No title
 </ul>
 
 
-  
+
 
 <p class="column7"><em><strong>
        Note: advised emacs commands</strong></em>
 
-  
+
 
 <p class="column8">
         The adviced functions can be further adviced, but
@@ -2306,7 +2313,7 @@ No title
         the advised functions detect it, is that advice.el's
         <samp class="word">ad-do-it</samp> macro cannot pass the interactive flag information
         to the original functions.
-  
+
 
 
   <a name="trouble_shooting" id="trouble_shooting"></a>
@@ -2317,7 +2324,7 @@ No title
 
 
 
-  
+
 <p>
 <p class="column8">
         There is no denying it, this package is dangerous. When something
@@ -2326,12 +2333,12 @@ No title
         might want to try to rescue the situation or understand what is
         going on. The most usual blame is the <em class="word">cache</em> content which does not
         contain the correct or up to date information.
-  
+
 
 <p class="column7"><em><strong>
        Package is not found or loaded?</strong></em>
 
-  
+
 
 <p class="column8">
         Please confirm that the file location is known and is in right
@@ -2339,12 +2346,12 @@ No title
         not correct, please check <samp class="word">tinypath-:load-path-root</samp> and
         <samp class="word">tinypath-:extra-path-root</samp>. Try to remedy the situation,
         regenerate cache with <samp class="word">M-x</samp> <samp class="word">tinypath-cache-regenerate</samp>.
-  
+
 
 <p class="column7"><em><strong>
        You don't know what particular package is causing troubles</strong></em>
 
-  
+
 
 <p class="column8">
         Go to the <em class="word">Message</em> buffer and clear it (<samp class="word">C-x</samp> <samp class="word">h</samp> followed by
@@ -2353,12 +2360,12 @@ No title
         be ignoring some files that you think should be included. Please
         check content of <samp class="word">tinypath-:load-path-ignore-regexp</samp> and
         <samp class="word">tinypath-:load-path-ignore-regexp-extra</samp>.
-  
+
 
 <p class="column7"><em><strong>
        You need to see the internals</strong></em>
 
-  
+
 
 <p class="column8">
         Call function <samp class="word">tinypath-cache-file-find-file</samp> to display the current
@@ -2366,7 +2373,7 @@ No title
         that you must not modify this file, because any changes you do, will
         get overwritten next time the cache is regenerated. The problem is
         somewhere else if you can see incorrect settings in the cache file.
-  
+
 
 
   <a name="code_note_general" id="code_note_general"></a>
@@ -2377,7 +2384,7 @@ No title
 
 
 
-  
+
 <p>
 <p class="column8">
         Because this package is among the first that is loaded from Emacs
@@ -2389,7 +2396,7 @@ No title
         this package defer loading functions until the end is reached and
         <samp class="word">load-path</samp> is determined and the rest of the functions can be
         loaded from the libraries.
-  
+
 
 
   <a name="code_note_where_is_that_emacs_package" id="code_note_where_is_that_emacs_package"></a>
@@ -2400,13 +2407,13 @@ No title
 
 
 
-  
+
 <p>
 <p class="column8">
         If you ever need to know the location of a package that Emacs
         would load or has loaded, while this utility is in effect,
         use this call:
-  
+
 <P>
 <TABLE class="shade-normal">
     <TR>
@@ -2415,12 +2422,12 @@ No title
       (insert (tinypath-cache-p &quot;gnus.el&quot;))    </PRE></TD>
     </TR>
 </TABLE>
-  
+
 
 <p class="column8">
         In fact the regular call yields same result, because
         <samp class="word">locate-library</samp> is adviced:
-  
+
 <P>
 <TABLE class="shade-normal">
     <TR>
@@ -2429,13 +2436,13 @@ No title
       (insert (locate-library &quot;gnus.el&quot;))    </PRE></TD>
     </TR>
 </TABLE>
-  
+
 
 <p class="column8">
         More easily, with <em class="word">tinylisp.el</em>, which takes advantage of
         tinypath.el cache, you can load any emacs package for editing
         with command:
-  
+
 <P>
 <TABLE class="shade-normal">
     <TR>
@@ -2446,11 +2453,11 @@ No title
       (tinypath cache)Lisp Library: gnus.el RET    </PRE></TD>
     </TR>
 </TABLE>
-  
+
 
 <p class="column8">
         Alternatively there is mode hot-keys $ l f  and $ l p :
-  
+
 <P>
 <TABLE class="shade-normal">
     <TR>
@@ -2463,7 +2470,7 @@ No title
       (tinypath cache)Lisp Library: gnus.el RET    </PRE></TD>
     </TR>
 </TABLE>
-  
+
 
 
   <a name="code_note_internal_optimizations" id="code_note_internal_optimizations"></a>
@@ -2474,12 +2481,12 @@ No title
 
 
 
-  
+
 <p>
 <p class="column8">
         In the installation section it is instructed that the location of the
         package is pushed into the <samp class="word">load-path</samp> before the package is loaded:
-  
+
 <P>
 <TABLE class="shade-normal">
     <TR>
@@ -2490,7 +2497,7 @@ No title
       (load &quot;tinypath.el&quot;)    </PRE></TD>
     </TR>
 </TABLE>
-  
+
 
 <p class="column8">
         Please follow this instruction. The reason is that program tries to
@@ -2504,7 +2511,7 @@ No title
         to date. The perl code will speed up booting compared to pure Emacs
         Lisp implementation. In addition the Perl code section in this file
         (often referred as &quot;external&quot;) has extra features included.
-  
+
 
 
   <a name="code_note_messages" id="code_note_messages"></a>
@@ -2515,7 +2522,7 @@ No title
 
 
 
-  
+
 <p>
 <p class="column8">
         This package will print loads of messages to Emacs &quot;*Message*&quot; or
@@ -2527,7 +2534,7 @@ No title
         not much used it before. You may find interesting information to
         debug some of your own mis-configurations, like stale directories
         in <samp class="word">exec-path</samp>.
-  
+
 
 
   <a name="code_note_custom" id="code_note_custom"></a>
@@ -2538,7 +2545,7 @@ No title
 
 
 
-  
+
 <p>
 <p class="column8">
         If you have Emacs that does not contain <em class="word">custom.elc</em> (Yes, it must be
@@ -2546,7 +2553,7 @@ No title
         Friedman's excellent custom emulation package <em class="word">cust-stub.el</em> at
         <a href="http://www.splode.com/~friedman/software/emacs-lisp/" >http://www.splode.com/~friedman/software/emacs-lisp/</A> You have to load
         it from absolute location before loading this packages like this:
-  
+
 <P>
 <TABLE class="shade-normal">
     <TR>
@@ -2556,7 +2563,7 @@ No title
       (load &quot;tinypath&quot;)    </PRE></TD>
     </TR>
 </TABLE>
-  
+
 
 
   <a name="code_note_insinuating_packages" id="code_note_insinuating_packages"></a>
@@ -2567,7 +2574,7 @@ No title
 
 
 
-  
+
 <p>
 <p class="column8">
         Some packages can be auto-configured when the perl script reads the
@@ -2585,18 +2592,18 @@ No title
         <samp class="word">load-path</samp> and <samp class="word">tinypath-:load-path-ignore-regexp</samp>. This is a
         complimentary method
         to that suggested in the manual section &quot;3rd party packages&quot;.
-  
+
 
 
   <a name="code_note_elp_profiling_results" id="code_note_elp_profiling_results"></a>
   <h2>
-      Code note: Elp profiling results 
+      Code note: Elp profiling results
       
   </h2>
 
 
 
-  
+
 <p>
 <p class="column8">
         The profiling results were run using method below. It must be note,
@@ -2610,7 +2617,7 @@ No title
         that perform the Parsing after the perl has returned results (these
         are not from the total listing, but after tweaking). The listing
         below represents timing results somewhere around 2001:
-  
+
 <P>
 <TABLE class="shade-normal">
     <TR>
@@ -2618,16 +2625,9 @@ No title
     <PRE>
       tinypath-external-output-parse                   1    4.89  4.89
         tinypath-external-output-parse-1               5    1.09  0.21
-        tinypath-external-output-parse-1-cache         1    3.79  3.79    </PRE></TD>
-    </TR>
-</TABLE>
-  
-  
-<P>
-<TABLE class="shade-normal">
-    <TR>
-    <TD class="shade-normal-attrib" valign="top">
-    <PRE>
+        tinypath-external-output-parse-1-cache         1    3.79  3.79
+
+
       tinypath-external-setup-parse-data               1    5.77  5.77
         tinypath-external-setup-1-load-path            249  0.70  0.002
         tinypath-external-setup-1-man-path             44   0.0   0.0
@@ -2636,14 +2636,14 @@ No title
         tinypath-external-setup-cache                  1    0.0   0.0    </PRE></TD>
     </TR>
 </TABLE>
-  
+
 
 <p class="column8">
         These timing results was taken 2003-05-18 running Cygwin
         XEmacs 21.4.10, Pentium 400 Mhz. These profiling results are
         from the initial boot phase, before cache is loaded. It's
         pretty fast.
-  
+
 <P>
 <TABLE class="shade-normal">
     <TR>
@@ -2653,11 +2653,11 @@ No title
       (load &quot;elp&quot;
       (load &quot;tinypath&quot;)
       (elp-instrument-package &quot;tinypath-&quot;)
-  
+
       ;; Now run the boot phase ONLY
       (tinypath-load-path-initial-value
         tinypath-:core-emacs-load-path-list)
-  
+
       Function Name                                   Count Elap   Ave
       =============================================== ===== =====  ===
       tinypath-load-path-initial-value                1     0.477  0.47
@@ -2673,7 +2673,7 @@ No title
       tinypath-emacs-versions                         1     0.0    0.0    </PRE></TD>
     </TR>
 </TABLE>
-  
+
 
 <p class="column8">
         Theses timing results was taken 2003-05-18 running Cygwin
@@ -2681,7 +2681,7 @@ No title
         directories was loaded from configuration file. In this case
         <samp class="word">tinypath-:cache-file-postfix</samp> value was '.el'. The timing
         information was tested and generated with:
-  
+
 <ul>
 	<li><samp class="word">C-x</samp> <samp class="word">C-f</samp> tinypath.el RET  &ndash; toad read tinypath.el to Emacs
 <li><samp class="word">M-x</samp> <samp class="word">load-library</samp> RET tinylisp.el RET
@@ -2697,8 +2697,8 @@ No title
 </ul>
 
 
-  
-  
+
+
 <P>
 <TABLE class="shade-normal">
     <TR>
@@ -2753,7 +2753,7 @@ No title
       tinypath-load-path-root-changed-p               1     0.0    0.0    </PRE></TD>
     </TR>
 </TABLE>
-  
+
 
 <p class="column8">
         Same timing test as above, but now using compiled cache file at
@@ -2761,7 +2761,7 @@ No title
         '.elc'. The speedup is 50%, rducing the load time to mere 3-4
         seconds. Notice the dramatic change in <samp class="word">tinypath-cache-file-load</samp>:
         0.5 seconds vs. 2.5 seconds non-compiled.
-  
+
 <P>
 <TABLE class="shade-normal">
     <TR>
@@ -2784,7 +2784,7 @@ No title
       tinypath-exec-path-from-path                    2     0.154  0.07    </PRE></TD>
     </TR>
 </TABLE>
-  
+
 
 
   <a name="todo" id="todo"></a>
@@ -2795,7 +2795,7 @@ No title
 
 
 
-  <p>
+<p>
 <ul>
 	<li>In theory it is possible to load remote files with ange-ftp/EFS in
             manner of <samp class="word">load-library</samp> RET /user@host:/path/to/file but this
@@ -2826,7 +2826,7 @@ This file has been automatically generated from plain text file
 with Perl script <strong>t2html.pl v2007.0526</strong><br>
 Document author: jaalto<br>
 Url: <a href="http://tiny-tools.sourceforge.net">http://tiny-tools.sourceforge.net</a><br>
-Last updated: 2007-09-02 12:05<br>
+Last updated: 2007-09-06 00:55<br>
 </em    class="footer">
 </body>
 </html>

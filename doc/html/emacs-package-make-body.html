@@ -22,12 +22,12 @@ Emacs lisp coding checklist
 	content="">
 
 <meta http-equiv="Content-Type" content="text/html; charset=utf-8">
-  <meta http-equiv="Expires" content="Thu,  1 Nov 2007 09:03:56 GMT">
+  <meta http-equiv="Expires" content="Sun,  4 Nov 2007 21:55:01 GMT">
 
 
 
   <meta name="Generator"
-	content="2007-09-02 12:03 Perl program t2html.pl v2007.0526 http://perl-text2html.sourceforge.net/">
+	content="2007-09-06 00:55 Perl program t2html.pl v2007.0526 http://perl-text2html.sourceforge.net/">
 
 
 
@@ -142,7 +142,7 @@ Emacs lisp coding checklist
         body
         {
             font-family: "Times New Roman", serif;
-
+            
 
             /*
                 More readable font, Like Arial in MS Word
@@ -682,7 +682,7 @@ Emacs lisp coding checklist
             font-size: 0.9em;
         }
 
-
+    
 
     </style>
 
@@ -717,13 +717,15 @@ Emacs lisp coding checklist
                <A name="document_id"  id="document_id"></A>
                <h1>
                1.0 Document id
-
+               
                </h1>
 
 
 
 <p class="column8">
-        <EM><STRONG>$Id: emacs-package-make.txt,v 2.11 2007/05/01 17:20:34 jaalto Exp $</STRONG></EM><br>
+        License: You can redistribute and/or modify this under the
+        terms of Gnu General Public license v2, or (at your option)
+        any later version.
 
 
 <p class="column8">
@@ -765,7 +767,7 @@ Emacs lisp coding checklist
                <A name="checklist_items"  id="checklist_items"></A>
                <h1>
                2.0 Checklist items
-
+               
                </h1>
 
 
@@ -773,7 +775,7 @@ Emacs lisp coding checklist
   <a name="select_unique_prefix_for_all_functions_and_all_variables" id="select_unique_prefix_for_all_functions_and_all_variables"></a>
   <h2>
       2.1 Select unique prefix for all functions and all variables
-
+      
   </h2>
 
 
@@ -825,7 +827,7 @@ Emacs lisp coding checklist
   <a name="always_include_correct_first_line" id="always_include_correct_first_line"></a>
   <h2>
       2.2 Always include correct first line:
-
+      
   </h2>
 
 
@@ -849,7 +851,7 @@ Emacs lisp coding checklist
   <a name="put_provide_command_at_the_end_of_file" id="put_provide_command_at_the_end_of_file"></a>
   <h2>
       3.3 Put 'provide' command at the end of file
-
+      
   </h2>
 
 
@@ -873,7 +875,7 @@ Emacs lisp coding checklist
   <a name="use_valid_lcd_format_which_doesnt_tolerate_changes_in" id="use_valid_lcd_format_which_doesnt_tolerate_changes_in"></a>
   <h2>
       2.3 Use valid LCD format, which doesn't tolerate changes in format
-
+      
   </h2>
 
 
@@ -908,7 +910,7 @@ Emacs lisp coding checklist
   <a name="check_the_code_layout_with_lispmnt_el" id="check_the_code_layout_with_lispmnt_el"></a>
   <h2>
       2.4 Check the code layout with lisp-mnt.el
-
+      
   </h2>
 
 
@@ -950,7 +952,7 @@ Emacs lisp coding checklist
   <a name="check_the_documentation_strings_which_checkdoc_el" id="check_the_documentation_strings_which_checkdoc_el"></a>
   <h2>
       2.5 Check the documentation strings which checkdoc.el
-
+      
   </h2>
 
 
@@ -978,7 +980,7 @@ Emacs lisp coding checklist
   <a name="check_the_code_with_elint_el" id="check_the_code_with_elint_el"></a>
   <h2>
       2.6 Check the code with Elint.el
-
+      
   </h2>
 
 
@@ -999,7 +1001,7 @@ Emacs lisp coding checklist
   <a name="always_include_gnu_copyright" id="always_include_gnu_copyright"></a>
   <h2>
       2.7 Always include GNU copyright.
-
+      
   </h2>
 
 
@@ -1035,7 +1037,7 @@ Emacs lisp coding checklist
   <a name="always_include_installation_instructions" id="always_include_installation_instructions"></a>
   <h2>
       2.8 Always include installation instructions.
-
+      
   </h2>
 
 
@@ -1072,7 +1074,7 @@ Emacs lisp coding checklist
   <a name="always_use_rcs_or_other_version_tool_to_manage" id="always_use_rcs_or_other_version_tool_to_manage"></a>
   <h2>
       2.9 Always use RCS or other version tool to manage your files.
-
+      
   </h2>
 
 
@@ -1111,7 +1113,7 @@ Emacs lisp coding checklist
   <a name="always_check_your_file_with_byte_compiler" id="always_check_your_file_with_byte_compiler"></a>
   <h2>
       2.10 Always check your file with byte compiler
-
+      
   </h2>
 
 
@@ -1138,7 +1140,7 @@ Emacs lisp coding checklist
   <a name="more_details_dont_just_require_other_packages" id="more_details_dont_just_require_other_packages"></a>
   <h2>
       2.11 More details &ndash; don't just 'require' other packages
-
+      
   </h2>
 
 
@@ -1183,7 +1185,7 @@ Emacs lisp coding checklist
   <a name="use_dynamic_byte_compilation" id="use_dynamic_byte_compilation"></a>
   <h2>
       2.12 Use dynamic byte compilation
-
+      
   </h2>
 
 
@@ -1242,7 +1244,7 @@ Emacs lisp coding checklist
   <a name="how_to_deal_with_variables_from_other_packages" id="how_to_deal_with_variables_from_other_packages"></a>
   <h2>
       2.13 How to deal with variables from other packages
-
+      
   </h2>
 
 
@@ -1335,7 +1337,7 @@ Emacs lisp coding checklist
   <a name="arrange_the_installation_so_that_it_can_be_autoloaded" id="arrange_the_installation_so_that_it_can_be_autoloaded"></a>
   <h2>
       2.14 Arrange the installation so that it can be autoloaded
-
+      
   </h2>
 
 
@@ -1434,7 +1436,7 @@ Emacs lisp coding checklist
   <a name="do_not_change_any_emacs_bindings_directly" id="do_not_change_any_emacs_bindings_directly"></a>
   <h2>
       2.15 Do not change any emacs bindings directly
-
+      
   </h2>
 
 
@@ -1513,7 +1515,7 @@ Emacs lisp coding checklist
   <a name="dont_forget_to_add_autoload_statements" id="dont_forget_to_add_autoload_statements"></a>
   <h2>
       2.16 Don't forget to add ###autoload statements
-
+      
   </h2>
 
 
@@ -1554,7 +1556,7 @@ Emacs lisp coding checklist
   <a name="document_all_your_variables_and_functions_well" id="document_all_your_variables_and_functions_well"></a>
   <h2>
       2.17 Document all your variables and functions well
-
+      
   </h2>
 
 
@@ -1621,7 +1623,7 @@ Emacs lisp coding checklist
   <a name="provide_a_xxxloadhook_at_the_end_of_file" id="provide_a_xxxloadhook_at_the_end_of_file"></a>
   <h2>
       2.18 Provide a xxx-load-hook at the end of file
-
+      
   </h2>
 
 
@@ -1660,7 +1662,7 @@ Emacs lisp coding checklist
   <a name="clean_up_all_whitespaces_from_the_end_of_lines" id="clean_up_all_whitespaces_from_the_end_of_lines"></a>
   <h2>
       2.19 Clean up all whitespaces from the end of lines.
-
+      
   </h2>
 
 
@@ -1708,7 +1710,7 @@ Emacs lisp coding checklist
   <a name="documentation_of_you_package" id="documentation_of_you_package"></a>
   <h2>
       2.20 Documentation of you package
-
+      
   </h2>
 
 
@@ -1760,7 +1762,7 @@ Emacs lisp coding checklist
   <a name="here_is_sample_skeleton_for_a_package_fill_it" id="here_is_sample_skeleton_for_a_package_fill_it"></a>
   <h2>
       2.21 Here is sample skeleton for a package. Fill it in.
-
+      
   </h2>
 
 
@@ -1935,7 +1937,7 @@ This file has been automatically generated from plain text file
 with Perl script <strong>t2html.pl v2007.0526</strong><br>
 Document author: jaalto<br>
 Url: <a href="http://tiny-tools.sourceforge.net">http://tiny-tools.sourceforge.net</a><br>
-Last updated: 2007-09-02 12:03<br>
+Last updated: 2007-09-06 00:55<br>
 </em    class="footer">
 </body>
 </html>
