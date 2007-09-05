@@ -42,12 +42,14 @@ Table of contents
 
         #t2html-comment http://www.xemacs.org/Documentation/packageGuide.html
 
-        .$Id: README.txt,v 2.36 2006/01/23 12:15:07 jaalto Exp $
+        License: You can redistribute and/or modify this under the
+        terms of Gnu General Public license v2, or (at your option)
+        any later version.
 
-        [The Sourceforge Public Summary] Emacs Tiny Tools is a collection
-        of libraries and packages, which are designed to be OS and X/Emacs
-        platform independent. E.g. configure load-path automatically, URL
-        handler, easy-delete, mail complete and many more. This file is
+        Emacs Tiny Tools is a collection of libraries and packages,
+        which are designed to be OS and X/Emacs platform independent.
+        E.g. configure load-path automatically, URL handler,
+        easy-delete, mail complete and many more. This file is
         README.txt included in Emacs Tiny Tools kit. It contains
         instructions how to install a cross platform Emacs/XEmacs/
         Unix/Win32 compatible utilities for wide variety of tasks:
