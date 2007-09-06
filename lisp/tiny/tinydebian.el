@@ -39,9 +39,9 @@
 ;;      (add-hook 'tinydebian-:load-hook 'tinydebian-install)
 ;;      (require 'tinydebian)
 ;;
-;;   If you have any questions or bug report to send, use this function:
+;;   If you have any about this Emacs package:
 ;;
-;;      M-x tinydebian-submit-bug-report    send question, feedback,bug report
+;;      M-x tinydebian-submit-bug-report    send question, feedback, bugs
 ;;
 ;;  To read the documentation after file has been loaded, call
 ;;
@@ -64,7 +64,11 @@
 ;;      o   colorize /var/log files like messages, syslog etc.
 ;;      o   Report Debian bug with M-x ... #todo
 ;;
-;;  Quick start
+;;  Quick start:
+;;
+;;      To report bug to Debian package, like command line reportbug(1):
+;;
+;;          M-x tinydebian-reportbug
 
 ;;}}}
 
@@ -3181,6 +3185,8 @@ You can select region and these commands to shell `sh' with command
 
 (add-hook 'tinydebian-:bts-mode-define-keys-hook
           'tinydebian-bts-mode-define-keys)
+
+(defalias 'tinydebian-bug-report-mail 'tinydebian-reportbug)
 
 (provide   'tinydebian)
 (run-hooks 'tinydebian-:load-hook)
