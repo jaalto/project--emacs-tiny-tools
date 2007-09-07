@@ -1,5 +1,21 @@
 2007-09-06  Jari Aalto  <jari.aalto@cante.net>
 
+	* tiny/tinyirc.el
+	(tinyirc-:pastebot-config-default-content): New.
+	(tinyirc-pastebot-install-example-servers): Use
+	`tinyirc-:pastebot-config-default-content'.
+	(tinyirc-pastebot-send-region): Do not require match for
+	service name.
+	(tinyirc-:pastebot-service-list-time-stamp): New.
+	(tinyirc-pastebot-service-list-set): Record
+	`tinyirc-:pastebot-service-list-time-stamp'.
+	(tinyirc-pastebot-service-file-name): New.
+	(tinyirc-pastebot-service-list-from-file): Use
+	`tinyirc-pastebot-service-file-name'.
+	(tinyirc-pastebot-service-file-name-changed-p): New.
+	(tinyirc-pastebot-service-list): Automatially notice
+	changes to pastebot service file and update cache as needed.
+
 	* tiny/tinydebian.el:
 	(top level::Quick start): Announce `tinydebian-reportbug'.
 	(bottom): Added alias command `tinydebian-reportbug'.

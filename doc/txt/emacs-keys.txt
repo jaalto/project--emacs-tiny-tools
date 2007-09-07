@@ -108,9 +108,10 @@ Table of contents
         #T2HTML-OPTION --css-code-bg
         #T2HTML-OPTION --html-frame
 
-        License: You can redistribute and/or modify this under the
-        terms of Gnu General Public license v2, or (at your option)
-        any later version.
+        License: This material may be distributed only subject to the
+        terms and conditions set forth in the Open Publication
+        License; either version 1.0, or (at your option) any later
+        version. Visit <http://opencontent.org/openpub/>.
 
         This document explains how do you deal with Emacs key bindings. In
         addition, you will find step by step how you use your X window's

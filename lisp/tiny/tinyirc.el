@@ -552,12 +552,15 @@ See also manual <http://sial.org/code/perl/scripts/pbotutil.pl.html>.")
   "History of used pastebot services.")
 
 (defvar tinyirc-:pastebot-service-list nil
-  "*List of available services according to `servers' file.
+  "List of available services according to `servers' file.
 If this variable is not set, it is populated from
 `tinyirc-:pastebot-config-directory' and file `servers'.
 
 The content of the `servers' file is read only once, so if it
 modified, function `tinyirc-pastebot-service-list-set'.")
+
+(defvar tinyirc-:pastebot-service-list-time-stamp nil
+  "Time of reading from `tinyirc-:pastebot-config-directory'.")
 
 (defvar tinyirc-pastebot-mode-map nil
   "Local keymap for STATE files loaded by edit.")
@@ -567,6 +570,69 @@ modified, function `tinyirc-pastebot-service-list-set'.")
 
 (defvar tinyirc-:http-buffer "*TinyIrc http*"
   "Error buffer.")
+
+(defvar tinyirc-:pastebot-config-default-content
+  (format "\
+# %s configuration file for SERVERS
+# for program %s
+
+# irc.freenode.net
+name debian
+url http://channels.debian.net/paste/
+channel #debian
+
+# irc.freenode.net
+name flood
+url http://channels.debian.net/paste/
+channel #flood
+
+# irc.freenode.net
+name perl
+url http://dragon.cbi.tamucc.edu:8080/
+channel #perl
+
+# irc.freenode.net (backup)
+name perl2
+url http://sial.org/pbot
+channel #perl
+
+# Perl channel backup
+name perl2
+url http://nopaste.snit.ch:8000/
+channel #perl-help
+
+# Use 'test' or 'none' service for channels that do not have
+# particular support for PasteBot. Simply announce
+# the url in the #channel with command:
+#
+#    /me [pastebot] <URL>
+
+name none
+url http://sial.org/pbot
+channel #none
+
+name nopaste
+url http://rafb.net/paste/
+channel #none
+
+name test
+url http://dragon.cbi.tamucc.edu:8080/
+channel ''
+
+name test2
+url http://sial.org:8888/
+channel ''
+
+name pastebin
+url http://pastebin.ca/
+channel ''
+
+# End of file
+"
+        tinyirc-:pastebot-config-directory
+        tinyirc-:pastebot-program)
+  "Default content for `tinyirc-pastebot-install-example-servers'.
+See also `tinyirc-:pastebot-config-directory'.")
 
 ;;}}}
 
@@ -775,15 +841,34 @@ References:
 
 ;;; ----------------------------------------------------------------------
 ;;;
-(defun tinyirc-pastebot-service-list-from-file ()
-  "Read `tinyirc-:pastebot-config-directory' and parse `servers' file."
+(defun tinyirc-pastebot-service-file-name ()
+  "Return configuration filename."
   (let* ((dir  tinyirc-:pastebot-config-directory)
          (file  (concat (file-name-as-directory dir)
-                        "servers"))
-         list)
+                        "servers")))
     (unless (file-directory-p dir)
       (error "Cannot read `tinyirc-:pastebot-config-directory' %s"
              tinyirc-:pastebot-config-directory))
+    file))
+
+;;; ----------------------------------------------------------------------
+;;;
+(defun tinyirc-pastebot-service-file-name-changed-p ()
+  "Check if configuration file has chnages since last reading."
+  (let ((time tinyirc-:pastebot-service-list-time-stamp))
+    (when time
+      (let* ((file    (tinyirc-pastebot-service-file-name))
+             (modtime (format-time-string
+                       "%Y-%m-%d %H:%M"
+                       (nth 5 (file-attributes file)))))
+        (string< time modtime)))))
+
+;;; ----------------------------------------------------------------------
+;;;
+(defun tinyirc-pastebot-service-list-from-file ()
+  "Read `tinyirc-:pastebot-config-directory' and parse `servers' file."
+  (let* ((file (tinyirc-pastebot-service-file-name))
+         list)
     (with-temp-buffer
       (insert-file-contents-literally file)
       (goto-char (point-min))
@@ -798,21 +883,27 @@ References:
 (defun tinyirc-pastebot-service-list-set ()
   "Set `tinyirc-:pastebot-service-list' from file.
 See `tinyirc-:pastebot-config-directory'."
-  (setq tinyirc-:pastebot-service-list
+  (setq tinyirc-:pastebot-service-list-time-stamp
+        (format-time-string "%Y-%m-%d %H:%M")
+        tinyirc-:pastebot-service-list
         (tinyirc-pastebot-service-list-from-file)))
 
 ;;; ----------------------------------------------------------------------
 ;;;
 (defun tinyirc-pastebot-service-list ()
   "Return `tinyirc-:pastebot-service-list' or read configuration."
-  (or tinyirc-:pastebot-service-list
-      (tinyirc-pastebot-service-list-set)))
+  (if (tinyirc-pastebot-service-file-name-changed-p)
+      ;;  Need update. User has chnages it on disk while we had read
+      ;;  and cached it earlier.
+      (tinyirc-pastebot-service-list-set)
+    (or tinyirc-:pastebot-service-list
+        (tinyirc-pastebot-service-list-set))))
 
 ;;; ----------------------------------------------------------------------
 ;;;
 (defun tinyirc-pastebot-receive-call-process-id (service id)
   "Receive message from pastebot SERVICE by ID number. Return content.
-Valid SERVICE is one that is defined in directory
+Valid SERVICE is one that is defined in dire$ctory
 `tinyirc-:pastebot-config-directory' and file `servers'."
   (let ((prg (tinyirc-pastebot-program)))
     (if (integerp id)
@@ -1283,64 +1374,11 @@ PasteBot interface working. Once the installation look valid, this function
 should report an success status.
 
 References:
+  `tinyirc-:pastebot-config-default-content'
   `tinyirc-:pastebot-program'
   `tinyirc-:pastebot-program-url'"
   (interactive)
-  (let* ((config-default-content (format "\
-# %s configuration file for SERVERS
-# for program %s
-
-# irc.freenode.net
-name debian
-url http://channels.debian.net/paste/
-channel #debian
-
-# irc.freenode.net
-name flood
-url http://channels.debian.net/paste/
-channel #flood
-
-# irc.freenode.net
-name perl
-url http://dragon.cbi.tamucc.edu:8080/
-channel #perl
-
-# irc.freenode.net (backup)
-name perl2
-url http://sial.org/pbot
-channel #perl
-
-# Perl channel backup
-name perl2
-url http://nopaste.snit.ch:8000/
-channel #perl-help
-
-# Use 'test' or 'none' service for channels that do not have
-# particular support for PasteBot. Simply announce
-# the url in the #channel with command:
-#
-#    /me [pastebot] <URL>
-
-name none
-url http://sial.org/pbot
-channel #none
-
-name test
-url http://dragon.cbi.tamucc.edu:8080/
-channel ''
-
-name test2
-url http://sial.org:8888/
-channel ''
-
-name pastebin
-url http://pastebin.ca/
-channel ''
-
-# End of file
-"
-                                         tinyirc-:pastebot-config-directory
-                                         tinyirc-:pastebot-program)))
+  (let* ((config-default-content tinyirc-:pastebot-config-default-content))
     (let* ( ;; (win32  (file-directory-p "c:/"))
            ;;  (cygwin (string-match "cygwin" "emacs-version"))
            (dir    (tinyirc-path tinyirc-:pastebot-config-directory))
@@ -1351,12 +1389,12 @@ channel ''
       (when (and (file-directory-p "c:/")
                  (file-exists-p link))
         (error "TinyIrc: [install] Cygwin conflict. File [%s] exists. \
-That file might be a symlink made under Cygwin shell (bash).
+That file might be a Windows shortcut, a symlink, made under Cygwin.
 In that case, you cannot use PasteBot interfcase
 both from NTEmacs and Cygwin Emacs, because NTEmacs
 cannot by default follow Cygwin symlinks.
 
-In case you aren't using Cygwin, please remove that Windows shortcut
+In case you aren't using Cygwin, please remove that Windows shortcut link
 and create real directory instead."
                link))
       (if (file-directory-p dir)
@@ -1384,7 +1422,8 @@ and create real directory instead."
        (concat
         "TinyIrc: [install] Check passed. "
         "Your PasteBot interface should be functonal provided that "
-        "configuration file %s 1) contains needed entries and 2) it has no syntax errors."
+        "configuration file %s 1) contains needed entries and "
+        "2) it has no syntax errors."
         "This function did not check its content. ")
        config))))
 
@@ -1425,12 +1464,15 @@ References:
                         (tinyirc-pastebot-service-list)))
           (file tinyirc-:pastebot-send-file))
      (unless list
-       (error "Tinyirc: Cannot get completions. Check pastebot `servers' file."))
+       (error (concat "Tinyirc: Cannot get completions."
+                      "Check pastebot `servers' file.")))
      (list
       (completing-read "Send to PasteBot service: "
                        list
                        nil
-                       'match
+                       ;;  Because user may have updated the
+                       ;;  configuration file and we don't know about it
+                       (not 'requir-match)
                        (if tinyirc-:pastebot-history-services
                            (car tinyirc-:pastebot-history-services))
                        'tinyirc-:pastebot-history-services)

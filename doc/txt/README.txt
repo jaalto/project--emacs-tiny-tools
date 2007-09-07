@@ -42,9 +42,10 @@ Table of contents
 
         #t2html-comment http://www.xemacs.org/Documentation/packageGuide.html
 
-        License: You can redistribute and/or modify this under the
-        terms of Gnu General Public license v2, or (at your option)
-        any later version.
+        License: This material may be distributed only subject to the
+        terms and conditions set forth in the Open Publication
+        License; either version 1.0, or (at your option) any later
+        version. Visit <http://opencontent.org/openpub/>.
 
         Emacs Tiny Tools is a collection of libraries and packages,
         which are designed to be OS and X/Emacs platform independent.

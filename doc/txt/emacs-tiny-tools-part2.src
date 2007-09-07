@@ -1910,7 +1910,7 @@ Tinygnus.el --- Gnus Plug-in. Additional functions. UBE fight etc.
     Url pointers
 
   	o   Procmail information can be found at
-  	    http://www.procmail.org/ and http://pm-doc.sourceforge.net/
+  	    http://www.procmail.org/ and http://pm-doc.asourceforge.net/
   	o   Gnus can be found at http://www.gnus.org/
 
     Fighting against UBE messages
@@ -6141,7 +6141,7 @@ Tinyperl.el --- Grab-bag of Perl related utilities. Pod documentation
       	    #   The following variable is updated by Emacs setup whenever
       	    #   this file is saved
 
-            $VERSION = '2007.0906';
+            $VERSION = '2007.0907';
 
   	If the VERSION variable uses number format NNNN.NNNN, then it
   	is assumed to contain ISO 8601 date YYYY.MMDD and this package
