@@ -1,0 +1,35 @@
+Copyright information
+
+        Copyright 1995-2007 Jari Aalto
+
+        This program (referring to all files distributed in project
+        "Emacs Tiny Tools") is free software; you can redistribute it
+        and/or modify it under the terms of the GNU General Public
+        License as published by the Free Software Foundation; either
+        version 2 of the License, or (at your option) any later
+        version.
+
+        This program is distributed in the hope that it will be useful, but
+        WITHOUT ANY WARRANTY; without even the implied warranty of
+        MERCHANTABILITY or FITNESS FOR A PARTICULAR PURPOSE. See the GNU
+        General Public License for more details.
+
+        You should have received a copy of the GNU General Public License
+        along with program; see the file COPYING. If not, write to the
+        Free Software Foundation, Inc., 51 Franklin Street, Fifth Floor,
+        Boston, MA 02110-1301, USA.
+
+        Visit <http://www.gnu.org/copyleft/gpl.html> for more information
+
+        This program runs solely with Free Software. It does not rely
+        on any component of non-Free Software.
+
+        - -
+
+        Note: All the documentation files (*.txt, *.html) may be
+        distributed only subject to the terms and conditions set forth
+        in the Open Publication License; either version 1.0, or (at
+        your option) any later version. Visit
+        <http://opencontent.org/openpub/>.
+
+End
