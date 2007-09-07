@@ -26,10 +26,11 @@ Copyright information
 
         - -
 
-        Note: All the documentation files (*.txt, *.html) may be
-        distributed only subject to the terms and conditions set forth
-        in the Open Publication License; either version 1.0, or (at
-        your option) any later version. Visit
+        All the documentation files may be distributed only subject to
+        the terms and conditions set forth in the Open Publication
+        License; either version 1.0, or (at your option) any later
+        version. The copyright holder does not exercise any of the
+        "LICENSE OPTIONS" that may be listed in the license. Visit
         <http://opencontent.org/openpub/>.
 
 End
