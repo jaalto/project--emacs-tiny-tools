@@ -1,8 +1,11 @@
-Emacs Tiny Tools
+Emacs Tiny Tools -- Collection of plug-in Emacs Lisp modules
 
 bin/	Project administration utilities and helper scripts
 doc/ 	Documentation.
 lisp/ 	Emacs add-on modules i.e. extensions ("The Code")
 
-Start at doc/txt/README.txt for install, licence and
-other project information.
+Important files:
+
+doc/txt/README.txt 	For install and general project information
+doc/txt/LICENSE.txt 	Licensing information
+lisp/ChangeLog		Project change records
