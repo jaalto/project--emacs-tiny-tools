@@ -150,12 +150,11 @@ Table of contents
 
         Copyright (C) 1995-2007 Jari Aalto
 
-        License: This material may be distributed only subject to the
-        terms and conditions set forth in the Open Publication
-        License; either version 1.0, or (at your option) any later
-        version. The copyright holder does not exercise any of the
-        "LICENSE OPTIONS" that may be listed in the license. Visit
-        <http://opencontent.org/openpub/>.
+        License: This material may be distributed only subject to
+        the terms and conditions set forth in GNU General Public
+        License v2 or later; or, at your option, distributed under the
+        terms of GNU Free Documentation License version 1.2 or later
+        (GNU FDL).
 
         This document is the manual for PGP handling package
         TinyPgp.el, software that runs in Unix Emacs 19.30+/20+;
