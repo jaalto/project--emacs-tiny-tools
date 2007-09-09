@@ -2,12 +2,12 @@ Copyright information
 
         Copyright 1995-2007 Jari Aalto
 
-        This program (referring to all files distributed in project
-        "Emacs Tiny Tools") is free software; you can redistribute it
-        and/or modify it under the terms of the GNU General Public
-        License as published by the Free Software Foundation; either
-        version 2 of the License, or (at your option) any later
-        version.
+        This program (referring to all files, including documentation,
+        distributed in project "Emacs Tiny Tools") is free software;
+        you can redistribute it and/or modify it under the terms of
+        the GNU General Public License as published by the Free
+        Software Foundation; either version 2 of the License, or (at
+        your option) any later version.
 
         This program is distributed in the hope that it will be useful, but
         WITHOUT ANY WARRANTY; without even the implied warranty of
@@ -26,11 +26,23 @@ Copyright information
 
         - -
 
-        All the documentation files may be distributed only subject to
-        the terms and conditions set forth in the Open Publication
-        License; either version 1.0, or (at your option) any later
-        version. The copyright holder does not exercise any of the
-        "LICENSE OPTIONS" that may be listed in the license. Visit
-        <http://opencontent.org/openpub/>.
+        Exception: The documentation of project "Emacs Tiny Tools"
+        (*.txt and *.html files) is DUAL LICENCED and may be
+        distributed under the terms of GNU General Public License (GNU
+        GPL) --see above--; *or*, at your option, distributed under
+        the terms of GNU Free Documentation License (GNU FDL) set
+        forth below:
+
+            Copyright (C) 1995-2007 Jari Aalto
+
+            Permission is granted to copy, distribute and/or modify
+            this document under the terms of the GNU Free
+            Documentation License, Version 1.2 or any later version
+            published by the Free Software Foundation; with no
+            Invariant Sections, no Front-Cover Texts, and no
+            Back-Cover Texts. A copy of the license is included in the
+            section entitled "GNU Free Documentation License".
+
+            Visit <http://www.gnu.org/licenses/fdl.html> for more information.
 
 End
