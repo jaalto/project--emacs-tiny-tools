@@ -30,10 +30,15 @@ Copyright information
         (*.txt and *.html files) is DUAL LICENCED and may be
         distributed under the terms of GNU General Public License (GNU
         GPL) --see above--; *or*, at your option, distributed under
-        the terms of GNU Free Documentation License (GNU FDL). The end
-        user can continue to distribute the documentation in this dual
-        licence form *or* select the other license (GNU GPL, GNU FDL)
-        and remove the unwanted one.
+        the terms of GNU Free Documentation License (GNU FDL).
+
+        The end user can continue to distribute the documentation in
+        this dual licence form *or* select the other license (GNU GPL,
+        GNU FDL) and remove the unwanted one. In case of removal, a
+        notice "License <license name> removed <date ISO 8601> by
+        <Firstname Lastname>" must mentioned somewhere in the
+        distributed files; that notice is allowed to be outside of the
+        original files.
 
             Copyright (C) 1995-2007 Jari Aalto
 
