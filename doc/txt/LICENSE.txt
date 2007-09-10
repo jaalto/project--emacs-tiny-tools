@@ -30,8 +30,10 @@ Copyright information
         (*.txt and *.html files) is DUAL LICENCED and may be
         distributed under the terms of GNU General Public License (GNU
         GPL) --see above--; *or*, at your option, distributed under
-        the terms of GNU Free Documentation License (GNU FDL) set
-        forth below:
+        the terms of GNU Free Documentation License (GNU FDL). The end
+        user can continue to distribute the documentation in this dual
+        licence form *or* select a license and remove the unwanted
+        license.
 
             Copyright (C) 1995-2007 Jari Aalto
 
