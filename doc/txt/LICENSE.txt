@@ -32,8 +32,8 @@ Copyright information
         GPL) --see above--; *or*, at your option, distributed under
         the terms of GNU Free Documentation License (GNU FDL). The end
         user can continue to distribute the documentation in this dual
-        licence form *or* select a license and remove the unwanted
-        license.
+        licence form *or* select the other license (GNU GPL, GNU FDL)
+        and remove the unwanted one.
 
             Copyright (C) 1995-2007 Jari Aalto
 
