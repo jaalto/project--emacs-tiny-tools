@@ -36,7 +36,7 @@ Copyright information
         this dual licence form *or* select the other license (GNU GPL,
         GNU FDL) and remove the unwanted one. In case of removal, a
         notice "License <license name> removed <date ISO 8601> by
-        <Firstname Lastname>" must mentioned somewhere in the
+        <Firstname Lastname>" must be mentioned somewhere in the
         distributed files; that notice is allowed to be outside of the
         original files.
 
