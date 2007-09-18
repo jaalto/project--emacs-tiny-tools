@@ -1,6 +1,6 @@
-Copyright information
+Licensing information
 
-        Copyright 1995-2007 Jari Aalto
+        Copyright (C) 1995-2007 Jari Aalto
 
         This program (referring to all files, including documentation,
         distributed in project "Emacs Tiny Tools") is free software;
