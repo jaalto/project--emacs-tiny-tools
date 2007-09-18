@@ -1,11 +1,30 @@
-Emacs Tiny Tools -- Collection of plug-in Emacs Lisp modules
+Emacs Tiny Tools - Collection of plug-in Emacs Lisp modules
+-----------------------------------------------------------
 
-bin/	Project administration utilities and helper scripts
-doc/ 	Documentation.
-lisp/ 	Emacs add-on modules i.e. extensions ("The Code")
+Emacs Tiny Tools is a collection of packages (extensions) and libraries
+designed to be OS and X/Emacs platform independent. They include tools to
+configure load-path automatically, jump to URLs, easy text delete, mail
+completion, and many more utilities (50+).
 
-Important files:
+    bin/	Project administration utilities and helper scripts
+    doc/ 	Documentation.
+    lisp/ 	Emacs add-on modules i.e. extensions ("The Code")
 
-doc/txt/README.txt 	For install and general project information
-doc/txt/LICENSE.txt 	Licensing information
-lisp/ChangeLog		Project change records
+Important files
+
+    doc/txt/README.txt          Install and general project information
+    doc/txt/LICENSE.txt 	Licensing information
+    lisp/ChangeLog		Project change records
+
+Project contacts
+
+    Homepage
+      http://freshmeat.net/projects/emacs-tiny-tools
+
+    Reporting bugs
+      See freshmeat page
+
+    Source code repository
+      See freshmeat page
+
+End of file
