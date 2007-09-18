@@ -1,3 +1,8 @@
+2007-09-16  Jari Aalto  <jari.aalto@cante.net>
+
+	* tiny/tinydebian.el (tinydebian-reportbug): Correct alias
+	definition.
+
 2007-09-06  Jari Aalto  <jari.aalto@cante.net>
 
 	* tiny/tinyirc.el

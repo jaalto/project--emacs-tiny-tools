@@ -3186,7 +3186,7 @@ You can select region and these commands to shell `sh' with command
 (add-hook 'tinydebian-:bts-mode-define-keys-hook
           'tinydebian-bts-mode-define-keys)
 
-(defalias 'tinydebian-bug-report-mail 'tinydebian-reportbug)
+(defalias 'tinydebian-reportbug 'tinydebian-bug-report-mail)
 
 (provide   'tinydebian)
 (run-hooks 'tinydebian-:load-hook)
