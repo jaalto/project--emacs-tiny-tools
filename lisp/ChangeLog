@@ -1,3 +1,9 @@
+2007-09-19  Jari Aalto  <jari.aalto@cante.net>
+
+	* tiny/tinydebian.el (tinydebian-bts-mode): Added
+	`tinydebian-bts-mail-ctrl-merge'.
+	(tinydebian-bts-mail-ctrl-merge): New.
+
 2007-09-16  Jari Aalto  <jari.aalto@cante.net>
 
 	* tiny/tinydebian.el (tinydebian-reportbug): Correct alias

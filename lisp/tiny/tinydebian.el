@@ -708,7 +708,8 @@ Mode description:
      ["Send BTS Ctrl forward"              tinydebian-bts-mail-ctrl-forward-main  t]
      ["Send BTS Ctrl reassign"             tinydebian-bts-mail-ctrl-reassign t]
      ["Send BTS Ctrl retitle"              tinydebian-bts-mail-ctrl-retitle  t]
-     ["Send BTS Ctrl reopen"               tinydebian-bts-mail-ctrl-reopen   t])
+     ["Send BTS Ctrl reopen"               tinydebian-bts-mail-ctrl-reopen   t]
+     ["Send BTS Ctrl merge"                tinydebian-bts-mail-ctrl-merge    t])
 
     (list
      "Query information"
@@ -789,17 +790,18 @@ Mode description:
      (define-key map  "lwp"  'tinydebian-url-list-wnpp-rfp)
      (define-key map  "lwP"  'tinydebian-url-list-wnpp-itp)
 
-     ;;  (C)ontrol commands
+     ;;  (C)ontrol commands alphabetically
      (define-key map  "cc"  'tinydebian-bts-mail-ctrl-close)
+     (define-key map  "cf"  'tinydebian-bts-mail-ctrl-forward-main)
+     (define-key map  "cm"  'tinydebian-bts-mail-ctrl-merge)
+     (define-key map  "co"  'tinydebian-bts-mail-ctrl-reopen)
+     (define-key map  "cr"  'tinydebian-bts-mail-ctrl-reassign)
+     (define-key map  "cR"  'tinydebian-bts-mail-ctrl-retitle)
      (define-key map  "cs"  'tinydebian-bts-mail-ctrl-severity)
      (define-key map  "ct"  'tinydebian-bts-mail-ctrl-tags)
      (define-key map  "cT"  'tinydebian-bts-mail-ctrl-usertag)
-     (define-key map  "cf"  'tinydebian-bts-mail-ctrl-forward-main)
-     (define-key map  "cr"  'tinydebian-bts-mail-ctrl-reassign)
-     (define-key map  "cR"  'tinydebian-bts-mail-ctrl-retitle)
-     (define-key map  "co"  'tinydebian-bts-mail-ctrl-reopen)
 
-     ;;  URLs
+     ;;  (U)RLs
      (define-key map  "ub"  'tinydebian-url-bts-ctrl-page)
      (define-key map  "ud"  'tinydebian-url-policy-developers-reference)
      (define-key map  "un"  'tinydebian-url-policy-new-maintainer-guide)
@@ -2448,6 +2450,23 @@ thanks
    (insert
     (format "\
 reopen %s !
+thanks
+
+"
+            bug))))
+
+;;; ----------------------------------------------------------------------
+;;;
+(defun tinydebian-bts-mail-ctrl-merge (bug)
+  "Compose BTS control message a BUG and merge a duplicate."
+  (interactive
+   (list (tinydebian-bts-mail-ask-bug-number)))
+  (tinydebian-bts-mail-type-macro
+   nil nil nil
+   (format "Merge Bug#%s" bug)
+   (insert
+    (format "\
+merge %s <DUPLICATE OF BUG NBR>
 thanks
 
 "
