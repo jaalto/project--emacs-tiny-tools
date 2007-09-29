@@ -7243,11 +7243,15 @@ Input:
              (save-excursion (end-of-defun) (point))
              t)
             (setq iact "t"))
-        (if (null args)
-            (setq args (format ";; %-36s <args not known>\n" func))
-          (if (> (length args) 32)
-              (setq args (format ";; %-15s %s\n" func args))
-            (setq args (format ";; %-36s %s\n" func args))))
+        (cond
+         ((null args)
+          (setq args (format ";; %-36s <args not known>\n" func))
+          ((string= args "")
+           (setq args (format ";; %s\n" func)))
+          ((> (length args) 32)
+           (setq args (format ";; %-15s %s\n" func args)))
+          (t
+           (setq args (format ";; %-36s %s\n" func args)))))
         (push args list)
         ;; (autoload FUNCTION FILE &optional DOCSTRING INTERACTIVE TYPE)
         (setq str (format "(autoload '%-36s %s \"\" %s%s)%s\n"

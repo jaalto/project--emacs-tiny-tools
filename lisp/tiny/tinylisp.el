@@ -5056,7 +5056,7 @@ VERB                    verbose flag"
 ;;; ----------------------------------------------------------------------
 ;;;
 (defun tinylisp-find-autoload-functions (&optional buffer)
-  "Display all atoload functions."
+  "Display all autoload functions."
   (interactive)
   (let* ((list (ti::system-autoload-function-list))
          doc)

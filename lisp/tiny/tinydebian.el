@@ -2111,8 +2111,8 @@ At current point, current line, headers of the mail message
 (put 'tinydebian-bts-mail-type-macro 'lisp-indent-function 4)
 (defmacro tinydebian-bts-mail-type-macro (type pkg email subject &rest body)
   "Compose a TYPE request and run BODY.
-  Variables available: bugnbr, type-orig, package, description; but these ; ;
-  can all be nil."
+Variables available: bugnbr, type-orig, package, description; but these
+can all be nil."
   (let ((subj (gensym "subject-")))
     `(multiple-value-bind (bugnbr type-orig package description)
          (or (tinydebian-bts-parse-string-current-line)
@@ -2463,25 +2463,26 @@ Optional PACAGE name and VERSION number can be supplied."
          (package  (read-string "Package name [RET=ignore]: "))
          version)
      (if (tinydebian-string-p package)
-         (setq version (read-string "Package name [RET=ignore]: "))
+         (setq version (read-string "Version: "))
        (setq package nil))
      (list bug
            package
            (if (tinydebian-string-p version)
                version
              nil))))
-  (let* ((email (tinydebian-bts-email-compose (format "%s-done" bug))))
+  (let* ((email (tinydebian-bts-email-compose (format "%s-done" bug)))
+         (pkg   package))
     (tinydebian-bts-mail-type-macro
      nil
-     nil
+     pkg
      email
      (format "Bug#%s Close" bug)
      (insert
       (if (not (stringp package))
           ""
         (format "\
-Source: %s
-Source-Version: %s
+Package: %s
+Version: %s
 "
                 package
                 (or version "")))

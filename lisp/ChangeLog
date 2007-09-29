@@ -1,3 +1,17 @@
+2007-09-27  Jari Aalto  <jari.aalto@cante.net>
+
+	* tiny/tinydebian.el (tinydebian-bts-mail-ctrl-close):
+	Corrected 'package' and 'version' information.
+
+2007-09-25  Jari Aalto  <jari.aalto@cante.net>
+
+	* tiny/tinylisp.el (tinylisp-find-autoload-functions):
+	fix docstring typo.
+
+	* tiny/tinylib.el (ti::package-autoload-create-on-file):
+	Minor adjustment: if there are no function arguments,
+	do not add trailing empty spaces to listing.
+
 2007-09-16  Jari Aalto  <jari.aalto@cante.net>
 
 	* tiny/tinydebian.el (tinydebian-reportbug): Correct alias
