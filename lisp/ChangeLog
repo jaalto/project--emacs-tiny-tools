@@ -1,3 +1,8 @@
+2007-10-09  Jari Aalto  <jari.aalto@cante.net>
+
+	* tiny/tinymail.el (tinymail-buffer-email-address-scramble-area):
+	Improve regexps to find diff start better.
+
 2007-09-27  Jari Aalto  <jari.aalto@cante.net>
 
 	* tiny/tinydebian.el (tinydebian-bts-mail-ctrl-close):

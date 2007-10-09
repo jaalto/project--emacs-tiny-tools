@@ -2093,11 +2093,14 @@ documentation in the tinymail.el or call \\[tinymail-version]."
 ;;; ----------------------------------------------------------------------
 ;;;
 (defun tinymail-buffer-email-address-scramble-area ()
-  "Return are of eamil that can be scrambled.
+  "Return area of email that can be scrambled.
 Exclude patches and attachments."
   (let ((list
          (list
-          "^RCS[ \t]+file:.*,v\\|^diff[ \t]+-[^- \t\r\n]"
+          "^RCS[ \t]+file:.*,v\\|^[ \t]*diff[ \t]+.*[-/]"
+          "^---[ \t]"
+          "^***[ \t]"
+          "^\+\+\+[ \t]"
           "[<]#part" ;; Gnus attachment
           "\\[Attachment:"))
         (point-list (list (point-max)))
@@ -2105,9 +2108,8 @@ Exclude patches and attachments."
         end)
     (save-excursion
       (ti::pmin)
-      (when (search-forward (or mail-header-separator
-                                "---NOTHING__TO_FIND")
-                            nil t)
+      (when (and (stringp mail-header-separator)
+                 (search-forward mail-header-separator nilt ))
         (setq beg (1+ (line-end-position)))
         (dolist (re list)
           (when (re-search-forward re nil t)
