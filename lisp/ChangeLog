@@ -1,3 +1,8 @@
+2007-11-04  Jari Aalto  <jari.aalto@cante.net>
+
+	* tiny/tinymail.el (tinymail-buffer-email-address-scramble-area):
+	Typo 'nilt' => 'nil t' in `search-forward' call.
+
 2007-10-09  Jari Aalto  <jari.aalto@cante.net>
 
 	* tiny/tinymail.el (tinymail-buffer-email-address-scramble-area):

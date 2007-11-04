@@ -2109,7 +2109,7 @@ Exclude patches and attachments."
     (save-excursion
       (ti::pmin)
       (when (and (stringp mail-header-separator)
-                 (search-forward mail-header-separator nilt ))
+                 (search-forward mail-header-separator nil t))
         (setq beg (1+ (line-end-position)))
         (dolist (re list)
           (when (re-search-forward re nil t)
