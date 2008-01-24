@@ -127,7 +127,7 @@
 ;;          If Emacs crashes you can recover the previous session.
 ;;          See function `tinydesk-auto-save' for more. Similar functionality
 ;;          (".saves") is in new Emacs releases, but this package
-;;          was originally written using 19.28
+;;          was originally written for Emacs 19.28.
 ;;
 ;;      o   CRASH RECOVERY: If Emacs crashes, or you have to kill it
 ;;          with `-HUP' if it hangs, it leaves autosaved files around. When
@@ -147,20 +147,21 @@
 ;;
 ;;      o   You have Emacs session open with bunch of files. Now you
 ;;          believe that it's time to save this session. You do
-;;          C-x 4 s and give some name "state.c" if you edited c project.
+;;          `C-x' `4' `s' and give some name "state.c" if you worked
+;;          with a C project.
 ;;
-;;      Now, it all depends what you want to do after that. If you find more
-;;      files to Emacs; or kill some unwanted buffers, you can re-execute
-;;      C-x 4 s whenever you like. You can even edit the state file with
-;;      C-x 4 e to remove some files that you don't want to include to
-;;      that "project".
+;;      Now, it all depends what you want to do after that. You may
+;;      `find-file' more files to Emacs; or kill few unwanted
+;;      buffers. Re-execute `C-x' `4' `s' whenever you like. You can
+;;      even edit the state file with `C-x' `4' `e' to remove some files
+;;      that you don't want to include to that "project".
 ;;
 ;;      o   Next time you open Emacs you can load any state file with
 ;;          C-x 4 r "state.c"
 ;;
 ;;      If you want to switch between projects; unload first the current
-;;      project with C-x 4 u "state.c" and reload some other project
-;;      with C-x 4 r, eg your current C++ project "state.cc"
+;;      project with `C-x' `4' `u' "state.c" and reload some other project
+;;      with `C-x' `4' `r', e.g. your current C++ project "state.cc"
 ;;
 ;;  Automatic one time session saver
 ;;
@@ -168,13 +169,14 @@
 ;;      when Emacs starts again. I must say that this is not necessarily
 ;;      the best, because when you start Emacs for some quick job, you
 ;;      don't necessarily want it to load the saved session (loading all
-;;      files take time considerably). Loading Emacs with -q is not the
+;;      files takes some time). Loading Emacs with `-q' is not the
 ;;      choice, if you still like to have your other Emacs goodies active.
 ;;
-;;      Here is semi-automatic save and restore, put all these lines near
-;;      the end of your $HOME/.emacs. The setup saves the state when
-;;      Emacs exists and asks if you want to return to saved session on
-;;      Emacs startup. (You did also copy the installation lines too...)
+;;      Here is semi-automatic save and restore, put all these, in
+;;      addition to ones mentioned at the "install" section, lines
+;;      near the end of your $HOME/.emacs. The setup saves the state
+;;      when Emacs exists and asks if you want to return to saved
+;;      session on Emacs startup.
 ;;
 ;;          (defconst tinydesk-:directory-location "~/elisp/config")
 ;;
@@ -196,7 +198,7 @@
 ;;  Face setup
 ;;
 ;;      This program uses some faces to catch your attention when you're
-;;      working with the state files. I you restore state from a file and
+;;      working with the state files. If you restore state from a file and
 ;;      some file reference cannot be loaded, the state file will be shown
 ;;      to you and the problematic lines are highlighted. If you open the
 ;;      state file for editing, you can selectively load files. The mouse
