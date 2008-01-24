@@ -5,7 +5,7 @@
 # ddir.pl -- Program to do a DOS like directory tree
 #
 #       Copyright (C) 1994 Brian Blackmore
-#       Copyright (C) 1995-2007 Jari Aalto
+#       Copyright (C) 1995-2008 Jari Aalto
 #
 #       This program is free software; you can redistribute it and/or
 #       modify it under the terms of the GNU General Public License as

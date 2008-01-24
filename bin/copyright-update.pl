@@ -4,7 +4,7 @@
 #
 #   File id
 #
-#       Copyright (C) 2000-2007 Jari Aalto
+#       Copyright (C) 2000-2008 Jari Aalto
 #
 #       This program is free software; you can redistribute it and/or
 #       modify it under the terms of the GNU General Public License as
@@ -27,11 +27,11 @@
 #
 #       This program will update the year part of the copyright line.
 #
-#           Copyright (C)       2000-2007
+#           Copyright (C)       2000-2008
 #
 #       =>
 #
-#           Copyright (C)       2000-2007
+#           Copyright (C)       2000-2008
 #
 #       The Copyright year can be passed as command line option. If no
 #       option is given, current year is used.
@@ -107,8 +107,8 @@ file contains that line.
 For the above command, only files that contain lines like these would
 be updated:
 
-   Copyright (C)        2000-2007
-   Copyright: (C)       2000-2007
+   Copyright (C)        2000-2008
+   Copyright: (C)       2000-2008
 
 The format must be exatly as show aobve. Different amount of spaces is
 permitted, but the YEAR-YEAR must be kept together in files.
@@ -227,7 +227,7 @@ $Id: copyright-update.pl,v 1.14 2007/05/01 17:20:27 jaalto Exp $
 
 =head1 AUTHOR
 
-Copyright (C) 2000-2007 Jari Aalto. All rights reserved.
+Copyright (C) 2000-2008 Jari Aalto. All rights reserved.
 This program is free software; you can redistribute and/or modify program
 under the same terms as Perl itself or in terms of Gnu General Public
 licence v2 or later.
