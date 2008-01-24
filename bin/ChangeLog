@@ -1,4 +1,12 @@
-2007-05-01  Jari Aalto  <jari aalto A T cante net>
+2008-01-25  Jari Aalto  <jari.aalto@cante.net>
+
+	* copyright-update.pl (HandleCommandLineArgs): Accept
+	--debug LEVEL, instead of just -d.
+	(Main): Display warning if there are no matching files.
+	(wanted): Add git, darcs, arch version control directories
+	to default ignore list.
+
+2007-05-01  Jari Aalto  <jari.aalto@cante.net>
 
 	* copyright-update.pl (HandleFile): Variable $msg
 	had wrong number of double quotes.
@@ -6,7 +14,7 @@
 	'$y eq $YEAR'.
 	(wanted): $ignore pattern improved to cinlude ".#thisfile".
 
-2006-02-19  Jari Aalto  <root A T w2kpicasso>
+2006-02-19  Jari Aalto  <jari.aalto@cante.net>
 
 	* copyright-update.pl:
 	(HandleCommandLineArgs): New --ignore option and variable
@@ -21,7 +29,7 @@
 	(wanted): Check  $OPT_SCAN_TYPE and ignore all
 	symlinks.
 
-2005-05-19  Jari Aalto  <jari aalto A T cante dt net>
+2005-05-19  Jari Aalto  <jari.aalto@cante.net>
 
 	* Makefile:  Removed version
 	control Id-tag.
@@ -50,12 +58,12 @@
 	control Id-tag. Corrected #!-line. Removed extra newlines
 	from the code.
 
-2005-05-08  Jari Aalto  <jari aalto A T cante dt net>
+2005-05-08  Jari Aalto  <jari.aalto@cante.net>
 
 	* makefile.pl (Initialize): Added missing semicolon to $CONTACT.
 	Bug reported by David Hodge <david AT hodge.id.au>. Thanks.
 
-2005-04-17  Jari Aalto  <jari aalto A T cante dt net>
+2005-04-17  Jari Aalto  <jari.aalto@cante.net>
 
 	* emacs-util.pl (UniqueRoots2): Incorrect line
 	'next id $path' => 'next if $path'. Bug reported by
@@ -65,7 +73,7 @@
 
         Updated Copyright year in all files.
 
-2005-01-27  Jari  <jari aalto A T cante dt net>
+2005-01-27  Jari  <jari.aalto@cante.net>
 
         * emacs-util.pl: Corrected 3rd line at the top.
         (UniqueRoots): Added ext if /^\s*$/. This fixed SF
@@ -73,26 +81,26 @@
         SF user dan_brown.
         (UniqueRoots2): Added skip empty paths.
 
-2005-01-18  Jari  <jari aalto A T cante dt net>
+2005-01-18  Jari  <jari.aalto@cante.net>
 
         * emacs-util.pl: Added /usr/bin/perl interpreter line.
 
-2003-06-07 Sat  Jari Aalto  <jari aalto A T cante dt net>
+2003-06-07 Sat  Jari Aalto  <jari.aalto@cante.net>
 
         * admin.bashrc (function sfttscp ()): 1.2 Added -C option by default.
 
-2003-06-05 Thu  Jari Aalto  <jari aalto A T cante dt net>
+2003-06-05 Thu  Jari Aalto  <jari.aalto@cante.net>
 
         * makefile.pl (Help): 1.60 Removed old --html-base option. Removed
         --html-frame, --html-regexp options. Now handled in bin/admin.bash
 
-2003-02-27 Thu  Jari Aalto  <jari aalto A T cante dt net>
+2003-02-27 Thu  Jari Aalto  <jari.aalto@cante.net>
 
         * emacs-util.pl (wanted): 1.6 Incorrect regexp definition
         ruled out ALL external drived under Cygwin. Now make more stricter
         check ^/cygdrive/[a-z]$
 
-2003-02-06 Thu  Jari Aalto  <jari aalto A T cante dt net>
+2003-02-06 Thu  Jari Aalto  <jari.aalto@cante.net>
 
         * makefile.pl (given multiple): 1.59 Removed --perlfix, the first line
         '#!/usr/local/bin/perl' fix option. This is no longer needed, because
@@ -130,7 +138,7 @@
         (Help): 1.5 Added HTML help generation with --help-html and
         Manual pages with --help-man
 
-2003-01-28  Jari Aalto  <jari aalto A T cante dt net>
+2003-01-28  Jari Aalto  <jari.aalto@cante.net>
 
         * ripdoc.pl: Do not use #!/usr/local/bin/perl, but
         only #!perl. Suppose perl is along path.
@@ -168,18 +176,18 @@
         * c-function-list.pl: Do not use #!/usr/local/bin/perl, but
         only #!perl. Suppose perl is along path.
 
-2002-09-01 Sun  Jari Aalto  <jari aalto A T cante dt net>
+2002-09-01 Sun  Jari Aalto  <jari.aalto@cante.net>
 
         * admin.bashrc (function sfttcmd ()): New. Send remote
         commans, like deleting, copying listing files.
         (function sfttscp ()): Added -d DIRECTORY option to copy
         files under subdirectories
 
-2002-08-08 Thu  Jari Aalto  <jari aalto A T cante dt net>
+2002-08-08 Thu  Jari Aalto  <jari.aalto@cante.net>
 
         * admin.bashrc (function sftt_nice_text ()): 1.2 New.
 
-2002-08-07 Wed  Jari Aalto  <jari aalto A T cante dt net>
+2002-08-07 Wed  Jari Aalto  <jari.aalto@cante.net>
 
         * admin.bashrc (function sftttime ()): 1.2 New.
         (function sfttask ()): 1.2 New.
@@ -196,7 +204,7 @@
         (function sftt_htmlall ()): 1.2 REmoved automatic detection
         of --html-frame option. Now it is included in documents itself.
 
-2002-08-06 Tue  Jari Aalto  <jari aalto A T cante dt net>
+2002-08-06 Tue  Jari Aalto  <jari.aalto@cante.net>
 
         * emacs-util.pl (Initialize): Moved call to the Main();
         Small fices to the pod README.
@@ -213,34 +221,34 @@
         (Initialize): Define $EXECUTABLE_REGEXP. Added
         .py (python), .pl (perl), .bash, .tcsh extensions.
 
-2002-08-02 Fri  Jari Aalto  <jari aalto A T cante dt net>
+2002-08-02 Fri  Jari Aalto  <jari.aalto@cante.net>
 
         * makefile.pl (TargetClean): Did not clean .elc files
         (Emacs byte compile files). Regexp fixed.
 
-2002-05-02 Thu  Jari Aalto  <jari aalto A T cante dt net>
+2002-05-02 Thu  Jari Aalto  <jari.aalto@cante.net>
 
         * emacs-compile.pl (sub Main): 1.5 Modified regexp
         to exclude all files that include character #
 
-2002-01-28 Mon  Jari Aalto  <jari aalto A T cante dt net>
+2002-01-28 Mon  Jari Aalto  <jari.aalto@cante.net>
 
         * emacs-compile.pl (sub AbsolutePaths): 1.4 Conver Cygwin
         paths to DOs if compiling with cygwin Perl + Emacs.
         Emacs is not an Cygwin application.
 
-2002-01-14 Mon  Jari Aalto  <jari aalto A T cante dt net>
+2002-01-14 Mon  Jari Aalto  <jari.aalto@cante.net>
 
         * Makefile: 1.5
         Documentatation improved.
         (help): Rule fixed.
 
-2002-01-04 Fri  Jari Aalto  <jari aalto A T cante dt net>
+2002-01-04 Fri  Jari Aalto  <jari.aalto@cante.net>
 
         * makefile.mak (TT_EL_TINY): 1.65 incorrect name tinycb.el
         => tinybuffer.el
 
-2002-01-02 Wed  Jari Aalto  <jari aalto A T cante dt net>
+2002-01-02 Wed  Jari Aalto  <jari.aalto@cante.net>
 
         * Makefile (clean): 1.3 Corrected bash-styles extension file
         globs. `sh' does not knwo *{~,#,.elc}.
@@ -255,12 +263,12 @@
 
         * mywebget-emacs.conf: (reichor-stefan): site updated.
 
-2001-12-31 Mon  Jari Aalto  <jari aalto A T cante dt net>
+2001-12-31 Mon  Jari Aalto  <jari.aalto@cante.net>
 
         * mywebget-emacs.conf: 1.65 (ellison-gary): New.
         (rcpp-mode): By Matt Curtin <cmcurtin@interhack.com> added
 
-2001-12-30 Sun  Jari Aalto  <jari aalto A T cante dt net>
+2001-12-30 Sun  Jari Aalto  <jari.aalto@cante.net>
 
         * mywebget-emacs.conf: 1.63 Added regexp-no:folding. The folding
         primarysite is elswhere. Removed
@@ -273,12 +281,12 @@
         Added direct CVS links.
         (socha-robin): New.
 
-2001-12-28 Fri  Jari Aalto  <jari aalto A T cante dt net>
+2001-12-28 Fri  Jari Aalto  <jari.aalto@cante.net>
 
         * mywebget-emacs.conf: 1.62 Chnage all <no-regexp> tags to
         <regexp-no> tag.
 
-2001-12-24 Mon  Jari Aalto  <jari aalto A T cante dt net>
+2001-12-24 Mon  Jari Aalto  <jari.aalto@cante.net>
 
         * mywebget-emacs.conf: 1.59
         (niksic-hrvoje): URLs changed. Site corrected. Was
@@ -303,7 +311,7 @@
         (tramp): Removed. This is now sourceforge project.
         (tiny-tools): Removed. This is now sourceforge project.
 
-2001-12-23 Sun  Jari Aalto  <jari aalto A T cante dt net>
+2001-12-23 Sun  Jari Aalto  <jari.aalto@cante.net>
 
         * mywebget-emacs.conf (id3): 1.58 emoved new: option. Now finds file.
         (vera-mode): No more available.
@@ -312,28 +320,28 @@
         (glickstein-bob): URL no more there. Section commented out.
         (goel-deepak): URL updated. Now load lisp-mine.tar
 
-2001-12-09  Jari Aalto   <jari aalto A T cante dt net>
+2001-12-09  Jari Aalto   <jari.aalto@cante.net>
 
         * makefile.pl (TargetClean): Do not clean loaddefs.
 
-2001-12-08  Jari Aalto   <jari aalto A T cante dt net>
+2001-12-08  Jari Aalto   <jari.aalto@cante.net>
 
         * java-function-list.pl: corrected errors in the code.
 
         * makefile.pl (TargetAutoload): Fixed autoload generation
         for Emacs, XEmacs trouble.
 
-2001-12-08  Jari Aalto  <jari aalto A T cante dt net>
+2001-12-08  Jari Aalto  <jari.aalto@cante.net>
 
         * copyright-update.pl New Program. Updates copyright information.
         (other features can be added here.)
 
-2001-11-27  Jari Aalto  <jari aalto A T cante dt net>
+2001-11-27  Jari Aalto  <jari.aalto@cante.net>
 
         * mywebget-emacs.conf (jde): corrected regular expression
         to find new package name jde -> jdee
 
-2001-10-08 Mon  Jari Aalto  <jari aalto A T cante dt net>
+2001-10-08 Mon  Jari Aalto  <jari.aalto@cante.net>
 
         * makefile.pl (HandleCommandLineArgs): 1.48
         Renamed option --link-check to --Link-check to avoid
@@ -341,12 +349,12 @@
         (HandleCommandLineArgs();): 1.48 Updated changed tree structure
         lisp/ => lisp/tiny, doc/ => doc/txt
 
-2001-09-27 Thu  Jari Aalto  <jari aalto A T cante dt net>
+2001-09-27 Thu  Jari Aalto  <jari.aalto@cante.net>
 
         * makefile.pl (sub Initialize): 1.47 Added test for
         Native $CYGWIN_PERL in Win32 environment.
 
-2001-09-26  Jari Aalto  <jari aalto A T cante dt net>
+2001-09-26  Jari Aalto  <jari.aalto@cante.net>
 
         * mywebget-emacs.conf: (predescu-ovidiu): the lisp
         files were available with extension .txt. This is Geocities
@@ -355,17 +363,17 @@
         if user put more .txt files, they should have been manually
         inserted. Current code tracks all new lisp files on the page.
 
-2001-09-25 Tue  Jari Aalto  <jari aalto A T cante dt net>
+2001-09-25 Tue  Jari Aalto  <jari.aalto@cante.net>
 
         * mywebget-emacs.conf (bugtrack): 1.50 New package. From
         JDE site http://jde.sunsite.dk/developerscorner.html
 
-2001-09-01 Sat  Jari Aalto  <jari aalto A T cante dt net>
+2001-09-01 Sat  Jari Aalto  <jari.aalto@cante.net>
 
         * mywebget-emacs.conf (jde): Corrected http address,
         has changed to jde.sunsite.dk
 
-2001-08-25 Sat  Jari Aalto  <jari aalto A T cante dt net>
+2001-08-25 Sat  Jari Aalto  <jari.aalto@cante.net>
 
         * mywebget-emacs.conf: Moved the variables to separate
         file `mywebget-emacs-vars.conf', so that users can define
@@ -378,7 +386,7 @@
         (brodie-bill): New. Added, but the user has no home page,
         files copied from Kai's ftp site.
 
-2001-08-24 Fri  Jari Aalto  <jari aalto A T cante dt net>
+2001-08-24 Fri  Jari Aalto  <jari.aalto@cante.net>
 
         * makefile.pl (sub PathConvert): 1.47
         Accept bare labels -dos, -unix as conversion options too.
@@ -388,33 +396,33 @@
         must be converted into DOS format, because SYSTEM() is run
         in DOS context.
 
-2001-08-13 Mon  Jari Aalto  <jari aalto A T cante dt net>
+2001-08-13 Mon  Jari Aalto  <jari.aalto@cante.net>
 
         * mywebget-emacs.conf: 1.34 `storm-kim' site changed. updated
         download template.
 
-2001-08-05 Sun  Jari Aalto  <jari aalto A T cante dt net>
+2001-08-05 Sun  Jari Aalto  <jari.aalto@cante.net>
 
         * mywebget-emacs.conf: 1.33 Added pinard-francois
         (goel-deepak) Added miniedit.el for BBDB multiline
         field editing.
 
-2001-07-29 Sun  Jari Aalto  <jari aalto A T cante dt net>
+2001-07-29 Sun  Jari Aalto  <jari.aalto@cante.net>
 
         * mywebget-emacs.conf: 1.32 Added kapur-nevin
 
-2001-07-02  Jari Aalto  <jari aalto A T cante dt net>
+2001-07-02  Jari Aalto  <jari.aalto@cante.net>
 
         * makefile.pl (SfUploadIncoming): New function to help
         upload release packages to Sourceforge.
 
-2001-05-17 Thu  Jari Aalto  <jari aalto A T cante dt net>
+2001-05-17 Thu  Jari Aalto  <jari.aalto@cante.net>
 
         * makefile.pl (Html): 1.44 readdir() regular expression picked
         up .pl files for html generation. Added NOT .pl regexp to exclude
         perl files.
 
-2001-04-11 Wed  Jari Aalto  <jari aalto A T cante dt net>
+2001-04-11 Wed  Jari Aalto  <jari.aalto@cante.net>
 
         * makefile.pl (sub PathFix): 1.42 Made fucntion more clear
         by rewriting the if-statement.
@@ -422,20 +430,20 @@
         (sub TargetLisp): 1.42 Added CygwinToDos conversion to tacle
         W2K/Cygwin paths that must be converted for Emacs compilation.
 
-2001-03-31 Sat  Jari Aalto  <jari aalto A T cante dt net>
+2001-03-31 Sat  Jari Aalto  <jari.aalto@cante.net>
 
         * makefile.pl (CommandLine): 1.41 Chnaged option --tempdir
         to --Tempdir, so that --test option can be abbreviated as
         -t
         (sub TargetClean): 1.41 Added Celaning autoload files.
 
-2001-03-20 Tue  Jari Aalto  <jari aalto A T cante dt net>
+2001-03-20 Tue  Jari Aalto  <jari.aalto@cante.net>
 
         * makefile.pl (sub Autoload): Default value `emacs' and `xemacs'
         didn't work well. The FindBinary function didn't receive the
         argument. Fixed.
 
-2001-03-13 Tue  Jari Aalto  <jari aalto A T cante dt net>
+2001-03-13 Tue  Jari Aalto  <jari.aalto@cante.net>
 
         * makefile.pl: Removed `autouse' statements, because they seem
         to confuse some perl versions with messages:
@@ -446,37 +454,37 @@
         necessary to give target emacs with --binary, since the autoload
         file generation is same in Emacs and XEmacs. (I hope).
 
-2001-03-09 Fri  Jari Aalto  <jari aalto A T cante dt net>
+2001-03-09 Fri  Jari Aalto  <jari.aalto@cante.net>
 
         * makefile.pl (sub HandleCommandLineArgs): Added BUTTON_PREVIOUS
         and BUTTON_NEXT --button_previous etc.
 
-2001-03-05 Mon  Jari Aalto  <jari aalto A T cante dt net>
+2001-03-05 Mon  Jari Aalto  <jari.aalto@cante.net>
 
         * makefile.pl (sub FindBinary): Check BIN argument.
 
-2001-01-25 Thu  Jari Aalto  <jari aalto A T cante dt net>
+2001-01-25 Thu  Jari Aalto  <jari.aalto@cante.net>
 
         * makefile.pl (Getopt::Long): Corrected --html-base option
         to take argument.
 
-2001-01-21 Sun  Jari Aalto  <jari aalto A T cante dt net>
+2001-01-21 Sun  Jari Aalto  <jari.aalto@cante.net>
 
         * makefile.pl 1.27 Added PATH printing and count.
         (HandleCommandLineArgs): 1.27 Added more debug.
         Added :i argument for debug.
 
-2001-01-13 Sat  Jari Aalto  <jari aalto A T cante dt net>
+2001-01-13 Sat  Jari Aalto  <jari.aalto@cante.net>
 
         * makefile.pl (TargetClean;): 1.23 Changed ERROR to
         `Warning'
 
-2001-01-11 Thu  Jari Aalto  <jari aalto A T cante dt net>
+2001-01-11 Thu  Jari Aalto  <jari.aalto@cante.net>
 
         * makefile.pl (HandleCommandLineArgs();): 1.22 Better
         Path print.
 
-2001-01-07 Sun  Jari Aalto  <jari aalto A T cante dt net>
+2001-01-07 Sun  Jari Aalto  <jari.aalto@cante.net>
 
         * makefile.pl:
         1.20 $SHELL was not introduced
@@ -497,7 +505,7 @@
         (sub ShellPerlEnd()): 1.21 New.
         (sub ShellPerlStart($): 1.21 New.
 
-2000-11-25 Sat  Jari Aalto  <jari aalto A T cante dt net>
+2000-11-25 Sat  Jari Aalto  <jari.aalto@cante.net>
 
         * makefile.pl (Main): 1.18 Removed the default `all' target.
         (TargetBuild): 1.18 New.
@@ -505,13 +513,13 @@
         (TargetPerlfix): 1.18 New.
         (FixFileShebang): 1.18 New.
 
-2000-05-25 Thu  Jari Aalto  <jari aalto A T cante dt net>
+2000-05-25 Thu  Jari Aalto  <jari.aalto@cante.net>
 
         * makefile.pl (sub AbsolutePaths): 1.14 New, must use absolute paths
         for --load, becaseuse we change directories and relative ones
         supplied on command line won't work.
 
-2000-02-19 Sat  Jari Aalto  <jari aalto A T cante dt net>
+2000-02-19 Sat  Jari Aalto  <jari.aalto@cante.net>
 
         * makefile.pl (Main): 1.13 CYGWIN FIXES.
         Update PATH to include bin/ becasue we
@@ -519,19 +527,19 @@
         we're running under cygwin bash etc.
         (sub PathConvert): 1.13 New.
 
-2000-02-13 Sun  Jari Aalto  <jari aalto A T cante dt net>
+2000-02-13 Sun  Jari Aalto  <jari.aalto@cante.net>
 
         * makefile.pl (sub Clean): 1.10 Moved chdir and opendir to
         seratate IF test cases.
         (Main): 1.11 removed 'o' compile option from regexps and this
         seems to correct why "all" target didn't work. Hm?
 
-2000-01-10 Mon  Jari Aalto  <jari aalto A T cante dt net>
+2000-01-10 Mon  Jari Aalto  <jari.aalto@cante.net>
 
         * makefile.pl (sub Convert): 1.9 Spelling mistake corrected
         fialed --> failed.
 
-2000-01-09 Sun  Jari Aalto  <jari aalto A T cante dt net>
+2000-01-09 Sun  Jari Aalto  <jari.aalto@cante.net>
 
         * makefile.pl (Getopt::Long): XEmacs 21.2 fix.
         1.5 Added option --binary to specify target emacs to compile.
@@ -544,7 +552,7 @@
         about non existing targets.
         Added missing target "dist" from the documentation.
 
-2000-01-08 Sat  Jari Aalto  <jari aalto A T cante dt net>
+2000-01-08 Sat  Jari Aalto  <jari.aalto@cante.net>
 
         * makefile.pl (sub Lisp): 1.4 Now handles many directories
         compilation. Accepts multiple @load options.
@@ -553,7 +561,7 @@
         (sub Main): 1.4 ROOT path redefined. Calculates it as the
         program is accessed. Added missing lisp/rc directory.
 
-2000-01-07 Fri  Jari Aalto  <jari aalto A T cante dt net>
+2000-01-07 Fri  Jari Aalto  <jari.aalto@cante.net>
 
         * makefile.pl (sub Clean): 1.1 Fixed target "clean"
         (sub Dist): 1.3 New. Changed main

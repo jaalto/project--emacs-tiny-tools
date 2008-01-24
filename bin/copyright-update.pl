@@ -171,9 +171,9 @@ The default is current calendar year.
 
 =over 4
 
-=item B<--debug>
+=item B<--debug LEVEL>
 
-Turn on debug.
+Turn on debug. Level if 0-10.
 
 =back
 
@@ -327,6 +327,7 @@ sub HandleCommandLineArgs ()
     ));
 
     my ( $help, $helpMan, $helpHtml );          # local variables to function
+    $debug = -1;
 
     GetOptions      # Getopt::Long
     (
@@ -335,7 +336,7 @@ sub HandleCommandLineArgs ()
         , "Help-man"   => \$helpMan
         , "Help-html"  => \$helpHtml
         , "test"       => \$test
-        , "debug"      => \$debug
+        , "debug:i"    => \$debug
         , "verbose:i"  => \$verb
         , "ignore=s"   => \$OPT_REGEXP_IGNORE
         , "recursive"  => \$OPT_RECURSIVE
@@ -345,6 +346,9 @@ sub HandleCommandLineArgs ()
     $help     and  Help();
     $helpMan  and  Help(-man);
     $helpMan  and  Help(-html);
+
+    $debug = 1          if $debug == 0;
+    $debug = 0          if $debug < 0;
 
     $YEAR = Year()  unless defined $YEAR;
 
@@ -388,7 +392,7 @@ sub HandleFile ( % )
     my %arg = @ARG;
 
     my @files   = @{ $arg{-file} };
-    my $regexp  = $arg{-regexp}     || '' ;
+    my $regexp  = $arg{-regexp} || '' ;
 
     unless ( @files )
     {
@@ -500,7 +504,7 @@ sub wanted ()
     my $dir  = $File::Find::dir;
     my $file = $File::Find::name;  # complete path
 
-    if ( $dir =~ m,(CVS|RCS|\.bzr|\.svn)$,i )
+    if ( $dir =~ m,(CVS|RCS|\.(bzr|svn|git|darcs|arch))$,i )
     {
         $File::Find::prune = 1;
         $debug  and  print "$id: Ignored directory: $dir\n";
@@ -613,6 +617,13 @@ sub Main ()
     else
     {
         my @files = FileGlobs @ARGV;
+
+        unless (@files)
+        {
+            $verb  and  warn "[WARN] No files matching glob(s): @ARGV\n";
+            return;
+        }
+
         HandleFile -file => [@files], -regexp => $OPT_REGEXP;
     }
 }
