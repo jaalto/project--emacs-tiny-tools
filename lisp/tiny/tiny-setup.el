@@ -1347,31 +1347,32 @@ t or nil if file is to be compiled."
 ;;;
 (defun tiny-setup-compile-kit-libraries (dir)
   "Compile tiny tools libraries"
-  (tiny-setup-directory-recursive-macro dir
-                                        (let ((libs (directory-files dir 'abs-path "tinylib.*\\.el$")))
-                                          (when libs ;;  Found correct directory
-                                            (message "TinySetup: compiling libraries in right order.")
-                                            (let ((default-directory dir)
-                                                  compile-file)
-                                              ;; There is certain order of compilation. Low level libraries first.
-                                              (dolist (regexp tiny-setup-:library-compile-order)
-                                                (when (setq compile-file ;; compile these first
-                                                            (find-if (function
-                                                                      (lambda (elt)
-                                                                        (string-match regexp elt)))
-                                                                     libs))
-                                                  (setq libs (delete compile-file libs))
-                                                  (byte-compile-file compile-file)))
-                                              (message "TinySetup: compiling rest of the libraries.")
-                                              (dolist (file libs) ;; Rest of the libraries
-                                                (cond
-                                                 ((find-if (function
-                                                            (lambda (regexp)
-                                                              (string-match regexp file)))
-                                                           tiny-setup-:library-compile-exclude)
-                                                  (message "TinySetup: ignoring library %s" file))
-                                                 (t
-                                                  (byte-compile-file file)))))))))
+  (tiny-setup-directory-recursive-macro
+   dir
+   (let ((libs (directory-files dir 'abs-path "tinylib.*\\.el$")))
+     (when libs	;;  Found correct directory
+       (message "TinySetup: compiling libraries in right order.")
+       (let ((default-directory dir)
+	     compile-file)
+	 ;; There is certain order of compilation. Low level libraries first.
+	 (dolist (regexp tiny-setup-:library-compile-order)
+	   (when (setq compile-file ;; compile these first
+		       (find-if (function
+				 (lambda (elt)
+				   (string-match regexp elt)))
+				libs))
+	     (setq libs (delete compile-file libs))
+	     (byte-compile-file compile-file)))
+	 (message "TinySetup: compiling rest of the libraries.")
+	 (dolist (file libs) ;; Rest of the libraries
+	   (cond
+	    ((find-if (function
+		       (lambda (regexp)
+			 (string-match regexp file)))
+		      tiny-setup-:library-compile-exclude)
+	     (message "TinySetup: ignoring library %s" file))
+	    (t
+	     (byte-compile-file file)))))))))
 
 ;;; ----------------------------------------------------------------------
 ;;;

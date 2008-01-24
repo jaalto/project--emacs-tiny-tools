@@ -6229,10 +6229,12 @@ Table of Contents
     27.23 QA.el
 
         [Thien-Thi Nguyen] Do you do QA? (why not?!) do you use emacs?
-        (that's better.) do you wish for an emacs environment for managing
-        spec, test case database, test runs and html reports? (ok, no need
-        to answer...) QA uses EDB, the Emacs Database for the test case
-        database and test run file. pointers to EDB in the site above.
+        (that's better.) do you wish for an emacs environment for
+        managing spec, test case database, test runs and html reports?
+        (ok, no need to answer...) QA uses EDB
+        <http://www.gnuvola.org/software/edb/>, the Emacs Database for
+        the test case database and test run file. pointers to EDB in
+        the site above.
 
     27.24 TinyTf.el, white paper minor mode
 
