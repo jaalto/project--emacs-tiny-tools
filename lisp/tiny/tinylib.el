@@ -7252,7 +7252,7 @@ Input:
            (setq args (format ";; %-15s %s\n" func args)))
           (t
            (setq args (format ";; %-36s %s\n" func args)))))
-        (push args list)
+        (push (list func args) list)
         ;; (autoload FUNCTION FILE &optional DOCSTRING INTERACTIVE TYPE)
         (setq str (format "(autoload '%-36s %s \"\" %s%s)%s\n"
                           func
@@ -7267,13 +7267,18 @@ Input:
     (unless no-desc
       (with-current-buffer buffer
         (insert "\n")                   ;list arguments for functions.
-        (dolist (elt list) (insert elt)))))
-  (if tmp                          ;We loaded this to Emacs, remove it
-      (kill-buffer tmp))
-  (unless no-show
-    (pop-to-buffer buffer)
-    (ti::pmin))
-  buffer))
+        (dolist (elt list)
+          (multiple-value-bind (func args) elt
+            (if (and (stringp args)
+                     (string-match "[a-z]" args))
+                (insert (format ";; %-35s %s\n" func args))
+              (insert (format ";; %s\n" func)))))))
+    (if tmp                          ;We loaded this to Emacs, remove it
+        (kill-buffer tmp))
+    (unless no-show
+      (pop-to-buffer buffer)
+      (ti::pmin))
+    buffer)))
 
 ;;; ----------------------------------------------------------------------
 ;;;

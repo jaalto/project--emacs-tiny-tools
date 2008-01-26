@@ -90,6 +90,12 @@
 
 ;;; Code:
 
+
+(eval-when-compile
+  (require 'cl))
+
+(require 'tinylib)
+
 ;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;
 ;;
 ;;
@@ -207,7 +213,7 @@ E.g. if you want to calculate days; you'd do
   "Return 'provide and optional END of the file marker."
   (concat
    (format
-    "\n(provide '%s)\n\n"
+    "\n\n(provide '%s)\n\n"
     (file-name-sans-extension (file-name-nondirectory file)))
    (if end
        (format ";; End of file %s\n"
@@ -236,7 +242,8 @@ E.g. if you want to calculate days; you'd do
     (ti::package-autoload-create-on-file
      file
      (current-buffer)
-     'no-show)
+     'no-show
+     'no-desc)
     (insert (tinypath-tmp-autoload-file-footer dest 'eof))
     (let ((backup-inhibited t))
       (write-region (point-min) (point-max) dest))
@@ -246,10 +253,10 @@ E.g. if you want to calculate days; you'd do
 ;;;
 (defun tiny-setup-autoload-build-for-file (file)
   "Generate autoload from FILE to FILE-autoload.el"
-  (interactive "FGEnerate autoload from lisp file: ")
+  (interactive "fGenerate autoload from lisp file: ")
   (let* ((dest (format "%s-autoload.el"
                        (file-name-sans-extension file))))
-    (tiny-setup-autoload-build-for-file file dest)))
+    (tiny-setup-autoload-build-for-file-1 file dest)))
 
 ;;; ----------------------------------------------------------------------
 ;;;

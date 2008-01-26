@@ -1,5 +1,10 @@
 2008-01-26  Jari Aalto  <jari.aalto@cante.net>
 
+	* tiny/tinylib.el (ti::package-autoload-create-on-file):
+	Correct function argument printing. The dolist-loop that
+	generated ';; function arg arg ...' listing wrote all in
+	one single line.
+
 	* tiny/tiny-util-admin.el:
 	-- New file.
 
