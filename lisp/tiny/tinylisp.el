@@ -589,12 +589,12 @@
 ;;
 ;;          (setq tinylisp-:mode-prefix-key "C-cE")
 
-(eval-and-compile
-
 ;;;###autoload (autoload 'tinylisp-commentary    "tinylisp" "" t)
 ;;;###autoload (autoload 'tinylisp-mode          "tinylisp" "" t)
 ;;;###autoload (autoload 'turn-on-tinylisp-mode  "tinylisp" "" t)
 ;;;###autoload (autoload 'turn-off-tinylisp-mode "tinylisp" "" t)
+
+(eval-and-compile
 
   (ti::macrof-minor-mode-wizard
    "tinylisp-" " E" "$" "E" 'TinyLisp "tinylisp-:" ;1-6
