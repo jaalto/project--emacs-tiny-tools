@@ -1,5 +1,15 @@
 2008-01-26  Jari Aalto  <jari.aalto@cante.net>
 
+	* tiny/tiny-util-admin.el:
+	-- New file.
+
+	* tiny/tiny-setup.el
+	-- Remove administrative functions (autoload etc.)
+	(tiny-setup-compile-directory-recursive):
+	Fix indentation
+	(tiny-setup-compile-directory-delete-recursive):
+	Fix indentation
+
 	* tiny/tinydesk.el (tinydesk-clear-buffer-properties):
 	Remove also leading whitespace in fron tof comment ';;'
 	markers. Remove `redraw-display'. Display message only
