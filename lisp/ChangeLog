@@ -1,3 +1,23 @@
+2008-01-26  Jari Aalto  <jari.aalto@cante.net>
+
+	* tiny/tinydesk.el (tinydesk-clear-buffer-properties):
+	Remove also leading whitespace in fron tof comment ';;'
+	markers. Remove `redraw-display'. Display message only
+	when called interactively.
+	(tinydesk-set-face-non-files-buffer): Move location of
+	function.
+	(tinydesk-set-face-non-files-region): Improve docstring.
+	(tinydesk-read-word): Remove comment from read line.
+	This fixes function.
+	(tinydesk-handle-text-property): Removed extra `sleep-for'
+	calls. Add extra space before comment, so that is is next
+	to filename.
+	(tinydesk-add-space-if-non-space): New.
+	(tinydesk-handle-text-property): Use
+	`tinydesk-add-space-if-non-space'.
+	(tinydesk-mark-region): Use
+	`tinydesk-add-space-if-non-space'.
+
 2008-01-22  Jari Aalto  <jari.aalto@cante.net>
 
 	* tiny/tiny-setup.el (tiny-setup-compile-kit-libraries):
