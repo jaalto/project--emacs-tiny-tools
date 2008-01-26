@@ -1,5 +1,8 @@
 2008-01-26  Jari Aalto  <jari.aalto@cante.net>
 
+	* tiny/tinylisp.el: (top level): Move autoload definitiion out of
+	`eval-and-compile' so that `generate-file-autoloads' sees them.
+
 	* tiny/tinylib.el (ti::package-autoload-create-on-file):
 	Correct function argument printing. The dolist-loop that
 	generated ';; function arg arg ...' listing wrote all in

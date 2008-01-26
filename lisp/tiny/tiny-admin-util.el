@@ -51,14 +51,10 @@
 ;;     Autoload files
 ;;
 ;;      If *loaddef* files were not included in the package or if they were
-;;      mistakenly deleted. The tiny-setup.el startup is not possible
-;;      without the autoload files.
+;;      mistakenly deleted. Use following functions
 ;;
-;;      To generate autoloads recursively, call function
-;;      `tiny-setup-autoload-batch-update' with the ROOT
-;;      directory of your lisp files. The only requirement is that each
-;;      directory name is unique, because the generated autoload file name
-;;      contains directory name: *tiny-autoload-loaddefs-DIRNAME.el*
+;;          tiny-setup-generate-file-autoloads-dir
+;;          tiny-setup-generate-file-autoloads-recursive
 ;;
 ;;     Compilation check
 ;;
@@ -96,6 +92,53 @@
 
 (require 'tinylib)
 
+
+;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;
+;;
+;;
+;;      GENERAL UTILITIES
+;;
+;;
+;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;
+
+(defconst tiny-setup-:ignore-dir-regexp
+  "\\(\\.\\(bzr\\|hg\\|git\\svn\\)\\|CVS\\|RCS\\|\\.\\.?\\)$"
+  "Regexp to ignore directories.")
+
+;;; ----------------------------------------------------------------------
+;;;
+(put 'tiny-setup-directory-recursive-macro 'lisp-indent-function 1)
+(put 'tiny-setup-directory-recursive-macro 'edebug-form-spec '(body))
+(defmacro tiny-setup-directory-recursive-macro (directory &rest body)
+  "Start from DIRECTORY and run BODY recursively in each directories.
+
+Following variables are set during BODY:
+
+`dir'      Directrory name
+`dir-list' All directories under `dir'."
+  (`
+   (flet ((recurse
+           (dir)
+           (let* ((dir-list (tiny-setup-directory-list dir)))
+             (,@ body)
+             (when dir-list
+               (dolist (elt dir-list)
+                 (unless (string-match tiny-setup-:ignore-dir-regexp elt)
+                   (recurse elt)))))))
+     (recurse (, directory)))))
+
+;;; ----------------------------------------------------------------------
+;;;
+(defun tiny-setup-directory-list (dir)
+  "Return all directories under DIR."
+  (let (list)
+    (dolist (elt (directory-files dir 'full))
+      (when (and (file-directory-p elt)
+                 (not (string-match "[\\/]\\.\\.?$" elt)))
+        (push elt list)))
+    list))
+
+
 ;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;
 ;;
 ;;
@@ -128,13 +171,48 @@ E.g. if you want to calculate days; you'd do
 (put 'tiny-setup-time-this 'edebug-form-spec '(body))
 (defmacro tiny-setup-time-this (&rest body)
   "Run BODY with and time execution. Time is in `my-:tmp-time-diff'."
-  (`
-   (let* ((tmp-time-A (current-time))
+  `(let* ((tmp-time-A (current-time))
           tmp-time-B)
-     (,@ body)
+     ,@body
      (setq tmp-time-B (current-time))
      (setq tiny-setup-:time
-           (tiny-setup-time-difference tmp-time-B tmp-time-A)))))
+           (tiny-setup-time-difference tmp-time-B tmp-time-A))))
+
+;;; ----------------------------------------------------------------------
+;;;
+(put 'tiny-setup-clean-file-env-macro 'lisp-indent-function 0)
+(put 'tiny-setup-clean-file-env-macro 'edebug-form-spec '(body))
+(defmacro tiny-setup-clean-file-env-macro (&rest body)
+  "Run BODY with all the interfering hooks turned off."
+  `(let* (find-file-hooks
+          write-file-hooks
+          font-lock-mode
+          ;; buffer-auto-save-file-name
+          auto-save-hook
+          auto-save-default
+          (auto-save-interval 0)
+          (original-backup-inhibited backup-inhibited)
+          (backup-inhibited t))
+     ;; Reset also global
+     (setq-default backup-inhibited t)
+     ;;  When each file is loaded to emacs, do not turn on lisp-mode
+     ;;  or anything else => cleared file hooks. These are byte compiler
+     ;;  silencers:
+     (if (null find-file-hooks)
+         (setq find-file-hooks nil))
+     (if (null write-file-hooks)
+         (setq write-file-hooks nil))
+     (if (null font-lock-mode)
+         (setq font-lock-mode nil))
+     (if (null auto-save-hook)
+         (setq auto-save-hook nil))
+     (if (null auto-save-default)
+         (setq auto-save-default nil))
+     (if auto-save-interval
+         (setq auto-save-interval 0))
+     (if backup-inhibited
+         (setq backup-inhibited t))
+     ,@body))
 
 ;;; ----------------------------------------------------------------------
 ;;;
@@ -186,7 +264,6 @@ E.g. if you want to calculate days; you'd do
 ;;      AUTOLOAD UTILITIES
 ;;      These are admistrative utilies for package maintainer(s)
 ;;
-;;
 ;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;
 
 ;;; ----------------------------------------------------------------------
@@ -236,6 +313,79 @@ E.g. if you want to calculate days; you'd do
 
 ;;; ----------------------------------------------------------------------
 ;;;
+(defun tiny-setup-generate-file-autoloads-1 (file dest)
+  "Generate ###autoload from FILE to DEST."
+  (let ((generated-autoload-file dest))
+    (ti::file-delete-safe dest)
+    (ti::package-autoload-loaddefs-create-maybe dest)
+    (tiny-setup-clean-file-env-macro
+      (with-current-buffer (find-file-noselect dest)
+        (goto-char (point-max))
+        (re-search-backward "\n.*provide")
+        (generate-file-autoloads file)
+        (let ((backup-inhibited t))
+          (save-buffer))
+        (kill-buffer (current-buffer))))))
+
+;;; ----------------------------------------------------------------------
+;;;
+(defun tiny-setup-generate-file-autoloads (file)
+  "Generate ###autoload from FILE to FILE-loaddefs.el"
+  (interactive "fGenerate ###autoload from lisp file: ")
+  (let* ((dest (format "%s-loaddefs.el"
+                       (file-name-sans-extension file))))
+    (tiny-setup-generate-file-autoloads-1 file dest)))
+
+;;; ----------------------------------------------------------------------
+;;;
+(defun tiny-setup-generate-file-autoloads-list (list)
+  "Generate ###autoload from every file in LIST."
+  (dolist (file list)
+    (tiny-setup-generate-file-autoloads file)))
+
+;;; ----------------------------------------------------------------------
+;;;
+(defun tiny-setup-generate-file-autoloads-dir (dir &optional regexp)
+  "Generate ###autoload from DIR excluding optional REGEXP."
+  (interactive "DGenerate ###autoload loaddefs in dir\nsIgnore regexp: ")
+  (let ((files (directory-files dir 'full "\\.el"))
+        list)
+    (dolist (file files)
+      ;;  Ignore couple of other files as well.
+      (unless (or (string-match "-\\(loaddefs\\|autoload\\)\\.el" file)
+                  (and (stringp regexp)
+                       (string-match "^[ \t]*$" regexp)))
+        (push file list)))
+    (tiny-setup-generate-file-autoloads-list list)))
+
+;;; ----------------------------------------------------------------------
+;;;
+(defun tiny-setup-generate-file-autoloads-recursive (dir)
+  "Generate ###autoload recursively starting from DIR."
+  (tiny-setup-directory-recursive-macro
+      dir
+    (tiny-setup-generate-file-autoloads-dir dir)))
+
+;;; ----------------------------------------------------------------------
+;;;
+(defun tiny-setup-update-update-file-autoloads-1 (file dest)
+  "Update ###autoload from FILE to DEST."
+    (ti::package-autoload-loaddefs-create-maybe dest)
+    (let ((generated-autoload-file dest))
+      (tiny-setup-clean-file-env-macro
+        (update-file-autoloads file))))
+
+;;; ----------------------------------------------------------------------
+;;;
+(defun tiny-setup-update-file-autoloads (file)
+  "Update ###autoload from FILE to FILE-loaddefs.el"
+  (interactive "fUpdate ###autoload from lisp file: ")
+  (let* ((dest (format "%s-loaddefs.el"
+                       (file-name-sans-extension file))))
+    (tiny-setup-update-autoloads-loaddefs-1 file dest)))
+
+;;; ----------------------------------------------------------------------
+;;;
 (defun tiny-setup-autoload-build-for-file-1 (file dest)
   "Generate autoload from FILE to DEST."
   (with-temp-buffer
@@ -245,7 +395,7 @@ E.g. if you want to calculate days; you'd do
      'no-show
      'no-desc)
     (insert (tinypath-tmp-autoload-file-footer dest 'eof))
-    (let ((backup-inhibited t))
+    (tiny-setup-clean-file-env-macro
       (write-region (point-min) (point-max) dest))
     dest))
 
@@ -399,38 +549,6 @@ Store the autoloads to tiny-DIR-autoload.el"
 (defsubst tiny-setup-file-list-lisp-compiled (dir)
   "Return all compiled lisp files under DIR."
   (directory-files dir 'full "\\.elc$"))
-
-;;; ----------------------------------------------------------------------
-;;;
-(put 'tiny-setup-directory-recursive-macro 'lisp-indent-function 1)
-(put 'tiny-setup-directory-recursive-macro 'edebug-form-spec '(body))
-(defmacro tiny-setup-directory-recursive-macro (directory &rest body)
-  "Start from DIRECTORY and run BODY recursively in each directories.
-
-Following variables are set during BODY:
-
-`dir'      Directrory name
-`dir-list' All directories under `dir'."
-  (`
-   (flet ((recurse
-           (dir)
-           (let* ((dir-list (tiny-setup-directory-list dir)))
-             (,@ body)
-             (when dir-list
-               (dolist (elt dir-list)
-                 (recurse elt))))))
-     (recurse (, directory)))))
-
-;;; ----------------------------------------------------------------------
-;;;
-(defun tiny-setup-directory-list (dir)
-  "Return all directories under DIR."
-  (let (list)
-    (dolist (elt (directory-files dir 'full))
-      (when (and (file-directory-p elt)
-                 (not (string-match "[\\/]\\.\\.?$" elt)))
-        (push elt list)))
-    list))
 
 ;;; ----------------------------------------------------------------------
 ;;;
