@@ -33,10 +33,14 @@
 
 ;;; Install:
 
-;;  Put this file on your Emacs-Lisp load path, add following into your
-;;  ~/.emacs startup file.
+;;  This is a library and the functions are meant to be used in other
+;;  lisp packages. The standard require statement is:
 ;;
 ;;      (require 'date-parse)
+;;
+;;      ;;  If this file exists, it can be used instead of the bove.
+;;      ;;  The file containst autoload forward declarations
+;;      (require 'date-parse-autoload)
 
 ;;}}}
 ;;{{{ Commentary
@@ -63,10 +67,10 @@
 
 ;;; ....................................................... &variables ...
 
-(defvar parse-date-indices nil
-  "List of (START END) from last successful call to parse-date.")
+(defvar date-parse-indices nil
+  "List of (START END) from last successful call to date-parse.")
 
-(defconst date-patterns
+(defconst date-parse-patterns
   '(( ;; Sep 29 12:09:55 1986
      "[ \t]*\\([A-Za-z]+\\)[. \t]+\\([0-9]+\\)[, \t]+\
 \\([0-9]+\\):\\([0-9]+\\):\\([0-9]+\\)[, \t]+\
@@ -106,18 +110,34 @@ the field string to yield the appropriate integer value.")
 
 ;;; ............................................................ &code ...
 
-(defun parse-date (date &optional exactp nodefault)
+;; FIXME: Yuck. We only default the year.
+(defun date-parse-default-date-list (date)
+  "Return DATE list."
+  (let ((now nil))
+    ;; If the year is missing, default it to this year or last year,
+    ;; whichever is closer.
+    (or (nth 0 date)
+        (let ((year (nth 0 (or now (setq now (date-parse "now" t t)))))
+              (diff (* 30 (- (nth 1 date) (nth 1 now)))))
+          (if (zerop diff)
+              (setq diff (- (nth 2 date) (nth 2 now))))
+          (if (> diff 7)
+              (setq year (1- year)))
+          (setnth 0 date year)))
+    date))
+
+(defun date-parse (date &optional exactp nodefault)
   "Parse a DATE into a 3-list of year, month, day.
 This list may be extended by the weekday,
 and then by the hour, minute, second, and timezone
 \(if such information is found), making a total of eight list elements.
 Optional arg EXACTP means the whole string must hold the date.
 Optional NODEFAULT means the date is not defaulted (to the current year).
-In any case, if parse-date succeeds, parse-date-indices is set
+In any case, if `date-parse' succeeds, variable `date-parse-indices' is set
 to the 2-list holding the location of the date within the string."
   (if (not (stringp date))
       date
-    (let ((ptr date-patterns)
+    (let ((ptr date-parse-patterns)
           (string date)
           start end)
       (and (or (string= string "now")
@@ -144,12 +164,12 @@ to the 2-list holding the location of the date within the string."
               (let ((strs nil)
                     (fns nil)
                     (default-fns
-                      '(parse-date-year
-                        parse-date-month
+                      '(date-parse-year
+                        date-parse-month
                         nil ;;day
-                        parse-date-weekday
+                        date-parse-weekday
                         nil nil nil ;;hhmmss
-                        parse-date-timezone)))
+                        date-parse-timezone)))
                 (while fields
                   (let ((field (car fields))
                         (fn (car default-fns)))
@@ -186,34 +206,18 @@ to the 2-list holding the location of the date within the string."
                     (setq ptr nil))))))
       (or nodefault
           (null date)
-          (setq date (default-date-list date)))
+          (setq date (date-parse-default-date-list date)))
       (if date
-          (setq parse-date-indices (list start end)))
+          (setq date-parse-indices (list start end)))
       date)))
-
-;; FIXME: Yuck. We only default the year.
-(defun default-date-list (date)
-  "Return DATE list."
-  (let ((now nil))
-    ;; If the year is missing, default it to this year or last year,
-    ;; whichever is closer.
-    (or (nth 0 date)
-        (let ((year (nth 0 (or now (setq now (parse-date "now" t t)))))
-              (diff (* 30 (- (nth 1 date) (nth 1 now)))))
-          (if (zerop diff)
-              (setq diff (- (nth 2 date) (nth 2 now))))
-          (if (> diff 7)
-              (setq year (1- year)))
-          (setnth 0 date year)))
-    date))
 
 ;; Date field parsers:
 
-(defun parse-date-month (month)
+(defun date-parse-month (month)
   "Parse MONTH."
   (if (not (stringp month))
       month
-    (let ((sym 'parse-date-month-obarray))
+    (let ((sym 'date-parse-month-obarray))
       ;; This guy's memoized:
       (or (boundp sym) (set sym nil))
       (setq sym (intern month
@@ -244,7 +248,7 @@ to the 2-list holding the location of the date within the string."
             (set sym try)))
       (symbol-value sym))))
 
-(defun parse-date-year (year)
+(defun date-parse-year (year)
   "Parse YEAR."
   (if (not (stringp year))
       year
@@ -257,12 +261,12 @@ to the 2-list holding the location of the date within the string."
 
 ;; Other functions:
 
-(defun date-compare-key (date &optional integer-p)
+(defun date-parse-compare-key (date &optional integer-p)
   "Map DATE to strings preserving ordering.
 If optional INTEGER-P is true, yield an integer instead of a string.
 In that case, the granularity is minutes, not seconds,
 and years must be in this century."
-  (or (consp date) (setq date (parse-date date)))
+  (or (consp date) (setq date (date-parse date)))
   (let ((year (- (nth 0 date) 1900))
         (month (- (nth 1 date) 1))
         (day (- (nth 2 date) 1))
@@ -300,11 +304,11 @@ and years must be in this century."
         (setq hour (+ hour ?A))
         (format fmt year month day hour minute second)))))
 
-(defun date-lessp (date1 date2)
+(defun date-parse-lessp (date1 date2)
   "Compare DATE1 to DATE2 (which may be unparsed strings or parsed date lists).
-Equivalent to (string< (date-compare-key date1) (date-compare-key date2))."
-  (or (consp date1) (setq date1 (parse-date date1)))
-  (or (consp date2) (setq date2 (parse-date date2)))
+Equivalent to (string< (date-parse-compare-key date1) (date-parse-compare-key date2))."
+  (or (consp date1) (setq date1 (date-parse date1)))
+  (or (consp date2) (setq date2 (date-parse date2)))
   (catch 'return
     (let ((check (function (lambda (n1 n2)
                              (or n1 (setq n1 0))
@@ -319,7 +323,7 @@ Equivalent to (string< (date-compare-key date1) (date-compare-key date2))."
       (funcall check (nth 6 date1) (nth 6 date2))
       nil)))
 
-(defun sort-date-fields (reverse beg end)
+(defun date-parse-sort-fields (reverse beg end)
   "Sort lines in region by date value; argument means descending order.
 Called from a program, there are three required arguments:
 REVERSE (non-nil means reverse order), BEG and END (region to sort)."
@@ -331,8 +335,8 @@ REVERSE (non-nil means reverse order), BEG and END (region to sort)."
      reverse 'forward-line 'end-of-line
      (function
       (lambda ()
-        (date-compare-key
-         (or (parse-date
+        (date-parse-compare-key
+         (or (date-parse
               (buffer-substring (point) (progn (end-of-line) (point))))
              (throw 'key nil))))))))
 
