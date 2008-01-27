@@ -50,7 +50,7 @@
 ;;  Preface, 1989
 ;;
 ;;      Hacks for reading dates. Something better needs to be done,
-;;      obviously. In the file "dired-resort" are dired commands for
+;;      obviously. In the file "dired-sort" are dired commands for
 ;;      reordering the buffer by modification time, which is the whole
 ;;      purpose of this exercise.
 ;;
@@ -60,7 +60,12 @@
 
 ;;; Code:
 
-(require 'cl-compat) ;; 19.30 'setnth'
+(require 'cl-compat) ;; setnth
+
+(eval-when-compile
+  ;; plusp, minusp
+  ;; eql (in 22.x this is C-primitive)
+  (require 'cl))
 
 (eval-and-compile
   (autoload 'sort-subr "sort"))
