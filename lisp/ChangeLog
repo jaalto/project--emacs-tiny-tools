@@ -1,22 +1,40 @@
+2008-02-12  Jari Aalto  <jari.aalto@cante.net>
+
+	* tiny/tinylisp.el (tinylisp-library-symbol-information):
+	Check error from `file-name-nondirectory' and check
+	error code from `locate-library'.
+
+	* tiny/tinydiff.el: (Ducumentation): Small changes in wording.
+
+	* other/dired-sort.el (top level): Adjust autoloads.
+
+2008-01-27  Jari Aalto  <jari.aalto@cante.net>
+
+	* other/date-parse.el: Rename all functions and variables
+	to start with date-parse-* prefix.
+
+	* tiny/tinylisp.el (tinylisp-:regexp-function): Add `defalias'
+	(tinylisp-:regexp-variable): Add `defvaralias'.
+
+	* tiny/tinylib.el (ti::package-autoload-create-on-file): Add new
+	optional argument NO-PATH to suppress path information in comment.
+
 2008-01-26  Jari Aalto  <jari.aalto@cante.net>
 
 	* tiny/tinylisp.el: (top level): Move autoload definitiion out of
 	`eval-and-compile' so that `generate-file-autoloads' sees them.
 
-	* tiny/tinylib.el (ti::package-autoload-create-on-file):
-	Correct function argument printing. The dolist-loop that
-	generated ';; function arg arg ...' listing wrote all in
-	one single line.
+	* tiny/tinylib.el (ti::package-autoload-create-on-file): Correct
+	function argument printing. The dolist-loop that generated ';;
+	function arg arg ...' listing wrote all in one single line.
 
 	* tiny/tiny-util-admin.el:
 	-- New file.
 
 	* tiny/tiny-setup.el
 	-- Remove administrative functions (autoload etc.)
-	(tiny-setup-compile-directory-recursive):
-	Fix indentation
-	(tiny-setup-compile-directory-delete-recursive):
-	Fix indentation
+	(tiny-setup-compile-directory-recursive): Fix indentation
+	(tiny-setup-compile-directory-delete-recursive): Fix indentation
 
 	* tiny/tinydesk.el (tinydesk-clear-buffer-properties):
 	Remove also leading whitespace in fron tof comment ';;'
