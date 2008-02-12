@@ -1053,7 +1053,7 @@ element from the list is removed.")
   (concat
    "^(\\("
    ;;  cl DEFINES defun* macro
-   "defun\\*?\\|defsubst\\|defmacro"
+   "defun\\*?\\|defsubst\\|defmacro\\|defalias"
    ;; See SEMI poe.el
    "\\|defun-maybe\\|defmacro-maybe\\|defalias-maybe"
    ;; see Gnus nntp.el for deffoo
@@ -1067,7 +1067,7 @@ type and name.")
   (concat
    "^(\\("
    ;;  Normal lisp variables
-   "defvar\\|defconst"
+   "defvar\\|defconst\\|defvaralias"
    ;; Custom.el defined variables in 19.35
    "\\|defgroup\\|defcustom"
    "\\)[ \t]+\\([^ \t\n]+\\)")
@@ -4147,17 +4147,20 @@ input:
 ;;; ----------------------------------------------------------------------
 ;;;
 (defun tinylisp-library-symbol-information (file &optional verb)
-  "Display symbol information from FILE (full path name). VERB.
+  "Display symbol information from FILE (absolute path). VERB.
 FILE must be loaded into Emacs to gather all the variable
 and function definitions."
   (interactive
-   (list
-    (locate-library
-     (tinylisp-library-read-name 'el))
-    current-prefix-arg))
-  (let* ((feature-name (intern-soft
-                        (file-name-sans-extension
-                         (file-name-nondirectory file)))))
+   (let ((name (tinylisp-library-read-name 'el)))
+     (list
+      (or (locate-library name)
+	  (error "Can't find absolute path for %s" name))
+      current-prefix-arg)))
+  (or file
+      (error "Argument FILE is missing"))
+  (let* ((fname (file-name-nondirectory file))
+	 (feature-name (intern-soft
+			(file-name-sans-extension fname))))
     ;;  If the feature is not same as file name, we have no
     ;;  other choice to load the file. If feature-name was
     ;;  set, then the feature is already in Emacs (file was loaded
@@ -4165,6 +4168,8 @@ and function definitions."
     (unless feature-name
       (load file))
     (with-current-buffer (ti::system-get-file-documentation file verb)
+      (if (interactive-p)
+	  (display-buffer (current-buffer)))
       (turn-on-tinylisp-mode))))
 
 ;;; ----------------------------------------------------------------------
