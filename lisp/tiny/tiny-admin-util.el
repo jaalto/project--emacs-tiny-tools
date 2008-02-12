@@ -53,8 +53,13 @@
 ;;      If *loaddef* files were not included in the package or if they were
 ;;      mistakenly deleted. Use following functions
 ;;
-;;          tiny-setup-generate-file-autoloads-dir
-;;          tiny-setup-generate-file-autoloads-recursive
+;;          tiny-setup-generate-file-autoloads
+;;          tiny-setup-generate-loaddefs-dir
+;;          tiny-setup-generate-loaddefs-recursive
+;;
+;;          tiny-setup-autoload-build-for-file
+;;          tiny-setup-autoload-build-for-dir
+;;          tiny-setup-autoload-build-recursive
 ;;
 ;;     Compilation check
 ;;
@@ -180,9 +185,9 @@ E.g. if you want to calculate days; you'd do
 
 ;;; ----------------------------------------------------------------------
 ;;;
-(put 'tiny-setup-clean-file-env-macro 'lisp-indent-function 0)
-(put 'tiny-setup-clean-file-env-macro 'edebug-form-spec '(body))
-(defmacro tiny-setup-clean-file-env-macro (&rest body)
+(put 'tiny-setup-with-file-env-macro 'lisp-indent-function 0)
+(put 'tiny-setup-with-file-env-macro 'edebug-form-spec '(body))
+(defmacro tiny-setup-with-file-env-macro (&rest body)
   "Run BODY with all the interfering hooks turned off."
   `(let* (find-file-hooks
           write-file-hooks
@@ -317,15 +322,19 @@ E.g. if you want to calculate days; you'd do
   "Generate ###autoload from FILE to DEST."
   (let ((generated-autoload-file dest))
     (ti::file-delete-safe dest)
-    (ti::package-autoload-loaddefs-create-maybe dest)
-    (tiny-setup-clean-file-env-macro
+;;;    (ti::package-autoload-loaddefs-create-maybe dest)
+    (tiny-setup-with-file-env-macro
       (with-current-buffer (find-file-noselect dest)
         (goto-char (point-max))
-        (re-search-backward "\n.*provide")
-        (generate-file-autoloads file)
-        (let ((backup-inhibited t))
-          (save-buffer))
-        (kill-buffer (current-buffer))))))
+        ;;  line added by `ti::package-autoload-loaddefs-create-maybe'
+;;;        (re-search-backward "\n.*provide")
+        (let ((point (point)))
+          (generate-file-autoloads file)
+          ;;  something was inserted?
+          (unless (eq (point) point)
+            (let ((backup-inhibited t))
+              (save-buffer))
+            (kill-buffer (current-buffer))))))))
 
 ;;; ----------------------------------------------------------------------
 ;;;
@@ -338,14 +347,14 @@ E.g. if you want to calculate days; you'd do
 
 ;;; ----------------------------------------------------------------------
 ;;;
-(defun tiny-setup-generate-file-autoloads-list (list)
+(defun tiny-setup-generate-loaddefs-file-list (list)
   "Generate ###autoload from every file in LIST."
   (dolist (file list)
     (tiny-setup-generate-file-autoloads file)))
 
 ;;; ----------------------------------------------------------------------
 ;;;
-(defun tiny-setup-generate-file-autoloads-dir (dir &optional regexp)
+(defun tiny-setup-generate-loaddefs-dir (dir &optional regexp)
   "Generate ###autoload from DIR excluding optional REGEXP."
   (interactive "DGenerate ###autoload loaddefs in dir\nsIgnore regexp: ")
   (let ((files (directory-files dir 'full "\\.el"))
@@ -356,15 +365,16 @@ E.g. if you want to calculate days; you'd do
                   (and (stringp regexp)
                        (string-match "^[ \t]*$" regexp)))
         (push file list)))
-    (tiny-setup-generate-file-autoloads-list list)))
+    (tiny-setup-generate-loaddefs-file-list list)))
 
 ;;; ----------------------------------------------------------------------
 ;;;
-(defun tiny-setup-generate-file-autoloads-recursive (dir)
+(defun tiny-setup-generate-loaddefs-recursive (dir)
   "Generate ###autoload recursively starting from DIR."
+  (interactive "DGenerate ###autoload recursive dir: ")
   (tiny-setup-directory-recursive-macro
       dir
-    (tiny-setup-generate-file-autoloads-dir dir)))
+    (tiny-setup-generate-loaddefs-dir dir)))
 
 ;;; ----------------------------------------------------------------------
 ;;;
@@ -372,7 +382,7 @@ E.g. if you want to calculate days; you'd do
   "Update ###autoload from FILE to DEST."
     (ti::package-autoload-loaddefs-create-maybe dest)
     (let ((generated-autoload-file dest))
-      (tiny-setup-clean-file-env-macro
+      (tiny-setup-with-file-env-macro
         (update-file-autoloads file))))
 
 ;;; ----------------------------------------------------------------------
@@ -389,14 +399,15 @@ E.g. if you want to calculate days; you'd do
 (defun tiny-setup-autoload-build-for-file-1 (file dest)
   "Generate autoload from FILE to DEST."
   (with-temp-buffer
-    (ti::package-autoload-create-on-file
-     file
-     (current-buffer)
-     'no-show
-     'no-desc)
-    (insert (tinypath-tmp-autoload-file-footer dest 'eof))
-    (tiny-setup-clean-file-env-macro
-      (write-region (point-min) (point-max) dest))
+    (tiny-setup-with-file-env-macro
+     (ti::package-autoload-create-on-file
+      file
+      (current-buffer)
+      'no-show
+      'no-desc
+      'no-path)
+     (insert (tinypath-tmp-autoload-file-footer dest 'eof))
+     (write-region (point-min) (point-max) dest))
     dest))
 
 ;;; ----------------------------------------------------------------------
@@ -410,6 +421,38 @@ E.g. if you want to calculate days; you'd do
 
 ;;; ----------------------------------------------------------------------
 ;;;
+(defun tiny-setup-autoload-build-for-dir (dir &optional include exclude)
+  "Generate all autoloads from DIR.
+Obey optional INCLUDE and EXCLUDE regexps."
+  (interactive
+   "DGenerate all autoloads in dir\nsInclude re: \nsExlude re: ")
+  (let ((files (directory-files dir 'full "\\.el"))
+        list)
+    (dolist (file files)
+      ;;  Ignore couple of other files as well.
+      (cond
+       ;; Ignore these
+       ((string-match "-\\(loaddefs\\|autoload\\)\\.el" file))
+       ((and (stringp exclude)
+             (not (string-match "^[ \t]*$" exclude))
+             ((string-match exclude file))))
+       ((or (not (stringp include))
+            (string-match "^[ \t]*$" include)
+            (string-match include file))
+        (tiny-setup-autoload-build-for-file file))))))
+
+;;; ----------------------------------------------------------------------
+;;;
+(defun tiny-setup-autoload-build-recursive (dir &optional include exclude)
+  "Generate all autoloads recursively starting from DIR."
+  (interactive
+   "DGenerate all autoloads recursive dir: \nsInclude re: \nsExlude re: ")
+  (tiny-setup-directory-recursive-macro
+      dir
+    (tiny-setup-autoload-build-for-dir dir include exclude)))
+
+;;; ----------------------------------------------------------------------
+;;; FIXME: remove
 ;;; (tiny-setup-autoload-build-functions "~/elisp/tiny/lisp/tiny")
 ;;; (tiny-setup-autoload-build-functions "~/elisp/tiny/lisp/other")
 ;;;
