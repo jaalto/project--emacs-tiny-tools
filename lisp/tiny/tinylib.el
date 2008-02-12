@@ -7162,7 +7162,7 @@ Input:
 ;;; ----------------------------------------------------------------------
 ;;;
 (defun ti::package-autoload-create-on-file
-  (file &optional buffer no-show no-desc)
+  (file &optional buffer no-show no-desc no-path)
   "Very simple autoload function generator out of FILE.
 Optionally put results to BUFFER. NO-SHOW does not show buffer.
 
@@ -7175,7 +7175,8 @@ Input:
   FILE      Lisp .el to read
   BUFFER    Where to insert autoloads.
   NO-SHOW   Do not show autoload buffer
-  NO-DESC   Do not include function description comments."
+  NO-DESC   Do not include function description comments
+  NO-PATH   Do not include path location comment."
   (interactive "fConstruct lisp autoloads from file: ")
   (let* ((fn     (file-name-nondirectory file))
          (regexp (concat
@@ -7212,12 +7213,13 @@ Input:
               (setq emacs-lisp-mode-hook nil))
           (emacs-lisp-mode)))
       (ti::append-to-buffer
-       buffer  (concat "\n;; "
-                       (file-name-nondirectory file)
-                       "\n"
-                       ";; "
-                       file
-                       "\n\n"))
+       buffer
+       (format "\n;; %s\n" (file-name-nondirectory file)))
+      (unless no-path
+        (ti::append-to-buffer
+         buffer
+         (format ";; %s\n" file)))
+      (ti::append-to-buffer buffer "\n")
       (ti::pmin)
       (while (re-search-forward regexp nil t)
         (setq iact nil                  ;interactive flag
@@ -7236,8 +7238,7 @@ Input:
                         args
                         (subst-char-in-string
                          ;;  Convert multiline args to one line.
-                         ?\n ?\
-                         (buffer-substring point (point)) )))))
+                         ?\n ?\ (buffer-substring point (point)) )))))
         (if (re-search-forward
              "[ \t\n]+([ \t]*interactive"
              (save-excursion (end-of-defun) (point))
