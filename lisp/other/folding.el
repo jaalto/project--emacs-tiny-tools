@@ -4,7 +4,7 @@
 
 ;; Copyright (C) 2000-2008
 ;;           Jari Aalto
-;; Copyright (C) 1995-2008
+;; Copyright (C) 1995,1996,1997,1998,1999
 ;;           Jari Aalto, Anders Lindgren.
 ;; Copyright (C) 1994
 ;;           Jari Aalto
