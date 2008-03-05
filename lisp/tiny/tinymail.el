@@ -4428,9 +4428,7 @@ Return:
     (setq ret str)
     (when ret
       ;;  Remove quotes: "Mr. this" <email@example.com>
-      (setq ret (replace-regexp-in-string "['\"]+" "" ret))
-      ;;  Remove Middle names: Foo X. Bar
-      (setq ret (replace-regexp-in-string " [A-Z]\\." "" ret)))
+      (setq ret (replace-regexp-in-string "['\"]+" "" ret)))
     ;;   If the line is exessive long, say;
     ;;   "Mr. Foo the most spectacular..." <foo@camel.com>
     ;;   Then we make it smaller.
@@ -4527,7 +4525,11 @@ a handly way to refer to past articles."
                           (mail-header-from hdrs))))
          (date (tinymail-iso8601-date-value)))
     (delete-horizontal-space)
-    (insert "* " date " " from "\n")
+    (insert "* " date
+	    (if from
+		(format " %s" from)
+	      "")
+	    "\n")
     (let ((id (funcall tinymail-:citation-message-id-function)))
       (when (stringp id)
         (insert id)))))
