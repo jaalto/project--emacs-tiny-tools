@@ -1,3 +1,34 @@
+2008-03-03  Jari Aalto  <jari.aalto@cante.net>
+
+	* tiny/tinylibmail.el (ti::mail-parse-name): Ignore 'Dr.' etc prefixes.
+	(ti:mail-parse-name-not-accept): Ignore 'Dr.'.
+
+	* tiny/tinymail.el (tinymail-citation-who-said): Show full name.
+	Delete 'remove middle name' code.
+
+2008-02-26  Jari Aalto  <jari.aalto@cante.net>
+
+	* tiny/tinyreplace.el (tinyreplace-replace-region-1): Fix spelling.
+
+2008-02-18  Jari Aalto  <jari.aalto@cante.net>
+
+	* tiny/tinydebian.el (tinydebian-bug-ubuntu-p): New.
+	(tinydebian-bug-url): New.
+	(tinydebian-bug-browse-url-by-bug): Use `tinydebian-bug-url'.
+	(tinydebian-bug-nbr-string): DEtect Ubuntu bug line.
+
+	* tiny/tinyreplace.el (tinyreplace-define-keys-compile-map):
+	Adjust line length to 80.
+	(tinyreplace-read-compile-buffer-filename): Make sure DIR
+	contains trailing slash.
+	(tinyreplace-replace-over-files-compile-buffer): Remove
+	requirement to press a key when invalid file was found.
+
+2008-02-17  Jari Aalto  <jari.aalto@cante.net>
+
+	* tiny/tinycygwin.el (tinycygwin-bug-system-info-locale): Add
+	LANG, LC_MESSAGES.
+
 2008-02-12  Jari Aalto  <jari.aalto@cante.net>
 
 	* tiny/tinylisp.el (tinylisp-library-symbol-information):

@@ -981,7 +981,31 @@ Table of Contents
         Srivastava
         <http://people.debian.org/~srivasta/Position_Statement.html>
 
-    4.3 Emacs Jokes
+    4.3 Emacs Humor
+
+       World domination
+
+	    > I thought Emacs had become self-aware by now...
+
+	    Didn't you know the system went on-line August 4th,
+	    1984. Human decisions are removed from text editing
+	    functions. Emacs begins to learn at a geometric rate. It
+	    becomes self-aware at 2:14 a.m. Eastern time, August 29th,
+	    2006. In a panic, people try to pull the plug....
+
+       Emacs and the VI editor battle
+
+	Excerps from from two people discussing in the Slashdot forum:
+
+	    [1] > I don't get how this stupid 'vi VS emacs' is still continuing.
+	    Indeed, it should be entirely clear by now that of those
+	    three, VS is the best.
+
+	    [2] Emacs is a great OS...it does pretty much everything.
+	    All it lacks is a decent text editor.
+
+	    [3] vi? Oh. That was implemented as a 37-key combination
+	    so no human could possibly complete it
 
        4.3.1 The Word Emacs
 
@@ -1019,7 +1043,7 @@ Table of Contents
    do when invoked with a prefix argument? I am also confused about
    the implementation of this command. How is the interaction
    between the supervisor and student simulated in lisp? And what
-   function does emacs use to emulate extracting that last chapter
+   function does Emacs use to emulate extracting that last chapter
    before the deadline from the student, and the student getting the
    supervisor to actually read the damn thing. I tried an apropos
    search for "thesis-blood-from-stone" but got nothing....
