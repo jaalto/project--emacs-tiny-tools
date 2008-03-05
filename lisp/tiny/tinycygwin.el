@@ -2843,6 +2843,8 @@ package ask list."
   "Get locale information."
   (let* ((list
           '("LC_ALL"
+	    "LANG"
+	    "LC_MESSAGES"
             "LC_CTYPE"))
          val
          ret)
