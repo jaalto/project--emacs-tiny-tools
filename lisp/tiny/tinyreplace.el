@@ -538,12 +538,15 @@ Special commands:
 (defun tinyreplace-define-keys-compile-map  ()
   "Define key bindings."
   (interactive)
-  (tinyreplace-with-keymap 'compilation-mode-map
-                           (define-key map "%" 'tinyreplace-replace-over-files-compile-buffer))
-  (tinyreplace-with-keymap 'compilation-minor-mode-map
-                           (define-key map "%" 'tinyreplace-replace-over-files-compile-buffer))
-  (tinyreplace-with-keymap 'grep-mode-map
-                           (define-key map "%" 'tinyreplace-replace-over-files-compile-buffer)))
+  (tinyreplace-with-keymap
+   'compilation-mode-map
+   (define-key map "%" 'tinyreplace-replace-over-files-compile-buffer))
+  (tinyreplace-with-keymap
+   'compilation-minor-mode-map
+   (define-key map "%" 'tinyreplace-replace-over-files-compile-buffer))
+  (tinyreplace-with-keymap
+   'grep-mode-map
+   (define-key map "%" 'tinyreplace-replace-over-files-compile-buffer)))
 
 ;;; ----------------------------------------------------------------------
 ;;;
@@ -890,7 +893,7 @@ Commands while ASK is non-nil:     (simple undo backward is = 'v u' )
 Search modes
 
  s                      Mode: toggle symmetry.
-                        When mode is on, he written case is preserved.
+                        When mode is on, the written case is preserved.
  c                      Mode: toggle case sensitivity in search.
  w                      Mode: toggle word only search.
  a                      Mode: toggle arrow display.
@@ -1191,7 +1194,8 @@ Region is active. Go to beginning of region? "))
 ;;;
 (defun tinyreplace-read-compile-buffer-filename ()
   "Read filename on line."
-  (let ((re "^\\(\\(.:\\)?[^\n:]+\\):") ;; allow DOS drive at front d:/file/
+  (let (;; allow drive letter at front d:/file/
+	(re "^\\(\\(.:\\)?[^\n:]+\\):")
         dir
         file)
     (save-excursion
@@ -1200,10 +1204,13 @@ Region is active. Go to beginning of region? "))
         (save-excursion
           (if (re-search-backward "^cd[ \t]+\\([^\t\n]+\\)" nil t)
               (setq dir (ti::remove-properties (match-string 1)))))
-
         (when (and dir
+		   ;;  Check drive letter
                    (not (string-match "^\\(.:\\)?/" file)))
-          (setq file (concat dir file)))
+          (setq file (concat
+		      ;;  Make sure there is trailing slash
+		      (file-name-as-directory dir)
+		      file)))
         (setq file (ti::file-name-for-correct-system file 'emacs))))
     file))
 
@@ -1233,7 +1240,6 @@ Input:
   ;; ................................................. interactive end ...
   (let ((o-frame        (selected-frame))
         (w-frame        (ti::non-dedicated-frame))
-
         (func           (or func 'tinyreplace-replace-forward))
         (err-buffer     (ti::temp-buffer tinyreplace-:err-buffer 'clear))
         (read-only      0)
@@ -1259,13 +1265,10 @@ Input:
           ;;  /users/jaalto/elisp/test.el:;; $Id: ...
           (cond
            ((and file (not (file-exists-p file)))
-            (ti::read-char-safe-until
-             (format "TinyReplace: [press] invalid filename %s" file)))
-
+	    (format "TinyReplace: [press] invalid filename %s" file))
            ((and file (not (member file cache)))
             (raise-frame (select-frame w-frame))
             (push file cache)           ;Now we have dealt with it
-
             ;;  If it's under RCS and not locked, ask if we should
             ;;  CheckOut it.
             (when (and (vc-registered file)
@@ -1287,9 +1290,7 @@ Input:
              (t
               (save-excursion
                 ;;  Also jumps to buffer if it's already in Emacs
-
                 (setq buffer (find-file file))
-
                 ;;  Open outline/folding before doing anything
                 (ti::buffer-outline-widen)
                 (ti::pmin)

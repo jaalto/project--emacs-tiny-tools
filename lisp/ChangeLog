@@ -1,3 +1,7 @@
+2008-03-05  Jari Aalto  <jari.aalto@cante.net>
+
+	* other/folding.el: (top level): Correct Copyright Years.
+
 2008-03-03  Jari Aalto  <jari.aalto@cante.net>
 
 	* tiny/tinylibmail.el (ti::mail-parse-name): Ignore 'Dr.' etc prefixes.
