@@ -1286,6 +1286,28 @@ At current point, current line, headers of the mail message."
 
 ;;; ----------------------------------------------------------------------
 ;;;
+(defsubst tinydebian-bug-ubuntu-p ()
+  "Check if bug context is Debian."
+  (save-excursion
+    (goto-char (point-min))
+    (re-search-forward "[0-9]@bugs.launchpad.net" nil t)))
+
+;;; ----------------------------------------------------------------------
+;;;
+(defun tinydebian-bug-url (bug)
+  "Return correct bug URL for BUG."
+  (if (tinydebian-bug-ubuntu-p)
+      (format "https://bugs.launchpad.net/bzr/+bug/%s"
+             (if (numberp bug)
+                 (int-to-string bug)
+               bug))
+    (format "http://bugs.debian.org/%s"
+	    (if (numberp bug)
+		(int-to-string bug)
+	      bug))))
+
+;;; ----------------------------------------------------------------------
+;;;
 (defun tinydebian-bug-string-parse-wnpp-alert (str)
   "Parse wnpp-alert(1) like line. Return '(bug package bug-type desc)
   RFA 321654 debtags -- Enables support for package tags."
@@ -1307,12 +1329,21 @@ At current point, current line, headers of the mail message."
   "Read bug nbr from STR."
   (or (and (string-match "#\\([0-9]+\\)" str)
            (match-string 1 str))
+      ;; [Bug 192841] Ubuntu
+      (and (string-match "[[]Bug \\([0-9]+\\)[]]" str)
+           (match-string 1 str))
       (multiple-value-bind (bug)
           (tinydebian-bug-string-parse-wnpp-alert str)
         bug)
       ;;   NNNN@bugs.debian.org
       (and (string-match (concat "\\([0-9]+\\)\\(?:-[a-z]+\\)?@"
                                  tinydebian-:bts-email-address)
+                         str)
+           (match-string 1 str))
+      ;;   BTS message lines: "owner NNNNNN"
+      (and (string-match (concat "\\([0-9]+\\)\\(?:-[a-z]+\\)?@"
+				 ;; FIXME: Use variable
+                                 "bugs.launchpad.net")
                          str)
            (match-string 1 str))
       ;;   BTS message lines: "owner NNNNNN"
@@ -1643,11 +1674,7 @@ At current point, current line, headers of the mail message
     (if file
         (setq tinydebian-:browse-url-function
               (function tinydebian-browse-url-lynx-dump)))
-    (tinydebian-browse-url-1
-     (format "http://bugs.debian.org/%s"
-             (if (numberp bug)
-                 (int-to-string bug)
-               bug)))
+    (tinydebian-browse-url-1 (tinydebian-bug-url bug))
     (if file
         (with-current-buffer (get-buffer tinydebian-:buffer-www)
           (write-region (point-min) (point-max) file)
