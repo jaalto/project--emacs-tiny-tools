@@ -603,7 +603,7 @@ TT_EL_RC	=			\
 #   Text files
 
 TT_TEXT	=				\
-	$(DIR_DOC)/GNU-licence.txt	\
+	$(DIR_DOC)/GNU-license.txt	\
 	$(DIR_DOC)/OLD.txt		\
 	$(DIR_DOC)/ema-expect.txt	\
 	$(DIR_DOC)/bookmark.txt		\

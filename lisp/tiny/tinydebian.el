@@ -2267,7 +2267,7 @@ can all be nil."
 ;;; ----------------------------------------------------------------------
 ;;;
 (defun tinydebian-bts-mail-type-rfs (package license bug desc)
-  "Send an RFS request: PACKAGE name, package LICENCE and BUG and DESC.
+  "Send an RFS request: PACKAGE name, package LICENse and BUG and DESC.
    The DESC is short one line description string use in Subject."
   (interactive
    (let* ((name    (read-string

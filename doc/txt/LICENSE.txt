@@ -27,13 +27,13 @@ Licensing information
         - -
 
         Exception: The documentation of project "Emacs Tiny Tools"
-        (*.txt and *.html files) is DUAL LICENCED and may be
+        (*.txt and *.html files) is DUAL LICENseD and may be
         distributed under the terms of GNU General Public License (GNU
         GPL) --see above--; *or*, at your option, distributed under
         the terms of GNU Free Documentation License (GNU FDL).
 
         The end user can continue to distribute the documentation in
-        this dual licence form *or* select the other license (GNU GPL,
+        this dual license form *or* select the other license (GNU GPL,
         GNU FDL) and remove the unwanted one. In case of removal, a
         notice "License <license name> removed <date ISO 8601> by
         <Firstname Lastname>" must be mentioned somewhere in the

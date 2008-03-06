@@ -127,7 +127,7 @@
 
         * emacs-mkmf.pl: Added GPL URL.
 
-        * admin.bashrc: Added GPL licence.
+        * admin.bashrc: Added GPL license.
 
         * copyright-update.pl (Main): 1.5 Rewritten.
         (FileGlobs): 1.5 New.

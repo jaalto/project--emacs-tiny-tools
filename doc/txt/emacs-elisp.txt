@@ -930,7 +930,7 @@ Table of Contents
         o   _Perl_ _Artistic_ License
             http://language.perl.com/misc/Artistic.html
 
-        Documentation licences
+        Documentation licenses
 
         o   _FDL_, GNU Free Documentation License
             http://www.gnu.org/copyleft/fdl.html

@@ -418,7 +418,7 @@ $Id: makefile.pl,v 2.39 2007/05/01 17:20:31 jaalto Exp $
 Copyright (C) 2000-2008 Jari Aalto. All rights reserved.
 This program is free software; you can redistribute and/or modify program
 under the same terms as Perl itself or in terms of Gnu General Public
-licence v2 or later.
+license v2 or later.
 
 =cut
 
