@@ -1,5 +1,7 @@
 Licensing information
 
+    Project general
+
         Copyright (C) 1995-2008 Jari Aalto
 
         This program (referring to all files, including documentation,
@@ -24,13 +26,13 @@ Licensing information
         This program runs solely with Free Software. It does not rely
         on any component of non-Free Software.
 
-        - -
+    Exception for the documentation
 
-        Exception: The documentation of project "Emacs Tiny Tools"
-        (*.txt and *.html files) is DUAL LICENseD and may be
-        distributed under the terms of GNU General Public License (GNU
-        GPL) --see above--; *or*, at your option, distributed under
-        the terms of GNU Free Documentation License (GNU FDL).
+        The documentation of project "Emacs Tiny Tools" (*.txt and
+        *.html files) is DUAL LICENseD and may be distributed under
+        the terms of GNU General Public License (GNU GPL) --see
+        above--; *or*, at your option, distributed under the terms of
+        GNU Free Documentation License (GNU FDL).
 
         The end user can continue to distribute the documentation in
         this dual license form *or* select the other license (GNU GPL,
