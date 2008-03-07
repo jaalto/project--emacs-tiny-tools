@@ -429,8 +429,6 @@ replace: (f)wd (r)eg (w)ord (c)ompile buffer files (f)iles (lL)atex (?)help "
      ;;  If `tinyreplace-menu' is bound to M-%, then the "5" key makes
      ;;  sense, because "%" is shift-5.
      (?f  . ( (call-interactively 'tinyreplace-replace-forward)))
-     (?5  . ( (call-interactively 'tinyreplace-replace-forward)))
-     (?%  . ( (call-interactively 'tinyreplace-replace-forward)))
      (?w  . ( (call-interactively 'tinyreplace-word-replace)))
      (?r  . ( (call-interactively 'tinyreplace-replace-region)))
      (?c  . ( (call-interactively
@@ -443,11 +441,15 @@ replace: (f)wd (r)eg (w)ord (c)ompile buffer files (f)iles (lL)atex (?)help "
 Standard replace commands:
 
     f  calls function `tinyreplace-replace-forward'
-    %  calls function `tinyreplace-replace-forward'  (like M-%)
-    5  calls function `tinyreplace-replace-forward'  (Like M-%)
-
     w  calls function `tinyreplace-word-replace'
     r  calls function `tinyreplace-replace-region'
+
+    NOTE: If you select `f', You can select modes that affect how the
+    replacing will be ocnducted. E.g. pressing `B' will put point to the
+    beginning of buffer from wich the *forward* action ir carried out.
+
+    Another usefull mode to select before strting to replace is `w'
+    for word mode toggle.
 
 The following keys can be used in compile-like buffers, where each line
 contains standard grep-like output. If you mark a region, the selected

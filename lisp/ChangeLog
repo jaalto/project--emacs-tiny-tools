@@ -1,3 +1,8 @@
+2008-03-07  Jari Aalto  <jari.aalto@cante.net>
+
+	* tiny/tinyreplace.el (tinyreplace-:menu): Remove keys `5' and `%'.
+	Improve doctring.
+
 2008-03-05  Jari Aalto  <jari.aalto@cante.net>
 
 	* other/folding.el: (top level): Correct Copyright Years.
