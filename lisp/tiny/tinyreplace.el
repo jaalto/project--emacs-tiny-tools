@@ -1236,7 +1236,7 @@ Input:
 
   (interactive
    (ti::list-merge-elements
-    (tinyreplace-interactive-region-args "compile")
+    (tinyreplace-interactive-region-args "Compile")
     nil
     t))
   ;; ................................................. interactive end ...
@@ -1356,7 +1356,7 @@ Input:
 ;;;###autoload
 (defun tinyreplace-replace-region (beg end str1 str2)
   "In region BEG END, find STR1 and replace with STR2."
-  (interactive (tinyreplace-interactive-region-args "region"))
+  (interactive (tinyreplace-interactive-region-args "Region"))
   (tinyreplace-replace-region-1
    beg end (regexp-quote str1) str2 0 t))
 
