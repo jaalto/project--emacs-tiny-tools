@@ -4,7 +4,7 @@
 
 ;;{{{ Id
 
-;; Copyright (C)    1995-2007 Jari Aalto
+;; Copyright (C)    1995-2008 Jari Aalto
 ;; Keywords:        extensions
 ;; Author:          Jari Aalto
 ;; Maintainer:      Jari Aalto
@@ -25,7 +25,7 @@
 ;; for more details.
 ;;
 ;; You should have received a copy of the GNU General Public License
-;; along with program; see the file COPYING. If not, write to the
+;; along with program. If not, write to the
 ;; Free Software Foundation, Inc., 51 Franklin Street, Fifth Floor,
 ;; Boston, MA 02110-1301, USA.
 ;;
@@ -127,7 +127,7 @@
 ;;          If Emacs crashes you can recover the previous session.
 ;;          See function `tinydesk-auto-save' for more. Similar functionality
 ;;          (".saves") is in new Emacs releases, but this package
-;;          was originally written using 19.28
+;;          was originally written for Emacs 19.28.
 ;;
 ;;      o   CRASH RECOVERY: If Emacs crashes, or you have to kill it
 ;;          with `-HUP' if it hangs, it leaves autosaved files around. When
@@ -147,20 +147,21 @@
 ;;
 ;;      o   You have Emacs session open with bunch of files. Now you
 ;;          believe that it's time to save this session. You do
-;;          C-x 4 s and give some name "state.c" if you edited c project.
+;;          `C-x' `4' `s' and give some name "state.c" if you worked
+;;          with a C project.
 ;;
-;;      Now, it all depends what you want to do after that. If you find more
-;;      files to Emacs; or kill some unwanted buffers, you can re-execute
-;;      C-x 4 s whenever you like. You can even edit the state file with
-;;      C-x 4 e to remove some files that you don't want to include to
-;;      that "project".
+;;      Now, it all depends what you want to do after that. You may
+;;      `find-file' more files to Emacs; or kill few unwanted
+;;      buffers. Re-execute `C-x' `4' `s' whenever you like. You can
+;;      even edit the state file with `C-x' `4' `e' to remove some files
+;;      that you don't want to include to that "project".
 ;;
 ;;      o   Next time you open Emacs you can load any state file with
 ;;          C-x 4 r "state.c"
 ;;
 ;;      If you want to switch between projects; unload first the current
-;;      project with C-x 4 u "state.c" and reload some other project
-;;      with C-x 4 r, eg your current C++ project "state.cc"
+;;      project with `C-x' `4' `u' "state.c" and reload some other project
+;;      with `C-x' `4' `r', e.g. your current C++ project "state.cc"
 ;;
 ;;  Automatic one time session saver
 ;;
@@ -168,13 +169,14 @@
 ;;      when Emacs starts again. I must say that this is not necessarily
 ;;      the best, because when you start Emacs for some quick job, you
 ;;      don't necessarily want it to load the saved session (loading all
-;;      files take time considerably). Loading Emacs with -q is not the
+;;      files takes some time). Loading Emacs with `-q' is not the
 ;;      choice, if you still like to have your other Emacs goodies active.
 ;;
-;;      Here is semi-automatic save and restore, put all these lines near
-;;      the end of your $HOME/.emacs. The setup saves the state when
-;;      Emacs exists and asks if you want to return to saved session on
-;;      Emacs startup. (You did also copy the installation lines too...)
+;;      Here is semi-automatic save and restore, put all these, in
+;;      addition to ones mentioned at the "install" section, lines
+;;      near the end of your $HOME/.emacs. The setup saves the state
+;;      when Emacs exists and asks if you want to return to saved
+;;      session on Emacs startup.
 ;;
 ;;          (defconst tinydesk-:directory-location "~/elisp/config")
 ;;
@@ -196,7 +198,7 @@
 ;;  Face setup
 ;;
 ;;      This program uses some faces to catch your attention when you're
-;;      working with the state files. I you restore state from a file and
+;;      working with the state files. If you restore state from a file and
 ;;      some file reference cannot be loaded, the state file will be shown
 ;;      to you and the problematic lines are highlighted. If you open the
 ;;      state file for editing, you can selectively load files. The mouse
@@ -624,9 +626,13 @@ path, garbage at line...Hooks may check the contents of this.")
 (defsubst tinydesk-read-word ()
   "Read filename word."
   ;;   Windows use spaces in file names
-  (ti::remove-properties
-   (ti::string-remove-whitespace
-    (ti::buffer-read-word "- a-zA-Z0-9_/.!@#%&{}[]+:;~`<>"))))
+  (let ((word (ti::remove-properties
+               (ti::string-remove-whitespace
+                (ti::buffer-read-word "- a-zA-Z0-9_/.!@#%&{}[]+:;~`<>")))))
+    ;;  Remove comments from the end
+    (if (string-match "\\(.+[^ \t]\\);;" word)
+        (match-string 1 word)
+      word)))
 
 ;;; ----------------------------------------------------------------------
 ;;;
@@ -648,6 +654,15 @@ path, garbage at line...Hooks may check the contents of this.")
 (defsubst tinydesk-mode-map-activate ()
   "Use local \\{tinydesk-mode-map} on this buffer."
   (use-local-map tinydesk-mode-map))
+
+;;; ----------------------------------------------------------------------
+;;;
+(defun tinydesk-add-space-if-non-space ()
+  "Add extra space if previous character is non-space to make room."
+  (let* ((prev (char-to-string (char-after (1- (point))))))
+    (unless (string-match "[ \t]" prev)
+      ;;  So that comment doe snot get inserted next to the filename
+      (insert " "))))
 
 ;;; ----------------------------------------------------------------------
 ;;;
@@ -865,22 +880,23 @@ TinyDesk: Can't do state autosave: [%s] is not writable." save-to))
   (interactive)
   (let* ((c-chars       tinydesk-:comment-characters)
          (c-lev         tinydesk-:comment-start-level)
-         (c-re          (tinydesk-comment-re)))
+         (c-re          (tinydesk-comment-re))
+         beg)
     (tinydesk-clear-region-properties (point-min) (point-max))
     (save-excursion
       (ti::pmin)
       (while (not (eobp))
-
         ;;  Skip over BOL comments
-        (if (and (not (looking-at (concat "^[ \t]*[" c-chars "]+\\|$")))
-                 (looking-at c-re)
-                 (match-beginning c-lev))
-            (delete-region (match-beginning c-lev) (line-end-position)))
+        (when (and (not (looking-at (concat "^[ \t]*[" c-chars "]+\\|$")))
+                   (looking-at c-re)
+                   (setq beg (match-beginning c-lev)))
+          (goto-char beg)
+          (skip-chars-backward "[ \t]") ; delete leading whitespace too
+          (delete-region (point) (line-end-position)))
         (forward-line 1)))
     (set-buffer-modified-p nil)
-    (message "TinyDesk: *properties cleared from buffer")
-    ;;  Little nasty, but Emacs does not update display always...
-    (redraw-display)))
+    (if (interactive-p)
+        (message "TinyDesk: properties cleared from buffer"))))
 
 ;;; ----------------------------------------------------------------------
 ;;;
@@ -911,24 +927,23 @@ TinyDesk: Can't do state autosave: [%s] is not writable." save-to))
          (loaded     (get-buffer file)) ;in Emacs already ?
          (comment    (tinydesk-comment))
          (err-col    tinydesk-:message-column))
-    ;;  We need the sleep-for, because moving the mouse
-    ;;  clears the message and user may not notice it.
     (cond
      ((eq p (tinydesk-face 'file-pick))
       (cond
        ((null (file-exists-p text))
-        (message (concat "TinyDesk: File not exist, " text)) (sleep-for 0)
+        (message (concat "TinyDesk: File not exist, " text))
         (tinydesk-clear-line-properties))
        (loaded
-        (message "TinyDesk: File already loaded.") (sleep-for 0)
+        (message "TinyDesk: File already loaded.")
         (tinydesk-clear-line-properties))
        (t
         (find-file-noselect text)
-        (message "TinyDesk: Loaded ok.") (sleep-for 0)
+        (message "TinyDesk: Loaded ok.")
         (tinydesk-clear-line-properties)
         (move-to-column err-col t)
-        (if (not (looking-at "$\\|[ \t]*$"))
-            (end-of-line))
+        (unless (looking-at "$\\|[ \t]*$")
+          (end-of-line))
+        (tinydesk-add-space-if-non-space)
         (insert comment " loaded")
         (beginning-of-line)))))))
 
@@ -940,7 +955,8 @@ Marking is only done if word is valid filename."
   (interactive)
   (save-excursion
     (tinydesk-mark-region
-     (point-min) (point-max)
+     (point-min)
+     (point-max)
      (tinydesk-comment-re)
      tinydesk-:comment-start-level
      (or (interactive-p)
@@ -948,19 +964,9 @@ Marking is only done if word is valid filename."
 
 ;;; ----------------------------------------------------------------------
 ;;;
-(defun tinydesk-set-face-non-files-buffer  ()
-  "Change face to 'error in those lines whose first word is not valid file."
-  (interactive)
-  (tinydesk-set-face-non-files-region (point-min) (point-max))
-  (if (interactive-p)
-      (message "TinyDesk: marked non-lodable files")))
-
-;;; ----------------------------------------------------------------------
-;;;
 (defun tinydesk-set-face-non-files-region (beg end)
-  "Change face to 'error in those lines whose first word is not valid file.
-Also add comment marker for user that do not have highlight capability.
-Region is BEG END."
+  "In region BEG END set 'error face to invalid files (first word).
+Also add textual comment to the end of line if needed."
   (interactive "r")
   (let* ((empty-re      "^[ \t]*$")
          (sub-level     tinydesk-:comment-start-level)
@@ -982,20 +988,29 @@ Region is BEG END."
             (setq word (tinydesk-read-word))
             (if (and word (file-exists-p word))
                 nil
-;;;         (ti::d! word)
+ ;;         (ti::d! word)
               (tinydesk-line-property-set-error) ;put color on line
               ;;  Show to user that does not see the color
               (move-to-column err-col t)
-              ;; Is the filename that long, that it goes past err-col ?
+              ;; Is the filename that long, that it goes past err-col?
               (cond
                ((eq (point) (line-end-position))) ;do nothing
                ((looking-at (concat "[ \t" c-chars "]"))
-                (kill-line))            ;delete other marks
+                (kill-line))      ;delete other marks
                (t                 ;no other choices. place is cccupied
                 (end-of-line)
-                (insert " ")))          ;separate word
+                (insert " ")))    ;separate word
               (insert (concat comment " invalid"))))
           (forward-line 1))))))
+
+;;; ----------------------------------------------------------------------
+;;;
+(defun tinydesk-set-face-non-files-buffer  ()
+  "Change face to 'error in those lines whose first word is not valid file."
+  (interactive)
+  (tinydesk-set-face-non-files-region (point-min) (point-max))
+  (if (interactive-p)
+      (message "TinyDesk: marked non-lodable files")))
 
 ;;; ----------------------------------------------------------------------
 ;;; - This function is not general.
@@ -1079,6 +1094,7 @@ Example:
                 (move-to-column err-col t)
                 (if (not (looking-at (concat "$\\|[ \t" c-chars "]")))
                     (end-of-line)) ;no other choices, place is cccupied
+                (tinydesk-add-space-if-non-space)
                 (insert (concat comment " loaded")))
                (t
                 ;; ............................... not loaded in Emacs ...

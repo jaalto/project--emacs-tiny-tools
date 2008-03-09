@@ -2,7 +2,7 @@
 
 ;;{{{ Id
 
-;; Copyright (C)    2001-2007 Jari Aalto
+;; Copyright (C)    2001-2008 Jari Aalto
 ;; Keywords:        extensions
 ;; Author:          Jari Aalto
 ;; Maintainer:      Jari Aalto
@@ -23,7 +23,7 @@
 ;; for more details.
 ;;
 ;; You should have received a copy of the GNU General Public License
-;; along with program; see the file COPYING. If not, write to the
+;; along with program. If not, write to the
 ;; Free Software Foundation, Inc., 51 Franklin Street, Fifth Floor,
 ;; Boston, MA 02110-1301, USA.
 ;;
@@ -1407,6 +1407,28 @@ At current point, current line, headers of the mail message."
 
 ;;; ----------------------------------------------------------------------
 ;;;
+(defsubst tinydebian-bug-ubuntu-p ()
+  "Check if bug context is Debian."
+  (save-excursion
+    (goto-char (point-min))
+    (re-search-forward "[0-9]@bugs.launchpad.net" nil t)))
+
+;;; ----------------------------------------------------------------------
+;;;
+(defun tinydebian-bug-url (bug)
+  "Return correct bug URL for BUG."
+  (if (tinydebian-bug-ubuntu-p)
+      (format "https://bugs.launchpad.net/bzr/+bug/%s"
+             (if (numberp bug)
+                 (int-to-string bug)
+               bug))
+    (format "http://bugs.debian.org/%s"
+	    (if (numberp bug)
+		(int-to-string bug)
+	      bug))))
+
+;;; ----------------------------------------------------------------------
+;;;
 (defun tinydebian-bug-string-parse-wnpp-alert (str)
   "Parse wnpp-alert(1) like line. Return '(bug package bug-type desc)
   RFA 321654 debtags -- Enables support for package tags."
@@ -1428,12 +1450,21 @@ At current point, current line, headers of the mail message."
   "Read bug nbr from STR."
   (or (and (string-match "#\\([0-9]+\\)" str)
            (match-string 1 str))
+      ;; [Bug 192841] Ubuntu
+      (and (string-match "[[]Bug \\([0-9]+\\)[]]" str)
+           (match-string 1 str))
       (multiple-value-bind (bug)
           (tinydebian-bug-string-parse-wnpp-alert str)
         bug)
       ;;   NNNN@bugs.debian.org
       (and (string-match (concat "\\([0-9]+\\)\\(?:-[a-z]+\\)?@"
                                  tinydebian-:bts-email-address)
+                         str)
+           (match-string 1 str))
+      ;;   BTS message lines: "owner NNNNNN"
+      (and (string-match (concat "\\([0-9]+\\)\\(?:-[a-z]+\\)?@"
+				 ;; FIXME: Use variable
+                                 "bugs.launchpad.net")
                          str)
            (match-string 1 str))
       ;;   BTS message lines: "owner NNNNNN"
@@ -1765,11 +1796,7 @@ At current point, current line, headers of the mail message
     (if file
         (setq tinydebian-:browse-url-function
               (function tinydebian-browse-url-lynx-dump)))
-    (tinydebian-browse-url-1
-     (format "http://bugs.debian.org/%s"
-             (if (numberp bug)
-                 (int-to-string bug)
-               bug)))
+    (tinydebian-browse-url-1 (tinydebian-bug-url bug))
     (if file
         (with-current-buffer (get-buffer tinydebian-:buffer-www)
           (write-region (point-min) (point-max) file)
@@ -2254,8 +2281,8 @@ At current point, current line, headers of the mail message
 (put 'tinydebian-bts-mail-type-macro 'lisp-indent-function 4)
 (defmacro tinydebian-bts-mail-type-macro (type pkg email subject &rest body)
   "Compose a TYPE request and run BODY.
-  Variables available: bugnbr, type-orig, package, description; but these ; ;
-  can all be nil."
+Variables available: bugnbr, type-orig, package, description; but these
+can all be nil."
   (let ((subj (gensym "subject-")))
     `(multiple-value-bind (bugnbr type-orig package description)
          (or (tinydebian-bts-parse-string-current-line)
@@ -2381,7 +2408,7 @@ At current point, current line, headers of the mail message
 ;;; ----------------------------------------------------------------------
 ;;;
 (defun tinydebian-bts-mail-type-rfs (package license bug desc)
-  "Send an RFS request: PACKAGE name, package LICENCE and BUG and DESC.
+  "Send an RFS request: PACKAGE name, package LICENse and BUG and DESC.
    The DESC is short one line description string use in Subject."
   (interactive
    (let* ((name    (read-string
@@ -2623,25 +2650,26 @@ Optional PACAGE name and VERSION number can be supplied."
          (package  (read-string "Package name [RET=ignore]: "))
          version)
      (if (tinydebian-string-p package)
-         (setq version (read-string "Package name [RET=ignore]: "))
+         (setq version (read-string "Version: "))
        (setq package nil))
      (list bug
            package
            (if (tinydebian-string-p version)
                version
              nil))))
-  (let* ((email (tinydebian-bts-email-compose (format "%s-done" bug))))
+  (let* ((email (tinydebian-bts-email-compose (format "%s-done" bug)))
+         (pkg   package))
     (tinydebian-bts-mail-type-macro
      nil
-     nil
+     pkg
      email
      (format "Bug#%s Close" bug)
      (insert
       (if (not (stringp package))
           ""
         (format "\
-Source: %s
-Source-Version: %s
+Package: %s
+Version: %s
 "
                 package
                 (or version "")))

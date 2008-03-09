@@ -4,7 +4,7 @@
 
 ;;{{{ Id
 
-;; Copyright (C)    1996-2007 Jari Aalto
+;; Copyright (C)    1996-2008 Jari Aalto
 ;; Keywords:        tools
 ;; Author:          Jari Aalto
 ;; Maintainer:      Jari Aalto
@@ -25,7 +25,7 @@
 ;; for more details.
 ;;
 ;; You should have received a copy of the GNU General Public License
-;; along with program; see the file COPYING. If not, write to the
+;; along with program. If not, write to the
 ;; Free Software Foundation, Inc., 51 Franklin Street, Fifth Floor,
 ;; Boston, MA 02110-1301, USA.
 ;;
@@ -2093,11 +2093,14 @@ documentation in the tinymail.el or call \\[tinymail-version]."
 ;;; ----------------------------------------------------------------------
 ;;;
 (defun tinymail-buffer-email-address-scramble-area ()
-  "Return are of eamil that can be scrambled.
+  "Return area of email that can be scrambled.
 Exclude patches and attachments."
   (let ((list
          (list
-          "^RCS[ \t]+file:.*,v\\|^diff[ \t]+-[^- \t\r\n]"
+          "^RCS[ \t]+file:.*,v\\|^[ \t]*diff[ \t]+.*[-/]"
+          "^---[ \t]"
+          "^***[ \t]"
+          "^\+\+\+[ \t]"
           "[<]#part" ;; Gnus attachment
           "\\[Attachment:"))
         (point-list (list (point-max)))
@@ -2105,9 +2108,8 @@ Exclude patches and attachments."
         end)
     (save-excursion
       (ti::pmin)
-      (when (search-forward (or mail-header-separator
-                                "---NOTHING__TO_FIND")
-                            nil t)
+      (when (and (stringp mail-header-separator)
+                 (search-forward mail-header-separator nil t))
         (setq beg (1+ (line-end-position)))
         (dolist (re list)
           (when (re-search-forward re nil t)
@@ -4426,9 +4428,7 @@ Return:
     (setq ret str)
     (when ret
       ;;  Remove quotes: "Mr. this" <email@example.com>
-      (setq ret (replace-regexp-in-string "['\"]+" "" ret))
-      ;;  Remove Middle names: Foo X. Bar
-      (setq ret (replace-regexp-in-string " [A-Z]\\." "" ret)))
+      (setq ret (replace-regexp-in-string "['\"]+" "" ret)))
     ;;   If the line is exessive long, say;
     ;;   "Mr. Foo the most spectacular..." <foo@camel.com>
     ;;   Then we make it smaller.
@@ -4525,7 +4525,11 @@ a handly way to refer to past articles."
                           (mail-header-from hdrs))))
          (date (tinymail-iso8601-date-value)))
     (delete-horizontal-space)
-    (insert "* " date " " from "\n")
+    (insert "* " date
+	    (if from
+		(format " %s" from)
+	      "")
+	    "\n")
     (let ((id (funcall tinymail-:citation-message-id-function)))
       (when (stringp id)
         (insert id)))))

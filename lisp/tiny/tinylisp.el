@@ -4,7 +4,7 @@
 
 ;;{{{ Id
 
-;; Copyright (C)    1997-2007 Jari Aalto
+;; Copyright (C)    1997-2008 Jari Aalto
 ;; Keywords:        tools
 ;; Author:          Jari Aalto
 ;; Maintainer:      Jari Aalto
@@ -25,7 +25,7 @@
 ;; for more details.
 ;;
 ;; You should have received a copy of the GNU General Public License
-;; along with program; see the file COPYING. If not, write to the
+;; along with program. If not, write to the
 ;; Free Software Foundation, Inc., 51 Franklin Street, Fifth Floor,
 ;; Boston, MA 02110-1301, USA.
 ;;
@@ -589,12 +589,12 @@
 ;;
 ;;          (setq tinylisp-:mode-prefix-key "C-cE")
 
-(eval-and-compile
-
 ;;;###autoload (autoload 'tinylisp-commentary    "tinylisp" "" t)
 ;;;###autoload (autoload 'tinylisp-mode          "tinylisp" "" t)
 ;;;###autoload (autoload 'turn-on-tinylisp-mode  "tinylisp" "" t)
 ;;;###autoload (autoload 'turn-off-tinylisp-mode "tinylisp" "" t)
+
+(eval-and-compile
 
   (ti::macrof-minor-mode-wizard
    "tinylisp-" " E" "$" "E" 'TinyLisp "tinylisp-:" ;1-6
@@ -1053,7 +1053,7 @@ element from the list is removed.")
   (concat
    "^(\\("
    ;;  cl DEFINES defun* macro
-   "defun\\*?\\|defsubst\\|defmacro"
+   "defun\\*?\\|defsubst\\|defmacro\\|defalias"
    ;; See SEMI poe.el
    "\\|defun-maybe\\|defmacro-maybe\\|defalias-maybe"
    ;; see Gnus nntp.el for deffoo
@@ -1067,7 +1067,7 @@ type and name.")
   (concat
    "^(\\("
    ;;  Normal lisp variables
-   "defvar\\|defconst"
+   "defvar\\|defconst\\|defvaralias"
    ;; Custom.el defined variables in 19.35
    "\\|defgroup\\|defcustom"
    "\\)[ \t]+\\([^ \t\n]+\\)")
@@ -4147,17 +4147,20 @@ input:
 ;;; ----------------------------------------------------------------------
 ;;;
 (defun tinylisp-library-symbol-information (file &optional verb)
-  "Display symbol information from FILE (full path name). VERB.
+  "Display symbol information from FILE (absolute path). VERB.
 FILE must be loaded into Emacs to gather all the variable
 and function definitions."
   (interactive
-   (list
-    (locate-library
-     (tinylisp-library-read-name 'el))
-    current-prefix-arg))
-  (let* ((feature-name (intern-soft
-                        (file-name-sans-extension
-                         (file-name-nondirectory file)))))
+   (let ((name (tinylisp-library-read-name 'el)))
+     (list
+      (or (locate-library name)
+	  (error "Can't find absolute path for %s" name))
+      current-prefix-arg)))
+  (or file
+      (error "Argument FILE is missing"))
+  (let* ((fname (file-name-nondirectory file))
+	 (feature-name (intern-soft
+			(file-name-sans-extension fname))))
     ;;  If the feature is not same as file name, we have no
     ;;  other choice to load the file. If feature-name was
     ;;  set, then the feature is already in Emacs (file was loaded
@@ -4165,6 +4168,8 @@ and function definitions."
     (unless feature-name
       (load file))
     (with-current-buffer (ti::system-get-file-documentation file verb)
+      (if (interactive-p)
+	  (display-buffer (current-buffer)))
       (turn-on-tinylisp-mode))))
 
 ;;; ----------------------------------------------------------------------
@@ -5056,7 +5061,7 @@ VERB                    verbose flag"
 ;;; ----------------------------------------------------------------------
 ;;;
 (defun tinylisp-find-autoload-functions (&optional buffer)
-  "Display all atoload functions."
+  "Display all autoload functions."
   (interactive)
   (let* ((list (ti::system-autoload-function-list))
          doc)

@@ -4,7 +4,7 @@
 
 ;;{{{ Id
 
-;; Copyright (C)    1995-2007 Jari Aalto
+;; Copyright (C)    1995-2008 Jari Aalto
 ;; Keywords:        tools
 ;; Author:          Jari Aalto
 ;; Maintainer:      Jari Aalto
@@ -25,7 +25,7 @@
 ;; for more details.
 ;;
 ;; You should have received a copy of the GNU General Public License
-;; along with program; see the file COPYING. If not, write to the
+;; along with program. If not, write to the
 ;; Free Software Foundation, Inc., 51 Franklin Street, Fifth Floor,
 ;; Boston, MA 02110-1301, USA.
 ;;
@@ -932,7 +932,7 @@ If region is active, indent all lines backward."
 (defun tinytab-return-key-mode (&optional mode verb)
   "Toggle auto indent MODE / regular newline mode. VERB."
   (interactive)
-  (let* ((func  'tinytab-auto-indent)
+  (let* ((func 'tinytab-auto-indent)
          (now
           (or (and
                ;;  e.g. in fundamental-map this value is nil and
@@ -944,12 +944,12 @@ If region is active, indent all lines backward."
          to)
     ;;  If we redefine return key here, user will nver get out.
     ;;  C-m is exit-minibuffer.
-
     (if (string-match "minibuf" (buffer-name))
-        (error "TinyTab: Return key-mode not allowed in minibuffer."))
+        (error "TinyTab: tinytab-return-key-mode not allowed in minibuffer."))
     (setq verb (interactive-p))
     (cond
-     ((or (null mode) (not (integerp mode)))
+     ((or (null mode)
+          (not (integerp mode)))
       (setq to (if (eq now 'tinytab-auto-indent)
                    'newline
                  func)))

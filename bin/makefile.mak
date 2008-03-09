@@ -5,7 +5,7 @@
 #
 #   File id
 #
-#	Copyright (C) 1997-2007 Jari Aalto
+#	Copyright (C) 1997-2008 Jari Aalto
 #
 #	This program is free software; you can redistribute it and/or
 #	modify it under the terms of the GNU General Public License as
@@ -18,7 +18,7 @@
 #	General Public License for more details.
 #
 #	You should have received a copy of the GNU General Public
-#	License along with program; see the file COPYING. If not,
+#	License along with program. If not,
 #	write to the Free Software Foundation, Inc., 51 Franklin
 #	Street, Fifth Floor, Boston, MA 02110-1301, USA.
 #
@@ -603,7 +603,7 @@ TT_EL_RC	=			\
 #   Text files
 
 TT_TEXT	=				\
-	$(DIR_DOC)/GNU-licence.txt	\
+	$(DIR_DOC)/GNU-license.txt	\
 	$(DIR_DOC)/OLD.txt		\
 	$(DIR_DOC)/ema-expect.txt	\
 	$(DIR_DOC)/bookmark.txt		\

@@ -2,9 +2,9 @@
 
 ;; This file is not part of Emacs
 
-;; Copyright (C) 2000-2007
+;; Copyright (C) 2000-2008
 ;;           Jari Aalto
-;; Copyright (C) 1995-1999
+;; Copyright (C) 1995,1996,1997,1998,1999
 ;;           Jari Aalto, Anders Lindgren.
 ;; Copyright (C) 1994
 ;;           Jari Aalto
@@ -35,7 +35,7 @@
 ;; GNU General Public License for more details.
 ;;
 ;; You should have received a copy of the GNU General Public License
-;; along with program; see the file COPYING. If not, write to the
+;; along with program. If not, write to the
 ;; Free Software Foundation, Inc., 51 Franklin Street, Fifth Floor,
 ;; Boston, MA 02110-1301, USA.
 ;;

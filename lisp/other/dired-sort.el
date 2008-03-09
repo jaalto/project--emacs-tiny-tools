@@ -19,7 +19,7 @@
 ;; for more details.
 ;;
 ;; You should have received a copy of the GNU General Public License
-;; along with program; see the file COPYING. If not, write to the
+;; along with program. If not, write to the
 ;; Free Software Foundation, Inc., 51 Franklin Street, Fifth Floor,
 ;; Boston, MA 02110-1301, USA.
 ;;
@@ -68,7 +68,7 @@
 ;;      When you load this file, function `dired-sort-default-keys' is called.
 ;;      The following bindings to dired mode are defined.
 ;;
-;;          S" "    dired-sort-resort    (that's an "s" + SPACE)
+;;          S" "    dired-sort-resort    (that's an "S" + SPACE)
 ;;          Ss      dired-sort-by-size
 ;;          Sd      dired-sort-by-date
 ;;          Sf      dired-sort-by-field
@@ -81,7 +81,7 @@
 
 ;;; Code:
 
-(require 'date-parse)
+;;(require 'date-parse)
 
 (eval-and-compile
   ;;  Silence Byte compiler
@@ -93,7 +93,9 @@
   (autoload 'dired-revert             "dired")
   (autoload 'dired-get-filename       "dired")
   (autoload 'dired-move-to-filename   "dired")
-  (autoload 'sort-skip-fields         "sort"))
+  (autoload 'sort-skip-fields         "sort")
+  (autoload 'parse-date               "date-parse")
+  (autoload 'date-compare-key         "date-parse"))
 
 ;;; ....................................................... &variables ...
 
