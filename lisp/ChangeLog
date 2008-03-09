@@ -1,3 +1,19 @@
+2007-10-02  Jari Aalto  <jari.aalto@cante.net>
+
+	* tiny/tinydebian.el 
+	-- Filter out virtual packages, when making the Depends summary.
+	(tinydebian-package-status-dpkg-S-main): Renamed.
+	(tinydebian-package-status-main): Comment out call to
+	`tinydebian-package-status-dpkg-s-main'.
+	(tinydebian-package-info-by-key): New.
+	(tinydebian-bug-system-info-depends): Use
+	`tinydebian-package-info-by-key'.
+	(tinydebian-:virtual-package-list): New.
+	(tinydebian-virtual-package-parse-buffer): New.
+	(tinydebian-package-virtual-p): New.
+	(tinydebian-bug-system-info-depends): Use
+	`tinydebian-package-virtual-p'.
+
 2007-09-19  Jari Aalto  <jari.aalto@cante.net>
 
 	* tiny/tinydebian.el (tinydebian-bts-mode): Added
