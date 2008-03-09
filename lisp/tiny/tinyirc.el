@@ -601,9 +601,8 @@ name perl2
 url http://nopaste.snit.ch:8000/
 channel #perl-help
 
-# Use 'test' or 'none' service for channels that do not have
-# particular support for PasteBot. Simply announce
-# the url in the #channel with command:
+# Services for channels that do not have particular support for
+# PasteBot. Simply announce the url in the #channel with command:
 #
 #    /me [pastebot] <URL>
 
@@ -615,11 +614,7 @@ name nopaste
 url http://rafb.net/paste/
 channel #none
 
-name test
-url http://dragon.cbi.tamucc.edu:8080/
-channel ''
-
-name test2
+name sial
 url http://sial.org:8888/
 channel ''
 
@@ -639,6 +634,15 @@ See also `tinyirc-:pastebot-config-directory'.")
 ;;; ########################################################### &Funcs ###
 
 ;;{{{ General functions
+
+;;; ----------------------------------------------------------------------
+;;;
+(defsubst tinyirc-pastebot-program-name ()
+  "Verify that `tinyirc-:pastebot-program' is string."
+  (if (stringp tinyirc-:pastebot-program)
+      tinyirc-:pastebot-program
+    (error
+     "TinyIrc: [ERROR] `tinyirc-:pastebot-program' not defined.")))
 
 ;;; ----------------------------------------------------------------------
 ;;;
@@ -800,10 +804,7 @@ References:
 ;;;
 (defun tinyirc-pastebot-program-1 ()
   "Return location of `tinyirc-:pastebot-program'."
-  (let*  ((prg       (if (stringp tinyirc-:pastebot-program)
-                         tinyirc-:pastebot-program
-                       (error
-                        "TinyIrc: `tinyirc-:pastebot-program' not defined.")))
+  (let*  ((prg       (tinyirc-pastebot-program-name))
           (saved-abs  (get 'tinyirc-pastebot-program 'absolute))
           (saved-orig (get 'tinyirc-pastebot-program 'original))
           (path      (cond
@@ -825,7 +826,7 @@ References:
 ;;; ----------------------------------------------------------------------
 ;;;
 (defun tinyirc-pastebot-program ()
-  "Return location of `tinyirc-:pastebot-program'. Die on error."
+  "Return location of `tinyirc-:pastebot-program' or signal an error."
   (let ((path (tinyirc-pastebot-program-1)))
     (unless path
       (error
@@ -1463,6 +1464,7 @@ References:
                            (cons x 1)))
                         (tinyirc-pastebot-service-list)))
           (file tinyirc-:pastebot-send-file))
+     (tinyirc-pastebot-program-name)	;signal error if no program
      (unless list
        (error (concat "Tinyirc: Cannot get completions."
                       "Check pastebot `servers' file.")))

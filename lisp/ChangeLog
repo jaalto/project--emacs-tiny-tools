@@ -1,7 +1,14 @@
 2008-03-07  Jari Aalto  <jari.aalto@cante.net>
 
+	* tiny/tinyirc.el (tinyirc-pastebot-program-name): New.
+	(tinyirc-pastebot-program-1): Use `tinyirc-pastebot-program-name'.
+	(tinyirc-pastebot-send-region): Signal error if there is no program.
+	(tinyirc-:pastebot-config-default-content): Remove dragon server.
+
 	* tiny/tinyreplace.el (tinyreplace-:menu): Remove keys `5' and `%'.
 	Improve doctring.
+	(tinyreplace-replace-over-files-compile-buffer): Fix typo.
+	(tinyreplace-replace-region): Fix typo.
 
 2008-03-05  Jari Aalto  <jari.aalto@cante.net>
 
