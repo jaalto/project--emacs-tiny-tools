@@ -615,8 +615,129 @@ Format:
  '((PAGE-TYPE  URL [FONT-LOCK-KEYWORDS])
    ...)
 
-The FONT-LOCK-KEYWORDS is only used if the results appear in `tinydebian-:buffer-www'.
-See `tinydebian-:browse-url-function'.")
+The FONT-LOCK-KEYWORDS is only used if the results appear in
+`tinydebian-:buffer-www'. See `tinydebian-:browse-url-function'.")
+
+(defvar tinydebian-:virtual-package-list
+  ;; Updated 2008-03-08
+  '(("awk" "a suitable /usr/bin/{awk,nawk} (*)")
+    ("c-shell" "a suitable /bin/csh (*)")
+    ("dotfile-module" "a module for the Dotfile Generator")
+    ("emacsen" "the GNU emacs or a compatible editor")
+    ("lzh-archiver" "an LZH archiver package")
+    ("tclsh" "a /usr/bin/tclsh (*)")
+    ("wish" "a /usr/bin/wish (*)")
+    ("c-compiler" "a C compiler")
+    ("debconf-2.0" "the debconf protocol")
+    ("fortran77-compiler" "a Fortran77 compiler")
+    ("kernel-headers" "kernel header files (<linux/*.h>, <asm/*.h>)")
+    ("kernel-image" "kernel image (vmlinuz, System.map, modules)")
+    ("kernel-source" "kernel source code")
+    ("libc-dev" "header and object files of `libc'")
+    ("flexmem" "anything that can access flexible memory via the")
+    ("foomatic-data" "PPD printer description files")
+    ("linux-kernel-log-daemon" "a daemon to facilitate logging for the Linux kernel")
+    ("system-log-daemon" "a daemon that provides a logging facility for")
+    ("time-daemon" "anything that serves as a time daemon")
+    ("ups-monitor" "anything that is capable of controlling an UPS")
+    ("dict-client" "clients for the Dictionary Server")
+    ("dict-server" "the Dictionary Server")
+    ("dictd-dictionary" "a dictionary for the dictd Dictionary Server")
+    ("info-browser" "something that can browse GNU Info files")
+    ("ispell-dictionary" "a dictionary for the ispell system")
+    ("myspell-dictionary" "a dictionary for the myspell system")
+    ("man-browser" "something that can read man pages")
+    ("stardict-dictionary" "a dictionary for stardict")
+    ("stardict" "application capable of reading stardict-dictdata")
+    ("stardict-dictdata" "dictionary data which can be read from stardict")
+    ("wordlist" "a /usr/share/dict/words (*)")
+    ("www-browser" "something that can browse HTML files")
+    ("dhcp-client" "a DHCP client")
+    ("ftp-server" "a FTP server")
+    ("httpd" "a HTTP server")
+    ("httpd-cgi" "A CGI capable HTTP server")
+    ("ident-server" "an identd daemon")
+    ("inet-superserver" "an inetd server")
+    ("lambdamoo-core" "a lambdamoo-compatible database package")
+    ("lambdamoo-server" "anything running a moo using a lambdamoo-core")
+    ("radius-server" "a RADIUS server for acct/auth")
+    ("rsh-client" "an rsh client")
+    ("rsh-server" "an rsh server")
+    ("telnet-client" "a telnet client")
+    ("telnet-server" "a telnet server")
+    ("imap-client" "a mail reader capable of accessing remote mail")
+    ("imap-server" "an IMAP mail server")
+    ("mail-reader" "a mail user agent (e.g. Pine, Elm, mailx, &c)")
+    ("mail-transport-agent" "a mail transport agent (e.g. Smail, Sendmail, &c)")
+    ("news-reader" "a news reader (e.g. trn, tin, &c)")
+    ("news-transport-system" "a local news system (e.g. INN, C News or B News)")
+    ("pgp" "a version of PGP (International or US)")
+    ("pop3-server" "a POP3 Server")
+    ("x-display-manager" "an X client which manages a collection of X servers")
+    ("x-session-manager" "a program which starts a desktop environment")
+    ("x-terminal-emulator" "an X client which emulates a terminal with a")
+    ("x-window-manager" "an X client which provides window management")
+    ("xserver" "an X server that (directly or indirectly) manages")
+    ("ttf-japanese-gothic" "Gothic-style Japanese font")
+    ("ttf-japanese-mincho" "Mincho-style Japanese font")
+    ("audio-mixer" "a utility to control the input and output levels")
+    ("x-audio-mixer" "a utility to control the input and output levels")
+    ("mp3-encoder" "an MP3 encoder package")
+    ("mp3-decoder" "an MP3 decoder package")
+    ("mpd-client" "a client that can control the Music Player Daemon")
+    ("pdf-preview" "a preprocessor that creates PDF output")
+    ("pdf-viewer" "anything that can display PDF files")
+    ("postscript-preview" "a preprocessor that creates Postscript output")
+    ("postscript-viewer" "anything that can display Postscript files")
+    ("java-compiler" "a java compiler, for Java version 1")
+    ("java2-compiler" "a java compiler, for Java version 2")
+    ("java-virtual-machine" "a JAVA virtual machine")
+    ("java1-runtime" "a Java runtime environment, Java version 1")
+    ("java2-runtime" "a Java runtime environment, Java version 2")
+    ("scheme-r4rs" "Scheme interpreter with the R4RS environment")
+    ("scheme-r5rs" "Scheme interpreter with the R5RS environment")
+    ("scheme-ieee-11878-1900" "Scheme interpreter with the IEEE-11878-1900")
+    ("scheme-srfi-0" "Scheme interpreter accepting the SRFI 0 language")
+    ("scheme-srfi-7" "Scheme interpreter accepting the SRFI 7 language")
+    ("scheme-srfi-55" "Scheme interpreter accepting the SRFI 55 language"))
+  "List of virtual packages.
+
+To refresh:
+  wget http://www.debian.org/doc/packaging-manuals/virtual-package-names-list.txt
+  C-x C-f virtual-package-names-list.txt
+  M-x tinydebian-virtual-package-parse-buffer")
+
+(defun tinydebian-virtual-package-parse-buffer ()
+  "Parse content of virtual package file.
+This is strictly maintainer's function. Download the file
+mentioned in `tinydebian-:virtual-package-list' and run this function
+to generate updated list."
+  (interactive)
+  (let (beg
+        end
+        package
+        desc
+        list)
+    (save-excursion
+      (goto-char (point-min))
+      (unless (re-search-forward "^Miscellaneous[ \t\r\n]+------" nil t)
+        (error "Not content of virtual-package-names-list.txt"))
+      (setq beg (point))
+      (unless (re-search-forward "^Old and obsolete" nil t)
+        (error "Not end marker of virtual-package-names-list.txt"))
+      (setq end (line-beginning-position))
+      (goto-char beg)
+      (while (re-search-forward 
+              "^ \\([^ \t\r\n]+\\)[ \t]+\\(.+[^ \t\r\n]\\)" end t)
+        (setq package (match-string 1)
+              desc    (match-string 2))
+        (push (list package desc) list))
+      (when list
+        (let* ((name "*virtual-packages*")
+               (buffer (get-buffer-create name)))
+          (pop-to-buffer buffer)
+          (erase-buffer)
+          (insert (pp (nreverse list))))))))
 
 ;;}}}
 ;;{{{ setup: -- version
@@ -1624,19 +1745,20 @@ At current point, current line, headers of the mail message
   (let ((path (get 'tinydebian-browse-url-lynx-dump 'program)))
     (if (not path)
         (error "TinyDebian: [ERROR] `lynx' not found in PATH for %s" url)
-      (tinydebian-with-buffer-macro tinydebian-:buffer-www
-                                    (message "TinyDebian: Wait, accessing %s" url)
-                                    (tinydebian-call-process path nil "-dump" url)
-                                    (when mode
-                                      (turn-on-tinydebian-bts-mode)
-                                      (let ((font (tinydebian-url-page-font-lock-keywords mode)))
-                                        (when (and font
-                                                   (or tinydebian-:font-lock-mode
-                                                       global-font-lock-mode))
-                                          (setq font-lock-keywords font)
-                                          (font-lock-mode 1))))
-                                    (goto-char (point-min))
-                                    (display-buffer (current-buffer))))))
+      (tinydebian-with-buffer-macro
+        tinydebian-:buffer-www
+        (message "TinyDebian: Wait, accessing %s" url)
+        (tinydebian-call-process path nil "-dump" url)
+        (when mode
+          (turn-on-tinydebian-bts-mode)
+          (let ((font (tinydebian-url-page-font-lock-keywords mode)))
+            (when (and font
+                       (or tinydebian-:font-lock-mode
+                           global-font-lock-mode))
+              (setq font-lock-keywords font)
+              (font-lock-mode 1))))
+        (goto-char (point-min))
+        (display-buffer (current-buffer))))))
 
 ;;; ----------------------------------------------------------------------
 ;;;
@@ -1778,16 +1900,17 @@ At current point, current line, headers of the mail message
       (message "TinyDebian: [ERROR] program `%s' is not installed."
                bin))
      (t
-      (tinydebian-with-buffer-macro tinydebian-:buffer-wnpp-alert
-                                    (message "TinyDebian: wait, running %s..." path)
-                                    (tinydebian-call-process path)
-                                    (message "TinyDebian: wait, running %s... Done." path)
-                                    (goto-char (point-min))
-                                    (save-excursion
-                                      (tinydebian-command-show-wnpp-alert))
-                                    (turn-on-tinydebian-bts-mode)
-                                    (display-buffer buffer)
-                                    buffer)))))
+      (tinydebian-with-buffer-macro
+        tinydebian-:buffer-wnpp-alert
+        (message "TinyDebian: wait, running %s..." path)
+        (tinydebian-call-process path)
+        (message "TinyDebian: wait, running %s... Done." path)
+        (goto-char (point-min))
+        (save-excursion
+          (tinydebian-command-show-wnpp-alert))
+        (turn-on-tinydebian-bts-mode)
+        (display-buffer buffer)
+        buffer)))))
 
 ;;}}}
 ;;{{{ BTS URL pages
@@ -1942,7 +2065,9 @@ At current point, current line, headers of the mail message
    email
    (format "[ERROR] email is missing from input [%s]" email))
   (tinydebian-browse-url-1
-   (format "%slogin=%s" (tinydebian-url-page-compose 'qa-developer-status) email)))
+   (format "%slogin=%s" 
+           (tinydebian-url-page-compose 'qa-developer-status) 
+           email)))
 
 ;;; ----------------------------------------------------------------------
 ;;;
@@ -1955,7 +2080,9 @@ At current point, current line, headers of the mail message
    email
    (format "[ERROR] email is missing from input [%s]" email))
   (tinydebian-browse-url-1
-   (format "%ssubmitter=%s" (tinydebian-url-page-compose 'qa-developer-bugs) email)))
+   (format "%ssubmitter=%s" 
+           (tinydebian-url-page-compose 'qa-developer-bugs) 
+           email)))
 
 ;;; ----------------------------------------------------------------------
 ;;;
@@ -2081,6 +2208,20 @@ At current point, current line, headers of the mail message
 
 ;;}}}
 ;;{{{ BTS functions: Debian Developer interface to bug tracking system
+
+;;; ----------------------------------------------------------------------
+;;;
+(defsubst tinydebian-package-virtual-p (name)
+  "Check if package NAME is in `tinydebian-:virtual-package-list'."
+  (and tinydebian-:virtual-package-list
+       (assoc name tinydebian-:virtual-package-list)))
+
+;;; ----------------------------------------------------------------------
+;;;
+(defsubst tinydebian-package-info-by-key (key info)
+  "Study debian/control INFO and return KEY 'Depends'."
+  (cdr-safe (and info
+                 (assoc key info))))
 
 ;;; ----------------------------------------------------------------------
 ;;;
@@ -2688,7 +2829,8 @@ Returned list is
   (let* ((bin (executable-find "apt-file")))
     (cond
      ((null bin)
-      (message "TinyDebian: no `apt-fil' found along PATH (emacs `exec-path').")
+      (message 
+       "TinyDebian: no `apt-fil' found along PATH (emacs `exec-path').")
       (message "TinyDebian: Please run 'apt-get install apt-file'")
       nil)
      nil)))
@@ -2711,7 +2853,7 @@ Returned list is
 ;;;  Autolog terminates connections considered to be idle based on a large
 ;;;  variety of parameters.
 ;;;
-(defun tinydebian-package-status-dpkg-s (package)
+(defun tinydebian-package-status-dpkg-s-main (package)
   "Consult dpkg -s PACKAGE"
   (let* ((dpkg tinydebian-:bin-dpkg))
     (cond
@@ -2766,7 +2908,7 @@ Returned list is
 
 ;;; ----------------------------------------------------------------------
 ;;;
-(defun tinydebian-package-status-dpkg-S (file)
+(defun tinydebian-package-status-dpkg-S-main (file)
   "Consult dpkg -S FILE
 In this case, the package is unknown."
   (let* ((dpkg  tinydebian-:bin-dpkg))
@@ -2823,7 +2965,8 @@ In this case, the package is unknown."
                (list "--field=Provides"
                      "--eregex"
                      re))
-        (let* ((info (tinydebian-package-info-from-buffer (current-buffer))))
+        (let* ((info (tinydebian-package-info-from-buffer 
+                      (current-buffer))))
           (cond
            ((null info)
             (message
@@ -2889,9 +3032,10 @@ References:
 (defun tinydebian-package-status-main (package)
   "Find out PACKAGE details."
   (or (tinydebian-package-status-apt-cache package)
-      (tinydebian-package-status-dpkg-s package)
+;;; the big *-S-* already runs this
+;;;      (tinydebian-package-status-dpkg-s-main package)
       (tinydebian-package-status-grep-available package)
-      (tinydebian-package-status-dpkg-S package)
+      (tinydebian-package-status-dpkg-S-main package)
       (tinydebian-package-status-apt-file package)
       (if (string-match "^wnpp" package)
           (error (concat "TinyDebian: package WNPP is special. "
@@ -2927,17 +3071,16 @@ ask with PROMPT."
 ;;;
 (defun tinydebian-bug-system-info-depends (info &optional depend-key)
   "Return additional Dependency INFO from item `Depends'.
-DEPEND-KEY can be \"Depends\" or \"Pre-Depends\".
+DEPEND-KEY can be \"Depends\" [default] or \"Pre-Depends\".
 
 Example:
 
   Versions of packages autolog depends on:
   ii  cron            3.0pl1-72  management of regular background p
   ii  libc6           2.2.5-3    GNU C Library: Shared libraries an."
-  (let* ((depends (cdr-safe (and info
-                                 (assoc
-                                  (or depend-key "Depends")
-                                  info))))
+  (let* ((depends (tinydebian-package-info-by-key
+                   (or depend-key "Depends")
+                   info))
          str)
     (when depends
       (setq str "")
@@ -2945,28 +3088,28 @@ Example:
                (tinydebian-package-status-parse-depends depends))
         (multiple-value-bind (package op version)
             dep-info
-          ;; Not used yet, quiet byte compiler
-          (if op
-              (setq op op))
-          (if version
-              (setq version version))
-          (let* (info2
-                 desc
-                 ver)
-            (setq info2
-                  (tinydebian-package-info
-                   package
-                   (format "\
+          (unless (tinydebian-package-virtual-p package)
+            (if op ;; Not used yet, quiet byte compiler
+                (setq op op))
+            (if version
+                (setq version version))
+            (let* (info2
+                   desc
+                   ver)
+              (setq info2
+                    (tinydebian-package-info
+                     package
+                     (format "\
 \[TinyDebian] Depend. Insert `dpkg -s %s' to *scratch* and press RET: "
-                           package)))
-            (setq ver  (cdr-safe (assoc "Version" info2)))
-            ;; cut first few characters
-            (when (setq desc (cdr-safe (assoc "Description" info2)))
-              (setq desc (ti::string-left desc 45)))
-            (setq str
-                  (concat
-                   str
-                   (format "%-15s %-15s %s\n" package ver desc)))))))
+                             package)))
+              (setq ver (cdr-safe (assoc "Version" info2)))
+              ;; cut first few characters
+              (when (setq desc (cdr-safe (assoc "Description" info2)))
+                (setq desc (ti::string-left desc 45)))
+              (setq str
+                    (concat
+                     str
+                     (format "%-15s %-15s %s\n" package ver desc))))))))
     str))
 
 ;;; ----------------------------------------------------------------------
