@@ -62,8 +62,7 @@
 ;;      (global-set-key "\C-cps" 'tinyirc-pastebot-send-region)
 ;;      (global-set-key "\C-cpr" 'tinyirc-pastebot-receive-url)
 ;;
-;; Then you can try callling the initial setup. Thi needs to be done
-;; only once to verify your setup.
+;; Following commads install default setup and the needed Perl program
 ;;
 ;;      M-x load-library RET tinyirc.el RET
 ;;      M-x tinyirc-pastebot-install-perl-util-pastebot RET
@@ -1352,7 +1351,7 @@ INSTALL PROBLEM: Perl
                 saveto)
             (setq dir (completing-read
                        (format
-                        "Save %s to dir (must be along PATH): " filename)
+                        "Save %s to dir (press TAB; along PATH): " filename)
                        (mapcar (function
                                 (lambda (x)
                                   (cons x 1)))
@@ -1363,6 +1362,13 @@ INSTALL PROBLEM: Perl
                   (expand-file-name
                    (concat (file-name-as-directory dir) filename)))
             (write-region (point) (point-max) saveto)
+	    ;;  Make it executable
+	    (let* ((x-bits 73)  ;; Oct 111
+		   (r-bits 292) ;; Oct 444
+		   (mode   (file-modes saveto))
+		   (run-mode  (logior (logior mode x-bits)
+				      r-bits)))
+	      (set-file-modes saveto run-mode))
             (message "TinyIrc: saved %s" saveto)))))))
 
 ;;; ----------------------------------------------------------------------
@@ -1424,7 +1430,7 @@ and create real directory instead."
         "TinyIrc: [install] Check passed. "
         "Your PasteBot interface should be functonal provided that "
         "configuration file %s 1) contains needed entries and "
-        "2) it has no syntax errors."
+        "2) it has no syntax errors. "
         "This function did not check its content. ")
        config))))
 

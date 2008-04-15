@@ -1,3 +1,11 @@
+2008-04-15  Jari Aalto  <>
+
+	* tiny/tinyirc.el (tinyirc-pastebot-install-perl-util-pastebot):
+	Add help text 'press TAB'. Add `file-modes' to make program
+	executable.
+	(tinyirc-pastebot-install-example-servers): Add missing space
+	to message string.
+
 2008-03-07  Jari Aalto  <jari.aalto@cante.net>
 
 	* tiny/tinyirc.el (tinyirc-pastebot-program-name): New.
@@ -54,6 +62,15 @@
 	* tiny/tinydiff.el: (Ducumentation): Small changes in wording.
 
 	* other/dired-sort.el (top level): Adjust autoloads.
+
+2008-02-09  Jari Aalto	<jaalto@cante.cante.net>
+
+	* tiny/tinyirc.el (tinyirc-pastebot-program-1): Check
+	location of pbotutil.pl with `executable-find'.
+	(tinyirc-pastebot-install-perl-util-pastebot): Set
+	x-bit upon save.
+	(tinyirc-pastebot-install-example-servers): Add missing
+	space to message.
 
 2008-01-27  Jari Aalto  <jari.aalto@cante.net>
 
