@@ -45,7 +45,7 @@ Table Of Contents
         standard and the universal de facto file packaging standard
         PACKAGENAME-VERSION.VERSION[.VERSION]*
 
-	#TODO: This is SF instructions. Change to Savannah
+	#TODO: change to Savannah instructions
 
         o   Upload the file to project page.
             PLEASE DO THIS FIRST - YOU WILL PICK FILE LATER.
@@ -81,7 +81,7 @@ Table Of Contents
 
     1.5 Project web page locations
 
-	#TODO: This is SF instructions. Change to Savannah
+	#TODO: change to Savannah instructions
 
         At project server, web sites are located under /home/groups
         Project FTP Sites are located in
@@ -92,7 +92,7 @@ Table Of Contents
 
     1.6 Project documentation
 
-	#TODO: This is SF instructions. Change to Savannah
+	#TODO: change to Savannah instructions
 
         Visit the project main page <project website>/PROJECT-NAME
         (make sure you have logged in) and select from the left hand
