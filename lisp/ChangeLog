@@ -1,7 +1,153 @@
+2008-04-15  Jari Aalto  <>
+
+	* tiny/tinyirc.el (tinyirc-pastebot-install-perl-util-pastebot):
+	Add help text 'press TAB'. Add `file-modes' to make program
+	executable.
+	(tinyirc-pastebot-install-example-servers): Add missing space
+	to message string.
+
+2008-03-07  Jari Aalto  <jari.aalto@cante.net>
+
+	* tiny/tinyirc.el (tinyirc-pastebot-program-name): New.
+	(tinyirc-pastebot-program-1): Use `tinyirc-pastebot-program-name'.
+	(tinyirc-pastebot-send-region): Signal error if there is no program.
+	(tinyirc-:pastebot-config-default-content): Remove dragon server.
+
+	* tiny/tinyreplace.el (tinyreplace-:menu): Remove keys `5' and `%'.
+	Improve doctring.
+	(tinyreplace-replace-over-files-compile-buffer): Fix typo.
+	(tinyreplace-replace-region): Fix typo.
+
+2008-03-05  Jari Aalto  <jari.aalto@cante.net>
+
+	* other/folding.el: (top level): Correct Copyright Years.
+
+2008-03-03  Jari Aalto  <jari.aalto@cante.net>
+
+	* tiny/tinylibmail.el (ti::mail-parse-name): Ignore 'Dr.' etc prefixes.
+	(ti:mail-parse-name-not-accept): Ignore 'Dr.'.
+
+	* tiny/tinymail.el (tinymail-citation-who-said): Show full name.
+	Delete 'remove middle name' code.
+
+2008-02-26  Jari Aalto  <jari.aalto@cante.net>
+
+	* tiny/tinyreplace.el (tinyreplace-replace-region-1): Fix spelling.
+
+2008-02-18  Jari Aalto  <jari.aalto@cante.net>
+
+	* tiny/tinydebian.el (tinydebian-bug-ubuntu-p): New.
+	(tinydebian-bug-url): New.
+	(tinydebian-bug-browse-url-by-bug): Use `tinydebian-bug-url'.
+	(tinydebian-bug-nbr-string): DEtect Ubuntu bug line.
+
+	* tiny/tinyreplace.el (tinyreplace-define-keys-compile-map):
+	Adjust line length to 80.
+	(tinyreplace-read-compile-buffer-filename): Make sure DIR
+	contains trailing slash.
+	(tinyreplace-replace-over-files-compile-buffer): Remove
+	requirement to press a key when invalid file was found.
+
+2008-02-17  Jari Aalto  <jari.aalto@cante.net>
+
+	* tiny/tinycygwin.el (tinycygwin-bug-system-info-locale): Add
+	LANG, LC_MESSAGES.
+
+2008-02-12  Jari Aalto  <jari.aalto@cante.net>
+
+	* tiny/tinylisp.el (tinylisp-library-symbol-information):
+	Check error from `file-name-nondirectory' and check
+	error code from `locate-library'.
+
+	* tiny/tinydiff.el: (Ducumentation): Small changes in wording.
+
+	* other/dired-sort.el (top level): Adjust autoloads.
+
+2008-02-09  Jari Aalto	<jaalto@cante.cante.net>
+
+	* tiny/tinyirc.el (tinyirc-pastebot-program-1): Check
+	location of pbotutil.pl with `executable-find'.
+	(tinyirc-pastebot-install-perl-util-pastebot): Set
+	x-bit upon save.
+	(tinyirc-pastebot-install-example-servers): Add missing
+	space to message.
+
+2008-01-27  Jari Aalto  <jari.aalto@cante.net>
+
+	* other/date-parse.el: Rename all functions and variables
+	to start with date-parse-* prefix.
+
+	* tiny/tinylisp.el (tinylisp-:regexp-function): Add `defalias'
+	(tinylisp-:regexp-variable): Add `defvaralias'.
+
+	* tiny/tinylib.el (ti::package-autoload-create-on-file): Add new
+	optional argument NO-PATH to suppress path information in comment.
+
+2008-01-26  Jari Aalto  <jari.aalto@cante.net>
+
+	* tiny/tinylisp.el: (top level): Move autoload definitiion out of
+	`eval-and-compile' so that `generate-file-autoloads' sees them.
+
+	* tiny/tinylib.el (ti::package-autoload-create-on-file): Correct
+	function argument printing. The dolist-loop that generated ';;
+	function arg arg ...' listing wrote all in one single line.
+
+	* tiny/tiny-util-admin.el:
+	-- New file.
+
+	* tiny/tiny-setup.el
+	-- Remove administrative functions (autoload etc.)
+	(tiny-setup-compile-directory-recursive): Fix indentation
+	(tiny-setup-compile-directory-delete-recursive): Fix indentation
+
+	* tiny/tinydesk.el (tinydesk-clear-buffer-properties):
+	Remove also leading whitespace in fron tof comment ';;'
+	markers. Remove `redraw-display'. Display message only
+	when called interactively.
+	(tinydesk-set-face-non-files-buffer): Move location of
+	function.
+	(tinydesk-set-face-non-files-region): Improve docstring.
+	(tinydesk-read-word): Remove comment from read line.
+	This fixes function.
+	(tinydesk-handle-text-property): Removed extra `sleep-for'
+	calls. Add extra space before comment, so that is is next
+	to filename.
+	(tinydesk-add-space-if-non-space): New.
+	(tinydesk-handle-text-property): Use
+	`tinydesk-add-space-if-non-space'.
+	(tinydesk-mark-region): Use
+	`tinydesk-add-space-if-non-space'.
+
+2008-01-22  Jari Aalto  <jari.aalto@cante.net>
+
+	* tiny/tiny-setup.el (tiny-setup-compile-kit-libraries):
+	Fix indentation.
+
+2007-11-04  Jari Aalto  <jari.aalto@cante.net>
+
+	* tiny/tinymail.el (tinymail-buffer-email-address-scramble-area):
+	Typo 'nilt' => 'nil t' in `search-forward' call.
+
 2007-10-09  Jari Aalto  <jari.aalto@cante.net>
 
 	* tiny/tinymail.el (tinymail-buffer-email-address-scramble-area):
 	Improve regexps to find diff start better.
+
+2007-10-02  Jari Aalto  <jari.aalto@cante.net>
+
+	* tiny/tinydebian.el
+	-- Filter out virtual packages, when making the Depends summary.
+	(tinydebian-package-status-dpkg-S-main): Renamed.
+	(tinydebian-package-status-main): Comment out call to
+	`tinydebian-package-status-dpkg-s-main'.
+	(tinydebian-package-info-by-key): New.
+	(tinydebian-bug-system-info-depends): Use
+	`tinydebian-package-info-by-key'.
+	(tinydebian-:virtual-package-list): New.
+	(tinydebian-virtual-package-parse-buffer): New.
+	(tinydebian-package-virtual-p): New.
+	(tinydebian-bug-system-info-depends): Use
+	`tinydebian-package-virtual-p'.
 
 2007-09-27  Jari Aalto  <jari.aalto@cante.net>
 

@@ -2,7 +2,7 @@
 
 ;;{{{ Id
 
-;; Copyright (C)    2004-2007 Jari Aalto
+;; Copyright (C)    2004-2008 Jari Aalto
 ;; Keywords:        extensions
 ;; Author:          Jari Aalto
 ;; Maintainer:      Jari Aalto
@@ -2843,6 +2843,8 @@ package ask list."
   "Get locale information."
   (let* ((list
           '("LC_ALL"
+	    "LANG"
+	    "LC_MESSAGES"
             "LC_CTYPE"))
          val
          ret)

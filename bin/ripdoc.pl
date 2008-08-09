@@ -4,7 +4,7 @@
 #
 #   File id
 #
-#       Copyright (C)   1997-2007 Jari Aalto
+#       Copyright (C)   1997-2008 Jari Aalto
 #       Created:        1997-02
 #       Keywords:       Perl, text conversion
 #
@@ -326,7 +326,7 @@ $Id: ripdoc.pl,v 2.18 2007/05/01 17:20:31 jaalto Exp $
 
 Copyright 1998-2003 Jari Aalto. All rights reserved. This program is
 free software; you can redistribute it and/or modify it under the same
-terms as Perl itself or in terms of Gnu General Public licence v2 or
+terms as Perl itself or in terms of Gnu General Public license v2 or
 later.
 
 =cut

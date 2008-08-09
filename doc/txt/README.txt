@@ -42,7 +42,7 @@ Table of contents
 
         #t2html-comment http://www.xemacs.org/Documentation/packageGuide.html
 
-        Copyright (C) 1995-2007 Jari Aalto
+        Copyright (C) 1995-2008 Jari Aalto
 
         License: This material may be distributed only subject to
         the terms and conditions set forth in GNU General Public
