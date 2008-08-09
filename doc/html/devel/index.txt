@@ -71,13 +71,29 @@ Table Of Contents
 
         RETURN by pressing button "Summary" at the beginning of page.
 
-    1.4 Downloading sources for editing
+    1.3 Downloading sources for editing
 
         You need SSH and Git installed.
 
         To develop under Windows, install Cygwin
         http://www.cygwin.com/ => See link at the right hand corner
         and download `setup.exe'.
+
+    1.4 Savannah Web page management:
+
+        https://savannah.gnu.org/maintenance/HomepageUpload
+
+	Initial: ownloading the CVS structure
+
+	cd doc/
+	cvs -f -z3 -d:ext:$USER@cvs.sv.gnu.org:/web/emacs-tiny-tools co emacs-tiny-tools
+	mv emacs-tiny-tools www
+
+	After that, just copy *.html files to www
+
+	cd doc/
+	tar -cf - $(find src/ -type f -name "*.html") | tar -C www -xf -
+
 
     1.5 Project web page locations
 
