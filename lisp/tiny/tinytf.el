@@ -3468,6 +3468,18 @@ Return:
 
 ;;; ----------------------------------------------------------------------
 ;;;
+(defun tinytf-toc-insert-list (list)
+  "Insert list of Table of Contents strings in LIST."
+  (dolist (elt list)
+    (setq elt (car elt))
+    (if (string-match "^[ \t]+" elt)
+	(insert elt "\n")       ;sub heading...
+      (insert "\n" elt "\n")))
+  ;; Final newline
+  (insert "\n"))
+
+;;; ----------------------------------------------------------------------
+;;;
 (defun tinytf-toc (&optional arg verb)
   "Create table of contents.
 If there is heading level 1 whose name is \"Table of Contents\",
@@ -3495,14 +3507,8 @@ VERB enables verbose messages."
        ((null arg)
         (setq buffer (ti::temp-buffer buffer 'clear))
         (with-current-buffer buffer
-          (dolist (elt hlist)
-            (setq elt (car elt))
-            (if (string-match "^[ \t]+" elt)
-                (insert elt "\n")       ;sub heading...
-              (insert "\n" elt "\n")))
-          (insert "\n") ;; Final newline
+	  (tinytf-toc-insert-list hlist)
           (ti::pmin)
-          (ti::buffer-trim-blanks (point-min) (point-max))
           (if (stringp tinytf-:heading-ignore-regexp-form)
               (flush-lines tinytf-:heading-ignore-regexp-form))
           ;; Make sure there are two newlines at the end so that
@@ -3536,7 +3542,8 @@ VERB enables verbose messages."
             (string-rectangle
              (point-min)
              (point-max)
-             (tinytf-indent 2)))) ;; with-current
+             (tinytf-indent 2))) ;; with-current
+	  (ti::buffer-trim-blanks (point-min) (point-max)))
         (cond
          (toc                           ;Update existing toc
           (barf-if-buffer-read-only)

@@ -1,4 +1,11 @@
-2008-04-15  Jari Aalto  <>
+2008-08-10  Jari Aalto  <jari.aalto@cante.net>
+
+	* tiny/tinytf.el (tinytf-toc-insert-list): New.
+	(tinytf-toc): Move code to `tinytf-toc-insert-list'.
+	Move `ti::buffer-trim-blanks' down so that indentation
+	of the blank lines is removed.
+
+2008-04-15  Jari Aalto  <jari.aalto@cante.net>
 
 	* tiny/tinyirc.el (tinyirc-pastebot-install-perl-util-pastebot):
 	Add help text 'press TAB'. Add `file-modes' to make program
