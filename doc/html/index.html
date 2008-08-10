@@ -610,12 +610,11 @@ Version Control
        To download and install sources from development tree
        with <a href="http://git-scm.org">git</a> (see link
        <a href="http://www.kernel.org/pub/software/scm/git/docs/gittutorial.html">"the tutorial"</a>
-       for quick guide). A directory <tt>emacs-tiny-tools</tt> will
-       appear after cloning.
+       for quick guide).
 
 <PRE>
-        $ <SPAN class="cmd">cd</SPAN> <SPAN class="cmd-rest">$HOME/elisp</SPAN>
-        $ <SPAN class="cmd">git</SPAN> clone <SPAN class="cmd-rest">git://git.savannah.nongnu.org/emacs-tiny-tools.git</SPAN>
+        $ <SPAN class="cmd">cd</SPAN> <SPAN class="cmd-rest">$HOME/elisp/packages</SPAN>
+        $ <SPAN class="cmd">git</SPAN> clone <SPAN class="cmd-rest">git://git.savannah.nongnu.org/emacs-tiny-tools.git emacs-tiny-tools.git</SPAN>
         $ <SPAN class="cmd">git</SPAN> checkout <SPAN class="cmd-opt">--track -b</SPAN> <SPAN class="cmd-rest">devel origin/devel</SPAN>
 
 	... to get new updates from time to time
@@ -627,8 +626,8 @@ Version Control
 To install, add following lines to ~/.emacs startup file:
 <PRE>
         (require 'cl)
-        (push "~/elisp/emacs-tiny-tools/lisp/tiny" 'load-path :test 'string=)
-        (push "~/elisp/emacs-tiny-tools/lisp/other" 'load-path :test 'string=)
+        (push "~/elisp/packages/emacs-tiny-tools.git/lisp/tiny" 'load-path :test 'string=)
+        (push "~/elisp/packages/emacs-tiny-tools.git/lisp/other" 'load-path :test 'string=)
 </PRE>
 
 
