@@ -15,7 +15,7 @@ Emacs Tiny Tools Project README
 	content="">
 
 <meta http-equiv="Content-Type" content="text/html; charset=utf-8">
-  <meta http-equiv="Expires" content="Wed,  8 Oct 2008 14:19:02 GMT">
+  <meta http-equiv="Expires" content="Thu,  9 Oct 2008 09:03:08 GMT">
 
 
 
@@ -708,8 +708,8 @@ Emacs Tiny Tools Project README
 
 </h1>
 
-<a href="#kit_installation_instructions" class="toc">
-               1.0 Kit installation instructions
+<a href="#installation_instructions" class="toc">
+               1.0 Installation instructions
            </a>
            <br>
 
@@ -735,13 +735,8 @@ Emacs Tiny Tools Project README
            </a>
            <br>
 <li>
-           <a href="#install_from_scratch_without_prior_emacs_lisp_package_directory" class="toc">
-               1.5 Install from scratch -- without prior Emacs lisp package directory
-           </a>
-           <br>
-<li>
-           <a href="#autoload_files" class="toc">
-               1.6 Autoload files
+           <a href="#using_autoload_files" class="toc">
+               1.6 Using autoload files
            </a>
            <br>
 <li>
@@ -750,18 +745,13 @@ Emacs Tiny Tools Project README
            </a>
            <br>
 <li>
-           <a href="#optional_step_make_procedure" class="toc">
-               1.8 Optional step - make procedure
-           </a>
-           <br>
-<li>
-           <a href="#makefile_mak_obsolete" class="toc">
-               1.9 Makefile.mak (obsolete)
+           <a href="#optional_step_compiling_files" class="toc">
+               1.8 Optional step - compiling files
            </a>
            <br>
 <li>
            <a href="#submitting_bug_reports" class="toc">
-               1.10 Submitting bug reports
+               1.9 Submitting bug reports
            </a>
            <br>
 </ul>
@@ -794,40 +784,13 @@ Emacs Tiny Tools Project README
            </a>
            <br>
 <li>
-           <a href="#use_autoloads" class="toc">
-               3.2 Use autoloads
+           <a href="#autoloads" class="toc">
+               3.2 Autoloads
            </a>
            <br>
 <li>
            <a href="#customizing_packages" class="toc">
                3.3 Customizing packages
-           </a>
-           <br>
-</ul>
-<a href="#appendix_a_win32_and_unix_beginners" class="toc">
-               4.0 Appendix A - Win32 and Unix beginners
-           </a>
-           <br>
-
-<ul>
-<li>
-           <a href="#prompt_syntaxes" class="toc">
-               4.1 Prompt syntaxes
-           </a>
-           <br>
-<li>
-           <a href="#dos_and_unix_command_equivalences" class="toc">
-               4.2 Dos and Unix command equivalences
-           </a>
-           <br>
-<li>
-           <a href="#calling_perl_programs" class="toc">
-               4.3 Calling perl programs
-           </a>
-           <br>
-<li>
-           <a href="#changing_environment_settings" class="toc">
-               4.4 Changing environment settings
            </a>
            <br>
 </ul>
@@ -837,9 +800,9 @@ Emacs Tiny Tools Project README
 
 
 <hr>
-               <a name="kit_installation_instructions"  id="kit_installation_instructions"></a>
+               <a name="installation_instructions"  id="installation_instructions"></a>
                <h1>
-               1.0 Kit installation instructions
+               1.0 Installation instructions
 
                </h1>
 
@@ -858,7 +821,7 @@ Emacs Tiny Tools Project README
 
 <p>
 <p class="column8">
-        Copyright &copy; 1995-2007 Jari Aalto
+        Copyright &copy; 1995-2009 Jari Aalto
 
 
 <p class="column8">
@@ -893,8 +856,8 @@ Emacs Tiny Tools Project README
 
 <p>
 <p class="column8">
-        Extract the kit and it will create directory according to the
-        version number.
+        Extract the package and it will create directory according to
+        the version number:
 
 <p>
 <table class="shade-normal">
@@ -904,15 +867,18 @@ Emacs Tiny Tools Project README
       $ mkdir -p $HOME/elisp/packages/
       $ mkdir -p $HOME/elisp/config       # configuration settings
       $ mkdir -p $HOME/tmp                # for temporary files
+
       $ cd $HOME/elisp/packages/
-      $ gzip -dc ~/tmp/download/emacs-tiny-tools*.gz | tar xvf -    </pre></td>
+      $ gzip -dc ~/tmp/download/emacs-tiny-tools*.gz | tar -xvf -    </pre></td>
     </tr>
 </table>
 
 
 <p class="column8">
-        For Win32 platform, a good free archive program is available at
-        &lt;<a href="http://www.ultimatezip.com/" >http://www.ultimatezip.com/</A>&gt;.
+        Windows platform: create directories manually e.g. on
+        <samp class="word">C:\home\elisp</samp> and use some suitable archiver program. Aa
+        <a href="http://support.microsoft.com/kb/310519">environment variable</a>
+        HOME must alse be defined to point to <samp class="word">C:\home</samp>.
 
 
 
@@ -946,23 +912,11 @@ Emacs Tiny Tools Project README
     <td class="shade-normal-attrib" valign="top">
     <pre>
       ;; $HOME/.emacs
-      ;; This line loads package &quot;tinypath.el&quot;. Notice, no file
-      ;; extension &quot;.el&quot; is used, it's implicit.
+      ;; This line loads package &quot;tinypath.el&quot;
 
       (load &quot;~/elisp/packages/tiny-tools/lisp/tiny/tinypath&quot;)
 
-      ;; The rest of the code can be anywhere in startup file.
-
-      ...
-
-      ;;   See  M-x tiny-setup-display  and  C-h f tiny-setup
-
-      (require 'tiny-setup)
-      (tiny-setup nil)
-
-      ;; Perhaps you would like to load some package immediately.
-
-      (require 'tinymy)
+      ;; ... rest of the startup
 
       ;; End of example    </pre></td>
     </tr>
@@ -970,7 +924,7 @@ Emacs Tiny Tools Project README
 
 
 <p class="column7"><em><strong>
-       1.3.2 What next? Where do I put other lisp packages?</strong></em>
+       1.3.2 Where do I put other other lisp packages?</strong></em>
 
 
 
@@ -992,8 +946,8 @@ Emacs Tiny Tools Project README
                   |
                   +-packages/
                   |         |
-                  |         + emacs-tiny-tools-NNNN.NNNN/
-                  |         + jdee-NN.NN/
+                  |         + package-1.NNNN/
+                  |         + package-2.NN/
                   +-other/
                   +-my/    </pre></td>
     </tr>
@@ -1001,66 +955,57 @@ Emacs Tiny Tools Project README
 
 
 <p class="column8">
-        Now, perhaps you see an <em class="word">utility.el</em> in gnu.emacs.sources that you
-        would like to use. How do you install it? Just drop it in, say,
-        <samp class="word">$HOME/elisp/other/</samp> directory and call <samp class="word">M-x</samp>
-        <samp class="word">tinypath-cache-regenerate</samp>. After that Emacs knows the package now
-        and in next Emacs sessions. You still have to add relevant lines to
-        your Emacs startup which make the package active. Look inside
-        <em class="word">utility.el</em> and its setup instructions, something like:
+        Now, perhaps you see an <em class="word">utility.el</em> in gnu.emacs.sources that
+        you would like to use. How do you install it? Just drop it in,
+        say, to <samp class="word">$HOME/elisp/other/</samp> directory and call <samp class="word">M-x</samp>
+        <samp class="word">tinypath-cache-regenerate</samp>. After that Emacs knows the
+        package in next Emacs sessions. You still have to add relevant
+        lines to your Emacs startup which make the package active.
+        Look inside <em class="word">utility.el</em> and its setup instructions, something
+        like:
 
 <p>
 <table class="shade-normal">
     <tr>
     <td class="shade-normal-attrib" valign="top">
     <pre>
-      # $HOME/.emacs
-
-      &lt;leave those Tiny tools definitions here&gt;
-
-      (load &quot;utility&quot;)    ;; Start using the new file
+      (load &quot;utility&quot;)
       (utility-install)   ;; or whatever is needed to activate it
 
-      # End of file    </pre></td>
+
+  &lt;a name=&quot;quick_install_site_wide&quot; id=&quot;quick_install_site_wide&quot;&gt;</a>
+  &lt;h2&gt;
+      1.4 Quick install &ndash; site wide
+
+  &lt;/h2&gt;    </pre></td>
     </tr>
 </table>
 
 
-
-  <a name="quick_install_site_wide" id="quick_install_site_wide"></a>
-  <h2>
-      1.4 Quick install &ndash; site wide
-
-  </h2>
-
-
-
-
-<p>
 <p class="column8">
-        If you are owner of your own workstation or administrate the
-        current host and you have both XEmacs and Emacs installations; plus
-        you have lot of extra Emacs packages that are available form the
-        Net, you need to tell the <strong class="word">different</strong> locations where the installed
-        lisp directories are. In this case, you have to set the
+        If you are administering the current host and you have both
+        XEmacs and Emacs installations; plus you have lot of extra
+        Emacs packages that are available form the Net, you need to
+        tell the <strong class="word">different</strong> locations where the installed lisp
+        directories are. In this case, you have to set the
         <samp class="word">tinypath-:load-path-root</samp>. In previous personal installation
         example, this was automatically determined.
 
 
 <p class="column8">
-        After the code below, user have access to all packages installed
-        to your system, no matter where they reside. The <samp class="word">load-path</samp>
-        is configured porperly at Emacs startup and you, the admin, can
-        concentrate on getting your hand on the most prospective
-        lisp packages. Just drop them anywhere, move them around, the
-        changes will be noticed automatically.
+        After the code below, user have access to all packages
+        installed to your system, no matter where they reside. The
+        <samp class="word">load-path</samp> is configured porperly at Emacs startup and you,
+        the admin, can concentrate on getting your hand on the most
+        prospective lisp packages. Just drop them anywhere, move them
+        around, the changes will be noticed automatically.
 
 <p>
 <table class="shade-normal">
     <tr>
     <td class="shade-normal-attrib" valign="top">
     <pre>
-      ;;  Your lisp/site-start.el should contain this installation code.
+      ;;  &lt;emacs-version&gt;/lisp/site-start.el
       ;;
       ;;  List of ROOT directories where all Emacs lisp
       ;;  files are located. Update list according to your site.
@@ -1072,9 +1017,11 @@ Emacs Tiny Tools Project README
           (if (boundp 'xemacs-logo)               ;; ROOT DIR ONE
               &quot;The-XEmacs-root/lisp&quot;
             &quot;The-Emacs-root/lisp&quot;)
+
           (if (boundp 'xemacs-logo)               ;; ROOT DIR TWO
               &quot;Your-XEmacs-site-list-directory&quot;
             &quot;Your-Emacs-site-list-directory&quot;)
+
           &quot;~/elisp&quot;                               ;; ... and so on
           &quot;~/lisp&quot;))
 
@@ -1086,106 +1033,9 @@ Emacs Tiny Tools Project README
 
 
 
-  <a name="install_from_scratch_without_prior_emacs_lisp_package_directory" id="install_from_scratch_without_prior_emacs_lisp_package_directory"></a>
+  <a name="using_autoload_files" id="using_autoload_files"></a>
   <h2>
-      1.5 Install from scratch &ndash; without prior Emacs lisp package directory
-
-  </h2>
-
-
-
-
-<p>
-<p class="column7"><em><strong>
-       1.5.1 Preconditions for Unix</strong></em>
-
-
-
-<p class="column8">
-        If you don't have your private Emacs lisp directory yet, it's
-        time to create one. Decide where you want to put future downloaded
-        packages. Traditionally this has been <samp class="word">$HOME/elisp</samp>. Run command:
-
-<p>
-<table class="shade-normal">
-    <tr>
-    <td class="shade-normal-attrib" valign="top">
-    <pre>
-      $ mkdir -p $HOME/elisp/config  # for configuration settings
-      $ mkdir -p $HOME/tmp           # for temporary files    </pre></td>
-    </tr>
-</table>
-
-
-<p class="column7"><em><strong>
-       1.5.2 Preconditions for Win32</strong></em>
-
-
-
-<p class="column8">
-        In Windows operating system, there is no default HOME, so you have
-        to choose one directory for your personal use. This might be
-        something like:
-
-<p>
-<table class="shade-normal">
-    <tr>
-    <td class="shade-normal-attrib" valign="top">
-    <pre>
-      C:/emacs/emacs-20.7.1/      # some version of Emacs
-      C:/emacs/emacs-21.3/        # newer Emacs
-      C:/home/elisp               # your private lisp package dir
-
-      dos&gt; c:
-      dos&gt; cd \
-      dos&gt; md \home
-      dos&gt; md \home\elisp
-      dos&gt; md \home\elisp\config    </pre></td>
-    </tr>
-</table>
-
-
-<p class="column8">
-        At minimum, you must create environment variable <em class="word">HOME</em> and make
-        your Win98/NT/W2K/XP see it at boot time. In Win9x, add this line
-        to your <samp class="word">c:\autoexec.bat</samp>:
-
-<p>
-<table class="shade-normal">
-    <tr>
-    <td class="shade-normal-attrib" valign="top">
-    <pre>
-      set HOME=c:\home    </pre></td>
-    </tr>
-</table>
-
-
-<p class="column8">
-        In other Windows versions, use Control Panel =&gt; System =&gt;
-        Environment. Make sure you also create the directory to disk. Refer
-        to NT Emacs FAQ at
-        &lt;<a href="http://www.gnu.org/software/emacs/windows/ntemacs.html" >http://www.gnu.org/software/emacs/windows/ntemacs.html</A>&gt; for more
-        complete information about installing Win32 Emacs. After this line,
-        you Emacs translates tilde(~) character into reference to the
-        $HOME. Your Emacs startup file must reside at directory
-        <samp class="word">$HOME/.emacs</samp> which is the traditional way of saying &quot;Emacs
-        startup file is under HOME&quot;. In win32, this means that the location
-        would be:
-
-<p>
-<table class="shade-normal">
-    <tr>
-    <td class="shade-normal-attrib" valign="top">
-    <pre>
-      c:\home\.emacs    </pre></td>
-    </tr>
-</table>
-
-
-
-  <a name="autoload_files" id="autoload_files"></a>
-  <h2>
-      1.6 Autoload files
+      1.6 Using autoload files
 
   </h2>
 
@@ -1194,12 +1044,10 @@ Emacs Tiny Tools Project README
 
 <p>
 <p class="column8">
-        If you choose not to use file <em class="word">tiny-setup.el</em> and function
-        <samp class="word">tiny-setup</samp>, you could add following statements to your Emacs
-        startup file in <samp class="word">$HOME/.emacs</samp>. The autoload file provide
-        &quot;functions&quot; that are immediately available in Emacs, but they do
-        not load any packages. This is better than using <samp class="word">require</samp>
-        commands, because it makes your Emacs start faster.
+        The autoload file provide &quot;functions&quot; that are made known to
+        Emacs, but they do not load any packages. This is better than
+        using <samp class="word">require</samp> or <samp class="word">load</samp> commands, because it makes your
+        Emacs start faster.
 
 <p>
 <table class="shade-normal">
@@ -1210,18 +1058,17 @@ Emacs Tiny Tools Project README
 
       (load &quot;/path/to/tinypath.el&quot;)
 
-      ;;  These won't modify anything in your existing Emacs.
+      ;;  Load files that tell what functions exist
 
       (require 'tiny-autoload-loaddefs-tiny)
       (require 'tiny-autoload-loaddefs-other)
 
-      ;;  Now, configure anything as you would like.
-      ;;  Each feature must be taken into use separately.
-      ;;  Read the documentation sections at the beginning of each file.
+      ;;  Now, configure packages you want, See each package
+      ;;  for further instructions
 
       (autoload 'turn-on-tinyperl-mode &quot;tinyperl&quot; &quot;&quot; t)
       (add-hook 'perl-mode-hook  'turn-on-tinyperl-mode)
-      (add-hook 'pcerl-mode-hook 'turn-on-tinyperl-mode)
+      (add-hook 'cperl-mode-hook 'turn-on-tinyperl-mode)
 
       ;; End of $HOME/.emacs    </pre></td>
     </tr>
@@ -1240,12 +1087,10 @@ Emacs Tiny Tools Project README
 
 <p>
 <p class="column8">
-        If you are tight of space or otherwise do not need all the tools or
-        if you're only interested in specific package, here are the
-        instructions how you use minimum installation. The basic idea is to
-        include libraries + package(s). Most of the packages require only
-        four core libraries, but others may need more e.g. due to XEmacs
-        compatibility.
+        If you are tight of space or otherwise do not need all the
+        tools or if you're only interested in specific package, a
+        minimum installation is possible. The basic idea is to include
+        libraries + needed package(s).
 
 <p>
 <table class="shade-normal">
@@ -1264,9 +1109,9 @@ Emacs Tiny Tools Project README
 
 
 
-  <a name="optional_step_make_procedure" id="optional_step_make_procedure"></a>
+  <a name="optional_step_compiling_files" id="optional_step_compiling_files"></a>
   <h2>
-      1.8 Optional step - make procedure
+      1.8 Optional step - compiling files
 
   </h2>
 
@@ -1275,103 +1120,13 @@ Emacs Tiny Tools Project README
 
 <p>
 <p class="column8">
-        FIXME: This will change future release.
-
-
-<p class="column10"><em class="quote10">
-          Note: YOU MUST CONFIGURE <samp class="word">load-path.el</samp> in the kit if you
-          compile the packages. <strong class="word">Save</strong> <strong class="word">your</strong> <strong class="word">modified</strong> <strong class="word">copy</strong> for
-          next installation and use the <samp class="word">-l</samp> switch for the perl
-          <em class="word">makefile.pl</em>. It is not strictly needed to compile
-          anything, because all lisp files continue to work uncompiled.</em>
-
-
-
-<p class="column8">
-        Due to platform independence, Perl has been chosen for all
-        scripting tasks. It offers more expressive power than <samp class="word">make(1)</samp>
-        which is old Unix-only solution. The older make compatible
-        &quot;makefile.mak&quot; method is no longer supported due to its vulnerable
-        syntax (old time Makefile users know what a missing TAB causes).
-        The old makefile.mak file is preserved for educational purposes
-        which you can take a look if you need makefile example for
-        programming languages like Java or C++.
-
-
-<p class="column8">
-        You need Unix Perl 5.004+ in order to use the current build method
-        Perl for Windows is included in Cygwin. To build the kit, change
-        directory to <samp class="word">bin/</samp> and feed the <em class="word">makefile.pl</em> to perl. In Win32
-        platform, add make directive <samp class="word">unix2dos</samp> and in Unix add <samp class="word">dos2unix</samp>
-        which will fix the line endings. Substitute option <samp class="word">emacs</samp> with
-        <samp class="word">xemacs</samp> if you're compiling for XEmacs.
-
-<p>
-<table class="shade-normal">
-    <tr>
-    <td class="shade-normal-attrib" valign="top">
-    <pre>
-      $ cd bin/
-      $ perl makefile.pl --help
-      $ perl makefile.pl --binary emacs --verbose 2  dos2unix all
-                         |                           +======= ===
-        All command line options must                |
-        come BEFORE build options                    |
-                                                     |
-                                Two build options here    </pre></td>
-    </tr>
-</table>
-
-
-<p class="column8">
-        In case everything does not compile right, due to missing lisp
-        packages, modify <samp class="word">load-path.el</samp> to include any additional
-        directories. Make a copy of it to yourself for later updates and
-        supply your version with added option. The &quot;\&quot; at the end of line
-        means that the line continues. In Unix, you literally type that
-        character, in Win32, you just type everything as one line.
-
-<p>
-<table class="shade-normal">
-    <tr>
-    <td class="shade-normal-attrib" valign="top">
-    <pre>
-      $  perl makefile.pl --binary emacs --verbose 2  \
-         --load your-modified-copy-here/load-path.el  \
-         dos2unix all    </pre></td>
-    </tr>
-</table>
-
-
-<p class="column8">
-        <strong class="word">Gnus</strong> <strong class="word">note:</strong> packages <em class="word">tinygnus.el</em> and <em class="word">tinymail.el</em> require the
-        very latest development version of Gnus. Modify your copy of
-        <samp class="word">load-path.el</samp> to include path to the latest Gnus version.
-
-
-
-  <a name="makefile_mak_obsolete" id="makefile_mak_obsolete"></a>
-  <h2>
-      1.9 Makefile.mak (obsolete)
-
-  </h2>
-
-
-
-
-<p>
-<p class="column8">
-        The old <em class="word">makefile.mak</em> from very early Unix-only releases has been
-        included, but it is not used and no fixes are
-        incorporated even if suggested. The file has been kept in the
-        distribution, because it may have some educational value to learn
-        makefiles in Unix.
+        FIXME: At this time don not compile files.
 
 
 
   <a name="submitting_bug_reports" id="submitting_bug_reports"></a>
   <h2>
-      1.10 Submitting bug reports
+      1.9 Submitting bug reports
 
   </h2>
 
@@ -1381,10 +1136,9 @@ Emacs Tiny Tools Project README
 <p>
 <p class="column8">
         IT IS IMPORTANT THAT YOU USE NON-COMPILED FILES AND SUBMIT THE
-        <em class="word">BACKTRACE</em> Each lisp package has one or two contact functions.
-        When you find an error, immediately contact maintainer with the
-        bug report function. The <samp class="word">XXX</samp> is prefix of the package, like
-        <samp class="word">tinyurl</samp> for <em class="word">tinyurl.el</em>
+        <em class="word">BACKTRACE</em>. Send a bug report by using package's contact
+        functions. The <samp class="word">XXX</samp> below refers to the function prefix, like
+        <samp class="word">tinyurl</samp> for package <em class="word">tinyurl.el</em>:
 
 <p>
 <table class="shade-normal">
@@ -1595,9 +1349,9 @@ Emacs Tiny Tools Project README
 
 
 
-  <a name="use_autoloads" id="use_autoloads"></a>
+  <a name="autoloads" id="autoloads"></a>
   <h2>
-      3.2 Use autoloads
+      3.2 Autoloads
 
   </h2>
 
@@ -1671,183 +1425,6 @@ Emacs Tiny Tools Project README
     </tr>
 </table>
 
-<hr>
-               <a name="appendix_a_win32_and_unix_beginners"  id="appendix_a_win32_and_unix_beginners"></a>
-               <h1>
-               4.0 Appendix A - Win32 and Unix beginners
-
-               </h1>
-
-
-
-  <a name="prompt_syntaxes" id="prompt_syntaxes"></a>
-  <h2>
-      4.1 Prompt syntaxes
-
-  </h2>
-
-
-
-
-<p>
-<p class="column8">
-        If you're just starting to use Windows or have never heard of Unix,
-        here is a short course of the terms and lingo you see all the time
-        in the documentation:
-
-<p>
-<table class="shade-normal">
-    <tr>
-    <td class="shade-normal-attrib" valign="top">
-    <pre>
-      $       MEANS: the command prompt, a bash/korn/zsh shell
-      %       MEANS: the command prompt, csh/tcsh shell
-      &gt;       MEANS: the command prompt, again some other shell (dos)    </pre></td>
-    </tr>
-</table>
-
-
-
-  <a name="dos_and_unix_command_equivalences" id="dos_and_unix_command_equivalences"></a>
-  <h2>
-      4.2 Dos and Unix command equivalences
-
-  </h2>
-
-
-
-
-<p>
-<p class="column8">
-        The shell (DOS in Win32) where you type the command does not usually
-        matter, but the command you see may not be available in Win32. A crash
-        course would be:
-
-<p>
-<table class="shade-normal">
-    <tr>
-    <td class="shade-normal-attrib" valign="top">
-    <pre>
-      Unix    In Windows
-      -----   ------------------------------------------------------
-      cp      MEANS  &quot;copy&quot; command
-      mv      MEANS  move, which is combination of &quot;copy&quot; and &quot;del&quot;
-      ls      MEANS  list, which is &quot;dir&quot;
-      rm      MEANS  remove, which is &quot;del&quot;
-      ln      MEANS  link, Sorry, you're out of luck in Win32.
-                     --&gt; do a complete tree or file &quot;copy&quot; to destination.
-      chmod   MEANS  change modes, ignore these in Win32
-      mkdir   MEANS  make directory, &quot;md&quot;
-      --------------------------------------------------------------    </pre></td>
-    </tr>
-</table>
-
-
-<p class="column8">
-        Here is an example of one instruction, similar to what you can expect.
-        The explanation has been &quot;opened&quot; for you to the right hand in
-        double quotes.
-
-<p>
-<table class="shade-normal">
-    <tr>
-    <td class="shade-normal-attrib" valign="top">
-    <pre>
-      % cp file1.txt file2.txt    &quot;Copy file1.txt to file2.txt&quot;    </pre></td>
-    </tr>
-</table>
-
-
-
-  <a name="calling_perl_programs" id="calling_perl_programs"></a>
-  <h2>
-      4.3 Calling perl programs
-
-  </h2>
-
-
-
-
-<p>
-<p class="column8">
-        In Win32, the perl file (.pl) must be called differently than in
-        Unix. In Unix you must make the files executable and it can be
-        called directly using the name.
-
-<p>
-<table class="shade-normal">
-    <tr>
-    <td class="shade-normal-attrib" valign="top">
-    <pre>
-      $ export PATH=$PATH:$HOME/bin   &quot;Here are the programs&quot;
-      $ mkdir $HOME/bin       &quot;Put all your programs here&quot;
-      $ chmod +x bin/*        &quot;Make all files in bin/* executable&quot;
-      $ mywebget.pl --help    &quot;Run the perl program from bin/&quot;    </pre></td>
-    </tr>
-</table>
-
-
-<p class="column8">
-        In Windows, there is no such command as <samp class="word">chmod</samp> and Windows does
-        not know that perl scripts are runnable programs. You must prepend
-        the perl interpreter in front of every call an possibly add <samp class="word">-S</samp> to
-        instruct to search the script along your PATH variable. The
-        following calls would also work in any environment:
-
-<p>
-<table class="shade-normal">
-    <tr>
-    <td class="shade-normal-attrib" valign="top">
-    <pre>
-    </tr>
-</table>
-
-
-
-  <a name="changing_environment_settings" id="changing_environment_settings"></a>
-  <h2>
-      4.4 Changing environment settings
-
-  </h2>
-
-
-
-
-<p>
-<p class="column8">
-        The environment variables in Unix are prefixed with dollar and
-        written in all caps, like talking about $PATH. Read it like this:
-
-<p>
-<table class="shade-normal">
-    <tr>
-    <td class="shade-normal-attrib" valign="top">
-    <pre>
-      $ echo $PATH    </pre></td>
-    </tr>
-</table>
-
-
-<p class="column8">
-        It's the same variable in Windows, but the syntax to show it
-        is different:
-
-<p>
-<table class="shade-normal">
-    <tr>
-    <td class="shade-normal-attrib" valign="top">
-    <pre>
-      dos&gt; echo %PATH%    </pre></td>
-    </tr>
-</table>
-
-
-<p class="column8">
-        If you're instructed to change any environment variables, you must
-        open the <samp class="word">c:\autoexec.bat</samp> in Win9x with some text editor and
-        modify the contents. In WinME/NT/2000/XP+ you must edit the <samp class="word">Start</samp>
-        =&gt; <samp class="word">Control</samp> <samp class="word">Panel</samp> =&gt; <samp class="word">System</samp> =&gt; <samp class="word">Environment</samp>.
-
 
 
 
@@ -1857,7 +1434,7 @@ Emacs Tiny Tools Project README
 This file has been automatically generated from plain text file
 with
 <br>
-Last updated: 2008-08-09 17:19<br>
+Last updated: 2008-08-10 12:03<br>
 </em    class="footer">
 </body>
 </html>
