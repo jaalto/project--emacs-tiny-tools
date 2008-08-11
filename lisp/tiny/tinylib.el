@@ -9145,11 +9145,12 @@ BODY"
          ;;  If you have selected a prefix key that is a natural ABC key;
          ;;  then define "aa" as self insert command for "a" character.
          ;;
-         ;;  check also if prefix key defined is like  [{a)]] where "a"
-         ;;  if a single character. The [{?\C-a)]] is nto accepted as
+         ;;  check also if prefix key defined is like  [(a)]] where "a"
+         ;;  if a single character. The [(?\C-a)]] is to be accepted as
          ;;  repeated key: C-aC-a, only "aa"
          (let* ((char (ti::keymap-single-key-definition-p p)))
-           (when (and (characterp char) (ti::print-p char))
+           (when (and (characterp char)
+		      (ti::print-p char))
              ;;  The prefix key is single; printable character.
              (define-key map p 'self-insert-command)))
          (, body))))))
