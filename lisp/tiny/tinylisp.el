@@ -531,8 +531,7 @@
     (unless (zerop count)
       (message "\
   ** tinylisp.el: Some files were not found. This is not fatal.
-                  The package will adjust accoding to available features.
-                  Byte compiled file will be ok."))))
+                  The package will adjust accoding to available features."))))
 
 (ti::package-defgroup-tiny TinyLisp tinylisp-: tools
   "Lisp programming help module.
@@ -676,7 +675,6 @@ Defined keys:
      ["Indent function or variable"    tinylisp-indent-around-point          t]
      ["Narrow to function"             tinylisp-narrow-to-function           t]
      ["Widen"                          widen                                 t]
-     ["Convert word to defmacro var."  tinylisp-defmacro-surround-word       t]
      ["Byte compile current function." tinylisp-byte-compile-sexp            t]
 
      ["Show call tree for file"
@@ -787,7 +785,6 @@ Defined keys:
        (define-key map "'"   'tinylisp-jump-to-definition)
        (define-key map "+"   'tinylisp-jump-to-definition)
        (define-key map "'\177"   'tinylisp-back-to-definition)
-       (define-key map "`"   'tinylisp-defmacro-surround-word)
 
        (define-key map "{"   'tinylisp-backward-user-option)
        (define-key map "}"   'tinylisp-forward-user-option)
@@ -965,6 +962,7 @@ The default command is `macroexpand'."
       post-command-idle-hook))
     ("hook-file"
      (write-file-hooks
+      find-file-hook
       find-file-hooks
       after-save-hook))
     ("hook-mail"
@@ -986,6 +984,7 @@ The default command is `macroexpand'."
       post-command-hook
       post-command-idle-hook
       write-file-hooks
+      find-file-hook
       find-file-hooks
       after-save-hook
       after-init-hook)))
@@ -1165,7 +1164,6 @@ Format:
       (cons ?[  (list '(call-interactively 'tinylisp-backward-user-option)))
             (cons ?]  (list '(call-interactively 'tinylisp-forward-user-option)))
       (cons ?<  (list '(call-interactively 'tinylisp-indent-around-point)))
-      (cons ?` (list '(call-interactively 'tinylisp-defmacro-surround-word)))
       (cons ?a  (list '(call-interactively 'tinylisp-autoload-generate-buffer)))
       (cons ?A  (list '(call-interactively 'tinylisp-autoload-generate-file)))
       (cons ?B  (list '(call-interactively 'tinylisp-byte-compile-sexp)))
@@ -1304,8 +1302,6 @@ Symbol manipulation
 
        \\[universal-argument]       Restore backup'd value
        \\[universal-argument]\\[universal-argument]  Force setting backup value to current value.
-
-    `  Surround current word with defmacro statement (, WORD)
 
     S  Snoop variables. See `tinylisp-:table-snoop-variables'
        Following prefix arguments are recognized:
@@ -1478,8 +1474,8 @@ SPC     Lint defun")
 ;;;
 (defmacro tinylisp-require (sym)
   "Require package SYM."
-  (` (unless (featurep (, sym))
-       (require (, sym)))))
+  `(unless (featurep ,sym)
+     (require ,sym)))
 
 ;;; ----------------------------------------------------------------------
 ;;;
@@ -1960,10 +1956,9 @@ Spell checking doc-strings:
 (put 'tinylisp-with-current-buffer 'lisp-indent-function 1)
 (defmacro tinylisp-with-current-buffer (buffer &rest body)
   "Make BUFFER and run hook `tinylisp-:with-current-buffer-hook'."
-  (`
-   (with-current-buffer (, buffer)
-     (,@ body)
-     (run-hooks 'tinylisp-with-current-buffer-hook))))
+  `(with-current-buffer ,buffer
+     ,@body
+     (run-hooks 'tinylisp-with-current-buffer-hook)))
 
 ;;; ----------------------------------------------------------------------
 ;;;
@@ -1975,8 +1970,8 @@ Spell checking doc-strings:
                    (ti::buffer-match
                     (concat "^[^ \t\n\r]*\\(["
                             tinylisp-:variable-not-charset
-                            "]+\\)+"))
-                   0))))
+                            "]+\\)+")
+		    0)))))
     (when str
       ;;  Remove trainling colon
       (if (string-match "\\(.+\\):$" str)
@@ -2052,25 +2047,23 @@ Input:
   NOERR     If nil, then call error. if Non-nil then print message if
             STRING was not interned.
   BODY."
-  (`
-   (if (intern-soft (, string))
+  `(if (intern-soft ,string)
        (progn
-         (setq (, string) (intern-soft (, string)))
-         (,@ body))
-     (if (, noerr)
-         (message "TinyLisp: No symbol in obarray: %s" (, string))
-       (error "TinyLisp: No symbol in obarray: %s" (, string))))))
+         (setq ,string (intern-soft ,string))
+         ,@body)
+     (if ,noerr
+         (message "TinyLisp: No symbol in obarray: %s" ,string)
+       (error "TinyLisp: No symbol in obarray: %s" ,string))))
 
 ;;; ----------------------------------------------------------------------
 ;;;
 (put 'tinylisp-record-macro 'lisp-indent-function 1)
 (defmacro tinylisp-record-macro (flag &rest body)
   "If FLAG is non-nil execute BODY in record buffer."
-  (`
-   (if (, flag)
+  `(if ,flag
        (tinylisp-with-current-buffer (ti::temp-buffer tinylisp-:buffer-record)
                                      (ti::pmax)
-                                     (,@ body)))))
+                                     ,@body)))
 
 ;;; ----------------------------------------------------------------------
 ;;;
@@ -2087,8 +2080,7 @@ Bound variables in macro:
 
 You use this macro to bounds of Lisp defun, defvar, defconst
 structures."
-  (`
-   (let* ((buffer  (current-buffer))
+  `(let* ((buffer  (current-buffer))
           str
           beg
           end)
@@ -2105,7 +2097,7 @@ structures."
            (setq beg nil))
        (setq str (ti::read-current-line))
        (goto-char end)
-       (,@ body)))))
+       ,@body)))
 
 ;;; ----------------------------------------------------------------------
 ;;;
@@ -2123,8 +2115,7 @@ structures."
 (defmacro tinylisp-defun-sym-macro (&rest body)
   "Run BODY when defun sym is found.
 Same as `tinylisp-defun-macro' But define `name' and `sym' for function name."
-  (`
-   (tinylisp-defun-macro
+  `(tinylisp-defun-macro
     (let* ((info (tinylisp-read-function-name-info str))
            (name (car-safe info))
            (sym  (cdr-safe info)))
@@ -2132,21 +2123,20 @@ Same as `tinylisp-defun-macro' But define `name' and `sym' for function name."
           (setq info nil))
       (if (null sym)                    ;Bytecomp silencer.
           (setq sym nil))
-      (,@ body)))))
+      ,@body)))
 
 ;;; ----------------------------------------------------------------------
 ;;;
 (put 'tinylisp-defcustom-macro 'lisp-indent-function 0)
 (defmacro tinylisp-defcustom-macro (&rest body)
   "Activate advice 'tinylisp' for `defconst' _only_ during BODY."
-  (`
-   (unwind-protect
+  `(unwind-protect
        (progn
          (ad-enable-advice 'defconst 'around 'tinylisp)
          (ad-activate 'defconst)
-         (,@ body))
+         ,@body)
      ;;  Make sure this is always executed.
-     (tinylisp-emergency))))
+     (tinylisp-emergency)))
 
 ;;}}}
 ;;{{{ Install
@@ -2304,7 +2294,7 @@ If you see this message when calling following, there is bug in TinyLisp.
     ;;
     ;; Hans Chalupsky <hans@ISI.EDU>
     ;;
-    (eval (` (defconst (, sym) (, val) (, doc))))))
+    (eval `(defconst ,sym ,val ,doc))))
 
 ;;}}}
 ;;{{{ misc
@@ -2539,7 +2529,8 @@ References:
          (error "arg1 must be (existing) buffer")
        (insert-buffer-substring arg1 arg2 arg3)))
    (ti::pmin)
-   (replace-string str1 str2)
+   (while (search-forward str1 nil 'noerr)
+     (replace-match str2 nil t))
    (tinylisp-eval-fix-defconst)
    (tinylisp-eval-current-buffer)
 ;;;    (erase-buffer)                   ;May be big
@@ -2592,9 +2583,9 @@ Shrink and print message if not exist."
           (var (intern (format "tinylisp-:buffer-%s" x)))
           def)
       (setq def
-            (` (defun (, sym) (&optional pmin)
+            `(defun ,sym (&optional pmin)
                  (interactive "P")
-                 (tinylisp-b-display (, var) pmin))))
+                 (tinylisp-b-display ,var pmin)))
       (eval def))))
  '("eval" "record" "variables" "funcs" "autoload" ))
 
@@ -2748,12 +2739,13 @@ Insert STRING after the record stamp. VERB."
     (elp-results)
     (ti::pmin)
     (tinylisp-elp-summary-mode 1)
-    (tinylisp-record-macro record
-                           (insert "\nELP: "  (ti::date-standard-date) " " (buffer-name)
-                                   (if string string "\n"))
-                           (insert-buffer elp-results-buffer)
-                           (if verb
-                               (message "TinyLisp: Results RECORDED.")))
+    (tinylisp-record-macro
+	record
+      (insert "\nELP: "  (ti::date-standard-date) " " (buffer-name)
+	      (if string string "\n"))
+      (insert-buffer-substring elp-results-buffer)
+      (if verb
+	  (message "TinyLisp: Results RECORDED.")))
     (pop-to-buffer obuffer)))
 
 ;;; ----------------------------------------------------------------------
@@ -3085,10 +3077,10 @@ The `tinylisp-:buffer-record' buffer is displayed after the harness run is over.
     (let ((sym (intern (format "tinylisp-elp-summary-sort-column-%d" x)))
           def)
       (setq def
-            (` (defun (, sym) (&optional arg)
+            `(defun ,sym (&optional arg)
 ;;;              "Sort by field. ARG to reverse sort."
                  (interactive "P")
-                 (tinylisp-elp-summary-sort-column (, x) arg))))
+                 (tinylisp-elp-summary-sort-column ,x arg)))
       (eval def))))
  '(1 2 3 4 5 6 7 8 9))
 
@@ -4407,7 +4399,7 @@ Return:
                 (if (null buffer)
                     (lm-commentary file)
                   (with-temp-buffer
-                    (insert-buffer buffer)
+                    (insert-buffer-substring buffer)
                     (lm-commentary)))))
         (if (not (stringp str))
             (message "TinyLisp: No commentary in %s" file)
@@ -4751,17 +4743,6 @@ VERB."
 
 ;;; ----------------------------------------------------------------------
 ;;;
-(defun tinylisp-defmacro-surround-word ()
-  "Surround current word with (, )  defmacro statement."
-  (interactive)
-  (unless (ti::char-in-list-case (preceding-char) '(?\ ?\t ?\n))
-    (backward-word 1))
-  (insert "(, ")
-  (forward-word 1)
-  (insert ")"))
-
-;;; ----------------------------------------------------------------------
-;;;
 (defun tinylisp-macroexpand (&optional expand-function)
   "Expand macro call with EXPAND-FUNCTION which is string.
 If point is sitting inside call to macro, expand it.
@@ -4875,8 +4856,8 @@ User can't see string echoed otherwise. Optionally RESTORE."
     (ti::bool-toggle tinylisp-:syntax-show-mode arg)
     (cond
      (tinylisp-:syntax-show-mode
-      (make-local-hook 'post-command-hook)
-      (add-hook 'post-command-hook 'tinylisp-syntax-post-command)
+      ;; (make-local-hook 'post-command-hook)
+      (add-hook 'post-command-hook 'tinylisp-syntax-post-command nil 'local)
       (tinylisp-post-command-config))
      (t
       (remove-hook    'post-command-hook 'tinylisp-syntax-post-command)
@@ -4977,8 +4958,11 @@ VERB                    verbose flag"
         (message
          "TinyLisp: Property show mode is on %s"
          (if (equal arg '(64)) "(RECORDING)" "")))
-      (make-local-hook 'post-command-hook)
-      (add-hook 'post-command-hook 'tinylisp-property-post-command))
+      ;; (make-local-hook 'post-command-hook)
+      (add-hook 'post-command-hook
+		'tinylisp-property-post-command
+		nil
+		'local))
      (t
       (tinylisp-post-command-config 'restore)
       (remove-hook 'post-command-hook 'tinylisp-property-post-command)
@@ -5245,27 +5229,28 @@ Optionally goes BACK."
          go-buffer)
     (if (null buffer)
         (message "TinyLisp: No occur buffer exist.")
-      (tinylisp-with-current-buffer buffer
-                                    ;; This is ugly, but I don't know other way to move
-                                    ;; point permanently in the buffer. The select-window
-                                    ;; is the crucial command to make the point move.
-                                    (save-window-excursion
-                                      (pop-to-buffer (current-buffer))
-                                      (select-window (selected-window))
-                                      (if back
-                                          (forward-line -1)
-                                        (forward-line 1)))
-                                    (setq str (ti::read-current-line))
-                                    (if (null (setq line (ti::buffer-match "^\\([0-9]+\\):" 1)))
-                                        (message "TinyLisp: Can't find line number from occur buffer.")
-                                      (setq line (string-to-int line))
-                                      ;;  first line in occur buffer has
-                                      ;;  "Lines matching "tipgpd" in buffer xxx.el"
-                                      (if (null (setq file
-                                                      (ti::re-search-check "^Lines matching.* \\(.*\\).$"
-                                                                           1 nil 'matched)))
-                                          (message
-                                           "TinyLisp: Can't find file name from occur buffer."))))
+      (tinylisp-with-current-buffer
+	  buffer
+	;; This is ugly, but I don't know other way to move
+	;; point permanently in the buffer. The select-window
+	;; is the crucial command to make the point move.
+	(save-window-excursion
+	  (pop-to-buffer (current-buffer))
+	  (select-window (selected-window))
+	  (if back
+	      (forward-line -1)
+	    (forward-line 1)))
+	(setq str (ti::read-current-line))
+	(if (null (setq line (ti::buffer-match "^\\([0-9]+\\):" 1)))
+	    (message "TinyLisp: Can't find line number from occur buffer.")
+	  (setq line (string-to-number line))
+	  ;;  first line in occur buffer has
+	  ;;  "Lines matching "tipgpd" in buffer xxx.el"
+	  (if (null (setq file
+			  (ti::re-search-check "^Lines matching.* \\(.*\\).$"
+					       1 nil 'matched)))
+	      (message
+	       "TinyLisp: Can't find file name from occur buffer."))))
       (if (and file
                (null (setq go-buffer (get-buffer file))))
           (message "TinyLisp: buffer not exist %s" file)
@@ -5698,8 +5683,7 @@ Return: '((missing-tags) (fixed-tags))."
   "Check all Lisp commentary tags on FILE and fix as needed. Stop ON-ERROR.
 Return: '((missing-tags) (fixed-tags))."
   (interactive "fLisp file: \nP")
-  (let* ((buffer (find-buffer-visiting (expand-file-name file)))
-         find-file-hooks)
+  (let ((buffer (find-buffer-visiting (expand-file-name file))))
     (unless buffer
       (setq buffer (find-file-noselect file)))
     (with-current-buffer buffer
