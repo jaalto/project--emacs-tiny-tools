@@ -1,5 +1,16 @@
 2008-08-11  Jari Aalto  <jari.aalto@cante.net>
 
+	* tiny/tinycygwin.el
+	(top level): require message.el
+	(tinycygwin-file-buffer): Use
+	`insert-file-contents-literally'.
+	(tinycygwin-package-wnpp-main): Correct `if'.
+	(eval-when-compile): require message.el
+	(eval-and-compile): autoload `message-fetch-field'.
+	(tinycygwin-font-lock-keywords): Fix `cond' daemon.log.
+	(tinycygwin-bug-report-batch-setup-general): Remove variable
+	`resize-minibuffer-mode'
+
 	* tiny/tinytag.el (tinytag-:output-buffer): Fix defcustom.
 
 	* tiny/tinyperl.el (tinyperl-pause-upload-via-ftp): Use

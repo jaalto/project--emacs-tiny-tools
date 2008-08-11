@@ -90,6 +90,9 @@
 
 ;;{{{ setup: libraries
 
+;; Due to variable message-cite-prefix-regexp
+(require 'message)
+
 (eval-when-compile
   (require 'cl))
 
@@ -97,15 +100,11 @@
   ;;  Forward declarations
   (autoload 'executable-find            "executable")
   (autoload 'mail-setup                 "sendmail")
-  (autoload 'message-mode               "message")
-  (autoload 'message-disassociate-draft "message")
-  (autoload 'message-fetch-field        "message")
-  (autoload 'message-goto-cc            "message")
   (autoload 'ti::menu-menu              "tinylibmenu")
   (autoload 'mml-attach-file            "mml")
   (autoload 'mml-minibuffer-read-type   "mml")
   (autoload 'base64-decode-string       "base64")
-  ;;  Byte compiler silencer. Defined in separate file
+  ;;  Byte compiler silencers
   (defvar debug-ignored-errors)
   (defvar font-lock-defaults)
   (defvar font-lock-keyword-face)
@@ -921,27 +920,27 @@ inserted in `message-mode' with \\[mml-attach-file]."
   (save-current-buffer
     (goto-char (point-max))
     (tinycygwin-bug-report-mail-attach-file file)))
-
+;;##
 ;;; ----------------------------------------------------------------------
 ;;;
-(defun tinycygwin-insert-environment-variable-content (var)
-  "Inser content of environment variable VAR at point."
-  (interactive
-   (list
-    (completing-read
-     "Iinsert environment variable: "
-     (mapcar
-      (lambda (x)
-        (if (string-match "^\\(.+\\)=\\(.*\\)" x)
-            (cons (match-string 1 x)
-                  (match-string 2 x))
-          (cons "__NOT_FOUND__" . 1)))
-      process-environment)
-     nil
-     'match)))
-  (when var
-    (let ((value (getenv var)))
-      (insert (format "%s=%s" var (or (getenv var) ""))))))
+;; (defun tinycygwin-insert-environment-variable-content (var)
+;;   "Inser content of environment variable VAR at point."
+;;   (interactive
+;;    (list
+;;     (completing-read
+;;      "Insert environment variable: "
+;;      (mapcar
+;;       (lambda (x)
+;;         (if (string-match "^\\(.+\\)=\\(.*\\)" x)
+;;             (cons (match-string 1 x)
+;;                   (match-string 2 x))
+;;           (cons "__NOT_FOUND__" . 1)))
+;;       process-environment)
+;;      nil
+;;      'match)))
+;;   (when var
+;;     (let ((value (getenv var)))
+;;       (insert (format "%s=%s" var (or (getenv var) ""))))))
 
 ;;; ----------------------------------------------------------------------
 ;;;
@@ -1533,7 +1532,7 @@ is started. Here are few inportant Eamcs commands to help you:
            (buffer (get-buffer name)))
       (unless buffer
         (with-current-buffer (setq buffer (get-buffer-create name))
-          (insert-file-literally file)
+          (insert-file-contents-literally file)
           (setq buffer-read-only t)))
       buffer)))
 
@@ -1676,12 +1675,12 @@ is started. Here are few inportant Eamcs commands to help you:
                 "^... +[0-9]+ +[0-9]+:+[0-9]+:+[0-9]+")
                0 'font-lock-reference-face)
               (list
-               (concat "connection attempt" ;);  See "iplogger" package
-                                      0 'tinycygwin-:warn-face)
+               (concat "connection attempt" );  See "iplogger" package
+	       0 'tinycygwin-:warn-face)
               (list
                (concat "signal +[0-9]+\\|no such user"
                        "\\|connect from .*")
-               0 'font-lock-comment-face)))))
+               0 'font-lock-comment-face))))
 
       ((string-match "auth\\.log" file)
        ;; font-lock-constant-face
@@ -1892,8 +1891,8 @@ References:
            ((or (string= "" file)
                 (file-directory-p file)) ;; User pressed return. No file.
             (if (y-or-n-p (format "Include file %s. Are you sure? "
-                                  (file-name-nondirectory file))))
-            (push file file-list)))))
+                                  (file-name-nondirectory file)))
+		(push file file-list))))))
       (tinycygwin-package-wnpp-mail-generic "ITP" desc nil file-list))
      ((string= type "new")
       (let ((desc  (read-string "[RFP] Package name -- description: ")))
@@ -3637,7 +3636,6 @@ the setting include e.g.
   (setq query-replace-highlight   t)
   (setq search-highlight          t)
   (setq track-eol                 t)
-  (setq resize-minibuffer-mode    t)
   ..."
   (modify-syntax-entry ?-  "w")         ; part of word
   (modify-syntax-entry ?\t " ")         ; Treat TABs as spaces.
@@ -3651,7 +3649,6 @@ the setting include e.g.
   (setq query-replace-highlight   t)
   (setq search-highlight          t)
   (setq track-eol                 t)
-  (setq resize-minibuffer-mode    t)
   (setq-default indent-tabs-mode  nil) ;; Always spaces, more secure in email
   (add-hook 'debugger-mode-hook 'toggle-truncate-lines)
   (when (fboundp 'minibuffer-electric-default-mode)
