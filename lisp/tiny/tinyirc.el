@@ -1345,7 +1345,8 @@ INSTALL PROBLEM: Perl
                      'verbose)))
         (with-current-buffer buffer
           (goto-char (point-min))
-          (replace-regexp "\r" "" nil (point-min) (point-max))
+	  (while (re-search-forward "\r" nil 'noerr)
+	    (replace-match "" nil nil))
           (re-search-forward "^\n")
           (let (dir
                 saveto)

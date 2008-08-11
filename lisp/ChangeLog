@@ -1,5 +1,8 @@
 2008-08-11  Jari Aalto  <jari.aalto@cante.net>
 
+	* tiny/tinyirc.el (tinyirc-pastebot-install-perl-util-pastebot):
+	Replace `replace-regexp' call with lisp.
+
 	* tiny/tinydesk.el (tinydesk-:loaded-file-list): Change to `defvar'.
 	(tinydesk-:rejected-file-list): Change to `defvar'.
 
