@@ -1,5 +1,20 @@
 2008-08-11  Jari Aalto  <jari.aalto@cante.net>
 
+	* tiny/tinyigrep.el
+	- Byte comile fix: Add %d %s to all calls using `tinyigrep-countdown'
+	(ti::expand-file-name-cygwin-macro): Update to
+	modern backquote.
+	(tinyigrep-install-database-lisp-texi-lazy): Update to modern
+	backquote.
+	(top level): Use `string-to-number'.
+	(tinyigrep-:grep-program): Fix defgroup.
+	(tinyigrep-:grep-word-at-point): Fix defgroup.
+	(tinyigrep-install-database-lisp-packages-lazy): Update to modern
+	backquote.
+	(tinyigrep-install-database-lisp-flag-files-lazy): Update to modern
+	backquote.
+	(tinyigrep-:igrep-previous-args): Change to `defvar'.
+
 	* tiny/tinyef.el (tinyef-function-macro): Update to modern backquote.
 
 	* tiny/tinybookmark.el
