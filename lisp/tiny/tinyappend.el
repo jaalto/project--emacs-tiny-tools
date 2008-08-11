@@ -162,14 +162,13 @@ _only_ if buffer is empty initially."
 ;;;
 (defmacro tinyappend-line-area-args (msg)
   "Return region of current line: (beg end MSG) including newline."
-  (`
-   (list
+  `(list
     (line-beginning-position)
     (save-excursion
       (end-of-line)
       (ignore-errors (forward-char 1))  ;get newline, unless EOB
       (point))
-    (, msg))))
+    ,msg))
 
 ;;; ----------------------------------------------------------------------
 ;;;
@@ -264,7 +263,7 @@ VERB allows verbose messages."
   (interactive "P")
   (if (null (get-buffer tinyappend-:buffer))
       (message (concat "Can't yank, there is no buffer: " tinyappend-:buffer))
-    (insert-buffer tinyappend-:buffer)
+    (insert-buffer-substring tinyappend-:buffer)
     (if kill
         (tinyappend-kill))))
 

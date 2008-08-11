@@ -1,6 +1,11 @@
 2008-08-11  Jari Aalto  <jari.aalto@cante.net>
 
-	* tiny/tinybuffer.el (tinybuffer-iswitch-next): Update to modern backquote.
+	* tiny/tinyappend.el (tinyappend-line-area-args): Update to modern
+	backquote.
+	(tinyappend-yank): Use `use modern backquote'.
+
+	* tiny/tinybuffer.el (tinybuffer-iswitch-next): Update to modern
+	backquote.
 	(tinybuffer-iswitch-previous): Update to modern backquote.
 
 	* tiny/tinynbr.el (mapcar): Update to modern backquote.
