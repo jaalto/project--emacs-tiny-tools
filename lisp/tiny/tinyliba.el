@@ -594,6 +594,7 @@ This function is run only once at tinynyliba.el load."
   (autoload 'ti::compat-load-user-init-file       "tinylibm" "" nil 'macro)
   (autoload 'ti::compat-Info-directory-list-symbol "tinylibm" "" nil) ;; defsubst
   (autoload 'ti::compat-Info-directory-list       "tinylibm" "" nil) ;; defsubst
+  (autoload 'ti::compat-find-file-hook            "tinylibm" "" nil) ;; defsubst
   (autoload 'ti::buffer-pointer-of-info           "tinylibm" "" nil)
   (autoload 'ti::buffer-pointer-of-messages       "tinylibm" "" nil)
   (autoload 'ti::last-message-line                "tinylibm" "" nil)

@@ -2681,6 +2681,16 @@ VAR is set to following values when ARG is:
 
 ;;; ----------------------------------------------------------------------
 ;;;
+(defsubst ti::compat-find-file-hook ()
+  "Emacs and XEmacs compatibility. Return symbol."
+  (cond
+   ((boundp 'find-file-hook) ;; Emacs
+    (intern "find-file-hook"))
+   (t
+    (intern "find-file-hooks"))))
+
+;;; ----------------------------------------------------------------------
+;;;
 (defun ti::buffer-pointer-of-info ()
   "Return Emacs or XEmacs *info* buffer."
   ;;  This buffer should have been defvar'd in Emacs

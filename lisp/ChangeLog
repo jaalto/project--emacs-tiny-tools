@@ -1,5 +1,25 @@
 2008-08-11  Jari Aalto  <jari.aalto@cante.net>
 
+	* tiny/tinylisp.el (tinylisp-read-word): Correct args to
+	in call `ti::buffer-match'.
+	(tinylisp-occur-select-forward): Use `string-to-number'.
+	(tinylisp-elp-results): Use `insert-buffer-substring'.
+	(tinylisp-require): Update to modern backquote.
+	(tinylisp-with-current-buffer): Update to modern backquote.
+	(tinylisp-symbol-do-macro): Update to modern backquote.
+	(tinylisp-record-macro): Update to modern backquote.
+	(tinylisp-defun-macro): Update to modern backquote.
+	(tinylisp-defun-sym-macro): Update to modern backquote.
+	(tinylisp-defcustom-macro): Update to modern backquote.
+	(defadvice defconst): Update to modern backquote.
+	(top level; near tinylisp-b-record): Update to modern backquote.
+	(top level; near elp results): Update to modern backquote.
+	(tinylisp-library-documentation): Use `insert-buffer-substring'.
+	(tinylisp-defmacro-surround-word): REMOVED. Obsolete.
+	(tinylisp-eval): Replace call to `replace-string'
+	(tinylisp-lisp-mnt-tag-check-and-fix-file): Remove `find-file-hooks'.
+	(tinylisp-syntax-show-mode): Replace `make-local-hook'.
+
 	* tiny/tinypage.el (tinypage-renumber-level-forward): Change to
 	`string-to-number'.
 
@@ -77,6 +97,7 @@
 	(ti::pp-variable-list): Add %s %s to `error'.
 	(ti::pp-variable-list): Add two %s formats to `error' call which
 	were missing.
+	(ti::compat-find-file-hook): New.
 
 	* tiny/tiny1vc.el (tinyvc-do-macro): Update to modern backquote.
 	(tinyvc-file-confirm-macro): Update to modern backquote.
