@@ -80,6 +80,10 @@
 
 (require 'tinylibm)
 
+(autoload 'gnus-eval-in-buffer-window   "gnus-util" "" nil 'macro)
+(autoload 'gnus-summary-article-number  "gnus-sum")
+(autoload 'gnus-summary-display-article "gnus-sum")
+
 (eval-when-compile (ti::package-use-dynamic-compilation))
 
 (eval-and-compile
@@ -90,8 +94,6 @@
   (defvar global-font-lock-mode)
   (defvar font-lock-keywords)
   (defvar font-lock-defaults)
-  (autoload 'gnus-summary-article-number  "gnus-sum")
-  (autoload 'gnus-summary-display-article "gnus-sum")
   (defvar gnus-article-buffer))
 
 (ti::package-defgroup-tiny TinyDebian tinydebian-: extensions
@@ -201,7 +203,9 @@ See `tinydebian-buffer-url-bug'."
   :group 'TinyDebian)
 
 (defcustom tinydebian-:font-lock-mode t
-  "If non-nil, allow turning on `font-lock-mode'.")
+  "If non-nil, allow turning on `font-lock-mode'."
+  :type  'boolean
+  :group 'TinyDebian)
 
 ;;}}}
 ;;{{{ setup: -- private
@@ -961,10 +965,10 @@ Mode description:
       (let ((sym (intern (format "tinydebian-severity-select-%s"  x)))
             def)
         (setq def
-              (` (defun (, sym) ()
-                   "Set Severity level `tinydebian-:severity-selected'."
-                   (interactive)
-                   (setq  tinydebian-:severity-selected (, x)))))
+              `(defun ,sym ()
+		 "Set Severity level `tinydebian-:severity-selected'."
+		 (interactive)
+		 (setq  tinydebian-:severity-selected ,x)))
         (eval def))))
    '("critical"
      "grave"
@@ -1103,8 +1107,7 @@ Activate on files whose path matches
   "Search dpkg -s result from current point forward and narrow around it.
 Point is put at the beginning of region.
 Variable `package' contains the package name."
-  (`
-   (let* (beg-narrow
+  `(let* (beg-narrow
           package)
      (when (re-search-forward "^Package: +\\([^ \t\r\n]+\\) *$" nil t)
        (setq beg-narrow (line-beginning-position))
@@ -1112,7 +1115,7 @@ Variable `package' contains the package name."
        (when (re-search-forward "^[ \t]*$" nil t)
          (ti::narrow-safe beg-narrow (point)
            (ti::pmin)
-           (,@ body)))))))
+           ,@body)))))
 
 ;;; ----------------------------------------------------------------------
 ;;;
@@ -1156,6 +1159,12 @@ Signal optional ERROR message is STR was empty."
          (or buffer (current-buffer))
          (not 'real-time-display)
          args))
+
+;;; ----------------------------------------------------------------------
+;;;
+(defsubst tinydebian-url-page-font-lock-keywords (page-type)
+  "Return `font-lock-keywords' of PAGE-TYPE."
+  (tinydebian-with-url-page-type-macro page-type (nth 2 page-type)))
 
 ;;; ----------------------------------------------------------------------
 ;;;
@@ -1253,12 +1262,12 @@ Optional: SEARCH-ON DISTRIBUTION SECTION."
                 "^... +[0-9]+ +[0-9]+:+[0-9]+:+[0-9]+")
                0 'font-lock-reference-face)
               (list
-               (concat "connection attempt" ;);  See "iplogger" package
-                       0 'tinydebian-:warn-face)
-               (list
-                (concat "signal +[0-9]+\\|no such user"
-                        "\\|connect from .*")
-                0 'font-lock-comment-face)))))
+               (concat "connection attempt") ;See "iplogger" package
+	       0 'tinydebian-:warn-face)
+	      (list
+	       (concat "signal +[0-9]+\\|no such user"
+		       "\\|connect from .*")
+	       0 'font-lock-comment-face))))
 
       ((string-match "auth\\.log" file)
        ;; font-lock-constant-face
@@ -1362,8 +1371,9 @@ Optional: SEARCH-ON DISTRIBUTION SECTION."
            article-window)
        (gnus-summary-display-article article)
        (setq article-window (get-buffer-window gnus-article-buffer t))
-       (gnus-eval-in-buffer-window gnus-article-buffer
-                                   ,@body))))
+       (gnus-eval-in-buffer-window
+	   gnus-article-buffer
+	 ,@body))))
 
 ;;; ----------------------------------------------------------------------
 ;;;
@@ -1936,12 +1946,6 @@ At current point, current line, headers of the mail message
 
 ;;; ----------------------------------------------------------------------
 ;;;
-(defsubst tinydebian-url-page-font-lock-keywords (page-type)
-  "Return `font-lock-keywords' of PAGE-TYPE."
-  (tinydebian-with-url-page-type-macro page-type (nth 2 page)))
-
-;;; ----------------------------------------------------------------------
-;;;
 (defsubst tinydebian-url-debian-mentors-url (package &optional section)
   "Return PACKAGE URL to mentors.debian.net in optional SECTION (def. main)."
   (let* ((first-char (substring package 0 1)))
@@ -1970,10 +1974,10 @@ At current point, current line, headers of the mail message
         (error "TinyDebian: need 'apt-get install ...' (not found %s)"
                url)))
      ((string-match ":" url)
-      (tinydebian-browse-url-1 url mode)))
-    (t
-     (error "TinyDebian: browse internal error `%s' `%s' `%s'"
-            page-type mode url))))
+      (tinydebian-browse-url-1 url mode))
+     (t
+      (error "TinyDebian: browse internal error `%s' `%s' `%s'"
+	     page-type mode url)))))
 
 ;;; ----------------------------------------------------------------------
 ;;;
@@ -2020,13 +2024,6 @@ At current point, current line, headers of the mail message
 
 ;;; ----------------------------------------------------------------------
 ;;;
-(defun tinydebian-url-policy-best-practises ()
-  "Browse policy manual page: best practises section."
-  (interactive)
-  (tinydebian-url-debian-browse-url 'best-practises))
-
-;;; ----------------------------------------------------------------------
-;;;
 (defun tinydebian-url-list-bugs-by-rc ()
   "Browse release critical bugs."
   (interactive)
@@ -2049,7 +2046,7 @@ At current point, current line, headers of the mail message
                      (not 'require-match))))
   (when (and (stringp package)
              (not (string= "" package)))
-    (tinydebian-url-debian-browse-url-1
+    (tinydebian-browse-url-1
      (format (tinydebian-url-page-compose 'debcheck-package)
              (or distribution  "testing")
              package))))
@@ -2829,11 +2826,12 @@ Returned list is
   (let* ((bin (executable-find "apt-file")))
     (cond
      ((null bin)
-      (message 
-       "TinyDebian: no `apt-fil' found along PATH (emacs `exec-path').")
+      (message
+       "TinyDebian: no `apt-file' found along PATH (emacs `exec-path').")
       (message "TinyDebian: Please run 'apt-get install apt-file'")
       nil)
-     nil)))
+     (t
+      nil))))
 
 ;;; ----------------------------------------------------------------------
 ;;;
@@ -2927,7 +2925,7 @@ In this case, the package is unknown."
              "TinyDebian: dpkg -S doesn't know file `%s'" file)
             nil)
            (t
-            (tinydebian-package-status-dpkg-s pkg)))))))))
+            (tinydebian-package-status-dpkg-s-main pkg)))))))))
 
 ;;; ----------------------------------------------------------------------
 ;;;

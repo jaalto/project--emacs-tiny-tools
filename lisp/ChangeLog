@@ -1,5 +1,17 @@
 2008-08-11  Jari Aalto  <jari.aalto@cante.net>
 
+	* tiny/tinydebian.el (tinydebian-url-debian-browse-url): Correct `cond'
+	by moving `t' case inside it.
+	(tinydebian-url-policy-best-practises): Remove 2nd copy.
+	(tinydebian-package-status-apt-file): Correct last `cond' case by assing `t'
+	clause.
+	(tinydebian-font-lock-keywords): Correct daemon.log `font-lock-keywords'.
+	(tinydebian-url-list-package-debcheck): Corect call to
+	`tinydebian-browse-url-1'.
+	(tinydebian-package-status-dpkg-S-main): Correct call to
+	`tinydebian-package-status-dpkg-s-main'.
+	(tinydebian-url-page-font-lock-keywords): Move upward, before used.
+
 	* tiny/tinylibm.el (ti::fboundp-check-autoload): Update to modern backquote.
 	(ti::narrow-safe): Update to modern backquote.
 	(ti::narrow-to-paragraph): Update to modern backquote.
