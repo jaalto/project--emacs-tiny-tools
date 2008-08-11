@@ -831,7 +831,7 @@ References:
       (tinyeat-debug fid "CHARCTER is nil, maybe bop or eob")
       (tinyeat-verbose-macro
        (message
-        "TinyEat: "
+        "TinyEat: %s"
         (concat
          (if (bobp)
              "Beginning"

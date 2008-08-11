@@ -183,6 +183,7 @@
 
 	* tiny/tinyeat.el (tinyeat-repeat-macro): Convert to modern backquote.
 	(tinyeat-verbose-macro): Convert to modern backquote.
+	(tinyeat-eat): Add missing %s to `message'.
 
 	* tiny/tinypath.el
 	Remove indentation from functions that were wrapped inside section
