@@ -284,6 +284,8 @@
 	(tinypath-Info-default-directory-list): Add missing backtick.
 	(tinypath-Info-default-directory-list-sym): Add missing backtick.
 	(tinypath-message-log-max-sym): Add missing backtick.
+	(tinypath-message-log-max-sym-value): Change to `defsubst'.
+	(tinypath-Info-default-directory-list): Remove backtick.
 
 2008-08-10  Jari Aalto  <jari.aalto@cante.net>
 

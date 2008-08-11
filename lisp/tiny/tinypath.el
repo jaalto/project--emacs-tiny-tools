@@ -3065,9 +3065,9 @@ See M-x tinypath-version (the manual) for more information.")
 (defmacro tinypath-Info-default-directory-list ()
   "Emacs and XEmacs compatibility."
   ;; Latest XEmacs does not use `Info-default-directory-list'
-  `(if tinypath-:xemacs-p
-       (intern "Info-directory-list")
-     (intern "Info-default-directory-list")))
+  (if tinypath-:xemacs-p
+      (intern "Info-directory-list")
+    (intern "Info-default-directory-list")))
 
 ;;; ----------------------------------------------------------------------
 ;;;
@@ -3091,9 +3091,9 @@ See M-x tinypath-version (the manual) for more information.")
 
 ;;; ----------------------------------------------------------------------
 ;;;
-(defmacro tinypath-message-log-max-sym-value ()
+(defsubst tinypath-message-log-max-sym-value ()
   "Emacs and XEmacs compatibility."
-  `(symbol-value (tinypath-message-log-max-sym)))
+  (symbol-value (tinypath-message-log-max-sym)))
 
 ;;; ----------------------------------------------------------------------
 ;;;
