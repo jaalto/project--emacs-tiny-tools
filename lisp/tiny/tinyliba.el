@@ -399,6 +399,9 @@ This function is run only once at tinynyliba.el load."
   ;;}}}
   ;;{{{ Backward compatible lib: tinylibb.el
 
+  (autoload 'char=                                "tinylibb" "" nil)
+  (autoload 'region-active-p                      "tinylibb" "" nil)
+
   (autoload 'shell-command-to-string              "tinylibm" "" nil)
   (autoload 'describe-symbol-find-file            "tinylibb" "" nil)
   (autoload 'subst-char-with-string               "tinylibb" "" nil)

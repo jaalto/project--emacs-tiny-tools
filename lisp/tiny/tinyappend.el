@@ -95,9 +95,10 @@
 
 ;;; ......................................................... &require ...
 
-(require 'tinylibm)
+(require 'tinyliba)
 
-(eval-when-compile (ti::package-use-dynamic-compilation))
+(eval-when-compile
+  (ti::package-use-dynamic-compilation))
 
 (ti::package-defgroup-tiny TinyAppend tinyappend-: extensions
   "Gather text to separate cut buffer.")
