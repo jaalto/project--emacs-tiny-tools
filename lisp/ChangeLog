@@ -1,5 +1,7 @@
 2008-08-11  Jari Aalto  <jari.aalto@cante.net>
 
+	* tiny/tinyef.el (tinyef-function-macro): Update to modern backquote.
+
 	* tiny/tinybookmark.el
 	(tinybookmark-string-to-number): New. Emacs 22.x fix.
 	(tinybookmark-repeat): Use `tinybookmark-string-to-number'
