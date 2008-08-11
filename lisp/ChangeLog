@@ -1,5 +1,8 @@
 2008-08-11  Jari Aalto  <jari.aalto@cante.net>
 
+	* tiny/tinypad.el (ti::macrof-minor-mode-wizard): Replace
+	`find-file-hooks' with (ti::compath-find-file-hook).
+
 	* tiny/tinygnus.el (tinygnus-uff-summary-date): Use
 	`string-to-number'.
 	(autoload time-stamp-string): new.
