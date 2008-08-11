@@ -220,6 +220,15 @@
 	(tinybookmark-repeat): Use `tinybookmark-string-to-number'
 	(tinybookmark-repeat): Add %s to `error' format.
 
+	* tiny/tinytf.el (tinytf-convert-call-process): Emacs: Change
+	`compile-internal' to `compile-start'
+	(tinytf-compile): New.
+	(tinytf-toc): Change `replace-string' to lisp code.
+	(tinytf-toc): Use `insert-buffer-substring' instead of
+	`insert-buffer'.
+	(tinytf-convert-t2html-link-check): Use `tinytf-compile'.
+	(tinytf-convert-wrapper-macro): Use `insert-buffer-substring'.
+
 	* tiny/tinyeat.el (tinyeat-repeat-macro): Convert to modern backquote.
 	(tinyeat-verbose-macro): Convert to modern backquote.
 	(tinyeat-eat): Add missing %s to `message'.
