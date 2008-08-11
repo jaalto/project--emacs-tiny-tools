@@ -1,3 +1,29 @@
+2008-08-11  Jari Aalto  <jari.aalto@cante.net>
+
+	* tiny/tinylibm.el (ti::pp-variable-list): Add two %s formats
+	to `error' call which were missing.
+
+	* tiny/tinypath.el
+	Remove indentation from functions that were wrapped inside section
+	--++-- eval-and-compile --++--
+	(defmacro): Convert all to new style backquote.
+	(tinypath-:verbose-info-messages): Fix defcustom.
+	(tinypath-load-path-initial-value): Add missing %s to `message' call.
+	(tinypath-expand-file-name): Correct type `condA' to `cond'
+	(tinypath-:verbose-timing): Fix defcustom.
+	(tinypath-:load-path-accept-criteria): Fix defcustom.
+	(tinypath-ti::pp-variable-list): Add two %s formats
+	to `error' call which were missing.
+	(tinypath-directory-sep-char-macro): Rewrite code to ignore
+	`directory-sep-char' in Emacs 21.1 and later.
+	(tinypath-with-let-variable): New defmacro.
+	(tinypath-tmp-find-writable-dir): Fix XEmacs byte compile
+	for variable `user-login-name'.
+	(tinypath-report-timing-summary): Add %s to message format.
+	(tinypath-Info-default-directory-list): Remove backquote.
+	(tinypath-Info-default-directory-list-sym): Remove backquote.
+	(tinypath-message-log-max-sym): Remove backquote.
+
 2008-08-10  Jari Aalto  <jari.aalto@cante.net>
 
 	* tiny/tinytf.el (tinytf-toc-insert-list): New.
