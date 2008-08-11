@@ -770,6 +770,7 @@
 (require 'tinytab    nil 'noerr)
 (require 'tinyindent nil 'noerr)
 
+(autoload 'message-mail-p    "message")
 (autoload 'bbdb-hashtable    "bbdb" "" nil 'macro)
 (autoload 'bbdb-gethash      "bbdb")
 (autoload 'bbdb-record-net   "bbdb")
@@ -781,7 +782,6 @@
 (autoload 'mml-secure-message-encrypt-pgpmime  "mml")
 
 (eval-and-compile
-
   (ti::package-use-dynamic-compilation)
   (ti::package-require-mail-abbrevs)
 
@@ -1077,7 +1077,9 @@ The value must be callable by `funcall', e.g. macros are not callable."
   :group 'TinyMail)
 
 (defcustom tinymail-:complete-bbdb-case-fold-search case-fold-search
-  "*Should completing against BBDB record be case sensitive.")
+  "*Should completing against BBDB record be case sensitive."
+  :type  'boolean
+  :group 'TinyMail)
 
 (defcustom tinymail-:complete-mode 'string
   "*Control how completion is done.
@@ -2013,8 +2015,8 @@ If there is 2 or more leading spaces, then the field is considered 'off'."
 ;;;
 (defmacro tinymail-mail-aliases ()
   "Return `tinymail-:mail-aliases-alist' or build it if it is empty."
-  (` (or tinymail-:mail-aliases-alist
-         (tinymail-update-mail-abbrevs))))
+  `(or tinymail-:mail-aliases-alist
+       (tinymail-update-mail-abbrevs)))
 
 ;;; ----------------------------------------------------------------------
 ;;;
@@ -4547,12 +4549,13 @@ a handly way to refer to past articles."
 
 (defun tinymail-gpg-recipient ()
   "Check BBDB field gnus-pgp for 'sign' and 'encrypt'."
-  (when (and (eq (major-mode 'message-mode)
-                 (featurep 'bbdb)))
-    (when (and (not message-has-gpg)
+  (when (and (eq major-mode 'message-mode)
+	     (featurep 'bbdb))
+    (when (and (boundp 'message-has-gpg)
+	       (not message-has-gpg)
                (message-mail-p))
       (let* ((to-field      (mail-fetch-field "to"))
-             (components    (mail-extract-address-components to_field t))
+             (components    (mail-extract-address-components to-field t))
              recipient)
         (when (= (length components) 1)
           ;; Only a single recipient
