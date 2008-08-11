@@ -1,5 +1,18 @@
 2008-08-11  Jari Aalto  <jari.aalto@cante.net>
 
+	* tiny/tinygnus.el (tinygnus-uff-summary-date): Use
+	`string-to-number'.
+	(autoload time-stamp-string): new.
+	(tinygnus-set-group): Update to modern backquote.
+	(tinygnus-summary-map-articles-macro): Update to modern backquote.
+	(tinygnus-summary-map-article-body-macro): Update to modern backquote.
+	(tinygnus-output-buffer-macro): Update to modern backquote.
+	(tinygnus-files-from-dir-macro): Update to modern backquote.
+	(tinygnus-summary-map-line-macro): Update to modern backquote.
+	(tinygnus-debug-gnus-macro): Update to modern backquote.
+
+	* tiny/tinydired.el (autoload dired-read-shell-command): New.
+
 	* tiny/tinylisp.el (tinylisp-read-word): Correct args to
 	in call `ti::buffer-match'.
 	(tinylisp-occur-select-forward): Use `string-to-number'.
