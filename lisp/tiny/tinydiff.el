@@ -1371,8 +1371,8 @@ Eg.
         (tinydiff-debug fid "1>" elt "ARGS" args "I=" i "TMP" tmp)
         ;; ........................................... Change revision ...
         (when (string-match "\\.\\([0-9]+\\)$" tmp)
-          (setq revision (string-to-int (match-string 1 tmp))
-                nbr      (string-to-int
+          (setq revision (string-to-number (match-string 1 tmp))
+                nbr      (string-to-number
                           (ti::string-right (match-string 1 tmp) 1)))
           (tinydiff-debug fid "1>REV"   revision "last NBR"  nbr)
           (cond
@@ -1819,7 +1819,7 @@ Input:
         (message "Tinydiff: file's buffer in Emacs is modified.."))
        ((and was-rcs
              (null no-ask)              ;Maybe set in 1st cond case
-             (y-or-n-p (format "RCS file patched, find-file %s " file "? ")))
+             (y-or-n-p (format "RCS file patched, find-file %s?" file)))
         (find-file file))
        ((and feature
              (not (eq flag 'hunk))
@@ -2373,11 +2373,11 @@ Input:
     (if no-ask
         (setq ans prompt)
       (let* (tinyef-:mode)              ;Electric file mode OFF
-        (if tinyef-:mode
-            (setq tief-mode nil))       ;No-op, bytecompier silencer
-        ;;  Record command line prompt to *Messages* buffer
-        (message (concat "TinyDiff: " prompt))
-        (setq ans (read-from-minibuffer ">" prompt map))))
+	(if tinyef-:mode
+	    (setq tinyef-:mode nil))       ;No-op, bytecompier silencer
+	;;  Record command line prompt to *Messages* buffer
+	(message (concat "TinyDiff: " prompt))
+	(setq ans (read-from-minibuffer ">" prompt map))))
     (if (ti::nil-p ans)
         (setq ans nil))
     (ti::remove-properties ans)))
@@ -2457,8 +2457,8 @@ Lets user to edit option in the command line."
         "Tinydiff: There is autosave file, use minibuffer %s binding"
         (ti::keymap-function-bind-info
          'tinydiff-minibuffer--insert-file-autosave
-         tinydiff-:minibuffer-map)
-        (sit-for 1)))
+         tinydiff-:minibuffer-map))
+       (sit-for 1))
      (list
       (tinydiff-diff-command-generate))))
   (if (and (stringp cmd)
@@ -2690,7 +2690,7 @@ Input:
      (t
       (with-temp-buffer
         (insert mime-tag)
-        (insert-buffer obuffer)
+        (insert-buffer-substring obuffer)
         (set-register tinydiff-:register-diff (buffer-string))
         (when verb
           (message "TinyDiff: MIME diff in register `%c'"
@@ -2790,7 +2790,7 @@ Input:
         (setq ret (ti::buffer-match re-gnu-u 1)))))
 ;;;    (ti::d! (match-string 0) diff-type)
     (when ret
-      (setq ret (string-to-int ret)))
+      (setq ret (string-to-number ret)))
     ret))
 
 ;;; ----------------------------------------------------------------------
@@ -2915,7 +2915,7 @@ Activate only if point underneath has 'mouse-property."
       (setq line (ti::remove-properties (ti::buffer-read-word "[0-9]+")))
       (if (and buffer
                (not (ti::nil-p line)))
-          (tinydiff-goto buffer (string-to-int line))
+          (tinydiff-goto buffer (string-to-number line))
         (message "Tinydiff: Sorry, missing Line Number or filenname.")))))
 
 ;;}}}

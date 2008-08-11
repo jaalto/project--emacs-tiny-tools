@@ -1,5 +1,12 @@
 2008-08-11  Jari Aalto  <jari.aalto@cante.net>
 
+	* tiny/tinydiff.el
+	- Update `string-to-int' to `string-to-number'.
+	(tinydiff-patch-check-if-load): Fix `format' problem.
+	(tinydiff-diff-command-generate): Typo `tinyef-:mode'.
+	(tinydiff-diff-show): Correct `message' call.
+	(tinydiff-mime-compose): Use `insert-buffer-substring'.
+
 	* tiny/tinydebian.el (tinydebian-url-debian-browse-url): Correct `cond'
 	by moving `t' case inside it.
 	(tinydebian-url-policy-best-practises): Remove 2nd copy.
