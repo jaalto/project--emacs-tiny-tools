@@ -475,12 +475,12 @@ The default value is
   "Counter incremented every every time `write-file' event happens.
 See. `tinydesk-auto-save'.")
 
-(defconst tinydesk-:loaded-file-list nil
+(defvar tinydesk-:loaded-file-list nil
   "Overwritten when files are loaded. List.
 Contain files that were loaded by `tinydesk-find-file-whole-buffer'.
 Hooks may check the contents of this.")
 
-(defconst tinydesk-:rejected-file-list nil
+(defvar tinydesk-:rejected-file-list nil
   "Overwritten when files are loaded. List.
 Contain files that were *not* loaded by
 `tinydesk-find-file-whole-buffer'. Reason may be anything: incorrect filename,

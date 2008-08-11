@@ -1,5 +1,8 @@
 2008-08-11  Jari Aalto  <jari.aalto@cante.net>
 
+	* tiny/tinydesk.el (tinydesk-:loaded-file-list): Change to `defvar'.
+	(tinydesk-:rejected-file-list): Change to `defvar'.
+
 	* tiny/tinycomment.el (tinycomment-:not-comment-re): Fix defcustom.
 
 	* tiny/tinycache.el (tinycache-:mode-on-string-p): Change to
