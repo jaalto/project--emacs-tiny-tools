@@ -201,7 +201,9 @@ See `tinydebian-buffer-url-bug'."
   :group 'TinyDebian)
 
 (defcustom tinydebian-:font-lock-mode t
-  "If non-nil, allow turning on `font-lock-mode'.")
+  "If non-nil, allow turning on `font-lock-mode'."
+  :type  'boolean
+  :group 'TinyDebian)
 
 ;;}}}
 ;;{{{ setup: -- private
@@ -961,10 +963,10 @@ Mode description:
       (let ((sym (intern (format "tinydebian-severity-select-%s"  x)))
             def)
         (setq def
-              (` (defun (, sym) ()
-                   "Set Severity level `tinydebian-:severity-selected'."
-                   (interactive)
-                   (setq  tinydebian-:severity-selected (, x)))))
+              `(defun ,sym ()
+		 "Set Severity level `tinydebian-:severity-selected'."
+		 (interactive)
+		 (setq  tinydebian-:severity-selected ,x)))
         (eval def))))
    '("critical"
      "grave"
@@ -1103,8 +1105,7 @@ Activate on files whose path matches
   "Search dpkg -s result from current point forward and narrow around it.
 Point is put at the beginning of region.
 Variable `package' contains the package name."
-  (`
-   (let* (beg-narrow
+  `(let* (beg-narrow
           package)
      (when (re-search-forward "^Package: +\\([^ \t\r\n]+\\) *$" nil t)
        (setq beg-narrow (line-beginning-position))
@@ -1112,7 +1113,7 @@ Variable `package' contains the package name."
        (when (re-search-forward "^[ \t]*$" nil t)
          (ti::narrow-safe beg-narrow (point)
            (ti::pmin)
-           (,@ body)))))))
+           ,@body)))))
 
 ;;; ----------------------------------------------------------------------
 ;;;
