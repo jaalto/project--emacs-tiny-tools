@@ -1,5 +1,8 @@
 2008-08-11  Jari Aalto  <jari.aalto@cante.net>
 
+	* tiny/tinypage.el (tinypage-renumber-level-forward): Change to
+	`string-to-number'.
+
 	* tiny/tinylock.el (tinylock-:history): Change to defvar.
 
 	* tiny/tinydiff.el
