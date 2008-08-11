@@ -118,7 +118,7 @@
                    (symbol-function name)))))
     `(progn
        (defmacro ,name ,@everything-else)
-       (put (quote ,name) 'defmacro-maybe t)))))
+       (put (quote ,name) 'defmacro-maybe t))))
 
 ;;; ----------------------------------------------------------------------
 ;;;
