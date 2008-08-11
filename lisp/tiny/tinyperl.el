@@ -2545,11 +2545,7 @@ TinyPerl: Pod::Checker.pm is not known to this Perl version. @INC trouble?"))
            2 1)
          compilation-error-regexp-alist)
         (tinyperl-debug fid "cmd" cmd)
-        (compile-internal cmd
-                          "No more lines." ;; error-message
-                          nil              ;; name-of-mode
-                          nil              ;; parser
-                          nil)))           ;; error-regexp-alist
+        (compilation-start cmd)))
     (tinyperl-debug fid "buffer" buffer)
     buffer))
 

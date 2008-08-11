@@ -11,6 +11,7 @@
 	(tinyperl-directory-files): Update to modern backquote.
 	(tinyperl-executable-set): Update to modern backquote.
 	(tinyperl-version-macro): Update to modern backquote.
+	(tinyperl-podchecker): Use `compilation-start'.
 
 	* tiny/tinypad.el (ti::macrof-minor-mode-wizard): Replace
 	`find-file-hooks' with (ti::compath-find-file-hook).
