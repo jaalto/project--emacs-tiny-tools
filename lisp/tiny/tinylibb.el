@@ -388,15 +388,14 @@ Example:
 (defmacro-maybe with-temp-buffer (&rest forms)
   "Create a temporary buffer, and evaluate FORMS there like `progn'."
   (let ((temp-buffer (make-symbol "temp-buffer")))
-    (`
-     (let (((, temp-buffer)
+    `(let ((,temp-buffer
             (get-buffer-create (generate-new-buffer-name " *temp*"))))
        (unwind-protect
            (save-excursion
-             (set-buffer (, temp-buffer))
-             (,@ forms))
-         (and (buffer-name (, temp-buffer))
-              (kill-buffer (, temp-buffer))) )))))
+             (set-buffer ,temp-buffer)
+             ,@forms)
+         (and (buffer-name ,temp-buffer)
+              (kill-buffer ,temp-buffer)) ))))
 
 (defun-maybe byte-compiling-files-p ()
   "Return t if currently byte-compiling files."
@@ -411,15 +410,14 @@ Example:
 (put 'with-output-to-string 'edebug-form-spec '(body))
 (defmacro-maybe with-output-to-string (&rest body) ;XEmacs has this
   "Please use `shell-command-to-string'. Execute BODY and return string."
-  (`
-   (save-current-buffer
+  `(save-current-buffer
      (set-buffer (get-buffer-create " *string-output*"))
      (setq buffer-read-only nil)
      (buffer-disable-undo (current-buffer))
      (erase-buffer)
      (let ((standard-output (current-buffer)))
-       (,@ body))
-     (buffer-string))))
+       ,@body)
+     (buffer-string)))
 
 ;;; ----------------------------------------------------------------------
 ;;;
@@ -442,25 +440,25 @@ seen my `buffer-read-only'
    (set-text-properties 1 10 '(face highlight)))
 
 "
-    (` (let* ((Buffer-Modified (buffer-modified-p))
+    `(let* ((Buffer-Modified (buffer-modified-p))
               (Buffer-Read-Only buffer-read-only))
          (prog1
              (progn
                (setq buffer-read-only nil)
-               (,@ body)))
+               ,@body))
          (if Buffer-Modified
              (set-buffer-modified-p t)
            (set-buffer-modified-p nil))
          (if Buffer-Read-Only
              (setq buffer-read-only t)
-           (setq buffer-read-only nil))))))
+           (setq buffer-read-only nil)))))
 
 ;; `save-excursion' is expensive; use `save-current-buffer' instead
 (put 'save-current-buffer 'edebug-form-spec '(body))
 (defmacro-maybe save-current-buffer (&rest body)
   "Save the current buffer; execute BODY; restore the current buffer.
     Executes BODY just like `progn'."
-  (` (save-excursion (,@ body))))
+  `(save-excursion ,@body))
 
 (put 'with-current-buffer 'lisp-indent-function 1)
 (put 'with-current-buffer 'edebug-form-spec '(body))
@@ -469,10 +467,9 @@ seen my `buffer-read-only'
 Execute the forms in BODY with BUFFER as the current buffer.
     The value returned is the value of the last form in BODY.
     See also `with-current-buffer'."
-  (`
-   (save-current-buffer
-     (set-buffer (, buffer))
-     (,@ body))))
+  `(save-current-buffer
+     (set-buffer ,buffer)
+     ,@body))
 
 (defmacro-maybe with-output-to-file (file &rest body)
   "Open FILE and run BODY.
@@ -610,17 +607,16 @@ arguments.  If ARGS is not a list, no argument will be passed."
 
 (defmacro ti::compat-character-define-macro (function1 function2)
   "Define XEmacs compatible character FUNCTION2 as an alias for FUNCTION1."
-  (`
-   (when (or (not (fboundp (, function1)))
+  `(when (or (not (fboundp ,function1))
              (and (ti::emacs-p)
-                  (fboundp (, function1))
-                  (or (not (equal (symbol-function (, function1))
-                                  (, function2)))
+                  (fboundp ,function1)
+                  (or (not (equal (symbol-function ,function1)
+                                  ,function2))
                       ;;  If the definition is 'ignore, reassign correct
                       ;;  function.
-                      (equal (symbol-function (, function1))
+                      (equal (symbol-function ,function1)
                              'ignore))))
-     (defalias (, function1) (, function2)))))
+     (defalias ,function1 ,function2)))
 
 (defun ti::compat-char-int-p (ch)     ;Not in Emacs (in XEmacs20 MULE)
   (and (integerp ch)
@@ -1029,12 +1025,11 @@ Notes:
   "Run DOLIST for Cygwin mount table.
 `mount' is complete mount element (cygwin . dos).
 Variables `cygwin' and `dos' are bound respectively."
-  (`
-   (dolist (mount w32-cygwin-mount-table)
+  `(dolist (mount w32-cygwin-mount-table)
      ;;  mount => ("/tmp" . "c:\\temp")
      (let* ((cygwin (car mount))
             (dos    (cdr mount)))
-       (,@ body)))))
+       ,@body)))
 
 ;;; ----------------------------------------------------------------------
 ;;;
@@ -1050,11 +1045,10 @@ For example, you you want to call program ´zgrep' which is not an
       (w32-cygwin-shell-environment
            ...))
 
-Variable ´shell-file-name' is locally bound during call."
-  (`
-   (let ((shell-file-name (format "%s/bin/hash.exe"
+Variable `hell-file-name' is locally bound during call."
+  `(let ((shell-file-name (format "%s/bin/hash.exe"
                                   (ti::win32-cygwin-p 'use-cache))))
-     (,@ body))))
+     ,@body))
 
 ;;; ----------------------------------------------------------------------
 ;;;
@@ -1344,7 +1338,7 @@ Be sure to call `expand-file-name' before you pass PATH to the function."
         ;;  This emacs is too old for new custom. Emulate it.
         (defmacro defgroup (&rest args) nil)
         (defmacro defcustom (var value doc &rest args)
-          (` (defvar (, var) (, value) (, doc)))))
+          `(defvar ,var ,value ,doc)))
        ;; .. .. .. .. .. .. .. .. .. .. .. .. .. .. .. .. .. custom maybe . .
        (t
         ;; Explanation: When I say (require 'custom) in -batch byte
@@ -1435,7 +1429,7 @@ tinylibm.el: ** Too old custom.el; You should upgrade your Emacs."))
           ;; We have the old custom-library, hack around it.
           (defmacro defgroup (&rest args) nil)
           (defmacro defcustom (var value doc &rest args)
-            (` (defvar (, var) (, value) (, doc))))))))))))
+            `(defvar ,var ,value ,doc))))))))))
 
 ;;}}}
 

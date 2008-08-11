@@ -1,5 +1,15 @@
 2008-08-11  Jari Aalto  <jari.aalto@cante.net>
 
+	* tiny/tinylibb.el (with-temp-buffer): Update to modern backquote.
+	(with-output-to-string): Update to modern backquote.
+	(fboundp): Update to modern backquote.
+	(save-current-buffer): Update to modern backquote.
+	(with-current-buffer): Update to modern backquote.
+	(ti::compat-character-define-macro): Update to modern backquote.
+	(w32-cygwin-mount-table-dolist): Update to modern backquote.
+	(w32-cygwin-shell-environment): Update to modern backquote.
+	(custom): Update to modern backquote.
+
 	* tiny/tinyigrep.el
 	- Byte comile fix: Add %d %s to all calls using `tinyigrep-countdown'
 	(ti::expand-file-name-cygwin-macro): Update to
