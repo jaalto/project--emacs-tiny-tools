@@ -536,7 +536,9 @@ This variable is used in `tinytag-filter-default-function'."
 Many times the word picked at point matches several functions and you
 can keep this buffer in separate frame in Window environment to see what
 is the correct match.
-If this variable is nil, no buffer is created.")
+If this variable is nil, no buffer is created."
+  :type  'string
+  :group 'TinyTag)
 
 (defcustom tinytag-:database-dir
   (or

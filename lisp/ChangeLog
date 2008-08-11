@@ -1,5 +1,7 @@
 2008-08-11  Jari Aalto  <jari.aalto@cante.net>
 
+	* tiny/tinytag.el (tinytag-:output-buffer): Fix defcustom.
+
 	* tiny/tinyperl.el (tinyperl-pause-upload-via-ftp): Use
 	`insert-file-contents'.
 	(tinyperl-perldoc): Fix variable `cmd' and format.
