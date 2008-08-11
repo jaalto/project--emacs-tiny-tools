@@ -558,15 +558,14 @@ STRING is argument to `tinyreplace-:read-args-function'.
 
 Return:
  '(BEG END ARG1-STRING ARG2-STRING)"
-  (`
-   (if buffer-read-only
+  `(if buffer-read-only
        (barf-if-buffer-read-only)
      (if (region-active-p)
          (ti::list-merge-elements
           (region-beginning)
           (region-end)
-          (funcall tinyreplace-:read-args-function (, string)))
-       (error "TinyReplace: Region is not active. Please select one.")))))
+          (funcall tinyreplace-:read-args-function ,string))
+       (error "TinyReplace: Region is not active. Please select one."))))
 
 ;;; ----------------------------------------------------------------------
 ;;;
@@ -699,7 +698,7 @@ Note:
             to-str   (ti::string-format-percent to-str))
       (setq
        msg
-       (format "Replace '%s' with '%s' (a,bvuBFNU [%s%s%s%s] ?!ynqQ) "
+       (format "Replace '%s' with '%s' (a,bvuBFNU [%s%s%s%s%s] ?!ynqQ) "
                ;; Make prompt fit nicely
                (if (> (length from-str) 18)
                    (concat (ti::string-left from-str 16) "..")
@@ -1300,7 +1299,8 @@ Input:
                  (no-confirm
                   ;; Automatic replace
                   (message "TinyReplace: Processing %s" file)
-                  (replace-string str1 str2)
+		  (while (search-forward str1 nil 'noerr)
+		    (replace-match str2 nil t))
                   (with-current-buffer buffer
                     (save-buffer)))
                  (t
