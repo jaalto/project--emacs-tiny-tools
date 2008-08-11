@@ -278,7 +278,8 @@
 (require 'tinylibm)
 
 (eval-and-compile
-  (autoload 'dired-do-shell-command "dired-x" "" t)
+  (autoload 'dired-do-shell-command   "dired-x" "" t)
+  (autoload 'dired-read-shell-command "dired-x" "" t)
 
   ;; We really don't need to load full packages, so use these..
   (defvar   vc-dired-mode)
