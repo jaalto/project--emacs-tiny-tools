@@ -88,7 +88,7 @@
 
 ;;; ......................................................... &require ...
 
-(require 'tinylibm)
+(require 'tinyliba)
 
 (eval-when-compile
   (defvar mode-line-mode-menu)
