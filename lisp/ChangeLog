@@ -1,6 +1,58 @@
 2008-08-11  Jari Aalto  <jari.aalto@cante.net>
 
-	* tiny/tinyvc.el (tinyvc-do-macro): Update to modern backquote.
+	* tiny/tinylibm.el (ti::fboundp-check-autoload): Update to modern backquote.
+	(ti::narrow-safe): Update to modern backquote.
+	(ti::narrow-to-paragraph): Update to modern backquote.
+	(ti::nconc): Update to modern backquote.
+	(ti::when-package): Update to modern backquote.
+	(ti::with-require): Update to modern backquote.
+	(ti::with-time-this): Update to modern backquote.
+	(ti::with-coding-system-raw-text): Update to modern backquote.
+	(ti::verb): Update to modern backquote.
+	(int-to-float): Update to modern backquote.
+	(ti::dotimes): Update to modern backquote.
+	(ti::funcall): Update to modern backquote.
+	(ti::d!): Update to modern backquote.
+	(ti::d!!): Update to modern backquote.
+	(ti::applycar): Update to modern backquote.
+	(ti::print-p): Update to modern backquote.
+	(ti::assoc-append-inside): Update to modern backquote.
+	(ti::byte-compile-defun-compiled-p): Update to modern backquote.
+	(ti::byte-compile-defun-maybe): Update to modern backquote.
+	(ti::package-use-dynamic-compilation): Update to modern backquote.
+	(ti::package-require-for-emacs): Update to modern backquote.
+	(ti::package-require-view): Update to modern backquote.
+	(ti::package-package-require-timer): Update to modern backquote.
+	(ti::package-require-mail-abbrevs): Update to modern backquote.
+	(ti::use-file-compression): Update to modern backquote.
+	(ti::define-key-if-free): Update to modern backquote.
+	(ti::copy-key-definition): Update to modern backquote.
+	(ti::keep-lower-order): Update to modern backquote.
+	(ti::bool-toggle): Update to modern backquote.
+	(ti::dolist-buffer-list): Update to modern backquote.
+	(ti::vector-table-init): Update to modern backquote.
+	(ti::vector-table-get): Update to modern backquote.
+	(ti::vector-table-clear): Update to modern backquote.
+	(ti::load-file-with-wrapper): Update to modern backquote.
+	(ti::write-file-as-is-macro): Update to modern backquote.
+	(ti::directory-recursive-macro): Update to modern backquote.
+	(ti::i-macro-region-body): Update to modern backquote.
+	(ti::with-unix-shell-environment): Update to modern backquote.
+	(ti::package-defgroup-tiny): Update to modern backquote.
+	(ti::grep-output-parse-macro): Update to modern backquote.
+	(ti::occur-macro): Update to modern backquote.
+	(ti::momentary-output-macro): Update to modern backquote.
+	(ti::save-excursion-macro): Update to modern backquote.
+	(ti::save-with-marker-macro): Update to modern backquote.
+	(ti::save-line-column-macro): Update to modern backquote.
+	(ti::widen-safe): Update to modern backquote.
+	(ti::overlay-require-macro): Update to modern backquote.
+	(ti::ck-maybe-activate): Add %s to `error'.
+	(ti::add-hook-fix): REMOVED. crypt.el support.
+	(ti::add-hooks): Don't call `ti::add-hook-fix'.
+	(ti::pp-variable-list): Add %s %s to `error'.
+
+	* tiny/tiny1vc.el (tinyvc-do-macro): Update to modern backquote.
 	(tinyvc-file-confirm-macro): Update to modern backquote.
 	(tinyvc-do-over-locks-macro): Update to modern backquote.
 

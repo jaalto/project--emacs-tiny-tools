@@ -356,7 +356,9 @@ want to define simple key functions
    \"\\C-cc\"
    (ti::definteractive
      (message \"You gave arg: %s\" (ti::prefix-arg-to-text arg))))"
-  (` (function (lambda (&optional arg) (interactive "P") (,@ body)))))
+  `(function (lambda (&optional arg)
+	       (interactive "P")
+	       ,@body)))
 
 ;;; ----------------------------------------------------------------------
 ;;;
@@ -390,14 +392,14 @@ in file tinylibxe.el:
   ;; take in effect. Somebody else has actiated the autoload definition.
   ;;
   ...)"
-  (` (cond
-      ((or (and (fboundp (, function))
-                (ti::autoload-p (, function))
+  `(cond
+    ((or (and (fboundp ,function)
+                (ti::autoload-p ,function)
                 (string-match
-                 (, re )
-                 (nth 1 (symbol-function (, function)))))
-           (not (fboundp (, function))))
-       (,@ body)))))
+                 ,re
+                 (nth 1 (symbol-function ,function))))
+           (not (fboundp ,function)))
+       ,@body)))
 
 ;;; ----------------------------------------------------------------------
 ;;;
@@ -406,10 +408,10 @@ in file tinylibxe.el:
 (defmacro ti::narrow-safe (beg end &rest body)
   "Narrow temprarily to BEG END and do BODY.
 This FORM preserves restriction and excursion with one command."
-  (` (save-excursion
-       (save-restriction
-         (narrow-to-region (, beg) (, end))
-         (,@ body)))))
+  `(save-excursion
+     (save-restriction
+       (narrow-to-region ,beg ,end)
+       ,@body)))
 
 ;;; ----------------------------------------------------------------------
 ;;;
@@ -417,14 +419,13 @@ This FORM preserves restriction and excursion with one command."
 (put 'ti::narrow-to-paragraph 'edebug-form-spec '(body))
 (defmacro ti::narrow-to-paragraph (&rest body)
   "Narrow to paragraph. Point must be already inside a paragraph."
-  (`
-   (let* (beg)
+  `(let* (beg)
      (when (re-search-backward "^[ \t]*$" nil t)
        (forward-line 1)
        (setq beg (point))
        (when (re-search-forward "^[ \t]*$" nil t)
          (ti::narrow-safe beg (point)
-           (,@ body)))))))
+           ,@body)))))
 
 ;;; ----------------------------------------------------------------------
 ;;; Note that nconc works only if the initial
@@ -434,8 +435,8 @@ This FORM preserves restriction and excursion with one command."
 (defmacro ti::nconc (list x)
   "Add to LIST element X. Like nconc, but can also add to empty list.
 Using `nconc' is faster than `append'"
-  (` (setq (, list)
-           (nconc (, list) (list (, x))))))
+  `(setq ,list
+           (nconc ,list (list ,x))))
 
 ;;; ----------------------------------------------------------------------
 ;;;
@@ -465,13 +466,12 @@ A nil is not accepted as a true list."
 
   (when-package 'browse-url nil
     (autoload 'browse-url-at-mouse \"browse-url\" \"\" t))"
-  (`
-   (when (or (and (, feature)
-                  (featurep (, feature)))
-             (locate-library (or (, package)
-                                 (symbol-name (, feature)))))
+  `(when (or (and ,feature
+                  (featurep ,feature))
+             (locate-library (or ,package
+                                 (symbol-name ,feature))))
      (progn
-       (,@ body)))))
+       ,@body)))
 
 ;;; ----------------------------------------------------------------------
 ;;;
@@ -483,9 +483,8 @@ E.g. try loading a package and only if load succeeds, execute BODY.
 
   (with-feature 'browse-url nil
      ;;; Setting the variables etc)"
-  (`
-   (when (require (, feature) (, filename) 'noerr)
-     (,@ body))))
+  `(when (require ,feature ,filename 'noerr)
+     ,@body))
 
 ;;; ----------------------------------------------------------------------
 ;;;
@@ -497,15 +496,14 @@ Float time value in seconds is sent to FUNCTION.
 
   (ti::with-time-this '(lambda (time) (message \"Secs %f\" time))
      (sit-for 4))."
-  (`
-   (let* ((Time-A (current-time))
+  `(let* ((Time-A (current-time))
           Time-B
           Time-Diff)
      (prog1
-         (progn (,@ body)))
+         (progn ,@body))
      (setq Time-B (current-time))
      (setq Time-Diff (ti::date-time-difference Time-B Time-A 'float))
-     (funcall (, function) Time-Diff))))
+     (funcall ,function Time-Diff)))
 
 ;;; ----------------------------------------------------------------------
 ;;;
@@ -514,8 +512,8 @@ Float time value in seconds is sent to FUNCTION.
 (defmacro ti::with-coding-system-raw-text (&rest body)
   "Bind `coding-system-for-write' to Unix style raw write during BODY."
   ;;  #todo: 'raw-text is for Emacs, is this different in XEmacs?
-  (` (let* ((coding-system-for-write 'raw-text))
-       (,@ body))))
+  `(let* ((coding-system-for-write 'raw-text))
+       ,@body))
 
 ;;}}}
 ;;{{{ small ones
@@ -565,8 +563,7 @@ Example:
     ..code
     (if verb
         (message 2)))"
-  (`
-   (setq verb (or verb (interactive-p)))))
+  `(setq verb (or verb (interactive-p))))
 
 ;;; ----------------------------------------------------------------------
 ;;;
@@ -584,7 +581,7 @@ Example:
 ;;;
 (defmacro-maybe int-to-float (nbr)
   "Convert integer NBR to float."
-  (` (read (concat (int-to-string (, nbr)) ".0"))))
+  `(read (concat (int-to-string ,nbr) ".0")))
 
 ;;; ----------------------------------------------------------------------
 ;;; see also:  (dotimes (var 5) ..
@@ -592,10 +589,10 @@ Example:
 (put 'ti::dotimes 'lisp-indent-function 3)
 (defmacro ti::dotimes (var beg end &rest body)
   "Loop using VAR from BEG to END and do BODY."
-  (` (loop for (, var) from (, beg) to (, end)
-           do
-           (progn
-             (,@ body)))))
+  `(loop for ,var from ,beg to ,end
+	 do
+	 (progn
+	   ,@body)))
 
 ;;; ----------------------------------------------------------------------
 ;;;
@@ -624,10 +621,9 @@ Warning:
   `symbol-function' doesn't return a function to call. Rearrange
   code so that you do (require 'package) or (ti::autoload-p func) test before
   using ti::funcall."
-  (`
-   (let* ((func (, func-sym)))
-     (when (fboundp (, func-sym))
-       (apply func (,@ args) nil)))))
+  `(let* ((func ,func-sym))
+     (when (fboundp ,func-sym)
+       (apply func ,@args nil))))
 ;;; Old
 ;;;   (apply (symbol-function (, func-sym)) (,@ args) nil)
 
@@ -866,9 +862,9 @@ Example:
 ;;;
 (defmacro ti::d! (&rest args)
   "Debug. Show any ARGS and wait for keypress."
-  (` (save-excursion
-       (save-match-data
-         (read-from-minibuffer (ti::prin1-mapconcat "|" (,@ args)))))))
+  `(save-excursion
+     (save-match-data
+       (read-from-minibuffer (ti::prin1-mapconcat "|" ,@args)))))
 
 ;;; ----------------------------------------------------------------------
 ;;; - This logs to buffer, when you can't display values, e.g. in loop
@@ -879,12 +875,11 @@ Example:
   "Stream debug. Record any information in ARGS to debug buffer.
 References:
   `ti:m-debug-buffer'"
-  (`
-   (save-excursion
+  `(save-excursion
      (ti::append-to-buffer
       (get-buffer-create ti:m-debug-buffer)
       (save-match-data
-        (ti::prin1-mapconcat "|" (,@ args)))))))
+        (ti::prin1-mapconcat "|" ,@args)))))
 
 ;;; ----------------------------------------------------------------------
 ;;;
@@ -1132,9 +1127,9 @@ Examples:
 
   -->  ((2 1) (4 3))"
   (let ((spec-name (gensym)))
-    (` (mapcar (lambda ((, spec-name))
-                 (apply (, function-form) (, spec-name)) )
-               (, list-form) ))))
+    `(mapcar (lambda (,spec-name)
+                 (apply ,function-form ,spec-name) )
+               ,list-form )))
 
 ;;; ----------------------------------------------------------------------
 ;;;
@@ -1308,7 +1303,7 @@ Return:
           (ti::ck-advice-control mode)
           t))
        (t
-        (error "Unknown type %s" type mode))))))
+        (error "Unknown type %s %s" type mode))))))
 
 ;;; ----------------------------------------------------------------------
 ;;; See register.el::insert-register
@@ -1518,16 +1513,16 @@ Return:
 
   t
   nil"
-  (` (if (and (not (null (, ch)))       ;it must not be nil
-              (or (ti::char-in-list-case (, ch) '(?\t ?\n ?\r ?\f))
-                  ;;  esh-mode.el makes wrong definition of
-                  ;;  `char-int'. Fix it.
-                  (prog1 t
-                    (ti::compat-character-define-macro 'char-int   'identity))
-                  (and
-                   (> (char-int (, ch)) 31)
-                   (< (char-int (, ch)) 127))))
-         t nil)))
+  `(if (and (not (null ,ch))       ;it must not be nil
+	    (or (ti::char-in-list-case (, ch) '(?\t ?\n ?\r ?\f))
+		;;  esh-mode.el makes wrong definition of
+		;;  `char-int'. Fix it.
+		(prog1 t
+		  (ti::compat-character-define-macro 'char-int 'identity))
+		(and
+		 (> (char-int ,ch) 31)
+		 (< (char-int ,ch) 127))))
+       t nil))
 
 ;;; ----------------------------------------------------------------------
 ;;;
@@ -1800,14 +1795,13 @@ Example:
 
   -->
   '( (1 . (a b x)) (2 . (c d))))"
-  (`
-   (let* (EL-T
+  `(let* (EL-T
           LIS-T)
-     (if (not (setq EL-T (funcall (, func) (, key) (, list))))
-         (push (cons (, key) (list (, add))) (, list))
+     (if (not (setq EL-T (funcall ,func ,key ,list)))
+         (push (cons ,key (list ,add)) ,list)
        (setq LIS-T (cdr EL-T))
-       (push (, add) LIS-T)
-       (setcdr EL-T LIS-T)))))
+       (push ,add LIS-T)
+       (setcdr EL-T LIS-T))))
 
 ;;; ----------------------------------------------------------------------
 ;;;
@@ -2194,8 +2188,8 @@ E.g. you can't call `find-file', `switch-to-buffer' in dedicated frame."
   ;;  byte-code-function-p is marked obsolete in 19.14
   ;;  compiled-function-p is an obsolete in 19.34
   (if (ti::emacs-p)
-      (` (byte-code-function-p (symbol-function (, function-symbol))))
-    (` (compiled-function-p  (symbol-function (, function-symbol))))))
+      `(byte-code-function-p (symbol-function ,function-symbol))
+    `(compiled-function-p (symbol-function ,function-symbol))))
 
 ;;; ----------------------------------------------------------------------
 ;;;
@@ -2215,13 +2209,12 @@ those functions. If the package is currently beeing byte compiled, then
 the code does nothing. Note:  loading package always causes byte compiling
 the functions although they may already be byte compiled. This will not
 do much harm."
-  (`
-   (eval-and-compile
+  `(eval-and-compile
      ;;  If not package compiltion in progress....
      ;;
      (unless (byte-compiling-files-p)
-       (dolist (function (, defun-list))
-         (byte-compile function) )))))
+       (dolist (function ,defun-list)
+         (byte-compile function) ))))
 
 ;;; ----------------------------------------------------------------------
 ;;;
@@ -2230,8 +2223,7 @@ do much harm."
 Add this statement to the beginning of file:
 
    (eval-when-compile (ti::package-use-dynamic-compilation))"
-  (`
-   (progn
+  `(progn
      (when (boundp 'byte-compile-dynamic)
        (make-local-variable 'byte-compile-dynamic)
        (defvar byte-compile-dynamic) ;; silence byte compiler
@@ -2240,7 +2232,7 @@ Add this statement to the beginning of file:
        ;; In 19.34 this is t by default
        (make-local-variable 'byte-compile-dynamic-docstring)
        (defvar byte-compile-dynamic-docstring) ;; silence byte compiler
-       (set 'byte-compile-dynamic-docstring t)))))
+       (set 'byte-compile-dynamic-docstring t))))
 
 ;;; ----------------------------------------------------------------------
 ;;;
@@ -2257,66 +2249,62 @@ Add this statement to the beginning of file:
   "EMACS and XEMACS package compatibility. Evaluate BODY.
 E.g. `timer' in Emacs and 'itimer in XEmacs
 Recommended usage: (eval-and-compile (ti::package-require-for-emacs ...))."
-  (`
-   (progn
+  `(progn
      (if (ti::emacs-p)
-         (unless (featurep (, emacs))
-           (require (, emacs))
-           (,@ body))
-       (unless (featurep (, xemacs))
-         (require (, xemacs))
-         (,@ body) )))))
+         (unless (featurep ,emacs)
+           (require ,emacs)
+           ,@body)
+       (unless (featurep ,xemacs)
+         (require ,xemacs)
+         ,@body ))))
 
 ;;; ----------------------------------------------------------------------
 ;;;
 (defmacro ti::package-require-view ()
   "Emacs and XEmacs compatibility. Load view package."
-  (`
-   (if (ti::xemacs-p "20")
+  `(if (ti::xemacs-p "20")
        (require 'view-less)
-     (require 'view))))
+     (require 'view)))
 
 ;;; ----------------------------------------------------------------------
 ;;;
 (defmacro ti::package-package-require-timer ()
   "Emacs and XEmacs compatibility. Load view package."
-  (`
-   (if (ti::xemacs-p)
+  `(if (ti::xemacs-p)
        (require 'itimer)
-     (require 'timer))))
+     (require 'timer)))
 
 ;;; ----------------------------------------------------------------------
 ;;;
 (defmacro ti::package-require-mail-abbrevs ()
   "Emacs and XEmacs compatibility. Load mail abbrevs package.
 Recommended usage: (eval-and-compile (use-mail-abbrevs))"
-  (`
-   (ti::package-require-for-emacs
+  `(ti::package-require-for-emacs
     'mailabbrev
     'mail-abbrevs
     (when (fboundp 'mail-abbrevs-setup) ;; Emacs
-      (ti::funcall 'mail-abbrevs-setup)))))
+      (ti::funcall 'mail-abbrevs-setup))))
 
 ;;; ----------------------------------------------------------------------
 ;;;
 (defmacro ti::use-file-compression ()
   "Activate jka-compr.el."
-  (` (cond
-      ((or (featurep 'jka-compr)
-           (featurep 'crypt++)))        ;That's ok then.
-      ((and (featurep 'vm)
-            (require 'crypt++ nil 'noerr)))
-      ((featurep 'vm)
-       (error "\
+  `(cond
+    ((or (featurep 'jka-compr)
+	 (featurep 'crypt++)))		;That's ok then.
+    ((and (featurep 'vm)
+	  (require 'crypt++ nil 'noerr)))
+    ((featurep 'vm)
+     (error "\
 ** Tinylibm: VM and compression was requested but no 'crypt++ feature provided.
 ** Tinylibm: Visit ftp://ftp.cs.umb.edu/pub/misc/.
 ** Tinylibm: Cannot deduce to jka-compr,
 ** Tinylibm: because it has been previously reported that VM is not
 ** Tinylibm: compatible with jka-compr. (1999-02 up till Emacs 20.3"))
-      (t                                ;Last chance
-       (require 'jka-compr)
-       (if (fboundp 'jka-compr-install)
-           (jka-compr-install)))))) ;New Emacs and XEmacs releases need this
+    (t					;Last chance
+     (require 'jka-compr)
+     (if (fboundp 'jka-compr-install)
+	 (jka-compr-install))))) ;Later Emacs and XEmacs releases need this
 
 ;;; ----------------------------------------------------------------------
 ;;; #todo: what to do with .zip or other files?
@@ -2445,22 +2433,21 @@ Example:
      (format \"package xxx: key %s is already occupied with %s\"
              \"Please use manual customization.\"
              key def)))"
-  (`
-   (let ((def (lookup-key (, map) (, key) )))
+  `(let ((def (lookup-key ,map ,key )))
      ;; Lookup key returns NBR if the sequence of keys exceed
      ;; the last keymap prefix
      ;; C-cck  --> C-cc  is undefined, so there is no C-c c map yet
 
-     (if (or (eq def (, object))
+     (if (or (eq def ,object)
              (memq def '(nil ignore))
              (integerp def))
-         (define-key (, map) (, key ) (, object))
-       (if (, callback)
-           (funcall (, callback) (, key ) def)
+         (define-key ,map ,key ,object)
+       (if ,callback
+           (funcall ,callback ,key def)
          (error
           (format "Already occupied, key: %s slot content: %s "
-                  (, key)
-                  (prin1-to-string def))))))))
+                  ,key
+                  (prin1-to-string def)))))))
 
 ;;; ----------------------------------------------------------------------
 ;;;
@@ -2510,11 +2497,10 @@ Example:
     ;; Now occupy  minor map definition
 
     (define-key [prior] 'minor-mode-function)"
-  (`
-   (define-key (, map) (, to-key)
+  `(define-key ,map ,to-key
      (or (and (current-local-map)
-              (lookup-key (current-local-map) (, from-key)))
-         (lookup-key global-map (, from-key)) ))))
+              (lookup-key (current-local-map) ,from-key))
+         (lookup-key global-map ,from-key) )))
 
 ;;; ----------------------------------------------------------------------
 ;;;
@@ -2541,38 +2527,11 @@ If ARG is string, the length of string is returned."
     (length val)))
 
 ;;; ----------------------------------------------------------------------
-;;;
-(defun ti::add-hook-fix ()
-  "Arrange some write file hooks to correct order. Support crypt++.el"
-  (let* ((crypt-w  (memq 'crypt-write-file-hook write-file-hooks)))
-
-    (when crypt-w ;; Crypt present
-      (let* ((crypt-f  (memq 'crypt-find-file-hook find-file-hooks))
-             (crypt-n  (memq 'find-file-not-found-hooks
-                             find-file-not-found-hooks )))
-        (when (not (null (cdr crypt-w))) ;; Not in the end of the hook
-          (remove-hook 'crypt-write-file-hook 'write-file-hooks)
-          (add-hook    'crypt-write-file-hook 'write-file-hooks 'append))
-
-        (when (not (null (cdr (reverse crypt-f)))) ;; Not at the beginning
-          (remove-hook 'crypt-find-file-hook 'find-file-hooks)
-          (add-hook    'crypt-find-file-hook 'find-file-hooks 'append))
-
-        (when (not (null (cdr (reverse crypt-n)))) ;; Not at the beginning
-          (remove-hook 'find-file-not-found-hooks 'find-file-hooks)
-          (add-hook    'find-file-not-found-hooks 'find-file-hooks 'append))))))
-
-;;; ----------------------------------------------------------------------
 ;;; - add-hook should accept many parameters...
 ;;;
 (defun ti::add-hooks
   (hook-or-list single-or-list &optional remove append check)
   "Run `add-hook' to insert every element in HOOK-OR-LIST to SINGLE-OR-LIST.
-
-Notes:
-
-  Thic function calls `ti::add-hook-fix` if the hook in question
-  is `write-file-hooks' (Crypt support)
 
 Remember:
 
@@ -2595,9 +2554,6 @@ Example:
   (let* ((list  (ti::list-make single-or-list))
          (hlist (ti::list-make hook-or-list)))
     (dolist (hook hlist)
-      (if (eq hook 'write-file-hooks)
-          ;; Arrange some write file hooks to correct order (crypt.el)
-          (ti::add-hook-fix))
       (dolist (x list)
         (when (or (null check)
                   (and check
@@ -2646,39 +2602,38 @@ Default is to convert all tabs in STRING with spaces."
 ;;;
 (defmacro ti::keep-lower-order (var1 var2)
   "Keep VAR1 < VAR2."
-  (` (let ((MiN (min (, var1) (, var2)))
-           (MaX (max (, var1) (, var2))))
-       (setq (, var1) MiN)
-       (setq (, var2) MaX))))
+  `(let ((MiN (min ,var1 ,var2))
+	 (MaX (max ,var1 ,var2)))
+     (setq ,var1 MiN)
+     (setq ,var2 MaX)))
 
 ;;; ----------------------------------------------------------------------
 ;;;
 (defmacro ti::bool-toggle (var &optional arg)
   "Toggle VAR according to ARG like mode would do.
-Usefull for for functions that use arg 0/-1 = off, 1 = on, nil = toggle.
-Minor modes behave this way.
+Usefull for for functions that use arg 0/-1 = off, 1 = on, nil =
+toggle. Minor modes behave this way.
 
 VAR is set to following values when ARG is:
   arg 0/-1  VAR -> nil
   arg nbr   VAR -> t
   arg nil   VAR -> not(var)     toggles variable"
-  (`
-   ;;  The `let' is mandatory. XEmacs byte compiler will not allow
-   ;;  expanding the variable in numeric context. If we used
-   ;;
-   ;;  (and (integerp (, arg))
-   ;;       (< (, arg) 1))
-   ;;
-   ;;  That would compile into this (when optional ARG is nil)
-   ;;
-   ;;  (and (integerp nil)
-   ;;       (< nil 1))              ;; <= Byte compiler error
-   ;;
-   ;;  The message from XEmacs 21.5 would say:
-   ;;  ** evaluating (< nil 1): (wrong-type-argument number-char-or-marker-p nil)
-   ;;
-   (let  ((toggle (, arg)))
-     (setq (, var)
+  ;;  The `let' is mandatory. XEmacs byte compiler will not allow
+  ;;  expanding the variable in numeric context. If we used
+  ;;
+  ;;  (and (integerp ,arg)
+  ;;       (< ,arg 1))
+  ;;
+  ;;  That would compile into this (when optional ARG is nil)
+  ;;
+  ;;  (and (integerp nil)
+  ;;       (< nil 1))              ;; <= Byte compiler error
+  ;;
+  ;;  The message from XEmacs 21.5 would say:
+  ;;  ** evaluating (< nil 1): (wrong-type-argument number-char-or-marker-p nil)
+  ;;
+  `(let ((toggle ,arg))
+     (setq ,var
            (cond
             ((and (integerp toggle)
                   (< toggle 1))         ;Any negative value or 0
@@ -2686,11 +2641,11 @@ VAR is set to following values when ARG is:
             ((integerp toggle)          ;Any positive value
              t)
             ((null toggle)
-             (if (null (, var))
+             (if (null ,var)
                  t
                nil))
             (t
-             nil))))))
+             nil)))))
 
 ;;}}}
 
@@ -2800,25 +2755,24 @@ Examples:
   ;;  Get all buffers in `dired-mode'
   (ti::dolist-buffer-list '(eq major-mode 'dired-mode))
 "
-  (`
-   (let* (OK
+  `(let* (OK
           BN
           return-list)
      (dolist (buffer  (buffer-list))
        (setq BN (buffer-name buffer))
        (when (stringp BN)               ;it's killed if no name
          (with-current-buffer buffer
-           (when (, test-form)
+           (when ,test-form
              (setq OK t)
-             (when (, exclude-form)
+             (when ,exclude-form
                (setq OK nil))
              (when OK
-               (if (and (null (, temp-buf))
+               (if (and (null ,temp-buf)
                         (string-match "^[* ]" BN))
                    nil
                  (push BN return-list)
-                 (,@ action-form)))))))
-     return-list)))
+                 ,@action-form))))))
+     return-list))
 
 ;;; ----------------------------------------------------------------------
 ;;; Emacs erase-buffer doesn't take arguments
@@ -2953,15 +2907,15 @@ This should clear memory location contents."
 ;;;
 (defmacro ti::vector-table-init (table &optional size init-val)
   "Clears vector TABLE. Default SIZE is 128 buckets. INIT-VAL defaults to 0."
-  (` (setq (, table) (make-vector (or (, size) 127) (or (, init-val) 0)))))
+  `(setq ,table (make-vector (or ,size 127) (or ,init-val 0))))
 
 ;;; ----------------------------------------------------------------------
 ;;;
 (defmacro ti::vector-table-get (table item &optional allocate)
   "Read vector TABLE and return ITEM. ALLOCATE if ITEM does not exist."
-  (` (if (, allocate)
-         (intern (, item) (, table))
-       (intern-soft (, item) (, table)))))
+  `(if ,allocate
+       (intern ,item ,table)
+     (intern-soft ,item ,table)))
 
 ;;; ----------------------------------------------------------------------
 ;;;
@@ -2988,17 +2942,17 @@ Input:
 (defmacro ti::vector-table-clear (table)
   "Delete all values assicated to interned symbols in TABLE.
 If possible, unintern all symbols."
-  (` (progn
-       (mapatoms
-        (lambda (atom)
-          (setplist atom nil)
-          ;;  19.34
-          (when (fboundp 'unintern)
-            (ti::funcall 'unintern atom (, table))))
-        (, table))
-       (unless (fboundp 'unintern)      ;Old way
-         (ti::vector-table-init (, table) (length (, table))))
-       (, table))))
+  `(progn
+     (mapatoms
+      (lambda (atom)
+	(setplist atom nil)
+	;;  19.34
+	(when (fboundp 'unintern)
+	  (ti::funcall 'unintern atom ,table)))
+      ,table)
+     (unless (fboundp 'unintern)      ;Old way
+       (ti::vector-table-init ,table (length ,table)))
+     ,table))
 
 ;;}}}
 
@@ -3091,19 +3045,17 @@ Tinylibm: Can't write to file. Modified buffer with the same name in Emacs."))))
 (put 'ti::load-file-with-wrapper 'lisp-indent-function 0)
 (defmacro ti::load-file-with-wrapper (file)
   "Load possibly compressed lisp file. Crypt++ support."
-  (`
-   (if (not (featurep 'crypt++))
+  `(if (not (featurep 'crypt++))
        (load-file file)                 ;jka-compr handles this.
-     (ti::file-eval file))))
+     (ti::file-eval file)))
 
 ;;; ----------------------------------------------------------------------
 ;;;
 (put 'ti::write-file-binary-macro 'lisp-indent-function 0)
 (defmacro ti::write-file-as-is-macro (&rest body)
   "Write file without any coding conversions."
-  (`
-   (let* ((buffer-file-coding-system 'no-conversion)) ;; #todo: XEmacs?
-     (,@ body))))
+  `(let* ((buffer-file-coding-system 'no-conversion)) ;; #todo: XEmacs?
+     ,@body))
 
 ;;; ----------------------------------------------------------------------
 ;;;
@@ -3127,15 +3079,14 @@ Following variables are set during BODY:
 
 `dir'      Directrory name
 `dir-list' All directories under `dir'."
-  (`
-   (flet ((recurse
+  `(flet ((recurse
            (dir)
            (let* ((dir-list (ti::directory-list dir)))
-             (,@ body)
+             ,@body
              (when dir-list
                (dolist (elt dir-list)
                  (recurse elt))))))
-     (recurse (, directory)))))
+     (recurse ,directory)))
 
 ;;; ----------------------------------------------------------------------
 ;;;
@@ -3551,13 +3502,12 @@ region is not selected.
 
 Return:
   '(beg end BODY-return-value)"
-  (`
-   (if (null (region-active-p))
+  `(if (null (region-active-p))
        (error "No region selected.")
      (list
       (region-beginning)
       (region-end)
-      (,@ body)))))
+      ,@body)))
 
 ;;}}}
 ;;{{{ FORMS: special
@@ -3566,13 +3516,12 @@ Return:
 ;;;
 (put 'ti::with-unix-shell-environment 'lisp-indent-function 0)
 (put 'ti::with-unix-shell-environment 'edebug-form-spec '(body))
-(defmacro ti::with-unix-shell-environment  (&rest body)
+(defmacro ti::with-unix-shell-environment (&rest body)
   "Run BODY in Unix like shell. In Win32, this means using Cygwin.
 This form does not guarrantee the environment if there isn't none.
 
 Variable `shell-file-name' is bound locally to new value."
-  (`
-   (let ((shell-file-name shell-file-name))
+  `(let ((shell-file-name shell-file-name))
      ;;  In cygwin, programs like zgrep and egrep are
      ;;  shell scripts, which cannot be called (they should be .exe)
      ;;  in Win32, when cmdproxy.exe is used.
@@ -3581,7 +3530,7 @@ Variable `shell-file-name' is bound locally to new value."
      (when (ti::win32-p)
        (let ((cygwin (ti::win32-cygwin-p)))
          (setq shell-file-name (format "%s/bin/bash.exe" cygwin))))
-     (,@ body))))
+     ,@body))
 
 ;;; ----------------------------------------------------------------------
 ;;; so that I can keep the URL link in one place.
@@ -3597,25 +3546,24 @@ Input:
   GROUP     The upper level custom group where SYMBOL belong
             (e.g. extenstions).
   DOC       Group documentation string."
-  (`
-   (defgroup (, symbol) nil
-     (, doc)
+  `(defgroup ,symbol nil
+     ,doc
 
      ;; You could also use (url-link "mailto:foo.bar@example.com")
 
      :link '(url-link :tag "Update site"
                       "http://nongnu.org/projects/emacs-tiny-tools/")
-     :prefix (symbol-name (quote (, prefix)))
-     :group  (quote (, group))
+     :prefix (symbol-name (quote ,prefix))
+     :group  (quote ,group)
 
      ;;  Now define custom contact function when you click link
 
      :link '(link
              :tag "Contact maintainer"
              :func-args (list
-                         (symbol-name (quote (, prefix)))
-                         (symbol-name (quote (, symbol))))
-             :action    ti::package-tiny-defgroup-mail))))
+                         (symbol-name (quote ,prefix))
+                         (symbol-name (quote ,symbol)))
+             :action    ti::package-tiny-defgroup-mail)))
 
 ;;; ----------------------------------------------------------------------
 ;;; This would actually belong to ti::package-defgroup-tiny
@@ -3680,32 +3628,32 @@ Following variables are bound during loop (lowercase variable names):
 This means that you can say this in BODY.
 
    (setq absolute (concat grep-dir grep-file))"
-  (` (with-current-buffer (, buffer)
-       (save-excursion
-         (ti::pmin)
-         (let ((grep-dir (and (looking-at "^cd +\\(.*\\)")
-                              (match-string 1)))
-               grep-file
-               grep-line
-               grep-data)
-           (while (re-search-forward
-                   "^\\([^:\r\n]+\\):\\([0-9]+\\):\\(.*\\)" nil t)
-             (setq grep-file (match-string 1)
-                   grep-line (match-string 2)
-                   grep-data (match-string 3))
+  `(with-current-buffer ,buffer
+     (save-excursion
+       (ti::pmin)
+       (let ((grep-dir (and (looking-at "^cd +\\(.*\\)")
+			    (match-string 1)))
+	     grep-file
+	     grep-line
+	     grep-data)
+	 (while (re-search-forward
+		 "^\\([^:\r\n]+\\):\\([0-9]+\\):\\(.*\\)" nil t)
+	   (setq grep-file (match-string 1)
+		 grep-line (match-string 2)
+		 grep-data (match-string 3))
 
-             (when grep-line
-               (setq grep-line (string-to-int grep-line)))
+	   (when grep-line
+	     (setq grep-line (string-to-int grep-line)))
 
-             (beginning-of-line)
-             ;;  skip over
-             ;;
-             ;;   cd /usr/lib/perl5/5.6.1/pods/
-             ;;   grep finished (matches found) at Tue Jul 23 17:39:21
-             ;;
-             (unless (looking-at "^cd \\|^[^ \t\n\r]+ +finished")
-               (,@ body))
-             (forward-line 1)))))))
+	   (beginning-of-line)
+	   ;;  skip over
+	   ;;
+	   ;;   cd /usr/lib/perl5/5.6.1/pods/
+	   ;;   grep finished (matches found) at Tue Jul 23 17:39:21
+	   ;;
+	   (unless (looking-at "^cd \\|^[^ \t\n\r]+ +finished")
+	     ,@body)
+	   (forward-line 1))))))
 
 ;;; ----------------------------------------------------------------------
 ;;;
@@ -3716,16 +3664,15 @@ This means that you can say this in BODY.
 
 Execute BODY after occur statement in occur buffer.
 Run HOOK in occur buffer last; this arg can also be nil if there is no hook."
-  (`
-   (progn
+  `(progn
      (save-excursion                    ;save user's active point
        (ti::pmin)
-       (occur (, re)))
+       (occur ,re))
      (pop-to-buffer "*Occur*")
-     (,@ body)
+     ,@body
      (ti::pmin)
-     (if (, hook)
-         (run-hooks (quote (, hook)))))))
+     (if ,hook
+         (run-hooks (quote (, hook))))))
 
 ;;; ----------------------------------------------------------------------
 ;;;
@@ -3761,17 +3708,16 @@ Example:
     (ti::momentary-output-macro
         \"*notes*\" \"howdy! Press some key\" nil
       (princ \"This is the message\"))"
-  (`
-   (save-excursion
+  `(save-excursion
      (save-window-excursion
-       (with-output-to-temp-buffer (, buffer)
-         (,@ body))
-       (select-window  (get-buffer-window (, buffer)))
-       (if (, win1)
-           (delete-other-windows (get-buffer-window (, buffer))))
+       (with-output-to-temp-buffer ,buffer
+         ,@body)
+       (select-window  (get-buffer-window ,buffer))
+       (if ,win1
+           (delete-other-windows (get-buffer-window ,buffer)))
        (ti::read-char-safe-until
-        (or (, echo-msg) "Press something to delete window."))
-       (bury-buffer (, buffer))))))
+        (or ,echo-msg "Press something to delete window."))
+       (bury-buffer ,buffer))))
 
 ;;; ----------------------------------------------------------------------
 ;;; - Sometimes you just want to switch buffer temporarily and
@@ -3785,17 +3731,16 @@ No other values are preserved. Also the `select-window'
 is executed if the original buffer had `window-live-p'. (ie. it was visible)
 
 Use this if you want to e.g. scroll some buffer."
-  (`
-   (let* ((oRig-Buf (current-buffer))
+  `(let* ((oRig-Buf (current-buffer))
           (oRig-Win (get-buffer-window oRig-Buf)))
      (prog1
          (progn
-           (,@ body))
+           ,@body)
        (set-buffer oRig-Buf)                    ;restore buffer.
        (when (and (windowp oRig-Win)            ;no window visible
                   (window-live-p oRig-Win))
          ;; and the visible window
-         (select-window oRig-Win))))))
+         (select-window oRig-Win)))))
 
 ;;; ----------------------------------------------------------------------
 ;;;
@@ -3811,12 +3756,11 @@ Notes:
 
   Make sure you don't insert to immediate marker position, because
   markers moves along with the text!"
-  (`
-   (let* ((MarK (point-marker)))
+  `(let* ((MarK (point-marker)))
      (prog1
-         (progn (,@ body))
+         (progn ,@body)
        (when (marker-position MarK)
-         (goto-char (marker-position MarK)))))))
+         (goto-char (marker-position MarK))))))
 
 ;;; ----------------------------------------------------------------------
 ;;;
@@ -3858,17 +3802,18 @@ Example:
 Return:
 
   Last value returned by BODY"
-  (` (let* ((SLC-sLc-col  (current-column)) ;prevent variable suicide
-            (SLC-sLc-line (ti::current-line-number)))
-       (prog1
-           (progn (,@ body))
-         (goto-line SLC-sLc-line)
-         (move-to-column  SLC-sLc-col)
-         (cond
-          ((not (eq (ti::current-line-number) SLC-sLc-line))
-           (, fail-form))
-          ((not (eq (current-column) SLC-sLc-col))
-           (, col-form) ))))))
+  `(let* ((SLC-sLc-col  (current-column)) ;prevent variable suicide
+	  (SLC-sLc-line (ti::current-line-number)))
+     (prog1
+	 (progn
+	   ,@body)
+       (goto-line SLC-sLc-line)
+       (move-to-column  SLC-sLc-col)
+       (cond
+	((not (eq (ti::current-line-number) SLC-sLc-line))
+	 ,fail-form)
+	((not (eq (current-column) SLC-sLc-col))
+	 ,col-form )))))
 
 ;;; ----------------------------------------------------------------------
 ;;;
@@ -3883,25 +3828,23 @@ The BODY is not protected against errors or surrounded by `save-excursion'
 Return:
 
   last value of BODY"
-  (` (let ((BeG         (point-min-marker))
-           (EnD         (point-max-marker))
-           (EnD-max     (point-max))
-           EnD-wmax
-           ReT)
-       (unwind-protect
-           (progn
-             (widen)
-             (setq EnD-wmax (point-max))
-             (setq ReT (progn (,@ body))))
-         (with-current-buffer (marker-buffer BeG)
-           ;; what about after widen ? Were we in narrow mode ?
-           (if (not (= EnD-wmax EnD-max))
-               (narrow-to-region BeG EnD))
-
-           (if (null ReT)       ;no-op, Silence XEmacs 19.14 ByteComp.
-               (setq ReT nil))
-
-           ReT)))))
+  `(let ((BeG         (point-min-marker))
+	 (EnD         (point-max-marker))
+	 (EnD-max     (point-max))
+	 EnD-wmax
+	 ReT)
+     (unwind-protect
+	 (progn
+	   (widen)
+	   (setq EnD-wmax (point-max))
+	   (setq ReT (progn ,@body)))
+       (with-current-buffer (marker-buffer BeG)
+	 ;; what about after widen ? Were we in narrow mode ?
+	 (if (not (= EnD-wmax EnD-max))
+	     (narrow-to-region BeG EnD))
+	 (if (null ReT)		;no-op, Silence XEmacs 19.14 ByteComp.
+	     (setq ReT nil))
+	 ReT))))
 
 ;;}}}
 ;;{{{ misc
@@ -4000,14 +3943,14 @@ Example usage:
     (ti::overlay-require-macro
       (message \"*** package.el: Your Emacs doesn't have overlay support.\")
       (error \"Compilation aborted.\")))"
-  (` (progn
-       (when (and (ti::xemacs-p)
-                  ;;  No overlay functions?.
-                  (not (fboundp 'overlays-at)))
-         (load "overlay" 'noerr)) ;; has no provide statement
-       (or (fboundp 'overlays-at) ;; Did it define this function?
-           (progn
-             (,@ body))))))
+  `(progn
+     (when (and (ti::xemacs-p)
+		;;  No overlay functions?.
+		(not (fboundp 'overlays-at)))
+       (load "overlay" 'noerr))	  ;; has no provide statement
+     (or (fboundp 'overlays-at)	  ;; Did it define this function?
+	 (progn
+	   ,@body))))
 
 ;;; ----------------------------------------------------------------------
 ;;;
@@ -4041,7 +3984,7 @@ Example usage:
        ((listp
          (insert "'" (pp val))))
        (t
-        (error "unknown content of stream" sym val)))
+        (error "unknown content of stream %s %s" sym val)))
       (insert ")"))))
 
 ;;; ----------------------------------------------------------------------

@@ -584,7 +584,6 @@ This function is run only once at tinynyliba.el load."
   (autoload 'ti::copy-key-definition              "tinylibm" "" nil 'macro)
   (autoload 'ti::beginning-of-defun-point         "tinylibm" "" nil) ;;defsubst
   (autoload 'ti::digit-length                     "tinylibm" "" nil) ;;defsubst
-  (autoload 'ti::add-hook-fix                     "tinylibm" "" nil)
   (autoload 'ti::add-hooks                        "tinylibm" "" nil)
   (autoload 'ti::prefix-arg-to-text               "tinylibm" "" nil)
   (autoload 'ti::keep-lower-order                 "tinylibm" "" nil 'macro)
