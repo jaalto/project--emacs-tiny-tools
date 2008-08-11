@@ -397,6 +397,18 @@ Example:
          (and (buffer-name ,temp-buffer)
               (kill-buffer ,temp-buffer)) ))))
 
+(defun-maybe compilation-start
+  (cmd &optional mode name-function highlight-regexp)
+  "Emacs compatibility."
+  (autoload 'compile-internal "compile")
+  (compile-internal
+   cmd
+   "No more lines."
+   mode
+   nil ;; parser
+   highlight-regexp
+   name-function))
+
 (defun-maybe byte-compiling-files-p ()
   "Return t if currently byte-compiling files."
   (string= (buffer-name) " *Compiler Input*"))

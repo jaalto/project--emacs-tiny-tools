@@ -424,6 +424,7 @@ This function is run only once at tinynyliba.el load."
   (autoload 'randij                               "tinylibb" "" nil)
   (autoload 'byte-compiling-files-p               "tinylibb" "" nil 'macro)
   (autoload 'string-to-number                     "tinylibb" "" nil)
+  (autoload 'compilation-start                    "tinylibb" "" nil)
 
   ;;}}}
   ;;{{{ code: Autoload 'env' lib -- Emacs and XEmacs environment checks
