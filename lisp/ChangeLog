@@ -1,5 +1,7 @@
 2008-08-11  Jari Aalto  <jari.aalto@cante.net>
 
+	* tiny/tinynbr.el (mapcar): Update to modern backquote.
+
 	* tiny/tinyurl.el
 	- Use `string-to-number'
 	(tinyurl-command-table-before-string): Update to

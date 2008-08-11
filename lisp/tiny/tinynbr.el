@@ -190,7 +190,7 @@ Mode description:
           (base  (nth 1 x))
           def)
       (setq def
-            (` (defun (, sym1) (&optional insert reverse)
+            `(defun ,sym1 (&optional insert reverse)
                  "If prefix arg INSERT is non-nil, insert result to buffer."
                  (interactive "P")
                  (let* ((nbr (tinynbr-read-number reverse))
@@ -199,8 +199,8 @@ Mode description:
                      (if (string-match "^0[Xx]\\(.*\\)" nbr)
                          (setq nbr (match-string 1 nbr)))
                      (if (null reverse)
-                         (setq ret (radix nbr (, base)))
-                       (setq ret ((, sym3) (string-to-int nbr)))))
+                         (setq ret (radix nbr ,base))
+                       (setq ret (,sym3 (string-to-int nbr)))))
                    (cond
                     ((null nbr)
                      (message "TinyNbr: Can't find number at current point."))
@@ -210,25 +210,25 @@ Mode description:
                                   nbr
                                   ret
                                   (cond
-                                   ((equal (, base)  2)
+                                   ((equal ,base  2)
                                     (if reverse "bin - dec" "dec - bin"  ))
-                                   ((equal (, base)  8)
+                                   ((equal ,base  8)
                                     (if reverse "oct - dec" "dec - oct"  ))
-                                   ((equal (, base) 16)
+                                   ((equal ,base 16)
                                     (if reverse "hex - dec" "dec - hex"  ))
                                    (t "")))
                        (save-excursion
                          (end-of-line)
                          (insert " " (if (numberp ret)
                                          (int-to-string ret)
-                                       ret))))))))))
+                                       ret)))))))))
       (eval def)
 
       (setq def
-            (` (defun (, sym2) (&optional insert)
+            `(defun ,sym2 (&optional insert)
                  "If prefix arg INSERT is non-nil, insert result to buffer."
                  (interactive "P")
-                 ((, sym1) insert 'reverse))))
+                 (,sym1 insert 'reverse)))
       (eval def))))
  '(
    (hex 16)
