@@ -1,3 +1,8 @@
+2008-08-11  Jari Aalto  <jari.aalto@cante.net>
+
+	* tiny/tinyeat.el (tinyeat-repeat-macro): Convert to modern backquote.
+	(tinyeat-verbose-macro): Convert to modern backquote.
+
 2008-08-10  Jari Aalto  <jari.aalto@cante.net>
 
 	* tiny/tinytf.el (tinytf-toc-insert-list): New.

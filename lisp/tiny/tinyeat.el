@@ -373,10 +373,10 @@ TinyEat: ** keys were bound to TinyEat functions."))
 (put 'tinyeat-repeat-macro 'lisp-indent-function 1)
 (defmacro tinyeat-repeat-macro (end &rest body)
   "Loop using VAR from BEG to END and do BODY."
-  (` (loop for var from 1 to (, end)
-           do
-           (progn
-             (,@ body)))))
+  `(loop for var from 1 to ,end
+	 do
+	 (progn
+	   ,@body)))
 
 ;;; ----------------------------------------------------------------------
 ;;;
@@ -384,10 +384,9 @@ TinyEat: ** keys were bound to TinyEat functions."))
 (defmacro tinyeat-verbose-macro (&rest body)
   "Run BODY if tinyeat-:verbose-flag' is set.
 Minibuffer is excluded."
-  (`
-   (when (and (not (ti::buffer-minibuffer-p))
+  `(when (and (not (ti::buffer-minibuffer-p))
               tinyeat-:verbose-flag)
-     (,@ body))))
+     ,@body))
 
 ;;; ----------------------------------------------------------------------
 ;;;
