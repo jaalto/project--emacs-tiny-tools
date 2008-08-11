@@ -177,6 +177,7 @@
 	(tinyurl-overlay-kill): Remove 2nd copy of this function.
 	(turn-on-tinyurl-mode-automatically): Check boundp
 	`tinyurl-:mode-global-turned-off'.
+	(ti::macrof-minor-mode-wizard): Use `ti::compat-find-file-hook'.
 
 	* tiny/tinytab.el (tinytab-message): Update to modern backquote.
 

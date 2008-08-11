@@ -955,12 +955,10 @@ Defined keys:
      (cond
       (tinyurl-mode
        (put 'tinyurl-mode 'global t)
-       (unless (memq 'tinyurl-find-file-hook find-file-hooks)
-         (add-hook 'find-file-hooks 'tinyurl-find-file-hook)))
+       (add-hook (ti::compat-find-file-hook) 'tinyurl-find-file-hook))
       (t
        (put 'tinyurl-mode 'global nil)
-       (when (memq 'tinyurl-find-file-hook find-file-hooks)
-         (remove-hook 'find-file-hooks 'tinyurl-find-file-hook))))
+       (remove-hook (ti::compat-find-file-hook) 'tinyurl-find-file-hook)))
      (when (null (get 'tinyurl-mode 'self-call))
        (tinyurl-mode-action tinyurl-mode verb)))
    ;;  The Menubar item takes space and is not useful at least not
