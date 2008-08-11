@@ -559,14 +559,6 @@ Cache where book marks are stored in alist \(bookMarkName . point\)")
 
 ;;; ----------------------------------------------------------------------
 ;;;
-(defmacro tinybookmark-string-to-number (str)
-  "Emacs compatibility."
-  (if (fboundp 'string-to-number)
-      `(string-to-number ,str) ;; Emacs 22.x
-    `(string-to-int ,str)))
-
-;;; ----------------------------------------------------------------------
-;;;
 (defsubst tinybookmark-regexp-read-from-buffer ()
   "Return buffer's book mark regexp.
 If the local value where the regexp is stored is nil, the rescan buffer.
@@ -782,7 +774,7 @@ STRICT has effect only if COL is given:
      ((stringp count)
       (if (equal "" count)
           (setq c -1)                   ;interactive
-        (setq c (tinybookmark-string-to-number count))))
+        (setq c (string-to-number count))))
      ((numberp count)
       (setq c count))
      (t
