@@ -3957,13 +3957,10 @@ Example usage:
 (defun ti::pp-variable-list (list &optional buffer def-token)
   "Print LIST of variables to BUFFER. DEF-TOKEN defaults to `defconst'."
   (let* (val)
-
     (or buffer
         (setq buffer (current-buffer)))
-
     (or def-token
         (setq def-token "defconst"))
-
     (dolist (sym list)
       (unless (symbolp sym)
         (error "List member is not symbol %s" sym))
