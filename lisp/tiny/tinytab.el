@@ -406,9 +406,8 @@ See function `tinytab-return-key-mode' to turn on this auto-indent feature."
 ;;;
 (defmacro tinytab-message (&rest body)
   "Run BODY if `tinytab-:verbose' is non nil."
-  (`
-   (when tinytab-:verbose
-     (message (,@ body)))))
+  `(when tinytab-:verbose
+     (message ,@body)))
 
 ;;; ----------------------------------------------------------------------
 ;;;
