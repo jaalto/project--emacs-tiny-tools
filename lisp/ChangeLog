@@ -1,5 +1,12 @@
 2008-08-11  Jari Aalto  <jari.aalto@cante.net>
 
+	* tiny/tinymy.el (tinymy-mail-buffer): Use
+	`insert-buffer-substring'.
+	(tinymy-maybe-disable-auto-save): Use `make-local-variable.
+	(tinymy-sort-column-0): Update to modern backquote.
+	(tinymy-copy-file): Add %s to `message' format.
+	(tinymy-compile-run-command): Use `compilation-start'.
+
 	* tiny/tinymailbox.el (tinymailbox-message-macro): Update to
 	modern backquote.
 	(tinymailbox-header-macro): Update to modern backquote.
@@ -62,6 +69,7 @@
 	(w32-cygwin-mount-table-dolist): Update to modern backquote.
 	(w32-cygwin-shell-environment): Update to modern backquote.
 	(custom): Update to modern backquote.
+	(compilation-start): New.
 
 	* tiny/tinyigrep.el
 	- Byte comile fix: Add %d %s to all calls using `tinyigrep-countdown'
