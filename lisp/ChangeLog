@@ -1,5 +1,7 @@
 2008-08-11  Jari Aalto  <jari.aalto@cante.net>
 
+	* tiny/tinylock.el (tinylock-:history): Change to defvar.
+
 	* tiny/tinydiff.el
 	- Update `string-to-int' to `string-to-number'.
 	(tinydiff-patch-check-if-load): Fix `format' problem.

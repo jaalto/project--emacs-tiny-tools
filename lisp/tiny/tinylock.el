@@ -211,7 +211,7 @@ they are killed."
 
 ;;; ....................................................... &v-private ...
 
-(defconst tinylock-:history nil
+(defvar tinylock-:history nil
   "\(DATE PASSWD\) A storage where attempts of entering locked Emacs is put.
 Cleared every time lock takes effect.")
 
