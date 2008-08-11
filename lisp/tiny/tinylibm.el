@@ -3653,7 +3653,7 @@ This means that you can say this in BODY.
 		 grep-data (match-string 3))
 
 	   (when grep-line
-	     (setq grep-line (string-to-int grep-line)))
+	     (setq grep-line (string-to-number grep-line)))
 
 	   (beginning-of-line)
 	   ;;  skip over
