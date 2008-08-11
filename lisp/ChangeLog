@@ -1,5 +1,24 @@
 2008-08-11  Jari Aalto  <jari.aalto@cante.net>
 
+	* tiny/tinyurl.el
+	- Use `string-to-number'
+	(tinyurl-command-table-before-string): Update to
+	modern backquote.
+	(tinyurl-handler-mail-after): Add 2nd arg to `throw'.
+	(tinyurl-overlay-kill-in-buffer): Remove 2nd copy of this function.
+	(tinyurl-overlay-kill): Remove 2nd copy of this function.
+	(turn-on-tinyurl-mode-automatically): Check boundp
+	`tinyurl-:mode-global-turned-off'.
+
+	* tiny/tinytab.el (tinytab-message): Update to modern backquote.
+
+	* tiny/tinymail.el (tinymail-:complete-bbdb-case-fold-search): Fix
+	defcustom.
+	(tinymail-mail-aliases): Update to modern backquote.
+	(tinymail-gpg-recipient): Correct to_field => `to-field'.
+	(tinymail-gpg-recipient): Check boundp `message-has-gpg'.
+	(tinymail-gpg-recipient): Correct `eq major-mode' test.
+
 	* tiny/tinylibb.el (with-temp-buffer): Update to modern backquote.
 	(with-output-to-string): Update to modern backquote.
 	(fboundp): Update to modern backquote.

@@ -1047,6 +1047,7 @@ References:
   "This function is called from idle timer process `tinyurl-mark-process'.
 If `tinyurl-:mode-global-turned-off' is set, do nothing."
   (when (and (get  'tinyurl-mode 'global)
+	     (boundp 'tinyurl-:mode-global-turned-off)
              (null tinyurl-:mode-global-turned-off)
              (tinyurl-mode-turn-on-ok-p))
     (turn-on-tinyurl-mode-1)
@@ -1074,15 +1075,6 @@ If `tinyurl-:mode-global-turned-off' is set, do nothing."
 
 ;;; ----------------------------------------------------------------------
 ;;;
-(defun tinyurl-overlay-kill-in-buffer  ()
-  "Kill TinyUrl overlays from whole buffer. See also `tinyurl-overlay-kill'."
-  (interactive)
-  (put 'tinyurl-mark-line 'point nil)
-  (ti::overlay-remove-region
-   (point-min) (point-max) '(owner tinyurl) 'prop-val-list))
-
-;;; ----------------------------------------------------------------------
-;;;
 (defun tinyurl-overlay-kill  ()
   "Kill used overlays.
 This function only kills overlays recoded to internal list.
@@ -1091,6 +1083,18 @@ TinyUrl overlays, use `tinyurl-overlay-kill-in-buffer'."
   (put 'tinyurl-mark-line 'point nil)
   (dolist (ov (get 'tinyurl-mark-line 'ov-list))
     (delete-overlay ov)))
+
+;;; ----------------------------------------------------------------------
+;;;
+(defun tinyurl-overlay-kill-in-buffer ()
+  "Kill TinyUrl overlays from whole buffer. See also `tinyurl-overlay-kill'."
+  (interactive)
+  (put 'tinyurl-mark-line 'point nil)
+  (ti::overlay-remove-region
+   (point-min)
+   (point-max)
+   '(owner tinyurl)
+   'prop-val-list))
 
 ;;; ----------------------------------------------------------------------
 ;;;###autoload
@@ -1499,13 +1503,17 @@ References:
 ;;;
 (defmacro tinyurl-command-table-before-string (entry string)
   "Replace property 'before-string in ENTRY with STRING."
-  (`
-   (if (ti::emacs-p)
+  `(if (ti::emacs-p)
        (tinyurl-command-table-put-2nd
-        (, entry) 'overlay-plist 'before-string  (, string))
+        ,entry
+	'overlay-plist
+	'before-string
+	,string)
      (tinyurl-command-table-put-2nd
-      (, entry) 'overlay-plist 'begin-glyph
-      (ti::funcall 'make-glyph (, string))))))
+      ,entry
+      'overlay-plist
+      'begin-glyph
+      (ti::funcall 'make-glyph ,string))))
 
 ;;; ----------------------------------------------------------------------
 ;;; This is a copy from function `browse-url'.
@@ -1784,29 +1792,6 @@ References:
         (with-current-buffer buffer
           (turn-on-tinyperl-pod-view-mode))
         (ti::pop-to-buffer-or-window buffer)))))
-
-;;; ----------------------------------------------------------------------
-;;;
-(defun tinyurl-overlay-kill  ()
-  "Kill used overlays.
-This function only kills overlays recoded to internal list.
-The internal list may be inaccurate. To completely wipe out
-TinyUrl owned overlays, use `tinyurl-overlay-kill-in-buffer'."
-  (put 'tinyurl-mark-line 'point nil)
-  (dolist (ov (get 'tinyurl-mark-line 'ov-list))
-    (delete-overlay ov)))
-
-;;; ----------------------------------------------------------------------
-;;;
-(defun tinyurl-overlay-kill-in-buffer  ()
-  "Kill TinyUrl overlays from whole buffer. See also `tinyurl-overlay-kill'."
-  (interactive)
-  (put 'tinyurl-mark-line 'point nil)
-  (ti::overlay-remove-region
-   (point-min)
-   (point-max)
-   '(owner tinyurl)
-   'prop-val-list))
 
 ;;; ----------------------------------------------------------------------
 ;;;
@@ -2214,7 +2199,7 @@ If NOERR is non-nil, signal no error if file does not exist."
      ((or (string-match "in file +\\([^ \t\n]+\\) at line \\([0-9]+\\)" url)
           (string-match "at +\\([^ \t\n]+\\) line \\([0-9]+\\)" url))
       (setq file (match-string 1 url)
-            line (string-to-int (match-string 2 url)))))
+            line (string-to-number (match-string 2 url)))))
     (tinyurl-debug fid 'url url 'file file 'line line)
     (if (null file)
         (error "Tinyurl: Can't recognize URL [%s]" url))
@@ -2255,14 +2240,14 @@ Return:
       (beginning-of-line)
       (cond
        ((looking-at ".*[ \t]+line[ \t]+\\([0-9]+\\)")
-        (string-to-int (match-string 1)))
+        (string-to-number (match-string 1)))
        ((looking-at ".*on line +<b>\\([0-9]+\\)</b>")
         ;; PHP writes HTML =>   </b> on line <b>161</b><br>
-        (string-to-int (match-string 1)))
+        (string-to-number (match-string 1)))
        ((looking-at "^.+:\\([0-9]+\\):")
         ;;  Grep output
         ;; test.pl:119:use integer;
-        (string-to-int (match-string 1)))))))
+        (string-to-number (match-string 1)))))))
 
 ;;; ----------------------------------------------------------------------
 ;;;
@@ -2324,7 +2309,7 @@ Convert URL ftp:// to ange-ftp format and use `find-file'."
          (ref     (cond
                    ((and page
                          ;; skip basic references like: cut(1)
-                         (> (string-to-int page) 1))
+                         (> (string-to-number page) 1))
                     (format "%s(%s)" program page))
                    (program
                     program))))
@@ -2484,13 +2469,13 @@ Returned types (symbols) are:
       (ti::pmin)
       (unless (re-search-forward "^To: " nil t)
         (goto-char point)
-        (throw 'done))
+        (throw 'done t))
       (insert to)
       (ti::pmin)
       (unless (re-search-forward "^Subject: "  nil t)
         (goto-char point)
         (message "TinyUrl: [ERROR] Cannot continue,Subject: not found")
-        (throw 'done))
+        (throw 'done t))
       (when subject
         (insert (replace-regexp-in-string "[%]20" " " subject))
         (ti::mail-text-start 'move))
@@ -2500,7 +2485,7 @@ Returned types (symbols) are:
       ;;   instead.
       (save-excursion
         (cond
-         ((string-match "-request@" clean)
+         ((string-match "-request@" to)
           (insert "subscribe")))))))
 
 ;;; ----------------------------------------------------------------------
