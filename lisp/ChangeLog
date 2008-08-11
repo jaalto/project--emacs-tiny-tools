@@ -1,5 +1,10 @@
 2008-08-11  Jari Aalto  <jari.aalto@cante.net>
 
+	* tiny/tinybookmark.el
+	(tinybookmark-string-to-number): New. Emacs 22.x fix.
+	(tinybookmark-repeat): Use `tinybookmark-string-to-number'
+	(tinybookmark-repeat): Add %s to `error' format.
+
 	* tiny/tinyeat.el (tinyeat-repeat-macro): Convert to modern backquote.
 	(tinyeat-verbose-macro): Convert to modern backquote.
 
