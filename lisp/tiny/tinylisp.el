@@ -367,8 +367,6 @@
 ;;
 ;;      The regress.el provides support for writing and executing
 ;;      regression tests for Emacs Lisp code. Could that be supported too?
-;;
-;;      Add support to xray.el
 
 ;;}}}
 ;;{{{ history
@@ -466,13 +464,6 @@
       (autoload 'elint-initialize     "elint")
       (autoload 'elint-current-buffer "elint" "" t)
       (autoload 'elint-defun          "elint" "" t))
-    ;; .. .. .. .. .. .. .. .. .. .. .. .. .. .. .. .. .. .. .. .. xray ..
-    (unless (tinylisp-locate-library "xray")
-      (incf count)
-      (message "\
-  ** tinylisp.el: Hm, no xray.el found.
-                  No lisp symbol \"explain\" features available.
-                  2001-10 it was at http://www.cpqd.com.br/~vinicius"))
     ;; .. .. .. .. .. .. .. .. .. .. .. .. .. .. .. .. .. .. .. checkdoc ..
     (defvar checkdoc-version)
     (if (and nil ;; 2004-10-10 disabled.

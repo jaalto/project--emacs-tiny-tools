@@ -49,6 +49,8 @@
 	(tinylisp-lisp-mnt-tag-check-and-fix-file): Remove `find-file-hooks'.
 	(tinylisp-syntax-show-mode): Replace `make-local-hook'.
 	(tinylisp-property-show-mode): Replace `make-local-hook'.
+	(top level): Remove xreay.el support. 2001 URL does not exist at
+	http://www.cpqd.com.br/~vinicius
 
 	* tiny/tinypage.el (tinypage-renumber-level-forward): Change to
 	`string-to-number'.
