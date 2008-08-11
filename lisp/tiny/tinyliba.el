@@ -112,7 +112,7 @@ This function is run only once at tinynyliba.el load."
 ** tinyliba.el: Core library `cl' [%s] is dysfunctional.
                 (require 'cl) dind't provide standard CL statement
                 `return'. This may be a problem in `load-path' order.
-                Do you need to re-arrange it? The package `cl' is in [%s]"
+                Do you need to re-arrange it?"
                  location)))
       ;;  But, even if there is `return', the `dolist' macro may be broken.
       ;;  In Emacs 21.3 the dolist was moved to subr.el but with a
