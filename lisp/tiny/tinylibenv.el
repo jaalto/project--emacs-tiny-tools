@@ -88,9 +88,9 @@
                   "autoload"
                   (prin1-to-string
                    (symbol-function name)))))
-    (` (progn
-         (defun (, name) (,@ everything-else))
-         (put (quote (, name)) 'defun-maybe t)))))
+    `(progn
+       (defun ,name ,@everything-else)
+       (put (quote ,name) 'defun-maybe t))))
 
 ;;; ----------------------------------------------------------------------
 ;;;
@@ -102,9 +102,9 @@
                   "autoload"
                   (prin1-to-string
                    (symbol-function name)))))
-    (` (progn
-         (defsubst (, name) (,@ everything-else))
-         (put (quote (, name)) 'defsubst-maybe t)))))
+    `(progn
+       (defsubst ,name ,@everything-else)
+       (put (quote ,name) 'defsubst-maybe t))))
 
 ;;; ----------------------------------------------------------------------
 ;;;
@@ -116,28 +116,27 @@
                   "autoload"
                   (prin1-to-string
                    (symbol-function name)))))
-    (` (progn
-         (defmacro (, name) (,@ everything-else))
-         (put (quote (, name)) 'defmacro-maybe t)))))
+    `(progn
+       (defmacro ,name ,@everything-else)
+       (put (quote ,name) 'defmacro-maybe t)))))
 
 ;;; ----------------------------------------------------------------------
 ;;;
 (defmacro defalias-maybe (sym newdef)
   "Make defalias SYM if it does not exist and NEWDEF exists."
-  (`
-   (when (and (not (fboundp (, sym)))
-              (fboundp (, newdef)))
-     (defalias (, sym) (, newdef)))))
+  `(when (and (not (fboundp ,sym))
+              (fboundp ,newdef))
+     (defalias ,sym ,newdef)))
 
 ;;; ----------------------------------------------------------------------
 ;;;
 (defmacro defconst-maybe (name &rest everything-else)
   (or (and (boundp name)
            (not (get name 'defconst-maybe)))
-      (` (or (boundp (quote (, name)))
-             (progn
-               (defconst (, name) (,@ everything-else))
-               (put (quote (, name)) 'defconst-maybe t))))))
+      `(or (boundp (quote ,name))
+	   (progn
+	     (defconst ,name ,@everything-else)
+	     (put (quote ,name) 'defconst-maybe t)))))
 
 ;;}}}
 ;;{{{ Environment checks
