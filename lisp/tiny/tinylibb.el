@@ -402,6 +402,10 @@ Example:
   "Return t if currently byte-compiling files."
   (string= (buffer-name) " *Compiler Input*"))
 
+(defun-maybe string-to-number (str) ;; Emacs 22.x
+  "Emacs compatibility."
+  (string-to-int str))
+
 ;; #todo: This already exists in some XEmacs
 
 (put 'with-output-to-string 'edebug-form-spec '(body))
