@@ -1514,7 +1514,7 @@ Return:
   t
   nil"
   `(if (and (not (null ,ch))       ;it must not be nil
-	    (or (ti::char-in-list-case (, ch) '(?\t ?\n ?\r ?\f))
+	    (or (ti::char-in-list-case ,ch '(?\t ?\n ?\r ?\f))
 		;;  esh-mode.el makes wrong definition of
 		;;  `char-int'. Fix it.
 		(prog1 t
