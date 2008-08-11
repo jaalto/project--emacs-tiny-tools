@@ -1,5 +1,15 @@
 2008-08-11  Jari Aalto  <jari.aalto@cante.net>
 
+	* tiny/tinyperl.el (tinyperl-pause-upload-via-ftp): Use
+	`insert-file-contents'.
+	(tinyperl-perldoc): Fix variable `cmd' and format.
+	(tinyperl-pod-by-module): Replace `pathname' with path.
+	Was error: 'unused variable path'.
+	(tinyperl-verbose-macro): Update to modern backquote.
+	(tinyperl-directory-files): Update to modern backquote.
+	(tinyperl-executable-set): Update to modern backquote.
+	(tinyperl-version-macro): Update to modern backquote.
+
 	* tiny/tinypad.el (ti::macrof-minor-mode-wizard): Replace
 	`find-file-hooks' with (ti::compath-find-file-hook).
 
@@ -115,6 +125,7 @@
 	(ti::pp-variable-list): Add two %s formats to `error' call which
 	were missing.
 	(ti::compat-find-file-hook): New.
+	(ti::grep-output-parse-macro): Use `string-to-number'.
 
 	* tiny/tiny1vc.el (tinyvc-do-macro): Update to modern backquote.
 	(tinyvc-file-confirm-macro): Update to modern backquote.
