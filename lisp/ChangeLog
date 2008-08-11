@@ -1,5 +1,13 @@
 2008-08-11  Jari Aalto  <jari.aalto@cante.net>
 
+	* tiny/tinycache.el (tinycache-:mode-on-string-p): Change to
+	defsubst.
+	(tinycache-map-over-buffers): Update to modern backquote.
+	(tinycache-buffer-list-map-over-buffers): Update to modern
+	backquote.
+	(tinycache-buffer-list-map-over-off-buffers): Update to modern
+	backquote.
+
 	* tiny/tinyappend.el (tinyappend-line-area-args): Update to modern
 	backquote.
 	(tinyappend-yank): Use `use modern backquote'.

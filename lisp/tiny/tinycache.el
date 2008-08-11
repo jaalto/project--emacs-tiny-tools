@@ -432,9 +432,9 @@ Format: (BUFFER-POINTER BP ..)")
 
 ;;; ----------------------------------------------------------------------
 ;;;
-(defmacro tinycache-:mode-on-string-p ()
+(defsubst tinycache-:mode-on-string-p ()
   "Check if `tinycache-mode' is on."
-  (` (memq tinycache-mode '(t on))))
+  (memq tinycache-mode '(t on)))
 
 ;;; ----------------------------------------------------------------------
 ;;;
@@ -452,39 +452,36 @@ so that they don't clash with the toplevel definitions.
     'LisT'      current list of buffers to loop over.
 
 Setting 'list' to nil terminates this macro."
-  (`
-   (let* (NamE)
-     (dolist (BuffeR (tinycache-cached-file-list (, off)) )
+  `(let* (NamE)
+     (dolist (BuffeR (tinycache-cached-file-list ,off) )
        (setq NamE (buffer-name BuffeR))
        (if (null NamE)
            (setq NamE nil))             ;NoOp, Silence ButeComp
-       (,@ body)))))
+       ,@body)))
 
 ;;; ----------------------------------------------------------------------
 ;;;
 (put 'tinycache-buffer-list-map-over-buffers 'lisp-indent-function 0)
 (defmacro tinycache-buffer-list-map-over-buffers (&rest body)
   "Special Buffer list macro to execute BODY at found buffer line."
-  (`
-   (tinycache-map-over-buffers nil
+  `(tinycache-map-over-buffers nil
                                (setq NamE (regexp-quote NamE))
                                (ti::pmin)
                                (when (re-search-forward NamE nil t)
                                  (beginning-of-line)
-                                 (,@ body)))))
+                                 ,@body)))
 
 ;;; ----------------------------------------------------------------------
 ;;;
 (put 'tinycache-buffer-list-map-over-off-buffers 'lisp-indent-function 0)
 (defmacro tinycache-buffer-list-map-over-off-buffers (&rest body)
   "Special Buffer list macro to execute BODY at found buffer line."
-  (`
-   (tinycache-map-over-buffers 'off
+  `(tinycache-map-over-buffers 'off
                                (setq NamE (regexp-quote NamE))
                                (ti::pmin)
                                (when (re-search-forward NamE nil t)
                                  (beginning-of-line)
-                                 (,@ body)))))
+                                 ,@body)))
 
 ;;; ----------------------------------------------------------------------
 ;;;
@@ -648,7 +645,8 @@ has been turned manually off."
 (defun tinycache-mode-root-buffer (&optional remove)
   "Update root buffer's `tinycache-mode' flag. Optionally REMOVE from cache.
 This is the buffer where `tinycache-:cache' resides."
-  (make-variable-buffer-local 'tinycache-:mode-name)
+  ;; (make-variable-buffer-local 'tinycache-:mode-name)
+  (make-local-variable 'tinycache-:mode-name)
   (cond
    (remove
     (setq tinycache-mode nil))
