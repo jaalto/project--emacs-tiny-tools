@@ -19,6 +19,7 @@
 	(tinylisp-eval): Replace call to `replace-string'
 	(tinylisp-lisp-mnt-tag-check-and-fix-file): Remove `find-file-hooks'.
 	(tinylisp-syntax-show-mode): Replace `make-local-hook'.
+	(tinylisp-property-show-mode): Replace `make-local-hook'.
 
 	* tiny/tinypage.el (tinypage-renumber-level-forward): Change to
 	`string-to-number'.
@@ -139,6 +140,7 @@
 	backquote.
 	(tinycache-buffer-list-map-over-off-buffers): Update to modern
 	backquote.
+	(tinycache-add-local-hook): Replace `tinycache-add-local-hook'
 
 	* tiny/tinyappend.el (tinyappend-line-area-args): Update to modern
 	backquote.
