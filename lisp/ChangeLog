@@ -1,5 +1,13 @@
 2008-08-11  Jari Aalto  <jari.aalto@cante.net>
 
+	* tiny/tinymailbox.el (tinymailbox-message-macro): Update to
+	modern backquote.
+	(tinymailbox-header-macro): Update to modern backquote.
+	(tinymailbox-paragraph-macro): Update to modern backquote.
+	(tinymailbox-fmacro-move-1): Update to modern backquote.
+	(tinymailbox-fmacro-move): Update to modern backquote.
+	(tinymailbox-font-lock): Use `make-local-variable'.
+
 	* tiny/tinyirc.el (tinyirc-pastebot-install-perl-util-pastebot):
 	Replace `replace-regexp' call with lisp.
 
