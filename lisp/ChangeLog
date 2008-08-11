@@ -1,5 +1,7 @@
 2008-08-11  Jari Aalto  <jari.aalto@cante.net>
 
+	* tiny/tinycomment.el (tinycomment-:not-comment-re): Fix defcustom.
+
 	* tiny/tinycache.el (tinycache-:mode-on-string-p): Change to
 	defsubst.
 	(tinycache-map-over-buffers): Update to modern backquote.

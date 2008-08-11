@@ -169,7 +169,9 @@ the beginnning of line.
 
       $#variable_in_csh
 0123456789 123456789 12345       ;columns
-       *                         ;found comment pos, reject it.")
+       *                         ;found comment pos, reject it."
+  :type 'regexp
+  :group 'TinyComment)
 
 (defcustom tinycomment-:tab-call-no-alist
   '(fundamental-mode
