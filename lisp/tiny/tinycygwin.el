@@ -181,13 +181,15 @@
   :group 'TinyCygwin)
 
 (defcustom tinycygwin-:expert-flag nil
-  "*If non-nin, ask minimum of question in expert mode.
+  "*If non-nil, ask minimum of question in expert mode.
 All fancy features or Emacs settings are also disabled."
-  :type 'boolean)
+  :type  'boolean
+  :group 'TinyCygwin)
 
 (defcustom tinycygwin-:debug nil
-  "*Print extra message when debug iqs non-nil."
-  :type 'boolean)
+  "*If non-nil, print extra message."
+  :type  'boolean
+  :group 'TinyCygwin)
 
 ;;}}}
 ;;{{{ setup: -- private
@@ -660,8 +662,7 @@ environment."
      ((boundp 'window-system)
       (symbol-value 'window-system)))))
 
-(tinycygwin-defalias 'insert-file-literally   'insert-file-contents-literally)
-(tinycygwin-defalias 'insert-file-literally   'insert-file)
+(tinycygwin-defalias 'insert-file-contents-literally   'insert-file)
 (tinycygwin-defalias 'line-beginning-position 'point-at-bol)
 (tinycygwin-defalias 'line-end-position       'point-at-eol)
 
@@ -679,7 +680,7 @@ environment."
 (defun tinycygwin-insert-file (file)
   "INsert FILE literally at point."
   (tinycygwin-clean-system-with
-   (insert-file-literally file)))
+   (insert-file-contents-literally file)))
 
 ;;; ----------------------------------------------------------------------
 ;;;
