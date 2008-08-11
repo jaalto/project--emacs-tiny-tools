@@ -1,5 +1,9 @@
 2008-08-11  Jari Aalto  <jari.aalto@cante.net>
 
+	* tiny/tinyvc.el (tinyvc-do-macro): Update to modern backquote.
+	(tinyvc-file-confirm-macro): Update to modern backquote.
+	(tinyvc-do-over-locks-macro): Update to modern backquote.
+
 	* tiny/tinyreplace.el (tinyreplace-interactive-region-args):
 	Update to modern backquote.
 	(tinyreplace-replace-over-files-compile-buffer): Remove
