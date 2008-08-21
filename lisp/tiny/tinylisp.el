@@ -4609,10 +4609,16 @@ Can't find _defined_ variable or function on the line (eval buffer first).")
     ;; The name MUST end to .el, because that is the source of autoloads
     (cond
      ((string-match "\\.elc$" path)
-      (setq path (replace-match ".el" nil t path)))
+      (setq path (replace-match ".el" nil t path))
+      ;; File may also be stored in compressed format
+      (let (try)
+	(dolist (ext '("" ".gz" ".bz2" ".lzma"))
+	  (setq try (concat path ext))
+	  (if (file-exists-p try)
+	      (return (setq path try))))))
      ((not (string-match "\\.el$" path))
       (setq path (concat path ".el"))))
-
+    (ti::use-file-compression-maybe path)
     (ti::package-autoload-create-on-file
      path (get-buffer-create tinylisp-:buffer-autoload))))
 
