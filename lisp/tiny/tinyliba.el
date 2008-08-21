@@ -60,8 +60,9 @@
 ;;      do it like this:
 ;;
 ;;      o   Generate autoloads to separate buffer with
-;;          command
-;;;         C-u M-x tinylisp-autoload-generate-library RET file.el RET
+;;          commands:
+;;          M-x load-library RET tinylisp RET
+;;          C-u M-x tinylisp-autoload-generate-library RET file.el RET
 ;;      o   At the end of buffer *tinylisp-autoloads* cut'n paste
 ;;          the definititions to this file.
 ;;
@@ -89,7 +90,7 @@
 (autoload 'easy-menu-define  "easymenu"     "" nil 'macro)
 (autoload 'executable-find   "executable")
 
-(eval-and-compile ;; function must be visible at load time
+(eval-and-compile ;; This function must be visible at load time
   (defun ti::tmp-cl-library-check ()
     "Check that cl.el library is correct and force loading if not.
 This function is run only once at tinynyliba.el load."
@@ -145,7 +146,15 @@ This function is run only once at tinynyliba.el load."
 
 (eval-and-compile
   (require 'cl)
-  (ti::tmp-cl-library-check)
+
+  ;;  TODO: Probably should be gone by now.
+  ;;  Long story short: At a time Emacs shipped with crippled cl.el
+  ;;  library which broke everything. This check was necessary to
+  ;;  regain sane environment.
+
+  (if (string< emacs-version "21")
+      (ti::tmp-cl-library-check))
+
   ;; defvar silences Byte Compiler
   (defvar byte-compile-dynamic nil "") ;; Introduced in Emacs 19.29
   (make-local-variable 'byte-compile-dynamic)
@@ -1462,10 +1471,11 @@ This function is run only once at tinynyliba.el load."
   (autoload 'reporter-bug-hook                    "reporter" "" nil)
   (autoload 'define-mail-user-agent               "reporter" "" nil)
 
-  ;; vc-hooks.el
-  ;; /usr/share/emacs/21.2/lisp/vc-hooks.el
+  ;; vc-hooks.el.gz
+  ;; /usr/share/emacs/22.2/lisp/vc-hooks.el.gz
 
   (autoload 'vc-mistrust-permissions              "vc-hooks" "" nil)
+  (autoload 'vc-stay-local-p                      "vc-hooks" "" nil)
   (autoload 'vc-mode                              "vc-hooks" "" nil)
   (autoload 'vc-error-occurred                    "vc-hooks" "" nil 'macro)
   (autoload 'vc-file-setprop                      "vc-hooks" "" nil)
@@ -1475,8 +1485,9 @@ This function is run only once at tinynyliba.el load."
   (autoload 'vc-find-backend-function             "vc-hooks" "" nil)
   (autoload 'vc-call-backend                      "vc-hooks" "" nil)
   (autoload 'vc-call                              "vc-hooks" "" nil 'macro)
-  (autoload 'vc-parse-buffer                      "vc-hooks" "" nil) ;;defsubst
+  (autoload 'vc-parse-buffer                      "vc-hooks" "" nil);;defsubst
   (autoload 'vc-insert-file                       "vc-hooks" "" nil)
+  (autoload 'vc-find-root                         "vc-hooks" "" nil)
   (autoload 'vc-registered                        "vc-hooks" "" nil)
   (autoload 'vc-backend                           "vc-hooks" "" nil)
   (autoload 'vc-backend-subdirectory-name         "vc-hooks" "" nil)
@@ -1484,8 +1495,11 @@ This function is run only once at tinynyliba.el load."
   (autoload 'vc-checkout-model                    "vc-hooks" "" nil)
   (autoload 'vc-user-login-name                   "vc-hooks" "" nil)
   (autoload 'vc-state                             "vc-hooks" "" nil)
-  (autoload 'vc-up-to-date-p                      "vc-hooks" "" nil) ;;defsubst
+  (autoload 'vc-recompute-state                   "vc-hooks" "" nil)
+  (autoload 'vc-up-to-date-p                      "vc-hooks" "" nil);;defsubst
   (autoload 'vc-default-state-heuristic           "vc-hooks" "" nil)
+  (autoload 'vc-workfile-unchanged-p              "vc-hooks" "" nil)
+  (autoload 'vc-default-workfile-unchanged-p      "vc-hooks" "" nil)
   (autoload 'vc-workfile-version                  "vc-hooks" "" nil)
   (autoload 'vc-default-registered                "vc-hooks" "" nil)
   (autoload 'vc-possible-master                   "vc-hooks" "" nil)
@@ -1500,9 +1514,13 @@ This function is run only once at tinynyliba.el load."
   (autoload 'vc-mode-line                         "vc-hooks" "" t)
   (autoload 'vc-default-mode-line-string          "vc-hooks" "" nil)
   (autoload 'vc-follow-link                       "vc-hooks" "" nil)
+  (autoload 'vc-default-find-file-hook            "vc-hooks" "" nil)
   (autoload 'vc-find-file-hook                    "vc-hooks" "" nil)
   (autoload 'vc-file-not-found-hook               "vc-hooks" "" nil)
+  (autoload 'vc-default-find-file-not-found-hook  "vc-hooks" "" nil)
   (autoload 'vc-kill-buffer-hook                  "vc-hooks" "" nil)
+  (autoload 'vc-menu-map-filter                   "vc-hooks" "" nil)
+  (autoload 'vc-default-extra-menu                "vc-hooks" "" nil)
 
   ;; font-lock from Emacs 20.6
 
