@@ -7168,7 +7168,8 @@ Optionally put results to BUFFER. NO-SHOW does not show buffer.
 
 Note:
 
-  Doesn't recognize ###autoload tags; reads only functions.
+  Doesn't recognize ###autoload tags
+  Reads only functions.
 
 Input:
 
