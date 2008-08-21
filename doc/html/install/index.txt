@@ -118,6 +118,7 @@ Table of contents
 
             (load "utility")
             (utility-install)   ;; or whatever is needed to activate it
+
     1.4 Quick install -- site wide
 
         If you are administering the current host and you have both
