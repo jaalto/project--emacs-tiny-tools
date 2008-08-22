@@ -537,7 +537,7 @@ Table of Contents
         #T2HTML-OPTION Note:
         #T2HTML-OPTION --html-frame
 
-        Copyright (C) 1996-2007 Jari Aalto
+        Copyright (C) 1996-2008 Jari Aalto
 
         License: This material may be distributed only subject to
         the terms and conditions set forth in GNU General Public
