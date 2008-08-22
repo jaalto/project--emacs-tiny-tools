@@ -1,5 +1,8 @@
 2008-08-21  Jari Aalto  <jari.aalto@cante.net>
 
+	* txt/LICENSE.txt: change 'must be', to 'best be' in regards
+	to dual licence and it's other part removal.
+
 	General: Everything in the documentation dorectories havd
 	been rearranged. Now each file is in its own directory.
 
