@@ -13,8 +13,8 @@ completion, and many more utilities (50+).
 
 Important files
 
-    doc/txt/README.txt          Install and general project information
-    doc/txt/LICENSE.txt 	Licensing information
+    doc/html/install/           Install and general project information
+    doc/license/LICENSE.txt 	Licensing information
     lisp/ChangeLog		Project change records
 
 Project contacts
