@@ -246,7 +246,7 @@ sub Help (;$$)
     }
     elsif ( $type eq -man )
     {
-        eval "use Pod::Man";
+	eval "use Pod::Man;";
         $EVAL_ERROR  and  die "$id: Cannot generate Man: $EVAL_ERROR";
 
         my %options;
@@ -257,7 +257,18 @@ sub Help (;$$)
     }
     else
     {
-        pod2text $PROGRAM_NAME;
+	if ( $^V =~ /5\.10/ )
+	{
+	    # Bug in 5.10. Cant use string ("") as a symbol ref
+	    # while "strict refs" in use at
+	    # /usr/share/perl/5.10/Pod/Text.pm line 249.
+
+	    system("pod2text $PROGRAM_NAME");
+	}
+	else
+	{
+	    pod2text $PROGRAM_NAME;
+	}
     }
 
     defined $msg  and  print $msg;

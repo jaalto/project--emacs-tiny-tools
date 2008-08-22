@@ -1,9 +1,20 @@
+2008-08-21  Jari Aalto  <jari.aalto@cante.net>
+
+	* txt/LICENSE.txt: change 'must be', to 'best be' in regards
+	to dual licence and it's other part removal.
+
+	General: Everything in the documentation dorectories havd
+	been rearranged. Now each file is in its own directory.
+
+	* html/install/index.txt
+	(1.4 Quick install -- site wide): Correct heading position.
+
 2008-03-05  Jari Aalto  <jari.aalto@cante.net>
 
 	* txt/emacs-elisp.txt: (4.3 Emacs Humor): Add
 	'World domination', 'Emacs and the VI editor battle'.
 
-2006-01-23 Mon  Jari Aalto  <jari.aalto@cante.net>
+2006-01-23 Mon  Jari Aalto  <jari dot aalto A T cante dot net>
 
         * txt/emacs-elisp.txt (5.1 Win32 Emacs ports): Removed obsolete
         mailing list address and hyperachive.

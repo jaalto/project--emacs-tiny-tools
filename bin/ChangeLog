@@ -6,6 +6,10 @@
 	(wanted): Add git, darcs, arch version control directories
 	to default ignore list.
 
+2008-08-22  Jari Aalto  <jari.aalto@cante.net>
+
+	* copyright-update.pl (Help): Work around 5.10 bug for pod2text.
+
 2007-05-01  Jari Aalto  <jari.aalto@cante.net>
 
 	* copyright-update.pl (HandleFile): Variable $msg
