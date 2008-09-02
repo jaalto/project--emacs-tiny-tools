@@ -4,6 +4,9 @@
 	Improve docstring (Return value part). Make faster by
 	moving `file-name-nondirectory' out of loops.
 
+	* tinylisp.el (tinylisp-jump-to-definition): Support
+	compressed .el.gz files
+
 2008-08-21  Jari Aalto  <jari.aalto@cante.net>
 
 	* tiny/tinylisp.el (tinylisp-autoload-generate-library): Support

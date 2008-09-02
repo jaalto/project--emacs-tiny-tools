@@ -3397,15 +3397,14 @@ References:
           (error
            "TinyLisp: Couldn't find absolute path %s %s. Contact maintainer"
            sym file))
-        (when (string-match "\\(.*\\.el\\)c$" file)
+        (when (string-match "\\(.*\\.el\\)c" file)
           (setq file (match-string 1 file))
           (unless (file-exists-p file)
             (error "TinyLisp: There is only compiled file at %s" file)))
-
-        (when (or (find-buffer-visiting file) ;Already loaded
+        (when (or (find-buffer-visiting file) ;Already loaded?
                   (null verb)
                   (y-or-n-p (format "TinyLisp: Go to: %s ? " file)))
-          (unless (string-match "\\.el$" file)
+          (unless (string-match "\\.el\\($\\|\\.\\)" file)  ; .el.gz
             (setq file (concat file ".el")))
           (unless (ti::file-name-path-absolute-p file)
             (let ((path (locate-library file)))
