@@ -1,3 +1,9 @@
+2008-09-02  Jari Aalto  <jari.aalto@cante.net>
+
+	* tinylisp.el (tinylisp-library-locate-library-1):
+	Improve docstring (Return value part). Make faster by
+	moving `file-name-nondirectory' out of loops.
+
 2007-10-09  Jari Aalto  <jari.aalto@cante.net>
 
 	* tiny/tinymail.el (tinymail-buffer-email-address-scramble-area):

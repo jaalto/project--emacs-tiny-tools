@@ -4307,7 +4307,12 @@ Return:
 This also finds compressed files. Path portion and file extensions
 in FILE are ignored.
 
-Extensiosn are by default '(\".el\" \".elc\")."
+Extension search order is: '(\".el\" \".elc\").
+
+Return:
+  List of possible paths. Example:
+  '(\"/path/to/package.el\" \"/path/to/package.elc\")
+"
   (let* ((compressions '("" ".gz" ".Z" ".z" ".bz2" ".zip"))
          try
          ret)
@@ -4316,11 +4321,10 @@ Extensiosn are by default '(\".el\" \".elc\")."
     (or extensions
         (setq extensions '(".el" ".elc")))
     (dolist (path load-path)
-      (setq path (expand-file-name path))
+      (setq path (file-name-as-directory (expand-file-name path)))
       (dolist (end extensions)
         (dolist (z compressions)
-          (setq try (format "%s%s%s%s"
-                            (file-name-as-directory path) file end z))
+          (setq try (format "%s%s%s%s" path file end z))
           (if (file-exists-p try)
               (pushnew try ret :test 'string=)) )))
     ;; Preserve search order (due to push)
