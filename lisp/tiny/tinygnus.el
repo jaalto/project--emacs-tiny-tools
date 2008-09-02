@@ -4,7 +4,7 @@
 
 ;;{{{ Id
 
-;; Copyright (C)    1997-2007 Jari Aalto
+;; Copyright (C)    1997-2008 Jari Aalto
 ;; Keywords:        extensions
 ;; Author:          Jari Aalto
 ;; Maintainer:      Jari Aalto
@@ -404,6 +404,7 @@
 (require 'pp)
 (require 'tinylibm)
 
+(autoload 'time-stamp-string                  "time-stamp")
 (autoload 'gnus-summary-mark-article          "gnus-sum")
 (autoload 'gnus-summary-select-article        "gnus-sum")
 (autoload 'gnus-summary-work-articles         "gnus-sum")
@@ -740,14 +741,14 @@ run expiry function through %uE modified the elt in the pable is
   :group  'TinyGnus)
 
 (defcustom tinygnus-:uff-summary-date
-  '(format "%02d-%02d" (string-to-int date-mon)  date-day)
+  '(format "%02d-%02d" (string-to-number date-mon)  date-day)
   "This variable contain Lisp FORM to return summary line date string.
 If you want to customize this variable you have to look at the source
 code of `tinygnus-uff-summary-date' and use the dynamically bound variables.
 
 The default value is
 
-   '(format \"%02d-%02d\" (string-to-int date-mon)  date-day)
+   '(format \"%02d-%02d\" (string-to-number date-mon)  date-day)
 
 Which returns ISO date parts YY-MM. It is good to selects as brief
 date string as possible because the summary line is quite crowded place.
@@ -756,7 +757,7 @@ Here is value for YY-MM-DD:
 
    '(format \"%s-%02d-%02d\"
              (ti::string-right date-yyyy 2)
-             (string-to-int date-mon)
+             (string-to-number date-mon)
              date-day)"
   :type  'sexp
   :group 'TinyGnus)
@@ -1236,9 +1237,9 @@ Prefix key to access the minor mode is defined in `tinygnus-:group-mode-prefix-k
 ;;;
 (defmacro tinygnus-set-group ()
   "Set variable `group'."
-  (` (or group
-         (setq group (symbol-value 'gnus-newsgroup-name))
-         (error "Can't know the group"))))
+  `(or group
+       (setq group (symbol-value 'gnus-newsgroup-name))
+       (error "Can't know the group")))
 
 ;;; ----------------------------------------------------------------------
 ;;;
@@ -1247,8 +1248,7 @@ Prefix key to access the minor mode is defined in `tinygnus-:group-mode-prefix-k
   "Map through marked mesaes in Summary buffer and execute BODY.
 The variable `nbr' has the current article number. Use command
  (return) to stop the loop."
-  (`
-   (let* ((articles (gnus-summary-work-articles nil))
+  `(let* ((articles (gnus-summary-work-articles nil))
           gnus-article-display-hook     ;Do not run this
           gnus-article-prepare-hook
           gnus-select-article-hook
@@ -1262,17 +1262,16 @@ The variable `nbr' has the current article number. Use command
      (if gnus-visual-mark-article-hook (setq gnus-visual-mark-article-hook t))
      ;; (gnus-summary-save-process-mark)
      (dolist (nbr articles)
-       (,@ body)))))
+       ,@body)))
 
 ;;; ----------------------------------------------------------------------
 ;;;
 (put 'tinygnus-summary-map-article-body-macro 'lisp-indent-function 0)
-(defmacro tinygnus-summary-map-article-body-macro  (&rest body)
+(defmacro tinygnus-summary-map-article-body-macro (&rest body)
   "Run BODY inside articles that are marked.
 Variable `out' contains the output buffer and `buffer' points
 to the article buffer."
-  (`
-   (let* ((out   (get-buffer-create tinygnus-:output-buffer))
+  `(let* ((out   (get-buffer-create tinygnus-:output-buffer))
           buffer)
      (tinygnus-summary-map-articles-macro
       (gnus-summary-select-article 'all nil 'pseudo nbr)
@@ -1280,18 +1279,17 @@ to the article buffer."
       (when buffer
         (with-current-buffer buffer
           (ti::pmin)
-          (,@ body)))))))
+          ,@body)))))
 
 ;;; ----------------------------------------------------------------------
 ;;;
 (put 'tinygnus-output-buffer-macro 'lisp-indent-function 0)
 (defmacro tinygnus-output-buffer-macro (&rest body)
   "Run BODY if `tinygnus-:output-buffer' exists. Signal error otherwise."
-  (`
-   (let* ((buffer (get-buffer tinygnus-:output-buffer)))
+  `(let* ((buffer (get-buffer tinygnus-:output-buffer)))
      (if buffer
-         (progn (,@ body))
-       (error "TinyGnus: buffer %s does not exist." tinygnus-:output-buffer)))))
+         (progn ,@body)
+       (error "TinyGnus: buffer %s does not exist." tinygnus-:output-buffer))))
 
 ;;; ----------------------------------------------------------------------
 ;;;
@@ -1299,27 +1297,25 @@ to the article buffer."
   "Read all files from DIR and do BODY.
 You can refer to `file' when processing the files. Stop loop with
 command (return)."
-  (`
-   (let* ((files (tinygnus-read-files-from-dir (, dir))))
+  `(let* ((files (tinygnus-read-files-from-dir ,dir)))
      (when (or (not (interactive-p))
                (and (interactive-p)
                     (y-or-n-p
                      (format
                       "Found %d files, Proceed " (length files)))))
        (dolist (file files)
-         (,@ body))))))
+         ,@body))))
 
 ;;; ----------------------------------------------------------------------
 ;;;
 (put 'tinygnus-summary-map-lines 'lisp-indent-function 0)
 (defmacro tinygnus-summary-map-line-macro (&rest body)
   "Map line by line and run BODY in Summary buffer."
-  (`
-   (save-excursion
+  `(save-excursion
      (ti::pmin)
      (while (not (eobp))
-       (,@ body)
-       (forward-line 1)))))
+       ,@body
+       (forward-line 1))))
 
 ;;; ----------------------------------------------------------------------
 ;;;
@@ -2065,7 +2061,7 @@ The format of date string is defined in `tinygnus-:uff-summary-date'"
         ""
       (let* ((date-yyyy (aref date-vector 0))
              (date-mon  (aref date-vector 1))
-             (date-day  (string-to-int (aref date-vector 2)))
+             (date-day  (string-to-number (aref date-vector 2)))
              (string-lines      (if (> header-lines 9999)
                                     "????"
                                   (number-to-string header-lines)))
@@ -2857,10 +2853,9 @@ References:
 (put 'tinygnus-debug-gnus-macro 'edebug-form-spec '(body))
 (defmacro tinygnus-debug-gnus-macro (func &rest body)
   "Instantiate `pr' function to print debug information about FUNC."
-  (`
-   (flet ((pr (x y)
-              (tinygnus-gnus-debug-insert-line x y (, func))))
-     (,@ body))))
+  `(flet ((pr (x y)
+	      (tinygnus-gnus-debug-insert-line x y ,func)))
+     ,@body))
 
 ;;; ----------------------------------------------------------------------
 ;;;

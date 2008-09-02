@@ -4,7 +4,7 @@
 
 ;;{{{ Id
 
-;; Copyright (C)    1995-2007 Jari Aalto
+;; Copyright (C)    1995-2008 Jari Aalto
 ;; Keywords:        tools
 ;; Author:          Jari Aalto
 ;; Maintainer:      Jari Aalto
@@ -429,8 +429,6 @@ replace: (f)wd (r)eg (w)ord (c)ompile buffer files (f)iles (lL)atex (?)help "
      ;;  If `tinyreplace-menu' is bound to M-%, then the "5" key makes
      ;;  sense, because "%" is shift-5.
      (?f  . ( (call-interactively 'tinyreplace-replace-forward)))
-     (?5  . ( (call-interactively 'tinyreplace-replace-forward)))
-     (?%  . ( (call-interactively 'tinyreplace-replace-forward)))
      (?w  . ( (call-interactively 'tinyreplace-word-replace)))
      (?r  . ( (call-interactively 'tinyreplace-replace-region)))
      (?c  . ( (call-interactively
@@ -443,11 +441,15 @@ replace: (f)wd (r)eg (w)ord (c)ompile buffer files (f)iles (lL)atex (?)help "
 Standard replace commands:
 
     f  calls function `tinyreplace-replace-forward'
-    %  calls function `tinyreplace-replace-forward'  (like M-%)
-    5  calls function `tinyreplace-replace-forward'  (Like M-%)
-
     w  calls function `tinyreplace-word-replace'
     r  calls function `tinyreplace-replace-region'
+
+    NOTE: If you select `f', You can select modes that affect how the
+    replacing will be ocnducted. E.g. pressing `B' will put point to the
+    beginning of buffer from wich the *forward* action ir carried out.
+
+    Another usefull mode to select before strting to replace is `w'
+    for word mode toggle.
 
 The following keys can be used in compile-like buffers, where each line
 contains standard grep-like output. If you mark a region, the selected
@@ -538,12 +540,15 @@ Special commands:
 (defun tinyreplace-define-keys-compile-map  ()
   "Define key bindings."
   (interactive)
-  (tinyreplace-with-keymap 'compilation-mode-map
-                           (define-key map "%" 'tinyreplace-replace-over-files-compile-buffer))
-  (tinyreplace-with-keymap 'compilation-minor-mode-map
-                           (define-key map "%" 'tinyreplace-replace-over-files-compile-buffer))
-  (tinyreplace-with-keymap 'grep-mode-map
-                           (define-key map "%" 'tinyreplace-replace-over-files-compile-buffer)))
+  (tinyreplace-with-keymap
+   'compilation-mode-map
+   (define-key map "%" 'tinyreplace-replace-over-files-compile-buffer))
+  (tinyreplace-with-keymap
+   'compilation-minor-mode-map
+   (define-key map "%" 'tinyreplace-replace-over-files-compile-buffer))
+  (tinyreplace-with-keymap
+   'grep-mode-map
+   (define-key map "%" 'tinyreplace-replace-over-files-compile-buffer)))
 
 ;;; ----------------------------------------------------------------------
 ;;;
@@ -553,15 +558,14 @@ STRING is argument to `tinyreplace-:read-args-function'.
 
 Return:
  '(BEG END ARG1-STRING ARG2-STRING)"
-  (`
-   (if buffer-read-only
+  `(if buffer-read-only
        (barf-if-buffer-read-only)
      (if (region-active-p)
          (ti::list-merge-elements
           (region-beginning)
           (region-end)
-          (funcall tinyreplace-:read-args-function (, string)))
-       (error "TinyReplace: Region is not active. Please select one.")))))
+          (funcall tinyreplace-:read-args-function ,string))
+       (error "TinyReplace: Region is not active. Please select one."))))
 
 ;;; ----------------------------------------------------------------------
 ;;;
@@ -694,7 +698,7 @@ Note:
             to-str   (ti::string-format-percent to-str))
       (setq
        msg
-       (format "Replace '%s' with '%s' (a,bvuBFNU [%s%s%s%s] ?!ynqQ) "
+       (format "Replace '%s' with '%s' (a,bvuBFNU [%s%s%s%s%s] ?!ynqQ) "
                ;; Make prompt fit nicely
                (if (> (length from-str) 18)
                    (concat (ti::string-left from-str 16) "..")
@@ -890,7 +894,7 @@ Commands while ASK is non-nil:     (simple undo backward is = 'v u' )
 Search modes
 
  s                      Mode: toggle symmetry.
-                        When mode is on, he written case is preserved.
+                        When mode is on, the written case is preserved.
  c                      Mode: toggle case sensitivity in search.
  w                      Mode: toggle word only search.
  a                      Mode: toggle arrow display.
@@ -1191,7 +1195,8 @@ Region is active. Go to beginning of region? "))
 ;;;
 (defun tinyreplace-read-compile-buffer-filename ()
   "Read filename on line."
-  (let ((re "^\\(\\(.:\\)?[^\n:]+\\):") ;; allow DOS drive at front d:/file/
+  (let (;; allow drive letter at front d:/file/
+	(re "^\\(\\(.:\\)?[^\n:]+\\):")
         dir
         file)
     (save-excursion
@@ -1200,10 +1205,13 @@ Region is active. Go to beginning of region? "))
         (save-excursion
           (if (re-search-backward "^cd[ \t]+\\([^\t\n]+\\)" nil t)
               (setq dir (ti::remove-properties (match-string 1)))))
-
         (when (and dir
+		   ;;  Check drive letter
                    (not (string-match "^\\(.:\\)?/" file)))
-          (setq file (concat dir file)))
+          (setq file (concat
+		      ;;  Make sure there is trailing slash
+		      (file-name-as-directory dir)
+		      file)))
         (setq file (ti::file-name-for-correct-system file 'emacs))))
     file))
 
@@ -1227,13 +1235,12 @@ Input:
 
   (interactive
    (ti::list-merge-elements
-    (tinyreplace-interactive-region-args "compile")
+    (tinyreplace-interactive-region-args "Compile")
     nil
     t))
   ;; ................................................. interactive end ...
   (let ((o-frame        (selected-frame))
         (w-frame        (ti::non-dedicated-frame))
-
         (func           (or func 'tinyreplace-replace-forward))
         (err-buffer     (ti::temp-buffer tinyreplace-:err-buffer 'clear))
         (read-only      0)
@@ -1259,13 +1266,10 @@ Input:
           ;;  /users/jaalto/elisp/test.el:;; $Id: ...
           (cond
            ((and file (not (file-exists-p file)))
-            (ti::read-char-safe-until
-             (format "TinyReplace: [press] invalid filename %s" file)))
-
+	    (format "TinyReplace: [press] invalid filename %s" file))
            ((and file (not (member file cache)))
             (raise-frame (select-frame w-frame))
             (push file cache)           ;Now we have dealt with it
-
             ;;  If it's under RCS and not locked, ask if we should
             ;;  CheckOut it.
             (when (and (vc-registered file)
@@ -1287,9 +1291,7 @@ Input:
              (t
               (save-excursion
                 ;;  Also jumps to buffer if it's already in Emacs
-
                 (setq buffer (find-file file))
-
                 ;;  Open outline/folding before doing anything
                 (ti::buffer-outline-widen)
                 (ti::pmin)
@@ -1297,7 +1299,8 @@ Input:
                  (no-confirm
                   ;; Automatic replace
                   (message "TinyReplace: Processing %s" file)
-                  (replace-string str1 str2)
+		  (while (search-forward str1 nil 'noerr)
+		    (replace-match str2 nil t))
                   (with-current-buffer buffer
                     (save-buffer)))
                  (t
@@ -1353,7 +1356,7 @@ Input:
 ;;;###autoload
 (defun tinyreplace-replace-region (beg end str1 str2)
   "In region BEG END, find STR1 and replace with STR2."
-  (interactive (tinyreplace-interactive-region-args "region"))
+  (interactive (tinyreplace-interactive-region-args "Region"))
   (tinyreplace-replace-region-1
    beg end (regexp-quote str1) str2 0 t))
 

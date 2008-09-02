@@ -1,19 +1,20 @@
 Emacs Tiny Tools - Collection of plug-in Emacs Lisp modules
 -----------------------------------------------------------
 
-Emacs Tiny Tools is a collection of packages (extensions) and libraries
-designed to be OS and X/Emacs platform independent. They include tools to
-configure load-path automatically, jump to URLs, easy text delete, mail
+Emacs Tiny Tools is a collection of packages (extensions)
+and libraries designed to be OS and X/Emacs platform
+independent. They include tools to configure load-path
+automatically, jump to URLs, easy text delete, mail
 completion, and many more utilities (50+).
 
     bin/	Project administration utilities and helper scripts
-    doc/ 	Documentation.
+    doc/ 	Documentation
     lisp/ 	Emacs add-on modules i.e. extensions ("The Code")
 
 Important files
 
-    doc/txt/README.txt          Install and general project information
-    doc/txt/LICENSE.txt 	Licensing information
+    doc/html/install/           Install and general project information
+    doc/license/LICENSE.txt 	Licensing information
     lisp/ChangeLog		Project change records
 
 Project contacts

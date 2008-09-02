@@ -1,3 +1,19 @@
+2008-08-21  Jari Aalto  <jari.aalto@cante.net>
+
+	* txt/LICENSE.txt: change 'must be', to 'best be' in regards
+	to dual licence and it's other part removal.
+
+	General: Everything in the documentation dorectories havd
+	been rearranged. Now each file is in its own directory.
+
+	* html/install/index.txt
+	(1.4 Quick install -- site wide): Correct heading position.
+
+2008-03-05  Jari Aalto  <jari.aalto@cante.net>
+
+	* txt/emacs-elisp.txt: (4.3 Emacs Humor): Add
+	'World domination', 'Emacs and the VI editor battle'.
+
 2006-01-23 Mon  Jari Aalto  <jari dot aalto A T cante dot net>
 
         * txt/emacs-elisp.txt (5.1 Win32 Emacs ports): Removed obsolete
@@ -90,13 +106,13 @@
         "SQL*Plus and exhaustive highlighting"
         http://paddington.ic.uva.nl/public/sql-modes.zip by Karel Sprenger
 
-2005-05-08  Jari Aalto  <jari dot aalto A T cante dot net>
+2005-05-08  Jari Aalto  <jari.aalto@cante.net>
 
         * txt/emacs-elisp.txt:
         (3.0 XEmacs - Emacs the next generation): Removed CVS instructions
         and added URL to CVS XEmacs page.
 
-2005-04-22  Jari Aalto  <jari dot aalto A T cante dot net>
+2005-04-22  Jari Aalto  <jari.aalto@cante.net>
 
         * txt/emacs-elisp.txt: (2.0 GNU Emacs): Removed
         'Emacs 21 press release' link. Old.
@@ -125,14 +141,14 @@
         (27.1 AUCTeX): Updated entry by request of new maintainer
         David Kastrup
 
-2005-04-01  Jari Aalto  <jari dot aalto A T cante dot net>
+2005-04-01  Jari Aalto  <jari.aalto@cante.net>
 
         * txt/announcement.txt: Removed dead links.
 
         * html/index.html (http): Removed Emacs webring, no longer
         available. Corrected bad links.
 
-2005-03-08 Tue  Jari Aalto  <jari dot aalto A T cante dot net>
+2005-03-08 Tue  Jari Aalto  <jari.aalto@cante.net>
 
         * txt/emacs-elisp.txt (2.1 Emacs Documentation): 2.88 Removed
         'Commercial Emacs books'. List was not up to date and
@@ -144,12 +160,12 @@
         (4.2 Free software pointers): 2.88 Streamlined. Added Debian-legal
         links concerning GDFL/GPLv2
 
-2005-02-15 Tue  Jari Aalto  <jari dot aalto A T cante dot net>
+2005-02-15 Tue  Jari Aalto  <jari.aalto@cante.net>
 
         * html/index.html (CVS update): 2.43 Added open Source Logo
         to the bottom.
 
-2005-02-06  Jari Aalto   <jari dot aalto A T cante dot net>
+2005-02-06  Jari Aalto   <jari.aalto@cante.net>
 
         * txt/emacs-elisp.txt: (1.2) Developer's email addresses
         removed. They may be used by harvesters.
@@ -164,12 +180,12 @@
         (10.2 Gnus grouplens): Removed. Old.
         (36.9 C-comment-edit2.el): Removed. old.
 
-2005-02-04  Jari Aalto   <jari dot aalto A T cante dot net>
+2005-02-04  Jari Aalto   <jari.aalto@cante.net>
 
         * txt/emacs-elisp.txt (14.14 Subversion): Xteve's
         URL updated. Jim Blandy's message was removed.
 
-2004-11-12 Fri  Jari Aalto  <jari dot aalto A T cante dot net>
+2004-11-12 Fri  Jari Aalto  <jari.aalto@cante.net>x
 
         * txt/emacs-elisp.txt (1.1.1 Finding old Emacs packges or
         articles):  2.82  DEjanews no longer exists. Superceded
@@ -204,30 +220,30 @@
         ~hniksic link removed.
         (5.3 Emacs or Unix-like Win32 programs): 2.82
 
-2004-09-09  Jari Aalto  <jari dot aalto A T cante dt net>
+2004-09-09  Jari Aalto  <jari.aalto@cante.net>
 
         * html/index.html (cvs update method): Sourceforge has
         changed CVS server. Updated. Thanks to stefan AT erben com.
         Typos fixed: numering => numbering etc.
 
-2004-08-28 Sat  Jari Aalto  <jari dot aalto A T cante dt net>
+2004-08-28 Sat  Jari Aalto  <jari.aalto@cante.net>
 
         * txt/README.txt (1.3.3 What does tiny-setup installation do?):
         2.32 Removed.
         (1.5.3 Making Emacs aware of additional packages -- old way): Removed.
 
-2004-08-19 Thu  Jari Aalto  <jari dot aalto A T cante dt net>
+2004-08-19 Thu  Jari Aalto  <jari.aalto@cante.net>
 
-        * txt/LICENCE.txt (Text files and documentation): 2.4
-        Changed licence from www.opencontent.org to
+        * txt/LICENse.txt (Text files and documentation): 2.4
+        Changed license from www.opencontent.org to
         http://creativecommons.org/licenses/by-nc-sa/2.0/
 
-2004-04-28 Wed  Jari Aalto  <jari dot aalto A T cante dt net>
+2004-04-28 Wed  Jari Aalto  <jari.aalto@cante.net>
 
         * txt/emacs-keys.txt: From chapter 2, cleaned some old
         Emacs and XEmacs information.
 
-2004-04-02 Fri  Jari Aalto  <jari aalto A T cante dt net>
+2004-04-02 Fri  Jari Aalto  <jari.aalto@cante.net>
 
         * txt/README.txt (1.3 Quick install -- personal): 1.21 Typos
         fixed. Removed winzip, suggest ultimatezip.
@@ -244,12 +260,12 @@
         (9.4 Dot files): 1.55 Removed. Moved to condenced listing at
         start.
 
-2004-04-01 Thu  Jari Aalto  <jari aalto A T cante dt net>
+2004-04-01 Thu  Jari Aalto  <jari.aalto@cante.net>
 
         * txt/emacs-elisp.txt (14.13 Subversions): 1.54 Added
         Link to vc-svn.el
 
-2003-09-12 Fri  Jari Aalto  <jari aalto A T cante dt net>
+2003-09-12 Fri  Jari Aalto  <jari.aalto@cante.net>
 
         * txt/README.txt (1.3 Quick install -- personal): 1.19 Wrote
         section 'What next? Where I put other lisp packages?' based
@@ -260,7 +276,7 @@
         corrected. Typos.
         (News): 1.15 Added apt-get line /etc/apt/sources.list
 
-2003-08-10 Sun  Jari Aalto  <jari aalto A T cante dt net>
+2003-08-10 Sun  Jari Aalto  <jari.aalto@cante.net>
 
         * txt/emacs-elisp.txt (28.3 Ee.el, categorizing information
         manager for Emacs): 1.51 New.
@@ -271,24 +287,24 @@
         (36.25 Irc, internet relay char system (*)): 1.51 Xeinr, updated
         URL.
 
-2003-08-08 Fri  Jari Aalto  <jari aalto A T cante dt net>
+2003-08-08 Fri  Jari Aalto  <jari.aalto@cante.net>
 
         * html/index.html (<H1> Foreword): 1.14 Added new picture describing
         NEW package tinyirc.el and it's PasteBot interface.
         (<H1> Links and download): Fixed broken link to CVS ChangeLog.
 
-2003-08-01 Fri  Jari Aalto  <jari aalto A T cante dt net>
+2003-08-01 Fri  Jari Aalto  <jari.aalto@cante.net>
 
         * txt/emacs-elisp.txt (17.5 Smb-mode.el, editing SAMBA files):
         1.48 New.
         (1.2 Developer contact addresses and site list): 1.48
         Added Fraser McCrossan.
 
-2003-07-21 Mon  Jari Aalto  <jari aalto A T cante dt net>
+2003-07-21 Mon  Jari Aalto  <jari.aalto@cante.net>
 
         * txt/emacs-elisp.txt (14.13 Subversions): 1.48 New.
 
-2003-07-03 Thu  Jari Aalto  <jari aalto A T cante dt net>
+2003-07-03 Thu  Jari Aalto  <jari.aalto@cante.net>
 
         * txt/emacs-elisp.txt (21.1 Apt-sources.el, Debian editing mode):
         1.48 New.
@@ -315,7 +331,7 @@
         Charles Curley". Too old now.
 
 
-2003-06-07 Sat  Jari Aalto  <jari aalto A T cante dt net>
+2003-06-07 Sat  Jari Aalto  <jari.aalto@cante.net>
 
         * txt/emacs-elisp.txt (1.1 Emacs package links): 1.45 Phoaks link
         is no longer there http://www.phoaks.com/comp/emacs/index.html
@@ -336,18 +352,18 @@
         now ships correct ispell.
         (6.1 Emacs startup and load-path): 1.45 Fine tuned documentation.
 
-2003-06-06 Fri  Jari Aalto  <jari aalto A T cante dt net>
+2003-06-06 Fri  Jari Aalto  <jari.aalto@cante.net>
 
         * txt/emacs-elisp.txt: 1.45 (1.2 Developer contact addresses and
         site list). Theberge Jean-Philippe sent message and asked to
         update his email addresses. Done.
 
-2003-06-03 Tue  Jari Aalto  <jari aalto A T cante dt net>
+2003-06-03 Tue  Jari Aalto  <jari.aalto@cante.net>
 
         * txt/emacs-elisp.txt (1.2 Developer contact addresses and site
         list): 1.44 Gorrel Harley: Email address updated [panix].
 
-2003-05-20 Tue  Jari Aalto  <jari aalto A T cante dt net>
+2003-05-20 Tue  Jari Aalto  <jari.aalto@cante.net>
 
         * html/index.html (of this): 1.11 Updated contect to reflect
         latest development. Mainling list section was removed. It is no
@@ -361,12 +377,12 @@
         official CVS site is more preferred. Updated 'Operating system'
         section to tell about Cygwin support.
 
-2003-05-18 Sun  Jari Aalto  <jari aalto A T cante dt net>
+2003-05-18 Sun  Jari Aalto  <jari.aalto@cante.net>
 
         * txt/README.txt (3.2 Mailing list): 1.18 Removed mailing
         list information. The list is not active.
 
-2003-02-06 Thu  Jari Aalto  <jari aalto A T cante dt net>
+2003-02-06 Thu  Jari Aalto  <jari.aalto@cante.net>
 
         * txt/README.txt
         - Read through whole documentation and corrected spelling errors
@@ -374,14 +390,14 @@
         (1.6 Make procedure): 1.14 Removed
         option --perlfix, no longer available.
 
-2003-02-01 Sat  Jari Aalto  <jari aalto A T cante dt net>
+2003-02-01 Sat  Jari Aalto  <jari.aalto@cante.net>
 
         * txt/COPYING.txt: New.
 
         * txt/README.txt (8.2 Text files and documentation): 1.14 Removed.
         Moved to separate file COPYING.txt.
 
-2003-01-24 Fri  Jari Aalto  <jari aalto A T cante dt net>
+2003-01-24 Fri  Jari Aalto  <jari.aalto@cante.net>
 
         * txt/emacs-tinypgp.txt (1.2 Getting automatic manual update
         notification): 1.6 http://minder.netmind.com/ is no longer
@@ -409,14 +425,14 @@
         removed http://www.changecommander.com/
         (39.9 Term.el (*)): 1.41 Removed all URLs.
 
-2003-01-23 Thu  Jari Aalto  <jari aalto A T cante dt net>
+2003-01-23 Thu  Jari Aalto  <jari.aalto@cante.net>
 
         * txt/emacs-keys.txt (8.10 Win95: swapping ctrl-caps keys ?):
         1.4 Removed. No longer available.
         http://cs.washington.edu/homes/voelker/
         http://www.microsoft.com/windows/software/krnltoy.htm
 
-2002-10-23  Jari Aalto  <jari aalto A T cante dt net>
+2002-10-23  Jari Aalto  <jari.aalto@cante.net>
 
         * txt/README.txt (1.5 Install from scratch --
         without prior elisp directory): Added instructions to create
@@ -424,12 +440,12 @@
         * txt/README.txt (2.2 Platform support): Removed pointer to
         emacs-elisp.txt
 
-2002-10-13  Jari Aalto  <jari aalto A T cante dt net>
+2002-10-13  Jari Aalto  <jari.aalto@cante.net>
 
         * txt/emacs-elisp.txt (1.3 Developer contact addresses and site list):
         /Conrad Christoph/ Deleted old address and put gmx.de first.
 
-2002-09-14 Sat  Jari Aalto  <jari aalto A T cante dt net>
+2002-09-14 Sat  Jari Aalto  <jari.aalto@cante.net>
 
         * txt/README.txt (2.1 Project News): 1.11 Removed.
         The Changes are listed in ChangeLog files.
@@ -439,12 +455,12 @@
         in snapshots already know cvs.
         (5.0 History): 1.11 Removed. Moved inside 'Project'.
 
-2002-08-12  Jari Aalto  <jari aalto A T cante dt net>
+2002-08-12  Jari Aalto  <jari.aalto@cante.net>
 
         * txt/emacs-elisp.txt: (Developer list):
         Lord Philip / homepage URL added.
 
-2002-08-07 Wed  Jari Aalto  <jari aalto A T cante dt net>
+2002-08-07 Wed  Jari Aalto  <jari.aalto@cante.net>
 
         * txt/emacs-code.txt (1.2 What is this document?): 1.3
         Removed email addresses.
@@ -515,7 +531,7 @@
         switchover.
         Removed Lauri Gian <lauri@eng.it>. No more reachable.
 
-2002-08-05 Mon  Jari Aalto  <jari aalto A T cante dt net>
+2002-08-05 Mon  Jari Aalto  <jari.aalto@cante.net>
 
         * txt/emacs-tiny-tools.txt (    Brief overview): Corrected
         procmail link.
@@ -544,7 +560,7 @@
         (    3.5 NTEmacs and printing): Updated URL.
         (39.0 Directory listings of site-lisp): Removed old listings.
 
-2002-08-04 Sun  Jari Aalto  <jari aalto A T cante dt net>
+2002-08-04 Sun  Jari Aalto  <jari.aalto@cante.net>
 
         * txt/emacs-elisp.txt (    2.7 XEmacs - Emacs the next
         generation): Removed robin Socha's page. No longer available.
@@ -553,7 +569,7 @@
         (    12.12 Perforce P4 revision control software): P4
         moved to sourceforge. Updated.
 
-2002-08-03 Sat  Jari Aalto  <jari aalto A T cante dt net>
+2002-08-03 Sat  Jari Aalto  <jari.aalto@cante.net>
 
         * txt/emacs-elisp.txt
         (1.3 Developer contact addresses and site list):
@@ -569,7 +585,7 @@
         (    28.26 X-symbol (*), XEmacs):
         Pointed URL to sourceforge project `x-symbol'
 
-2002-07-12  Jari Aalto  <jari aalto A T cante dt net>
+2002-07-12  Jari Aalto  <jari.aalto@cante.net>
 
         * txt/emacs-elisp.txt:
         Lindgren Anders  / invalid link removed http://www.andersl.com/
@@ -589,7 +605,7 @@
         Dirson Yann / contacted via email - corrected info.
         Edmonds Brian / contacted via email - corrected info.
 
-2002-07-11  Jari Aalto  <jari aalto A T cante dt net>
+2002-07-11  Jari Aalto  <jari.aalto@cante.net>
 
         * txt/emacs-elisp.txt (1.2 Emacs first aid): Removed
         - invalid link http://www.emacslisp.org/
@@ -605,25 +621,25 @@
         Hirose Yuuji / old homepage link removed. Email updated
         Kleinpaste Karl / old homepage link removed.
 
-2002-03-03 Sun  Jari Aalto  <jari aalto A T cante dt net>
+2002-03-03 Sun  Jari Aalto  <jari.aalto@cante.net>
 
         * txt/emacs-keys.txt (2.1 Foreword to different emacs platforms): 1.2
         <Adrian.Aichner@t-online.de> Sent patch to correct few spelling
         mistaked. Thank you.
 
-2002-02-13 Wed  Jari Aalto  <jari aalto A T cante dt net>
+2002-02-13 Wed  Jari Aalto  <jari.aalto@cante.net>
 
         * txt/emacs-elisp.txt:
         (1.3 Developer contact addresses and site list): 1.30
         Updated Zundel Detlev URL address.
 
-2002-02-02 Sat  Jari Aalto  <jari aalto A T cante dt net>
+2002-02-02 Sat  Jari Aalto  <jari.aalto@cante.net>
 
         * txt/emacs-elisp.txt
         (1.3 Developer contact addresses and site list): 1.29
         Updated Drieu Benjamin.
 
-2002-01-29 Tue  Jari Aalto  <jari aalto A T cante dt net>
+2002-01-29 Tue  Jari Aalto  <jari.aalto@cante.net>
 
         * txt/emacs-elisp.txt: Removed ARCHIE and FTPSEARCH which
         are obsoleted by google.
@@ -633,7 +649,7 @@
         Removed http://eyeofdog.org/foof/emacs
         Common Lisp Hyper Spec (tm): Link updated.
 
-2002-01-28 Mon  Jari Aalto  <jari aalto A T cante dt net>
+2002-01-28 Mon  Jari Aalto  <jari.aalto@cante.net>
 
         * txt/emacs-font.txt (Highlighting regardless of mode in any buffer): 1.2
         Removed.
@@ -642,26 +658,26 @@
         Emacs and XEmacs can nor use same key binding syntax.
         Flyspelled whole buffer.
 
-2002-01-14  Jari Aalto  <jari aalto A T cante dt net>
+2002-01-14  Jari Aalto  <jari.aalto@cante.net>
 
         * txt/emacs-elisp.txt: (9.2 bbdb.el) Added sourceforge
         WWW homepage link and removed ~simmons URL link.
 
-2002-01-14 Mon  Jari Aalto  <jari aalto A T cante dt net>
+2002-01-14 Mon  Jari Aalto  <jari.aalto@cante.net>
 
         * html/index.html: Removed www.sourceforge from links.
 
-2002-01-12 Sat  Jari Aalto  <jari aalto A T cante dt net>
+2002-01-12 Sat  Jari Aalto  <jari.aalto@cante.net>
 
         * txt/emacs-elisp.txt (Developer List): 1.24 Added
         new members Link Thomas, Volker Franz, Yamaoka Katsumi
 
-2002-01-04 Fri  Jari Aalto  <jari aalto A T cante dt net>
+2002-01-04 Fri  Jari Aalto  <jari.aalto@cante.net>
 
         * txt/emacs-elisp.txt (29.5 Rolling buffers in same window): 1.22
         Incorrect name : tinycb.el => should be tinybuffer.el
 
-2002-01-02 Wed  Jari Aalto  <jari aalto A T cante dt net>
+2002-01-02 Wed  Jari Aalto  <jari.aalto@cante.net>
 
         * txt/emacs-package-make.txt (2.3 Use valid LCD format,
         which doesn't tolerate changes in format): 1.1 Removed link
@@ -670,7 +686,7 @@
         * txt/emacs-font.txt (12.0 Xt/Motif programming and font-lock): 1.1
         Removed URL http://www.polito.it/~s64912/things.html
 
-2002-01-01 Tue  Jari Aalto  <jari aalto A T cante dt net>
+2002-01-01 Tue  Jari Aalto  <jari.aalto@cante.net>
 
         * txt/emacs-elisp.txt (2.10 Emacs resourcesions): 1.18
         Url invalid. Removed.
@@ -707,26 +723,26 @@
         Url removed http://members.xoom.com/pmilliken/
         (13.23.1 JPDA Notes): Removed. This is too old.
 
-2001-12-10 Mon  Jari Aalto  <jari aalto A T cante dt net>
+2001-12-10 Mon  Jari Aalto  <jari.aalto@cante.net>
 
         * txt/emacs-elisp.txt (    27.9 SES, Emacs spreadsheet): New.
 
-2001-11-25  Jari Aalto  <jari aalto A T cante dt net>
+2001-11-25  Jari Aalto  <jari.aalto@cante.net>
 
         * txt/emacs-elisp.txt: Added Sqlplus-html.el
         by Hrvoje Niksic
 
-2001-08-05 Sun  Jari Aalto  <jari aalto A T cante dt net>
+2001-08-05 Sun  Jari Aalto  <jari.aalto@cante.net>
 
         * emacs-elisp.txt (Rebox.el) New.
         (8.16 Nnir-grepmail.el --- A grepmail plugin for nnir.el): 1.180 New.
 
-2001-07-22 Sun  Jari Aalto  <jari aalto A T cante dt net>
+2001-07-22 Sun  Jari Aalto  <jari.aalto@cante.net>
 
         * emacs-elisp.txt (Tail.el, tail -f): 1.175 New.
         (Etail.el, tail -f): 1.175 New.
 
-2001-03-08 Thu  Jari Aalto  <jari aalto A T cante dt net>
+2001-03-08 Thu  Jari Aalto  <jari.aalto@cante.net>
 
         * README.txt
         -- Changed the heading order so that the most important information
@@ -735,45 +751,45 @@
         (2.2 Quick install -- personal): Rewritten.
         (2.3 Quick install -- site wide): New section
 
-2000-11-06 Mon  Jari Aalto  <jari aalto A T cante dt net>
+2000-11-06 Mon  Jari Aalto  <jari.aalto@cante.net>
 
         * emacs-elisp.txt (Java Expert System Shell (jess-mode)): New.
         (Lookup): New.
 
-2000-11-05 Sun  Jari Aalto  <jari aalto A T cante dt net>
+2000-11-05 Sun  Jari Aalto  <jari.aalto@cante.net>
 
         * emacs-elisp.txt (DocBook IDE): New.
 
-2000-10-19 Thu  Jari Aalto  <jari aalto A T cante dt net>
+2000-10-19 Thu  Jari Aalto  <jari.aalto@cante.net>
 
         * emacs-elisp.txt (Rfc-page.el): New.
         (Table.el,): New.
         (Ldbdb.el, Little Brother's Database interface): New.
 
-2000-10-18 Wed  Jari Aalto  <jari aalto A T cante dt net>
+2000-10-18 Wed  Jari Aalto  <jari.aalto@cante.net>
 
         * emacs-elisp.txt (Screenlines.el): New.
 
-2000-08-06 Sun  Jari Aalto  <jari aalto A T cante dt net>
+2000-08-06 Sun  Jari Aalto  <jari.aalto@cante.net>
 
         * emacs-elisp.txt
         (Nnmaildir.el, one group per maildir): 1.67 New.
 
-2000-07-31 Mon  Jari Aalto  <jari aalto A T cante dt net>
+2000-07-31 Mon  Jari Aalto  <jari.aalto@cante.net>
 
         * emacs-elisp.txt (Java-open.el): 1.67 New.
 
-2000-07-30 Sun  Jari Aalto  <jari aalto A T cante dt net>
+2000-07-30 Sun  Jari Aalto  <jari.aalto@cante.net>
 
         * emacs-tiny-tools.txt (A Quick guide install for newcomers): 1.28
         New, for completely newcomers.
 
-2000-07-29 Sat  Jari Aalto  <jari aalto A T cante dt net>
+2000-07-29 Sat  Jari Aalto  <jari.aalto@cante.net>
 
         * emacs-elisp.txt (Blank-mode.el, see spaces and tabs): 1.67 New.
         (Screen-lines.el): 1.67 New.
 
-2000-07-26 Wed  Jari Aalto  <jari aalto A T cante dt net>
+2000-07-26 Wed  Jari Aalto  <jari.aalto@cante.net>
 
         * emacs-elisp.txt (Require statement tracing): 1.67 New.
         (Follow-mouse.el): 1.67 New.
@@ -793,20 +809,20 @@
         (13.1 Ascii.el): 1.67 New.
         (Rpm-spec-mode.el): 1.67 New.
 
-2000-03-13 Mon  Jari Aalto  <jari aalto A T cante dt net>
+2000-03-13 Mon  Jari Aalto  <jari.aalto@cante.net>
 
         * emacs-elisp.txt (14.14 Hyperspec.el, browse Common Lisp specs): 1.66 New.
 
-2000-03-09 Thu  Jari Aalto  <jari aalto A T cante dt net>
+2000-03-09 Thu  Jari Aalto  <jari.aalto@cante.net>
 
         * emacs-elisp.txt (3.5 NTEmacs and lisp package): 1.66 Added ls.el
 
-2000-03-08 Wed  Jari Aalto  <jari aalto A T cante dt net>
+2000-03-08 Wed  Jari Aalto  <jari.aalto@cante.net>
 
         * README.txt (3.5 Submitting bug reports): 1.5 `debug-or-error'
         --> `debug-on-error'
 
-2000-02-18 Fri  Jari Aalto  <jari aalto A T cante dt net>
+2000-02-18 Fri  Jari Aalto  <jari.aalto@cante.net>
 
         * emacs-elisp.txt
         (Translation.el, translation minor mode): 1.66 New.
@@ -817,22 +833,22 @@
         (Color-themes.el, preview and install color themes): 1.66 New.
         (Initsplit, code to split customizations into different files): 1.66 New.
 
-2000-02-13 Sun  Jari Aalto  <jari aalto A T cante dt net>
+2000-02-13 Sun  Jari Aalto  <jari.aalto@cante.net>
 
         * README.txt 1.4: instruct to modify lisp/load-path.el in order
         to compile tinygnus.el and tinymail.el
 
-2000-01-30 Sun  Jari Aalto  <jari aalto A T cante dt net>
+2000-01-30 Sun  Jari Aalto  <jari.aalto@cante.net>
 
         * emacs-elisp.txt (3.1 Win32 XEmacs ports): 1.65 New.
         (25.17 X-symbol (*)): 1.65 New.
 
-2000-01-18 Tue  Jari Aalto  <jari aalto A T cante dt net>
+2000-01-18 Tue  Jari Aalto  <jari.aalto@cante.net>
 
         * README.txt (3.2 Quick install): 1.4 New. Instruct to use
         `tinypath' for easy setup.
 
-2000-01-13 Thu  Jari Aalto  <jari aalto A T cante dt net>
+2000-01-13 Thu  Jari Aalto  <jari.aalto@cante.net>
 
         * README.txt (3.2 Make procedure): 1.4 Mention that Perl
         5.004 is required for build process.
@@ -841,13 +857,13 @@
         (3.1 Unpacking): 1.4 Suggest drop directorty $HOME/elisp/packages/
         instead of $HOME/elisp/
 
-2000-01-10 Mon  Jari Aalto  <jari aalto A T cante dt net>
+2000-01-10 Mon  Jari Aalto  <jari.aalto@cante.net>
 
         * emacs-elisp.txt (32.6 Backup-dir.el, place backups to
         separate dir (*)): 1.65 --> Moved to backup section
         (Himark.el): 1.65 todo added.
 
-2000-01-09 Sun  Jari Aalto  <jari aalto A T cante dt net>
+2000-01-09 Sun  Jari Aalto  <jari.aalto@cante.net>
 
         * announcement.txt (Project page and download): New file.
         Used to announce package in newsgroups.

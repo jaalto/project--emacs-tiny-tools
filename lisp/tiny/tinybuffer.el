@@ -4,7 +4,7 @@
 
 ;;{{{ Id
 
-;; Copyright (C) 1996-2007 Jari Aalto
+;; Copyright (C) 1996-2008 Jari Aalto
 ;; Keywords:     extensions
 ;; Author:       Jari Aalto
 ;; Maintainer:   Jari Aalto
@@ -364,28 +364,26 @@ See variable `tinybuffer-:ignore-regexp'."
 ;;;
 (defmacro tinybuffer-iswitch-next ()
   "Return next buffer in list."
-  (`
-   (let* ((first (car tinybuffer-:buffer-list))
+  `(let* ((first (car tinybuffer-:buffer-list))
           (rest  (cdr tinybuffer-:buffer-list))
           (ret   (car rest)))
      (setq list rest)
      (ti::nconc list first)                     ;add to the end
      (setq tinybuffer-:buffer-list list)        ;update list
-     ret)))
+     ret))
 
 ;;; ----------------------------------------------------------------------
 ;;;
 (defmacro tinybuffer-iswitch-previous ()
   "Return previous buffer in list."
-  (`
-   (let* ((rev   (reverse tinybuffer-:buffer-list))
+  `(let* ((rev   (reverse tinybuffer-:buffer-list))
           (last  (car rev))
           (rest  (reverse (cdr rev)))
           (ret   last))
      (setq list rest)
      (push last list)                           ;add to the end
      (setq tinybuffer-:buffer-list list)        ;update list
-     ret)))
+     ret))
 
 ;;}}}
 ;;{{{ code: interactive

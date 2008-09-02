@@ -4,7 +4,7 @@
 
 ;;{{{ Id
 
-;; Copyright (C)    1995-2007 Jari Aalto
+;; Copyright (C)    1995-2008 Jari Aalto
 ;; Keywords:        extensions
 ;; Author:          Jari Aalto
 ;; Maintainer:      Jari Aalto
@@ -211,7 +211,7 @@ they are killed."
 
 ;;; ....................................................... &v-private ...
 
-(defconst tinylock-:history nil
+(defvar tinylock-:history nil
   "\(DATE PASSWD\) A storage where attempts of entering locked Emacs is put.
 Cleared every time lock takes effect.")
 

@@ -4,7 +4,7 @@
 
 ;;{{{ Id
 
-;; Copyright (C)    1995-2007 Jari Aalto
+;; Copyright (C)    1995-2008 Jari Aalto
 ;; Keywords:        tools
 ;; Author:          Jari Aalto
 ;; Maintainer:      Jari Aalto
@@ -774,11 +774,11 @@ STRICT has effect only if COL is given:
      ((stringp count)
       (if (equal "" count)
           (setq c -1)                   ;interactive
-        (setq c (string-to-int count))))
+        (setq c (string-to-number count))))
      ((numberp count)
       (setq c count))
      (t
-      (error "Invalid count arg" count)))
+      (error "Invalid count arg %s" count)))
 
 ;;;    (ti::d! "c-val" c)
 

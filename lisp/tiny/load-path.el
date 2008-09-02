@@ -5,7 +5,7 @@
 ;;
 ;;  File id
 ;;
-;;      Copyright (C) 1997-2007 Jari Aalto
+;;      Copyright (C) 1997-2008 Jari Aalto
 ;;
 ;;      This program is free software; you can redistribute it and/or
 ;;      modify it under the terms of the GNU General Public License as
@@ -53,6 +53,8 @@
 (dolist (path
          '(
 
+           "~/var/link/emacs"
+
            ;; Define any new path HERE. It won't matter if you
            ;; define non-exiting paths, they are stripped away.
            ;;
@@ -65,7 +67,7 @@
            ;;  Unix: Posisbly the best is to have
            ;;  this directory to be a symbolic link to latest distribution
            ;;
-           ;;  Win32: Symbolic links don't work, change this to the absolute
+           ;;  Windows: Symbolic links don't work, change this to the absolute
            ;;  path of the kit location directories.
 
            "~/elisp/tiny"

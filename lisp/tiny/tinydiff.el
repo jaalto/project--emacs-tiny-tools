@@ -4,7 +4,7 @@
 
 ;;{{{ Id
 
-;; Copyright (C)    1996-2007 Jari Aalto
+;; Copyright (C)    1996-2008 Jari Aalto
 ;; Keywords:        tools
 ;; Author:          Jari Aalto
 ;; Maintainer:      Jari Aalto
@@ -137,25 +137,26 @@
 ;;
 ;;          C-x b
 ;;
-;;      If you want to generate [rcs]diff for current buffer, call function
+;;      If you want to generate diff against current buffer and file on
+;;      disk, call function
 ;;
 ;;          M-x tinydiff-diff-show
 ;;
-;;      And it generates diff and puts you on `tinydiff-mode'. X window users and
-;;      those that have the highlighting capabitities can enjoy more about
-;;      this mode, because it marks line numbers in buffer with
-;;      `mouse-face'. You just click the point to jump to diff position
+;;      In windowed system an those Emacs versions that have
+;;      highlighting capabitities can enjoy more about this mode,
+;;      because it marks line numbers in buffer with `mouse-face'. You
+;;      can just click the point to jump to diff position.
 ;;
 ;;  Taking diffs
 ;;
-;;      The main purpose of this module is to help you taking "diff shots",
-;;      inside emacs. This means that the file must be loaded into
-;;      emacs and your cursor must be in the buffers, before you execute
+;;      The main purpose of this package is to help taking "diff
+;;      shots". This means that the file must be loaded into emacs and
+;;      the cursor must be in the buffers, before you execute
 ;;
 ;;          M-x tinydiff-diff-show
 ;;
-;;      o   If the file is not rcs controlled you're offered regular diff
-;;      o   if file is rcs controlled, your're offered rcsdiff prompt
+;;      o   if the file is not version controlled, a regular diff is offered
+;;      o   if file is version controlled, your're offered vc prompt
 ;;      o   if the buffer has changed, you're offered to diff against
 ;;          last saved file to see recent changes you have done since you
 ;;          saved the buffer.
@@ -164,7 +165,7 @@
 ;;
 ;;      The help key is on `?', press it to get summary of command while
 ;;      you're in minibuffer prompt. The command prompt in minibuffer looks
-;;      like this for rcs controlled file.
+;;      like this for RCS version controlled file.
 ;;
 ;;          > cd /users/foo/dir1/dir2; rcsdiff -c -r1.21 test.txt
 ;;
@@ -192,7 +193,7 @@
 ;;      That feature should allow you to get filenames into the prompt
 ;;      easily.
 ;;
-;;  Command prompt: diffing between two Rcs revisions
+;;  Command prompt: diffing between two RCS revisions
 ;;
 ;;      There is also more commands, like `C-r' which changes
 ;;
@@ -205,19 +206,19 @@
 ;;
 ;;       Case study:
 ;;
-;;      You see nice package on the net. You download it ;; and notice that
-;;      it needs some fixes. You put the original version ;; to your
-;;      private rcstree with the same version number as what ;; the package
-;;      had; say 2.2. Then you CheckOut the original, make ;; changes, and
-;;      put it back to tree with version 2.2.1.1. You dont't ;; put it back
-;;      with 2.3, because that's not your file. You made the ;; correction
-;;      to 2.2, so you must make a branch.
+;;      You see a package on the net. You download it and notice that
+;;      it needs some fixes. You put the original version to your
+;;      private rcstree with the same version number as what the
+;;      package had; say 2.2. Then you CheckOut the original, make
+;;      changes, and put it back to tree with version 2.2.1.1. You
+;;      dont't put it back with 2.3, because that's not your file. You
+;;      made the correction to 2.2, so you must make a branch.
 ;;
 ;;      Okay. You have the original 2.2 and you have the fixed version
 ;;      2.2.1.1 and you want to send the diff to the author. Here is how
 ;;      you do it
 ;;
-;;      o   Be on the file buffer 2.2.1.1 and hit M-x tinydiff-dif
+;;      o   Be on the file buffer 2.2.1.1 and call `M-x' `tinydiff-dif'
 ;;      o   Hit `C-r' toggle second revision (previous) and edit the line
 ;;          to look "-r2.2 -r2.2.1.1". You are usually comparing _old_ and
 ;;          new_ versions.
@@ -234,12 +235,12 @@
 ;;      And hit enter. Then you get clean diff that you can send to author.
 ;;      And when he responds back or sends you new version, say 2.5,
 ;;      you repeat the whole process again if you intend to make more
-;;      changes 8put original 2.5 on ice and make branch 2.5.1.1 for your
+;;      changes put original 2.5 on ice and make branch 2.5.1.1 for your
 ;;      changes)
 ;;
 ;;  Command prompt: autosave and backup file diff
 ;;
-;;      Other helpfull commands insert he #autosaved# and backup~ filenames
+;;      Other helpful commands insert he #autosaved# and backup~ filenames
 ;;      into the current point. Remember to put the # or ~ file to the left
 ;;      and not to the right. you do want to diff current file against the
 ;;      saved one; right? The first one is original prompt. That second is
@@ -267,8 +268,7 @@
 ;;      if the version that person has is exactly N.NN and aborts if
 ;;      he had some other version. This prevent applying diffs that
 ;;      are meant to other versions. Regular Unix *patch* program
-;;      does not notice the *Prereq:* tag, so consider getting more
-;;      safer GNU version as soon as possible.
+;;      does not read the *Prereq:* tag.
 ;;
 ;;  Patching
 ;;
@@ -354,14 +354,14 @@
 ;;      .orig file and prompts you to choose an appropriate action.
 ;;      Here is the explanation what they do and what should you choose
 ;;
-;;       Command _*o*_
+;;       Command _o_
 ;;
 ;;      Go back to (o)riginal. This copies the FILE.txt.orig over the
 ;;      FILE.txt and deletes FILE.txt.orig and doesn't do _anything_
 ;;      else (stops the patching process). You're back to starting
 ;;      point as if you never patched anything.
 ;;
-;;       Command _*r*_
+;;       Command _r_
 ;;
 ;;      (R)etry means that the FILE.txt.orig is copied over FILE.txt and the
 ;;      pach is tried again for FILE.txt. You may have asked the author to
@@ -369,7 +369,7 @@
 ;;      this new patch you want to try if it now goes ok. The FILE.txt.orig
 ;;      still remains as a backup
 ;;
-;;       Command _*g*_
+;;       Command _g_
 ;;
 ;;      (G)o says that we should apply the diff again to FILE.txt. Do this
 ;;      only if you did not get rejections last time. The intention
@@ -729,7 +729,8 @@ If no reference is found, function _must_ call 'error'."
 ;;  - It's great to paste the function name into buffer.
 ;;  - C-x g REG put the name into current buffer...
 
-(defcustom tinydiff-:function-name-handle-function 'tinydiff-function-name-store
+(defcustom tinydiff-:function-name-handle-function
+    'tinydiff-function-name-store
   "*Function which find the code's function name string.
 
 Input args to function:
@@ -1370,8 +1371,8 @@ Eg.
         (tinydiff-debug fid "1>" elt "ARGS" args "I=" i "TMP" tmp)
         ;; ........................................... Change revision ...
         (when (string-match "\\.\\([0-9]+\\)$" tmp)
-          (setq revision (string-to-int (match-string 1 tmp))
-                nbr      (string-to-int
+          (setq revision (string-to-number (match-string 1 tmp))
+                nbr      (string-to-number
                           (ti::string-right (match-string 1 tmp) 1)))
           (tinydiff-debug fid "1>REV"   revision "last NBR"  nbr)
           (cond
@@ -1818,7 +1819,7 @@ Input:
         (message "Tinydiff: file's buffer in Emacs is modified.."))
        ((and was-rcs
              (null no-ask)              ;Maybe set in 1st cond case
-             (y-or-n-p (format "RCS file patched, find-file %s " file "? ")))
+             (y-or-n-p (format "RCS file patched, find-file %s?" file)))
         (find-file file))
        ((and feature
              (not (eq flag 'hunk))
@@ -2372,11 +2373,11 @@ Input:
     (if no-ask
         (setq ans prompt)
       (let* (tinyef-:mode)              ;Electric file mode OFF
-        (if tinyef-:mode
-            (setq tief-mode nil))       ;No-op, bytecompier silencer
-        ;;  Record command line prompt to *Messages* buffer
-        (message (concat "TinyDiff: " prompt))
-        (setq ans (read-from-minibuffer ">" prompt map))))
+	(if tinyef-:mode
+	    (setq tinyef-:mode nil))       ;No-op, bytecompier silencer
+	;;  Record command line prompt to *Messages* buffer
+	(message (concat "TinyDiff: " prompt))
+	(setq ans (read-from-minibuffer ">" prompt map))))
     (if (ti::nil-p ans)
         (setq ans nil))
     (ti::remove-properties ans)))
@@ -2456,8 +2457,8 @@ Lets user to edit option in the command line."
         "Tinydiff: There is autosave file, use minibuffer %s binding"
         (ti::keymap-function-bind-info
          'tinydiff-minibuffer--insert-file-autosave
-         tinydiff-:minibuffer-map)
-        (sit-for 1)))
+         tinydiff-:minibuffer-map))
+       (sit-for 1))
      (list
       (tinydiff-diff-command-generate))))
   (if (and (stringp cmd)
@@ -2689,7 +2690,7 @@ Input:
      (t
       (with-temp-buffer
         (insert mime-tag)
-        (insert-buffer obuffer)
+        (insert-buffer-substring obuffer)
         (set-register tinydiff-:register-diff (buffer-string))
         (when verb
           (message "TinyDiff: MIME diff in register `%c'"
@@ -2789,7 +2790,7 @@ Input:
         (setq ret (ti::buffer-match re-gnu-u 1)))))
 ;;;    (ti::d! (match-string 0) diff-type)
     (when ret
-      (setq ret (string-to-int ret)))
+      (setq ret (string-to-number ret)))
     ret))
 
 ;;; ----------------------------------------------------------------------
@@ -2914,7 +2915,7 @@ Activate only if point underneath has 'mouse-property."
       (setq line (ti::remove-properties (ti::buffer-read-word "[0-9]+")))
       (if (and buffer
                (not (ti::nil-p line)))
-          (tinydiff-goto buffer (string-to-int line))
+          (tinydiff-goto buffer (string-to-number line))
         (message "Tinydiff: Sorry, missing Line Number or filenname.")))))
 
 ;;}}}

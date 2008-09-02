@@ -4,7 +4,7 @@
 
 ;;{{{ Id
 
-;; Copyright (C)    1997-2007 Jari Aalto
+;; Copyright (C)    1997-2008 Jari Aalto
 ;; Keywords:        wp
 ;; Author:          Jari Aalto
 ;; Maintainer:      Jari Aalto
@@ -1824,38 +1824,38 @@ The buffer is detected by using function strored in variable
 
 (eval-and-compile
 
+;; #todo FIXME `,func
 ;;; ----------------------------------------------------------------------
 ;;;
   (defun tinytf-fmacro-indent-region-1 (func doc col msg &rest body)
     "Use `tinytf-fmacro-indent-region' with FUNC DOC COL MSG BODY."
-    (let* ((sym (intern (symbol-name (` (, func))))))
-      (`
-       (defun (, sym)  (beg end &optional verb)
-         (, doc)
+    (let* ((sym (intern (symbol-name `,func))))
+      `(defun ,sym  (beg end &optional verb)
+         ,doc
          (interactive "*r")
          (ti::verb)
          (let* ((reg
                  (tinytf-move-paragraph-to-column
-                  beg end (, col)
+                  beg end ,col
                   (if verb
-                      (, msg)))))
-           (,@ body))))))
+                      ,msg))))
+           ,@body))))
 
+;; #todo FIME: `,func
 ;;; ----------------------------------------------------------------------
 ;;;
   (defun tinytf-fmacro-mark-word-1 (func doc char1 &optional char2)
     "Use `tinytf-fmacro-mark-word' with FUNC DOC CHAR1 CHAR2."
-    (let* ((sym (intern (symbol-name (` (, func))))))
-      (`
-       (defun (, sym) ()
-         (, doc)
+    (let* ((sym (intern (symbol-name `,func))))
+      `(defun ,sym ()
+         ,doc
          (interactive "*")
          (unless (ti::space-p (preceding-char))
            (skip-chars-backward "^ ,\t\f\r\n"))
-         (insert (char-to-string (, char1)))
+         (insert (char-to-string ,char1))
          (skip-chars-forward "^ ,\t\f\r\n")
-         (insert (char-to-string (or (, char2) (, char1))))
-         (skip-chars-forward " ,\t\f\r\n")))))
+         (insert (char-to-string (or ,char2 ,char1)))
+         (skip-chars-forward " ,\t\f\r\n"))))
 
 ;;; ----------------------------------------------------------------------
 ;;;
@@ -1877,14 +1877,14 @@ The buffer is detected by using function strored in variable
       (if (and beg end)
           (cons beg end))))
 
+;; #todo FIXME `,func
 ;;; ----------------------------------------------------------------------
 ;;;
   (defun tinytf-fmacro-indent-paragraph-1 (func doc col msg &rest body)
     "Use `tinytf-fmacro-indent-paragraph'."
-    (let* ((sym (intern (symbol-name (` (, func))))))
-      (`
-       (defun (, sym)  (&optional verb)
-         (, doc)
+    (let* ((sym (intern (symbol-name `,func))))
+      `(defun ,sym  (&optional verb)
+         ,doc
          (interactive "*")
          (let* ((region (tinytf-paragraph-bounds))
                 (beg    (car-safe region))
@@ -1896,34 +1896,43 @@ The buffer is detected by using function strored in variable
              (tinytf-move-paragraph-to-column
               beg
               end
-              (, col)
+              ,col
               (if verb
-                  (, msg))
+                  ,msg)
               'noask)
-             (,@ body)))))))
+             ,@body)))))
 
 ;;; --++-- --++-- --++-- --++-- --++-- --++-- --++-- --++-- - eval end --
   ) ;; eval-end
 
 ;;; ----------------------------------------------------------------------
 ;;;
+(put 'tinytf-compile 'lisp-indent-function 3)
+(defmacro tinytf-compile (cmd mode &optional regexp)
+  "Run compile command based on Emacs version."
+  (if (fboundp 'compilation-start) ;; Emacs
+      `(compilation-start ,cmd ,mode (not 'name-function) ,regexp)
+    `(compile-internal ,cmd "No more lines." ,mode (not 'parser) ,regexp)))
+
+;;; ----------------------------------------------------------------------
+;;;
 (defmacro tinytf-fmacro-indent-region (func doc col msg &optional body)
   "Create indent function FUNC with DOC COL MSG BODY.
 Created function arguments: (beg end &optional verb)"
-  (` (, (tinytf-fmacro-indent-region-1
-         func
-         doc
-         col
-         msg
-         body))))
+  `,(tinytf-fmacro-indent-region-1
+     func
+     doc
+     col
+     msg
+     body))
 
 ;;; ----------------------------------------------------------------------
 ;;;
 (defmacro tinytf-fmacro-mark-word (func doc char1 &optional char2)
   "Create word marking function FUNC with DOC and CHAR.
 Created function arguments: ()"
-  (` (, (tinytf-fmacro-mark-word-1
-         func doc char1 char2))))
+  `,(tinytf-fmacro-mark-word-1
+     func doc char1 char2))
 
 ;;; ----------------------------------------------------------------------
 ;;;
@@ -1931,8 +1940,8 @@ Created function arguments: ()"
 (defmacro tinytf-fmacro-indent-paragraph (func doc col msg &optional body)
   "Create word marking function FUNC with DOC and COL, MSG and BODY.
 Created function arguments: ()"
-  (` (, (tinytf-fmacro-indent-paragraph-1
-         func doc col msg body))))
+  `,(tinytf-fmacro-indent-paragraph-1
+     func doc col msg body))
 
 ;;; These are conventional macros
 
@@ -1942,11 +1951,10 @@ Created function arguments: ()"
 (put 'tinytf-paragraph-macro 'edebug-form-spec '(body))
 (defmacro tinytf-paragraph-macro (&rest body)
   "Set paragraph values locally while executing BODY."
-  (`
-   (let* ((sentence-end         tinytf-:sentence-end)
+  `(let* ((sentence-end         tinytf-:sentence-end)
           (paragraph-start      tinytf-:paragraph-start)
           (paragraph-separate   paragraph-start))
-     (,@ body))))
+     ,@body))
 
 ;;; ----------------------------------------------------------------------
 ;;;
@@ -1955,8 +1963,7 @@ Created function arguments: ()"
 (defmacro tinytf-heading-macro (&rest body)
   "Map over every heading. The point sits at the beginning of heading text.
 The BODY must move the point so that next heading can be found."
-  (`
-   (let* ((RE-search  (concat
+  `(let* ((RE-search  (concat
                        (tinytf-regexp)
                        (if (> tinytf-:heading-number-level 0)
                            (concat "\\|" (tinytf-regexp 1)))
@@ -1968,7 +1975,7 @@ The BODY must move the point so that next heading can be found."
        (tinytf-heading-start)
        (while (re-search-forward RE-search nil t)
          (unless (string-match RE-no (ti::read-current-line))
-           (,@ body)))))))
+           ,@body)))))
 
 ;;; ----------------------------------------------------------------------
 ;;;
@@ -1978,8 +1985,7 @@ The BODY must move the point so that next heading can be found."
   "Search begin point of current heading level or signal error.
 You can refer to variable 'level' and 'beg' and 'end' in the BODY.
 The point is at start of level."
-  (`
-   (let* ((level  (tinytf-level-number))
+  `(let* ((level  (tinytf-level-number))
           beg
           end)
      (unless level
@@ -1989,7 +1995,7 @@ The point is at start of level."
      (setq beg (point)
            end (tinytf-block-end))
      (goto-char beg)
-     (,@ body))))
+     ,@body))
 
 ;;; ----------------------------------------------------------------------
 ;;;
@@ -2103,13 +2109,12 @@ name."
 (put 'tinytf-convert-view-macro 'edebug-form-spec '(body))
 (defmacro tinytf-convert-view-macro (&rest body)
   "Check file `tinytf-:file-last-html-generated' and run BODY."
-  (`
-   (let* ((file tinytf-:file-last-html-generated))
+  `(let* ((file tinytf-:file-last-html-generated))
      (when (or (not file)
                (not (file-exists-p file)))
        (error "TinyTf: Can't view HTML, file not available [%s]"
               (prin1-to-string file)))
-     (,@ body))))
+     ,@body))
 
 ;;; ----------------------------------------------------------------------
 ;;;
@@ -2211,16 +2216,15 @@ Input:
 
   TEMP       if non-nil, write temporary buffers to disk
   BODY       rest of the lisp forms."
-  (`
-   (let* ((file-name (buffer-file-name))
+  `(let* ((file-name (buffer-file-name))
           (file      (tinytf-convert-html-source)))
-     (when (and (, temp)
+     (when (and ,temp
                 (null file-name))
        (let* ((buffer (current-buffer)))
          (with-temp-buffer
-           (insert-buffer buffer)
+           (insert-buffer-substring buffer)
            (write-region (point-min) (point-max) file))))
-     (,@ body))))
+     ,@body))
 
 ;;; ----------------------------------------------------------------------
 ;;;
@@ -2254,70 +2258,69 @@ Return:
                               Status may also be compile buffer process."
   (interactive)
   (setq options (delq nil options))
-  (tinytf-convert-wrapper-macro 'temp-write
-                                (message "TinyTf: Generating HTML... (t2html) %s" file-name)
-                                ;;  This may take a while
-                                ;;  We feed the script to Perl and that works in every
-                                ;;  platform.
-                                (let* ((log    (get-buffer-create tinytf-:buffer-html-process))
-                                       (target (tinytf-convert-html-destinaton))
-                                       (dir    (file-name-directory target))
-                                       (opt    (append options
-                                                       (list
-                                                        "--Out-dir"
-                                                        dir
-                                                        "--Out"
-                                                        file)))
-                                       status)
-                                  (with-current-buffer log
-                                    (insert (format "\nTinyTf: t2html.pl run %s\n"
-                                                    (ti::date-standard-date 'minutes)))
+  (tinytf-convert-wrapper-macro
+      'temp-write
+    (message "TinyTf: Generating HTML... (t2html) %s" file-name)
+    ;;  This may take a while
+    ;;  We feed the script to Perl and that works in every
+    ;;  platform.
+    (let* ((log    (get-buffer-create tinytf-:buffer-html-process))
+	   (target (tinytf-convert-html-destinaton))
+	   (dir    (file-name-directory target))
+	   (opt    (append options
+			   (list
+			    "--Out-dir"
+			    dir
+			    "--Out"
+			    file)))
+	   status)
+      (with-current-buffer log
+	(insert (format "\nTinyTf: t2html.pl run %s\n"
+			(ti::date-standard-date 'minutes)))
 
-                                    (insert (format "Source: %s\n" file)
-                                            (format "Target: %s\n" target))
-                                    (cond
-                                     ((eq process 'call-process)
-                                      (with-temp-buffer
-                                        (apply 'call-process "perl"
-                                               nil
-                                               (current-buffer)
-                                               nil
-                                               (tinyperl-convert-binary-t2html)
-                                               opt)
-                                        (message "TinyTf: Generating HTML...done. %s" target)
-                                        (cond
-                                         ((or (eq mode 'display)
-                                              (and (null mode)
-                                                   (not (ti::buffer-empty-p))))
-                                          (setq status 'error)
-                                          (append-to-buffer log (point-min) (point-max))
-                                          (display-buffer log))
-                                         ((eq mode 'noerr)
-                                          nil))))
-                                     (t
-                                      (let* ((command (concat
-                                                       "perl "
-                                                       (tinyperl-convert-binary-t2html)
-                                                       " "
-                                                       " --print-url "
-                                                       (ti::list-to-string opt))))
-                                        (compile-internal command
-                                                          "No more lines."
-                                                          tinytf-:process-compile-html
-                                                          nil nil)
-                                        ;;  Turn on URL recognizer so that lines can be clicked
-                                        (with-current-buffer
-                                            (get-buffer
-                                             (format "*%s*"
-                                                     tinytf-:process-compile-html))
-                                          (run-hooks 'tinytf-:process-compile-hook))
-                                        (message "TinyTf: Generating HTML... compile. %s"
-                                                 target))))
-                                    (ti::append-to-buffer
-                                     log
-                                     (format "\nEnd: %s\n"
-                                             (ti::date-standard-date 'minutes)))
-                                    (list target status)))))
+	(insert (format "Source: %s\n" file)
+		(format "Target: %s\n" target))
+	(cond
+	 ((eq process 'call-process)
+	  (with-temp-buffer
+	    (apply 'call-process "perl"
+		   nil
+		   (current-buffer)
+		   nil
+		   (tinyperl-convert-binary-t2html)
+		   opt)
+	    (message "TinyTf: Generating HTML...done. %s" target)
+	    (cond
+	     ((or (eq mode 'display)
+		  (and (null mode)
+		       (not (ti::buffer-empty-p))))
+	      (setq status 'error)
+	      (append-to-buffer log (point-min) (point-max))
+	      (display-buffer log))
+	     ((eq mode 'noerr)
+	      nil))))
+	 (t
+	  (let* ((command (concat
+			   "perl "
+			   (tinyperl-convert-binary-t2html)
+			   " "
+			   " --print-url "
+			   (ti::list-to-string opt))))
+	    (tinytf-compile command
+			    tinytf-:process-compile-html)
+	    ;;  Turn on URL recognizer so that lines can be clicked
+	    (with-current-buffer
+		(get-buffer
+		 (format "*%s*"
+			 tinytf-:process-compile-html))
+	      (run-hooks 'tinytf-:process-compile-hook))
+	    (message "TinyTf: Generating HTML... compile. %s"
+		     target))))
+	(ti::append-to-buffer
+	 log
+	 (format "\nEnd: %s\n"
+		 (ti::date-standard-date 'minutes)))
+	(list target status)))))
 
 ;;; ----------------------------------------------------------------------
 ;;;
@@ -2377,11 +2380,10 @@ Return:
                                   ;;    leave-regexp-alist
                                   ;;    file-regexp-alist
                                   ;;    nomessage-regexp-alist
-                                  (compile-internal command-args
-                                                    "No more lines."
-                                                    tinytf-:process-compile-html
-                                                    nil
-                                                    grep-regexp-alist))))
+                                  (tinytf-compile
+				    command-args
+				    tinytf-:process-compile-html
+				    grep-regexp-alist))))
 
 ;;; ----------------------------------------------------------------------
 ;;;
@@ -2398,8 +2400,8 @@ Return:
 ;;;
 (defun tinytf-compile-mode-settings ()
   "Install font lock and additional keybindings for Link check."
+  ;; #todo: font-lock
   (let* ()))
-             ;; #todo: font-lock
 
 ;;; ----------------------------------------------------------------------
 ;;;
@@ -3468,6 +3470,18 @@ Return:
 
 ;;; ----------------------------------------------------------------------
 ;;;
+(defun tinytf-toc-insert-list (list)
+  "Insert list of Table of Contents strings in LIST."
+  (dolist (elt list)
+    (setq elt (car elt))
+    (if (string-match "^[ \t]+" elt)
+	(insert elt "\n")       ;sub heading...
+      (insert "\n" elt "\n")))
+  ;; Final newline
+  (insert "\n"))
+
+;;; ----------------------------------------------------------------------
+;;;
 (defun tinytf-toc (&optional arg verb)
   "Create table of contents.
 If there is heading level 1 whose name is \"Table of Contents\",
@@ -3495,14 +3509,8 @@ VERB enables verbose messages."
        ((null arg)
         (setq buffer (ti::temp-buffer buffer 'clear))
         (with-current-buffer buffer
-          (dolist (elt hlist)
-            (setq elt (car elt))
-            (if (string-match "^[ \t]+" elt)
-                (insert elt "\n")       ;sub heading...
-              (insert "\n" elt "\n")))
-          (insert "\n") ;; Final newline
+	  (tinytf-toc-insert-list hlist)
           (ti::pmin)
-          (ti::buffer-trim-blanks (point-min) (point-max))
           (if (stringp tinytf-:heading-ignore-regexp-form)
               (flush-lines tinytf-:heading-ignore-regexp-form))
           ;; Make sure there are two newlines at the end so that
@@ -3523,7 +3531,10 @@ VERB enables verbose messages."
           ;;
           (when (and toc nil)
             ;;  Convert heading 2 level to heading  1
-            (ti::pmin) (replace-string (tinytf-indent 1) ""))
+            (ti::pmin)
+	    (let ((str (tinytf-indent 1)))
+	      (while (search-forward str nil 'noerr)
+		(replace-match "" nil t))))
           (ti::pmin)
           (delete-region
            (point)
@@ -3536,7 +3547,8 @@ VERB enables verbose messages."
             (string-rectangle
              (point-min)
              (point-max)
-             (tinytf-indent 2)))) ;; with-current
+             (tinytf-indent 2))) ;; with-current
+	  (ti::buffer-trim-blanks (point-min) (point-max)))
         (cond
          (toc                           ;Update existing toc
           (barf-if-buffer-read-only)
@@ -3544,7 +3556,7 @@ VERB enables verbose messages."
           (ti::save-with-marker-macro
             ;;  Leave one empty line
             (goto-char (car toc))
-            (insert-buffer buffer)))
+            (insert-buffer-substring buffer)))
          (t                             ;No previous toc
           (when verb
             (pop-to-buffer buffer)

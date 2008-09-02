@@ -4,7 +4,7 @@
 
 ;;{{{ Id
 
-;; Copyright (C)    1996-2007 Jari Aalto
+;; Copyright (C)    1996-2008 Jari Aalto
 ;; Keywords:        tools
 ;; Author:          Jari Aalto
 ;; Maintainer:      Jari Aalto
@@ -708,7 +708,7 @@ References:
                    (string= orig-level-string level-string)
                    (setq nbr (match-string lev2)))
           (if (null counter)            ;first value ?
-              (setq counter (string-to-int nbr))
+              (setq counter (string-to-number nbr))
             (incf  counter)
             ;;  Replace the last number with the right increment
             (ti::replace-match lev2 (int-to-string counter))))))

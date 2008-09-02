@@ -4,7 +4,7 @@
 
 ;;{{{ Id
 
-;; Copyright (C)    1995-2007 Jari Aalto
+;; Copyright (C)    1995-2008 Jari Aalto
 ;; Keywords:        extensions
 ;; Author:          Jari Aalto
 ;; Maintainer:      Jari Aalto
@@ -248,11 +248,12 @@ Make sure symbol names are all in lowercase.")
 
 (defvar ti:mail-parse-name-not-accept
   (concat
-   "[A-Z][/][A-Z]"                      ;company division PMR/TMS ?
+   "[A-Z][/][A-Z]"                      ;company division ABC/TMS
    "\\|^[A-Z]+\\'"                      ;all in capitals
    "\\|^[-]$"                           ;single '-' word
-   "\\|[.0-9]"                          ;maybe phone number ?
-   "\\|com\\|org\\|edu")
+   "\\|[.0-9]"                          ;maybe phone number
+   "\\|com\\|org\\|edu"
+   "\\|Dr")				;Titles
   "*Regexp to exclude non-valid people names.
 We can't be sure that the names are really good names when we parse the
 senders From field. Let's see an example
@@ -411,10 +412,11 @@ Exceptions:
           (- (point) beg)))))))
 
 ;;; ----------------------------------------------------------------------
-;;; #todo: this is old function and should be removed.
+;;;FIXME: this is old function and should be removed.
 ;;;
 (defun ti::mail-get-2re (re str)
-  "Use RE and match STR. Return list ('' '') if not matched."
+  "Use RE and return submatches 1 and 2 from STR.
+Return list of empty strings if no matches."
   (let ((m1 "")
         (m2 ""))
     (if (eq nil (string-match re str))
@@ -1208,7 +1210,7 @@ Return:
     (save-excursion
       (when (and (re-search-forward re nil t)
                  (re-search-forward "^$" nil t))
-        ;;  #todo: Check first character. Actually we should check bit mask...
+        ;; FIXME: Check first character. Actually we should check bit mask...
         ;;
         ;;  -----BEGIN PGP MESSAGE-----
         ;;  Version: 2.6.2
@@ -2690,7 +2692,8 @@ that the old functionality is preserved in spite of changes."
         stat
         ptr)
     (setq list
-          '("<jdoe@examole.com> (Finland, pgp id 512/47141D35)"
+          '("Dr. Foo Bar <foo@bar.com>"
+	    "<jdoe@examole.com> (Finland, pgp id 512/47141D35)"
             "(Rune Juntti[FRONTEC Pajala]) <jdoe@example.se>"
             "shahramn@wv.mentorg.com (jdoe@example.com)"
             "(jdoe@example.com)"
@@ -2722,8 +2725,7 @@ that the old functionality is preserved in spite of changes."
       (read-from-minibuffer (concat "TEST>>" e1 "," e2 "<")))))
 
 ;;; ----------------------------------------------------------------------
-;;; (ti::mail-t-parse-name)
-;;;
+;;; ( ti::mail-parse-name "\"Dr. Volker Zell\" <dr.volker.zell-QHcLZuEGTsvQT0dZR+AlfA@public.gmane.org>")
 (defun ti::mail-parse-name (line)
   "Try to parse various formats of 'From:' fields.
 Supposes that the 'From:' keyword is removed from the LINE.
@@ -2731,11 +2733,13 @@ Supposes that the 'From:' keyword is removed from the LINE.
 Return:
   list          '(firstname surname)
   nil           if cannot parse both"
-  (let* ((re-A          "[-a-zA-Z0-9.{|]")
+  (let* ((re-ignore "\\(?:Dr. +\\|Mr. +\\)?")
+
+	 (re-A          "[-a-zA-Z0-9.{|]")
          (re-AG         (concat "\\("  re-A "+\\)"))
 
          ;;  'From: Mr-CEO John Doe <jdoe@example.com'
-         (fs-re2  (concat re-AG " +" re-AG))
+         (fs-re2  (concat re-ignore re-AG " +" re-AG))
 
          ;;  'USER <\"CLUSTER::VAX\@site.cm\"'
          (fs-vax  (concat "^" re-AG "[ \t<\"]+[A-Z]+::" re-AG))
@@ -4501,7 +4505,7 @@ Subexpression 1 contains field name and 2 contains rest."
   (string-match "^\\([A-Z][^:]+\\):\\(.*\\)" string))
 
 ;;; ----------------------------------------------------------------------
-;;; #todo:
+;;;FIXME:
 (defun ti::mail-field-line-p ()
   "Return `field' name if the bginning of line contains 'NNNN:'."
   (let ((str (buffer-substring
@@ -4542,7 +4546,7 @@ If WRAP is non-nil, call `ti::mail-field-string-wrap'."
     (ti::mail-field-read-line-at-point wrap)))
 
 ;;; ----------------------------------------------------------------------
-;;; #todo:
+;;;FIXME:
 (defun ti::mail-current-field-name  ()
   "Return name of field at current point or nil."
   (save-excursion
@@ -5289,7 +5293,7 @@ satisfied."
         (re-search-forward re nil t)))))
 
 ;;; ----------------------------------------------------------------------
-;;; #todo: not tested
+;;;FIXME: not tested
 ;;;
 (defun ti::mail-mime-qp-decode(from to)
   "Mime. Decode quoted-printable from region between FROM and TO."

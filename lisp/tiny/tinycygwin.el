@@ -2,7 +2,7 @@
 
 ;;{{{ Id
 
-;; Copyright (C)    2004-2007 Jari Aalto
+;; Copyright (C)    2004-2008 Jari Aalto
 ;; Keywords:        extensions
 ;; Author:          Jari Aalto
 ;; Maintainer:      Jari Aalto
@@ -90,6 +90,9 @@
 
 ;;{{{ setup: libraries
 
+;; Due to variable message-cite-prefix-regexp
+(require 'message)
+
 (eval-when-compile
   (require 'cl))
 
@@ -97,15 +100,11 @@
   ;;  Forward declarations
   (autoload 'executable-find            "executable")
   (autoload 'mail-setup                 "sendmail")
-  (autoload 'message-mode               "message")
-  (autoload 'message-disassociate-draft "message")
-  (autoload 'message-fetch-field        "message")
-  (autoload 'message-goto-cc            "message")
   (autoload 'ti::menu-menu              "tinylibmenu")
   (autoload 'mml-attach-file            "mml")
   (autoload 'mml-minibuffer-read-type   "mml")
   (autoload 'base64-decode-string       "base64")
-  ;;  Byte compiler silencer. Defined in separate file
+  ;;  Byte compiler silencers
   (defvar debug-ignored-errors)
   (defvar font-lock-defaults)
   (defvar font-lock-keyword-face)
@@ -181,13 +180,15 @@
   :group 'TinyCygwin)
 
 (defcustom tinycygwin-:expert-flag nil
-  "*If non-nin, ask minimum of question in expert mode.
+  "*If non-nil, ask minimum of question in expert mode.
 All fancy features or Emacs settings are also disabled."
-  :type 'boolean)
+  :type  'boolean
+  :group 'TinyCygwin)
 
 (defcustom tinycygwin-:debug nil
-  "*Print extra message when debug iqs non-nil."
-  :type 'boolean)
+  "*If non-nil, print extra message."
+  :type  'boolean
+  :group 'TinyCygwin)
 
 ;;}}}
 ;;{{{ setup: -- private
@@ -660,8 +661,7 @@ environment."
      ((boundp 'window-system)
       (symbol-value 'window-system)))))
 
-(tinycygwin-defalias 'insert-file-literally   'insert-file-contents-literally)
-(tinycygwin-defalias 'insert-file-literally   'insert-file)
+(tinycygwin-defalias 'insert-file-contents-literally   'insert-file)
 (tinycygwin-defalias 'line-beginning-position 'point-at-bol)
 (tinycygwin-defalias 'line-end-position       'point-at-eol)
 
@@ -679,7 +679,7 @@ environment."
 (defun tinycygwin-insert-file (file)
   "INsert FILE literally at point."
   (tinycygwin-clean-system-with
-   (insert-file-literally file)))
+   (insert-file-contents-literally file)))
 
 ;;; ----------------------------------------------------------------------
 ;;;
@@ -920,27 +920,27 @@ inserted in `message-mode' with \\[mml-attach-file]."
   (save-current-buffer
     (goto-char (point-max))
     (tinycygwin-bug-report-mail-attach-file file)))
-
+;;##
 ;;; ----------------------------------------------------------------------
 ;;;
-(defun tinycygwin-insert-environment-variable-content (var)
-  "Inser content of environment variable VAR at point."
-  (interactive
-   (list
-    (completing-read
-     "Iinsert environment variable: "
-     (mapcar
-      (lambda (x)
-        (if (string-match "^\\(.+\\)=\\(.*\\)" x)
-            (cons (match-string 1 x)
-                  (match-string 2 x))
-          (cons "__NOT_FOUND__" . 1)))
-      process-environment)
-     nil
-     'match)))
-  (when var
-    (let ((value (getenv var)))
-      (insert (format "%s=%s" var (or (getenv var) ""))))))
+;; (defun tinycygwin-insert-environment-variable-content (var)
+;;   "Inser content of environment variable VAR at point."
+;;   (interactive
+;;    (list
+;;     (completing-read
+;;      "Insert environment variable: "
+;;      (mapcar
+;;       (lambda (x)
+;;         (if (string-match "^\\(.+\\)=\\(.*\\)" x)
+;;             (cons (match-string 1 x)
+;;                   (match-string 2 x))
+;;           (cons "__NOT_FOUND__" . 1)))
+;;       process-environment)
+;;      nil
+;;      'match)))
+;;   (when var
+;;     (let ((value (getenv var)))
+;;       (insert (format "%s=%s" var (or (getenv var) ""))))))
 
 ;;; ----------------------------------------------------------------------
 ;;;
@@ -1532,7 +1532,7 @@ is started. Here are few inportant Eamcs commands to help you:
            (buffer (get-buffer name)))
       (unless buffer
         (with-current-buffer (setq buffer (get-buffer-create name))
-          (insert-file-literally file)
+          (insert-file-contents-literally file)
           (setq buffer-read-only t)))
       buffer)))
 
@@ -1675,12 +1675,12 @@ is started. Here are few inportant Eamcs commands to help you:
                 "^... +[0-9]+ +[0-9]+:+[0-9]+:+[0-9]+")
                0 'font-lock-reference-face)
               (list
-               (concat "connection attempt" ;);  See "iplogger" package
-                                      0 'tinycygwin-:warn-face)
+               (concat "connection attempt" );  See "iplogger" package
+	       0 'tinycygwin-:warn-face)
               (list
                (concat "signal +[0-9]+\\|no such user"
                        "\\|connect from .*")
-               0 'font-lock-comment-face)))))
+               0 'font-lock-comment-face))))
 
       ((string-match "auth\\.log" file)
        ;; font-lock-constant-face
@@ -1891,8 +1891,8 @@ References:
            ((or (string= "" file)
                 (file-directory-p file)) ;; User pressed return. No file.
             (if (y-or-n-p (format "Include file %s. Are you sure? "
-                                  (file-name-nondirectory file))))
-            (push file file-list)))))
+                                  (file-name-nondirectory file)))
+		(push file file-list))))))
       (tinycygwin-package-wnpp-mail-generic "ITP" desc nil file-list))
      ((string= type "new")
       (let ((desc  (read-string "[RFP] Package name -- description: ")))
@@ -2843,6 +2843,8 @@ package ask list."
   "Get locale information."
   (let* ((list
           '("LC_ALL"
+	    "LANG"
+	    "LC_MESSAGES"
             "LC_CTYPE"))
          val
          ret)
@@ -3634,7 +3636,6 @@ the setting include e.g.
   (setq query-replace-highlight   t)
   (setq search-highlight          t)
   (setq track-eol                 t)
-  (setq resize-minibuffer-mode    t)
   ..."
   (modify-syntax-entry ?-  "w")         ; part of word
   (modify-syntax-entry ?\t " ")         ; Treat TABs as spaces.
@@ -3648,7 +3649,6 @@ the setting include e.g.
   (setq query-replace-highlight   t)
   (setq search-highlight          t)
   (setq track-eol                 t)
-  (setq resize-minibuffer-mode    t)
   (setq-default indent-tabs-mode  nil) ;; Always spaces, more secure in email
   (add-hook 'debugger-mode-hook 'toggle-truncate-lines)
   (when (fboundp 'minibuffer-electric-default-mode)

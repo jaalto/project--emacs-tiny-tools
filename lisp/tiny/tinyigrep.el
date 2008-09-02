@@ -4,7 +4,7 @@
 
 ;;{{{ Id
 
-;; Copyright (C)    1996-2007 Jari Aalto
+;; Copyright (C)    1996-2008 Jari Aalto
 ;; Keywords:        tools
 ;; Author:          Jari Aalto
 ;; Maintainer:      Jari Aalto
@@ -396,9 +396,9 @@
       (if (string-match "^\\([0-9]+\\)\+.\\([0-9]+\\)" igrep-version)
           (list (match-string 1 igrep-version)
                 (match-string 2 igrep-version)))
-    (if (or (< (string-to-int major) 2)
+    (if (or (< (string-to-number major) 2)
             (and (string= major "2")
-                 (< (string-to-int minor) 55)))
+                 (< (string-to-number minor) 55)))
         (error
          "TinyIgrep: [Emacs check] You must have igrep 2.56+. You have now %s"
          igrep-version)))
@@ -448,10 +448,14 @@
     "grep")
    (t
     "egrep"))
-  "*Default grep program. Initialised from `grep-program' if available.")
+  "*Default grep program. Initialised from `grep-program' if available."
+  :type  'string
+  :group 'TinyIgrep)
 
 (defcustom tinyigrep-:grep-word-at-point nil
-  "*if non-nil, Grab word at point for searching.")
+  "*if non-nil, Grab word at point for searching."
+  :type  'boolean
+  :group 'TinyIgrep)
 
 (defcustom tinyigrep-:user-level 'basic
   "*Interface level.
@@ -725,7 +729,7 @@ Format:
 
   '((DATABASE LISP-FILE-TO-SEARCH-WHERE-TEXI-COULD-BE-FOUND) ...)")
 
-(defconst tinyigrep-:igrep-previous-args nil
+(defvar tinyigrep-:igrep-previous-args nil
   "List of variables used for calling igrep.")
 
 (defvar tinyigrep-:history-igrep nil
@@ -763,9 +767,8 @@ Input:
   CHECK-FORM    Additional check for to verify Cygwin or supply t if there
                 is nothing special to check.
   BODY          Forms to run."
-  (`
-   (let ((igrep-null-device igrep-null-device)
-         (CHECK  (, check-form)))
+  `(let ((igrep-null-device igrep-null-device)
+         (CHECK  ,check-form))
      (unwind-protect
          (progn
            (when (and CHECK
@@ -775,13 +778,13 @@ Input:
              (ti::advice-control '(expand-file-name
                                    shell-quote-argument)
                                  "^tinylib-cygwin" nil))
-           (,@ body))
+           ,@body)
        (when (and CHECK
                   (ti::emacs-type-win32-p)
                   (ti::win32-cygwin-p))
          (ti::advice-control '(expand-file-name
                                shell-quote-argument)
-                             "^tinylib-cygwin" 'disable))))))
+                             "^tinylib-cygwin" 'disable)))))
 
 ;;  Install only for Native Win32 Emacs + Cygwin tools
 
@@ -1038,9 +1041,9 @@ Examples:
 ;;;
 (defmacro tinyigrep-countdown (message count &optional msg)
   "Show (format MESSAGE COUNT MSG) and decrease COUNT."
-  (` (progn
-       (decf (, count))
-       (message (format (, message) (, count) (or (, msg) "") )))))
+  `(progn
+     (decf ,count)
+     (message (format ,message ,count (or ,msg "") ))))
 
 ;;; ----------------------------------------------------------------------
 ;;;
@@ -1197,20 +1200,21 @@ References:
       (multiple-value-bind (db lisp-file recursive) elt
         (setq sym (intern (format "%s%s" base db)))
         (setq def
-              (` (defun (, sym) (&optional grep)
-                   "Define lisp package database"
-                   (or grep
-                       (setq grep tinyigrep-:grep-program))
-                   (tinyigrep-db-push-elt-lisp-package
-                    (, db)
-                    (, lisp-file)
-                    grep
-                    (, recursive) ))))
+              `(defun ,sym (&optional grep)
+		 "Define lisp package database"
+		 (or grep
+		     (setq grep tinyigrep-:grep-program))
+		 (tinyigrep-db-push-elt-lisp-package
+		  ,db
+		  ,lisp-file
+		  grep
+		  ,recursive )))
         (tinyigrep-countdown
          (concat
           "TinyIgrep: Wait, initialising `tinyigrep-:lisp-package-file-list'"
-          "lazy...")
-         count (format "[%s]" db) )
+          "lazy... %d %s")
+         count
+	 (format "[%s]" db) )
         ;;  Create functions on-the-fly
         (eval def)
         (tinyigrep-db-push-lazy-define db sym)))))
@@ -1234,18 +1238,18 @@ References:
       (multiple-value-bind (db lisp-file recursive) elt
         (setq sym (intern (format "%s%s" base db)))
         (setq def
-              (` (defun (, sym) (&optional grep)
+              `(defun ,sym (&optional grep)
                    "Define lisp package database"
                    (or grep
                        (setq grep tinyigrep-:grep-program))
                    (tinyigrep-db-push-elt-package
-                    (, db)
-                    (, lisp-file)
-                    (, recursive) ))))
+                    ,db
+                    ,lisp-file
+                    ,recursive )))
         (tinyigrep-countdown
          (concat
           "TinyIgrep: Wait, initialising "
-          "`tinyigrep-:lisp-package-file-list' lazy...")
+          "`tinyigrep-:lisp-package-file-list' lazy... %d %s")
          count (format "[%s]" db) )
         ;;  Create functions on-the-fly
         (eval def)
@@ -1271,19 +1275,19 @@ References:
           elt
         (setq sym (intern (format "%s%s" base db)))
         (setq def
-              (` (defun (, sym) (&optional grep)
-                   "Define lisp package database"
-                   (or grep
-                       (setq grep tinyigrep-:grep-program))
-                   (tinyigrep-db-push-elt-package-texi
-                    (, db)
-                    (, lisp-file)
-                    nil
-                    grep ))))
+              `(defun ,sym (&optional grep)
+		 "Define lisp package database"
+		 (or grep
+		     (setq grep tinyigrep-:grep-program))
+		 (tinyigrep-db-push-elt-package-texi
+		  ,db
+		  ,lisp-file
+		  nil
+		  grep )))
         (tinyigrep-countdown
          (concat
           "TinyIgrep: Wait, initialising "
-          "`tinyigrep-:lisp-texi-database-list' lazy...")
+          "`tinyigrep-:lisp-texi-database-list' lazy... %d %s")
          count (format "[%s]" db) )
         ;;  Create functions on-the-fly
         (eval def)
@@ -1298,8 +1302,9 @@ References:
     (dolist (elt list)
       (multiple-value-bind (db function) elt
         (tinyigrep-countdown
-         "TinyIgrep: Wait, initialising default lazy database..."
-         count (format "[%s]" db))
+         "TinyIgrep: Wait, initialising default lazy database... %d %s"
+         count
+	 (format "[%s]" db))
         (tinyigrep-db-push-lazy-define db function)))))
 
 ;;}}}

@@ -4,7 +4,7 @@
 
 ;;{{{ Id
 
-;; Copyright (C) 1998-2007 Jari Aalto
+;; Copyright (C) 1998-2008 Jari Aalto
 ;; Keywords:     extensions
 ;; Author:       Jari Aalto
 ;; Maintainer:   Jari Aalto
@@ -916,22 +916,21 @@ See `tinyperl-pod-grep-faq-answer'")
 (put 'tinyperl-verbose-macro 'lisp-indent-function 1)
 (defmacro tinyperl-verbose-macro (level &rest body)
   "When LEVEL is =< `tinyperl-:verbose' run BODY."
-  (`
-   (when (and (numberp tinyperl-:verbose)
-              (or (= (, level) tinyperl-:verbose)
-                  (< (, level) tinyperl-:verbose)))
-     (,@ body))))
+  `(when (and (numberp tinyperl-:verbose)
+              (or (= ,level tinyperl-:verbose)
+                  (< ,level tinyperl-:verbose)))
+     ,@body))
 
 ;;; ----------------------------------------------------------------------
 ;;;
 (put 'tinyperl-directory-files 'lisp-indent-function 3)
 (defmacro tinyperl-directory-files (variable path &optional regexp)
   "Store to VARIABLE .pl and .pm files in PATH. Optionally match REGEXP."
-  (` (setq (, variable)
-           (directory-files
-            (, path)
-            nil
-            (or (, regexp) "\\.pl\\|\\.pm")))))
+  `(setq ,variable
+	 (directory-files
+	  ,path
+	  nil
+	  (or ,regexp "\\.pl\\|\\.pm"))))
 
 ;;; ----------------------------------------------------------------------
 ;;;
@@ -946,13 +945,12 @@ when it matches REGEXP and set variable SYM to that value, effectively:
            \"perldoc\" tinyperl-:perldoc-bin \"perldoc\"))
 
 --> (tinyperl-executable-set 'tinyperl-:perldoc-bin \"perldoc\")"
-  (`
-   (set (, sym)
+  `(set ,sym
         (tinyperl-executable-find-path
-         (, bin)
-         (symbol-value (, sym))
-         (or (, regexp)
-             (, bin))))))
+         ,bin
+         (symbol-value ,sym)
+         (or ,regexp
+             ,bin))))
 
 ;;; ----------------------------------------------------------------------
 ;;;
@@ -1778,11 +1776,11 @@ Mode description:
         (let ((sym  (intern (format "tinyperl-pod-write-skeleton-%s"
                                     (symbol-name x)))))
           (setq def
-                (` (defun (, sym) ()
-                     "Forward declaration wrapper. Will define real function."
-                     (interactive)
-                     (tinyperl-skeleton-initialize)
-                     (funcall (quote (, sym))))))
+                `(defun ,sym ()
+		   "Forward declaration wrapper. Will define real function."
+		   (interactive)
+		   (tinyperl-skeleton-initialize)
+		   (funcall (quote ,sym))))
           (eval def))))
      '(item
        script-manpage
@@ -2547,11 +2545,7 @@ TinyPerl: Pod::Checker.pm is not known to this Perl version. @INC trouble?"))
            2 1)
          compilation-error-regexp-alist)
         (tinyperl-debug fid "cmd" cmd)
-        (compile-internal cmd
-                          "No more lines." ;; error-message
-                          nil              ;; name-of-mode
-                          nil              ;; parser
-                          nil)))           ;; error-regexp-alist
+        (compilation-start cmd)))
     (tinyperl-debug fid "buffer" buffer)
     buffer))
 
@@ -2880,8 +2874,7 @@ References:
                       ;;  SPACES in the path name.
                       "perldoc"
                     tinyperl-:perldoc-bin)
-                  string
-                  ""))
+                  string))
          run
          win)
     (ti::verb)
@@ -2897,8 +2890,9 @@ References:
         (setq buffer-read-only nil)
         (erase-buffer))
       (when verb
-        (tinyperl-verbose-macro 2
-                                (message "TinyPerl: Running %s" cmd)))
+        (tinyperl-verbose-macro
+         2
+	 (message "TinyPerl: Running %s" cmd)))
       ;; Win32 call-process fails if the binary c:\prgram files\..
       ;; name contains spaces. This is special problems for perldoc.bat
       ;; Because it is in fact full of perl code and called again. See
@@ -2911,18 +2905,21 @@ References:
                   (ti::buffer-empty-p))
           (erase-buffer)
           (when verb
-            (tinyperl-verbose-macro 2
-                                    (message "TinyPerl: No matches. Trying without -f ...")))
+            (tinyperl-verbose-macro
+	     2
+	     (message "TinyPerl: No matches. Trying without -f ...")))
           (tinyperl-perldoc-1 buffer (list string))
           (setq cmd (format "%s %s"
                             tinyperl-:perldoc-bin
                             string))
           (when verb
-            (tinyperl-verbose-macro 2
-                                    (message "TinyPerl: No matches. Trying without -f ...Done.")))))
+            (tinyperl-verbose-macro
+	     2
+	     (message "TinyPerl: No matches. Trying without -f ...Done.")))))
       (when verb
-        (tinyperl-verbose-macro 2
-                                (message "TinyPerl: Running %s. Done." cmd))))
+        (tinyperl-verbose-macro
+	 2
+	 (message "TinyPerl: Running %s. Done." cmd))))
     (cond
      ((setq win (or (get-buffer-window buffer t) ;In another frame
                     (get-buffer-window buffer)))
@@ -3005,7 +3002,7 @@ Input:
            "\\[tinyperl-install-force] to rebuild cache."))))
       ;;  In FEW cases the *.pm file does not contain the documentation,
       ;;  but there is separate *.pod file, E.g POSIX.pm => POSIX.pod
-      (multiple-value-bind (name pathname)
+      (multiple-value-bind (name path)
           (list (car module) (cdr module))
         (dolist (elt (list
                       (replace-regexp-in-string
@@ -3013,7 +3010,7 @@ Input:
                       name))
           (setq path
                 (ti::file-make-path
-                 pathname
+                 path
                  ;;  Delete prefix, because (cdr path) will cnotain the
                  ;;  full directory
                  ;;
@@ -3024,7 +3021,6 @@ Input:
           (when (file-exists-p path)
             (setq file path)
             (return))))
-
       (when (or (not file)
                 (not (file-exists-p file)))
         (error "TinyPerl: Cache error, %s does not exist" (car module)))
@@ -3385,12 +3381,11 @@ been answered in FAQ'"
 (put 'tinyperl-version-macro 'lisp-indent-function 0)
 (defmacro tinyperl-version-macro (&rest body)
   "Do BODY when version variable is found. Uses `save-excursion'."
-  (`
-   (save-excursion
+  `(save-excursion
      (ti::pmin)
      ;; (ti::buffer-outline-widen)
      (when (tinyperl-version-stamp-re-search-forward)
-       (,@ body)))))
+       ,@body)))
 
 ;;; ----------------------------------------------------------------------
 ;;;
@@ -3517,7 +3512,7 @@ The filename must contain version number: FILE-VERSION.pl"
 ;;;     (format "TinyPerl: ange-ftp PAUSE upload completed %s" ver))
     (copy-file file upload 'ok-if-already-exists)
     (with-temp-buffer
-      (insert-file upload)
+      (insert-file-contents upload)
       (write-file
        (concat
         "/anonymous@pause.perl.org:/incoming/"

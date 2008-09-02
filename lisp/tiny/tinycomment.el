@@ -4,7 +4,7 @@
 
 ;;{{{ Id
 
-;; Copyright (C) 1994-2007 Jari Aalto
+;; Copyright (C) 1994-2008 Jari Aalto
 ;; Keywords:     extensions
 ;; Author:       Jari Aalto
 ;; Maintainer:   Jari Aalto
@@ -169,7 +169,9 @@ the beginnning of line.
 
       $#variable_in_csh
 0123456789 123456789 12345       ;columns
-       *                         ;found comment pos, reject it.")
+       *                         ;found comment pos, reject it."
+  :type 'regexp
+  :group 'TinyComment)
 
 (defcustom tinycomment-:tab-call-no-alist
   '(fundamental-mode

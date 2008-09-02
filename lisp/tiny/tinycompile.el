@@ -4,7 +4,7 @@
 
 ;;{{{ Id
 
-;; Copyright (C)    1996-2007 Jari Aalto
+;; Copyright (C)    1996-2008 Jari Aalto
 ;; Keywords:        extensions
 ;; Author:          Jari Aalto
 ;; Maintainer:      Jari Aalto
@@ -88,7 +88,7 @@
 
 ;;; ......................................................... &require ...
 
-(require 'tinylibm)
+(require 'tinyliba)
 
 (eval-when-compile
   (defvar mode-line-mode-menu)

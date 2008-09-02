@@ -4,7 +4,7 @@
 
 ;;{{{ Id
 
-;; Copyright (C)    1996-2007 Jari Aalto
+;; Copyright (C)    1996-2008 Jari Aalto
 ;; Keywords:        tools
 ;; Author:          Jari Aalto
 ;; Maintainer:      Jari Aalto
@@ -361,8 +361,7 @@ uU = Cancel Checkout with 'co'")
 (defmacro tinyvc-do-macro (&rest body)
   "Store info to variables 'ver' and 'file'. Variable VERB must e also bound.
 If 'ver' of 'file' cannot be set, print message and do nothing with BODY."
-  (`
-   (when (and (or (setq ver (tinyvc-get-version))
+  `(when (and (or (setq ver (tinyvc-get-version))
                   (error "No version found on the line."))
               (or (setq file (tinyvc-get-filename))
                   (error "Can't find rcs file name from buffer.")))
@@ -378,7 +377,7 @@ If 'ver' of 'file' cannot be set, print message and do nothing with BODY."
              (setq file buffer-file-name)))
           (t
            (error "Can't find absolute filename %s" file)))))
-     (,@ body))))
+     ,@body))
 
 ;;; ----------------------------------------------------------------------
 ;;;
@@ -387,14 +386,13 @@ If 'ver' of 'file' cannot be set, print message and do nothing with BODY."
   "Make sure FILE is read-only before continuing.
 If VERB is nil, don't do any checkings or ask from user when
 executing BODY."
-  (`
-   (when (or (null (, verb))
-             (and (, verb)
-                  (or (ti::file-read-only-p (, file))
+  `(when (or (null ,verb)
+             (and ,verb
+                  (or (ti::file-read-only-p ,file)
                       (y-or-n-p
                        (format "Writable %s exist, are you sure "
-                               (file-name-nondirectory (, file)))))))
-     (,@ body))))
+                               (file-name-nondirectory ,file))))))
+     ,@body))
 
 ;;; ----------------------------------------------------------------------
 ;;;
@@ -427,13 +425,12 @@ executing BODY."
 While the macro loops each line; the variables 'user' and 'ver'
 are updated. If you want to terminate macro, move point away from the
 lock lines: eg by (goto-char (point-min)))."
-  (`
-   (save-excursion
+  `(save-excursion
      (ti::pmin) (re-search-forward "^locks:") (forward-line 1)
      (while (looking-at "^[ \t]+\\([^:]+\\):[ \t]\\([.0-9]+\\)")
        (setq user (match-string 1) ver (match-string 2))
-       (,@ body)
-       (forward-line 1)))))
+       ,@body
+       (forward-line 1))))
 
 ;;}}}
 ;;{{{ Rcs interface

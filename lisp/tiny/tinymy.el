@@ -4,7 +4,7 @@
 
 ;;{{{ Id
 
-;; Copyright (C)    1995-2007 Jari Aalto
+;; Copyright (C)    1995-2008 Jari Aalto
 ;; Keywords:        tools
 ;; Author:          Jari Aalto
 ;; Maintainer:      Jari Aalto
@@ -1561,7 +1561,8 @@ If you supply PREFIX ARG, then
         (message "TinyMy: There is no safe copy for %s" file1))
        ((eq 1 (length file-list))
         (when (y-or-n-p
-               (message "TinyMy: Found safe copy %s; copy it over original? "))
+               (message "TinyMy: Found safe copy %s; copy it over original? "
+			file1))
           (delete-file file1)           ;copy-file barfs otherwise
           (copy-file (car file-list) file1)
           (message "TinyMy: Safe copy restored.")))
@@ -1788,7 +1789,8 @@ The subject line will tell the versions."
     (ti::package-require-mail-abbrevs)
     (ti::mail-text-start 'move)
     (insert "\n\n\n\n")
-    (save-excursion (insert-buffer data-buffer))
+    (save-excursion
+      (insert-buffer-substring data-buffer))
     ;; Make sure the outlline/folding is opened first
     (ti::buffer-outline-widen)
     (if subj
@@ -2422,7 +2424,7 @@ References:
   (interactive "P")
   (let* ((cmd (tinymy-compile-run-command-ask clear)))
     (when (not (ti::nil-p cmd))
-      (compile-internal cmd "No more errors.")
+      (compilation-start cmd)
       (pop-to-buffer "*compilation*"))))
 
 ;;; ----------------------------------------------------------------------
@@ -2601,9 +2603,9 @@ Mode description:
     (let ((sym (intern (format "tinymy-sort-mode-column-%d" x)))
           def)
       (setq def
-            (` (defun (, sym) (beg end)
-                 (interactive "*r")
-                 (tinymy-sort-column beg end (, x) ))))
+            `(defun ,sym (beg end)
+	       (interactive "*r")
+	       (tinymy-sort-column beg end ,x )))
       (eval def))))
  '(1 2 3 4 5 6 7 8 9))
 
@@ -2635,7 +2637,8 @@ Mode description:
              (not (file-writable-p
                    (file-name-directory buffer-file-name))))
     (auto-save-mode nil)
-    (set (make-variable-buffer-local 'auto-save-interval) 0)))
+    ;;    (set (make-variable-buffer-local 'auto-save-interval) 0)))
+    (set (make-local-variable 'auto-save-interval) 0)))
 
 ;;; ----------------------------------------------------------------------
 ;;;

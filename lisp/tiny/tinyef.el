@@ -4,7 +4,7 @@
 
 ;;{{{ Id
 
-;; Copyright (C)    1995-2007 Jari Aalto
+;; Copyright (C)    1995-2008 Jari Aalto
 ;; Keywords:        extensions
 ;; Author:          Jari Aalto
 ;; Maintainer:      Jari Aalto
@@ -361,11 +361,10 @@ Defined keys:
 ;;;
 (defmacro tinyef-function-macro (action)
   "Define interactive command ACTION."
-  (let* ((sym (intern (format "tinyef-%s" (symbol-name (` (, action)))))))
-    (`
-     (defun (, sym) ()
+  (let* ((sym (intern (format "tinyef-%s" (symbol-name `,action)))))
+    `(defun ,sym ()
        (interactive)
-       (tinyef-char nil (quote (, action)))))))
+       (tinyef-char nil (quote ,action)))))
 
 (tinyef-function-macro chunk-delete)
 (tinyef-function-macro step-delete-back)

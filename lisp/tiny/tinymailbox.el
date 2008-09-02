@@ -4,7 +4,7 @@
 
 ;;{{{ Id
 
-;; Copyright (C)    1997-2007 Jari Aalto
+;; Copyright (C)    1997-2008 Jari Aalto
 ;; Keywords:        tools
 ;; Author:          Jari Aalto
 ;; Maintainer:      Jari Aalto
@@ -534,7 +534,8 @@ Ignore big mailboxes."
       (cond
        (tinymailbox-mode
         (ti::string-syntax-kill-double-quote)
-        (make-variable-buffer-local 'tinymailbox-:font-lock-keywords)
+        ;; (make-variable-buffer-local 'tinymailbox-:font-lock-keywords)
+        (make-local-variable 'tinymailbox-:font-lock-keywords)
         (unless (get 'tinymailbox-:font-lock-keywords 'original)
           (put 'tinymailbox-:font-lock-keywords
                'original
@@ -569,8 +570,7 @@ Ignore big mailboxes."
 (put 'tinymailbox-message-macro 'edebug-form-spec '(body))
 (defmacro tinymailbox-message-macro (&rest body)
   "Do BODY on message. You can refer to `beg' and `end' for message region."
-  (`
-   (let* ((opoint  (point))
+  `(let* ((opoint  (point))
           beg
           end)
      ;; Just to make byteCompiler happy
@@ -587,19 +587,15 @@ Ignore big mailboxes."
      ;;   From asdasdasdadas
      ;;   X-Header: blah
      ;;   ...
-;;;	(if (looking-at "From ")
-;;;	    (backward-line 1))             ;Fix position a bit
      (setq end (point))
-;;;      (error beg end)
-     (,@ body))))
+     ,@body))
 
 ;;; ----------------------------------------------------------------------
 ;;;
 (put 'tinymailbox-header-macro 'lisp-indent-function 0)
 (defmacro tinymailbox-header-macro (&rest body)
   "Do BODY on message. You can refer to `beg' and `end' for message region."
-  (`
-   (let* (beg
+  `(let* (beg
           end)
      ;; Just to make byteCompiler happy
      (if beg
@@ -610,18 +606,17 @@ Ignore big mailboxes."
      (re-search-forward "^[ \t]*$")
      (beginning-of-line)
      (setq end (point))
-     (,@ body))))
+     ,@body))
 
 ;;; ----------------------------------------------------------------------
 ;;;
 (put 'tinymailbox-paragraph-macro 'lisp-indent-function 0)
 (defmacro tinymailbox-paragraph-macro (&rest body)
   "Set paragraph values locally while executing BODY."
-  (`
-   (let* ((sentence-end         "[.?!]*[ \n]+")
+  `(let* ((sentence-end         "[.?!]*[ \n]+")
           (paragraph-start      "^[ \t]*$")
           (paragraph-separate   paragraph-start))
-     (,@ body))))
+     ,@body))
 
 ;;}}}
 ;;{{{ misc
@@ -752,29 +747,27 @@ Ignore big mailboxes."
 (eval-and-compile
   (defun tinymailbox-fmacro-move-1 (func doc move-func re msg &rest body)
     "Use `tinymailbox-fmacro-move with FUNC DOC MOVE-FUNC RE MSG and BODY."
-    (let* ((sym (intern (symbol-name (` (, func))))))
-      (`
-       (defun (, sym) (&optional arg)
-         (, doc)
+    (let* ((sym (intern (symbol-name `,func))))
+      `(defun ,sym (&optional arg)
+         ,doc
          (interactive "P")
          (let* ((Opoint  (point))
                 stat)
-           (if (eq (, move-func) 're-search-backward)
+           (if (eq ,move-func 're-search-backward)
                (beginning-of-line)
              (end-of-line))
            (cond
-            ((setq stat (funcall (, move-func) (, re) nil t))
+            ((setq stat (funcall ,move-func ,re nil t))
              (goto-char (match-end 0)))
             (t
              (goto-char Opoint)))
            (tinymailbox-header-show-or-hide)
-           (,@ body)
+           ,@body
            (if (interactive-p)
                (recenter 3))
            (when (and (null stat) (interactive-p))
-             (message (, msg)))
-           stat)))))
-
+             (message ,msg))
+           stat))))
   ) ;; eval-and-compile
 
 ;;; ----------------------------------------------------------------------
@@ -782,8 +775,8 @@ Ignore big mailboxes."
 (defmacro tinymailbox-fmacro-move (func doc move-func re msg &optional body)
   "Create Move function FUNC DOC MOVE-FUNC RE MSG and BODY.
 Created function arguments: (&optional arg)"
-  (` (, (tinymailbox-fmacro-move-1
-         func doc move-func re msg body))))
+  `,(tinymailbox-fmacro-move-1
+     func doc move-func re msg body))
 
 ;;; ----------------------------------------------------------------------
 ;;;
@@ -1010,6 +1003,7 @@ References:
          to-dest
          to
          to-list
+	 reply-to
          cc
          cc-list
          references

@@ -4,7 +4,7 @@
 
 ;;{{{ Id
 
-;; Copyright (C)    1995-2007 Jari Aalto
+;; Copyright (C)    1995-2008 Jari Aalto
 ;; Keywords:        tools
 ;; Author:          Jari Aalto
 ;; Maintainer:      Jari Aalto
@@ -408,9 +408,8 @@ See function `tinytab-return-key-mode' to turn on this auto-indent feature."
 ;;;
 (defmacro tinytab-message (&rest body)
   "Run BODY if `tinytab-:verbose' is non nil."
-  (`
-   (when tinytab-:verbose
-     (message (,@ body)))))
+  `(when tinytab-:verbose
+     (message ,@body)))
 
 ;;; ----------------------------------------------------------------------
 ;;;
@@ -934,7 +933,7 @@ If region is active, indent all lines backward."
 (defun tinytab-return-key-mode (&optional mode verb)
   "Toggle auto indent MODE / regular newline mode. VERB."
   (interactive)
-  (let* ((func  'tinytab-auto-indent)
+  (let* ((func 'tinytab-auto-indent)
          (now
           (or (and
                ;;  e.g. in fundamental-map this value is nil and
@@ -946,12 +945,12 @@ If region is active, indent all lines backward."
          to)
     ;;  If we redefine return key here, user will nver get out.
     ;;  C-m is exit-minibuffer.
-
     (if (string-match "minibuf" (buffer-name))
-        (error "TinyTab: Return key-mode not allowed in minibuffer."))
+        (error "TinyTab: tinytab-return-key-mode not allowed in minibuffer."))
     (setq verb (interactive-p))
     (cond
-     ((or (null mode) (not (integerp mode)))
+     ((or (null mode)
+          (not (integerp mode)))
       (setq to (if (eq now 'tinytab-auto-indent)
                    'newline
                  func)))
