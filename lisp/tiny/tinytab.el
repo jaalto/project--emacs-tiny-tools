@@ -229,6 +229,8 @@
 
 (eval-and-compile
 
+  (autoload 'ti::macrof-minor-mode-wizard "tinylib" "" 'macro)
+
   (ti::macrof-minor-mode-wizard
    "tinytab-"
    " " ;; This used to be " +" to indicate "Plussed tab"
