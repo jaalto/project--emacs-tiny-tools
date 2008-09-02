@@ -372,9 +372,9 @@ For full documentation, see function `tinydesk-auto-save'"
 (defcustom tinydesk-:save-exclude-regexp
   (concat
 
-   ;; Gnus auto save
+   ;; Gnus
 
-   "dribble"
+   "dribble\\|drafts"
 
    ;;  Do save mail buffers; because you want to call M-x rmail
    ;;  instead.

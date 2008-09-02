@@ -8,7 +8,7 @@
 	compressed .el.gz files
 
 	* tinydesk.el (tinydesk-:save-exclude-regexp): Add
-	GNUS dribble file.
+	GNUS files.
 
 2008-08-21  Jari Aalto  <jari.aalto@cante.net>
 
