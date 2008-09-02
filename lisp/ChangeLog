@@ -7,6 +7,9 @@
 	* tinylisp.el (tinylisp-jump-to-definition): Support
 	compressed .el.gz files
 
+	* tinydesk.el (tinydesk-:save-exclude-regexp): Add
+	GNUS dribble file.
+
 2008-08-21  Jari Aalto  <jari.aalto@cante.net>
 
 	* tiny/tinylisp.el (tinylisp-autoload-generate-library): Support

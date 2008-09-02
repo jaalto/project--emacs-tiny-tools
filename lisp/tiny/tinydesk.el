@@ -372,10 +372,14 @@ For full documentation, see function `tinydesk-auto-save'"
 (defcustom tinydesk-:save-exclude-regexp
   (concat
 
+   ;; Gnus auto save
+
+   "dribble"
+
    ;;  Do save mail buffers; because you want to call M-x rmail
    ;;  instead.
 
-   "RMAIL\\|VM\\|MH"
+   "\\|RMAIL\\|VM\\|MH"
 
    ;;  No ange ftp buffers
 
