@@ -558,14 +558,12 @@ STRING is argument to `tinyreplace-:read-args-function'.
 
 Return:
  '(BEG END ARG1-STRING ARG2-STRING)"
-  `(if buffer-read-only
-       (barf-if-buffer-read-only)
-     (if (region-active-p)
-         (ti::list-merge-elements
-          (region-beginning)
-          (region-end)
-          (funcall tinyreplace-:read-args-function ,string))
-       (error "TinyReplace: Region is not active. Please select one."))))
+  `(if (region-active-p)
+       (ti::list-merge-elements
+	(region-beginning)
+	(region-end)
+	(funcall tinyreplace-:read-args-function ,string))
+     (error "TinyReplace: Region is not active. Please select one.")))
 
 ;;; ----------------------------------------------------------------------
 ;;;

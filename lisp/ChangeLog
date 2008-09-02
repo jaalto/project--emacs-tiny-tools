@@ -10,6 +10,10 @@
 	* tinydesk.el (tinydesk-:save-exclude-regexp): Add
 	GNUS files.
 
+	* tiny/tinyreplace.el (tinyreplace-interactive-region-args):
+	Remove `barf-if-buffer-read-only'. Emacs 22.x compile buffer
+	is read only.
+
 2008-08-21  Jari Aalto  <jari.aalto@cante.net>
 
 	* tiny/tinylisp.el (tinylisp-autoload-generate-library): Support
