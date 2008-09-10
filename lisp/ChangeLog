@@ -1,3 +1,8 @@
+2008-09-05  Jari Aalto  <jari.aalto@cante.net>
+
+	* tiny/tinydesk.el (tinydesk-install-default-keybindings): 
+	Renamed. Was `tinydesk-default-emacs-keybindings'
+
 2008-09-02  Jari Aalto  <jari.aalto@cante.net>
 
 	* tinylisp.el (tinylisp-library-locate-library-1):

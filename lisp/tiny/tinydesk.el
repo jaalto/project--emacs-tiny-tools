@@ -38,8 +38,8 @@
 ;;   Put this file on your Emacs-Lisp load path, add following into your
 ;;   $HOME/.emacs startup file
 ;;
-;;      (add-hook 'tinydesk-:load-hook 'tinydesk-default-emacs-keybindings)
-;;      (add-hook 'tinydesk-:load-hook 'tinydesk-recover-last-state)
+;;      ;; (add-hook 'tinydesk-:load-hook 'tinydesk-recover-last-state)
+;;      (add-hook 'tinydesk-:load-hook 'tinydesk-install-default-keybindings)
 ;;      (require 'tinydesk)
 ;;
 ;;   or use the autoload feature. Notice that the automatic "file
@@ -55,7 +55,7 @@
 ;;      (autoload 'tinydesk-edit-state-file "tinydesk" "" t)
 ;;
 ;;   Suggested keybindings. These are inlcuded in function
-;;   `tinydesk-default-keybindings'.
+;;   `tinydesk-install-default-keybindings'.
 ;;
 ;;      (define-key ctl-x-4-map "S" 'tinydesk-save-state)
 ;;      (define-key ctl-x-4-map "R" 'tinydesk-recover-state)
@@ -381,6 +381,10 @@ For full documentation, see function `tinydesk-auto-save'"
 
    "\\|RMAIL\\|VM\\|MH"
 
+   ;;  TinyDesk suggested "state.<name>" files
+
+   "\\|state\\."
+
    ;;  No ange ftp buffers
 
    "\\(ftp\\|anonymous\\)@.*/"
@@ -537,7 +541,7 @@ path, garbage at line...Hooks may check the contents of this.")
 
 ;;; ----------------------------------------------------------------------
 ;;;
-(defun tinydesk-default-emacs-keybindings ()
+(defun tinydesk-install-default-keybindings ()
   "Install package under `ctl-x-4-map'
 \\{ctl-x-4-map}"
   (interactive)
