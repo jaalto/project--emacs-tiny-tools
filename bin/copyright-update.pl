@@ -99,10 +99,18 @@ year is current year unless passed with B<--year> YEAR option.
 
 To change all files recursively from current directory, whose author is
 "Mr. Foo" use command below. The B<--regexp> option requires that
-file contains that line.
+file contains matching line. The lines affected are those matches
+by the --line regural expression.
 
-   perl -S copyright-update.pl --recursive --Regexp "Author:.*Mr. Foo" \
-        --ignore '\.(bak|bup|[~#]])$' --verbose 1 --test --year 2002 .
+   perl -S copyright-update.pl \
+        --recursive \
+        --Regexp "Author:.*Mr. Foo" \
+        --line '\bFoo\b' \
+        --ignore '\.(bak|bup|[~#]])$' \
+        --verbose 1 \
+        --year 2002 \
+        --test \
+        .
 
 For the above command, only files that contain lines like these would
 be updated:
@@ -138,6 +146,10 @@ Print help in Unix manual page format. You can pipe this to a comman:
 =item B<--ignore REGEXP>
 
 Ignore files mathing regexp. The match is done against whole path.
+
+=item B<--line REGEXP>
+
+Change only lines which match REGEXP. The match is case-insensitive.
 
 =item B<--recursive>
 
@@ -325,6 +337,7 @@ sub HandleCommandLineArgs ()
         $debug
 
         $YEAR
+        $OPT_LINE_REGEXP
         $OPT_RECURSIVE
         $OPT_REGEXP
         $OPT_REGEXP_IGNORE
@@ -350,8 +363,9 @@ sub HandleCommandLineArgs ()
         , "debug:i"    => \$debug
         , "verbose:i"  => \$verb
         , "ignore=s"   => \$OPT_REGEXP_IGNORE
+        , "line=s"     => \$OPT_LINE_REGEXP
         , "recursive"  => \$OPT_RECURSIVE
-        , "Regexp"     => \$OPT_REGEXP
+        , "Regexp=s"   => \$OPT_REGEXP
     );
 
     $help     and  Help();
@@ -404,6 +418,7 @@ sub HandleFile ( % )
 
     my @files   = @{ $arg{-file} };
     my $regexp  = $arg{-regexp} || '' ;
+    my $linere  = $arg{-line}   || '' ;
 
     unless ( @files )
     {
@@ -411,7 +426,10 @@ sub HandleFile ( % )
         return;
     }
 
-    $debug  and  print "$id: -file [@files], -regexp [$regexp]\n";
+    $debug  and  print "$id: -file [@files], ",
+                       "-regexp [$regexp] ",
+                       "-line [$linere]\n"
+		       ;
 
     local ( *FILE, $ARG );
 
@@ -422,7 +440,7 @@ sub HandleFile ( % )
 
         # ..................................................... read ...
 
-        unless ( open FILE, "< $file" )
+        unless ( open FILE, "<", $file )
         {
             $verb  and  print "$id: Cannot open $file\n";
             next;
@@ -472,19 +490,34 @@ sub HandleFile ( % )
             next;
         }
 
-        s/($copy$repeat)($yyyy)/$1$YEAR/gi;
+	if ( $linere )
+	{
+	    if ($debug)
+	    {
+		warn "s/(?:$linere).*\\K($copy$repeat)($yyyy)/\${1}$YEAR/gmi\n";
+		warn "s/($copy$repeat)$yyyy(.*$linere)/\${1}$YEAR\${2}/gmi\n";
+	    }
+
+	    s/(?:$linere).*\K($copy$repeat)$yyyy/$1$YEAR/gmi;
+	    s/($copy$repeat)$yyyy(.*$linere)/$1$YEAR$2/gmi;
+	}
+	else
+	{
+	    s/($copy$repeat)$yyyy/$1$YEAR/gmi;
+	}
 
         my $msg = $test ? "$id: Would change" : "$id: Changed";
 
         $verb  and  print "$msg $file $y => $YEAR\n";
         $test  and  next;
 
-        unless ( open FILE, "> $file" )
+        unless ( open FILE, ">", $file )
         {
             print "$id: Cannot open for writing: $file\n";
         }
         else
         {
+	    $verb  and print "$id: wrote file $file\n";
             binmode FILE;
             print FILE $ARG;
             close FILE;
@@ -549,7 +582,9 @@ sub wanted ()
             print "$id: $file\n";
         }
 
-        HandleFile -file => [$file], -regexp => $OPT_REGEXP;
+        HandleFile -file => [$file],
+	  -line   => $OPT_LINE_REGEXP,
+	  -regexp => $OPT_REGEXP;
     }
 }
 
@@ -635,7 +670,9 @@ sub Main ()
             return;
         }
 
-        HandleFile -file => [@files], -regexp => $OPT_REGEXP;
+        HandleFile -file => [@files],
+	  -line   => $OPT_LINE_REGEXP,
+	  -regexp => $OPT_REGEXP;
     }
 }
 
