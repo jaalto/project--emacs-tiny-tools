@@ -23,66 +23,70 @@
 #
 #   Documentation
 #
-#       These bash functions will help managing Sourceforge project. You need:
+#       These bash functions will help managing the project. You need:
 #
 #       bash        (Unix)  http://www.fsf.org/directory/bash.html
 #                   (Win32) http://www.cygwin.com/
 #       Perl 5.4+   (Unix)  http://www.perl.org/
 #                   (Win32) Perl is included in Cygwin tools
-#       t2html.pl   Perl program to convert text -> HTML
-#                   http://perl-text2html.sourceforge.net/
+#       t2html.pl   Perl text to HTML converter
+#                   http://freshmeat.net/projects/perl-text2html
 #
-#       This file is for the Admin or Co-Developer of the project:
+#       This file is for the Admin or Co-Developer of the project.
+#       Download the project and Web pages with:
 #
-#           http://sourceforge.net/projects/tiny-tools
-#           http://tiny-tools.sourceforge.net/
+#	git clone git://git.savannah.nongnu.org/emacs-tiny-tools.git \
+#	    emacs-tiny-tools.git emacs-tiny-tools.git
+#
+#	cvs -d :ext:<login>@cvs.sv.gnu.org:/web/emacs-tiny-tools \
+#	    co emacs-tiny-tools-www.cvs
 #
 #       Include this file to your $HOME/.bashrc and make the necessary
 #       modifications
 #
-#           SF_TINY_TOOLS_USER=<sourceforge-login-name>
-#           SF_TINY_TOOLS_USER_NAME="FirstName LastName"
-#           SF_TINY_TOOLS_ROOT=~/cvs-projects/tiny-tools
+#           PROJ_TINY_TOOLS_USER=<login-name>
+#           PROJ_TINY_TOOLS_USER_NAME="FirstName LastName"
+#           PROJ_TINY_TOOLS_ROOT=~/projects/emacs-tiny-tools
 #
-#           source ~/cvs-projects/tiny-tools/bin/admin.bashrc
+#           source ~/projects/emacs-tiny-tools/bin/admin.bashrc
 #
 #       Functions related to release maintenance contain underscore (_)
 #       in function name.
 
-VERSION="2007.0905.2127"
+VERSION="2008.0915.2131"
 
-function sfttinit ()
+function prjttinit ()
 {
-    local id="sfttinit"
+    local id="prjttinit"
 
-    SF_TINY_TOOLS_ROOT=${SF_TINY_TOOLS_ROOT:-"."}
+    PROJ_TINY_TOOLS_ROOT=${PROJ_TINY_TOOLS_ROOT:-"."}
 
-    if [ "$SF_TINY_TOOLS_USER" = "" ]; then
-       echo "$id: Identity SF_TINY_TOOLS_USER unknown."
+    if [ ! "$PROJ_TINY_TOOLS_USER" ]; then
+       echo "$id: Identity PROJ_TINY_TOOLS_USER unknown."
     fi
 
-    if [ "$SF_TINY_TOOLS_USER_NAME" = "" ]; then
-       echo "$id: Identity SF_TINY_TOOLS_USER_NAME unknown."
+    if [ "$PROJ_TINY_TOOLS_USER_NAME" ]; then
+       echo "$id: Identity PROJ_TINY_TOOLS_USER_NAME unknown."
     fi
 }
 
-function sfttdate ()
+function prjttdate ()
 {
     date "+%Y.%m%d"
 }
 
-function sftttime ()
+function prjtttime ()
 {
     date "+%Y-%m-%d %H:%M:%S"
 }
 
-function sfttfilesizeAwk ()
+function prjttfilesizeAwk ()
 {
     # This was old implementation. Found better bash solution.
     ls -la $1 | awk '{print $5}'
 }
 
-function sfttfilesize ()
+function prjttfilesize ()
 {
     #   put line into array ( .. )
 
@@ -95,7 +99,7 @@ function sfttfilesize ()
     echo ${line[4]}
 }
 
-function sfttask ()
+function prjttask ()
 {
     #   Ask question from user. RETURN answer is "no".
 
@@ -112,94 +116,42 @@ function sfttask ()
     esac
 }
 
-function sfttscp ()
-{
-    #   To upload file to project, call from shell prompt
-    #
-    #       bash$ sfttscp <FILE>
-    #       bash$ sfttscp -d SUBDIR <FILE>
+function prjtt_copyhtml ()
+{(
+    #  Copy files from CURRENT_ROOT to ../emacs-tiny-tools-www.cvs
 
-    local dir
+    cd ${PROJ_TINY_TOOLS_ROOT:-"."} &&
+    find . -type f -name "*.html" |
+    rsync ${test:+"--dry-run"} \
+      --files-from=- \
+      --update \
+      --progress \
+      --verbose \
+      -r \
+      . \
+      ../../../emacs-tiny-tools-www.cvs/
+)}
 
-    if [ "$1" == "-d" ]; then
-       shift
-       dir="$1"
-       shift
-    fi
-
-    local id="sfttscp"
-
-    local sfuser=$SF_TINY_TOOLS_USER
-    local sfproject=t/ti/tiny-tools
-
-    if [ "$sfuser" = "" ]; then
-        echo "$id: SF_TINY_TOOLS_USER is not set."
-        return
-    fi
-
-    echo scp -C $* $sfuser@shell.sourceforge.net:/home/groups/$sfproject/htdocs/
-}
-
-function sfttscp_all ()
-{
-    #   Upload all relevant files to project
-
-    local id="sfttscp_all"
-
-    local sfuser=$SF_TINY_TOOLS_USER
-    local sfproject=t/ti/tiny-tools
-
-    if [ "$sfuser" = "" ]; then
-        echo "$id: SF_TINY_TOOLS_USER is not set."
-        return
-    fi
-
-    local dir=$SF_TINY_TOOLS_ROOT/doc/html
-    local target="$sfuser@shell.sourceforge.net:/home/groups/$sfproject/htdocs/"
-
-    local args='$(ls *html | egrep -v "java|autoload")'
-
-    echo "$id: scp $arg $target"
-
-    (
-        cd $dir
-        eval "scp $arg $target"
-    )
-
-    echo "$id: Done."
-}
-
-function sftt_movehtml ()
-{
-    if [ -d ../../html/  ]; then
-        mv *.html ../../html/
-    elif [ -d ../html/  ]; then
-        mv *.html ../html/
-    else
-        echo "$id: Can't move generated HTML to html/"
-    fi
-}
-
-function sftthtml ()
+function prjtthtml ()
 {
     #   To generate HTML documentation located in /doc directory, call
     #
-    #       bash$ sftthtml <FILE.txt>
+    #       bash$ prjtthtml <FILE.txt>
     #
     #   To generate Frame based documentation
     #
-    #       bash$ sftthtml <FILE.txt> --html-frame
+    #       bash$ prjtthtml <FILE.txt> --html-frame
     #
     #   For simple page, like README.txt
     #
-    #       bash$ sftthtml <FILE.txt> --as-is
+    #       bash$ prjtthtml <FILE.txt> --as-is
 
-    local id="sftthtml"
+    local id="prjtthtml"
 
     local input="$1"
     shift
 
-    if [ "$input" = "" ]; then
+    if [ ! "$input" ]; then
         echo "id: usage is FILE [html-options]"
         return
     fi
@@ -213,49 +165,38 @@ function sftthtml ()
 
     echo "Htmlizing .. $id $input $opt"
 
-    #   perl -S  will work both in Unix and Win32. The -S causes
-    #   perl to search $PATH
-
-    perl -S t2html.pl                                               \
+    perl -S t2html                                                  \
           $opt                                                      \
-          --author "$SF_TINY_TOOLS_USER_NAME"                       \
+          --author "$PROJ_TINY_TOOLS_USER_NAME"                     \
           --url    "http://tiny-tools.sourceforge.net"              \
 	  --Auto-detect                                             \
           --Out                                                     \
           $input
 
-    sftt_movehtml
+    prjtt_movehtml
 }
 
-function sftthtmlall ()
+function prjtthtmlall ()
 {
-    local id="sftt_htmlall"
+    local id="prjtt_htmlall"
 
     #   loop all *.txt files and generate HTML
-    #   If filesize if bigger than 15K, generate Framed HTML page.
 
-    local dir=$SF_TINY_TOOLS_ROOT/doc/txt
+    local dir=$PROJ_TINY_TOOLS_ROOT/doc/html
+    local file
 
-    (
-        cd $dir || return
-        echo "$id: Source dir " $(pwd)
+    while read file
+    do
+	prjtthtml $file
 
-        for file in *.txt;
-        do
-
-            local opt=""
-
-            sftthtml $file "$opt"
-
-        done
-    )
+    done < $(find $dir -type f -name "*.txt")
 
     echo "$id: done."
 }
 
-function sftt_nice_text ()
+function prjtt_nice_text ()
 {
-    local id="sftt_nice_text"
+    local id="prjtt_nice_text"
     local file=$1
 
     #  Add "Nice looking" option to the generated file.
@@ -278,64 +219,45 @@ function sftt_nice_text ()
     echo "$id: $file done."
 }
 
-function sfttcmd ()
-{
-
-    #   To send command to the host. This lists the htdocs directory
-    #
-    #       bash$ sfcvstoolscmd ls
-
-    local sfuser=$SF_TINY_TOOLS_USER
-    local sfproject=t/ti/tiny-tools
-    local dir=/home/groups/$sfproject/htdocs/
-
-    if [ "$SF_TINY_TOOLS_USER" = "" ]; then
-         echo "$id: SF_TINY_TOOLS_USER is not set."
-        return
-    fi
-
-    ssh $sfuser@shell.sourceforge.net "cd $dir; $*"
-}
-
-
-function sftt_tinypath_doc ()
+function prjtt_tinypath_doc ()
 {
     # Update documentation that is generated form original files.
 
-    local id="sftt_doc"
+    local id="prjtt_doc"
 
-    local bin=$SF_TINY_TOOLS_ROOT/bin
-    local doc=$SF_TINY_TOOLS_ROOT/doc/txt
-    local lisp=$SF_TINY_TOOLS_ROOT/lisp/tiny
+    local bin=$PROJ_TINY_TOOLS_ROOT/bin
+    local doc=$PROJ_TINY_TOOLS_ROOT/doc/html/tinypath
+    local lisp=$PROJ_TINY_TOOLS_ROOT/lisp/tiny
 
     local cmd="perl $bin/ripdoc.pl $lisp/tinypath.el"
-    local to="$doc/emacs-tinypath.txt"
+    local to="index.txt"
 
     echo "$cmd > $to"
 
     $cmd > $to
 
-    dummy=$(sftt_nice_text $to)
+    dummy=$(prjtt_nice_text $to)
 
     echo "$id: done."
 }
 
-function sftt_docLispManual ()
+function prjtt_docLispManual ()
 {
-    local id="sftt_docLispManual"
+    local id="prjtt_docLispManual"
 
     #   Rip all documentation from lisp files
     #   and update tiny-tools.txt
 
-    local dir=$SF_TINY_TOOLS_ROOT/lisp/tiny
-    local outDir=$SF_TINY_TOOLS_ROOT/doc/txt/
+    local bin=$PROJ_TINY_TOOLS_ROOT/bin
+    local dir=$PROJ_TINY_TOOLS_ROOT/lisp/tiny
+    local outDir=$PROJ_TINY_TOOLS_ROOT/doc/html/manual
 
     local out=emacs-tiny-tools
-    local out1=${out}-part1.src
-    local out2=${out}-part2.src
-    local final=${out}.txt
+    local out1=$out-part1.src
+    local out2=$out-part2.src
+    local final=$out.txt
 
-    local cmd="cd $dir && perl -S ripdoc.pl"
+    local cmd="cd $dir && perl -S $bin/ripdoc.pl"
     local files='$(ls *.el | sort)'
 
     (
@@ -352,17 +274,17 @@ function sftt_docLispManual ()
     echo "$id: $final done."
 }
 
-function sftt_linkcheck ()
+function prjtt_linkcheck ()
 {
     # Check if the URL links are valid
 
-    local id="sftt_linkcheck"
+    local id="prjtt_linkcheck"
 
-    local dir="$SF_TINY_TOOLS_ROOT/doc/txt"
-    local cache="$HOME/tmp/sftt-link.cache"
-    local log="$HOME/tmp/sftt-link.log"
+    local dir="$PROJ_TINY_TOOLS_ROOT/doc/html"
+    local cache="$HOME/tmp/prjtt-link.cache"
+    local log="$HOME/tmp/prjtt-link.log"
 
-    if test -f "$cache" && sfttask "$id: Remove $cache (y/[n])?"
+    if [ -f "$cache" ] && prjttask "$id: Remove $cache (y/[n])?"
     then
         echo "$id: rm $cache"
         rm $cache
@@ -372,7 +294,7 @@ function sftt_linkcheck ()
  --quiet --Link-cache $cache"
 
 
-    local date=$(sftttime)
+    local date=$(prjtttime)
 
     cat >> $log <<EOF
 $date Link check $dir
@@ -392,45 +314,45 @@ EOF
     echo "$id: Done. Results in $log"
 }
 
-function sftt_release_check ()
+function prjtt_release_check ()
 {
     #   Remind that that everything has been prepared
     #   Before doing release
 
-    if sfttask '[sftt_doc] Generate tinypath docs (y/[n])?'
+    if prjttask '[prjtt_doc] Generate tinypath docs (y/[n])?'
     then
         echo "Running..."
-        sftt_doc
+        prjtt_doc
     fi
 
-    if sfttask '[sftt_docLispManual] Generate complete lisp docs (y/[n])?'
+    if prjttask '[prjtt_docLispManual] Generate complete lisp docs (y/[n])?'
     then
         echo "Running..."
-        sftt_docLispManual
+        prjtt_docLispManual
     fi
 
-    if sfttask '[sftt_linkcheck] Run URL link check? (y/[n])'
+    if prjttask '[prjtt_linkcheck] Run URL link check? (y/[n])'
     then
         echo "Running..."
-        sftt_linkcheck
+        prjtt_linkcheck
     fi
 
-    if sfttask '[sftt_linkcheck] Convert all text files to HTML? (y/[n])'
+    if prjttask '[prjtt_linkcheck] Convert all text files to HTML? (y/[n])'
     then
         echo "Running..."
-        sftt_htmlall
+        prjtt_htmlall
     fi
 
-    if sfttask '[sftt_linkcheck] Upload HTML to sourceforge? (y/[n])'
+    if prjttask '[prjtt_linkcheck] Upload HTML to sourceforge? (y/[n])'
     then
         echo "Running..."
-        sfttscp_all
+        prjttscp_all
     fi
 }
 
-function sftt_release ()
+function prjtt_release ()
 {
-    local id="sftt_release"
+    local id="prjtt_release"
 
     #   TYPE is tgz  bz2  or zip
 
@@ -458,11 +380,11 @@ function sftt_release ()
                     cmd=zip
                     ;;
              *)     echo "$id: ERROR, unknow release type [tgz|bz2|zip]"
-                    return
+                    return 1
                     ;;
     esac
 
-    sftt_release_check
+    prjtt_release_check
 
     local dir=/tmp
 
@@ -471,14 +393,14 @@ function sftt_release ()
         return
     fi
 
-    if [ ! -d "$SF_TINY_TOOLS_ROOT" ]; then
-        echo "$id: No SF_TINY_TOOLS_ROOT [$SF_TINY_TOOLS_ROOT]"
+    if [ ! -d "$PROJ_TINY_TOOLS_ROOT" ]; then
+        echo "$id: No PROJ_TINY_TOOLS_ROOT [$PROJ_TINY_TOOLS_ROOT]"
         return
     fi
 
 
     local base=emacs-tiny-tools
-    local ver=$(sfttdate)
+    local ver=$(prjttdate)
     local tar="$base-$ver$ext1"
     local file="$base-$ver$ext1$ext2"
 
@@ -499,7 +421,7 @@ function sftt_release ()
         fi
 
 
-        cp -r $SF_TINY_TOOLS_ROOT $dir/$todir
+        cp -r $PROJ_TINY_TOOLS_ROOT $dir/$todir
 
         cd $dir
 
@@ -543,8 +465,8 @@ function sftt_release ()
 
 }
 
-sfttinit                        # Run initializer
+prjttinit                        # Run initializer
 
-export SF_TINY_TOOLS_ROOT
+export PROJ_TINY_TOOLS_ROOT
 
 # End of file
