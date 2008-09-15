@@ -405,20 +405,21 @@ have to do set this variable to nil and use your own line delete:
 
 (defcustom tinydesk-:save-title
   '(progn
-     (format
-      (concat
-       ";; Emacs tinydesk.el state file\n"
-       ";;\n"
-       ";;\n"
-       ";;       M-x load-library RET tinydesk RET\n"
-       ";;       M-x tinydesk-version RET   <<to read manual>>\n"
-       ";;       M-x tinydesk-recover-state RET %s RET"
-       "\n\n")
+     (format "\
+;; Emacs tinydesk.el state file
+;;
+;;
+;;       Date: %s
+;;       M-x load-library RET tinydesk RET
+;;       M-x tinydesk-version RET   ;; To read manual
+;;       M-x tinydesk-recover-state RET %s RET
+
+"
       (ti::date-standard-date 'short)
       (if (boundp 'file)
           file ;; visible in function `tinydesk-save-state'
-        "")))
-  "*A lisp form to return a string to the beginning of state file."
+        "<file>")))
+  "*A lisp form to be included at the beginning of state file."
   :type  'sexp
   :group 'TinyDesk)
 
@@ -1463,7 +1464,7 @@ TinyDesk: State saving aborted. Please save to new file or kill buffer: %s" file
 ;;;
 (defun tinydesk-rename-buffer-maybe ()
   "Rename buffer it FILENAME-DIR if there is <N> in the buffer name.
-If two or more of the files are loaded into emacs with the same name
+If two or more of the files are loaded into Emacs with the same name
 from different directories:
 
   ~/tmp/file.txt         => buffer file.txt
@@ -1498,7 +1499,7 @@ directory part, instead of the <N>, so that the names would read:
 ;;; ----------------------------------------------------------------------
 ;;;
 (defun tinydesk-find-file (file)
-  "Load FILE or `recover-file' as needed. Rename buffer if buffer<2>"
+  "Load FILE or `recover-file' as needed. Rename buffer if buffer<2>."
   (with-current-buffer (find-file-noselect file)
     (when (and (null (buffer-modified-p))
                (file-exists-p (make-auto-save-file-name)))

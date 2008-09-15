@@ -1,3 +1,9 @@
+2008-09-15  Jari Aalto  <jari.aalto@cante.net>
+
+	* tiny/tinydesk.el (tinydesk-:save-title): Remove `concat'
+	to make eval form simpler to edit.
+	(top level): Checkdoc style check: problems fixed.
+
 2008-09-05  Jari Aalto  <jari.aalto@cante.net>
 
 	* tiny/tinydesk.el (tinydesk-install-default-keybindings): 
