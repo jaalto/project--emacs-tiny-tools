@@ -4,7 +4,7 @@
 #
 #   File id
 #
-#       Copyright (C) 2000-2008 Jari Aalto
+#       Copyright (C) 2000-2009 Jari Aalto
 #
 #       This program is free software; you can redistribute it and/or
 #       modify it under the terms of the GNU General Public License as

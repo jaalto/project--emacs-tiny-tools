@@ -4,7 +4,7 @@
 #
 #  File id
 #
-#	Copyright (C) 2000-2008 Jari Aalto
+#	Copyright (C) 2000-2009 Jari Aalto
 #
 #	This program is free software; you can redistribute it and or
 #	modify it under the terms of the GNU General Public License as
@@ -415,7 +415,7 @@ $Id: makefile.pl,v 2.39 2007/05/01 17:20:31 jaalto Exp $
 
 =head1 AUTHOR
 
-Copyright (C) 2000-2008 Jari Aalto. All rights reserved.
+Copyright (C) 2000-2009 Jari Aalto. All rights reserved.
 This program is free software; you can redistribute and/or modify program
 under the same terms as Perl itself or in terms of Gnu General Public
 license v2 or later.
