@@ -23,7 +23,7 @@ Table of contents
 
 1.0 Installation instructions
 
-    1.1 Briefly
+    1.1 Foreword
 
         #T2HTML-TITLE Emacs Tiny Tools Project README
         #T2HTML-METAKEYWORDS Emacs, Emacs Lisp, Tiny Tools Documentation
@@ -53,7 +53,12 @@ Table of contents
     1.2 Unpacking
 
         Extract the package and it will create directory according to
-        the version number:
+        the version number. Under Windows platform: create directories
+        manually e.g. on `C:\home\elisp' and use some suitable
+        archiver program. A Windows
+        #URL<http://support.microsoft.com/kb/310519><environment variable>
+        HOME must alse be defined to point to suitable location, like
+        `C:\home'.
 
             $ mkdir -p $HOME/elisp/packages/
             $ mkdir -p $HOME/elisp/config       # configuration settings
@@ -62,22 +67,28 @@ Table of contents
             $ cd $HOME/elisp/packages/
             $ gzip -dc ~/tmp/download/emacs-tiny-tools*.gz | tar -xvf -
 
-        Windows platform: create directories manually e.g. on
-        `C:\home\elisp' and use some suitable archiver program. An
-        #URL<http://support.microsoft.com/kb/310519><environment variable>
-        HOME must alse be defined to point to `C:\home'.
-
     1.3 Quick install -- personal
 
-       1.3.1 Activating the packages
+        Emacs *load-path* must be configured to point to Emacs Lisp
+        package directories. Add following lines to `$HOME/.emacs'
+        startup file. Substitute the paths as necessary to reflect
+        unpack locations:
 
-        If you just want to install the package for your personal use, add
-        following lines at the start of your Emacs initialization file.
-        These lines below will actually configure your Emacs to be aware of
-        *all* lisp paths under `$HOME/elisp' or `$HOME/lisp', so whatever
-        magic you used to do to keep your `load-path' up to date is no
-        longer needed. The Lisp package path variable `load-path' is
-        periodically kept up to date without manual tweaking.
+            (add-to-list 'load-path
+                         "~/elisp/packages/emacs-tiny-tools/lisp/tiny")
+            (add-to-list 'load-path
+                         "~/elisp/packages/emacs-tiny-tools/lisp/other")
+
+    1.4 Advanced install -- using tinypath
+
+       1.4.1 Personal install using tinypath
+
+        The following lines below will configure Emacs to be aware of
+        *all* lisp paths under `$HOME/elisp' or `$HOME/lisp', so
+        whatever magic you used to do to keep your `load-path' up to
+        date is no longer needed. The Lisp package path variable
+        `load-path' is periodically kept up to date without manual
+        tweaking.
 
             ;; $HOME/.emacs
             ;; This line loads package "tinypath.el"
@@ -87,8 +98,6 @@ Table of contents
             ;; ... rest of the startup
 
             ;; End of example
-
-       1.3.2 Where do I put other other lisp packages?
 
         When the `tinypath.el' package is active, you can pretty much put
         packages or individual lisp files anywhere, provided that they
@@ -119,7 +128,7 @@ Table of contents
             (load "utility")
             (utility-install)   ;; or whatever is needed to activate it
 
-    1.4 Quick install -- site wide
+       1.4.2 Site wide install using tinypath
 
         If you are administering the current host and you have both
         XEmacs and Emacs installations; plus you have lot of extra
@@ -160,11 +169,11 @@ Table of contents
 
             ;; End of example
 
-    1.6 Using autoload files
+    1.5 Advanced install -- using autoload files
 
         The autoload file provide "functions" that are made known to
         Emacs, but they do not load any packages. This is better than
-        using `require' or `load' commands, because it makes your
+        using `require' or `load' commands, because it makes the
         Emacs start faster.
 
             ;; $HOME/.emacs
@@ -185,7 +194,7 @@ Table of contents
 
             ;; End of $HOME/.emacs
 
-    1.7 Minimum installation
+    1.6 Minimal install
 
         If you are tight of space or otherwise do not need all the
         tools or if you're only interested in specific package, a
@@ -200,11 +209,11 @@ Table of contents
 
             + NOW select packages that you're interested in.
 
-    1.8 Optional step - compiling files
+    1.7 Optional step - compiling files
 
-        FIXME: At this time don not compile files.
+        FIXME: <under construction>
 
-    1.9 Submitting bug reports
+    1.8 Submitting bug reports
 
         IT IS IMPORTANT THAT YOU USE NON-COMPILED FILES AND SUBMIT THE
         *BACKTRACE*. Send a bug report by using package's contact
@@ -349,11 +358,10 @@ Table of contents
 
     3.3 Customizing packages
 
-        New Emacs releases 19.34+ come with the package *defcustom.el*
-        bundled. If you have limited lisp skills or if you want an
-        easy interface to packages' variables, then you can customize
-        the modules. The *group* is completed when you press `tab'
-        key:
+        Emacs releases come with the package *defcustom.el* bundled.
+        If you have limited lisp skills or if you want an easy
+        interface to packages' variables, then you can customize the
+        modules. The *group* is completed when you press `tab' key:
 
             M-x customize-group RET group RET
 
