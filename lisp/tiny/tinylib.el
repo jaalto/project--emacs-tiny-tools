@@ -2465,14 +2465,14 @@ Return:
       (cond
        ((looking-at "^[ \t]*\\([^:\r\n]+\\):\\([0-9]+\\):\\(.*\\)")
         ;; file:nbr:<rest>
-        (setq file (match-string 1)
-              line (match-string 2)
-              rest (match-string 3)))
-       ((looking-at "^[ \t]*\\([a-zA-Z]:[^:\r\n]+\\):\\([0-9]+\\):\\(.*\\)")
+        (setq file (match-string-no-properties 1)
+              line (match-string-no-properties 2)
+              rest (match-string-no-properties 3)))
+       ((looking-at "^[ \t]*\\([-a-zA-Z/.]:[^:\r\n]+\\):\\([0-9]+\\):\\(.*\\)")
         ;; d:/home/path/file.txt
-        (setq file (match-string 1)
-              line (match-string 2)
-              rest (match-string 3))))
+        (setq file (match-string-no-properties 1)
+              line (match-string-no-properties 2)
+              rest (match-string-no-properties 3))))
       (when line
         (if (string-match "^[0-9]+$" line)
             (setq line (string-to-int line))
@@ -2548,9 +2548,9 @@ Return:
         ;;   --> then load file.err into emacs and start jumping to errors.
         (setq path (file-name-directory buffer-file-name))))
       ;;  ./dir/file --> dir/file
-      (if (and (stringp file)
-               (string-match "^\\.[/\\]" file))
-          (setq file (ti::replace-match 0 nil file)))
+;;       (if (and (stringp file)
+;;                (string-match "^\\.[/\\]" file))
+;;           (setq file (ti::replace-match 0 nil file)))
       (setq ret (list (if path
                           (ti::file-make-path path file)
                         file)

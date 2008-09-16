@@ -476,7 +476,7 @@ Return:
          (cd   (save-excursion
                  (goto-char (point-min))
                  (when (looking-at "^cd \\(.+\\)")
-                   (match-string 1))))
+                   (match-string-no-properties 1))))
          file
          file2
          re
@@ -506,7 +506,8 @@ Return:
       (setq point (point))
       (buffer-enable-undo)
       (ti::pmin)
-      (delete-matching-lines re)
+      (with-buffer-modified
+	(delete-matching-lines re))
       (if (< point (point-max))
           (goto-char point)))))
 

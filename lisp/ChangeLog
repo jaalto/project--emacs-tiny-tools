@@ -1,3 +1,13 @@
+2008-09-16  Jari Aalto  <jari.aalto@cante.net>
+
+	* tiny/tinycompile.el (tinycompile-kill-all-file-lines):
+	Handle read-only compile buffer correctly by using
+	`with-buffer-modified'
+
+	* tiny/tinylib.el (ti::buffer-parse-line-main): Do not strip
+	leading ./ or ../ but return path as it.
+	(ti::buffer-parse-grep-line): Use `match-string-no-properties'.
+
 2008-09-15  Jari Aalto  <jari.aalto@cante.net>
 
 	* tiny/tinydesk.el (tinydesk-:save-title): Remove `concat'
@@ -6,7 +16,7 @@
 
 2008-09-05  Jari Aalto  <jari.aalto@cante.net>
 
-	* tiny/tinydesk.el (tinydesk-install-default-keybindings): 
+	* tiny/tinydesk.el (tinydesk-install-default-keybindings):
 	Renamed. Was `tinydesk-default-emacs-keybindings'
 
 2008-09-02  Jari Aalto  <jari.aalto@cante.net>
