@@ -184,6 +184,7 @@
       .......................................................................
 -->
 
+<a name="links" id="links"></a>
 <H1> Links and download </H1>
 
 
@@ -203,6 +204,14 @@ numerous changes.
 	Main project page
         </A>
 	(never changes; bookmark this one)
+
+    <LI>
+	<a name="devel" id="devel"></a>
+        <A HREF="https://savannah.nongnu.org/projects/emacs-tiny-tools"
+        CLASS="main">
+	Development page
+        </A>
+	(Source code, bug tracker etc.)
 
     <LI>
         <A HREF="https://savannah.nongnu.org/files/?group=emacs-tiny-tools"
@@ -301,6 +310,17 @@ Other pages
 	Developer information
         </A>
 
+
+    <LI>
+        To build Emacs lisp package hierarchy
+        <SAMP>/usr/local/share/emacs/site-lisp/net</SAMP> by pulling Emacs Lisp
+        developers' packages from the Net, see project:
+
+        <A HREF="http://freshmeat.net/projects/perlwebget">
+	http://freshmeat.net/projects/perlwebget
+        </A>
+
+
 <!--
     <LI>Project announcements at
         <A HREF="announcement.html">
@@ -310,22 +330,13 @@ Other pages
 
 </UL>
 
-
-        To build Emacs lisp package hierarchy
-        <SAMP>/usr/local/site-lisp/net</SAMP> by pulling every Emacs Lisp
-        Developers' packages from the Net, see project:
-
-        <A HREF="http://perl-webget.sourceforge.net">
-        http://perl-webget.sourceforge.net
-        </A>
-
-
 <!--  .......................................................................
       HEADING
       .......................................................................
 -->
 
 <H1>
+<a name="exerpts" id="exerpts"></a>
 Excerpts
 </H1>
 
@@ -433,6 +444,7 @@ Excerpts
       .......................................................................
 -->
 
+<a name="news" id="news"></a>
 <H1>
 News
 </H1>
@@ -505,6 +517,7 @@ News
       .......................................................................
 -->
 
+<a name="history" id="history"></a>
 <H1>
 Brief History
 </H1>
@@ -531,44 +544,40 @@ http://www.gnu.org/copyleft/gpl.html</A>.
       .......................................................................
 -->
 
+<a name="platform" id="platform"></a>
 <H1>
-Win32 Platform Support
+Platform Support
 </H1>
 
-    Win32 users will be more than delighted to hear, that the current releases
-    support quite well cross platform Emacs / XEmacs / Win32 / Cygwin / Unix.
-
-    XEmacs support is now going strong too, even the Win32 XEmacs support.
-
-    Latest Emacs releases are now supported much better, because of the
-    availability of pre-compiled binaries for Win32.
-
+    These utilities support quite well cross platform Emacs / XEmacs in
+    all Windows Native / Cygwin and Unix environments.
 
 <!--  .......................................................................
       HEADING
       .......................................................................
 -->
 
+<a name="compatibility" id="compatibility"></a>
 <H1>
-Operating system and Emacs Version Compatibility
+Emacs Version Compatibility
 </H1>
 
     Operating systems currently supported are, in order of importance, are
     below. The <A HREF="http://www.cygwin.com">Cygwin</A> environment is
-    almost identical to Unix, but it requires special handling enspecially
-    when both Emacs version can use it (Win32 native Emacs and Cygwin
+    almost identical to Unix, but it requires special handling especially
+    when both Emacs version can use it (Windows native Emacs and Cygwin
     Emacs). For example package <SPAN class="note2">tinyigrep.el</SPAN> can
     be used to grep recursively through many defined databases to locate
-    and replace files in full project tree in both Win32 and Cygwin Emacs
+    and replace files in full project tree in both Windows and Cygwin Emacs
     versions.
 
 <PRE>
-    Unix/Linux: Emacs and XEmacs
-    Win32: Windows Native environment (NT Emacs and NT XEmacs)
-    Win32: Windows Cygwin environment (Cygwin Emacs and Cygwin XEmacs)
+    Linux/Unix: Emacs and XEmacs
+    Windows native environment (NT Emacs and NT XEmacs)
+    Windows Cygwin environment (Cygwin Emacs and Cygwin XEmacs)
 </PRE>
 
-    The minimum criterias for support are:
+    The minimum criterias for versions are:
 
 <PRE>
     Emacs   20.1+   ( 21.2+ preferred )
@@ -580,15 +589,17 @@ Operating system and Emacs Version Compatibility
       .......................................................................
 -->
 
+<a name="contact" id="contact"></a>
 <H1>
 Contact
 </H1>
 
-    <P> There no mailing list for the project. Contact
+    <P> There is no mailing list for the project. See
+
     <a href="http://bazaar-vcs.org/JariAalto">
-       maintainer
+    Development page
     </a>
-    as
+
     needed by including "tiny-tools" in the subject (otherwise message
     may be classified as spam by the fileters). Report problems to
     <a href="https://savannah.nongnu.org/projects/emacs-tiny-tools">bug
@@ -603,6 +614,8 @@ Contact
 -->
 
 
+<a name="source" id="source"></a>
+<a name="version_control" id="version_control"></a>
 <H1>
 Version Control
 </H1>
@@ -621,7 +634,7 @@ Version Control
         $ <SPAN class="cmd">git</SPAN> pull
 </PRE>
 
-
+<a name="source_install" id="source_install"></a>
 <p>
 To install, add following lines to ~/.emacs startup file:
 <PRE>
