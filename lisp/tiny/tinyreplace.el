@@ -1268,20 +1268,22 @@ Input:
            ((and file (not (member file cache)))
             (raise-frame (select-frame w-frame))
             (push file cache)           ;Now we have dealt with it
+
             ;;  If it's under RCS and not locked, ask if we should
             ;;  CheckOut it.
-            (when (and (vc-registered file)
-                       (eq 'RCS (vc-backend file))
-                       (not (file-writable-p file))
-                       (y-or-n-p (format "Co rcs file: %s" file)))
-              (unless (call-process
-                       "co"
-                       nil
-                       err-buffer
-                       nil
-                       "-l"
-                       (expand-file-name file))
-                (pop-to-buffer err-buffer)))
+;; FIXME: RCS is not longer used. Remove this code
+;;             (when (and (vc-registered file)
+;;                        (eq 'RCS (vc-backend file))
+;;                        (not (file-writable-p file))
+;;                        (y-or-n-p (format "Co rcs file: %s" file)))
+;;               (unless (call-process
+;;                        "co"
+;;                        nil
+;;                        err-buffer
+;;                        nil
+;;                        "-l"
+;;                        (expand-file-name file))
+;;                 (pop-to-buffer err-buffer)))
             (cond
              ((not (file-writable-p file))
               (incf  read-only)

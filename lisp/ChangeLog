@@ -1,5 +1,10 @@
 2008-09-16  Jari Aalto  <jari.aalto@cante.net>
 
+	* tiny/tinyreplace.el
+	(tinyreplace-replace-over-files-compile-buffer): Comment
+	out call to `vc-registered' which used to check if the file
+	was under RCS version control. Obsolete by now.
+
 	* tiny/tinycompile.el (tinycompile-kill-all-file-lines):
 	Handle read-only compile buffer correctly by using
 	`with-buffer-modified'
