@@ -56,18 +56,18 @@
 
 ;;  Overview of features
 ;;
-;;      This package contains utilities for the Debian System Administarator,
-;;      to help administring Debian in daily tasks and submitting bug
-;;      reports from Emacs. Learn more about debian at
-;;      http://www.debian.org/
+;;      This package contains utilities for the Debian package authors
+;;      (Debian Developers) and System Administarators to help
+;;      administring Debian in daily tasks and submitting bug reports
+;;      from Emacs Gnus mail interface. Learn more about Debian at
+;;      http://www.debian.org/ and Gnus, the combined all purpose, news
+;;      and mailreader at http://www.gnus.org/
 ;;
 ;;      o   colorize /var/log files like messages, syslog etc.
-;;      o   Report Debian bug with M-x ... #todo
-;;
-;;  Quick start:
-;;
-;;      To report bug to Debian package, like command line reportbug(1):
-;;
+;;      o   In Gnus *Summary* buffer, there is new menu "Tdeb" to
+;;          administrate Debian bug reports. Useful mainly for Debian
+;;          package Developers.
+;;      o   To report bug to a Debian package, like command line reportbug(1):
 ;;          M-x tinydebian-reportbug
 
 ;;}}}
@@ -939,10 +939,10 @@ Mode description:
 ;;;
 (defun tinydebian-bts-mode-gnus-summary-maybe-turn-on ()
   "Activate tinydebian-bts-mode if group name contains word 'Debian'"
-  (when (and (boundp 'gnus-newsgroup-name)
-             (stringp gnus-newsgroup-name)
-             (string-match "debian" gnus-newsgroup-name))
-    (turn-on-tinydebian-bts-mode)))
+;;   (when (and (boundp 'gnus-newsgroup-name)
+;;              (stringp gnus-newsgroup-name)
+;;             (string-match "debian" gnus-newsgroup-name))
+  (turn-on-tinydebian-bts-mode))
 
 ;;; ----------------------------------------------------------------------
 ;;;
@@ -1048,7 +1048,7 @@ Activate on files whose path matches
   ;;
   (cond
    (uninstall
-    ;;(remove-hook 'write-file-hooks 'tinydebian-auto-save)
+    ;; (remove-hook 'write-file-hooks 'tinydebian-auto-save)
     (tinydebian-install-font-lock-keywords 'uninstall)
     (remove-hook 'find-file-hooks 'tinydebian-find-file-hooks)
     (remove-hook 'gnus-summary-prepare-hook

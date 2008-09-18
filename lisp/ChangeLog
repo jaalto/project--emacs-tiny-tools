@@ -4,6 +4,11 @@
 	New.
 	(ti::macrof-minor-mode-wizard): Add to menu
 	`tinydebian-bts-mail-ctrl-forwarded-main'.
+	(tinydebian-bts-mode-gnus-summary-maybe-turn-on): Remove
+	ceck for newsgroup name, because mail can also arrive to INBOX.
+	Just turn on `turn-on-tinydebian-bts-mode' for all *Summary*
+	buffers.
+	(to level::Overview of features): Improve documentation.
 
 	* Massive update: Change wording of every file
 	from " Emacs-Lisp load path" to refer to variable `load-path'.
