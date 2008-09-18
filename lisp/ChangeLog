@@ -1,5 +1,10 @@
 2008-09-18  Jari Aalto  <jari.aalto@cante.net>
 
+	* tiny/tinydebian.el (tinydebian-bts-mail-ctrl-forwarded-main):
+	New.
+	(ti::macrof-minor-mode-wizard): Add to menu
+	`tinydebian-bts-mail-ctrl-forwarded-main'.
+
 	* Massive update: Change wording of every file
 	from " Emacs-Lisp load path" to refer to variable `load-path'.
 

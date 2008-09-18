@@ -831,6 +831,7 @@ Mode description:
      ["Send BTS Ctrl tags"                 tinydebian-bts-mail-ctrl-tags     t]
      ["Send BTS Ctrl usertag"              tinydebian-bts-mail-ctrl-usertag  t]
      ["Send BTS Ctrl forward"              tinydebian-bts-mail-ctrl-forward-main  t]
+     ["Send BTS Ctrl forwarded"            tinydebian-bts-mail-ctrl-forwarded-main  t]
      ["Send BTS Ctrl reassign"             tinydebian-bts-mail-ctrl-reassign t]
      ["Send BTS Ctrl retitle"              tinydebian-bts-mail-ctrl-retitle  t]
      ["Send BTS Ctrl reopen"               tinydebian-bts-mail-ctrl-reopen   t]
@@ -918,6 +919,7 @@ Mode description:
      ;;  (C)ontrol commands alphabetically
      (define-key map  "cc"  'tinydebian-bts-mail-ctrl-close)
      (define-key map  "cf"  'tinydebian-bts-mail-ctrl-forward-main)
+     (define-key map  "cF"  'tinydebian-bts-mail-ctrl-forwarded-main)
      (define-key map  "cm"  'tinydebian-bts-mail-ctrl-merge)
      (define-key map  "co"  'tinydebian-bts-mail-ctrl-reopen)
      (define-key map  "cr"  'tinydebian-bts-mail-ctrl-reassign)
@@ -2705,6 +2707,31 @@ thanks
 
 "
             bug))))
+
+;;; ----------------------------------------------------------------------
+;;;
+(defun tinydebian-bts-mail-ctrl-forwarded-main (bug &optional control-message)
+  "Compose BTS control message: forwarded BUG ADDRESS."
+  (interactive
+   (list (tinydebian-bts-mail-ask-bug-number)
+         current-prefix-arg))
+  (tinydebian-bts-mail-type-macro
+   nil nil nil
+   (format "Bug#%s%s forwarded to upstream" bug (if package
+					 (format " to package %s"
+						 package)
+				       ""))
+   (insert
+    (format "\
+forwarded %s %s
+thanks
+
+"
+            bug
+            (if (and package
+                     (not (string= "" package)))
+                package
+              "<add upstream Bug tracker submission URL here>")))))
 
 ;;; ----------------------------------------------------------------------
 ;;;
