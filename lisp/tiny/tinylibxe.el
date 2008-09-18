@@ -35,7 +35,7 @@
 ;;{{{ Install
 
 ;; ........................................................ &t-install ...
-;; Put this file on your Emacs-Lisp load path, add following into your
+;; Put this file on your Emacs-Lisp `load-path', add following into your
 ;; package that you're currently developing. This ensures compatibility
 ;; for some extent to XEmacs and Emacs.
 ;;

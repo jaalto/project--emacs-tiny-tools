@@ -37,7 +37,7 @@
 ;;; Intall:
 
 ;; ........................................................ &t-install ...
-;;   Put this file on your Emacs-Lisp load path, add following into your
+;;   Put this file on your Emacs-Lisp `load-path', add following into your
 ;;   ~/.emacs startup file. Rip code with tinylib.el/ti::package-rip-magic
 ;;
 ;;       ;;  To use default keybinding "C-x("  and "C-x)", add this:

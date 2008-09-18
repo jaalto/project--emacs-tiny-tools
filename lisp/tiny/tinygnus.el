@@ -35,7 +35,7 @@
 ;;; Install:
 
 ;; ....................................................... &t-install ...
-;;  Put this file on your Emacs-Lisp load path, add following into your
+;;  Put this file on your Emacs-Lisp `load-path', add following into your
 ;;  ~/.gnus startup file. This file should be loaded only after gnus
 ;;  startup.
 ;;

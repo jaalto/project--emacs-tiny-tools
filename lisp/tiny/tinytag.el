@@ -33,7 +33,7 @@
 ;;{{{ Install
 
 ;; ....................................................... &t-install ...
-;;  Put this file on your Emacs-Lisp load path, add following into your
+;;  Put this file on your Emacs-Lisp `load-path', add following into your
 ;;  ~/.emacs startup file. Rip code with with tinylib.el/ti::package-rip-magic
 ;;
 ;;      (setq tinytag-:database-dir "~/elisp/config")

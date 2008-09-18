@@ -30,7 +30,7 @@
 
 ;;; Install:
 
-;;  Put this file on your Emacs-Lisp load path, add following into your
+;;  Put this file on your Emacs-Lisp `load-path', add following into your
 ;;  ~/.emacs startup file.
 ;;
 ;;      (add-hook 'dired-mode-hook '(lambda () (require 'dired-sort)))

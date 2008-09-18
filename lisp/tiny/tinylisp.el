@@ -37,7 +37,7 @@
 ;;; Install:
 
 ;; ....................................................... &t-install ...
-;; Put this file on your Emacs-Lisp load path, add following into your
+;; Put this file on your Emacs-Lisp `load-path', add following into your
 ;; ~/.emacs startup file.
 ;;
 ;;      ;;  Select some unused, non-shifted, fast prefix key.
@@ -49,6 +49,7 @@
 ;;      (require 'tinylisp)
 ;;
 ;;      (setq tinylisp-:load-hook nil)
+;;
 ;; Or prefer following autoload: your Emacs loads this package only
 ;; when you need it.
 ;;

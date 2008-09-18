@@ -32,7 +32,7 @@
 ;;{{{ Install
 
 ;; ........................................................ &t-install ...
-;;   Put this file on your Emacs-Lisp load path, add following into your
+;;   Put this file on your Emacs-Lisp `load-path', add following into your
 ;;   $HOME/.emacs startup file
 ;;
 ;;   (add-hook 'tinycygwin-:load-hook 'tinycygwin-install)

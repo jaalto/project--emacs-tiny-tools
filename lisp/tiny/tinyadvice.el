@@ -37,7 +37,7 @@
 ;;; Install:
 
 ;; ....................................................... &t-install ...
-;; Put this file on your Emacs-Lisp load path, add following into your
+;; Put this file on your Emacs-Lisp `load-path', add following into your
 ;; ~/.emacs startup file.
 ;;
 ;;     (require 'tinyadvice)
@@ -46,9 +46,10 @@
 ;; Emacs startup "feel" using the following autoload suggestion:
 ;;
 ;;     (require 'tinylib)
-;;     (when (ti::emacs-p)                           ;Do not load in XEmacs
-;;       (if (fboundp 'run-with-idle-timer)      ;Emacs
-;;           (run-with-idle-time (* 4 60) nil '(lambda () (require 'tinyadvice)))
+;;     (when (ti::emacs-p)                    ;Do not load in XEmacs
+;;       (if (fboundp 'run-with-idle-timer)   ;Emacs
+;;           (run-with-idle-time (* 4 60) nil
+;;             '(lambda () (require 'tinyadvice)))
 ;;         (run-at-time "4 min" nil '(lambda () (require 'tinyadvice)))))
 ;;
 ;; But before you leap into this, make sure you want to do it.

@@ -35,7 +35,7 @@
 ;;{{{ Install
 
 ;; ....................................................... &t-install ...
-;; Put this file on your Emacs-Lisp load path, add one of these into your
+;; Put this file on your Emacs-Lisp `load-path', add one of these into your
 ;; ~/.emacs startup file
 ;;
 ;;   Normal load

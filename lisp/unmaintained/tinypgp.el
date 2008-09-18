@@ -34,7 +34,7 @@
 ;;
 ;;  THIS FILE IS UNMAINTAINED - AND NOT WORKING IN ANY WAY
 ;;
-;;  Put this file on your Emacs-Lisp load path, add following into your
+;;  Put this file on your Emacs-Lisp `load-path', add following into your
 ;;  ~/.emacs startup file.
 ;;
 ;;      (require 'tinypgp)

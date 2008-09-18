@@ -33,7 +33,7 @@
 ;;{{{ Install
 
 ;; ....................................................... &t-install ...
-;;  Put this file on your Emacs-Lisp load path, add following into your
+;;  Put this file on your Emacs-Lisp `load-path', add following into your
 ;;  ~/.emacs startup file. This must be the very first entry before
 ;;  any keybindings take in effect.
 ;;

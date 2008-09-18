@@ -33,7 +33,7 @@
 ;;{{{ Install
 
 ;; ........................................................ &t-install ...
-;;   Put this file on your Emacs-Lisp load path, add following into your
+;;   Put this file on your Emacs-Lisp `load-path', add following into your
 ;;   $HOME/.emacs startup file
 ;;
 ;;      (add-hook 'tinydebian-:load-hook 'tinydebian-install)
@@ -731,7 +731,7 @@ to generate updated list."
         (error "Not end marker of virtual-package-names-list.txt"))
       (setq end (line-beginning-position))
       (goto-char beg)
-      (while (re-search-forward 
+      (while (re-search-forward
               "^ \\([^ \t\r\n]+\\)[ \t]+\\(.+[^ \t\r\n]\\)" end t)
         (setq package (match-string 1)
               desc    (match-string 2))
@@ -2062,8 +2062,8 @@ At current point, current line, headers of the mail message
    email
    (format "[ERROR] email is missing from input [%s]" email))
   (tinydebian-browse-url-1
-   (format "%slogin=%s" 
-           (tinydebian-url-page-compose 'qa-developer-status) 
+   (format "%slogin=%s"
+           (tinydebian-url-page-compose 'qa-developer-status)
            email)))
 
 ;;; ----------------------------------------------------------------------
@@ -2077,8 +2077,8 @@ At current point, current line, headers of the mail message
    email
    (format "[ERROR] email is missing from input [%s]" email))
   (tinydebian-browse-url-1
-   (format "%ssubmitter=%s" 
-           (tinydebian-url-page-compose 'qa-developer-bugs) 
+   (format "%ssubmitter=%s"
+           (tinydebian-url-page-compose 'qa-developer-bugs)
            email)))
 
 ;;; ----------------------------------------------------------------------
@@ -2963,7 +2963,7 @@ In this case, the package is unknown."
                (list "--field=Provides"
                      "--eregex"
                      re))
-        (let* ((info (tinydebian-package-info-from-buffer 
+        (let* ((info (tinydebian-package-info-from-buffer
                       (current-buffer))))
           (cond
            ((null info)

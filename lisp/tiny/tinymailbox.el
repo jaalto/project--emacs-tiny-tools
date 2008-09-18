@@ -33,7 +33,7 @@
 ;;{{{ Install
 
 ;; ....................................................... &t-install ...
-;;  Put this file on your Emacs-Lisp load path, add following into your
+;;  Put this file on your Emacs-Lisp `load-path', add following into your
 ;;  ~/.emacs startup file. Code can be extracted with function
 ;;  tinylib.el/ti::package-rip-magic
 ;;

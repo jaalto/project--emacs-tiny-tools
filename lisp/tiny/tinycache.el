@@ -32,7 +32,7 @@
 ;;}}}
 ;;{{{ Install
 
-;;   Put this file on your Emacs-Lisp load path, add following into
+;;   Put this file on your Emacs-Lisp `load-path', add following into
 ;;   ~/.emacs startup file:
 ;;
 ;;       (add-hook tinycache-:load-hook 'tinycache-install-msb)

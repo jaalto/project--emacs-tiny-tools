@@ -38,7 +38,7 @@
 ;;
 ;;  ** NOTE: 1998-01 This file is no longer maintained. Plese see Gnus.
 ;;
-;;  Put this file on your Emacs-Lisp load path, add following into your
+;;  Put this file on your Emacs-Lisp `load-path', add following into your
 ;;  ~/.emacs startup file. Rip code with with tinylib.el/ti::package-rip-magic
 ;;
 ;;      (require 'tinyrmail)

@@ -35,7 +35,7 @@
 ;;{{{ Install
 
 ;; ....................................................... &t-install ...
-;;  Put this file on your Emacs-Lisp load path, add following into your
+;;  Put this file on your Emacs-Lisp `load-path', add following into your
 ;;  ~/.emacs startup file.
 ;;
 ;;      ;; You could also call M-x tinycompile-install / tinycompile-uninstall

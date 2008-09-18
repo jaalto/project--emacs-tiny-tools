@@ -44,7 +44,7 @@
 ;; o    External program pbotutil.pl must have been installed
 ;;      See `tinyirc-:pastebot-program-url'.
 ;;
-;; Put this file on your Emacs-Lisp load path, add following into
+;; Put this file on your Emacs-Lisp `load-path', add following into
 ;; ~/.emacs startup file.
 ;;
 ;;      (require 'tinyirc)

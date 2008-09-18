@@ -35,7 +35,7 @@
 ;;{{{ Install
 
 ;; ........................................................ &t-install ...
-;; You put this file on your Emacs-Lisp load path, add following into your
+;; You put this file on your Emacs-Lisp `load-path', add following into your
 ;; .emacs startup file
 ;;
 ;;     (require 'tinyliby)
