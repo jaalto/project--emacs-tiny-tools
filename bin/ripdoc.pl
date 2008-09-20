@@ -16,14 +16,8 @@
 #       This program is distributed in the hope that it will be useful, but
 #       WITHOUT ANY WARRANTY; without even the implied warranty of
 #       MERCHANTABILITY or FITNESS FOR A PARTICULAR PURPOSE.  See the GNU
-#       General Public License for more details.
-#
-#	You should have received a copy of the GNU General Public License
-#	along with program. If not, write to the
-#	Free Software Foundation, Inc., 51 Franklin Street, Fifth Floor,
-#	Boston, MA 02110-1301, USA.
-#
-#	Visit <http://www.gnu.org/copyleft/gpl.html> for more information
+#       General Public License for more details at
+#	<http://www.gnu.org/copyleft/gpl.html>.
 
 use autouse 'Pod::Text'     => qw( pod2text );
 
@@ -41,7 +35,7 @@ use Getopt::Long;
     #   The following variable is updated by Emacs setup whenever
     #   this file is saved
 
-    $VERSION = '2007.0905.2137';
+    $VERSION = '2008.0920.1133';
 
 # ****************************************************************************
 #
@@ -111,44 +105,44 @@ ripdoc.pl - Rip documentation from the beginning of file
 
 =head1 OPTIONS
 
-=head2 General options
-
 =over 4
 
 =item B<--doc>
 
 Use default seach start: 'Documentation|Commentary'
 
-=item B<--begin-regexp REGEXP> B<-bre REGEXP>
+=item B<-b|--begin-regexp REGEXP>
 
 Search any beginning regexp mathing RE istead of default 'File id|Preface'
 
-=item B<--end-regexp REGEXP> B<-ere REGEXP>
+=item B<-d|--doc>
+
+Set search regexp to 'Documentation:|Commentary:'.
+
+=item B<-D|--debug>
+
+Turn on debug.
+
+=item B<-e|--end-regexp REGEXP>
 
 Search any Ending regexp mathing RE istead of default 'Change Log|History'
 
-=item B<--ignore-regexp> B<-ire REGEXP>
+=item B<-h|--help>
+
+Display help page.
+
+=item B<-i|--ignore-regexp>
 
 Ignore lines matching RE. The default value ignores shell I<!/slash/bang>
 lines.
 
-=head2 Miscellaneous options
-
-=item B<--debug> B<-d>
-
-Turn on debug.
-
-=item B<--help> B<-h>
-
-Print help page.
-
-=item B<--verbose> B<-v>
+=item B<-v|--verbose> B<-v>
 
 Turn on verbose messages.
 
-=item B<--Version> B<-V>
+=item B<-V|--version>
 
-Print program version and contact info.
+Display program version and contact info.
 
 =back
 
@@ -156,45 +150,46 @@ Print program version and contact info.
 
 =head2 General
 
-Perl and Java are execptions among the programming languages, because they
-include a way to embed documentating inside program. Perl interpreter knows
-POD and it can ignore those lines. In other programming languages, like
-Emacs lisp and Shell programs, Procmail code, you do not have anything
-out of the box to help you document the program to the outside world.
-The choices are:
+Perl and Java are execptions among the programming languages, because
+they include a way to embed documentating inside program. Likewise
+Perl interpreter knows POD and it can ignore those lines.
+
+In other programming languages, like in Shell programs, Procmail code,
+there is nothing out of the box that would help to document the
+program to the outside world. The choices are:
 
 =over 4
 
 =item *
 
-A Separate document(s) for the program is maintained:
-Unix man pages *.1, Text files .txt, Latex *.tex, texinfo Info pages *.info,
-SGML, ...
+A separate document(s) for the program is maintained: Unix man pages
+*.1, Text files .txt, Latex *.tex, texinfo Info pages *.info, SGML,
+...
 
 =item *
 
-Program prints a brief/complete manual when invoked with --help or -h.
+Programs display a brief/complete manual when invoked with -h|--help
+option.
 
 =item *
 
 Documentation is put to the beginning of the file and distributed
-with the file
+with the file.
 
 =back
 
-This is the tool for the last bullet. The documentation is maintained at
-the beginning of the distributed program(s). I<ripdoc.pl> extracts the
-documentation which follows TF (Technical format:
-ftp://cs.uta.fi/pub/ssjaaa/t2html.html ) guidelines. The idea is that you
-can generate html docs similarly that what pod2html does. The conversion
-goes like this:
+This utility is aimed for the last bullet. The documentation is
+maintained at the beginning of the distributed files. Program extracts
+the documentation which follows TF (Technical text format) guidelines.
+The idea is that you can generate html docs similarly that what Perl
+utility pod2html does. The conversion goes like this:
 
-    % ripdoc.pl code.sh | t2html.pl > code.html
+    ripdoc.pl code.sh | t2html.pl > code.html
 
 =head2 How to write documentation
 
-In order to use this program, you must write the documentation
-to the beginning of file in the following format:
+In order to use this program, the documentation is written in rigid
+format to the beginning of file:
 
     #!/bin/sh
     #
@@ -214,11 +209,10 @@ to the beginning of file in the following format:
     #       txt txt xtx at column 8
     #       txt txt xtx at column 8
 
-=head2 Finer specifications for the documenation format
+=head2 Specification for the documenation format
 
-Program reads documentation from the beginning of file.
-The very first line determines the comment string in the file.
-The documentation starts when a header I<Preface> or I<File> I<Id> is
+The very first line determines the comment string in the file. The
+documentation starts when a header I<Preface> or I<File> I<Id> is
 found
 
     #   Preface         # or "File id"
@@ -240,11 +234,11 @@ begining of sentence.
 
 =head2 Notes on documentation format
 
-Very First line determines what is the comment string that is
-ripped away from the beginning of lines. You must not use
-multiple of comment markers like above I<#######>, this will
-handicap ripdoc.pl. Remember to start writing headings at column
-four and write text at column 8. The following is not in TF format.
+Very first line determines what is the comment string that is ripped
+away from the beginning of lines. Remember to start writing of
+headings at column four and write text at standard tab column 8. You
+must not use multiple of comment markers like I<#######> below; it
+will handicap this utiity.
 
     #!/bin/sh
     #
@@ -262,32 +256,19 @@ four and write text at column 8. The following is not in TF format.
     #            Furher example code at column 12
     #            More code examples at column 12
     #
-    # Next heading is here
+    # Next heading here
     #
     #        txt txt txt at column 8
     #        txt txt xtx at column 8
     #        txt txt xtx at column 8
 
-=head1 SUITABILITY
-
-You can run this program to rip out documentation from any file that
-follows the 4 character indentation rule, which is the basis of TF
-(technical format). The only requirement is that the comment markers are
-single lined. C and Java-styled I<comment-start> I<comment-end> combination
-cannot be handled, because the comment marker is determined from the
-beginning of line.
-
-          /* This comment documentation cannot be handled
-           *
-           */
-
 =head1 EXAMPLES
 
-You usually can combine the procuced clear text output to a text to html
-fileter to generate html documentation out of the comments.
+You can combine the procuced clear text output to a text to html
+filter to generate html documentation out of the comments.
 
-    % ripdoc.pl file.sh | t2html.pl > file.sh.html
-    % ripdoc.pl file.cc | t2html.pl > file.cc.html
+    ripdoc.pl file.sh | t2html.pl > file.sh.html
+    ripdoc.pl file.cc | t2html.pl > file.cc.html
 
 =head1 SEE ALSO
 
@@ -295,7 +276,16 @@ t2html(1), weblint(1), html2ps(1), ps2ascii(1)
 
 =head1 BUGS
 
-<known limitations>
+You can run this program to rip out documentation from any file that
+follows the 4 character indentation rule, which is the basis of TF
+(technical text format). The only requirement is that the comment
+markers are single lined. C and Java-styled I<comment-start>
+I<comment-end> combination cannot be handled, because the comment
+marker is determined from the beginning of line.
+
+          /* This comment documentation cannot be handled
+           *
+           */
 
 =head1 AVAILABILITY
 
@@ -318,16 +308,11 @@ No optional CPAN modules needed.
 
 C<any>
 
-=head1 VERSION
-
-$Id: ripdoc.pl,v 2.18 2007/05/01 17:20:31 jaalto Exp $
-
 =head1 AUTHOR
 
-Copyright 1998-2003 Jari Aalto. All rights reserved. This program is
-free software; you can redistribute it and/or modify it under the same
-terms as Perl itself or in terms of Gnu General Public license v2 or
-later.
+Copyright (C) 1998-2009 Jari Aalto. All rights reserved. This program
+is free software; you can redistribute it and/or modify it under the
+terms of Gnu General Public license v2 or any later version.
 
 =cut
 
@@ -399,15 +384,15 @@ sub HandleCommandLineArgs ()
 
     GetOptions      # Getopt::Long
     (
-          "h|help"              => \$help
-        , "verbose"             => \$verb
-        , "Version"             => \$version
-        , "debug"               => \$debug
-
+          "help"                => \$help
+        , "b|begin-regexp=s"    => \$BEGIN_REGEXP
         , "doc"                 => \$doc
-        , "bre|begin-regexp=s"  => \$BEGIN_REGEXP
-        , "ere|end-regexp=s"    => \$END_REGEXP
-        , "ire|ignore-regexp=s" => \$IGNORE_REGEXP
+        , "D|debug"             => \$debug
+        , "e|end-regexp=s"      => \$END_REGEXP
+        , "i|ignore-regexp=s"   => \$IGNORE_REGEXP
+        , "verbose"             => \$verb
+        , "V|version"           => \$version
+
     );
 
     $version        and die "$VERSION $PROGNAME $CONTACT $URL\n";
@@ -562,6 +547,8 @@ sub Main ()
             {
                 $ARG = "    " . uc($1) . $2 . "\n";
             }
+
+	    s/[ \t]+$//;	    # delete EOL whitespaces
 
             print "$ARG";
         }

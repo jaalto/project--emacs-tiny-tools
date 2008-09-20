@@ -1,3 +1,11 @@
+2008-09-20  Jari Aalto  <jari.aalto@cante.net>
+
+	* ripdoc.pl
+	(top level): Remove old FSF address.
+	(HELP): Add proper short and --long options. Improve
+	documentation. Moved /* */ java example to the BUGS section.
+	(Main): Delete EOL whitespaces.
+
 2008-09-14  Jari Aalto  <jari.aalto@cante.net>
 
 	* copyright-update.pl (HELP): Document new option --line RE.
