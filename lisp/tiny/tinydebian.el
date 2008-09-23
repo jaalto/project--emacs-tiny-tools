@@ -543,11 +543,11 @@ See also `tinydebian-:rfs-hook'.")
 See also `tinydebian-:rfs-template'")
 
 (defvar tinydebian-:bts-email-address "bugs.debian.org"
-  "Email address or Debian Bug Tracking System.")
+  "Email address for Debian Bug Tracking System.")
 
 ;; https://help.launchpad.net/UsingMaloneEmail
 (defvar tinydebian-:launchpad-email-address "bugs.launchpad.net"
-  "Email address or Debian Bug Tracking System.")
+  "Emacs address for Launchpad Bug Tracking System.")
 
 (defvar tinydebian-:list-email-address "lists.debian.org"
   "Email address or Debian mailing lists.")
@@ -1379,6 +1379,15 @@ Optional: SEARCH-ON DISTRIBUTION SECTION."
 
 ;;; ----------------------------------------------------------------------
 ;;;
+(defsubst tinydebian-gnus-summary-mode-summary-line ()
+  "Return Subject at current point in Gnus Summary mode."
+  (save-excursion
+    (goto-char (line-end-position))
+    (skip-chars-backward "^][" (line-beginning-position))
+    (buffer-substring (point) (line-end-position))))
+
+;;; ----------------------------------------------------------------------
+;;;
 (defun tinydebian-email-gnus-summary-mode ()
   "Read mail address if point is at Gnus summary buffer."
   (tinydebian-email-gnus-summary-mode-macro
@@ -1421,16 +1430,29 @@ At current point, current line, headers of the mail message."
 ;;;
 (defsubst tinydebian-bug-ubuntu-p ()
   "Check if bug context is Debian."
-  (save-excursion
-    (goto-char (point-min))
-    (re-search-forward "[0-9]@bugs.launchpad.net" nil t)))
+  (cond
+   ((string-match "Summary" (buffer-name))
+    (let ((str (buffer-substring (line-beginning-position)
+				 (line-end-position))))
+      ;; [Bug 272680]
+      (string-match
+       (concat
+	"\\[Bug +"
+	"[0-9][0-9][0-9]"
+	"[0-9][0-9][0-9]"
+	"\\]")
+       str)))
+   (t
+    (save-excursion
+      (goto-char (point-min))
+      (re-search-forward "[0-9]@bugs.launchpad.net" nil t)))))
 
 ;;; ----------------------------------------------------------------------
 ;;;
 (defun tinydebian-bug-url (bug)
   "Return correct bug URL for BUG."
   (if (tinydebian-bug-ubuntu-p)
-      (format "https://bugs.launchpad.net/bzr/+bug/%s"
+      (format "https://bugs.launchpad.net/bugs/%s"
              (if (numberp bug)
                  (int-to-string bug)
                bug))
@@ -1497,13 +1519,25 @@ At current point, current line, headers of the mail message."
 
 ;;; ----------------------------------------------------------------------
 ;;;
+(defsubst tinydebian-bug-nbr-any-in-string (string)
+  "Read bug number NNNNNN from STRING."
+  (if (string-match
+       "\\([^0-9]\\|^\\)\\([0-9][0-9][0-9][0-9][0-9][0-9]\\)$"
+       string)
+      (match-string 2 string)))
+
+;;; ----------------------------------------------------------------------
+;;;
 (defsubst tinydebian-bug-nbr-any-at-current-point ()
   "Read bug number NNNNNN from current point"
-  (let ((str (current-word)))
-    (if (string-match
-         "\\([^0-9]\\|^\\)\\([0-9][0-9][0-9][0-9][0-9][0-9]\\)$"
-         str)
-        (match-string 2 str))))
+  (tinydebian-bug-nbr-any-in-string (current-word)))
+
+;;; ----------------------------------------------------------------------
+;;;
+(defsubst tinydebian-bug-nbr-any-at-current-line ()
+  "Read bug number NNNNNN from current line."
+  (tinydebian-bug-nbr-any-in-string
+   (buffer-substring (line-beginning-position) (line-end-position))))
 
 ;;; ----------------------------------------------------------------------
 ;;;
@@ -1564,16 +1598,24 @@ If optional REGEXP is sebt, it must take number in submatch 1."
 (defun tinydebian-bug-nbr-any (&rest args)
   "Try various methods to find bug tracking number. Ignore ARGS.
 At current point, current line, headers of the mail message
-(CC, To, Subject), forward from point, whole buffer."
-  (or (tinydebian-bug-nbr-at-current-point)
-      (tinydebian-bug-nbr-current-line)
-      (tinydebian-email-cc-to-bug-nbr)
-      (tinydebian-email-subject-bug-nbr)
-      (tinydebian-bug-nbr-forward)
-      (tinydebian-bug-nbr-buffer)
-      (tinydebian-bug-hash-forward)
-      (tinydebian-bug-hash-buffer)
-      (tinydebian-bug-nbr-any-at-current-point)))
+\(CC, To, Subject), forward from point, whole buffer."
+  (cond
+   ((eq major-mode 'gnus-summary-mode)
+    (or (tinydebian-bug-nbr-at-current-point)
+	(tinydebian-bug-nbr-current-line)
+	;; !A [  40: Foo Bar ] <subject content>
+	(tinydebian-bug-nbr-any-in-string
+	 (tinydebian-gnus-summary-mode-summary-line))))
+   (t
+    (or (tinydebian-bug-nbr-at-current-point)
+	(tinydebian-bug-nbr-current-line)
+	(tinydebian-email-cc-to-bug-nbr)
+	(tinydebian-email-subject-bug-nbr)
+	(tinydebian-bug-nbr-forward)
+	(tinydebian-bug-nbr-buffer)
+	(tinydebian-bug-hash-forward)
+	(tinydebian-bug-hash-buffer)
+	(tinydebian-bug-nbr-any-at-current-point)))))
 
 ;;; ----------------------------------------------------------------------
 ;;;

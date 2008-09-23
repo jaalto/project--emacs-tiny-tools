@@ -1,3 +1,19 @@
+2008-09-23  Jari Aalto  <jari.aalto@cante.net>
+
+	* tiny/tinydebian.el (tinydebian-bug-nbr-any): In Gnus Summary
+	buffer, search only current header line.
+	(tinydebian-bug-nbr-any-in-string): New.
+	(tinydebian-bug-nbr-any-at-current-line): New.
+	(tinydebian-bug-nbr-any-at-current-point): Move code to
+	`tinydebian-bug-nbr-any-in-string'.
+	(tinydebian-gnus-summary-mode-summary-line): New.
+
+2008-09-21  Jari Aalto  <jari.aalto@cante.net>
+
+	* tiny/tinydebian.el (tinydebian-bug-ubuntu-p): Detect Ubuntu
+	bug Subject line in Summary buffer.
+	(tinydebian-bug-url): Correct Ubuntu bug URL.
+
 2008-09-18  Jari Aalto  <jari.aalto@cante.net>
 
 	* tiny/tinydebian.el (tinydebian-bts-mail-ctrl-forwarded-main):
