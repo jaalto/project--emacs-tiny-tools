@@ -1,3 +1,14 @@
+2008-09-27  Jari Aalto  <jari.aalto@cante.net>
+
+	* tiny/tinydebian.el (tinydebian-bug-ubuntu-p): Return bug number.
+	(tinydebian-bug-sourceforge-p): New.
+	(tinydebian-bug-browse-url-by-bug): Check return value
+	of `tinydebian-bug-url'.
+	(tinydebian-bug-sourceforge-name-to-group-id): New.
+	(tinydebian-macro-retrieve-synchronously): New.
+	(tinydebian-bug-nbr-string): Add Sourceforge support.
+	(tinydebian-bug-sourceforge-string-p): New.
+
 2008-09-23  Jari Aalto  <jari.aalto@cante.net>
 
 	* tiny/tinydebian.el (tinydebian-bug-nbr-any): In Gnus Summary

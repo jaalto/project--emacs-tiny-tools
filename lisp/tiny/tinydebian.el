@@ -83,6 +83,7 @@
 (autoload 'gnus-eval-in-buffer-window   "gnus-util" "" nil 'macro)
 (autoload 'gnus-summary-article-number  "gnus-sum")
 (autoload 'gnus-summary-display-article "gnus-sum")
+(autoload 'url-retrieve-synchronously   "url")
 
 (eval-when-compile (ti::package-use-dynamic-compilation))
 
@@ -1122,7 +1123,7 @@ Variable `package' contains the package name."
 ;;; ----------------------------------------------------------------------
 ;;;
 (put 'tinydebian-with-buffer-macro 'edebug-form-spec '(body))
-(put 'tinydebian-with-buffer-macro 'lisp-indent-function 0)
+(put 'tinydebian-with-buffer-macro 'lisp-indent-function 1)
 (defmacro tinydebian-with-buffer-macro (buffer &rest body)
   "Create BUFFER, empty it and run BODY.
 Variable `buffer' is available in this macro."
@@ -1426,40 +1427,160 @@ At current point, current line, headers of the mail message."
   "Call hook `tinydebian-:find-email-hook' until value returned."
   (run-hook-with-args-until-success 'tinydebian-:find-email-hook))
 
+
+;;; ----------------------------------------------------------------------
+;;;
+(put 'tinydebian-retrieve-synchronously-macro 'edebug-form-spec '(body))
+(put 'tinydebian-retrieve-synchronously-macro 'lisp-indent-function 1)
+(defmacro tinydebian-retrieve-synchronously-macro (url &rest body)
+  "Retrieve URL and run BODY.
+Point is at the beginning. Variable `buffer' is bound.
+The URL buffer is killed at exit."
+  `(let ((buffer (url-retrieve-synchronously url)))
+     (when buffer
+       (prog1
+	   (with-current-buffer buffer
+	     (goto-char (point-min))
+	     ,@body)
+	 (kill-buffer buffer)))))
+
+;;; ----------------------------------------------------------------------
+;;;
+(defun tinydebian-bug-sourceforge-name-to-group-id (project)
+  "Visit PROJECT web page to determine group ID."
+  (let* ((url (format "http://sourceforge.net/projects/%s" project)))
+    (tinydebian-retrieve-synchronously-macro url
+      (if (re-search-forward
+	   (concat
+	    (regexp-quote "/project/showfiles.php?group_id=")
+	    "\\([0-9]+\\)")
+	   nil t)
+	  (match-string-no-properties 1)))))
+
+;;; ----------------------------------------------------------------------
+;;;
+(defsubst tinydebian-bug-sourceforge-parse-bug-string (str)
+  "Parse STR foo-Bugs-2040281 and return list (PROJECT BUG)."
+  (if (string-match "\\([^ \t\r\n]+\\)-Bugs-\\([0-9]+\\)" str)
+      (list (match-string-no-properties 1 str)
+	    (match-string-no-properties 2 str))))
+
+;;; ----------------------------------------------------------------------
+;;;
+(defun tinydebian-bug-sourceforge-url-1 (project bug)
+  "Return URL for PROJECT name and its BUG number.
+This function needs network connection."
+  ;; foo-Bugs-2040281
+  (let ((group-id (tinydebian-bug-sourceforge-name-to-group-id project))
+	url
+	atid)
+    (when group-id
+      (setq url
+	    (format
+	     (concat "https://sourceforge.net/tracker/?&aid=%s"
+		     "&group_id=%s")
+	     bug group-id))
+      ;;  href="/tracker/?group_id=95606&amp;atid=611982">Bugs</a></li>
+      (tinydebian-retrieve-synchronously-macro url
+	(if (re-search-forward
+	     (concat
+	      (regexp-quote
+	       "/tracker/?group_id=95606&amp;atid=")
+	      "\\([0-9]+\\)"
+	      ".*> *Bugs *</a>")
+	     nil t)
+	    (setq atid (match-string-no-properties 1))))
+      (when atid
+	(setq url (format "%s&atid=%s&func=detail" url atid)))
+      url)))
+
+;;; ----------------------------------------------------------------------
+;;;
+(defun tinydebian-bug-sourceforge-url-main (str)
+  "Return URL for STR foo-Bugs-2040281"
+  (multiple-value-bind (project bug)
+      (tinydebian-bug-sourceforge-parse-bug-string str)
+    (when bug
+      (tinydebian-bug-sourceforge-url-1 project bug))))
+
+;;; ----------------------------------------------------------------------
+;;;
+(defsubst tinydebian-bug-sourceforge-string-p (str)
+  "Test if STR looks like Sourceforge bug."
+  (if (string-match
+       (concat
+	;; "Sourceforge.*"
+	"\\([a-zA-Z]+-Bugs-"
+	"[0-9][0-9][0-9]+\\)")
+       str)
+      (match-string-no-properties 1 str)))
+
+;;; ----------------------------------------------------------------------
+;;;
+(defun tinydebian-bug-sourceforge-p ()
+  "Check if bug context is Sourceforge."
+  (cond
+   ((eq major-mode 'gnus-summary-mode)
+    (let ((str (buffer-substring (line-beginning-position)
+				 (line-end-position))))
+      ;; [ 120: SourceForge.net        ] [ foo-Bugs-2040281 ]
+      (tinydebian-bug-sourceforge-string-p str)))
+   (t
+    (save-excursion
+      (goto-char (point-min))
+      (if (re-search-forward "https?://sourceforge.net/tracker/.*" nil t)
+	  (match-string-no-properties 1))))))
+
 ;;; ----------------------------------------------------------------------
 ;;;
 (defsubst tinydebian-bug-ubuntu-p ()
   "Check if bug context is Debian."
   (cond
-   ((string-match "Summary" (buffer-name))
+   ((eq major-mode 'gnus-summary-mode)
     (let ((str (buffer-substring (line-beginning-position)
 				 (line-end-position))))
       ;; [Bug 272680]
-      (string-match
-       (concat
-	"\\[Bug +"
-	"[0-9][0-9][0-9]"
-	"[0-9][0-9][0-9]"
-	"\\]")
-       str)))
+      (if (string-match
+	   (concat
+	    "\\[Bug +"
+	    "[0-9][0-9][0-9]"
+	    "[0-9][0-9][0-9]"
+	    "\\]")
+	   str)
+	  (match-string-no-properties 1))))
    (t
     (save-excursion
       (goto-char (point-min))
-      (re-search-forward "[0-9]@bugs.launchpad.net" nil t)))))
+      (if (re-search-forward "\\([0-9]+\\)@bugs.launchpad.net" nil t)
+	  (match-string-no-properties 1))))))
 
 ;;; ----------------------------------------------------------------------
 ;;;
 (defun tinydebian-bug-url (bug)
-  "Return correct bug URL for BUG."
-  (if (tinydebian-bug-ubuntu-p)
+  "Return correct bug URL for BUG.
+
+NOTE: only works in standard Gnus Summary or Article buffer. This
+function looks around surrounding Email text to determine what is
+the proper bug destionation: Sourceforge, Ubuntu or Debian."
+  (let (ret
+	project
+	group-id
+	str)
+    (cond
+     ((setq str (tinydebian-bug-sourceforge-p))
+      (if (string-match "http" str)
+	  str
+	(tinydebian-bug-sourceforge-url-main str)))
+     ((tinydebian-bug-ubuntu-p)
       (format "https://bugs.launchpad.net/bugs/%s"
-             (if (numberp bug)
-                 (int-to-string bug)
-               bug))
-    (format "http://bugs.debian.org/%s"
-	    (if (numberp bug)
-		(int-to-string bug)
-	      bug))))
+	      (if (numberp bug)
+		  (int-to-string bug)
+		bug))
+      (bug
+       (format "http://bugs.debian.org/%s"
+	       (if (numberp bug)
+		   (int-to-string bug)
+		 bug)))))))
 
 ;;; ----------------------------------------------------------------------
 ;;;
@@ -1482,10 +1603,13 @@ At current point, current line, headers of the mail message."
 ;;;
 (defun tinydebian-bug-nbr-string (str)
   "Read bug nbr from STR."
-  (or (and (string-match "#\\([0-9]+\\)" str)
+  (or (and (string-match "#\\([0-9]+\\)" str)  ;; Bug#NNNN Debian
            (match-string 1 str))
       ;; [Bug 192841] Ubuntu
       (and (string-match "[[]Bug \\([0-9]+\\)[]]" str)
+           (match-string 1 str))
+      ;; [foo-Bugs-192841] Sourceforge
+      (and (string-match "[[] *[a-zA-Z]+-Bugs-\\([0-9]+\\) *[]]" str)
            (match-string 1 str))
       (multiple-value-bind (bug)
           (tinydebian-bug-string-parse-wnpp-alert str)
@@ -1826,8 +1950,11 @@ At current point, current line, headers of the mail message
 ;;; ----------------------------------------------------------------------
 ;;;
 (defun tinydebian-bug-browse-url-by-bug (bug &optional file)
-  "Browse by BUG number. Optionally save bug report to FILE.
-  A prefix argument in interactive mode prompts for FILE to save."
+  "Browse by Debian BUG number. Optionally save bug report to FILE.
+  A prefix argument in interactive mode prompts for FILE to save.
+
+NOTE: This function is designed to work only in Gnus Summary and
+Article buffers."
   (interactive
    (let* ((prev (get 'tinydebian-bug-browse-url-by-bug 'file))
           (dir  (if prev
@@ -1850,14 +1977,16 @@ At current point, current line, headers of the mail message
     (if file
         (setq tinydebian-:browse-url-function
               (function tinydebian-browse-url-lynx-dump)))
-    (tinydebian-browse-url-1 (tinydebian-bug-url bug))
-    (if file
-        (with-current-buffer (get-buffer tinydebian-:buffer-www)
-          (write-region (point-min) (point-max) file)
-          (if (interactive-p)
-              (message "Wrote %s" file))
-          file)
-      tinydebian-:buffer-www)))
+    (let ((url (tinydebian-bug-url bug)))
+      (when url
+	(tinydebian-browse-url-1 url)
+	(if file
+	    (with-current-buffer (get-buffer tinydebian-:buffer-www)
+	      (write-region (point-min) (point-max) file)
+	      (if (interactive-p)
+		  (message "Wrote %s" file))
+	      file)
+	  tinydebian-:buffer-www)))))
 
 ;;; ----------------------------------------------------------------------
 ;;;
