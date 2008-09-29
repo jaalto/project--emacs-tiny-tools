@@ -1,3 +1,14 @@
+2008-09-29  Jari Aalto  <jari.aalto@cante.net>
+
+	* tiny/tinydebian.el (tinydebian-bug-ubuntu-p): Add `str'
+	to `match-string-no-properties'.
+
+2008-09-28  Jari Aalto  <jari.aalto@cante.net>
+
+	* tiny/tinydebian.el (tinydebian-trim-blanks): New.
+	(tinydebian-bug-url): Correct last `cond' statement.
+	(tinydebian-bug-browse-url-by-bug): Use `tinydebian-trim-blanks'.
+
 2008-09-27  Jari Aalto  <jari.aalto@cante.net>
 
 	* tiny/tinydebian.el (tinydebian-bug-ubuntu-p): Return bug number.
@@ -8,6 +19,9 @@
 	(tinydebian-macro-retrieve-synchronously): New.
 	(tinydebian-bug-nbr-string): Add Sourceforge support.
 	(tinydebian-bug-sourceforge-string-p): New.
+	(tinydebian-bts-mail-ctrl-forward-main): Set
+	`message-reply-buffer', so that C-c C-y can insert original
+	message.
 
 2008-09-23  Jari Aalto  <jari.aalto@cante.net>
 
