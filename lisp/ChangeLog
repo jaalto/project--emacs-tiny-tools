@@ -1,3 +1,15 @@
+2008-10-17  Jari Aalto  <jari.aalto@cante.net>
+
+	* tiny/tinydebian.el (tinydebian-command-show-wnpp-alert):
+	Fix infinite loop.
+	(tinydebian-command-show-wnpp-alert-format): Fix parse
+	error %d => %2.
+	(tinydebian-wnpp-alert-mode): New.
+	(tinydebian-wnpp-alert-mode-map-activate): New.
+	(tinydebian-wnpp-alert-default-mode-bindings): New.
+	(tinydebian-:wnpp-alert-mode-name): New.
+	(tinydebian-:wnpp-alert-mode-hook): New.
+
 2008-09-29  Jari Aalto  <jari.aalto@cante.net>
 
 	* tiny/tinydebian.el (tinydebian-bug-ubuntu-p): Add `str'

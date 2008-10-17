@@ -161,6 +161,17 @@ See function `tinydebian-command-wnpp-alert'."
   :type  'string
   :group 'TinyDebian)
 
+(defcustom tinydebian-:wnpp-alert-mode-name "TwnppAlert"
+  "*Editing mode for WNPP alert buffer."
+  :type  'string
+  :group 'TinyDebian)
+
+(defcustom tinydebian-:wnpp-alert-mode-hook
+  '(tinydebian-wnpp-alert-default-mode-bindings)
+  "*Hook run after the `tinydebian-wnpp-alert-mode' is turned on."
+  :type  'hook
+  :group 'TinyDesk)
+
 (defcustom tinydebian-:buffer-www "*Tinydebian WWW*"
   "*Buffer name where to put WWW call results.
 See `tinydebian-:browse-url-function'."
@@ -212,6 +223,9 @@ See `tinydebian-buffer-url-bug'."
 ;;{{{ setup: -- private
 
 ;;; ....................................................... &v-private ...
+
+(defvar tinydebian-:wnpp-alert-mode-map nil
+  "Local keymap for WNPP alert listing.")
 
 (defvar tinydebian-:font-lock-keywords-adaptive-date t
   "Flag to signal that current time is used to display today's log.
@@ -2061,6 +2075,36 @@ Article buffers."
 
 ;;; ----------------------------------------------------------------------
 ;;;
+(defun tinydebian-wnpp-alert-default-mode-bindings ()
+  "Define default key bindings to `tinydebian-:wnpp-alert-mode-map'."
+  (define-key tinydebian-:wnpp-alert-mode-map
+    (kbd "RET") 'tinydebian-bug-browse-url-by-bug))
+
+;;; ----------------------------------------------------------------------
+;;;
+(defsubst tinydebian-wnpp-alert-mode-map-activate ()
+  "Use local \\{tinydebian-:wnpp-alert-mode-map} on this buffer."
+  (use-local-map tinydebian-:wnpp-alert-mode-map))
+
+;;; ----------------------------------------------------------------------
+;;;
+;;;###autolaod
+(defun tinydebian-wnpp-alert-mode (&rest ignore)
+  "Turn on WNPP alert mode. IGNORE all arguments.
+
+Mode description:
+
+\\{tinydebian-:wnpp-alert-mode-map}"
+  (interactive)
+  (setq mode-name   tinydebian-:wnpp-alert-mode-name)
+  (setq major-mode 'tinydebian-wnpp-alert-mode)
+  (unless tinydebian-:wnpp-alert-mode-map
+    (setq tinydebian-:wnpp-alert-mode-map (make-sparse-keymap)))
+  (run-hooks 'tinydebian-:wnpp-alert-mode-hook)
+  (tinydebian-wnpp-alert-mode-map-activate))
+
+;;; ----------------------------------------------------------------------
+;;;
 (defun tinydebian-command-show-wnpp-alert-format ()
   "Convert lines to more readable format from current point.
 
@@ -2077,7 +2121,7 @@ Article buffers."
 	     "\\([a-z]+\\) +\\([0-9]+\\) +\\([^ \t\r\n]+\\)"
 	     " +-- +\\(.*\\)")))
     (while (re-search-forward re nil t)
-      (replace-match (format "%-3s %d %-12s -- %s"
+      (replace-match (format "%-3s %s %-12s -- %s"
 			     (match-string 1)
 			     (match-string 2)
 			     (match-string 3)
@@ -2097,13 +2141,14 @@ Article buffers."
 	       bin))
      (t
       (tinydebian-with-buffer-macro
-	tinydebian-:buffer-wnpp-alert
+	  tinydebian-:buffer-wnpp-alert
 	(message "TinyDebian: wait, running %s..." path)
 	(tinydebian-call-process path)
 	(message "TinyDebian: wait, running %s... Done." path)
 	(goto-char (point-min))
 	(save-excursion
-	  (tinydebian-command-show-wnpp-alert))
+	  (tinydebian-command-show-wnpp-alert-format))
+	(tinydebian-wnpp-alert-mode)
 	(turn-on-tinydebian-bts-mode)
 	(display-buffer buffer)
 	buffer)))))
