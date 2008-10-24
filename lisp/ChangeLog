@@ -1,3 +1,8 @@
+2008-10-24  Jari Aalto  <jari.aalto@cante.net>
+
+	* tiny/tinylisp.el (tinylisp-property-show-mode): Fix turning off.
+	  Remove `tinylisp-property-post-command' from local hook.
+
 2008-10-17  Jari Aalto  <jari.aalto@cante.net>
 
 	* tiny/tinydebian.el (tinydebian-command-show-wnpp-alert):

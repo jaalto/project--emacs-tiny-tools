@@ -4958,7 +4958,9 @@ VERB                    verbose flag"
       (when verb
         (message
          "TinyLisp: Property show mode is on %s"
-         (if (equal arg '(64)) "(RECORDING)" "")))
+         (if (equal arg '(64))
+	     "(RECORDING)"
+	   "")))
       ;; (make-local-hook 'post-command-hook)
       (add-hook 'post-command-hook
 		'tinylisp-property-post-command
@@ -4966,8 +4968,11 @@ VERB                    verbose flag"
 		'local))
      (t
       (tinylisp-post-command-config 'restore)
-      (remove-hook 'post-command-hook 'tinylisp-property-post-command)
-      (if verb (message "TinyLisp: Property show mode is off"))))))
+      (remove-hook 'post-command-hook
+		   'tinylisp-property-post-command
+		   'local)
+      (if verb
+	  (message "TinyLisp: Property show mode is off"))))))
 
 ;;}}}
 ;;{{{ Snooping
