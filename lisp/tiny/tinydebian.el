@@ -36,6 +36,7 @@
 ;;   Put this file on your Emacs-Lisp `load-path', add following into your
 ;;   $HOME/.emacs startup file
 ;;
+;;      (setq tinydebian-:novice-mode nil)
 ;;      (add-hook 'tinydebian-:load-hook 'tinydebian-install)
 ;;      (require 'tinydebian)
 ;;
@@ -84,6 +85,8 @@
 (autoload 'gnus-summary-article-number  "gnus-sum")
 (autoload 'gnus-summary-display-article "gnus-sum")
 (autoload 'url-retrieve-synchronously   "url")
+(autoload 'mail-position-on-field	"sendmail")
+(autoload 'mail-fetch-field		"sendmail")
 
 (eval-when-compile (ti::package-use-dynamic-compilation))
 
@@ -104,6 +107,12 @@
 ;;{{{ setup: hooks
 
 ;;; ......................................................... &v-hooks ...
+
+(defcustom tinydebian-:novice-mode t
+  "*If nil, do no hand-holding. Thi removed all extra help
+messages inserted e.g. in BTS control send message templates."
+  :type  'boolean
+  :group 'TinyDebian)
 
 (defcustom tinydebian-:load-hook nil
   "*Hook run when file has been loaded."
@@ -170,7 +179,7 @@ See function `tinydebian-command-wnpp-alert'."
   '(tinydebian-wnpp-alert-default-mode-bindings)
   "*Hook run after the `tinydebian-wnpp-alert-mode' is turned on."
   :type  'hook
-  :group 'TinyDesk)
+  :group 'TinyDebian)
 
 (defcustom tinydebian-:buffer-www "*Tinydebian WWW*"
   "*Buffer name where to put WWW call results.
@@ -942,6 +951,7 @@ Mode description:
      (define-key map  "cs"  'tinydebian-bts-mail-ctrl-severity)
      (define-key map  "ct"  'tinydebian-bts-mail-ctrl-tags)
      (define-key map  "cT"  'tinydebian-bts-mail-ctrl-usertag)
+     (define-key map  "cx"  'tinydebian-bts-mail-ctrl-fixed)
 
      ;;  (U)RLs
      (define-key map  "ub"  'tinydebian-url-bts-ctrl-page)
@@ -1017,6 +1027,7 @@ Install `font-lock-keywords' for log files."
 ;;;###autoload
 (defun tinydebian-install-in-buffers (&optional uninstall)
   "Install or UNINSTALL `tinydebiab-bts-mode' in existing buffers.
+Run also `tinydebian-mail-mode-debian-default-keybindings' in all mail buffer.
 Activate on Gnus summary and article modes if there is word 'Debian'.
 Activate on files whose path matches
 `tinydebian-:install-buffer-file-name-regexp'."
@@ -1027,6 +1038,10 @@ Activate on files whose path matches
     (dolist (buffer (buffer-list))
       (let (doit)
 	(with-current-buffer buffer
+	  (when (memq major-mode '(message-mode mail-mode))
+	    (if uninstall
+		(turn-off-tinydebian-bts-mode)
+	      (turn-on-tinydebian-bts-mode)))
 	  (cond
 	   ((and (stringp buffer-file-name)
 		 (string-match tinydebian-:install-buffer-file-name-regexp
@@ -1065,7 +1080,12 @@ Activate on files whose path matches
    (uninstall
     ;; (remove-hook 'write-file-hooks 'tinydebian-auto-save)
     (tinydebian-install-font-lock-keywords 'uninstall)
-    (remove-hook 'find-file-hooks 'tinydebian-find-file-hooks)
+    (remove-hook 'message-mode-hook
+		 'turn-on-tinydebian-mail-mode)
+    (remove-hook 'mail-mode-hook
+		 'turn-on-tinydebian-mail-mode)
+    (remove-hook 'find-file-hooks
+		 'tinydebian-find-file-hooks)
     (remove-hook 'gnus-summary-prepare-hook
 		 'tinydebian-bts-mode-gnus-summary-maybe-turn-on)
     (remove-hook 'gnus-article-prepare-hook
@@ -1074,7 +1094,12 @@ Activate on files whose path matches
    (t
     ;; (add-hook 'write-file-hooks 'tinydebian-auto-save)
     (tinydebian-install-font-lock-keywords)
-    (add-hook 'find-file-hooks  'tinydebian-find-file-hooks)
+    (add-hook 'message-mode-hook
+	      'turn-on-tinydebian-mail-mode)
+    (add-hook 'mail-mode-hook
+	      'turn-on-tinydebian-mail-mode)
+    (add-hook 'find-file-hooks
+	      'tinydebian-find-file-hooks)
     (add-hook 'gnus-summary-prepare-hook
 	      'tinydebian-bts-mode-gnus-summary-maybe-turn-on)
     (add-hook 'gnus-article-prepare-hook
@@ -1100,7 +1125,7 @@ Activate on files whose path matches
 ;;; ----------------------------------------------------------------------
 ;;;
 (defmacro tinydebian-launchpad-email-compose (address)
-  "Send message to Launchpad at ADDRESS."
+  "Send message to ADDRESS@<launchpad>."
   `(format "%s@%s" ,address tinydebian-:launchpad-email-address))
 
 ;;; ----------------------------------------------------------------------
@@ -1111,13 +1136,13 @@ Activate on files whose path matches
 ;;; ----------------------------------------------------------------------
 ;;;
 (defmacro tinydebian-list-email-compose (address)
-  "Send message to Debian mailing list at ADDRESS."
+  "Send message to ADDRESS@<debian mailing list>."
   `(format "%s@%s" ,address tinydebian-:list-email-address))
 
 ;;; ----------------------------------------------------------------------
 ;;;
 (defmacro tinydebian-bts-email-compose (address)
-  "Send message to Debian BTS at ADDRESS."
+  "Send message to ADDRESS@<debian bts>."
   `(format "%s@%s" ,address tinydebian-:bts-email-address))
 
 ;;; ----------------------------------------------------------------------
@@ -1129,6 +1154,28 @@ Activate on files whose path matches
 ;;;
 (defsubst tinydebian-bts-email-control ()
   (tinydebian-bts-email-compose "control"))
+
+;;; ----------------------------------------------------------------------
+;;;
+(defsubst tinydebian-bts-email-quiet-compose (bug)
+  "Compose BUG-quiet, where BUG can be number or string."
+  (if (numberp bug)
+      (format "%d-quiet" bug)
+    (format "%s-quiet" bug)))
+
+;;; ----------------------------------------------------------------------
+;;;
+(defsubst tinydebian-bts-email-quiet-remove (email)
+  "Modify ADDRESS NNNN-quie@example.com to simply NNNN@example.com address"
+  (when (and (stringp email)
+	     (string-match "\\([^ \t\r\n]+\\)-quiet\\(@.+\\)" email))
+  (format "%s%s" (match-string 1 email) (match-string 2 email))))
+
+;;; ----------------------------------------------------------------------
+;;;
+(defsubst tinydebian-bts-email-quiet (bug)
+  (tinydebian-bts-email-compose
+   (tinydebian-bts-email-quiet-compose bug)))
 
 ;;; ----------------------------------------------------------------------
 ;;;
@@ -1424,7 +1471,7 @@ Optional: SEARCH-ON DISTRIBUTION SECTION."
 ;;;
 (defun tinydebian-email-field-from ()
   "Read From: field and return email."
-  (let* ((str (mail-fetch-field "From")))
+  (let ((str (mail-fetch-field "From")))
     (or (and str
 	     (tinydebian-email-at-line str)))))
 
@@ -1432,7 +1479,7 @@ Optional: SEARCH-ON DISTRIBUTION SECTION."
 ;;;
 (defun tinydebian-email-field-to ()
   "Read To: field and return email."
-  (let* ((str (mail-fetch-field "To")))
+  (let ((str (mail-fetch-field "To")))
     (or (and str
 	     (tinydebian-email-at-line str)))))
 
@@ -1452,7 +1499,6 @@ At current point, current line, headers of the mail message."
 (defsubst tinydebian-email-search ()
   "Call hook `tinydebian-:find-email-hook' until value returned."
   (run-hook-with-args-until-success 'tinydebian-:find-email-hook))
-
 
 ;;; ----------------------------------------------------------------------
 ;;;
@@ -1629,33 +1675,34 @@ the proper bug destionation: Sourceforge, Ubuntu or Debian."
 ;;;
 (defun tinydebian-bug-nbr-string (str)
   "Read bug nbr from STR."
-  (or (and (string-match "#\\([0-9]+\\)" str)  ;; Bug#NNNN Debian
-	   (match-string 1 str))
-      ;; [Bug 192841] Ubuntu
-      (and (string-match "[[]Bug \\([0-9]+\\)[]]" str)
-	   (match-string 1 str))
-      ;; [foo-Bugs-192841] Sourceforge
-      (and (string-match "[[] *[a-zA-Z]+-Bugs-\\([0-9]+\\) *[]]" str)
-	   (match-string 1 str))
-      (multiple-value-bind (bug)
-	  (tinydebian-bug-string-parse-wnpp-alert str)
-	bug)
-      ;;   NNNN@bugs.debian.org
-      (and (string-match (concat "\\([0-9]+\\)\\(?:-[a-z]+\\)?@"
-				 tinydebian-:bts-email-address)
-			 str)
-	   (match-string 1 str))
-      ;;   BTS message lines: "owner NNNNNN"
-      (and (string-match (concat "\\([0-9]+\\)\\(?:-[a-z]+\\)?@"
-				 ;; FIXME: Use variable
-				 "bugs.launchpad.net")
-			 str)
-	   (match-string 1 str))
-      ;;   BTS message lines: "owner NNNNNN"
-      (and (string-match (concat "\\<\\(?:owner\\|retitle\\) "
-				 "\\([0-9][0-9][0-9][0-9][0-9][0-9]\\)\\>")
-			 str)
-	   (match-string 1 str))))
+  (when (stringp str)
+    (or (and (string-match "#\\([0-9]+\\)" str)	;; Bug#NNNN Debian
+	     (match-string 1 str))
+	;; [Bug 192841] Ubuntu
+	(and (string-match "[[]Bug \\([0-9]+\\)[]]" str)
+	     (match-string 1 str))
+	;; [foo-Bugs-192841] Sourceforge
+	(and (string-match "[[] *[a-zA-Z]+-Bugs-\\([0-9]+\\) *[]]" str)
+	     (match-string 1 str))
+	(multiple-value-bind (bug)
+	    (tinydebian-bug-string-parse-wnpp-alert str)
+	  bug)
+	;;   NNNN@bugs.debian.org
+	(and (string-match (concat "\\([0-9]+\\)\\(?:-[a-z]+\\)?@"
+				   tinydebian-:bts-email-address)
+			   str)
+	     (match-string 1 str))
+	;;   BTS message lines: "owner NNNNNN"
+	(and (string-match (concat "\\([0-9]+\\)\\(?:-[a-z]+\\)?@"
+				   ;; FIXME: Use variable
+				   "bugs.launchpad.net")
+			   str)
+	     (match-string 1 str))
+	;;   BTS message lines: "owner NNNNNN"
+	(and (string-match (concat "\\<\\(?:owner\\|retitle\\) "
+				   "\\([0-9][0-9][0-9][0-9][0-9][0-9]\\)\\>")
+			   str)
+	     (match-string 1 str)))))
 
 ;;; ----------------------------------------------------------------------
 ;;;
@@ -1671,10 +1718,11 @@ the proper bug destionation: Sourceforge, Ubuntu or Debian."
 ;;;
 (defsubst tinydebian-bug-nbr-any-in-string (string)
   "Read bug number NNNNNN from STRING."
-  (if (string-match
-       "\\([^0-9]\\|^\\)\\([0-9][0-9][0-9][0-9][0-9][0-9]\\)$"
-       string)
-      (match-string 2 string)))
+  (when (stringp string)
+    (if (string-match
+	 "\\([^0-9]\\|^\\)\\([0-9][0-9][0-9][0-9][0-9][0-9]\\)$"
+	 string)
+	(match-string 2 string))))
 
 ;;; ----------------------------------------------------------------------
 ;;;
@@ -2152,6 +2200,297 @@ Mode description:
 	(turn-on-tinydebian-bts-mode)
 	(display-buffer buffer)
 	buffer)))))
+
+;;}}}
+;;{{{ Mail: message-mode, mail-mode
+
+;;; ----------------------------------------------------------------------
+;;;
+(defsubst tinydebian-mail-address-list (header)
+  "Return list of addresses in HEADER."
+  (let* ((str  (mail-fetch-field header))
+	 (list (and str
+		    (split-string str "[ \t\r\n]*,[ \t\r\n]*"))))
+    list))
+
+;;; ----------------------------------------------------------------------
+;;;
+(defsubst tinydebian-mail-header-matches (header re)
+  "Return list of addresses from HEADER matching RE."
+  (let (list)
+    (dolist (elt (tinydebian-mail-address-list header))
+      (when (string-match re elt)
+	(push elt list)))
+    list))
+
+;;; ----------------------------------------------------------------------
+;;;
+(defsubst tinydebian-mail-header-not-matches (header re)
+  "Return list of addresses from HEADER not matching RE."
+  (let (list)
+    (dolist (elt (tinydebian-mail-address-list header))
+      (unless (string-match re elt)
+	(push elt list)))
+    list))
+
+;;; ----------------------------------------------------------------------
+;;;
+(defsubst tinydebian-mail-address-match-p (re)
+  "Check of Headers To or Cc have addresses matching RE."
+  (or (tinydebian-mail-header-matches "To" re)
+      (tinydebian-mail-header-matches "Cc" re)))
+
+;;; ----------------------------------------------------------------------
+;;;
+(defun tinydebian-mail-address-match-type-p (type &optional bug)
+  "Check if TYPE@ address is already set. Optional bug checks BUG-TYPE@ address."
+  (let ((re (if (not bug)
+		(format "%s@" type)
+	      (format  "%s-%s@"
+		       (if (numberp bug)
+			   (int-to-string bug)
+			 bug)
+		       type))))
+    (tinydebian-mail-address-match-p re)))
+
+;;; ----------------------------------------------------------------------
+;;;
+(defsubst tinydebian-mail-address-match-quiet-p (&optional bug)
+  (tinydebian-mail-address-match-type-p "quiet" bug))
+
+;;; ----------------------------------------------------------------------
+;;;
+(defsubst tinydebian-mail-address-match-maintonly-p (&optional bug)
+  (tinydebian-mail-address-match-type-p "maintonly" bug))
+
+;;; ----------------------------------------------------------------------
+;;;
+(defsubst tinydebian-mail-address-match-submitter-p (&optional bug)
+  (tinydebian-mail-address-match-type-p "submitter" bug))
+
+;;; ----------------------------------------------------------------------
+;;;
+(defsubst tinydebian-mail-address-match-bug-p (&optional bug)
+  (tinydebian-mail-address-match-type-p "%s@" bug))
+
+;;; ----------------------------------------------------------------------
+;;;
+(defsubst tinydebian-mail-address-match-control-p (&optional bug)
+  "Check if control address is already set."
+  (tinydebian-mail-address-match-p "control@"))
+
+;;; ----------------------------------------------------------------------
+;;;
+(defun tinydebian-mail-header-set (header value)
+  "Set HEADER to VALUE. if VALUE is nil, remove field."
+  (save-restriction
+    (mail-position-on-field header)
+    (mail-header-narrow-to-field)
+    (cond
+     ((stringp value)
+      (re-search-forward "^[^ \t\r\n]+: ?")
+      (delete-region (point) (point-max))
+      (insert value)
+      (if (not (string-match "\n\\'" value))
+	  (insert "\n")))
+     (t
+      (delete-region (point-min) (point-max))))))
+
+;;; ----------------------------------------------------------------------
+;;;
+(defun tinydebian-mail-header-remove-item (header re)
+  "Remove from To or Cc HEADER all items matching RE."
+  (let ((field (mail-fetch-field header))
+	list)
+    (when (and field
+	       (string-match re field))
+      (setq field nil)
+      (if (setq list (tinydebian-mail-header-not-matches header re))
+	  (setq field
+		(mapconcat 'concat
+			   (tinydebian-mail-header-not-matches header re)
+			   ", x")))
+      ;; We must not remove "To: field
+      (if (and (null field)
+	       (string-match "To" header))
+	  (setq field ""))
+      (tinydebian-mail-header-set header field)
+      t)))
+
+;;; ----------------------------------------------------------------------
+;;;
+(defsubst tinydebian-mail-header-send-remove-item-regexp (re)
+  "Rmeove from headers To and CC items matching RE."
+  (or (tinydebian-mail-header-remove-item "To" re)
+      (tinydebian-mail-header-remove-item "Cc" re)))
+
+;;; ----------------------------------------------------------------------
+;;;
+(defun tinydebian-mail-mode-debian-address-add (header email)
+  "Add EMAIL to Cc header."
+  (unless (tinydebian-mail-address-match-p (regexp-quote email))
+    (let ((cc (mail-fetch-field header)))
+      (setq cc
+	    (if (and cc
+		     (string-match "@" cc))
+		;; Append to field
+		(format "%s, %s" cc email)
+	      ;; New field
+	      email))
+      (tinydebian-mail-header-set header cc))))
+
+;;; ----------------------------------------------------------------------
+;;;
+(defun tinydebian-mail-mode-debian-address-quiet-add (bug)
+  "Add BUG-quiet address."
+  (interactive (list (tinydebian-bts-mail-ask-bug-number "Bug")))
+  (let* ((email (tinydebian-bts-email-compose bug)))
+    (tinydebian-mail-header-send-remove-item-regexp email)
+    (tinydebian-mail-mode-debian-address-add
+     "To"
+     (tinydebian-bts-email-quiet bug))))
+
+;;; ----------------------------------------------------------------------
+;;;
+(defun tinydebian-mail-mode-debian-address-quiet-remove (bug)
+  "Remove BUG-quiet address, that is, convert to standard bug address."
+  (interactive (list (tinydebian-bts-mail-ask-bug-number "Bug")))
+  (let* ((re    (format "%s@\\|%s-quiet@" bug bug)))
+    (tinydebian-mail-header-send-remove-item-regexp re)
+    (tinydebian-mail-mode-debian-address-add
+     "To"
+     (tinydebian-bts-email-compose bug))))
+
+;;; ----------------------------------------------------------------------
+;;;
+(defun tinydebian-mail-mode-debian-address-quiet-toggle (bug &optional remove)
+  "Add NNN-quiet address or optionally REMOVE.
+In interactive call, toggle quiet address on and off."
+  (interactive
+   (list
+    (tinydebian-bts-mail-ask-bug-number "Quiet bug")
+    current-prefix-arg))
+  ;; toggle
+  (when (interactive-p)
+    (let ((quiet-p (tinydebian-mail-address-match-quiet-p bug)))
+      (unless remove
+	(if quiet-p
+	    (setq remove t)))))
+  (save-excursion
+    (cond
+     (remove
+      (tinydebian-mail-mode-debian-address-quiet-remove bug))
+     (t
+      (tinydebian-mail-mode-debian-address-quiet-add bug)))))
+
+;;; ----------------------------------------------------------------------
+;;;
+(defun tinydebian-mail-mode-debian-address-email-add (email)
+  "Add email."
+  (tinydebian-mail-mode-debian-address-add "To" email))
+
+;;; ----------------------------------------------------------------------
+;;;
+(defun tinydebian-mail-mode-debian-address-email-remove (email)
+  "Remove email."
+  (tinydebian-mail-header-send-remove-item-regexp email))
+
+;;; ----------------------------------------------------------------------
+;;;
+(defun tinydebian-mail-mode-debian-address-type-toggle
+  (type &optional remove interactive)
+  "Add TYPE off address (control, maintonly, submitter). Optionally REMOVE.
+In interactive call, toggle TYPE of address on and off."
+  ;; toggle
+  (when interactive
+    (when (and (null remove)
+	       (tinydebian-mail-address-match-type-p type))
+      (setq remove t)))
+  (save-excursion
+    (let ((email (tinydebian-bts-email-compose type)))
+      (cond
+       (remove
+	(tinydebian-mail-mode-debian-address-email-remove email))
+       (t
+	(tinydebian-mail-mode-debian-address-email-add email))))))
+
+;;; ----------------------------------------------------------------------
+;;;
+(defun tinydebian-mail-mode-debian-address-control-toggle (&optional remove)
+  "Add control address or optionally REMOVE.
+In interactive call, toggle conrol address on and off."
+  (interactive "P")
+  ;; toggle
+  (tinydebian-mail-mode-debian-address-type-toggle
+   "control" remove (interactive-p)))
+
+;;; ----------------------------------------------------------------------
+;;;
+(defun tinydebian-mail-mode-debian-address-submitter-toggle (&optional remove)
+  "Add submitter address or optionally REMOVE.
+In interactive call, toggle conrol address on and off."
+  (interactive "P")
+  ;; toggle
+  (tinydebian-mail-mode-debian-address-type-toggle
+   "submitter" remove (interactive-p)))
+
+;;; ----------------------------------------------------------------------
+;;;
+(defun tinydebian-mail-mode-debian-address-maintonly-toggle (&optional remove)
+  "Add maintonly address or optionally REMOVE.
+In interactive call, toggle conrol address on and off."
+  (interactive "P")
+  ;; toggle
+  (tinydebian-mail-mode-debian-address-type-toggle
+   "maintonly" remove (interactive-p)))
+
+;;; ----------------------------------------------------------------------
+;;;
+(defsubst tinydebian-mail-mode-map-activate ()
+  "Use local \\{tinydebian-:mail-mode-map} on this buffer."
+  (use-local-map tinydebian-:mail-mode-map))
+
+(eval-and-compile
+
+;;;###autoload (autoload 'tinydebian-mail-mode          "tinydebian" "" t)
+;;;###autoload (autoload 'turn-on-tinydebian-mail-mode  "tinydebian" "" t)
+;;;###autoload (autoload 'turn-off-tinydebian-mail-mode "tinydebian" "" t)
+;;;###autoload (defvar tinydebian-:mail-mode-prefix-key "\C-c-")
+  (ti::macrof-minor-mode-wizard
+   "tinydebian-mail-" " Tbts" "\C-c." "Tbts" 'TinyDebian "tinydebian-:mail-" ;1-6
+
+   "Debian Bug Tracking System (BTS) Minor mode. This mode helps
+composing the BTS messages in mail send buffer.
+
+Prefix key is:
+
+  tinydebian-:mail-mode-prefix-key
+
+Mode description:
+
+\\{tinydebian-:mail-mode-prefix-map}"
+
+   "TinyDebian BTS mail send mode"
+   nil
+   "TinyDebian BTS mail send minor mode menu."
+   (list
+    tinydebian-:mail-mode-easymenu-name
+    ["Toggle Control"     tinydebian-mail-mode-debian-address-control-toggle   t]
+    ["Toggle Quiet"       tinydebian-mail-mode-debian-address-quiet-toggle     t]
+    ["Toggle Submitter"   tinydebian-mail-mode-debian-address-submitter-toggle t]
+    ["Toggle Maintonly"   tinydebian-mail-mode-debian-address-maintonly-toggle t]
+
+;;     "----"
+;;     (list
+
+;;      ["Send BTS ITA: intent to adopt"      tinydebian-bts-mail-type-ita    t]
+     )
+
+   (progn
+     (define-key map  "c"  'tinydebian-mail-mode-debian-address-control-toggle)
+     (define-key map  "m"  'tinydebian-mail-mode-debian-address-maintonly-toggle)
+     (define-key map  "q"  'tinydebian-mail-mode-debian-address-submitter-toggle)
+     (define-key map  "s"  'tinydebian-mail-mode-debian-address-submitter-toggle))))
 
 ;;}}}
 ;;{{{ BTS URL pages
@@ -2788,7 +3127,9 @@ thanks
 
 "
 	    bug
-	    tag-string))))
+	    tag-string))
+   (when (re-search-backward "[+]" nil t)
+     (forward-char 2))))
 
 ;;; ----------------------------------------------------------------------
 ;;;
@@ -2836,16 +3177,35 @@ thanks
 
 ;;; ----------------------------------------------------------------------
 ;;;
-(defun tinydebian-bts-mail-ctrl-reopen (bug)
-  "Compose BTS control message a BUG and reopen it."
+(defun tinydebian-bts-mail-ctrl-retitle (bug title)
+  "Compose BTS control message to a BUG and change TITLE."
+  (interactive
+   (list (tinydebian-bts-mail-ask-bug-number)
+	 (read-string "New title: ")))
+  (tinydebian-bts-mail-type-macro
+   nil nil nil
+   (format "Reassign Bug#%s" bug)
+   (insert
+    (format "\
+retitle %s %s
+thanks
+
+"
+	    bug
+	    title))))
+
+;;; ----------------------------------------------------------------------
+;;;
+(defun tinydebian-bts-mail-ctrl-fixed (bug)
+  "Compose BTS control message to mark BUG fixed."
   (interactive
    (list (tinydebian-bts-mail-ask-bug-number)))
   (tinydebian-bts-mail-type-macro
    nil nil nil
-   (format "Reopen Bug#%s" bug)
+   (format "Fixed Bug#%s" bug)
    (insert
     (format "\
-reopen %s !
+fixed %s <version>
 thanks
 
 "
@@ -2929,13 +3289,13 @@ Version: %s
   (tinydebian-bts-mail-type-macro
    nil nil nil
    (format "Debian Bug#%s -- forwarded upstream" bug)
-   (insert
-    (format "\
-forwarded %s <http://upstream.example.com/bug-tracking/nbr>
-thanks
-
-"
-	    bug))))
+   (let (point)
+     (insert (format "forwarded %s " bug))
+     (setq point (point))
+     (if tinydebian-:novice-mode
+	 (insert "<http://upstream.example.com/bug-tracking/nbr>"))
+     (insert "thanks\n")
+     (goto-char point))))
 
 ;;; ----------------------------------------------------------------------
 ;;;
@@ -2950,17 +3310,16 @@ thanks
 					 (format " to package %s"
 						 package)
 				       ""))
-   (insert
-    (format "\
-forwarded %s %s
-thanks
-
-"
-	    bug
-	    (if (and package
-		     (not (string= "" package)))
-		package
-	      "<add upstream Bug tracker submission URL here>")))))
+   (let (point)
+     (insert (format "forwarded %s " bug))
+     (setq point (point))
+     (if (and package
+	      (not (string= "" package)))
+	 (insert package)
+       (if tinydebian-:novice-mode
+	   (insert "<add upstream Bug tracker submission URL here>")))
+     (insert "\nthanks\n")
+     (goto-char point))))
 
 ;;; ----------------------------------------------------------------------
 ;;;

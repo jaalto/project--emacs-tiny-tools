@@ -1,3 +1,51 @@
+2008-10-31  Jari Aalto  <jari.aalto@cante.net>
+
+	* tiny/tinydebian.el (tinydebian-bts-mail-ctrl-fixed): New.
+	(tinydebian-bts-email-quiet): New.
+	(tinydebian-bug-nbr-any-in-string): Check STRING.
+	(tinydebian-bug-nbr-string): Check STR.
+	(tinydebian-mail-header-matches): New.
+	(tinydebian-mail-address-match-quiet-p): New.
+	(tinydebian-bts-email-quiet-compose): New.
+	(tinydebian-bts-email-quiet-remove): New.
+	(tinydebian-mail-header-not-matches): New.
+	(tinydebian-mail-header-set): New.
+	(tinydebian-mail-mode-debian-address-quiet-control): New.
+	(tinydebian-mail-address-match-p): New.
+	(tinydebian-mail-address-match-control-p): New.
+	(tinydebian-mail-mode-debian-address-add-cc): New.
+	(tinydebian-mail-mode-debian-address-quiet-add): New.
+	(tinydebian-mail-header-send-remove-item-regexp): New
+	(tinydebian-mail-address-match-type-p): New.
+	(tinydebian-mail-address-match-maintonly-p): New.
+	(tinydebian-mail-address-match-submitter-p): New.
+	(tinydebian-mail-mode-debian-address-control-add): New.
+	(tinydebian-mail-mode-debian-address-control-remove): New.
+	(tinydebian-mail-mode-debian-address-control-toggle): New.
+	(tinydebian-mail-mode-debian-address-type-toggle): New.
+	(tinydebian-install): Install
+	`tinydebian-mail-mode-debian-default-keybindings'.
+	(tinydebian-install-in-buffers): Run
+	`tinydebian-mail-mode-debian-default-keybindings'.
+	(tinydebian-:mail-mode-prefix-key): New.
+	(tinydebian-:mail-mode-map): New.
+	(tinydebian-:mail-mode-name): New.
+	(tinydebian-:mail-mode-hook): New.
+	(tinydebian-mail-mode-default-mode-bindings): New.
+	(tinydebian-mail-mode-map-activate): New.
+	(tinydebian-bts-mail-ctrl-tags): Position cursor at better place.
+	(tinydebian-bts-mail-ctrl-forward-bts): Position cursor at better place.
+	(tinydebian-:expert-mode): New.
+	(tinydebian-bts-mail-ctrl-forwarded-main): Position cursor at better place.
+	(tinydebian-mail-mode): New minor mode for `message-mode' and `mail-mode' to
+	manupulate control, quiet, submitter and maintonly addresses.
+
+2008-10-30  Jari Aalto  <jari.aalto@cante.net>
+
+	* tiny/tinydebian.el
+	(tinydebian-mail-mode-default-keybindings): New.
+	(tinydebian-mail-mode-address-quiet): New.
+
 2008-10-24  Jari Aalto  <jari.aalto@cante.net>
 
 	* tiny/tinylisp.el (tinylisp-property-show-mode): Fix turning off.
