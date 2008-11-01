@@ -438,15 +438,13 @@ backport the change or too minor to be worth bothering).")
      "This bug affects support for large files (over 2 gigabytes).")
     ("l10n"
      "This bug is relevant to the localisation of the package.")
-    ("woody"
-     "This bug particularly applies to the (unreleased) woody distribution.")
-    ("sarge"
-     "This bug particularly applies to the sarge distribution.")
-    ("etch"
-     "This bug particularly applies to the etch distribution.")
-    ("sid"
-     "This bug particularly applies to an architecture that is
-currently unreleased (that is, in the sid distribution).")
+;;     ("sarge"
+;;      "This bug particularly applies to the sarge distribution.")
+;;     ("etch"
+;;      "This bug particularly applies to the etch distribution.")
+;;     ("sid"
+;;      "This bug particularly applies to an architecture that is
+;; currently unreleased (that is, in the sid distribution).")
     ("experimental"
      "This bug particularly applies to the experimental distribution."))
   "Each bug can have zero or more of a set of given tags.
@@ -831,7 +829,10 @@ Mode description:
    (list
     tinydebian-:bts-mode-easymenu-name
     ["Reply to bug"                  tinydebian-bts-mail-type-reply            t]
-    ["Report bug by mail"            tinydebian-bug-report-mail                t]
+    ["Report a new bug"              tinydebian-bug-report-mail                t]
+
+    "----"
+
     ["Goto URL by bug number"        tinydebian-bug-browse-url-by-bug          t]
     ["Goto URL by package bugs"      tinydebian-bug-browse-url-by-package-bugs t]
     ["Goto URL by package name"      tinydebian-bug-browse-url-by-package-name t]
@@ -857,6 +858,7 @@ Mode description:
      ["Send BTS Ctrl usertag"              tinydebian-bts-mail-ctrl-usertag  t]
      ["Send BTS Ctrl forward"              tinydebian-bts-mail-ctrl-forward-main  t]
      ["Send BTS Ctrl forwarded"            tinydebian-bts-mail-ctrl-forwarded-main  t]
+     ["Send BTS Ctrl fixed"                tinydebian-bts-mail-ctrl-fixed    t]
      ["Send BTS Ctrl reassign"             tinydebian-bts-mail-ctrl-reassign t]
      ["Send BTS Ctrl retitle"              tinydebian-bts-mail-ctrl-retitle  t]
      ["Send BTS Ctrl reopen"               tinydebian-bts-mail-ctrl-reopen   t]
@@ -2414,12 +2416,12 @@ Remove addresses by RE."
 
 ;;; ----------------------------------------------------------------------
 ;;;
-(defun tinydebian-mail-mode-debian-address-ask-bug (&optional msg)
+(defun tinydebian-mail-mode-debian-address-ask-bug ()
   "Return bug number form To or Cc or ask with MSG."
   (let ((nbr (tinydebian-email-cc-to-bug-nbr)))
     (if nbr
 	nbr
-      (tinydebian-bts-mail-ask-bug-number (or msg "Bug")))))
+      (tinydebian-bts-mail-ask-bug-number))))
 
 ;;; ----------------------------------------------------------------------
 ;;;
@@ -2479,16 +2481,6 @@ In interactive call, toggle TYPE of address on and off."
 
 ;;; ----------------------------------------------------------------------
 ;;;
-(defun tinydebian-mail-mode-debian-address-control-toggle (&optional remove)
-  "Add control address or optionally REMOVE.
-In interactive call, toggle conrol address on and off."
-  (interactive "P")
-  ;; toggle
-  (tinydebian-mail-mode-debian-address-type-toggle
-   "control" nil remove (interactive-p)))
-
-;;; ----------------------------------------------------------------------
-;;;
 (defun tinydebian-mail-mode-debian-address-submitter-toggle (bug &optional remove)
   "Add submitter address or optionally REMOVE.
 In interactive call, toggle conrol address on and off."
@@ -2496,6 +2488,35 @@ In interactive call, toggle conrol address on and off."
   ;; toggle
   (tinydebian-mail-mode-debian-address-type-toggle
    "submitter" bug remove (interactive-p)))
+
+;;; ----------------------------------------------------------------------
+;;;
+(defun tinydebian-mail-mode-debian-address-bug-toggle (bug &optional remove)
+  "Add BUG address or optionally REMOVE."
+  (interactive
+   (list
+    (tinydebian-mail-mode-debian-address-ask-bug)
+    current-prefix-arg))
+  (let ((re (format "%s@\\|%s-\\(close\\|quiet\\)@" bug bug)))
+    (when (interactive-p)
+      (when (and (null remove)
+		 (tinydebian-mail-address-match-p re))
+	(setq remove t)))
+    (if remove
+	(tinydebian-mail-header-send-remove-item-regexp re)
+      (tinydebian-mail-mode-debian-address-add-standard-bug
+       bug
+       (format re bug)))))
+
+;;; ----------------------------------------------------------------------
+;;;
+(defun tinydebian-mail-mode-debian-address-control-toggle (&optional remove)
+  "Add control address or optionally REMOVE.
+In interactive call, toggle conrol address on and off."
+  (interactive "P")
+  ;; toggle
+  (tinydebian-mail-mode-debian-address-type-toggle
+   "control" nil remove (interactive-p)))
 
 ;;; ----------------------------------------------------------------------
 ;;;
@@ -2547,17 +2568,9 @@ In interactive call, toggle conrol address on and off."
 
 ;;; ----------------------------------------------------------------------
 ;;;
-(defun tinydebian-bts-mail-ctrl-command-finalize-add ()
-  "Add 'finalize' marker if it is missing.
-Return point if marker was added."
-  (let ((point (tinydebian-bts-mail-ctrl-finalize-position)))
-    (unless point
-      (goto-char (point-min))
-      (re-search-forward		;Signals error if not found
-       (concat "^" (regexp-quote mail-header-separator)))
-      (goto-char (point-max))
-      (insert "thanks\n")
-      (point))))
+(defsubst tinydebian-bts-mail-ctrl-command-finalize-add ()
+  "Add 'finalize' marker."
+  (insert "thanks\n"))
 
 ;;; ----------------------------------------------------------------------
 ;;;
@@ -2604,7 +2617,7 @@ Return point if marker was added."
   (let (point)
     (tinydebian-bts-mail-ctrl-command-goto-body-start)
     (unless (setq point (tinydebian-bts-mail-ctrl-finalize-position))
-      (setq point (tinydebian-bts-mail-ctrl-command-finalize-add)))
+      (error "No control command finalize marker 'thanks' found"))
     (save-restriction
       (narrow-to-region (point) point)
       (flush-lines re))))
@@ -2622,6 +2635,9 @@ Return point if marker was added."
 (defun tinydebian-bts-mail-ctrl-command-add (string &optional re)
   "Add STRING containing control command.
 If optional RE is non-nil, remove all command lines matching RE"
+  (unless (tinydebian-bts-mail-ctrl-finalize-position)
+    (tinydebian-bts-mail-ctrl-command-goto-body-start)
+    (tinydebian-bts-mail-ctrl-command-finalize-add))
   (if re
       (tinydebian-bts-mail-ctrl-command-remove re))
   (tinydebian-bts-mail-ctrl-command-insert string))
@@ -2701,13 +2717,23 @@ If optional RE is non-nil, remove all command lines matching RE"
 
 ;;; ----------------------------------------------------------------------
 ;;;
-(defun tinydebian-bts-mail-ctrl-command-forward (bug uri)
+(defun tinydebian-bts-mail-ctrl-command-forwarded (bug uri)
   "Mark BUG forwarded to URI."
   (interactive
    (list
     (tinydebian-mail-mode-debian-address-ask-bug)
     (read-string "Forward to URI: ")))
   (tinydebian-bts-mail-ctrl-command-add-macro "forwarded" bug uri))
+
+;;; ----------------------------------------------------------------------
+;;;
+(defun tinydebian-bts-mail-ctrl-command-fixed (bug version)
+  "Mark BUG fixed in VERSION."
+  (interactive
+   (list
+    (tinydebian-mail-mode-debian-address-ask-bug)
+    (read-string "Fixed in version: ")))
+  (tinydebian-bts-mail-ctrl-command-add-macro "fixed" bug version))
 
 ;;; ----------------------------------------------------------------------
 ;;;
@@ -2751,27 +2777,37 @@ Mode description:
    "TinyDebian BTS mail send minor mode menu."
    (list
     tinydebian-:mail-mode-easymenu-name
-    ["Toggle Control"     tinydebian-mail-mode-debian-address-control-toggle   t]
-    ["Toggle Quiet"       tinydebian-mail-mode-debian-address-quiet-toggle     t]
-    ["Toggle Submitter"   tinydebian-mail-mode-debian-address-submitter-toggle t]
-    ["Toggle Maintonly"   tinydebian-mail-mode-debian-address-maintonly-toggle t]
+    ["Address Bug"         tinydebian-mail-mode-debian-address-bug-toggle       t]
+    ["Address Control"     tinydebian-mail-mode-debian-address-control-toggle   t]
+    ["Address Quiet"       tinydebian-mail-mode-debian-address-quiet-toggle     t]
+    ["Address Close"       tinydebian-mail-mode-debian-address-close-toggle     t]
+    ["Address Submitter"   tinydebian-mail-mode-debian-address-submitter-toggle t]
+    ["Address Maintonly"   tinydebian-mail-mode-debian-address-maintonly-toggle t]
 
-    (list
-     "BTS Control messages"
-     ["Send BTS Ctrl close"                tinydebian-bts-mail-ctrl-close    t]
-     ["Send BTS Ctrl severity"             tinydebian-bts-mail-ctrl-severity t]
-     ["Send BTS Ctrl tags"                 tinydebian-bts-mail-ctrl-tags     t]
-     ["Send BTS Ctrl usertag"              tinydebian-bts-mail-ctrl-usertag  t]
-     ["Send BTS Ctrl forward"              tinydebian-bts-mail-ctrl-forward-main  t]
-     ["Send BTS Ctrl forwarded"            tinydebian-bts-mail-ctrl-forwarded-main  t]
-     ["Send BTS Ctrl reassign"             tinydebian-bts-mail-ctrl-reassign t]
-     ["Send BTS Ctrl retitle"              tinydebian-bts-mail-ctrl-retitle  t]
-     ["Send BTS Ctrl reopen"               tinydebian-bts-mail-ctrl-reopen   t]
-     ["Send BTS Ctrl merge"                tinydebian-bts-mail-ctrl-merge    t])
+    "----"
 
-     )
+    ["Goto URL by bug number"        tinydebian-bug-browse-url-by-bug          t]
+    ["Goto URL by package bugs"      tinydebian-bug-browse-url-by-package-bugs t]
+    ["Goto URL by package name"      tinydebian-bug-browse-url-by-package-name t]
+
+    "----"
+
+;;;    ["Send BTS Ctrl close"      tinydebian-bts-mail-ctrl-command-close    t]
+    ["Send BTS Ctrl severity"   tinydebian-bts-mail-ctrl-command-severity t]
+    ["Send BTS Ctrl tags"       tinydebian-bts-mail-ctrl-command-tags     t]
+    ["Send BTS Ctrl usertag"    tinydebian-bts-mail-ctrl-command-usertag  t]
+    ["Send BTS Ctrl forward"    tinydebian-bts-mail-ctrl-command-forwarded  t]
+;;;    ["Send BTS Ctrl forwarded"  tinydebian-bts-mail-ctrl-command-forward  t]
+    ["Send BTS Ctrl fixed"      tinydebian-bts-mail-ctrl-command-fixed    t]
+    ["Send BTS Ctrl reassign"   tinydebian-bts-mail-ctrl-command-reassign t]
+    ["Send BTS Ctrl retitle"    tinydebian-bts-mail-ctrl-command-retitle  t]
+;;;    ["Send BTS Ctrl reopen"     tinydebian-bts-mail-ctrl-command-reopen   t]
+    ["Send BTS Ctrl merge"      tinydebian-bts-mail-ctrl-command-merge    t]
+
+    )
 
    (progn
+     (define-key map  "b"  'tinydebian-mail-mode-debian-address-bug-toggle)
      (define-key map  "t"  'tinydebian-mail-mode-debian-address-control-toggle)
      (define-key map  "m"  'tinydebian-mail-mode-debian-address-maintonly-toggle)
      (define-key map  "o"  'tinydebian-mail-mode-debian-address-close-toggle)
@@ -2779,16 +2815,16 @@ Mode description:
      (define-key map  "s"  'tinydebian-mail-mode-debian-address-submitter-toggle)
 
      ;;  (C)ontrol commands
-;;      (define-key map  "cf"  'tinydebian-bts-mail-ctrl-forwarded-main)
-      (define-key map  "cF"  'tinydebian-bts-mail-ctrl-control-forward)
-      (define-key map  "cm"  'tinydebian-bts-mail-ctrl-control-merge)
-;;      (define-key map  "co"  'tinydebian-bts-mail-ctrl-reopen)
+;;      (define-key map  "cf"  'tinydebian-bts-mail-ctrl-command-forward)
+      (define-key map  "cF"  'tinydebian-bts-mail-ctrl-command-forwarded)
+      (define-key map  "cm"  'tinydebian-bts-mail-ctrl-command-merge)
+;;      (define-key map  "co"  'tinydebian-bts-mail-ctrl-command-reopen)
       (define-key map  "cr"  'tinydebian-bts-mail-ctrl-command-reassign)
      (define-key map  "cR"  'tinydebian-bts-mail-ctrl-command-retitle)
      (define-key map  "cs"  'tinydebian-bts-mail-ctrl-command-severity)
      (define-key map  "ct"  'tinydebian-bts-mail-ctrl-command-tags)
-;;      (define-key map  "cT"  'tinydebian-bts-mail-ctrl-usertag)
-;;      (define-key map  "cx"  'tinydebian-bts-mail-ctrl-fixed)
+     (define-key map  "cT"  'tinydebian-bts-mail-ctrl-command-usertag)
+     (define-key map  "cx"  'tinydebian-bts-mail-ctrl-command-fixed)
 
      )))
 

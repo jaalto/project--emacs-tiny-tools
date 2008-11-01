@@ -40,6 +40,10 @@
 	(tinydebian-bts-mail-ctrl-command-retitle): New.
 	(tinydebian-bts-mail-ctrl-command-tags): New.
 	(tinydebian-bts-mail-ctrl-command-usertag): New.
+	(tinydebian-mail-mode-debian-address-bug): New.
+	(tinydebian-mail-mode-debian-address-bug-toggle): New.
+	(tinydebian-:tags-list): Remove woody, sid, sarge etc.
+	(tinydebian-bts-mail-ctrl-command-fixed): New.x
 
 2008-10-31  Jari Aalto  <jari.aalto@cante.net>
 
