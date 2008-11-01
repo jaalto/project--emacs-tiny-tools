@@ -32,6 +32,14 @@
 	(tinydebian-bts-mail-ctrl-tags): Change arg TAG-STRING to
 	TAG-LIST.
 	(tinydebian-mail-mode-debian-address-ask-bug): New.
+	(tinydebian-bts-mail-ctrl-command-add-macro): New.
+	(tinydebian-bts-ctrl-list-ask): New.
+	(tinydebian-bts-mail-ctrl-command-merge): New.
+	(tinydebian-bts-mail-ctrl-command-forward): New.
+	(tinydebian-bts-mail-ctrl-command-reassign): New.
+	(tinydebian-bts-mail-ctrl-command-retitle): New.
+	(tinydebian-bts-mail-ctrl-command-tags): New.
+	(tinydebian-bts-mail-ctrl-command-usertag): New.
 
 2008-10-31  Jari Aalto  <jari.aalto@cante.net>
 
