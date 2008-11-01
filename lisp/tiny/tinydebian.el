@@ -87,6 +87,7 @@
 (autoload 'url-retrieve-synchronously   "url")
 (autoload 'mail-position-on-field	"sendmail")
 (autoload 'mail-fetch-field		"sendmail")
+(autoload 'regexp-opt                   "regexp-opt")
 
 (eval-when-compile (ti::package-use-dynamic-compilation))
 
@@ -1131,6 +1132,7 @@ Activate on files whose path matches
 ;;; ----------------------------------------------------------------------
 ;;;
 (defsubst tinydebian-launchpad-email-new ()
+  "Compose new."
   (tinydebian-launchpad-email-compose "new"))
 
 ;;; ----------------------------------------------------------------------
@@ -1141,18 +1143,34 @@ Activate on files whose path matches
 
 ;;; ----------------------------------------------------------------------
 ;;;
-(defmacro tinydebian-bts-email-compose (address)
+(defmacro tinydebian-bts-email-compose-1 (address)
   "Send message to ADDRESS@<debian bts>."
   `(format "%s@%s" ,address tinydebian-:bts-email-address))
 
 ;;; ----------------------------------------------------------------------
 ;;;
+(defsubst tinydebian-bts-email-compose (address &optional bug)
+   (when (string-match "submitter\\|maintonly\\|quiet\\|close" address)
+     (cond
+      ((string-match "[0-9]-" address)
+       t) ;; Looks like correct address
+      (bug
+       (setq address (format "%s-%s" bug address)))
+      (t
+       (error "Can't compose NNNN-ADDRESS from values `%s' `%s'"
+	      address bug))))
+   (tinydebian-bts-email-compose-1 address))
+
+;;; ----------------------------------------------------------------------
+;;;
 (defsubst tinydebian-bts-email-submit ()
+  "Compose submit."
   (tinydebian-bts-email-compose "submit"))
 
 ;;; ----------------------------------------------------------------------
 ;;;
 (defsubst tinydebian-bts-email-control ()
+  "Compose control."
   (tinydebian-bts-email-compose "control"))
 
 ;;; ----------------------------------------------------------------------
@@ -2341,50 +2359,6 @@ Mode description:
 
 ;;; ----------------------------------------------------------------------
 ;;;
-(defun tinydebian-mail-mode-debian-address-quiet-add (bug)
-  "Add BUG-quiet address."
-  (interactive (list (tinydebian-bts-mail-ask-bug-number "Bug")))
-  (let* ((email (tinydebian-bts-email-compose bug)))
-    (tinydebian-mail-header-send-remove-item-regexp email)
-    (tinydebian-mail-mode-debian-address-add
-     "To"
-     (tinydebian-bts-email-quiet bug))))
-
-;;; ----------------------------------------------------------------------
-;;;
-(defun tinydebian-mail-mode-debian-address-quiet-remove (bug)
-  "Remove BUG-quiet address, that is, convert to standard bug address."
-  (interactive (list (tinydebian-bts-mail-ask-bug-number "Bug")))
-  (let* ((re    (format "%s@\\|%s-quiet@" bug bug)))
-    (tinydebian-mail-header-send-remove-item-regexp re)
-    (tinydebian-mail-mode-debian-address-add
-     "To"
-     (tinydebian-bts-email-compose bug))))
-
-;;; ----------------------------------------------------------------------
-;;;
-(defun tinydebian-mail-mode-debian-address-quiet-toggle (bug &optional remove)
-  "Add NNN-quiet address or optionally REMOVE.
-In interactive call, toggle quiet address on and off."
-  (interactive
-   (list
-    (tinydebian-bts-mail-ask-bug-number "Quiet bug")
-    current-prefix-arg))
-  ;; toggle
-  (when (interactive-p)
-    (let ((quiet-p (tinydebian-mail-address-match-quiet-p bug)))
-      (unless remove
-	(if quiet-p
-	    (setq remove t)))))
-  (save-excursion
-    (cond
-     (remove
-      (tinydebian-mail-mode-debian-address-quiet-remove bug))
-     (t
-      (tinydebian-mail-mode-debian-address-quiet-add bug)))))
-
-;;; ----------------------------------------------------------------------
-;;;
 (defun tinydebian-mail-mode-debian-address-email-add (email)
   "Add email."
   (tinydebian-mail-mode-debian-address-add "To" email))
@@ -2397,9 +2371,96 @@ In interactive call, toggle quiet address on and off."
 
 ;;; ----------------------------------------------------------------------
 ;;;
+(defun tinydebian-mail-mode-debian-address-manipulate (email &optional re)
+  "Add EMAIL address. Remove addresses matching RE."
+  (if re
+      (tinydebian-mail-header-send-remove-item-regexp re))
+  (tinydebian-mail-mode-debian-address-add
+   "To"
+   email))
+
+;;; ----------------------------------------------------------------------
+;;;
+(defun tinydebian-mail-mode-debian-address-tag-add (bug type &optional re)
+  "Remove BUG-TYPE address. Remove addresses by RE."
+  (tinydebian-mail-mode-debian-address-manipulate
+   (tinydebian-bts-email-compose type bug)
+   re))
+
+;;; ----------------------------------------------------------------------
+;;;
+(defun tinydebian-mail-mode-debian-address-add-standard-bug (bug &optional re)
+  "Add BUG@ address. Remove all other addresses related to BUG.
+Remove addresses by RE."
+  (tinydebian-mail-mode-debian-address-manipulate
+   (tinydebian-bts-email-compose bug)
+   re))
+
+;;; ----------------------------------------------------------------------
+;;;
+(defun tinydebian-mail-mode-debian-address-tag-toggle
+  (bug type &optional remove interactive re)
+  "Add BUG-TYPE address or optionally REMOVE.
+In interactive call, toggle TYPE of address on and off.
+Remove addresses by RE."
+  ;; toggle
+  (when interactive
+    (when (and (null remove)
+	       (tinydebian-mail-address-match-type-p type bug))
+      (setq remove t)))
+  (if remove
+      (tinydebian-mail-mode-debian-address-add-standard-bug bug re)
+    (tinydebian-mail-mode-debian-address-tag-add bug type re)))
+
+;;; ----------------------------------------------------------------------
+;;;
+(defun tinydebian-mail-mode-debian-address-ask-bug (&optional msg)
+  "Return bug number form To or Cc or ask with MSG."
+  (let ((nbr (tinydebian-email-cc-to-bug-nbr)))
+    (if nbr
+	nbr
+      (tinydebian-bts-mail-ask-bug-number (or msg "Bug")))))
+
+;;; ----------------------------------------------------------------------
+;;;
+(defun tinydebian-mail-mode-debian-address-ask-args (&optional msg)
+  "Return bug number and value of `current-prefix-arg'.
+If bug number cannot be determined from To or Cc headers, ask MSG from user."
+  (list
+   (tinydebian-mail-mode-debian-address-ask-bug)
+   current-prefix-arg))
+
+;;; ----------------------------------------------------------------------
+;;;
+(defun tinydebian-mail-mode-debian-address-quiet-toggle (bug &optional remove)
+  "Add NNN-quiet address or optionally REMOVE.
+In interactive call, toggle quiet address on and off."
+  (interactive (tinydebian-mail-mode-debian-address-ask-args "Quiet bug"))
+  (tinydebian-mail-mode-debian-address-tag-toggle
+   bug
+   "quiet"
+   remove
+   (interactive-p)
+   (format "%s@\\|%s-\\(close\\|quiet\\)@" bug bug)))
+
+;;; ----------------------------------------------------------------------
+;;;
+(defun tinydebian-mail-mode-debian-address-close-toggle (bug &optional remove)
+  "Add NNN-close address or optionally REMOVE.
+In interactive call, toggle quiet address on and off."
+  (interactive (tinydebian-mail-mode-debian-address-ask-args "Close bug"))
+  (tinydebian-mail-mode-debian-address-tag-toggle
+   bug
+   "close"
+   remove
+   (interactive-p)
+   (format "%s@\\|%s-\\(close\\|quiet\\)@" bug bug)))
+
+;;; ----------------------------------------------------------------------
+;;;
 (defun tinydebian-mail-mode-debian-address-type-toggle
-  (type &optional remove interactive)
-  "Add TYPE off address (control, maintonly, submitter). Optionally REMOVE.
+  (type &optional bug remove interactive)
+  "Add TYPE off BUG nbr address (control, maintonly, submitter). Optionally REMOVE.
 In interactive call, toggle TYPE of address on and off."
   ;; toggle
   (when interactive
@@ -2407,7 +2468,9 @@ In interactive call, toggle TYPE of address on and off."
 	       (tinydebian-mail-address-match-type-p type))
       (setq remove t)))
   (save-excursion
-    (let ((email (tinydebian-bts-email-compose type)))
+    (let ((email (if bug
+		     (tinydebian-bts-email-compose type bug)
+		   (tinydebian-bts-email-compose type))))
       (cond
        (remove
 	(tinydebian-mail-mode-debian-address-email-remove email))
@@ -2422,27 +2485,191 @@ In interactive call, toggle conrol address on and off."
   (interactive "P")
   ;; toggle
   (tinydebian-mail-mode-debian-address-type-toggle
-   "control" remove (interactive-p)))
+   "control" nil remove (interactive-p)))
 
 ;;; ----------------------------------------------------------------------
 ;;;
-(defun tinydebian-mail-mode-debian-address-submitter-toggle (&optional remove)
+(defun tinydebian-mail-mode-debian-address-submitter-toggle (bug &optional remove)
   "Add submitter address or optionally REMOVE.
 In interactive call, toggle conrol address on and off."
-  (interactive "P")
+  (interactive (tinydebian-mail-mode-debian-address-ask-args "Submitter bug"))
   ;; toggle
   (tinydebian-mail-mode-debian-address-type-toggle
-   "submitter" remove (interactive-p)))
+   "submitter" bug remove (interactive-p)))
 
 ;;; ----------------------------------------------------------------------
 ;;;
-(defun tinydebian-mail-mode-debian-address-maintonly-toggle (&optional remove)
+(defun tinydebian-mail-mode-debian-address-maintonly-toggle (bug &optional remove)
   "Add maintonly address or optionally REMOVE.
 In interactive call, toggle conrol address on and off."
-  (interactive "P")
+  (interactive (tinydebian-mail-mode-debian-address-ask-args "Submitter bug"))
   ;; toggle
   (tinydebian-mail-mode-debian-address-type-toggle
-   "maintonly" remove (interactive-p)))
+   "maintonly" bug remove (interactive-p)))
+
+
+(defvar tinydebian-:bts-mail-ctrl-finalize-line-regexp
+  (concat "^[ \t]*"
+	  (regexp-opt
+	   '("quit"
+	     "stop"
+	     "thank"
+	     "thanks"
+	     "thankyou"
+	     "thank you"))
+	  "[ \t]*$")
+  "Regexp to indicate BTS command end.")
+
+;;; ----------------------------------------------------------------------
+;;;
+(defsubst tinydebian-empty-line ()
+  "Empty current line."
+  (delete-region (line-beginning-position) (line-end-position)))
+
+;;; ----------------------------------------------------------------------
+;;;
+(defun tinydebian-bts-mail-ctrl-finalize-position (&optional point)
+  "At `point-min' or POINT, return positon of command stop marker: thanks etc."
+  (save-excursion
+    (goto-char (or point (point-min)))
+    (when (re-search-forward
+	   tinydebian-:bts-mail-ctrl-finalize-line-regexp
+	   nil t)
+      (match-beginning 0))))
+
+;;; ----------------------------------------------------------------------
+;;;
+(defun tinydebian-bts-mail-ctrl-command-finalize-line-p ()
+  "Check current line is control command end (finalize line)."
+  (string-match
+   tinydebian-:bts-mail-ctrl-finalize-line-regexp
+   (buffer-substring (line-beginning-position) (line-end-position))))
+
+;;; ----------------------------------------------------------------------
+;;;
+(defun tinydebian-bts-mail-ctrl-command-finalize-add ()
+  "Add 'finalize' marker if it is missing.
+Return point if marker was added."
+  (let ((point (tinydebian-bts-mail-ctrl-finalize-position)))
+    (unless point
+      (goto-char (point-min))
+      (re-search-forward		;Signals error if not found
+       (concat "^" (regexp-quote mail-header-separator)))
+      (goto-char (point-max))
+      (insert "thanks\n")
+      (point))))
+
+;;; ----------------------------------------------------------------------
+;;;
+(defun tinydebian-bts-mail-ctrl-command-position (command &optional point)
+  "At `point-min' or POINT, return position of command as list '(BEG END)."
+  (save-excursion
+    (goto-char (or point (point-min)))
+    (when (re-search-forward (format "^\\([ \t]*%s[ \t]*\\)" command) nil t)
+      (list (match-beginning 0) (match-end 0)))))
+
+;;; ----------------------------------------------------------------------
+;;;
+(defun tinydebian-bts-mail-ctrl-command-goto (command)
+  "Goto command."
+  (multiple-value-bind (beg end)
+      (tinydebian-bts-mail-ctrl-command-position command)
+    (if end
+	(goto-char end))))
+
+;;; ----------------------------------------------------------------------
+;;;
+(defun tinydebian-email-body-start-position ()
+  "Return body start position in email."
+  (save-excursion
+    (goto-char (point-min))
+    (when (re-search-forward
+	   (concat "^\\(" (regexp-quote mail-header-separator) "\\)")
+	   nil t)
+      (match-beginning 0))))
+
+;;; ----------------------------------------------------------------------
+;;;
+(defun tinydebian-bts-mail-ctrl-command-goto-body-start ()
+  "Goto start of email body."
+  (goto-char (point-min))
+  (re-search-forward		;Signals error if not found
+   (concat "^" (regexp-quote mail-header-separator)))
+  (forward-line 1))
+
+;;; ----------------------------------------------------------------------
+;;;
+(defun tinydebian-bts-mail-ctrl-command-remove (re)
+  "Remove all command lines matching RE"
+  (let (point)
+    (tinydebian-bts-mail-ctrl-command-goto-body-start)
+    (unless (setq point (tinydebian-bts-mail-ctrl-finalize-position))
+      (setq point (tinydebian-bts-mail-ctrl-command-finalize-add)))
+    (save-restriction
+      (narrow-to-region (point) point)
+      (flush-lines re))))
+
+;;; ----------------------------------------------------------------------
+;;;
+(defun tinydebian-bts-mail-ctrl-command-insert (string)
+  "Insert STRING containing control command at current position."
+  (unless (string-match "\n\\'" string)
+    (setq string (concat string "\n")))
+  (insert string))
+
+;;; ----------------------------------------------------------------------
+;;;
+(defun tinydebian-bts-mail-ctrl-command-add (string &optional re)
+  "Add STRING containing control command.
+If optional RE is non-nil, remove all command lines matching RE"
+  (if re
+      (tinydebian-bts-mail-ctrl-command-remove re))
+  (tinydebian-bts-mail-ctrl-command-insert string))
+
+;;; ----------------------------------------------------------------------
+;;;
+(defun tinydebian-bts-mail-ctrl-command-severity (bug severity)
+  "Add command for BUG SEVERITY."
+  (interactive
+   (list
+    (tinydebian-mail-mode-debian-address-ask-args)
+    (completing-read
+     "BTS severity: "
+     tinydebian-:severity-list
+     nil
+     'match)))
+  (let ((cmd "severity")
+	(str (format "severity %s %s" bug severity)))
+    (tinydebian-bts-mail-ctrl-command-add str "^[ \t]*severity")))
+
+;;; ----------------------------------------------------------------------
+;;;
+(defun tinydebian-bts-mail-ctrl-command-tags (bug tag-list)
+  "Add BUG TAG-LIST."
+  (interactive
+   (list
+    (tinydebian-mail-mode-debian-address-ask-bug)
+    (tinydebian-bts-ctrl-tags-ask)))
+  (let* ((cmd  "tags")
+	 (tags (mapconcat 'concat tag-list " "))
+	 (str  (format "tags %s + %s" bug tags)))
+    (tinydebian-bts-mail-ctrl-command-add str "^[ \t]*tags")))
+
+;;; ----------------------------------------------------------------------
+;;;
+(defun tinydebian-bts-mail-ctrl-command-severity (bug severity)
+  "Add command TAGS."
+  (interactive
+   (list
+    (tinydebian-mail-mode-debian-address-ask-bug)
+    (completing-read
+     "BTS severity: "
+     tinydebian-:severity-list
+     nil
+     'match)))
+  (let ((cmd "severity")
+	(str (format "severity %s %s" bug severity)))
+    (tinydebian-bts-mail-ctrl-command-add str "^[ \t]*severity")))
 
 ;;; ----------------------------------------------------------------------
 ;;;
@@ -2457,7 +2684,7 @@ In interactive call, toggle conrol address on and off."
 ;;;###autoload (autoload 'turn-off-tinydebian-mail-mode "tinydebian" "" t)
 ;;;###autoload (defvar tinydebian-:mail-mode-prefix-key "\C-c-")
   (ti::macrof-minor-mode-wizard
-   "tinydebian-mail-" " Tbts" "\C-c." "Tbts" 'TinyDebian "tinydebian-:mail-" ;1-6
+   "tinydebian-mail-" " Tbts" "\C-c-" "Tbts" 'TinyDebian "tinydebian-:mail-" ;1-6
 
    "Debian Bug Tracking System (BTS) Minor mode. This mode helps
 composing the BTS messages in mail send buffer.
@@ -2480,17 +2707,41 @@ Mode description:
     ["Toggle Submitter"   tinydebian-mail-mode-debian-address-submitter-toggle t]
     ["Toggle Maintonly"   tinydebian-mail-mode-debian-address-maintonly-toggle t]
 
-;;     "----"
-;;     (list
+    (list
+     "BTS Control messages"
+     ["Send BTS Ctrl close"                tinydebian-bts-mail-ctrl-close    t]
+     ["Send BTS Ctrl severity"             tinydebian-bts-mail-ctrl-severity t]
+     ["Send BTS Ctrl tags"                 tinydebian-bts-mail-ctrl-tags     t]
+     ["Send BTS Ctrl usertag"              tinydebian-bts-mail-ctrl-usertag  t]
+     ["Send BTS Ctrl forward"              tinydebian-bts-mail-ctrl-forward-main  t]
+     ["Send BTS Ctrl forwarded"            tinydebian-bts-mail-ctrl-forwarded-main  t]
+     ["Send BTS Ctrl reassign"             tinydebian-bts-mail-ctrl-reassign t]
+     ["Send BTS Ctrl retitle"              tinydebian-bts-mail-ctrl-retitle  t]
+     ["Send BTS Ctrl reopen"               tinydebian-bts-mail-ctrl-reopen   t]
+     ["Send BTS Ctrl merge"                tinydebian-bts-mail-ctrl-merge    t])
 
-;;      ["Send BTS ITA: intent to adopt"      tinydebian-bts-mail-type-ita    t]
      )
 
    (progn
-     (define-key map  "c"  'tinydebian-mail-mode-debian-address-control-toggle)
+     (define-key map  "t"  'tinydebian-mail-mode-debian-address-control-toggle)
      (define-key map  "m"  'tinydebian-mail-mode-debian-address-maintonly-toggle)
-     (define-key map  "q"  'tinydebian-mail-mode-debian-address-submitter-toggle)
-     (define-key map  "s"  'tinydebian-mail-mode-debian-address-submitter-toggle))))
+     (define-key map  "o"  'tinydebian-mail-mode-debian-address-close-toggle)
+     (define-key map  "q"  'tinydebian-mail-mode-debian-address-quiet-toggle)
+     (define-key map  "s"  'tinydebian-mail-mode-debian-address-submitter-toggle)
+
+     ;;  (C)ontrol commands
+;;      (define-key map  "cf"  'tinydebian-bts-mail-ctrl-forward-main)
+;;      (define-key map  "cF"  'tinydebian-bts-mail-ctrl-forwarded-main)
+;;      (define-key map  "cm"  'tinydebian-bts-mail-ctrl-merge)
+;;      (define-key map  "co"  'tinydebian-bts-mail-ctrl-reopen)
+;;      (define-key map  "cr"  'tinydebian-bts-mail-ctrl-reassign)
+;;      (define-key map  "cR"  'tinydebian-bts-mail-ctrl-retitle)
+     (define-key map  "cs"  'tinydebian-bts-mail-ctrl-command-severity)
+     (define-key map  "ct"  'tinydebian-bts-mail-ctrl-command-tags)
+;;      (define-key map  "cT"  'tinydebian-bts-mail-ctrl-usertag)
+;;      (define-key map  "cx"  'tinydebian-bts-mail-ctrl-fixed)
+
+     )))
 
 ;;}}}
 ;;{{{ BTS URL pages
@@ -3077,7 +3328,6 @@ can all be nil."
     (format "\
 severity %s %s
 thanks
-
 "
 	    bug
 	    severity))))
@@ -3096,40 +3346,48 @@ thanks
 usertag %s +
 thanks
 "
-	    bug))))
+	    bug))
+   (when (re-search-backward "[+]" nil t)
+     (forward-char 2))))
 
 ;;; ----------------------------------------------------------------------
 ;;;
-(defun tinydebian-bts-mail-ctrl-tags (bug tag-string)
-  "Compose BTS control message to a BUG with TAG-STRING."
+(defun tinydebian-bts-ctrl-tags-ask ()
+  "Ask list of tags interactively."
+  (let (tag
+	list)
+    (while (or (null tag)
+	       (not (string= "" tag)))
+      (setq tag (completing-read
+		 "BTS tag [RET when done]: "
+		 tinydebian-:tags-list
+		 nil
+		 'match))
+      (unless (string= "" tag)
+	(push tag list)))
+    list))
+
+;;; ----------------------------------------------------------------------
+;;;
+(defun tinydebian-bts-mail-ctrl-tags (bug tag-list)
+  "Compose BTS control message to a BUG with TAG-LIST."
   (interactive
-   (let ((bug (tinydebian-bts-mail-ask-bug-number))
-	 tag
-	 list)
-     (while (or (null tag)
-		(not (string= "" tag)))
-       (setq tag (completing-read
-		  "BTS tag [RET when done]: "
-		  tinydebian-:tags-list
-		  nil
-		  'match))
-       (unless (string= "" tag)
-	 (push tag list)))
-     (list bug
-	   (mapconcat 'concat list " "))))
-  (tinydebian-bts-mail-type-macro
-   nil nil nil
-   (format "Bug#%s change of tags / %s" bug tag-string)
-   (insert
-    (format "\
+   (list (tinydebian-bts-mail-ask-bug-number)
+	 (tinydebian-bts-ctrl-tags-ask)))
+  (let ((tag-string
+	 (mapconcat 'concat tag-list " ")))
+    (tinydebian-bts-mail-type-macro
+	nil nil nil
+	(format "Bug#%s change of tags / %s" bug tag-string)
+      (insert
+       (format "\
 tags %s + %s
 thanks
-
 "
-	    bug
-	    tag-string))
-   (when (re-search-backward "[+]" nil t)
-     (forward-char 2))))
+	       bug
+	       tag-string))
+      (when (re-search-backward "[+]" nil t)
+	(forward-char 2)))))
 
 ;;; ----------------------------------------------------------------------
 ;;;
@@ -3148,7 +3406,6 @@ thanks
     (format "\
 reassign %s %s
 thanks
-
 "
 	    bug
 	    (if (and package
@@ -3166,33 +3423,11 @@ thanks
   (tinydebian-bts-mail-type-macro
    nil nil nil
    (format "Reassign Bug#%s" bug)
-   (insert
-    (format "\
-retitle %s %s
-thanks
-
-"
-	    bug
-	    title))))
-
-;;; ----------------------------------------------------------------------
-;;;
-(defun tinydebian-bts-mail-ctrl-retitle (bug title)
-  "Compose BTS control message to a BUG and change TITLE."
-  (interactive
-   (list (tinydebian-bts-mail-ask-bug-number)
-	 (read-string "New title: ")))
-  (tinydebian-bts-mail-type-macro
-   nil nil nil
-   (format "Reassign Bug#%s" bug)
-   (insert
-    (format "\
-retitle %s %s
-thanks
-
-"
-	    bug
-	    title))))
+   (let (point)
+     (insert (format "retitle %s " bug))
+     (setq point (point))
+     (insert "%s\nthanks\n" title)
+     (goto-char point))))
 
 ;;; ----------------------------------------------------------------------
 ;;;
@@ -3203,13 +3438,13 @@ thanks
   (tinydebian-bts-mail-type-macro
    nil nil nil
    (format "Fixed Bug#%s" bug)
-   (insert
-    (format "\
-fixed %s <version>
-thanks
-
-"
-	    bug))))
+   (let (point)
+     (insert (format "fixed %s " bug))
+     (setq point (point))
+     (if tinydebian-:novice-mode
+	 (insert "<version>"))
+     (insert "\nthanks\n")
+     (goto-char point))))
 
 ;;; ----------------------------------------------------------------------
 ;;;
@@ -3220,13 +3455,13 @@ thanks
   (tinydebian-bts-mail-type-macro
    nil nil nil
    (format "Merge Bug#%s" bug)
-   (insert
-    (format "\
-merge %s <DUPLICATE OF BUG NBR>
-thanks
-
-"
-	    bug))))
+   (let (point)
+     (insert (format "merge %s " bug))
+     (setq point (point))
+     (if tinydebian-:novice-mode
+	 (insert "<bug nbr thatis duplicate of this bug>"))
+     (insert "\nthanks\n")
+     (goto-char point))))
 
 ;;; ----------------------------------------------------------------------
 ;;;

@@ -1,3 +1,38 @@
+2008-11-01  Jari Aalto  <jari.aalto@cante.net>
+
+	* tiny/tinydebian.el (tinydebian-bts-email-compose-1): New.
+	(tinydebian-bts-email-compose): Add arg BUG.
+	(tinydebian-mail-mode-debian-address-close-toggle): New.
+	(tinydebian-mail-mode-debian-address-ask-args): New.
+	(tinydebian-mail-mode-debian-address-quiet-toggle): Rewritten.
+	(tinydebian-mail-mode-debian-address-control-toggle): Rewritten.
+	(tinydebian-mail-mode-debian-address-submitter-toggle): Rewritten.
+	(tinydebian-mail-mode-debian-address-maintonly-toggle): Rewritten.
+	(tinydebian-mail-mode): Prepare for control messages.
+	(tinydebian-mail-mode-debian-address-tag-toggle): Rewritten.
+	(tinydebian-mail-mode-debian-address-add-standard-bug): New.
+	(tinydebian-mail-mode-debian-address-tag-add): New.
+	(tinydebian-mail-mode-debian-address-manipulate): New.
+	(tinydebian-bts-email-compose): Rewritten.
+	(tinydebian-bts-email-compose-1): New lowlevel function.
+	(tinydebian-bts-mail-ctrl-fixed): Support `tinydebian-:novice-mode'.
+	(tinydebian-bts-mail-ctrl-merge): Support `tinydebian-:novice-mode'.
+	(tinydebian-bts-mail-ctrl-retitle): Position point at better location.
+	(tinydebian-bts-mail-ctrl-usertag): Position point at better location.
+	(tinydebian-bts-mail-ctrl-command-position): New.
+	(tinydebian-bts-mail-ctrl-command-goto): New.
+	(tinydebian-bts-mail-ctrl-command-stop): New.
+	(tinydebian-bts-mail-ctrl-command-finalize): New.
+	(tinydebian-:bts-mail-ctrl-finalize-line-regexp): New.
+	(tinydebian-bts-mail-ctrl-command-goto-body-start): New.
+	(tinydebian-empty-line): New.
+	(tinydebian-bts-mail-ctrl-command-finalize-line-p): New.
+	(tinydebian-email-body-start-position): New.
+	(tinydebian-bts-ctrl-tags-ask): New.
+	(tinydebian-bts-mail-ctrl-tags): Change arg TAG-STRING to
+	TAG-LIST.
+	(tinydebian-mail-mode-debian-address-ask-bug): New.
+
 2008-10-31  Jari Aalto  <jari.aalto@cante.net>
 
 	* tiny/tinydebian.el (tinydebian-bts-mail-ctrl-fixed): New.
