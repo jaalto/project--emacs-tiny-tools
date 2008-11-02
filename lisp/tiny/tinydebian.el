@@ -1678,7 +1678,7 @@ the proper bug destionation: Sourceforge, Ubuntu or Debian."
 ;;;
 (defun tinydebian-bug-string-parse-wnpp-alert (str)
   "Parse wnpp-alert(1) like line. Return '(bug package bug-type desc)
-  RFA 321654 debtags -- Enables support for package tags."
+RFA 321654 debtags -- Enables support for package tags."
   (let (case-fold-search)
     (when (string-match
 	   (concat
@@ -1690,6 +1690,44 @@ the proper bug destionation: Sourceforge, Ubuntu or Debian."
        (match-string 3 str)
        (match-string 1 str)
        (match-string 4 str)))))
+
+;;; ----------------------------------------------------------------------
+;;; (tinydebian-bug-string-parse-bts-wnpp-subject "Bug#1111: marked as done (ITA: foo -- desc")
+;;; (tinydebian-bug-string-parse-bts-wnpp-subject "Bug#1111: ITA: foo -- desc")
+;;; (tinydebian-bug-string-parse-bts-wnpp-subject "Processed: retitle 465897 to ITA: foo -- desc")
+(defun tinydebian-bug-string-parse-bts-wnpp-subject (str)
+ "Parse wnpp email Subject orphan line.  Return '(bug package bug-type desc).
+Bug#NNNN: O: package -- description."
+  (let ((case-fold-search t))
+    (cond
+     ((string-match
+       (concat
+	"bug#"
+	"\\([0-9]+\\):[ \t]+"
+	"\\(?:marked as done (\\)?"
+	"\\([A-Z]+\\):[ \t]+"
+	"\\([^ \t\r\n]*\\)[ \t]+-+[ \t]+"
+	"\\(.+\\)")
+       str)
+      (list
+       (match-string 1 str)
+       (match-string 3 str)
+       (match-string 2 str)
+       (match-string 4 str)))
+     ((string-match
+       (concat
+	"Processed:[ \t]+[a-z]+[ \t]+"
+	"\\([0-9]+\\)"
+	"[ \t]+to[ \t]+"
+	"\\([A-Z]+\\):[ \t]+"
+	"\\([^ \t\r\n]*\\)[ \t]+-+[ \t]+"
+	"\\(.+\\)")
+       str)
+      (list
+       (match-string 1 str)
+       (match-string 3 str)
+       (match-string 2 str)
+       (match-string 4 str))))))
 
 ;;; ----------------------------------------------------------------------
 ;;;
@@ -1942,7 +1980,8 @@ At current point, current line, headers of the mail message
 
 ;;; ----------------------------------------------------------------------
 ;;;
-(defun tinydebian-bug-package-name-current-line ()
+(defun tinydebian-bug-package-name-current-line-wnpp-alert ()
+  "Parse wnpp-alert(1) line."
   (let* ((line (buffer-substring-no-properties
 		(line-beginning-position)
 		(line-end-position))))
@@ -1953,9 +1992,22 @@ At current point, current line, headers of the mail message
 
 ;;; ----------------------------------------------------------------------
 ;;;
+(defun tinydebian-bug-package-name-current-line-wnpp-subject ()
+  "PArse BTS Suject line."
+  (let* ((line (buffer-substring-no-properties
+		(line-beginning-position)
+		(line-end-position))))
+    (when line
+      (multiple-value-bind (bug package)
+	  (tinydebian-bug-string-parse-bts-wnpp-subject line)
+	package))))
+
+;;; ----------------------------------------------------------------------
+;;;
 (defun my-debian-bug-package-name-any ()
   "Search package name."
-  (or (tinydebian-bug-package-name-current-line)
+  (or (tinydebian-bug-package-name-current-line-wnpp-alert)
+      (tinydebian-bug-package-name-current-line-wnpp-subject)
       (tinydebian-bug-package-name-header-pool)
       (tinydebian-bug-package-name-header-package)
       (progn
@@ -2700,9 +2752,10 @@ If optional RE is non-nil, remove all command lines matching RE"
 (defun tinydebian-bts-mail-ctrl-command-retitle (bug string)
   "Retitle BUG with STRING."
   (interactive
-   (list
-    (tinydebian-mail-mode-debian-address-ask-bug)
-    (read-string "New title: ")))
+   (let ((subject (mail-fetch-field "Subject")))
+     (list
+      (tinydebian-mail-mode-debian-address-ask-bug)
+      (read-string "New title: " subject))))
   (tinydebian-bts-mail-ctrl-command-add-macro "retitle" bug string))
 
 ;;; ----------------------------------------------------------------------
@@ -3518,8 +3571,19 @@ thanks
 ;;;
 (defun tinydebian-bts-mail-ctrl-reopen (bug)
   "Compose BTS control message to reopen BUG."
-  ;; FIXME: TODO
-  (error "Not yet implemented."))
+  (interactive
+   (list (tinydebian-bts-mail-ask-bug-number)))
+  (tinydebian-bts-mail-type-macro
+   nil nil nil
+   (format "Reopen Bug#%s" bug)
+   (let (point)
+     (insert (format "reopen %s\n" bug))
+     (insert (format "owner %s !\n" bug))
+     (setq point (point))
+     (insert (format "# [For Closed bug] retitle %s IT[AP]: pkg -- description"
+		     bug))
+     (insert "\nthanks\n")
+     (goto-char point))))
 
 ;;; ----------------------------------------------------------------------
 ;;;

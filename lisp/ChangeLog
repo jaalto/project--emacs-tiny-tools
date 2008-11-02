@@ -1,3 +1,9 @@
+2008-11-02  Jari Aalto  <jari.aalto@cante.net>
+
+	* tiny/tinydebian.el (tinydebian-bts-mail-ctrl-reopen): New.
+	(tinydebian-bts-mail-ctrl-command-retitle): Use Subject: as
+	default input string.
+
 2008-11-01  Jari Aalto  <jari.aalto@cante.net>
 
 	* tiny/tinydebian.el (tinydebian-bts-email-compose-1): New.
@@ -44,6 +50,10 @@
 	(tinydebian-mail-mode-debian-address-bug-toggle): New.
 	(tinydebian-:tags-list): Remove woody, sid, sarge etc.
 	(tinydebian-bts-mail-ctrl-command-fixed): New.x
+	(tinydebian-bug-string-parse-bts-wnpp-subject): New.
+	(tinydebian-bug-package-name-current-line-wnpp-subject): New.
+	(my-debian-bug-package-name-any): Use
+	`tinydebian-bug-package-name-current-line-wnpp-subject'.
 
 2008-10-31  Jari Aalto  <jari.aalto@cante.net>
 
