@@ -1,3 +1,8 @@
+2008-11-03  Jari Aalto  <jari.aalto@cante.net>
+
+	* tiny/tinydebian.el (tinydebian-bts-mail-type-ita): Fix indent.
+	(tinydebian-bts-mail-type-itp): Fix indent.
+
 2008-11-02  Jari Aalto  <jari.aalto@cante.net>
 
 	* tiny/tinydebian.el (tinydebian-bts-mail-ctrl-reopen): New.

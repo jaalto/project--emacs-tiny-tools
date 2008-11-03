@@ -3279,20 +3279,21 @@ can all be nil."
 (defun tinydebian-bts-mail-type-ita (bug)
   "Send an ITA request."
   (interactive (list (tinydebian-bts-mail-ask-bug-number "ITA")))
-  (tinydebian-bts-mail-type-macro "ITA" nil nil nil
-				  (insert
-				   (format "\
-  retitle %s %s
-  owner %s !
-  thanks
-  "
-					   bug
-					   (concat "ITA: "
-						   (if package
-						       (format "%s -- " package)
-						     "")
-						   (or description ""))
-					   bug))))
+  (tinydebian-bts-mail-type-macro
+      "ITA" nil nil nil
+    (insert
+     (format "\
+retitle %s %s
+owner %s !
+thanks
+"
+	     bug
+	     (concat "ITA: "
+		     (if package
+			 (format "%s -- " package)
+		       "")
+		     (or description ""))
+	     bug))))
 
 ;;; ----------------------------------------------------------------------
 ;;;
@@ -3300,20 +3301,21 @@ can all be nil."
   "Reposnd to RFP with an ITP request."
   (interactive
    (list (tinydebian-bts-mail-ask-bug-number "ITP response to RFP")))
-  (tinydebian-bts-mail-type-macro "ITP" nil nil nil
-				  (insert
-				   (format "\
-  retitle %s %s
-  owner %s !
-  thanks
-  "
-					   bug
-					   (concat "ITP: "
-						   (if package
-						       (format "%s -- " package)
-						     "")
-						   (or description ""))
-					   bug))))
+  (tinydebian-bts-mail-type-macro
+      "ITP" nil nil nil
+    (insert
+     (format "\
+retitle %s %s
+owner %s !
+thanks
+"
+	     bug
+	     (concat "ITP: "
+		     (if package
+			 (format "%s -- " package)
+		       "")
+		     (or description ""))
+	     bug))))
 
 ;;; ----------------------------------------------------------------------
 ;;;
