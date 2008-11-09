@@ -488,7 +488,7 @@ you are trying to report a bug in an existing package)
 1 p    ITP, `Intent To Package'. Please submit a package description
        along with copyright and URL in such a report.
 
-2 o    The package has been `Orphaned'. It needs a new maintainer as soon as
+2 o    The package has been 'Orphaned'. It needs a new maintainer as soon as
        possible.
 
 3 a    RFA, this is a `Request for Adoption'. Due to lack of time, resources,
@@ -527,12 +527,20 @@ NOTE: The <TAG:> constructs must be retained.")
 See also `tinydebian-:rfp-template'")
 
 (defconst tinydebian-:wnpp-template-licenses-alist
-  '("Artistic"
+  '( ;; List updated 2008-11-03
+    "Apache-2.0"
+    "Artistic"
     "BSD"
+    "GFDL"
+    "GFDL-1.2"
     "GPL"
     "GPL-2"
+    "GPL-3"
     "LGPL"
     "LGPL-2"
+    "LGPL-2.1"
+    "LGPL-3"
+    ;; This is not mentioned, but include anyway
     "MIT/X11")
   "List of licenses as recorded in Debian /usr/share/common-licenses/
 See also <http://www.debian.org/legal/licenses/> and
@@ -550,15 +558,24 @@ I'm looking for sponsor:
   License         : <license: GPL, LGPL, BSD, MIT/X, Artistic, etc.>
   Programming Lang: <C, C++, C#, Perl, Python, etc.>
 
-\(* = remove if package is not in Debian.)
+\(* = remove if package is not in Debian repository.)
 Description:
 
 debian/changelog:
 
 Other notes:
 "
-  "RFS message to debian.devel.mentor mailinf list.
-NOTE: The <TAG:> constructs must be retained.
+  "RFS message to debian.devel.mentor mailing list.
+NOTE: The <TAG:> constructs must be retained and are replaced in message:
+
+  Package name    : <package>
+  Version         : x.y.z
+  ITA/ITP URL     : <ita: http://bugs.debian.org/BugNbr>
+* Package bugs URL: <bugs: http://bugs.debian.org/Package>
+  URL             : <mentors: http://mentors.debian.net/debian/pool/main/p/package/*.dsc>
+  License         : <license: GPL, LGPL, BSD, MIT/X, Artistic, etc.>
+  Programming Lang: <C, C++, C#, Perl, Python, etc.>
+
 See also `tinydebian-:rfs-hook'.")
 
 (defvar tinydebian-:rfs-hook nil
@@ -848,6 +865,7 @@ Mode description:
      ["Send BTS RFP: request for packege"  tinydebian-bts-mail-type-rfp    t]
      ["Send BTS RFS: request for sponsor"  tinydebian-bts-mail-type-rfs    t]
      ["Send BTS O: orphan"                 tinydebian-bts-mail-type-orphan t]
+     ["Send BTS RM: remove"                tinydebian-bts-mail-type-remove t]
      ["WNPP control menu"                  tinydebian-package-wnpp-main    t])
 
     (list
@@ -909,11 +927,13 @@ Mode description:
      (define-key map  "-a" 'tinydebian-bts-mail-type-ita)
      (define-key map  "-A" 'tinydebian-bts-mail-type-rfa)
      (define-key map  "-h" 'tinydebian-bts-mail-type-rfh)
+     (define-key map  "-o" 'tinydebian-bts-mail-type-orphan)
      (define-key map  "-P" 'tinydebian-bts-mail-type-itp)
      (define-key map  "-p" 'tinydebian-bts-mail-type-rfp)
      (define-key map  "-r" 'tinydebian-bts-mail-type-reply)
+     (define-key map  "-R" 'tinydebian-bts-mail-type-remove)
      (define-key map  "-s" 'tinydebian-bts-mail-type-rfs)
-     (define-key map  "-o" 'tinydebian-bts-mail-type-orphan)
+
      (define-key map  "mi" 'tinydebian-bts-mail-message-info)
 
      ;;  (i)nfo (i)nstalled
@@ -2381,7 +2401,7 @@ Mode description:
 	  (setq field
 		(mapconcat 'concat
 			   (tinydebian-mail-header-not-matches header re)
-			   ", x")))
+			   ", ")))
       ;; We must not remove "To: field
       (if (and (null field)
 	       (string-match "To" header))
@@ -3335,11 +3355,66 @@ thanks
      nil)))
 
 ;;; ----------------------------------------------------------------------
+;;; FIXME: #TODO
+(defun tinydebian-bts-mail-type-orphan (package desc)
+  "Send an orphan request to PACKAGE with DESC."
+  (interactive
+   (let* ((pkg (read-string "Orphan package: ")))
+     (list pkg (tinydebian-package-status-description-1 pkg))))
+  (let ((subj-message
+	 (format "O: %s -- %s"
+		 package
+		 (or desc
+		     (if tinydebian-:novice-mode
+			 "<description>")
+		     ""))))
+  (tinydebian-bts-mail-type-macro
+      "O" nil (tinydebian-bts-email-submit) subj-message
+    (insert
+     (format "\
+Package: wnpp
+Severity: normal
+
+"))
+      (let ((point (point)))
+	(if tinydebian-:novice-mode
+	    (insert "<describe orphan detail>\n"))
+	(goto-char point)))))
+
+;;; ----------------------------------------------------------------------
 ;;;
-(defun tinydebian-bts-mail-type-orphan (package license homepage desc)
-  "Send an orphan request."
-  (interactive)
-  (message "tinydebian-bts-mail-type-orphan not yet implemented."))
+(defun tinydebian-bts-mail-type-remove (package type &optional desc)
+  "Send a remove request.
+PACKAGE   package name
+TYPE      'RM' = remove, 'RoM' = request of maintainer
+DESC      apt-cache show <package>; first line description."
+  (interactive
+   (let* ((pkg (read-string "RM package: "))
+	  (type
+	   (if (y-or-n-p "Are you the maintainer? ")
+	       "RoM"
+	     "RM")))
+     (list pkg type (tinydebian-package-status-description-1 pkg))))
+  (let ((subj-message
+	 (format "%s: %s -- %s"
+		 type
+		 package
+		 (or desc
+		     (if tinydebian-:novice-mode
+			 "<description>")
+		     ""))))
+    (tinydebian-bts-mail-type-macro
+	type nil (tinydebian-bts-email-submit) subj-message
+      (insert
+       (format "\
+Package: ftp.debian.org
+Severity: wishlist
+
+"))
+      (let ((point (point)))
+	(if tinydebian-:novice-mode
+	    (insert "<describe reason for removal>\n"))
+	(goto-char point)))))
 
 ;;; ----------------------------------------------------------------------
 ;;;
@@ -3610,8 +3685,8 @@ thanks
   (interactive
    (list (tinydebian-bts-mail-ask-bug-number)))
   (tinydebian-bts-mail-type-macro
-   nil nil nil
-   (format "Fixed Bug#%s" bug)
+      nil nil nil
+      (format "Fixed Bug#%s" bug)
    (let (point)
      (insert (format "fixed %s " bug))
      (setq point (point))
@@ -3774,11 +3849,11 @@ and not forwarded any Debian mailing lists."
 (defun tinydebian-package-read-field-content-1 ()
   "Read content. Point must be positionioned at Field:-!-."
   (let* ((str (if (looking-at " +\\(.*\\)")
-		  (match-string 1))))
+		  (match-string-no-properties 1))))
     (while (and (not (eobp))
 		(zerop (forward-line 1)) ;; Did it
 		(looking-at "^\\( +.*\\)"))
-      (setq str (concat (or str "") (match-string 1))))
+      (setq str (concat (or str "") (match-string-no-properties 1))))
     str))
 
 ;;; ----------------------------------------------------------------------
@@ -3793,10 +3868,19 @@ Be sure to call `tinydebian-package-narrow-to-region' first."
 ;;;
 (defun tinydebian-package-parse-info-all ()
   "Parse all fields forward. Return '((field . info) (field . info) ..)."
-  (let* (field
+  (let* (name
+	 field
 	 alist)
     (while (re-search-forward "^\\([^ \t\r\n]+\\):" nil t)
-      (setq field (match-string 1))
+      (setq name (match-string-no-properties 0))
+      (setq field (match-string-no-properties 1))
+      ;;  Treat "Description:" differently" and break it into two fields
+      (when (string-match "description" name)
+	(let (line)
+	  (when (looking-at " *\\([^ \t].+\\)")
+	    (setq line (match-string-no-properties 1))
+	    (push (cons (format "%s1" field) line) alist))
+	  (forward-line 1)))
       (push (cons field (tinydebian-package-read-field-content-1))
 	    alist))
     (nreverse alist)))
@@ -3959,21 +4043,30 @@ In this case, the package is unknown."
 
 ;;; ----------------------------------------------------------------------
 ;;;
-;;;
 (defun tinydebian-package-status-apt-cache (package)
-  "Consult dpkg -S FILE
+  "Consult apt-cache shoiw PACKAGE
 In this case, the package is unknown."
-  (with-temp-buffer
-    (message "TinyDebian: Running ... apt-cache show %s (takes a while)"
-	     package)
-    (apply 'tinydebian-call-process "apt-cache" nil (list "show" package))
-    (message "Done.")
-    (unless (eq (point-max) (point-min))
-      (goto-char (point-min))
-      (tinydebian-package-parse-info-all))))
+  (let ((bin "/usr/bin/apt-cache"))
+    (when (and (file-exists-p bin)
+	       (stringp package))
+      (with-temp-buffer
+	(message "TinyDebian: Running ... apt-cache show %s (takes a while)"
+		 package)
+	(apply 'tinydebian-call-process bin nil (list "show" package))
+	(message "Done.")
+	(unless (eq (point-max) (point-min))
+	  (goto-char (point-min))
+	  (tinydebian-package-parse-info-all))))))
 
 ;;; ----------------------------------------------------------------------
 ;;;
+(defun tinydebian-package-status-description-1 (package)
+  "Return the first line description for PACKAGE."
+  (let* ((info (tinydebian-package-status-apt-cache pkg))
+	 (desc (cdr-safe (assoc "Description1" info))))
+    desc))
+
+;;; ----------------------------------------------------------------------
 ;;;
 (defun tinydebian-package-status-grep-available (package)
   "Consult grep-available(1) for PACKAGE from 'Provides' field."

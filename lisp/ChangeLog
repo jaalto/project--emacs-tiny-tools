@@ -1,7 +1,24 @@
+2008-11-09  Jari Aalto  <jari.aalto@cante.net>
+
+	* tiny/tinydebian.el (tinydebian-bts-mail-type-orphan): New.
+	(tinydebian-bts-mail-type-remove): New.
+	(tinydebian-package-parse-info-all): Parse 'Description' field
+	into two.
+	(tinydebian-package-read-field-content-1): Use
+	`match-string-no-properties'.
+	(tinydebian-package-status-apt-cache): Check that apt-cache
+	exists
+	(tinydebian-package-status-description-1): New.
+
+2008-11-06  Jari Aalto  <jari.aalto@cante.net>
+
+	* tiny/tinydebian.el (tinydebian-:rfs-template): Adjust docstring.
+
 2008-11-03  Jari Aalto  <jari.aalto@cante.net>
 
 	* tiny/tinydebian.el (tinydebian-bts-mail-type-ita): Fix indent.
 	(tinydebian-bts-mail-type-itp): Fix indent.
+	(tinydebian-:wnpp-template-licenses-alist): Update.
 
 2008-11-02  Jari Aalto  <jari.aalto@cante.net>
 
