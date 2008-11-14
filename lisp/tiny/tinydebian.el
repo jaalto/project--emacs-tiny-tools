@@ -2746,9 +2746,11 @@ If optional RE is non-nil, remove all command lines matching RE"
 (defun tinydebian-bts-mail-ctrl-command-tags (bug list)
   "Set BUG LIST to tags."
   (interactive
-   (list
-    (tinydebian-mail-mode-debian-address-ask-bug)
-    (tinydebian-bts-ctrl-tags-ask)))
+   (let ((bug (tinydebian-mail-mode-debian-address-ask-bug)))
+     (list
+      bug
+      (tinydebian-bts-ctrl-tags-ask
+       (format  "BTS tag #%s [RET when done]: " bug)))))
   (tinydebian-bts-mail-ctrl-command-add-macro
    "tags"
    bug
@@ -2866,16 +2868,16 @@ Mode description:
     "----"
 
 ;;;    ["Send BTS Ctrl close"      tinydebian-bts-mail-ctrl-command-close    t]
-    ["Send BTS Ctrl severity"   tinydebian-bts-mail-ctrl-command-severity t]
-    ["Send BTS Ctrl tags"       tinydebian-bts-mail-ctrl-command-tags     t]
-    ["Send BTS Ctrl usertag"    tinydebian-bts-mail-ctrl-command-usertag  t]
-    ["Send BTS Ctrl forward"    tinydebian-bts-mail-ctrl-command-forwarded  t]
-;;;    ["Send BTS Ctrl forwarded"  tinydebian-bts-mail-ctrl-command-forward  t]
-    ["Send BTS Ctrl fixed"      tinydebian-bts-mail-ctrl-command-fixed    t]
-    ["Send BTS Ctrl reassign"   tinydebian-bts-mail-ctrl-command-reassign t]
-    ["Send BTS Ctrl retitle"    tinydebian-bts-mail-ctrl-command-retitle  t]
-;;;    ["Send BTS Ctrl reopen"     tinydebian-bts-mail-ctrl-command-reopen   t]
-    ["Send BTS Ctrl merge"      tinydebian-bts-mail-ctrl-command-merge    t]
+    ["Add BTS Ctrl severity"   tinydebian-bts-mail-ctrl-command-severity t]
+    ["Add BTS Ctrl tags"       tinydebian-bts-mail-ctrl-command-tags     t]
+    ["Add BTS Ctrl usertag"    tinydebian-bts-mail-ctrl-command-usertag  t]
+    ["Add BTS Ctrl forward"    tinydebian-bts-mail-ctrl-command-forwarded  t]
+;;;   Addend BTS Ctrl forwarded"  tinydebian-bts-mail-ctrl-command-forward  t]
+    ["Add BTS Ctrl fixed"      tinydebian-bts-mail-ctrl-command-fixed    t]
+    ["Add BTS Ctrl reassign"   tinydebian-bts-mail-ctrl-command-reassign t]
+    ["Add BTS Ctrl retitle"    tinydebian-bts-mail-ctrl-command-retitle  t]
+;;;   Addend BTS Ctrl reopen"     tinydebian-bts-mail-ctrl-command-reopen   t]
+    ["Add BTS Ctrl merge"      tinydebian-bts-mail-ctrl-command-merge    t]
 
     )
 
@@ -3583,8 +3585,8 @@ thanks
 
 ;;; ----------------------------------------------------------------------
 ;;;
-(defun tinydebian-bts-ctrl-tags-ask ()
-  "Ask list of tags interactively."
+(defun tinydebian-bts-ctrl-tags-ask (&optional message)
+  "Ask list of tags interactively with optional MESSAGE."
   (let (tag
 	list)
     (while (or (null tag)

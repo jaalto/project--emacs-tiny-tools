@@ -1,3 +1,9 @@
+2008-11-14  Jari Aalto  <jari.aalto@cante.net>
+
+	* tiny/tinydebian.el (tinydebian-bts-ctrl-tags-ask): Add arg MESSAGE.
+	(tinydebian-bts-mail-ctrl-command-tags): Show bug number when
+	asking tags.
+
 2008-11-09  Jari Aalto  <jari.aalto@cante.net>
 
 	* tiny/tinydebian.el (tinydebian-bts-mail-type-orphan): New.
