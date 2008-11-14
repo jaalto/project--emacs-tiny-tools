@@ -2889,6 +2889,10 @@ Mode description:
      (define-key map  "q"  'tinydebian-mail-mode-debian-address-quiet-toggle)
      (define-key map  "s"  'tinydebian-mail-mode-debian-address-submitter-toggle)
 
+     (define-key map  "ub"  'tinydebian-bug-browse-url-by-bug)
+     (define-key map  "uB"  'tinydebian-bug-browse-url-by-package-bugs)
+     (define-key map  "up"  'tinydebian-bug-browse-url-by-package-name)
+
      ;;  (C)ontrol commands
 ;;      (define-key map  "cf"  'tinydebian-bts-mail-ctrl-command-forward)
       (define-key map  "cF"  'tinydebian-bts-mail-ctrl-command-forwarded)
