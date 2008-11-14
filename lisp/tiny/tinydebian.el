@@ -2413,8 +2413,9 @@ Mode description:
 ;;;
 (defsubst tinydebian-mail-header-send-remove-item-regexp (re)
   "Rmeove from headers To and CC items matching RE."
-  (or (tinydebian-mail-header-remove-item "To" re)
-      (tinydebian-mail-header-remove-item "Cc" re)))
+  (save-excursion
+    (or (tinydebian-mail-header-remove-item "To" re)
+	(tinydebian-mail-header-remove-item "Cc" re))))
 
 ;;; ----------------------------------------------------------------------
 ;;;
@@ -2466,9 +2467,10 @@ Mode description:
 (defun tinydebian-mail-mode-debian-address-add-standard-bug (bug &optional re)
   "Add BUG@ address. Remove all other addresses related to BUG.
 Remove addresses by RE."
-  (tinydebian-mail-mode-debian-address-manipulate
-   (tinydebian-bts-email-compose bug)
-   re))
+  (save-excursion
+    (tinydebian-mail-mode-debian-address-manipulate
+     (tinydebian-bts-email-compose bug)
+     re)))
 
 ;;; ----------------------------------------------------------------------
 ;;;

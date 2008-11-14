@@ -7,6 +7,8 @@
 	`tinydebian-bug-browse-url-by-bug',
 	`tinydebian-bug-browse-url-by-package-bugs',
 	`tinydebian-bug-browse-url-by-package-name'.
+	(tinydebian-mail-header-send-remove-item-regexp): Add `save-excursion'.
+	(tinydebian-mail-mode-debian-address-add-standard-bug): Add `save-excursion'.
 
 2008-11-09  Jari Aalto  <jari.aalto@cante.net>
 
