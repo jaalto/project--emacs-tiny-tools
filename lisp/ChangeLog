@@ -1,3 +1,9 @@
+2009-01-08  Jari Aalto  <jari.aalto@cante.net>
+
+	* tiny/tinydebian.el (tinydebian-bug-url): Add savannah.gnu.org support.
+	(tinydebian-bug-gnu-savannah-support-string-p): New.
+	(tinydebian-bug-gnu-savannah-p): New.
+
 2008-11-14  Jari Aalto  <jari.aalto@cante.net>
 
 	* tiny/tinydebian.el (tinydebian-bts-ctrl-tags-ask): Add arg MESSAGE.

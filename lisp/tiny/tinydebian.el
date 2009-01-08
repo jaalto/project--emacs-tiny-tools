@@ -1617,6 +1617,32 @@ This function needs network connection."
 
 ;;; ----------------------------------------------------------------------
 ;;;
+(defsubst tinydebian-bug-gnu-savannah-support-string-p (str)
+  "Test if STR looks like Savannah support request."
+  (if (string-match "\\[sr +#\\([0-9]+\\)\\]" str)
+      (match-string-no-properties 1 str)))
+
+;;; ----------------------------------------------------------------------
+;;;
+(defun tinydebian-bug-gnu-savannah-p ()
+  "Check if bug context is Sourceforge."
+  (cond
+   ((eq major-mode 'gnus-summary-mode)
+    (let ((str (buffer-substring (line-beginning-position)
+				 (line-end-position)))
+	  bug)
+      ;; [  21: Foo Bar ] [sr #106037]
+      (cond
+       ((setq bug (tinydebian-bug-gnu-savannah-support-string-p str))
+	(format "http://savannah.gnu.org/support/?%s" bug)))))
+   (t
+    (save-excursion
+      (goto-char (point-min))
+      (if (re-search-forward "http://savannah.gnu.org/.*[?][0-9]+" nil t)
+	  (match-string-no-properties 1))))))
+
+;;; ----------------------------------------------------------------------
+;;;
 (defsubst tinydebian-bug-sourceforge-string-p (str)
   "Test if STR looks like Sourceforge bug."
   (if (string-match
@@ -1679,6 +1705,10 @@ the proper bug destionation: Sourceforge, Ubuntu or Debian."
 	group-id
 	str)
     (cond
+     ((setq str (tinydebian-bug-gnu-savannah-p))
+      (if (string-match "http" str)
+	  str
+	(error "Unknown SAvannah tracker `%s'" str)))
      ((setq str (tinydebian-bug-sourceforge-p))
       (if (string-match "http" str)
 	  str
@@ -2117,7 +2147,7 @@ At current point, current line, headers of the mail message
 ;;;
 (defun tinydebian-bug-browse-url-by-bug (bug &optional file)
   "Browse by Debian BUG number. Optionally save bug report to FILE.
-  A prefix argument in interactive mode prompts for FILE to save.
+A prefix argument in interactive mode prompts for FILE to save.
 
 NOTE: This function is designed to work only in Gnus Summary and
 Article buffers."
@@ -2139,7 +2169,7 @@ Article buffers."
   (setq bug (tinydebian-trim-blanks bug))
   (when (or (not (stringp bug))
 	    (not (string-match "^[0-9]+$" bug)))
-    (error "TinyDebian: Invalid bug number `%s'." bug))
+    (error "TinyDebian: Invalid bug number format `%s'." bug))
   (let ((tinydebian-:browse-url-function tinydebian-:browse-url-function))
     (if file
 	(setq tinydebian-:browse-url-function
