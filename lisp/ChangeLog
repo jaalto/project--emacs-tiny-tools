@@ -1,3 +1,24 @@
+2009-01-29  Jari Aalto  <jari.aalto@cante.net>
+
+	* tiny/tinyperl.el (tinyperl-pod-grep-faq-data-context-1):
+	Change re-search-forward arg from 'noerr to t (Emacs 22.x fix).
+
+	* tiny/tinylibmail.el (ti::mail-whois-parse-paragraph):
+	Change re-search-forward arg from 'noerr to t (Emacs 22.x fix).
+	(ti::mail-whois-parse-tech):
+	Change re-search-forward arg from 'noerr to t (Emacs 22.x fix).
+	(ti::mail-whois-parse-zone):
+	Change re-search-forward arg from 'noerr to t (Emacs 22.x fix).
+	(ti::mail-whois-parse-records):
+	Change re-search-forward arg from 'noerr to t (Emacs 22.x fix).
+	(ti::mail-whois-parse-admin):
+	Change re-search-forward arg from 'noerr to t (Emacs 22.x fix).
+	(ti::mail-whois-parse-admin):
+	Change re-search-forward arg from 'noerr to t (Emacs 22.x fix).
+
+	* tiny/tinyirc.el (tinyirc-pastebot-install-perl-util-pastebot):
+	Change re-search-forward arg from 'noerr to t (Emacs 22.x fix).
+
 2009-01-08  Jari Aalto  <jari.aalto@cante.net>
 
 	* tiny/tinydebian.el (tinydebian-bug-url): Add savannah.gnu.org support.

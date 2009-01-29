@@ -3221,7 +3221,7 @@ TEXT-DATA      ends to cr/lf"
        (t
         (goto-char point) ;; Previous search-min changed point
         (save-excursion
-          (when (re-search-backward "^=head[0-9]?" nil 'noerr)
+          (when (re-search-backward "^=head[0-9]?" nil t)
             (setq topic (ti::buffer-read-line))))
         ;;  Excerpt enough content arount the point.
         (let (try-min

@@ -3458,7 +3458,7 @@ References:
 (defun ti::mail-whois-parse-paragraph (regexp &optional end-regexp)
   "Whois: Parse pragraph for the first REGEXP to END-REGEXP.
 See `ti::mail-whois-parse'."
-  (when (re-search-forward regexp nil 'noerr)
+  (when (re-search-forward regexp nil t)
     (let ((beg (match-beginning 0)))
       (if (null end-regexp)
           (forward-paragraph)
@@ -3638,7 +3638,7 @@ See `ti::mail-whois-parse'."
          (ti::mail-whois-parse-paragraph-end-condition))
         (cond
          ((and (goto-char point)
-               (re-search-forward ":\\(.*tech.*@.*\\)" nil 'noerr))
+               (re-search-forward ":\\(.*tech.*@.*\\)" nil t))
           (ti::mail-whois-parse-cleanup
            (match-string 1)))))))
 
@@ -3652,7 +3652,7 @@ See `ti::mail-whois-parse'."
          (ti::mail-whois-parse-paragraph-end-condition))
         (cond
          ((and (goto-char point)
-               (re-search-forward ":\\(.*zone.*@.*\\)" nil 'noerr))
+               (re-search-forward ":\\(.*zone.*@.*\\)" nil t))
           (ti::mail-whois-parse-cleanup
            (match-string 1)))))))
 
@@ -3767,7 +3767,7 @@ Values examined are: expires, created and updated."
             ;;  The order of the fields can be anything, start over
             ;;  every time from the same point
             (goto-char beg)
-            (when (re-search-forward regexp nil 'noerr)
+            (when (re-search-forward regexp nil t)
               (multiple-value-bind (raw day month year)
                   (list
                    (match-string 2)
@@ -3838,16 +3838,16 @@ See `ti::mail-whois-parse'."
   (let ((point (point)))
     (cond
      ((and (goto-char point)
-           (re-search-forward "^[ \t]*Administrative Contact:" nil 'noerr))
+           (re-search-forward "^[ \t]*Administrative Contact:" nil t))
       (forward-line 1)
       (let ((beg (point)))
         ;;  Search "Technical Contact:"
-        (when (re-search-forward "^[ \t]*.+:[ \t]*$" nil 'noerr)
+        (when (re-search-forward "^[ \t]*.+:[ \t]*$" nil t)
           (ti::mail-whois-parse-cleanup
            (buffer-substring
             beg (1- (line-beginning-position)))))))
      ((and (goto-char point)
-           (re-search-forward ":\\(.*admin.*@.*\\)" nil 'noerr))
+           (re-search-forward ":\\(.*admin.*@.*\\)" nil t))
       (ti::mail-whois-parse-cleanup
        (match-string 1))))))
 
