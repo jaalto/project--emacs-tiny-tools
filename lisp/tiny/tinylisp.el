@@ -3400,6 +3400,13 @@ References:
            sym file))
         (when (string-match "\\(.*\\.el\\)c" file)
           (setq file (match-string 1 file))
+	  (let (try)
+	    (catch 'done
+	      ;; Compressed lisp file
+	      (dolist (ext '(".gz" ".bz2" ".lzma"))
+		(setq try (format "%s%s" file ext))
+		(if (file-exists-p try)
+		    (throw 'done (setq file try))))))
           (unless (file-exists-p file)
             (error "TinyLisp: There is only compiled file at %s" file)))
         (when (or (find-buffer-visiting file) ;Already loaded?
