@@ -1617,6 +1617,39 @@ This function needs network connection."
 
 ;;; ----------------------------------------------------------------------
 ;;;
+(defsubst tinydebian-bug-gnu-emacs-bts-string-p (str)
+  "Test if STR looks like Emacs BTS support request."
+  ;; [  23: Emacs bug Tracking Syst] bug#2134:
+  (if (string-match "Emacs.*bug#\\([0-9]+\\):" str)
+      (match-string-no-properties 1 str)))
+
+;;; ----------------------------------------------------------------------
+;;;
+(defun tinydebian-bug-gnu-emacs-bts-p ()
+  "Check if bug context is Emacs BTS."
+  (let ((url "http://emacsbugs.donarmstrong.com"))
+    (cond
+     ((eq major-mode 'gnus-summary-mode)
+      (let ((str (buffer-substring (line-beginning-position)
+				   (line-end-position)))
+	    bug)
+	(cond
+	 ((setq bug (tinydebian-bug-gnu-emacs-bts-string-p str))
+	  (format "%s/%s" url bug)))))
+     (t
+      (save-excursion
+	(goto-char (point-min))
+	(when (and (re-search-forward
+		    "Thank.*filing.*bug report.*Emacs" nil t)
+		   (re-search-forward
+		    "send it to \\([0-9]+\\)@emacsbugs"
+		    nil t))
+	  (if (re-search-forward
+	       "http://savannah.gnu.org/.*[?][0-9]+" nil t)
+	      (format "%s/%s" url bug))))))))
+
+;;; ----------------------------------------------------------------------
+;;;
 (defsubst tinydebian-bug-gnu-savannah-support-string-p (str)
   "Test if STR looks like Savannah support request."
   (if (string-match "\\[sr +#\\([0-9]+\\)\\]" str)
@@ -1705,10 +1738,14 @@ the proper bug destionation: Sourceforge, Ubuntu or Debian."
 	group-id
 	str)
     (cond
+     ((setq str (tinydebian-bug-gnu-emacs-bts-p))
+      (if (string-match "http" str)
+	  str
+	(error "Unknown Emacs tracker `%s'" str)))
      ((setq str (tinydebian-bug-gnu-savannah-p))
       (if (string-match "http" str)
 	  str
-	(error "Unknown SAvannah tracker `%s'" str)))
+	(error "Unknown Savannah tracker `%s'" str)))
      ((setq str (tinydebian-bug-sourceforge-p))
       (if (string-match "http" str)
 	  str
