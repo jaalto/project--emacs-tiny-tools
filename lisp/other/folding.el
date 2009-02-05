@@ -2,9 +2,9 @@
 
 ;; This file is not part of Emacs
 
-;; Copyright (C) 2000-2008
+;; Copyright (C) 2000-2009
 ;;           Jari Aalto
-;; Copyright (C) 1995,1996,1997,1998,1999
+;; Copyright (C) 1995, 1996, 1997, 1998, 1999
 ;;           Jari Aalto, Anders Lindgren.
 ;; Copyright (C) 1994
 ;;           Jari Aalto
@@ -16,9 +16,9 @@
 ;;              Anders Lindgren <andersl A T csd.uu dt se>
 ;; Maintainer:  Jari Aalto <jari aalto A T cante dt net>
 ;; Created:     1992
-;; Version:     2007.0506
+;; Version:     git 7d0f6e0 (Savannah)
 ;; VCS-Version: $Revision: 3.42 $
-;; VCS-URL:     http://nongnu.org/projects/emacs-tiny-tools/
+;; VCS-URL:     http://savannah.nongnu.org/projects/emacs-tiny-tools/
 ;; VCS-Date:    $Date: 2007/05/07 10:50:05 $
 ;; Keywords:    tools
 
