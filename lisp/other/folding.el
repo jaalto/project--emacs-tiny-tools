@@ -16,7 +16,7 @@
 ;;              Anders Lindgren <andersl A T csd.uu dt se>
 ;; Maintainer:  Jari Aalto <jari aalto A T cante dt net>
 ;; Created:     1992
-;; Version:     git 7d0f6e0 (Savannah)
+;; Version:     git f7e5609 (Savannah)
 ;; VCS-Version: $Revision: 3.42 $
 ;; VCS-URL:     http://savannah.nongnu.org/projects/emacs-tiny-tools/
 ;; VCS-Date:    $Date: 2007/05/07 10:50:05 $
@@ -1788,7 +1788,7 @@ with XEmacs.")
 (defvar folding-stack nil
   "Internal. A list of marker pairs representing folds entered so far.")
 
-(defvar folding-version  (substring "$Revision: 3.42 $" 11 15)
+(defvar folding-version (substring "$Revision: 3.42 $" 11 15)
   "Version number of folding.el.")
 
 ;;}}}
