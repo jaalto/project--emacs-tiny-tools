@@ -388,12 +388,11 @@
 ;;  Customization: adding new major modes
 ;;
 ;;      To add fold marks for a new major mode, use the function
-;;      `folding-add-to-marks-list'. Example:
+;;      `folding-add-to-marks-list'. The command also replaces
+;;      existing marks. An example:
 ;;
 ;;          (folding-add-to-marks-list
 ;;           'c-mode "/* {{{ " "/* }}} */" " */" t)
-;;          (folding-add-to-marks-list
-;;           'java-mode "// {{{ " "// }}}" nil t)
 ;;
 ;;  Customization: ISearch
 ;;
@@ -634,11 +633,17 @@
 ;;{{{ History
 ;; [person version] = developer and his revision tree number.
 ;;
+;; Feb  05  2009  22.2.1           [jari git e0c2e92]
+;; - Add `python-mode' with `folding-add-to-marks-list'.
+;;
 ;; May  06  2007  21.4             [jari 3.38-3.41 2007.0506]
 ;; - Cleanup. Eol whitespaces removed, extra newlines cleaned.
 ;;   Paren positions corrected.
 ;; - 'Personal reflections by Anders Lindgren' topic
 ;;   rephrased 'Future development ideas'
+;; - (folding-show-current-entry): Run `font-lock-fontify-region'
+;;   after opening the fold. Font-lock.el treated all closed folds
+;;   as comments.
 ;;
 ;; Nov  16  2006  21.4             [jari 3.36-3.37 2006.1118]
 ;; - Jeremy Hankins <nowan A T nowan org> sent a patch, which
@@ -3624,7 +3629,8 @@ visible. This is useful after some commands eg., search commands."
                            (when folding-narrow-by-default
                              (setq folding-stack
                                    (if folding-stack
-                                       (cons (cons (point-min-marker) (point-max-marker))
+                                       (cons (cons (point-min-marker)
+						   (point-max-marker))
                                              folding-stack)
                                      '(folded)))
                              (folding-set-mode-line))
@@ -3685,7 +3691,11 @@ subfolds."
   (or noskip
       (folding-skip-ellipsis-backward))
   (let ((point (point))
-        backward forward start end subfolds-not-p)
+        backward
+	forward
+	start
+	end
+	subfolds-not-p)
     (unwind-protect
         (or (and (integerp
                   (car-safe (setq backward (folding-skip-folds t))))
@@ -3712,6 +3722,19 @@ subfolds."
                    (folding-subst-regions
                     (append backward (nreverse forward))
                     ?\r ?\n)
+		   ;;  FIXME: this should be moved to font-lock:
+		   ;;  - When fold is closed, the whole line (with code)
+		   ;;    is treated as comment
+		   ;;  - Fon-lock changes all fonts to `font-lock-comment-face'
+		   ;;  - When you again open fold, all code is comment color
+		   ;;
+		   ;;  => Font lock should stop at \r, and not use ".*"
+		   ;;     which includes \r character
+		   ;;  This is a workaround, not aa efficient one
+		   (if (or (and (boundp 'global-font-lock-mode)
+				global-font-lock-mode)
+			   font-lock-mode)
+		       (font-lock-fontify-region start end))
                    (list start end (not subfolds-not-p))))
             (if noerror
                 nil
@@ -4398,6 +4421,7 @@ buffer without affecting the default value for a particular mode."
 (folding-add-to-marks-list 'plain-TeX-mode         "%{{{"   "%}}}" nil t)
 (folding-add-to-marks-list 'plain-tex-mode         "%{{{"   "%}}}" nil t)
 (folding-add-to-marks-list 'prolog-mode            "% {{{"   "% }}}" nil t)
+(folding-add-to-marks-list 'python-mode            "# {{{"  "# }}}" nil t)
 (folding-add-to-marks-list 'rexx-mode              "/* {{{" "/* }}} */" " */" t)
 (folding-add-to-marks-list 'sh-mode                "# {{{"  "# }}}" nil t)
 (folding-add-to-marks-list 'sh-script-mode         "# {{{"  "# }}}" nil t)
