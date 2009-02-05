@@ -1,5 +1,12 @@
 2009-02-05 Thu  Jari Aalto  <jari dot aalto A T cante dot net>
 
+        * html/install/index.txt (1.2 Unpacking): Write graph. Remove
+        `mkdir' commands.
+        (1.1 Foreword): Correct title.
+        (Table of contents): Regenerate.
+        (1.5 Advanced install -- using autoload files): Adjust comments
+        in example.
+
 	* html/devel/index.txt (Emacs Tiny Tools Project): Ad dshort 255
 	character info.
 	(1.2 Releases): Add savanah snapshot.

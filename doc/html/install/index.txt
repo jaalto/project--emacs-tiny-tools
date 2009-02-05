@@ -1,16 +1,16 @@
 Table of contents
 
        1.0 Installation instructions
-           1.1 Briefly
+           1.1 Foreword
            1.2 Unpacking
            1.3 Quick install -- personal
-              1.3.1 Activating the packages
-              1.3.2 Where do I put other other lisp packages?
-           1.4 Quick install -- site wide
-           1.6 Using autoload files
-           1.7 Minimum installation
-           1.8 Optional step - compiling files
-           1.9 Submitting bug reports
+           1.4 Advanced install -- using tinypath
+              1.4.1 Personal install using tinypath
+              1.4.2 Site wide install using tinypath
+           1.5 Advanced install -- using autoload files
+           1.6 Minimal install
+           1.7 Optional step - compiling files
+           1.8 Submitting bug reports
 
        2.0 Project information
            2.1 What does prefix "tiny" mean
@@ -25,7 +25,7 @@ Table of contents
 
     1.1 Foreword
 
-        #T2HTML-TITLE Emacs Tiny Tools Project README
+        #T2HTML-TITLE Emacs Tiny Tools Project install instructions
         #T2HTML-METAKEYWORDS Emacs, Emacs Lisp, Tiny Tools Documentation
         #T2HTML-OPTION --css-code-bg
         #T2HTML-OPTION --css-code-note=Note:
@@ -54,25 +54,31 @@ Table of contents
 
         Extract the package and it will create directory according to
         the version number. Under Windows platform: create directories
-        manually e.g. on `C:\home\elisp' and use some suitable
-        archiver program. A Windows
+        manually e.g. on `C:\home\elisp'. A Windows
         #URL<http://support.microsoft.com/kb/310519><environment variable>
         HOME must alse be defined to point to suitable location, like
-        `C:\home'.
+        `C:\home'. The HOME directory must exist. Create following
+        directories:
 
-            $ mkdir -p $HOME/elisp/packages/
-            $ mkdir -p $HOME/elisp/config       # configuration settings
-            $ mkdir -p $HOME/tmp                # for temporary files
+            $HOME
+            |
+            +-elisp/
+            | |
+            | +-packages/
+            |
+            +-tmp/
 
-            $ cd $HOME/elisp/packages/
+        Unpack the archive to suitable location, like
+        `$HOME/elisp/packages'. Unser Unix/Linux the commands are:
+
+            $ cd $HOME/elisp/packages
             $ gzip -dc ~/tmp/download/emacs-tiny-tools*.gz | tar -xvf -
 
     1.3 Quick install -- personal
 
         Emacs *load-path* must be configured to point to Emacs Lisp
-        package directories. Add following lines to `$HOME/.emacs'
-        startup file. Substitute the paths as necessary to reflect
-        unpack locations:
+        package directories. Add following lines to `$HOME/.emacs'.
+        Substitute the paths as necessary to reflect unpack locations:
 
             (add-to-list 'load-path
                          "~/elisp/packages/emacs-tiny-tools/lisp/tiny")
@@ -185,8 +191,8 @@ Table of contents
             (require 'tiny-autoload-loaddefs-tiny)
             (require 'tiny-autoload-loaddefs-other)
 
-            ;;  Now, configure packages you want, See each package
-            ;;  for further instructions
+            ;;  Configuration section of wanted packages.
+            ;;  See each package for further instructions.
 
             (autoload 'turn-on-tinyperl-mode "tinyperl" "" t)
             (add-hook 'perl-mode-hook  'turn-on-tinyperl-mode)
@@ -207,7 +213,7 @@ Table of contents
             tinylib.el      - main library
             tinylibxe.el    - XEmacs support library
 
-            + NOW select packages that you're interested in.
+            + select packages that you're interested in
 
     1.7 Optional step - compiling files
 
@@ -216,12 +222,16 @@ Table of contents
     1.8 Submitting bug reports
 
         IT IS IMPORTANT THAT YOU USE NON-COMPILED FILES AND SUBMIT THE
-        *BACKTRACE*. Send a bug report by using package's contact
-        functions. The `XXX' below refers to the function prefix, like
-        `tinyurl' for package *tinyurl.el*:
+        *BACKTRACE*. The backtrace is collection of lines that are
+        printed when Emacs Lisp code signals an error. Send a bug
+        report by using package's contact functions. The `XXX' below
+        refers to the function prefix, like `tinyurl' for package
+        *tinyurl.el*:
 
-            M-x load-library RET package.el RET    # load non-compiled
-            M-x turn-on-emacs-debug RET            # From tinyliba.el
+            M-x load-library RET package.el RET       # load non-compiled
+
+            M-x turn-on-emacs-debug RET               # From tinyliba.el
+            M-x set-variable RET debug-on-error RET t # Or use this
 
             ...  repeat what you did until the point of error ...
 
@@ -242,13 +252,13 @@ Table of contents
 
     2.2 Thank you section
 
-        The life with Emacs evolved in the direction called "Tiny Tools";
-        modules that got initially written in the past years starting with
-        Emacs 18.59 and after that with 19.28. The current code is aimed to
-        be XEmacs/Emacs Unix/Win32 platform independent. The cross platform
-        could not be possible without following testers that patiently kept
-        reporting bugs and making improvement suggestions. Most sincere
-        thanks to you all.
+        The Emacs utilities evolved in the direction of "Tiny Tools";
+        modules that got initially written in the past years starting
+        with Emacs 18.59. The current code base is aimed to be
+        XEmacs/Emacs Unix/Win32 platform independent. The cross
+        platform could not be possible without following testers that
+        patiently kept reporting bugs and making improvement
+        suggestions. Most sincere thanks to you all.
 
         o   Henk SPG <tank AT xs4all.nl> who had courage to take early v1.6x
             TinyPgp in XEmacs. I got very good feedback and bug tracing
@@ -361,7 +371,7 @@ Table of contents
         Emacs releases come with the package *defcustom.el* bundled.
         If you have limited lisp skills or if you want an easy
         interface to packages' variables, then you can customize the
-        modules. The *group* is completed when you press `tab' key:
+        modules. The *group* is completed when you press TAB key:
 
             M-x customize-group RET group RET
 
