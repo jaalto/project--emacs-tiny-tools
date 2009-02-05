@@ -1241,7 +1241,7 @@ References:
 ;;; ----------------------------------------------------------------------
 ;;;
 (defsubst tinycygwin-bug-report-email-prefix (&optional type)
-  "Return Subejct's bug prefix string 'Cygwin-TYPE#YYYYMMDDTHHMM'
+  "Return Subejct's bug prefix string 'OS-TYPE#YYYYMMDDTHHMM'
 The time is in UTC and similar to 'date ----iso-8601=minutes'
 The TYPE is 'bug' by default, but can also be other type, like
 rfa, rfp, itp, orphan, update. See `tinycygwin-:menu-wnpp'."
