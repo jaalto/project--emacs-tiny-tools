@@ -40,7 +40,7 @@
 ;;      (add-hook 'tinydebian-:load-hook 'tinydebian-install)
 ;;      (require 'tinydebian)
 ;;
-;;   If you have any about this Emacs package:
+;;   If you have any questions about this Emacs package:
 ;;
 ;;      M-x tinydebian-submit-bug-report    send question, feedback, bugs
 ;;
