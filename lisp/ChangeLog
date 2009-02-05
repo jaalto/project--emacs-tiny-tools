@@ -1,3 +1,18 @@
+2009-02-05  Jari Aalto  <jaalto@jondo.cante.net>
+
+	* other/folding.el (python-mode): Add `python-mode' with
+	`folding-add-to-marks-list'.
+	(folding-shift-in): Adjust indenting.
+	(folding-show-current-entry): Fontify region when opening the font.
+	This is a workaround, that woudl better be fixed in font-lock which
+	treats \r characters as part of comment. That makes all inside a fold
+	to colorize with `font-lock-comment-face'.
+
+2009-02-05 Thu  Jari Aalto  <jari dot aalto A T cante dot net>
+
+	* tiny/tinycygwin.el (tinycygwin-bug-report-email-prefix):
+	Adjust documentation string.
+
 2009-01-31  Jari Aalto  <jari.aalto@cante.net>
 
 	* tiny/tinydebian.el (tinydebian-bug-url): Support Emacs BTS.
