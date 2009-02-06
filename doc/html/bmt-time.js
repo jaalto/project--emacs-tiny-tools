@@ -31,6 +31,7 @@
 //          </HTML>
 
 ///////////////////////////////////////////////////////////////////////
+//
 // DESCRIPTION
 //
 //	    Take UTC time, and do the following: [(Hours + 1 {Make sure
@@ -52,17 +53,17 @@ function SwatchBeats()
 
     var bmt = new Date();
 
-
     bmt.setTime( bmt.getTime()
             + (bmt.getTimezoneOffset() + 60) * 60 * 1000 );
 
     var beat = ( bmt.getHours() * 3600 + bmt.getMinutes() * 60
-            + bmt.getSeconds() ) /  86.4;
+             + bmt.getSeconds() ) /  86.4;
 
     return beat;
 }
 
 ///////////////////////////////////////////////////////////////////////
+//
 // DESCRIPTION
 //
 //	    Convert floating point number to N number of decimels.
@@ -85,11 +86,11 @@ function CutDecimals(n, count)
     {
         if ( count < 1 )
         {
-        str = str.substr(0, pos -1 )
+            str = str.substr(0, pos -1 )
         }
         else
         {
-        str = str.substr(0, pos + count + 1);
+            str = str.substr(0, pos + count + 1);
         }
     }
 
@@ -97,6 +98,7 @@ function CutDecimals(n, count)
 }
 
 ///////////////////////////////////////////////////////////////////////
+//
 // DESCRIPTION
 //
 //	    Return Swatch Biel Mean Time (BMT), World tme, Internet time
@@ -114,12 +116,15 @@ function CutDecimals(n, count)
 function BMTtime()
 {
     // "Biel Mean Time" - Swatch headquarter in Switzerland
+
     var beat = SwatchBeats();
     beat = "@" + CutDecimals( beat, 2);
+
     return beat;
 }
 
 ///////////////////////////////////////////////////////////////////////
+//
 // DESCRIPTION
 //
 //		Display the BMT to the target source
@@ -141,7 +146,8 @@ function BMTtimeDisplay(out)
     if ( out < 1 )
     {
         var str = "Swatch Internet time is now "
-              + time;
+                + time;
+
         defaultStatus = str;		    // Print to the status bar
         setTimeout("BMTtimeDisplay(0)", 5000);  // Repeat ourself
     }

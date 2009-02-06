@@ -1,5 +1,8 @@
 2009-02-06 Fri  Jari Aalto  <jari.aalto@cante.net>
 
+        * html/bmt-time.js: (top level): Adjust comments and code layout
+        slightly.
+
         * html/index.html: (Bried History): update paragraph.
 
 2009-02-05 Thu  Jari Aalto  <jari.aalto@cante.net>
