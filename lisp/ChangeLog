@@ -24,6 +24,9 @@
         (tinydebian-mail-mode::wizard): add `tinydebian-bts-mail-ctrl-command-cc'.
         (tinydebian-bts-mail-ctrl-command-add): Correct point when inserting command.
         (tinydebian-bts-mail-ctrl-command-cc): New.
+        (tinydebian-bts-mail-ctrl-command-no-ack): New.
+        (tinydebian-bts-mail-ctrl-command-add-macro): Make `string' argument optional.
+        (tinydebian-bts-mail-ctrl-command-no-owner): New.
 
 2009-02-05  Jari Aalto  <jaalto@jondo.cante.net>
 

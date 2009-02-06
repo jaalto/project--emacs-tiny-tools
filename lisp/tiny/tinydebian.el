@@ -2837,14 +2837,16 @@ If optional RE is non-nil, remove all command lines matching RE"
 ;;;
 (put 'tinydebian-bts-mail-ctrl-command-add-macro 'edebug-form-spec '(body))
 (put 'tinydebian-bts-mail-ctrl-command-add-macro 'lisp-indent-function 0)
-(defmacro tinydebian-bts-mail-ctrl-command-add-macro (cmd bug string)
-  "Compose Control command from BUG CMD-NAME CMD-STRING."
-  `(let ((str (format "%s %s %s" ,cmd ,bug ,string))
+(defmacro tinydebian-bts-mail-ctrl-command-add-macro (cmd bug &optional string)
+  "Compose Control command from BUG CMD-NAME and optional CMD-STRING."
+  `(let ((str (if ,string
+                  (format "%s %s %s" ,cmd ,bug ,string)
+                (format "%s %s" ,cmd ,bug)))
 	 (re  (format "^[ \t]*%s" ,cmd)))
      (tinydebian-bts-mail-ctrl-command-add str re)
      ;; Position point to better place.
      (forward-line -1)
-     (search-forward (format "%s %s " ,cmd ,bug))))
+     (re-search-forward (format "%s %s *" ,cmd ,bug) nil t)))
 
 ;;; ----------------------------------------------------------------------
 ;;;
@@ -2931,6 +2933,15 @@ If optional RE is non-nil, remove all command lines matching RE"
 
 ;;; ----------------------------------------------------------------------
 ;;;
+(defun tinydebian-bts-mail-ctrl-command-no-owner (bug)
+  "Remove the owner of BUG."
+  (interactive
+   (list
+    (tinydebian-mail-mode-debian-address-ask-bug)))
+  (tinydebian-bts-mail-ctrl-command-add-macro "noowner" bug))
+
+;;; ----------------------------------------------------------------------
+;;;
 (defun tinydebian-bts-mail-ctrl-command-merge (bug list)
   "Mark BUG merged with LIST of bug numbers."
   (interactive
@@ -2950,6 +2961,15 @@ If LIST if nil, position point at pseudo header."
     (tinydebian-bts-mail-ctrl-command-add cmd)
     (forward-line -1)
     (re-search-forward ":" nil t)))
+
+;;; ----------------------------------------------------------------------
+;;;
+(defun tinydebian-bts-mail-ctrl-command-no-ack ()
+  "Insert command to disable acknowledgement mail from the BTS."
+  (interactive)
+  (save-excursion
+    (tinydebian-bts-mail-ctrl-command-add "X-Debbugs-No-Ack: enable"
+                                          "^X-Debbugs-No-Ack:")))
 
 ;;; ----------------------------------------------------------------------
 ;;;
@@ -3012,6 +3032,8 @@ Mode description:
 ;;;   Addend BTS Ctrl reopen"     tinydebian-bts-mail-ctrl-command-reopen   t]
     ["Add BTS Ctrl merge"      tinydebian-bts-mail-ctrl-command-merge    t]
     ["Add BTS Ctrl CC"         tinydebian-bts-mail-ctrl-command-cc       t]
+    ["Add BTS Ctrl No Ack"     tinydebian-bts-mail-ctrl-command-no-ack   t]
+    ["Add BTS Ctrl No-owner"   tinydebian-bts-mail-ctrl-command-no-owner t]
 
     )
 
@@ -3032,6 +3054,8 @@ Mode description:
      (define-key map  "cc"  'tinydebian-bts-mail-ctrl-command-cc)
      (define-key map  "cF"  'tinydebian-bts-mail-ctrl-command-forwarded)
      (define-key map  "cm"  'tinydebian-bts-mail-ctrl-command-merge)
+     (define-key map  "cn"  'tinydebian-bts-mail-ctrl-command-no-ack)
+     (define-key map  "cN"  'tinydebian-bts-mail-ctrl-command-no-owner)
 ;;      (define-key map  "co"  'tinydebian-bts-mail-ctrl-command-reopen)
      (define-key map  "cr"  'tinydebian-bts-mail-ctrl-command-reassign)
      (define-key map  "cR"  'tinydebian-bts-mail-ctrl-command-retitle)
