@@ -1,4 +1,8 @@
-2009-02-05 Thu  Jari Aalto  <jari dot aalto A T cante dot net>
+2009-02-06 Fri  Jari Aalto  <jari.aalto@cante.net>
+
+        * html/index.html: (Bried History): update paragraph.
+
+2009-02-05 Thu  Jari Aalto  <jari.aalto@cante.net>
 
         * html/install/index.txt (1.2 Unpacking): Write graph. Remove
         `mkdir' commands.
