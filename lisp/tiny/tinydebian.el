@@ -2942,6 +2942,20 @@ If optional RE is non-nil, remove all command lines matching RE"
 
 ;;; ----------------------------------------------------------------------
 ;;;
+(defun tinydebian-bts-mail-ctrl-command-unarchive (bug)
+  "Unarchive BUG to be able to respond to it.
+
+After preset number days, the bug is archived, at which point no
+more changes can be made. Trying to send mail (or merge with
+it) to the bug after that will be rejected. To make any
+changes, the bug must be unarchived first."
+  (interactive
+   (list
+    (tinydebian-mail-mode-debian-address-ask-bug)))
+  (tinydebian-bts-mail-ctrl-command-add-macro "unarchive" bug))
+
+;;; ----------------------------------------------------------------------
+;;;
 (defun tinydebian-bts-mail-ctrl-command-merge (bug list)
   "Mark BUG merged with LIST of bug numbers."
   (interactive
@@ -3034,6 +3048,7 @@ Mode description:
     ["Add BTS Ctrl CC"         tinydebian-bts-mail-ctrl-command-cc       t]
     ["Add BTS Ctrl No Ack"     tinydebian-bts-mail-ctrl-command-no-ack   t]
     ["Add BTS Ctrl No-owner"   tinydebian-bts-mail-ctrl-command-no-owner t]
+    ["Unarchive bug"           tinydebian-bts-mail-ctrl-command-unarchive t]
 
     )
 
@@ -3062,6 +3077,7 @@ Mode description:
      (define-key map  "cs"  'tinydebian-bts-mail-ctrl-command-severity)
      (define-key map  "ct"  'tinydebian-bts-mail-ctrl-command-tags)
      (define-key map  "cT"  'tinydebian-bts-mail-ctrl-command-usertag)
+     (define-key map  "cU"  'tinydebian-bts-mail-ctrl-command-unarchive)
      (define-key map  "cx"  'tinydebian-bts-mail-ctrl-command-fixed)
 
      )))
