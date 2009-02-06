@@ -582,12 +582,23 @@ See also `tinydebian-:rfs-hook'.")
   "Hook run after function `tinydebian-bts-mail-type-rfs'.
 See also `tinydebian-:rfs-template'")
 
-(defvar tinydebian-:bts-email-address "bugs.debian.org"
+(defvar tinydebian-:debian-bts-email-address "bugs.debian.org"
   "Email address for Debian Bug Tracking System.")
 
 ;; https://help.launchpad.net/UsingMaloneEmail
 (defvar tinydebian-:launchpad-email-address "bugs.launchpad.net"
-  "Emacs address for Launchpad Bug Tracking System.")
+  "Email address for Launchpad Bug Tracking System.")
+
+(defconst tinydebian-:launchpad-url-http-package-bugs
+  "https://bugs.launchpad.net/bugs"
+  "The Launchpad bug control URL without parameter, up to '/' token.")
+
+(defvar tinydebian-:emacs-bts-email-address "emacsbugs.donarmstrong.com"
+  "Email address for Emacs Bug Tracking System.")
+
+(defconst tinydebian-:emacs-bts-url-http-package-bugs
+  "http://emacsbugs.donarmstrong.com"
+  "The Emacs bug control URL without parameter, up to '/' token.")
 
 (defvar tinydebian-:list-email-address "lists.debian.org"
   "Email address or Debian mailing lists.")
@@ -597,27 +608,27 @@ See also `tinydebian-:rfs-template'")
   "http://packages.debian.net/search?"
   "The packages Debian control URL without parameter, up to '?' token.")
 
-(defconst tinydebian-:url-http-package-bugs
+(defconst tinydebian-:debian-url-http-package-bugs
   "http://bugs.debian.org"
   "The bugs Debian control URL without parameter, up to '/' token.")
 
-(defvar tinydebian-:url-http-debian-www
+(defvar tinydebian-:debian-url-http-www
   "http://www.debian.org"
   "The main WWW page of Debian.")
 
-(defvar tinydebian-:url-http-wnpp-page-main
+(defvar tinydebian-:debian-url-http-wnpp-page-main
   "http://www.debian.org/devel/wnpp"
   "The WNPP main page URL address. No trailing slash.")
 
-(defconst tinydebian-:url-http-wnpp-page-alist
+(defconst tinydebian-:debian-url-http-wnpp-page-alist
   '(("RFA" . "rfa_bypackage")
     ("O"   . "orphaned")
     ("RFH" . "help_request")
     ("RFP" . "requested")
     ("ITP" . "being_packaged"))
-  "List of mapping to pages under `tinydebian-:url-http-wnpp-page-main'.")
+  "List of pages under `tinydebian-:debian-url-http-wnpp-page-main'.")
 
-(defconst tinydebian-:url-debian-page-alist
+(defconst tinydebian-:debian-url-page-alist
   (list
    '(bts-control
      "http://www.debian.org/Bugs/server-control")
@@ -662,7 +673,7 @@ Format:
 The FONT-LOCK-KEYWORDS is only used if the results appear in
 `tinydebian-:buffer-www'. See `tinydebian-:browse-url-function'.")
 
-(defvar tinydebian-:virtual-package-list
+(defvar tinydebian-:debian-virtual-package-list
   ;; Updated 2008-03-08
   '(("awk" "a suitable /usr/bin/{awk,nawk} (*)")
     ("c-shell" "a suitable /bin/csh (*)")
@@ -754,7 +765,7 @@ To refresh:
 (defun tinydebian-virtual-package-parse-buffer ()
   "Parse content of virtual package file.
 This is strictly maintainer's function. Download the file
-mentioned in `tinydebian-:virtual-package-list' and run this function
+mentioned in `tinydebian-:debian-virtual-package-list' and run this function
 to generate updated list."
   (interactive)
   (let (beg
@@ -850,9 +861,9 @@ Mode description:
 
     "----"
 
-    ["Goto URL by bug number"        tinydebian-bug-browse-url-by-bug          t]
-    ["Goto URL by package bugs"      tinydebian-bug-browse-url-by-package-bugs t]
-    ["Goto URL by package name"      tinydebian-bug-browse-url-by-package-name t]
+    ["Goto URL by bug number"    tinydebian-bug-browse-url-by-bug          t]
+    ["Goto URL by package bugs"  tinydebian-bug-browse-url-by-package-bugs t]
+    ["Goto URL by package name"  tinydebian-bug-browse-url-by-package-name t]
 
     "----"
 
@@ -870,17 +881,17 @@ Mode description:
 
     (list
      "BTS Control messages"
-     ["Send BTS Ctrl close"                tinydebian-bts-mail-ctrl-close    t]
-     ["Send BTS Ctrl severity"             tinydebian-bts-mail-ctrl-severity t]
-     ["Send BTS Ctrl tags"                 tinydebian-bts-mail-ctrl-tags     t]
-     ["Send BTS Ctrl usertag"              tinydebian-bts-mail-ctrl-usertag  t]
-     ["Send BTS Ctrl forward"              tinydebian-bts-mail-ctrl-forward-main  t]
-     ["Send BTS Ctrl forwarded"            tinydebian-bts-mail-ctrl-forwarded-main  t]
-     ["Send BTS Ctrl fixed"                tinydebian-bts-mail-ctrl-fixed    t]
-     ["Send BTS Ctrl reassign"             tinydebian-bts-mail-ctrl-reassign t]
-     ["Send BTS Ctrl retitle"              tinydebian-bts-mail-ctrl-retitle  t]
-     ["Send BTS Ctrl reopen"               tinydebian-bts-mail-ctrl-reopen   t]
-     ["Send BTS Ctrl merge"                tinydebian-bts-mail-ctrl-merge    t])
+     ["Send BTS Ctrl close"        tinydebian-bts-mail-ctrl-close    t]
+     ["Send BTS Ctrl severity"     tinydebian-bts-mail-ctrl-severity t]
+     ["Send BTS Ctrl tags"         tinydebian-bts-mail-ctrl-tags     t]
+     ["Send BTS Ctrl usertag"      tinydebian-bts-mail-ctrl-usertag  t]
+     ["Send BTS Ctrl forward"      tinydebian-bts-mail-ctrl-forward-main  t]
+     ["Send BTS Ctrl forwarded"    tinydebian-bts-mail-ctrl-forwarded-main  t]
+     ["Send BTS Ctrl fixed"        tinydebian-bts-mail-ctrl-fixed    t]
+     ["Send BTS Ctrl reassign"     tinydebian-bts-mail-ctrl-reassign t]
+     ["Send BTS Ctrl retitle"      tinydebian-bts-mail-ctrl-retitle  t]
+     ["Send BTS Ctrl reopen"       tinydebian-bts-mail-ctrl-reopen   t]
+     ["Send BTS Ctrl merge"        tinydebian-bts-mail-ctrl-merge    t])
 
     (list
      "Query information"
@@ -1147,6 +1158,12 @@ Activate on files whose path matches
 
 ;;; ----------------------------------------------------------------------
 ;;;
+(defmacro tinydebian-emacs-bts-email-compose (address)
+  "Send message to ADDRESS@<emacs bts>."
+  `(format "%s@%s" ,address tinydebian-:emacs-bts-email-address))
+
+;;; ----------------------------------------------------------------------
+;;;
 (defmacro tinydebian-launchpad-email-compose (address)
   "Send message to ADDRESS@<launchpad>."
   `(format "%s@%s" ,address tinydebian-:launchpad-email-address))
@@ -1167,11 +1184,11 @@ Activate on files whose path matches
 ;;;
 (defmacro tinydebian-bts-email-compose-1 (address)
   "Send message to ADDRESS@<debian bts>."
-  `(format "%s@%s" ,address tinydebian-:bts-email-address))
+  `(format "%s@%s" ,address tinydebian-:debian-bts-email-address))
 
 ;;; ----------------------------------------------------------------------
 ;;;
-(defsubst tinydebian-bts-email-compose (address &optional bug)
+(defun tinydebian-bts-email-compose (address &optional bug)
    (when (string-match "submitter\\|maintonly\\|quiet\\|close" address)
      (cond
       ((string-match "[0-9]-" address)
@@ -1181,7 +1198,11 @@ Activate on files whose path matches
       (t
        (error "Can't compose NNNN-ADDRESS from values `%s' `%s'"
 	      address bug))))
-   (tinydebian-bts-email-compose-1 address))
+   (cond
+    ((tinydebian-bug-gnu-emacs-bts-p)
+     (tinydebian-emacs-bts-email-compose address))
+    (t
+     (tinydebian-bts-email-compose-1 address))))
 
 ;;; ----------------------------------------------------------------------
 ;;;
@@ -1254,6 +1275,13 @@ Signal optional ERROR message is STR was empty."
 	   (string-match "[^ \t\r\n]" str))
       (and (stringp error)
 	   (error "TinyDebian: %s" error))))
+
+;;; ----------------------------------------------------------------------
+;;;
+(defsubst tinydebian-current-line-string ()
+  "Return current line."
+  (buffer-substring (line-beginning-position)
+                    (line-end-position)))
 
 ;;; ----------------------------------------------------------------------
 ;;;
@@ -1617,7 +1645,7 @@ This function needs network connection."
 
 ;;; ----------------------------------------------------------------------
 ;;;
-(defsubst tinydebian-bug-gnu-emacs-bts-string-p (str)
+(defun tinydebian-bug-gnu-emacs-bts-string-p (str)
   "Test if STR looks like Emacs BTS support request."
   ;; [  23: Emacs bug Tracking Syst] bug#2134:
   (if (string-match "Emacs.*bug#\\([0-9]+\\):" str)
@@ -1625,28 +1653,44 @@ This function needs network connection."
 
 ;;; ----------------------------------------------------------------------
 ;;;
+(defun tinydebian-bug-gnu-emacs-bts-re-search-p (&optional point)
+  "Search from `point-min' or optional POINT for Emacs BTS response.
+Return:
+  '(bug-number email). or nil."
+  ;; Your message has been sent to the package maintainer(s):
+  ;;  Emacs Bugs <email>
+  ;;
+  ;; If you wish to submit further information on this problem, please
+  ;; send it to 2217@<address>, as before.
+  ;;
+  ;; Please do not send mail to owner@<address> unless you wish
+  ;; to report a problem with the Bug-tracking system.
+  (save-excursion
+    (goto-char (point-min))
+    (when (re-search-forward
+           (format
+            "\\(\\([0-9]+\\)@%s[^ \t\r\n]+\\)"
+            tinydebian-:emacs-bts-email-address)
+           nil t)
+      (list (match-string 2)
+            (match-string 1)))))
+
+;;; ----------------------------------------------------------------------
+;;;
 (defun tinydebian-bug-gnu-emacs-bts-p ()
   "Check if bug context is Emacs BTS."
-  (let ((url "http://emacsbugs.donarmstrong.com"))
+  (let ((url tinydebian-:emacs-bts-url-http-package-bugs))
     (cond
      ((eq major-mode 'gnus-summary-mode)
-      (let ((str (buffer-substring (line-beginning-position)
-				   (line-end-position)))
+      (let ((str (tinydebian-current-line-string)))
 	    bug)
 	(cond
 	 ((setq bug (tinydebian-bug-gnu-emacs-bts-string-p str))
 	  (format "%s/%s" url bug)))))
      (t
-      (save-excursion
-	(goto-char (point-min))
-	(when (and (re-search-forward
-		    "Thank.*filing.*bug report.*Emacs" nil t)
-		   (re-search-forward
-		    "send it to \\([0-9]+\\)@emacsbugs"
-		    nil t))
-	  (if (re-search-forward
-	       "http://savannah.gnu.org/.*[?][0-9]+" nil t)
-	      (format "%s/%s" url bug))))))))
+      (multiple-value-bind (bug email)
+          (tinydebian-bug-gnu-emacs-bts-re-search-p)
+        (format "%s/%s" url bug))))))
 
 ;;; ----------------------------------------------------------------------
 ;;;
@@ -1751,12 +1795,14 @@ the proper bug destionation: Sourceforge, Ubuntu or Debian."
 	  str
 	(tinydebian-bug-sourceforge-url-main str)))
      ((tinydebian-bug-ubuntu-p)
-      (format "https://bugs.launchpad.net/bugs/%s"
+      (format "%s/%s"
+              tinydebian-:launchpad-url-http-package-bugs
 	      (if (numberp bug)
 		  (int-to-string bug)
 		bug)))
      (bug
-      (format "http://bugs.debian.org/%s"
+      (format "%s/%s"
+              tinydebian-:debian-url-http-package-bugs
 	      (if (numberp bug)
 		  (int-to-string bug)
 		bug))))))
@@ -1834,7 +1880,7 @@ Bug#NNNN: O: package -- description."
 	  bug)
 	;;   NNNN@bugs.debian.org
 	(and (string-match (concat "\\([0-9]+\\)\\(?:-[a-z]+\\)?@"
-				   tinydebian-:bts-email-address)
+				   tinydebian-:debian-bts-email-address)
 			   str)
 	     (match-string 1 str))
 	;;   BTS message lines: "owner NNNNNN"
@@ -2233,7 +2279,7 @@ Article buffers."
 ;;;
 (defsubst tinydebian-url-debian-bugs (string)
   "Return bugs URL."
-  (format "%s/%s" tinydebian-:url-http-package-bugs string))
+  (format "%s/%s" tinydebian-:debian-url-http-package-bugs string))
 
 ;;; ----------------------------------------------------------------------
 ;;;
@@ -2984,10 +3030,10 @@ Mode description:
 (put 'tinydebian-with-url-page-type-macro 'edebug-form-spec '(body))
 (put 'tinydebian-with-url-page-type-macro 'lisp-indent-function 1)
 (defmacro tinydebian-with-url-page-type-macro (page-type &rest body)
-  "Retrieve PAGE-TYPE from `tinydebian-:url-debian-page-alist' and run BODY.
+  "Retrieve PAGE-TYPE from `tinydebian-:debian-url-page-alist' and run BODY.
   Variable `page'is bound to the retrieved value.
   Signal error if PAGE-TYPE is not found."
-  `(let ((page (assoc ,page-type tinydebian-:url-debian-page-alist)))
+  `(let ((page (assoc ,page-type tinydebian-:debian-url-page-alist)))
      (unless page
        (error "TinyDebian: unknown page-typpe `%s'" ,page-type))
      ,@body))
@@ -3195,16 +3241,16 @@ Mode description:
 ;;;
 (defsubst tinydebian-url-wnpp-compose (page-type)
   "Return URL to search"
-  (let ((page (assoc page-type tinydebian-:url-http-wnpp-page-alist)))
+  (let ((page (assoc page-type tinydebian-:debian-url-http-wnpp-page-alist)))
     (unless page
       (error "TinyDebian: unknow page-typpe `%s'" page-type))
-    (format "%s/%s" tinydebian-:url-http-wnpp-page-main (cdr page))))
+    (format "%s/%s" tinydebian-:debian-url-http-wnpp-page-main (cdr page))))
 
 ;;; ----------------------------------------------------------------------
 ;;;
 (defsubst tinydebian-url-usertag-compose (tag)
   "Return URL to search"
-  (format "%s/usertag:%s" tinydebian-:url-http-debian-www tag))
+  (format "%s/usertag:%s" tinydebian-:debian-url-http-www tag))
 
 ;;; ----------------------------------------------------------------------
 ;;;
@@ -3263,9 +3309,9 @@ Mode description:
 ;;; ----------------------------------------------------------------------
 ;;;
 (defsubst tinydebian-package-virtual-p (name)
-  "Check if package NAME is in `tinydebian-:virtual-package-list'."
-  (and tinydebian-:virtual-package-list
-       (assoc name tinydebian-:virtual-package-list)))
+  "Check if package NAME is in `tinydebian-:debian-virtual-package-list'."
+  (and tinydebian-:debian-virtual-package-list
+       (assoc name tinydebian-:debian-virtual-package-list)))
 
 ;;; ----------------------------------------------------------------------
 ;;;
@@ -3294,7 +3340,7 @@ Mode description:
   (bug type package subject email &rest body)
   "Compose mail with SUBJECT and run BODY."
   (let ((name (gensym "name-")))
-    `(let ((,name (format "*Mail Debian BTS %s*"
+    `(let ((,name (format "*Mail BTS %s*"
 			  (cond
 			   ((and ,bug ,type ,package)
 			    (format "%s %s %s"

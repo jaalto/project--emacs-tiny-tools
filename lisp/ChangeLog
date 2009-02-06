@@ -1,3 +1,25 @@
+2009-02-06 Fri  Jari Aalto  <jari.aalto@cante.net>
+
+        * tiny/tinydebian.el
+        (top level): Rename all Debian variables to tinydebian-:tinydebian-*.
+        (tinydebian-bug-gnu-emacs-bts-re-search-p): New.
+        (tinydebian-bug-gnu-emacs-bts-p): Use
+        `(tinydebian-bug-gnu-emacs-bts-re-search-p):'
+        (tinydebian-:emacs-bts-email-address): devel New.
+        (tinydebian-:emacs-bts-url-http-package-bugs): New.
+        (tinydebian-bug-gnu-emacs-bts-p): Use
+        `tinydebian-:emacs-bts-url-http-package-bugs'.
+        (tinydebian-:launchpad-url-http-package-bugs): New.
+        (tinydebian-bug-url): Use `tinydebian-:launchpad-url-http-package-bugs'
+        and `tinydebian-:debian-url-http-package-bugs'.
+        (tinydebian-bts-mail-compose-macro): Remove word 'Debian' from
+        generated buffer name.
+        (tinydebian-bts-email-compose): Support Emacs BTS.
+        (tinydebian-current-line-string): New.
+        (tinydebian-emacs-bts-email-compose): New.
+        (tinydebian-bts-email-compose): Support Emacs BTS control
+        messages.
+
 2009-02-05  Jari Aalto  <jaalto@jondo.cante.net>
 
 	* other/folding.el (python-mode): Add `python-mode' with
