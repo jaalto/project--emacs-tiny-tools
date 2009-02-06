@@ -47,7 +47,7 @@
 //	    float
 ///////////////////////////////////////////////////////////////////////
 
-function SwatchBeats()
+function SwatchBeats ()
 {
     // calculate Middle European Time, i.e. UTC + 1
 
@@ -77,7 +77,7 @@ function SwatchBeats()
 //	    string
 ///////////////////////////////////////////////////////////////////////
 
-function CutDecimals(n, count)
+function CutDecimals (n, count)
 {
     var str = n.toString();
     var pos = str.indexOf(".");
@@ -113,7 +113,7 @@ function CutDecimals(n, count)
 //	    string
 ///////////////////////////////////////////////////////////////////////
 
-function BMTtime()
+function BMTtime ()
 {
     // "Biel Mean Time" - Swatch headquarter in Switzerland
 
@@ -139,7 +139,7 @@ function BMTtime()
 //		string
 ///////////////////////////////////////////////////////////////////////
 
-function BMTtimeDisplay(out)
+function BMTtimeDisplay (out)
 {
     var time = BMTtime();
 
