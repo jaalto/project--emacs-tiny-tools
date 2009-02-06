@@ -19,6 +19,11 @@
         (tinydebian-emacs-bts-email-compose): New.
         (tinydebian-bts-email-compose): Support Emacs BTS control
         messages.
+        (end of file): Add to hook `tinydebian-:mail-mode-define-keys-hook'
+        function `tinydebian-mail-mode-define-keys'.
+        (tinydebian-mail-mode::wizard): add `tinydebian-bts-mail-ctrl-command-cc'.
+        (tinydebian-bts-mail-ctrl-command-add): Correct point when inserting command.
+        (tinydebian-bts-mail-ctrl-command-cc): New.
 
 2009-02-05  Jari Aalto  <jaalto@jondo.cante.net>
 

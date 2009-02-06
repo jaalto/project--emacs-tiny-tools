@@ -852,12 +852,15 @@ Mode description:
 \\{tinydebian-:bts-mode-prefix-map}"
 
    "TinyDebian BTS"
+
    nil
+
    "TinyDebian BTS minor mode menu."
+
    (list
     tinydebian-:bts-mode-easymenu-name
-    ["Reply to bug"                  tinydebian-bts-mail-type-reply            t]
-    ["Report a new bug"              tinydebian-bug-report-mail                t]
+    ["Reply to bug"                  tinydebian-bts-mail-type-reply        t]
+    ["Report a new bug"              tinydebian-bug-report-mail            t]
 
     "----"
 
@@ -2827,6 +2830,7 @@ If optional RE is non-nil, remove all command lines matching RE"
     (tinydebian-bts-mail-ctrl-command-finalize-add))
   (if re
       (tinydebian-bts-mail-ctrl-command-remove re))
+  (goto-char (tinydebian-bts-mail-ctrl-finalize-position))
   (tinydebian-bts-mail-ctrl-command-insert string))
 
 ;;; ----------------------------------------------------------------------
@@ -2938,6 +2942,17 @@ If optional RE is non-nil, remove all command lines matching RE"
 
 ;;; ----------------------------------------------------------------------
 ;;;
+(defun tinydebian-bts-mail-ctrl-command-cc (&optional list)
+  "Add pseudo header and LIST of email addresses.
+If LIST if nil, position point at pseudo header."
+  (interactive)
+  (let ((cmd (format "X-Debbugs-CC: %s" (mapconcat 'concat list " "))))
+    (tinydebian-bts-mail-ctrl-command-add cmd)
+    (forward-line -1)
+    (re-search-forward ":" nil t)))
+
+;;; ----------------------------------------------------------------------
+;;;
 (defsubst tinydebian-mail-mode-map-activate ()
   "Use local \\{tinydebian-:mail-mode-map} on this buffer."
   (use-local-map tinydebian-:mail-mode-map))
@@ -2963,8 +2978,11 @@ Mode description:
 \\{tinydebian-:mail-mode-prefix-map}"
 
    "TinyDebian BTS mail send mode"
+
    nil
+
    "TinyDebian BTS mail send minor mode menu."
+
    (list
     tinydebian-:mail-mode-easymenu-name
     ["Address Bug"         tinydebian-mail-mode-debian-address-bug-toggle       t]
@@ -2993,6 +3011,7 @@ Mode description:
     ["Add BTS Ctrl retitle"    tinydebian-bts-mail-ctrl-command-retitle  t]
 ;;;   Addend BTS Ctrl reopen"     tinydebian-bts-mail-ctrl-command-reopen   t]
     ["Add BTS Ctrl merge"      tinydebian-bts-mail-ctrl-command-merge    t]
+    ["Add BTS Ctrl CC"         tinydebian-bts-mail-ctrl-command-cc       t]
 
     )
 
@@ -3010,10 +3029,11 @@ Mode description:
 
      ;;  (C)ontrol commands
 ;;      (define-key map  "cf"  'tinydebian-bts-mail-ctrl-command-forward)
-      (define-key map  "cF"  'tinydebian-bts-mail-ctrl-command-forwarded)
-      (define-key map  "cm"  'tinydebian-bts-mail-ctrl-command-merge)
+     (define-key map  "cc"  'tinydebian-bts-mail-ctrl-command-cc)
+     (define-key map  "cF"  'tinydebian-bts-mail-ctrl-command-forwarded)
+     (define-key map  "cm"  'tinydebian-bts-mail-ctrl-command-merge)
 ;;      (define-key map  "co"  'tinydebian-bts-mail-ctrl-command-reopen)
-      (define-key map  "cr"  'tinydebian-bts-mail-ctrl-command-reassign)
+     (define-key map  "cr"  'tinydebian-bts-mail-ctrl-command-reassign)
      (define-key map  "cR"  'tinydebian-bts-mail-ctrl-command-retitle)
      (define-key map  "cs"  'tinydebian-bts-mail-ctrl-command-severity)
      (define-key map  "ct"  'tinydebian-bts-mail-ctrl-command-tags)
@@ -4617,6 +4637,9 @@ You can select region and these commands to shell `sh' with command
 
 (add-hook 'tinydebian-:bts-mode-define-keys-hook
 	  'tinydebian-bts-mode-define-keys)
+
+(add-hook 'tinydebian-:mail-mode-define-keys-hook
+	  'tinydebian-mail-mode-define-keys)
 
 (defalias 'tinydebian-reportbug 'tinydebian-bug-report-mail)
 
