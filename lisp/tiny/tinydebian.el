@@ -1686,7 +1686,7 @@ Return:
 	    bug)
 	(cond
 	 ((setq bug (tinydebian-bug-gnu-emacs-bts-string-p str))
-	  (format "%s/%s" url bug)))))
+	  (format "%s/%s" url bug))))
      (t
       (multiple-value-bind (bug email)
           (tinydebian-bug-gnu-emacs-bts-re-search-p)
