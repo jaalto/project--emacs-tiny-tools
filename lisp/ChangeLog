@@ -9,8 +9,10 @@
 	* tiny/tiny-admin-util.el: Remove autoload utilities and move to
 	tinylisp.el
 
-	* tiny/tinylisp.el (tinylisp-autoload-generate-file): Adjust
-	description.
+	* tiny/tinylisp.el
+	(top level): Add documentation section 'Batch processing'.
+	(tinylisp-batch-generic-command-line): New.
+	(tinylisp-autoload-generate-file): Adjust description.
 	(tinylisp-:menu-autoload): New.
 	(tinylisp-:ignore-dir-regexp): New.
 	(tinylisp-directory-recursive-macro): New. New.
@@ -38,6 +40,15 @@
 	`tinylisp-autoload-quick-build-interactive-from-file'.
 	(tinylisp-mode::wizard): Add
 	`tinylisp-autoload-quick-build-interactive-from-file'.
+	(tinylisp-batch-autoload-quick-build-from-file): New.
+	(tinylisp-batch-autoload-quick-build-interactive-from-file): New.
+	(tinylisp-batch-generic-command-line): New.
+	(tinylisp-file-macro): New.
+	(tinylisp-find-file-noselect): New.
+	(tinylisp-insert-file-contents): New.
+	(tinylisp-with-file-env-macro): Update with more hooks.
+	(tinylisp-file-name-add-suffix): New.
+	(tinylisp-batch-autoload-generate-loaddefs-file): New.
 
 	* tiny/tiny-setup.el: OBSOLETE file. Add `error' to prevent using it.
 
