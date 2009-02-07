@@ -610,8 +610,8 @@ Defined keys:
    (list                                ;arg 10
     tinylisp-:mode-easymenu-name
     ["Eval whole buffer"              tinylisp-eval-current-buffer           t]
-    ["Eval whole buffer, `load'"      tinylisp-eval-current-buffer-from-file  t]
-    ["Eval whole buffer as defconst"  tinylisp-eval-current-buffer-defconst t]
+    ["Eval whole buffer, `load'"      tinylisp-eval-current-buffer-from-file t]
+    ["Eval whole buffer as defconst"  tinylisp-eval-current-buffer-defconst  t]
     ["Eval statement at point"        tinylisp-eval-at-point                 t]
     ["Eval reverse statement at point" tinylisp-eval-reverse                 t]
     ["Eval and edit line "            tinylisp-eval-edit                     t]
