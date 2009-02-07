@@ -31,6 +31,9 @@
 	(tinylisp-autoload-real-build-for-file): New.
 	(tinylisp-autoload-real-build-for-dir): New.
 	(tinylisp-autoload-real-autoload-build-recursive): New.
+	(tinylisp-forward-def): Correct forward movement.
+	(tinylisp-autoload-quick-build-from-file): New.
+	(tinylisp-autoload-quick-build-interactive-from-file): New.
 
 	* tiny/tiny-setup.el: OBSOLETE file. Add `error' to prevent using it.
 
