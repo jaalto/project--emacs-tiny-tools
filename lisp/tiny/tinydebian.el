@@ -85,8 +85,8 @@
 (autoload 'gnus-summary-article-number  "gnus-sum")
 (autoload 'gnus-summary-display-article "gnus-sum")
 (autoload 'url-retrieve-synchronously   "url")
-(autoload 'mail-position-on-field	"sendmail")
-(autoload 'mail-fetch-field		"sendmail")
+(autoload 'mail-position-on-field       "sendmail")
+(autoload 'mail-fetch-field             "sendmail")
 (autoload 'regexp-opt                   "regexp-opt")
 
 (eval-when-compile (ti::package-use-dynamic-compilation))
@@ -599,6 +599,13 @@ See also `tinydebian-:rfs-template'")
 (defconst tinydebian-:emacs-bts-url-http-package-bugs
   "http://emacsbugs.donarmstrong.com"
   "The Emacs bug control URL without parameter, up to '/' token.")
+
+(defvar tinydebian-:emacs-bts-line-regexp
+  "Emacs.*Bug#\\([0-9]+\\)"
+  "Regexp to return Emacs BTS bug number from submatch 1.
+E.g. in `gnus-summary-mode':
+
+   [  16: Emacs bug Tracking Syst] Processed: Bug#2217 Change of severity / minor")
 
 (defvar tinydebian-:list-email-address "lists.debian.org"
   "Email address or Debian mailing lists.")
@@ -1284,7 +1291,7 @@ Signal optional ERROR message is STR was empty."
 (defsubst tinydebian-current-line-string ()
   "Return current line."
   (buffer-substring (line-beginning-position)
-                    (line-end-position)))
+		    (line-end-position)))
 
 ;;; ----------------------------------------------------------------------
 ;;;
@@ -1651,32 +1658,60 @@ This function needs network connection."
 (defun tinydebian-bug-gnu-emacs-bts-string-p (str)
   "Test if STR looks like Emacs BTS support request."
   ;; [  23: Emacs bug Tracking Syst] bug#2134:
-  (if (string-match "Emacs.*bug#\\([0-9]+\\):" str)
+  (if (string-match tinydebian-:emacs-bts-line-regexp str)
       (match-string-no-properties 1 str)))
+
+;;; ----------------------------------------------------------------------
+;;;
+(defun tinydebian-bug-gnu-emacs-bts-re-search-email ()
+  "Search from current point for `tinydebian-:emacs-bts-email-address'.
+Return:
+  '(bug-number email)"
+  (let ((email (regexp-quote tinydebian-:emacs-bts-email-address)))
+    (cond
+     ((re-search-forward (format
+                          "\\(\\([0-9]+\\)@%s[^ \t\r\n]+\\)"
+                          email)
+                          nil t)
+      ;; Your message has been sent to the package maintainer(s):
+      ;;  Emacs Bugs <email>
+      ;;
+      ;; If you wish to submit further information on this problem, please
+      ;; send it to 2217@<address>, as before.
+      ;;
+      ;; Please do not send mail to owner@<address> unless you wish
+      ;; to report a problem with the Bug-tracking system.
+      (list (match-string 2)
+            (match-string 1)))
+     ((save-excursion
+        (re-search-forward (concat
+                            email
+                            "\\|Emacs bugs database")
+                           nil t))
+      ;; Processing commands for control@emacsbugs.donarmstrong.com:
+      ;;
+      ;; > severity NNNN minor
+      ;; bug#NNN: <<subject>
+      ;; Severity set to `minor' from `normal'
+      ;;
+      ;; > thanks
+      ;; Stopping processing here.
+      ;;
+      ;; Please contact me if you need assistance.
+      ;;
+      ;; Don Armstrong
+      ;; (administrator, Emacs bugs database)
+      (tinydebian-bug-nbr-forward)))))
 
 ;;; ----------------------------------------------------------------------
 ;;;
 (defun tinydebian-bug-gnu-emacs-bts-re-search-p (&optional point)
   "Search from `point-min' or optional POINT for Emacs BTS response.
 Return:
-  '(bug-number email). or nil."
-  ;; Your message has been sent to the package maintainer(s):
-  ;;  Emacs Bugs <email>
-  ;;
-  ;; If you wish to submit further information on this problem, please
-  ;; send it to 2217@<address>, as before.
-  ;;
-  ;; Please do not send mail to owner@<address> unless you wish
-  ;; to report a problem with the Bug-tracking system.
+  '(bug-number email)."
   (save-excursion
-    (goto-char (point-min))
-    (when (re-search-forward
-           (format
-            "\\(\\([0-9]+\\)@%s[^ \t\r\n]+\\)"
-            tinydebian-:emacs-bts-email-address)
-           nil t)
-      (list (match-string 2)
-            (match-string 1)))))
+    (goto-char (or point (point-min)))
+    (tinydebian-bug-gnu-emacs-bts-re-search-email)))
 
 ;;; ----------------------------------------------------------------------
 ;;;
@@ -1685,15 +1720,14 @@ Return:
   (let ((url tinydebian-:emacs-bts-url-http-package-bugs))
     (cond
      ((eq major-mode 'gnus-summary-mode)
-      (let ((str (tinydebian-current-line-string)))
+      (let ((str (tinydebian-current-line-string))
 	    bug)
-	(cond
-	 ((setq bug (tinydebian-bug-gnu-emacs-bts-string-p str))
+	(when (setq bug (tinydebian-bug-gnu-emacs-bts-string-p str))
 	  (format "%s/%s" url bug))))
      (t
       (multiple-value-bind (bug email)
-          (tinydebian-bug-gnu-emacs-bts-re-search-p)
-        (format "%s/%s" url bug))))))
+	  (tinydebian-bug-gnu-emacs-bts-re-search-p)
+	(format "%s/%s" url bug))))))
 
 ;;; ----------------------------------------------------------------------
 ;;;
@@ -1799,13 +1833,13 @@ the proper bug destionation: Sourceforge, Ubuntu or Debian."
 	(tinydebian-bug-sourceforge-url-main str)))
      ((tinydebian-bug-ubuntu-p)
       (format "%s/%s"
-              tinydebian-:launchpad-url-http-package-bugs
+	      tinydebian-:launchpad-url-http-package-bugs
 	      (if (numberp bug)
 		  (int-to-string bug)
 		bug)))
      (bug
       (format "%s/%s"
-              tinydebian-:debian-url-http-package-bugs
+	      tinydebian-:debian-url-http-package-bugs
 	      (if (numberp bug)
 		  (int-to-string bug)
 		bug))))))
@@ -1870,7 +1904,7 @@ Bug#NNNN: O: package -- description."
 (defun tinydebian-bug-nbr-string (str)
   "Read bug nbr from STR."
   (when (stringp str)
-    (or (and (string-match "#\\([0-9]+\\)" str)	;; Bug#NNNN Debian
+    (or (and (string-match "#\\([0-9]+\\)" str) ;; Bug#NNNN Debian
 	     (match-string 1 str))
 	;; [Bug 192841] Ubuntu
 	(and (string-match "[[]Bug \\([0-9]+\\)[]]" str)
@@ -1945,7 +1979,7 @@ Bug#NNNN: O: package -- description."
 (defsubst tinydebian-bug-nbr-forward (&optional regexp)
   "Read bug#NNNN from current point forward.
 If optional REGEXP is sebt, it must take number in submatch 1."
-  (tinydebian-buffer-match-string (or regexp "Bug#\\([0-9]+\\)")))
+  (tinydebian-buffer-match-string (or regexp "[Bb]ug#\\([0-9]+\\)")))
 
 ;;; ----------------------------------------------------------------------
 ;;;
@@ -2796,7 +2830,7 @@ In interactive call, toggle conrol address on and off."
 (defun tinydebian-bts-mail-ctrl-command-goto-body-start ()
   "Goto start of email body."
   (goto-char (point-min))
-  (re-search-forward		;Signals error if not found
+  (re-search-forward            ;Signals error if not found
    (concat "^" (regexp-quote mail-header-separator)))
   (forward-line 1))
 
@@ -2840,8 +2874,8 @@ If optional RE is non-nil, remove all command lines matching RE"
 (defmacro tinydebian-bts-mail-ctrl-command-add-macro (cmd bug &optional string)
   "Compose Control command from BUG CMD-NAME and optional CMD-STRING."
   `(let ((str (if ,string
-                  (format "%s %s %s" ,cmd ,bug ,string)
-                (format "%s %s" ,cmd ,bug)))
+		  (format "%s %s %s" ,cmd ,bug ,string)
+		(format "%s %s" ,cmd ,bug)))
 	 (re  (format "^[ \t]*%s" ,cmd)))
      (tinydebian-bts-mail-ctrl-command-add str re)
      ;; Position point to better place.
@@ -2983,7 +3017,7 @@ If LIST if nil, position point at pseudo header."
   (interactive)
   (save-excursion
     (tinydebian-bts-mail-ctrl-command-add "X-Debbugs-No-Ack: enable"
-                                          "^X-Debbugs-No-Ack:")))
+					  "^X-Debbugs-No-Ack:")))
 
 ;;; ----------------------------------------------------------------------
 ;;;

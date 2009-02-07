@@ -1,3 +1,16 @@
+2009-02-07 Sat  Jari Aalto  <jari.aalto@cante.net>
+
+        * tiny/tiny-setup.el: OBSOLETE file. Add `error' to prevent using it.
+
+        * tiny/tinydebian.el (tinydebian-bug-gnu-emacs-bts-p): Correct
+        `gnus-summary-mode' test.
+        (tinydebian-:emacs-bts-line-regexp): New.
+        (tinydebian-bug-gnu-emacs-bts-string-p): Use `tinydebian-:emacs-bts-line-regexp'.
+        (tinydebian-bug-gnu-emacs-bts-re-search-email): New.
+        (tinydebian-bug-nbr-forward): Adjust regexp for 'bug' and 'Bug'.
+        (tinydebian-bug-gnu-emacs-bts-re-search-p): Use
+        `tinydebian-bug-gnu-emacs-bts-re-search-email'.
+
 2009-02-06 Fri  Jari Aalto  <jari.aalto@cante.net>
 
         * tiny/tinydebian.el
@@ -27,6 +40,7 @@
         (tinydebian-bts-mail-ctrl-command-no-ack): New.
         (tinydebian-bts-mail-ctrl-command-add-macro): Make `string' argument optional.
         (tinydebian-bts-mail-ctrl-command-no-owner): New.
+        (tinydebian-bts-mail-ctrl-command-unarchive): devel New.
 
 2009-02-05  Jari Aalto  <jaalto@jondo.cante.net>
 
