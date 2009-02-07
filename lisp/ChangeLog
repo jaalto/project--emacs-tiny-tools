@@ -49,6 +49,8 @@
 	(tinylisp-with-file-env-macro): Update with more hooks.
 	(tinylisp-file-name-add-suffix): New.
 	(tinylisp-batch-autoload-generate-loaddefs-file): New.
+	(tinylisp-insert-file-contents): Add missing backquote.
+	(tinylisp-find-file-noselect): Add missing backquote.
 
 	* tiny/tiny-setup.el: OBSOLETE file. Add `error' to prevent using it.
 

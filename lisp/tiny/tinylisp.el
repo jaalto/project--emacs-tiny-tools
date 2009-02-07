@@ -2102,18 +2102,20 @@ Following variables are set during BODY:
 ;;; ----------------------------------------------------------------------
 ;;;
 (put 'tinylisp-find-file-no-select 'lisp-indent-function 0)
+(put 'tinylisp-find-file-noselect  'edebug-form-spec '(body))
 (defmacro tinylisp-find-file-noselect (&rest body)
   "Disable hooks and run BODY"
-  (tinylisp-with-file-env-macro
-   (apply 'find-file-noselect ,@body)))
+  `(tinylisp-with-file-env-macro
+     (find-file-noselect ,@body)))
 
 ;;; ----------------------------------------------------------------------
 ;;;
 (put 'tinylisp-insert-file-contents 'lisp-indent-function 0)
+(put 'tinylisp-insert-file-contents 'edebug-form-spec '(body))
 (defmacro tinylisp-insert-file-contents (&rest body)
   "Disable hooks and run BODY"
-  (tinylisp-with-file-env-macro
-   (apply 'insert-file-contents ,@body)))
+  `(tinylisp-with-file-env-macro
+     (insert-file-contents ,@body)))
 
 ;;; ----------------------------------------------------------------------
 ;;;
@@ -4779,7 +4781,7 @@ Can't find _defined_ variable or function on the line (eval buffer first).")
 ;;;
 (defsubst tinylisp-file-name-add-suffix (file suffix)
   "Convert FILE.EXT into FILE-SUFFIX.EXT."
-  (let ((ext file-name-extension file))
+  (let ((ext (file-name-extension file)))
     (format "%s-%s.%s"
 	    (file-name-sans-extension file)
 	    suffix
