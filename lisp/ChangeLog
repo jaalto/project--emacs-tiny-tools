@@ -1,46 +1,73 @@
 2009-02-07 Sat  Jari Aalto  <jari.aalto@cante.net>
 
-        * tiny/tiny-setup.el: OBSOLETE file. Add `error' to prevent using it.
+	* tiny/tiny-admin-util.el: Remove autoload utilities and move to
+	tinylisp.el
 
-        * tiny/tinydebian.el (tinydebian-bug-gnu-emacs-bts-p): Correct
-        `gnus-summary-mode' test.
-        (tinydebian-:emacs-bts-line-regexp): New.
-        (tinydebian-bug-gnu-emacs-bts-string-p): Use `tinydebian-:emacs-bts-line-regexp'.
-        (tinydebian-bug-gnu-emacs-bts-re-search-email): New.
-        (tinydebian-bug-nbr-forward): Adjust regexp for 'bug' and 'Bug'.
-        (tinydebian-bug-gnu-emacs-bts-re-search-p): Use
-        `tinydebian-bug-gnu-emacs-bts-re-search-email'.
+	* tiny/tinylisp.el (tinylisp-autoload-generate-file): Adjust
+	description.
+	(tinylisp-:menu-autoload): New.
+	(tinylisp-:ignore-dir-regexp): New.
+	(tinylisp-directory-recursive-macro): New. New.
+	(tinylisp-with-file-env-macro): New.
+	(tinylisp-directory-list): New.
+	(tinylisp-autoload-real-directory-last): New.
+	(tinylisp-autoload-real-directory-to-file-name): New.
+	(tinypath-tmp-autoload-file-footer): New.
+	(tinylisp-autoload-real-directories): New.
+	(tinylisp-autoload-real-generate-file-autoloads-1): New.
+	(tinylisp-autoload-real-generate-file-autoloads): New.
+	(tinylisp-autoload-real-generate-loaddefs-file-list): New.
+	(tinylisp-autoload-real-generate-loaddefs-dir): New.
+	(tinylisp-autoload-real-generate-loaddefs-recursive): New.
+	(tinylisp-autoload-real-update-update-file-autoloads-1): New.
+	(tinylisp-autoload-real-update-file-autoloads): New.
+	(tinylisp-autoload-real-build-for-file-1): New.
+	(tinylisp-autoload-real-build-for-file): New.
+	(tinylisp-autoload-real-build-for-dir): New.
+	(tinylisp-autoload-real-autoload-build-recursive): New.
+
+	* tiny/tiny-setup.el: OBSOLETE file. Add `error' to prevent using it.
+
+	* tiny/tinydebian.el (tinydebian-bug-gnu-emacs-bts-p): Correct
+	`gnus-summary-mode' test.
+	(tinydebian-:emacs-bts-line-regexp): New.
+	(tinydebian-bug-gnu-emacs-bts-string-p): Use
+	`tinydebian-:emacs-bts-line-regexp'.
+	(tinydebian-bug-gnu-emacs-bts-re-search-email): New.
+	(tinydebian-bug-nbr-forward): Adjust regexp for 'bug' and 'Bug'.
+	(tinydebian-bug-gnu-emacs-bts-re-search-p): Use
+	`tinydebian-bug-gnu-emacs-bts-re-search-email'.
 
 2009-02-06 Fri  Jari Aalto  <jari.aalto@cante.net>
 
-        * tiny/tinydebian.el
-        (top level): Rename all Debian variables to tinydebian-:tinydebian-*.
-        (tinydebian-bug-gnu-emacs-bts-re-search-p): New.
-        (tinydebian-bug-gnu-emacs-bts-p): Use
-        `(tinydebian-bug-gnu-emacs-bts-re-search-p):'
-        (tinydebian-:emacs-bts-email-address): devel New.
-        (tinydebian-:emacs-bts-url-http-package-bugs): New.
-        (tinydebian-bug-gnu-emacs-bts-p): Use
-        `tinydebian-:emacs-bts-url-http-package-bugs'.
-        (tinydebian-:launchpad-url-http-package-bugs): New.
-        (tinydebian-bug-url): Use `tinydebian-:launchpad-url-http-package-bugs'
-        and `tinydebian-:debian-url-http-package-bugs'.
-        (tinydebian-bts-mail-compose-macro): Remove word 'Debian' from
-        generated buffer name.
-        (tinydebian-bts-email-compose): Support Emacs BTS.
-        (tinydebian-current-line-string): New.
-        (tinydebian-emacs-bts-email-compose): New.
-        (tinydebian-bts-email-compose): Support Emacs BTS control
-        messages.
-        (end of file): Add to hook `tinydebian-:mail-mode-define-keys-hook'
-        function `tinydebian-mail-mode-define-keys'.
-        (tinydebian-mail-mode::wizard): add `tinydebian-bts-mail-ctrl-command-cc'.
-        (tinydebian-bts-mail-ctrl-command-add): Correct point when inserting command.
-        (tinydebian-bts-mail-ctrl-command-cc): New.
-        (tinydebian-bts-mail-ctrl-command-no-ack): New.
-        (tinydebian-bts-mail-ctrl-command-add-macro): Make `string' argument optional.
-        (tinydebian-bts-mail-ctrl-command-no-owner): New.
-        (tinydebian-bts-mail-ctrl-command-unarchive): devel New.
+	* tiny/tinydebian.el
+	(top level): Rename all Debian variables to tinydebian-:tinydebian-*.
+	(tinydebian-bug-gnu-emacs-bts-re-search-p): New.
+	(tinydebian-bug-gnu-emacs-bts-p): Use
+	`(tinydebian-bug-gnu-emacs-bts-re-search-p):'
+	(tinydebian-:emacs-bts-email-address): New. New.
+	(tinydebian-:emacs-bts-url-http-package-bugs): New.
+	(tinydebian-bug-gnu-emacs-bts-p): Use
+	`tinydebian-:emacs-bts-url-http-package-bugs'.
+	(tinydebian-:launchpad-url-http-package-bugs): New.
+	(tinydebian-bug-url): Use `tinydebian-:launchpad-url-http-package-bugs'
+	and `tinydebian-:debian-url-http-package-bugs'.
+	(tinydebian-bts-mail-compose-macro): Remove word 'Debian' from
+	generated buffer name.
+	(tinydebian-bts-email-compose): Support Emacs BTS.
+	(tinydebian-current-line-string): New.
+	(tinydebian-emacs-bts-email-compose): New.
+	(tinydebian-bts-email-compose): Support Emacs BTS control
+	messages.
+	(end of file): Add to hook `tinydebian-:mail-mode-define-keys-hook'
+	function `tinydebian-mail-mode-define-keys'.
+	(tinydebian-mail-mode::wizard): add `tinydebian-bts-mail-ctrl-command-cc'.
+	(tinydebian-bts-mail-ctrl-command-add): Correct point when inserting command.
+	(tinydebian-bts-mail-ctrl-command-cc): New.
+	(tinydebian-bts-mail-ctrl-command-no-ack): New.
+	(tinydebian-bts-mail-ctrl-command-add-macro): Make `string' argument optional.
+	(tinydebian-bts-mail-ctrl-command-no-owner): New.
+	(tinydebian-bts-mail-ctrl-command-unarchive): New. New.
 
 2009-02-05  Jari Aalto  <jaalto@jondo.cante.net>
 
@@ -717,7 +744,7 @@
 
 	* other/dired-sort.el (top level): Adjust autoloads.
 
-2008-02-09  Jari Aalto	<jaalto@cante.cante.net>
+2008-02-09  Jari Aalto  <jaalto@cante.cante.net>
 
 	* tiny/tinyirc.el (tinyirc-pastebot-program-1): Check
 	location of pbotutil.pl with `executable-find'.
@@ -923,7 +950,7 @@
 	Fixed missing paren.
 
 	* other/folding.el: 'Personal reflections by Anders Lindgren'
-	topic rephrased 'Future development ideas'
+	topic rephrased 'Future New.opment ideas'
 
 2007-05-06  Jari Aalto  <jari.aalto@cante.net>
 
@@ -966,8 +993,8 @@
 
 2007-03-17  Jari Aalto  <jaalto A T w2kpicasso cante net>
 
-	* tiny/tinydebian.el (tinydebian-:grep-find-devel-docdir-list): New.
-	(tinydebian-grep-find-debian-devel): New.
+	* tiny/tinydebian.el (tinydebian-:grep-find-New.-docdir-list): New.
+	(tinydebian-grep-find-debian-New.): New.
 
 2007-03-13  Jari Aalto  <jari.aalto@cante.net>
 
@@ -1141,18 +1168,18 @@
 
 2006-11-21  Jari Aalto  <jari.aalto@cante.net>
 
-	* tiny/tinydebian.el (tinydebian-url-qa-developer-status): Added
+	* tiny/tinydebian.el (tinydebian-url-qa-New.oper-status): Added
 	space to interactive prompt.
 	(tinydebian-:url-debian-page-alist): Added `pkg-search-files'.
 	(tinydebian-url-list-package-by-filename): New.
 	(tinydebian-:url-debian-page-alist): Added `policy',
 	`policy-text', `newmaint-guide', `best-practises',
-	`developers-reference', `developers-reference-text'
+	`New.opers-reference', `New.opers-reference-text'
 	(tinydebian-url-policy-manual): Added optional arg TEXT-FILE
 	to open text version of Debian plicy manual.
 	(tinydebian-url-new-maintainer-guide): New.
 	(tinydebian-url-policy-best-practises): New.
-	(tinydebian-url-policy-developers-reference): New.
+	(tinydebian-url-policy-New.opers-reference): New.
 	(tinydebian-url-debian-browse-url): Improved. Can now
 	load text files in files system as well.
 	(tinydebian-bts-mail-type-itp): Docstring correction.
@@ -1245,11 +1272,11 @@
 	the docstring was in wrong place, fixed.
 	(tinydebian-browse-url-lynx-dump): Added `put' `get' to
 	record static value of lynx(1).
-	(tinydebian-:url-debian-page-alist): Added `qa-developer-status'
+	(tinydebian-:url-debian-page-alist): Added `qa-New.oper-status'
 	(tinydebian-string-p): New.
-	(tinydebian-url-qa-developer): New.
+	(tinydebian-url-qa-New.oper): New.
 	(tinydebian-url-list-by-usertag): Use `tinydebian-string-p'
-	(tinydebian-:url-debian-page-alist): Added `qa-developer-bugs'
+	(tinydebian-:url-debian-page-alist): Added `qa-New.oper-bugs'
 	(tinydebian-email-search): New.
 	(tinydebian-:find-email-hook): New.
 	(tinydebian-email-at-word): New.
@@ -2280,7 +2307,7 @@
 	* tiny/tinypath.el: (tinypath-:load-path-ignore-regexp):
 	Ignore .buid, .sinst, .inst directories
 
-2005-01-05   Jari Aalto  <jari dot aalto A T cante dt net>
+2005-01-05   Jari Aalto  <jari.aalto@cante.net>
 
 	* tiny/tinylibenv.el (ti::win32-cygwin-p-1): Do not trust
 	cygwin1.dll, but also search cygpath.exe
@@ -2325,7 +2352,7 @@
 	(tinypath-install-reset-variables): 2.124 New.
 	(tinypath-load-copy-get): 2.124 New.
 
-2004-12-18 Mon  Jari Aalto  <jari dot aalto A T cante dt net>
+2004-12-18 Mon  Jari Aalto  <jari.aalto@cante.net>
 
 	* rc/emacs-rc-tiny.el: Old example removed.
 
@@ -2338,12 +2365,12 @@
 	* tiny/tinycygwin.el (tinycygwin-sysinfo-buffer): 2.11
 	Typo 'Plea' => 'Please'.
 
-2004-12-13 Mon  Jari Aalto  <jari dot aalto A T cante dt net>
+2004-12-13 Mon  Jari Aalto  <jari.aalto@cante.net>
 
 	* tiny/tinyurl.el (tinyurl-validate-url-default): 2.73 Added message
 	if character '$' matches.
 
-2004-11-25 Thu  Jari Aalto  <jari dot aalto A T cante dt net>
+2004-11-25 Thu  Jari Aalto  <jari.aalto@cante.net>
 
 	* other/folding.el (bibtex-mode): 3.30 At section
 	'Set some useful default fold marks' there was extra non-ascii
@@ -2351,7 +2378,7 @@
 	Removed. Bug reported by Juhapekka Tolvanen <juhtolv@cc.jyu.fi>.
 	Closes Debian bug Bug#282388.
 
-2004-11-24 Wed  Jari Aalto  <jari dot aalto A T cante dt net>
+2004-11-24 Wed  Jari Aalto  <jari.aalto@cante.net>
 
 	* tiny/tinytf.el (tinytf-convert-t2html-basic): 2.81 Add
 	--Auto-detect if there are #T2HTML-* tags.
@@ -2360,7 +2387,7 @@
 	(tinytf-convert-call-process): 2.81 Ignore nil values
 	from OPTIONS parameter.
 
-2004-11-23 Tue  Jari Aalto  <jari dot aalto A T cante dt net>
+2004-11-23 Tue  Jari Aalto  <jari.aalto@cante.net>
 
 	* tiny/tinydiff.el (tinydiff-minibuffer--toggle-diff-type): 2.67
 	Handle embedded -bwu option change as -bwc and vice versa.
@@ -2383,7 +2410,7 @@
 	(tinydiff-diff-command-generate): 2.67 Check if `diff-prg'
 	is nil and signal error.
 
-2004-11-15 Mon  Jari Aalto  <jari dot aalto A T cante dt net>
+2004-11-15 Mon  Jari Aalto  <jari.aalto@cante.net>
 
 	* tiny/tinyigrep.el (tinyigrep-:grep-word-at-point): 2.76 New
 	user variable.
@@ -2393,7 +2420,7 @@
 	* tiny/tinylib.el (ti::directory-unix-man-path-root): 2.91
 	Missing symbol quote added.
 
-2004-11-13 Sat  Jari Aalto  <jari dot aalto A T cante dt net>
+2004-11-13 Sat  Jari Aalto  <jari.aalto@cante.net>
 
 	* tiny/tinytf.el
 	- All exit functions are now under key prefix 'x'; like 'xx',
@@ -2522,7 +2549,7 @@
 	(tinydired-:unwanted-files-regexp): 2.41 Added java object
 	files *.class and python *.pyc files
 
-2004-11-03 Wed  Jari Aalto  <jari dot aalto A T cante dt net>
+2004-11-03 Wed  Jari Aalto  <jari.aalto@cante.net>
 
 	* tiny/tinylibo.el (ti::overlay-get-within-area): 2.34 Removed
 	`mapcar' and used faster `append'. Did not find the first overlay.
@@ -2602,7 +2629,7 @@
 	(timer): Removed expensive call to `locate-library'.
 	(overlay): Removed expensive call to `locate-library'.
 
-2004-10-18  Jari Aalto  <jari dot aalto A T cante dt net>
+2004-10-18  Jari Aalto  <jari.aalto@cante.net>
 
 	* tiny/tinydiff.el: (tinydiff-diff-command-generate):
 	Always expand `tinydiff-:diff-tmp-file', not just in
@@ -2610,7 +2637,7 @@
 	(tinydiff-diff-show): Added  expand `tinydiff-:diff-tmp-file'
 	check. Do not ask to save buffer.
 
-2004-10-13 Wed  Jari Aalto  <jari dot aalto A T cante dt net>
+2004-10-13 Wed  Jari Aalto  <jari.aalto@cante.net>
 
 	* tiny/tinypath.el (tinypath-:info-file-basic-contents): 2.118
 	incorrect definition. Was 'Node: Top     This ' which
@@ -2634,7 +2661,7 @@
 	(tinymy-scroll-down): 2.74 Added `move-to-column' to
 	put cursor at col 0.
 
-2004-10-12 Tue  Jari Aalto  <jari dot aalto A T cante dt net>
+2004-10-12 Tue  Jari Aalto  <jari.aalto@cante.net>
 
 	* tiny/tinyprocmail.el (tinyprocmail-lint-recipe-start): 2.47
 	Changed message 'you may need a lock' => 'it may need a lock'.
@@ -2647,12 +2674,12 @@
 	(tinycompile-install): 2.43 New user function.
 	(tinycompile-uninstall): 2.43 New user function.
 
-2004-10-07 Thu  Jari Aalto  <jari dot aalto A T cante dt net>
+2004-10-07 Thu  Jari Aalto  <jari.aalto@cante.net>
 
 	* tiny/tinymail.el (tinymail-from-field-value-plus): 2.75
 	Remove 'INBOX.' prefix from IMAP Gnus groups.
 
-2004-09-28 Tue  Jari Aalto  <jari dot aalto A T cante dt net>
+2004-09-28 Tue  Jari Aalto  <jari.aalto@cante.net>
 
 	* tiny/tinyeat.el (tinyeat-delete-whole-word-1): 2.51 Added
 	optional parameter CHARSET.
@@ -2660,7 +2687,7 @@
 	`tinyeat-delete-whole-word-1'.
 	(tinyeat-delete-whole-word-1-charset): 2.51 New.
 
-2004-09-25 Sat  Jari Aalto  <jari dot aalto A T cante dt net>
+2004-09-25 Sat  Jari Aalto  <jari.aalto@cante.net>
 
 	* tiny/tinycompile.el:
 	(top level): Added defvar `tinyurl-mode' for byte compiler.
@@ -2678,12 +2705,12 @@
 	`ti::string-syntax-kill-double-quote' to improve
 	font lock.
 
-2004-09-27  Jari Aalto  <jari dot aalto A T cante dt net>
+2004-09-27  Jari Aalto  <jari.aalto@cante.net>
 
 	* tiny/tinymailbox.el (tinymailbox-:menu-main): Updated menu
 	documentation. Explained o, O, d, m keys.
 
-2004-09-24  Jari Aalto <jari dot aalto A T cante dt net>
+2004-09-24  Jari Aalto <jari.aalto@cante.net>
 
 	* tiny/tinyurl.el (tinyurl-find-url-message-id):
 	Added debug
@@ -2691,18 +2718,18 @@
 	(tinyurl-handler-main): Renamed. Was `tinyurl-handler'
 	(tinyurl-handler-mail-after): New.
 
-2004-09-23  Jari Aalto <jari dot aalto A T cante dt net>
+2004-09-23  Jari Aalto <jari.aalto@cante.net>
 
 	* tiny/tinyurl.el (tinyurl-handler): Added check if mail
 	composing failed.
 	(tinyurl-agent-function): Added debug.
 
-2004-09-23  Jari Aalto <jari dot aalto A T cante dt net>
+2004-09-23  Jari Aalto <jari.aalto@cante.net>
 
 	* tiny/tinyprocmail.el (tinyprocmail-lint-recipe-start):
 	Changed message 'you need lock' => 'you may need a lock'.
 
-2004-09-22  Jari Aalto <jari dot aalto A T cante dt net>
+2004-09-22  Jari Aalto <jari.aalto@cante.net>
 
 	* tiny/tinymailbox.el (tinymailbox-mode): Chnaged prefix
 	key from single quite to C-c + single quote. This follows
@@ -2715,21 +2742,21 @@
 	`ti::string-syntax-kill-double-quote' to improve
 	font lock.
 
-2004-09-21    <jari dot aalto A T cante dt net>
+2004-09-21    <jari.aalto@cante.net>
 
 	* tiny/tinypath.el (tinypath-cache-mode): Test `interactive-p' for
 	displayed messages.
 
-2004-09-14  Jari Aalto  <jari dot aalto A T cante dt net>
+2004-09-14  Jari Aalto  <jari.aalto@cante.net>
 
 	* tiny/tinyprocmail.el (prg): Made 'v' in v3.22 optional.
 
-2004-09-12  Jari Aalto  <jari dot aalto A T cante dt net>
+2004-09-12  Jari Aalto  <jari.aalto@cante.net>
 
 	* tiny/tinylib.el: Removed extra newlines. Cleaned up
 	the comments at the beginning of file.
 
-2004-09-10 Fri  Jari Aalto  <jari dot aalto A T cante dt net>
+2004-09-10 Fri  Jari Aalto  <jari.aalto@cante.net>
 
 	* tiny/tinyigrep.el (tinyigrep-install-default-databases): 2.73
 	'lisp-home' database now searches several directories, like
@@ -2783,7 +2810,7 @@
 	(tinymy-makefile-mode-hook): Chnaged fuction to
 	`ti::buffer-backslash-fix-paragraph'.
 
-2004-09-09  Jari Aalto  Jari Aalto  <jari dot aalto A T cante dt net>
+2004-09-09  Jari Aalto  Jari Aalto  <jari.aalto@cante.net>
 
 	* tiny/tinylibb.el
 	--  Massive replace-* function renaming session in every package.
@@ -2801,12 +2828,12 @@
 	`tinytf-forward-paragraph'.
 	(tinytf-indent-paragraph-6): 2.76 Added `fill-paragraph'.
 
-2004-09-06  Jari Aalto  <jari dot aalto A T cante dt net>
+2004-09-06  Jari Aalto  <jari.aalto@cante.net>
 
 	* tiny/tinyliby.el (ti::system-describe-symbols-i-args):
 	Prompt message fixed.
 
-2004-09-03 Fri  Jari Aalto  <jari dot aalto A T cante dt net>
+2004-09-03 Fri  Jari Aalto  <jari.aalto@cante.net>
 
 	* tiny/tinyhotlist.el (tinyhotlist-control): 2.43 Typo fixed.
 
@@ -2831,12 +2858,12 @@
 	that can be turned on. they were not the default features that were
 	activated (there is none; without explicit user request).
 
-2004-09-02 Thu  Jari Aalto  <jari dot aalto A T cante dt net>
+2004-09-02 Thu  Jari Aalto  <jari.aalto@cante.net>
 
 	* tiny/tinylib.el (ti::file-passwd-build-alist): 2.85
 	typo: `witch-current-buffer' => `with-current-buffer'
 
-2004-09-01 Wed  Jari Aalto  <jari dot aalto A T cante dt net>
+2004-09-01 Wed  Jari Aalto  <jari.aalto@cante.net>
 
 	* tiny/tinyeat.el: 2.50 Added more key binding examples to the
 	'install'.
@@ -2851,7 +2878,7 @@
 	* tiny/tinysearch.el (tinysearch-default-keybindings): 2.39
 	Removed. User must decide where to bind the keys.
 
-2004-08-31 Tue  Jari Aalto  <jari dot aalto A T cante dt net>
+2004-08-31 Tue  Jari Aalto  <jari.aalto@cante.net>
 
 	* tiny/tinyurl.el
 	(tinyurl-type): 2.63 Added missing ')' from `defun'
@@ -2867,7 +2894,7 @@
 	(tinyurl-command-table-default): 2.63 Commented out explicit setting
 	of 'URL. Use the default value from `tinyurl-command-table-default-1'
 
-2004-08-29 Sun  Jari Aalto  <jari dot aalto A T cante dt net>
+2004-08-29 Sun  Jari Aalto  <jari.aalto@cante.net>
 
 	* tiny/tinysearch.el: (Installation:) 2.39 Removed note about F2
 	keys being defined at start up. They aren't.
@@ -2879,7 +2906,7 @@
 	missing ')' next to tinytab entry.
 	(tiny-setup-:option-table): 2.91 Added entry 'tinycygwin'.
 
-2004-08-28 Sat  Jari Aalto  <jari dot aalto A T cante dt net>
+2004-08-28 Sat  Jari Aalto  <jari.aalto@cante.net>
 
 	* tiny/tinyperl.el
 	-- Removed extra messages. The default verbose level 1 gives
@@ -2932,14 +2959,14 @@
 	`shell-commang' caused displaying the buffer, which was not
 	good e.g. in tinymail.el TAB completion for users.
 
-2004-08-28 Sat  Jari Aalto  <jari dot aalto A T cante dt net>
+2004-08-28 Sat  Jari Aalto  <jari.aalto@cante.net>
 
 	* tiny/tinylib.el (ti::file-passwd-read-entry): 2.83 Removed
 	`shell-command' and replaced with `call-process'. The
 	`shell-commang' caused displaying the buffer, which was not
 	good e.g. in tinymail.el TAB completion for users.
 
-2004-08-27 Fri  Jari Aalto  <jari dot aalto A T cante dt net>
+2004-08-27 Fri  Jari Aalto  <jari.aalto@cante.net>
 
 	* tiny/tinyperl.el: 2.69 Extra newlines removed.
 
@@ -2950,13 +2977,13 @@
 	(locate-library browser-url): 2.60 Removed. browse-url has been
 	standard for Emacs long enough.
 
-2004-08-26 Thu  Jari Aalto  <jari dot aalto A T cante dt net>
+2004-08-26 Thu  Jari Aalto  <jari.aalto@cante.net>
 
 	* tiny/tinymail.el (tinymail-buffer-email-address-scramble-1):
 	2.72 Use simple AT, instead of <AT> which look too much like
 	HTML tag.
 
-2004-08-25 Wed  Jari Aalto  <jari dot aalto A T cante dt net>
+2004-08-25 Wed  Jari Aalto  <jari.aalto@cante.net>
 
 	* tiny/tinylib.el (ti::process-java-version): 2.83 Added
 	check for variable `java' being nil, before
@@ -2967,7 +2994,7 @@
 	(tq-process-buffer): 2.61 Obsole tq.el advice for 19.30 removed.
 	(tinyadvice-:advice-table): 2.61 Removed `tq-process-buffer'.
 
-2004-08-19 Thu  Jari Aalto  <jari dot aalto A T cante dt net>
+2004-08-19 Thu  Jari Aalto  <jari.aalto@cante.net>
 
 	* tiny/tinyurl.el
 	(tinyurl-command-browse-url-default-browser-function): 2.60 New.
@@ -2981,7 +3008,7 @@
 	(tinycygwin-bug-report-message-mark-external): 2.8 New.
 	(tinycygwin-bug-report-mail-compose-interactive): 2.8 New.
 
-2004-04-28  Jari Aalto  <jari dot aalto A T cante dt net>
+2004-04-28  Jari Aalto  <jari.aalto@cante.net>
 
 	* tiny/tinymy.el
 	-- Mouse movement handler rewritten. The CPU usage is now
@@ -3017,20 +3044,20 @@
 	If PROGRAM is not found, do nothing.
 	(tinycygwin-path-to-cygwin): 2.7 New.
 
-2004-05-24  Jari Aalto  <jari dot aalto A T cante dt net>
+2004-05-24  Jari Aalto  <jari.aalto@cante.net>
 
 	* tiny/tinypath.el (tinypath-:verbose-info-messages): New.
 	(tinypath-install-environment-user): Check
 	`tinypath-:verbose-info-messages' and display messages only
 	if variables is set to non-nil.
 
-2004-04-23 Fri  Jari Aalto  <jari dot aalto A T cante dt net>
+2004-04-23 Fri  Jari Aalto  <jari.aalto@cante.net>
 
 	* tiny/tinyeat.el (tinyeat-delete-whole-word-1): 1.75 If cursor
 	was inside space, but there was only one space forward, it dind't
 	notice space backward. Fixed. Now call `fixup-whitespace'.
 
-2004-04-22 Thu  Jari Aalto  <jari dot aalto A T cante dt net>
+2004-04-22 Thu  Jari Aalto  <jari.aalto@cante.net>
 
 	* tiny/tinyeat.el (tinyeat-install-default-bindings): 1.75
 	Added M-DEL, which is different from ESC DEL under Debian.
@@ -3038,26 +3065,26 @@
 	* tiny/tinypath.el (tinypath-cache-setup): 1.169 Added back
 	commented call to `tinypath-exec-path-check-verbose'.
 
-2004-04-13 Tue  Jari Aalto  <jari dot aalto A T cante dt net>
+2004-04-13 Tue  Jari Aalto  <jari.aalto@cante.net>
 
 	* tiny/tinydired.el (tinydired-first-line): 1.65 The
 	format of ls(1) listing in Debian is different. Now
 	always go 2 lines down and look at the rwx
 
-2004-04-10 Sat  Jari Aalto  <jari dot aalto A T cante dt net>
+2004-04-10 Sat  Jari Aalto  <jari.aalto@cante.net>
 
 	* tiny/tinygnus.el (tinygnus-expunge-all-from-user): 1.84 New.
 
 	* tiny/tinymail.el (tinymail-gpg-recipient): 1.98 New.
 
-2004-04-09 Fri  Jari Aalto  <jari dot aalto A T cante dt net>
+2004-04-09 Fri  Jari Aalto  <jari.aalto@cante.net>
 
 	* tiny/tinypath.el (tinypath-default-load-path-root-user): 1.169
 	Added support for ~/.emacs.d/ in new Emacs.
 	(tinypath-tmp-find-writable-dir): 1.169 Added ~/.emacs.d/config
 	Added `user-login-name'.
 
-2004-04-08 Thu  Jari Aalto  <jari dot aalto A T cante dt net>
+2004-04-08 Thu  Jari Aalto  <jari.aalto@cante.net>
 
 	* tiny/tinyliba.el: 1.96 Updated tinylibmail.el autoloads.
 
@@ -3070,7 +3097,7 @@
 
 	* tiny/tinytab.el: 1.74 Removed extra newlines.
 
-2004-04-06  Jari Aalto  <jari dot aalto A T cante dt net>
+2004-04-06  Jari Aalto  <jari.aalto@cante.net>
 
 	* tiny/tinypath.el
 	-- Serious bug corrected. If `load-path' was set and
@@ -3089,7 +3116,7 @@
 	(autoload): 1.166 use `tinypath-cache-p-for-advice'.
 	(require): 1.166 use `tinypath-cache-p-for-advice'.
 
-2004-04-05  Jari Aalto  <jari dot aalto A T cante dt net>
+2004-04-05  Jari Aalto  <jari.aalto@cante.net>
 
 	* tiny/tinycygwin.el (tinycygwin-email-choice-list):
 	Call `tinycygwin-maintainer'.
@@ -3101,7 +3128,7 @@
 	(tinypath-load-path-add-subdirs): Added
 	Subversion and monotone.
 
-2004-04-04  Jari Aalto  <jari dot aalto A T cante dt net>
+2004-04-04  Jari Aalto  <jari.aalto@cante.net>
 
 	* tiny/tinycompile.el (tinycompile-shorten-lines): Added
 	progress message for long buffers.
@@ -3112,7 +3139,7 @@
 	(tinymail-from-anti-ube-maybe): use `tinymail-:user-mail-address'.
 	(tinymail-:user-mail-address): New.
 
-2004-04-02 Fri  Jari Aalto  <jari dot aalto A T cante dt net>
+2004-04-02 Fri  Jari Aalto  <jari.aalto@cante.net>
 
 	* tiny/tinymail.el (tinymail-url-reference-google-group): 1.94 New.
 	(tinymail-message-id-value): 1.94 New.
@@ -3129,7 +3156,7 @@
 	(tinyprocmail-overlay-hide): 1.65 Clear
 	`tinyprocmail-:overlay-second' as well.
 
-2004-04-01 Thu  Jari Aalto  <jari dot aalto A T cante dt net>
+2004-04-01 Thu  Jari Aalto  <jari.aalto@cante.net>
 
 	* tiny/tinymail.el (tinymail-field-off-p): 1.93 Added
 	`stringp' test.
@@ -3171,12 +3198,12 @@
 	See http://list-archive.xemacs.org/xemacs-beta/199810/msg00039.html
 	(folding-interactive-spec-p): 2.112 New.
 
-2004-03-31 Wed  Jari Aalto  <jari dot aalto A T cante dt net>
+2004-03-31 Wed  Jari Aalto  <jari.aalto@cante.net>
 
 	* tiny/tinydiff.el (tinydiff-parse-buffer): 1.80 Some cruft
 	in function name? Chnaged back to `ti::text-clear-region-properties'
 
-2004-03-30 Tue  Jari Aalto  <jari dot aalto A T cante dt net>
+2004-03-30 Tue  Jari Aalto  <jari.aalto@cante.net>
 
 	* tiny/tinytf.el: 1.92 (Technical note: about the default prefix
 	key z): Rewrote. Now use C-c C-z by default.
@@ -3193,7 +3220,7 @@
 	(tinymail-process-run-p): 1.92 Disable timer if window
 	is not visible.
 
-2004-03-28 Sun  Jari Aalto  <jari dot aalto A T cante dt net>
+2004-03-28 Sun  Jari Aalto  <jari.aalto@cante.net>
 
 	* tiny/tinydiff.el
 	Renamed all command line function and variable
@@ -3201,7 +3228,7 @@
 	(tinydiff-turn-on-view-mode): 1.79 Rewritten.
 	Removed tinymy.el dependency.
 
-2004-03-27 Sat  Jari Aalto  <jari dot aalto A T cante dt net>
+2004-03-27 Sat  Jari Aalto  <jari.aalto@cante.net>
 
 	* tiny/tinycygwin.el (tinycygwin-program-parse-version): 1.122 New.
 	(tinycygwin-message-mode-attach-program-version): New.
@@ -3210,7 +3237,7 @@
 	(tinycygwin-:history-ask-program): 1.122 New.
 	(tinycygwin-:history-ask-version): 1.122 New.
 
-2004-03-26 Fri  Jari Aalto  <jari dot aalto A T cante dt net>
+2004-03-26 Fri  Jari Aalto  <jari.aalto@cante.net>
 
 	* tiny/tinylisp.el (tinylisp-face-print): 1.92 Added check for
 	empty list.
@@ -3271,14 +3298,14 @@
 	This is not a user function.
 	(tinycygwin-update-file-autoloads): 1.121 Added IS8601 date.
 
-2004-03-25 Thu  Jari Aalto  <jari dot aalto A T cante dt net>
+2004-03-25 Thu  Jari Aalto  <jari.aalto@cante.net>
 
 	* tiny/tinymail.el (tinymail-mail-send-to-list): 1.90 Added
 	Cc: field check in addition to To: field check.
 	(tinymail-from-field-value): 1.90 Added error checking that `info'
 	is a list.
 
-2004-03-24 Wed  Jari Aalto  <jari dot aalto A T cante dt net>
+2004-03-24 Wed  Jari Aalto  <jari.aalto@cante.net>
 
 	* tiny/tinycygwin.el (tinycygwin-sysinfo-insert): 1.105 No more
 	user callable. Removed `shell-command-to-string' and used
@@ -3296,7 +3323,7 @@
 	(tinymail-:feature-hook): 1.89 Added back
 	`tinymail-mail-send-to-list'.
 
-2004-03-23 Tue  Jari Aalto  <jari dot aalto A T cante dt net>
+2004-03-23 Tue  Jari Aalto  <jari.aalto@cante.net>
 
 	* tiny/tinyload.el: 1.75 'Bugs' topic wording corrected.
 
@@ -3324,7 +3351,7 @@
 	(tinycygwin-bug-report-mail-main-new-bug): 1.105 Change arg
 	TO-MAIL => EMAIL-LIST
 
-2004-03-22 Mon  Jari Aalto  <jari dot aalto A T cante dt net>
+2004-03-22 Mon  Jari Aalto  <jari.aalto@cante.net>
 
 	* tiny/tinymail.el (tinymail-:feature-hook): 1.88 Set
 	to nil.
@@ -3372,7 +3399,7 @@
 	(tinycygwin-bug-report-mail-compose): 1.99 Skip nil
 	values in TO-LIST.
 
-2004-03-21 Sun  Jari Aalto  <jari dot aalto A T cante dt net>
+2004-03-21 Sun  Jari Aalto  <jari.aalto@cante.net>
 
 	* tiny/tinycygwin.el (tinycygwin-user-full-name-valid-p): 1.86 New.
 	(tinycygwin-user-mail-address-validate-error): 1.86 Removed.
@@ -3418,7 +3445,7 @@
 	(tinycygwin-string-trim): 1.88 Renamed. Was
 	`tinycygwin-sting-trim'.
 
-2004-03-19 Fri  Jari Aalto  <jari dot aalto A T cante dt net>
+2004-03-19 Fri  Jari Aalto  <jari.aalto@cante.net>
 
 	* tiny/tinymail.el: 1.87 Removed from default
 	setup `tinymail-buffer-email-address-scramble'. User must
@@ -3446,7 +3473,7 @@
 	(tinycygwin-bug-report-mail-mode): 1.86 Added
 	`tinycygwin-bug-report-message-send-actions'.
 
-2004-03-16 Tue  Jari Aalto  <jari dot aalto A T cante dt net>
+2004-03-16 Tue  Jari Aalto  <jari.aalto@cante.net>
 
 	* tiny/tinycygwin.el
 	(top level): added defvar for `tinycygwin-:command-switch-type'.
@@ -3461,7 +3488,7 @@
 	Added TYPE.
 	(tinycygwin-bug-report-batch): 1.86 Added TYPE.
 
-2004-03-14 Sun  Jari Aalto  <jari dot aalto A T cante dt net>
+2004-03-14 Sun  Jari Aalto  <jari.aalto@cante.net>
 
 	* tiny/tinycygwin.el (tinycygwin-bug-report-mail-package): 1.85
 	Added TYPE.
@@ -3472,7 +3499,7 @@
 	* tiny/tinyperl.el (tinyperl-:pod-font-lock-keywords): 1.96
 	Added support for sub-heading like 'package-source.sh'.
 
-2004-03-13 Sat  Jari Aalto  <jari dot aalto A T cante dt net>
+2004-03-13 Sat  Jari Aalto  <jari.aalto@cante.net>
 
 	* tiny/tinycygwin.el (tinycygwin-package-bug-generic-p): 1.78 New.
 	(tinycygwin-package-status-cygwin): 1.78 New.
@@ -3523,7 +3550,7 @@
 	was continued with RET, but nothing was typed yet, the cursor
 	was at empty line. Couldn't find the field name. Fixed.
 
-2004-03-12 Fri  Jari Aalto  <jari dot aalto A T cante dt net>
+2004-03-12 Fri  Jari Aalto  <jari.aalto@cante.net>
 
 	* tiny/tinycygwin.el (tinycygwin-bug-report-mail-main): 1.66
 	Updated doc string to include '-- Other package insformation'
@@ -3556,7 +3583,7 @@
 	`tinycygwin-bug-report-mail-compose-interactive'.
 	(tinycygwin-:bug-report-mail-hook): 1.78 New.
 
-2004-03-11 Thu  Jari Aalto  <jari dot aalto A T cante dt net>
+2004-03-11 Thu  Jari Aalto  <jari.aalto@cante.net>
 
 	* tiny/tinylisp.el (tinylisp-jump-to-definition): 1.91 Added
 	`define-derived-mode' to defun matches.
@@ -3619,7 +3646,7 @@
 	(tinycygwin-bug-report-mail-insert-details-sysinfo): 1.60 New.
 	(tinycygwin-bug-report-mail-insert-details-bundle): 1.62 New.
 
-2004-03-10 Wed  Jari Aalto  <jari dot aalto A T cante dt net>
+2004-03-10 Wed  Jari Aalto  <jari.aalto@cante.net>
 
 	* tiny/tinycygwin.el (tinycygwin-bug-report-mail-package): 1.13 New.
 	(tinycygwin-bug-report-mail-batch): 1.13 Fixed command line
@@ -3649,25 +3676,25 @@
 	any other ti:: library functions any more. This file is
 	self standing.
 
-2004-03-09 Tue  Jari Aalto  <jari dot aalto A T cante dt net>
+2004-03-09 Tue  Jari Aalto  <jari.aalto@cante.net>
 
 	* tiny/tinylibmenu.el (ti::menu-help): 1.63 Replaced all
 	`ti::char-in-list-case' with `member'. Replaced all character read
 	calls with `read-char-exclusive'. Replaces char= with
 	string=.
 
-2004-03-03 Wed  Jari Aalto  <jari dot aalto A T cante dt net>
+2004-03-03 Wed  Jari Aalto  <jari.aalto@cante.net>
 
 	* tiny/tinydesk.el (tinydesk-auto-save): 1.67 The default filename
 	is `emacs-config-tinydesk-autosave-', was `tinydesk-autosave-'
 
-2004-02-09 Mon  Jari Aalto  <jari dot aalto A T cante dt net>
+2004-02-09 Mon  Jari Aalto  <jari.aalto@cante.net>
 
 	* tiny/tinyperl.el (tinyperl-:pod-font-lock-keywords): 1.94
 	Added support for highlighting =item keywords that
 	are-like-this. Previously accepted only "like this".
 
-2004-02-08 Sun  Jari Aalto  <jari dot aalto A T cante dt net>
+2004-02-08 Sun  Jari Aalto  <jari.aalto@cante.net>
 
 	* tiny/tinymy.el (tinymy-toggle-buffer-name): 1.91 Removed.
 	Emacs includes function `rename-uniquely'.
@@ -3698,12 +3725,12 @@
 	(tinymy-package-save-get-file-name): 1.91 Added more logic
 	to find correct package start position.
 
-2004-02-05 Thu  Jari Aalto  <jari dot aalto A T cante dt net>
+2004-02-05 Thu  Jari Aalto  <jari.aalto@cante.net>
 
 	* tiny/tinytf.el (tinytf-fontify-current-buffer-window): 1.90
 	Added `window-live-p' test.
 
-2004-01-31 Sat  Jari Aalto  <jari dot aalto A T cante dt net>
+2004-01-31 Sat  Jari Aalto  <jari.aalto@cante.net>
 
 	* tiny/tinytab.el (tinytab-tab-backward-del): 1.70  fix `move-to-column'
 	(tinytab-tab-forward): 1.70  fix `move-to-column'
@@ -3728,12 +3755,12 @@
 	(ti::buffer-move-to-col): 1.112  fix `move-to-column'
 	(ti::buffer-add-string-region): 1.112  fix `move-to-column'
 
-2004-01-31  Jari Aalto  <jari dot aalto A T cante dt net>
+2004-01-31  Jari Aalto  <jari.aalto@cante.net>
 
 	* tiny/tinygnus.el (tinygnus-make-group-nnml): Receating
 	NNML group dind't work. Fixed.
 
-2004-01-29 Thu  Jari Aalto  <jari dot aalto A T cante dt net>
+2004-01-29 Thu  Jari Aalto  <jari.aalto@cante.net>
 
 	* tiny/tinypath.el (tinypath-gnus-versions): 1.162 Removed
 	`tinypath-gnus-load-path-list'. use parameter PATH-LIST.
@@ -3746,7 +3773,7 @@
 	(tinypath-insinuate-gnus): 1.162 Added `pushnew' for
 	Gnus path
 
-2004-01-27 Tue  Jari Aalto  <jari dot aalto A T cante dt net>
+2004-01-27 Tue  Jari Aalto  <jari.aalto@cante.net>
 
 	* tiny/tinydiff.el (tinydiff-get-buffer-name): 1.77 Added
 	unlimited search to one of the cases `re-search-forward', so
@@ -3758,7 +3785,7 @@
 	* tiny/tinypath.el (tinypath-cache-regenerate): 1.161 Incorrect
 	variable `load-pah' => `load-path'.
 
-2004-01-26 Mon  Jari Aalto  <jari dot aalto A T cante dt net>
+2004-01-26 Mon  Jari Aalto  <jari.aalto@cante.net>
 
 	* tiny/tinymail.el: 1.84 New.
 	(tinymail-install-hooks): 1.84 install
@@ -3780,7 +3807,7 @@
 	(tinypath-directory-list-clean): 1.160 Activated the `pushnew'
 	to filter duplicates.
 
-2004-01-25 Sun  Jari Aalto  <jari dot aalto A T cante dt net>
+2004-01-25 Sun  Jari Aalto  <jari.aalto@cante.net>
 
 	* tiny/tinylisp.el (tinylisp-jump-to-definition): 1.89 Added
 	`stringp' test for FILE.
@@ -3790,33 +3817,33 @@
 	(tinylisp-jump-to-definition): 1.89 Moved logic to
 	`tinylisp-symbol-file-location'.
 
-2004-01-24 Sat  Jari Aalto  <jari dot aalto A T cante dt net>
+2004-01-24 Sat  Jari Aalto  <jari.aalto@cante.net>
 
 	* tiny/tinylibm.el (ti::color-lighter): 1.91 New.
 
-2004-01-23 Fri  Jari Aalto  <jari dot aalto A T cante dt net>
+2004-01-23 Fri  Jari Aalto  <jari.aalto@cante.net>
 
 	* tiny/tinyef.el (tinyef-mode): 1.58 Clarifies documentation.
 
-2004-01-22 Thu  Jari Aalto  <jari dot aalto A T cante dt net>
+2004-01-22 Thu  Jari Aalto  <jari.aalto@cante.net>
 
 	* tiny/tinylisp.el (tinylisp-:menu-main): 1.88 Removed
 	documentation for key `x'. There is no such key, it's `X'.
 
-2004-01-21 Wed  Jari Aalto  <jari dot aalto A T cante dt net>
+2004-01-21 Wed  Jari Aalto  <jari.aalto@cante.net>
 
 	* tiny/tinyliba.el (top-level): 1.92 Moved cl.el fixing code to
 	function `ti::tmp-cl-library-check'. Now always turns off
 	tinypath.el advices
 
-2004-01-11 Sun  Jari Aalto  <jari dot aalto A T cante dt net>
+2004-01-11 Sun  Jari Aalto  <jari.aalto@cante.net>
 
 	* tiny/tinyliba.el (top-level): 1.91 The `dolist' and `return'
 	check needed a fix for tinypath.el, which was called due to
 	adviced `load-library' function. It must be deactivated.
 	Added code to check `tinypath'.
 
-2004-01-06 Tue  Jari Aalto  <jari dot aalto A T cante dt net>
+2004-01-06 Tue  Jari Aalto  <jari.aalto@cante.net>
 
 	* tiny/tinypath.el (tinypath-cache-regenerate): 1.158
 	function wiped out all user added directories because
@@ -3824,7 +3851,7 @@
 	check for null `load-path' and only then the
 	`tinypath-original-values' is called.
 
-2004-01-05 Mon  Jari Aalto  <jari dot aalto A T cante dt net>
+2004-01-05 Mon  Jari Aalto  <jari.aalto@cante.net>
 
 	* tiny/tinyadvice.el (shell): 1.76 It was not intuitive
 	to ask user to rename the OLD shell buffer. Chnaged the
@@ -3850,13 +3877,13 @@
 	(tinyvc-install-to-emacs): 1.59 Added skiping buffers
 	which have no `buffer-file-name'.
 
-2003-12-31 Wed  Jari Aalto  <jari dot aalto A T cante dt net>
+2003-12-31 Wed  Jari Aalto  <jari.aalto@cante.net>
 
 	* tiny/tinypath.el (tinypath-cache-p-2): 1.157 Absolute
 	path name was not correctly handled. Not the path is returned
 	as is.
 
-2003-12-11 Thu  Jari Aalto  <jari dot aalto A T cante dt net>
+2003-12-11 Thu  Jari Aalto  <jari.aalto@cante.net>
 
 	* tiny/tinyurl.el (tinyurl-command-table-default-1):
 	Changed 'url method to use `browse-url-generic'
@@ -3867,7 +3894,7 @@
 	(tinyurl-table): Removed `error', not only prints
 	`message'
 
-2003-12-10 Wed  Jari Aalto  <jari dot aalto A T cante dt net>
+2003-12-10 Wed  Jari Aalto  <jari.aalto@cante.net>
 
 	* tiny/tinyurl.el (tinyurl-overlay-plist): Moved after
 	`tinyurl-table-current'.
@@ -3880,12 +3907,12 @@
 	(tinyurl-:file-filter-table): Added GIMP to
 	view jpg and image files
 
-2003-12-09 Tue  Jari Aalto  <jari dot aalto A T cante dt net>
+2003-12-09 Tue  Jari Aalto  <jari.aalto@cante.net>
 
 	* tiny/tinylisp.el (HARNESS): Renamed to
 	`tinylisp-:harness-flag'
 
-2003-12-08  Jari Aalto  <jari dot aalto A T cante dt net>
+2003-12-08  Jari Aalto  <jari.aalto@cante.net>
 
 	* tiny/tinypath.el (tinypath-use-compression-maybe):
 	Documentation string fixed.
@@ -3915,25 +3942,25 @@
 	filed, but that needed improvement. Now caches only .el
 	and .elc files. Added regexp to `directory-files'.
 
-2003-11-06 Thu    <jari dot aalto A T cante dt net>
+2003-11-06 Thu    <jari.aalto@cante.net>
 
 	* tiny/tinyperl.el (tinyperl-pod-by-module): 1.93
 	looked only files ending .pm, but e.g. POSIX.pm's documentation
 	is in POSIX.pod. Now looks first PACKAGE.pod before PACKAGE.pm
 
-2003-10-28 Tue  Jari Aalto  <jari dot aalto A T cante dt net>
+2003-10-28 Tue  Jari Aalto  <jari.aalto@cante.net>
 
 	* tiny/tiny-setup.el (tiny-setup-:option-table): 1.104 Removed
 	`tinyindent'. Package no longer supported.
 	(tiny-setup-tinyindent-bind): 1.104 Removed.
 	(tiny-setup-tinyindent-bindforce): 1.104 Removed.
 
-2003-10-05 Sun  Jari Aalto  <jari dot aalto A T cante dt net>
+2003-10-05 Sun  Jari Aalto  <jari.aalto@cante.net>
 
 	* other/folding.el: 2.111 Added new section
 	'Related packages or modes'.
 
-2003-10-03 Fri  Jari Aalto  <jari dot aalto A T cante dt net>
+2003-10-03 Fri  Jari Aalto  <jari.aalto@cante.net>
 
 	* tiny/tinyperl.el (tinyperl-:pause-directory): 1.92 Updated new
 	PAUSE URL.
@@ -3944,7 +3971,7 @@
 	* tiny/tinylib.el (ti::buffer-parse-line-main): 1.111 Added
 	check for empty `elt' if parse fails.
 
-2003-09-23 Tue  Jari Aalto  <jari dot aalto A T cante dt net>
+2003-09-23 Tue  Jari Aalto  <jari.aalto@cante.net>
 
 	* tiny/tinypath.el (tinypath-exec-path-check-verbose-fix): 1.138 New.
 	(tinypath-emacs-root-directory): 1.138 Improved.
@@ -3973,7 +4000,7 @@
 	(ti::mail-ip-at-point): 1.83 Use `ti::mail-ip-at-point-1'.
 	(ti::mail-whois-parse-records): 1.83 Improved checking.
 
-2003-09-22  Jari Aalto  <jari dot aalto A T cante dt net>
+2003-09-22  Jari Aalto  <jari.aalto@cante.net>
 
 	* tiny/tinylibmail.el (ti::mail-whois-parse-registrant-1):
 	More liberal regexp.
@@ -3982,7 +4009,7 @@
 	* tiny/tinypath.el (tinypath-cache-setup): Incorrect paren
 	fixed.
 
-2003-09-21 Sun  Jari Aalto  <jari dot aalto A T cante dt net>
+2003-09-21 Sun  Jari Aalto  <jari.aalto@cante.net>
 
 	* tiny/tinylibmail.el (ti::mail-whois-parse-admin): 1.81 Added
 	more matches.
@@ -3999,18 +4026,18 @@
 
 	* tiny/tinylib.el (ti::buffer-read-paragraph): 1.110 New.
 
-2003-09-18 Thu    <jari dot aalto A T cante dt net>
+2003-09-18 Thu    <jari.aalto@cante.net>
 
 	* tiny/tinyigrep.el (tinyigrep-main-read-args): 1.85 Removed
 	`ext' (like *el), because it was offered in wrong prompt.
 	ItÅ‰s not a database choice, but a file pattern choice.
 
-2003-09-15 Mon  Jari Aalto  <jari dot aalto A T cante dt net>
+2003-09-15 Mon  Jari Aalto  <jari.aalto@cante.net>
 
 	* tiny/tinydiff.el (tinydiff-:patch-program): Paren in
 	wrong position. Fixed.
 
-2003-09-14  Jari Aalto  <jari dot aalto A T cante dt net>
+2003-09-14  Jari Aalto  <jari.aalto@cante.net>
 
 	* tiny/tinypath.el: At the beginning of line the word 'Id'
 	was in separate line (must have been a RET press mistake).
@@ -4025,7 +4052,7 @@
 	(tinymailbox-mail): Added check for empty
 	`mail-yank-prefix'.
 
-2003-09-12 Fri  Jari Aalto  <jari dot aalto A T cante dt net>^M
+2003-09-12 Fri  Jari Aalto  <jari.aalto@cante.net>^M
 
 	* other/folding.el
 	(DOCUMENTATION): Added 'Uninstall' and 'To read the manual'
@@ -4144,7 +4171,7 @@
 	(tinyirc-pastebot-install-example-servers): 1.24 Unused variables
 	`cygwin' and `win32' commented out.
 
-2003-09-09 Tue  Jari Aalto  <jari dot aalto A T cante dt net>
+2003-09-09 Tue  Jari Aalto  <jari.aalto@cante.net>
 
 	* tiny/tinyload.el (tinyload-eval): 1.72 Added string
 	'[ERROR]' to better visually stand up in *Messages* buffer.
@@ -4157,7 +4184,7 @@
 	list `tinypath-Info-default-directory-list'. This must be
 	symbol `tinypath-Info-default-directory-list-sym'.
 
-2003-09-08  Jari Aalto <jari dot aalto A T cante dt net>
+2003-09-08  Jari Aalto <jari.aalto@cante.net>
 
 	* tiny/tinyperl.el
 	(documentation): There is no more variable
@@ -4171,7 +4198,7 @@
 	(tinyperl-manpage-at-point): New. Guess manual page word
 	at point  e.g. in *pod* buffer.
 
-2003-09-05  Jari Aalto <jari dot aalto A T cante dt net>
+2003-09-05  Jari Aalto <jari.aalto@cante.net>
 
 	* tiny/tinylibmail.el: Incorrect
 	function names '*-regexp-*' => '*-regexps-*'
@@ -4183,19 +4210,19 @@
 	* tiny/tinylib.el (ti::string-trim-blanks): Incorrect
 	function name '*-regexp-*' => '*-regexps-*'
 
-2003-09-04  Jari Aalto  <jari dot aalto A T cante dt net>
+2003-09-04  Jari Aalto  <jari.aalto@cante.net>
 
 	* tiny/tinyeat.el (tinyeat-install-default-bindings):
 	Removed call to `tinyeat-install-default-non-window-bindings'.
 	It does not exist any more.
 
-2003-09-01 Mon  Jari Aalto  <jari dot aalto A T cante dt net>
+2003-09-01 Mon  Jari Aalto  <jari.aalto@cante.net>
 
 	* tiny/tinylibm.el (ti::assoc-replace-maybe-add): 1.87
 	`push' cannot be used to set a symbol in t-case.
 	Use `set' and `cons' instead.
 
-2003-08-30 Sat  Jari Aalto  <jari dot aalto A T cante dt net>
+2003-08-30 Sat  Jari Aalto  <jari.aalto@cante.net>
 
 	* tiny/tinydesk.el (tinydesk-:mode-name): 1.64 Mode
 	renamed ro 'TinyDesk'. Was `StateFileEdit'.
@@ -4212,12 +4239,12 @@
 	which defines broken `dolist'. Load correct definition
 	from cl-macs.el
 
-2003-08-28  Jari Aalto <jari dot aalto A T cante dt net>
+2003-08-28  Jari Aalto <jari.aalto@cante.net>
 
 	* tiny/tinypath.el (ti::win32-cygwin-p): Cache value was newer
 	used. Now assign it to `ret' variable.
 
-2003-08-26 Tue  Jari Aalto  <jari dot aalto A T cante dt net>
+2003-08-26 Tue  Jari Aalto  <jari.aalto@cante.net>
 
 	* tiny/tinylibmail.el (ti::mail-whois-parse-paragraph): 1.77
 	Use `match-beginning' to read the point.
@@ -4228,7 +4255,7 @@
 	(ti::mail-ip-top-level-domain): 1.77 Added
 	`ti::mail-ip-raw-p' check.
 
-2003-08-24 Sun  Jari Aalto  <jari dot aalto A T cante dt net>
+2003-08-24 Sun  Jari Aalto  <jari.aalto@cante.net>
 
 	* tiny/tinygnus.el (tinygnus-nslookup-do): 1.77 Disabled.
 	New Spam mode is in sketch table
@@ -4254,9 +4281,9 @@
 	(ti::mail-dig): 1.75 New.
 	(ti::mail-nslookup-parse): 1.75 Removed `ti::pmin'.
 
-2003-08-23 Sat  Jari Aalto  <jari dot aalto A T cante dt net>
+2003-08-23 Sat  Jari Aalto  <jari.aalto@cante.net>
 
-	2003-08-23 Sat  Jari Aalto  <jari dot aalto A T cante dt net>
+	2003-08-23 Sat  Jari Aalto  <jari.aalto@cante.net>
 	* tiny/tinylib.el (ti:-syntax-info): 1.105 Renamed, was
 	`ti:-syntax-info'.
 	(ti::var-x-coord): 1.105 Renamed. Was Å¥ti::-x-coord'
@@ -4291,12 +4318,12 @@
 	(ti::mail-add-to-field-string): 1.75 If adding first element
 	to field, do not add ','.
 
-2003-08-22 Fri  Jari Aalto  <jari dot aalto A T cante dt net>
+2003-08-22 Fri  Jari Aalto  <jari.aalto@cante.net>
 
 	* tiny/tinylibmail.el (ti::mail-parse-date-string): 1.70
 	Added support for a different date.
 
-2003-08-21 Thu  Jari Aalto  <jari dot aalto A T cante dt net>
+2003-08-21 Thu  Jari Aalto  <jari.aalto@cante.net>
 
 	* tiny/tinylibmail.el (ti::mail-nslookup): 1.69 Added
 	argument `bin' to tell where nslookup is.
@@ -4327,22 +4354,22 @@
 	(ti::mail-sendmail-pure-env-macro): 1.69 Added
 	`message-mode-hook', `message-setup-hook'.
 
-2003-08-19 Tue  Jari Aalto  <jari dot aalto A T cante dt net>
+2003-08-19 Tue  Jari Aalto  <jari.aalto@cante.net>
 
 	* tiny/tinylibm.el (ti::subrp-p): 1.84 Added `fboundp'
 	before testing built-in functioness.
 
-2003-08-18 Mon  Jari Aalto  <jari dot aalto A T cante dt net>
+2003-08-18 Mon  Jari Aalto  <jari.aalto@cante.net>
 
 	* tiny/tinylisp.el (tinylisp-find-match-from-hooks): 1.84
 	Hook content listing is sorted.
 
-2003-08-17 Sun  Jari Aalto  <jari dot aalto A T cante dt net>
+2003-08-17 Sun  Jari Aalto  <jari.aalto@cante.net>
 
 	* tiny/tinymail.el: 1.80 Documentation changes. Wording
 	and typos fixed.
 
-2003-08-16 Sat  Jari Aalto  <jari dot aalto A T cante dt net>
+2003-08-16 Sat  Jari Aalto  <jari.aalto@cante.net>
 
 	* tiny/tinylibenv.el (ti::win32-p): 1.5
 	Under Cygwin Emacs function returns nil. Documented now.
@@ -4364,7 +4391,7 @@
 	(tinypath-cache-elt-package): 1.126 New.
 	(tinypath-cache-elt-fullpath): 1.126 New.
 
-2003-08-13 Wed  Jari Aalto  <jari dot aalto A T cante dt net>
+2003-08-13 Wed  Jari Aalto  <jari.aalto@cante.net>
 
 	* tiny/tinymy.el (tinymy-install-files): 1.88
 	Removed call
@@ -4377,7 +4404,7 @@
 	* tiny/tinylibid.el (ti::id-:buffer-match-regexp-list): 1.62
 	Modified Å¥code-java' regexp a little.
 
-2003-08-12 Tue  Jari Aalto  <jari dot aalto A T cante dt net>
+2003-08-12 Tue  Jari Aalto  <jari.aalto@cante.net>
 
 	* tiny/tinypath.el (tinypath-install-main): 1.125
 	`eval-and-compiles' => `eval-and-compile'
@@ -4391,12 +4418,12 @@
 	(tinyperl-pod-by-module): 1.87 Better error message. Suggest
 	running `tinyperl-install-force' in case CPAN modules have been installed.
 
-2003-08-10 Sun  Jari Aalto  <jari dot aalto A T cante dt net>
+2003-08-10 Sun  Jari Aalto  <jari.aalto@cante.net>
 
 	* tiny/tinyigrep.el (tinyigrep-:lisp-package-file-list): 1.81
 	Added project ERC and Liece to search list.
 
-2003-08-08 Fri  Jari Aalto  <jari dot aalto A T cante dt net>
+2003-08-08 Fri  Jari Aalto  <jari.aalto@cante.net>
 
 	NOTE: Performace changes. `nreverse' is faster than `reverse'
 	which copies elements.
@@ -4555,7 +4582,7 @@
 	(tinylisp-library-locate-library-1): 1.82 Use
 	`nreverse', no `reverse'.
 
-2003-08-07 Thu  Jari Aalto  <jari dot aalto A T cante dt net>
+2003-08-07 Thu  Jari Aalto  <jari.aalto@cante.net>
 
 	* tiny/tinylisp.el
 	(tinylisp-edebug-instrument): 1.80 Added edebug to work
@@ -4567,7 +4594,7 @@
 	* tiny/tinyirc.el: 1.80 New FILE. Pastebot service for
 	IRC channel #perl.
 
-2003-08-06 Wed  Jari Aalto  <jari dot aalto A T cante dt net>
+2003-08-06 Wed  Jari Aalto  <jari.aalto@cante.net>
 
 	* tiny/tinylib.el (ti::macrof-minor-mode-viper-attach):
 	1.102 Removed `interactive'.
@@ -4587,14 +4614,14 @@
 
 	* tiny/tinylibmenu.el: 1.60 Documentation beatified.
 
-2003-08-01 Fri  Jari Aalto  <jari dot aalto A T cante dt net>
+2003-08-01 Fri  Jari Aalto  <jari.aalto@cante.net>
 
 	* tiny/tinynbr.el (tinynbr-read-number-at-point): 1.56 New.
 	(tinynbr-read-number): 1.56 New.
 	(mapcar): 1.56 Top level, Added prefix 'TinyNbr' to
 	a message.
 
-2003-07-30  Jari Aalto  <jari dot aalto A T cante dt net>
+2003-07-30  Jari Aalto  <jari.aalto@cante.net>
 
 	* tiny/tinymy.el (tinymy-install-after-save-hook): New.
 	`executable-make-buffer-file-executable-if-script-p' signals
@@ -4604,14 +4631,14 @@
 	(tinymy-maybe-make-file-executable): Added test
 	`ti::file-name-remote-p file'
 
-2003-06-29 Sun  Jari Aalto  <jari dot aalto A T cante dt net>
+2003-06-29 Sun  Jari Aalto  <jari.aalto@cante.net>
 
 	* tiny/tinyperl.el (tinyperl-mode): 1.85 Added skeleton
 	functions to the mode menu. They were bound, but missing
 	from the menu. Other menua items rearranged slightly.
 	(pod2text is now in its own category).
 
-2003-06-28  Jari Aalto  <jari dot aalto A T cante dt net>
+2003-06-28  Jari Aalto  <jari.aalto@cante.net>
 
 	* tiny/tinyeat.el (tinyeat-space-delete-at-point): Use
 	`tinyeat-verbose-macro'.
@@ -4631,7 +4658,7 @@
 	(tinyeat-verbose-macro): New. Take into account
 	minibuffer.
 
-2003-06-27 Fri  Jari Aalto  <jari dot aalto A T cante dt net>
+2003-06-27 Fri  Jari Aalto  <jari.aalto@cante.net>
 
 	* tiny/tinymy.el (tinymy-word-backward): 1.80 Renamed.
 	Was `tinymy-backward-word'.
@@ -4647,7 +4674,7 @@
 	(tinymy-mouse-movement-handler): 1.80 Added support
 	for `tooltip-mouse-motion'.
 
-2003-07-03 Thu  Jari Aalto  <jari dot aalto A T cante dt net>
+2003-07-03 Thu  Jari Aalto  <jari.aalto@cante.net>
 
 	* tiny/tinylibenv.el (ti::os-check-linux-p): 1.3 A bit better
 	check for `vmlinuz'
@@ -4661,7 +4688,7 @@
 
 	* tiny/tinylib.el (ti::buffer-looking-at-one-space): 1.101 New.
 
-2003-06-26 Thu  Jari Aalto  <jari dot aalto A T cante dt net>
+2003-06-26 Thu  Jari Aalto  <jari.aalto@cante.net>
 
 	* tiny/tinylibenv.el (ti::os-check-linux-p): 1.3 Typo in
 	function call `file-exixts-p' => `file-exists-p'.
@@ -4705,7 +4732,7 @@
 	call to it, there remained duplicate paths in tilde(~)
 	format and trailing slashes.
 
-2003-06-25 Wed  Jari Aalto  <jari dot aalto A T cante dt net>
+2003-06-25 Wed  Jari Aalto  <jari.aalto@cante.net>
 
 	* tiny/tinylib.el (ti::process-java-version): 1.99 Under
 	Debian `java' is a symbolic link and emacs-version 21.2.2
@@ -4714,19 +4741,19 @@
 	* tiny/tinytag.el: 1.66 Added messages while detecting Java.
 	Under Debian 3.0 this hung.
 
-2003-06-12 Thu  Jari Aalto  <jari dot aalto A T cante dt net>
+2003-06-12 Thu  Jari Aalto  <jari.aalto@cante.net>
 
 	* tiny/tinyperl.el (tinyperl-:pod-font-lock-keywords): 1.84 Added
 	couple of more highlight rules for sub headings.
 
-2003-06-11 Wed  Jari Aalto  <jari dot aalto A T cante dt net>
+2003-06-11 Wed  Jari Aalto  <jari.aalto@cante.net>
 
 	* tiny/tinytab.el (tinytab-bol-forward-del): 1.67 New.
 	Handle BOL special case, then delete forward
 	`tinytab-width' spaces if possible.
 	(tinytab-:tab-delete-hook): 1.67 Added `tinytab-bol-forward-del'
 
-2003-06-10 Tue  Jari Aalto  <jari dot aalto A T cante dt net>
+2003-06-10 Tue  Jari Aalto  <jari.aalto@cante.net>
 
 	* tiny/tinydiff.el (tinydiff-diff-show): 1.73 Corrected nasty bug
 	which asked o save buffer also in case when user wanted to diff
@@ -4751,17 +4778,17 @@
 	(tinyeat-:bind-install-type): 1.64 Chnaged default type from
 	`alt-keys' to `meta-keys'.
 
-2003-06-09 Mon  Jari Aalto  <jari dot aalto A T cante dt net>
+2003-06-09 Mon  Jari Aalto  <jari.aalto@cante.net>
 
 	* tiny/tinyperl.el (tinyperl-pod-write-skeleton-script-manpage):
 	1.83 Removed @(#) SCCS tag.
 
-2003-06-08 Sun  Jari Aalto  <jari dot aalto A T cante dt net>
+2003-06-08 Sun  Jari Aalto  <jari.aalto@cante.net>
 
 	* tiny/tinygnus.el (tinygnus-check-gnus-installation-gnus): 1.74
 	Emacs version check corrected. Added XEmacs check.
 
-2003-06-07 Sat  Jari Aalto  <jari dot aalto A T cante dt net>
+2003-06-07 Sat  Jari Aalto  <jari.aalto@cante.net>
 
 	* tiny/tiny-setup.el (tiny-setup-compile-directory-recursive):
 	1.101 Added parameter FUNCTION.
@@ -4811,14 +4838,14 @@
 	1.62 Renamed `backslash-fix-resion' => `backslash-fix-paragraph'
 	("tinyprocmail-"): 1.62 Fixed prefix `timy-' => `tinymy-'
 
-2003-06-06 Fri  Jari Aalto  <jari dot aalto A T cante dt net>
+2003-06-06 Fri  Jari Aalto  <jari.aalto@cante.net>
 
 	* tiny/tinymail.el (tinymail-complete-key): 1.75 When point is at
 	BODY, check more closely if `tinytab-indent-by-tab-width' can be
 	called. function `tinymail-complete-guess-in-headers' is now
 	removed from `tinymail-:complete-key-hook' while point is in body
 
-2003-06-06  Jari Aalto  <jari dot aalto A T cante dt net>
+2003-06-06  Jari Aalto  <jari.aalto@cante.net>
 
 	* tiny/tinypath.el (tinypath-cache-p-2): If package was moved on
 	disk, the cahe was invalid. So full scan was used and a new entry
@@ -4827,7 +4854,7 @@
 	error and made whole package useless, because cache format was
 	corrupted.
 
-2003-06-06 Fri  Jari Aalto  <jari dot aalto A T cante dt net>
+2003-06-06 Fri  Jari Aalto  <jari.aalto@cante.net>
 
 	* tiny/tinypath.el (tinypath-:verbose-timing): 1.120 Extra `nil'
 	value, custom signalled error `Junk in args nil'. Fixed.
@@ -4861,7 +4888,7 @@
 	* tiny/tinyliba.el: Updated autoloads for
 	`tinylibmail.el' and `tinyliby.el'
 
-2003-06-05 Thu  Jari Aalto  <jari dot aalto A T cante dt net>
+2003-06-05 Thu  Jari Aalto  <jari.aalto@cante.net>
 
 	* tiny/tinylibm.el (ti::applycar): 1.78 Renamed `applycar'
 	=> `ti::applycar'.
@@ -4956,7 +4983,7 @@
 	* tiny/tinypair.el (tinypair-pair-type-select): 1.60 Added support
 	for arguments 'us and 'usa.
 
-2003-06-03 Tue  Jari Aalto  <jari dot aalto A T cante dt net>
+2003-06-03 Tue  Jari Aalto  <jari.aalto@cante.net>
 
 	* tiny/tinymail.el (tinymail-complete-headers-nothing-found): 1.73
 	If no completions was found, functon fun `forward-word'. This
@@ -4975,7 +5002,7 @@
 	Removed 'activate'. User must enable this by hand. The
 	package is not intuitive enough for casual user.
 
-2003-06-02  Jari Aalto  <jari dot aalto A T cante dt net>
+2003-06-02  Jari Aalto  <jari.aalto@cante.net>
 
 	* tiny/tinytab.el (tinytab-region-bounds): Nasty bug fixed.
 	If point was at the beginning of line, first TAB advanced ok,
@@ -4991,7 +5018,7 @@
 	TAB key now calls tinytab when point is inside body of
 	message.
 
-2003-05-30 Fri  Jari Aalto  <jari dot aalto A T cante dt net>
+2003-05-30 Fri  Jari Aalto  <jari.aalto@cante.net>
 
 	* tiny/tinylisp.el: 1.77 M-x tinylisp-mode in vanilla
 	Emacs did not activate the mode. Problem was missing hook
@@ -5001,7 +5028,7 @@
 
 	* tiny/tinylibenv.el (ti::executable-find): 1.1 New.
 
-2003-05-23 Fri  Jari Aalto  <jari dot aalto A T cante dt net>
+2003-05-23 Fri  Jari Aalto  <jari.aalto@cante.net>
 
 	* tiny/tinylibmail.el (ti::mail-field-email-address-p): 1.65 New.
 
@@ -5046,12 +5073,12 @@
 	* tiny/tinylibxe.el (ti::expand-file-name-cygwin-macro): 1.60
 	Moved to correct library tinyigrep.el
 
-2003-05-22 Thu    <jari dot aalto A T cante dt net>
+2003-05-22 Thu    <jari.aalto@cante.net>
 
 	* tiny/tinypath.el (tinypath-exec-path-check-verbose): 1.116
 	Improved message display.
 
-2003-05-21 Wed  Jari Aalto  <jari dot aalto A T cante dt net>
+2003-05-21 Wed  Jari Aalto  <jari.aalto@cante.net>
 
 	* tiny/tinyliby.el (ti::system-unload): 1.61 Changed `while'
 	to `dolist'.
@@ -5095,7 +5122,7 @@
 	called `shell-quote-argument' that caused havoc on file names.
 	The advice code undoes the effect.
 
-2003-05-20 Tue  Jari Aalto  <jari dot aalto A T cante dt net>
+2003-05-20 Tue  Jari Aalto  <jari.aalto@cante.net>
 
 	* tiny/tinylib.el (ti::vc-version-string-p): 1.94 New.
 	(ti::vc-version-lessp): 1.94 New.
@@ -5125,7 +5152,7 @@
 	fixed.
 	(autoload): Added `ti::pop-to-buffer-or-window'.
 
-2003-05-19 Mon  Jari Aalto  <jari dot aalto A T cante dt net>
+2003-05-19 Mon  Jari Aalto  <jari.aalto@cante.net>
 
 	* tiny/tinymy.el (tinymy-file-stamp): 1.77 Added check
 	against empty `user-mail-address' (variable doc2).
@@ -5218,7 +5245,7 @@
 	(tinypath-exec-path-check): 1.110 Added Trailing slash check
 	`file-name-as-directory'.
 
-2003-05-17 Sat  Jari Aalto  <jari dot aalto A T cante dt net>
+2003-05-17 Sat  Jari Aalto  <jari.aalto@cante.net>
 
 	* tiny/tinyxreg.el: 1.57 Documentation fixed.
 
@@ -5226,7 +5253,7 @@
 	used `b' `e', when region was active. Changed to `beg' and
 	`end'.
 
-2003-05-15 Thu  Jari Aalto  <jari dot aalto A T cante dt net>
+2003-05-15 Thu  Jari Aalto  <jari.aalto@cante.net>
 
 	* tiny/tinyeat.el (tinyeat-:bind-install-type): 1.60 Bind
 	only `alt-key'
@@ -5238,7 +5265,7 @@
 	`tinyeat-backward-preserve'. Used Å¥kbd' to bind
 	`ESC C-y' to `tinyeat-yank-overwrite'.
 
-2003-03-20 Thu  Jari Aalto  <jari dot aalto A T cante dt net>
+2003-03-20 Thu  Jari Aalto  <jari.aalto@cante.net>
 
 	* tiny/tinyliba.el (ti::win32-cygwin-p): 1.82 Serious error
 	fixed. The colon(:) check code dind't take into account
@@ -5251,13 +5278,13 @@
 
 	* tiny/tinylibxe.el (advice expand-file-name): 1.59 New.
 
-2003-03-18 Tue  Jari Aalto  <jari dot aalto A T cante dt net>
+2003-03-18 Tue  Jari Aalto  <jari.aalto@cante.net>
 
 	* tiny/tinylibb.el: 1.78 Added `mm-decode.el' fix.
 	Defines wrong XEmacs compatibility functions, just
 	like eshell
 
-2003-03-04 Tue  Jari Aalto  <jari dot aalto A T cante dt net>
+2003-03-04 Tue  Jari Aalto  <jari.aalto@cante.net>
 
 	* tiny/tinyliba.el: 1.81 Updated vc-hooks.el
 	autoloads from Emacs 20.7 to Emacs 21.2
@@ -5270,7 +5297,7 @@
 	* tiny/tinyadvice.el (vc-rcs-status): 1.72 Removed.
 	Unreliable.
 
-2003-03-03 Mon  Jari Aalto  <jari dot aalto A T cante dt net>
+2003-03-03 Mon  Jari Aalto  <jari.aalto@cante.net>
 
 	* tiny/tinylib.el (ti::vc-version-simple-p): 1.92 New.
 
@@ -5285,7 +5312,7 @@
 	is not a suitable start value for rcs -k to preserve
 	keywords. Do nothing if version number looks complex.
 
-2003-03-02 Sun  Jari Aalto  <jari dot aalto A T cante dt net>
+2003-03-02 Sun  Jari Aalto  <jari.aalto@cante.net>
 
 	* tiny/tinylibxe.el (ti::xemacs-p): 1.56 Missing paren
 	in 'advice: code from XEmacs --> Emacs' fixed.
@@ -5325,7 +5352,7 @@
 	(tinydebian-:menu-wnpp): New.
 	(tinydebian-package-wnpp-main): New.
 
-2003-03-01 Sat  root  <jari dot aalto A T cante dt net>
+2003-03-01 Sat  root  <jari.aalto@cante.net>
 
 	* tiny/tinydebian.el (tinydebian-package-status-dpkg-S-parse): New.
 	(tinydebian-package-status-apt-file): New.
@@ -5337,7 +5364,7 @@
 	It is now unconditonally run at the end of file. Without this,
 	it is not possible to send bug reports.
 
-2003-02-28 Fri  Jari Aalto  <jari dot aalto A T cante dt net>
+2003-02-28 Fri  Jari Aalto  <jari.aalto@cante.net>
 
 	* tiny/tinylisp.el (tinylisp-jump-to-definition): 1.73 Incorrect
 	(symbol-name function) => just plain FUNCTION, bcause it the
@@ -5349,7 +5376,7 @@
 	multiple files: '(search search search ...). Didn't look into
 	argument 1, DEFAULT-DIRECTORY. Fixed
 
-2003-02-27 Thu  Jari Aalto  <jari dot aalto A T cante dt net>
+2003-02-27 Thu  Jari Aalto  <jari.aalto@cante.net>
 
 	* tiny/tinypath.el (tinypath-default-load-path-root-dirs): 1.108
 	Added Cygwin /usr/share/site-lisp hierarchy
@@ -5361,21 +5388,21 @@
 	* tiny/tinyigrep.el (tinyigrep-install-default-databases): 1.73
 	Incorrect database name used for `News'. Fixed.
 
-2003-02-25 Tue  Jari Aalto  <jari dot aalto A T cante dt net>
+2003-02-25 Tue  Jari Aalto  <jari.aalto@cante.net>
 
 	* tiny/tinylisp.el (tinylisp-jump-to-definition): 1.73
 	Didn't find aliased functions. Like searching
 	`gnus-netrc-machine' is actually an alias to function
 	`netrc-machine'. Fixed.
 
-2003-02-24  Jari Aalto  <jari dot aalto A T cante dt net>
+2003-02-24  Jari Aalto  <jari.aalto@cante.net>
 
 	* tiny/tinypath.el (tinypath-:cache-file-hostname-function):
 	nil value is no longer default. Always use HOST prefix
 	in cache file. This is more secure initial setup for
 	mixed network conditions.
 
-2003-02-22  Jari Aalto  <jari dot aalto A T cante dt net>
+2003-02-22  Jari Aalto  <jari.aalto@cante.net>
 
 	* tiny/tinyef.el (tinyef-:mode-key-table): Removed ?*
 	binding, because it made imposisble to enter buffer
@@ -5414,7 +5441,7 @@
 	Added safeguard.
 	(setq tinypath-report-mode-map (make-sparse-keymap))
 
-2003-02-20 Thu  Jari Aalto  <jari dot aalto A T cante dt net>
+2003-02-20 Thu  Jari Aalto  <jari.aalto@cante.net>
 
 	* tiny/tinylisp.el (tinylisp-find-function-list): 1.73
 	Increased format from %-8 to %-12
@@ -5439,7 +5466,7 @@
 	Like `emacs-p' => `ti::emacs-p' etc.
 	(ti::win32-nt-p): 1.78 Wrong test file: `cnd.exe' => `cmd.exe'
 
-2003-02-18 Tue  Jari Aalto  <jari dot aalto A T cante dt net>
+2003-02-18 Tue  Jari Aalto  <jari.aalto@cante.net>
 
 	* tiny/tinylibm.el (ti::file-name-path-absolute-p): 1.73 New.
 
@@ -5455,7 +5482,7 @@
 
 	* tiny/tinylibb.el (ti::subrp-p): 1.76 New.
 
-2003-02-13 Thu  Jari Aalto  <jari dot aalto A T cante dt net>
+2003-02-13 Thu  Jari Aalto  <jari.aalto@cante.net>
 
 	* tiny/tinylisp.el (tinylisp-byte-compile-display-call-tree): 1.73
 	Added safeguard if *Call-Tree* buffer is not available.
@@ -5468,17 +5495,17 @@
 	(defvar): 1.85 Corrected htmlize.el detection. Do not
 	define `htmlize-buffer' autoload if package is not available.
 
-2003-02-12 Wed  Jari Aalto  <jari dot aalto A T cante dt net>
+2003-02-12 Wed  Jari Aalto  <jari.aalto@cante.net>
 
 	* tiny/tiny-setup.el (defvar): 1.94 Added missing autoload entries
 	for tinydesk.el
 
-2003-02-08  Jari Aalto  <jari dot aalto A T cante dt net>
+2003-02-08  Jari Aalto  <jari.aalto@cante.net>
 
 	* tiny/tinydiff.el (tinydiff-:diff-program): Missing right
 	parentheses added.
 
-2003-02-06 Thu  Jari Aalto  <jari dot aalto A T cante dt net>
+2003-02-06 Thu  Jari Aalto  <jari.aalto@cante.net>
 
 	* tiny/tinytab.el (tinytab-tab-key-insert): 1.61 New.
 	Easier to debug.
@@ -5535,37 +5562,37 @@
 	(tinydiff-:diff-option): 1.68 Added check `os-supports-gnu-p',
 	set option to `-u' if so.
 
-2003-02-05 Wed  Jari Aalto  <jari dot aalto A T cante dt net>
+2003-02-05 Wed  Jari Aalto  <jari.aalto@cante.net>
 
 	* other/folding.el (folding-uninstall): 2.108 Folding was removed
 	from all hooks, but the buffers stayed in folding mode. Now
 	calling uninstall will terminate folding-mode in every Emacs
 	buffer by calling `turn-off-folding-mode'.
 
-2003-02-04 Tue  Jari Aalto  <jari dot aalto A T cante dt net>
+2003-02-04 Tue  Jari Aalto  <jari.aalto@cante.net>
 
 	* tiny/tinymacro.el (tinymacro-assign): 1.57 Added prefix
 	`tinymacro:' to all messages.
 
-2003-02-04 Tue  Jari Aalto  <jari dot aalto A T cante dt net>
+2003-02-04 Tue  Jari Aalto  <jari.aalto@cante.net>
 
 	* tiny/tinymacro.el (tinymacro-assign): 1.57 Added prefix
 	`tinymacro:' to all messages.
 
-2003-02-04 Tue  Jari Aalto  <jari dot aalto A T cante dt net>
+2003-02-04 Tue  Jari Aalto  <jari.aalto@cante.net>
 
 	* tiny/tiny-setup.el: Added autoload for `folding-uninstall'.
 
 	* other/folding.el (turn-off-folding-mode): Typo in documentation
 	string: 'turn on' => 'turn off'.
 
-2003-02-03 Mon  Jari Aalto  <jari dot aalto A T cante dt net>
+2003-02-03 Mon  Jari Aalto  <jari.aalto@cante.net>
 
 	* tiny/tiny-setup.el (tiny-setup-tinydebian-autoload): 1.91 New
 	(tiny-setup-tinydebian-load): 1.91 New.
 	(tiny-setup-:option-table): 1.91 added `tinydebian' entry
 
-2003-02-02 Sun  Jari Aalto  <jari dot aalto A T cante dt net>
+2003-02-02 Sun  Jari Aalto  <jari.aalto@cante.net>
 
 	* tiny/tinydebian.el: 1.15 Added `font-lock-mode' and
 	`global-font-lock-mode'
@@ -5577,7 +5604,7 @@
 	(tinydebian-install): 1.15 Changed interactive parameter from p to
 	P. (raw argument).
 
-2003-01-28 Tue  Jari Aalto  <jari dot aalto A T cante dt net>
+2003-01-28 Tue  Jari Aalto  <jari.aalto@cante.net>
 
 	* tiny/tinyadvice.el (vc-do-command): 1.66 Added check if
 	file contains ',v'. For some reason `(vc-registered file)'
@@ -5592,12 +5619,12 @@
 	(ti::-xe-mouse-call-original): 1.86 Incorrect variable
 	`ti::xe-mouse-call-original' => `ti::-xe-mouse-call-original'
 
-2003-01-26 Sun  Jari Aalto  <jari dot aalto A T cante dt net>
+2003-01-26 Sun  Jari Aalto  <jari.aalto@cante.net>
 
 	* tiny/tinymy.el (tinymy-maybe-make-file-executable): 1.71
 	Tightened suspicius #! test.
 
-2003-01-23 Thu  Jari Aalto  <jari dot aalto A T cante dt net>
+2003-01-23 Thu  Jari Aalto  <jari.aalto@cante.net>
 
 	* other/folding.el: 2.106 Applied patch from plasma
 	<plasmaball@pchome.com.tw> (sent 2002-10-31). The folding markes
@@ -5651,7 +5678,7 @@
 	`yank', because it is `mouse-yank-at-point' under Emacs 21.2.
 	Added `emacs-p' test and reading mouse event `button2' under XEmacs.
 
-2003-01-21 Tue  Jari Aalto  <jari dot aalto A T cante dt net>
+2003-01-21 Tue  Jari Aalto  <jari.aalto@cante.net>
 
 	* tiny/tinyperl.el (tinyperl-version-stamp): 1.78
 	$VERSION variable match is now 2, not 1.
@@ -5659,11 +5686,11 @@
 	support for defining version variable with `my' and
 	`local', `our'.
 
-2003-01-08 Wed  Jari Aalto  <jari dot aalto A T cante dt net>
+2003-01-08 Wed  Jari Aalto  <jari.aalto@cante.net>
 
 	* tiny/tinytf.el (tinytf-:saved-comment-end): 1.83 New.
 
-2003-01-02 Thu  Jari Aalto  <jari dot aalto A T cante dt net>
+2003-01-02 Thu  Jari Aalto  <jari.aalto@cante.net>
 
 	* tiny/tinylib.el (ti::file-name-for-correct-system): 1.85 Did
 	not expand path with ~ or dot-dot (..) correctly. Now use
@@ -5682,19 +5709,19 @@
 	* tiny/tiny-setup.el (defvar): 1.90 Typo: `autolaod' =>
 	`autoload' in statement `tinylisp-install'.
 
-2002-12-31 Tue  Jari Aalto  <jari dot aalto A T cante dt net>
+2002-12-31 Tue  Jari Aalto  <jari.aalto@cante.net>
 
 	* tiny/tinyurl.el (tinyurl-dispatcher): 1.64 Extra character
 	`s' removed.
 
-2002-12-31  Jari Aalto  <jari dot aalto A T cante dt net>
+2002-12-31  Jari Aalto  <jari.aalto@cante.net>
 
 	* tiny/tinyreplace.el (tinyreplace-:menu): Added `f' key
 	to run `tinyreplace-replace-forward'. More intuitive for a
 	novice user than the default `5' key. It is assumed that not all
 	userd bound `tinyreplace-menu' to M-%.
 
-2002-12-23  Jari Aalto  <jari dot aalto A T cante dt net>
+2002-12-23  Jari Aalto  <jari.aalto@cante.net>
 
 	* tiny/tinylisp.el (tinylisp-:load-hook): Removed
 	`turn-on-tinylisp-mode-all-buffers' from `tinylisp-:load-hook'.
@@ -5702,7 +5729,7 @@
 	(tinylisp-install): New.
 	(tinylisp-uninstall): New.
 
-2002-12-19  Jari Aalto  <jari dot aalto A T cante dt net>
+2002-12-19  Jari Aalto  <jari.aalto@cante.net>
 
 	* tiny/tinylib.el (ti::file-name-for-correct-system): New.
 
@@ -5716,7 +5743,7 @@
 	Win32 Emacs / Cygwin. Now calls generic `tinyigrep-igrep-call'
 	which sorts out the OS dependent things.
 
-2002-12-18 Wed  Jari Aalto  <jari dot aalto A T cante dt net>
+2002-12-18 Wed  Jari Aalto  <jari.aalto@cante.net>
 
 	* tiny/tinyperl.el
 	FASTER STARTUP - DEFERRED skeleton.el loading
@@ -5732,7 +5759,7 @@
 	This never found term/linux.el correctly. Fixed to use
 	loop variable `file'
 
-2002-12-14  Jari Aalto  <jari dot aalto A T cante dt net>
+2002-12-14  Jari Aalto  <jari.aalto@cante.net>
 
 	* tiny/tinypath.el (tinypath-info-handler): Added variable
 	`cleanup' which forces rebuilding info structure if new
@@ -5741,7 +5768,7 @@
 	`tinypath-Info-default-directory-list-clean' and
 	`tinypath-exec-path-clean'
 
-2002-12-13  Jari Aalto  <jari dot aalto A T cante dt net>
+2002-12-13  Jari Aalto  <jari.aalto@cante.net>
 
 	* tiny/tinypath.el (tinypath-install): Added END [INFO]
 	debug printing.
@@ -5767,7 +5794,7 @@
 	Added 2nd level highlighting fixes according to
 	Perl 5.8.0 perre.pod manual page.
 
-2002-12-12  Jari Aalto  <jari dot aalto A T cante dt net>
+2002-12-12  Jari Aalto  <jari.aalto@cante.net>
 
 	* tiny/tinypath.el (tinypath-default-load-path-root-dirs):
 	Added Debian /usr/local/lib/emacs/site-lisp
@@ -5842,7 +5869,7 @@
 	ESC tab now changes tab width. Removed pecial KDE check.
 	(Docs): Documentaion has been completely rewritten.
 
-2002-12-11  Jari Aalto <jari dot aalto A T cante dt net>
+2002-12-11  Jari Aalto <jari.aalto@cante.net>
 
 	* tiny/tiny-setup.el (tiny-setup-tinymy-bindemacs):
 	Mistakenly [prior] key was bound to `tinymy-buffer-file-chmod'.
@@ -5851,7 +5878,7 @@
 	[meta f], [meta b] bindings.
 	(tiny-setup-all): REmoved autolaod cookie and `interactive'.
 
-2002-12-06  Jari Aalto  <jari dot aalto A T cante dt net>
+2002-12-06  Jari Aalto  <jari.aalto@cante.net>
 
 	* tiny/tinypath.el (tinypath-cache-file-name): Added check
 	for null `tinypath-:cache-file-hostname-function'
@@ -5982,7 +6009,7 @@
 	kicked the mode ON, although the URL detection was globally
 	turned OFF.
 
-2002-12-04 Wed  Jari Aalto  <jari dot aalto A T cante dt net>
+2002-12-04 Wed  Jari Aalto  <jari.aalto@cante.net>
 
 	* tiny/tinyperl.el ("tinyperl-pod-view-"): 1.70
 	PgUp and PgDown keys returned to normal binding. The
@@ -5991,7 +6018,7 @@
 	(tinyperl-pod-jump): 1.70 Command disabled.
 	(tinyperl-mode): 1.70 Reordered menus a bit.
 
-2002-11-29  Jari Aalto  <jari dot aalto A T cante dt net>
+2002-11-29  Jari Aalto  <jari.aalto@cante.net>
 
 	* tiny/tinyeat.el (tinyeat-install-default-bindings):
 	Deletd ESC-k keybinding. There already was `Meta C-d'
@@ -6010,12 +6037,12 @@
 	(tinyeat-word-move-point): Removed `interactive'
 	(tinyeat-eat): Removed `interactive'
 
-2002-10-24  Jari Aalto   <jari dot aalto A T cante dt net>
+2002-10-24  Jari Aalto   <jari.aalto@cante.net>
 
 	* tiny/tinypath.el (fboundp): Å¥turn-on-font-lock' typo.
 	Was Å¥fbounp' => Å¥fboundp'
 
-2002-10-23  Jari Aalto  <jari dot aalto A T cante dt net>
+2002-10-23  Jari Aalto  <jari.aalto@cante.net>
 
 	* tiny/tinypath.el (fbounp 'turn-on-font-lock): Defined in
 	tinyliba.el, but has to be known here before the library is
@@ -6027,19 +6054,19 @@
 	care for missing ~/tmp directory under Win32.
 	Solved bug: tiny-tools-Bugs-627065
 
-2002-10-13  Jari Aalto  <jari dot aalto A T cante dt net>
+2002-10-13  Jari Aalto  <jari.aalto@cante.net>
 
 	* tiny/tinylibid.el (ti::id-:buffer-first-line-regexp-list):
 	Table of contents" is now named `text-white-paper-toc'
 
-2002-09-15 Sun  Jari Aalto  <jari dot aalto A T cante dt net>
+2002-09-15 Sun  Jari Aalto  <jari.aalto@cante.net>
 
 	* tiny/tinypath.el (require): 1.90 Added check that
 	FEATURE is `symbolp'.
 	(load): 1.90 Added check that FILE is `stringp'.
 	(locate-library): 1.90 Added check that FILE is `stringp'.
 
-2002-09-14 Sat  Jari Aalto  <jari dot aalto A T cante dt net>
+2002-09-14 Sat  Jari Aalto  <jari.aalto@cante.net>
 
 	* tiny/tinyigrep.el (tinyigrep-install-default-databases): 1.67
 	Incorrect database definition for `lisp-home'. Fixed.
@@ -6050,12 +6077,12 @@
 	Loading TinyGnus.el previously required that Gnus was not
 	from Emacs installation.
 
-2002-09-12  Jari Aalto  <jari dot aalto A T cante dt net>
+2002-09-12  Jari Aalto  <jari.aalto@cante.net>
 
 	* tiny/tinylibb.el (region-active-p): More accurate check.
 	Added `mark-marker' verification.
 
-2002-09-06 Fri  Jari Aalto  <jari dot aalto A T cante dt net>
+2002-09-06 Fri  Jari Aalto  <jari.aalto@cante.net>
 
 	* tiny/tinymacro.el (tinymacro-create-symbol): 1.55 Emacs
 	21.x fix. Cannot `concat' numbers with strings.
@@ -6069,14 +6096,14 @@
 	(tinymy-package-save-to-file-buffer-ending): 1.68 Added
 	argument START-POINT.
 
-2002-09-05 Thu  Jari Aalto  <jari dot aalto A T cante dt net>
+2002-09-05 Thu  Jari Aalto  <jari.aalto@cante.net>
 
 	* tiny/tinyigrep.el (tinyigrep-main-read-args): 1.66
 	Fixed edebug intrumentation problme. (missing concat
 	parenthese)
 	(tinyigrep-expand-file-name): 1.66 New.
 
-2002-09-04 Wed  Jari Aalto  <jari dot aalto A T cante dt net>
+2002-09-04 Wed  Jari Aalto  <jari.aalto@cante.net>
 
 	* tiny/tinydiff.el (tinydiff-find-program): 1.66 Better
 	diagnostic message
@@ -6106,7 +6133,7 @@
 	* tiny/tinyadvice.el (tinyadvice-vc-register): 1.64 Extra `and'
 	keyword caused C-v v i error. Fixed.
 
-2002-09-03 Tue  Jari Aalto  <jari dot aalto A T cante dt net>
+2002-09-03 Tue  Jari Aalto  <jari.aalto@cante.net>
 
 	* tiny/tinyload.el (tinyload-load-ignore-message): Removed `1+',
 	because showed 102%
@@ -6131,7 +6158,7 @@
 	`lisp-home' improved. Now notices ~/.xemacs and ~/.emacs.d/
 	directories.
 
-2002-09-01 Sun  Jari Aalto  <jari dot aalto A T cante dt net>
+2002-09-01 Sun  Jari Aalto  <jari.aalto@cante.net>
 
 	* tiny/tinytf.el (tinytf-:font-lock-keywords): 1.79 The Heading
 	1 and Heading 2 were not correctly propertized under Emacs
@@ -6161,7 +6188,7 @@
 	(tinyigrep-:flag-file-list): 1.63 New.
 	(tinyigrep-:lisp-package-file-list): 1.63 New.
 
-2002-08-31 Sat  Jari Aalto  <jari dot aalto A T cante dt net>
+2002-08-31 Sat  Jari Aalto  <jari.aalto@cante.net>
 
 	* tiny/tinyigrep.el (tinyigrep-main-read-args): 1.63
 	Added Lazy-defined adatabases: only when selected, the database is
@@ -6194,7 +6221,7 @@
 	`end' etc to the `root-map'. They do not have to be called
 	with (C-c ') prefix any more, just hit the key.
 
-2002-08-29  Jari Aalto  <jari dot aalto A T cante dt net>
+2002-08-29  Jari Aalto  <jari.aalto@cante.net>
 
 	* tiny/tinyigrep.el (error): Rmeoved Kevin's email address and
 	pointed people to Google and group=gnu.emacs.sources
@@ -6214,7 +6241,7 @@
 	(tinytf-fontify-current-buffer-window): Check that font lock is
 	active.
 
-2002-08-26 Mon  Jari Aalto  <jari dot aalto A T cante dt net>
+2002-08-26 Mon  Jari Aalto  <jari.aalto@cante.net>
 
 	* tiny/tinytf.el (tinytf-mode): Removed extra
 	`mode-line-mode-menu' definition. It is now created by
@@ -6231,7 +6258,7 @@
 	* tiny/tinyperl.el (tinyperl-inc-split): Call
 	`w32-cygwin-path-to-dos' only under Native Win32 Emacs/XEmacs.
 
-2002-08-25 Sun  Jari Aalto  <jari dot aalto A T cante dt net>
+2002-08-25 Sun  Jari Aalto  <jari.aalto@cante.net>
 
 	* tiny/tinymy.el (tinymy-maybe-make-file-executable):
 	Wrong variable `good' => `stat'
@@ -6253,7 +6280,7 @@
 	(w32-cygwin-path-to-dos): Call
 	`w32-cygwin-mount-table-path-to-dos'.
 
-2002-08-24  Jari Aalto  <jari dot aalto A T cante dt net>
+2002-08-24  Jari Aalto  <jari.aalto@cante.net>
 
 	* tiny/tinydiff.el (tinydiff-compose-diff-filename):
 	Changed postfix from `.diff' to `.patch'
@@ -6265,7 +6292,7 @@
 	* tiny/tinymy.el (tinymy-maybe-make-file-executable): Improved
 	#! detection. There must be no leading spaces.
 
-2002-08-23 Fri  Jari Aalto  <jari dot aalto A T cante dt net>
+2002-08-23 Fri  Jari Aalto  <jari.aalto@cante.net>
 
 	* other/folding.el (folding-uninstall-hooks): 2.105
 	Removed `interactive' status.
@@ -6283,7 +6310,7 @@
 	* tiny/tinyliba.el (tinylib-version): Updated autolaods for
 	tinylib.el
 
-2002-08-22 Thu  Jari Aalto  <jari dot aalto A T cante dt net>
+2002-08-22 Thu  Jari Aalto  <jari.aalto@cante.net>
 
 	* tiny/tinyef.el
 	- NEW FEATURE: C-c C-b, C-c C-f, C-c C-d, C-c TAB keybindings in
@@ -6397,7 +6424,7 @@
 	(tiny-setup-:option-table): 1.80 tinyef/bindextra New user
 	configuration.
 
-2002-08-21 Wed  Jari Aalto  <jari dot aalto A T cante dt net>
+2002-08-21 Wed  Jari Aalto  <jari.aalto@cante.net>
 
 	* tiny/tinymy.el (tinymy-scroll-down): 1.61 Got stuck with
 	M-x apropos, where lines are long. Check now if
@@ -6406,7 +6433,7 @@
 	* tiny/tinylibm.el (ti::when-package): 1.71 Removed
 	.el.gz search.
 
-2002-08-20 Tue Jari Aalto  <jari dot aalto A T cante dt net>
+2002-08-20 Tue Jari Aalto  <jari.aalto@cante.net>
 
 	* tiny/tinymy.el (tinymy-compile-run-command): 1.61
 	Removed Å¥fundamental-mode' restrictions, where the
@@ -6452,7 +6479,7 @@
 	in Emacs 21.2, where it defines alias 'ignore for
 	`characterp'. Added `eval-after-load' for it.
 
-2002-08-19 Jari Aalto  <jari dot aalto A T cante dt net>
+2002-08-19 Jari Aalto  <jari.aalto@cante.net>
 
 	NEW FEATURE: All minor modes can now be turned on and off
 	by clicking the Emac 21.2 mode-line with mouse-3 near the
@@ -6468,7 +6495,7 @@
 	(ti::macrof-mode-line-mode-menu): 1.74 New. Emacs 21.2
 	`mode-line-mode-menu support macro.
 
-2002-08-19  Jari Aalto  <jari dot aalto A T cante dt net>
+2002-08-19  Jari Aalto  <jari.aalto@cante.net>
 
 	* tiny/tinyadvice.el (tinyadvice-:advice-table): New
 	advice `mouse-wheel-scroll-screen' (win32).
@@ -6476,7 +6503,7 @@
 	* tiny/tinymy.el (tinymy-scroll-down): Renamed.
 	Was `tinymy-scroll'.
 
-2002-08-14 Wed  Jari Aalto  <jari dot aalto A T cante dt net>
+2002-08-14 Wed  Jari Aalto  <jari.aalto@cante.net>
 
 	* tiny/tinymy.el (tinymy-compile-command-for-buffer): New.
 	(tinymy-compile-command-for-buffer-clear): New.
@@ -6488,7 +6515,7 @@
 	had top-level (level1) heading followed by standard text
 	at column 8 was detected.
 
-2002-08-14 ke  Jari Aalto  <jari dot aalto A T cante dt net>
+2002-08-14 ke  Jari Aalto  <jari.aalto@cante.net>
 
 	* tiny/tinylisp.el (tinylisp-:menu-elp): 1.65
 	Change ?h => ?H, because tinylibmenu.el occupies ?h
@@ -6501,7 +6528,7 @@
 	to this name and moved it out of tinylibm.el to tinylibb.el
 	(backward lib)
 
-2002-08-13 Tue  Jari Aalto  <jari dot aalto A T cante dt net>
+2002-08-13 Tue  Jari Aalto  <jari.aalto@cante.net>
 
 	* tiny/tinylibm.el (ti::with-unix-shell-environment): New.
 
@@ -6522,12 +6549,12 @@
 	`tinyigrep-:history-programs'
 	(tinyigrep-fix-program-path): 1.60
 
-2002-08-12 Mon  Jari Aalto  <jari dot aalto A T cante dt net>
+2002-08-12 Mon  Jari Aalto  <jari.aalto@cante.net>
 
 	* tiny/tinypath.el (tinypath-path-ok-p): Added `stringp'
 	test for `tinypath-:load-path-ignore-regexp'
 
-2002-08-09  Jari Aalto  <jari dot aalto A T cante dt net>
+2002-08-09  Jari Aalto  <jari.aalto@cante.net>
 
 	* other/folding.el: flyspell checked documentation.
 
@@ -6609,7 +6636,7 @@
 	(tinymail-save-dead-mail): Do not save message.el mail messages to
 	tinymail-:dead-mail-file if they are already saved under `draft'.
 
-2002-08-08 Thu  Jari Aalto  <jari dot aalto A T cante dt net>
+2002-08-08 Thu  Jari Aalto  <jari.aalto@cante.net>
 
 	* tiny/tinylisp.el (tinylisp-:menu-checkdoc): 1.64
 	Emacs 21.2 checkdoc.el does have variable
@@ -6621,7 +6648,7 @@
 	* tiny/tinylibt.el (TinyLibText): 1.55 Changed cystom
 	prefixes `TinyMatch' => `TinylibText'.
 
-2002-08-07 Wed  Jari Aalto  <jari dot aalto A T cante dt net>
+2002-08-07 Wed  Jari Aalto  <jari.aalto@cante.net>
 
 	* tiny/tinymy.el (tinymy-:compile-table): 1.58 Added new
 	compile command for tinytf.el TEXT files. If .txt file
@@ -6639,7 +6666,7 @@
 	in Å¥Code Note: overlay management'. This caysed all text
 	to turn into BOLD in HTML (ripdoc.pl file | t2html.pl)
 
-2002-08-06 Tue  Jari Aalto  <jari dot aalto A T cante dt net>
+2002-08-06 Tue  Jari Aalto  <jari.aalto@cante.net>
 
 	* tiny/tinylibb.el (turn-on-font-lock): New.
 
@@ -6662,7 +6689,7 @@
 	values are saved at start.
 	(tinypath-cache-regenerate): Use `tinypath-original-values'
 
-2002-08-05  Jari Aalto  <jari dot aalto A T cante dt net>
+2002-08-05  Jari Aalto  <jari.aalto@cante.net>
 
 	* tiny/tinypath.el (tinypath-cache-p): Remove cache element
 	if file was deleted on disk.
@@ -6675,7 +6702,7 @@
 	(tinypath-load-path-search): Make case sensitive match on
 	`tinypath-:load-path-ignore-regexp'.
 
-2002-08-05 Mon  Jari Aalto  <jari dot aalto A T cante dt net>
+2002-08-05 Mon  Jari Aalto  <jari.aalto@cante.net>
 
 	KIT RELEASED 2002-08-05
 
@@ -6689,7 +6716,7 @@
 
 	* tiny/tinyliba.el (ti::menu-help): New.
 
-2002-08-04 Sun  Jari Aalto  <jari dot aalto A T cante dt net>
+2002-08-04 Sun  Jari Aalto  <jari.aalto@cante.net>
 
 	* tiny/tinyperl.el (tinyperl-:pod-font-lock-keywords): Added
 	=head2 highlighting: allow multiple words.
@@ -6698,7 +6725,7 @@
 	was first created.
 
 
-2002-08-03 Sat  Jari Aalto  <jari dot aalto A T cante dt net>
+2002-08-03 Sat  Jari Aalto  <jari.aalto@cante.net>
 
 	* other/folding.el
 	Removed LCD entry, because OHIO archive hasn't
@@ -6716,7 +6743,7 @@
 	* tiny/tinylibm.el (ti::directory-recursive-macro):
 	Corrected `edebug-form-spec' and `lisp-indent-function'.
 
-2002-08-02 Fri  Jari Aalto  <jari dot aalto A T cante dt net>
+2002-08-02 Fri  Jari Aalto  <jari.aalto@cante.net>
 
 	* tiny/tinylisp.el (tinylisp-:load-hook): Added
 	`turn-on-tinylisp-mode-all-buffers' and removed
@@ -6785,7 +6812,7 @@
 	9th parameter `prefix-keymap-sym'. THIS IS SERIOUS ERROR,
 	because it affects all files that create minor modes.
 
-2002-08-01 Thu  Jari Aalto  <jari dot aalto A T cante dt net>
+2002-08-01 Thu  Jari Aalto  <jari.aalto@cante.net>
 
 	* tiny/tinylibm.el (ti::directory-list): New.
 	(ti::directory-recursive-macro): New.
@@ -6799,12 +6826,12 @@
 	(tiny-setup-compile-kit-libraries): New.
 	(tiny-setup-file-list-lisp-compiled): New.
 
-2002-07-31  Jari Aalto  <jari dot aalto A T cante dt net>
+2002-07-31  Jari Aalto  <jari.aalto@cante.net>
 
 	* tiny/tinyperl.el (tinyperl-pod-grep-faq-data-insert):
 	Wrong number of parens at the function end. Fixed.
 
-2002-07-30  Jari Aalto  <jari dot aalto A T cante dt net>
+2002-07-30  Jari Aalto  <jari.aalto@cante.net>
 
 	* tiny/tinypath.el (tinypath-file-remove-trailing-slash):
 	New.
@@ -6818,14 +6845,14 @@
 	Added exclusion of paths by
 	`tinypath-:load-path-ignore-regexp'.
 
-2002-07-30  Jari Aalto  <jari dot aalto A T cante dt net>
+2002-07-30  Jari Aalto  <jari.aalto@cante.net>
 
 	* tiny/tinypath.el (tinypath-load-path-initial-value):
 	Added booting Emacs paths. This function booted only
 	XEmacs paths. Now if something goes wrong, all Emacs
 	paths are automatically restored.
 
-2002-07-27  Jari Aalto  <jari dot aalto A T cante dt net>
+2002-07-27  Jari Aalto  <jari.aalto@cante.net>
 
 	* tiny/tinydesk.el (tinydesk-only-files-region): Lisp
 	indent fix.
@@ -6837,7 +6864,7 @@
 
 	* tiny/tinyperl.el: Ran flyspell on docs.
 
-2002-07-25  Jari Aalto  <jari dot aalto A T cante dt net>
+2002-07-25  Jari Aalto  <jari.aalto@cante.net>
 
 	* tiny/tinytab.el (tinytab-tab-forward-insert): Removed
 	`Insert' message.
@@ -6872,13 +6899,13 @@
 	Do not pass full path to grep(1), but set
 	`default-directory'.
 
-2002-07-24  Jari Aalto  <jari dot aalto A T cante dt net>
+2002-07-24  Jari Aalto  <jari.aalto@cante.net>
 
 	* tiny/tinyperl.el (tinyperl-mode): Moved
 	`tinyperl-selfstubber-stubs' to key `S'. Reorganizes menus
 	and menu texts.
 
-2002-07-23  Jari Aalto  <jari dot aalto A T cante dt net>
+2002-07-23  Jari Aalto  <jari.aalto@cante.net>
 
 	NEW FEATURE: TinyPerl can now contruct an FAQ answers
 	from the pod files. See keybinding C-c ' G (Grep FAQ)-
@@ -6922,18 +6949,18 @@
 	the very beginning of buffer, when there was no empty
 	line at `bop'. Fixed.
 
-2002-07-11  Jari Aalto  <jari dot aalto A T cante dt net>
+2002-07-11  Jari Aalto  <jari.aalto@cante.net>
 
 	* tiny/tinymailbox.el (tinymailbox-:menu-main):
 	Added `call-interactively' calls.
 
-2002-07-08  Jari Aalto  <jari dot aalto A T cante dt net>
+2002-07-08  Jari Aalto  <jari.aalto@cante.net>
 
 	* tiny/tinypgp.el (tinypgp-path):
 	(tinypgp-:file-secring):
 
 
-2002-07-08  Jari Aalto  <jari dot aalto A T cante dt net>
+2002-07-08  Jari Aalto  <jari.aalto@cante.net>
 
 	* tiny/tinylibm.el (ti::file-name-forward-slashes-cygwin):
 	Added flag 'no-alter-case so that C:/ is converted to
@@ -6965,7 +6992,7 @@
 	(tinypgp-binary-get-result-re1-macro): Added new parameters.
 	GPG support.
 
-2002-07-07  Jari Aalto  <jari dot aalto A T cante dt net>
+2002-07-07  Jari Aalto  <jari.aalto@cante.net>
 
 	* tiny/tinypgp.el (tinypgp-exe-do-command-region):
 	Changed all `shell-execute' calls to `shell-command'.
@@ -6977,17 +7004,17 @@
 	(tinypgp-backend-select-pgp5): Renamed.
 	Was `tinypgp-backend-select5'
 
-2002-06-06  Jari Aalto  <jari dot aalto A T cante dt net>
+2002-06-06  Jari Aalto  <jari.aalto@cante.net>
 
 	* tiny/tinyigrep.el (tinyigrep-db-push-elt-package-texi):
 	Added `file-name-as-directory' which fixes the not-found
 	texi/ directories in most of the packages.
 
-2002-05-07 Tue  Jari Aalto  <jari dot aalto A T cante dt net>
+2002-05-07 Tue  Jari Aalto  <jari.aalto@cante.net>
 
 	* tiny/tinyhotlist.el (tinyhotlist-control): 1.57 Eg. => E.g.
 
-2002-05-06 Mon  Jari Aalto  <jari dot aalto A T cante dt net>
+2002-05-06 Mon  Jari Aalto  <jari.aalto@cante.net>
 
 	* tiny/tinyload.el (tinyload-load-ok-message): 1.61 Added
 	missing argument `stat'. compile error reported by
@@ -6995,7 +7022,7 @@
 	(tinyload-config-file-parse): 1.61 Extra variable `ok'
 	removed.
 
-2002-05-02 Thu  Jari Aalto  <jari dot aalto A T cante dt net>
+2002-05-02 Thu  Jari Aalto  <jari.aalto@cante.net>
 
 	* tiny/tinyliba.el (hexl-hex-string-to-integer): 1.64
 	Removed duplicate autloads: `delete-rectangle'
@@ -7029,7 +7056,7 @@
 	(tinygnus-article-ube-send-to-postmasters): 1.64 Removed unused
 	variable `elt'
 
-2002-05-01 Wed  Jari Aalto  <jari dot aalto A T cante dt net>
+2002-05-01 Wed  Jari Aalto  <jari.aalto@cante.net>
 
 	* tiny/tinylibmail.el (ti::mail-parse-received-regexp-list): 1.60
 	Added unused `re-word2e' to list 2.
@@ -7055,7 +7082,7 @@
 	call: `tinygnus-article-received-top-level-domain' =>
 	`ti::mail-ip-top-level-domain'
 
-2002-04-10 Wed  Jari Aalto  <jari dot aalto A T cante dt net>
+2002-04-10 Wed  Jari Aalto  <jari.aalto@cante.net>
 
 	* tiny/tinyload.el (tinyload-load-ignore-message): 1.59 Wrong
 	full percentage value (102%). Fixed. Should now show 100%.
@@ -7068,7 +7095,7 @@
 	(tinyload-load-list-delete-package): 1.59 New.
 	(tinyload-load-list-add-package): 1.59 New.
 
-2002-04-09 Tue  Jari Aalto  <jari dot aalto A T cante dt net>
+2002-04-09 Tue  Jari Aalto  <jari.aalto@cante.net>
 
 	* tiny/tinyload.el (tinyload-install): 1.58 Added call to check
 	`tinyload-config-file-load-default'
@@ -7078,7 +7105,7 @@
 	(tinylaod-config-file-emacs-type-ok-p): 1.58 New.
 	(tinyload-:load-file): 1.58 New user variable.
 
-2002-04-09  Jari Aalto  <jari dot aalto A T cante dt net>
+2002-04-09  Jari Aalto  <jari.aalto@cante.net>
 
 	* tiny/tinyload.el (tinyload-continue-check): Corrected
 	error 'Format specifier doesn't match argument type' reported
@@ -7094,46 +7121,46 @@
 	function `gnus-continuum-version'. now made sure that
 	`mm-char-int' contains correct definition.
 
-2002-03-28 Thu  Jari Aalto  <jari dot aalto A T cante dt net>
+2002-03-28 Thu  Jari Aalto  <jari.aalto@cante.net>
 
 	* tiny/tinylib.el (ti::file-chmod-make-writable): 1.69 New.
 	(ti::file-chmod-make-read-only): 1.69 New.
 
-2002-03-28  Jari Aalto  <jari dot aalto A T cante dt net>
+2002-03-28  Jari Aalto  <jari.aalto@cante.net>
 
 	* tiny/tinylib.el (ti::file-chmod-w-toggle): Removed `if'
 	and used more readable `when'.
 
-2002-03-25  Jari Aalto  <jari dot aalto A T cante dt net>
+2002-03-25  Jari Aalto  <jari.aalto@cante.net>
 
 	* other/folding.el (folding-install): Added UNISTALL.
 
-2002-03-12 Tue  Jari Aalto  <jari dot aalto A T cante dt net>
+2002-03-12 Tue  Jari Aalto  <jari.aalto@cante.net>
 
 	* tiny/tinylibm.el (ti::narrow-to-paragraph): 1.65 New.
 
-2002-03-10  Jari Aalto  <jari dot aalto A T cante dt net>
+2002-03-10  Jari Aalto  <jari.aalto@cante.net>
 
 	* tiny/tinygnus.el (tinygnus-:ube-abuse-account-table):
 	Misplaced paren.
 
-2002-03-09  Jari Aalto  <jari dot aalto A T cante dt net>
+2002-03-09  Jari Aalto  <jari.aalto@cante.net>
 
 	* tiny/tinypath.el (tinypath-cache-file-name): convert
 	everything with `downcase' before returning value.
 
-2002-03-03 Sun  Jari Aalto  <jari dot aalto A T cante dt net>
+2002-03-03 Sun  Jari Aalto  <jari.aalto@cante.net>
 
 	* tiny/tinyload.el (tinyload-install): 1.55 Debug now prints
 	the `run-at-time' entry used.
 
-2002-03-03  Jari Aalto  <jari dot aalto A T cante dt net>
+2002-03-03  Jari Aalto  <jari.aalto@cante.net>
 
 	* tiny/tinygnus.el (tinygnus-ube-address-compose):
 	Composing abuse address now supports complete
 	email address in `tinygnus-:ube-abuse-account-table'
 
-2002-03-02  Jari Aalto  <jari dot aalto A T cante dt net>
+2002-03-02  Jari Aalto  <jari.aalto@cante.net>
 
 	* tiny/tinylibmail.el (ti::mail-parse-received-regexp-list):
 	Added many more Received header choices.
@@ -7150,16 +7177,16 @@
 	(tinygnus-nslookup-examine-ip-list): logic rewritten.
 	(tinygnus-nslookup-do): logic rewritten.
 
-2002-02-21 Thu  Jari Aalto  <jari dot aalto A T cante dt net>
+2002-02-21 Thu  Jari Aalto  <jari.aalto@cante.net>
 
 	* tiny/tinymacro.el
 	(tinymacro-install-default-keybindings): 1.53 New.
 
-2002-02-20 Wed  Jari Aalto  <jari dot aalto A T cante dt net>
+2002-02-20 Wed  Jari Aalto  <jari.aalto@cante.net>
 
 	* tiny/tinyload.el (tinyload-busy-count-incf): 1.55 New.
 
-2002-02-18 Mon  Jari Aalto  <jari dot aalto A T cante dt net>
+2002-02-18 Mon  Jari Aalto  <jari.aalto@cante.net>
 
 	* tiny/tinytf.el (tinytf-mode): 1.69
 	Added `tinytf-convert-t2html-link-check-cached'
@@ -7169,11 +7196,11 @@
 
 	* tiny/tinylib.el (ti::buffer-parse-grep-line): 1.68 New.
 
-2002-02-17  Jari Aalto  <jari dot aalto A T cante dt net>
+2002-02-17  Jari Aalto  <jari.aalto@cante.net>
 
 	* tiny/tinygnus.el (tinygnus-host-canonilize): New.
 
-2002-02-16  Jari Aalto  <jari dot aalto A T cante dt net>
+2002-02-16  Jari Aalto  <jari.aalto@cante.net>
 
 	* tiny/tinygnus.el (tinygnus-ube-postmaster-inform):
 	Rewritten
@@ -7190,7 +7217,7 @@
 	(tinygnus-ns-lookup-list): New.
 	(tinygnus-nslookup-do): New.
 
-2002-02-16 Sat  Jari Aalto  <jari dot aalto A T cante dt net>
+2002-02-16 Sat  Jari Aalto  <jari.aalto@cante.net>
 
 	* tiny/tinypath.el (tinypath-gnus-latest-version): 1.74
 	If Gnus version was not found, the check returned error.
@@ -7208,7 +7235,7 @@
 	The new implementation should be clearer and more straight
 	forward.
 
-2002-02-13 Wed  Jari Aalto  <jari dot aalto A T cante dt net>
+2002-02-13 Wed  Jari Aalto  <jari.aalto@cante.net>
 
 	* tiny/tinyhotlist.el
 	Flyspelled documentation section.
@@ -7230,7 +7257,7 @@
 	(tiny-setup-:option-table): 1.74 Added `tinydesk' configuration
 	option `bindforce'
 
-2002-02-11 Mon  Jari Aalto  <jari dot aalto A T cante dt net>
+2002-02-11 Mon  Jari Aalto  <jari.aalto@cante.net>
 
 	* tiny/tinypath.el (tinypath-install-environment-user):
 	Corrected message for Å¥bash'. The USER is not defined.
@@ -7240,7 +7267,7 @@
 	interactive argument, so that user can supply
 	M-85 M-x ti::buffer-fill-region-spaces
 
-2002-02-10 Sun  Jari Aalto  <jari dot aalto A T cante dt net>
+2002-02-10 Sun  Jari Aalto  <jari.aalto@cante.net>
 
 	* tiny/tinydebian.el: NEW PACKAGE.
 
@@ -7274,7 +7301,7 @@
 	(tinydiff-diff-command-generate): 1.61 Save state if user
 	want a diff agianst the file-on-disk.
 
-2002-02-09 Sat  Jari Aalto  <jari dot aalto A T cante dt net>
+2002-02-09 Sat  Jari Aalto  <jari.aalto@cante.net>
 
 	* other/dired-sort.el (dired-sort-line-property-table): 1.11
 	Renamed. Was `dired-line-property-table'
@@ -7309,12 +7336,12 @@
 	(dired-sort-resort): 1.11 Renamed. Was
 	`dired-sort-resort'
 
-2002-02-06 Wed  Jari Aalto  <jari dot aalto A T cante dt net>
+2002-02-06 Wed  Jari Aalto  <jari.aalto@cante.net>
 
 	* tiny/tinyigrep.el (tinyigrep-install-default-databases): 1.56
 	Added Cygwin /usr/doc hierarchy search.
 
-2002-02-04 Mon  Jari Aalto  <jari dot aalto A T cante dt net>
+2002-02-04 Mon  Jari Aalto  <jari.aalto@cante.net>
 
 	KIT RELEASED 2001-02-04
 
@@ -7340,7 +7367,7 @@
 	`.' to reat word moving correctly e.g. in `text-mode', where
 	punctuation shoudl be obeyed.
 
-2002-02-03 Sun  Jari Aalto  <jari dot aalto A T cante dt net>
+2002-02-03 Sun  Jari Aalto  <jari.aalto@cante.net>
 
 	* tiny/tinytf.el (tinytf-install-add-log): 1.68 Do not save
 	original value. The variable
@@ -7352,7 +7379,7 @@
 	(tinytf-mode): 1.68 Check that `tinytf-:saved-left-margin'
 	in integer before restoring `left-margin'
 
-2002-02-02 Sat  Jari Aalto  <jari dot aalto A T cante dt net>
+2002-02-02 Sat  Jari Aalto  <jari.aalto@cante.net>
 
 	* other/folding.el (folding-uninstall-hooks): 2.101
 	Call `turn-off-folding-mode' before uninstalling the
@@ -7361,7 +7388,7 @@
 	(folding-mode): 2.101 `folding-keep-hooked'
 	is now called only if `folding-mode' is turned on.
 
-2002-02-01 Fri  Jari Aalto  <jari dot aalto A T cante dt net>
+2002-02-01 Fri  Jari Aalto  <jari.aalto@cante.net>
 
 	* tiny/tinyliba.el (require): 1.61 Extra character `x'
 	removed. This was a typo that prevented loading file.
@@ -7369,14 +7396,14 @@
 	* tiny/tinylib.el (ti::xe-timer-cancel-function): 1.64
 	Didn't return killed timer elements. Fixed.
 
-2002-01-31 Thu  Jari Aalto  <jari dot aalto A T cante dt net>
+2002-01-31 Thu  Jari Aalto  <jari.aalto@cante.net>
 
 	* tiny/tinypath.el (tinypath-cache-p): 1.72 If package
 	location has changed and cache got invalidated, a
 	full scan was made. However the result of full scan
 	was not put to `tinypath-:cache-level-two'. Fixed.
 
-2002-01-30 Wed  Jari Aalto  <jari dot aalto A T cante dt net>
+2002-01-30 Wed  Jari Aalto  <jari.aalto@cante.net>
 
 	* tiny/tinymy.el (tinymy-:move-word-case-modes): 1.57
 	Added many more modes to MoveLikeThisWord when Control-<arrow>
@@ -7402,7 +7429,7 @@
 	* tiny/tinylibid.el (ti::id-:buffer-match-regexp-list): 1.55
 	Added `code-procmail' check.
 
-2002-01-29 Tue  Jari Aalto  <jari dot aalto A T cante dt net>
+2002-01-29 Tue  Jari Aalto  <jari.aalto@cante.net>
 
 	* tiny/tinytf.el
 	(tinytf-:add-log-current-defun-header-regexp): Started with
@@ -7412,7 +7439,7 @@
 	level 1 parentheses, because add-log.el looks at paren 1
 	first.
 
-2002-01-28 Mon  Jari Aalto  <jari dot aalto A T cante dt net>
+2002-01-28 Mon  Jari Aalto  <jari.aalto@cante.net>
 
 	* tiny/tinylib-ad.el (define-key-after): 1.55 Added
 	`fboundp'.
@@ -7440,7 +7467,7 @@
 	it is used in one of the essential function
 	declarations.
 
-2002-01-27 Sun  Jari Aalto  <jari dot aalto A T cante dt net>
+2002-01-27 Sun  Jari Aalto  <jari.aalto@cante.net>
 
 	* tiny/tinymy.el: 1.56 Flyspelled.
 
@@ -7518,7 +7545,7 @@
 	(tinypath-info-directory-entry-p): 1.70 New. Takes
 	care of checking if there is already info entry.
 
-2002-01-25 Fri  Jari Aalto  <jari dot aalto A T cante dt net>
+2002-01-25 Fri  Jari Aalto  <jari.aalto@cante.net>
 
 	* tiny/tinypath.el
 	(tinypath-:verbose-timing): New user variable.
@@ -7544,7 +7571,7 @@
 	If buffer is folded or outlined, open the narrowing
 	before searchng for function.
 
-2002-01-24 Thu  Jari Aalto  <jari dot aalto A T cante dt net>
+2002-01-24 Thu  Jari Aalto  <jari.aalto@cante.net>
 
 	* tiny/tinymailbox.el (tinymailbox-font-lock): 1.59 Can't
 	use `window-*' functions to get bounds, because the window
@@ -7591,7 +7618,7 @@
 	triple comments ';;;' but ';;'. Changed the search
 	regexp to cope with this.
 
-2002-01-23 Wed  Jari Aalto  <jari dot aalto A T cante dt net>
+2002-01-23 Wed  Jari Aalto  <jari.aalto@cante.net>
 
 	************************************************************
 	RADICAL CHANGES - tinylib{m,a} Library functions altered.
@@ -7653,7 +7680,7 @@
 	running in `perl-mode', but e.g in `text-mode'. Now loading
 	tinyperl.el will also populate those buffers.
 
-2002-01-22 Tue  Jari Aalto  <jari dot aalto A T cante dt net>
+2002-01-22 Tue  Jari Aalto  <jari.aalto@cante.net>
 
 	* tiny/tinymy.el (tinymy-:compile-table): 1.54 updated regexps
 	for shell languages (ksh, bash, sh, csh). You can compile
@@ -7667,14 +7694,14 @@
 	according to SQL standard.
 	(ti::id-:file-extension-alist): 1.52 Added `.bash', `.csh', `.ksh'
 
-2002-01-22    <jari dot aalto A T cante dt net>
+2002-01-22    <jari.aalto@cante.net>
 
 	* tiny/tinypath.el (tinypath-info-handler): incorrect
 	call to `substr'. Missing the DIR argument. This was
 	serious error and prevented using the package if new
 	info files were found.
 
-2002-01-19 Sat  Jari Aalto  <jari dot aalto A T cante dt net>
+2002-01-19 Sat  Jari Aalto  <jari.aalto@cante.net>
 
 	* tiny/tinymailbox.el (tinymailbox-find-file-hooks): 1.57
 	Incorrect placement of paren.
@@ -7695,19 +7722,19 @@
 	(tinypath-info-initialize): 1.67 Added call to
 	`tinypath-Info-default-directory-list-clean'
 
-2002-01-17 Thu  Jari Aalto  <jari dot aalto A T cante dt net>
+2002-01-17 Thu  Jari Aalto  <jari.aalto@cante.net>
 
 	* tiny/tinymailbox.el (tinymailbox-find-file-hooks):
 	Exclude certain files for mailbox checks: *.tmp *.log
 	.procmailrc, VM, RMAIL.
 
-2002-01-15 Tue  Jari Aalto  <jari dot aalto A T cante dt net>
+2002-01-15 Tue  Jari Aalto  <jari.aalto@cante.net>
 
 	* tiny/tinypath.el (tinypath-install-environment-user):
 	LOGNAME 'Linux error' was displayed in W2k. This is
 	incorrect. Added test fro (not (tinypath-win32-p)).
 
-2002-01-14 Mon  Jari Aalto  <jari dot aalto A T cante dt net>
+2002-01-14 Mon  Jari Aalto  <jari.aalto@cante.net>
 
 	* tiny/tinyperl.el (tinyperl-perldoc): 1.60 Added
 	(get-buffer-create tinyperl-:perldoc-buffer). There is
@@ -7749,7 +7776,7 @@
 	(tiny-setup-package): 1.70 Missing `list' argument to
 	function `prin1-to-string'.
 
-2002-01-13 Sun  Jari Aalto  <jari dot aalto A T cante dt net>
+2002-01-13 Sun  Jari Aalto  <jari.aalto@cante.net>
 
 	* tiny/tinydesk.el (ti::defgroup-tiny): 1.53 Wrong macro
 	call, was `ti::defgroup'.
@@ -7762,7 +7789,7 @@
 	to the end if called interactively. This forces regenerating
 	info files and new additions will be seen.
 
-2002-01-12 Sat  Jari Aalto  <jari dot aalto A T cante dt net>
+2002-01-12 Sat  Jari Aalto  <jari.aalto@cante.net>
 
 	* tiny/tinydired.el (tinydired-:download-dir): 1.54
 	2 separate VALUES in `defcustom' declaration, but only one
@@ -7794,7 +7821,7 @@
 	in message
 	http://www.geocrawler.com/lists/3/SourceForge/8673/0/7453688/
 
-2002-01-11 Fri  Jari Aalto  <jari dot aalto A T cante dt net>
+2002-01-11 Fri  Jari Aalto  <jari.aalto@cante.net>
 
 
 	************************************************************
@@ -7878,12 +7905,12 @@
 	(tinytf-install-add-log): 1.61 New.
 	(tinytf-install): 1.61 Install add-log.el support.
 
-2002-01-10 Thu  Jari Aalto  <jari dot aalto A T cante dt net>
+2002-01-10 Thu  Jari Aalto  <jari.aalto@cante.net>
 
 	* tiny/tinytf.el (tinytf-utility-programs-check): Too loose
 	error handling if files were not avilable. Tightened.
 
-2002-01-09 <jari dot aalto A T cante dt net>
+2002-01-09 <jari.aalto@cante.net>
 
 	* tiny/tinygnus.el (tinygnus-gnus-summary-catchup-with-read-all):
 	1.53 New. Mark rest of the articles as read.
@@ -7907,12 +7934,12 @@
 	Incorrect USER checking: the `format' died for
 	unmatched `%s'.
 
-2002-01-07 Mon  Jari Aalto  <jari dot aalto A T cante dt net>
+2002-01-07 Mon  Jari Aalto  <jari.aalto@cante.net>
 
 	* tiny/tinyurl.el (tinyurl-default-exclude): Exclude
 	`archive-mode'. There is no URLs in it, but files.
 
-2002-01-06 Sun  Jari Aalto  <jari dot aalto A T cante dt net>
+2002-01-06 Sun  Jari Aalto  <jari.aalto@cante.net>
 
 	* tiny/tinydired.el (tinydired-:readin-hook): 1.52
 	Emacs 21.1 includes new feature `ls-lisp-dirs-first'.
@@ -7934,13 +7961,13 @@
 	section.
 	(vc-mode-line): 1.53 Incorrect variable: `now' => `vc'
 
-2002-01-05 Sat  Jari Aalto  <jari dot aalto A T cante dt net>
+2002-01-05 Sat  Jari Aalto  <jari.aalto@cante.net>
 
 	* tiny/tinydired.el (tinydired-normal-buffer-p): 1.51
 	Incorrect return. This disabled `tinydired-sort-dir'
 	so that directories were never put first.
 
-2002-01-02 Wed  Jari Aalto  <jari dot aalto A T cante dt net>
+2002-01-02 Wed  Jari Aalto  <jari.aalto@cante.net>
 
 	* tiny/tinymail.el: 1.53 typo autoload => autoload
 
@@ -7967,7 +7994,7 @@
 	(tinytag-install-sample-database-java-external-process): 1.55
 	unused variable `type' removed.
 
-2001-12-31 Mon  Jari Aalto  <jari dot aalto A T cante dt net>
+2001-12-31 Mon  Jari Aalto  <jari.aalto@cante.net>
 
 	KIT RELEASED 2001-12-31
 
@@ -8016,7 +8043,7 @@
 	error fixed. there was no `cond', thus (t  sttement
 	was called like a function.
 
-2001-12-30 Sun  Jari Aalto  <jari dot aalto A T cante dt net>
+2001-12-30 Sun  Jari Aalto  <jari.aalto@cante.net>
 
 	* tiny/tinymy.el (tinymy-install): 1.52
 	`tinymy-mouse-movement-handler' cannot be installed under win32,
@@ -8031,18 +8058,18 @@
 	Emacs version number. It returned '(20.7 20.7.3) in
 	Win32.
 
-2001-12-24 Mon  Jari Aalto  <jari dot aalto A T cante dt net>
+2001-12-24 Mon  Jari Aalto  <jari.aalto@cante.net>
 
 	* tiny/tinyliba.el (xemacs-p): 1.54 Made more restrictive.
 	Now checks `emacs-version', which is most reliable.
 
-2001-12-22 Sat  Jari Aalto  <jari dot aalto A T cante dt net>
+2001-12-22 Sat  Jari Aalto  <jari.aalto@cante.net>
 
 	* other/folding.el (folding-mode-write-file): 2.96 Errorneous `:',
 	when it should have been `;'. Bug reported by
 	Brand Michael <michael.brand@siemens.com>
 
-2001-12-21 Fri  Jari Aalto  <jari dot aalto A T cante dt net>
+2001-12-21 Fri  Jari Aalto  <jari.aalto@cante.net>
 
 	* tiny/tinypath.el (startup): Added more checking for USER,
 	LOGNAME and environment, because LOGNAME may be set, not
@@ -8050,7 +8077,7 @@
 	for current host. It looked a bit funny to see WinNT
 	specific message in Unix host....
 
-2001-12-19 Wed  Jari Aalto  <jari dot aalto A T cante dt net>
+2001-12-19 Wed  Jari Aalto  <jari.aalto@cante.net>
 
 	* other/folding.el (folding-fold-region): XEmacs latex-mode
 	makes folds indent strangely (somewhere at column 40). The
@@ -8097,7 +8124,7 @@
 	regexp caused Regexp parser error. Broke the regexp
 	to multiple separate matches.
 
-2001-12-18 Tue  Jari Aalto  <jari dot aalto A T cante dt net>
+2001-12-18 Tue  Jari Aalto  <jari.aalto@cante.net>
 
 	* tiny/tinylibb.el (w32-cygwin-path-to-dos): 1.56 Rewritten.
 	(w32-cygwin-mount-table-dolist): 1.56 New.
@@ -8109,7 +8136,7 @@
 	If t2html.pl was nt found, the function dies on error
 	`expand-file-name' tried to expand nil. Fixed.
 
-2001-12-14 Fri  Jari Aalto  <jari dot aalto A T cante dt net>
+2001-12-14 Fri  Jari Aalto  <jari.aalto@cante.net>
 
 	* tiny/tinylibb.el (w32-cygwin-convert): New.
 
@@ -8117,7 +8144,7 @@
 	Added `stringp' test before using
 	`file-directory-p' function.
 
-2001-12-13 Thu  Jari Aalto  <jari dot aalto A T cante dt net>
+2001-12-13 Thu  Jari Aalto  <jari.aalto@cante.net>
 
 	* tiny/tinyadvice.el (occur): Added test for
 	(boundp  'outline-mode). The (featurep 'outline) is
@@ -8136,7 +8163,7 @@
 	$<cursor>PATH => ${PATH}. Previously inserted pairs like this:
 	${}PATH
 
-2001-12-12 Wed  Jari Aalto  <jari dot aalto A T cante dt net>
+2001-12-12 Wed  Jari Aalto  <jari.aalto@cante.net>
 
 	* tiny/tinylibm.el (ti::temp-directory): Added error handling.
 	(ti::write-file-binary-macro): New.
@@ -8156,7 +8183,7 @@
 	(tinydiff-block-region): Removed (forward-line -1) which
 	took one one too much to the diff block.
 
-2001-12-11 Tue  Jari Aalto  <jari dot aalto A T cante dt net>
+2001-12-11 Tue  Jari Aalto  <jari.aalto@cante.net>
 
 	* tiny/tinylibb.el (subst-char-in-string): Wrapped
 	autoload inside XEmacs test.
@@ -8200,7 +8227,7 @@
 	(tiny-setup-tinytag-autoload): Added `cc-mode-hook'
 	(tiny-setup-package): Rewrote whole function.
 
-2001-12-10 Mon  Jari Aalto  <jari dot aalto A T cante dt net>
+2001-12-10 Mon  Jari Aalto  <jari.aalto@cante.net>
 
 	* other/folding.el (folding-flag-region): Corrected lisp
 	parens. No code changed.
@@ -8218,7 +8245,7 @@
 	(tinyurl-find-url-file): Added `ti::select-frame-non-dedicated'
 	for compile buffer, which can be in dedicated frame.
 
-2001-12-09  Jari Aalto  <jari dot aalto A T cante dt net>
+2001-12-09  Jari Aalto  <jari.aalto@cante.net>
 
 	* tiny/tinytf.el (tinytf-fontify-current-buffer-window):
 	If text buffer was smalled than window, the `window-end' returned
@@ -8249,7 +8276,7 @@
 
 	* tiny/tinylib.el (ti::p-java-version): New.
 
-2001-12-08  Jari Aalto  <jari dot aalto A T cante dt net>
+2001-12-08  Jari Aalto  <jari.aalto@cante.net>
 
 	NEW FEATURE: Tinytag is now automatically activated by
 	tiny-setup.el. This means that whenever you start
@@ -8317,12 +8344,12 @@
 	(tinyhotlist-build-default-hotlist):
 	writing typo in documentation string.
 
-2001-12-02  Jari Aalto  <jari dot aalto A T cante dt net>
+2001-12-02  Jari Aalto  <jari.aalto@cante.net>
 
 	* tiny/tinylib-ad.el (buffer-size): Emacs 21.1 compatibility.
 	Added support for additional argument BUFFER.
 
-2001-11-28  Jari Aalto  <jari dot aalto A T cante dt net>
+2001-11-28  Jari Aalto  <jari.aalto@cante.net>
 
 	* tiny/tinypair.el (tinypair-whiteti::space-p): Incorrect
 	function name fixed => `tinypair-whitespace-p'
@@ -8334,20 +8361,20 @@
 	colon(,). Now it advanced over colon to the next marked word:
 	_text_
 
-2001-11-25  Jari Aalto  <jari dot aalto A T cante dt net>
+2001-11-25  Jari Aalto  <jari.aalto@cante.net>
 
 	* tiny/tinylibb.el (ti:xe-define-compatibility-defalias): New.
 	Added `eval-after-load' to fix Emacs compatibility
 	problme in eshell::esh-mode.el. Eshell mistakenly defines
 	XEmacs functions to `ignore' which break things.
 
-2001-11-24  Jari Aalto  <jari dot aalto A T cante dt net>
+2001-11-24  Jari Aalto  <jari.aalto@cante.net>
 
 	* tiny/tinypath.el: Error in the setup comment. There is
 	no function Å¥stringp=' => `string='. Error reported by
 	david x callaway <dxc@xprt.net>
 
-2001-11-23 Fri  Jari Aalto  <jari dot aalto A T cante dt net>
+2001-11-23 Fri  Jari Aalto  <jari.aalto@cante.net>
 
 	* tiny/tinylib.el (ti::unix-man-path-root): check for nil
 	before calling Å¥file-directory-p'
@@ -8377,7 +8404,7 @@
 	* tiny/tinylisp.el (tinylisp-:menu-info): Spelling mistake
 	a)ad => a)d (advised functions)
 
-2001-11-20 Tue  Jari Aalto  <jari dot aalto A T cante dt net>
+2001-11-20 Tue  Jari Aalto  <jari.aalto@cante.net>
 
 	* tiny/tinytf.el (tinytf-text-format-p): Tightened regular
 	expression to detect correct TF file. The old regular expression
@@ -8391,18 +8418,18 @@
 	TOC to decide if TF is turned on. Error in Å¥remove-hook': it
 	never uninstalled itself.
 
-2001-11-19  Jari Aalto  <jari dot aalto A T cante dt net>
+2001-11-19  Jari Aalto  <jari.aalto@cante.net>
 
 	* tiny/tinypath.el: Added argument TRADITIONAL, which makes
 	it possible to call Emacs Lisp cache method.
 	(tinypath-cache-setup): Added argument TRADITIONAL.
 
-2001-11-16  Jari Aalto  <jari dot aalto A T cante dt net>
+2001-11-16  Jari Aalto  <jari.aalto@cante.net>
 
 	* tiny/tinyliby.el (ti::y-enable-disabled-options): Emacs 21.1
 	byte compiler fix: `arg' variable put into `let'.
 
-2001-11-15  Jari Aalto  <jari dot aalto A T cante dt net>
+2001-11-15  Jari Aalto  <jari.aalto@cante.net>
 
 	* tiny/tinylibb.el (ti::xe-character-define-macro): This macro fixes
 	some ill behaving packages that redefine XEmacs compatible
@@ -8411,7 +8438,7 @@
 	breaks compatibility. Not checked if it has been corrected
 	in newest eshell version.
 
-2001-11-15  Jari Aalto  <jari dot aalto A T cante dt net>
+2001-11-15  Jari Aalto  <jari.aalto@cante.net>
 
 	* tiny/tinymail.el (tinymail-report-update): The Mail report function
 	never run, because the buffer tinymail-:report-spool-buffer was
@@ -8424,19 +8451,19 @@
 	from the printed ON/OFF message. Bug reported by
 	Clemens Beckstein <beckstein@informatik.uni-jena.de>
 
-2001-10-31 Wed  Jari Aalto  <jari dot aalto A T cante dt net>
+2001-10-31 Wed  Jari Aalto  <jari.aalto@cante.net>
 
 	* tiny/tinyliby.el (ti::y-enable-disabled-options): 1.50 New
 	user function.
 
-2001-10-28 Sun  Jari Aalto  <jari dot aalto A T cante dt net>
+2001-10-28 Sun  Jari Aalto  <jari.aalto@cante.net>
 
 	* tiny/tinytf.el (tinytf-:font-lock-keywords): 1.50
 	Moved 'Big letter words' font-lock regular expression
 	later in the list, so that reference [] takes
 	precedence.
 
-2001-10-27 Sat  Jari Aalto  <jari dot aalto A T cante dt net>
+2001-10-27 Sat  Jari Aalto  <jari.aalto@cante.net>
 
 	* tiny/tinylisp.el (tinylisp-jump-to-definition): 1.50
 	Mistake in regexp. If searching for `functions-test' it could
@@ -8461,14 +8488,14 @@
 	(tinypath-admin-remove-matching): 1.50 Call
 	`tinypath-load-path-remove-cache'
 
-2001-10-24 Wed  Jari Aalto  <jari dot aalto A T cante dt net>
+2001-10-24 Wed  Jari Aalto  <jari.aalto@cante.net>
 
 	* tiny/tinylibm.el (ti::bool-toggle): 1.50 If argument was nil
 	or t, it never toggled the argument. This meant that calling any
 	mode by name (M-x xxx-mode) always turned the mode on, never off.
 	Rewrote whole macro.
 
-2001-10-23 Tue  Jari Aalto  <jari dot aalto A T cante dt net>
+2001-10-23 Tue  Jari Aalto  <jari.aalto@cante.net>
 
 	* tiny/tinyliba.el (win32-shell-p): New.
 
@@ -8480,19 +8507,19 @@
 	(tinydiff-patch-with-diff-1): Added `expand-file-name'
 	tinydiff-:diff-tmp-file if `win32-shell-p'.
 
-2001-10-22 Mon  Jari Aalto  <jari dot aalto A T cante dt net>
+2001-10-22 Mon  Jari Aalto  <jari.aalto@cante.net>
 
 	* tiny/tiny-setup.el (tiny-setup-autoload-read): 1.52
 	The directory structure was changed and there is no more
 	tiny-autoload-loaddefs-lisp. trying to load that file
 	caused an error. The load command was removed.
 
-2001-10-11 Thu  Jari Aalto  <jari dot aalto A T cante dt net>
+2001-10-11 Thu  Jari Aalto  <jari.aalto@cante.net>
 
 	* tiny/tiny-setup.el (tiny-setup-autoload-read): Autoload file
 	changed Å¥tiny-autoload-loaddefs-lisp' => Å¥tiny-autoload-loaddefs-tiny'
 
-2001-10-08 Mon  Jari Aalto  <jari dot aalto A T cante dt net>
+2001-10-08 Mon  Jari Aalto  <jari.aalto@cante.net>
 
 	* tiny/tiny-setup.el (tiny-setup-autoload-batch-update): 1.50
 	Require slash in DIR.
@@ -8566,13 +8593,13 @@
 	(and (integerp nil) (< nil 1))
 	(ti::temp-file): 1.58 Extra variable `val' removed.
 
-2001-10-06 Sat  Jari Aalto  <jari dot aalto A T cante dt net>
+2001-10-06 Sat  Jari Aalto  <jari.aalto@cante.net>
 
 	* tinylisp.el (tinylisp-jump-to-definition): 1.63 Failed to find the
 	function definition if it did not have spaces after NAME:
 	(defun name (). Now accepts (defun name()
 
-2001-10-04 Thu  Jari Aalto  <jari dot aalto A T cante dt net>
+2001-10-04 Thu  Jari Aalto  <jari.aalto@cante.net>
 
 	* tinylibm.el (ti::expand-file-name-tilde-in-string): 1.57
 	Expanding ~user paths in Win32 does not make sense.
@@ -8583,7 +8610,7 @@
 	* tinyigrep.el (tinyigrep-install-default-databases): 1.37
 	Parse errror in tinyigrep-:perl-pod-path. Added missing paren.
 
-2001-10-02 Tue  Jari Aalto  <jari dot aalto A T cante dt net>
+2001-10-02 Tue  Jari Aalto  <jari.aalto@cante.net>
 
 	* tinydesk.el (tinydesk-install): 1.36 New. INstall or
 	uninstall package. Add hook to `find-file-hooks' to activate
@@ -8593,7 +8620,7 @@
 	(turn-on-tinydesk-mode-maybe): 1.36 New. Activated from
 	`find-file-hooks'
 
-2001-09-27 Thu  Jari Aalto  <jari dot aalto A T cante dt net>
+2001-09-27 Thu  Jari Aalto  <jari.aalto@cante.net>
 
 	* tinyperl.el
 	(tinyperl-cache-file-name): New. No more use fixed
@@ -8634,7 +8661,7 @@
 	of the path changed at startup.This made it think that
 	user had changed paths and called EXT process to scan disk again.
 
-2001-09-26 Wed  Jari Aalto  <jari dot aalto A T cante dt net>
+2001-09-26 Wed  Jari Aalto  <jari.aalto@cante.net>
 
 	* tiny-setup.el (tiny-setup-turn-off-tinypair-mode): 1.25
 	`turn-off-tinypair-mode' is installed into `minibuffer-setup-hook',
@@ -8643,19 +8670,19 @@
 	Added safeguard so that package existence is checked
 	first, before call to `turn-off-tinypair-mode' is attemped.
 
-2001-09-26  Jari Aalto  <jari dot aalto A T cante dt net>
+2001-09-26  Jari Aalto  <jari.aalto@cante.net>
 
 	* tinypath.el (tinypath-use-compression): `tinypath-cache-p' is
 	not the correct way to find out path for jka-compr.el. Added
 	`locate-library' and PANIC message if the core library is not
 	found.
 
-2001-09-26 Wed  Jari Aalto  <jari dot aalto A T cante dt net>
+2001-09-26 Wed  Jari Aalto  <jari.aalto@cante.net>
 
 	* tinydesk.el (tinydesk-:save-title): 1.35 Added more informative
 	state file header with instruction how to reload state file.
 
-2001-09-25 Tue  Jari Aalto  <jari dot aalto A T cante dt net>
+2001-09-25 Tue  Jari Aalto  <jari.aalto@cante.net>
 
 	* tinymy.el: 1.49 Installation document clarified:
 	AUTOLOAD section rewritten and the code changed with better
@@ -8671,7 +8698,7 @@
 	so that no further checking is done if buffer was already
 	excluded.
 
-2001-09-24 Mon  Jari Aalto  <jari dot aalto A T cante dt net>
+2001-09-24 Mon  Jari Aalto  <jari.aalto@cante.net>
 
 	* tinylib.el (ti::unix-man-path-root): 1.71 New. Created
 	new category for Unix/Cygwin related functions under ti::unix
@@ -8711,7 +8738,7 @@
 	(tinyperl-:cache-file): 1.62 Made the cache file Emacs flavor specific.
 	This is needed to support Cygwin perl.
 
-2001-09-23 Sun  Jari Aalto  <jari dot aalto A T cante dt net>
+2001-09-23 Sun  Jari Aalto  <jari.aalto@cante.net>
 
 	* tinylibb.el: 1.26 New.
 	(w32-cygwin-mount-point-to-dos): 1.26 New.
@@ -8776,7 +8803,7 @@
 	corrected. Function never added new info entries to `dir'. The
 	search condition was all wrong. Fixed.
 
-2001-09-22 Sat  Jari Aalto  <jari dot aalto A T cante dt net>
+2001-09-22 Sat  Jari Aalto  <jari.aalto@cante.net>
 
 	* tinyurl.el (tinyurl-handler): 1.56
 	Removed call (ti::select-frame-non-dedicated), because the
@@ -8786,14 +8813,14 @@
 	* tinymy.el (tinymy-:compile-table): 1.48 Added PHP
 	interpreter cimpilation support on C-z c c
 
-2001-09-09 Sun  Jari Aalto  <jari dot aalto A T cante dt net>
+2001-09-09 Sun  Jari Aalto  <jari.aalto@cante.net>
 
 	* tiny-setup.el (tiny-setup-package-require): 1.24 Changed
 	(if (not => (unless
 	(tiny-setup-tinysearch-bindmousemeta): 1.24 New. Meta and
 	ALT keys require different binding.
 
-2001-09-07 Fri  Jari Aalto  <jari dot aalto A T cante dt net>
+2001-09-07 Fri  Jari Aalto  <jari.aalto@cante.net>
 
 	* tinyigrep.el: 1.35 Corrected documentation typos.
 
@@ -8813,25 +8840,25 @@
 	(startup): Better diagnostic message if Win2000 variable
 	USERNAME was used to ser USER.
 
-2001-08-28    <jari dot aalto A T cante dt net>
+2001-08-28    <jari.aalto@cante.net>
 
 	* tiny-setup.el (autoload): Added autoload for
 	`turn-on-tinyef-mode' which is installed in minibuffer
 	hook => running M-x was impossible and caused error because
 	the mode couldn't be found.
 
-2001-08-25 Sat  Jari Aalto  <jari dot aalto A T cante dt net>
+2001-08-25 Sat  Jari Aalto  <jari.aalto@cante.net>
 
 	* tiny-setup.el (autoload): Added missing autoload for
 	`turn-off-tinypair-mode'
 
-2001-08-24 Fri  Jari Aalto  <jari dot aalto A T cante dt net>
+2001-08-24 Fri  Jari Aalto  <jari.aalto@cante.net>
 
 	* tinymy.el (tinymy-compile-run-command): Read type
 	every time form buffer with `ti::id-info' and do not use cached
 	value. Removed argument 'variable from `ti::id-info'
 
-2001-08-22  Jari Aalto  <jari dot aalto A T cante dt net>
+2001-08-22  Jari Aalto  <jari.aalto@cante.net>
 
 	* tinypath.el
 	Removed `ti::funcall' definition.
@@ -8843,22 +8870,22 @@
 	(tinypath-cache-mode):
 	Convert ti::bool-toggle => tinypath- ti::bool-toggle
 
-2001-08-16    <jari dot aalto A T cante dt net>
+2001-08-16    <jari.aalto@cante.net>
 
 	* tinypath.el (require): In w2k use USERNAME and copy its
 	value to USER and LOGNAME.
 
-2001-08-11 Sat  Jari Aalto  <jari dot aalto A T cante dt net>
+2001-08-11 Sat  Jari Aalto  <jari.aalto@cante.net>
 
 	* tinygnus.el (tinygnus-summary-mode): 1.36 Added reason why the
 	mode couldn't be started: print `major-mode' in the message.
 
-2001-08-08 Wed  Jari Aalto  <jari dot aalto A T cante dt net>
+2001-08-08 Wed  Jari Aalto  <jari.aalto@cante.net>
 
 	* tinydiff.el (tinydiff-diff-command-generate): 1.24
 	call `file-components' rewritten. It's no more in the library.
 
-2001-08-06 Mon  Jari Aalto  <jari dot aalto A T cante dt net>
+2001-08-06 Mon  Jari Aalto  <jari.aalto@cante.net>
 
 	* tinypath.el (require): Wrong instruction for BAT 'SET'
 	commands. et USER=c:\johndoe =>  USER=johndoe
@@ -8876,7 +8903,7 @@
 	(ti::window-pmin-line-p): 1.56
 	Was `window-pmin-line-p'. Affected all code.
 
-2001-08-05 Sun  Jari Aalto  <jari dot aalto A T cante dt net>
+2001-08-05 Sun  Jari Aalto  <jari.aalto@cante.net>
 
 	* tinylib.el (ti::b-xtra-open-outline): 1.70 CAlled
 	wrong function `save-with-marker' which was namespaced as
@@ -8905,7 +8932,7 @@
 	(tinyperl-mode): 1.58 Added 'Cf' key to run
 	`tinyperl-pause-upload-via-ftp'
 
-2001-08-03 Fri  Jari Aalto  <jari dot aalto A T cante dt net>
+2001-08-03 Fri  Jari Aalto  <jari.aalto@cante.net>
 
 	* tinygnus.el (tinygnus-group-mode): 1.33 Added missing
 	menu entry for
@@ -8920,7 +8947,7 @@
 	The cache file name should contain a HOSTNAME portion.
 	Added `tinypath-cache-file-name'
 
-2001-08-02 Thu  Jari Aalto  <jari dot aalto A T cante dt net>
+2001-08-02 Thu  Jari Aalto  <jari.aalto@cante.net>
 
 	* tinycomment.el (tinycomment-indent-for-comment): 1.10
 	Added missing ###autoload
