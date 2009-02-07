@@ -5019,10 +5019,11 @@ In interactive mode, the DEST is FILE-loaddefs.el and VERB mode is t."
   (interactive
    (let (file
 	 dest)
-     (setq file (read-file-name "Autoloads from file:" (buffer-file-name)))
+     (setq file (read-file-name "Autoloads from file: "
+				nil nil nil (buffer-file-name)))
      (setq dest (format "%s-autoload-interactive.el"
 		       (file-name-sans-extension file)))
-     (setq dest (read-file-name "Autoloads save [RET = none]:" dest))
+     (setq dest (read-file-name "Autoloads save [RET = none]: " nil nil nil dest))
      (if (string= "" dest)
 	 (setq dest nil))
      (list
