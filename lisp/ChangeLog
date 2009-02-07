@@ -1,4 +1,8 @@
-2009-02-07 Sat  Jari Aalto  <jari.aalto@cante.net>
+2009-02-07  Jari Aalto  <jari.aalto@cante.net>
+
+	* tiny/tinyadvice.el (tinyadvice-elts): replace old backquote.
+
+	* tiny/tinylibmail.el: Massive update: replace old backquotes
 
         * tiny/tinyreplace.el (tinyreplace-:menu): Correct documentaiton string.
 

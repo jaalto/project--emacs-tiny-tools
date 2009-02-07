@@ -332,12 +332,11 @@ This function accepts trailing spaces or just n\\--\\n"
 (put 'ti::mail-set-region 'edebug-form-spec '(body))
 (defmacro  ti::mail-set-region (beg end)
   "Set BEG END to whole buffer if they don't have value."
-  (`
-   (progn
-     (or (, beg)
-         (setq (, beg) (ti::mail-text-start)))
-     (or (, end)
-         (setq (, end) (point-max))))))
+  `(progn
+     (or ,beg
+         (setq ,beg (ti::mail-text-start)))
+     (or ,end
+         (setq , end (point-max)))))
 
 ;;; ----------------------------------------------------------------------
 ;;;
@@ -345,9 +344,8 @@ This function accepts trailing spaces or just n\\--\\n"
 (put 'ti::mail-point-in-header-macro 'edebug-form-spec '(body))
 (defmacro ti::mail-point-in-header-macro (&rest body)
   "Run BODY only if point is inside mail header area."
-  (`
-   (when (< (point) (ti::mail-text-start))
-     (,@ body))))
+  `(when (< (point) (ti::mail-text-start))
+     ,@body))
 
 ;;; ----------------------------------------------------------------------
 ;;;
@@ -697,14 +695,13 @@ to mailing list or otherwise Group is not considered mailing list."
 (defmacro ti::mail-vm-macro (&rest body)
   "Do BODY in VM's active buffer.
 The `save-excursion' -- set buffer form is executed."
-  (`
-   (let* ((BuffeR-S  (when (boundp 'vm-mail-buffer)
+  `(let* ((BuffeR-S  (when (boundp 'vm-mail-buffer)
                        (symbol-value 'vm-mail-buffer))))
      (if (or (null BuffeR-S)
              (not (buffer-live-p (get-buffer BuffeR-S))))
          (error "vm-mail-buffer invalid")
        (with-current-buffer BuffeR-S
-         (,@ body))))))
+         ,@body))))
 
 ;;; ----------------------------------------------------------------------
 ;;;
@@ -713,14 +710,13 @@ The `save-excursion' -- set buffer form is executed."
 (defmacro ti::mail-mh-macro (&rest body)
   "Do BODY in MH's active buffer.
 The `save-excursion' -- set buffer form is executed."
-  (`
-   (let* ((BuffeR-S  (when (boundp 'mh-show-buffer)
+  `(let* ((BuffeR-S  (when (boundp 'mh-show-buffer)
                        (symbol-value 'mh-show-buffer))))
      (if (or (null BuffeR-S)
              (not (buffer-live-p (get-buffer BuffeR-S))))
          (error "mh-show-buffer invalid")
        (with-current-buffer BuffeR-S
-         (,@ body))))))
+         ,@body))))
 
 ;;; ----------------------------------------------------------------------
 ;;;
@@ -729,14 +725,13 @@ The `save-excursion' -- set buffer form is executed."
 (defmacro ti::mail-gnus-macro (&rest body)
   "Do BODY in Gnus `gnus-article-buffer' if it exists.
 The `save-excursion' -- set buffer form is executed."
-  (`
-   (let* ((BuffeR-S  (when (boundp 'gnus-article-buffer)
+  `(let* ((BuffeR-S  (when (boundp 'gnus-article-buffer)
                        (symbol-value 'gnus-article-buffer))))
      (if (or (null BuffeR-S)
              (not (buffer-live-p (get-buffer BuffeR-S))))
          (error "gnus-article-buffer invalid")
        (with-current-buffer BuffeR-S
-         (,@ body))))))
+         ,@body))))
 
 ;;; ----------------------------------------------------------------------
 ;;;
@@ -744,8 +739,7 @@ The `save-excursion' -- set buffer form is executed."
 (put 'ti::mail-rmail-macro 'edebug-form-spec '(body))
 (defmacro ti::mail-rmail-macro (&rest body)
   "Do BODY in RMAIL's active buffer. You have be in RMAIL summary."
-  (`
-   (let* ((BuffeR-R
+  `(let* ((BuffeR-R
            ;;  This variable is available in Rmail-summary
            ;;
            (or (if (boundp 'rmail-buffer) (symbol-value 'rmail-buffer))
@@ -754,7 +748,7 @@ The `save-excursion' -- set buffer form is executed."
              (not (buffer-live-p (get-buffer BuffeR-R))))
          (error "rmail-buffer buffer invalid")
        (with-current-buffer BuffeR-R
-         (,@ body))))))
+         ,@body))))
 
 ;;; ----------------------------------------------------------------------
 ;;;
@@ -770,18 +764,17 @@ Input:
         with original headers. If nil, then area narrows to displayed
         message.
  BODY   forms to execute in are narrowed to message."
-  (`
-   (let ((beg (rmail-msgbeg (, nbr)))
-         (end (rmail-msgend (, nbr))))
+  `(let ((beg (rmail-msgbeg ,nbr))
+         (end (rmail-msgend ,nbr)))
      (save-window-excursion
        (ti::widen-safe
          (goto-char beg)
          (forward-line 1)
-         (if (null (, mode))
+         (if (null ,mode)
              (search-forward "\n*** EOOH ***\n" end t))
          (narrow-to-region (point) end)
          (goto-char (point-min))
-         (,@ body))))))
+         ,@body))))
 
 ;;; ----------------------------------------------------------------------
 ;;;
@@ -1461,14 +1454,13 @@ Return
 (defmacro ti::mail-pgp-stream-study-1-key-id (stream result)
   "Read MSB and LSB key-id from STREAM to RESULT.
 STREAM will be advanced during read."
-  (`
-   (let* ((i 0))
+  `(let* ((i 0))
      (while (< i 4)
-       (setq (, result) (concat (or (, result)  "")
-                                (format "%02x" (car (, stream))))
-             (, stream) (cdr (, stream))
+       (setq ,result (concat (or ,result  "")
+                                (format "%02x" (car ,stream)))
+             ,stream (cdr ,stream)
              i          (1+ i)))
-     (setq (, result) (upcase (, result))))))
+     (setq ,result (upcase ,result))))
 
 ;;; ----------------------------------------------------------------------
 ;;;
@@ -2031,8 +2023,7 @@ In the macro you can use following variables:
   `area-and'
 
 This macro does nothing if there is no normal PGP signature."
-  (`
-   (let (limits
+  `(let (limits
          area-beg
          area-end)
      (setq limits (ti::mail-pgp-block-area 'sig))
@@ -2043,7 +2034,7 @@ This macro does nothing if there is no normal PGP signature."
        ;;  If these are no used in BODY: no-op Quiet XE ByteCompiler
        (if (null area-beg)  (setq area-beg nil))
        (if (null area-end)  (setq area-end nil))
-       (,@ body)))))
+       ,@body)))
 
 ;;; ----------------------------------------------------------------------
 ;;;
@@ -2058,11 +2049,10 @@ This macro does nothing if there is no normal PGP signature."
 (put 'ti::mail-with-article-buffer 'edebug-form-spec '(body))
 (defmacro ti::mail-with-article-buffer (&rest body)
   "Run BODY in *Article* buffer if it exists."
-  (`
-   (let* ((buffer  (ti::mail-get-article-buffer)))
+  `(let* ((buffer  (ti::mail-get-article-buffer)))
      (when (buffer-live-p buffer)
        (with-current-buffer buffer
-         (,@ body))))))
+         ,@body))))
 
 ;;; ----------------------------------------------------------------------
 ;;;
@@ -5114,9 +5104,8 @@ If NA-MODE is non-nil:
 (put 'ti::mail-mime-tm-edit-mode-macro 'edebug-form-spec '(body))
 (defmacro ti::mail-mime-tm-edit-mode-macro  (&rest body)
   "TM. Run body If mime edit mode is active in current buffer."
-  (`
-   (when (and (ti::mail-mime-tm-featurep-p) (ti::mail-mime-tm-edit-p))
-     (,@ body))))
+  `(when (and (ti::mail-mime-tm-featurep-p) (ti::mail-mime-tm-edit-p))
+     ,@body))
 
 ;;; ----------------------------------------------------------------------
 ;;;
@@ -5124,9 +5113,8 @@ If NA-MODE is non-nil:
 (put 'ti::mail-mime-semi-edit-mode-macro 'edebug-form-spec '(body))
 (defmacro ti::mail-mime-semi-edit-mode-macro  (&rest body)
   "SEMI. Run body If mime edit mode is active in current buffer."
-  (`
-   (when (and (ti::mail-mime-semi-featurep-p) (ti::mail-mime-semi-edit-p))
-     (,@ body))))
+  `(when (and (ti::mail-mime-semi-featurep-p) (ti::mail-mime-semi-edit-p))
+     ,@body))
 
 ;;; ----------------------------------------------------------------------
 ;;;
@@ -5134,13 +5122,12 @@ If NA-MODE is non-nil:
 (put 'ti::mail-mime-funcall-0-macro 'edebug-form-spec '(body))
 (defmacro ti::mail-mime-funcall-0-macro (func-tm func-semi)
   "Call function  FUNC-TM or FUNC-SEMI with no arguments."
-  (`
-   (cond
+  `(cond
     ((and (ti::mail-mime-tm-featurep-p) (ti::mail-mime-tm-edit-p))
-     (ti::funcall (, func-tm))
+     (ti::funcall ,func-tm)
      t)
     ((and (ti::mail-mime-semi-featurep-p) (ti::mail-mime-semi-edit-p))
-     (ti::funcall (, func-semi))))))
+     (ti::funcall ,func-semi))))
 
 ;;; ----------------------------------------------------------------------
 ;;;
@@ -5148,14 +5135,13 @@ If NA-MODE is non-nil:
 (put 'ti::mail-mime-funcall-2-macro 'edebug-form-spec '(body))
 (defmacro ti::mail-mime-funcall-2-macro (func-tm func-semi arg1 arg2)
   "Call function  FUNC-TM or FUNC-SEMI with ARG1 ARG2."
-  (`
-   (cond
+  `(cond
     ((and (ti::mail-mime-tm-featurep-p) (ti::mail-mime-tm-edit-p))
-     (ti::funcall (, func-tm) (, arg1) (, arg2))
+     (ti::funcall ,func-tm ,arg1 ,arg2)
      t)
     ((and (ti::mail-mime-semi-featurep-p) (ti::mail-mime-semi-edit-p))
-     (ti::funcall (, func-semi) (, arg1) (, arg2))
-     t))))
+     (ti::funcall ,func-semi ,arg1 ,arg2)
+     t)))
 
 ;;; ----------------------------------------------------------------------
 ;;;
@@ -5238,15 +5224,14 @@ nil  if mime is not available.
 (defmacro ti::mail-mime-tm-split-macro (&rest body)
   "TM. Define  variables `split'  `max' `parts' and run BODY if TM active.
 You have to use variables `max' and `parts' otherwise you don't need this macro."
-  (`
-   (when (boundp 'mime-editor/split-message)
+  `(when (boundp 'mime-editor/split-message)
      (let* ((split (symbol-value 'mime-editor/split-message))
             (max   (symbol-value 'mime-editor/message-default-max-lines))
             (lines (count-lines (point-min) (point-max)))
             (parts (1+ (/ lines max))))
        (if (null split)
            (setq split nil))            ; No-op Bytecomp silencer
-       (,@ body)))))
+       ,@body)))
 
 ;;; ----------------------------------------------------------------------
 ;;;
@@ -5363,8 +5348,7 @@ content-transfer-encoding: quoted-printable"
 (put 'ti::mail-sendmail-pure-env-macro 'edebug-form-spec '(body))
 (defmacro ti::mail-sendmail-pure-env-macro (&rest body)
   "Reset all mail/message hooks/vars locally to nil and run BODY."
-  (`
-   (let* (message-setup-hook
+  `(let* (message-setup-hook
           message-mode-hook
           mail-mode-hook
           mail-setup-hook
@@ -5377,7 +5361,7 @@ content-transfer-encoding: quoted-printable"
      (if mail-archive-file-name (setq mail-archive-file-name    nil))
      (if mail-default-headers   (setq mail-default-headers      nil))
      (if mail-default-reply-to  (setq mail-default-reply-to     nil))
-     (,@ body))))
+     ,@body))
 
 ;;; ----------------------------------------------------------------------
 ;;;
@@ -5385,20 +5369,19 @@ content-transfer-encoding: quoted-printable"
 (put 'ti::mail-sendmail-macro-1 'edebug-form-spec '(body))
 (defmacro ti::mail-sendmail-macro-1 (to subject send &rest body)
   "See `ti::mail-sendmail-macro' instead. This is low level function."
-  (`
-   (progn
+  `(progn
      (ti::mail-sendmail-pure-env-macro
       ;;   to subject in-reply-to cc replybuffer actions
       ;;
-      (mail-setup (, to) (, subject) nil nil nil nil)
+      (mail-setup ,to ,subject nil nil nil nil)
       (mail-mode)
       (ti::mail-kill-field "^fcc")
       (ti::mail-text-start 'move)
-      (,@ body)
+      ,@body
       (ti::pmin)
       (ti::kill-buffer-safe " sendmail temp") ;See sendmail-send-it
-      (when (, send)
-        (mail-send-and-exit nil))))))
+      (when ,send
+        (mail-send-and-exit nil)))))
 
 ;;; ----------------------------------------------------------------------
 ;;;
@@ -5421,15 +5404,14 @@ Note:
 
     The hooks are set to nil so that mail buffer is created fast and
     that nothing causes trouble when mail buffer is ready."
-  (`
-   (let* ((BuffeR (ti::temp-buffer ti:mail-mail-buffer 'clear)))
+  `(let* ((BuffeR (ti::temp-buffer ti:mail-mail-buffer 'clear)))
      (save-window-excursion
        (with-current-buffer BuffeR
          (ti::mail-sendmail-macro-1
-          (, to)
-          (, subject)
-          (, send)
-          (,@ body)))))))
+          ,to
+          ,subject
+          ,send
+          ,@body)))))
 
 ;;}}}
 
