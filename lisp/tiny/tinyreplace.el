@@ -445,15 +445,15 @@ Standard replace commands:
     r  calls function `tinyreplace-replace-region'
 
     NOTE: If you select `f', You can select modes that affect how the
-    replacing will be ocnducted. E.g. pressing `B' will put point to the
-    beginning of buffer from wich the *forward* action ir carried out.
+    replacing will be started. E.g. pressing `B' will put point to the
+    beginning of buffer from which the *forward* action is carried out.
 
-    Another usefull mode to select before strting to replace is `w'
+    Another useful mode to select before strting to replace is `w'
     for word mode toggle.
 
 The following keys can be used in compile-like buffers, where each line
 contains standard grep-like output. If you mark a region, the selected
-files are searched and matches replaced.
+files are searched for replacements.
 
     FILE:LINE-NUMBER:output
     FILE:LINE-NUMBER:output

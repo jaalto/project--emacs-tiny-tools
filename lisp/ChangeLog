@@ -1,5 +1,7 @@
 2009-02-07 Sat  Jari Aalto  <jari.aalto@cante.net>
 
+        * tiny/tinyreplace.el (tinyreplace-:menu): Correct documentaiton string.
+
 	* tiny/tiny-admin-util.el: Remove autoload utilities and move to
 	tinylisp.el
 
