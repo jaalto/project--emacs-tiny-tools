@@ -659,12 +659,14 @@ Defined keys:
 
     (list
      "Autoload"
-     ["Quick autoloads from buffer"  tinylisp-autoload-generate-buffer       t]
-     ["Quick autoloads from file"    ti::package-autoload-create-on-file     t]
+     ["Quick autoloads from buffer"  tinylisp-autoload-quick-build-from-buffer   t]
+     ["Quick autoloads from file"    tinylisp-autoload-quick-build-from-file     t]
+     ["Quick autoloads from directory" tinylisp-autoload-quick-build-from-dir    t]
+     ["Quick autoloads recursive"    tinylisp-autoload-quick-build-dir-recursive t]
      "----"
-     ["Real autoloads for file"      tinylisp-autoload-real-build-for-file   t]
-     ["Real autoloads for directory" tinylisp-autoload-real-build-for-dir    t]
-     ["Real autoloads recursive"     tinylisp-autoload-real-generate-loaddefs-recursive t])
+     ["Loaddefs from file"      tinylisp-autoload-generate-loaddefs-file      t]
+     ["Loaddefs from directory" tinylisp-autoload-generate-loaddefs-dir       t]
+     ["Loaddefs recursive"      tinylisp-autoload-generate-loaddefs-recursive t])
 
     (list
      "Miscellaneous"
@@ -790,11 +792,14 @@ Defined keys:
 
        (define-key map "<"   'tinylisp-indent-around-point)
 
-       (define-key map "ab"  'tinylisp-autoload-generate-buffer)
-       (define-key map "af"  'tinylisp-autoload-generate-file)
-       (define-key map "aF"  'tinylisp-autoload-real-build-for-file)
-       (define-key map "ad"  'tinylisp-autoload-real-build-for-dir)
-       (define-key map "ar"  'tinylisp-autoload-real-generate-loaddefs-recursive)
+       ;; FIXME
+       (define-key map "ab"  'tinylisp-autoload-quick-build-from-buffer)
+       (define-key map "ad"  'tinylisp-autoload-guick-build-from-dir)
+       (define-key map "af"  'tinylisp-autoload-quick-build-from-file)
+       (define-key map "ar"  'tinylisp-autoload-quick-build-dir-recursive)
+       (define-key map "aF"  'tinylisp-autoload-generate-loaddefs-file)
+       (define-key map "aD"  'tinylisp-autoload-generate-loaddefs-dir)
+       (define-key map "aR"  'tinylisp-autoload-generate-loaddefs-recursive)
 
        (define-key map "ia"  'tinylisp-ad-match)
        (define-key map "ie"  'tinylisp-library-info-emacs)
@@ -1139,7 +1144,7 @@ Format:
 
      '(format
        "\
-%s -=*.\\rmE)val ,;'+)call wn)ar py)mode o)ccur aA)load vVfF xSdD >beEcilX C-e"
+%s -=*.\\rmE)val ,;'+)call wn)ar py)mode o)ccur a)uto vVfF xSdD >beEcilX C-e"
        (if current-prefix-arg
            (format "%s"  (prin1-to-string current-prefix-arg))
          "Lisp:"))
@@ -1166,8 +1171,6 @@ Format:
       (cons ?[  (list '(call-interactively 'tinylisp-backward-user-option)))
             (cons ?]  (list '(call-interactively 'tinylisp-forward-user-option)))
       (cons ?<  (list '(call-interactively 'tinylisp-indent-around-point)))
-      (cons ?a  (list '(call-interactively 'tinylisp-autoload-generate-buffer)))
-      (cons ?A  (list '(call-interactively 'tinylisp-autoload-generate-file)))
       (cons ?B  (list '(call-interactively 'tinylisp-byte-compile-sexp)))
       (cons ?f  (list '(call-interactively 'tinylisp-find-function-list)))
       (cons ?F  (list '(call-interactively 'tinylisp-find-function-list-occur)))
@@ -1190,6 +1193,7 @@ Format:
       (cons ?\C-c  (list '(call-interactively 'tinylisp-commentary)))
       (cons ?\C-e  'tinylisp-:menu-edebug)
       (cons ?\C-v  (list '(call-interactively 'tinylisp-version)))
+      (cons ?a       'tinylisp-:menu-autoload)
       (cons ?i       'tinylisp-:menu-info)
       (cons ?e       'tinylisp-:menu-elp)
       (cons ?E       'tinylisp-:menu-elint)
@@ -1315,7 +1319,7 @@ Symbol manipulation
        5           Set all snooped variables to nil.
        \\[universal-argument]         edit variable
 
-Symbol find or autoload generation
+Symbol find
 
     a  Create autoloads by reading current buffer (must have
        `buffer-file-name'). With prefix argument, ask package
@@ -1656,21 +1660,34 @@ c   `tinylisp-commentary'")
 ;;; ----------------------------------------------------------------------
 ;;;
 (defconst tinylisp-:menu-autoload
-  '("Autoload: b)uffer quick f)ile quick F)ile d)ir r)ecursive"
-    ((?b . ( (tinylisp-autoload-generate-buffer)))
-     (?f . ( (ti::package-autoload-create-on-file)))
-     (?F . ( (tinylisp-autoload-real-build-for-file)))
-     (?d . ( (tinylisp-autoload-real-build-for-dir)))
-     (?r . ( (tinylisp-autoload-real-generate-loaddefs-recursive)))
+  '("Autoloads: b)uffer f)ile d)dir r)ecur Loaddefs: F)ile D)ir R)ecursive"
+    ((?b . ( (call-interactively 'tinylisp-autoload-quick-build-from-buffer)))
+     (?f . ( (call-interactively 'tinylisp-autoload-quick-build-from-file)))
+     (?d . ( (call-interactively 'tinylisp-autoload-guick-build-from-dir)))
+     (?r . ( (call-interactively 'tinylisp-autoload-quick-build-dir-recursive)))
+     (?F . ( (call-interactively 'tinylisp-autoload-generate-loaddefs-file)))
+     (?D . ( (call-interactively 'tinylisp-autoload-generate-loaddefs-dir)))
+     (?R . ( (call-interactively 'tinylisp-autoload-generate-loaddefs-recursive)))
      (?/ . tinylisp-:menu-main)))
   "Help menu:
 /       Back to root menu
 q       Quit menu
-b       Quick autoloads from buffer. Scan all macros and functions.
-f       Quick autoloads from file. Scan all macros and functions.
-F       Real autoloads for file. FILE-loaddefs.el is generated.
-d       Real autoloads for directory. FILE-loaddefs.el is generated for each.
-r       Real autoloads recursive. Sama as command (d), but recursive.")
+
+Quick autoloads: list of all macros and functions
+
+    b   Show autoloads from buffer which defines `buffer-file-name'.
+        With prefix argument, ask package
+
+    f   Write autoloads from FILE.wl to FILE-autoload.el.
+
+    d   From DIRECTORY matching REGEXP, exluding REGEXP, write all autolaods
+        to each FILE-autoload.el
+
+Real autolaods: FILE-loaddefs.el
+
+    F   Generate FILE-loaddefs.el from FILE.el   (FIXME: not yet implemented)
+    D   Same, but for whole directory.
+    R   Same, but recursively for all directories.")
 
 ;;; ----------------------------------------------------------------------
 ;;;
@@ -4664,7 +4681,7 @@ Can't find _defined_ variable or function on the line (eval buffer first).")
 
 ;;; ----------------------------------------------------------------------
 ;;;
-(defun tinylisp-autoload-generate-buffer (&optional arg)
+(defun tinylisp-autoload-quick-build-from-buffer (&optional arg)
   "Read all defuns and construct autoloads from buffer's file on disk.
 The autoloads cannot be generated from anonymous buffer, because the
 syntax is:
@@ -4688,24 +4705,28 @@ syntax is:
 
 ;;; ----------------------------------------------------------------------
 ;;;
-(defun tinylisp-autoload-generate-file
-  (file &optional regexp no-desc buffer verb)
-  "Generate function autoload commands from FILE matching REGEXP.
+;;;###autoload
+(defun tinylisp-autoload-guick-build-from-dir
+  (file-or-dir &optional regexp no-desc buffer verb)
+  "Generate quick autoloads from list of FILE-OR-DIR matching REGEXP.
 Input:
 
-  FILE      File or directory.
-  REGEXP    If FILE was directory, include fiels matching REGEXP.
-  NO-DESC   If non-nil, do not include function detection comments.
-            Interactively supply \\[universal-argument].
-  BUFFER    Buffer where to gather autoloads; default
-            `tinylisp-:buffer-autoload'
-  VERB      Flag, if non-nil pop to result buffer."
-  (interactive "DAutoload directory: \nsFiles Matching regexp: \nP")
-  (let* ((files (if (file-directory-p file)
-                    (ti::directory-files file regexp 'abs
-                                         '(and (not (file-directory-p arg))
-                                               (string-match "\\.el$" arg)))
-                  (list file))))        ;single filename
+  FILE-OR-DIR File or directory.
+  REGEXP      If FILE-OR-DIR was directory, read files matching REGEXP.
+  NO-DESC     Optional, if non-nil, do not include function detection comments.
+              Interactively supply \\[universal-argument].
+  BUFFER      Optional buffer where to gather autoloads; default
+              `tinylisp-:buffer-autoload'
+  VERB        Optional flag, if non-nil pop to result buffer."
+  (interactive "DAutoload directory: \nsFiles matching regexp: \nP")
+  (let* ((files (if (file-directory-p file-or-dir)
+                    (ti::directory-files
+                     file-or-dir
+                     regexp
+                     'absolute
+                     '(and (not (file-directory-p arg))
+                           (string-match "\\.el$" arg)))
+                  (list file-or-dir))))        ;single filename
     (or buffer
         (setq buffer (get-buffer-create tinylisp-:buffer-autoload)))
     (ti::verb)
@@ -4843,8 +4864,8 @@ Following variables are set during BODY:
 
 ;;; ----------------------------------------------------------------------
 ;;;
-(defun tinylisp-autoload-real-generate-file-autoloads-1 (file dest)
-  "Generate ###autoload from FILE to DEST."
+(defun tinylisp-autoload-write-loaddefs-file (file dest &optional verb)
+  "Write ###autoload from FILE to DEST. VERB."
   (let ((generated-autoload-file dest))
     (ti::file-delete-safe dest)
 ;;;    (ti::package-autoload-loaddefs-create-maybe dest)
@@ -4856,31 +4877,31 @@ Following variables are set during BODY:
         (let ((point (point)))
           (generate-file-autoloads file)
           ;;  something was inserted?
-          (unless (eq (point) point)
+          (cond
+           ((eq (point) point)
+            (if verb
+                (message "No autoload definitions in %s" file)))
+           (t
             (let ((backup-inhibited t))
               (save-buffer))
-            (kill-buffer (current-buffer))))))))
+            (kill-buffer (current-buffer)))))))))
 
 ;;; ----------------------------------------------------------------------
 ;;;
-(defun tinylisp-autoload-real-generate-file-autoloads (file)
-  "Generate ###autoload from FILE to FILE-loaddefs.el"
-  (interactive "fGenerate ###autoload from lisp file: ")
-  (let* ((dest (format "%s-loaddefs.el"
-                       (file-name-sans-extension file))))
-    (tinylisp-autoload-real-generate-file-autoloads-1 file dest)))
-
-;;; ----------------------------------------------------------------------
-;;;
-(defun tinylisp-autoload-real-generate-loaddefs-file-list (list)
-  "Generate ###autoload from every file in LIST."
-  (dolist (file list)
-    (tinylisp-autoload-real-generate-file-autoloads file)))
+(defun tinylisp-autoload-generate-loaddefs-file (file &optional dest verb)
+  "Generate autoloads from FILE to DEST. VERB.
+In interactive mode, the DEST is FILE-loaddefs.el and VERB mode is t."
+  (interactive
+   (let* ((file (read-file-name "Loaddefs from file: "))
+          (dest (format "%s-loaddefs.el"
+                        (file-name-sans-extension file))))
+     (list file dest t)))
+  (tinylisp-autoload-write-loaddefs-file file dest verb))
 
 ;;; ----------------------------------------------------------------------
 ;;;
 ;;;###autoload
-(defun tinylisp-autoload-real-generate-loaddefs-dir (dir &optional regexp)
+(defun tinylisp-autoload-generate-loaddefs-dir (dir &optional regexp)
   "Generate ###autoload from DIR excluding optional REGEXP."
   (interactive "DGenerate ###autoload loaddefs in dir\nsIgnore regexp: ")
   (let ((files (directory-files dir 'full "\\.el"))
@@ -4891,17 +4912,17 @@ Following variables are set during BODY:
                   (and (stringp regexp)
                        (string-match "^[ \t]*$" regexp)))
         (push file list)))
-    (tinylisp-autoload-real-generate-loaddefs-file-list list)))
+    (tinylisp-autoload-generate-loaddefs-file-list list)))
 
 ;;; ----------------------------------------------------------------------
 ;;;
 ;;;###autoload
-(defun tinylisp-autoload-real-generate-loaddefs-recursive (dir)
+(defun tinylisp-autoload-generate-loaddefs-recursive (dir)
   "Generate ###autoload recursively starting from DIR."
   (interactive "DGenerate ###autoload recursive dir: ")
   (tinylisp-directory-recursive-macro
       dir
-    (tinylisp-autoload-real-generate-loaddefs-dir dir)))
+    (tinylisp-autoload-generate-loaddefs-dir dir)))
 
 ;;; ----------------------------------------------------------------------
 ;;;
@@ -4923,7 +4944,7 @@ Following variables are set during BODY:
 
 ;;; ----------------------------------------------------------------------
 ;;;
-(defun tinylisp-autoload-real-build-for-file-1 (file dest)
+(defun tinylisp-autoload-quick-build-from-file-1 (file dest)
   "Generate autoload from FILE to DEST."
   (with-temp-buffer
     (tinylisp-with-file-env-macro
@@ -4940,20 +4961,20 @@ Following variables are set during BODY:
 ;;; ----------------------------------------------------------------------
 ;;;
 ;;;###autoload
-(defun tinylisp-autoload-real-build-for-file (file)
+(defun tinylisp-autoload-quick-build-from-file (file)
   "Generate autoload from FILE to FILE-autoload.el"
-  (interactive "fGenerate autoload from lisp file: ")
+  (interactive "fGenerate quick autoload from lisp file: ")
   (let* ((dest (format "%s-autoload.el"
                        (file-name-sans-extension file))))
-    (tinylisp-autoload-real-build-for-file-1 file dest)))
+    (tinylisp-autoload-quick-build-from-file-1 file dest)))
 
 ;;; ----------------------------------------------------------------------
 ;;;
-(defun tinylisp-autoload-real-build-for-dir (dir &optional include exclude)
+(defun tinylisp-autoload-quick-build-dir-recursive (dir &optional include exclude)
   "Generate all autoloads from DIR.
 Obey optional INCLUDE and EXCLUDE regexps."
   (interactive
-   "DGenerate all autoloads in dir\nsInclude re: \nsExlude re: ")
+   "DGenerate quick autoloads in dir\nsInclude re: \nsExlude re: ")
   (let ((files (directory-files dir 'full "\\.el"))
         list)
     (dolist (file files)
@@ -4967,7 +4988,7 @@ Obey optional INCLUDE and EXCLUDE regexps."
        ((or (not (stringp include))
             (string-match "^[ \t]*$" include)
             (string-match include file))
-        (tinylisp-autoload-real-build-for-file file))))))
+        (tinylisp-autoload-quick-build-from-file file))))))
 
 ;;; ----------------------------------------------------------------------
 ;;;
@@ -4979,7 +5000,7 @@ Obey optional INCLUDE and EXCLUDE regexps."
    "DGenerate all autoloads recursive dir: \nsInclude re: \nsExlude re: ")
   (tinylisp-directory-recursive-macro
       dir
-    (tinylisp-autoload-real-build-for-dir dir include exclude)))
+    (tinylisp-autoload-quick-build-dir-recursive dir include exclude)))
 
 ;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;
 ;;
