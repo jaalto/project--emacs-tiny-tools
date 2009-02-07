@@ -663,6 +663,8 @@ Defined keys:
      "Autoload"
      ["Quick autoloads from buffer"  tinylisp-autoload-quick-build-from-buffer   t]
      ["Quick autoloads from file"    tinylisp-autoload-quick-build-from-file     t]
+     ["Quick autoloads interactive from file"
+      tinylisp-autoload-quick-build-interactive-from-file t]
      ["Quick autoloads from directory" tinylisp-autoload-quick-build-from-dir    t]
      ["Quick autoloads recursive"    tinylisp-autoload-quick-build-dir-recursive t]
      "----"
@@ -798,6 +800,7 @@ Defined keys:
        (define-key map "ab"  'tinylisp-autoload-quick-build-from-buffer)
        (define-key map "ad"  'tinylisp-autoload-guick-build-from-dir)
        (define-key map "af"  'tinylisp-autoload-quick-build-from-file)
+       (define-key map "ai"  'tinylisp-autoload-quick-build-interactive-from-file)
        (define-key map "ar"  'tinylisp-autoload-quick-build-dir-recursive)
        (define-key map "aF"  'tinylisp-autoload-generate-loaddefs-file)
        (define-key map "aD"  'tinylisp-autoload-generate-loaddefs-dir)
@@ -1662,9 +1665,11 @@ c   `tinylisp-commentary'")
 ;;; ----------------------------------------------------------------------
 ;;;
 (defconst tinylisp-:menu-autoload
-  '("Autoloads: b)uffer f)ile d)dir r)ecur Loaddefs: F)ile D)ir R)ecursive"
+  '("Autoloads: b)uffer fi)le d)dir r)ecur Loaddefs: F)ile D)ir R)ecursive"
     ((?b . ( (call-interactively 'tinylisp-autoload-quick-build-from-buffer)))
      (?f . ( (call-interactively 'tinylisp-autoload-quick-build-from-file)))
+     (?i . ( (call-interactively
+	      'tinylisp-autoload-quick-build-intearactive-from-file)
      (?d . ( (call-interactively 'tinylisp-autoload-guick-build-from-dir)))
      (?r . ( (call-interactively 'tinylisp-autoload-quick-build-dir-recursive)))
      (?F . ( (call-interactively 'tinylisp-autoload-generate-loaddefs-file)))
@@ -1680,7 +1685,10 @@ Quick autoloads: list of all macros and functions
     b   Show autoloads from buffer which defines `buffer-file-name'.
         With prefix argument, ask package
 
-    f   Write autoloads from FILE.wl to FILE-autoload.el.
+    f   Write autoloads from FILE.el to FILE-autoload.el
+
+    i   Write interactive function autoloads from FILE.el to
+        FILE-autoload-interactive.el
 
     d   From DIRECTORY matching REGEXP, exluding REGEXP, write all autolaods
         to each FILE-autoload.el

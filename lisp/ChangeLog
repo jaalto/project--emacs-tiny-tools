@@ -4,7 +4,7 @@
 
 	* tiny/tinylibmail.el: Massive update: replace old backquotes
 
-        * tiny/tinyreplace.el (tinyreplace-:menu): Correct documentaiton string.
+	* tiny/tinyreplace.el (tinyreplace-:menu): Correct documentaiton string.
 
 	* tiny/tiny-admin-util.el: Remove autoload utilities and move to
 	tinylisp.el
@@ -34,6 +34,10 @@
 	(tinylisp-forward-def): Correct forward movement.
 	(tinylisp-autoload-quick-build-from-file): New.
 	(tinylisp-autoload-quick-build-interactive-from-file): New.
+	(tinylisp-:menu-autoload): Add
+	`tinylisp-autoload-quick-build-interactive-from-file'.
+	(tinylisp-mode::wizard): Add
+	`tinylisp-autoload-quick-build-interactive-from-file'.
 
 	* tiny/tiny-setup.el: OBSOLETE file. Add `error' to prevent using it.
 
