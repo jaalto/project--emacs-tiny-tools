@@ -5044,7 +5044,7 @@ In interactive mode, the DEST is FILE-loaddefs.el and VERB mode is t."
 		      (file-name-nondirectory path))))
      (if (string= "" file)
 	 (error "No file name"))
-     (setq dest (tinylisp-file-name-add-suffix file "loaddefs"))
+     (setq dest (tinylisp-file-name-add-suffix file "autoloadss"))
      (setq dest (read-file-name
 		 "Loaddefs write: "
 		 (file-name-directory dest)
@@ -5067,7 +5067,7 @@ for `command-line-args-left'."
   (tinylisp-with-command-line
    (tinylisp-autoload-write-loaddefs-file
     file
-    (tinylisp-file-name-add-suffix file "loaddefs")
+    (tinylisp-file-name-add-suffix file "autoloads")
     'verbose)))
 
 ;;; ----------------------------------------------------------------------
@@ -5076,7 +5076,7 @@ for `command-line-args-left'."
   "Generate loaddefs for LIST of files. VERB."
   (let (dest)
     (dolist (file list)
-      (setq dest (tinylisp-file-name-add-suffix file "loaddefs"))
+      (setq dest (tinylisp-file-name-add-suffix file "autoloads"))
       (tinylisp-autoload-write-loaddefs-file file dest verb))))
 
 ;;; ----------------------------------------------------------------------
@@ -5144,7 +5144,7 @@ for `command-line-args-left'."
 ;;;
 ;;;###autoload
 (defun tinylisp-autoload-quick-build-from-file (file &optional dest verb)
-  "Generate autoload from FILE to DEST; FILE-autoload.el"
+  "Generate autoload from FILE to DEST"
   (interactive
    (let* ((path  (buffer-file-name))
 	  (dir   (and path
@@ -5160,7 +5160,7 @@ for `command-line-args-left'."
 		      (file-name-nondirectory path))))
      (if (string= "" file)
 	 (error "No file name"))
-     (setq dest (tinylisp-file-name-add-suffix file "autoload"))
+     (setq dest (tinylisp-file-name-add-suffix file "autoloads-plain"))
      (setq dest (read-file-name
 		 "Autoloads write: "
 		 (file-name-directory dest)
@@ -5185,7 +5185,7 @@ for `command-line-args-left'."
     file
     (tinylisp-file-name-add-suffix
      file
-     "autoload")
+     "autoloads-plain")
     'verbose)))
 
 ;;; ----------------------------------------------------------------------
@@ -5211,7 +5211,7 @@ for `command-line-args-left'."
 	 (error "No file name"))
      (setq dest (tinylisp-file-name-add-suffix
 		 file
-		 "autoload-interactive"))
+		 "autoloads-plain-interactive"))
      (setq dest (read-file-name
 		 "Autoloads write [RET = none]: "
 		 (file-name-directory dest)
@@ -5251,7 +5251,7 @@ for `command-line-args-left'."
     file
     (tinylisp-file-name-add-suffix
      file
-     "autoload-interactive")
+     "autoloads-plain-interactive")
     'verbose)))
 
 ;;; ----------------------------------------------------------------------
