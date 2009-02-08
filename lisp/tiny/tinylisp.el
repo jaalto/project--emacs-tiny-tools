@@ -4800,6 +4800,17 @@ Can't find _defined_ variable or function on the line (eval buffer first).")
 
 ;;; ----------------------------------------------------------------------
 ;;;
+(defun tinylisp-directory-file-list (dir &optional exclude)
+  "Return list of Emacs Lisp files. Optinally EXCLUDE by regexp."
+  (let (list)
+    (dolist (elt (directory-files dir 'full "\\.el"))
+      (when (or (null exclude)
+		(not (string-match exclude file)))
+        (push elt list)))
+    list))
+
+;;; ----------------------------------------------------------------------
+;;;
 (defun tinylisp-autoload-real-directory-last (dir)
   "Return last directory name in DIR. /dir1/dir2/ -> dir2."
   (if (string-match "[/\\]\\([^/\\]+\\)[/\\]?$" dir)
@@ -4949,7 +4960,7 @@ Call arguments:
      (tinylisp-library-read-name)))
    ((buffer-file-name)
     (ti::package-autoload-create-on-file
-     file
+     (buffer-file-name)
      (get-buffer-create tinylisp-:buffer-autoload)))
    (t
     (error "Can't generate autoload statements. (buffer-file-name) is nil."))))
@@ -5019,11 +5030,33 @@ Input:
   "Generate autoloads from FILE to DEST. VERB.
 In interactive mode, the DEST is FILE-loaddefs.el and VERB mode is t."
   (interactive
-   (let ((file (read-file-name "Loaddefs from file: ")))
+   (let* ((path (buffer-file-name))
+	  (dir  (and path
+		     (file-name-directory (buffer-file-name))))
+	  file
+	  dest)
+     (setq file (read-file-name
+		 "Loaddefs from file: "
+		 dir
+		 (not 'default)
+		 (not 'match)
+		 (and path
+		      (file-name-nondirectory path))))
+     (if (string= "" file)
+	 (error "No file name"))
+     (setq dest (tinylisp-file-name-add-suffix file "loaddefs"))
+     (setq dest (read-file-name
+		 "Loaddefs write: "
+		 (file-name-directory dest)
+		 (not 'default)
+		 (not 'match)
+		 (file-name-nondirectory dest)))
+     (if (string= "" dest)
+	 (error "No file name"))
      (list
       file
-      (tinylisp-file-name-add-suffix file "loaddefs")
-      t)))
+      dest
+      'verbose)))
   (tinylisp-autoload-write-loaddefs-file file dest verb))
 
 ;;; ----------------------------------------------------------------------
@@ -5039,19 +5072,28 @@ for `command-line-args-left'."
 
 ;;; ----------------------------------------------------------------------
 ;;;
+(defun tinylisp-autoload-generate-loaddefs-file-list (list &optional verb)
+  "Generate loaddefs for LIST of files. VERB."
+  (let (dest)
+    (dolist (file list)
+      (setq dest (tinylisp-file-name-add-suffix file "loaddefs"))
+      (tinylisp-autoload-write-loaddefs-file file dest verb))))
+
+;;; ----------------------------------------------------------------------
+;;;
 ;;;###autoload
-(defun tinylisp-autoload-generate-loaddefs-dir (dir &optional regexp)
-  "Generate autoload from DIR excluding files by optional REGEXP."
-  (interactive "DGenerate ###autoload loaddefs in dir\nsIgnore regexp: ")
-  (let ((files (directory-files dir 'full "\\.el"))
-        list)
-    (dolist (file files)
-      ;;  Ignore couple of other files as well.
-      (unless (or (string-match "-\\(loaddefs\\|autoload\\)\\.el" file)
-                  (and (stringp regexp)
-                       (string-match "^[ \t]*$" regexp)))
-        (push file list)))
-    (tinylisp-autoload-generate-loaddefs-file-list list)))
+(defun tinylisp-autoload-generate-loaddefs-dir (dir &optional exclude)
+  "Generate loaddefs from DIR, optionally EXCLUDE by regexp."
+  (interactive "DLoaddefs from dir\nsIgnore regexp: ")
+  (let ((regexp "-\\(loaddefs\\|autoload.*\\)\\.el")
+	list)
+    (if (and (stringp exclude)
+	     (not (string= "" exclude)))  ;; Interactive RET
+	(setq regexp (format "%s\\|%s" regexp exclude)))
+    (setq list (tinylisp-directory-file-list dir exclude))
+    (tinylisp-autoload-generate-loaddefs-file-list
+     list
+     (interactive-p))))
 
 ;;; ----------------------------------------------------------------------
 ;;;
@@ -5066,7 +5108,7 @@ for `command-line-args-left'."
 ;;; ----------------------------------------------------------------------
 ;;;
 (defun tinylisp-autoload-real-update-update-file-autoloads-1 (file dest)
-  "Update ###autoload from FILE to DEST."
+  "Update autoload from FILE to DEST."
     (ti::package-autoload-loaddefs-create-maybe dest)
     (let ((generated-autoload-file dest))
       (tinylisp-with-file-env-macro
@@ -5076,8 +5118,8 @@ for `command-line-args-left'."
 ;;; tinylisp-loaddefs-update-from-file
 ;;; FIXME: unused.
 (defun tinylisp-autoload-real-update-file-autoloads (file)
-  "Update ###autoload from FILE to FILE-loaddefs.el"
-  (interactive "fUpdate loaddedfs from lisp file: ")
+  "Update autoload from FILE to FILE-loaddefs.el"
+  (interactive "fLoaddedfs from file: ")
   (let* ((dest (format "%s-loaddefs.el"
                        (file-name-sans-extension file))))
     (tinylisp-autoload-real-update-autoloads-loaddefs-1 file dest)))
@@ -5104,15 +5146,27 @@ for `command-line-args-left'."
 (defun tinylisp-autoload-quick-build-from-file (file &optional dest verb)
   "Generate autoload from FILE to DEST; FILE-autoload.el"
   (interactive
-   (let (file
-	 dest)
-     (setq file (read-file-name "Autoload read from file: "
-				nil nil nil (buffer-file-name)))
-     (setq dest (tinylisp-file-name-add-suffix
-		 file
-		 "autoload"))
-     (setq dest (read-file-name "Autoloads write: "
-				nil nil nil dest))
+   (let* ((path  (buffer-file-name))
+	  (dir   (and path
+		      (file-name-directory path)))
+	  file
+	  dest)
+     (setq file (read-file-name
+		 "Autoloads from file: "
+		 dir
+		 (not 'default)
+		 (not 'match)
+		 (and path
+		      (file-name-nondirectory path))))
+     (if (string= "" file)
+	 (error "No file name"))
+     (setq dest (tinylisp-file-name-add-suffix file "autoload"))
+     (setq dest (read-file-name
+		 "Autoloads write: "
+		 (file-name-directory dest)
+		 (not 'default)
+		 (not 'match)
+		 (file-name-nondirectory dest)))
      (if (string= "" dest)
 	 (error "No file name"))
      (list
@@ -5141,15 +5195,29 @@ for `command-line-args-left'."
   (file &optional dest verb)
   "Collect interactive defuns from FILE. Optionally write to DEST, VERB."
   (interactive
-   (let (file
-	 dest)
-     (setq file (read-file-name "Autoloads read from file: "
-				nil nil nil (buffer-file-name)))
+   (let* ((path  (buffer-file-name))
+	  (dir   (and path
+		      (file-name-directory path)))
+	  file
+	  dest)
+     (setq file (read-file-name
+		 "I-autoloads from file: "
+		 dir
+		 (not 'default)
+		 (not 'match)
+		 (and path
+		      (file-name-nondirectory path))))
+     (if (string= "" file)
+	 (error "No file name"))
      (setq dest (tinylisp-file-name-add-suffix
 		 file
 		 "autoload-interactive"))
-     (setq dest (read-file-name "Autoloads write [RET = none]: "
-				nil nil nil dest))
+     (setq dest (read-file-name
+		 "Autoloads write [RET = none]: "
+		 (file-name-directory dest)
+		 (not 'default)
+		 (not 'match)
+		 (file-name-nondirectory dest)))
      (if (string= "" dest)
 	 (setq dest nil))
      (list
