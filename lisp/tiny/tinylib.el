@@ -7237,9 +7237,11 @@ Input:
                        (backward-char 1)
                        (setq
                         args
-                        (subst-char-in-string
-                         ;;  Convert multiline args to one line.
-                         ?\n ?\ (buffer-substring point (point)) )))))
+			(replace-regexp-in-string
+			 "[ \t]+" " "
+			 (subst-char-in-string
+			  ;;  Convert multiline args to one line.
+			  ?\n ?\ (buffer-substring point (point)) ))))))
         (if (re-search-forward
              "[ \t\n]+([ \t]*interactive"
              (save-excursion (end-of-defun) (point))
