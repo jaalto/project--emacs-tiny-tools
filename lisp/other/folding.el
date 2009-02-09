@@ -16,7 +16,7 @@
 ;;              Anders Lindgren <andersl A T csd.uu dt se>
 ;; Maintainer:  Jari Aalto <jari aalto A T cante dt net>
 ;; Created:     1992
-;; Version:     git 4b13804+1 (Savannah emacs-tiny-tools)
+;; Version:     git 6a3cff7 (Savannah emacs-tiny-tools)
 ;; VCS-Version: $Revision: 3.42 $
 ;; VCS-URL:     http://savannah.nongnu.org/projects/emacs-tiny-tools/
 ;; VCS-Date:    $Date: 2007/05/07 10:50:05 $
@@ -633,7 +633,7 @@
 ;;{{{ History
 ;; [person version] = developer and his revision tree number.
 ;;
-;; Feb  09  2009  22.2.1           [jari git e0c2e92..4b13804 +1]
+;; Feb  09  2009  22.2.1           [jari git e0c2e92..6a3cff7]
 ;; - Minor documentaton fixes.
 ;; - Add new `python-mode' using `folding-add-to-marks-list'.
 ;; - Add new variable `folding-version-time' to record edit time.
