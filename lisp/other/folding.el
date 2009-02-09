@@ -16,7 +16,7 @@
 ;;              Anders Lindgren <andersl A T csd.uu dt se>
 ;; Maintainer:  Jari Aalto <jari aalto A T cante dt net>
 ;; Created:     1992
-;; Version:     git f7e5609 (Savannah)
+;; Version:     git 4b13804+1 (Savannah emacs-tiny-tools)
 ;; VCS-Version: $Revision: 3.42 $
 ;; VCS-URL:     http://savannah.nongnu.org/projects/emacs-tiny-tools/
 ;; VCS-Date:    $Date: 2007/05/07 10:50:05 $
@@ -453,9 +453,9 @@
 ;;
 ;;          (defun my-folding-load-hook ()
 ;;            "Folding vars setup."
+;;            ;;  Change marks for 'text-mode'
 ;;            (let* ((ptr (assq 'text-mode folding-mode-marks-alist)))
 ;;              (setcdr ptr (list "# {{{" "# }}}"))))
-;;
 ;;
 ;;  Example: choosing different fold marks for mode
 ;;
@@ -633,8 +633,11 @@
 ;;{{{ History
 ;; [person version] = developer and his revision tree number.
 ;;
-;; Feb  05  2009  22.2.1           [jari git e0c2e92]
-;; - Add `python-mode' with `folding-add-to-marks-list'.
+;; Feb  09  2009  22.2.1           [jari git e0c2e92..4b13804 +1]
+;; - Minor documentaton fixes.
+;; - Add new `python-mode' using `folding-add-to-marks-list'.
+;; - Add new variable `folding-version-time' to record edit time.
+;;   Value is automatically updated by developer's Emacs setup.
 ;;
 ;; May  06  2007  21.4             [jari 3.38-3.41 2007.0506]
 ;; - Cleanup. Eol whitespaces removed, extra newlines cleaned.
@@ -1790,6 +1793,9 @@ with XEmacs.")
 
 (defvar folding-version (substring "$Revision: 3.42 $" 11 15)
   "Version number of folding.el.")
+
+(defconst folding-version-time "2009.0209.1831"
+  "Last edited time as version number")
 
 ;;}}}
 ;;{{{ setup: bind
@@ -3666,8 +3672,9 @@ visible. This is useful after some commands eg., search commands."
 
         (if (eq (car folding-stack) 'folded)
             (folding-narrow-to-region nil nil t)
-          (folding-narrow-to-region (marker-position (car (car folding-stack)))
-                                    (marker-position (cdr (car folding-stack))) t))
+          (folding-narrow-to-region
+	   (marker-position (car (car folding-stack)))
+	   (marker-position (cdr (car folding-stack))) t))
         (and (consp (car folding-stack))
              (set-marker (car (car folding-stack)) nil)
              (set-marker (cdr (car folding-stack)) nil))
@@ -5373,7 +5380,6 @@ And from END t `point-min'. If ARG is nil, delete overlays."
       (setq folding-narrow-overlays (cons overlay-beg  overlay-end)))))
 
 ;;}}}
-
 ;;{{{ code: end of file tag, provide
 
 (folding-install)
