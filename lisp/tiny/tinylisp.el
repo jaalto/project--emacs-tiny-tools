@@ -1699,7 +1699,8 @@ c   `tinylisp-commentary'")
 	      'tinylisp-autoload-quick-autoload-build-recursive)))
      (?F . ( (call-interactively 'tinylisp-autoload-generate-loaddefs-file)))
      (?D . ( (call-interactively 'tinylisp-autoload-generate-loaddefs-dir)))
-     (?R . ( (call-interactively 'tinylisp-autoload-generate-loaddefs-recursive)))
+     (?R . ( (call-interactively
+	      'tinylisp-autoload-generate-loaddefs-recursive)))
      (?/ . tinylisp-:menu-main)))
   "Help menu:
 /       Back to root menu
@@ -1710,10 +1711,9 @@ Quick autoloads: list of all macros and functions
     b   Show autoloads from buffer which defines `buffer-file-name'.
         With prefix argument, ask package
 
-    f   Write autoloads from FILE.el to FILE-autoload.el
+    f   Write autoloads from FILE.el.
 
-    i   Write interactive function autoloads from FILE.el to
-        FILE-autoload-interactive.el
+    i   Write interactive function autoloads from FILE.el.
 
     d   From DIRECTORY matching REGEXP, exluding REGEXP, write all autolaods
         to each FILE-autoload.el
