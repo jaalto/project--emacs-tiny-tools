@@ -900,7 +900,7 @@ Defined keys:
        (define-key map "\C-eX"    'tinylisp-edebug-uninstrument-everything)
 
        (define-key map "1f"      'tinylisp-face-list-font-lock-faces)
-       (define-key map "1f"      'tinylisp-face-list-known-faces)
+       (define-key map "1F"      'tinylisp-face-list-known-faces)
        (define-key map "1p"      'tinylisp-process-kill)
        (define-key map "1P"      'list-processes))))))
 
@@ -1426,16 +1426,16 @@ Additional menus
                 (format "%s "  (prin1-to-string current-prefix-arg))
               ""))
    (list
-    (cons ?f  (list '(tinylisp-face-list-font-lock-faces)))
-    (cons ?F  (list '(tinylisp-face-list-known-faces)))
-    (cons ?p  (list '(tinylisp-process-kill)))
-    (cons ?P  (list '(list-processes)))
+    (cons ?f  (list '(call-interactively 'tinylisp-face-list-font-lock-faces)))
+    (cons ?F  (list '(call-interactively 'tinylisp-face-list-known-faces)))
+    (cons ?p  (list '(call-interactively 'tinylisp-process-kill)))
+    (cons ?P  (list '(call-interactively 'list-processes)))
     (cons ?/  'tinylisp-:menu-main)))
   "*Miscellaneous interface: Processes and fonts.
 /       Back to root menu
 q       Quit menu
-f       List font lock colors available.
-F       List ALL known faces.
+f       List font lock faces available. With prefix arg, the gory details.
+F       List ALL known faces. With prefix arg, the gory details.
 p       Kill running processes interactively.
 P       List running processes.")
 
@@ -2119,6 +2119,16 @@ Following variables are set during BODY:
 
 ;;; ----------------------------------------------------------------------
 ;;;
+(defsubst tinylisp-whitespace-cleanup-eol (&optional point)
+  "Remove all EOL whitespaces from POINT or `current-point'."
+  (save-excursion
+    (if point
+	(goto-char point))
+    (while (re-search-forward "[ \f\v\t]+$" nil t)
+      (replace-match ""))))
+
+;;; ----------------------------------------------------------------------
+;;;
 (defsubst tinylisp-read-word ()
   "Read word under point."
   (let ((str (or (ti::remove-properties
@@ -2472,7 +2482,6 @@ If you see this message when calling following, there is bug in TinyLisp.
 ;;;
 (defun tinylisp-face-list-unique (face-list)
   "Return unique faces '((var face) ..) from FACE-LIST."
-  (interactive)
   (let* ((getface 'get-face)
          face
          list)
@@ -2496,37 +2505,54 @@ If you see this message when calling following, there is bug in TinyLisp.
 ;;; (load-library "flyspell")
 ;;; (tinylisp-face-print (current-buffer) '(flyspell-incorrect-face))
 ;;;
-(defun tinylisp-face-print (buffer face-list)
-  "Insert description to BUFFER for each symbol in FACE-LIST."
+(defun tinylisp-face-print (buffer face-list &optional details)
+  "Insert description to BUFFER for each symbol in FACE-LIST.
+If optional DETAILS is non-nil, display also 'face-defface-spec properties."
   (let* ((list (tinylisp-face-list-unique face-list))
          beg
          var
-         face)
+         face
+	 plist)
     (when list
       (setq buffer (ti::temp-buffer tinylisp-:buffer-tmp 'clear))
       (with-current-buffer buffer
-        (dolist (elt list)
-          (setq var  (car elt)
-                face (nth 1 elt))
-          (insert (format "%-35s" (symbol-name var)))
+        (dolist (elt (sort list
+			   (lambda (a b)
+			     (string<
+			      (symbol-name (car a))
+			      (symbol-name (car b))))))
+          (setq var    (car elt)
+                face   (nth 1 elt)
+		plist  (if details
+			   (format
+			    " %s\n"
+			    (plist-get
+			     (symbol-plist face)
+			     'face-defface-spec))
+			 ""))
+	  (insert (format "%-35s" (symbol-name var)))
           (setq beg  (point))
           (insert "abcdef12345  ")
           (set-text-properties beg (point) (list 'face face))
           (if (ti::emacs-p)
-              (insert (format " fg: %-15s  bg: %s\n"
+              (insert (format "fg: %-15s  bg: %s%s"
                               (face-foreground face)
-                              (face-background face)))
-            (insert (format "\n  fg: %-15s\n  bg: %s\n"
+                              (face-background face)
+			      plist))
+            (insert (format "\n  fg: %-15s\n  bg: %s%s"
                             (face-foreground face)
-                            (face-background face)))))
-        (sort-lines nil (point-min) (point-max)))
+                            (face-background face)
+			    plist)))
+	  (insert "\n")))
       buffer)))
 
 ;;; ----------------------------------------------------------------------
 ;;;
-(defun tinylisp-face-list-font-lock-faces ()
-  "List known font lock faces and colors used."
-  (interactive)
+(defun tinylisp-face-list-font-lock-faces (&optional details)
+  "List known font lock faces and colors used.
+Optionally give DETAILS of each face.
+See also \\[list-colors-display]."
+  (interactive "P")
   (cond
    ((not (featurep 'font-lock))
     (message "tinylisp.el: font-lock.el is not loaded. No faces."))
@@ -2535,14 +2561,16 @@ If you see this message when calling following, there is bug in TinyLisp.
            (ti::system-get-symbols "^font-lock-.*face$" '(boundp sym))))
       (when symbols
         (let ((buffer (ti::temp-buffer tinylisp-:buffer-tmp 'clear)))
-          (tinylisp-face-print buffer symbols)
+          (tinylisp-face-print buffer symbols details)
           (display-buffer buffer)))))))
 
 ;;; ----------------------------------------------------------------------
 ;;;
-(defun tinylisp-face-list-known-faces ()
-  "List all known 'face' variables."
-  (interactive)
+(defun tinylisp-face-list-known-faces (&optional details)
+  "List all known 'face' variables.
+Optionally give DETAILS of each face.
+See also \\[list-colors-display]."
+  (interactive "P")
   (let* ((symbols (ti::system-get-symbols
                    "face"
                    '(or (boundp sym)
@@ -2551,7 +2579,7 @@ If you see this message when calling following, there is bug in TinyLisp.
                         ;; Only works in Emacs. Returns nil in XEmacs
                         (facep sym))))
          (buffer  (ti::temp-buffer tinylisp-:buffer-tmp 'clear)))
-    (tinylisp-face-print buffer symbols)
+    (tinylisp-face-print buffer symbols details)
     (display-buffer buffer)))
 
 ;;; ----------------------------------------------------------------------
@@ -5013,13 +5041,16 @@ Input:
         ;;  line added by `ti::package-autoload-loaddefs-create-maybe'
 ;;;        (re-search-backward "\n.*provide")
         (let ((point (point)))
+	  ;;  FIXME: This call generates ^L lines. Are they important?
           (generate-file-autoloads file)
-          ;;  something was inserted?
+          ;;  was something inserted?
           (cond
            ((eq (point) point)
             (if verb
                 (message "No autoload definitions in %s" file)))
            (t
+	    ;;  DVCS git does not like ^L at EOL
+	    (tinylisp-whitespace-cleanup-eol (point-min))
             (let ((backup-inhibited t))
               (save-buffer))
             (kill-buffer (current-buffer)))))))))

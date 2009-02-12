@@ -1,3 +1,16 @@
+2009-02-12  Jari Aalto  <jari.aalto@cante.net>
+
+	* tiny/tinylisp.el (tinylisp-face-list-unique): Remove incorrect
+	`interactive' spec.
+	(tinylisp-face-print): Display `face-defface-spec' property if
+	new arg FULL is non-nil.
+	(tinylisp-face-list-font-lock-faces): Add new optional arg DETAILS.
+	(tinylisp-face-list-known-faces): Add new optional arg DETAILS.
+	(tinylisp-:menu-misc-1): document new DETAILS prefix arg.
+	(tinylisp-whitespace-cleanup-eol): New.
+	(tinylisp-autoload-write-loaddefs-file): Use
+	`tinylisp-whitespace-cleanup-eol'.
+
 2009-02-08  Jari Aalto  <jari.aalto@cante.net>
 
 	* tiny/tinylib.el (ti::package-autoload-create-on-file): Squeeze
