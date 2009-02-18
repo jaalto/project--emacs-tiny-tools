@@ -41,10 +41,8 @@
 ;;
 ;;  You can also use the preferred way: autoload
 ;;
-;;       (autoload 'tinynbr-mode "tinynbr t t)
-;;       ;;  Put all minor mode activations below C-c m map
-;;       ;;
-;;       (global-set-key "\C-cmN"  'tinynbr-mode)
+;;       (autoload 'tinynbr-mode "tinynbr "" t)
+;;       (global-set-key "\C-cN"  'tinynbr-mode)
 ;;
 ;;  If you have any questions, use this function to contact author
 ;;
