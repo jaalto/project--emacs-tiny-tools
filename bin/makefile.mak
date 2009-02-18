@@ -26,28 +26,13 @@
 #
 #   Description
 #
-#	************************************************************************
+#	*******************************************************************
 #
-#	2000-05-24 This Unix makefile format is no longer supported, because
-#	it does not work in variety of platforms (win32). If you find an error,
-#	please send me a diff(1) generated with option -c or -u and a little bit
-#	of explanation of your changes and I will patch the original. Other than
-#	that, no changes are planned.
+#	2000-05-24 This Unix makefile format is no longer used. All
+#	the documentaion below is outdated and invalid. This file is
+#	preserved solely for educational purposes
 #
-#	Prefer using the perl based makefile.pl which is more reliable.
-#
-#	    % perl  bin/makefile.pl --binary emacs all
-#
-#	************************************************************************
-#
-#   Right into business
-#
-#	The distribution's makefiles have extensions *.mak and there is rule
-#	"makefile" to draw a symlink from *.mak --> Makefile so that you
-#	don't have to use -f option.
-#
-#	% make -f *.mak makefile config help
-#	% make all
+#	*******************************************************************
 #
 #   Foreword to PC and Unix
 #
@@ -434,7 +419,6 @@ DIR_EMACS_RC=	../lisp/rc
 #   `env INSTALL_DIR=xxx make -f *.mak install-cp'
 #
 
-
 INSTALL_DIR	    = /usr/local/share/emacs/site-lisp/tiny/
 INSTALL_DIR_LINK    = ../tiny	# See rule `install-ln'
 INSTALL_DIR_HTML    = $(INSTALL_DIR)
@@ -482,7 +466,6 @@ LIST_MISC   = `ls  |							    \
 		 egrep -v '\.ini|\.el|\.pl|\.tar|\.gz|:$'		    \
 		 | sort -u						    \
 		`
-
 # ########################################################### &flags ###
 
 FLAG_IGERR  =	1  # If 0, then stop on error
