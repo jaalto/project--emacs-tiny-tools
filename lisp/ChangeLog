@@ -1,3 +1,17 @@
+2009-02-19  Jari Aalto  <jari.aalto@cante.net>
+
+	* tiny/tinygnus.el (tinygnus-summary-compose-current-mail-as-template):
+	Reformat indentation.
+
+	* tiny/tinydebian.el (tinydebian-bug-gnu-savannah-site-support-p):
+	Rename.
+	(tinydebian-bug-generic-string-p): New.
+	(tinydebian-bug-gnu-savannah-buffer-url-p): New.
+	(tinydebian-with-gnus-article-buffer): New.
+	(tinydebian-bug-url): In `gnus-summary-mode', check savannah request
+	from gnus article buffer.
+	(tinydebian-bug-gnus-article-buffer-p): New.
+
 2009-02-12  Jari Aalto  <jari.aalto@cante.net>
 
 	* tiny/tinylisp.el (tinylisp-face-list-unique): Remove incorrect

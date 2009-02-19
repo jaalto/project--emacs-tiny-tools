@@ -591,7 +591,15 @@ See also `tinydebian-:rfs-template'")
 
 (defconst tinydebian-:launchpad-url-http-package-bugs
   "https://bugs.launchpad.net/bugs"
-  "The Launchpad bug control URL without parameter, up to '/' token.")
+  "The Launchpad bug control URL without parameter.")
+
+(defconst tinydebian-:gnu-savannah-url-http-package-bugs
+  "http://savannah.gnu.org/bugs"
+  "The savanah.gnus.org bug URL without parameter")
+
+(defconst tinydebian-:gnu-savannah-url-http-site-support-bugs
+  "http://savannah.gnu.org/support"
+  "The savanah.gnus.org site request URL without parameter")
 
 (defvar tinydebian-:emacs-bts-email-address "emacsbugs.donarmstrong.com"
   "Email address for Emacs Bug Tracking System.")
@@ -1153,6 +1161,18 @@ Activate on files whose path matches
 
 ;;}}}
 ;;{{{ Utility functions
+
+(put 'tinydebian-with-gnus-article-buffer 'lisp-indent-function 1)
+(put 'tinydebian-with-gnus-article-buffer 'edebug-form-spec '(body))
+(defmacro tinydebian-with-gnus-article-buffer (&optional nbr &rest body)
+  "In article NBR, run BODY. Defaults to article at *Summary* buffer."
+  (let ((buffer (gensym "buffer-")))
+    `(progn
+       (gnus-summary-select-article 'all nil 'pseudo ,nbr)
+       (let ((,buffer (get-buffer gnus-original-article-buffer)))
+	 (when ,buffer
+	   (with-current-buffer ,buffer
+	     ,@body))))))
 
 ;;; ----------------------------------------------------------------------
 ;;;
@@ -1731,15 +1751,31 @@ Return:
 
 ;;; ----------------------------------------------------------------------
 ;;;
-(defsubst tinydebian-bug-gnu-savannah-support-string-p (str)
-  "Test if STR looks like Savannah support request."
+(defsubst tinydebian-bug-gnu-savannah-site-support-string-p (str)
+  "Test if STR looks like Savannah site support request."
   (if (string-match "\\[sr +#\\([0-9]+\\)\\]" str)
       (match-string-no-properties 1 str)))
 
 ;;; ----------------------------------------------------------------------
 ;;;
-(defun tinydebian-bug-gnu-savannah-p ()
-  "Check if bug context is Sourceforge."
+(defsubst tinydebian-bug-generic-string-p (str)
+  "Test if STR looks like string '[bug #25611]'"
+  (if (string-match "\\[bug +#\\([0-9]+\\)\\]" str)
+      (match-string-no-properties 1 str)))
+
+;;; ----------------------------------------------------------------------
+;;;
+(defun tinydebian-bug-gnu-savannah-buffer-url-p ()
+  "Check if bug context is savannah.gnu.org in buffer at `point-min'."
+  (save-excursion
+    (goto-char (point-min))
+    (if (re-search-forward "http://savannah.gnu.org/[^ \t\r\n]+[?][0-9]+" nil t)
+	(match-string-no-properties 0))))
+
+;;; ----------------------------------------------------------------------
+;;;
+(defun tinydebian-bug-gnu-savannah-site-support-p ()
+  "Check if bug context is Savannah site request."
   (cond
    ((eq major-mode 'gnus-summary-mode)
     (let ((str (buffer-substring (line-beginning-position)
@@ -1747,13 +1783,12 @@ Return:
 	  bug)
       ;; [  21: Foo Bar ] [sr #106037]
       (cond
-       ((setq bug (tinydebian-bug-gnu-savannah-support-string-p str))
-	(format "http://savannah.gnu.org/support/?%s" bug)))))
+       ((setq bug (tinydebian-bug-gnu-savannah-site-support-string-p str))
+	(format "%s/?%s"
+		tinydebian-:gnu-savannah-url-http-site-support-bugs
+		bug)))))
    (t
-    (save-excursion
-      (goto-char (point-min))
-      (if (re-search-forward "http://savannah.gnu.org/.*[?][0-9]+" nil t)
-	  (match-string-no-properties 1))))))
+    (tinydebian-bug-gnu-savannah-buffer-url-p))))
 
 ;;; ----------------------------------------------------------------------
 ;;;
@@ -1808,6 +1843,17 @@ Return:
 
 ;;; ----------------------------------------------------------------------
 ;;;
+(defun tinydebian-bug-gnus-article-buffer-p ()
+  "Return bug URL from gnus article buffer if any.
+This function can only be run from `gnus-summary-mode'."
+  (when (and (featurep 'gnus)
+	     (boundp 'gnus-article-buffer)
+	     (eq major-mode 'gnus-summary-mode))
+    (tinydebian-with-gnus-article-buffer nil
+      (tinydebian-bug-gnu-savannah-buffer-url-p))))
+
+;;; ----------------------------------------------------------------------
+;;;
 (defun tinydebian-bug-url (bug)
   "Return correct bug URL for BUG.
 
@@ -1823,7 +1869,7 @@ the proper bug destionation: Sourceforge, Ubuntu or Debian."
       (if (string-match "http" str)
 	  str
 	(error "Unknown Emacs tracker `%s'" str)))
-     ((setq str (tinydebian-bug-gnu-savannah-p))
+     ((setq str (tinydebian-bug-gnu-savannah-site-support-p))
       (if (string-match "http" str)
 	  str
 	(error "Unknown Savannah tracker `%s'" str)))
@@ -1837,6 +1883,10 @@ the proper bug destionation: Sourceforge, Ubuntu or Debian."
 	      (if (numberp bug)
 		  (int-to-string bug)
 		bug)))
+     ;;  There is nothing that can be detect from Summary line,
+     ;;  we must look at article buffer.
+     ;;  [  49: Foo Bar ] [bug #25611] ....
+     ((tinydebian-bug-gnus-article-buffer-p))
      (bug
       (format "%s/%s"
 	      tinydebian-:debian-url-http-package-bugs
