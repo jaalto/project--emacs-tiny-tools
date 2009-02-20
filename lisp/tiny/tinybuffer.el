@@ -47,9 +47,9 @@
 ;;  You don't need to copy these if you used the `require', but in order
 ;;  to trigger autoload you must insert these into your ~/.emacs. These
 ;;  are also the defaults bindings. If you use something other that these,
-;;  reset the `tinybuffer-:load-hook' too.
+;;  reset the `tinybuffer-:load-hook' variable.
 ;;
-;;    (defconst tinybuffer-:load-hook nil)  ;; Don't load default bindings.
+;;    (setq tinybuffer-:load-hook nil)  ;; Don't load default bindings.
 ;;
 ;;    ;;    If you use Emacs with X window, these could be suitable keys.
 ;;
@@ -58,7 +58,7 @@
 ;;    (global-set-key [(control meta <)]    'tinybuffer-iswitch-to-buffer)
 ;;    (global-set-key [(alt <)]             'tinybuffer-sort-mode-toggle)
 ;;
-;;    ;;    For non-windowed emacs; you want to program your own keys
+;;    ;;    For non-windowed Emacs; you want to program your own keys.
 ;;    ;;    Please check C-h l `view-lossage' for your keybindings, these
 ;;    ;;    examples are from HP-UX numpad:
 ;;
@@ -92,14 +92,14 @@
 ;;      With this small package you can switch to next or previous buffer
 ;;      in a current window. If you only have small amount of buffers in
 ;;      `buffer-list', this may be the fastest way to select a working
-;;      buffer. In the other hand, if you have more than 20 working
+;;      buffer. On the other hand, if you have more than 20 working
 ;;      buffers, I'd recommend that you use exellent substring buffer
 ;;      switching utility instead: *iswitchb.el* which is included in
 ;;      standard Emacs distribution
 ;;
 ;;      If you have windowed environment and want to have hot list of your
 ;;      permanent buffers available, use *imenu.el* or *tinyhotlist.el* and
-;;      you can select RMAIL; GNUS; VM; *scratch* buffers instantly.
+;;      you can select buffers instantly.
 ;;
 ;;  Description
 ;;
@@ -241,7 +241,8 @@ See \\[tinybuffer-iswitch-to-buffer]."
          (rev   (reverse list))
          before
          ret)
-    ;; Basic idea is this, say pointer is at B
+    ;; Basic idea is this, say pointer is at B:
+    ;;
     ;; list:   A B C D
     ;; start:    B C D
     ;; rev     D C B A
@@ -334,18 +335,16 @@ See variable `tinybuffer-:ignore-regexp'."
       (setq list (reverse (buffer-list))))
      (t
       (setq list (buffer-list))))
-
     (setq list (delq (current-buffer) list))
-
     (dolist (buffer list)
       (unless (string-match re (buffer-name buffer))
         (setq go buffer)                ;Stop and select it
         (return)))
-
     (if (null go)
         (message
-         "TinyBuffer: No buffers to circulate; see `tinybuffer-:ignore-regexp'"))
-
+	 (concat
+	  "TinyBuffer: No buffers to circulate; "
+	  "see `tinybuffer-:ignore-regexp'")))
     (if go
         (switch-to-buffer go))))
 
@@ -418,11 +417,8 @@ References:
          buffer
          mode
          ch)
-
     (tinybuffer-init-buffer-list)
-
     (while loop
-
       (setq mode
             (with-current-buffer (get-buffer str)
               (cond
@@ -431,31 +427,24 @@ References:
                         (symbol-value 'dired-directory)))
                (t
                 (format "<%s>" (symbol-name major-mode))))))
-
       (when show-dir
         (setq dir (or (buffer-file-name (get-buffer str))
                       nil)))
-
       ;;  This formats the line so that it is visually more pleasant
       ;;  to read. If the file and dir are sticked together, it's
       ;;  hard to distinguish the words.
       ;;
       ;;  FILE      DIR
-
       (setq fmt
             (if (and str (< (+ (length str) (length dir)) 55))
                 "TinyIswich: %-20s %s %s"
               "TinyIswich: %s %s %s"))
-
       (unless dir
         (setq dir  mode
               mode nil))
-
       (setq ch (ti::read-char-safe-until
                 (format fmt str (or dir "") (or mode "" ))))
-
 ;;;      (ti::d! str buffer (char= ch key-back) (char= ch key-fw) go-list)
-
       (cond
        ((and ch (char= ch key-back))
         (setq buffer (tinybuffer-iswitch-previous)))
@@ -463,10 +452,8 @@ References:
         (setq buffer (tinybuffer-iswitch-next)))
        ((and ch (ti::char-in-list-case ch go-list))
         (setq loop nil)))
-
       (if buffer
           (setq str (buffer-name buffer))))
-
     (if (and ch
              buffer
              (not (ti::char-in-list-case ch quit-list)))

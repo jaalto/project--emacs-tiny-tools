@@ -1,3 +1,12 @@
+2009-02-20  Jari Aalto  <jari.aalto@cante.net>
+
+	* other/folding.el: Make XEmacs CVS and Savannah git revisions at
+	header more clear. Unify html-mode folds as in other modes:
+	change [[[ ]]] to {{{ }}}. Move `folding-version-time' to the
+	beginning of file.
+
+	* tiny/tinybuffer.el: Adjust comments. Remove extra newlines.
+
 2009-02-19  Jari Aalto  <jari.aalto@cante.net>
 
 	* tiny/tinygnus.el (tinygnus-summary-compose-current-mail-as-template):
