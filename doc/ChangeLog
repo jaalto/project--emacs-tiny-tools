@@ -1,3 +1,28 @@
+2009-02-20  Jari Aalto  <jari.aalto@cante.net>
+
+	* html/packages/index.txt: (2.3 Use valid LCD format):
+	Remove, obsolete.
+	(2.5 Check the code with Elint.el): Remove Peter Liljenberg's
+	non-workign email address.
+	(2.8 Always use version control software to manage your files):
+	Clean content.
+	(2.9 Always check your file with byte compiler): Adjust compile
+	command example.
+	(2.11 Use dynamic byte compilation): Remove old 19.xx
+	cruft.
+	(2.12 How to deal with variables from other packages): Correct
+	defvar example.
+	(2.13 Arrange the installation so that it can be autoloaded):
+	Remove TinyDired, use generic package name.
+	(2.14 Do not change any emacs bindings directly): Correct
+	function name: add *-install-*
+	(2.16 Document all your variables and functions well): Adjust
+	defun example about hidden documentation.
+	(2.17 Clean up all whitespaces from the end of lines):
+	Remove ti:: function prefix.
+	(2.19 Here is sample skeleton for a package. Fill it in):
+	Remove obsolete defcustom.
+
 2009-02-06 Fri  Jari Aalto  <jari.aalto@cante.net>
 
         * html/bmt-time.js: (top level): Adjust comments and code layout

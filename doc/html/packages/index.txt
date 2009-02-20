@@ -1,29 +1,27 @@
 Table of contents
 
        1.0 Document id
-              1.0.1 The order of importance
 
        2.0 Checklist items
            2.1 Select unique prefix for all functions and all variables
            2.2 Always include correct first line:
-           2.3 Use valid LCD format, which doesn't tolerate changes in format
-           2.4 Check the code layout with lisp-mnt.el
-           2.5 Check the documentation strings which checkdoc.el
-           2.6 Check the code with Elint.el
-           2.7 Always include GNU copyright.
-           2.8 Always include installation instructions.
-           2.9 Always use RCS or other version tool to manage your files.
-           2.10 Always check your file with byte compiler
-           2.11 More details -- don't just 'require' other packages
-           2.12 Use dynamic byte compilation
-           2.13 How to deal with variables from other packages
-           2.14 Arrange the installation so that it can be autoloaded
-           2.15 Do not change any emacs bindings directly
-           2.16 Don't forget to add ###autoload statements
-           2.17 Document all your variables and functions well
-           2.19 Clean up all whitespaces from the end of lines.
-           2.20 Documentation of you package
-           2.21 Here is sample skeleton for a package. Fill it in.
+           2.3 Check the code layout with lisp-mnt.el
+           2.4 Check the documentation strings which checkdoc.el
+           2.5 Check the code with Elint.el
+           2.6 Always include GNU copyright.
+           2.7 Always include installation instructions.
+           2.8 Always use RCS or other version tool to manage your files.
+           2.9 Always check your file with byte compiler
+           2.10 More details -- don't just 'require' other packages
+           2.11 Use dynamic byte compilation
+           2.12 How to deal with variables from other packages
+           2.13 Arrange the installation so that it can be autoloaded
+           2.14 Do not change any emacs bindings directly
+           2.15 Don't forget to add ###autoload statements
+           2.16 Document all your variables and functions well
+           2.17 Clean up all whitespaces from the end of lines.
+           2.18 Documentation of you package
+           2.19 Here is sample skeleton for a package. Fill it in.
 
 1.0 Document id
 
@@ -48,12 +46,11 @@ Table of contents
         information from them. If package looks messy or feels like chaos,
         many people may skip over it.
 
-       1.0.1 The order of importance
+        The order of importance
 
         .   Variable and function naming -- without this your package is messy.
         .   Correct first line      -- it helps getting right summaries
         .   'provide' command       -- don't ever leave it out
-        .   LCD entry               -- make sure it's in right format
         .   Check code with Byte Compiler -- Nobody wants leaking code.
         .   Offer autoload choice   -- nobody wants to load all when
             emacs starts
@@ -107,24 +104,7 @@ Table of contents
         Compiler will tell you if there is such conflict in putting the
         require to the end.
 
-    2.3 Use valid LCD format, which doesn't tolerate changes in format
-
-        No triple ';;;' or more comments at the beginning. You don't
-        have to wait to get the correct LCD entry from OHIO, use
-        ~/misc/ if you're not sure where the package belongs.
-
-            ;; Emacs Lisp Archive Entry
-            ;; Filename: hello.el
-            ;; Version: 1.1   (or RCS/CVS *Revision*)
-            ;; Keywords: hello, greeting (see finder.el)
-            ;; Author: Jane Schmoe <jane@example.com>
-            ;; Maintainer: Jane Schmoe <jane@example.com>
-            ;; Created: YYYY-MM-DD
-            ;; Description: cause a greeting message to appear on the user's screen
-            ;; URL: http://foo.example.com/~jane/emacs.html
-            ;; Compatibility: Emacs19, Emacs20, XEmacs21
-
-    2.4 Check the code layout with lisp-mnt.el
+    2.3 Check the code layout with lisp-mnt.el
 
         Use function `lm-verify'. It tells you if you have proper tags in
         your package. Pay attention to the count of comment markers with
@@ -148,7 +128,7 @@ Table of contents
 
             ;;; XXX.el ends here
 
-    2.5 Check the documentation strings which checkdoc.el
+    2.4 Check the documentation strings which checkdoc.el
 
         In addition to `lm-verify', the checkdoc will parse all your
         variable and function documentation and show you the points
@@ -158,17 +138,15 @@ Table of contents
 
             File: elisp, Node: Documentation Tips
 
-    2.6 Check the code with Elint.el
+    2.5 Check the code with Elint.el
 
         A lisp syntax checker is also your friend. Run it through your code
         and check code for unused variables and that functions are called
         with right arguments. You find this package also in latest Emacs
         distribution. If you don't have it, there may be small chance that
-        you can get it from author Peter Liljenberg, whose Email
-        address was -<petli@lysator.liu.se> (2000-11: Lysator account is no
-        longer active)
+        you can get it from author Peter Liljenberg.
 
-    2.7 Always include GNU copyright.
+    2.6 Always include GNU copyright.
 
         See your emacs distribution and copy one from there
         and mention link http://www.gnu.org/copyleft/gpl.html Here is
@@ -186,7 +164,7 @@ Table of contents
             ;; or FITNESS FOR A PARTICULAR PURPOSE. See the GNU General Public License
             ;; for more details. http://www.gnu.org/copyleft/gpl.html
 
-    2.8 Always include installation instructions.
+    2.7 Always include installation instructions.
 
         If file installs itself, it should tell how it behaves after the
         installation (when the commands take in effect, in what modes
@@ -205,26 +183,14 @@ Table of contents
             ;;      (autoload 'package-mode           "package" "" t)
             ;;      (autoload 'turn-on-package-mode   "package" "" t)
 
-    2.9 Always use RCS or other version tool to manage your files.
+    2.8 Always use version control software to manage your files
 
-        Be sure to include the full version string in your package:
+        Be sure to include some version string in your package:
 
-            ;;  Include this ...
-            ;;
             (defvar XXX-version (substring "$Revision: 2.11 $" 11 15)
              "Version number")
 
-            ;;  ...Or include this
-            ;;
-            (defvar XXX-version-id
-             "$Id: emacs-package-make.txt,v 2.11 2007/05/01 17:20:34 jaalto Exp $"
-             "Latest modification time and version number.")
-
-        The *Revision* and *Id* are automatically expanded to version
-        strings every time you use RCS or CVS version control commands. See
-        cvs(1), co(1) and ident(1) for more.
-
-    2.10 Always check your file with byte compiler
+    2.9 Always check your file with byte compiler
 
         Don't leave leaks in your code. Use Byte compiler to catch any
         variable leaks or missing functions that you should load with
@@ -233,10 +199,10 @@ Table of contents
         compatibility point of view it is good to check with both XEmacs
         and Emacs byte compiler.
 
-        o   Start fresh emacs: emacs -q -no-site-file
-        o   M-x byte-compile-file XXX.el
+            emacs -q -no-site-file          ;; In clean emacs
+            M-x byte-compile-file XXX.el
 
-    2.11 More details -- don't just 'require' other packages
+    2.10 More details -- don't just 'require' other packages
 
         When you include packages with `require' command, don't
         do it like this:
@@ -254,19 +220,11 @@ Table of contents
               (autoload 'dired-bunch-files          "dired-aux")
               (autoload 'dired-run-shell-command    "dired-aux"))
 
-    2.12 Use dynamic byte compilation
+    2.11 Use dynamic byte compilation
 
         Newer Emacs versions can load only the functions to memory that are
         really and not just slurp the whole file. Put this in your
         packages, near the first require command in your package.
-
-            (eval-when-compile
-             ;; Silence very old Byte Compiler
-             (defvar byte-compile-dynamic nil "19.29+ variable")
-             (make-local-variable 'byte-compile-dynamic)
-             (setq byte-compile-dynamic t))
-
-        If you don't care about support for old emacs version, use:
 
             (eval-when-compile (setq byte-compile-dynamic t))
 
@@ -277,7 +235,7 @@ Table of contents
 
             -*-byte-compile-dynamic: t;-*-
 
-    2.13 How to deal with variables from other packages
+    2.12 How to deal with variables from other packages
 
         Let's say you use `ediff-number-of-differences' variable in function
         `xxx-my-ediff-call'. This is the only place where ediff is used and
@@ -294,7 +252,7 @@ Table of contents
         is unknown variable. Ok, let's tell byte compiler about it with:
 
             (eval-and-compile
-              (defvar 'ediff-get-difference)
+              (defvar ediff-get-difference)
               (autoload 'ediff-get-difference "ediff"))
 
         Note that `defvar' only contains variable name and _no_ _value_. It
@@ -316,7 +274,7 @@ Table of contents
             (when (boundp 'ediff-get-difference)
               ..ok, we're set to do the things...)
 
-    2.14 Arrange the installation so that it can be autoloaded
+    2.13 Arrange the installation so that it can be autoloaded
 
         Try to avoid this form of loading if you can. Do not say that
         this is the only way to use the package:
@@ -340,10 +298,10 @@ Table of contents
         If the package installs key bindings, then you should show where to
         hook the package to get things going. See For example
         *tinydired.el*, which uses sophisticated booting. When dired
-        loads, TinyDired installs everything at the same time
+        loads, "package" installs everything at the same time
         and only these lines are needed in for user setup:
 
-            (add-hook 'dired-mode-hook '(lambda () (require 'tinydired) nil))
+            (add-hook 'dired-mode-hook '(lambda () (require 'package) nil))
 
         Other times, you can just instruct for interactive functions
 
@@ -362,12 +320,12 @@ Table of contents
         think user may hit most likely to utilize your package for the
         first calls.
 
-    2.15 Do not change any emacs bindings directly
+    2.14 Do not change any emacs bindings directly
 
         Put bindings behind a function, and allow user to customize them.
         Like this:
 
-            (defun XXX-default-bindings ()
+            (defun XXX-install-default-bindings ()
              "docs here..."
              (global-set-key "X" 'XXX-func1)
              (global-set-key "Y" 'XXX-func2)
@@ -377,7 +335,7 @@ Table of contents
         Next, you can instruct in installation, that user can add following
         statement if he wants to use the default bindings.
 
-            (add-hook 'XXX-load-hook 'XXX-default-bindings)
+            (add-hook 'XXX-load-hook 'XXX-install-default-bindings)
 
         When file is loaded the bindings take in effect. You could also put
         it this way:
@@ -394,7 +352,7 @@ Table of contents
         bindings. And the latter, if you just _add_ some bindings
         somewhere which is free slot.
 
-    2.16 Don't forget to add ###autoload statements
+    2.15 Don't forget to add ###autoload statements
 
         Someday, perhaps your package may be included into emacs
         distribution, or some system administrator may want to include your
@@ -408,7 +366,7 @@ Table of contents
 
             File: elisp, Node: Autoload
 
-    2.17 Document all your variables and functions well
+    2.16 Document all your variables and functions well
 
         They should be as clear as crystal, so that they contain
         descriptive *documentation* string. Use "*" for user variables
@@ -432,9 +390,9 @@ Table of contents
         out internal function description:
 
             (defun XXX-internal-function ()
-              ;; Hey, I'm writing the docs below the function
-              ;; So that every hacker must peek the source file in
-              ;; order to find out how it's documented.
+              ;; Don't hide docs below a function.
+              ;; This emans that everyone must open the source file in
+              ;; order to find out how the function is documented.
               ...)
 
         That's bad, because then you can't just sit on Emacs buffer and
@@ -460,37 +418,32 @@ Table of contents
         ``eval-after-load' to `after-load-alist' is not s nice as
         manipulating the items with `add-hook' and `remove-hook'.
 
-    2.19 Clean up all whitespaces from the end of lines.
+    2.17 Clean up all whitespaces from the end of lines
 
         This is important, because if someone sends you patches, the diff
         command would count the whitespace differences too. Well, there
         is options to bypass that, but removing extra whitespace is good
         idea anyway.
 
-            (add-hook 'write-file-hooks 'ti::b-trim-blanks)
+            (add-hook 'write-file-hooks 'my-trim-blanks)
 
-            ;;  This is from tinylib.el
-            ;;  Don't leave the fboundp test out, because
-            ;;  it prevent wiping out existing function.
+            (defun my-trim-blanks (beg end)
+              "Delete trailing blanks in region"
+              (interactive "*r")
+              (save-restriction
+                (save-excursion
+                  (narrow-to-region beg end)
+                  ;;  _much slower would be:
+                  ;;  (replace-regexp "[ \t]+$" "")
+                  (goto-char (point-min))
+                  (while (not (eobp))
+                    (end-of-line)
+                    (delete-horizontal-space)
+                    (forward-line 1))))
+              ;;  To be sure, clean hook returns nil
+              nil))
 
-            (if (not (fboundp 'ti::b-trim-blanks))
-              (defun ti::b-trim-blanks (beg end)
-                "Delete trailing blanks in region"
-                (interactive "*r")
-                (save-restriction
-                  (save-excursion
-                    (narrow-to-region beg end)
-                    ;;  _much slower would be:
-                    ;;  (replace-regexp "[ \t]+$" "")
-                    (goto-char (point-min))
-                    (while (not (eobp))
-                      (end-of-line)
-                      (delete-horizontal-space)
-                      (forward-line 1))))
-                ;;  To be sure, clean hook returns nil
-                nil))
-
-    2.20 Documentation of you package
+    2.18 Documentation of you package
 
         Just for the curious reader, if you have www page where you can
         describe your emacs packages, you could format your documentation
@@ -524,19 +477,12 @@ Table of contents
 
             ;;; Change Log:
 
-    2.21 Here is sample skeleton for a package. Fill it in.
-
-        Don't mind the expanded ID or REVISION strings. They'll get
-        replaced by your RCS when you put your package into rcs control for
-        the first time. See ident(1) why there is so many $IdentifierName$
-        strings. Remember, this is just an example to give an idea of the
-        concepts discussed here.
+    2.19 Here is sample skeleton for a package. Fill it in
 
         If you wonder why there is *&v-keyword* like dot lines: they are
         called book marks and handled by *tinybm.el*
 
-            ;;; @(#) XXX.el --- one line description string for the package
-            ;;; @(#) $Id: emacs-package-make.txt,v 2.11 2007/05/01 17:20:34 jaalto Exp $
+            ;;; XXX.el --- one line description string for the package
 
             ;; This file is not part of Emacs
 
@@ -545,8 +491,8 @@ Table of contents
             ;; Filename: hello.el
             ;; Version: 1.1   (or RCS/CVS *Revision*)
             ;; Keywords: hello, greeting (see finder.el)
-            ;; Author: Jane Schmoe <jane@example.com>
-            ;; Maintainer: Jane Schmoe <jane@example.com>
+            ;; Author: Jane Smith <jane@example.com>
+            ;; Maintainer: Jane Smith <jane@example.com>
             ;; Created: YYYY-MM-DD
             ;; Description: cause a greeting message to appear on the user's screen
             ;; URL: http://www.example.com/~jane/emacs.html
@@ -588,7 +534,7 @@ Table of contents
             ;;
             ;;     Here is small utility that provodes...
             ;;
-            ;;  Overviev of features
+            ;;  Overwiev of features
             ;;
             ;;     o   Simple indexing of file ...
             ;;     o   Automatic recovery ...
@@ -605,12 +551,9 @@ Table of contents
             ;;; .......................................................... require ...
 
             (eval-when-compile
-              (defvar byte-compile-dynamic nil) ;silence old Emacs's ByteCompiler
               (set (make-local-variable 'byte-compile-dynamic) t))
 
-            (require 'assoc)
-            (require 'faces)
-
+            (require 'assoc)   ;; or, what packges are needed
 
             ;; from these packages we only use some functions...
             (eval-and-compile
@@ -619,28 +562,13 @@ Table of contents
               (autoload 'vc-dired-mode              "vc")
               (autoload 'vc-finish-logentry         "vc"))
 
-            ;;; ........................................................ defcustom ...
-            ;; from <URL:http://www.dina.kvl.dk/~abraham/custom/>:
-            ;; If you write software that must work without the new custom
-
-            (eval-and-compile
-             (condition-case ()
-                 (require 'custom)
-               (error nil))
-             (if (and (featurep 'custom) (fboundp 'custom-declare-variable))
-                 nil ;; We've got what we needed
-               ;; We have the old custom-library, hack around it!
-               (defmacro defgroup (&rest args)
-                 nil)
-               (defmacro defcustom (var value doc &rest args)
-                 (` (defvar (, var) (, value) (, doc))))))
-
             ;;; ............................................................ hooks ...
 
             (defcustom XXX-load-hook nil
               "*Hook run when package has been loaded."
                :type 'hook
                :group 'XXX)
+
             ;;; ........................................................... public ...
             ;;; User configurable variables
 
