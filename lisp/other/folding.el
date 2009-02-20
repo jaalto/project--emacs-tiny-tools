@@ -18,13 +18,16 @@
 ;; Created:     1992
 ;; Keywords:    tools
 ;;
-;; [Latest devel: Savannah emacs-tiny-tools revision]
-;; Version:     git 6a3cff7
-;;
-;; [XEmacs CVS tree revision]
+;; [Latest XEmacs CVS tree commit and revision]
 ;; VCS-Version: $Revision: 3.42 $
 ;; VCS-URL:     http://savannah.nongnu.org/projects/emacs-tiny-tools/
 ;; VCS-Date:    $Date: 2007/05/07 10:50:05 $
+;;
+;; [Latest devel: Savannah emacs-tiny-tools revision]
+;; Version:     git 6a3cff7
+
+(defconst folding-version-time "2009.0220.1403"
+  "Last edit time in format YYYY.MMDD.HHMM.")
 
 ;;{{{ GPL
 
@@ -1802,9 +1805,6 @@ with XEmacs.")
 
 (defvar folding-version (substring "$Revision: 3.42 $" 11 15)
   "Version number of folding.el.")
-
-(defconst folding-version-time "2009.0209.1831"
-  "Last edited time as version number")
 
 ;;}}}
 ;;{{{ setup: bind
