@@ -49,7 +49,7 @@
 ;;      o   Make sure all your personal Emacs Lisp files are under any of these
 ;;          directories: $HOME/elisp, `~/.emacs.d' (newer Emacs), ~/.xemacs.
 ;;      o   Create directory `$HOME/elisp/config' where cache will be saved.
-;;      o   Include these lines at the top of startup file: `$HOME/.emacs'
+;;      o   Include these lines near top of startup file: `$HOME/.emacs'
 ;;
 ;;          ;; $HOME/.emacs
 ;;          (require 'cl)
@@ -59,9 +59,8 @@
 ;;          (pushnew "~/elisp/tiny-tools-NNNN.NNNN/lisp/tiny"
 ;;                   load-path :test 'string=)
 ;;
-;;          ;; - If you use new XEmacs, that may ship the lisp
+;;          ;; - If you use XEmacs that ships the lisp
 ;;          ;;   files in separate kit, tell where the directories are
-;;          ;;   => Was used in Win32 native XEmacs 2003.
 ;;          ;; - See http://www.xemacs.org/Develop/cvsaccess.html
 ;;          ;;   for cvs access and easy update (2003-05-20).
 ;;
@@ -109,7 +108,7 @@
 ;;      cache size is around 500k and if you use compression, it takes
 ;;      somewhere 200k.
 ;;
-;;          mkdir -p ~/elisp/config     (in new Emacs: ~/.emacs.d/config)
+;;          mkdir -p ~/elisp/config     (or ~/.emacs.d/config)
 ;;
 ;;  Transparent compression
 ;;
@@ -124,11 +123,11 @@
 ;;          (require 'somefile)
 ;;
 ;;      This transparent support however comes with a prolonged search
-;;      time, because more attempts must be made in order to find the file.
-;;      If all the files are in non-compressed format and you do not plan
-;;      to use the compression support, a much better performancs can be
-;;      achieved by turning the support off (it's the default). To turn it
-;;      on, use:
+;;      time, because more attempts must be made in order to find the
+;;      file. If all the files are in non-compressed format and you do
+;;      not plan to use the compression support, a much better
+;;      performancs can be achieved by turning the support off (it's
+;;      off by default). To turn it on, use:
 ;;
 ;;          (setq tinypath-:compression-support 'default)
 ;;
@@ -206,7 +205,7 @@
 ;;     The conclusions
 ;;
 ;;      For cross platform solution it is best not to rely on symlinks,
-;;      because they don't work well over a Windows mount. Secondly,
+;;      because they don't work well over a Windows mounts. Secondly,
 ;;      updating `load-path' should not be needed by hand after a new
 ;;      package installation, after a directory name change, after
 ;;      directory structure change, etc. A dream package would solve this
@@ -242,7 +241,7 @@
 ;;          cache and `load-path' is validated for erroneous entries and
 ;;          rebuilt as needed. This feature should auto-detect changes in
 ;;          directory structure and help semi auto-installing
-;;          new directories (packages) for you.
+;;          new directories (i.e. packages) for you.
 ;;      o   The `load-path' is optimized so, that users' files automatically
 ;;          take precedence first (~/elisp), next any other files found,
 ;;          and last the core Emacs files in the distribution.
@@ -318,7 +317,7 @@
 ;;      added to variable `tinypath-:load-path-root'. Below there is
 ;;      an example for PC users, where the E: partition replicates
 ;;      identical Unix tree structure. We suppose for a moment that
-;;      Cygwin is installed there. The following actually works for
+;;      Cygwin is installed also there. The following actually works for
 ;;      shared Unix Emacs setup file too, because non-existing
 ;;      directories will get ignored:
 ;;
@@ -328,21 +327,22 @@
 ;;
 ;;  Peiodic load path syncronization watchdog
 ;;
-;;      If new lisp packages are installe dand tried reularly when new
+;;      If new lisp packages are installed and tried reularly when new
 ;;      development versions are tracked, then the manual need to call
 ;;      `M-x' `tinypath-cache-regenerate' may become tiresome. There
 ;;      is a built in idle timer watchdog included in the package, but
-;;      it is not activated by default. It's job is to examine load path
+;;      it is not activated by default. Its job is to examine load path
 ;;      every now and them when Emacs is idle to see if the `load-path'
 ;;      has gone out of synch i.e. new paths have appeared, old ones removed
 ;;      or new packages has been added. This feature is experimental and
-;;      the scanning may be quite resource intensive because disk I/O
-;;      is neede to determine the status of the paths and files. To anable
-;;      it, you must define the load hook before anything else:
+;;      the scanning may be quite resource intensive because bursts of disk I/O
+;;      is needed to determine the status of the paths and files. To enable
+;;      it, you must set the load hook before anything else:
 ;;
 ;;          (setq tinypath-:load-hook
 ;;             '(tinypath-install tinypath-install-timer))
-;;          ... and now the call to 'load' tinypath comes after it ...
+;;          ...
+;;          (load "~/elisp/tiny/tinypath")
 ;;
 ;;  XEmacs and Emacs specific directories
 ;;
@@ -361,7 +361,7 @@
 ;;          /usr/share/emacs/site-lisp/xemacs/   .. only for XEmacs
 ;;
 ;;      To take care of the Emacs specific `load-path' setting, use code
-;;      similar to this snippet. If you load the setup multiple times, the
+;;      similar to the below. If you load the setup multiple times, the
 ;;      `pushnew' ensures that the directories are not added multiple
 ;;      times.
 ;;
@@ -386,29 +386,17 @@
 ;;      `load-path'. If you simply instructed to search the whole
 ;;      site-lisp root `/usr/share/site-lisp', and current emacs
 ;;      binary is "emacs", then all directories that contain path
-;;      portion `/xemacs' are automatically ignored.
+;;      portion `/xemacs' would have been automatically ignored.
 ;;
 ;;     Building part of site-lisp from Internet
 ;;
 ;;      If we continue talking a bit more about site-lisp, there is utility
-;;      *mywebget.pl* at <http://perl-webget.sourceforge.net/>. It
-;;      includes a *mywebget-emacs.conf* which contains
-;;      knowledge where the various lisp developers' home pages are and how
-;;      to download all known lisp tools that do not come with Emacs. If
-;;      you have lot of disk space and you're interested in getting more
-;;      tools to go with your Emacs, follow the instruction laid out
-;;      in the above project's page.
-;;
-;;      If you are further interested in Emacs packages, see Cvs
-;;      version control program available for Unix at
-;;      <http://www.cvshome.com/> and for Win32 `cvs' will ship with
-;;      the <http://cygwin.com> installation. With Cvs you can track
-;;      development of many Emacs projects including Gnus, BBDB,
-;;      Mailcrypt etc. Cvs is minimizing network traffic by
-;;      transferring only changes.  Here is one suggestion where you
-;;      could put all your Emacs Lisp Version control downloads:
-;;
-;;           /usr/share/emacs/site-lisp/net/cvs-packages
+;;      *pwget.pl* at <http://freshmeat.net/projects/perl-webget/>. It
+;;      includes an Emacs configuration settings which contain knowledge
+;;      where the various lisp developers' home pages are and how to
+;;      download lisp packages. If you have lot of disk space and you're
+;;      interested in experimenting with more packages to go with your
+;;      Emacs, follow the instruction laid out in the pwget's project page.
 ;;
 ;;      Now, the overall structure of whole site-lisp might look
 ;;      something like this:
@@ -463,13 +451,12 @@
 ;;
 ;;     XEmacs 21.2+ core packages
 ;;
-;;      Some (Win32) XEmacs versions come with only the very basic
-;;      installation. Lisp packages may be distributed in separate
-;;      archive *xemacs-packages* (nick named SUMO due to its huge
-;;      size). There is also *mule-packages* and *site-packages*
-;;      archives. A built-in heuristics tries to guess the location of
-;;      these by looking under and near your XEmacs installation. Here
-;;      is example from Win32:
+;;      Some XEmacs versions come with only the very basic installation.
+;;      Lisp packages may be distributed in separate archive
+;;      *xemacs-packages* (nick named "SUMO" due to its huge size). There is
+;;      also *mule-packages* and *site-packages* archives. A built-in
+;;      heuristics tries to guess the location of these by looking under
+;;      and near your XEmacs installation. Here is example from Win32:
 ;;
 ;;          .../XEmacs/XEmacs-NN.N/xemacs-packages
 ;;          .../XEmacs/xemacs-packages
@@ -496,7 +483,7 @@
 ;;
 ;;      o   Package's additional subdirectories like texinfo, tex, doc, etc,
 ;;          misc, RCS, CVS, .svn (Subversion), MT (monotone version control),
-;;          zip are ignored.
+;;          .git, .hg, .darcs and 'zip' are ignored.
 ;;      o   Any temporary directories named .../t/ .../T/ .../tmp* .../temp*
 ;;          are ignored.
 ;;      o   Directories that do not contain any files ending to .el or .elc are
@@ -530,8 +517,8 @@
 ;;
 ;;      There is very simple way. Put your regular expression to
 ;;      `tinypath-:ignore-file-regexp-extra' and it will tell which
-;;      directories to ignore.  Naturally you must put the lisp code
-;;      _before_ you load package.
+;;      directories to ignore. Naturally you must define the ignore regexp
+;;      before loading TiyPath:
 ;;
 ;;          (setq tinypath-:load-path-ignore-regexp-extra
 ;;                "\\|[/\\]x?emacs[/\\0-9.]+[/\\]lisp[/\\]gnus")
@@ -623,11 +610,11 @@
 ;;          /usr/share/site-lisp/common/packages/semi/flim-1.12.1/smtpmail.el
 ;;
 ;;      There is a problem if FLIM's *smtpmail.el* is not compatible with
-;;      the one in Emacs. If it is, then there is no problem. Either one can be
-;;      loaded, and the `load-path' order does not matter. But you don't
-;;      know that before you get error "function smtpmail-xxxx not defined"
-;;      and you start investigating with (locate-library "smtpmail") which
-;;      package is actually active.
+;;      the one in Emacs. If it is, then there is no problem. Either one
+;;      can be loaded, and the `load-path' order does not matter. But you
+;;      don't know that before you get error "function smtpmail-xxxx not
+;;      defined" and you start investigating with (locate-library
+;;      "smtpmail") which package is actually active.
 ;;
 ;;      Please investigate your path with [C-u] `M-x'
 ;;      `tinypath-cache-problem-report' and see if you find duplicate
@@ -649,24 +636,22 @@
 ;;
 ;;      _Explanation:_ Previously *imenu* was installed as a separate
 ;;      package. Now latest Emacs ships with one, so it is best to delete
-;;      the previous one `other/imenu.el.' Keep on eye on the numbers
-;;      here: The lower, the more close it is to the beginning of
-;;      cache when the directories were searched. The package with
-;;      lowest score will get loaded. Another package, *base64.el*
-;;      seems to be problematic too. But because Gnus path has lowest
-;;      score, it will get loaded before w3's base64.el. This is good,
-;;      because Gnus contains the latest version of *base64.el*. In
-;;      the buffer `tinypath-report-mode' is turned on to manipulate
-;;      reported lines.  Unnecessary files can be deleted with
+;;      the previous one `other/imenu.el.' Keep on eye on the leftmost
+;;      scores: The lower, the more close it is to the beginning of cache
+;;      when the directories were searched. The package with lowest score
+;;      will get loaded. Another package, *base64.el* seems to be
+;;      problematic too. But because Gnus path has lowest score, it will
+;;      get loaded before w3's base64.el. This is good, because Gnus
+;;      contains the latest version of *base64.el*. In the buffer
+;;      `tinypath-report-mode' a mode is turned on where you can manipulate
+;;      reported lines. Unnecessary files can be deleted with
 ;;      `Control-shift-mouse-1' or `C-c' `C-d'.
 ;;
 ;;  Symlinked directories are ignored
 ;;
-;;      TODO: Later version might support symlinks. Rethinking this over.
-;;
-;;      It has been the tradition to use symlinks a lot in Unix to
-;;      arrange easy access to versioned packages. Like how to
-;;      ~/elisp/gnus/ no matter what version is currently installed.
+;;      It has been the tradition to use symlinks a lot in POSIX
+;;      environments to arrange easy access to versioned packages. Like how
+;;      to ~/elisp/gnus/ no matter what version is currently installed.
 ;;
 ;;          ln -s ~/elisp/packages/gnus-N.NN  ~/elisp/packages/gnus
 ;;
@@ -683,18 +668,18 @@
 ;;      If you have drawn a symlink to the the current directory from
 ;;      *SEPARATE* directory, then that directory will never be seen:
 ;;
-;;          ln -s ~/some-disk/elisp/artist-1.1/ ~/elisp/packages/artist-1.1
+;;          ln -s ~/other-dir/elisp/artist-1.1/ ~/elisp/packages/artist-1.1
 ;;
 ;;      To solve this, instead either _a)_ move the package physically
 ;;      under the ~/elisp/ from the *~/some-disk/elisp/* so that the
 ;;      recursive search will record it or _b)_ add the separate
-;;      directory *~/some-disk/elisp* to the variable
+;;      directory *~/other-dir/elisp* to the variable
 ;;      `tinypath-:load-path-root'.
 ;;
 ;;  Using cache
 ;;
 ;;      Now when you're freed from update burden of the directories in your
-;;      disk, you can concentrate organizing the files under sensible
+;;      disk, you can concentrate on organizing the files under sensible
 ;;      directories. Here is an example how the organizing could go:
 ;;
 ;;          ~/elisp/users/kevinr/       Kevin Rodger's files
@@ -735,13 +720,15 @@
 ;;          + EMACS-VERSION
 ;;          + tinypath-:cache-file-postfix
 ;;
+;;      An example:
+;;
 ;;          ~/elisp/config/emacs-config-tinypath-cache-win32-HOST-emacs-20.4.1.el.gz
 ;;          ==========================================                        ======
-;;          prefix                                                           postfix
+;;          prefix                                                            postfix
 ;;
 ;;     Unix hosts and NFS mounts
 ;;
-;;      In Unix environment, it is also common that several hosts are
+;;      In POSIX environment, it is also common that several hosts are
 ;;      NFS mounted so that the home disk is available from every
 ;;      server. The programs could also be NFS mounted, but many times
 ;;      programs are stored locally on each server's own disks. Now,
@@ -868,7 +855,7 @@
 ;;      that it returns incorrect listing. Print the script help with
 ;;      following command:
 ;;
-;;          % perl emacs-util.pl --help
+;;          perl emacs-util.pl --help
 ;;
 ;;      Here are some performance statistics of the perl script in action.
 ;;      (Use --verbose argument to see the statistics)
@@ -924,7 +911,7 @@
 ;;  Updating running Emacs
 ;;
 ;;      Suppose you have downloaded the latest versions of packages X, Y and Z
-;;      and you want your current emacs's paths updated, call this function:
+;;      and you want your current Emacs's paths updated, call this function:
 ;;
 ;;          M-x tinypath-cache-regenerate
 ;;
@@ -1123,19 +1110,6 @@
 ;;      not much used it before. You may find interesting information to
 ;;      debug some of your own mis-configurations, like stale directories
 ;;      in `exec-path'.
-;;
-;;  Code note: Custom
-;;
-;;      If you have very old Emacs that does not contain *custom.elc*
-;;      (Yes, it must be in compiled format, be sure to check), you
-;;      can download Noah Friedman's excellent custom emulation
-;;      package *cust-stub.el* at
-;;      http://www.splode.com/~friedman/software/emacs-lisp/ You have
-;;      to load it from absolute location before loading this packages
-;;      like this:
-;;
-;;          (load "~/elisp/noah/cust-stub")
-;;          (load "tinypath")
 ;;
 ;;  Code note: Insinuating packages
 ;;

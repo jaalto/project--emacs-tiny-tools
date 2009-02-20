@@ -1,5 +1,8 @@
 2009-02-20  Jari Aalto  <jari.aalto@cante.net>
 
+	* tiny/tinypath.el: Correct typos in documentation. Remove
+	ancient cust-stub.el information.
+
 	* other/folding.el: Make XEmacs CVS and Savannah git revisions at
 	header more clear. Unify html-mode folds as in other modes:
 	change [[[ ]]] to {{{ }}}. Move `folding-version-time' to the
