@@ -16,11 +16,15 @@
 ;;              Anders Lindgren <andersl A T csd.uu dt se>
 ;; Maintainer:  Jari Aalto <jari aalto A T cante dt net>
 ;; Created:     1992
-;; Version:     git 6a3cff7 (Savannah emacs-tiny-tools)
+;; Keywords:    tools
+;;
+;; [Latest devel: Savannah emacs-tiny-tools revision]
+;; Version:     git 6a3cff7
+;;
+;; [XEmacs CVS tree revision]
 ;; VCS-Version: $Revision: 3.42 $
 ;; VCS-URL:     http://savannah.nongnu.org/projects/emacs-tiny-tools/
 ;; VCS-Date:    $Date: 2007/05/07 10:50:05 $
-;; Keywords:    tools
 
 ;;{{{ GPL
 
@@ -631,7 +635,12 @@
 ;;; Change Log:
 
 ;;{{{ History
+
 ;; [person version] = developer and his revision tree number.
+;;
+;; Feb  20  2009  22.2.1           [jari git]
+;; - Make XEmacs CVS and Savannah git revisions at header more clear
+;; - Unify html-mode folds as in other modes: change [[[ ]]] to {{{ }}}
 ;;
 ;; Feb  09  2009  22.2.1           [jari git e0c2e92..6a3cff7]
 ;; - Minor documentaton fixes.
@@ -4403,7 +4412,7 @@ buffer without affecting the default value for a particular mode."
 (folding-add-to-marks-list 'f90-mode               "! {{{"  "! }}}" nil t)
 (folding-add-to-marks-list 'generic-mode           ";# "    ";\$" nil t)
 (folding-add-to-marks-list 'gofer-mode             "-- {{{" "-- }}}" nil t)
-(folding-add-to-marks-list 'html-mode   "<!-- [[[ " "<!-- ]]] -->" " -->" t)
+(folding-add-to-marks-list 'html-mode   "<!-- {{{ " "<!-- }}} -->" " -->" t)
 (folding-add-to-marks-list 'icon-mode              "# {{{" "# }}}" nil t)
 (folding-add-to-marks-list 'indented-text-mode     "{{{"    "}}}" nil t)
 (folding-add-to-marks-list 'java-mode              "// {{{" "// }}}" nil t)
