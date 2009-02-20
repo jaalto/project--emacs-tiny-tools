@@ -24,9 +24,9 @@
 ;; VCS-Date:    $Date: 2007/05/07 10:50:05 $
 ;;
 ;; [Latest devel: Savannah emacs-tiny-tools revision]
-;; Version:     git 6a3cff7
+;; Version:     git 56b3089
 
-(defconst folding-version-time "2009.0220.1403"
+(defconst folding-version-time "2009.0220.1404"
   "Last edit time in format YYYY.MMDD.HHMM.")
 
 ;;{{{ GPL
@@ -641,7 +641,7 @@
 
 ;; [person version] = developer and his revision tree number.
 ;;
-;; Feb  20  2009  22.2.1           [jari git]
+;; Feb  20  2009  22.2.1           [jari git 51ada03..56b3089]
 ;; - Make XEmacs CVS and Savannah git revisions at header more clear
 ;; - Unify html-mode folds as in other modes: change [[[ ]]] to {{{ }}}
 ;;
