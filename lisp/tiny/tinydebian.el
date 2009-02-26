@@ -1690,9 +1690,9 @@ Return:
   (let ((email (regexp-quote tinydebian-:emacs-bts-email-address)))
     (cond
      ((re-search-forward (format
-                          "\\(\\([0-9]+\\)@%s[^ \t\r\n]+\\)"
-                          email)
-                          nil t)
+			  "\\(\\([0-9]+\\)@%s[^ \t\r\n]+\\)"
+			  email)
+			  nil t)
       ;; Your message has been sent to the package maintainer(s):
       ;;  Emacs Bugs <email>
       ;;
@@ -1702,12 +1702,12 @@ Return:
       ;; Please do not send mail to owner@<address> unless you wish
       ;; to report a problem with the Bug-tracking system.
       (list (match-string 2)
-            (match-string 1)))
+	    (match-string 1)))
      ((save-excursion
-        (re-search-forward (concat
-                            email
-                            "\\|Emacs bugs database")
-                           nil t))
+	(re-search-forward (concat
+			    email
+			    "\\|Emacs bugs database")
+			   nil t))
       ;; Processing commands for control@emacsbugs.donarmstrong.com:
       ;;
       ;; > severity NNNN minor
@@ -1747,7 +1747,8 @@ Return:
      (t
       (multiple-value-bind (bug email)
 	  (tinydebian-bug-gnu-emacs-bts-re-search-p)
-	(format "%s/%s" url bug))))))
+	(if email
+	    (format "%s/%s" url bug)))))))
 
 ;;; ----------------------------------------------------------------------
 ;;;
@@ -2535,7 +2536,8 @@ Mode description:
 ;;; ----------------------------------------------------------------------
 ;;;
 (defun tinydebian-mail-address-match-type-p (type &optional bug)
-  "Check if TYPE@ address is already set. Optional bug checks BUG-TYPE@ address."
+  "Check if TYPE@ address is already set.
+Optional bug checks BUG-TYPE@ address."
   (let ((re (if (not bug)
 		(format "%s@" type)
 	      (format  "%s-%s@"
@@ -2736,8 +2738,8 @@ In interactive call, toggle quiet address on and off."
 ;;;
 (defun tinydebian-mail-mode-debian-address-type-toggle
   (type &optional bug remove interactive)
-  "Add TYPE off BUG nbr address (control, maintonly, submitter). Optionally REMOVE.
-In interactive call, toggle TYPE of address on and off."
+  "Add TYPE off BUG nbr address (control, maintonly, submitter).
+Optionally REMOVE. In interactive call, toggle TYPE of address on and off."
   ;; toggle
   (when interactive
     (when (and (null remove)
@@ -2755,7 +2757,8 @@ In interactive call, toggle TYPE of address on and off."
 
 ;;; ----------------------------------------------------------------------
 ;;;
-(defun tinydebian-mail-mode-debian-address-submitter-toggle (bug &optional remove)
+(defun tinydebian-mail-mode-debian-address-submitter-toggle
+  (bug &optional remove)
   "Add submitter address or optionally REMOVE.
 In interactive call, toggle conrol address on and off."
   (interactive (tinydebian-mail-mode-debian-address-ask-args "Submitter bug"))
