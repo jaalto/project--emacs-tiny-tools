@@ -462,7 +462,7 @@ Same mangling is performed for the same STRING. Mangling can't be reversed."
         (setq ch        (aref str i)
               ch-string (char-to-string ch)
               extra     "")
-        (if (char= ch ?%)
+        (if (char-equal ch ?%)
             (setq extra ch-string))
         (setq ret (concat ret ch-string extra))
         (incf i))))
@@ -3118,12 +3118,12 @@ Example:
                     (delete-backward-char 1)))
               ;; ....................................... unix --> dos ...
               (end-of-line)
-              (if (not (char= (preceding-char) ?\015))
+              (if (not (char-equal (preceding-char) ?\015))
                   (insert "\015"))
               (while (not (eobp))
                 (forward-line)
                 (end-of-line)
-                (if (not (char= (preceding-char) ?\015))
+                (if (not (char-equal (preceding-char) ?\015))
                     (insert "\015")))))
         ;;  restore value
         (setq buffer-read-only stat))))))
@@ -3746,10 +3746,8 @@ Returns:
 You have to call this function if you want to do something for
 the whole buffer."
   (interactive)
-
   ;;  Unfold the buffer, so that we can see all.
   ;;  We must also preserve point
-
   (ti::save-with-marker-macro
     (and (boundp 'folding-mode)
          ;;  No autoloads allowed, this makes sure the fboundp
@@ -4730,19 +4728,19 @@ Also makes a great gift."
       ((begchar char)
        (endchar char))
     (cond
-     ((or (char= char ?{) (char= char ?}))
+     ((or (char-equal char ?{) (char-equal char ?}))
       (setq begchar ?{)
       (setq endchar ?}))
-     ((or (char= char ?\() (char= char ?\)))
+     ((or (char-equal char ?\() (char-equal char ?\)))
       (setq begchar ?\()
       (setq endchar ?\)))
-     ((or (char= char ?<) (char= char ?>))
+     ((or (char-equal char ?<) (char-equal char ?>))
       (setq begchar ?<)
       (setq endchar ?>))
-     ((or (char= char ?`) (char= char ?'))
+     ((or (char-equal char ?`) (char-equal char ?'))
       (setq begchar ?`)
       (setq endchar ?'))
-     ((or (char= char ?[) (char= char ?]))
+     ((or (char-equal char ?[) (char-equal char ?]))
       (setq begchar ?[)
             (setq endchar ?])))
     (re-search-backward "^\\|\\s-" (point-min))
@@ -6545,7 +6543,7 @@ Return:
        ((ti::print-p ch)
         (setq str (concat str (char-to-string ch))) ))
       (setq ch (ti::read-char-safe-until)))
-    (if (char= ch ?\e)
+    (if (char-equal ch ?\e)
         (setq str nil))
     str))
 
@@ -6579,7 +6577,7 @@ If user presses ESC, return nil."
       (setq ch (ti::read-char-safe-until
                 (concat prompt (substring bar 0 (length str))))))
     (message "")
-    (if (char= ch ?\e)
+    (if (char-equal ch ?\e)
         (setq str nil))
     str))
 

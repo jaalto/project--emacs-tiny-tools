@@ -2221,12 +2221,12 @@ Input:
               (sit-for 1))
           ;; .. .. .. .. .. .. .. .. .. .. .. .. .. .. .. .. .orig exist ..
           (cond
-           ((char= char ?r)             ;Retry patch to original
+           ((char-equal char ?r)             ;Retry patch to original
             (delete-file dest-file)     ;copy-file won't work otw
             (copy-file  (concat dest-file ".orig") dest-file))
-           ((char= char ?g)             ;Go ahead
+           ((char-equal char ?g)             ;Go ahead
             nil)
-           ((char= char ?o)
+           ((char-equal char ?o)
             (delete-file dest-file)
             (copy-file  (concat dest-file ".orig") dest-file)
             (delete-file (concat dest-file ".orig"))

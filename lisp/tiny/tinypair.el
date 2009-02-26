@@ -634,12 +634,12 @@ Returns t, when pairing is allowed for buffer."
   "Special cursor positioning function.
 BEG is start point and CHAR is starting pair character."
   (cond
-   ((char= char ?\( )
+   ((char-equal char ?\( )
     ;;  Mostly in minibuffer and for lisp'ish things, put cursor
     ;;  after starting paren.
     (goto-char beg))
-   ((or (char= char ?\' )               ;Move to next word.
-        (char= char ?\` ))
+   ((or (char-equal char ?\' )               ;Move to next word.
+        (char-equal char ?\` ))
     (let (point)
       (save-excursion
         (skip-chars-forward " \t\f")
@@ -716,7 +716,7 @@ BEG is start point and CHAR is starting pair character."
                       "read ch end"
                       (char-to-string read-ch)
                       (char-to-string ch-end))
-      (unless (char= read-ch ch-end)
+      (unless (char-equal read-ch ch-end)
         (insert ch-end)))
      ((integerp arg)
       (insert (ti::string-repeat arg ch-beg)))
@@ -843,10 +843,10 @@ Input:
                          "WORD-PAIR" word-pair)
         (cond
          ;; ... ... ... ... ... ... ... ... ... ... ... ... ... ... ... ...
-         ((char= ch-now ch-end)         ;already pair visible
+         ((char-equal ch-now ch-end)         ;already pair visible
           (tinypair-debug  fid "now = End"))
          ;; ... ... ... ... ... ... ... ... ... ... ... ... ... ... ... ...
-         ((char= syntax-now ?\ )        ;whitespace at point
+         ((char-equal syntax-now ?\ )        ;whitespace at point
           (setq pair t)                 ;ok, do pairing
           (tinypair-debug  fid "Whitespace 1 1 t"))
          (word-pair

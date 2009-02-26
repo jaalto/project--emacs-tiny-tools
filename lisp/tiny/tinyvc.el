@@ -651,7 +651,7 @@ it keeps it alive until next rlog command."
   "Check if there is marker character at the beginning of line.
 Move point. Optionally REMOVE marker."
   (beginning-of-line)
-  (char= (following-char) ?>))
+  (char-equal (following-char) ?>))
 
 ;;; ----------------------------------------------------------------------
 ;;;

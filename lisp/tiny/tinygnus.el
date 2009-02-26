@@ -1450,37 +1450,38 @@ See function `tinygnus-article-ube-send-to-postmasters'."
   "Use current article as template and compose new mail."
   (interactive)
   (let ((article (gnus-summary-article-number)))
-    (gnus-setup-message 'reply-yank
-                        (gnus-summary-select-article t)
-                        (set-buffer gnus-original-article-buffer)
-                        ;; see message.el - message-supersede
-                        (let ( ;; (sender  (message-fetch-field "sender"))
-                              ;; (from    (message-fetch-field "from"))
-                              (buffer  (current-buffer)))
-                          ;; Get a normal message buffer.
-                          (message-pop-to-buffer (message-buffer-name "mail from template"))
-                          (insert-buffer-substring buffer)
-                          (message-narrow-to-head)
-                          ;; Remove unwanted headers.
-                          (message-remove-header "Message-ID")
-                          (message-remove-header "Content-Type")
-                          (when message-ignored-supersedes-headers
-                            (message-remove-header message-ignored-supersedes-headers t))
-                          ;; insert mail-header-separator if needed
-                          (if (re-search-backward
-                               (concat "\n" mail-header-separator "\n") nil t)
-                              (goto-char (point-max))
-                            (insert mail-header-separator))
-                          (widen)
-                          (forward-line 1))
-                        (push
-                         `((lambda ()
-                             (when (gnus-buffer-exists-p ,gnus-summary-buffer)
-                               (save-excursion
-                                 (set-buffer ,gnus-summary-buffer)
-                                 (gnus-cache-possibly-remove-article ,article nil nil nil t)
-                                 (gnus-summary-mark-as-read ,article gnus-canceled-mark)))))
-                         message-send-actions))))
+    (gnus-setup-message
+	'reply-yank
+      (gnus-summary-select-article t)
+      (set-buffer gnus-original-article-buffer)
+      ;; see message.el - message-supersede
+      (let ( ;; (sender  (message-fetch-field "sender"))
+	    ;; (from    (message-fetch-field "from"))
+	    (buffer  (current-buffer)))
+	;; Get a normal message buffer.
+	(message-pop-to-buffer (message-buffer-name "mail from template"))
+	(insert-buffer-substring buffer)
+	(message-narrow-to-head)
+	;; Remove unwanted headers.
+	(message-remove-header "Message-ID")
+	(message-remove-header "Content-Type")
+	(when message-ignored-supersedes-headers
+	  (message-remove-header message-ignored-supersedes-headers t))
+	;; insert mail-header-separator if needed
+	(if (re-search-backward
+	     (concat "\n" mail-header-separator "\n") nil t)
+	    (goto-char (point-max))
+	  (insert mail-header-separator))
+	(widen)
+	(forward-line 1))
+      (push
+       `((lambda ()
+	   (when (gnus-buffer-exists-p ,gnus-summary-buffer)
+	     (save-excursion
+	       (set-buffer ,gnus-summary-buffer)
+	       (gnus-cache-possibly-remove-article ,article nil nil nil t)
+	       (gnus-summary-mark-as-read ,article gnus-canceled-mark)))))
+       message-send-actions))))
 
 ;;; ----------------------------------------------------------------------
 ;;;

@@ -289,8 +289,8 @@ RET/SPC = ok. The real character pressed is available
 thru global variable `tinyindent-:RET'."
   (setq tinyindent-:RET (ti::read-char-safe msg))
   (if (and (characterp tinyindent-:RET)
-           (or (char= tinyindent-:RET ?\C-m)
-               (char= tinyindent-:RET ?\ ))) ; RET/SPC
+           (or (char-equal tinyindent-:RET ?\C-m)
+               (char-equal tinyindent-:RET ?\ ))) ; RET/SPC
       t
     nil))
 
@@ -438,7 +438,7 @@ References:
          ((not (characterp ch)))
          ((eq ch SPC)
           (indent-relative))
-         ((char= ch ?\t)
+         ((char-equal ch ?\t)
           (tab-to-tab-stop)
           ;;  tab stop already does this
           (setq ch nil))

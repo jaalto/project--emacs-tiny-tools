@@ -656,16 +656,16 @@ Current keymap:
              ;; permit `//hostname/path/to/file'
              (not (eq (point) (1+ (point-min))))
              ;; permit `http://url/goes/here'
-             (not (char= ?: (char-after (- (point) 2)))))
+             (not (char-equal ?: (char-after (- (point) 2)))))
         (delete-region point (point))
         (insert char))
 
        ((memq act '(e-tilde))
         (cond
-         ((char= (preceding-char) ?~)
+         ((char-equal (preceding-char) ?~)
           ;;  /ftp@some:~  pressing "~" now deletes full line
           (delete-region bolp (point)))
-         ((and (not (ti::win32-p)) (char= (preceding-char) ?:))
+         ((and (not (ti::win32-p)) (char-equal (preceding-char) ?:))
           ;;  In NT, it's best to delete immediately, because you have
           ;;  those MS-DOS filename C:/ ...
           ;;

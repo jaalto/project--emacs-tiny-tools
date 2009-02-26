@@ -3128,9 +3128,9 @@ Return
       (goto-char (1- point))
       (setq ch (following-char))
       (if unmark
-          (if (char= ch ?.)
+          (if (char-equal ch ?.)
               (delete-char 1))
-        (if (char= ch ?.)
+        (if (char-equal ch ?.)
             (if verb
                 (message "TinyTf: Already marked as <BR>"))
           (insert "."))))

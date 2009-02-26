@@ -343,7 +343,7 @@ Line format must be
           (setq count (/ (* 100 (point)) (point-max)))
           (message "Tinycompile: Wait, processing %d %%" count))
         ;; ./pie-mail/hypb.el --> {cd}/pie-mail/hypb.el
-        (if (char= (aref path 0) ?.)
+        (if (char-equal (aref path 0) ?.)
             (setq path (concat cd (substring path 2))))
         (when path
           (setq file (file-name-nondirectory path))

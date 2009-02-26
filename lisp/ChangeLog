@@ -1,3 +1,12 @@
+2009-02-26  Jari Aalto  <jari.aalto@cante.net>
+
+        -- Mass update: change all `char=' commands to `char-equal'; Emacs
+           22.x fix.
+
+	* tiny/tinydebian.el (tinydebian-bug-gnu-emacs-bts-p):
+	Check if `email' was set. This fixes bug where every mail
+	was considered Emacs BTS.
+
 2009-02-20  Jari Aalto  <jari.aalto@cante.net>
 
 	* tiny/tinypath.el: Correct typos in documentation. Remove

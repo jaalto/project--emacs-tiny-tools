@@ -444,11 +444,11 @@ References:
               mode nil))
       (setq ch (ti::read-char-safe-until
                 (format fmt str (or dir "") (or mode "" ))))
-;;;      (ti::d! str buffer (char= ch key-back) (char= ch key-fw) go-list)
+;;;      (ti::d! str buffer (char-equal ch key-back) (char-equal ch key-fw) go-list)
       (cond
-       ((and ch (char= ch key-back))
+       ((and ch (char-equal ch key-back))
         (setq buffer (tinybuffer-iswitch-previous)))
-       ((and ch (char= ch key-fw))
+       ((and ch (char-equal ch key-fw))
         (setq buffer (tinybuffer-iswitch-next)))
        ((and ch (ti::char-in-list-case ch go-list))
         (setq loop nil)))

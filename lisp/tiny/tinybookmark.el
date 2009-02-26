@@ -788,7 +788,7 @@ STRICT has effect only if COL is given:
       (while ok
         (message "insert? <spc,enter> ") (setq ch (read-char))
         (cond
-         ((or (char= ch ?\C-m ) (char= ch ?\ ))
+         ((or (char-equal ch ?\C-m ) (char-equal ch ?\ ))
           (insert str))
          (t (setq ok nil))))
       (message ""))
@@ -796,7 +796,6 @@ STRICT has effect only if COL is given:
      ;; ... ... ... ... ... ... ... ... ... ... ... ... ... ... ... ... ...
 
      ((eq c 0)
-
       (setq len         (length str)
             p           (current-column))
 

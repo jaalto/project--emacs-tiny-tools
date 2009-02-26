@@ -712,33 +712,33 @@ Note:
       (setq ans (ti::read-char-safe-until msg))
       ;;  There is purposively a dummy COND case.
       (cond
-       ((char= ?a ans)
+       ((char-equal ?a ans)
         (tinyreplace-arrow-control buffer 'toggle)
         (read-from-minibuffer
          "Arrow refreshed. Press RET to update view."))
-       ((char= ?s ans)
+       ((char-equal ?s ans)
         (tinyreplace-symmetry-toggle))
-       ((char= ?w ans)
+       ((char-equal ?w ans)
         (ti::bool-toggle tinyreplace-:word-match-mode)
         (put 'tinyreplace-replace-1
              'tinyreplace-:word-match-mode
              tinyreplace-:word-match-mode))
-       ((char= ?c ans)
+       ((char-equal ?c ans)
         (ti::bool-toggle case-fold-search)
         (put 'tinyreplace-replace-1 'case-fold-search case-fold-search))
-       ((char= ?\  ans)
+       ((char-equal ?\  ans)
         (setq ans ?y))
-       ((char= ?x ans)                  ;exclude toggle
+       ((char-equal ?x ans)                  ;exclude toggle
         (if tinyreplace-:exclude-line
             (setq tinyreplace-:exclude-line nil)
           ;; Dynamically bound in call func
           (setq tinyreplace-:exclude-line o-exclude)))
-       ((char= ?F ans)
+       ((char-equal ?F ans)
         (tinyreplace-show-function-name (point)))
-       ((char= ?N ans)
+       ((char-equal ?N ans)
         (setq  tinyreplace-:narrow-state t)
         (setq ans ?N))
-       ((char= ?U ans)
+       ((char-equal ?U ans)
         (funcall tinyreplace-:user-function)
         (setq ans ?U))
        ((ti::char-in-list-case ans '(?\177 ?\b ?n))
@@ -1058,7 +1058,7 @@ Region is active. Go to beginning of region? "))
                     ;; ... ... ... ... ... ... ... ... ... ... ... ... ...
                     (cond
                      ;; .......................... beginning of buffer ...
-                     ((char= ?B replace)
+                     ((char-equal ?B replace)
                       (if (eq func 're-search-forward)
                           (progn
                             (ti::pmin)
@@ -1068,12 +1068,12 @@ Region is active. Go to beginning of region? "))
                       (redraw-display)
                       (setq replace nil))
                      ;; ... ... ... ... ... ... ... ... ... ... . help  ..
-                     ((char= ?? replace)
+                     ((char-equal ?? replace)
                       (ti::menu-help 'tinyreplace-replace-region-1)
                       (setq bypass t)
                       (setq replace nil))
                      ;; ... ... ... ... ... ... ... ... ... ... narrow  ..
-                     ((char= ?N replace)
+                     ((char-equal ?N replace)
                       (cond
                        ((eq func 're-search-forward)
                         ;;  The other call isn't executed if first fails
@@ -1105,7 +1105,7 @@ Region is active. Go to beginning of region? "))
                           (sit-for 1)))))
                       (setq replace nil))
                      ;; ... ... ... ... ... ... ... ... ... ... ... ... ..
-                     ((char= ?b replace)
+                     ((char-equal ?b replace)
                       (save-excursion
                         (goto-char mb)
                         (setq mb nil me nil)
@@ -1122,7 +1122,7 @@ Region is active. Go to beginning of region? "))
                       (setq replace nil
                             do-ask  t))
                      ;; ... ... ... ... ... ... ... ... ... ... ... ... ..
-                     ((char= ?v replace)
+                     ((char-equal ?v replace)
                       (save-excursion
                         (if PREV-ME
                             (goto-char PREV-ME))
@@ -1140,7 +1140,7 @@ Region is active. Go to beginning of region? "))
                         (tinyreplace-move-overlay mb me))
                       (setq replace nil  do-ask t))
                      ;; ... ... ... ... ... ... ... ... ... ... ... ... ..
-                     ((char= ?u replace)
+                     ((char-equal ?u replace)
                       (tinyreplace-replace-1
                        mb me
                        (ti::string-case-replace str read-string
@@ -1148,13 +1148,13 @@ Region is active. Go to beginning of region? "))
                       (tinyreplace-move-overlay mb me)
                       (setq replace nil  do-ask t))
                      ;; ... ... ... ... ... ... ... ... ... ... ... ... ..
-                     ((char= ?! replace)
+                     ((char-equal ?! replace)
                       (setq   ask nil     replace t))
-                     ((char= ?n replace)
+                     ((char-equal ?n replace)
                       (setq replace nil))
-                     ((char= ?q replace)
+                     ((char-equal ?q replace)
                       (throw 'cancel t))
-                     ((char= ?Q replace)
+                     ((char-equal ?Q replace)
                       (setq quit-point mb)
                       (throw 'cancel t))
                      (t

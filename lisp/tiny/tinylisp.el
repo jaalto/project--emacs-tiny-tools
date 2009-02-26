@@ -2629,7 +2629,7 @@ That usually means that symbol is not yet defined to obarray."
 ;;;
 (defun tinylisp-backward-opening-paren ()
   "Go backward until parenthesis found."
-  (if (char= ?\( (following-char))
+  (if (char-equal ?\( (following-char))
       (point)
     (re-search-backward "(" nil t)))
 
@@ -4437,7 +4437,7 @@ Return:
     (if (looking-at "[ \t\n]")          ;only spaces ahead?
         (ti::read-current-line)
       ;;  go backward until space(word) or function call
-      (unless (char= (following-char) ?\( )
+      (unless (char-equal (following-char) ?\( )
         (re-search-backward "[( \t\n]" nil t)
         (skip-chars-forward " \t\n")))
     (buffer-substring (point) (line-end-position))))

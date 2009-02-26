@@ -630,13 +630,13 @@ if BACK is non-nil the deletion is headed backward."
     (cond
      ((and back
            (ti::space-p (or ch-p ?\ ))
-           (char= ch ?\n))
+           (char-equal ch ?\n))
       (delete-horizontal-space)
       (if (null back)
           (tinyeat-verbose-macro
            (message "TinyEat: line cleared")))
       t)
-     ((char= ch ?\n)                    ;no spaces before, do nothing
+     ((char-equal ch ?\n)                    ;no spaces before, do nothing
       nil)
      ((or (and ch ch-n
                (ti::space-p ch)
@@ -848,9 +848,9 @@ References:
            (message "TinyEat: line cleared."))))
      ;; --``-- --``-- --``-- --``-- --``-- --``-- --``-- --``-- --``-- --``--
      ;; - Multiple  newlines, squeeze to one only
-     ((and (char= ch ?\n)
+     ((and (char-equal ch ?\n)
            ch-n
-           (char= ch-n ?\n))
+           (char-equal ch-n ?\n))
       (funcall charf "\n")
       (if (null back)
           (backward-char 1)        ;do not join, leave 1 EMPTY newline
@@ -859,7 +859,7 @@ References:
       (delete-region p (point)))
      ;; --``-- --``-- --``-- --``-- --``-- --``-- --``-- --``-- --``-- --``--
      ;; - at the end of line I suppose add previous line to it.
-     ((char= ch ?\n)
+     ((char-equal ch ?\n)
       (tinyeat-debug
        fid "NEWLINE" 'back back 'ti::space-preserve ti::space-preserve)
       (unless (tinyeat-space-delete-at-point back ti::space-preserve)

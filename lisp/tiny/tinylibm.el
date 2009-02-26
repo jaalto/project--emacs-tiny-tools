@@ -1008,14 +1008,14 @@ Input:
 ;;; Neither is this format recommended.
 ;;; (memq (char-int ch) (mapcar 'char-int '(?a ?b ?c ?d ?e ?f)))
 ;;;
-;;; cl's (member* ch '(?a ?b) :test 'char=)
+;;; cl's (member* ch '(?a ?b) :test 'char-equal)
 ;;;
 (defsubst ti::char-in-list-case (char list)
   "If CHAR can be found in LIST, return a pointer to it.
 The match is case sensitive."
   (when char
     (let* (case-fold-search)
-      (member* char list :test 'char=))))
+      (member* char list :test 'char-equal))))
 
 ;;; ----------------------------------------------------------------------
 ;;; #todo: read-char-exclusive?
@@ -1329,8 +1329,8 @@ Return:
 ;;;
 (defsubst ti::space-p (char)
   "Return t if character CHAR is space or tab."
-  (or (char= char ?\t)
-      (char= char ?\ )))
+  (or (char-equal char ?\t)
+      (char-equal char ?\ )))
 
 ;;; ----------------------------------------------------------------------
 ;;;
@@ -2580,7 +2580,7 @@ Default is to convert all tabs in STRING with spaces."
      (t
       (while (< i len)
         (setq elt (char-to-string (aref string i)))
-        (if (char= char (aref string i))
+        (if (char-equal char (aref string i))
             (setq elt to-string))
         (setq ret (concat ret elt))
         (incf  i))))

@@ -1024,7 +1024,7 @@ Searches string 'X-Pgp-Signed:' and return end of match or nil."
 ;;;
 (defun ti::mail-pgp-re (str)
   "Add possible beginning anchor if STR doesn't have one."
-  (if (not (char= (aref str 0) ?^))
+  (if (not (char-equal (aref str 0) ?^))
       (concat "^" str)))
 
 ;;; ----------------------------------------------------------------------
@@ -1213,9 +1213,9 @@ Return:
         (forward-line 1)
         (setq char (following-char))
         (cond
-         ((char= char ?p) 'conventional)
-         ((char= char ?h) 'pgp)
-         ((char= char ?o) 'base64))))))
+         ((char-equal char ?p) 'conventional)
+         ((char-equal char ?h) 'pgp)
+         ((char-equal char ?o) 'base64))))))
 
 ;;; ----------------------------------------------------------------------
 ;;;
@@ -4344,7 +4344,7 @@ Return:
       ;;  require final newline every time: "123\n", the trim
       ;;  command will remove any exeessive newlines.
       (ti::pmax)
-      (if (not (char= (preceding-char) ?\n))
+      (if (not (char-equal (preceding-char) ?\n))
           (insert "\n")))
     ret))
 
@@ -5285,7 +5285,7 @@ satisfied."
   (save-excursion
     (goto-char from)
     (while (search-forward "=" to t)
-      (cond ((char= (following-char) ?\n)
+      (cond ((char-equal (following-char) ?\n)
              (delete-char -1)
              (delete-char 1))
             ((looking-at "[0-9A-F][0-9A-F]")

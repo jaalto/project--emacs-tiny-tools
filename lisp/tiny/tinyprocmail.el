@@ -1338,8 +1338,8 @@ Input:
        ((looking-at "[ \t]*}")
         'beg))))
    (t
-    (or (if (char= (following-char) ?{) 'beg)
-        (if (char= (following-char) ?}) 'end)))))
+    (or (if (char-equal (following-char) ?{) 'beg)
+        (if (char-equal (following-char) ?}) 'end)))))
 
 ;;; ----------------------------------------------------------------------
 ;;;
@@ -1514,7 +1514,7 @@ Input:
     (set-syntax-table (get 'tinyprocmail-:mode-name 'syntax-table))
     (prog1
         (cond
-         ((char= (following-char) ?{)
+         ((char-equal (following-char) ?{)
           (forward-list 1)
           (if no-adjust
               (forward-line 1)
@@ -2628,7 +2628,7 @@ Warning, flag combo `hb' is useless when dropping to folder.")
 (defun tinyprocmail-lint-malformed-brace ()
   "Check braces."
   (while (re-search-forward "^[ \t]*{" nil t)
-    (when (and (char= ?\{ (preceding-char)) ; {}  or {var
+    (when (and (char-equal ?\{ (preceding-char)) ; {}  or {var
                (not (looking-at "[ \t\n]")))
       (tinyprocmail-log (point) "Error, no space after  `{' .")
       (tinyprocmail-fix-macro "No space after {  Add one?"

@@ -737,11 +737,11 @@ No '%s feature found, are you absolutely sure you have loaded the file? "
       (setq char (ti::read-char-safe "\
  v)ars o)options non-(O)options i)nteractive funcs f)uncs all RET)all"))
       (cond
-       ((char= char ?v) (setq arg '(4)))
-       ((char= char ?o) (setq arg '(16)))
-       ((char= char ?O) (setq arg '64))
-       ((char= char ?i) (setq arg 0))
-       ((char= char ?f) (setq arg 9))))
+       ((char-equal char ?v) (setq arg '(4)))
+       ((char-equal char ?o) (setq arg '(16)))
+       ((char-equal char ?O) (setq arg '64))
+       ((char-equal char ?i) (setq arg 0))
+       ((char-equal char ?f) (setq arg 9))))
     (setq prompt
           (cond
            ((equal arg '(4))
