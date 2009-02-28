@@ -829,10 +829,13 @@ to generate updated list."
      tinydebian-:severity-selected
      tinydebian-:tags-list)))
 
+(defconst tinydebian-:version-time "2009.0227.1902"
+  "Last edited time.")
+
 (defvar tinydebian-:bts-extra-headers
   (format "X-Bug-User-Agent: Emacs %s and tinydebian.el %s\n"
 	  emacs-version
-	  (substring tinydebian-:version-id 21 25))
+	  tinydebian-:version-time
   "Header to add to BTS control mails.")
 
 ;;}}}
@@ -1191,6 +1194,12 @@ Activate on files whose path matches
 (defmacro tinydebian-emacs-bts-email-compose (address)
   "Send message to ADDRESS@<emacs bts>."
   `(format "%s@%s" ,address tinydebian-:emacs-bts-email-address))
+
+;;; ----------------------------------------------------------------------
+;;;
+(defmacro tinydebian-emacs-bts-bug-url-compose (bug)
+  "Compose Emacs BTS URL from BUG number."
+  `(format "%s/%s" tinydebian-:emacs-bts-url-http-package-bugs ,bug))
 
 ;;; ----------------------------------------------------------------------
 ;;;
@@ -1690,7 +1699,7 @@ Return:
   (let ((email (regexp-quote tinydebian-:emacs-bts-email-address)))
     (cond
      ((re-search-forward (format
-			  "\\(\\([0-9]+\\)@%s[^ \t\r\n]+\\)"
+			  "\\(\\([0-9]+\\)@%s\\>\\)"
 			  email)
 			  nil t)
       ;; Your message has been sent to the package maintainer(s):
@@ -1708,7 +1717,7 @@ Return:
 			    email
 			    "\\|Emacs bugs database")
 			   nil t))
-      ;; Processing commands for control@emacsbugs.donarmstrong.com:
+      ;; Processing commands for control@<address>:
       ;;
       ;; > severity NNNN minor
       ;; bug#NNN: <<subject>
@@ -1719,9 +1728,10 @@ Return:
       ;;
       ;; Please contact me if you need assistance.
       ;;
-      ;; Don Armstrong
+      ;; Foo Bar
       ;; (administrator, Emacs bugs database)
-      (tinydebian-bug-nbr-forward)))))
+      (let ((bug (tinydebian-bug-nbr-forward)))
+	(list bug))))))
 
 ;;; ----------------------------------------------------------------------
 ;;;
@@ -1735,20 +1745,46 @@ Return:
 
 ;;; ----------------------------------------------------------------------
 ;;;
+(defun tinydebian-bug-gnu-emacs-bts-buffer-p ()
+  "Check if bug context is Emacs BTS."
+  (multiple-value-bind (bug email)
+      (tinydebian-bug-gnu-emacs-bts-re-search-p)
+    (if email
+	bug)))
+
+;;; ----------------------------------------------------------------------
+;;;
+(defun tinydebian-bug-gnu-emacs-bts-gnus-summary-line-p ()
+  (let* ((str (tinydebian-current-line-string))
+	 (bug (tinydebian-bug-gnu-emacs-bts-string-p str)))
+    (when bug
+      (tinydebian-emacs-bts-bug-url-compose bug))))
+
+;;; ----------------------------------------------------------------------
+;;;
+(defun tinydebian-bug-gnu-emacs-bts-gnus-article-p ()
+  "Check if bug context is Emacs BTS in current article buffer."
+  (tinydebian-with-gnus-article-buffer nil
+    (let ((bug (tinydebian-bug-gnu-emacs-bts-buffer-p)))
+      (when bug
+	(tinydebian-emacs-bts-bug-url-compose bug)))))
+
+;;; ----------------------------------------------------------------------
+;;;
+(defsubst tinydebian-bug-gnu-emacs-bts-gnus-summary-p ()
+  "Check if bug context is Emacs BTS at Gnus summary line."
+  (or (tinydebian-bug-gnu-emacs-bts-gnus-summary-line-p)
+      (tinydebian-bug-gnu-emacs-bts-gnus-article-p)))
+
+;;; ----------------------------------------------------------------------
+;;;
 (defun tinydebian-bug-gnu-emacs-bts-p ()
   "Check if bug context is Emacs BTS."
-  (let ((url tinydebian-:emacs-bts-url-http-package-bugs))
-    (cond
-     ((eq major-mode 'gnus-summary-mode)
-      (let ((str (tinydebian-current-line-string))
-	    bug)
-	(when (setq bug (tinydebian-bug-gnu-emacs-bts-string-p str))
-	  (format "%s/%s" url bug))))
-     (t
-      (multiple-value-bind (bug email)
-	  (tinydebian-bug-gnu-emacs-bts-re-search-p)
-	(if email
-	    (format "%s/%s" url bug)))))))
+  (cond
+   ((eq major-mode 'gnus-summary-mode)
+    (tinydebian-bug-gnu-emacs-bts-gnus-summary-p))
+   ((memq major-mode '(message-mode mail-mode))
+    (tinydebian-bug-gnu-emacs-bts-buffer-p))))
 
 ;;; ----------------------------------------------------------------------
 ;;;

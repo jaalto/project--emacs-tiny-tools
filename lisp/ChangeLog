@@ -1,3 +1,18 @@
+2009-02-27  Jari Aalto  <jari.aalto@cante.net>
+
+	* tiny/tinydebian.el
+	(tinydebian-bug-gnu-emacs-bts-gnus-summary-line-p): New.
+	(tinydebian-bug-gnu-emacs-bts-gnus-article-p): New.
+	(tinydebian-bug-gnu-emacs-bts-p): Rewrite.
+	(tinydebian-bug-gnu-emacs-bts-buffer-p): New.
+	(tinydebian-bug-gnu-emacs-bts-gnus-summary-p): New.
+	(tinydebian-emacs-bts-bug-url-compose): New.
+	(tinydebian-bug-gnu-emacs-bts-re-search-email): Improve
+	search regexp.
+	(tinydebian-:version-time): New.
+	(tinydebian-bts-mail-ctrl-retitle): Add missing `format'
+	command to insert new title.
+
 2009-02-26  Jari Aalto  <jari.aalto@cante.net>
 
         -- Mass update: change all `char=' commands to `char-equal'; Emacs
