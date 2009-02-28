@@ -829,13 +829,13 @@ to generate updated list."
      tinydebian-:severity-selected
      tinydebian-:tags-list)))
 
-(defconst tinydebian-:version-time "2009.0227.1902"
+(defconst tinydebian-:version-time "2009.0228.0714"
   "Last edited time.")
 
 (defvar tinydebian-:bts-extra-headers
   (format "X-Bug-User-Agent: Emacs %s and tinydebian.el %s\n"
 	  emacs-version
-	  tinydebian-:version-time
+	  tinydebian-:version-time)
   "Header to add to BTS control mails.")
 
 ;;}}}
@@ -3979,7 +3979,7 @@ thanks
    (let (point)
      (insert (format "retitle %s " bug))
      (setq point (point))
-     (insert "%s\nthanks\n" title)
+     (insert (format "%s\nthanks\n" title))
      (goto-char point))))
 
 ;;; ----------------------------------------------------------------------
