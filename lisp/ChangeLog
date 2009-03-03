@@ -1,5 +1,8 @@
 2009-03-03  Jari Aalto  <jari.aalto@cante.net>
 
+	* tiny/tinylisp.el (tinylisp-elp-harness): Add much more
+	documentation to docstring.
+
 	* tiny/tinydebian.el (tinydebian-bts-mail-compose-macro): Do not
 	hard code Debian, use `tinydebian-bts-generic-email-control'.
 	(tinydebian-bts-generic-email-control): New.

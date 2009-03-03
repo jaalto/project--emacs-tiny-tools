@@ -3168,50 +3168,64 @@ In short: remove previous instrumentation and do new one. VERB."
 ;;;
 (defun tinylisp-elp-harness (&optional count verb)
   "Call elp multiple times to get reliable results.
-Default is call count is 3,but you can supply numeric prefix COUNT. VERB.
+Default is call count is 3, but you can supply numeric prefix COUNT. VERB.
 
-   ** You must have instrumented the functions before you call this function
+   1. Use empty buffer
+   2. Write test functions with t-*
+   3. Evaluate buffer (instantiate functions) M-x eval-current-buffer
+   4. Instrument test functions: $ e I t- RET
+   5. Run harness: $ e I h
+
+   ** Remember, you must have instrumented the functions before
+   ** you call this harness function
 
 This is bit exotic function and it requires that you have written
-following test setup in the clear Lisp buffer. Let's say we're
-interested if 'let*' is slower that 'let'.
+following a test setup smilar to one in the clear Lisp buffer,
+like *scratch*.
 
-            (defun t-1 () (let* () ))
-            (defun t-2 () (let  () ))
-            (defun t-3 () )
+  ;; Let's say we're interested if 'let*' is slower
+  ;; that 'let'.
 
-            [* point/cursor is before this statement]
-            ;; The trick here is that when you instrument whole
-            ;; buffer and eval all the functions with '$ -' ,
-            ;; the when forms are bypassed
-            ;;
-            ;; When you have Evaled/instrumented buffer, then change
-            ;; it to 'when t' and call the harness function.
-            ;;
-            ;; The variable tinylisp-:harness-flag is set to t when you can this
-            ;; function and set to nil when this function finishes.
-            ;;
-            (when tinylisp-:harness-flag
-              (ti::dotimes count 1 500  ; run 500 times
-                (t-1)
-                (t-2)
-                (t-3)))
+  (defun t-1 () (let* () ))
+  (defun t-2 () (let  () ))
+  (defun t-3 () )
 
-This function evals everything from current point forward ARG times.
-If there is word tinylisp-:harness-flag in the buffer, the current point is not
-used but the eval is started from the beginning of that line forward.
+  ;; The trick here is that when you instrument whole
+  ;; buffer and eval all the functions ($ -),
+  ;; the form below is bypassed
+  ;;
+  ;; The variable tinylisp-:harness-flag is set to t during harness test.
 
-After each eval round it records the elp result to `tinylisp-:buffer-record'.
-In the above setup, this means that we repeat the test setup 3 times
-to get 3 elp timing results. Since using elp only once for small functions,
-doesn't give reliable results; we have to repeat the test at least 3 times.
+  ;; -!- The cursor is blinking here
 
-The `tinylisp-:buffer-record' buffer is displayed after the harness run is over."
+  (when tinylisp-:harness-flag
+    (ti::dotimes count 1 500  ; run 500 times
+      (t-1)
+      (t-2)
+      (t-3)))
+
+This function evaluates everything from current point forward ARG
+times. If there is word `tinylisp-:harness-flag' forward in the
+buffer, the `current-point' is not used but the evaluating is
+started from the beginning of `tinylisp-:harness-flag' line
+forward.
+
+After each evaluating round the elp results are recorded to
+`tinylisp-:buffer-record'.
+
+In the above setup, this means that the test below
+`tinylisp-:harness-flag' is repeated 3 times to get 3 elp timing
+results. Since using elp only once for small functions, doesn't
+give reliable results; we have to repeat the test at least 3
+times.
+
+The `tinylisp-:buffer-record' buffer is displayed after the
+harness run is over."
   (interactive "P")
-  (let* (case-fold-search
-         beg
-         h-found
-         rounds)
+  (let (case-fold-search
+        beg
+        h-found
+        rounds)
     (ti::verb)
     (setq count  (or count 3)
           rounds count)
