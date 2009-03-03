@@ -1203,6 +1203,12 @@ Activate on files whose path matches
 
 ;;; ----------------------------------------------------------------------
 ;;;
+(defsubst tinydebian-emacs-bts-email-control ()
+  "Compose control."
+  (tinydebian-emacs-bts-email-compose "control"))
+
+;;; ----------------------------------------------------------------------
+;;;
 (defmacro tinydebian-launchpad-email-compose (address)
   "Send message to ADDRESS@<launchpad>."
   `(format "%s@%s" ,address tinydebian-:launchpad-email-address))
@@ -1254,6 +1260,19 @@ Activate on files whose path matches
 (defsubst tinydebian-bts-email-control ()
   "Compose control."
   (tinydebian-bts-email-compose "control"))
+
+;; FIXME Move elsewhere
+;;; ----------------------------------------------------------------------
+;;;
+(defun tinydebian-bts-generic-email-control (&optional buffer)
+  "Compose control according to BTS, judging from optional BUFFER."
+  (with-current-buffer (or buffer (current-buffer))
+    (cond
+     ;; FIXME launchpad
+     ((tinydebian-bug-gnu-emacs-bts-p)
+      (tinydebian-emacs-bts-email-control))
+     (t
+      (tinydebian-bts-email-control)))))
 
 ;;; ----------------------------------------------------------------------
 ;;;
@@ -3520,10 +3539,12 @@ Mode description:
 (put 'tinydebian-bts-mail-compose-macro 'edebug-form-spec '(body))
 (put 'tinydebian-bts-mail-compose-macro 'lisp-indent-function 5)
 (defmacro tinydebian-bts-mail-compose-macro
-  (bug type package subject email &rest body)
+  (buffer bug type package subject email &rest body)
   "Compose mail with SUBJECT and run BODY."
-  (let ((name (gensym "name-")))
-    `(let ((,name (format "*Mail BTS %s*"
+  (let ((name (gensym "name-"))
+	(buffer (gensym "buffer-")))
+    `(let ((,buffer (current-buffer))
+	   (,name (format "*Mail BTS %s*"
 			  (cond
 			   ((and ,bug ,type ,package)
 			    (format "%s %s %s"
@@ -3540,7 +3561,7 @@ Mode description:
        (mail-setup
 	(if ,email
 	    ,email
-	  (tinydebian-bts-email-compose "control"))
+	  (tinydebian-bts-generic-email-control ,buffer))
 	,subject
 	nil
 	nil
@@ -3579,13 +3600,13 @@ can all be nil."
 				    (or description ""))
 			  ""))))
 	 (tinydebian-bts-mail-compose-macro
-	  bugnbr
-	  ,type
-	  package
-	  ,subj
-	  ,email
-	  (goto-char (point-max))
-	  ,@body)))))
+	     bugnbr
+	     ,type
+	     package
+	     ,subj
+	     ,email
+	   (goto-char (point-max))
+	   ,@body)))))
 
 ;;; ----------------------------------------------------------------------
 ;;;
@@ -4012,7 +4033,7 @@ thanks
      (insert (format "merge %s " bug))
      (setq point (point))
      (if tinydebian-:novice-mode
-	 (insert "<bug nbr thatis duplicate of this bug>"))
+	 (insert "<bug nbr that is duplicate of this bug>"))
      (insert "\nthanks\n")
      (goto-char point))))
 

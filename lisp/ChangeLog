@@ -1,3 +1,16 @@
+2009-03-03  Jari Aalto  <jari.aalto@cante.net>
+
+	* tiny/tinydebian.el (tinydebian-bts-mail-compose-macro): Do not
+	hard code Debian, use `tinydebian-bts-generic-email-control'.
+	(tinydebian-bts-generic-email-control): New.
+	(tinydebian-bts-generic-email-control): New.
+	(tinydebian-emacs-bts-email-control): New.
+
+2009-03-02  Jari Aalto  <jari.aalto@cante.net>
+
+	* tiny/tinyeat.el (tinyeat-install-default-bindings): Change
+	M-DEL to M-backspace.
+
 2009-02-27  Jari Aalto  <jari.aalto@cante.net>
 
 	* tiny/tinydebian.el
