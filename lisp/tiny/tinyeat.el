@@ -59,7 +59,7 @@
 ;;      (global-set-key (kbd "ESC z")         'tinyeat-kill-buffer-lines-main)
 ;;      (global-set-key (kbd "ESC C-k")       'tinyeat-zap-line)
 ;;
-;;      (global-set-key (kbd "M-DEL")         'tinyeat-forward-preserve)
+;;      (global-set-key (kbd "<M-backspace>") 'tinyeat-forward-preserve)
 ;;      (global-set-key (kbd "<C-delete>")    'tinyeat-backward-preserve)
 ;;      (global-set-key (kbd "<S-backspace>") 'tinyeat-delete-whole-word)
 ;;
@@ -335,7 +335,7 @@ Normally word is terminated by whitespace or newlines."
 
   ;;  Alt-backspace
   (global-set-key (kbd "ESC DEL")         'tinyeat-backward-preserve)
-  (global-set-key (kbd "M-DEL")           'tinyeat-backward-preserve)
+  (global-set-key (kbd "<M-backspace>")   'tinyeat-backward-preserve)
 
   (global-set-key (kbd "<S-backspace>")   'tinyeat-delete-whole-word)
   (global-set-key (kbd "<S-delete>")      'tinyeat-delete-whole-word)
