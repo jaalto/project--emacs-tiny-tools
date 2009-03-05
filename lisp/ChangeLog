@@ -1,3 +1,8 @@
+2009-03-05  Jari Aalto  <jari.aalto@cante.net>
+
+	* tiny/tinydebian.el (tinydebian-bts-mail-compose-macro): correct arguments.
+	(tinydebian-bts-mail-ask-bug-number): Remove word 'Debian'.
+
 2009-03-03  Jari Aalto  <jari.aalto@cante.net>
 
 	* tiny/tinylisp.el (tinylisp-elp-harness): Add much more

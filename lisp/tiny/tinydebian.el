@@ -829,7 +829,7 @@ to generate updated list."
      tinydebian-:severity-selected
      tinydebian-:tags-list)))
 
-(defconst tinydebian-:version-time "2009.0228.0714"
+(defconst tinydebian-:version-time "2009.0305.2344"
   "Last edited time.")
 
 (defvar tinydebian-:bts-extra-headers
@@ -3539,7 +3539,7 @@ Mode description:
 (put 'tinydebian-bts-mail-compose-macro 'edebug-form-spec '(body))
 (put 'tinydebian-bts-mail-compose-macro 'lisp-indent-function 5)
 (defmacro tinydebian-bts-mail-compose-macro
-  (buffer bug type package subject email &rest body)
+  (bug type package subject email &rest body)
   "Compose mail with SUBJECT and run BODY."
   (let ((name (gensym "name-"))
 	(buffer (gensym "buffer-")))
@@ -3613,7 +3613,7 @@ can all be nil."
 (defsubst tinydebian-bts-mail-ask-bug-number (&optional type)
   "Ask bug number. Return as '(bug) suitable for interactive"
   (read-string
-   (format "Debian BTS %sbug number: "
+   (format "BTS %sbug number: "
 	   (if type
 	       (concat type " ")
 	     ""))
