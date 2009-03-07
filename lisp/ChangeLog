@@ -1,3 +1,8 @@
+2009-03-07  Jari Aalto  <jari.aalto@cante.net>
+
+	* tiny/tinydebian.el (tinydebian-with-gnus-article-buffer): change
+	`progn' to `save-window-excursion'.
+
 2009-03-05  Jari Aalto  <jari.aalto@cante.net>
 
 	* tiny/tinydebian.el (tinydebian-bts-mail-compose-macro): correct arguments.

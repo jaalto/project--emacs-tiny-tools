@@ -829,7 +829,7 @@ to generate updated list."
      tinydebian-:severity-selected
      tinydebian-:tags-list)))
 
-(defconst tinydebian-:version-time "2009.0305.2344"
+(defconst tinydebian-:version-time "2009.0307.1503"
   "Last edited time.")
 
 (defvar tinydebian-:bts-extra-headers
@@ -1170,7 +1170,7 @@ Activate on files whose path matches
 (defmacro tinydebian-with-gnus-article-buffer (&optional nbr &rest body)
   "In article NBR, run BODY. Defaults to article at *Summary* buffer."
   (let ((buffer (gensym "buffer-")))
-    `(progn
+    `(save-window-excursion
        (gnus-summary-select-article 'all nil 'pseudo ,nbr)
        (let ((,buffer (get-buffer gnus-original-article-buffer)))
 	 (when ,buffer
