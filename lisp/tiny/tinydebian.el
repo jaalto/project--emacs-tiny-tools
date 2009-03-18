@@ -829,7 +829,7 @@ to generate updated list."
      tinydebian-:severity-selected
      tinydebian-:tags-list)))
 
-(defconst tinydebian-:version-time "2009.0307.1503"
+(defconst tinydebian-:version-time "2009.0318.1913"
   "Last edited time.")
 
 (defvar tinydebian-:bts-extra-headers
@@ -1233,7 +1233,11 @@ Activate on files whose path matches
 
 ;;; ----------------------------------------------------------------------
 ;;;
-(defun tinydebian-bts-email-compose (address &optional bug)
+(defun tinydebian-bts-email-compose (address &optional bug bts-type)
+  "Compare type of ADDRESS using BUG and BTS-TYPE information.
+The BTS-TYPE can be:
+  'emacs    Emacs BTS
+  nil       Defaults to Debian BTS."
    (when (string-match "submitter\\|maintonly\\|quiet\\|close" address)
      (cond
       ((string-match "[0-9]-" address)
@@ -1244,7 +1248,7 @@ Activate on files whose path matches
        (error "Can't compose NNNN-ADDRESS from values `%s' `%s'"
 	      address bug))))
    (cond
-    ((tinydebian-bug-gnu-emacs-bts-p)
+    ((eq bts-type 'emacs)  ;; (tinydebian-bug-gnu-emacs-bts-p)
      (tinydebian-emacs-bts-email-compose address))
     (t
      (tinydebian-bts-email-compose-1 address))))
@@ -1264,6 +1268,20 @@ Activate on files whose path matches
 ;; FIXME Move elsewhere
 ;;; ----------------------------------------------------------------------
 ;;;
+(defun tinydebian-bts-generic-email-compose (type &optional bug buffer)
+  "Compose TYPE of address according to BTS using optional BUG number.
+Judging from optional BUFFER."
+  (with-current-buffer (or buffer (current-buffer))
+    (let (bts)
+      (if (tinydebian-bts-email-compose type bug 'emacs)
+	  (setq bts 'emacs))
+      ;; FIXME launchpad
+      (tinydebian-bts-email-compose
+       type bug bts))))
+
+;; FIXME Move elsewhere
+;;; ----------------------------------------------------------------------
+;;;
 (defun tinydebian-bts-generic-email-control (&optional buffer)
   "Compose control according to BTS, judging from optional BUFFER."
   (with-current-buffer (or buffer (current-buffer))
@@ -1273,6 +1291,7 @@ Activate on files whose path matches
       (tinydebian-emacs-bts-email-control))
      (t
       (tinydebian-bts-email-control)))))
+
 
 ;;; ----------------------------------------------------------------------
 ;;;
@@ -2791,7 +2810,7 @@ In interactive call, toggle quiet address on and off."
 
 ;;; ----------------------------------------------------------------------
 ;;;
-(defun tinydebian-mail-mode-debian-address-type-toggle
+(defun tinydebian-mail-mode-debian-address-type-add
   (type &optional bug remove interactive)
   "Add TYPE off BUG nbr address (control, maintonly, submitter).
 Optionally REMOVE. In interactive call, toggle TYPE of address on and off."
@@ -2801,9 +2820,7 @@ Optionally REMOVE. In interactive call, toggle TYPE of address on and off."
 	       (tinydebian-mail-address-match-type-p type))
       (setq remove t)))
   (save-excursion
-    (let ((email (if bug
-		     (tinydebian-bts-email-compose type bug)
-		   (tinydebian-bts-email-compose type))))
+    (let ((email (tinydebian-bts-generic-email-compose type bug)))
       (cond
        (remove
 	(tinydebian-mail-mode-debian-address-email-remove email))
@@ -2818,7 +2835,7 @@ Optionally REMOVE. In interactive call, toggle TYPE of address on and off."
 In interactive call, toggle conrol address on and off."
   (interactive (tinydebian-mail-mode-debian-address-ask-args "Submitter bug"))
   ;; toggle
-  (tinydebian-mail-mode-debian-address-type-toggle
+  (tinydebian-mail-mode-debian-address-type-add
    "submitter" bug remove (interactive-p)))
 
 ;;; ----------------------------------------------------------------------
@@ -2847,7 +2864,7 @@ In interactive call, toggle conrol address on and off."
 In interactive call, toggle conrol address on and off."
   (interactive "P")
   ;; toggle
-  (tinydebian-mail-mode-debian-address-type-toggle
+  (tinydebian-mail-mode-debian-address-type-add
    "control" nil remove (interactive-p)))
 
 ;;; ----------------------------------------------------------------------
@@ -2857,7 +2874,7 @@ In interactive call, toggle conrol address on and off."
 In interactive call, toggle conrol address on and off."
   (interactive (tinydebian-mail-mode-debian-address-ask-args "Submitter bug"))
   ;; toggle
-  (tinydebian-mail-mode-debian-address-type-toggle
+  (tinydebian-mail-mode-debian-address-type-add
    "maintonly" bug remove (interactive-p)))
 
 
@@ -2986,6 +3003,8 @@ If optional RE is non-nil, remove all command lines matching RE"
 		(format "%s %s" ,cmd ,bug)))
 	 (re  (format "^[ \t]*%s" ,cmd)))
      (tinydebian-bts-mail-ctrl-command-add str re)
+     ;; Add control@ address
+     (tinydebian-mail-mode-debian-address-type-add "control")
      ;; Position point to better place.
      (forward-line -1)
      (re-search-forward (format "%s %s *" ,cmd ,bug) nil t)))

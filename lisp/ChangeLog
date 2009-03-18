@@ -1,7 +1,27 @@
+2009-03-18  Jari Aalto  <jari.aalto@cante.net>
+
+	* tiny/tinylisp.el (tinylisp-jump-to-definition): Add to
+	F-RE `define-minor-mode'. Add failover if WORD was not found:
+	use approximate search as last resort.
+
+2009-03-13  Jari Aalto  <jari.aalto@cante.net>
+
+	* tiny/tinydebian.el (tinydebian-bts-generic-email-compose): Change
+	call to `tinydebian-bts-email-compose'.
+
 2009-03-07  Jari Aalto  <jari.aalto@cante.net>
 
 	* tiny/tinydebian.el (tinydebian-with-gnus-article-buffer): change
 	`progn' to `save-window-excursion'.
+	(tinydebian-bts-generic-email-compose): Change call to
+	`tinydebian-emacs-bts-email-compose'. Add parameter 'emacs'.
+	(tinydebian-bts-email-compose): Add parameter `bts-type' to
+	handle Emacs BTS addresses.
+	(tinydebian-mail-mode-debian-address-type-add): Rename.
+	Was `tinydebian-mail-mode-debian-address-type-toggle'.
+	(tinydebian-bts-mail-ctrl-command-add-macro): Call
+	`tinydebian-mail-mode-debian-address-type-add' to add email
+	address.
 
 2009-03-05  Jari Aalto  <jari.aalto@cante.net>
 
