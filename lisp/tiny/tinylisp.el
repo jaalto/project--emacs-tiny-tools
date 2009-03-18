@@ -3492,7 +3492,7 @@ SAVE        \\[universal-argument]: then save the point so
             non-nil: then clear the call chain, save point, and jump to
             definition. This lets you start building call chain again.
 
-WORD        String. Symbol to search.
+WORD        String definition to search (defvar, defconst, defun ...).
 
 VERB        Flag. Allows displaying verbose messages.
 
@@ -3508,7 +3508,7 @@ References:
   (let* ((f-re
           (concat "^(\\(defun\\*?\\|defmacro\\*?\\|defsubst\\|deffoo"
                   "\\|defun-maybe\\|defsubst-maybe"
-                  "\\|define-derived-mode"
+                  "\\|define-derived-mode\\|define-minor-mode"
                   "\\|defalias\\|fset"
                   ;;  See grep.el::define-compilation-mode
                   "\\|define-[^ \t\r\n]+-mode"
@@ -3638,6 +3638,10 @@ References:
               (setq point nil)          ;Clear flag
               (message "TinyLisp: Strange... cant't find definition: %s"
                        word)
+	      ;;  Try approximation: "(WORD"  or "(setq WORD ...)"
+	      (let ((re (format "(%s\\>\\|\\<%s\\>" word word)))
+		(if (re-search-forward re nil t)
+		    (goto-char (match-beginning 0))))
               (sit-for 2))
             (when save
               (if (and save (not (equal save '(4))))
