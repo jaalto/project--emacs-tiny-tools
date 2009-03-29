@@ -46,7 +46,7 @@
 ;;      (autoload 'tinysearch-search-word-forward  "tinysearch" "" t)
 ;;      (autoload 'tinysearch-search-word-backward "tinysearch" "" t)
 ;;
-;;      ;;  Install default keybindings: M-s (forward search), C-M-s
+;;      ;;  Install default keybindings: M-s (forward search), M-r
 ;;      ;;  (bbackward), M-Mouse-1 (forward), C-M-Mouse-1 (backward)
 ;;      (add-hook 'tinysearch-:load-hook 'tinysearch-install)
 
@@ -520,10 +520,12 @@ NOTE:
 ;;;
 ;;;###autoload
 (defun tinysearch-install-default-keybindings (&optional uninstall)
-  "Install default keybindings; M-s C-M-s, M-Mouse-1, C-M-Mouse-1."
+  "Install default keybindings
+M-Mouse-1   M-s  search forward
+C-M-Mouse-1 M-r  reverse."
   (interactive)
-  (global-set-key [(meta ?s)] 'tinysearch-search-word-forward)
-  (global-set-key [(control meta ?s)] 'tinysearch-search-word-backward)
+  (global-set-key "\M-s" 'tinysearch-search-word-forward)
+  (global-set-key "\M-r" 'tinysearch-search-word-backward)
   ;;  For mouse (under windowed system)
   (global-set-key [(meta control mouse-1)]
                   'tinysearch-search-word-forward)
