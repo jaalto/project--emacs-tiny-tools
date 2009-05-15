@@ -1,3 +1,15 @@
+2009-05-15  Jari Aalto  <jari.aalto@cante.net>
+
+	* tiny/tinybookmark.el (ti::macrof-version-bug-report):
+	Remove. Never used.
+
+2009-03-29  Jari Aalto  <jari.aalto@cante.net>
+
+	* tiny/tinyepkg.el: Improve documentation.
+
+	* tiny/tinysearch.el (tinysearch-install-default-keybindings): Change
+	C-M-s (reverse search) to non-window friendly M-r keybinding.x
+
 2009-03-18  Jari Aalto  <jari.aalto@cante.net>
 
 	* tiny/tinylisp.el (tinylisp-jump-to-definition): Add to

@@ -42,49 +42,43 @@
 ;;
 ;;      (require 'tinybookmark)
 ;;
-;; or use autoload, your emacs starts up faster, prefered:
+;; or use autoload, and Emacs starts up faster, prefered:
 ;;
-;;      (autoload 'tinybookmark-insert   "tinybookmark" "" t)
-;;      (autoload 'tinybookmark-repeat   "tinybookmark" "" t)
-;;      (autoload 'tinybookmark-parse    "tinybookmark" "" t)
-;;      (autoload 'tinybookmark-forward  "tinybookmark" "" t)
-;;      (autoload 'tinybookmark-backward "tinybookmark" "" t)
-;;      (autoload 'tinybookmark-keyboard         "tinybookmark" "" t)
-;;      (autoload 'tinybookmark-keyboard-parse   "tinybookmark" "" t)
+;;      (autoload 'tinybookmark-insert          "tinybookmark" "" t)
+;;      (autoload 'tinybookmark-repeat          "tinybookmark" "" t)
+;;      (autoload 'tinybookmark-parse           "tinybookmark" "" t)
+;;      (autoload 'tinybookmark-forward         "tinybookmark" "" t)
+;;      (autoload 'tinybookmark-backward        "tinybookmark" "" t)
+;;      (autoload 'tinybookmark-keyboard        "tinybookmark" "" t)
+;;      (autoload 'tinybookmark-keyboard-parse  "tinybookmark" "" t)
 ;;
-;;      (when (ti::compat-window-system)
-;;        (autoload 'tinybookmark-mouse          "tinybookmark" "" t)
-;;        (autoload 'tinybookmark-mouse-parse    "tinybookmark" "" t))
+;;      (when window-system
+;;        (autoload 'tinybookmark-mouse         "tinybookmark" "" t)
+;;        (autoload 'tinybookmark-mouse-parse   "tinybookmark" "" t))
 ;;
-;; To use  'M-x bm' for quick book mark command:
+;; Ideas for keybindings
 ;;
-;;      (defalias 'tinybookmark-insert 'bm)
-;;
-;; Suggested keybindings
+;;      M-x tinybookmark-insert  to add bookmark
 ;;
 ;;      ;;  This is for windowed Emacs. It brings up nice pop up menu
-;;      ;;  In XEmacs tou must use different mouse events: `mouse1down'
+;;      ;;  In XEmacs, use different mouse event: `mouse1down'
 ;;
 ;;      (global-set-key [(?\e) (control mouse-1)]        'tinybookmark-mouse)
 ;;      (global-set-key [(?\e) (control shift mouse-1)]  'tinybookmark-mouse-parse)
 ;;
-;;      ;;  Keyboard users can move between book marks with these
+;;      ;;  To use keyboard to navigate between bookmarks
 ;;
 ;;      (global-set-key [(shift left)]  'tinybookmark-backward)
 ;;      (global-set-key [(shift right)] 'tinybookmark-forward)
 ;;
-;;      ;;  Or to bavigate with complete menu
+;;      ;; To navigate with completion menu
 ;;
-;;      (global-set-key [(shift right)] 'tinybookmark-keyboard)
+;;      (global-set-key [(control shift right)] 'tinybookmark-keyboard)
 ;;
 ;; BE SURE THAT
 ;;
-;;      you have defined comment syntax, otherwise the inserted field
-;;      won't have proper prefix + endings
-;;
-;; If you have any questions, use function:
-;;
-;;      M-x tinybookmark-submit-bug-report
+;;      Define comment syntax, otherwise the inserted field
+;;      won't have proper prefix + ending
 
 ;;}}}
 ;;{{{ Documentation
@@ -95,7 +89,7 @@
 
 ;;  Preface, feb 1995
 ;;
-;;      Long ago I used little function I wrote that inserted section
+;;      Long ago I used a little function I wrote that inserted section
 ;;      breaks, those that I call `book' `marks'. There was also
 ;;      `folding.el' to keep the code in separate sections. Findings things
 ;;      was easy when you just searched either book marks or jumped between
@@ -108,7 +102,7 @@
 ;;          repeated characters and sequences up till end of line with
 ;;          named identifier.
 ;;      o   Automatically parse book marks from file, if it contains
-;;          RCS identifier `bookMarkRegexp' which defines book mark syntax for
+;;          identifier `bookMarkRegexp' which defines book mark syntax for
 ;;          the file. Uses X-popup [imenu] to show those book marks and
 ;;          moving between them.
 ;;
@@ -156,7 +150,7 @@
 ;;           (progn
 ;;            ..
 ;;            (goto-char ..
-;;            ;; ^^^^^^^^^^^^^^^^^^^^^^^ sepratorInsideCode ^^^
+;;            ;; ^^^^^^^^^^^^^^^^^^^^^^^^^^ sepratorInsideCode ^^^
 ;;
 ;;      The `How-to-use' is book mark, because it has `&' on it, whilst the
 ;;      latter isn't -- it is used inside code to make it more readable and
@@ -212,8 +206,7 @@
 ;;
 ;;          ;; .. .. . .. . .. . .. . .. . .. . .. . .. . .. .
 ;;          ;;  More detailed functions under h-cc, Not
-;;          ;;  named, because there is only 2 small funcs
-;;          ;;  easily found.
+;;          ;;  named, because there is only 2 function
 ;;
 ;;      Again there are couple of points to follow here. All the tricks are
 ;;      discussed already: the `Big' letter trick put's major break to the
@@ -370,8 +363,8 @@
 ;;      then seeing if there exist sub-breaks. Immediately this leads to
 ;;      question "What is the main break?", and if we say main breaks start
 ;;      with "#|/%" character set we limit the use of breaks. Besides deciding
-;;      what are sub-breaks, main-breaks with regexp may be too slow. Besides,
-;;      the breaks are intended to to give an *overview* of the buffer.
+;;      what are sub-breaks, main-breaks with regexp may be too slow.
+;;      The breaks are intended to to give an *overview* of the buffer.
 ;;      Please use imenu to find single functions if you don't feel like
 ;;      tapping couple of pgUp/pgDown after the point is positioned in the break
 ;;      section.
@@ -522,34 +515,6 @@ Cache where book marks are stored in alist \(bookMarkName . point\)")
 (defvar tinybookmark-:bookmark-regexp nil
   "Private. Hold buffers book mark regexp.")
 (make-variable-buffer-local 'tinybookmark-:bookmark-regexp)
-
-;;}}}
-;;{{{ setup: -- version
-
-;;; ....................................................... &v-version ...
-
-(eval-and-compile
-  (ti::macrof-version-bug-report
-   "tinybookmark.el"
-   "tinybookmark"
-   tinybookmark-:version-id
-   "$Id: tinybookmark.el,v 2.42 2007/05/01 17:20:42 jaalto Exp $"
-   '(tinybookmark-:version-id
-     tinybookmark-:parse-before-hook
-     tinybookmark-:load-hook
-     tinybookmark-:cache
-     tinybookmark-:cache-char-count
-     tinybookmark-:bookmark-regexp
-     tinybookmark-:cache-update
-     tinybookmark-:cache-threshold-val
-     tinybookmark-:max-col
-     tinybookmark-:trailer-space-len
-     tinybookmark-:comment-start-func
-     tinybookmark-:comment-end-func
-     tinybookmark-:scan-filter-func
-     tinybookmark-:goto-func
-     tinybookmark-:insert-strict
-     tinybookmark-:re-default-chars)))
 
 ;;}}}
 
