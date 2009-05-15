@@ -1,5 +1,28 @@
 2009-05-15  Jari Aalto  <jari.aalto@cante.net>
 
+	* tiny/tinylibb.el (kbd, functionp, frame-parameter): Remove.
+	(buffer-live-p): Remove.
+	(run-hook-with-args-until-success): Remove.
+	(add-to-list): Remove.
+	(byte-code-function-p): Remove.
+	(compose-mail): Remove.
+	(match-string): Remove.
+	(replace-regexp-in-string): Remove.
+	(buffer-substring-no-properties): Remove.
+	(match-string-no-properties): Remove.
+	(file-name-extension): Remove.
+	(file-name-sans-extension): Remove.
+	(executable-find): Remove.
+	(custom): Remove.
+	(eval-after-load): Remove.
+	(make-local-hook): Remove.
+	(abs): Remove.
+	(split-sting): Remove.
+	(delete-indentation): Remove.
+	(with-output-to-string): Remove.
+	(with-current-buffer): Remove.
+	(save-current-buffer): Remove.
+
 	* tiny/tinybookmark.el (ti::macrof-version-bug-report):
 	Remove. Never used.
 	(tinybookmark-:version-time): New.

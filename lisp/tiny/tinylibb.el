@@ -105,17 +105,15 @@
   (defvar temporary-file-directory)
   (autoload 'ti::replace-match "tinylibm"))
 
+(defconst tinylibb-version-time "2009.0515.0753"
+  "Latest version number as last modified time.")
+
 ;;; ....................................................... &emulation ...
 
 (defun-maybe force-mode-line-update  ()
   ;; XEmacs, labels this obsolete
   ;; In older Emacs it does not exist
   (set-buffer-modified-p (buffer-modified-p)))
-
-(defun-maybe eval-after-load (arg1 form) ;; XEmacs 19.14 doesn't have this
-  ;;  "A simple emulation. Eval FORM immediately."
-  (load arg1)
-  (eval form))
 
 ;; Some XEmacs doesn't have 'buffer-flush-undo
 (defalias-maybe 'buffer-disable-undo 'buffer-flush-undo)
@@ -133,23 +131,6 @@
      ;;  Emacs includes `insert-file-literally'.
      (defalias-maybe 'insert-file-literally 'insert-file-contents-literally))
 
-(defun-maybe make-local-hook (hook) ;; Exists in 19.30+
-  ;;  "Make HOOK local to buffer."
-  ;; - I need locals so many times it make sme cry, e.g. post-command-hook
-  ;; - And why doesn't the add-hook accepts list by default ??
-  ;;
-  ;; - This aapplies to 19.29.1 and newer
-  ;;       (add-hook HOOK FUNCTION &optional APPEND LOCAL)
-  ;;       Do not use `make-local-variable' to make a hook
-  ;;       variable buffer-local.  Use `make-local-hook'
-  ;;       instead.
-  ;;
-  ;; the variable may be local already, but we do not do
-  ;; any checkings
-  (make-local-variable hook)
-  ;; Copy this because add-hook modifies the list structure.
-  (set hook (copy-sequence (eval hook))))
-
 (defun-maybe find-buffer-visiting (file) ;not in XEmacs 19.14
   ;;  "Find buffer for FILE."
   ;;   file-truename  dies if there is no directory part in the name
@@ -162,12 +143,6 @@
   (forward-line (if (integerp arg)
                     (- 0 arg)
                   -1)))
-
-(defun-maybe abs (x)
-  ;;  "Absolute value of X."
-  (if (< x 0)
-      (- x)
-    x))
 
 (defun-maybe int-to-float (nbr)
   "Convert integer NBR to float."
@@ -312,68 +287,8 @@ PAD says to padd hex string with leading zeroes."
                    (ti::string-value i)
                    (ti::string-value j)))))
 
-;;; ... ... ... ... ... ... ... ... ... ... ... ... ... ... ...  split  ..
-
-(unless (fboundp 'split-sting)
-  (eval-and-compile
-    (defun ti::split-string (string &optional regexp level cont-level)
-      "Do not use this function. Call `split-string' instead.
-This function exists, because current Emacs did not define `split-string' and
-there is now alias which emulates the new Emacs behavior.
-
-If called with only STRING, then split on white space.
-
-Input:
-
-  STRING
-  REGEXP        The delimiter in string, Default is '[\\f\\t\\n\\r\\v]+'
-  LEVEL         The sub match in REGEXP to end reading substring.
-                Default is 0
-  CONT-LEVEL    The sub match end to continue reading the STRING.
-                Default is 0 (REGEXP match's end point)
-
-Example:
-
-  (split-string \"-I/dir1 -I/dir2\" \" *-I\")
-  --> '(\"/dir1\" \"/dir2\")"
-      (let ((start 0)
-            str
-            ret)
-        (or regexp
-            (setq regexp "[ \f\t\n\r\v]+"))
-        (or level
-            (setq level 0))
-        (or cont-level
-            (setq cont-level 0))
-
-        ;;  If no match, return as is '(string)
-
-        (if (null (string-match regexp string ))
-            (setq ret (list string))
-          (while (string-match regexp string start)
-            (setq str (substring string start (match-beginning level)))
-            (setq start (match-end cont-level))
-            ;; Ignore BOL matches. There is no string for us.
-            (if (> (match-beginning level) 0)
-                (push str ret)))
-          ;;  Try with " test" --> '("test")
-          (if (and (> start 0)
-                   (< start (length string)))
-              (push (substring string start) ret)))
-        (nreverse ret)))))
-
-(defun-maybe split-string (string &optional separators)
-  ;; (split-string STRING &optional SEPARATORS)
-  ;; in XEmacs 19.14 subr.el
-  ;;  "Split string on whitespace."
-  (ti::split-string string separators))
-
 ;;; .. .. .. .. .. .. .. .. .. .. .. .. .. .. .. .. .. .. higher Emacs . .
 ;;:  Features found from new emacs only 20.xx
-
-;; In simple.el, old Emacs does not have this.
-(and (fboundp 'delete-indentation)
-     (defalias-maybe 'join-lines 'delete-indentation))
 
 (defun-maybe replace-char-in-string (ch1 ch2 string)
   ;;  "Search CH1, change it with CH2 in STRING."
@@ -417,23 +332,9 @@ Example:
   "Emacs compatibility."
   (string-to-int str))
 
-;; #todo: This already exists in some XEmacs
-
-(put 'with-output-to-string 'edebug-form-spec '(body))
-(defmacro-maybe with-output-to-string (&rest body) ;XEmacs has this
-  "Please use `shell-command-to-string'. Execute BODY and return string."
-  `(save-current-buffer
-     (set-buffer (get-buffer-create " *string-output*"))
-     (setq buffer-read-only nil)
-     (buffer-disable-undo (current-buffer))
-     (erase-buffer)
-     (let ((standard-output (current-buffer)))
-       ,@body)
-     (buffer-string)))
-
 ;;; ----------------------------------------------------------------------
 ;;;
-(unless (fboundp 'with-buffer-unmodified)
+(unless (fboundp 'with-buffer-modified)
   ;;  Appeared in Emacs 21.2
   (put 'with-buffer-modified 'lisp-indent-function 0)
   (put 'with-buffer-modified 'edebug-form-spec '(body))
@@ -465,24 +366,6 @@ seen my `buffer-read-only'
              (setq buffer-read-only t)
            (setq buffer-read-only nil)))))
 
-;; `save-excursion' is expensive; use `save-current-buffer' instead
-(put 'save-current-buffer 'edebug-form-spec '(body))
-(defmacro-maybe save-current-buffer (&rest body)
-  "Save the current buffer; execute BODY; restore the current buffer.
-    Executes BODY just like `progn'."
-  `(save-excursion ,@body))
-
-(put 'with-current-buffer 'lisp-indent-function 1)
-(put 'with-current-buffer 'edebug-form-spec '(body))
-(defmacro-maybe with-current-buffer (buffer &rest body)
-  "tinylibm.el
-Execute the forms in BODY with BUFFER as the current buffer.
-    The value returned is the value of the last form in BODY.
-    See also `with-current-buffer'."
-  `(save-current-buffer
-     (set-buffer ,buffer)
-     ,@body))
-
 (defmacro-maybe with-output-to-file (file &rest body)
   "Open FILE and run BODY.
 \(with-output-to-file \"foo\"
@@ -492,56 +375,6 @@ Execute the forms in BODY with BUFFER as the current buffer.
        ,@body)))
 
 ;; Emacs 19.30 and below don't have this
-
-(defun-maybe match-string (level &optional string)
-  ;;  "Read match from buffer at sub match LEVEL. Optionally from STRING.
-  ;;Return nil, if match at LEVEL doesn't exist.
-  ;;
-  ;;You have to call `looking-at' etc. before using this function.
-  ;;You can use use `ti::buffer-match' or `ti::string-match' directly too."
-  (if (match-end level)
-      (if (stringp string)
-          (substring
-           string
-           (match-beginning level) (match-end level))
-        (buffer-substring
-         (match-beginning level) (match-end level)))))
-
-;; (replace-regexp-in-string
-;;   REGEXP REP STRING &optional FIXEDCASE LITERAL SUBEXP START)
-
-;;  (string regexp rep &optional subexp count)
-;;
-(defun-maybe replace-regexp-in-string
-  (regexp rep string &optional fixedcase literal subexp start)
-  (let* ((i  0))
-    (or subexp
-        (setq subexp 0))
-    (while (string-match regexp string)
-      (if (> (incf i) 5000)
-          (error "Substituted string causes circular match. Loop never ends.")
-        (inline (setq string (ti::replace-match subexp rep string)))))
-    string))
-
-(defun-maybe buffer-substring-no-properties (beg end)
-  (ti::remove-properties (buffer-substring beg end)))
-
-;; Here's the pre-Emacs 20.3 definition.  Note the optional arg.
-
-(defun-maybe match-string-no-properties (num &optional string)
-  ;;   "Return string of text matched by last search, without text properties.
-  ;; NUM specifies which parenthesized expression in the last regexp.
-  ;;  Value is nil if NUMth pair didn't match, or there were less than NUM pairs.
-  ;; Zero means the entire text matched by the whole regexp or whole string.
-  ;; STRING should be given if the last search was by `string-match' on STRING."
-  (if (match-beginning num)
-      (if string
-          (let ((result
-                 (substring string (match-beginning num) (match-end num))))
-            (set-text-properties 0 (length result) nil result)
-            result)
-        (buffer-substring-no-properties (match-beginning num)
-                                        (match-end num)))))
 
 ;; This is from pcvs.el
 (defun-maybe file-to-string (file &optional oneline args)
@@ -564,16 +397,10 @@ arguments.  If ARGS is not a list, no argument will be passed."
                               (point-max))))
       (file-error nil))))
 
-(defun-maybe file-name-extension (filename)
-  (ti::file-get-extension filename))
 
-(defun-maybe file-name-sans-extension (filename)
-  ;;  "Return FILENAME without extension."
-  (replace-regexp-in-string "\\.[^.]+$" ""  filename))
-
-;; Emacs 20.3 invented its own function names `line-beginning-position'
-;; `line-end-position' while XEmacs already had had point-* function
-;; names since 1996: `point-at-eol' and `point-at-bol'.
+;; Emacs 20.3 uses functions names `line-beginning-position'
+;; `line-end-position' while XEmacs introduced point-* function
+;; names 1996: `point-at-eol' and `point-at-bol'.
 
 (defsubst-maybe line-beginning-position (&optional n)
   "Return begin position of line forward N."
@@ -596,13 +423,6 @@ arguments.  If ARGS is not a list, no argument will be passed."
         auto-save-hook
         auto-save-default)
     (insert-file file)))
-
-(eval-and-compile
-  (if (locate-library "executable") ;; 20.4 defines this
-      (autoload 'executable-find "executable")
-    (defun-maybe executable-find (program-name)
-      ;;  "Find PROGRAM-NAME along `exec-path'."
-      (ti::file-get-load-path program-name exec-path))))
 
 (defun-maybe executable-find-in-system (program-name) ;Handle Win32 case too.
   ;;   "Find PROGRAM-NAME along `exec-path'.
@@ -844,8 +664,6 @@ font-lock.el"
   "Call `font-lock-mode-maybe' with argument 1."
   (font-lock-mode-maybe 1))
 
-(defalias-maybe 'compose-mail 'mail)
-
 (defun-maybe region-active-p ()         ;XEmacs function
   "Return `mark' if mark (region) is active."
   (cond
@@ -858,55 +676,6 @@ font-lock.el"
          ;;  used to return (mark-marker)
          (mark 'noerr)))))
 
-;; Newer advice "2.15" uses this call, make sure it exist.
-(defalias-maybe 'byte-code-function-p 'ignore)
-
-(defun-maybe add-to-list (list-var element)
-  ;;  "Add to symbol LIST-VAR ELEMENT."
-  (or (member element (symbol-value list-var)) ;; copy from 19.34
-      (set list-var (cons element (symbol-value list-var)))))
-
-(defun-maybe run-hook-with-args-until-success
-  (hook-sym &optional &rest args)
-  ;;   "Run all functions in HOOK-SYM. Stop when first one return non-nil.
-  ;;
-  ;; Input:
-  ;;
-  ;;   HOOK-SYM  hook symbol, or list of functions.
-  ;;   ARGS           arguments to functions. if NIL, functions
-  ;;             are called without arguments."
-  (let* ((val  (symbol-value hook-sym))
-         (list (if (listp val) val (list val))) ;Make list maybe
-         ret
-         func)
-    (while (and (null ret) list)
-      (setq func (car list)   list (cdr list))
-      (setq ret (apply func args)))
-    ret))
-
-(defun-maybe buffer-live-p (buffer)
-  ;;  "Check if BUFFER exist."
-  (cond
-   ((not (bufferp buffer))
-    (error "must be pointer"))
-   ((stringp buffer)
-    (get-buffer buffer))
-   (buffer
-    (buffer-name buffer))))
-
-(eval-when-compile
-  ;;  don't show "obsolete function warning", because we know what
-  ;;  we're doing below.
-  (put 'frame-parameters 'byte-compile nil))
-
-(when (not (fboundp 'frame-parameter))  ;Emacs 19.35
-  (if (fboundp 'frame-property)
-      (defalias 'frame-parameter 'frame-property) ; XEmacs.
-    (defun frame-parameter (frame property &optional default)
-      "Return FRAME's value for property PROPERTY."
-      (or (cdr (assq property (frame-parameters frame)))
-          default))))
-
 (unless (and (fboundp 'find-file-binary) ;; Emacs function --> XEmacs
              (boundp 'buffer-file-coding-system))
   (defun find-file-binary (file)
@@ -917,25 +686,6 @@ font-lock.el"
       (find-file file))))
 
 ;;}}}
-;;{{{ special
-
-;;; ........................................... &compatibility-special ...
-;;; These need emacs-p xemacs-p tests
-
-;; not known function in 19.14
-
-(eval-and-compile
-  (autoload 'read-kbd-macro "edmacro")
-  (when (ti::emacs-p)
-    (or (fboundp 'kbd)                  ;Std in Emacs 20.x
-        (defmacro kbd (keys)            ;(kbd "C-<delete>")
-          "Convert KEYS to the internal Emacs key representation.
-KEYS should be a string constant in the format used for
-saving keyboard macros (see `insert-kbd-macro')."
-          (let ((f 'read-kbd-macro))
-            (funcall f keys))))))
-
-;;}}}
 ;;{{{ code: function test
 
 ;;; ...................................................... &func-tests ...
@@ -943,16 +693,6 @@ saving keyboard macros (see `insert-kbd-macro')."
 ;;; "define before using"
 
 (eval-and-compile
-
-;;; ----------------------------------------------------------------------
-;;;
-  (defun-maybe functionp (obj) ;; Emacs 20.3+ XEmacs 20.x
-    (or (subrp obj)
-        (byte-code-function-p obj)
-        (and (symbolp obj)
-             (fboundp obj))
-        (and (consp obj)
-             (eq (car obj) 'lambda))))
 
 ;;; ----------------------------------------------------------------------
 ;;;
@@ -1020,8 +760,6 @@ Notes:
 
 ;;}}}
 ;;{{{ code: Cygwin support
-
-;;; ........................................................... cygwin ...
 
 ;;; Patch for these functions has been submitted to Emacs 21.2
 ;;; (w32-fns.el)
@@ -1319,132 +1057,6 @@ Be sure to call `expand-file-name' before you pass PATH to the function."
 
 ;;}}}
 
-;;; ########################################################## &custom ###
-
-;;{{{ custom
-
-;;; 2000-03-20
-;;; - This code is beginning to be obsolete now when Newest Emacs is 21.2
-;;;   custom.el.
-;;; - This code does nothing if custom.el is present, so let it be here.
-
-(eval-and-compile
-  (cond
-   ((string-match "2[0-9]\\." (emacs-version))
-    (require 'custom))                  ;Out of the box
-   (t                           ;Well, this is old Emacs - lot of work
-    (let* ((list  load-path)
-           dir
-           try
-           path)
-      (cond
-       ;; ..................................................... no custom ...
-       ;;  The reason why newest custom.el does not work in prior releases is the
-       ;;  new bacquote macro syntax it uses. It needs new emacs lisp parser to
-       ;;  read the macros.
-       ;;
-       ((or (and (ti::emacs-p)
-                 (< emacs-minor-version  34))
-            (and (eq 19 (ti::xemacs-p))
-                 (< emacs-minor-version  15)))
-        ;;  This emacs is too old for new custom. Emulate it.
-        (defmacro defgroup (&rest args) nil)
-        (defmacro defcustom (var value doc &rest args)
-          `(defvar ,var ,value ,doc)))
-       ;; .. .. .. .. .. .. .. .. .. .. .. .. .. .. .. .. .. custom maybe . .
-       (t
-        ;; Explanation: When I say (require 'custom) in -batch byte
-        ;; compile; and the load-path HAD my private ~/elisp at front,
-        ;; but it still loaded old custom.elc from XEmacs 19.14 distribution.
-        ;;
-        ;; Why? Don't know. That's why we load it manually here.
-        (while (and (null path)         ;Where it is?
-                    (setq dir (car list)))
-          (setq try
-                (if (string-match "/$" dir)
-                    (concat dir "custom.el")
-                  (concat dir "/custom.el")))
-          (when (file-exists-p try)
-;;;     (message (format "tinylibm: ** Using custom from [%s]" try))
-            (setq path (file-name-directory try)))
-          (setq list (cdr list)))
-        ;; ............................................... load new custom ...
-        (condition-case ()
-            (progn
-              ;; The new custom won't work in .el format, it must be
-              ;; loaded in .elc format.
-              (unless (featurep 'custom)
-                (load (concat path "custom.elc"))))
-          (error
-           (message "tinylibm: ** Couldn't find custom.elc [compiled version]")))
-        ;;  Check few things, what this custom.elc provided.
-        ;;  This is internal information to debug things
-        ;;
-        (message "tinylibm: ** internal info: Custom [%s] declare [%s]"
-                 (if (featurep 'custom)
-                     "t"
-                   "nil")
-                 (if (fboundp 'custom-declare-variable)
-                     "t"
-                   "nil"))
-        (cond
-         ((and (featurep 'custom)
-               (fboundp 'custom-declare-variable))
-          ;; .. .. .. .. .. .. .. .. .. .. .. .. .. .. .. .. .. .. . case 1 ..
-          ;;  19.14 includes a very old custom.el, and it shouldn't be used
-          ;;  any more.
-          ;;
-          ;;  custom-XE19.14    : custom.el::customize()
-          ;;  custom-1.96       : cus-edit.el::(defun customize (symbol)
-          ;;  custom-1.9956     : cus-edit.el:::customize()
-          ;;                      cus-edit.el::customize-group (group)
-          (cond
-           ((and (null (ti::function-args-p 'customize))
-                 (not (fboundp 'customize-group)))
-            (message "\
-tinylibm.el: ** [Ignore, Compilation is still going fine...]
-             ** Hm, loading custom didn't go quite right. Reasons:
-             ** a. You have too old custom.el library, because I can't
-             **    see `customize' function to take ONE argument.
-             **    Be sure to have newest custom.el and cus-edit.el
-             ** b. Your load-path is set so that the old custom.el
-             **    was loaded."))
-           (t
-            ;;  The new 1.9956 Custom.el produces warning for defcustom
-            ;;  variables not beeing defined. This code is only for
-            ;;  19.34 and won't work anywhere else.
-            ;;
-            (if (string-match
-                 "19.2[0-9]\\|19.3[0-3]\\|19.1[0-4]"
-                 (emacs-version))
-                (message "\
-             ** ...But you don't have [X]Emacs 19.34, 19.15, or 20+
-             ** That's why you see lot of undefined variables.
-             ** It's a byte compiler issue, nothing to worry about.")
-              ;; This is part of bytecomp.el in 20.1:
-              ;;
-              (put 'custom-declare-variable 'byte-hunk-handler
-                   'byte-compile-file-form-custom-declare-variable)
-              (defun byte-compile-file-form-custom-declare-variable (form)
-                (if (memq 'free-vars byte-compile-warnings)
-                    (setq byte-compile-bound-variables
-                          (cons (nth 1 (nth 1 form))
-                                byte-compile-bound-variables))) form))))
-
-          nil)
-         ;; .. .. .. .. .. .. .. .. .. .. .. .. .. .. .. .. .. .. . case 2 ..
-         (t
-          (unless (string-match "19.2[0-9]\\|19.3[0-3]\\|19.1[0-4]"
-                                (emacs-version))
-            (message "\
-tinylibm.el: ** Too old custom.el; You should upgrade your Emacs."))
-          ;; We have the old custom-library, hack around it.
-          (defmacro defgroup (&rest args) nil)
-          (defmacro defcustom (var value doc &rest args)
-            `(defvar ,var ,value ,doc))))))))))
-
-;;}}}
-
 ;;; ################################################### &byte-optimize ###
 
 ;;{{{ misc
@@ -1488,36 +1100,6 @@ tinylibm.el: ** Too old custom.el; You should upgrade your Emacs."))
       (if constant
           (eval form)
         form))))
-
-;;}}}
-;;{{{ Version
-
-;;; ......................................................... &version ...
-
-(defconst tinylibb-version
-  (substring "$Revision: 2.73 $" 11 15)
-  "Latest version number.")
-
-(defconst tinylibb-version-id
-  "$Id: tinylibb.el,v 2.73 2007/05/01 17:20:45 jaalto Exp $"
-  "Latest modification time and version number.")
-
-;;; ----------------------------------------------------------------------
-;;;
-(defun tinylibb-version (&optional arg)
-  "Show version information. ARG will instruct to print message to echo area."
-  (interactive "P")
-  (ti::package-version-info "tinylibb.el" arg))
-
-;;; ----------------------------------------------------------------------
-;;;
-(defun tinylibb-submit-bug-report ()
-  "Submit bug report."
-  (interactive)
-  (ti::package-submit-bug-report
-   "tinylibb.el"
-   tinylibb-version-id
-   '(tinylibb-version-id)))
 
 ;;}}}
 
