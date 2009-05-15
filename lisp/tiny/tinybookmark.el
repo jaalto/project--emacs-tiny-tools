@@ -399,6 +399,9 @@
             the file. Uses X-popup [imenu] for showing those book marks and
             moving between them.")
 
+(defvar tinybookmark-:version-time "2009.0515.0717"
+  "Last modified time.")
+
 ;;}}}
 ;;{{{ setup: -- hooks
 

@@ -2,6 +2,7 @@
 
 	* tiny/tinybookmark.el (ti::macrof-version-bug-report):
 	Remove. Never used.
+	(tinybookmark-:version-time): New.
 
 2009-03-29  Jari Aalto  <jari.aalto@cante.net>
 
