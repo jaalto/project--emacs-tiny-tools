@@ -829,7 +829,7 @@ to generate updated list."
      tinydebian-:severity-selected
      tinydebian-:tags-list)))
 
-(defconst tinydebian-:version-time "2009.0318.1913"
+(defconst tinydebian-:version-time "2009.0804.1644"
   "Last edited time.")
 
 (defvar tinydebian-:bts-extra-headers
@@ -912,6 +912,8 @@ Mode description:
      ["Send BTS Ctrl reassign"     tinydebian-bts-mail-ctrl-reassign t]
      ["Send BTS Ctrl retitle"      tinydebian-bts-mail-ctrl-retitle  t]
      ["Send BTS Ctrl reopen"       tinydebian-bts-mail-ctrl-reopen   t]
+     ["Send BTS Ctrl affects"      tinydebian-bts-mail-ctrl-affects  t]
+     ["Send BTS Ctrl clone"        tinydebian-bts-mail-ctrl-clone    t]
      ["Send BTS Ctrl merge"        tinydebian-bts-mail-ctrl-merge    t])
 
     (list
@@ -996,7 +998,9 @@ Mode description:
      (define-key map  "lwP"  'tinydebian-url-list-wnpp-itp)
 
      ;;  (C)ontrol commands alphabetically
+     (define-key map  "ca"  'tinydebian-bts-mail-ctrl-affects)
      (define-key map  "cc"  'tinydebian-bts-mail-ctrl-close)
+     (define-key map  "cC"  'tinydebian-bts-mail-ctrl-clone)
      (define-key map  "cf"  'tinydebian-bts-mail-ctrl-forward-main)
      (define-key map  "cF"  'tinydebian-bts-mail-ctrl-forwarded-main)
      (define-key map  "cm"  'tinydebian-bts-mail-ctrl-merge)
@@ -1272,9 +1276,9 @@ The BTS-TYPE can be:
   "Compose TYPE of address according to BTS using optional BUG number.
 Judging from optional BUFFER."
   (with-current-buffer (or buffer (current-buffer))
-    (let (bts)
-      (if (tinydebian-bts-email-compose type bug 'emacs)
-	  (setq bts 'emacs))
+    (let ((bts (if (tinydebian-bug-gnu-emacs-bts-p)
+		   'emacs)))
+      (tinydebian-bts-email-compose type bug bts)
       ;; FIXME launchpad
       (tinydebian-bts-email-compose
        type bug bts))))
@@ -4053,6 +4057,43 @@ thanks
      (setq point (point))
      (if tinydebian-:novice-mode
 	 (insert "<bug nbr that is duplicate of this bug>"))
+     (insert "\nthanks\n")
+     (goto-char point))))
+
+;;; ----------------------------------------------------------------------
+;;;
+(defun tinydebian-bts-mail-ctrl-clone (bug)
+  "Compose BTS control message a BUG for cloning."
+  (interactive
+   (list (tinydebian-bts-mail-ask-bug-number)))
+  (tinydebian-bts-mail-type-macro
+   nil nil nil
+   (format "Clone Bug#%s" bug)
+   (let (point)
+     (insert (format "clone %s -1" bug))
+     (setq point (point))
+     (if tinydebian-:novice-mode
+	 (insert " <To copy to new package: reassign -1 package>"))
+     (insert "\nretitle -1")
+     (if tinydebian-:novice-mode
+	 (insert " <New bug's title>"))
+     (insert "\nthanks\n")
+     (goto-char point))))
+
+;;; ----------------------------------------------------------------------
+;;;
+(defun tinydebian-bts-mail-ctrl-affects (bug)
+  "Compose BTS control message a BUG for affect."
+  (interactive
+   (list (tinydebian-bts-mail-ask-bug-number)))
+  (tinydebian-bts-mail-type-macro
+   nil nil nil
+   (format "Affect Bug#%s" bug)
+   (let (point)
+     (insert (format "affect %s " bug))
+     (setq point (point))
+     (if tinydebian-:novice-mode
+	 (insert "<space separated list of packages affected by this bug>"))
      (insert "\nthanks\n")
      (goto-char point))))
 

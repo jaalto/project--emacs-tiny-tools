@@ -1,3 +1,8 @@
+2009-08-08  Jari Aalto  <jari.aalto@cante.net>
+
+	* tiny/tinydebian.el (tinydebian-bts-generic-email-compose):
+	Define 'bts' variable. Detect Emacs BTS.
+
 2009-05-15  Jari Aalto  <jari.aalto@cante.net>
 
 	* tiny/tinylibb.el (kbd, functionp, frame-parameter): Remove.
