@@ -2126,6 +2126,16 @@ If optional REGEXP is sebt, it must take number in submatch 1."
 
 ;;; ----------------------------------------------------------------------
 ;;;
+(defsubst tinydebian-bug-nbr-insert-at-point ()
+  "Insert bug number at point (if anything found)."
+  (interactive)
+  (let ((nbr (or (tinydebian-email-cc-to-bug-nbr)
+		 (tinydebian-bug-nbr-any))))
+    (if nbr
+	(insert nbr))))
+
+;;; ----------------------------------------------------------------------
+;;;
 (defsubst tinydebian-bug-hash-buffer ()
   "Search #NNNN from buffer."
   (tinydebian-bug-nbr-buffer "#\\([0-9]+\\)"))
@@ -3068,6 +3078,15 @@ If optional RE is non-nil, remove all command lines matching RE"
 
 ;;; ----------------------------------------------------------------------
 ;;;
+(defun tinydebian-bts-mail-ctrl-command-reopen (bug)
+  "Reopen BUG."
+  (interactive
+   (list
+    (tinydebian-mail-mode-debian-address-ask-bug)))
+  (tinydebian-bts-mail-ctrl-command-add-macro "reopen" bug))
+
+;;; ----------------------------------------------------------------------
+;;;
 (defun tinydebian-bts-mail-ctrl-command-reassign (bug package)
   "Reassign BUG to PACKAGE."
   (interactive
@@ -3208,22 +3227,23 @@ Mode description:
     ["Add BTS Ctrl fixed"      tinydebian-bts-mail-ctrl-command-fixed    t]
     ["Add BTS Ctrl reassign"   tinydebian-bts-mail-ctrl-command-reassign t]
     ["Add BTS Ctrl retitle"    tinydebian-bts-mail-ctrl-command-retitle  t]
-;;;   Addend BTS Ctrl reopen"     tinydebian-bts-mail-ctrl-command-reopen   t]
+    ["Add BTS Ctrl reopen"     tinydebian-bts-mail-ctrl-command-reopen   t]
     ["Add BTS Ctrl merge"      tinydebian-bts-mail-ctrl-command-merge    t]
     ["Add BTS Ctrl CC"         tinydebian-bts-mail-ctrl-command-cc       t]
     ["Add BTS Ctrl No Ack"     tinydebian-bts-mail-ctrl-command-no-ack   t]
     ["Add BTS Ctrl No-owner"   tinydebian-bts-mail-ctrl-command-no-owner t]
+    ["Insert Bug number"       tinydebian-bug-nbr-insert-at-point t]
     ["Unarchive bug"           tinydebian-bts-mail-ctrl-command-unarchive t]
-
     )
 
    (progn
+     (define-key map  "i"  'tinydebian-mail-mode-insert-bug-number)
      (define-key map  "b"  'tinydebian-mail-mode-debian-address-bug-toggle)
-     (define-key map  "t"  'tinydebian-mail-mode-debian-address-control-toggle)
      (define-key map  "m"  'tinydebian-mail-mode-debian-address-maintonly-toggle)
      (define-key map  "o"  'tinydebian-mail-mode-debian-address-close-toggle)
      (define-key map  "q"  'tinydebian-mail-mode-debian-address-quiet-toggle)
      (define-key map  "s"  'tinydebian-mail-mode-debian-address-submitter-toggle)
+     (define-key map  "t"  'tinydebian-mail-mode-debian-address-control-toggle)
 
      (define-key map  "ub"  'tinydebian-bug-browse-url-by-bug)
      (define-key map  "uB"  'tinydebian-bug-browse-url-by-package-bugs)
@@ -3236,7 +3256,7 @@ Mode description:
      (define-key map  "cm"  'tinydebian-bts-mail-ctrl-command-merge)
      (define-key map  "cn"  'tinydebian-bts-mail-ctrl-command-no-ack)
      (define-key map  "cN"  'tinydebian-bts-mail-ctrl-command-no-owner)
-;;      (define-key map  "co"  'tinydebian-bts-mail-ctrl-command-reopen)
+     (define-key map  "co"  'tinydebian-bts-mail-ctrl-command-reopen)
      (define-key map  "cr"  'tinydebian-bts-mail-ctrl-command-reassign)
      (define-key map  "cR"  'tinydebian-bts-mail-ctrl-command-retitle)
      (define-key map  "cs"  'tinydebian-bts-mail-ctrl-command-severity)

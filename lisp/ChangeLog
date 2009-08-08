@@ -2,6 +2,8 @@
 
 	* tiny/tinydebian.el (tinydebian-bts-generic-email-compose):
 	Define 'bts' variable. Detect Emacs BTS.
+	(tinydebian-bts-mail-ctrl-command-reopen): New.
+	(tinydebian-bug-nbr-insert-at-point): New user function.
 
 2009-05-15  Jari Aalto  <jari.aalto@cante.net>
 
