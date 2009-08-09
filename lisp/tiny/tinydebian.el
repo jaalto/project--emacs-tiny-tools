@@ -1,4 +1,4 @@
-;;; tinydebian.el --- Debian utilities.
+;;; tinydebian.el --- Debian, Ubuntu and Emacs Bug Tracking utilities.
 
 ;;{{{ Id
 
@@ -57,19 +57,42 @@
 
 ;;  Overview of features
 ;;
-;;      This package contains utilities for the Debian package authors
-;;      (Debian Developers) and System Administarators to help
-;;      administring Debian in daily tasks and submitting bug reports
-;;      from Emacs Gnus mail interface. Learn more about Debian at
-;;      http://www.debian.org/ and Gnus, the combined all purpose, news
-;;      and mailreader at http://www.gnus.org/
+;;      This package contains utilities for the package authors
+;;      (Debian developers, Ubuntu Developers, Emacs Pretest
+;;      Developers) to help managing Bug reports from the Bug Tracking
+;;      Systems (BTS). The Bug interface hooks up in Gnus *Summary*
+;;      (http://www.gnus.org/) buffer and a separate menu to send
+;;      commands appear.
 ;;
-;;      o   colorize /var/log files like messages, syslog etc.
+;;      There are also minor modes that can be turned on for `M-x'
+;;      `mail' (C-x m) to use BTS control commands.
+;;
+;;      Briefly:
+;;
+;;      o   Colorize /var/log files like messages, syslog etc.
 ;;      o   In Gnus *Summary* buffer, there is new menu "Tdeb" to
-;;          administrate Debian bug reports. Useful mainly for Debian
-;;          package Developers.
-;;      o   To report bug to a Debian package, like command line reportbug(1):
-;;          M-x tinydebian-reportbug
+;;          administrate bug reports. Useful for Debian/Ubuntu/Emacs
+;;          developers.
+;;      o   To report a bug to a Debian package, similar to  reportbug(1),
+;;          use 'M-x' 'tinydebian-reportbug'
+;;
+;;  History
+;;
+;;      This package is called 'tinydebian', because it was first
+;;      developed to help administering a Debian system. Support for
+;;      the Debian BTS interface
+;;      (http://www.debian.org/Bugs/server-control) is a big part of
+;;      te file. Later, GNU Emacs development team decided to set up a
+;;      bug tracking system and they chose the Debian BTS software.
+;;      Support to detect Emacs bugs from Debian bugs were added.
+;;      Ubuntu Launchpad.net BTS can also be controlled by email and
+;;      it has similarities to the Debian BTS as far as how the
+;;      commands are added to the mail messages. The Launch bug email
+;;      interface is the last addition to the pack.
+;;
+;;      The heuristics are based in Gnus Summary buffer line (as in
+;;      standard Gnus), the Article content, to decide which bug
+;;      tracking system is used.
 
 ;;}}}
 
@@ -829,7 +852,7 @@ to generate updated list."
      tinydebian-:severity-selected
      tinydebian-:tags-list)))
 
-(defconst tinydebian-:version-time "2009.0804.1644"
+(defconst tinydebian-:version-time "2009.0809.1748"
   "Last edited time.")
 
 (defvar tinydebian-:bts-extra-headers

@@ -1,3 +1,7 @@
+2009-08-09  Jari Aalto  <jari.aalto@cante.net>
+
+	* tiny/tinydebian.el: Improve 'Commentary:' doc section.
+
 2009-08-08  Jari Aalto  <jari.aalto@cante.net>
 
 	* tiny/tinydebian.el (tinydebian-bts-generic-email-compose):
