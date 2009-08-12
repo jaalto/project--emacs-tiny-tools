@@ -853,7 +853,7 @@ to generate updated list."
      tinydebian-:severity-selected
      tinydebian-:tags-list)))
 
-(defconst tinydebian-:version-time "2009.0812.1354"
+(defconst tinydebian-:version-time "2009.0812.1741"
   "Last edited time.")
 
 (defvar tinydebian-:bts-extra-headers
@@ -3708,12 +3708,12 @@ An example: '   #12345   ' => 12345."
 ;;;
 (defsubst tinydebian-bts-mail-ask-bug-number (&optional type)
   "Ask bug number. Return as '(bug) suitable for interactive"
-  (read-string
-   (format "BTS %sbug number: "
-	   (if type
-	       (concat type " ")
-	     ""))
-   (tinydebian-bts-bug-number-trim
+  (tinydebian-bts-bug-number-trim
+   (read-string
+    (format "BTS %sbug number: "
+	    (if type
+		(concat type " ")
+	      ""))
     (tinydebian-bug-nbr-any))))
 
 ;;; ----------------------------------------------------------------------
