@@ -6,6 +6,7 @@
 ;; Keywords:        extensions
 ;; Author:          Jari Aalto
 ;; Maintainer:      Jari Aalto
+;; Created:         2001
 ;;
 ;; To get information on this program, call M-x tinydebian-version.
 ;; Look at the code with folding.el
@@ -36,7 +37,7 @@
 ;;   Put this file on your Emacs-Lisp `load-path', add following into your
 ;;   $HOME/.emacs startup file
 ;;
-;;      (setq tinydebian-:novice-mode nil)
+;;      (setq tinydebian-:novice-mode t)  ;; or nil
 ;;      (add-hook 'tinydebian-:load-hook 'tinydebian-install)
 ;;      (require 'tinydebian)
 ;;
@@ -852,7 +853,7 @@ to generate updated list."
      tinydebian-:severity-selected
      tinydebian-:tags-list)))
 
-(defconst tinydebian-:version-time "2009.0809.1748"
+(defconst tinydebian-:version-time "2009.0812.1354"
   "Last edited time.")
 
 (defvar tinydebian-:bts-extra-headers
@@ -925,6 +926,8 @@ Mode description:
 
     (list
      "BTS Control messages"
+     ["Send BTS Ctrl affects"      tinydebian-bts-mail-ctrl-affects  t]
+     ["Send BTS Ctrl clone"        tinydebian-bts-mail-ctrl-clone    t]
      ["Send BTS Ctrl close"        tinydebian-bts-mail-ctrl-close    t]
      ["Send BTS Ctrl severity"     tinydebian-bts-mail-ctrl-severity t]
      ["Send BTS Ctrl tags"         tinydebian-bts-mail-ctrl-tags     t]
@@ -932,12 +935,11 @@ Mode description:
      ["Send BTS Ctrl forward"      tinydebian-bts-mail-ctrl-forward-main  t]
      ["Send BTS Ctrl forwarded"    tinydebian-bts-mail-ctrl-forwarded-main  t]
      ["Send BTS Ctrl fixed"        tinydebian-bts-mail-ctrl-fixed    t]
+     ["Send BTS Ctrl found"        tinydebian-bts-mail-ctrl-found    t]
+     ["Send BTS Ctrl merge"        tinydebian-bts-mail-ctrl-merge    t]
      ["Send BTS Ctrl reassign"     tinydebian-bts-mail-ctrl-reassign t]
      ["Send BTS Ctrl retitle"      tinydebian-bts-mail-ctrl-retitle  t]
-     ["Send BTS Ctrl reopen"       tinydebian-bts-mail-ctrl-reopen   t]
-     ["Send BTS Ctrl affects"      tinydebian-bts-mail-ctrl-affects  t]
-     ["Send BTS Ctrl clone"        tinydebian-bts-mail-ctrl-clone    t]
-     ["Send BTS Ctrl merge"        tinydebian-bts-mail-ctrl-merge    t])
+     ["Send BTS Ctrl reopen"       tinydebian-bts-mail-ctrl-reopen   t])
 
     (list
      "Query information"
@@ -1024,9 +1026,11 @@ Mode description:
      (define-key map  "ca"  'tinydebian-bts-mail-ctrl-affects)
      (define-key map  "cc"  'tinydebian-bts-mail-ctrl-close)
      (define-key map  "cC"  'tinydebian-bts-mail-ctrl-clone)
+
      (define-key map  "cf"  'tinydebian-bts-mail-ctrl-forward-main)
      (define-key map  "cF"  'tinydebian-bts-mail-ctrl-forwarded-main)
      (define-key map  "cm"  'tinydebian-bts-mail-ctrl-merge)
+     (define-key map  "cn"  'tinydebian-bts-mail-ctrl-found)
      (define-key map  "co"  'tinydebian-bts-mail-ctrl-reopen)
      (define-key map  "cr"  'tinydebian-bts-mail-ctrl-reassign)
      (define-key map  "cR"  'tinydebian-bts-mail-ctrl-retitle)
@@ -3048,6 +3052,106 @@ If optional RE is non-nil, remove all command lines matching RE"
 
 ;;; ----------------------------------------------------------------------
 ;;;
+(defun tinydebian-bts-mail-ctrl-command-cc (&optional list)
+  "Add pseudo header and LIST of email addresses.
+If LIST if nil, position point at pseudo header."
+  (interactive)
+  (let ((cmd (format "X-Debbugs-CC: %s" (mapconcat 'concat list " "))))
+    (tinydebian-bts-mail-ctrl-command-add cmd)
+    (forward-line -1)
+    (re-search-forward ":" nil t)))
+
+;;; ----------------------------------------------------------------------
+;;;
+(defun tinydebian-bts-mail-ctrl-command-fixed (bug version)
+  "Mark BUG fixed in VERSION."
+  (interactive
+   (list
+    (tinydebian-mail-mode-debian-address-ask-bug)
+    (read-string "Fixed in version: ")))
+  (tinydebian-bts-mail-ctrl-command-add-macro "fixed" bug version))
+
+;;; ----------------------------------------------------------------------
+;;;
+(defun tinydebian-bts-mail-ctrl-command-forwarded (bug uri)
+  "Mark BUG forwarded to URI."
+  (interactive
+   (list
+    (tinydebian-mail-mode-debian-address-ask-bug)
+    (read-string "Forward to URI: ")))
+  (tinydebian-bts-mail-ctrl-command-add-macro "forwarded" bug uri))
+
+;;; ----------------------------------------------------------------------
+;;;
+(defun tinydebian-bts-mail-ctrl-command-found (bug version)
+  "Mark BUG found in VERSION."
+  (interactive
+   (list
+    (tinydebian-mail-mode-debian-address-ask-bug)
+    (read-string "Package version where bug was found: ")))
+  (tinydebian-bts-mail-ctrl-command-add-macro "found" bug version))
+
+;;; ----------------------------------------------------------------------
+;;;
+(defun tinydebian-bts-mail-ctrl-command-merge (bug list)
+  "Mark BUG merged with LIST of bug numbers."
+  (interactive
+   (list
+    (tinydebian-mail-mode-debian-address-ask-bug)
+    (tinydebian-bts-ctrl-list-ask "Merge with bug")))
+  (let ((string (mapconcat 'concat list " ")))
+    (tinydebian-bts-mail-ctrl-command-add-macro "merge" bug string)))
+
+;;; ----------------------------------------------------------------------
+;;;
+(defun tinydebian-bts-mail-ctrl-command-no-ack ()
+  "Insert command to disable acknowledgement mail from the BTS."
+  (interactive)
+  (save-excursion
+    (tinydebian-bts-mail-ctrl-command-add "X-Debbugs-No-Ack: enable"
+					  "^X-Debbugs-No-Ack:")))
+
+;;; ----------------------------------------------------------------------
+;;;
+(defun tinydebian-bts-mail-ctrl-command-no-owner (bug)
+  "Remove the owner of BUG."
+  (interactive
+   (list
+    (tinydebian-mail-mode-debian-address-ask-bug)))
+  (tinydebian-bts-mail-ctrl-command-add-macro "noowner" bug))
+
+;;; ----------------------------------------------------------------------
+;;;
+(defun tinydebian-bts-mail-ctrl-command-reassign (bug package)
+  "Reassign BUG to PACKAGE."
+  (interactive
+   (list
+    (tinydebian-mail-mode-debian-address-ask-bug)
+    (read-string "Reassign to package: ")))
+  (tinydebian-bts-mail-ctrl-command-add-macro "reassign" bug package))
+
+;;; ----------------------------------------------------------------------
+;;;
+(defun tinydebian-bts-mail-ctrl-command-reopen (bug)
+  "Reopen BUG."
+  (interactive
+   (list
+    (tinydebian-mail-mode-debian-address-ask-bug)))
+  (tinydebian-bts-mail-ctrl-command-add-macro "reopen" bug))
+
+;;; ----------------------------------------------------------------------
+;;;
+(defun tinydebian-bts-mail-ctrl-command-retitle (bug string)
+  "Retitle BUG with STRING."
+  (interactive
+   (let ((subject (mail-fetch-field "Subject")))
+     (list
+      (tinydebian-mail-mode-debian-address-ask-bug)
+      (read-string "New title: " subject))))
+  (tinydebian-bts-mail-ctrl-command-add-macro "retitle" bug string))
+
+;;; ----------------------------------------------------------------------
+;;;
 (defun tinydebian-bts-mail-ctrl-command-severity (bug severity)
   "Add command for BUG SEVERITY."
   (interactive
@@ -3077,78 +3181,6 @@ If optional RE is non-nil, remove all command lines matching RE"
 
 ;;; ----------------------------------------------------------------------
 ;;;
-(defun tinydebian-bts-mail-ctrl-command-usertag (bug list)
-  "Set BUG LIST to usertags."
-  (interactive
-   (list
-    (tinydebian-mail-mode-debian-address-ask-bug)
-    (tinydebian-bts-ctrl-list-ask "Usertag")))
-  (tinydebian-bts-mail-ctrl-command-add-macro
-   "usertag"
-   bug
-   (concat "+ " (mapconcat 'concat list " "))))
-
-;;; ----------------------------------------------------------------------
-;;;
-(defun tinydebian-bts-mail-ctrl-command-retitle (bug string)
-  "Retitle BUG with STRING."
-  (interactive
-   (let ((subject (mail-fetch-field "Subject")))
-     (list
-      (tinydebian-mail-mode-debian-address-ask-bug)
-      (read-string "New title: " subject))))
-  (tinydebian-bts-mail-ctrl-command-add-macro "retitle" bug string))
-
-;;; ----------------------------------------------------------------------
-;;;
-(defun tinydebian-bts-mail-ctrl-command-reopen (bug)
-  "Reopen BUG."
-  (interactive
-   (list
-    (tinydebian-mail-mode-debian-address-ask-bug)))
-  (tinydebian-bts-mail-ctrl-command-add-macro "reopen" bug))
-
-;;; ----------------------------------------------------------------------
-;;;
-(defun tinydebian-bts-mail-ctrl-command-reassign (bug package)
-  "Reassign BUG to PACKAGE."
-  (interactive
-   (list
-    (tinydebian-mail-mode-debian-address-ask-bug)
-    (read-string "Reassign to package: ")))
-  (tinydebian-bts-mail-ctrl-command-add-macro "reassign" bug package))
-
-;;; ----------------------------------------------------------------------
-;;;
-(defun tinydebian-bts-mail-ctrl-command-forwarded (bug uri)
-  "Mark BUG forwarded to URI."
-  (interactive
-   (list
-    (tinydebian-mail-mode-debian-address-ask-bug)
-    (read-string "Forward to URI: ")))
-  (tinydebian-bts-mail-ctrl-command-add-macro "forwarded" bug uri))
-
-;;; ----------------------------------------------------------------------
-;;;
-(defun tinydebian-bts-mail-ctrl-command-fixed (bug version)
-  "Mark BUG fixed in VERSION."
-  (interactive
-   (list
-    (tinydebian-mail-mode-debian-address-ask-bug)
-    (read-string "Fixed in version: ")))
-  (tinydebian-bts-mail-ctrl-command-add-macro "fixed" bug version))
-
-;;; ----------------------------------------------------------------------
-;;;
-(defun tinydebian-bts-mail-ctrl-command-no-owner (bug)
-  "Remove the owner of BUG."
-  (interactive
-   (list
-    (tinydebian-mail-mode-debian-address-ask-bug)))
-  (tinydebian-bts-mail-ctrl-command-add-macro "noowner" bug))
-
-;;; ----------------------------------------------------------------------
-;;;
 (defun tinydebian-bts-mail-ctrl-command-unarchive (bug)
   "Unarchive BUG to be able to respond to it.
 
@@ -3163,34 +3195,16 @@ changes, the bug must be unarchived first."
 
 ;;; ----------------------------------------------------------------------
 ;;;
-(defun tinydebian-bts-mail-ctrl-command-merge (bug list)
-  "Mark BUG merged with LIST of bug numbers."
+(defun tinydebian-bts-mail-ctrl-command-usertag (bug list)
+  "Set BUG LIST to usertags."
   (interactive
    (list
     (tinydebian-mail-mode-debian-address-ask-bug)
-    (tinydebian-bts-ctrl-list-ask "Merge with bug")))
-  (let ((string (mapconcat 'concat list " ")))
-    (tinydebian-bts-mail-ctrl-command-add-macro "merge" bug string)))
-
-;;; ----------------------------------------------------------------------
-;;;
-(defun tinydebian-bts-mail-ctrl-command-cc (&optional list)
-  "Add pseudo header and LIST of email addresses.
-If LIST if nil, position point at pseudo header."
-  (interactive)
-  (let ((cmd (format "X-Debbugs-CC: %s" (mapconcat 'concat list " "))))
-    (tinydebian-bts-mail-ctrl-command-add cmd)
-    (forward-line -1)
-    (re-search-forward ":" nil t)))
-
-;;; ----------------------------------------------------------------------
-;;;
-(defun tinydebian-bts-mail-ctrl-command-no-ack ()
-  "Insert command to disable acknowledgement mail from the BTS."
-  (interactive)
-  (save-excursion
-    (tinydebian-bts-mail-ctrl-command-add "X-Debbugs-No-Ack: enable"
-					  "^X-Debbugs-No-Ack:")))
+    (tinydebian-bts-ctrl-list-ask "Usertag")))
+  (tinydebian-bts-mail-ctrl-command-add-macro
+   "usertag"
+   bug
+   (concat "+ " (mapconcat 'concat list " "))))
 
 ;;; ----------------------------------------------------------------------
 ;;;
@@ -3241,20 +3255,21 @@ Mode description:
 
     "----"
 
+    ["Add BTS Ctrl CC"         tinydebian-bts-mail-ctrl-command-cc       t]
 ;;;    ["Send BTS Ctrl close"      tinydebian-bts-mail-ctrl-command-close    t]
-    ["Add BTS Ctrl severity"   tinydebian-bts-mail-ctrl-command-severity t]
-    ["Add BTS Ctrl tags"       tinydebian-bts-mail-ctrl-command-tags     t]
-    ["Add BTS Ctrl usertag"    tinydebian-bts-mail-ctrl-command-usertag  t]
-    ["Add BTS Ctrl forward"    tinydebian-bts-mail-ctrl-command-forwarded  t]
-;;;   Addend BTS Ctrl forwarded"  tinydebian-bts-mail-ctrl-command-forward  t]
     ["Add BTS Ctrl fixed"      tinydebian-bts-mail-ctrl-command-fixed    t]
+    ["Add BTS Ctrl forward"    tinydebian-bts-mail-ctrl-command-forwarded  t]
+;;;    ["Addend BTS Ctrl forwarded"  tinydebian-bts-mail-ctrl-command-forward  t]
+    ["Add BTS Ctrl found"      tinydebian-bts-mail-ctrl-command-found    t]
+    ["Add BTS Ctrl merge"      tinydebian-bts-mail-ctrl-command-merge    t]
+    ["Add BTS Ctrl No Ack"     tinydebian-bts-mail-ctrl-command-no-ack   t]
+    ["Add BTS Ctrl No-owner"   tinydebian-bts-mail-ctrl-command-no-owner t]
     ["Add BTS Ctrl reassign"   tinydebian-bts-mail-ctrl-command-reassign t]
     ["Add BTS Ctrl retitle"    tinydebian-bts-mail-ctrl-command-retitle  t]
     ["Add BTS Ctrl reopen"     tinydebian-bts-mail-ctrl-command-reopen   t]
-    ["Add BTS Ctrl merge"      tinydebian-bts-mail-ctrl-command-merge    t]
-    ["Add BTS Ctrl CC"         tinydebian-bts-mail-ctrl-command-cc       t]
-    ["Add BTS Ctrl No Ack"     tinydebian-bts-mail-ctrl-command-no-ack   t]
-    ["Add BTS Ctrl No-owner"   tinydebian-bts-mail-ctrl-command-no-owner t]
+    ["Add BTS Ctrl severity"   tinydebian-bts-mail-ctrl-command-severity t]
+    ["Add BTS Ctrl tags"       tinydebian-bts-mail-ctrl-command-tags     t]
+    ["Add BTS Ctrl usertag"    tinydebian-bts-mail-ctrl-command-usertag  t]
     ["Insert Bug number"       tinydebian-bug-nbr-insert-at-point t]
     ["Unarchive bug"           tinydebian-bts-mail-ctrl-command-unarchive t]
     )
@@ -3278,6 +3293,7 @@ Mode description:
      (define-key map  "cF"  'tinydebian-bts-mail-ctrl-command-forwarded)
      (define-key map  "cm"  'tinydebian-bts-mail-ctrl-command-merge)
      (define-key map  "cn"  'tinydebian-bts-mail-ctrl-command-no-ack)
+     (define-key map  "cn"  'tinydebian-bts-mail-ctrl-command-found)
      (define-key map  "cN"  'tinydebian-bts-mail-ctrl-command-no-owner)
      (define-key map  "co"  'tinydebian-bts-mail-ctrl-command-reopen)
      (define-key map  "cr"  'tinydebian-bts-mail-ctrl-command-reassign)
@@ -3676,6 +3692,20 @@ can all be nil."
 
 ;;; ----------------------------------------------------------------------
 ;;;
+(defsubst tinydebian-bts-bug-number-trim (str)
+  "Remove whitespace and #-hash signs.
+An example: '   #12345   ' => 12345."
+  (if (stringp str)
+      (replace-regexp-in-string
+       "^[ \t\r\n#]+"
+       ""
+       (replace-regexp-in-string
+	"[ \t\r\n]+$"
+	""
+	str))))
+
+;;; ----------------------------------------------------------------------
+;;;
 (defsubst tinydebian-bts-mail-ask-bug-number (&optional type)
   "Ask bug number. Return as '(bug) suitable for interactive"
   (read-string
@@ -3683,7 +3713,8 @@ can all be nil."
 	   (if type
 	       (concat type " ")
 	     ""))
-   (tinydebian-bug-nbr-any)))
+   (tinydebian-bts-bug-number-trim
+    (tinydebian-bug-nbr-any))))
 
 ;;; ----------------------------------------------------------------------
 ;;;
@@ -4083,6 +4114,26 @@ thanks
      (setq point (point))
      (if tinydebian-:novice-mode
 	 (insert "<version>"))
+     (insert "\nthanks\n")
+     (goto-char point))))
+
+;;; ----------------------------------------------------------------------
+;;;
+(defun tinydebian-bts-mail-ctrl-found (bug version)
+  "Compose BTS control message to mark BUG found in VERSION."
+  (interactive
+   (list
+    (tinydebian-bts-mail-ask-bug-number)
+    (read-string "Package version where bug was found: ")))
+  (tinydebian-bts-mail-type-macro
+      nil nil nil
+      (format "Found Bug#%s in version %s" bug version)
+   (let (point)
+     (insert (format "found %s %s" bug version))
+     (setq point (point))
+     (if tinydebian-:novice-mode
+	 (insert "\n# Records that #bug has been encountered"
+		 "in the given version of the package"))
      (insert "\nthanks\n")
      (goto-char point))))
 

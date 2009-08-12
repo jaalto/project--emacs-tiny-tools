@@ -1,3 +1,17 @@
+2009-08-12  Jari Aalto  <jari.aalto@cante.net>
+
+	* tiny/tinydebian.el (tinydebian-bts-mail-ctrl-command-found): New.
+	(tinydebian-bts-mail-ask-bug-number): Move call to
+	`tinydebian-bts-bug-number-trim'.
+	(tinydebian-bts-bug-number-trim): Test with `stringp'.
+	(tinydebian-bts-mail-ctrl-found): New.
+
+2009-08-10  Jari Aalto  <jari.aalto@cante.net>
+
+	* tiny/tinydebian.el (tinydebian-bts-bug-number-trim): New.
+	(tinydebian-bts-mail-ask-bug-number): Use
+	`tinydebian-bts-bug-number-trim' to accept string like '#12345'.
+
 2009-08-09  Jari Aalto  <jari.aalto@cante.net>
 
 	* tiny/tinydebian.el: Improve 'Commentary:' doc section.
