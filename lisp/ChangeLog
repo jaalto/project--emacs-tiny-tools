@@ -1,3 +1,22 @@
+2009-08-14  Jari Aalto  <jari.aalto@cante.net>
+
+	* tiny/tinydebian.el (tinydebian-bts-mail-ctrl-notfound):
+	Add missing parameter VERSION.
+	(tinydebian-bts-mail-ctrl-notfixed): New.
+	(tinydebian-bts-mail-ctrl-command-notforwarded): New.
+	(tinydebian-bts-mail-ctrl-command-notfixed): New.
+	(tinydebian-bts-mail-ctrl-command-notfound): New.
+	(tinydebian-bts-mail-ctrl-notforwarded): New.
+	(tinydebian-bug-nbr-debian-url-forward): New.
+	(tinydebian-mail-mode-debian-address-package-toggle): New.
+	(tinydebian-mail-mode-address-type-add): Rename function.
+	(tinydebian-bug-gnu-emacs-bts-gnus-summary-line-p): Improve
+	Emacs BTS detection.
+
+2009-08-13  Jari Aalto  <jari.aalto@cante.net>
+
+	* tiny/tinydebian.el (tinydebian-bts-mail-ctrl-notfound): New.
+
 2009-08-12  Jari Aalto  <jari.aalto@cante.net>
 
 	* tiny/tinydebian.el (tinydebian-bts-mail-ctrl-command-found): New.
