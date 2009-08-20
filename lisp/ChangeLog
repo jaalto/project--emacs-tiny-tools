@@ -1,3 +1,8 @@
+2009-08-20  Jari Aalto  <jari.aalto@cante.net>
+
+	* tiny/tinydebian.el (tinydebian-bts-mail-ctrl-forwarded-main):
+	Fix if-case indent.
+
 2009-08-14  Jari Aalto  <jari.aalto@cante.net>
 
 	* tiny/tinydebian.el (tinydebian-bts-mail-ctrl-notfound):
@@ -2359,7 +2364,7 @@
 
 	* other/dired-sort.el (dired-sort-default-keys): 2.7 Changed
 	key prefix from `S' (used by dired:symlink) to `C-cs'.
-	(dired-sort-extract-size): 2.7 Check ¥dired-sort-move-to-date'
+	(dired-sort-extract-size): 2.7 Check 'dired-sort-move-to-date'
 	before reading size.
 	(dired-sort-move-to-date): 2.7 Check status of
 	`dired-move-to-filename'.
@@ -3415,7 +3420,7 @@
 	`stringp' test.
 
 	* tiny/tinylibmail.el (ti::mail-add-field): 1.86 Use
-	¥mail-position-on-field'.
+	`mail-position-on-field'.
 
 	* tiny/tinydiff.el (tinydiff-:patch-to-file): 1.80 New.
 	(tinydiff-patch): 1.80 Dave file to `tinydiff-:patch-to-file'
@@ -3709,7 +3714,7 @@
 	New.
 	(tinycygwin-bug-report-batch): 1.86 Replaced
 	`unless tinycygwin-:expert-flag' with
-	¥tinycygwin-non-expert-with'. Added
+	`tinycygwin-non-expert-with'. Added
 	`tinycygwin-bug-report-batch-settings'
 	(tinycygwin-bug-report-batch-settings): 1.86 New.
 	(tinycygwin-user-mail-address-set): 1.86 New.
@@ -3954,9 +3959,9 @@
 	(tinymy-file-stamp): 1.91 Removed. Emacs includes
 	time-stamp.el
 	(tinymy-:stamp-user-mail-address): Removed. Was used in
-	¥tinymy-file-stamp'.
+	`tinymy-file-stamp'.
 	(tinymy-write-file-hook): 1.91 Removed. Was used in
-	¥tinymy-file-stamp'.
+	`tinymy-file-stamp'.
 	(tinymy-buffer-file-gzip): 1.91 Renamed. Was
 	`tinymy-gzip-buffer-file'
 	(tinymy-buffer-read-only): 1.91 Renamed. Was
@@ -4042,7 +4047,7 @@
 
 	* tiny/tinymail.el: 1.84 New.
 	(tinymail-install-hooks): 1.84 install
-	`tinymail-scramble-email-addresses' to ¥tinymail-:send-mail-hook-list'
+	`tinymail-scramble-email-addresses' to `tinymail-:send-mail-hook-list'
 	(tinymail-scramble-email-addresses-1): 1.84 New.
 	(tinymail-scramble-email-addresses): 1.84 New.
 
@@ -4283,7 +4288,7 @@
 
 	* tiny/tinyigrep.el (tinyigrep-main-read-args): 1.85 Removed
 	`ext' (like *el), because it was offered in wrong prompt.
-	ItÅ‰s not a database choice, but a file pattern choice.
+	It is not a database choice, but a file pattern choice.
 
 2003-09-15 Mon  Jari Aalto  <jari.aalto@cante.net>
 
@@ -4382,7 +4387,7 @@
 	non-used variable `recursive' in `multiple-value-bind'.
 	(tinyigrep-main-read-args): 1.84 Offer `ext' as defuault choice
 	to search files (like in test.java buffer => *.java). Removed unused
-	variable `dir' from top-level Å¥let'.
+	variable `dir' from top-level `let'.
 	(tinyigrep-igrep-call): 1.84 Missing variable `fid'. Added.
 
 	* tiny/tinymail.el (tinymail-y-or-n-p-abort-p): 1.82 Moved upward
@@ -4539,18 +4544,18 @@
 	2003-08-23 Sat  Jari Aalto  <jari.aalto@cante.net>
 	* tiny/tinylib.el (ti:-syntax-info): 1.105 Renamed, was
 	`ti:-syntax-info'.
-	(ti::var-x-coord): 1.105 Renamed. Was Å¥ti::-x-coord'
+	(ti::var-x-coord): 1.105 Renamed. Was `ti::-x-coord'
 	(ti::var-y-coord): 1.105 Renamed. Was `ti::-y-coord'
 	(ti::var-passwd-buffer): 1.105 Renamed. Was `ti::-passwd-buffer'
 	(ti::buffer-text-properties-wipe): 1.105 Made BEG END optional.
 	(ti::string-remove-whitespace): 1.106 Rewritten.
 
 	* tiny/tinylibm.el (ti::month-to-number): 1.86 Added
-	argument Å¥zero-padded'.
+	argument `zero-padded'.
 	(ti::nil-p): 1.86 Added \r check.
 
 	* tiny/tinylibmail.el (ti::mail-nslookup): 1.71 Removed
-	Å¥erase-buffer'. Few variables renamed.
+	`erase-buffer'. Few variables renamed.
 	(ti::mail-nslookup): 1.71 Support .info etc. domains,
 	not just three character domains.
 	(ti::mail-whois): 1.71 New.
@@ -4655,7 +4660,7 @@
 	verification support.
 
 	* tiny/tinylibid.el (ti::id-:buffer-match-regexp-list): 1.62
-	Modified Å¥code-java' regexp a little.
+	Modified `code-java' regexp a little.
 
 2003-08-12 Tue  Jari Aalto  <jari.aalto@cante.net>
 
@@ -4816,7 +4821,7 @@
 
 	* tiny/tinyirc.el
 	-- Byte compile is clean.
-	(tinyirc-append-to-buffer): 1.18 Å¥open-line'
+	(tinyirc-append-to-buffer): 1.18 `open-line'
 	called without argument. Fixed.
 	(tinyirc-pastebot-message-record):
 	1.18 Wrong globa variable `tinyirc-:pastebot-buffer-file-name' =>
@@ -4956,7 +4961,7 @@
 
 	* tiny/tinyurl.el: 1.71 Added win32 check. under Linux,
 	Netscape is not longer dominating, but Mozilla, Phoenix or Opera.
-	(tinyurl-user-command-table-default): 1.71 Added Å¥default'.
+	(tinyurl-user-command-table-default): 1.71 Added `default'.
 	(tinyurl-command-table-default): 1.71 New.
 	(tinyurl-command-table-defaults): 1.71 Added DEFAULT entry.
 
@@ -4977,7 +4982,7 @@
 	Missing paren added.
 	(tinytag-uninstall): 1.67 New.
 	(tinytag-install-sample-databases): 1.67 Added property flag
-	Å¥done'.
+	`done'.
 
 	* tiny/tinypath.el (tinypath-directory-list-clean): 1.121 Removed
 	`win32' check, because that prevented calling
@@ -5371,7 +5376,7 @@
 
 	* tiny/tinylibxe.el (expand-file-name): 1.60 Winth native Win32
 	Emacs + igrep.el + tinyigrep.el, there was a problem with calling
-	the databases. The problme was function Å¥igrep.el::igrep' whic
+	the databases. The problme was function `igrep.el::igrep' whic
 	called `shell-quote-argument' that caused havoc on file names.
 	The advice code undoes the effect.
 
@@ -5426,7 +5431,7 @@
 	(tinymail-from-anti-ube-maybe): 1.69 Added check for
 	`user-mail-address'
 	(tinymail-:report-mail-notify-program): 1.69 Improved checking
-	with Å¥let' form.
+	with `let' form.
 	(tinymail-default-report-mail-command): 1.69 If there is
 	~/.procmailrc, show message to user, but do not die. Removed
 	`error' call.
@@ -5515,7 +5520,7 @@
 	safer to bind `tinyeat-erase-buffer'
 	(tinyeat-install-default-bindings): 1.60 Added `kbd'
 	binding `M-DEL', alt-backspace to run
-	`tinyeat-backward-preserve'. Used Å¥kbd' to bind
+	`tinyeat-backward-preserve'. Used `kbd' to bind
 	`ESC C-y' to `tinyeat-yank-overwrite'.
 
 2003-03-20 Thu  Jari Aalto  <jari.aalto@cante.net>
@@ -5903,7 +5908,7 @@
 	* tiny/tinytab.el (tinytab-activate-region): New.
 
 	* tiny/tinylibb.el (region-active-p): 1.74 Return `mark',
-	not Å¥mark-marker' in Emacs.
+	not `mark-marker' in Emacs.
 
 	* tiny/tinytab.el (tinytab-region-bounds): Require that
 	`transient-mark-mode' is active, otherwise there will
@@ -6292,8 +6297,8 @@
 
 2002-10-24  Jari Aalto   <jari.aalto@cante.net>
 
-	* tiny/tinypath.el (fboundp): Å¥turn-on-font-lock' typo.
-	Was Å¥fbounp' => Å¥fboundp'
+	* tiny/tinypath.el (fboundp): `turn-on-font-lock' typo.
+	Was `fbounp' => `fboundp'
 
 2002-10-23  Jari Aalto  <jari.aalto@cante.net>
 
@@ -6689,7 +6694,7 @@
 2002-08-20 Tue Jari Aalto  <jari.aalto@cante.net>
 
 	* tiny/tinymy.el (tinymy-compile-run-command): 1.61
-	Removed Å¥fundamental-mode' restrictions, where the
+	Removed `fundamental-mode' restrictions, where the
 	mode was not checked at all. Now it is.
 
 	* tiny/tinylibid.el (ti::id-test-buffer-content-special): 1.58
@@ -6831,7 +6836,7 @@
 	differently and user may want to know more.
 	(tiny-setup-tinyappend-bind): Added display definitions
 	C-c= etc. Added FORCE argument. Changed
-	Å¥tinyappend-end' binding from C-c= to C-c+.
+	`tinyappend-end' binding from C-c= to C-c+.
 	All other binfings changed as well. (+ = add, _ = add to the end,
 	_ = kill, | = yank)
 	(tiny-setup-tinyappend-bindforce): New.
@@ -6916,7 +6921,7 @@
 	tinytf.el white-paper-text
 
 	* tiny/tinyurl.el: 1.57 Wrong indentation (off by +1)
-	in Å¥Code Note: overlay management'. This caysed all text
+	in `Code Note: overlay management'. This caysed all text
 	to turn into BOLD in HTML (ripdoc.pl file | t2html.pl)
 
 2002-08-06 Tue  Jari Aalto  <jari.aalto@cante.net>
@@ -7513,7 +7518,7 @@
 2002-02-11 Mon  Jari Aalto  <jari.aalto@cante.net>
 
 	* tiny/tinypath.el (tinypath-install-environment-user):
-	Corrected message for Å¥bash'. The USER is not defined.
+	Corrected message for `bash'. The USER is not defined.
 
 	* tiny/tinylib.el (ti::date-standard-rfc-regexp): 1.65 New.
 	(ti::buffer-fill-region-spaces): 1.65 Added `P'
@@ -8116,8 +8121,8 @@
 	(ti::m-tmp-dir): 1.60 Removed. Not used.
 	(ti:-tmp-dir): 1.60 Removed. Not used.
 	(ti:-tmp-buffer): 1.60 Removed. not used.
-	(ti::p-zip): 1.60 REmoved reference to Å¥ti:-tmp-buffer'
-	(ti::-passwd-buffer): 1.60 Renamed. Was Å¥ti:-passwd-buffer'.
+	(ti::p-zip): 1.60 REmoved reference to `ti:-tmp-buffer'
+	(ti::-passwd-buffer): 1.60 Renamed. Was `ti:-passwd-buffer'.
 	(ti:-compression-ext): 1.60 Removed. Unused.
 	(ti::-x-coord): 1.60 Renamed. Was `ti:-x-coord'
 	(ti::-y-coord): 1.60 Renamed. Was `ti:-y-coord'
@@ -8199,9 +8204,9 @@
 	Now `tinydired-sort-dir' is no more installed under
 	Emacs 21, but a message is printed to make user
 	aware of the new ls-lisp.el variable.
-	(tinydired-:tmp-dir): 1.52 Added Å¥dolist', to check where
+	(tinydired-:tmp-dir): 1.52 Added `dolist', to check where
 	is a good download directory.
-	(tinydired-:download-dir): 1.52 Added Å¥dolist', to check where
+	(tinydired-:download-dir): 1.52 Added `dolist', to check where
 	is a good download directory.
 	(ange-ftp-vms-sans-version): 1.52 Tightened the Emacs version
 	test. Now it's bullet proof.
@@ -8280,7 +8285,7 @@
 	variable `ptr'
 
 	* tiny/tiny-setup.el (tiny-setup-package): 1.64 Removed unused variable
-	Å¥done'.
+	`done'.
 	(autoload): 1.64 Added autoloads for `ti::mt-mailbox-p' and
 	`turn-on-tinymailbox-mode'
 
@@ -8624,35 +8629,35 @@
 2001-11-24  Jari Aalto  <jari.aalto@cante.net>
 
 	* tiny/tinypath.el: Error in the setup comment. There is
-	no function Å¥stringp=' => `string='. Error reported by
+	no function `stringp=' => `string='. Error reported by
 	david x callaway <dxc@xprt.net>
 
 2001-11-23 Fri  Jari Aalto  <jari.aalto@cante.net>
 
 	* tiny/tinylib.el (ti::unix-man-path-root): check for nil
-	before calling Å¥file-directory-p'
+	before calling `file-directory-p'
 
 	* tiny/tinydiff.el (tinydiff-find-program): In SunOS, the
 	default diff program is located from /bin/diff. Added code
 	to give precedence for /usr/local/bin and /opt/local/bin.
 	(tinydiff-:diff-program): Now prefer
-	Å¥diff-comman' and Å¥ediff-diff-program' before searching the
+	`diff-comman' and `ediff-diff-program' before searching the
 	diff command along PATH.
 	(tinydiff-get-function-name): Renamed.
-	Was Å¥tinydiff-func-name-store'
+	Was `tinydiff-func-name-store'
 	(tinydiff-get-function-name): Renamed.
-	Was Å¥tinydiff-get-func-name'
+	Was `tinydiff-get-func-name'
 	(tinydiff-file-to-patch): Added 'return' to jump out of
 	the loop immediately when destination file to patch was found.
 	(tinydiff-patch-with-diff-1): SERIOUS BUG. File being patched
 	was parsed wrong so that FILE (had dir) and DIR portions (had
-	file). Swapped order of Å¥file-name-directory' and
-	Å¥file-name-nondirectory'
+	file). Swapped order of `file-name-directory' and
+	`file-name-nondirectory'
 	(tinydiff-patch): Removed tinydiff-shell-command and used
-	more portable Å¥call-process' to call gzip.
+	more portable `call-process' to call gzip.
 
 	* tiny/tinyigrep.el (tinyigrep-install-default-databases):
-	Added Å¥lisp-ediff' satabase seach.
+	Added `lisp-ediff' satabase seach.
 
 	* tiny/tinylisp.el (tinylisp-:menu-info): Spelling mistake
 	a)ad => a)d (advised functions)
@@ -8668,7 +8673,7 @@
 
 	* tiny/tiny-setup.el (tiny-setup-turn-on-tinytf-mode-maybe):
 	Added better TF detecting: check heading Level 1 and 2, not just
-	TOC to decide if TF is turned on. Error in Å¥remove-hook': it
+	TOC to decide if TF is turned on. Error in `remove-hook': it
 	never uninstalled itself.
 
 2001-11-19  Jari Aalto  <jari.aalto@cante.net>
@@ -8770,7 +8775,7 @@
 2001-10-11 Thu  Jari Aalto  <jari.aalto@cante.net>
 
 	* tiny/tiny-setup.el (tiny-setup-autoload-read): Autoload file
-	changed Å¥tiny-autoload-loaddefs-lisp' => Å¥tiny-autoload-loaddefs-tiny'
+	changed `tiny-autoload-loaddefs-lisp' => `tiny-autoload-loaddefs-tiny'
 
 2001-10-08 Mon  Jari Aalto  <jari.aalto@cante.net>
 
@@ -8818,13 +8823,13 @@
 
 	* tinyperl.el (tinyperl-install): 1.65 Extra variable
 	`ok' removed.
-	(tinyperl-install): 1.65 Extra variable Å¥failure' removed.
+	(tinyperl-install): 1.65 Extra variable `failure' removed.
 
 	* tinypath.el (tinypath-cycgwin-p): 1.140 Byte compiler
 	fiX: non-exixting `executable-find'
 	(tinypath-use-compression): 1.140 Wrong cal `errror' => `error'
 	(tinypath-emacs-core-path-p): 1.140 Wrong variable
-	`ver' => Å¥version'
+	`ver' => `version'
 	(tinypath-set-default-value-macro): 1.140 Added test
 	`tinypath-byte-compile-running-p'
 	(tinypath-cygwin-p): 1.140 Extra variable `root' removed.
@@ -8947,7 +8952,7 @@
 	timer expired and it consulted exclude function if the
 	mouse-2 should have URL jump feature. This was repeated
 	every time Emacs was idle and user worked in dired.
-	Now added cache of already excluded buffers to the Å¥plist'
+	Now added cache of already excluded buffers to the `plist'
 	so that no further checking is done if buffer was already
 	excluded.
 
@@ -9433,7 +9438,7 @@
 	(ti::write-file-with-wrapper): 1.54 was `write-file-with-wrapper'
 	(ti::load-file-with-wrapper): 1.54 was `load-file-with-wrapper'
 	(ti::file-name-remote-p): 1.54 was `file-name-remote-p'
-	(ti::file-name-backward-slashes): 1.54 was ¥file-name-dos'
+	(ti::file-name-backward-slashes): 1.54 was `file-name-dos'
 	(ti::file-name-forward-slashes): 1.54 was `file-name-unix'
 	(ti::file-changed-on-disk-p): 1.54 was `file-changed-on-disk-p'
 	(ti::file-mode-make-*): 1.54 was `file-mode-*'
@@ -9648,11 +9653,11 @@
 	the diff start position.
 	(tinydiff-patch): 1.21 Added TYPE input argument.
 	(tinydiff-block-apply-patch): 1.21 Send 'hunk to `tinydiff-patch'
-	(tinydiff-patch-check-if-load): 1.21 Use ¥display-buffer' to
+	(tinydiff-patch-check-if-load): 1.21 Use `display-buffer' to
 	show existing Emacs buffer, not `pop-to-buffer'.
-	(tinydiff-patch-check-rejections): 1.21  Use ¥display-buffer'
+	(tinydiff-patch-check-rejections): 1.21  Use `display-buffer'
 	to show reject buffer, not `pop-to-buffer'.
-	(tinydiff-patch-with-diff-1): 1.21 Use ¥display-buffer'
+	(tinydiff-patch-with-diff-1): 1.21 Use `display-buffer'
 	to show patch-succeed buffer, not `pop-to-buffer'.
 	(tinydiff-block-apply-patch): 1.21 Added `save-excursion' to
 	prevent moving the current point.
@@ -9706,7 +9711,7 @@
 
 	* tinyurl.el (tinyurl-guess-line-number-at-point): 1.50 Added
 	Support for reading PHP error line numbers. (HTML)
-	(tinyurl-command-table-default-1): 1.50 Added ¥compiler-php-at-line'
+	(tinyurl-command-table-default-1): 1.50 Added `compiler-php-at-line'
 	and call to function `tinyurl-find-url-php'
 	(tinyurl-type): 1.50 Added `compiler-php-at-line'
 	(tinyurl-find-url-php-compile): 1.50 New.
@@ -9724,7 +9729,7 @@
 	a forward declaration for function `tinylisp-menu'.
 
 	* tinymy.el (tinymy-mouse-movement-handler): 1.41 Removed
-	extra debug variable ¥EV'.
+	extra debug variable `EV'.
 	(tinymy-define-keys): 1.42 Renamed. Was `tinymy-define-key'
 	(tinymy-define-keys-extra): 1.42 Renamed. Was
 	``tinymy-define-key-extra'
@@ -9871,7 +9876,7 @@
 	* tinypath.el: Removed extra non-user plain string
 	`tinypath-external-helper'.
 	(tinypath-executable-find): Mistakenly
-	returned directory! Now checks ¥file-directory-p'.
+	returned directory! Now checks `file-directory-p'.
 
 	* tinyliba.el (ti::q-read-input-as-password): Added missing
 	autoload `ti::f-complete-filename-minibuffer'.
@@ -9954,7 +9959,7 @@
 2001-03-19 Mon  Jari Aalto  <jari.aalto@cante.net>
 
 	* tinypath.el
-	-- If user had both ®~/lisp (for common lisp) and ~/elisp, they
+	-- If user had both ~/lisp (for common lisp) and ~/elisp, they
 	   were both added to the defaul load path list. No good. Now
 	   there is separate function to determine only ONE user Emacs
 	   lisp directory.
@@ -10023,7 +10028,7 @@
 	SNAPSHOT RELEASED
 
 	* tinyliba.el (tinyliba-file-version): New. Give better diagnostics
-	when cl.el package is loaded and it does not defined macro ¥return'.
+	when cl.el package is loaded and it does not defined macro `return'.
 	Now findds out the cl.el version number and prints it to user.
 	Bruce Ingalls <bruce@conde-dev.com> reported that the dysfunctional
 	meessage was printed with SUMO dated 2001-02-02 with XEmacs v21.2b45
@@ -10327,12 +10332,12 @@
 
 2001-03-04 Sun  Jari Aalto  <jari.aalto@cante.net>
 
-	* tinyurl.el (turn-on-tinyurl-mode-1): Use ¥turn-on-tinyurl-mode-1'
+	* tinyurl.el (turn-on-tinyurl-mode-1): Use `turn-on-tinyurl-mode-1'
 
-	* tinylibm.el (clear-buffer): Remove ¥list-loop' and use
-	¥dolist'
-	(window-loop): Remove ¥list-loop' and use
-	¥dolist'
+	* tinylibm.el (clear-buffer): Remove `list-loop' and use
+	`dolist'
+	(window-loop): Remove `list-loop' and use
+	`dolist'
 
 	* tinylib.el (ti::m-make-ND-array): Added prefix `ti::m-'
 	which was missing.
@@ -10348,7 +10353,7 @@
 
 	* tinypath.el (tinypath-cache-p-1-new): unused variable
 	`regexp' fixed. Variable `dir' commented out.
-	(tinypath-load-path-remove): Variable ¥path' must be `regexp'
+	(tinypath-load-path-remove): Variable `path' must be `regexp'
 	(tinypath-gnus-latest-version); `version-last' removed.
 	(tinypath-load-path-root-changed-p): Added check that the value is
 	set before checking changed status. Always returned t, which caused
@@ -10431,7 +10436,7 @@
 	`load-path' gets set to nil. User is also instructed to submit
 	a bug report.
 	(tinypath-message-bug): Corrected message printing errors. `format'
-	+ `concat' combination for `substitute-command-keys'. Added ¥sit-for'
+	+ `concat' combination for `substitute-command-keys'. Added `sit-for'
 	to help reading the important message.
 	(tinypath-external-load-path-lookup-regexp): New.
 	(tinypath-external-setup-parse-data): Use
@@ -10563,7 +10568,7 @@
 	-- More abstraction to compression.
 	(tinypath-file-compressed-p): New.
 	(tinypath-use-compression-maybe): New.
-	(tinypath-cache-setup): Call ¥tinypath-use-compression-maybe'.
+	(tinypath-cache-setup): Call `tinypath-use-compression-maybe'.
 	(tinypath-load-library-safety-belt): Use
 	`tinypath-use-compression-maybe'
 	(tinypath-load-library-safety-belt): Removed.
@@ -10609,7 +10614,7 @@
 
 2001-02-26 Mon  Jari Aalto  <jari.aalto@cante.net>
 
-	* load-path.el (my-tmp-time-this): Removed extra variable ¥diff'.
+	* load-path.el (my-tmp-time-this): Removed extra variable `diff'.
 
 	* tinylibxe.el (error-message-string): Variable `buf' must
 	be `buffer'.
@@ -10619,7 +10624,7 @@
 	* tinymail.el (tinymail-complete-guess-in-body): Extra
 	variable `string' removed.
 
-	* tinylib.el (ti::b-join-region): Removed ¥join-line'
+	* tinylib.el (ti::b-join-region): Removed `join-line'
 	and used real name `delete-indentation'. XEmacs compilation
 	fix.
 
@@ -10908,7 +10913,7 @@
 	(tinypath-cache-mode): Special treatment for `autoload'
 	advice.
 
-	* tinymail.el (tinymail-process-run-p): ¥Must check if
+	* tinymail.el (tinymail-process-run-p): `Must check if
 	mode has been turned off.
 
 2001-01-25 Thu  Jari Aalto  <jari.aalto@cante.net>
@@ -11069,14 +11074,14 @@
 	message.
 	(tinypath-external-output-parse): 1.59 Added debug.
 	(tinypath-external-output-parse): 1.59 Pase `lisp-dir'
-	not ¥lisp'.
+	not `lisp'.
 	(tinypath-external-helper): 1.59 Added option `--Lang-lisp-dir'
 	(tinypath-external-setup): 1.59 Added support for
-	¥c-src-dir'
+	`c-src-dir'
 	(tinypath-external-helper): 1.59 Added support for
-	¥c-src-dir'
+	`c-src-dir'
 	(tinypath-external-output-parse): 1.59 Added support for
-	¥c-src-dir'
+	`c-src-dir'
 	(tinypath-external-setup): 1.59 Support
 	`tinypath-:extra-ff-search-directories'
 	(tinypath-:extra-ff-search-directories): 1.59 New.
@@ -11106,7 +11111,7 @@
 	Use `file-name-extension'
 
 	* tinyliba.el: 1.31 lifted 'macro autoloads out of
-	¥eval-and-compile' due to XEmacs 20.4 byte compiler
+	`eval-and-compile' due to XEmacs 20.4 byte compiler
 	message ...compiler ignores `autoload' except at top
 	level
 	(ti::f-get-extension): 1.31 Renamed.
@@ -11138,7 +11143,7 @@
 	(tinypath-extra-path-setup): 1.58 New.
 	(tinypath-extra-path-handler): 1.58 New.
 	(tinypath-manpage-handler): 1.58 New.
-	(tinypath-cache-file-write): 1.58 Added ¥woman-manpath'
+	(tinypath-cache-file-write): 1.58 Added `woman-manpath'
 	(tinypath-woman-insinuate): 1.58 New.
 	(tinypath-external-output-parse): 1.58 New.
 	(tinypath-external-output-parse-1): 1.58 New.
@@ -11171,7 +11176,7 @@
 	* tinylisp.el (require edebug): 1.43 In older Emacs versions
 	debug and edebug may not `provide' feature. substituted `require'
 	with `load'.
-	(tinylisp-find-autoload-functions): 1.43 Extra variable ¥file'
+	(tinylisp-find-autoload-functions): 1.43 Extra variable `file'
 	removed.
 
 	* tinymail.el (defun): 1.38 env.var MAIL in pritine systems
@@ -11400,7 +11405,7 @@
 	(tinypath-cache-p): New.
 	(tinypath-emacs-lisp-file-list-cache-clear): New.
 	(tinypath-cache-setup): Call
-	¥tinypath-emacs-lisp-file-list-cache-clear'.
+	`tinypath-emacs-lisp-file-list-cache-clear'.
 	(tinypath-info-handler): Wrong lisp paren
 	match fixed.
 	(tinypath-exec-path-display): 1.52 New.
@@ -11497,7 +11502,7 @@
 	all user needs is Emacs for a while without extra features.
 	(tinypath-cache-setup): 1.46 Added message how many directories are in
 	`load-path'. (For *Messages* buffer, debug).
-	(tinypath-directory-list-clean): 1.46 Added ¥pushnew' to
+	(tinypath-directory-list-clean): 1.46 Added `pushnew' to
 	make sure there will be no duplicates after cleaning.
 	(tinypath-install-timer): 1.46 Added messages.
 	(For *Messages* buffer, debug).
@@ -11682,7 +11687,7 @@
 	function.
 
 	* tinyperl.el (tinyperl-version-stamp): 1.37 Renamed.
-	Was ¥tinyperl-stamp-version-stamp'
+	Was `tinyperl-stamp-version-stamp'
 	(tinyperl-version-macro): 1.37 New.
 	(tinyperl-version-stamp-re-search-forward): 1.37 New.
 	(tinyperl-selfstubber-stubs): 1.37 New user function.
@@ -11885,7 +11890,7 @@
 	(tinygnus-gnus-newsrc-alist): 1.18 Commented out unused
 	variables.
 	(tinygnus-gnus-debug-investigate-problem): 1.18 Removed `stat'
-	(tinygnus-fix-nnml-groups): 1.18 Removed ¥elt'
+	(tinygnus-fix-nnml-groups): 1.18 Removed `elt'
 	(tinygnus-gnus-debug-update-nnml-group-alist): 1.18 Removed
 	`buffer' `list'
 	(tinygnus-load-user-init-file): 1.18 New. XEmacs.
@@ -11899,10 +11904,10 @@
 	(tinylisp-with-current-buffer): 1.31 Byte compiler fix.
 	Missing (, buffer)
 	(tinylisp-lisp-mnt-tag-check-and-fix-buffer): 1.31
-	Byte compiler fix. missing ¥stat' variable.
+	Byte compiler fix. missing `stat' variable.
 	(tinylisp-lisp-mnt-tag-check-and-fix-file): 1.31
 	Byte compiler fix.
-	(tinylisp-face-print): 1.31 Removed `bg' ¥fg'
+	(tinylisp-face-print): 1.31 Removed `bg' `fg'
 	(tinylisp-library-info-emacs): 1.31 Removed `list'
 	(tinylisp-library-load-by-regexp): 1.31 Removed `file'
 	(tinylisp-library-locate-1): 1.31 Removed `list'
@@ -12070,7 +12075,7 @@
 	(cvs-conflict-mode-menu):
 	(cvs-conflict-mode-easymenu): Was `cvs-conflict-mode-menu'
 	(cvs-conflict-mode-string): Name renamed. The modeline is
-	has very little room for long name, used ¥Cvs!' instead of
+	has very little room for long name, used `Cvs!' instead of
 	`Conflict'.
 	(cvs-conflict-mode-string): Renamed to
 	`cvs-conflict-mode-name-string'
@@ -12226,7 +12231,7 @@
 	(tinypath-:cache-duplicate-report-ignore-functions): 1.38 is
 	now list of functions.
 	(tinypath-add-directory-one): 1.38 Win32 directories
-	are not case sensitive, use ¥downcase' and `pushnew'.
+	are not case sensitive, use `downcase' and `pushnew'.
 	(subst-char-in-string): 1.38 New.
 	(tinypath-load-path-clean): 1.38 Expand all directories.
 	In Win32, downcase every path. Remove duplicate paths.
@@ -12248,7 +12253,7 @@
 	See new section 'Special features'
 	(tinyload-autoload-function-load): 1.11 New.
 	(tinyload-install): 1.11 Added `tinyload-process-install-hook'
-	and ¥tinyload-process-uninstall-hook'
+	and `tinyload-process-uninstall-hook'
 	(tinyload-process-install-hook): 1.11 New.
 	(tinyload-process-uninstall-hook): 1.11 New.
 
@@ -12522,7 +12527,7 @@
 	Added w32 support for completing directorynames with \
 	in the comint shell buffer when `comint-completion-addsuffix'
 	was set to true.
-	(comint-dynamic-complete-as-filename): Call ¥comint-directory-sep-char'
+	(comint-dynamic-complete-as-filename): Call `comint-directory-sep-char'
 	to find out the
 	(comint-dos-shell-file-name-regexp): New. Regexp to match
 	sos based shell named like cmd.*\\.exe
@@ -12633,14 +12638,14 @@
 	* tinyload.el (tinyload-cancel): New.
 	(tinyload-start): New.
 	(tinyload-loader-process): Added better debug messages.
-	Added ¥condition-case' stateemnts to protect the BEFORE and
+	Added `condition-case' stateemnts to protect the BEFORE and
 	AFTER eval statements when the package is loaded.
-	Serious correction: There was ¥sit-for' that that threw the
+	Serious correction: There was `sit-for' that that threw the
 	control back to user if sit-for couldn't be waited. BUT,
 	the process didn't clear the busy count => eternal deadlock
 	situation.
 	(tinyload-feature-p): This function generated error, because the
-	string-match didn't look into string ¥feature', but buffer. I
+	string-match didn't look into string `feature', but buffer. I
 	don't undertand how on earth tinyload.el package has worked
 	and I haven't have notticed this error. This was the source of
 	continuous deadlock in Linux Redhat Emacs 20.7
@@ -12648,8 +12653,8 @@
 2000-12-08  Jari Aalto  <jari.aalto@cante.net>
 
 	* tinymy.el (tinymy-mouse-movement-handler): Added safeguards
-	so that functions ¥posn-window' and ¥event-start' exist
-	and that ¥win' pointer gets defined.
+	so that functions `posn-window' and `event-start' exist
+	and that `win' pointer gets defined.
 	(tinymy-buffer-info): Added support for dired buffers. Point
 	at the end of dired buffer to see the information.
 
@@ -13235,7 +13240,7 @@
 2000-09-30 Sat  Jari Aalto  <jari.aalto@cante.net>
 
 	* tinytf.el (ti::m-fmacro-minor-mode-wizard): byte compiler,
-	extra variable ¥vec' removed.
+	extra variable `vec' removed.
 
 	* tinypgp.el: Message that tinypgp is NOT MAINTAINED currently.
 	Don't know when IU have time to look at it.
@@ -13586,14 +13591,14 @@
 2000-07-28 Fri  Jari Aalto  <jari.aalto@cante.net>
 
 	* tinygnus.el (tinygnus-gnus-summary-kill-not-replied): 1.11
-	Renamed. Was mistakenly ¥my-gnus-summary-kill-not-replied'
+	Renamed. Was mistakenly `my-gnus-summary-kill-not-replied'
 	(tinygnus-summary-compose-current-mail-as-template): 1.11 New.
 
 	* tinyigrep.el (tinyigrep-install-default-databases): 1.12
 	Emacs 20.6 No longer distributes CL.EL in directory
 	/emacs-version/cl.el but in /emacs-version/emacs-lisp/cl.el
 	--> corrected database searches `lisp-emacs-distribution'
-	and ¥lisp-cl'
+	and `lisp-cl'
 
 2000-07-27 Thu  Jari Aalto  <jari.aalto@cante.net>
 
@@ -13735,7 +13740,7 @@
 	(tinytag-install): 1.7 Call `idle-timer-supported-p'
 
 	* tinyperl.el (tinyperl-install-hooks): 1.12
-	XEmacs fix. Added ¥cperl-mode-hook`
+	XEmacs fix. Added `cperl-mode-hook`
 	(tinyperl-:pod-font-lock-keywords): 1.12 XEmacs fix.
 	Added Win32 \r next to \n characters in regular expressions.
 
@@ -13876,7 +13881,7 @@
 	use `ti::xe-timer-control'
 
 	* tinylib.el (ti::xe-timer-control): 1.14 New.
-	(ti::xe-timer-elt): 1.14 Rewritten. Search also ¥timer-idle-list'.
+	(ti::xe-timer-elt): 1.14 Rewritten. Search also `timer-idle-list'.
 	Now returns '(timer-elt timer-variable) instead of plain timer-elt.
 	(ti::xe-timer-cancel-function): 1.14 New. Delete all timers for
 	FUNCTION.
@@ -13957,7 +13962,7 @@
 	** reference to free variable tinyperl-mode
 
 	* tinytag.el (tinytag-word-default-adjust): 1.7 Removed extra
-	debug variable ¥RE'
+	debug variable `RE'
 
 2000-02-18 Fri  Jari Aalto  <jari.aalto@cante.net>
 
@@ -14105,7 +14110,7 @@
 
 	* tinygnus.el (tinygnus-summary-gather-urls): 1.9 Fixed
 	documentation string.
-	(tinygnus-summary-gather-urls): 1.9 Added ¥total'
+	(tinygnus-summary-gather-urls): 1.9 Added `total'
 
 	* tinyperl.el (tinyperl-install): 1.10 Convert all path names to
 	Unix format. When cache saved the state, the backslashes caused problem
@@ -15588,7 +15593,7 @@
 
 	* tinylisp.el: XEmacs 21.2 Fix.
 	Added require `debug' because there was some trouble loading
-	¥edebug' alone.
+	`edebug' alone.
 
 	* tinylib.el (ti::f-path-to-msdos): New.
 	(ti::f-path-to-unix): New.
@@ -15769,7 +15774,7 @@
 
 	* mail/smtpmail.el (smtpmail-send-it): WinNT doesn't like filename
 	that has ":" characters. The queue mail command calls
-	ßtime-stamp-hh:mm:ss'. Changed to call ßtime-stamp-hhmmss
+	`time-stamp-hh:mm:ss'. Changed to call `time-stamp-hhmmss
 	which is new function in time-stamp.el
 
 1999-01-02 Sat  Jari Aalto  <jari.aalto@cante.net>
