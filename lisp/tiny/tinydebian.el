@@ -853,7 +853,7 @@ to generate updated list."
      tinydebian-:severity-selected
      tinydebian-:tags-list)))
 
-(defconst tinydebian-:version-time "2009.0812.1741"
+(defconst tinydebian-:version-time "2009.0820.0804"
   "Last edited time.")
 
 (defvar tinydebian-:bts-extra-headers
@@ -4402,10 +4402,12 @@ Version: %s
 	 current-prefix-arg))
   (tinydebian-bts-mail-type-macro
    nil nil nil
-   (format "Bug#%s%s forwarded to upstream" bug (if package
-					 (format " to package %s"
-						 package)
-				       ""))
+   (format "Bug#%s%s forwarded to upstream"
+	   bug
+	   (if package
+	       (format " to package %s"
+		       package)
+	     ""))
    (let (point)
      (insert (format "forwarded %s " bug))
      (setq point (point))
