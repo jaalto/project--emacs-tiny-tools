@@ -853,7 +853,7 @@ to generate updated list."
      tinydebian-:severity-selected
      tinydebian-:tags-list)))
 
-(defconst tinydebian-:version-time "2009.0820.0804"
+(defconst tinydebian-:version-time "2009.0829.1038"
   "Last edited time.")
 
 (defvar tinydebian-:bts-extra-headers
@@ -983,7 +983,7 @@ Mode description:
      (define-key map  "B"  'tinydebian-bug-browse-url-by-package-bugs)
      (define-key map  "M"  'tinydebian-bug-report-mail)
      (define-key map  "p"  'tinydebian-bug-browse-url-by-package-name)
-     (define-key map  "r"  'tinydebian-bug-reply)
+     (define-key map  "r"  'tinydebian-bts-mail-type-reply )
      (define-key map  "w"  'tinydebian-package-wnpp-main)
 
      (define-key map  "-a" 'tinydebian-bts-mail-type-ita)
@@ -3232,7 +3232,7 @@ If LIST if nil, position point at pseudo header."
   "Add command for BUG SEVERITY."
   (interactive
    (list
-    (tinydebian-mail-mode-debian-address-ask-args)
+    (tinydebian-mail-mode-debian-address-ask-bug)
     (completing-read
      "Bug severity: "
      tinydebian-:severity-list
@@ -4167,11 +4167,23 @@ thanks
 
 ;;; ----------------------------------------------------------------------
 ;;;
+(defun tinydebian-bts-mail-title-read ()
+  "Return old TITLE from `gnus-article-buffer' buffer"
+  (cond
+   ((eq major-mode 'gnus-summary-mode)
+    (tinydebian-with-gnus-article-buffer nil
+     (message-fetch-field "Subject")))
+   ((memq major-mode '(message-mode mail-mode))
+    (message-fetch-field "Subject"))))
+
+;;; ----------------------------------------------------------------------
+;;;
 (defun tinydebian-bts-mail-ctrl-retitle (bug title)
   "Compose BTS control message to a BUG and change TITLE."
   (interactive
    (list (tinydebian-bts-mail-ask-bug-number)
-	 (read-string "New title: ")))
+	 (read-string "New title: "
+		      (tinydebian-bts-mail-title-read))))
   (tinydebian-bts-mail-type-macro
    nil nil nil
    (format "Retitle Bug#%s" bug)
