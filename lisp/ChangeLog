@@ -1,4 +1,29 @@
+2009-08-29  Jari Aalto  <jari.aalto@cante.net>
+
+	* tiny/tinydebian.el (tinydebian-bts-mail-title-read): New.
+	(tinydebian-bts-mail-ctrl-retitle): Use
+	`tinydebian-bts-mail-title-read' to offer old Subject
+	for editing.
+
+2009-08-28  Jari Aalto  <jari.aalto@cante.net>
+
+	* tiny/tinydebian.el (tinydebian-bts-mail-ctrl-command-severity):
+	Correct interactive spec: Call
+	'tinydebian-mail-mode-debian-address-ask-bug'.
+
+2009-08-25  Jari Aalto  <jari.aalto@cante.net>
+
+	* tiny/tinylib.el (ti::set-face-try-list): Improve docstring.
+
+2009-08-21  Jari Aalto  <jari.aalto@cante.net>
+
+	* tiny/tinydebian.el (tinydebian-bts-mode):
+	Correct 'r' to call `tinydebian-bts-mail-type-reply'.
+
 2009-08-20  Jari Aalto  <jari.aalto@cante.net>
+
+	* tiny/tinylisp.el (tinylisp-:menu-info): Correct docstring.
+	The hook menu is (o), not (h).
 
 	* tiny/tinydebian.el (tinydebian-bts-mail-ctrl-forwarded-main):
 	Fix if-case indent.
