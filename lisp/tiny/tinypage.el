@@ -88,14 +88,16 @@
 ;;
 ;;  About making pages -- basics
 ;;
-;;      If you're totally unfamiliar to the concept of page: you make
-;;      pages in emacs by adding the linefeed marker in the text, normally
-;;      on its own line, just before your topics or headings.
+;;      The pages are made by adding the linefeed marker into the
+;;      text. The page markers are interpreted by printed to print
+;;      text on the following page. The page marker character is
+;;      usually added on its own line just before the topics or
+;;      headings. In Emacs, you need two key strokes to produce
+;;	ASCII chacter Control-L:
 ;;
 ;;          C-q C-l  --> ^L
 ;;
-;;      That inserts the ^L character in the buffer. That is where your
-;;      page starts. The layout of your doc may look like this:
+;;	The layout of your document would look something like:
 ;;
 ;;         ^L
 ;;         1.0 Topic one
@@ -111,12 +113,10 @@
 ;;              txt txt txt txt txt txt txt txt
 ;;              txt txt txt txt txt txt txt ...
 ;;
-;;
 ;;  About renumbering
 ;;
-;;      This package offers simple renumbering features, but it
-;;      won't do everything for you! Let's first tell what it won't
-;;      do. Renumbering these is piece of cake:
+;;      The package offers simple renumbering features, but it has some
+;;      limitations. Let's see an example of renumbering:
 ;;
 ;;          1.1
 ;;          1.7.1.5             (1)
@@ -134,12 +134,10 @@
 ;;          1.5.4.2
 ;;          1.3
 ;;
-;;      tsk-tsk, before you say anything... It went all right.
-;;      Now you see what it won't do for you.
+;;      Notes:
 ;;
 ;;      .   It can't know that the 1.7.1.5 belongs under previous 1.1,
-;;          because no back tracking is done. I won't even try!
-;;          [write a separate package if you want that...I won't do it]
+;;          because no back tracking is done.
 ;;
 ;;      .   Same goes here, it can't know that the 1.5.4.1 should actually
 ;;          start from 1.5.1.1
@@ -152,16 +150,16 @@
 ;;      .   --> 1.1.1.1
 ;;      .   --> 1.5.1.1  _AND_ do replace M-% 1.5.4 with 1.5.1
 ;;
-;;      Then all the renumberin would have gone just fine.
-;;      Little handy work and this package helps you to number your doc easily.
-;;
+;;      Then all the renumberin would have gone just fine. Little
+;;      handy work and this package helps you to number your doc
+;;      easily.
 ;;
 ;;  Renumbering -- be cautious
 ;;
-;;      If you have index section in you file, you have a little problem,
-;;      because this package does not know nothing about such things.
-;;      If the Index section is at the beginning, just go past it and
-;;      use function:
+;;      If you have index section in you file, there is a little
+;;      problem, because this package does not know anything about
+;;      such things. If the Table of Contents section is at the
+;;      beginning, go past it and use function:
 ;;
 ;;          M-x tinypage-renumber-forward
 ;;
@@ -169,16 +167,16 @@
 ;;
 ;;          M-x tinypage-renumber-buffer
 ;;
-;;      Would be disaster. It can only be used for non-index buffers.
+;;      Would be disaster. It can only be used for non-TOC buffers.
 ;;
 ;;  Creating index
 ;;
-;;      After you have renumbered all, your old index section is useless,
-;;      Just call function
+;;      After all headings are renumbered, the old TOC section needs
+;;      update:
 ;;
 ;;          M-x tinypage-toc
 ;;
-;;      And copy the showed buffer in place of the old index.
+;;      Copy the shown buffer in place of the old TOC.
 ;;
 ;;  Limitations
 ;;
@@ -193,20 +191,19 @@
 ;;              1.5
 ;;
 ;;          Where the Daddy-Cool portable sondium emission detector is
-;;          described in full...
+;;          described in full.
 ;;
-;;      The Number 1.5 is unfortunately renumbered to 1.2, and possibly
-;;      causing headache in the NASA and in the spying countries...
-;;      If you know elegant way to prevent these false hits, please
-;;      drop me a mail. At this time I haven't much payed attention to this.
+;;      The number 1.5 is unfortunately renumbered to 1.2, and
+;;      possibly causing headache in the NASA and in the spying
+;;      countries. If you know elegant way to prevent these false
+;;      hits, please drop me a mail.
 ;;
 ;;  Code Note
 ;;
 ;;      The renumbering used here uses brute force, so the execution time
 ;;      is O(n2). If you have more that 30-40 sections, the renumbering
-;;      might take 15-40 minutes. If you care to send me more pleasant
-;;      numbering I'd be very gratefull and you're name would be carved to
-;;      this module. For now, I'm just too lazy to change anything.
+;;      might take considerable time. If you improve the renumbering, plese
+;;      send a patch.
 
 ;;}}}
 

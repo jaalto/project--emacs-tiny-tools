@@ -1,5 +1,10 @@
 2009-08-29  Jari Aalto  <jari.aalto@cante.net>
 
+	* tiny/tinypage.el: (Commentary): Improve many paragraphs.
+
+	* tiny/tinypath.el (tinypath-info-handler): Correct indentation.
+	(tinypath-info-kill-buffers): Improve error checking.
+
 	* tiny/tinydebian.el (tinydebian-bts-mail-title-read): New.
 	(tinydebian-bts-mail-ctrl-retitle): Use
 	`tinydebian-bts-mail-title-read' to offer old Subject
