@@ -4615,8 +4615,8 @@ Doesn't care about read only status of buffer."
 (defun ti::set-face-try-list (list face &optional attribute)
   "Try to assign color to face.
 The input is list of color names which are tried one by one.
-First one that succeeds is assigned. If color is occupied, tries
-next one. Doesn't signal any errors.
+First one that succeeds is assigned. If color is occupied, try
+next one. Don't signal any errors.
 
 Input:
 
@@ -4628,7 +4628,7 @@ Return:
 
   color         color that was assigned
   nil           all tries failed"
-  (let* (status)
+  (let (status)
     (or attribute
         (setq attribute 'fg))
     (dolist (color (ti::list-make list))
