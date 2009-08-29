@@ -1,5 +1,8 @@
 2009-08-29  Jari Aalto  <jari.aalto@cante.net>
 
+	* tiny/tinylib.el (ti::package-install-pgp-tar): Add TEMPDIR.
+	(ti::package-install-pgp-tar): Correct gpg, pgp check.
+
 	* tiny/tinypage.el: (Commentary): Improve many paragraphs.
 
 	* tiny/tinypath.el (tinypath-info-handler): Correct indentation.
