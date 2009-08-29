@@ -7518,19 +7518,25 @@ Input:
   SOURCE        instead of using current buffer, read this file"
 
   (interactive "DSave programs to directory: ")
-  (let* (
-         (pgp     (or (and (executable-find "pgp")
+  (let* ((pgp     (or (and (executable-find "pgp")
                            ;;  Do not use returned absolute path
                            ;;  due to platform independency
                            "pgp")
-                      (message "TinyLib: Can't find `pgp'.")))
-         (gpg     (or (and (executable-find "pgp")
-                           "pgp")
-                      (message "TinyLib: Can't find `gpg'.")))
-         (pgp-bin (or pgp gpg))
+                      (progn (message "TinyLib: Can't find `pgp'.")
+			     nil)))
+         (gpg     (or (and (executable-find "gpg")
+                           "gpg")
+		      (progn
+			(message "TinyLib: Can't find `gpg'.")
+			nil)))
+         (pgp-bin (or gpg
+		      pgp
+		      (error "No pgp or gpg program in `exec-path'")))
          (tar     (or (executable-find "tar")
-                      (error "TinyLib: Can't find 'tar'.")))
-         (tmp     (or (and (getenv "TMP")
+                      (error "TinyLib: No tar in 'exec-path'.")))
+         (tmp     (or (and (getenv "TEMPDIR")
+                           (ti::file-make-path (getenv "TEMPDIR")))
+		      (and (getenv "TMP")
                            (ti::file-make-path (getenv "TMP")))
                       (and  (getenv "TMPDIR")
                             (ti::file-make-path (getenv "TMPDIR")))
@@ -7557,7 +7563,9 @@ Input:
            (not (file-exists-p source)))
       (error "TinyLib: Can't find '%s'" source))
      ((not (file-directory-p tmp))
-      (error "TinyLib: Can't use directory '%s'. Set env variable TMP." tmp))
+      (error
+       (format "TinyLib: Can't use directory '%s'. "
+	       "Set env variable TEMPDIR." tmp)))
      ((not (file-exists-p dir))
       (error "TinyLib: No such directory %s." dir)))
     (setq buffer (ti::temp-buffer
@@ -7588,7 +7596,7 @@ Input:
       (delete-region (point-min) (point))
       (buffer-enable-undo)
       ;; .................................................... call pgp ...
-      (setq cmd (format "%% rm %s %s\n"  in-file out-file))
+      (setq cmd (format "CMD: rm %s %s\n"  in-file out-file))
       (unless test
         (ti::file-delete-safe (list in-file out-file)))
       (write-region (point-max) (point-min) in-file)
@@ -7604,7 +7612,7 @@ Input:
       (let* ((out-file          (ti::file-name-forward-slashes out-file))
              (default-directory (file-name-directory out-file))
              (file              (file-name-nondirectory out-file)))
-        (insert (format "%% cd %s ; %s -o %s %s\n"
+        (insert (format "CMD: cd %s ; %s -o %s %s\n"
                         default-directory
                         pgp-bin
                         file
@@ -7617,7 +7625,8 @@ Input:
                         "-o" file (file-name-nondirectory in-file))
           (ti::pmin)
           (unless (re-search-forward "Plaintext filename:" nil t)
-            (error "TinyLib: Can't proceed, PGP didn't set filename.")))
+            (message
+	     "WARN: TinyLib: Can't proceed, process didn't set filename.")))
         ;; .. .. .. .. .. .. .. .. .. .. .. .. .. .. .. show tar content  ..
         (ti::pmax)
         (setq cmd  (format "cd %s ; %s %s %s"
@@ -7626,7 +7635,7 @@ Input:
                            tar-opt-show
                            file))
 
-        (insert "% " cmd "\n") (setq beg (point))
+        (insert "CMD: " cmd "\n") (setq beg (point))
         (unless test
           (call-process tar
                         nil buffer nil
@@ -7651,7 +7660,7 @@ Input:
                          (expand-file-name dir)
                          tar-opt-x
                          out-file))
-      (insert "% "cmd "\n")
+      (insert "CMD: "cmd "\n")
       (unless test
         (let* ((default-directory (expand-file-name dir)))
           (call-process tar nil buffer nil
@@ -7662,7 +7671,7 @@ Input:
         (push in-file file-list)
         (push out-file file-list)
         (dolist (elt file-list)
-          (insert (format "%% rm %s\n" elt))
+          (insert (format "CMD: rm %s\n" elt))
           (unless test
             (ti::file-delete-safe elt) )))
       (message "TinyLib: installation to %s complete" dir))))
@@ -9415,9 +9424,7 @@ Example how to call created functions:
   "Use macro `ti::macrof-install-pgp-tar' and see arguments there.
 FUNC-INS-SYM ELISP-FILE LOG-BUFFER."
   (let* (sym)
-
     (setq sym (intern (symbol-name (` (, func-ins-sym)))))
-
     (`
      (defun (, sym) (dir)
        "Install additional programs from the end of package."
@@ -9435,8 +9442,8 @@ FUNC-INS-SYM ELISP-FILE LOG-BUFFER."
 ;;;
 (defmacro ti::macrof-install-pgp-tar
   (func-ins-sym elisp-file &optional log-buffer)
-  "Return standard pgp tar install function.
-It handles installing pgp base 64 signed tar block from the end of file.
+  "Macro. Return standard pgp tar install function.
+Handle installing pgp base 64 signed tar block from the end of file.
 
   1.   Create tar file (it sould not have directory names, but ...)
   2.   pgp base64 sign the tar file (clearsig off)
@@ -9449,8 +9456,9 @@ It handles installing pgp base 64 signed tar block from the end of file.
   ...
   ;; -----END PGP MESSAGE-----
 
-And nothing more is needed to get your programs untarred nicely.
-The drop directory is asked from the user when he calls this function.
+Nothing more is needed to get your programs untarred nicely. The
+drop directory is asked from the user when he calls this
+function.
 
 Input:
 
