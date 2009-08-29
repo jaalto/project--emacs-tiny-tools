@@ -1621,13 +1621,13 @@ f   Describe file symbols. Gather all documentation from symbols in FILE.
     You have to load the file into Emacs first (eval it with \\[load-file]),
     because this function reads the documentation properties from memory.
 
-h   Search a match from contents of all -hook -function -functions symbols
-    E.g. you can locate all hooks that have function matching 'my'.
-
 l   Decribe library symbols. This is like `f', but you do not need to give
     the full path name, but the file will be located along `load-path'.
 
 L   Show buffer local variables.
+
+o   Search a match from contents of all -hook -function -functions symbols
+    E.g. you can locate all hooks that have function matching 'my'.
 
 s   Search any symbol (variable or function) from Emacs obrray with REGEXP.
 
