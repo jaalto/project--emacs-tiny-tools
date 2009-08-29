@@ -38,7 +38,6 @@
 ;; Put this file on your Emacs-Lisp `load-path', add following into your
 ;; ~/.emacs startup file.
 ;;
-;;      (add-hook 'tinyurl-:load-hook  'tinyurl-install-to-packages)
 ;;      (require 'tinyurl)
 ;;
 ;;      ;; To activate the mode globally add code below
@@ -49,7 +48,11 @@
 ;;
 ;;      ;; If you do not have permenent internet connection, add this
 ;;      ;; It will follow Gnus plugged mode state.
+;;
 ;;      (setq tinyurl-:plugged-function 'tinyurl-plugged-p)
+;;
+;;      ;; OPTIONAL: Attach to VM, RMAIL, Gnus etc.
+;;      ;; (add-hook 'tinyurl-:load-hook 'tinyurl-install-to-packages)
 ;;
 ;; You can also use the preferred way: autoload. Only when you call the
 ;; `M-x' `tinyurl-mode', this package loads. The following setup is
@@ -57,11 +60,13 @@
 ;; VM, RMAIL, MH, gnus as the `require' method does. Call
 ;; `M-x' `tinyurl-install-to-packages' for those.
 ;;
-;;      (add-hook 'tinyurl-:load-hook         'tinyurl-install-to-packages)
 ;;      (autoload 'tinyurl-mode               "tinyurl" "" t)
 ;;      (autoload 'tinyurl-mode-1             "tinyurl" "" t)
 ;;      (autoload 'turn-on-tinyurl-mode-1     "tinyurl" "" t)
 ;;      (autoload 'turn-off-tinyurl-mode-1    "tinyurl" "" t)
+;;
+;;      ;; OPTIONAL: Attach to VM, RMAIL, Gnus etc.
+;;      ;; (add-hook 'tinyurl-:load-hook 'tinyurl-install-to-packages)
 ;;
 ;;      ;;  Keybinding suggestions
 ;;
@@ -98,9 +103,9 @@
 ;;      and with any mode.
 ;;
 ;;      Now there is; it is possible browse any buffer or document and
-;;      jump to URLs on the line. Works for programing modes too. You
-;;      just position the cursor somewhere on the line, wait 2 seconds
-;;      and the URLs in the current line are marked.
+;;      jump to URLs on the line. Works for programing modes too.
+;;      Position the cursor somewhere on the line, wait 2 seconds and
+;;      the URLs in the current line are buttonized.
 ;;
 ;;  Overview of features
 ;;
@@ -110,11 +115,11 @@
 ;;      o   General URL handler: not just the regular http, ftp, but
 ;;          also for programming languages like Perl/Lisp/C++ and
 ;;          man page cut(1) references and jumping to Debian bug
-;;          reports (+ WNPP) and more...
+;;          reports (+ WNPP) and more.
 ;;
 ;;      o   When the global minor mode is on, wait few seconds and the
 ;;          current line will be scanned for urls. Because not all
-;;          terminals show clolor, there is additional "!" character added to
+;;          terminals show color, there is additional "!" character added to
 ;;          the front of URL for calling you to *push* it.
 ;;      o   Once the minor mode is turned on, it occupies every buffer,
 ;;          but there is also function to turn the mode on or off per buffer
@@ -124,8 +129,8 @@
 ;;          point. These bindings are electric: If there is no button to push,
 ;;          the original binding is called according to underlying mode.
 ;;      o   You can change the url handler sets on the fly: e.g.
-;;          call lynx for a while, then switch to Netscape or use your custom
-;;          browser. See `M-x' `tinyurl-set-handler'
+;;          call lynx for a while, then switch to default browser
+;;          or use your custom browser. See `M-x' `tinyurl-set-handler'
 ;;      o   Centralised url handling. If you call `tinyurl-install-to-packages'
 ;;          then GNUS, TM, VM etc. now call TinyUrl and you only need to
 ;;          configure things in one place.
