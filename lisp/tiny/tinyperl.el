@@ -49,9 +49,9 @@
 ;;      (add-hook 'perl-mode-hook  'turn-on-tinyperl-mode)
 ;;      (add-hook 'cperl-mode-hook 'turn-on-tinyperl-mode)
 ;;
-;;  This package will keep the configuration information in a cache and
-;;  if for some reason the cache becomes invalid, force rebuilding everything
-;;  with command:
+;;  The package will keep the configuration information in a cache and
+;;  if for some reason the cache becomes invalid, the cache can be
+;;  rebuilt with command:
 ;;
 ;;      C-u M-x tinyperl-install
 ;;
