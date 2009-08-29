@@ -41,7 +41,7 @@
 ;;  any keybindings take in effect.
 ;;
 ;;      ;;  - Tell which procmail version you're using, see procmail -v
-;;      ;;  - Uf you do not set this, tinyprocmail.el will call shell
+;;      ;;  - If you do not set this, tinyprocmail.el will call shell
 ;;      ;;    to find out the procmail version. (slower)
 ;;
 ;;      (setq tinyprocmail-:procmail-version "v3.11pre7")
@@ -55,12 +55,12 @@
 ;;      (autoload 'tinyprocmail-mode          "tinyprocmail" "" t)
 ;;      (add-hook 'tinyprocmail-:load-hook 'tinyprocmail-install)
 ;;
-;;      ;;  Procmail files usually end to suffix "*.rc", like file-name.rc
+;;      ;;  Procmail files usually end to suffix "*.rc", like pm-file.rc
 ;;      ;;  Some older procmail files start with "rc.*", like rc.file-name
 ;;
 ;;      (autoload 'aput "assoc")
 ;;      (aput 'auto-mode-alist
-;;            "\\.\\(procmail\\)?rc$"
+;;            "\\.procmailrc\\|pm-.*\\.rc$\\|\\<rc\\.[a-z]"
 ;;            'turn-on-tinyprocmail-mode)
 ;;
 ;;  This source file includes sample procmail test file for Lint. You
@@ -935,7 +935,7 @@ Mode description
 ;;; ----------------------------------------------------------------------
 ;;;
 ;;;###autoload (autoload 'tinyprocmail-install-files "tinyprocmail" t t)
-(ti::macrof-install-pgp-tar tinyprocmail-install-files  "tinyprocmail.el")
+(ti::macrof-install-pgp-tar tinyprocmail-install-files "tinyprocmail.el")
 
 ;;; ----------------------------------------------------------------------
 ;;;
