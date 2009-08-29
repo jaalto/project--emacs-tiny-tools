@@ -5321,12 +5321,12 @@ Return
        (interactive-p)
        list)
       (tinypath-verbose-macro 2
-			      (message "TinyPath: [INFO] PUSH maybe => %s"
-				       dir))
+	(message "TinyPath: [INFO] PUSH maybe => %s"
+		 dir))
       (tinypath-verbose-macro 5
-			      (message
-			       "TinyPath: [INFO] PUSH (before) Info-default-directory-list: %s"
-			       (prin1-to-string (tinypath-Info-default-directory-list))))
+	(message
+	 "TinyPath: [INFO] PUSH (before) Info-default-directory-list: %s"
+	 (prin1-to-string (tinypath-Info-default-directory-list))))
       ;;  Always add found directories to the list.
       ;;  Notice, that directory may contain trailing slash, that's why
       ;;  two `member' tests
@@ -5340,16 +5340,16 @@ Return
 	(unless (or (member dir1 list)
 		    (member dir2 list))
 	  (tinypath-verbose-macro 2
-				  (message
-				   "TinyPath: [INFO] PUSH Info-default-directory-list => %s" dir2))
+	    (message
+	     "TinyPath: [INFO] PUSH Info-default-directory-list => %s" dir2))
 	  (setq cleanup t)
 	  ;;  This is efectively "(push dir2 <info-list>)"
 	  (set (tinypath-Info-default-directory-list-sym)
 	       (cons dir2 (tinypath-Info-default-directory-list)))
 	  (tinypath-verbose-macro 5
-				  (message
-				   "TinyPath: [INFO] PUSH (after) Info-default-directory-list: %s"
-				   (prin1-to-string (tinypath-Info-default-directory-list))))))
+	    (message
+	     "TinyPath: [INFO] PUSH (after) Info-default-directory-list: %s"
+	     (prin1-to-string (tinypath-Info-default-directory-list))))))
       ;;  Kill all previous info files from Emacs, so that next info
       ;;  C-h i will force Emacs to regenerate found new entries.
       (when (or cleanup                 ;Added new directory
@@ -5365,7 +5365,7 @@ Return
   ;;    all 'dir' files.
   ;;  - Kill also centeal buffer *info*
   (dolist (buffer (buffer-list))
-    (when (string-match "^ info\\|^\\*info" (buffer-name buffer))
+    (when (string-match "^ info\\|^\\*info" (or (buffer-name buffer) ""))
       (kill-buffer buffer))))
 
 ;;; ----------------------------------------------------------------------
