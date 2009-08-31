@@ -47,35 +47,40 @@
 ;; or autoload and your Emacs starts faster, preferred method:
 ;;
 ;;      (setq tinytf-:mode-prefix-key "z")  ; OPTIONAL
-;;      (autoload 'tinytf-mode                 "tinytf" "" t)
-;;      (autoload 'turn-on-tinytf-mode-maybe   "tinytf" "" t)
 ;;
-;; To use additional function keys, add this line:
+;;      (autoload 'tinytf-mode			"tinytf" "" t)
+;;      (autoload 'turn-on-tinytf-mode-maybe	"tinytf" "" t)
+;;      (autoload 'tinytf-untabify-buffer	"tinytf" "" t)
+;;      (autoload 'turn-on-tinytf-mode-maybe	"tinytf" "" t)
 ;;
-;;      (setq tinytf-:mode-define-keys-hook
-;;        '(tinytf-mode-define-keys tinytf-mode-define-f-keys)))
+;; To use additional function keys, add these lines:
+;;
+;;      ;; Required
+;;      (add-hook 'tinytf-:mode-define-keys-hook 'tinytf-mode-define-keys)
+;;      ;; OPTIONAL
+;;      (add-hook 'tinytf-:mode-define-keys-hook 'tinytf-mode-define-f-keys)
 ;;
 ;; Additional hooks to detect and format buffer (optional):
 ;;
 ;;       (add-hook 'write-file-hooks 'tinytf-untabify-buffer)
 ;;       (add-hook 'find-file-hooks 'turn-on-tinytf-mode-maybe)
 ;;
-;; If you feel that you have to redefine some binding to suit your
-;; keyboard better, please do add similar setup to your emacs
+;; If you need to redefine some binding to suit your keyboard better,
+;; add setup like this to your ~/.emacs file:
 ;;
-;;      (add-hook 'tinytf-:mode-define-keys-hook 'my-tinytf-mode-define-keys)
+;;      (setq tinytf-:mode-define-keys-hook 'my-tinytf-mode-define-keys)
 ;;
 ;;      (defun my-tinytf-mode-define-keys ()
 ;;        (let ((map tinytf-:mode-prefix-map))
-;;          (tinytf-mode-define-keys)   ;;  Default keys.
-;;          (tinytf-mode-define-f-keys)
+;;          (tinytf-mode-define-keys)   ;; Default keys.
+;;          (tinytf-mode-define-f-keys) ;; Additional F-keys
 ;;          (define-key map "]"  'tinytf-mark-word-sample)
 ;;          (define-key map "["  'ignore)
 ;;          (define-key map "{"  'tinytf-mark-word-emp)
 ;;          (define-key map "}"  'tinytf-mark-word-strong)))
 ;;
 ;; It is possible to write documentation into other files as well
-;; using TF format. There is another perl program that can extract the
+;; using TF format. There is a perl program that can extract
 ;; documentation into text/plain by omitting comments:
 ;;
 ;;      http://cpan.perl.org/modules/by-authors/id/J/JA/JARIAALTO/
