@@ -38,13 +38,15 @@
 ;; Put this file on your Emacs-Lisp `load-path', add following into your
 ;; ~/.emacs startup file.
 ;;
-;;      (add-hook 'tinytf-:load-hook 'turn-on-tinytf-mode-all-buffers)
+;;      ;; OPTIONAL: If you want fast minor mode key binding
 ;;      (setq tinytf-:mode-prefix-key "z")   ;; faster than default C-c C-z
+;;
+;;      (add-hook 'tinytf-:load-hook 'turn-on-tinytf-mode-all-buffers)
 ;;      (require 'tinytf)
 ;;
 ;; or autoload and your Emacs starts faster, preferred method:
 ;;
-;;      (setq tinytf-:mode-prefix-key "z")
+;;      (setq tinytf-:mode-prefix-key "z")  ; OPTIONAL
 ;;      (autoload 'tinytf-mode                 "tinytf" "" t)
 ;;      (autoload 'turn-on-tinytf-mode-maybe   "tinytf" "" t)
 ;;
@@ -156,24 +158,25 @@
 ;;  What is Technical Format?
 ;;
 ;;      In short: it is list of text placement and formatting rules.
-;;      And you're looking at it right now in this document.
+;;      And you're looking at it right now in this document. This
+;;      package offers minor mode for text files to adjusting the
+;;      correct layout.
 ;;
-;;      This package offers minor mode for text files and helps you to
-;;      maintain correct layout. You can even convert file into HTML very
-;;      easily with the perl script which is usually distributed in the
-;;      complete Tiny Tools Kit or available separately from the CPAN
-;;      under developer account JARIAALTO. You do not need to know a shred
-;;      about the HTML language itself. And it is much easier to update
-;;      text files, than deal with HTML itself. When you have text ready,
-;;      you just feed it to the t2html.pl perl script and it gives you
-;;      nicely formatted HTML page. Writing HTML *home* pages is different
-;;      story, because you usually want to include some graphics,
-;;      JavaScript, PHP or JSP in the page. But putting some text document
-;;      available in HTML format is easily made possible with this package.
+;;	You can convert text file into HTML very easily with the perl
+;;      script which is availale separately at
+;;      <http://freshmeat.net/projects/perl-text2html>. You do not
+;;      need to know a thing about the HTML language itself. It is
+;;      much easier to update text files, than deal with HTML itself.
+;;      When you have text ready, you just feed it to the `t2html.pl'
+;;      perl script and it gives you nicely formatted HTML page.
+;;      Writing HTML home pages is different story, because you
+;;      usually want to include some graphics, JavaScript, PHP or JSP
+;;      in the page. But aputting some text document available in HTML
+;;      format is easily made possible with this package.
 ;;
-;;      In the other hand, while you may not be interested in HTML, you
+;;      On the other hand, while you may not be interested in HTML, you
 ;;      could still consider writing your documents in 'Technical format'
-;;      -- with word *technical* I refer to the layout of the text, which
+;;      -- with word technical I refer to the layout of the text, which
 ;;      is very _rigid_. In order to use facilities in this package,
 ;;      e.g. heading hiding/showing, the headings must be placed in
 ;;      columns 0 and 4 and the first word must be in *uppercase*.  The
@@ -184,7 +187,7 @@
 ;;      the same format.
 ;;
 ;;      All in all, this package was primarily designed to help writing
-;;      text documents for t2html.pl and viewing document in *outline*
+;;      text documents for `t2html.pl' and viewing document in *outline*
 ;;      styled selective display. Please refer to mode description for
 ;;      full details of the text layout format.
 ;;
@@ -192,9 +195,7 @@
 ;;
 ;;      Please note, that this section may be slightly out of date.
 ;;      You should read up to date information from the conversion
-;;      program using command `t2html.pl' `--help' available at
-;;      http://perl-text2html.sourceforge.net/ and nearest Perl CPAN
-;;      http://cpan.perl.org/modules/by-authors/id/J/JA/JARIAALTO/
+;;      program using command `t2html.pl' `--help'.
 ;;
 ;;      --//-- TF description start
 ;;
@@ -298,9 +299,9 @@
 ;;      treated in HTML output, call following function. If you have 19.30+
 ;;      this is not necessary, see note about post command above.
 ;;
-;;        Do you wonder why 'z' prefix is default? Well, I wanted a fast
-;;        key that was mostly unused. You can change that if you prefer
-;;        some other key. See variable `tinytf-:mode-prefix-key'
+;;        The examples here use customized 'z' keybinging for fast
+;;        access. You can change that if you prefer some other key.
+;;        See variable `tinytf-:mode-prefix-key'
 ;;
 ;;          z RET   tinytf-column-info-display
 ;;
@@ -515,25 +516,10 @@
 ;;      the key "doubles"; i.e. pressing "zz" will generate the plain "z"
 ;;      character.
 ;;
-;;  Technical note: post command
-;;
-;;      This note is valid only for old Emacs releases, prior 20.x.
-;;
-;;      While you type text in the buffer, the post command activates at
-;;      regular intervals to untabify the buffer. The untabify is done
-;;      because it makes formatting text easier and when you print the text
-;;      file, you can be sure that the output is the same regardless of
-;;      the tabs.
-;;
-;;      If you have Emacs 19.30+ there is additional help feature available
-;;      to you. When you sit still in some column position for few seconds,
-;;      the column description will be shown automatically. That should
-;;      help keeping you informed of the text layout.
-;;
 ;;  Technical note: HTML utilities
 ;;
 ;;      Two external utilities are searched for HTML generation:
-;;      t2html.pl and htmlize.el. If these utilities are found,
+;;      `t2html.pl' and `htmlize.el'. If these utilities are found,
 ;;      their locations are stored to plist of variable `tinytf-menu'.
 ;;      See source code of function `tinytf-utility-programs-check'
 ;;      for more.
@@ -544,6 +530,18 @@
 ;;      for certain sections. This gets almost always garbled with
 ;;      the first pull-down. Selecting the menu second time shows
 ;;      correct section names with bold letters.
+;;
+;;      [This note is valid only for old Emacs releases, prior 20.x]
+;;      While you type text in the buffer, the post command activates at
+;;      regular intervals to untabify the buffer. The untabify is done
+;;      because it makes formatting text easier and when you print the text
+;;      file, you can be sure that the output is the same regardless of
+;;      the tabs.
+;;
+;;      If you have Emacs 19.30+ there is additional help feature available
+;;      to you. When you sit still in some column position for few seconds,
+;;      the column description will be shown automatically. That should
+;;      help keeping you informed of the text layout.
 
 ;;}}}
 

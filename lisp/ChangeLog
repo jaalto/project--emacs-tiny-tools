@@ -1,3 +1,8 @@
+2009-08-31  Jari Aalto  <jari.aalto@cante.net>
+
+	* tiny/tinytf.el: (top level::Documentation): Remove CPAN
+	references and point to freshmeat t2html project.
+
 2009-08-29  Jari Aalto  <jari.aalto@cante.net>
 
 	* tiny/tinylib.el (ti::package-install-pgp-tar): Add TEMPDIR.
