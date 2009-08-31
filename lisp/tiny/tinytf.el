@@ -74,9 +74,6 @@
 ;;          (define-key map "{"  'tinytf-mark-word-emp)
 ;;          (define-key map "}"  'tinytf-mark-word-strong)))
 ;;
-;; To make HTML, you need conversion Perl script *t2html.pl* available at
-;; http://perl-text2html.sourceforge.net/
-;;
 ;; It is possible to write documentation into other files as well
 ;; using TF format. There is another perl program that can extract the
 ;; documentation into text/plain by omitting comments:
@@ -85,7 +82,8 @@
 ;;      ripdoc.pl
 ;;
 ;; For example this lisp file's documentation can be converted into HTML
-;; with following command sequence:
+;; with following command sequence. t2html is available at
+;; <http://freshmeat.net/projects/perl-text2html>.
 ;;
 ;;      % ripdoc.pl tinytf.el | t2html.pl > tinytf.html
 ;;
@@ -103,18 +101,21 @@
 ;;  Preface, Jan 1997
 ;;
 ;;      Late in the 1996 there was a need for a better text file
-;;      handling than just plan `text-mode'. I was looking for a simple
-;;      tool to generate HTML pages out of text-based documents. After some
-;;      researching on the web, I still couldn't find anything that would
-;;      have been strictly a text-based solution. There were many "languages"
-;;      from which the HTML could be generated, but really, I didn't want
-;;      to learn any new language just for that. I can understand people
-;;      that write their documents still using LaTeX, but Win32 Word
-;;      is much suitable and more known than any of those exotic formats.
-;;      The project started by creating the tool that converted text into
-;;      HTML (Perl *t2html.pl* script) and then writing a Emacs package to
-;;      help writing the text files. It has been proven to be really nice
-;;      combination where flexibility meets cross-platform demands.
+;;      handling than just plan `text-mode'. I was looking for a
+;;      simple tool to generate HTML pages out of text-based
+;;      documents. After some researching on the web, I still couldn't
+;;      find anything that would have been strictly a text-based
+;;      solution. There were many "languages" from which the HTML
+;;      could be generated, but really, I didn't want to learn any new
+;;      language just for that. I can understand people that write
+;;      their documents still using LaTeX, but Win32 Word is much
+;;      suitable and more known than any of those exotic formats. The
+;;      project started by creating the tool that converted text into
+;;      HTML (Perl *t2html.pl*
+;;      <http://freshmeat.net/projects/perl-text2html>) and then
+;;      writing a Emacs package to help writing the text files. It has
+;;      been proven to be really nice combination where flexibility
+;;      meets cross-platform demands.
 ;;
 ;;  Overview of features
 ;;
