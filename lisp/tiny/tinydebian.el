@@ -853,7 +853,7 @@ to generate updated list."
      tinydebian-:severity-selected
      tinydebian-:tags-list)))
 
-(defconst tinydebian-:version-time "2009.0829.1038"
+(defconst tinydebian-:version-time "2009.0902.1146"
   "Last edited time.")
 
 (defvar tinydebian-:bts-extra-headers
@@ -2103,13 +2103,33 @@ Bug#NNNN: O: package -- description."
 
 ;;; ----------------------------------------------------------------------
 ;;;
-(defun tinydebian-bug-nbr-at-current-point ()
-  "Read bug number with hash (#) mark from current point"
+(defun tinydebian-bug-nbr-at-current-point-hash ()
+  "Read bug number with hash (#) mark from current point."
   (let ((table (syntax-table))
 	word)
     (with-syntax-table table
       (modify-syntax-entry ?# "w" table)
       (tinydebian-bug-nbr-string (current-word)))))
+
+;;; ----------------------------------------------------------------------
+;;;
+(defun tinydebian-bug-nbr-at-current-point-number ()
+  "Read at least 4 digit bug number from current point.
+The number must be surreounded by whitespace."
+  (when (looking-at "[0-9]+[ \t\r\n]")
+    (save-excursion
+      ;; Go to beginning
+      (skip-chars-backward "^ \t\r\n")
+      ;; At least 3 digits
+      (when (looking-at "\\([0-9][0-9][0-9]+\\)[ \t\r\n]")
+	(current-word)))))
+
+;;; ----------------------------------------------------------------------
+;;;
+(defsubst tinydebian-bug-nbr-at-current-point ()
+  "Read bug number from current point."
+  (or (tinydebian-bug-nbr-at-current-point-hash)
+      (tinydebian-bug-nbr-at-current-point-number)))
 
 ;;; ----------------------------------------------------------------------
 ;;;

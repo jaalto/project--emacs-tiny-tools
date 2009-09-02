@@ -1,3 +1,9 @@
+2009-09-02  Jari Aalto  <jari.aalto@cante.net>
+
+	* tiny/tinydebian.el
+	(tinydebian-bug-nbr-at-current-point-hash): New.
+	(tinydebian-bug-nbr-at-current-point-sumber): New.
+
 2009-08-31  Jari Aalto  <jari.aalto@cante.net>
 
 	* tiny/tinytf.el: (top level::Documentation): Remove CPAN
