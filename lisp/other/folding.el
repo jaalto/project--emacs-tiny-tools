@@ -25,7 +25,7 @@
 ;; [Latest devel version]
 ;; Vcs-URL:     http://savannah.nongnu.org/projects/emacs-tiny-tools
 
-(defconst folding-version-time "2009.0905.0755"
+(defconst folding-version-time "2009.0905.0811"
   "Last edit time in format YYYY.MMDD.HHMM.")
 
 ;;{{{ GPL
@@ -3037,7 +3037,7 @@ It prevents 'binary pollution' upon save."
   "Return folding font-lock keywords for MODE."
   ;;  Add support mode-by-mode basis. Check if mode is already
   ;;  handled from the property list.
-  (destructuring-bind (beg end)
+  (destructuring-bind (beg end ignore)
       (folding-get-mode-marks (or mode major-mode))
     (setq beg (concat "^[ \t]*" (regexp-quote beg) "[^\r\n]+"))
     (setq end (concat "^[ \t]*" (regexp-quote end)))

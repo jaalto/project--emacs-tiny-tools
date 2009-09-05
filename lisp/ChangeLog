@@ -1,7 +1,7 @@
 2009-09-05  Jari Aalto  <jari.aalto@cante.net>
 
 	* other/folding.el
-	(folding-kbd): Modernize macro.
+	Modernize all macros.
 	(folding-narrow-by-default): Move variable
 	definition before `folding-advice-instantiate' which
 	refers to it.
@@ -12,6 +12,7 @@
 	`multiple-value-bind', avoiding problems on XEmacs version.
 	(folding-font-lock-keywords): Use `destructuring-bind'.
 	(folding-all-comment-blocks-in-region): Use `destructuring-bind'.
+	(folding-font-lock-keywords): Add 3rd arg to destructuring-bind.
 
 2009-09-02  Jari Aalto  <jari.aalto@cante.net>
 
