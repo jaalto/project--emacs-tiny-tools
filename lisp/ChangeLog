@@ -5,6 +5,9 @@
 	(folding-narrow-by-default): Move variable
 	definition before `folding-advice-instantiate' which
 	refers to it.
+	(folding-font-lock-support): Use standard `let'.
+	(folding-font-lock-support-instantiate): Use standard `let'.
+	(folding-toggle-enter-exit): Adjust docstring.
 
 2009-09-02  Jari Aalto  <jari.aalto@cante.net>
 

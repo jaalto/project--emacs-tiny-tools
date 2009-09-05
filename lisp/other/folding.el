@@ -25,7 +25,7 @@
 ;; [Latest devel version]
 ;; Vcs-URL:     http://savannah.nongnu.org/projects/emacs-tiny-tools
 
-(defconst folding-version-time "2009.0905.0725"
+(defconst folding-version-time "2009.0905.0736"
   "Last edit time in format YYYY.MMDD.HHMM.")
 
 ;;{{{ GPL
@@ -640,7 +640,7 @@
 
 ;; [person version] = developer and his revision tree number.
 ;;
-;; Sep  20  2009  23.1             [jari git 551dea2]
+;; Sep  20  2009  23.1             [jari git a80c2d6]
 ;; - Remove 'defmacro custom' for very old Emacs version that did
 ;;   not have custom.
 ;; - Modernize all macros to use new backquote syntax,
@@ -3052,7 +3052,7 @@ It prevents 'binary pollution' upon save."
   (or mode
       (setq mode major-mode))
   ;;  Hide function from Byte Compiler.
-  (let* ((function 'font-lock-add-keywords))
+  (let ((function 'font-lock-add-keywords))
     (when (fboundp function)
       (funcall function
                mode
@@ -3066,13 +3066,13 @@ It prevents 'binary pollution' upon save."
                          (let ((sym 'global-font-lock-mode))
                            (and (boundp sym)
                                 (symbol-value sym)))))
-            ;; #todo: should we use font-lock-fontify-buffer instead?
+            ;; FIXME: should we use font-lock-fontify-buffer instead?
             (font-lock-mode -1)
             (font-lock-mode 1)))))))
 
 (defun folding-font-lock-support ()
   "Add font lock support."
-  (let* ((list (get 'folding-mode 'font-lock)))
+  (let ((list (get 'folding-mode 'font-lock)))
     (unless (memq major-mode list)
       ;;  Support added, update known list
       (push major-mode list)
@@ -3735,11 +3735,11 @@ subfolds."
 		   ;;  - When fold is closed, the whole line (with code)
 		   ;;    is treated as comment
 		   ;;  - Fon-lock changes all fonts to `font-lock-comment-face'
-		   ;;  - When you again open fold, all code is comment color
+		   ;;  - When you again open fold, all text is in color
 		   ;;
 		   ;;  => Font lock should stop at \r, and not use ".*"
 		   ;;     which includes \r character
-		   ;;  This is a workaround, not aa efficient one
+		   ;;  This is a workaround, not an efficient one
 		   (if (or (and (boundp 'global-font-lock-mode)
 				global-font-lock-mode)
 			   font-lock-mode)
@@ -3754,7 +3754,8 @@ subfolds."
 ;;{{{ folding-hide-current-entry
 
 (defun folding-toggle-enter-exit ()
-  "Run folding-shift-in or folding-shift-out depending on current line's contents."
+  "Run `folding-shift-in' or `folding-shift-out'.
+This depends on current line's contents."
   (interactive)
   (beginning-of-line)
   (let ((current-line-mark (folding-mark-look-at)))
