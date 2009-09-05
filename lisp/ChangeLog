@@ -1,4 +1,17 @@
+2009-09-05  Jari Aalto  <jari.aalto@cante.net>
+
+	* other/folding.el
+	(folding-kbd): Modernize macro.
+	(folding-narrow-by-default): Move variable
+	definition before `folding-advice-instantiate' which
+	refers to it.
+
 2009-09-02  Jari Aalto  <jari.aalto@cante.net>
+
+	* tiny/tinylisp.el (tinylisp-directory-file-list): Correct local
+	variable.
+	(tinylisp-autoload-generate-loaddefs-dir): Correct insteractive
+	`exclude' var setting.
 
 	* tiny/tinydebian.el
 	(tinydebian-bug-nbr-at-current-point-hash): New.

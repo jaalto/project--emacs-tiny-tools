@@ -19,14 +19,13 @@
 ;; Keywords:    tools
 ;;
 ;; [Latest XEmacs CVS tree commit and revision]
-;; VCS-Version: $Revision: 3.42 $
-;; VCS-URL:     http://savannah.nongnu.org/projects/emacs-tiny-tools/
-;; VCS-Date:    $Date: 2007/05/07 10:50:05 $
+;; Vcs-Version: $Revision: 3.42 $
+;; Vcs-Date:    $Date: 2007/05/07 10:50:05 $
 ;;
-;; [Latest devel: Savannah emacs-tiny-tools revision]
-;; Version:     git 56b3089
+;; [Latest devel version]
+;; Vcs-URL:     http://savannah.nongnu.org/projects/emacs-tiny-tools
 
-(defconst folding-version-time "2009.0220.1404"
+(defconst folding-version-time "2009.0905.0725"
   "Last edit time in format YYYY.MMDD.HHMM.")
 
 ;;{{{ GPL
@@ -640,6 +639,14 @@
 ;;{{{ History
 
 ;; [person version] = developer and his revision tree number.
+;;
+;; Sep  20  2009  23.1             [jari git 551dea2]
+;; - Remove 'defmacro custom' for very old Emacs version that did
+;;   not have custom.
+;; - Modernize all macros to use new backquote syntax,
+;; - Move `folding-narrow-by-default' variable
+;;   definition before `folding-advice-instantiate' which
+;;   refers to it.
 ;;
 ;; Feb  20  2009  22.2.1           [jari git 51ada03..56b3089]
 ;; - Make XEmacs CVS and Savannah git revisions at header more clear
@@ -1811,20 +1818,6 @@ with XEmacs.")
 
 ;;; .......................................................... &v-bind ...
 
-;; Custom hack for Emacs that does not have custom
-
-(eval-and-compile
-  (condition-case ()
-      (require 'custom)
-    (error nil))
-  (if (and (featurep 'custom) (fboundp 'custom-declare-variable))
-      nil ;; We've got what we needed
-    ;; We have the old custom-library, hack around it!
-    (defmacro defgroup (&rest args)
-      nil)
-    (defmacro defcustom (var value doc &rest args)
-      (` (defvar (, var) (, value) (, doc))))))
-
 (defgroup folding nil
   "Managing buffers with Folds."
   :group 'tools)
@@ -1868,9 +1861,9 @@ occupy it if you have used M - g got `goto-line'."
   "Folding: define KEY with FUNCTION to `folding-mode-prefix-map'.
 This is used when assigning keybindings to `folding-mode-map'.
 See also `folding-mode-prefix-key'."
-  (` (define-key
-       folding-mode-prefix-map
-       (, key) (, function))))
+  `(define-key
+     folding-mode-prefix-map
+     ,key ,function))
 
 (defun folding-bind-default-mouse ()
   "Bind default mouse keys used by Folding mode."
@@ -2006,6 +1999,10 @@ non-nil when folding was loaded.
 See also `folding-goto-key'."
   :type  'boolean
   :group 'folding)
+
+(defvar folding-narrow-by-default t
+  "If t (default) things like isearch will enter folds.  If nil the
+folds will be opened, but not entered.")
 
 (when folding-advice-instantiate
   (eval-when-compile (require 'advice))
@@ -2146,10 +2143,6 @@ started in C mode."
 ;;{{{ setup: user config
 
 ;;; ........................................................ &v-Config ...
-
-(defvar folding-narrow-by-default t
-  "If t (default) things like isearch will enter folds.  If nil the
-folds will be opened, but not entered.")
 
 ;; Q: should this inherit mouse-yank-at-point's value? maybe not.
 (defvar folding-mouse-yank-at-point t
@@ -4856,10 +4849,11 @@ nil means discard it; anything else is stream for print."
 (let ((cmds folding-isearch-normal-cmds))
   (while cmds
     (eval
-     (` (defun (, (intern (concat "folding-" (symbol-name (car cmds))))) ()
-          "Automatically generated"
-          (interactive)
-          (folding-isearch-general (quote (, (car cmds)))))))
+     `(defun ,(intern (concat "folding-" (symbol-name (car cmds))))
+	nil
+	"Automatically generated"
+	(interactive)
+	(folding-isearch-general (quote ,(car cmds)))))
     (setq cmds (cdr cmds))))
 
 ;; The HEART! Executes command and updates the foldings.
