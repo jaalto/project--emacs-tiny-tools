@@ -25,7 +25,7 @@
 ;; [Latest devel version]
 ;; Vcs-URL:     http://savannah.nongnu.org/projects/emacs-tiny-tools
 
-(defconst folding-version-time "2009.0905.0736"
+(defconst folding-version-time "2009.0905.0755"
   "Last edit time in format YYYY.MMDD.HHMM.")
 
 ;;{{{ GPL
@@ -2567,11 +2567,11 @@ Return t ot nil if marks were removed."
   (interactive)
   (if (not (folding-mark-look-at))
       (when (interactive-p)
-        (message "Folding: Cursor not over fold. Can't removed fold marks.")
+        (message "Folding: Cursor not over fold. Can't remove fold marks.")
         nil)
-    (multiple-value-bind (beg end)
+    (destructuring-bind (beg end)
         (folding-show-current-entry)
-      (let* ((kill-whole-line t))
+      (let ((kill-whole-line t))
         ;;  must be done in this order, because point moves after kill.
         (goto-char end)
         (beginning-of-line)
@@ -3037,7 +3037,7 @@ It prevents 'binary pollution' upon save."
   "Return folding font-lock keywords for MODE."
   ;;  Add support mode-by-mode basis. Check if mode is already
   ;;  handled from the property list.
-  (multiple-value-bind (beg end)
+  (destructuring-bind (beg end)
       (folding-get-mode-marks (or mode major-mode))
     (setq beg (concat "^[ \t]*" (regexp-quote beg) "[^\r\n]+"))
     (setq end (concat "^[ \t]*" (regexp-quote end)))
@@ -5294,7 +5294,7 @@ The result will be:
          (comment-regexp (concat "^" comment-start))
          (marker         (point-marker))
          done)
-    (multiple-value-bind (left right ignore)
+    (destructuring-bind (left right ignore)
         (folding-get-mode-marks)
       ;; Bytecomp silencer: variable ignore bound but not referenced
       (if ignore (setq ignore ignore))

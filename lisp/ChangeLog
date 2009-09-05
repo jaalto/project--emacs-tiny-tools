@@ -8,6 +8,10 @@
 	(folding-font-lock-support): Use standard `let'.
 	(folding-font-lock-support-instantiate): Use standard `let'.
 	(folding-toggle-enter-exit): Adjust docstring.
+	(fold-marks-kill): Use `destructuring-bind', not
+	`multiple-value-bind', avoiding problems on XEmacs version.
+	(folding-font-lock-keywords): Use `destructuring-bind'.
+	(folding-all-comment-blocks-in-region): Use `destructuring-bind'.
 
 2009-09-02  Jari Aalto  <jari.aalto@cante.net>
 
