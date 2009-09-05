@@ -4849,9 +4849,9 @@ Can't find _defined_ variable or function on the line (eval buffer first).")
 (defun tinylisp-directory-file-list (dir &optional exclude)
   "Return list of Emacs Lisp files. Optinally EXCLUDE by regexp."
   (let (list)
-    (dolist (elt (directory-files dir 'full "\\.el"))
+    (dolist (elt (directory-files dir 'full "\\.el$"))
       (when (or (null exclude)
-		(not (string-match exclude file)))
+		(not (string-match exclude elt)))
         (push elt list)))
     list))
 
@@ -5052,7 +5052,7 @@ Input:
   "Write ###autoload from FILE to DEST. VERB."
   (let ((generated-autoload-file dest))
     (ti::file-delete-safe dest)
-;;;    (ti::package-autoload-loaddefs-create-maybe dest)
+ ;;;    (ti::package-autoload-loaddefs-create-maybe dest)
     (tinylisp-with-file-env-macro
       (with-current-buffer (tinylisp-find-file-noselect dest)
         (goto-char (point-max))
@@ -5093,7 +5093,7 @@ In interactive mode, the DEST is FILE-loaddefs.el and VERB mode is t."
 		      (file-name-nondirectory path))))
      (if (string= "" file)
 	 (error "No file name"))
-     (setq dest (tinylisp-file-name-add-suffix file "autoloadss"))
+     (setq dest (tinylisp-file-name-add-suffix file "loaddefs"))
      (setq dest (read-file-name
 		 "Loaddefs write: "
 		 (file-name-directory dest)
@@ -5116,7 +5116,7 @@ for `command-line-args-left'."
   (tinylisp-with-command-line
    (tinylisp-autoload-write-loaddefs-file
     file
-    (tinylisp-file-name-add-suffix file "autoloads")
+    (tinylisp-file-name-add-suffix file "loaddefs")
     'verbose)))
 
 ;;; ----------------------------------------------------------------------
@@ -5125,24 +5125,27 @@ for `command-line-args-left'."
   "Generate loaddefs for LIST of files. VERB."
   (let (dest)
     (dolist (file list)
-      (setq dest (tinylisp-file-name-add-suffix file "autoloads"))
+      (setq dest (tinylisp-file-name-add-suffix file "loaddefs"))
       (tinylisp-autoload-write-loaddefs-file file dest verb))))
 
 ;;; ----------------------------------------------------------------------
 ;;;
 ;;;###autoload
-(defun tinylisp-autoload-generate-loaddefs-dir (dir &optional exclude)
-  "Generate loaddefs from DIR, optionally EXCLUDE by regexp."
+(defun tinylisp-autoload-generate-loaddefs-dir
+  (dir &optional exclude verb)
+  "Generate loaddefs from DIR, optionally EXCLUDE by regexp.
+If VERB is non-nil, display verbose messages."
   (interactive "DLoaddefs from dir\nsIgnore regexp: ")
   (let ((regexp "-\\(loaddefs\\|autoload.*\\)\\.el")
 	list)
     (if (and (stringp exclude)
-	     (not (string= "" exclude)))  ;; Interactive RET
-	(setq regexp (format "%s\\|%s" regexp exclude)))
-    (setq list (tinylisp-directory-file-list dir exclude))
-    (tinylisp-autoload-generate-loaddefs-file-list
-     list
-     (interactive-p))))
+	     (string-match "^[ \t\r\n]*$" exclude))
+	;; Interactive RET
+	(setq exclude regexp))
+    (when (setq list (tinylisp-directory-file-list dir exclude))
+      (tinylisp-autoload-generate-loaddefs-file-list
+       list
+       (or verb (interactive-p))))))
 
 ;;; ----------------------------------------------------------------------
 ;;;
