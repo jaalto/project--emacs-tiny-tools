@@ -853,7 +853,7 @@ to generate updated list."
      tinydebian-:severity-selected
      tinydebian-:tags-list)))
 
-(defconst tinydebian-:version-time "2009.0902.1146"
+(defconst tinydebian-:version-time "2009.0909.1526"
   "Last edited time.")
 
 (defvar tinydebian-:bts-extra-headers
@@ -4882,12 +4882,12 @@ Example:
 ;;; ----------------------------------------------------------------------
 ;;;
 (defun tinydebian-bug-system-info-os-architecture ()
-  "Read architecture."
+  "Read architecture. Return empty string if cannot read."
   (if (not tinydebian-:bin-dpkg)
       ""
     (with-temp-buffer
       (tinydebian-call-process
-       tinydebian-:bin-dpkg  nil "--print-installation-architecture")
+       tinydebian-:bin-dpkg  nil "--print-architecture")
       (tinydebian-string-delete-newlines
        (buffer-string)))))
 
