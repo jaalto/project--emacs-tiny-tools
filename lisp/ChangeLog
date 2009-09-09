@@ -3,6 +3,8 @@
 	* tiny/tinydebian.el (tinydebian-bug-system-info-os-architecture):
 	Use --print-architecture instead of obsolete
 	--print-installation-architecture.
+	(tinydebian-bug-system-info-os): Check empty locale.
+	(tinydebian-bug-system-info-locale): Add LC_LANG.
 
 2009-09-05  Jari Aalto  <jari.aalto@cante.net>
 

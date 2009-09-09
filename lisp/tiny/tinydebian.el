@@ -853,7 +853,7 @@ to generate updated list."
      tinydebian-:severity-selected
      tinydebian-:tags-list)))
 
-(defconst tinydebian-:version-time "2009.0909.1526"
+(defconst tinydebian-:version-time "2009.0909.1532"
   "Last edited time.")
 
 (defvar tinydebian-:bts-extra-headers
@@ -4910,11 +4910,12 @@ Example:
 ;;;
 (defun tinydebian-bug-system-info-locale ()
   "Get locale information."
-  (let* ((list
-	  '("LC_ALL"
-	    "LC_CTYPE"))
-	 val
-	 ret)
+  (let ((list
+	 '("LC_ALL"
+	   "LC_CTYPE"
+	   "LC_LANG"))
+	val
+	ret)
     (dolist (var list)
       (when (setq val (getenv var))
 	(setq val (format "%s=%s" var val))
@@ -4935,7 +4936,7 @@ Locale: LANG=en_US, LC_CTYPE=en_US."
 			(ti::process-uname)))
 	 (architecture (tinydebian-bug-system-info-os-architecture))
 	 (release      (tinydebian-bug-system-info-os-version))
-	 (locale       (tinydebian-bug-system-info-locale)))
+	 (locale       (or (tinydebian-bug-system-info-locale) ""))
     (format "\
 Debian Release: %s
 Architecture: %s
