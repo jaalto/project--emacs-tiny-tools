@@ -4,7 +4,20 @@
 	Use --print-architecture instead of obsolete
 	--print-installation-architecture.
 	(tinydebian-bug-system-info-os): Check empty locale.
-	(tinydebian-bug-system-info-locale): Add LC_LANG.
+	(tinydebian-bug-system-info-locale): Add LANG.
+	(tinydebian-bug-system-info-os-version): Do not
+	return any default value.
+	(tinydebian-bug-report-mail): Remove double from docstring.
+	(tinydebian-:bin-apt-cache): New.
+	(tinydebian-bug-system-info-apt-cache-policy-parse-priority): New.
+	(tinydebian-bug-system-info-apt-cache-policy-parse-pinned): New.
+	(tinydebian-bug-system-info-apt-cache-policy-parse-release): New.
+	(tinydebian-bug-system-info-apt-prefer): New.
+	(tinydebian-bug-system-info-apt-cache-policy-parse-priority-str): New.
+	(tinydebian-bug-system-info-apt-policy): New.
+	(tinydebian-bug-system-info-apt-policy-debian): New.
+	(tinydebian-bug-system-info-apt-policy): New.
+	(tinydebian-bug-system-info-os): Add APT Prefers, APT policy.
 
 2009-09-05  Jari Aalto  <jari.aalto@cante.net>
 

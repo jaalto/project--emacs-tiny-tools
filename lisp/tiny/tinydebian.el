@@ -305,6 +305,9 @@ Only used if `tinydebian-:browse-url-function'is set to
 (defconst tinydebian-:bin-dpkg (executable-find "dpkg")
   "Location of `dpkg' binary.")
 
+(defconst tinydebian-:bin-apt-cache (executable-find "apt-cache")
+  "Location of `apt-cache' binary.")
+
 (defconst tinydebian-:bin-grep-available (executable-find "grep-available")
   "Location of `grep-available' binary.")
 
@@ -853,7 +856,7 @@ to generate updated list."
      tinydebian-:severity-selected
      tinydebian-:tags-list)))
 
-(defconst tinydebian-:version-time "2009.0909.1532"
+(defconst tinydebian-:version-time "2009.0909.1742"
   "Last edited time.")
 
 (defvar tinydebian-:bts-extra-headers
@@ -4883,8 +4886,7 @@ Example:
 ;;;
 (defun tinydebian-bug-system-info-os-architecture ()
   "Read architecture. Return empty string if cannot read."
-  (if (not tinydebian-:bin-dpkg)
-      ""
+  (when tinydebian-:bin-dpkg
     (with-temp-buffer
       (tinydebian-call-process
        tinydebian-:bin-dpkg  nil "--print-architecture")
@@ -4893,10 +4895,182 @@ Example:
 
 ;;; ----------------------------------------------------------------------
 ;;;
+(defun tinydebian-bug-system-info-apt-cache-policy-parse-pinned ()
+  "Parse output of apt-cache policy from current point.
+Point is moved forward.
+
+Return:
+  '((PACKAGE VERSION) ...)
+
+\[An example listing]
+Pinned packages:
+     debian-policy -> 3.8.3.0
+     topgit -> 0.7-1"
+  (when (re-search-forward "^Pinned packages:[ \t]*$" nil t)
+    (let (list)
+      (while (re-search-forward
+	      "^[ \t]+\\([^ \t\r\n]+\\) +-> +\\(.*[^ \t\r\n]\\)" nil t)
+	(push (list (match-string 1)
+		    (match-string 2))
+	      list))
+      list)))
+
+;;; ----------------------------------------------------------------------
+;;;
+(defun tinydebian-bug-system-info-apt-cache-policy-parse-priority ()
+  "Parse output of apt-cache policy from current point.
+Point is moved forward.
+
+Return:
+  assoc list: '(((priority VALUE) (url VALUE) ...) ...)
+
+\[An example listing]
+
+Package files:
+ 100 /var/lib/dpkg/status
+     release a=now
+ 500 http://deb.opera.com sid/non-free Packages
+     release o=Opera Software ASA,a=unstable,n=sid,l=The Opera web browser,c=non-free
+     origin deb.opera.com
+   1 http://ftp.fi.debian.org experimental/non-free Packages
+     release o=Debian,a=experimental,n=experimental,l=Debian,c=non-free
+     origin ftp.fi.debian.org
+   1 http://ftp.fi.debian.org experimental/contrib Packages
+     release o=Debian,a=experimental,n=experimental,l=Debian,c=contrib
+     origin ftp.fi.debian.org
+   1 http://ftp.fi.debian.org experimental/main Packages
+     release o=Debian,a=experimental,n=experimental,l=Debian,c=main
+     origin ftp.fi.debian.org
+ 500 http://ftp.fi.debian.org unstable/contrib Packages
+     release o=Debian,a=unstable,n=sid,l=Debian,c=contrib
+     origin ftp.fi.debian.org
+ 990 http://ftp.se.debian.org testing/main Packages
+     release o=Debian,a=testing,n=squeeze,l=Debian,c=main
+Pinned packages:
+     debian-policy -> 3.8.3.0
+     topgit -> 0.7-1"
+  (when (re-search-forward "^Package files:[ \t]*$" nil t)
+    (let (list)
+      (while (re-search-forward
+	      "^ +\\([0-9]+\\) +\\(.*\\)" nil t)
+	(let ((priority (match-string 1))
+	      (url      (match-string 2))
+	      release
+	      origin)
+	  (forward-line 1)
+	  (when (looking-at "^[ \t]+release[ \t]+\\(.*\\)")
+	    (setq release (match-string 1)))
+	  (forward-line 1)
+	  (if (looking-at "^[ \t]+origin[ \t]+\\(.*\\)")
+	      (setq origin (match-string 1))
+	    (forward-line -1))
+	  (push (list
+		 (cons 'priority priority)
+		 (cons 'url url)
+		 (cons 'release release)
+		 (cons 'origin origin))
+		list)))
+      ;; Return in original order
+      (reverse list))))
+
+;;; ----------------------------------------------------------------------
+;;;
+(defun tinydebian-bug-system-info-apt-cache-policy-parse-priority-str
+  (cache)
+  "Call `tinydebian-bug-system-info-apt-cache-policy-parse-priority'
+with CACHE as input."
+  (when cache
+    (with-temp-buffer
+      (insert cache)
+      (goto-char (point-min))
+      (tinydebian-bug-system-info-apt-cache-policy-parse-priority))))
+
+;;; ----------------------------------------------------------------------
+;;;
+(defun tinydebian-bug-system-info-apt-cache-policy-query ()
+  "Return result of 'apt-cache policy'."
+  (when tinydebian-:bin-dpkg
+   (with-temp-buffer
+     (tinydebian-call-process
+      tinydebian-:bin-apt-cache nil "policy")
+     (buffer-string))))
+
+;;; ----------------------------------------------------------------------
+;;;
+(defun tinydebian-bug-system-info-apt-cache-policy-parse-release
+  (elt field)
+  "Return from ELT, the assoc 'release and its FIELD.
+The DATA is a single element of
+`tinydebian-bug-system-info-apt-cache-policy-parse-priority'.
+
+An example if 'release value, where FIELD could be 'a'
+    o=Debian,a=testing,n=squeeze,l=Debian,c=main"
+  (let ((str (cdr-safe (assoc 'release elt))))
+    (when (and (stringp str)
+	       (string-match (concat field "=\\([^ \t\r\n,]+\\)") str))
+      (match-string 1 str))))
+
+;;; ----------------------------------------------------------------------
+;;;
+(defun tinydebian-bug-system-info-apt-prefer (parsed-cache)
+  "Check APT preferences from PARSED-CACHE.
+See `tinydebian-bug-system-info-apt-cache-policy-query' for CACHE."
+  (when parsed-cache
+    ;; The last one is highest
+    (let ((elt (car (reverse parsed-cache))))
+      (tinydebian-bug-system-info-apt-cache-policy-parse-release
+       elt "a"))))
+
+;;; ----------------------------------------------------------------------
+;;;
+(defun tinydebian-bug-system-info-apt-policy
+  (parsed-cache &optional match)
+  "Check APT policy from PARSED-CACHE.
+See `tinydebian-bug-system-info-apt-cache-policy-query' for CACHE.
+If optional MATCH is given, search for MATCH from release string.
+
+Return string. Something like:
+  ((990 'testing') (500 'unstable') (1 'experimental'))"
+  (let (list)
+    (dolist (elt parsed-cache)
+      (let* ((priority (cdr-safe (assoc 'priority elt)))
+	     (relassoc (cdr-safe  (assoc 'release elt)))
+	     (release
+	      (if (or (null match)
+		      (string-match match relassoc))
+		  (tinydebian-bug-system-info-apt-cache-policy-parse-release
+		   elt "a"))))
+	(when release
+	  (pushnew (list priority release) list :test 'equal))))
+    list))
+
+;;; ----------------------------------------------------------------------
+;;;
+(defun tinydebian-bug-system-info-apt-policy-debian (parsed-cache)
+  "Call `tinydebian-bug-system-info-apt-policy' with 'Debian'."
+  (tinydebian-bug-system-info-apt-policy parsed-cache "o=Debian"))
+
+;;; ----------------------------------------------------------------------
+;;; same as in reportbug(1)
+(defun tinydebian-bug-system-info-apt-policy-as-string (policy-data)
+  "Convert POLICY-DATA '((PRIORITY STRING) ...) into string.
+See `tinydebian-bug-system-info-apt-policy' for POLICY-DATA."
+  (when policy-data
+    (let (str)
+      (dolist (elt policy-data)
+	(multiple-value-bind (priority value) elt
+	  (setq str
+		(if str
+		    (concat str (format " (%s, %s)" priority value))
+		  (format "(%s, %s)" priority value)))))
+      str)))
+
+;;; ----------------------------------------------------------------------
+;;;
 (defun tinydebian-bug-system-info-os-version ()
-  "Read Debian version number."
-  (let* ((file  "/etc/debian_version")
-	 (ret    (format "%s not found or readable." file)))
+  "Read Debian version from /etc/debian_version file."
+  (let ((file  "/etc/debian_version")
+	ret)
     (when (and (file-exists-p   file)
 	       (file-readable-p file))
       (with-temp-buffer
@@ -4911,9 +5085,9 @@ Example:
 (defun tinydebian-bug-system-info-locale ()
   "Get locale information."
   (let ((list
-	 '("LC_ALL"
-	   "LC_CTYPE"
-	   "LC_LANG"))
+	 '("LANG"
+	   "LC_ALL"
+	   "LC_CTYPE"))
 	val
 	ret)
     (dolist (var list)
@@ -4934,15 +5108,27 @@ Kernel: Linux terra 2.4.17 #1 Fri Feb 8 21:32:43 EET 2002 i686
 Locale: LANG=en_US, LC_CTYPE=en_US."
   (let* ((kernel       (tinydebian-string-delete-newlines
 			(ti::process-uname)))
-	 (architecture (tinydebian-bug-system-info-os-architecture))
+	 (architecture (or (tinydebian-bug-system-info-os-architecture) ""))
 	 (release      (tinydebian-bug-system-info-os-version))
-	 (locale       (or (tinydebian-bug-system-info-locale) ""))
+	 (cache
+	  (tinydebian-bug-system-info-apt-cache-policy-parse-priority-str
+	   (tinydebian-bug-system-info-apt-cache-policy-query)))
+	 (apt-prefer   (tinydebian-bug-system-info-apt-prefer cache))
+	 (apt-policy
+	  (tinydebian-bug-system-info-apt-policy-as-string
+	   (tinydebian-bug-system-info-apt-policy-debian
+	    cache)))
+	(locale       (or (tinydebian-bug-system-info-locale) "")))
     (format "\
 Debian Release: %s
+  APT Prefers %s
+  APT policy: %s
 Architecture: %s
 Kernel: %s
 Locale: %s"
 	    release
+	    apt-prefer
+	    apt-policy
 	    architecture
 	    kernel
 	    locale)))
@@ -5001,28 +5187,15 @@ Severity: wishlist
 
 -- System Information
 Debian Release: 3.0
+  APT prefers testing
+  APT policy: (990, 'testing'), (500, 'unstable'), (1, 'experimental')
 Architecture: i386
 Kernel: Linux foo 2.4.17 #1 Fri Feb 8 21:32:43 EET 2002 i686
 Locale: LANG=en_US, LC_CTYPE=en_US
 
 Versions of packages autolog depends on:
 ii  cron                          3.0pl1-72  management of regular background p
-ii  libc6                         2.2.5-3    GNU C Library: Shared libraries an
-
-Subject: autolog based on DNS and IP names
-Package: autolog
-Version: 0.35-10
-Severity: wishlist
-
--- System Information
-Debian Release: 3.0
-Architecture: i386
-Kernel: Linux terra 2.4.17 #1 Fri Feb 8 21:32:43 EET 2002 i686
-Locale: LANG=en_US, LC_CTYPE=en_US
-
-Versions of packages autolog depends on:
-ii  cron                          3.0pl1-72  management of regular background p
-ii  libc6                         2.2.5-3    GNU C Library: Shared libraries an."
+ii  libc6                         2.2.5-3    GNU C Library: Shared libraries an"
   (interactive
    (progn
      (if (y-or-n-p "[TinyDebian] Submit bug report? ")
