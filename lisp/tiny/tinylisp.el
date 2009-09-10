@@ -2119,6 +2119,15 @@ Following variables are set during BODY:
 
 ;;; ----------------------------------------------------------------------
 ;;;
+(defsubst tinylisp-get-buffer-create (&optional buffer)
+  "Call (get-buffer-create buffer) and put it in `emacs-lisp-mode'."
+  (with-current-buffer (get-buffer-create buffer)
+    (unless (eq major-mode 'emacs-lisp-mode)
+      (emacs-lisp-mode))
+    (current-buffer)))
+
+;;; ----------------------------------------------------------------------
+;;;
 (defsubst tinylisp-whitespace-cleanup-eol (&optional point)
   "Remove all EOL whitespaces from POINT or `current-point'."
   (save-excursion
@@ -3966,7 +3975,7 @@ is appended to record buffer.
         (if (< (length str) 73)
             (message (format "TinyLisp: %s => %s"  (symbol-name sym) str))
           (tinylisp-with-current-buffer
-           (get-buffer-create tinylisp-:buffer-macro)
+           (tinylisp-get-buffer-create tinylisp-:buffer-macro)
            (let ((win (get-buffer-window (current-buffer)))
                  (str (pp (symbol-value sym))))
              (display-buffer (current-buffer))
@@ -4228,30 +4237,31 @@ return:
                   ;;   remove anchor
                   re (substring re 1)))))
     (if (and list (null no-show))
-        (tinylisp-with-current-buffer (ti::temp-buffer buffer 'clear)
-                                      (dolist (var list)
-                                        (setq str nil) ;Clear this
-                                        ;;  Is it symbol? Yes; okay is there really such function?
-                                        ;;  Okay, read the interactive arguments the, OTW
-                                        ;;  it was not a function.
-                                        (if (setq func (intern-soft (cdr var)))
-                                            (if (fboundp func)
-                                                (setq str (commandp func))
-                                              (setq func nil)))
-                                        (insert (format "%-12s%s%s %-40s %s\n"
-                                                        (car var)
-                                                        ;;  Interactive and defsubst? this is dangerous!
-                                                        ;;
-                                                        (if (and str
-                                                                 (string= "defsubst" (car var)))
-                                                            " !" "")
-                                                        (if (null func) " ?" "")
+        (tinylisp-with-current-buffer
+	    (ti::temp-buffer buffer 'clear)
+	  (dolist (var list)
+	    (setq str nil) ;Clear this
+	    ;;  Is it symbol? Yes; okay is there really such function?
+	    ;;  Okay, read the interactive arguments the, OTW
+	    ;;  it was not a function.
+	    (if (setq func (intern-soft (cdr var)))
+		(if (fboundp func)
+		    (setq str (commandp func))
+		  (setq func nil)))
+	    (insert (format "%-12s%s%s %-40s %s\n"
+			    (car var)
+			    ;;  Interactive and defsubst? this is dangerous!
+			    ;;
+			    (if (and str
+				     (string= "defsubst" (car var)))
+				" !" "")
+			    (if (null func) " ?" "")
 
-                                                        (cdr var)
-                                                        (or str ""))))
-                                      (pop-to-buffer (current-buffer))
-                                      (ti::pmin)
-                                      (run-hooks 'tinylisp-:find-func-list-hook)))
+			    (cdr var)
+			    (or str ""))))
+	  (pop-to-buffer (current-buffer))
+	  (ti::pmin)
+	  (run-hooks 'tinylisp-:find-func-list-hook)))
     list))
 
 ;;; ----------------------------------------------------------------------
@@ -4939,7 +4949,7 @@ Dor and version control directories are filtered out."
     (ti::use-file-compression-maybe path)
     (ti::package-autoload-create-on-file
      path
-     (get-buffer-create tinylisp-:buffer-autoload))))
+     (tinylisp-get-buffer-create tinylisp-:buffer-autoload))))
 
 ;;; ----------------------------------------------------------------------
 ;;;
@@ -5007,7 +5017,7 @@ Call arguments:
    ((buffer-file-name)
     (ti::package-autoload-create-on-file
      (buffer-file-name)
-     (get-buffer-create tinylisp-:buffer-autoload)))
+     (tinylisp-get-buffer-create tinylisp-:buffer-autoload)))
    (t
     (error "Can't generate autoload statements. (buffer-file-name) is nil."))))
 
@@ -5036,7 +5046,7 @@ Input:
                            (string-match "\\.el$" arg)))
                   (list file-or-dir))))        ;single filename
     (or buffer
-        (setq buffer (get-buffer-create tinylisp-:buffer-autoload)))
+        (setq buffer (tinylisp-get-buffer-create tinylisp-:buffer-autoload)))
     (ti::verb)
     (dolist (file files)
       (ti::package-autoload-create-on-file
@@ -5287,7 +5297,7 @@ for `command-line-args-left'."
 	(insert (tinypath-tmp-autoload-file-footer dest 'eof))
 	(write-region (point-min) (point-max) dest)))
      (t
-      (with-current-buffer (get-buffer-create tinylisp-:buffer-autoload)
+      (with-current-buffer (tinylisp-get-buffer-create tinylisp-:buffer-autoload)
 	(goto-char (point-max))
 	(insert str)
 	(if verb
@@ -5685,7 +5695,7 @@ VERB                    verbose flag"
            val)
       (or buffer
           (setq buffer (current-buffer)))
-      (pop-to-buffer (get-buffer-create tinylisp-:buffer-variables))
+      (pop-to-buffer (tinylisp-get-buffer-create tinylisp-:buffer-variables))
       (ti::pmax)
       (insert "\nbuffer-local-variables: " (buffer-name buffer) "\n\n" )
       (dolist (elt (my-sort2 (buffer-local-variables buffer)))
@@ -5727,7 +5737,7 @@ VERB                    verbose flag"
         (message "TinyLisp: No autoload functions found in Emacs.")
       (or buffer
           (setq buffer
-                (get-buffer-create tinylisp-:buffer-autoload)))
+                (tinylisp-get-buffer-create tinylisp-:buffer-autoload)))
       (pop-to-buffer buffer)
       (erase-buffer)
       (insert "\n[TinyLisp] Autoload functions currently in Emacs:\n\n")
@@ -5750,7 +5760,7 @@ VERB                    verbose flag"
   "Search all functions that match REGEXP in -hooks -function[s] symbols."
   (interactive "sSearch match from hooks: ")
   (tinylisp-with-current-buffer
-   (get-buffer-create tinylisp-:buffer-data)
+   (tinylisp-get-buffer-create tinylisp-:buffer-data)
    (ti::pmax))
   (pop-to-buffer (ti::system-match-in-hooks regexp tinylisp-:buffer-data))
   (sort-lines nil (point-min) (point-max)))

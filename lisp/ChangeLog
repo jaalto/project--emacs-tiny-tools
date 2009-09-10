@@ -1,3 +1,8 @@
+2009-09-10  Jari Aalto  <jari.aalto@cante.net>
+
+	* tiny/tinylisp.el (tinylisp-find-function-list): Correct indentation.
+	(tinylisp-get-buffer-create): New.
+
 2009-09-09  Jari Aalto  <jari.aalto@cante.net>
 
 	* tiny/tinydebian.el (tinydebian-bug-system-info-os-architecture):
