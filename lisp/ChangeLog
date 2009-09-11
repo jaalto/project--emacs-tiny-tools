@@ -1,3 +1,8 @@
+2009-09-11  Jari Aalto  <jari.aalto@cante.net>
+
+	* tiny/tinydebian.el (tinydebian-bug-url-current-buffer): Renamed.
+	(tinydebian-bug-url): New. Call `tinydebian-bug-url-current-buffer'.
+
 2009-09-10  Jari Aalto  <jari.aalto@cante.net>
 
 	* tiny/tinylisp.el (tinylisp-find-function-list): Correct indentation.

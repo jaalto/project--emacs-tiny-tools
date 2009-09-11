@@ -856,7 +856,7 @@ to generate updated list."
      tinydebian-:severity-selected
      tinydebian-:tags-list)))
 
-(defconst tinydebian-:version-time "2009.0909.1742"
+(defconst tinydebian-:version-time "2009.0911.0555"
   "Last edited time.")
 
 (defvar tinydebian-:bts-extra-headers
@@ -1976,12 +1976,13 @@ This function can only be run from `gnus-summary-mode'."
 
 ;;; ----------------------------------------------------------------------
 ;;;
-(defun tinydebian-bug-url (bug)
+(defun tinydebian-bug-url-current-buffer (bug)
   "Return correct bug URL for BUG.
 
 NOTE: only works in standard Gnus Summary or Article buffer. This
 function looks around surrounding Email text to determine what is
-the proper bug destionation: Sourceforge, Ubuntu or Debian."
+the proper bug destionation: Sourceforge, Ubuntu etc.
+The last choice os Debian."
   (let (ret
 	project
 	group-id
@@ -2015,6 +2016,18 @@ the proper bug destionation: Sourceforge, Ubuntu or Debian."
 	      (if (numberp bug)
 		  (int-to-string bug)
 		bug))))))
+
+;;; ----------------------------------------------------------------------
+;;;
+(defun tinydebian-bug-url (bug)
+  "Return correct bug URL for BUG.
+Under Gnus, peek current article to determine bug context."
+  (cond
+   ((eq major-mode 'gnus-summary-mode)
+    (tinydebian-with-gnus-article-buffer nil
+      (tinydebian-bug-url-current-buffer bug)))
+   (t
+    (tinydebian-bug-url-current-buffer bug))))
 
 ;;; ----------------------------------------------------------------------
 ;;;
