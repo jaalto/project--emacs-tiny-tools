@@ -2,6 +2,8 @@
 
 	* tiny/tinydebian.el (tinydebian-bug-url-current-buffer): Renamed.
 	(tinydebian-bug-url): New. Call `tinydebian-bug-url-current-buffer'.
+	(tinydebian-bug-gnu-savannah-site-support-p): Add nongnu.org site
+	regexp.
 
 2009-09-10  Jari Aalto  <jari.aalto@cante.net>
 

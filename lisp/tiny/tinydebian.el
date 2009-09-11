@@ -856,7 +856,7 @@ to generate updated list."
      tinydebian-:severity-selected
      tinydebian-:tags-list)))
 
-(defconst tinydebian-:version-time "2009.0911.0555"
+(defconst tinydebian-:version-time "2009.0911.0854"
   "Last edited time.")
 
 (defvar tinydebian-:bts-extra-headers
@@ -1891,7 +1891,7 @@ Return:
   "Check if bug context is savannah.gnu.org in buffer at `point-min'."
   (save-excursion
     (goto-char (point-min))
-    (if (re-search-forward "http://savannah.gnu.org/[^ \t\r\n]+[?][0-9]+" nil t)
+    (if (re-search-forward "http://savannah.\\(?:non\\)gnu.org/[^ \t\r\n]+[?][0-9]+" nil t)
 	(match-string-no-properties 0))))
 
 ;;; ----------------------------------------------------------------------
