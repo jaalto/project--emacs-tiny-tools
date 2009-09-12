@@ -18,6 +18,21 @@
 	(tinydebian-url-debian-bugs): Move location.
 	(tinydebian-bts-mode): Change key 'b' to run generic
 	`tinydebian-bug-browse-url-main' which works almost for any bug.x
+	(tinydebian-bts-email-compose): Change bts-type test to string.
+	(tinydebian-bts-generic-email-compose-1): Set  BTS type to
+	string, not symbol.
+	(tinydebian-bts-generic-email-compose): Set  BTS type to
+	string, not symbol.
+	(tinydebian-bug-ask-bts-and-number): New.
+	(tinydebian-bts-url-bug-compose): New.
+	(tinydebian-launchpad-url-package-bugs): New.
+	(tinydebian-bug-url-current-buffer): Simplify. Use
+	`tinydebian-launchpad-url-package-bugs'.
+	(tinydebian-bug-ask-url-for-bts-and-number): New.
+	(tinydebian-bug-bts-type-determine): New.
+	(tinydebian-debian-bug-bts-type-p): New.
+	(tinydebian-debian-bts-url-compose): New.
+	(tinydebian-gnome-bug-type-p): New.
 
 2009-09-11  Jari Aalto  <jari.aalto@cante.net>
 

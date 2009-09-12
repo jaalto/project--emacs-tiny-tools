@@ -3,7 +3,7 @@
 ;;{{{ Id
 
 ;; Copyright (C)    2001-2009 Jari Aalto
-;; Keywords:        extensions
+;; Keywords:        extensionss
 ;; Author:          Jari Aalto
 ;; Maintainer:      Jari Aalto
 ;; Created:         2001
@@ -636,10 +636,6 @@ See also `tinydebian-:rfs-template'")
   "HTTP address of an individual bug in Emacs Bug Tracking System.
 The %s is placeholder for bug number.")
 
-(defconst tinydebian-:emacs-bts-url-http-package-bugs
-  "http://emacsbugs.donarmstrong.com"
-  "The Emacs bug control URL without parameter, up to '/' token.")
-
 (defvar tinydebian-:emacs-bts-line-regexp
   "Emacs.*Bug#\\([0-9]+\\)"
   "Regexp to return Emacs BTS bug number from submatch 1.
@@ -675,9 +671,10 @@ E.g. in `gnus-summary-mode':
     ("ITP" . "being_packaged"))
   "List of pages under `tinydebian-:debian-url-http-wnpp-page-main'.")
 
+;; FIXME: Not yet used
 (defvar tinydebian-:bts-compose-type
   "Dynamically bound variable which is set during BTS Control actions.
-Values: nil (Debian), 'emacs, 'launchpad.")
+Values: nil (Debian), 'emacs', 'launchpad'.")
 
 (defconst tinydebian-:debian-url-page-alist
   (list
@@ -865,7 +862,7 @@ to generate updated list."
      tinydebian-:severity-selected
      tinydebian-:tags-list)))
 
-(defconst tinydebian-:version-time "2009.0912.1210"
+(defconst tinydebian-:version-time "2009.0912.1431"
   "Last edited time.")
 
 (defvar tinydebian-:bts-extra-headers
@@ -1259,8 +1256,16 @@ Activate on files whose path matches
 
 ;;; ----------------------------------------------------------------------
 ;;;
-(defsubst tinydebian-url-debian-bugs (string)
-  "Return bugs URL."
+(defsubst tinydebian-gnome-bts-url-compose (bug)
+  "Return Gnome URL for BUG."
+  (format "https://bugzilla.gnome.org/show_bug.cgi?id=%s" bug))
+
+;;; ----------------------------------------------------------------------
+;;;
+(defsubst tinydebian-debian-bts-url-compose (string)
+  "Return Debian URL for STRING.
+String is anything that is attached to
+`tinydebian-:debian-url-http-package-bugs'"
   (format tinydebian-:debian-url-http-package-bugs string))
 
 ;;; ----------------------------------------------------------------------
@@ -1272,14 +1277,11 @@ Activate on files whose path matches
 ;;; ----------------------------------------------------------------------
 ;;;
 (defsubst tinydebian-emacs-bts-bug-url-compose (bug)
-  "Compose Emacs BTS URL for BUG."
-  (format tinydebian-:emacs-bts-url-http-bugs bug))
-
-;;; ----------------------------------------------------------------------
-;;;
-(defsubst tinydebian-emacs-bts-bug-url-compose (bug)
-  "Compose Emacs BTS URL from BUG number."
-  (format "%s/%s" tinydebian-:emacs-bts-url-http-package-bugs bug))
+  "Compose Emacs BTS URL for a BUG number."
+  (format tinydebian-:emacs-bts-url-http-bugs
+	  (if (numberp bug)
+	      (int-to-string bug)
+	    bug)))
 
 ;;; ----------------------------------------------------------------------
 ;;;
@@ -1301,15 +1303,42 @@ Activate on files whose path matches
 
 ;;; ----------------------------------------------------------------------
 ;;;
-(defmacro tinydebian-list-email-compose (address)
+(defsubst tinydebian-list-email-compose (address)
   "Send message to ADDRESS@<debian mailing list>."
-  `(format "%s@%s" ,address tinydebian-:list-email-address))
+  (format "%s@%s" address tinydebian-:list-email-address))
 
 ;;; ----------------------------------------------------------------------
 ;;;
-(defmacro tinydebian-bts-email-compose-1 (address)
+(defsubst tinydebian-bts-email-compose-1 (address)
   "Send message to ADDRESS@<debian bts>."
-  `(format "%s@%s" ,address tinydebian-:debian-bts-email-address))
+  (format "%s@%s" address tinydebian-:debian-bts-email-address))
+
+;;; ----------------------------------------------------------------------
+;;;
+(defsubst tinydebian-launchpad-url-package-bugs (bug)
+  "Return Launchpad URL for BUG."
+  (format tinydebian-:launchpad-url-http-package-bugs
+	  (if (numberp bug)
+	      (int-to-string bug)
+	    bug)))
+
+;;; ----------------------------------------------------------------------
+;;;
+(defun tinydebian-debian-bug-bts-type-p ()
+  "Check if buffer is for Emacs BTS."
+  (save-excursion
+    (goto-char (point-min))
+    (when (or (re-search-forward
+	       "\\(http://bugs.debian[^ \t\r\n]+\\)" nil t)
+	      (re-search-forward
+	       (format "[0-9]+@%s" tinydebian-:debian-bts-email-address) nil t)
+	      (re-search-forward
+	       (concat
+		tinydebian-:list-email-address
+		"\\|"
+		"debian\\.org\\>") nil t))
+      (or (match-string 1)
+	  (match-string 0)))))
 
 ;;; ----------------------------------------------------------------------
 ;;;
@@ -1319,7 +1348,7 @@ The ADDRESS can be:
   control, submit etc.
 
 The BTS-TYPE can be:
-  'emacs    Emacs BTS
+  'emacs'   Emacs BTS
   nil       Debian BTS."
    (when (string-match "submitter\\|maintonly\\|quiet\\|close" address)
      (cond
@@ -1331,10 +1360,30 @@ The BTS-TYPE can be:
        (error "Can't compose NNNN-ADDRESS from values `%s' `%s'"
 	      address bug))))
    (cond
-    ((eq bts-type 'emacs)  ;; (tinydebian-bug-gnu-emacs-bts-p)
+    ((string= bts-type "emacs")  ;; (tinydebian-emacs-bug-type-p)
      (tinydebian-emacs-bts-email-compose address))
     (t
      (tinydebian-bts-email-compose-1 address))))
+
+;;; ----------------------------------------------------------------------
+;;;
+(defun tinydebian-bts-url-bug-compose (bts bug)
+  "Compose URLS of BTS and BUG.
+Input:
+
+  BUG		string
+  BTS	string: emacs, launchpad, debian"
+  (cond
+   ((string-match "debian" bts)
+    (tinydebian-debian-bts-url-compose bug))
+   ((string-match "emacs" bts)
+    (tinydebian-emacs-bts-bug-url-compose bug))
+   ((string-match "launchpad" bts)
+    (tinydebian-launchpad-email-compose bug))
+   ((string-match "gnome" bts)
+    (tinydebian-gnome-bts-url-compose bug))
+   (t
+    (error "Unknown bts `%s'" bts))))
 
 ;; FIXME Move elsewhere
 ;;; ----------------------------------------------------------------------
@@ -1344,8 +1393,8 @@ The BTS-TYPE can be:
 Judging from optional BUFFER."
   (with-current-buffer (or buffer (current-buffer))
     ;; FIXME launchpad
-    (let ((bts (if (tinydebian-bug-gnu-emacs-bts-p)
-		   'emacs)))
+    (let ((bts (if (tinydebian-emacs-bug-type-p)
+		   "emacs")))
       (tinydebian-bts-email-compose
        type bug bts))))
 
@@ -1356,8 +1405,8 @@ Judging from optional BUFFER."
   "Compose TYPE of address according to BTS using optional BUG number.
 Judging from optional BUFFER."
   (let ((bts  (tinydebian-with-bug-context
-		(if (tinydebian-bug-gnu-emacs-bts-p)
-		    'emacs))))
+		(if (tinydebian-emacs-bug-type-p)
+		    "emacs"))))
     (tinydebian-bts-generic-email-compose-1 type bug bts)))
 
 ;;; ----------------------------------------------------------------------
@@ -1380,7 +1429,7 @@ Judging from optional BUFFER."
   (with-current-buffer (or buffer (current-buffer))
     (cond
      ;; FIXME launchpad
-     ((tinydebian-bug-gnu-emacs-bts-p)
+     ((tinydebian-emacs-bug-type-p)
       (tinydebian-emacs-bts-email-control))
      (t
       (tinydebian-bts-email-control)))))
@@ -1768,7 +1817,7 @@ The URL buffer is killed at exit."
 
 ;;; ----------------------------------------------------------------------
 ;;;
-(defsubst tinydebian-bug-sourceforge-parse-bug-string (str)
+(defsubst tinydebian-sourceforge-bug-type-parse-bug-string (str)
   "Parse STR foo-Bugs-2040281 and return list (PROJECT BUG)."
   (if (string-match "\\([^ \t\r\n]+\\)-Bugs-\\([0-9]+\\)" str)
       (list (match-string-no-properties 1 str)
@@ -1808,7 +1857,7 @@ This function needs network connection."
 (defun tinydebian-bug-sourceforge-url-main (str)
   "Return URL for STR foo-Bugs-2040281"
   (multiple-value-bind (project bug)
-      (tinydebian-bug-sourceforge-parse-bug-string str)
+      (tinydebian-sourceforge-bug-type-parse-bug-string str)
     (when bug
       (tinydebian-bug-sourceforge-url-1 project bug))))
 
@@ -1914,7 +1963,7 @@ Return:
 
 ;;; ----------------------------------------------------------------------
 ;;;
-(defun tinydebian-bug-gnu-emacs-bts-p ()
+(defun tinydebian-emacs-bug-type-p ()
   "Check if bug context is Emacs BTS."
   (cond
    ((eq major-mode 'gnus-summary-mode)
@@ -1942,7 +1991,7 @@ Return:
 ;;; ----------------------------------------------------------------------
 ;;;
 (defun tinydebian-bug-gnu-savannah-buffer-url-p ()
-  "Check if bug context is savannah.gnu.org in buffer at `point-min'."
+  "Check if bug context is savannah.gnu.org in buffer starting at `point-min'."
   (save-excursion
     (goto-char (point-min))
     (if (re-search-forward
@@ -1951,12 +2000,11 @@ Return:
 
 ;;; ----------------------------------------------------------------------
 ;;;
-(defun tinydebian-bug-gnu-savannah-site-support-p ()
+(defun tinydebian-savannah-bug-type-site-support-p ()
   "Check if bug context is Savannah site request."
   (cond
    ((eq major-mode 'gnus-summary-mode)
-    (let ((str (buffer-substring (line-beginning-position)
-				 (line-end-position)))
+    (let ((str (tinydebian-current-line-string))
 	  bug)
       ;; [  21: Foo Bar ] [sr #106037]
       (cond
@@ -1981,28 +2029,39 @@ Return:
 
 ;;; ----------------------------------------------------------------------
 ;;;
-(defun tinydebian-bug-sourceforge-p ()
+(defun tinydebian-sourceforge-bug-type-p ()
   "Check if bug context is Sourceforge."
   (cond
    ((eq major-mode 'gnus-summary-mode)
-    (let ((str (buffer-substring (line-beginning-position)
-				 (line-end-position))))
+    (let ((str (tinydebian-current-line-string))
       ;; [ 120: SourceForge.net        ] [ foo-Bugs-2040281 ]
       (tinydebian-bug-sourceforge-string-p str)))
    (t
     (save-excursion
       (goto-char (point-min))
-      (if (re-search-forward "https?://sourceforge.net/tracker/.*" nil t)
-	  (match-string-no-properties 1))))))
+      (if (re-search-forward "https?://sourceforge.net/tracker/[^ \t\r\n]+" nil t)
+	  (match-string-no-properties 0)))))))
 
 ;;; ----------------------------------------------------------------------
 ;;;
-(defsubst tinydebian-bug-ubuntu-p ()
-  "Check if bug context is Debian."
+(defsubst tinydebian-gnome-bug-type-p ()
+  "Check if bug context is Gnome."
+  (let ((str (tinydebian-current-line-string)))
+    (cond
+     ((string-match "bugzilla.gnome.org" str)
+      str)
+     (t
+      (goto-char (point-min))
+      (if (re-search-forward "https?://bugzilla.gnome.org[^ \t\r\n]+" nil t)
+	  (match-string-no-properties 0))))))
+
+;;; ----------------------------------------------------------------------
+;;;
+(defsubst tinydebian-launchpad-bug-type-p ()
+  "Check if bug context is Launchpad."
   (cond
    ((eq major-mode 'gnus-summary-mode)
-    (let ((str (buffer-substring (line-beginning-position)
-				 (line-end-position))))
+    (let ((str (tinydebian-current-line-string)))
       ;; [Bug 272680]
       (if (string-match
 	   (concat
@@ -2043,7 +2102,7 @@ The last choice os Debian."
 	group-id
 	str)
     (cond
-     ((setq str (tinydebian-bug-gnu-emacs-bts-p))
+     ((setq str (tinydebian-emacs-bug-type-p))
       (cond
        ((string-match "http" str)
 	str)
@@ -2051,29 +2110,43 @@ The last choice os Debian."
 	(tinydebian-emacs-bts-bug-url-compose str))
        (t
 	(error "Unknown Emacs tracker `%s'" str))))
-     ((setq str (tinydebian-bug-gnu-savannah-site-support-p))
+     ((setq str (tinydebian-savannah-bug-type-site-support-p))
       (if (string-match "http" str)
 	  str
 	(error "Unknown Savannah tracker `%s'" str)))
-     ((setq str (tinydebian-bug-sourceforge-p))
+     ((setq str (tinydebian-sourceforge-bug-type-p))
       (if (string-match "http" str)
 	  str
 	(tinydebian-bug-sourceforge-url-main str)))
-     ((tinydebian-bug-ubuntu-p)
-      (format "%s/%s"
-	      tinydebian-:launchpad-url-http-package-bugs
-	      (if (numberp bug)
-		  (int-to-string bug)
-		bug)))
+     ((tinydebian-launchpad-bug-type-p)
+      (tinydebian-launchpad-url-package-bugs bug))
      ;;  There is nothing that can be detect from Summary line,
      ;;  we must look at article buffer.
      ;;  [  49: Foo Bar ] [bug #25611] ....
      ((tinydebian-bug-gnus-article-buffer-p))
      (bug
-      (tinydebian-url-debian-bugs
-       (if (numberp bug)
-	   (int-to-string bug)
-	 bug))))))
+      (tinydebian-debian-bts-url-compose bug)))))
+
+;;; ----------------------------------------------------------------------
+;;;
+(defun tinydebian-bug-bts-type-determine ()
+  "Check what BTS type is in use.
+Return: '(BTS-TYPE-STRING [BUG NUMBER | URL])."
+  (tinydebian-with-bug-context
+    (let (data)
+      (cond
+       ((setq data (tinydebian-savannah-bug-type-site-support-p))
+	(list "savannah" data))
+       ((setq data (tinydebian-bug-gnu-emacs-bts-buffer-p))
+	(list "emacs" data))
+       ((setq data (tinydebian-sourceforge-bug-type-p))
+	(list "sourceforge" data))
+       ((setq data (tinydebian-launchpad-bug-type-p))
+	(list "launchpad" data))
+       ((setq data (tinydebian-gnome-bug-type-p))
+	(list "gnome" data))
+       ((setq data (tinydebian-debian-bug-bts-type-p))
+	(list "debian" data))))))
 
 ;;; ----------------------------------------------------------------------
 ;;;
@@ -2222,15 +2295,13 @@ The number must be surreounded by whitespace."
 (defsubst tinydebian-bug-nbr-any-at-current-line ()
   "Read bug number NNNNNN from current line."
   (tinydebian-bug-nbr-any-in-string
-   (buffer-substring (line-beginning-position) (line-end-position))))
+   (tinydebian-current-line-string)))
 
 ;;; ----------------------------------------------------------------------
 ;;;
 (defsubst tinydebian-bug-nbr-current-line ()
   "Read bug number from current line"
-  (let* ((line (buffer-substring-no-properties
-		(line-beginning-position)
-		(line-end-position))))
+  (let ((line (tinydebian-current-line-string)))
     (tinydebian-bug-nbr-string line)))
 
 ;;; ----------------------------------------------------------------------
@@ -2311,10 +2382,7 @@ In Gnus summary buffer, look inside original article."
       (let ((point (point))
 	    nbr)
 	(cond
-	 ((string-match "http://"
-			(buffer-substring
-			 (line-beginning-position)
-			 (line-end-position)))
+	 ((string-match "http://" (tinydebian-current-line-string))
 	  (thing-at-point 'url))
 	 ((re-search-forward
 	   `,(concat "https?://.*\\("
@@ -2445,9 +2513,7 @@ At current point, current line, headers of the mail message
 ;;; ----------------------------------------------------------------------
 ;;;
 (defsubst tinydebian-bts-parse-string-current-line ()
-  (let ((str (buffer-substring-no-properties
-	      (line-beginning-position)
-	      (line-end-position))))
+  (let ((str (tinydebian-current-line-string)))
     (tinydebian-bts-parse-string-1 str)))
 
 ;;; ----------------------------------------------------------------------
@@ -2461,9 +2527,7 @@ At current point, current line, headers of the mail message
 ;;;
 (defun tinydebian-bug-package-name-current-line-wnpp-alert ()
   "Parse wnpp-alert(1) line."
-  (let* ((line (buffer-substring-no-properties
-		(line-beginning-position)
-		(line-end-position))))
+  (let ((line (tinydebian-current-line-string)))
     (when line
       (multiple-value-bind (bug package)
 	  (tinydebian-bug-string-parse-wnpp-alert line)
@@ -2473,9 +2537,7 @@ At current point, current line, headers of the mail message
 ;;;
 (defun tinydebian-bug-package-name-current-line-wnpp-subject ()
   "PArse BTS Suject line."
-  (let* ((line (buffer-substring-no-properties
-		(line-beginning-position)
-		(line-end-position))))
+  (let ((line (tinydebian-current-line-string)))
     (when line
       (multiple-value-bind (bug package)
 	  (tinydebian-bug-string-parse-bts-wnpp-subject line)
@@ -2627,6 +2689,41 @@ Article buffers."
 
 ;;; ----------------------------------------------------------------------
 ;;;
+(defun tinydebian-bug-ask-bts-and-number (&optional bts nbr)
+  "Ask BTS system and bug number. Return '(BTS NBR)."
+  ;; FIXME: Launchpad, Emacs BTS
+  (setq bts (completing-read
+	     "Select BTS (no input = debian): "
+	     '(("debian" . 1)
+	       ("launchpad" . 2)
+	       ("emacs" . 3)
+	       ("savannah" . 4)
+	       ("gnome" . 4)
+	       ("sourceforge" . 5))
+	     nil ; predicate
+	     t   ; require-match
+	     bts
+	     nil ; initial-input
+	     nil ; hist
+	     "debian"))
+  (setq nbr (read-string"bug number: " nbr))
+  (when (or (not (stringp nbr))
+	    (not (string-match "[0-9]" nbr)))
+    (error "TinyDebian: Error, no bug number given"))
+  (list bts
+	nbr))
+
+;;; ----------------------------------------------------------------------
+;;;
+(defun tinydebian-bug-ask-url-for-bts-and-number (&optional bts nbr)
+  "Ask BTS and NBR. Return URL.
+If BTS and NBR parameters are passed, do not ask, just return URL."
+  (multiple-value-bind (bts nbr)
+      (tinydebian-bug-ask-bts-and-number bts nbr)
+    (tinydebian-bts-url-bug-compose bts nbr)))
+
+;;; ----------------------------------------------------------------------
+;;;
 (defun tinydebian-bug-browse-url-main (url &optional file)
   "Browse bug URL at point or by searching forward.
 In Gnus summary buffer, the Article buffer is consulted for bug."
@@ -2635,23 +2732,18 @@ In Gnus summary buffer, the Article buffer is consulted for bug."
 	  (dir  (if prev
 		    (file-name-directory prev)))
 	  (url-str (tinydebian-bug-url-forward))
-	  (url  (cond
-		 (url-str
-		  (read-string "Browse URL: " url-str))
-		 (t
-		  ;; FIXME: Launchpad, Emacs BTS
-		  (let ((nbr
-			 (read-string"Browse Debian bug number: "
-				     (tinydebian-bug-nbr-search))))
-		    (if (not (string-match "[0-9]" nbr))
-			(error "TinyDebian: Error, no bug number given")
-		      (tinydebian-url-debian-bugs nbr))))))
+	  (url (multiple-value-bind (bts data)
+		   (tinydebian-bug-bts-type-determine)
+		 (or (tinydebian-bug-ask-url-for-bts-and-number
+		      bts
+		      (tinydebian-bug-nbr-search))
+		     (error "TinyDebian: ERROR, No BTS information."))))
 	  (name (if current-prefix-arg
 		    (read-file-name
 		     format "Save URL content to file: "
-		     dir)))
+		     dir))))
      (put 'tinydebian-bug-browse-url-by-bug 'file name)
-     (list url name))))
+     (list url name)))
   (tinydebian-bug-browse-url-run url))
 
 ;;; ----------------------------------------------------------------------
@@ -2671,7 +2763,7 @@ In Gnus summary buffer, the Article buffer is consulted for bug."
       (error "TinyDebian: BUG argument is empty"))
   (let* ((name   (tinydebian-bug-buffer-name bug))
 	 (buffer (get-buffer name))
-	 (url    (tinydebian-url-debian-bugs bug)))
+	 (url    (tinydebian-debian-bts-url-compose bug)))
     (if buffer
 	buffer
       (setq buffer (get-buffer-create name))
@@ -2703,7 +2795,7 @@ In Gnus summary buffer, the Article buffer is consulted for bug."
 	    (not (string-match "[a-z]" package)))
     (error "TinyDebian: Invalid package name `%s'." package))
   (tinydebian-browse-url-1
-   (tinydebian-url-debian-bugs package)
+   (tinydebian-debian-bts-url-compose package)
    package))
 
 ;;; ----------------------------------------------------------------------
@@ -3155,7 +3247,7 @@ In interactive call, toggle conrol address on and off."
   "Check current line is control command end (finalize line)."
   (string-match
    tinydebian-:bts-mail-ctrl-finalize-line-regexp
-   (buffer-substring (line-beginning-position) (line-end-position))))
+   (tinydebian-current-line-string)))
 
 ;;; ----------------------------------------------------------------------
 ;;;
@@ -4000,7 +4092,7 @@ thanks
   "Reply to bug found at current point or line"
   (interactive (list (tinydebian-bts-mail-ask-bug-number "Reply to bug")))
   (let ((subject (my-tinydebian-subject-any))
-	(tinydebian-:bts-compose-type))
+	tinydebian-:bts-compose-type)
     (tinydebian-bts-mail-compose-macro
      bug
      "reply"
@@ -4122,8 +4214,8 @@ Severity: wishlist
 			  (replace-match str 'literal nil nil 1))))))
     (let* ((arg-pkg package) ;; Due to macro which reserves var `package'.
 	   (mentors-url (tinydebian-url-debian-mentors-url package))
-	   (ita-url     (tinydebian-url-debian-bugs bug))
-	   (pkg-url     (tinydebian-url-debian-bugs package)))
+	   (ita-url     (tinydebian-debian-bts-url-compose bug))
+	   (pkg-url     (tinydebian-debian-bts-url-compose package)))
       (tinydebian-bts-mail-type-macro "RFS"
 				      arg-pkg (tinydebian-list-email-compose "debian-mentors") nil
 				      (insert tinydebian-:rfs-template)
