@@ -7,6 +7,17 @@
 	(tinydebian-with-bug-context): New.
 	(tinydebian-bug-url): Use `tinydebian-with-bug-context'.
 	(tinydebian-bts-generic-email-compose): Use `tinydebian-with-bug-context'.
+	(tinydebian-bts-generic-email-compose-1): New.
+	(tinydebian-emacs-bts-bug-url-compose): New.
+	(tinydebian-:emacs-bts-url-http-bugs): New.
+	(tinydebian-bug-url-forward): New.
+	(tinydebian-bug-browse-url-main): New.
+	(tinydebian-bug-browse-url-run): New.
+	(tinydebian-bug-url-current-buffer): Use
+	`tinydebian-url-debian-bugs'.
+	(tinydebian-url-debian-bugs): Move location.
+	(tinydebian-bts-mode): Change key 'b' to run generic
+	`tinydebian-bug-browse-url-main' which works almost for any bug.x
 
 2009-09-11  Jari Aalto  <jari.aalto@cante.net>
 
