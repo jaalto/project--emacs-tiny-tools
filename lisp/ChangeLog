@@ -1,3 +1,10 @@
+2009-09-12  Jari Aalto  <jari.aalto@cante.net>
+
+	* tiny/tinydebian.el (tinydebian-bug-gnu-emacs-bts-p): Add
+	modes `gnus-original-article-mode' and `gnus-article-mode'.
+	(tinydebian-bug-url-current-buffer): Detect savannah messages
+	better.
+
 2009-09-11  Jari Aalto  <jari.aalto@cante.net>
 
 	* tiny/tinydebian.el (tinydebian-bug-url-current-buffer): Renamed.

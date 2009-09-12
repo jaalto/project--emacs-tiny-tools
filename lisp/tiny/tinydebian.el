@@ -856,7 +856,7 @@ to generate updated list."
      tinydebian-:severity-selected
      tinydebian-:tags-list)))
 
-(defconst tinydebian-:version-time "2009.0911.0854"
+(defconst tinydebian-:version-time "2009.0912.0617"
   "Last edited time.")
 
 (defvar tinydebian-:bts-extra-headers
@@ -1868,7 +1868,10 @@ Return:
   (cond
    ((eq major-mode 'gnus-summary-mode)
     (tinydebian-bug-gnu-emacs-bts-gnus-summary-p))
-   ((memq major-mode '(message-mode mail-mode))
+   ((memq major-mode '(message-mode
+		       mail-mode
+		       gnu-original-article-mode
+		       gnus-article-mode))
     (tinydebian-bug-gnu-emacs-bts-buffer-p))))
 
 ;;; ----------------------------------------------------------------------
