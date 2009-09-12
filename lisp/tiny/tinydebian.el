@@ -862,7 +862,7 @@ to generate updated list."
      tinydebian-:severity-selected
      tinydebian-:tags-list)))
 
-(defconst tinydebian-:version-time "2009.0912.1441"
+(defconst tinydebian-:version-time "2009.0912.1525"
   "Last edited time.")
 
 (defvar tinydebian-:bts-extra-headers
@@ -1256,6 +1256,12 @@ Activate on files whose path matches
 
 ;;; ----------------------------------------------------------------------
 ;;;
+(defsubst tinydebian-sourceware-bts-url-compose (bug)
+  "Return Gnome URL for BUG."
+  (format "http://sourceware.org/bugzilla/show_bug.cgi?id=%s" bug))
+
+;;; ----------------------------------------------------------------------
+;;;
 (defsubst tinydebian-gnome-bts-url-compose (bug)
   "Return Gnome URL for BUG."
   (format "https://bugzilla.gnome.org/show_bug.cgi?id=%s" bug))
@@ -1382,6 +1388,8 @@ Input:
     (tinydebian-launchpad-email-compose bug))
    ((string-match "gnome" bts)
     (tinydebian-gnome-bts-url-compose bug))
+   ((string-match "sourceware" bts)
+    (tinydebian-sourceware-bts-url-compose bug))
    (t
     (error "Unknown bts `%s'" bts))))
 
@@ -1804,7 +1812,7 @@ The URL buffer is killed at exit."
 
 ;;; ----------------------------------------------------------------------
 ;;;
-(defun tinydebian-bug-sourceforge-name-to-group-id (project)
+(defun tinydebian-sourceforge-bug-name-to-group-id (project)
   "Visit PROJECT web page to determine group ID."
   (let* ((url (format "http://sourceforge.net/projects/%s" project)))
     (tinydebian-retrieve-synchronously-macro url
@@ -1818,18 +1826,31 @@ The URL buffer is killed at exit."
 ;;; ----------------------------------------------------------------------
 ;;;
 (defsubst tinydebian-sourceforge-bug-type-parse-bug-string (str)
-  "Parse STR foo-Bugs-2040281 and return list (PROJECT BUG)."
-  (if (string-match "\\([^ \t\r\n]+\\)-Bugs-\\([0-9]+\\)" str)
+  "Parse STR foo-*-2040281 and return list (PROJECT BUG)."
+  (if (string-match
+	  `,(concat
+	     "\\<\\([^ \t\r\n]+\\)"
+	     "-\\(?:Patches\\|Bugs\\)-" ;; FIXME: Feature|Support Requests
+	     "\\([0-9]+\\)")
+	  str)
       (list (match-string-no-properties 1 str)
 	    (match-string-no-properties 2 str))))
 
 ;;; ----------------------------------------------------------------------
 ;;;
-(defun tinydebian-bug-sourceforge-url-1 (project bug)
+(defsubst tinydebian-sourceforge-bug-at-current-point ()
+  "Read bug number NNNNNN from current point.
+See `tinydebian-sourceforge-bug-type-parse-bug-string'."
+  (let ((line (tinydebian-current-line-string)))
+    (tinydebian-bug-nbr-sourceforge-tracker line)))
+
+;;; ----------------------------------------------------------------------
+;;;
+(defun tinydebian-sourceforge-bug-url-1 (project bug)
   "Return URL for PROJECT name and its BUG number.
 This function needs network connection."
   ;; foo-Bugs-2040281
-  (let ((group-id (tinydebian-bug-sourceforge-name-to-group-id project))
+  (let ((group-id (tinydebian-sourceforge-bug-name-to-group-id project))
 	url
 	atid)
     (when group-id
@@ -1854,12 +1875,12 @@ This function needs network connection."
 
 ;;; ----------------------------------------------------------------------
 ;;;
-(defun tinydebian-bug-sourceforge-url-main (str)
+(defun tinydebian-sourceforge-bug-url-main (str)
   "Return URL for STR foo-Bugs-2040281"
   (multiple-value-bind (project bug)
       (tinydebian-sourceforge-bug-type-parse-bug-string str)
     (when bug
-      (tinydebian-bug-sourceforge-url-1 project bug))))
+      (tinydebian-sourceforge-bug-url-1 project bug))))
 
 ;;; ----------------------------------------------------------------------
 ;;;
@@ -2017,7 +2038,7 @@ Return:
 
 ;;; ----------------------------------------------------------------------
 ;;;
-(defsubst tinydebian-bug-sourceforge-string-p (str)
+(defsubst tinydebian-sourceforge-bug-string-p (str)
   "Test if STR looks like Sourceforge bug."
   (if (string-match
        (concat
@@ -2033,14 +2054,15 @@ Return:
   "Check if bug context is Sourceforge."
   (cond
    ((eq major-mode 'gnus-summary-mode)
-    (let ((str (tinydebian-current-line-string))
-      ;; [ 120: SourceForge.net        ] [ foo-Bugs-2040281 ]
-      (tinydebian-bug-sourceforge-string-p str)))
+    (let ((str (tinydebian-current-line-string)))
+      (multiple-value-bind (project bug)
+	  (tinydebian-sourceforge-bug-type-parse-bug-string str)
+	(tinydebian-sourceforge-bug-url-1 project bug))))
    (t
     (save-excursion
       (goto-char (point-min))
-      (if (re-search-forward "https?://sourceforge.net/tracker/[^ \t\r\n]+" nil t)
-	  (match-string-no-properties 0)))))))
+      (if (re-search-forward "https?://sourceforge.net/tracker/[^<> \t\r\n]+" nil t)
+	  (match-string-no-properties 0))))))
 
 ;;; ----------------------------------------------------------------------
 ;;;
@@ -2052,7 +2074,20 @@ Return:
       str)
      (t
       (goto-char (point-min))
-      (if (re-search-forward "https?://bugzilla.gnome.org[^ \t\r\n]+" nil t)
+      (if (re-search-forward "https?://bugzilla.gnome.org[^<> \t\r\n]+" nil t)
+	  (match-string-no-properties 0))))))
+
+;;; ----------------------------------------------------------------------
+;;;
+(defsubst tinydebian-sourceware-bug-type-p ()
+  "Check if bug context is sourceware (GNU projects; under Redhat bugzilla tracker)."
+  (let ((str (tinydebian-current-line-string)))
+    (cond
+     ((string-match "sourceware.*bugzilla[^<> \t\r\n]+\\([0-9]+\\)" str)
+      (match-string-no-properties 1))
+     (t
+      (goto-char (point-min))
+      (if (re-search-forward "https?://.*sourceware.org[^<> \t\r\n]+" nil t)
 	  (match-string-no-properties 0))))))
 
 ;;; ----------------------------------------------------------------------
@@ -2117,7 +2152,7 @@ The last choice os Debian."
      ((setq str (tinydebian-sourceforge-bug-type-p))
       (if (string-match "http" str)
 	  str
-	(tinydebian-bug-sourceforge-url-main str)))
+	(tinydebian-sourceforge-bug-url-main str)))
      ((tinydebian-launchpad-bug-type-p)
       (tinydebian-launchpad-url-package-bugs bug))
      ;;  There is nothing that can be detect from Summary line,
@@ -2145,6 +2180,8 @@ Return: '(BTS-TYPE-STRING [BUG NUMBER | URL])."
 	(list "launchpad" data))
        ((setq data (tinydebian-gnome-bug-type-p))
 	(list "gnome" data))
+       ((setq data (tinydebian-sourceware-bug-type-p))
+	(list "sourceware" data))
        ((setq data (tinydebian-debian-bug-bts-type-p))
 	(list "debian" data))))))
 
@@ -2287,7 +2324,7 @@ The number must be surreounded by whitespace."
 ;;; ----------------------------------------------------------------------
 ;;;
 (defsubst tinydebian-bug-nbr-any-at-current-point ()
-  "Read bug number NNNNNN from current point"
+  "Read bug number NNNNNN from current point."
   (tinydebian-bug-nbr-any-in-string (current-word)))
 
 ;;; ----------------------------------------------------------------------
@@ -2699,7 +2736,8 @@ Article buffers."
 	       ("emacs" . 3)
 	       ("savannah" . 4)
 	       ("gnome" . 4)
-	       ("sourceforge" . 5))
+	       ("sourceforge" . 5)
+	       ("sourceware" . 6))
 	     nil ; predicate
 	     t   ; require-match
 	     bts
@@ -2734,10 +2772,18 @@ In Gnus summary buffer, the Article buffer is consulted for bug."
 	  (url-str (tinydebian-bug-url-forward))
 	  (url (multiple-value-bind (bts data)
 		   (tinydebian-bug-bts-type-determine)
-		 (or (tinydebian-bug-ask-url-for-bts-and-number
-		      bts
-		      (tinydebian-bug-nbr-search))
-		     (error "TinyDebian: ERROR, No BTS information."))))
+		 (cond
+		  ((and (stringp bts)
+			(string-match "sourceforge" bts))
+		   (read-string "Bug URL: " data))
+		  ((and (stringp data)
+			(string-match "http" data))
+		   (read-string "Bug URL: " data))
+		  (t
+		   (or (tinydebian-bug-ask-url-for-bts-and-number
+			bts
+			(tinydebian-bug-nbr-search))
+		       (error "TinyDebian: ERROR, No BTS information."))))))
 	  (name (if current-prefix-arg
 		    (read-file-name
 		     format "Save URL content to file: "

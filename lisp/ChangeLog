@@ -17,7 +17,7 @@
 	`tinydebian-url-debian-bugs'.
 	(tinydebian-url-debian-bugs): Move location.
 	(tinydebian-bts-mode): Change key 'b' to run generic
-	`tinydebian-bug-browse-url-main' which works almost for any bug.x
+	`tinydebian-bug-browse-url-main' which works almost for any bug.
 	(tinydebian-bts-email-compose): Change bts-type test to string.
 	(tinydebian-bts-generic-email-compose-1): Set  BTS type to
 	string, not symbol.
@@ -34,6 +34,9 @@
 	(tinydebian-debian-bts-url-compose): New.
 	(tinydebian-gnome-bug-type-p): New.
 	(tinydebian-bug-gnu-savannah-buffer-url-p): Improve regexp.
+	(tinydebian-sourceware-bts-url-compose): New.
+	(tinydebian-sourceforge-bug-at-current-point): New.
+	(tinydebian-sourceforge-bug-type-p): Improve.
 
 2009-09-11  Jari Aalto  <jari.aalto@cante.net>
 
