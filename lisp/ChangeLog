@@ -37,6 +37,7 @@
 	(tinydebian-sourceware-bts-url-compose): New.
 	(tinydebian-sourceforge-bug-at-current-point): New.
 	(tinydebian-sourceforge-bug-type-p): Improve.
+	(tinydebian-mercurial-bug-type-p): New.
 
 2009-09-11  Jari Aalto  <jari.aalto@cante.net>
 

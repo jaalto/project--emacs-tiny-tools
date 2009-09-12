@@ -862,7 +862,7 @@ to generate updated list."
      tinydebian-:severity-selected
      tinydebian-:tags-list)))
 
-(defconst tinydebian-:version-time "2009.0912.1525"
+(defconst tinydebian-:version-time "2009.0912.1531"
   "Last edited time.")
 
 (defvar tinydebian-:bts-extra-headers
@@ -2092,6 +2092,20 @@ Return:
 
 ;;; ----------------------------------------------------------------------
 ;;;
+(defsubst tinydebian-mercurial-bug-type-p ()
+  "Check if bug context is Mercurial."
+  (let ((str (tinydebian-current-line-string)))
+    (cond
+     ;; <http://mercurial.selenic.com/bts/issue1803>
+     ((string-match "http.*mercurial.*/bts/[^<> \t\r\n]+\\([0-9]+\\)" str)
+      (match-string-no-properties 1))
+     (t
+      (goto-char (point-min))
+      (if (re-search-forward "https?://.*mercurial.*/bts/[^<> \t\r\n]+" nil t)
+	  (match-string-no-properties 0))))))
+
+;;; ----------------------------------------------------------------------
+;;;
 (defsubst tinydebian-launchpad-bug-type-p ()
   "Check if bug context is Launchpad."
   (cond
@@ -2182,6 +2196,8 @@ Return: '(BTS-TYPE-STRING [BUG NUMBER | URL])."
 	(list "gnome" data))
        ((setq data (tinydebian-sourceware-bug-type-p))
 	(list "sourceware" data))
+       ((setq data (tinydebian-mercurial-bug-type-p))
+	(list "mercurial" data))
        ((setq data (tinydebian-debian-bug-bts-type-p))
 	(list "debian" data))))))
 
@@ -2774,7 +2790,8 @@ In Gnus summary buffer, the Article buffer is consulted for bug."
 		   (tinydebian-bug-bts-type-determine)
 		 (cond
 		  ((and (stringp bts)
-			(string-match "sourceforge" bts))
+			(stringp data)
+			(string-match "http" data))
 		   (read-string "Bug URL: " data))
 		  ((and (stringp data)
 			(string-match "http" data))
