@@ -856,7 +856,7 @@ to generate updated list."
      tinydebian-:severity-selected
      tinydebian-:tags-list)))
 
-(defconst tinydebian-:version-time "2009.0912.0617"
+(defconst tinydebian-:version-time "2009.0912.0622"
   "Last edited time.")
 
 (defvar tinydebian-:bts-extra-headers
@@ -1870,7 +1870,7 @@ Return:
     (tinydebian-bug-gnu-emacs-bts-gnus-summary-p))
    ((memq major-mode '(message-mode
 		       mail-mode
-		       gnu-original-article-mode
+		       gnus-original-article-mode
 		       gnus-article-mode))
     (tinydebian-bug-gnu-emacs-bts-buffer-p))))
 
@@ -1992,10 +1992,14 @@ The last choice os Debian."
 	str)
     (cond
      ((setq str (tinydebian-bug-gnu-emacs-bts-p))
-      (if (string-match "http" str)
-	  str
-	(error "Unknown Emacs tracker `%s'" str)))
-     ((setq str (tinydebian-bug-gnu-savannah-site-support-p))
+      (cond
+       ((string-match "http" str)
+	str)
+       ((string-match "^[0-9]" str)
+	(tinydebian-emacs-bts-bug-url-compose str))
+       (t
+	(error "Unknown Emacs tracker `%s'" str))))
+     ((setq str (tinydebian-bug-gnu-savannah-site-support-p))x
       (if (string-match "http" str)
 	  str
 	(error "Unknown Savannah tracker `%s'" str)))
