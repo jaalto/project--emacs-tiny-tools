@@ -38,6 +38,7 @@
 	(tinydebian-sourceforge-bug-at-current-point): New.
 	(tinydebian-sourceforge-bug-type-p): Improve.
 	(tinydebian-mercurial-bug-type-p): New.
+	(tinydebian-bug-browse-url-main-interactive): New.
 
 2009-09-11  Jari Aalto  <jari.aalto@cante.net>
 

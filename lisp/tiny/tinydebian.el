@@ -862,7 +862,7 @@ to generate updated list."
      tinydebian-:severity-selected
      tinydebian-:tags-list)))
 
-(defconst tinydebian-:version-time "2009.0912.1531"
+(defconst tinydebian-:version-time "2009.0912.1534"
   "Last edited time.")
 
 (defvar tinydebian-:bts-extra-headers
@@ -2778,35 +2778,41 @@ If BTS and NBR parameters are passed, do not ask, just return URL."
 
 ;;; ----------------------------------------------------------------------
 ;;;
-(defun tinydebian-bug-browse-url-main (url &optional file)
-  "Browse bug URL at point or by searching forward.
-In Gnus summary buffer, the Article buffer is consulted for bug."
-  (interactive
-   (let* ((prev (get 'tinydebian-bug-browse-url-by-bug 'file))
-	  (dir  (if prev
-		    (file-name-directory prev)))
-	  (url-str (tinydebian-bug-url-forward))
-	  (url (multiple-value-bind (bts data)
-		   (tinydebian-bug-bts-type-determine)
-		 (cond
-		  ((and (stringp bts)
-			(stringp data)
-			(string-match "http" data))
-		   (read-string "Bug URL: " data))
-		  ((and (stringp data)
-			(string-match "http" data))
-		   (read-string "Bug URL: " data))
+(defun tinydebian-bug-browse-url-main-interactive (&optional ask-file)
+  "Interactive part of `tinydebian-bug-browse-url-main'."
+  (let* ((prev (get 'tinydebian-bug-browse-url-by-bug 'file))
+	 (dir  (if prev
+		   (file-name-directory prev)))
+	 (url-str (tinydebian-bug-url-forward))
+	 (url (multiple-value-bind (bts data)
+		  (tinydebian-bug-bts-type-determine)
+		(cond
+		 ((and (stringp bts)
+		       (stringp data)
+		       (string-match "http" data))
+		  (read-string "Bug URL: " data))
+		 ((and (stringp data)
+		       (string-match "http" data))
+		  (read-string "Bug URL: " data))
 		  (t
 		   (or (tinydebian-bug-ask-url-for-bts-and-number
 			bts
 			(tinydebian-bug-nbr-search))
 		       (error "TinyDebian: ERROR, No BTS information."))))))
-	  (name (if current-prefix-arg
+	  (name (if ask-file
 		    (read-file-name
 		     format "Save URL content to file: "
 		     dir))))
      (put 'tinydebian-bug-browse-url-by-bug 'file name)
      (list url name)))
+
+;;; ----------------------------------------------------------------------
+;;;
+(defun tinydebian-bug-browse-url-main (url &optional file)
+  "Browse bug URL at point or by searching forward.
+In Gnus summary buffer, the Article buffer is consulted for bug."
+  (interactive
+   (tinydebian-bug-browse-url-main-interactive current-prefix-arg))
   (tinydebian-bug-browse-url-run url))
 
 ;;; ----------------------------------------------------------------------
