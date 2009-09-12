@@ -862,7 +862,7 @@ to generate updated list."
      tinydebian-:severity-selected
      tinydebian-:tags-list)))
 
-(defconst tinydebian-:version-time "2009.0912.1431"
+(defconst tinydebian-:version-time "2009.0912.1441"
   "Last edited time.")
 
 (defvar tinydebian-:bts-extra-headers
@@ -1329,7 +1329,7 @@ String is anything that is attached to
   (save-excursion
     (goto-char (point-min))
     (when (or (re-search-forward
-	       "\\(http://bugs.debian[^ \t\r\n]+\\)" nil t)
+	       "\\(http://bugs.debian[^<> \t\r\n]+\\)" nil t)
 	      (re-search-forward
 	       (format "[0-9]+@%s" tinydebian-:debian-bts-email-address) nil t)
 	      (re-search-forward
@@ -1995,12 +1995,12 @@ Return:
   (save-excursion
     (goto-char (point-min))
     (if (re-search-forward
-	 "http://savannah.\\(?:non\\)gnu.org/[^ \t\r\n]+[?][0-9]+" nil t)
+	 "https?://savannah.\\(?:non\\)?gnu.org/[^<> \t\r\n]+[?][0-9]+" nil t)
 	(match-string-no-properties 0))))
 
 ;;; ----------------------------------------------------------------------
 ;;;
-(defun tinydebian-savannah-bug-type-site-support-p ()
+(defun tinydebian-savannah-bug-type-bts-p ()
   "Check if bug context is Savannah site request."
   (cond
    ((eq major-mode 'gnus-summary-mode)
@@ -2110,7 +2110,7 @@ The last choice os Debian."
 	(tinydebian-emacs-bts-bug-url-compose str))
        (t
 	(error "Unknown Emacs tracker `%s'" str))))
-     ((setq str (tinydebian-savannah-bug-type-site-support-p))
+     ((setq str (tinydebian-savannah-bug-type-bts-p))
       (if (string-match "http" str)
 	  str
 	(error "Unknown Savannah tracker `%s'" str)))
@@ -2135,7 +2135,7 @@ Return: '(BTS-TYPE-STRING [BUG NUMBER | URL])."
   (tinydebian-with-bug-context
     (let (data)
       (cond
-       ((setq data (tinydebian-savannah-bug-type-site-support-p))
+       ((setq data (tinydebian-savannah-bug-type-bts-p))
 	(list "savannah" data))
        ((setq data (tinydebian-bug-gnu-emacs-bts-buffer-p))
 	(list "emacs" data))
@@ -2653,7 +2653,7 @@ At current point, current line, headers of the mail message
 	tinydebian-:buffer-www))))
 
 ;;; ----------------------------------------------------------------------
-;;;
+;;; FIXME: remove, obsoleted by tinydebian-bug-browse-url-main
 (defun tinydebian-bug-browse-url-by-bug (bug &optional file)
   "Browse by Debian BUG number.
 

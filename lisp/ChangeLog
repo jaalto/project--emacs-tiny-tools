@@ -33,6 +33,7 @@
 	(tinydebian-debian-bug-bts-type-p): New.
 	(tinydebian-debian-bts-url-compose): New.
 	(tinydebian-gnome-bug-type-p): New.
+	(tinydebian-bug-gnu-savannah-buffer-url-p): Improve regexp.
 
 2009-09-11  Jari Aalto  <jari.aalto@cante.net>
 
