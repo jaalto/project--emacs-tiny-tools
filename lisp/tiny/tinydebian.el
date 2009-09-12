@@ -856,7 +856,7 @@ to generate updated list."
      tinydebian-:severity-selected
      tinydebian-:tags-list)))
 
-(defconst tinydebian-:version-time "2009.0912.0622"
+(defconst tinydebian-:version-time "2009.0912.0645"
   "Last edited time.")
 
 (defvar tinydebian-:bts-extra-headers
@@ -904,7 +904,7 @@ Mode description:
 
    (list
     tinydebian-:bts-mode-easymenu-name
-    ["Reply to bug"                  tinydebian-bts-mail-type-reply        t]
+    ["Reply to a bug"                tinydebian-bts-mail-type-reply        t]
     ["Report a new bug"              tinydebian-bug-report-mail            t]
 
     "----"
@@ -1207,6 +1207,8 @@ Activate on files whose path matches
 ;;}}}
 ;;{{{ Utility functions
 
+;;; ----------------------------------------------------------------------
+;;;
 (put 'tinydebian-with-gnus-article-buffer 'lisp-indent-function 1)
 (put 'tinydebian-with-gnus-article-buffer 'edebug-form-spec '(body))
 (defmacro tinydebian-with-gnus-article-buffer (&optional nbr &rest body)
@@ -1218,6 +1220,19 @@ Activate on files whose path matches
 	 (when ,buffer
 	   (with-current-buffer ,buffer
 	     ,@body))))))
+
+;;; ----------------------------------------------------------------------
+;;;
+(put 'tinydebian-with-bug-context 'lisp-indent-function 0)
+(put 'tinydebian-with-bug-context 'edebug-form-spec '(body))
+(defmacro tinydebian-with-bug-context (&rest body)
+  "In Gnus Group buffer chnage to original article and run BODY."
+  `(cond
+    ((eq major-mode 'gnus-summary-mode)
+     (tinydebian-with-gnus-article-buffer nil
+       ,@body))
+    (t
+     ,@body)))
 
 ;;; ----------------------------------------------------------------------
 ;;;
@@ -1277,9 +1292,12 @@ Activate on files whose path matches
 ;;;
 (defun tinydebian-bts-email-compose (address &optional bug bts-type)
   "Compare type of ADDRESS using BUG and BTS-TYPE information.
+The ADDRESS can be:
+  control, submit etc.
+
 The BTS-TYPE can be:
   'emacs    Emacs BTS
-  nil       Defaults to Debian BTS."
+  nil       Debian BTS."
    (when (string-match "submitter\\|maintonly\\|quiet\\|close" address)
      (cond
       ((string-match "[0-9]-" address)
@@ -1295,6 +1313,20 @@ The BTS-TYPE can be:
     (t
      (tinydebian-bts-email-compose-1 address))))
 
+;; FIXME Move elsewhere
+;;; ----------------------------------------------------------------------
+;;;
+(defun tinydebian-bts-generic-email-compose (type &optional bug buffer)
+  "Compose TYPE of address according to BTS using optional BUG number.
+Judging from optional BUFFER."
+  (tinydebian-with-bug-context
+   (with-current-buffer (or buffer (current-buffer))
+     ;; FIXME launchpad
+     (let ((bts (if (tinydebian-bug-gnu-emacs-bts-p)
+		    'emacs)))
+       (tinydebian-bts-email-compose
+	type bug bts)))))
+
 ;;; ----------------------------------------------------------------------
 ;;;
 (defsubst tinydebian-bts-email-submit ()
@@ -1306,20 +1338,6 @@ The BTS-TYPE can be:
 (defsubst tinydebian-bts-email-control ()
   "Compose control."
   (tinydebian-bts-email-compose "control"))
-
-;; FIXME Move elsewhere
-;;; ----------------------------------------------------------------------
-;;;
-(defun tinydebian-bts-generic-email-compose (type &optional bug buffer)
-  "Compose TYPE of address according to BTS using optional BUG number.
-Judging from optional BUFFER."
-  (with-current-buffer (or buffer (current-buffer))
-    (let ((bts (if (tinydebian-bug-gnu-emacs-bts-p)
-		   'emacs)))
-      (tinydebian-bts-email-compose type bug bts)
-      ;; FIXME launchpad
-      (tinydebian-bts-email-compose
-       type bug bts))))
 
 ;; FIXME Move elsewhere
 ;;; ----------------------------------------------------------------------
@@ -2029,12 +2047,8 @@ The last choice os Debian."
 (defun tinydebian-bug-url (bug)
   "Return correct bug URL for BUG.
 Under Gnus, peek current article to determine bug context."
-  (cond
-   ((eq major-mode 'gnus-summary-mode)
-    (tinydebian-with-gnus-article-buffer nil
-      (tinydebian-bug-url-current-buffer bug)))
-   (t
-    (tinydebian-bug-url-current-buffer bug))))
+  (tinydebian-with-bug-context
+   (tinydebian-bug-url-current-buffer bug))
 
 ;;; ----------------------------------------------------------------------
 ;;;

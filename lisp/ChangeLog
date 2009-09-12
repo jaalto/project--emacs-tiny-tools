@@ -4,6 +4,9 @@
 	modes `gnus-original-article-mode' and `gnus-article-mode'.
 	(tinydebian-bug-url-current-buffer): Detect savannah messages
 	better.
+	(tinydebian-with-bug-context): New.
+	(tinydebian-bug-url): Use `tinydebian-with-bug-context'.
+	(tinydebian-bts-generic-email-compose): Use `tinydebian-with-bug-context'.
 
 2009-09-11  Jari Aalto  <jari.aalto@cante.net>
 
