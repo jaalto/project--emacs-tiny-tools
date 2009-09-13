@@ -1,5 +1,12 @@
 2009-09-13  Jari Aalto  <jari.aalto@cante.net>
 
+	* tiny/tinylibm.el (ti::list-find): Cosmetic changes.
+
+	* tiny/tinylisp.el (tinylisp-load-history-car): New.
+	(tinylisp-load-history-grep): Use `tinylisp-load-history-car'.
+	(tinylisp-library-load-by-regexp): Improve docstring.
+	(tinylisp-:menu-lisp-library): Improve (L) command's description.
+
 	* tiny/tinydebian.el (tinydebian-sourceforge-bug-type-parse-bug-string):
 	Add Feature, Support Requests.
 

@@ -1472,6 +1472,8 @@ l       Load one Lisp library with completion into Emacs. (evaluate)
 
 L       Load again libraries inside Emacs matching regexp. E.g. if you want to
         reload all of present gnus, supply regexp `gnus'
+        NOTE: The regexp is matches against full path, so using
+        anchor '^PACKAGE-NAME' will not work.
 
 f       `find-file' a library for editing.
 
@@ -4660,29 +4662,42 @@ In interactive call, the FILE is completed using `load-path' libraries."
 
 ;;; ----------------------------------------------------------------------
 ;;;
+(defsubst tinylisp-load-history-car ()
+  "Return `car' elements from `load-history'."
+  (let (list)
+    ;; Faster than mapcar
+    (dolist (elt load-history)
+      (push (car elt) list))
+    list))
+
+;;; ----------------------------------------------------------------------
+;;;
 (defun tinylisp-load-history-grep (regexp)
   "Grep load history with REGEXP."
-  (ti::list-find
-   (mapcar 'car load-history)
-   regexp
-   (function
-    (lambda (arg elt)
-      (string-match arg (or elt ""))))
-   'all-matches))
+    (ti::list-find
+     (tinylisp-load-history-car)
+     regexp
+     (function
+      (lambda (re elt)
+	(and (stringp elt)
+	     (string-match re elt))))
+     'all-matches))
 
 ;;; ----------------------------------------------------------------------
 ;;;
 (defun tinylisp-library-load-by-regexp (regexp &optional no-elc verb)
   "Reload all packages (that are inside Emacs) matching REGEXP.
-NO-ELC says to load non-compiled packages. VERB."
+NO-ELC says to load non-compiled packages. VERB.
+
+NOTE
+  The REGEXP is matches against full path."
   (interactive
    (list
     (read-from-minibuffer "Reload packages matching regexp: ")
     (y-or-n-p "Load uncompiled versions ")))
-
-  (let* ((count 0)
-         list
-         done)
+  (let ((count 0)
+	list
+	done)
     (ti::verb)
     (when (and verb
                (string-match "el$" regexp))
@@ -4711,7 +4726,7 @@ NO-ELC says to load non-compiled packages. VERB."
               (progn
                 (setq elt (file-name-nondirectory elt))
                 (load elt 'noerr)))
-          (incf  count))
+          (incf count))
          (t
           (message "TinyLisp: Reload failed %s" elt)))))
     (when verb
