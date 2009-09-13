@@ -862,7 +862,7 @@ to generate updated list."
      tinydebian-:severity-selected
      tinydebian-:tags-list)))
 
-(defconst tinydebian-:version-time "2009.0912.1534"
+(defconst tinydebian-:version-time "2009.0913.0618"
   "Last edited time.")
 
 (defvar tinydebian-:bts-extra-headers
@@ -1830,7 +1830,7 @@ The URL buffer is killed at exit."
   (if (string-match
 	  `,(concat
 	     "\\<\\([^ \t\r\n]+\\)"
-	     "-\\(?:Patches\\|Bugs\\)-" ;; FIXME: Feature|Support Requests
+	     "-\\(?:Patches\\|Bugs\\|\\(?:Feature\\|Support\\) Requests\\)-"
 	     "\\([0-9]+\\)")
 	  str)
       (list (match-string-no-properties 1 str)

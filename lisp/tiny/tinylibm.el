@@ -2102,7 +2102,7 @@ Return:
 ;;; ----------------------------------------------------------------------
 ;;;
 (defun ti::list-find (table arg &optional test-function all-matches)
-  "Loops through TABLE until element matching ARG is found.
+  "Loop through TABLE until element matching ARG is found.
 
 Input:
 
@@ -2150,7 +2150,7 @@ Return:
   nil
   element      single element
   list         list is returned if all-items is non-nil"
-  (let* (ret)
+  (let (ret)
     (dolist (element table)
       (when (if test-function
                 (funcall test-function arg element)
