@@ -1,3 +1,8 @@
+2009-09-13  Jari Aalto  <jari.aalto@cante.net>
+
+	* tiny/tinydebian.el (tinydebian-sourceforge-bug-type-parse-bug-string):
+	Add Feature, Support Requests.
+
 2009-09-12  Jari Aalto  <jari.aalto@cante.net>
 
 	* tiny/tinydebian.el (tinydebian-bug-gnu-emacs-bts-p): Add
