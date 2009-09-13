@@ -628,7 +628,7 @@ Defined keys:
    (list                                ;arg 10
     tinylisp-:mode-easymenu-name
     ["Eval whole buffer"              tinylisp-eval-current-buffer           t]
-    ["Eval whole buffer, `load'"      tinylisp-eval-current-buffer-from-file t]
+    ["Eval whole buffer, load"        tinylisp-eval-current-buffer-from-file t]
     ["Eval whole buffer as defconst"  tinylisp-eval-current-buffer-defconst  t]
     ["Eval statement at point"        tinylisp-eval-at-point                 t]
     ["Eval reverse statement at point" tinylisp-eval-reverse                 t]
@@ -1277,7 +1277,7 @@ Eval commands:
        variable `tinylisp-:table-reverse-eval-alist'. E.g. if you see
        `add-hook', the statement is interpreted as `remove-hook'.
 
-    C - m (RET)
+    RET
 
         Eval statement _preceeding_ the cursor. This will output the
         returned values one by one. E.g.
@@ -1301,7 +1301,7 @@ Finding errors and debugging
     #  Find Lisp error with method 2. Try this if previous failed.
 
     %  Insert permanent debug tags. With \\[universal-argument] remove
-       debug tags.  If the byte compilation gives a weird error and does not
+       debug tags. If the byte compilation gives a weird error and does not
        tell the function and keys ! or # claim that all lisp code is valid,
        you should instrument debug tags and try byte compiling again.
 
@@ -1406,14 +1406,15 @@ Byte compilation
 Additional menus
 
     b   Buffer menu. Jump to TinyLisp temp buffers.
-    c   Checkdoc, docstring syntax checker menu
+    c   Checkdoc, docstring syntax checker menu.
     C   Byte (C)ompilation menu.
-    e   Elp menu. Emacs lisp profiler menu
-    E   Elint menu. Emacs Lisp code syntax checker menu
+    e   Elp menu. Emacs lisp profiler menu.
+    E   Elint menu. Emacs Lisp code syntax checker menu.
     H   Help menu.
-    i   Info menu. Find adviced functions, find from hooks/variables
+    i   Info menu. Find adviced functions, find from hooks/variables,
+        list local variables.
     l   Library menu. Load, find lisp libraries for editing.
-    1   Misc menu 1: Display face settings, process kill menu
+    1   Misc menu 1: Display face settings, process kill menu.
 
     C-e Edebug, Emacs Lisp debugger menu"))
 
@@ -2219,12 +2220,12 @@ Optionally POP. VERB prints message."
 ;;;
 (put 'tinylisp-symbol-do-macro 'lisp-indent-function 2)
 (defmacro tinylisp-symbol-do-macro (string noerr &rest body)
-  "Execute body if string is interned.
+  "Execute body if STRING is interned.
 Input:
-  STRING    function or variable name
+  STRING    function or variable name.
   NOERR     If nil, then call error. if Non-nil then print message if
             STRING was not interned.
-  BODY."
+  BODY      Forms to execute."
   `(if (intern-soft ,string)
        (progn
          (setq ,string (intern-soft ,string))
@@ -2239,9 +2240,10 @@ Input:
 (defmacro tinylisp-record-macro (flag &rest body)
   "If FLAG is non-nil execute BODY in record buffer."
   `(if ,flag
-       (tinylisp-with-current-buffer (ti::temp-buffer tinylisp-:buffer-record)
-                                     (ti::pmax)
-                                     ,@body)))
+       (tinylisp-with-current-buffer
+	   (ti::temp-buffer tinylisp-:buffer-record)
+	 (ti::pmax)
+	 ,@body)))
 
 ;;; ----------------------------------------------------------------------
 ;;;
@@ -2662,8 +2664,9 @@ Return:
          statement)
     (save-excursion
       (cond
-       ((and (stringp word) (intern-soft word))
-        (skip-chars-backward "^ \t"))
+       ((and (stringp word)
+	     (intern-soft word))
+        (skip-chars-backward "^( \t\r\n"))
        ((line-end-position) ;;move to opening paren in this line
         (re-search-backward "(" (line-beginning-position) t))
        (t
@@ -2990,9 +2993,9 @@ Input:
   (interactive
    (tinylisp-elp-instrument-buffer-i-args current-prefix-arg 'iact))
 
-  (let* ((str   (if remove "un" ""))
-         (count 0)
-         list)
+  (let ((str (if remove "un" ""))
+	(count 0)
+	list)
     (ti::verb)
     (cond
      (type
@@ -3008,9 +3011,9 @@ Input:
             (when (string-match "defun\\|defsubst" type)
               (incf count)
               (tinylisp-symbol-do-macro func nil
-                                        (elp-restore-function func) ;do this first
-                                        (if (null remove)
-                                            (elp-instrument-function func))))))
+		(elp-restore-function func) ;do this first
+		(if (null remove)
+		    (elp-instrument-function func))))))
         (if verb
             (message "TinyLisp: %sinstrumented %d functions" str count))))
      (t
@@ -3033,8 +3036,8 @@ TinyLisp: %sinstrumented package '%s'. Count of functions is unknown."
       ;;  This evaluates the function prior elp'ing it.
       (tinylisp-eval-at-point)
       (tinylisp-symbol-do-macro func nil
-                                (elp-restore-function func) ;do this first
-                                (elp-instrument-function func))
+	(elp-restore-function func) ;do this first
+	(elp-instrument-function func))
       (message (format "TinyLisp: ELP instrumented [%s]" func)))))
 
 ;;; ----------------------------------------------------------------------
@@ -3158,7 +3161,7 @@ Input:
     (if (not func)
         (message "TinyLisp: ELP,  Can't find function name.")
       (tinylisp-symbol-do-macro func nil
-                                (elp-restore-function func))
+	(elp-restore-function func))
       (message (format "TinyLisp: ELP, restored [%s]" func)))))
 
 ;;; ----------------------------------------------------------------------
@@ -3896,23 +3899,23 @@ ARG can be
     (if (ti::nil-p var)
         (message "TinyLisp: Couldn't read variable at point")
       (tinylisp-symbol-do-macro var 'noerr
-                                (if (not (boundp var))
-                                    (message "TinyLisp: There is no %s variable" (symbol-name var))
-                                  (unless (or (eq cmd 'bup) (memq 'original (symbol-plist var)))
-                                    (put var 'original (symbol-value var)))
-                                  (cond
-                                   ((eq cmd 'restore)
-                                    (set var (get var 'original))
-                                    (message
-                                     "TinyLisp:%s restored to original value" (symbol-name var)))
-                                   (t
-                                    (setq val
-                                          (read-from-minibuffer
-                                           (format "Set %s to lisp expression: " (symbol-name var))
-                                           (prin1-to-string (symbol-value var))))
+	(if (not (boundp var))
+	    (message "TinyLisp: There is no %s variable" (symbol-name var))
+	  (unless (or (eq cmd 'bup) (memq 'original (symbol-plist var)))
+	    (put var 'original (symbol-value var)))
+	  (cond
+	   ((eq cmd 'restore)
+	    (set var (get var 'original))
+	    (message
+	     "TinyLisp:%s restored to original value" (symbol-name var)))
+	   (t
+	    (setq val
+		  (read-from-minibuffer
+		   (format "Set %s to lisp expression: " (symbol-name var))
+		   (prin1-to-string (symbol-value var))))
 
-                                    (setq val (read val)) ;Convert to lisp
-                                    (set var val))))))))
+	    (setq val (read val)) ;Convert to lisp
+	    (set var val))))))))
 
 ;;; ----------------------------------------------------------------------
 ;;;
@@ -4037,7 +4040,7 @@ defcustom note:
   Call \\[tinylisp-emergency] NOW! After that things are back to normal.
   and you can continue as usual."
   (interactive)
-  (let* ((debug-on-error t))            ;Make sure this is on!
+  (let ((debug-on-error t))            ;Make sure this is on!
     (tinylisp-defun-macro
      ;;  We handle defvar as defconst so that new value takes in
      ;;  effect.
@@ -4138,40 +4141,38 @@ If current buffer has no file, call `tinylisp-eval-current-buffer'."
   "Search backward for opening parenthesis and Reverse the statement.
 See variable `tinylisp-:table-reverse-eval-alist'"
   (interactive)
-  (let* ((stat  (tinylisp-read-symbol-at-point))
-         (table tinylisp-:table-reverse-eval-alist)
-         func
-         str1
-         str2
-         statement)
+  (let ((stat  (tinylisp-read-symbol-at-point))
+	(table tinylisp-:table-reverse-eval-alist)
+	func
+	str1
+	str2
+	statement)
     (if (or (null stat)
             (ti::nil-p (setq func (nth 1 stat))))
-        (message "TinyLisp: Can't find command around point.")
+        (message "TinyLisp: Can't find function around point.")
+      (tinylisp-symbol-do-macro
+	  func 'noerr
+	(setq str1 (symbol-name func))
+	(if (null (setq func (cdr-safe (assq func table))))
+	    (message "TinyLisp: Can't find reverse command for %s" str1)
+	  (setq str2 (symbol-name func)
+		statement (nth 2 stat))
+	  ;; Do some special handling, e.g. add hook may have
+	  ;; additional argument 'add , remove it.
+	  (when (string-match "add-hook +[^ ]+ +[^ ]+\\( +[^ )]+\\))"
+			      statement)
+	    (setq statement (ti::replace-match 1 "" statement)))
 
-      (tinylisp-symbol-do-macro func 'noerr
-                                (setq str1 (symbol-name func))
-                                (if (null (setq func (cdr-safe (assq func table))))
-                                    (message "TinyLisp: Can't find reverse command for %s" str1)
-                                  (setq str2 (symbol-name func)
-                                        statement (nth 2 stat))
-
-                                  ;; Do some special handling, e.g. add hook may have
-                                  ;; additional argument 'add , remove it.
-
-                                  (when (string-match "add-hook +[^ ]+ +[^ ]+\\( +[^ )]+\\))"
-                                                      statement)
-                                    (setq statement (ti::replace-match 1 "" statement)))
-
-                                  (tinylisp-eval str1 str2 'string statement)
-                                  (message "TinyLisp: evaled as %s" str2))))))
+	  (tinylisp-eval str1 str2 'string statement)
+	  (message "TinyLisp: evaled as %s" str2))))))
 
 ;;; ----------------------------------------------------------------------
 ;;;
 (defun tinylisp-eval-edit ()
   "Read current line and allow editing the statement before evaling it."
   (interactive)
-  (let* ((line (ti::string-remove-whitespace (ti::read-current-line)))
-         ret)
+  (let ((line (ti::string-remove-whitespace (ti::read-current-line)))
+	ret)
     (setq ret (eval (read (read-from-minibuffer "tinylisp-Eval: " line))))
     (message "TinyLisp: returned: %s" (prin1-to-string ret))))
 
@@ -4317,13 +4318,13 @@ input:
                   sym  (cdr var)
                   str  ";; #symbol not found")
             (tinylisp-symbol-do-macro sym 'noerr
-                                      (setq str "")
-                                      (if (user-variable-p sym)
-                                          (setq str "user variable"))
-                                      (if (string= type "defcustom")
-                                          (setq str (concat str " defcustom")))
-                                      (if (not (ti::nil-p str)) ;Add comment prefix if not empty
-                                          (setq str (concat ";; " str))))
+	      (setq str "")
+	      (if (user-variable-p sym)
+		  (setq str "user variable"))
+	      (if (string= type "defcustom")
+		  (setq str (concat str " defcustom")))
+	      (if (not (ti::nil-p str)) ;Add comment prefix if not empty
+		  (setq str (concat ";; " str))))
             (if (null show-type)
                 (insert (cdr var) "\n")
               (insert (format "%-40s%s\n" (cdr var) str))))

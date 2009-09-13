@@ -1,11 +1,38 @@
 2009-09-13  Jari Aalto  <jari.aalto@cante.net>
 
+	* tiny/tinyadvice.el (shell): Correct doxstring.
+	(vc-do-command): Remove (old RCS).
+	(vc-register): Remove (old RCS).
+	(vc-print-log): Remove (old).
+	(tinyadvice-vc-register): Remove (old RCS).
+	(vc-register): Remove (old RCS).
+	(vc-mode-line): Remove (old RCS).
+	(tinymy-rcs-p): Remove (old RCS).
+	(vc-do-command): Remove (old RCS).
+	(tinyadvice-rcs-initial-comment): Remove (old RCS).
+	(display-time-process-this-message): Remove. Obsolete XEmacs.
+	(save-buffers-kill-emacs): Remove. Obsoleted by 20.x.
+	(fill-paragraph): Remove. Obsoleted by 19.28.
+	(tinyadvice-elts): Modernize macro.
+	(ange-ftp-dired-run-shell-command): Obsoleted by tramp.el.
+	(compile-internal): Obsolete.
+
 	* tiny/tinylibm.el (ti::list-find): Cosmetic changes.
 
 	* tiny/tinylisp.el (tinylisp-load-history-car): New.
 	(tinylisp-load-history-grep): Use `tinylisp-load-history-car'.
 	(tinylisp-library-load-by-regexp): Improve docstring.
 	(tinylisp-:menu-lisp-library): Improve (L) command's description.
+	(tinylisp-install-menu): Improve docstring.
+	(tinylisp-eval-reverse): Correct indentation.
+	(tinylisp-elp-instrument-buffer): Correct indentation.
+	(tinylisp-elp-instrument-function): Correct indentation.
+	(tinylisp-elp-restore-function): Correct indentation.
+	(tinylisp-set-value-at-point): Correct indentation.
+	(tinylisp-find-variable-list): Correct indentation.
+	(tinylisp-record-macro): Correct indentation.
+	(tinylisp-read-symbol-at-point): Correct `skip-chars-backward'
+	regexp.
 
 	* tiny/tinydebian.el (tinydebian-sourceforge-bug-type-parse-bug-string):
 	Add Feature, Support Requests.
