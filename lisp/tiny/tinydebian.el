@@ -862,7 +862,7 @@ to generate updated list."
      tinydebian-:severity-selected
      tinydebian-:tags-list)))
 
-(defconst tinydebian-:version-time "2009.0913.0618"
+(defconst tinydebian-:version-time "2009.0919.0923"
   "Last edited time.")
 
 (defvar tinydebian-:bts-extra-headers
@@ -2786,6 +2786,9 @@ If BTS and NBR parameters are passed, do not ask, just return URL."
 	 (url-str (tinydebian-bug-url-forward))
 	 (url (multiple-value-bind (bts data)
 		  (tinydebian-bug-bts-type-determine)
+		(if (and url-str
+			 (string-match "http" url-str))
+		    (setq data url-str))
 		(cond
 		 ((and (stringp bts)
 		       (stringp data)
@@ -2799,12 +2802,12 @@ If BTS and NBR parameters are passed, do not ask, just return URL."
 			bts
 			(tinydebian-bug-nbr-search))
 		       (error "TinyDebian: ERROR, No BTS information."))))))
-	  (name (if ask-file
+	  (file (if ask-file
 		    (read-file-name
 		     format "Save URL content to file: "
 		     dir))))
-     (put 'tinydebian-bug-browse-url-by-bug 'file name)
-     (list url name)))
+     (put 'tinydebian-bug-browse-url-by-bug 'file file)
+     (list url file)))
 
 ;;; ----------------------------------------------------------------------
 ;;;

@@ -1,3 +1,8 @@
+2009-09-19  Jari Aalto  <jari.aalto@cante.net>
+
+	* tiny/tinydebian.el (tinydebian-bug-browse-url-main-interactive):
+	Prefer `url-str' if found. This correctly finds launchpad URLs.
+
 2009-09-13  Jari Aalto  <jari.aalto@cante.net>
 
 	* tiny/tinyadvice.el (shell): Correct doxstring.
@@ -16,6 +21,9 @@
 	(tinyadvice-elts): Modernize macro.
 	(ange-ftp-dired-run-shell-command): Obsoleted by tramp.el.
 	(compile-internal): Obsolete.
+	(tinyadvice-:compile-internal-buffer): Remove.
+	(tinyadvice-:compile-internal-hook): Remove.
+	(imenu): Remove.
 
 	* tiny/tinylibm.el (ti::list-find): Cosmetic changes.
 
