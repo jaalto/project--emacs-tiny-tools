@@ -2554,7 +2554,7 @@ TinyPerl: Pod::Checker.pm is not known to this Perl version. @INC trouble?"))
 ;;; (tinyperl-pod2text (tinyperl-pod-manpage-to-file "perlfunc.pod"))
 ;;;
 (defun tinyperl-pod2text (file &optional buffer)
-  "Run pod on FILE and put output to BUFFER."
+  "Run pod on FILE and write output to BUFFER."
   (let ((fid "tinyperl-pod2text"))
     (or buffer
         (setq buffer (tinyperl-pod-buffer-name
@@ -2569,7 +2569,7 @@ TinyPerl: Pod::Checker.pm is not known to this Perl version. @INC trouble?"))
       ;; Move point to the end of visible window
       ;; #todo: was I thinking of something here ?...
       (when nil                         ;disabled
-        (let* ((win (get-buffer-window (current-buffer) t)))
+        (let ((win (get-buffer-window (current-buffer) t)))
           (when win
             (set-window-point win (point-max)))))
       (let ((point (point))
@@ -2579,29 +2579,43 @@ TinyPerl: Pod::Checker.pm is not known to this Perl version. @INC trouble?"))
                             (ti::win32-cygwin-p))))
         (tinyperl-debug fid "file" file)
         ;; perl -MPod::Text -e "pod2text shift" -n groff /cygdrive/p/unix/cygwin/lib/perl5/5.8.0/pods/perlfunc.pod
-        (call-process tinyperl-:perl-bin
-                      nil
-                      buffer
-                      nil
-                      "-MPod::Text"
-                      "-e"
-                      "pod2text shift"
-                      ;;  Cygwin's groff(1) was changed to bash
-                      ;;  shell script which cannot be used
-                      ;;  from NTEmacs
+	(cond
+	 ((not (string-match "-nt" (emacs-version))) ; Not NT Emacs
+	  (call-process "pod2text"
+			nil
+			buffer
+			nil
+			file))
+
+	(t
+	 ;; NOTE: Perl 5.x has bug in -MPod::Text
+	 ;; FIXME Nothing we can do?
+	 (call-process tinyperl-:perl-bin
+		       nil
+		       buffer
+		       nil
+		       "-MPod::Text"
+		       "-e"
+		       "pod2text shift"
+		       ;;  Cygwin's groff(1) was changed to bash
+		       ;;  shell script which cannot be used
+		       ;;  from NTEmacs
 ;;;#todo
 ;;;                      (if nt-cygwin
 ;;;                          "-n")
 ;;;                      (if nt-cygwin
 ;;;                          "groff")
-                      file)
+		       file)))
         (when (eq (point) point)
           (message
            (concat "TinyPerl: pod2text was empty. "
                    "Please check Perl environment."
                    "It may be broken: try running `perldoc perl'."))))
       (ti::pmin)
-      (tinyperl-debug fid "tinyperl-:pod2text-after-hook"  tinyperl-:pod2text-after-hook)
+      (tinyperl-debug
+       fid
+       "tinyperl-:pod2text-after-hook"
+       tinyperl-:pod2text-after-hook)
       (run-hooks 'tinyperl-:pod2text-after-hook)
       (setq buffer-read-only t)
       buffer)))
