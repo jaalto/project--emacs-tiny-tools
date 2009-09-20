@@ -1080,8 +1080,8 @@ Check variable `exec-path'"
       (tinyperl-perl-examine tinyperl-:perl-bin)
       ;;  Leave trace to Message buffer.
       (tinyperl-verbose-macro 2
-                              (message "TinyPerl: [Perl version] => %s"
-                                       (or (tinyperl-perl-type-version-info) "")))
+	(message "TinyPerl: [Perl version] => %s"
+		 (or (tinyperl-perl-type-version-info) "")))
       ok)))
 
 ;;; ----------------------------------------------------------------------
@@ -1104,17 +1104,18 @@ References:
   `tinyperl-:pod-path'
   `tinyperl-:pod-list'"
   (interactive)
-  (flet ((set-maybe (symbol eval-form)
-                    (when (or (eq 'force check)
-                              (and check
-                                   (symbol-value symbol)))
-                      (tinyperl-verbose-macro 1
-                                              (message "TinyPerl: Setting up var: %s" symbol))
-                      (set symbol
-                           (eval eval-form)))))
+  (flet ((set-maybe
+	  (symbol eval-form)
+	  (when (or (eq 'force check)
+		    (and check
+			 (symbol-value symbol)))
+	    (tinyperl-verbose-macro 1
+	      (message "TinyPerl: Wait, setting up var: %s" symbol))
+	    (set symbol
+		 (eval eval-form)))))
     (when verb
       (tinyperl-verbose-macro 1
-                              (message "TinyPerl: Setting up variables...")))
+	(message "TinyPerl: Wait, setting up variables...")))
     (unless (set-maybe
              'tinyperl-:inc-path
              '(tinyperl-inc-path tinyperl-:perl-bin))
@@ -1137,7 +1138,7 @@ tinyperl-:perl-bin Unrecognized. Need Perl 5. [%s]"
       (error "TinyPerl: Setup failure tinyperl-:pod-list"))
     (when verb
       (tinyperl-verbose-macro 1
-                              (message "TinyPerl: Setting up variables...Done.")))))
+	(message "TinyPerl: Wait, setting up variables...Done.")))))
 
 ;;; ----------------------------------------------------------------------
 ;;;
@@ -1188,7 +1189,7 @@ Input:
       (tinyperl-save-state nil verb)
       (when verb
         (tinyperl-verbose-macro 1
-                                (message "TinyPerl: Setting up variables...done"))))
+	  (message "TinyPerl: Setting up variables...done"))))
     (put 'tinyperl-mode
          'podchecker
          (tinyperl-perl-module-exists-p "Pod::Checker.pm"))
@@ -1303,7 +1304,7 @@ When LOAD: If `(tinyperl-cache-file-name)' does not exist. return nil."
         (load file)
         (when verb
           (tinyperl-verbose-macro 1
-                                  (message "TinyPerl: state restored [%s]" file)))
+	    (message "TinyPerl: state restored [%s]" file)))
         t))
      (t
       (ti::write-file-variable-state
@@ -1318,7 +1319,7 @@ When LOAD: If `(tinyperl-cache-file-name)' does not exist. return nil."
          tinyperl-:pod2text-bin))
       (when verb
         (tinyperl-verbose-macro 1
-                                (message "TinyPerl: state saved [%s]" file)))
+	  (message "TinyPerl: state saved [%s]" file)))
       t))))
 
 ;;; ----------------------------------------------------------------------
@@ -1383,7 +1384,7 @@ When LOAD: If `(tinyperl-cache-file-name)' does not exist. return nil."
                  remove)
   (when verb
     (tinyperl-verbose-macro 2
-                            (message "TinyPerl: Hooks installed"))))
+      (message "TinyPerl: Hooks installed"))))
 
 ;;; ----------------------------------------------------------------------
 ;;;
@@ -2331,7 +2332,7 @@ References:
             ;;  Record to message, so that possible errors can be
             ;;  traced.
             (tinyperl-verbose-macro 3
-                                    (message "Tinyperl: invalid @INC dir %s. Ignored." x))))))
+	      (message "Tinyperl: invalid @INC dir %s. Ignored." x))))))
     (tinyperl-debug fid "result [2]" result)
     (when (and result
                (null ret))
@@ -2451,7 +2452,7 @@ Return:
       (dolist (path INC)
         (when verb
           (tinyperl-verbose-macro 2
-                                  (message "TinyPerl: Reading @INC path %s" path)))
+	    (message "TinyPerl: Reading @INC path %s" path)))
         (tinyperl-directory-files files path)
         (dolist (file files)
           (push (cons file path) ret))
@@ -2891,7 +2892,7 @@ References:
         (erase-buffer))
       (when verb
         (tinyperl-verbose-macro
-         2
+	    2
 	 (message "TinyPerl: Running %s" cmd)))
       ;; Win32 call-process fails if the binary c:\prgram files\..
       ;; name contains spaces. This is special problems for perldoc.bat
@@ -2906,7 +2907,7 @@ References:
           (erase-buffer)
           (when verb
             (tinyperl-verbose-macro
-	     2
+		2
 	     (message "TinyPerl: No matches. Trying without -f ...")))
           (tinyperl-perldoc-1 buffer (list string))
           (setq cmd (format "%s %s"
@@ -2914,11 +2915,11 @@ References:
                             string))
           (when verb
             (tinyperl-verbose-macro
-	     2
+		2
 	     (message "TinyPerl: No matches. Trying without -f ...Done.")))))
       (when verb
         (tinyperl-verbose-macro
-	 2
+	    2
 	 (message "TinyPerl: Running %s. Done." cmd))))
     (cond
      ((setq win (or (get-buffer-window buffer t) ;In another frame
@@ -3279,7 +3280,7 @@ Return:
       (let ((file (concat grep-dir grep-file)))
         (when verb
           (tinyperl-verbose-macro 2
-                                  (message "TinyPerl: reading faq context %s" file)))
+	    (message "TinyPerl: reading faq context %s" file)))
         (setq buffer (find-file-noselect file)))
       (with-current-buffer buffer
         (goto-line grep-line))
@@ -3309,8 +3310,8 @@ References:
         (multiple-value-bind (topic text) context-data
           (when verb
             (tinyperl-verbose-macro 2
-                                    (message "TinyPerl: processing data %s"
-                                             (file-name-nondirectory file))))
+	      (message "TinyPerl: processing data %s"
+		       (file-name-nondirectory file))))
           (insert
            (format "FILE: [%s]" (file-name-nondirectory file))
            (if line
@@ -3353,10 +3354,10 @@ been answered in FAQ'"
     ;;  Grep is asyncronousd, need sleep, and then
     ;;  wait until process finishes. Only after that we gather hits.
     (tinyperl-verbose-macro 1
-                            (message "TinyPerl: waiting *grep* process finish..."))
+      (message "TinyPerl: waiting *grep* process finish..."))
     (tinyperl-process-wait buffer)
     (tinyperl-verbose-macro 1
-                            (message "TinyPerl: waiting *grep* process finish...done"))
+      (message "TinyPerl: waiting *grep* process finish...done"))
     ;;  See if we got any faq Subject hits?
     ;;  --> put them into list '((faq-name  (topic data)) ..)
     (setq data (tinyperl-pod-grep-faq-data-context-all-files buffer verb))
@@ -3368,9 +3369,9 @@ been answered in FAQ'"
         (ti::pmin)))
     (if data
         (tinyperl-verbose-macro 1
-                                (message "TinyPerl: FAQ done."))
+	  (message "TinyPerl: FAQ done."))
       (tinyperl-verbose-macro 1
-                              (message "TinyPerl: FAQ context processing failed [no data].")))))
+	(message "TinyPerl: FAQ context processing failed [no data].")))))
 
 ;;}}}
 ;;{{{ Misc
@@ -3483,7 +3484,7 @@ References:
     (setq to (concat (file-name-as-directory directory) file))
     (copy-file from to 'ok-if-already-exists)
     (tinyperl-verbose-macro 1
-                            (message "Tinyperl: PAUSE, Copied to %s" to))
+      (message "Tinyperl: PAUSE, Copied to %s" to))
     to))
 
 ;;; ----------------------------------------------------------------------
@@ -3571,7 +3572,7 @@ Input:
             (unless (string-match "\\.pm$" name)
               ;;  SelfStubber expects Modules (.pm) files only
               (tinyperl-verbose-macro 2
-                                      (message "TinyPerl: %s must end to .pm, fixing..." file))
+		(message "TinyPerl: %s must end to .pm, fixing..." file))
               (setq name (concat name ".pm")))
 
             (setq tmp (ti::temp-file name 'tmp-dir))
@@ -3593,11 +3594,11 @@ Input:
                                            (file-name-directory file))))
 
           (tinyperl-verbose-macro 2
-                                  (message ;Record it to *Messages* buffer
-                                   (format
-                                    "%s -MDevel::SelfStubber -e %s"
-                                    tinyperl-:perl-bin
-                                    cmd-1)))
+	    (message ;Record it to *Messages* buffer
+	     (format
+	      "%s -MDevel::SelfStubber -e %s"
+	      tinyperl-:perl-bin
+	      cmd-1)))
           ;; ........................................... find-position ...
 
           (and (setq beg (ti::re-search-check
@@ -3620,7 +3621,7 @@ Input:
                             cmd-1)
 
               (tinyperl-verbose-macro 1
-                                      (message "TinyPerl: stubs updated in buffer"))))
+		(message "TinyPerl: stubs updated in buffer"))))
            (t                           ;No previoous STUBS
             (call-process tinyperl-:perl-bin
                           nil
