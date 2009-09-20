@@ -54,13 +54,14 @@
 ;;      (autoload 'tinyeat-kill-buffer-lines-point-max "tinyeat" "" t)
 ;;      (autoload 'tinyeat-kill-buffer-lines-point-min "tinyeat" "" t)
 ;;
-;;      (global-set-key (kbd "ESC C-k")       'tinyeat-kill-line-backward)
-;;      (global-set-key (kbd "ESC d")         'tinyeat-forward-preserve)
-;;      (global-set-key (kbd "ESC z")         'tinyeat-kill-buffer-lines-main)
-;;      (global-set-key (kbd "ESC C-k")       'tinyeat-zap-line)
+;;      (global-set-key "\M-y"                'tinyeat-yank-overwrite)
+;;      (global-set-key "\M-k"                'tinyeat-kill-line-backward)
+;;      (global-set-key "\C-\M-k"             'tinyeat-zap-line)
 ;;
-;;      (global-set-key (kbd "<M-backspace>") 'tinyeat-forward-preserve)
-;;      (global-set-key (kbd "<C-delete>")    'tinyeat-backward-preserve)
+;;      (global-set-key (kbd "<M-backspace>") 'tinyeat-backward-preserve)
+;;
+;;      (global-set-key "\M-d"                'tinyeat-forward-preserve)
+;;      (global-set-key "\C-\M-d"             'tinyeat-delete-paragraph)
 ;;      (global-set-key (kbd "<S-backspace>") 'tinyeat-delete-whole-word)
 ;;
 ;; Investigate problems with:
@@ -321,41 +322,43 @@ Normally word is terminated by whitespace or newlines."
 ;;;
 ;;;###autoload
 (defun tinyeat-install-default-bindings ()
-  "Add default bindings to the backspace key with modifiers."
+  "Bind default keys to various 'eat' functions."
   (interactive)
-  (global-set-key (kbd "ESC C-y")         'tinyeat-yank-overwrite)
+
+  ;; was `yank-pop'
+  (global-set-key "\M-y"                  'tinyeat-yank-overwrite)
 
   ;; was `kill-sentence'
-  (global-set-key (kbd "ESC C-k")         'tinyeat-kill-line-backward)
+  (global-set-key "\C-\M-k"               'tinyeat-zap-line)
 
   ;;  was `kill-word'
-  (global-set-key (kbd "ESC d")           'tinyeat-forward-preserve)
-  (global-set-key (kbd "<C-delete>")      'tinyeat-forward-preserve)
+  (global-set-key "\M-d"                  'tinyeat-forward-preserve)
   (global-set-key (kbd "<C-backspace>")   'tinyeat-forward-preserve)
+  ;; secondary backup
+  (global-set-key (kbd "<C-delete>")      'tinyeat-forward-preserve)
+  (global-set-key (kbd "<C-deletechar>")  'tinyeat-forward-preserve)
+
 
   ;;  Alt-backspace
-  (global-set-key (kbd "ESC DEL")         'tinyeat-backward-preserve)
+  (global-set-key (kbd "<M-delete>")      'tinyeat-backward-preserve)
   (global-set-key (kbd "<M-backspace>")   'tinyeat-backward-preserve)
 
   (global-set-key (kbd "<S-backspace>")   'tinyeat-delete-whole-word)
   (global-set-key (kbd "<S-delete>")      'tinyeat-delete-whole-word)
 
 ;;;    (when (ti::xemacs-p)
-;;;      (global-set-key (kbd "M-BS")            'tinyeat-backward-preserve)
-;;;      (global-set-key (kbd "C-BS")            'tinyeat-forward-preserve))
+;;;      (global-set-key (kbd "M-BS")     'tinyeat-backward-preserve)
+;;;      (global-set-key (kbd "C-BS")     'tinyeat-forward-preserve))
 
   ;;  Was `down-list'
-  (global-set-key (kbd "ESC C-d")         'tinyeat-delete-paragraph)
+  (global-set-key "\C-\M-d"               'tinyeat-delete-paragraph)
   (global-set-key (kbd "<C-S-backspace>") 'tinyeat-delete-paragraph)
   (global-set-key (kbd "<C-S-delete>")    'tinyeat-delete-paragraph)
-
-  (global-set-key (kbd "ESC C-k")   'tinyeat-zap-line)
 
   (unless (ti::compat-window-system)
     (tinyeat-install-default-bindings-terminal))
 
-  (message "\
-TinyEat: ** keys were bound to TinyEat functions."))
+  (message "TinyEat: ** keys were bound to TinyEat functions."))
 
 ;;; ----------------------------------------------------------------------
 ;;;

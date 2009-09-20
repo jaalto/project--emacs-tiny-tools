@@ -1,5 +1,9 @@
 2009-09-20  Jari Aalto  <jari.aalto@cante.net>
 
+	* tiny/tinyeat.el (tinyeat-install-default-bindings): Rethink
+	key bindings from non-window perspective. MANY KEYS
+	HAVE BEEN RELOCATED FOR BETTER NON-WINDOW ACCESS.
+
 	* tiny/tinyperl.el (tinyperl-install-variables-lookup): Add
 	word 'wait'.
 	(tinyperl-pod2text): Work around bug in Perl library
