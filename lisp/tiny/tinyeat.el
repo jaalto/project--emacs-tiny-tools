@@ -98,26 +98,22 @@
 ;;
 ;;  Non-windowed and Windowed Emacs
 ;;
-;;      This package works _best_ in windowed Emacs, because in windowed
-;;      environment you can use the modifiers *Control*, *Alt* and *Meta*
-;;      freely with other keys. The idea of this package is to overload
-;;      your single key, `backspace', as much as possible with various
-;;      delete functionalities.
-;;
-;;      In non-windowed Emacs there is no key named `backspace', so
-;;      standard Emacs bindings are bound instead. Many of this
-;;      package's features are left unused because there are no
-;;      suitable keys to bind the commands to. In non-windowed Emacs the
-;;      command marked with (*) are not available. Emacs bindings
-;;      that are redefined when you call `tinyeat-activate' are:
+;;      This package works _best_ in windowed Emacs, because in
+;;      windowed environment you can use the modifiers *Control*,
+;;      *Alt* and *Meta* freely with the backspace key. The idea of
+;;      this package is to overload your single key, `backspace', as
+;;      much as possible with various delete functionalities.
+;;      The differences to non-windowed environment are as follows.
+;;      Key marked with (*) is not available under non-window system.
 ;;
 ;;                          was             now
 ;;          ---------------------------------------------------------
 ;;          M-d             kill-word       tinyeat-forward-preserve
-;;          S-backspace     <none>          tinyeat-delete-whole-word  (*)
 ;;          M-k             kill-sentence   tinyeat-kill-line-backward
-;;          M-C-d           down-list       tinyeat-delete-paragraph
-;;          M-C-y           <none>          tinyeat-yank-overwrite
+;;          S-backspace     <none>          tinyeat-delete-whole-word  (*)
+;;          C-M-d           down-list       tinyeat-delete-paragraph
+;;          C-M-k           kill-sexp       tinyeat-zap-line
+;;          M-y             yank-pop        tinyeat-yank-overwrite
 ;;
 ;;  Story behind this package
 ;;
@@ -190,16 +186,17 @@
 ;;      Line delete
 ;;
 ;;          <<           >>           <<>>
-;;          M-k          C-k          M-C-k
+;;          M-k          C-k          C-M-k
 ;;                                    zap whole line
 ;;
 ;;      Chunk delete: words, spaces, symbols ...
 ;;
 ;;          <<           >>           <<>>               \//\
 ;;          M-Backspace  C-backspace  S-Backspace        C-M-d  / C-S-backspace
-;;                                    Delete whole word  Paragraph delete
+;;                       M-d          Delete whole word  Paragraph delete
 ;;
-;;      Other functions that you might want to bind to keys:
+;;      These function have no defult binding in `tinyeat-install', but
+;;      you might find suitable keys for them:
 ;;
 ;;         M-x tinyeat-erase-buffer
 ;;         M-x tinyeat-kill-buffer-lines-main
@@ -325,11 +322,14 @@ Normally word is terminated by whitespace or newlines."
   "Bind default keys to various 'eat' functions."
   (interactive)
 
+  ;; was `kill-sentence'
+  (global-set-key "\M-k"                  'tinyeat-kill-line-backward)
+
+  ;; was kill-sexp
+  (global-set-key "\C-\M-k"               'tinyeat-zap-line)
+
   ;; was `yank-pop'
   (global-set-key "\M-y"                  'tinyeat-yank-overwrite)
-
-  ;; was `kill-sentence'
-  (global-set-key "\C-\M-k"               'tinyeat-zap-line)
 
   ;;  was `kill-word'
   (global-set-key "\M-d"                  'tinyeat-forward-preserve)

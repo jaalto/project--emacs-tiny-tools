@@ -1,6 +1,8 @@
 2009-09-20  Jari Aalto  <jari.aalto@cante.net>
 
-	* tiny/tinyeat.el (tinyeat-install-default-bindings): Rethink
+	* tiny/tinyeat.el
+	(on-windowed and Windowed Emacs): update documentation.
+	(tinyeat-install-default-bindings): Rethink
 	key bindings from non-window perspective. MANY KEYS
 	HAVE BEEN RELOCATED FOR BETTER NON-WINDOW ACCESS.
 
