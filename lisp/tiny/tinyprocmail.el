@@ -1047,7 +1047,7 @@ If buffer does not exist, do nothing."
   "Fix. Display MESSAGE and do BODY."
   `(when (or (eq tinyprocmail-:lint-fix-mode 'auto)
              (and (eq tinyprocmail-:lint-fix-mode 'semi)
-                  (tinyprocmail-o (y-or-n-p (, message)))))
+                  (tinyprocmail-o (y-or-n-p ,message))))
      ,@body))
 
 ;;; ----------------------------------------------------------------------
