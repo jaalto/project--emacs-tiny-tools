@@ -863,7 +863,7 @@ to generate updated list."
      tinydebian-:severity-selected
      tinydebian-:tags-list)))
 
-(defconst tinydebian-:version-time "2009.0920.0956"
+(defconst tinydebian-:version-time "2009.0920.1000"
   "Last edited time.")
 
 (defvar tinydebian-:bts-extra-headers
@@ -1077,10 +1077,11 @@ Mode description:
 ;;; ----------------------------------------------------------------------
 ;;;
 (defun tinydebian-bts-mode-maybe-turn-on ()
-  "Activate tinydebian-bts-mode if buffer contains word 'Debian'"
+  "Activate tinydebian-bts-mode in certain buffers.
+Buffer should contains a word 'Debian' or 'Emacs'."
   (when (save-excursion
 	  (goto-char (point-min))
-	  (re-search-forward "debian" nil t))
+	  (re-search-forward "debian\\|emacs" nil t))
     (turn-on-tinydebian-bts-mode)))
 
 ;;}}}
@@ -4055,7 +4056,7 @@ Mode description:
 	 (message-mode))
 	(t
 	 (mail-mode)))
-       (tinydebian-mail-mode)
+       (turn-on-tinydebian-mail-mode)
        (tinydebian-bts-insert-headers)
        ,@body)))
 
