@@ -64,7 +64,7 @@
 ;;            'turn-on-tinyprocmail-mode)
 ;;
 ;;  This source file includes sample procmail test file for Lint. You
-;;  can unpack it if you have `pgp' and `tar' commands in your system.
+;;  can unpack it if you have `gpg' and `tar' commands in your system.
 ;;  When the file has been unpacked, load pm-lint.rc file into buffer,
 ;;  and follow instructions in the file.
 ;;
@@ -580,7 +580,7 @@ If any other value, then receipe start looks like
 procmail v3.22 2001/09/10
 procmail v3.11pre7 1997/04/28 written and created by Stephen R. van den Berg
 procmail v3.11pre4 1995/10/29 written and created by Stephen R. van den Berg"
-    (let* ((prg (executable-find "procmail")))
+    (let ((prg (executable-find "procmail")))
       (if (null prg)
           (message "\
   ** tinyprocmail.el: Warning, couldn't auto-set `tinyprocmail-:procmail-version'.")
@@ -601,7 +601,6 @@ procmail v3.11pre4 1995/10/29 written and created by Stephen R. van den Berg"
    ;;   [   \n]
    ;;   ^   ^^^highlighted.
    '("\\[[^]\n]*\t[^]\n]*\\]"       . font-lock-keyword-face)
-
    '("#.*"                          . font-lock-comment-face)
    ;;   Recipe start :0
    ;;   The regexp says: Start with `:0' or `:' followed by spaces
@@ -787,9 +786,7 @@ Code writing: `tinytab-mode' on \\[tinytab-mode]
 
 Mode description (main mode)
 \\{tinyprocmail-:mode-prefix-map}"
-
    "Procmail recipe coding"
-
    (progn                              ;Some mode specific things? No?
      (cond
       (tinyprocmail-mode
@@ -814,7 +811,6 @@ Mode description (main mode)
        (if (and tinytab-mode (get 'tinyprocmail-mode 'tit))
            (turn-off-tinytab-mode))
        (tinyprocmail-overlay-hide))))
-
    "Procmail mode"
    (list                                ;arg 10
     tinyprocmail-:mode-easymenu-name
@@ -1431,7 +1427,7 @@ This checks if the actions line is ok."
 Return:
   t      Sitting on condition line after move.
   nil    Not a condition line after move"
-  (let* ((cont-p (looking-at ".*[\\][ \t]*$")))
+  (let ((cont-p (looking-at ".*[\\][ \t]*$")))
     (if (or (looking-at ":0")
             (save-excursion
               (beginning-of-line)
@@ -1456,7 +1452,7 @@ Return:
 ;;;
 (defun tinyprocmail-move-to-condition-end ()
   "Go to condition end. Point must inside condition or recipe start."
-  (let* ()
+  (let ()  ;; FIXME: reserved for variables
     (cond
      ((tinyprocmail-brace-p)
       nil)
@@ -1484,7 +1480,6 @@ Return:
                       ;;
                       ;;  *condition
                       ;;  mbox
-
                       (and (looking-at "^[ \t]*$")
                            (save-excursion
                              (forward-line 1)
@@ -1524,7 +1519,7 @@ Input:
 ;;;
 (defun tinyprocmail-move-to-recipe-end ()
   "Go to recipe block end. Return recipe bound: (beg . end) ."
-  (let* (beg)
+  (let (beg)
     (if (not (tinyprocmail-recipe-start-p))
         (tinyprocmail-backward-strict))
     (setq beg (point))
@@ -2131,10 +2126,11 @@ Return:
       (when fwd-invalid-p
         (setq str "Error, invalid forward line. Maybe extra colons.")
         (tinyprocmail-log fwd-invalid-p str)
-        (tinyprocmail-fix-macro (concat str " Remove ")
-                                (beginning-of-line)
-                                (while (re-search-forward "," (line-end-position) t)
-                                  (ti::replace-match 0))))
+        (tinyprocmail-fix-macro
+	    (concat str " Remove ")
+	  (beginning-of-line)
+	  (while (re-search-forward "," (line-end-position) t)
+	    (ti::replace-match 0))))
       (when forward-p
         (save-excursion
           (goto-char forward-p)
@@ -2286,15 +2282,17 @@ info, ! -oi, may be unnecessary. It's default in New prcomail.")
           (when (string-match "H" flags)
             (setq str "Error, size test doesn't use `H' flag. (use H ?? <)")
             (tinyprocmail-log size-test-p str)
-            (tinyprocmail-fix-macro (concat str " Remove ")
-                                    (setq fix-line  t
-                                          flags     (replace-regexp-in-string "H" "" flags))))
+            (tinyprocmail-fix-macro
+		(concat str " Remove ")
+	      (setq fix-line  t
+		    flags     (replace-regexp-in-string "H" "" flags))))
           (when (string-match "B" flags)
             (setq str "Error, size test doesn't use `B' flag. (use B ?? <)")
             (tinyprocmail-log size-test-p str)
-            (tinyprocmail-fix-macro (concat str " Remove ")
-                                    (setq fix-line t
-                                          flags (replace-regexp-in-string "B" "" flags))))))
+            (tinyprocmail-fix-macro
+		(concat str " Remove ")
+	      (setq fix-line t
+		    flags (replace-regexp-in-string "B" "" flags))))))
       ;; .................................................... assignment ...
       ;; VAR=| cat something
       (when assignment-p
@@ -2302,22 +2300,25 @@ info, ! -oi, may be unnecessary. It's default in New prcomail.")
                    (null dc))
           (setq str "Warning, flag `c' is useless in assignment =|")
           (tinyprocmail-log opoint str)
-          (tinyprocmail-fix-macro (concat str " Remove ")
-                                  (setq fix-line t
-                                        flags (replace-regexp-in-string "c" "" flags))))
+          (tinyprocmail-fix-macro
+	      (concat str " Remove ")
+	    (setq fix-line t
+		  flags (replace-regexp-in-string "c" "" flags))))
         (when (and (string-match "i" flags)
                    (null di))
           (setq str "Warning, flag `i' is not recommended in assignment =|")
           (tinyprocmail-log opoint str)
-          (tinyprocmail-fix-macro (concat str " Remove ")
-                                  (setq fix-line t
-                                        flags (replace-regexp-in-string "i" "" flags))))
+          (tinyprocmail-fix-macro
+	      (concat str " Remove ")
+	    (setq fix-line t
+		  flags (replace-regexp-in-string "i" "" flags))))
         (when lock-p
           (setq str "Warning, lockfile \":\" is useless in assignment =|")
           (tinyprocmail-log opoint str)
-          (tinyprocmail-fix-macro (concat str " Remove ")
-                                  (setq fix-line t
-                                        flags (replace-regexp-in-string ":" "" flags))))
+          (tinyprocmail-fix-macro
+	      (concat str " Remove ")
+	    (setq fix-line t
+		  flags (replace-regexp-in-string ":" "" flags))))
         (save-excursion
           (goto-char assignment-p)
           (when (looking-at ".*`")
@@ -2332,28 +2333,33 @@ info, ! -oi, may be unnecessary. It's default in New prcomail.")
         (when (string-match "f" flags)
           (tinyprocmail-log
            opoint "Error, formail -D used. Flag `f' is a mistake.")
-          (tinyprocmail-fix-macro "Formail -D used, remove `f' flag? "
-                                  (setq fix-line t
-                                        flags (replace-regexp-in-string "f" "" flags))))
+          (tinyprocmail-fix-macro
+	      "Formail -D used, remove `f' flag? "
+	    (setq fix-line t
+		  flags (replace-regexp-in-string "f" "" flags))))
         (when (not (string-match "W" flags))
           (tinyprocmail-log
            opoint "Warning, formail -D used but no `W' flag found.")
-          (tinyprocmail-fix-macro "Formail -D found, add `W' flag? "
-                                  (setq fix-line t   flags (concat "W" flags))))
+          (tinyprocmail-fix-macro
+	      "Formail -D found, add `W' flag? "
+	    (setq fix-line t   flags (concat "W" flags))))
         (when (not (ti::string-match-case "h" flags))
           (tinyprocmail-log opoint "Error, formail -D used. No flag `h' found.")
-          (tinyprocmail-fix-macro "Formail -D found, Add `h' flag? "
-                                  (setq fix-line t  flags (concat "h" flags))))
+          (tinyprocmail-fix-macro
+	      "Formail -D found, Add `h' flag? "
+	    (setq fix-line t  flags (concat "h" flags))))
         (when (ti::string-match-case "b" flags)
           (tinyprocmail-log
            opoint "Error, formail -D used. SHould not have `b'.")
-          (tinyprocmail-fix-macro "Formail -D found, remove `b' flag? "
-                                  (setq fix-line t  flags (ti::string-regexp-delete "b" flags))))
+          (tinyprocmail-fix-macro
+	      "Formail -D found, remove `b' flag? "
+	    (setq fix-line t  flags (ti::string-regexp-delete "b" flags))))
         (when  (not lock-p)
           (setq str "Warning, formail -D used but no lockfile.")
           (tinyprocmail-log opoint str)
-          (tinyprocmail-fix-macro (concat str " Add. ")
-                                  (setq fix-line t  flags (concat ":" flags)))))
+          (tinyprocmail-fix-macro
+	      (concat str " Add. ")
+	    (setq fix-line t  flags (concat ":" flags)))))
       ;; ............................................ Check f and h or b ...
       (setq fix nil)
       (when (and (ti::string-match-case "f" flags)
@@ -2373,9 +2379,10 @@ info, ! -oi, may be unnecessary. It's default in New prcomail.")
                  (ti::string-match-case "c" flags))
         (setq str "info, Redundant `c' in `f' recipe.")
         (tinyprocmail-log (point) str)
-        (tinyprocmail-fix-macro (concat str " Correct ")
-                                (setq fix t)
-                                (setq flags (replace-regexp-in-string "c" "" flags))))
+        (tinyprocmail-fix-macro
+	    (concat str " Correct ")
+	  (setq fix t)
+	  (setq flags (replace-regexp-in-string "c" "" flags))))
       (when fix (tinyprocmail-flag-kill flags))
       ;; ..................................................... "|" and w ...
       ;;  Every "|" action should have "w" flag
@@ -2408,8 +2415,9 @@ Warning, recipe with \"|\" may need `w' flag. (recommended) ")
                  (not (string-match "f" flags)))
         (setq str "Warning, Formail used but no `f' flag found.")
         (tinyprocmail-log opoint str)
-        (tinyprocmail-fix-macro (concat str " Add ")
-                                (setq fix-line t   flags (concat "f" flags))))
+        (tinyprocmail-fix-macro
+	    (concat str " Add ")
+	  (setq fix-line t   flags (concat "f" flags))))
       ;; .............................................. f and no-formail ...
       ;;  If there was MH "rcvstore" Then "i" should not be there.
       (when (and (null redirection-p)
@@ -2432,9 +2440,10 @@ Warning, recipe with \"|\" may need `w' flag. (recommended) ")
                  (null di))
         (setq str "info, flag `i' is meaningless on top of nested block.")
         (tinyprocmail-log opoint str)
-        (tinyprocmail-fix-macro (concat str " Remove ")
-                                (setq fix-line t
-                                      flags (replace-regexp-in-string "i" "" flags))))
+        (tinyprocmail-fix-macro
+	    (concat str " Remove ")
+	  (setq fix-line t
+		flags (replace-regexp-in-string "i" "" flags))))
       (when (and (null redirection-p)
                  pipe-p
                  (not (ti::string-match-case "f" flags))
@@ -2445,8 +2454,9 @@ Warning, recipe with \"|\" may need `w' flag. (recommended) ")
               "\
 Warning, no \">\" in \"|\" recipe 'i' kills message. May need `c'.")
         (tinyprocmail-log opoint str)
-        (tinyprocmail-fix-macro (concat str " Add ")
-                                (setq fix-line t   flags (concat "c" flags))))
+        (tinyprocmail-fix-macro
+	    (concat str " Add ")
+	  (setq fix-line t   flags (concat "c" flags))))
       (goto-char opoint)
       ;; ............................................. check H without B ...
       (let (case-fold-search)
@@ -2454,9 +2464,10 @@ Warning, no \">\" in \"|\" recipe 'i' kills message. May need `c'.")
                    (null (ti::string-match-case "B" flags)))
           (setq str "info, flag `H' is useless, because it is default.")
           (tinyprocmail-log opoint str)
-          (tinyprocmail-fix-macro (concat str " Remove ")
-                                  (setq fix-line t
-                                        flags (replace-regexp-in-string "H" "" flags)))))
+          (tinyprocmail-fix-macro
+	      (concat str " Remove ")
+	    (setq fix-line t
+		  flags (replace-regexp-in-string "H" "" flags)))))
       ;; ....................................................... check W ...
       ;;  :0 c: somefile is same as :0 Wc: somefile but ONLY on nesting
       ;;  block
@@ -2467,9 +2478,10 @@ Warning, no \">\" in \"|\" recipe 'i' kills message. May need `c'.")
         (setq str
               "info, redundant `Wc:', `c:' already implies W in {} block.")
         (tinyprocmail-log opoint str)
-        (tinyprocmail-fix-macro (concat str " Correct")
-                                (setq fix-line t
-                                      flags (replace-regexp-in-string "W" "" flags))))
+        (tinyprocmail-fix-macro
+	    (concat str " Correct")
+	  (setq fix-line t
+		flags (replace-regexp-in-string "W" "" flags))))
       ;; ................................................. need lockfile ...
       (when (and redirection-p
                  (not brace-p)
@@ -2478,9 +2490,10 @@ Warning, no \">\" in \"|\" recipe 'i' kills message. May need `c'.")
                  (not lock-p))
         (setq str "Warning, recipe seems to store to folder, may need lock.")
         (tinyprocmail-log opoint str)
-        (tinyprocmail-fix-macro (concat str " Add ")
-                                (setq fix-line  t
-                                      flags    (concat flags ":"))))
+        (tinyprocmail-fix-macro
+	    (concat str " Add ")
+	  (setq fix-line  t
+		flags    (concat flags ":"))))
       ;;  Missing lockfile, but not if /dev/null
       ;;  :0      :0
       ;;  mbox    /dev/null
@@ -2495,9 +2508,10 @@ Warning, no \">\" in \"|\" recipe 'i' kills message. May need `c'.")
         (tinyprocmail-log mbox-p str)
         (save-excursion
           (goto-char mbox-p)
-          (tinyprocmail-fix-macro (concat str " Add ")
-                                  (setq fix-line t
-                                        flags    (concat flags ":")))))
+          (tinyprocmail-fix-macro
+	      (concat str " Add ")
+	    (setq fix-line t
+		  flags    (concat flags ":")))))
       ;; .......................................................... MBOX ...
       (when mbox-p
         ;; ... ... ... ... ... ... ... ... ... ... ... ... ...  dev/null . .
@@ -2507,9 +2521,10 @@ Warning, no \">\" in \"|\" recipe 'i' kills message. May need `c'.")
             (tinyprocmail-log mbox-p str)
             (save-excursion
               (goto-char mbox-p)
-              (tinyprocmail-fix-macro (concat str " Remove ")
-                                      (setq fix-line t
-                                            flags (replace-regexp-in-string ":" "" flags)))))
+              (tinyprocmail-fix-macro
+		  (concat str " Remove ")
+		(setq fix-line t
+		      flags (replace-regexp-in-string ":" "" flags)))))
           (unless (ti::string-match-case "h" flags)
             (setq str "Info, /dev/null may be more efficient with `h' flag")
             (tinyprocmail-log mbox-p str)
@@ -2530,16 +2545,18 @@ Warning, no \">\" in \"|\" recipe 'i' kills message. May need `c'.")
         (when (and flags (string-match "i" flags))
           (setq str "Warning, flag `i' is dangerous when dropping to folder.")
           (tinyprocmail-log opoint str)
-          (tinyprocmail-fix-macro (concat str " Remove ")
-                                  (setq fix-line t
-                                        flags (replace-regexp-in-string "i" "" flags))))
+          (tinyprocmail-fix-macro
+	      (concat str " Remove ")
+	    (setq fix-line t
+		  flags (replace-regexp-in-string "i" "" flags))))
         (when (and flags (ti::string-match-case "hb\\|bh" flags))
           (setq str "\
 Warning, flag combo `hb' is useless when dropping to folder.")
           (tinyprocmail-log opoint str)
-          (tinyprocmail-fix-macro (concat str " Remove ")
-                                  (setq fix-line t
-                                        flags (replace-regexp-in-string "hb\\|bh" "" flags)))))
+          (tinyprocmail-fix-macro
+	      (concat str " Remove ")
+	    (setq fix-line t
+		  flags (replace-regexp-in-string "hb\\|bh" "" flags)))))
       ;; .................................................... check lock ...
       (goto-char opoint)
       (beginning-of-line)
@@ -2595,9 +2612,10 @@ Warning, flag combo `hb' is useless when dropping to folder.")
                  (not (string-match "[$]LOCKEXT" lock-file))))
           (setq str (format "no $LOCKEXT extension in lockfile `%s'" lock-file))
           (tinyprocmail-log (point) str)
-          (tinyprocmail-fix-macro (concat str " Add ")
-                                  (goto-char (match-end 0))
-                                  (insert "$LOCKEXT")))
+          (tinyprocmail-fix-macro
+	      (concat str " Add ")
+	    (goto-char (match-end 0))
+	    (insert "$LOCKEXT")))
          ((save-match-data
             (and
              (when (string-match "\\(.*\\)\\." lock-file)
@@ -2745,8 +2763,9 @@ Warning, flag combo `hb' is useless when dropping to folder.")
           (tinyprocmail-fix-macro str))
         ;; ... ... ... ... ... ... ... ... ... ... ... ... ...  tilde(~) . .
         (when (looking-at "^.*=.*\\(~\\)/")
-          (tinyprocmail-log (point)
-                            "Error, csh's tilde(~) is not supported, Use $HOME.")
+          (tinyprocmail-log
+	   (point)
+	   "Error, csh's tilde(~) is not supported, Use $HOME.")
           (tinyprocmail-fix-macro "Non-supported: Substitute ~ with $HOME "
                                   (ti::replace-match 1 "$HOME")))
         ;; ... ... ... ... ... ... ... ... ... ... ...  mismatch(` -- ') . .
@@ -2817,8 +2836,9 @@ Warning, flag combo `hb' is useless when dropping to folder.")
                 "Pedantic, `` is not a recommended initialize "
                 "practise (uses shell)."))))
           (when (save-match-data (not (string= var1 var2)))
-            (tinyprocmail-log (point)
-                              "Warning, variables don't match in init sequence.")
+            (tinyprocmail-log
+	     (point)
+	     "Warning, variables don't match in init sequence.")
             (tinyprocmail-fix-macro
              "[cannot-fix] Left var1 and right var2 don't match."))
           (when (save-match-data (not (string-match "[-+]" op)))
