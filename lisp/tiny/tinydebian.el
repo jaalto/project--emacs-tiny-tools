@@ -58,6 +58,8 @@
 
 ;;  Overview of features
 ;;
+;;      http://www.emacswiki.org/emacs/TinyDebian
+;;
 ;;      This package contains utilities for the package authors
 ;;      (Debian developers, Ubuntu Developers, Emacs Pretest
 ;;      Developers) to help managing Bug reports from the Bug Tracking
@@ -862,7 +864,7 @@ to generate updated list."
      tinydebian-:severity-selected
      tinydebian-:tags-list)))
 
-(defconst tinydebian-:version-time "2009.0920.0952"
+(defconst tinydebian-:version-time "2009.0920.0953"
   "Last edited time.")
 
 (defvar tinydebian-:bts-extra-headers
