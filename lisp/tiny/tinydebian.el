@@ -85,17 +85,16 @@
 ;;      developed to help administering a Debian system. Support for
 ;;      the Debian BTS interface
 ;;      (http://www.debian.org/Bugs/server-control) is a big part of
-;;      te file. Later, GNU Emacs development team decided to set up a
-;;      bug tracking system and they chose the Debian BTS software.
+;;      the package. Later when GNU Emacs development moved
+;;      to same bug tracking system, support for Emacs BTS was added.
 ;;      Support to detect Emacs bugs from Debian bugs were added.
-;;      Ubuntu Launchpad.net BTS can also be controlled by email and
-;;      it has similarities to the Debian BTS as far as how the
-;;      commands are added to the mail messages. The Launch bug email
-;;      interface is the last addition to the pack.
 ;;
-;;      The heuristics are based in Gnus Summary buffer line (as in
-;;      standard Gnus), the Article content, to decide which bug
-;;      tracking system is used.
+;;      Ubuntu Launchpad.net BTS can also be controlled by email and
+;;      it has similarities to the Debian BTS. The Launchpad email
+;;      interface is in planned state.
+;;
+;;      The heuristics are based in Gnus Summary and Article buffers
+;;      how to decide which bug tracking system will be used.
 
 ;;}}}
 
@@ -864,7 +863,7 @@ to generate updated list."
      tinydebian-:severity-selected
      tinydebian-:tags-list)))
 
-(defconst tinydebian-:version-time "2009.0920.0953"
+(defconst tinydebian-:version-time "2009.0920.0956"
   "Last edited time.")
 
 (defvar tinydebian-:bts-extra-headers
