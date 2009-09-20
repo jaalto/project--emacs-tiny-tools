@@ -862,7 +862,7 @@ to generate updated list."
      tinydebian-:severity-selected
      tinydebian-:tags-list)))
 
-(defconst tinydebian-:version-time "2009.0919.0923"
+(defconst tinydebian-:version-time "2009.0920.0952"
   "Last edited time.")
 
 (defvar tinydebian-:bts-extra-headers
@@ -4054,6 +4054,7 @@ Mode description:
 	 (message-mode))
 	(t
 	 (mail-mode)))
+       (tinydebian-mail-mode)
        (tinydebian-bts-insert-headers)
        ,@body)))
 
@@ -4374,7 +4375,7 @@ thanks
 (defun tinydebian-bts-mail-ctrl-usertag (bug &optional tag-string)
   "Compose BTS control message usertag to a BUG with TAG-STRING."
   (interactive
-   (let ((bug (tinydebian-bts-mail-ask-bug-number)))))
+   (list (tinydebian-bts-mail-ask-bug-number)))
   (tinydebian-bts-mail-type-macro
    nil nil nil
    (format "Bug#%s change of usertag %s" bug (or tag-string ""))
