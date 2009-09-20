@@ -4,6 +4,7 @@
 	word 'wait'.
 	(tinyperl-pod2text): Work around bug in Perl library
 	Pod::Text.
+	(tinyperl-pod-by-module): Correct Modules find algorithm.
 
 	* tiny/tinyprocmail.el: Modernize all macros.
 	Adjust indentation in all defuns.

@@ -125,7 +125,7 @@
 ;;      cached too.
 ;;
 ;;      In addition the Perl POD manual pages and paths are cached at startup.
-;;      This is derived from *Config.pm* module $Config{privlib}.
+;;      This is derived from *Config.pm* variable $Config{privlib}.
 ;;
 ;;      If you need to change any of the above settings in environment
 ;;      during the session, reload package or call `tinyperl-install' to
@@ -134,7 +134,7 @@
 ;;  Saving TinyPerl state (cache)
 ;;
 ;;      When the package is used for the first time, the Perl `@INC'
-;;      is read and all .pl and .pm files along the path are cached
+;;      is read and all *.pl and *.pm files along the path are cached
 ;;      and written to file pointed by function
 ;;      `tinyperl-cache-file-name'. Next time this package is loaded,
 ;;      the initialization will be faster.
@@ -1091,9 +1091,9 @@ Check variable `exec-path'"
 
 Input:
 
-  CHECK     Check variable: Preserve previous content and set only
+  CHECK     Check variable: preserve previous content and set only
             those that do not have value.
-            if value is 'force, reset variable in all cases.
+            If value is 'force, reset variable in all cases.
 
   VERB      Allow verbose messages
 
@@ -1148,6 +1148,61 @@ tinyperl-:perl-bin Unrecognized. Need Perl 5. [%s]"
 
 ;;; ----------------------------------------------------------------------
 ;;;
+(defun tinyperl-cache-file-name ()
+  "Return Perl version specific cache file.
+
+Don't touch this code unless you know what you're doing.
+
+  We need Emacs specific cache files, because the @INC path
+  names returned by Activestate Perl and Cygwin Perl are different
+  under different Emacs flavors: XEmacs can be built under Cygwin and win32
+  but Emacs understands only DOS paths. .. the matrix is:
+
+  Win32 Cygwin Perl             @INC is unix style => convert to dos for Emacs
+  Win32 Activestate Perl        @INC is DOS style => use as is in Emacs
+
+  XEmacs .. eh, well, that hasn't been tackled yet. The @INC matrix
+  would be:
+
+  ygwin perl + Cygwin XEmacs plays well together
+  ygwin perl + Win32 XEmacs doesn't
+  ctivestate + Cygwin XEmacs doesn't
+  ctivestate + Win32 XEmacs does.
+
+References:
+
+  `tinyperl-:cache-file-prefix'.
+  `tinyperl-:cache-file-postfix'"
+  (concat (if (stringp tinyperl-:cache-file-prefix)
+              (concat tinyperl-:cache-file-prefix "-")
+            "emacs-config")
+          ;; (if (ti::win32-p) "win32-" "unix-")
+          (if (ti::emacs-p)
+              "emacs"
+            "xemacs")
+          "-"
+          (let ((sym (tinyperl-perl-type)))
+            (if sym
+                (symbol-name sym)
+              (error "TinyPerl: Perl type is not known.")))
+          (if (stringp tinyperl-:cache-file-postfix)
+              tinyperl-:cache-file-postfix
+            "")))
+
+;;; ----------------------------------------------------------------------
+;;;
+(defun tinyperl-load-state-if-recent-enough ()
+  "Load `(tinyperl-cache-file-name)'.
+But only if less than `tinyperl-:cache-file-days-old-max'"
+  (interactive)
+  (let ((file (tinyperl-cache-file-name)))
+    (if (and (file-exists-p file)
+             (< (ti::file-days-old file)
+                tinyperl-:cache-file-days-old-max))
+        (tinyperl-save-state 'load 'message))))
+
+;;; ----------------------------------------------------------------------
+;;;
 (defun tinyperl-install-1 (&optional force verb)
   "Install variables.
 You should call `tinyperl-install' or `tinyperl-install-force' instead.
@@ -1159,8 +1214,8 @@ Input:
             If nil, read saved variables from `(tinyperl-cache-file-name)'.
 
   VERB      Allow verbose messaegs."
-  (let* (stat
-         ok)
+  (let (stat
+	ok)
     ;;  The FORCE Flag says that we should start all over, no
     ;;  matter how broken our setup is. In case the unfortunate
     ;;  accident of tinyperl-:perl-bin being in format
@@ -1234,61 +1289,6 @@ Input:
   "Uninstall TinyPerl."
   (interactive)
   (tinyperl-install 'uninstall))
-
-;;; ----------------------------------------------------------------------
-;;;
-(defun tinyperl-cache-file-name ()
-  "Return Perl version specific cache file.
-
-Don't touch this code unless you know what you're doing.
-
-  We need Emacs specific cache files, because the @INC path
-  names returned by Activestate Perl and Cygwin Perl are different
-  under different Emacs flavors: XEmacs can be built under Cygwin and win32
-  but Emacs understands only DOS paths. .. the matrix is:
-
-  Win32 Cygwin Perl             @INC is unix style => convert to dos for Emacs
-  Win32 Activestate Perl        @INC is DOS style => use as is in Emacs
-
-  XEmacs .. eh, well, that hasn't been tackled yet. The @INC matrix
-  would be:
-
-  ygwin perl + Cygwin XEmacs plays well together
-  ygwin perl + Win32 XEmacs doesn't
-  ctivestate + Cygwin XEmacs doesn't
-  ctivestate + Win32 XEmacs does.
-
-References:
-
-  `tinyperl-:cache-file-prefix'.
-  `tinyperl-:cache-file-postfix'"
-  (concat (if (stringp tinyperl-:cache-file-prefix)
-              (concat tinyperl-:cache-file-prefix "-")
-            "emacs-config")
-          ;; (if (ti::win32-p) "win32-" "unix-")
-          (if (ti::emacs-p)
-              "emacs"
-            "xemacs")
-          "-"
-          (let ((sym (tinyperl-perl-type)))
-            (if sym
-                (symbol-name sym)
-              (error "TinyPerl: Perl type is not known.")))
-          (if (stringp tinyperl-:cache-file-postfix)
-              tinyperl-:cache-file-postfix
-            "")))
-
-;;; ----------------------------------------------------------------------
-;;;
-(defun tinyperl-load-state-if-recent-enough ()
-  "Load `(tinyperl-cache-file-name)'.
-But only if less than `tinyperl-:cache-file-days-old-max'"
-  (interactive)
-  (let ((file (tinyperl-cache-file-name)))
-    (if (and (file-exists-p file)
-             (< (ti::file-days-old file)
-                tinyperl-:cache-file-days-old-max))
-        (tinyperl-save-state 'load 'message))))
 
 ;;; ----------------------------------------------------------------------
 ;;;
@@ -3017,25 +3017,26 @@ Input:
            "\\[tinyperl-install-force] to rebuild cache."))))
       ;;  In FEW cases the *.pm file does not contain the documentation,
       ;;  but there is separate *.pod file, E.g POSIX.pm => POSIX.pod
-      (multiple-value-bind (name path)
-          (list (car module) (cdr module))
-        (dolist (elt (list
-                      (replace-regexp-in-string
-                       ".pm" ".pod" name)
-                      name))
-          (setq path
-                (ti::file-make-path
-                 path
-                 ;;  Delete prefix, because (cdr path) will cnotain the
-                 ;;  full directory
-                 ;;
-                 ;;  Getopt::Long.pm --> Long.pm
-                 (replace-regexp-in-string
-                  ".*:" ""
-                  elt)))
-          (when (file-exists-p path)
-            (setq file path)
-            (return))))
+      (let (try)
+	(multiple-value-bind (name path)
+	    (list (car module) (cdr module))
+	  (dolist (elt (list
+			(replace-regexp-in-string
+			 ".pm" ".pod" name)
+			name))
+	    (setq try
+		  (ti::file-make-path
+		   path
+		   ;;  Delete prefix, because (cdr path) will cnotain the
+		   ;;  full directory
+		   ;;
+		   ;;  Getopt::Long.pm --> Long.pm
+		   (replace-regexp-in-string
+		    ".*:" ""
+		    elt)))
+	    (when (file-exists-p try)
+            (setq file try)
+            (return)))))
       (when (or (not file)
                 (not (file-exists-p file)))
         (error "TinyPerl: Cache error, %s does not exist" (car module)))
