@@ -1028,50 +1028,46 @@ must match `^:0'."
 ;;;
 (defmacro tinyprocmail-o (&rest body)
   "Move overlay to point and protect BODY. Overlay is hiddedn after body."
-  (`
-   (unwind-protect
+  `(unwind-protect
        (progn
          (tinyprocmail-overlay (point))
-         (,@ body))
-     (tinyprocmail-overlay-hide))))
+         ,@body)
+     (tinyprocmail-overlay-hide)))
 
 ;;; ----------------------------------------------------------------------
 ;;;
 (defmacro tinyprocmail-output-macro (&rest body)
   "Go to `tinyprocmail-:lint-output-buffer' and do BODY.
 If buffer does not exist, do nothing."
-  (`
-   (let ((buffer (get-buffer tinyprocmail-:lint-output-buffer)))
+  `(let ((buffer (get-buffer tinyprocmail-:lint-output-buffer)))
      (when buffer
        (with-current-buffer buffer
-         (,@ body))))))
+         ,@body))))
 
 ;;; ----------------------------------------------------------------------
 ;;;
 (put 'tinyprocmail-fix-macro 'lisp-indent-function 1)
 (defmacro tinyprocmail-fix-macro (message &rest body)
   "Fix. Display MESSAGE and do BODY."
-  (`
-   (when (or (eq tinyprocmail-:lint-fix-mode 'auto)
+  `(when (or (eq tinyprocmail-:lint-fix-mode 'auto)
              (and (eq tinyprocmail-:lint-fix-mode 'semi)
                   (tinyprocmail-o (y-or-n-p (, message)))))
-     (,@ body))))
+     ,@body))
 
 ;;; ----------------------------------------------------------------------
 ;; fmacro = function create macro
 ;;;
 (defmacro tinyprocmail-fmacro-move (back method)
   "Make move function using BACK and METHOD."
-  (let* ((sym (intern
-               (format "tinyprocmail-%s-%s"
-                       (if back
-                           "backward"
-                         "forward")
-                       (symbol-name   (` (, method)))))))
-    (`
-     (defun (, sym) ()
+  (let ((sym (intern
+	      (format "tinyprocmail-%s-%s"
+		      (if back
+			  "backward"
+			"forward")
+		      (symbol-name   `,method)))))
+    `(defun ,sym ()
        (interactive)
-       (tinyprocmail-forward (quote (, back)) (quote (, method)))))))
+       (tinyprocmail-forward (quote ,back) (quote ,method)))))
 
 ;;}}}
 ;;{{{ misc
@@ -1307,9 +1303,9 @@ Input:
 
 ;;; ----------------------------------------------------------------------
 ;;;
-(defmacro tinyprocmail-flag-string ()
+(defsubst tinyprocmail-flag-string ()
   "Return base flag string."
-  (` "aAeEHBDfhbwWirc:"))
+  "aAeEHBDfhbwWirc:")
 
 ;;; ----------------------------------------------------------------------
 ;;;
