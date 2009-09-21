@@ -863,7 +863,7 @@ to generate updated list."
      tinydebian-:severity-selected
      tinydebian-:tags-list)))
 
-(defconst tinydebian-:version-time "2009.0921.1705"
+(defconst tinydebian-:version-time "2009.0921.1718"
   "Last edited time.")
 
 (defvar tinydebian-:bts-extra-headers
@@ -1283,6 +1283,12 @@ Activate on files whose path matches
 
 ;;; ----------------------------------------------------------------------
 ;;;
+(defsubst tinydebian-kde-bts-url-compose (bug)
+  "Return KDE URL for BUG."
+  (format "https://bugs.kde.org/show_bug.cgi?id=%s" bug))
+
+;;; ----------------------------------------------------------------------
+;;;
 (defsubst tinydebian-debian-bts-url-compose (string)
   "Return Debian URL for STRING.
 String is anything that is attached to
@@ -1397,20 +1403,20 @@ Input:
   PROJECT	String. If needed for the BTS.
 		E.g. code.google.com needs project name."
   (cond
-   ((string-match "debian" bts)
-    (tinydebian-debian-bts-url-compose bug))
-   ((string-match "emacs" bts)
-    (tinydebian-emacs-bts-bug-url-compose bug))
-   ((string-match "launchpad" bts)
-    (tinydebian-launchpad-email-compose bug))
    ((string-match "gnome" bts)
     (tinydebian-gnome-bts-url-compose bug))
-   ((string-match "sourceware" bts)
-    (tinydebian-sourceware-bts-url-compose bug))
+   ((string-match "kde" bts)
+    (tinydebian-kde-bts-url-compose bug))
    ((string-match "sourceware" bts)
     (tinydebian-sourceware-bts-url-compose bug))
    ((string-match "google" bts)
     (tinydebian-google-code-bts-url-compose bug project))
+   ((string-match "launchpad" bts)
+    (tinydebian-launchpad-email-compose bug))
+   ((string-match "emacs" bts)
+    (tinydebian-emacs-bts-bug-url-compose bug))
+   ((string-match "debian" bts)
+    (tinydebian-debian-bts-url-compose bug))
    (t
     (error "Unknown bts `%s'" bts))))
 
@@ -2099,6 +2105,21 @@ Return:
       (if (re-search-forward "https?://bugzilla.gnome.org[^<> \t\r\n]+" nil t)
 	  (match-string-no-properties 0))))))
 
+;; ----------------------------------------------------------------------
+;;;
+(defsubst tinydebian-kde-bug-type-p ()
+  "Check if bug context is KDE."
+  (let ((str (tinydebian-current-line-string)))
+    (cond
+     ((string-match "bugs.kde.org" str)
+      str)
+     (t
+      (goto-char (point-min))
+      (if (or (re-search-forward
+	       "https?://bugs.kde.org/[^<> \t\r\n]+[0-9]+" nil t)
+	      (re-search-forward "\\|https?://bugs.kde.org" nil t))
+	  (match-string-no-properties 0))))))
+
 ;;; ----------------------------------------------------------------------
 ;;;
 (defsubst tinydebian-mysql-bug-type-p ()
@@ -2225,16 +2246,18 @@ Return: '(BTS-TYPE-STRING [BUG NUMBER | URL])."
 	(list "emacs" data))
        ((setq data (tinydebian-sourceforge-bug-type-p))
 	(list "sourceforge" data))
-       ((setq data (tinydebian-launchpad-bug-type-p))
-	(list "launchpad" data))
        ((setq data (tinydebian-gnome-bug-type-p))
 	(list "gnome" data))
+       ((setq data (tinydebian-kde-bug-type-p))
+	(list "kde" data))
        ((setq data (tinydebian-sourceware-bug-type-p))
 	(list "sourceware" data))
        ((setq data (tinydebian-mysql-bug-type-p))
 	(list "mysql" data))
        ((setq data (tinydebian-mercurial-bug-type-p))
 	(list "mercurial" data))
+       ((setq data (tinydebian-launchpad-bug-type-p))
+	(list "launchpad" data))
        ((setq data (tinydebian-debian-bug-bts-type-p))
 	(list "debian" data))))))
 
@@ -2790,11 +2813,11 @@ Article buffers."
 	       ("launchpad" . 2)
 	       ("emacs" . 3)
 	       ("savannah" . 4)
-	       ("gnome" . 4)
-	       ("sourceforge" . 5)
-	       ("sourceware" . 6)
-	       ("mysql" . 7)
-	       ("google" . 8))
+	       ("gnome" . 5)
+	       ("kde" . 6)
+	       ("sourceware" . 7)
+	       ("mysql" . 8)
+	       ("google" . 9))
 	     nil ; predicate
 	     t   ; require-match
 	     bts

@@ -11,6 +11,11 @@
 	(tinydebian-mysql-bug-type-p): New.
 	(tinydebian-bug-bts-type-determine): Add MySQL support.
 	(tinydebian-mysql-bts-url-compose): New.
+	(tinydebian-bts-url-bug-compose): Move debian last.
+	(tinydebian-kde-bug-type-p): New.
+	(tinydebian-kde-bts-url-compose): New.
+	(tinydebian-bts-url-bug-compose): Add KDE.
+	(tinydebian-bug-ask-bts-and-number): Add KDE.
 
 2009-09-20  Jari Aalto  <jari.aalto@cante.net>
 
