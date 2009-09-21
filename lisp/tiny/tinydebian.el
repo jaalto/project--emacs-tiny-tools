@@ -863,7 +863,7 @@ to generate updated list."
      tinydebian-:severity-selected
      tinydebian-:tags-list)))
 
-(defconst tinydebian-:version-time "2009.0920.1000"
+(defconst tinydebian-:version-time "2009.0921.1019"
   "Last edited time.")
 
 (defvar tinydebian-:bts-extra-headers
@@ -1264,6 +1264,13 @@ Activate on files whose path matches
 
 ;;; ----------------------------------------------------------------------
 ;;;
+(defsubst tinydebian-google-code-bts-url-compose (project bug)
+  "Return code.google.com issue URL for PROJECT BUG."
+  (format "http://code.google.com/%s/issues/detail?id=%s"
+	  project bug))
+
+;;; ----------------------------------------------------------------------
+;;;
 (defsubst tinydebian-gnome-bts-url-compose (bug)
   "Return Gnome URL for BUG."
   (format "https://bugzilla.gnome.org/show_bug.cgi?id=%s" bug))
@@ -1375,12 +1382,14 @@ The BTS-TYPE can be:
 
 ;;; ----------------------------------------------------------------------
 ;;;
-(defun tinydebian-bts-url-bug-compose (bts bug)
-  "Compose URLS of BTS and BUG.
+(defun tinydebian-bts-url-bug-compose (bts bug &optional project)
+  "Compose URL.
 Input:
 
-  BUG		string
-  BTS	string: emacs, launchpad, debian"
+  BTS		String: emacs, launchpad, debian, google
+  BUG		String. Nmber.
+  PROJECT	String. If needed for the BTS.
+		E.g. code.google.com needs project name."
   (cond
    ((string-match "debian" bts)
     (tinydebian-debian-bts-url-compose bug))
@@ -1392,6 +1401,10 @@ Input:
     (tinydebian-gnome-bts-url-compose bug))
    ((string-match "sourceware" bts)
     (tinydebian-sourceware-bts-url-compose bug))
+   ((string-match "sourceware" bts)
+    (tinydebian-sourceware-bts-url-compose bug))
+   ((string-match "google" bts)
+    (tinydebian-google-code-bts-url-compose bug project))
    (t
     (error "Unknown bts `%s'" bts))))
 
@@ -2444,6 +2457,7 @@ In Gnus summary buffer, look inside original article."
 		     "bugzilla.*[0-9]"
 		     "\\|launchpad.*[0-9]"
 		     "\\|savannah.*[0-9]"
+		     "\\|issue.*[0-9]"
 		     "\\)")
 	   nil t)
 	  (thing-at-point 'url))
@@ -2744,7 +2758,7 @@ Article buffers."
 
 ;;; ----------------------------------------------------------------------
 ;;;
-(defun tinydebian-bug-ask-bts-and-number (&optional bts nbr)
+(defun tinydebian-bug-ask-bts-and-number (&optional bts nbr project)
   "Ask BTS system and bug number. Return '(BTS NBR)."
   ;; FIXME: Launchpad, Emacs BTS
   (setq bts (completing-read
@@ -2755,28 +2769,34 @@ Article buffers."
 	       ("savannah" . 4)
 	       ("gnome" . 4)
 	       ("sourceforge" . 5)
-	       ("sourceware" . 6))
+	       ("sourceware" . 6)
+	       ("google" . 7))
 	     nil ; predicate
 	     t   ; require-match
 	     bts
 	     nil ; initial-input
 	     nil ; hist
 	     "debian"))
+  (cond
+   ((string= "google" bts)
+    (setq project (read-string "Project name: "))))
   (setq nbr (read-string"bug number: " nbr))
   (when (or (not (stringp nbr))
 	    (not (string-match "[0-9]" nbr)))
     (error "TinyDebian: Error, no bug number given"))
   (list bts
-	nbr))
+	nbr
+	project))
 
 ;;; ----------------------------------------------------------------------
 ;;;
-(defun tinydebian-bug-ask-url-for-bts-and-number (&optional bts nbr)
-  "Ask BTS and NBR. Return URL.
-If BTS and NBR parameters are passed, do not ask, just return URL."
-  (multiple-value-bind (bts nbr)
-      (tinydebian-bug-ask-bts-and-number bts nbr)
-    (tinydebian-bts-url-bug-compose bts nbr)))
+(defun tinydebian-bug-ask-url-for-bts-and-number
+  (&optional bts nbr project)
+  "Ask BTS and NBR and possibly PROJECT. Return URL.
+If parameters are passed, do not ask, just return URL."
+  (multiple-value-bind (bts nbr project)
+      (tinydebian-bug-ask-bts-and-number bts nbr project)
+    (tinydebian-bts-url-bug-compose bts nbr project)))
 
 ;;; ----------------------------------------------------------------------
 ;;;
