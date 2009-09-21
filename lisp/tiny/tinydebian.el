@@ -863,7 +863,7 @@ to generate updated list."
      tinydebian-:severity-selected
      tinydebian-:tags-list)))
 
-(defconst tinydebian-:version-time "2009.0921.1019"
+(defconst tinydebian-:version-time "2009.0921.1705"
   "Last edited time.")
 
 (defvar tinydebian-:bts-extra-headers
@@ -1261,6 +1261,12 @@ Activate on files whose path matches
 (defsubst tinydebian-sourceware-bts-url-compose (bug)
   "Return Gnome URL for BUG."
   (format "http://sourceware.org/bugzilla/show_bug.cgi?id=%s" bug))
+
+;;; ----------------------------------------------------------------------
+;;;
+(defsubst tinydebian-mysql-bts-url-compose (bug)
+  "Return MySQL URL for BUG."
+  (format "http://forge.mysql.com/worklog/task.php?id=%s" bug))
 
 ;;; ----------------------------------------------------------------------
 ;;;
@@ -2076,7 +2082,8 @@ Return:
    (t
     (save-excursion
       (goto-char (point-min))
-      (if (re-search-forward "https?://sourceforge.net/tracker/[^<> \t\r\n]+" nil t)
+      (if (re-search-forward
+	   "https?://sourceforge.net/tracker/[^<> \t\r\n]+" nil t)
 	  (match-string-no-properties 0))))))
 
 ;;; ----------------------------------------------------------------------
@@ -2094,8 +2101,21 @@ Return:
 
 ;;; ----------------------------------------------------------------------
 ;;;
+(defsubst tinydebian-mysql-bug-type-p ()
+  "Check if bug context is MySQL."
+  (let ((str (tinydebian-current-line-string)))
+    (cond
+     ((string-match "forge.mysql.com" str)
+      str)
+     (t
+      (goto-char (point-min))
+      (if (re-search-forward "https?://forge.mysql.com[^<> \t\r\n]+" nil t)
+	  (match-string-no-properties 0))))))
+
+;;; ----------------------------------------------------------------------
+;;;
 (defsubst tinydebian-sourceware-bug-type-p ()
-  "Check if bug context is sourceware (GNU projects; under Redhat bugzilla tracker)."
+  "Check if bug context is sourceware (GNU; under Redhat bugzilla tracker)."
   (let ((str (tinydebian-current-line-string)))
     (cond
      ((string-match "sourceware.*bugzilla[^<> \t\r\n]+\\([0-9]+\\)" str)
@@ -2211,6 +2231,8 @@ Return: '(BTS-TYPE-STRING [BUG NUMBER | URL])."
 	(list "gnome" data))
        ((setq data (tinydebian-sourceware-bug-type-p))
 	(list "sourceware" data))
+       ((setq data (tinydebian-mysql-bug-type-p))
+	(list "mysql" data))
        ((setq data (tinydebian-mercurial-bug-type-p))
 	(list "mercurial" data))
        ((setq data (tinydebian-debian-bug-bts-type-p))
@@ -2458,6 +2480,7 @@ In Gnus summary buffer, look inside original article."
 		     "\\|launchpad.*[0-9]"
 		     "\\|savannah.*[0-9]"
 		     "\\|issue.*[0-9]"
+		     "\\|forge.*[0-9]"
 		     "\\)")
 	   nil t)
 	  (thing-at-point 'url))
@@ -2770,7 +2793,8 @@ Article buffers."
 	       ("gnome" . 4)
 	       ("sourceforge" . 5)
 	       ("sourceware" . 6)
-	       ("google" . 7))
+	       ("mysql" . 7)
+	       ("google" . 8))
 	     nil ; predicate
 	     t   ; require-match
 	     bts

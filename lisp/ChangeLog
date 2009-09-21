@@ -6,6 +6,11 @@
 	`project'.
 	(tinydebian-bug-ask-bts-and-number): Ask project if needed.
 	(tinydebian-bug-url-forward): Add code.google.com support.
+	(tinydebian-bug-url-forward): Add forge.mysql.com support.
+	(tinydebian-bug-ask-bts-and-number): Add MySQL support.
+	(tinydebian-mysql-bug-type-p): New.
+	(tinydebian-bug-bts-type-determine): Add MySQL support.
+	(tinydebian-mysql-bts-url-compose): New.
 
 2009-09-20  Jari Aalto  <jari.aalto@cante.net>
 
