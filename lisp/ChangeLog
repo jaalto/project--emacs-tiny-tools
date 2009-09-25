@@ -1,3 +1,11 @@
+2009-09-25  Jari Aalto  <jari.aalto@cante.net>
+
+	* tiny/tinydebian.el (tinydebian-perl-cpan-bug-type-p): New.
+	(tinydebian-bts-url-bug-compose): Add support for Perl CPAN.
+	(tinydebian-bug-bts-type-determine): Add support for Perl CPAN.
+	(tinydebian-bug-ask-bts-and-number): Add support for Perl CPAN.
+	(tinydebian-bug-url-forward): Add support for Perl CPAN.
+
 2009-09-21  Jari Aalto  <jari.aalto@cante.net>
 
 	* tiny/tinydebian.el (tinydebian-google-code-bts-url-compose): New.

@@ -863,7 +863,7 @@ to generate updated list."
      tinydebian-:severity-selected
      tinydebian-:tags-list)))
 
-(defconst tinydebian-:version-time "2009.0921.1718"
+(defconst tinydebian-:version-time "2009.0925.1000"
   "Last edited time.")
 
 (defvar tinydebian-:bts-extra-headers
@@ -1407,6 +1407,8 @@ Input:
     (tinydebian-gnome-bts-url-compose bug))
    ((string-match "kde" bts)
     (tinydebian-kde-bts-url-compose bug))
+   ((string-match "perl-cpan" bts)
+    (tinydebian-perl-cpan-bts-url-compose bug))
    ((string-match "sourceware" bts)
     (tinydebian-sourceware-bts-url-compose bug))
    ((string-match "google" bts)
@@ -2105,7 +2107,7 @@ Return:
       (if (re-search-forward "https?://bugzilla.gnome.org[^<> \t\r\n]+" nil t)
 	  (match-string-no-properties 0))))))
 
-;; ----------------------------------------------------------------------
+;;; ----------------------------------------------------------------------
 ;;;
 (defsubst tinydebian-kde-bug-type-p ()
   "Check if bug context is KDE."
@@ -2118,6 +2120,21 @@ Return:
       (if (or (re-search-forward
 	       "https?://bugs.kde.org/[^<> \t\r\n]+[0-9]+" nil t)
 	      (re-search-forward "\\|https?://bugs.kde.org" nil t))
+	  (match-string-no-properties 0))))))
+
+;;; ----------------------------------------------------------------------
+;;;
+(defsubst tinydebian-perl-cpan-bug-type-p ()
+  "Check if bug context is RT.CPAN.ORG."
+  (let ((str (tinydebian-current-line-string)))
+    (cond
+     ((string-match "rt.cpan.org" str)
+      str)
+     (t
+      (goto-char (point-min))
+      (if (or (re-search-forward
+	       "https?://rt.cpan.org/[^<> \t\r\n]+[0-9]+" nil t)
+	      (re-search-forward "\\|https?://rt.cpan.org" nil t))
 	  (match-string-no-properties 0))))))
 
 ;;; ----------------------------------------------------------------------
@@ -2240,6 +2257,8 @@ Return: '(BTS-TYPE-STRING [BUG NUMBER | URL])."
   (tinydebian-with-bug-context
     (let (data)
       (cond
+       ((setq data (tinydebian-perl-cpan-bug-type-p))
+	(list "perl-cpan" data))
        ((setq data (tinydebian-savannah-bug-type-bts-p))
 	(list "savannah" data))
        ((setq data (tinydebian-bug-gnu-emacs-bts-buffer-p))
@@ -2504,6 +2523,7 @@ In Gnus summary buffer, look inside original article."
 		     "\\|savannah.*[0-9]"
 		     "\\|issue.*[0-9]"
 		     "\\|forge.*[0-9]"
+		     "\\|rt.cpan.org.*[0-9]"
 		     "\\)")
 	   nil t)
 	  (thing-at-point 'url))
@@ -2815,9 +2835,10 @@ Article buffers."
 	       ("savannah" . 4)
 	       ("gnome" . 5)
 	       ("kde" . 6)
-	       ("sourceware" . 7)
-	       ("mysql" . 8)
-	       ("google" . 9))
+	       ("perl-cpan" . 7)
+	       ("sourceware" . 8)
+	       ("mysql" . 9)
+	       ("google" . 10))
 	     nil ; predicate
 	     t   ; require-match
 	     bts
@@ -2856,6 +2877,7 @@ If parameters are passed, do not ask, just return URL."
 	 (url (multiple-value-bind (bts data)
 		  (tinydebian-bug-bts-type-determine)
 		(if (and url-str
+			 (null data)
 			 (string-match "http" url-str))
 		    (setq data url-str))
 		(cond
