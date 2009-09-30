@@ -1,3 +1,10 @@
+2009-09-30  Jari Aalto  <jari.aalto@cante.net>
+
+	* tiny/tinydebian.el (tinydebian-kde-bug-type-p): Correct typo
+	in regexp.
+	(tinydebian-perl-cpan-bug-type-p): Correct typo
+	in regexp.
+
 2009-09-25  Jari Aalto  <jari.aalto@cante.net>
 
 	* tiny/tinydebian.el (tinydebian-perl-cpan-bug-type-p): New.

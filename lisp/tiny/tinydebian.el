@@ -2119,7 +2119,7 @@ Return:
       (goto-char (point-min))
       (if (or (re-search-forward
 	       "https?://bugs.kde.org/[^<> \t\r\n]+[0-9]+" nil t)
-	      (re-search-forward "\\|https?://bugs.kde.org" nil t))
+	      (re-search-forward "https?://bugs.kde.org" nil t))
 	  (match-string-no-properties 0))))))
 
 ;;; ----------------------------------------------------------------------
@@ -2134,7 +2134,7 @@ Return:
       (goto-char (point-min))
       (if (or (re-search-forward
 	       "https?://rt.cpan.org/[^<> \t\r\n]+[0-9]+" nil t)
-	      (re-search-forward "\\|https?://rt.cpan.org" nil t))
+	      (re-search-forward "https?://rt.cpan.org" nil t))
 	  (match-string-no-properties 0))))))
 
 ;;; ----------------------------------------------------------------------
