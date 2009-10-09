@@ -1,3 +1,51 @@
+2009-10-09  Jari Aalto  <jari.aalto@cante.net>
+
+	* tiny/tinyirc.el (tinyirc-:pastebot-config-default-content):
+	Update servers.
+
+	* tiny/tinyeat.el:
+	(tinyeat-install-default-bindings): Change M-y to non-conflicting
+	key C-S-y.
+
+2009-10-08  Jari Aalto  <jari.aalto@cante.net>
+
+	* tiny/tinydebian.el (tinydebian-bts-mail-ctrl-retitle): Adjust
+	Subject to announce 'Bug' as the first word.
+	(tinydebian-bts-mail-ctrl-fixed): Adjust
+	Subject to announce 'Bug' as the first word.
+	(tinydebian-bts-mail-ctrl-found): Adjust
+	Subject to announce 'Bug' as the first word.
+	(tinydebian-bts-mail-ctrl-merge): Adjust
+	Subject to announce 'Bug' as the first word.
+	(tinydebian-bts-mail-ctrl-clone): Adjust
+	Subject to announce 'Bug' as the first word.
+	(tinydebian-bts-mail-ctrl-affects): Adjust
+	Subject to announce 'Bug' as the first word.x
+	(tinydebian-bts-mail-ctrl-forward-bts): Remove word Debian.
+
+2009-10-06  Jari Aalto  <jari.aalto@cante.net>
+
+	* tiny/tinydebian.el (tinydebian-:launchpad-url-http-package-bugs):
+	Change URL to include %s for package and %s for bug number.
+	(tinydebian-launchpad-url-package-bugs): Add parameter PACKAGE.
+	(tinydebian-launchpad-bug-type-p): Remove unreliable `gnus-summary-mode'
+	check.
+	(tinydebian-launchpad-bug-type-p): Rewrite everything. Return URL.
+	(tinydebian-bug-nbr-debian-url-forward): Improve regexp.
+	(tinydebian-buffer-match-string): Rename parameter start to point.
+	Use `tinydebian-bug-nbr-mime-clean'.
+	(tinydebian-bug-nbr-mime-clean): New.
+	(tinydebian-debian-bug-bts-type-p): Clean MIME from bug number.
+
+2009-10-04  Jari Aalto  <jari.aalto@cante.net>
+
+	* tiny/tinydebian.el (tinydebian-bts-mode): Add
+	`tinydebian-bts-mail-ctrl-remove-package'.
+	New.
+	(tinydebian-bts-mail-ctrl-remove-package-ask): New.
+	(tinydebian-bts-parse-string-with-package): Add support for ROM
+	subjects.
+
 2009-09-30  Jari Aalto  <jari.aalto@cante.net>
 
 	* tiny/tinydebian.el (tinydebian-kde-bug-type-p): Correct typo
