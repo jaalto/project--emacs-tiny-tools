@@ -54,7 +54,7 @@
 ;;      (autoload 'tinyeat-kill-buffer-lines-point-max "tinyeat" "" t)
 ;;      (autoload 'tinyeat-kill-buffer-lines-point-min "tinyeat" "" t)
 ;;
-;;      (global-set-key "\M-y"                'tinyeat-yank-overwrite)
+;;      (global-set-key "\C-S-y"              'tinyeat-yank-overwrite)
 ;;      (global-set-key "\M-k"                'tinyeat-kill-line-backward)
 ;;      (global-set-key "\C-\M-k"             'tinyeat-zap-line)
 ;;
@@ -113,7 +113,7 @@
 ;;          S-backspace     <none>          tinyeat-delete-whole-word  (*)
 ;;          C-M-d           down-list       tinyeat-delete-paragraph
 ;;          C-M-k           kill-sexp       tinyeat-zap-line
-;;          M-y             yank-pop        tinyeat-yank-overwrite
+;;          C-S-y           yank-pop        tinyeat-yank-overwrite (*)
 ;;
 ;;  Story behind this package
 ;;
@@ -328,8 +328,7 @@ Normally word is terminated by whitespace or newlines."
   ;; was kill-sexp
   (global-set-key "\C-\M-k"               'tinyeat-zap-line)
 
-  ;; was `yank-pop'
-  (global-set-key "\M-y"                  'tinyeat-yank-overwrite)
+  (global-set-key "\C-S-y"                'tinyeat-yank-overwrite)
 
   ;;  was `kill-word'
   (global-set-key "\M-d"                  'tinyeat-forward-preserve)
