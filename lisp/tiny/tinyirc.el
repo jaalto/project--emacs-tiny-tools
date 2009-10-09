@@ -602,13 +602,15 @@ name none
 url http://nopaste.snit.ch/
 channel #none
 
-name pastebot
-url http://www.pastebot.net/
-channel #none
+# FIXME; Interface problems?
+# name pastebot
+# url http://www.pastebot.net/
+# channel #none
 
-name pastebin-ca
-url http://pastebin.ca/
-channel ''
+# FIXME; Not a pastebot server
+# name pastebin-ca
+# url http://pastebin.ca/
+# channel ''
 
 # End of file
 "
