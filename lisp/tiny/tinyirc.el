@@ -613,7 +613,8 @@ channel ''
 # End of file
 "
         tinyirc-:pastebot-config-directory
-        tinyirc-:pastebot-program)
+        (or tinyirc-:pastebot-program
+	    "pbotutil.pl"))
   "Default content for `tinyirc-pastebot-install-example-servers'.
 See also `tinyirc-:pastebot-config-directory'.")
 
