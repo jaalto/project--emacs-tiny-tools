@@ -37,9 +37,7 @@
 ;;
 ;; Requirements:
 ;;
-;; o    Only paste services that use de facto
-;;      <http://sourceforge.net/projects/pastebot> servers
-;;      are supported.
+;; o    Only supports <freshmeat.net/projects/pastebot> services.
 ;; o    Perl must have been installed
 ;; o    External program pbotutil.pl must have been installed
 ;;      See `tinyirc-:pastebot-program-url'.
@@ -243,7 +241,7 @@
 ;;      pages. There should be a form to where to submit a message.
 ;;      Couple of services at the time of writing existed:
 ;;
-;;          http://dragon.cbi.tamucc.edu:8080
+;;          http://www.pastebot.net/
 ;;          http://sial.org/pbot/
 ;;          http://pastebin.ca/
 ;;          http://paste.lisp.org/
@@ -577,28 +575,23 @@ modified, function `tinyirc-pastebot-service-list-set'.")
 
 # irc.freenode.net
 name debian
-url http://channels.debian.net/paste/
+url http://oaste.debian.net/
 channel #debian
 
 # irc.freenode.net
 name flood
-url http://channels.debian.net/paste/
+url http://oaste.debian.net/
 channel #flood
 
 # irc.freenode.net
 name perl
-url http://dragon.cbi.tamucc.edu:8080/
+url http://nopaste.snit.ch/
 channel #perl
 
 # irc.freenode.net (backup)
 name perl2
-url http://sial.org/pbot
+url http://nopaste.snit.ch/
 channel #perl
-
-# Perl channel backup
-name perl2
-url http://nopaste.snit.ch:8000/
-channel #perl-help
 
 # Services for channels that do not have particular support for
 # PasteBot. Simply announce the url in the #channel with command:
@@ -606,18 +599,14 @@ channel #perl-help
 #    /me [pastebot] <URL>
 
 name none
-url http://sial.org/pbot
+url http://nopaste.snit.ch/
 channel #none
 
-name nopaste
-url http://rafb.net/paste/
+name pastebot
+url http://www.pastebot.net/
 channel #none
 
-name sial
-url http://sial.org:8888/
-channel ''
-
-name pastebin
+name pastebin-ca
 url http://pastebin.ca/
 channel ''
 
