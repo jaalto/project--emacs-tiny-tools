@@ -46,8 +46,8 @@
 ;;
 ;;   or use autoload and your $HOME/.emacs starts faster
 ;;
-;;      (global-set-key "\C-x)" 'tinymacro-end-kbd-macro-and-assign)
 ;;      (autoload 'tinymacro-end-kbd-macro-and-assign  "tinymacro" "" t)
+;;      (global-set-key "\C-x)" 'tinymacro-end-kbd-macro-and-assign)
 ;;
 ;;   If you have any questions, feedback, use this function
 ;;
@@ -67,8 +67,7 @@
 ;;      gnu.emacs.help post asked for easy way to assign newly created
 ;;      macro to some key. In reponse the author sent a simple function to do
 ;;      it, but he informaed that one macro, which was recycled every time,
-;;      was too little. Author started modifying code more, and that was
-;;      the birth of this package.
+;;      was too little. That little function was start of this package.
 ;;
 ;; Description
 ;;
