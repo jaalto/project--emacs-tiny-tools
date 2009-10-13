@@ -1,3 +1,11 @@
+2009-10-13  Jari Aalto  <jari.aalto@cante.net>
+
+	* tiny/tinyeat.el (tinyeat-install-default-bindings): Use `kbd'
+	for C-S-y.
+
+	* tiny/tinydebian.el (tinydebian-bts-mode): Correct
+	binding to `tinydebian-bts-mail-ctrl-remove-package'.
+
 2009-10-09  Jari Aalto  <jari.aalto@cante.net>
 
 	* tiny/tinyirc.el (tinyirc-:pastebot-config-default-content):
