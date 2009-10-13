@@ -865,7 +865,7 @@ to generate updated list."
      tinydebian-:severity-selected
      tinydebian-:tags-list)))
 
-(defconst tinydebian-:version-time "2009.1008.1903"
+(defconst tinydebian-:version-time "2009.1013.1536"
   "Last edited time.")
 
 (defvar tinydebian-:bts-extra-headers
@@ -993,7 +993,9 @@ Mode description:
 
    (progn
 
-     (define-key map  "b"  'tinydebian-bug-browse-url-main) ;; tinydebian-bug-browse-url-by-bug
+     ;; Replaces tinydebian-bug-browse-url-by-bug
+     (define-key map  "b"  'tinydebian-bug-browse-url-main)
+
      (define-key map  "B"  'tinydebian-bug-browse-url-by-package-bugs)
      (define-key map  "M"  'tinydebian-bug-report-mail)
      (define-key map  "p"  'tinydebian-bug-browse-url-by-package-name)
@@ -1055,7 +1057,7 @@ Mode description:
      (define-key map  "co"  'tinydebian-bts-mail-ctrl-reopen)
      (define-key map  "cr"  'tinydebian-bts-mail-ctrl-reassign)
      (define-key map  "cR"  'tinydebian-bts-mail-ctrl-retitle)
-     (define-key map  "\C-r" tinydebian-bts-mail-ctrl-remove-package)
+     (define-key map  "\C-r" 'tinydebian-bts-mail-ctrl-remove-package)
      (define-key map  "cs"  'tinydebian-bts-mail-ctrl-severity)
      (define-key map  "ct"  'tinydebian-bts-mail-ctrl-tags)
      (define-key map  "cT"  'tinydebian-bts-mail-ctrl-usertag)
