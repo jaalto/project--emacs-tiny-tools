@@ -328,7 +328,7 @@ Normally word is terminated by whitespace or newlines."
   ;; was kill-sexp
   (global-set-key "\C-\M-k"               'tinyeat-zap-line)
 
-  (global-set-key "\C-S-y"                'tinyeat-yank-overwrite)
+  (global-set-key (kbd "C-S-y")           'tinyeat-yank-overwrite)
 
   ;;  was `kill-word'
   (global-set-key "\M-d"                  'tinyeat-forward-preserve)
