@@ -865,7 +865,7 @@ to generate updated list."
      tinydebian-:severity-selected
      tinydebian-:tags-list)))
 
-(defconst tinydebian-:version-time "2009.1013.1536"
+(defconst tinydebian-:version-time "2009.1018.1055"
   "Last edited time.")
 
 (defvar tinydebian-:bts-extra-headers
@@ -950,6 +950,7 @@ Mode description:
      ["Send BTS Ctrl forwarded"    tinydebian-bts-mail-ctrl-forwarded-main  t]
      ["Send BTS Ctrl fixed"        tinydebian-bts-mail-ctrl-fixed    t]
      ["Send BTS Ctrl notfixed"     tinydebian-bts-mail-ctrl-notfixed t]
+     ["Send BTS Ctrl noowner"      tinydebian-bts-mail-ctrl-noowner  t]
      ["Send BTS Ctrl found"        tinydebian-bts-mail-ctrl-found    t]
      ["Send BTS Ctrl notfound"     tinydebian-bts-mail-ctrl-notfound t]
      ["Send BTS Ctrl merge"        tinydebian-bts-mail-ctrl-merge    t]
@@ -1061,6 +1062,7 @@ Mode description:
      (define-key map  "cs"  'tinydebian-bts-mail-ctrl-severity)
      (define-key map  "ct"  'tinydebian-bts-mail-ctrl-tags)
      (define-key map  "cT"  'tinydebian-bts-mail-ctrl-usertag)
+     (define-key map  "cW"  'tinydebian-bts-mail-ctrl-noowner)
      (define-key map  "cx"  'tinydebian-bts-mail-ctrl-fixed)
      (define-key map  "cX"  'tinydebian-bts-mail-ctrl-notfixed)
 
@@ -4779,6 +4781,24 @@ RoQA    Package removal - Requested by the QA team."
    (let (point)
      (insert (format "notfixed %s %s" bug version))
      (setq point (point))
+     (insert "\nthanks\n")
+     (goto-char point))))
+
+;;; ----------------------------------------------------------------------
+;;;
+(defun tinydebian-bts-mail-ctrl-noowner (bug)
+  "Compose BTS control message to mark BUG noowner."
+  (interactive
+   (list
+    (tinydebian-bts-mail-ask-bug-number)))
+  (tinydebian-bts-mail-type-macro
+      nil nil nil
+      (format "Bug#%s status change - noowner" bug)
+   (let (point)
+     (insert (format "noowner %s" bug))
+     (setq point (point))
+     (if tinydebian-:novice-mode
+	 (insert "<explain reason, remember also to 'retitle' as needed>"))
      (insert "\nthanks\n")
      (goto-char point))))
 
