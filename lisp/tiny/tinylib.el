@@ -7180,9 +7180,20 @@ Input:
   (let* ((fn     (file-name-nondirectory file))
          (regexp (concat
                   "^(\\("
-                  "defun\\|defmacro\\|defsubst"
-                  "\\|defun-maybe\\|defsubst-maybe\\|defmacro-maybe"
+                  "defun"
+		  "\\|defmacro"
+		  "\\|defsubst"
+                  "\\|defun-maybe"
+		  "\\|defsubst-maybe"
+		  "\\|defmacro-maybe"
+		  "\\|define-compilation-mode"
+		  "\\|define-derived-mode"
+		  "\\|define-generic-mode"
+		  "\\|define-global-minor-mode"
+		  "\\|define-globalized-minor-mode"
 		  "\\|define-minor-mode"
+		  "\\|easy-mmode-define-global-mode"
+		  "\\|easy-mmode-define-minor-mode"
                   "\\)"
                   "[ \t]+\\([^ \t\n(]+\\)[ \t]*"))
          list
