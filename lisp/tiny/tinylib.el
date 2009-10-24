@@ -7171,7 +7171,7 @@ Note:
 
 Input:
 
-  FILE      Lisp .el to read
+  FILE      Emasc Lisp file to read
   BUFFER    Where to insert autoloads.
   NO-SHOW   Do not show autoload buffer
   NO-DESC   Do not include function description comments
