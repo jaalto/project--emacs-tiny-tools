@@ -7181,9 +7181,8 @@ Input:
          (regexp (concat
                   "^(\\("
                   "defun\\|defmacro\\|defsubst"
-                  ;; SEMI poe.el
                   "\\|defun-maybe\\|defsubst-maybe\\|defmacro-maybe"
-
+		  "\\|define-minor-mode"
                   "\\)"
                   "[ \t]+\\([^ \t\n(]+\\)[ \t]*"))
          list
