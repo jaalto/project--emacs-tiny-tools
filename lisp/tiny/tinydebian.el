@@ -2898,7 +2898,8 @@ Article buffers."
 	       ("perl-cpan" . 7)
 	       ("sourceware" . 8)
 	       ("mysql" . 9)
-	       ("google" . 10))
+	       ("google" . 10)
+	       ("freshmeat" . 11))
 	     nil ; predicate
 	     t   ; require-match
 	     bts
@@ -2906,7 +2907,7 @@ Article buffers."
 	     nil ; hist
 	     "debian"))
   (cond
-   ((string= "google" bts)
+   ((string= "google\\|freshmeat" bts)
     (setq project (read-string "Project name: "))))
   (setq nbr (read-string"bug number: " nbr))
   (when (or (not (stringp nbr))
@@ -2936,7 +2937,9 @@ If parameters are passed, do not ask, just return URL."
 	 (url-str (tinydebian-bug-url-forward))
 	 (url (multiple-value-bind (bts data)
 		  (tinydebian-bug-bts-type-determine)
-		(if (and (null data)
+		(if (and (or (null data)
+			     (and (stringp data)
+				  (not (string-match "http" data))))
 			 url-str
 			 (string-match "http" url-str))
 		    (setq data url-str))
