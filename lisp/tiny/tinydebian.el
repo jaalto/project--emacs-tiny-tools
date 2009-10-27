@@ -2141,6 +2141,22 @@ Return:
 
 ;;; ----------------------------------------------------------------------
 ;;;
+(defsubst tinydebian-freshmeat-bug-type-p ()
+  "Check if bug context is Freshmeat."
+  (let ((str (tinydebian-current-line-string)))
+    (cond
+     ((string-match "freshmeat.net" str)
+      str)
+     (t
+      (goto-char (point-min))
+      (if (or (re-search-forward
+	       ;;  http://freshmeat.net/projects/wcd#release_307159
+	       "https?://freshmeat.net/[^<> \t\r\n]+[0-9][0-9][0-9]+" nil t)
+	      (re-search-forward "https?://rt.cpan.org" nil t))
+	  (match-string-no-properties 0))))))
+
+;;; ----------------------------------------------------------------------
+;;;
 (defsubst tinydebian-perl-cpan-bug-type-p ()
   "Check if bug context is RT.CPAN.ORG."
   (let ((str (tinydebian-current-line-string)))
@@ -2280,6 +2296,8 @@ Return: '(BTS-TYPE-STRING [BUG NUMBER | URL])."
   (tinydebian-with-bug-context
     (let (data)
       (cond
+       ((setq data (tinydebian-freshmeat-bug-type-p))
+	(list "freshmeat" data))
        ((setq data (tinydebian-perl-cpan-bug-type-p))
 	(list "perl-cpan" data))
        ((setq data (tinydebian-savannah-bug-type-bts-p))
@@ -2487,7 +2505,7 @@ If optional REGEXP is sebt, it must take number in submatch 1."
 	     ;; This URL contatains "mime" 3D escape
 	     ;; http://bugs.debian.org/cgi-bin/bugreport.cgi?bug=3D515275
 	     "\\|http://bugs\\.debian\\.org/.*bug=\\([0-9][^ \t\r\n]+\\)"))))
-    (tinydebian-bug-nbr-mime-clean bug)))
+    (tinydebian-bug-nbr-mime-clean str)))
 
 ;;; ----------------------------------------------------------------------
 ;;;
@@ -2554,13 +2572,14 @@ In Gnus summary buffer, look inside original article."
 	 ((string-match "http://" (tinydebian-current-line-string))
 	  (thing-at-point 'url))
 	 ((re-search-forward
-	   `,(concat "https?://.*\\("
-		     "bugzilla.*[0-9]"
-		     "\\|launchpad.*[0-9]"
-		     "\\|savannah.*[0-9]"
-		     "\\|issue.*[0-9]"
-		     "\\|forge.*[0-9]"
-		     "\\|rt.cpan.org.*[0-9]"
+	   `,(concat "https?://[^ \t\r\n]*"
+		     "\\(bugzilla[^ \t\r\n]+[0-9]"
+		     "\\|launchpad[^ \t\r\n]+[0-9]"
+		     "\\|savannah[^ \t\r\n]+[0-9]"
+		     "\\|issue[^ \t\r\n]+[0-9]"
+		     "\\|forge[^ \t\r\n]+[0-9]"
+		     "\\|rt.cpan.org[^ \t\r\n]+[0-9]"
+		     "\\|freshmeat.net[^ \t\r\n]+[0-9][0-9][0-9]"
 		     "\\)")
 	   nil t)
 	  (thing-at-point 'url))
