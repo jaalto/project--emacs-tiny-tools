@@ -373,11 +373,12 @@
 ;;                    tinylisp-autoload-quick-build-interactive-from-file))" \
 ;;          file.el ...
 ;;
-;;      Following function are also available for `-f' command line option:
+;;      Following function are also available for command line option `-f'
 ;;
 ;;	    tinylisp-batch-autoload-quick-build-from-file
 ;;	    tinylisp-batch-autoload-quick-build-interactive-from-file
 ;;          tinylisp-batch-autoload-generate-loaddefs-file
+;;          tinylisp-batch-autoload-generate-loaddefs-dir
 ;;
 ;;  Todo section
 ;;
@@ -4903,29 +4904,27 @@ Can't find _defined_ variable or function on the line (eval buffer first).")
 ;;;
 (defun tinylisp-autoload-real-directories (list)
   "Examine LIST and return directories.
-Dor and version control directories are filtered out."
-  (let (ret)
+Dot-dirs and version control directories are filtered out."
+  (let ((re `,(concat
+	       "[/\\]\\.+$\\|CVS\\|RCS\\|_MTN"
+	       "\\|\\.\\(svn\\|bzr\\|hg\\|git\\|darcs\\|mtn\\)"))
+	ret)
     (dolist (elt list)
       (when (and (file-directory-p elt)
                  ;;  Drop . ..
-                 (not (string-match
-                       "[/\\]\\.+$\\|CVS\\|RCS\\|_MTN"
-                       elt)))
+                 (not (string-match re elt)))
         (push elt ret)))
     ret))
 
 ;;; ----------------------------------------------------------------------
 ;;;
+(put 'tinylisp-with-command-line 'lisp-indent-function 0)
+(put 'tinylisp-with-command-line 'edebug-form-spec '(body))
 (defmacro tinylisp-with-command-line (&rest body)
-  "For each command line file, run BODY. Varibale `file' is bound."
+  "Loop `command-line-args-left', run BODY. Variable `item' is bound."
   `(let ((debug-on-error t))
-     (dolist (file command-line-args-left)
-       (cond
-	((and (not (file-directory-p file))
-	      (file-exists-p file))
-	 ,@body)
-	(t
-	 (message "[ERROR] Not a file %s" file))))))
+     (dolist (item command-line-args-left)
+       ,@body)))
 
 ;;; ----------------------------------------------------------------------
 ;;;
@@ -4933,7 +4932,7 @@ Dor and version control directories are filtered out."
   "Return 'provide and optional END of the file marker."
   (concat
    (format
-    "\n\n(provide '%s)\n\n"
+    "(provide '%s)\n"
     (file-name-sans-extension (file-name-nondirectory file)))
    (if end
        (format ";; End of file %s\n"
@@ -5136,22 +5135,27 @@ In interactive mode, the DEST is FILE-loaddefs.el and VERB mode is t."
 
 ;;; ----------------------------------------------------------------------
 ;;;
-(defun tinylisp-batch-autoload-generate-loaddefs-file ()
-  "Call `tinylisp-autoload-write-loaddefs-file'
-for `command-line-args-left'."
+(defun tinylisp-batch-autoload-generate-loaddefs-file (&optional suffix)
+  "Call `tinylisp-autoload-write-loaddefs-file' for `command-line-args-left'.
+Add optional SUFFIX to the files. Default value is 'loaddefs' resulting
+a 'filename-loaddefs.el'"
   (tinylisp-with-command-line
    (tinylisp-autoload-write-loaddefs-file
-    file
-    (tinylisp-file-name-add-suffix file "loaddefs")
+    item
+    (tinylisp-file-name-add-suffix item (or suffix "loaddefs"))
     'verbose)))
 
 ;;; ----------------------------------------------------------------------
 ;;;
-(defun tinylisp-autoload-generate-loaddefs-file-list (list &optional verb)
-  "Generate loaddefs for LIST of files. VERB."
+(defun tinylisp-autoload-generate-loaddefs-file-list
+  (list &optional suffix verb)
+  "Generate loaddefs for LIST of files.
+Add optional SUFFIX and display nmessages if VERB is non-nil."
   (let (dest)
     (dolist (file list)
-      (setq dest (tinylisp-file-name-add-suffix file "loaddefs"))
+      (setq dest (tinylisp-file-name-add-suffix
+		  file
+		  (or suffix "loaddefs")))
       (tinylisp-autoload-write-loaddefs-file file dest verb))))
 
 ;;; ----------------------------------------------------------------------
@@ -5172,6 +5176,16 @@ If VERB is non-nil, display verbose messages."
       (tinylisp-autoload-generate-loaddefs-file-list
        list
        (or verb (interactive-p))))))
+
+;;; ----------------------------------------------------------------------
+;;;
+(defun tinylisp-batch-autoload-generate-loaddefs-dir (&optional exclude)
+  "Call `tinylisp-autoload-generate-loaddefs-dir' for `command-line-args-left'.
+Optionally EXCLUDE files by regexp."
+  (tinylisp-with-command-line
+   (tinylisp-autoload-generate-loaddefs-dir
+    item
+    exclude)))
 
 ;;; ----------------------------------------------------------------------
 ;;;
@@ -5204,8 +5218,16 @@ If VERB is non-nil, display verbose messages."
 
 ;;; ----------------------------------------------------------------------
 ;;;
-(defun tinylisp-autoload-quick-build-from-file-1 (file dest)
-  "Generate autoload from FILE to DEST."
+(defun tinylisp-autoload-quick-build-from-file-1
+  (file dest &optional provide footer)
+  "Generate autoload from FILE to DEST.
+
+Input:
+
+  FILE	    Examine FILE.
+  DEST	    Write autoloads to DEST.
+  PROVIDE   If non-nil, write `provide' statement.
+  FOOTER    If non-nil, write 'End of ...' footer."
   (with-temp-buffer
     (tinylisp-with-file-env-macro
      (ti::package-autoload-create-on-file
@@ -5214,15 +5236,25 @@ If VERB is non-nil, display verbose messages."
       'no-show
       'no-desc
       'no-path)
-     (insert (tinypath-tmp-autoload-file-footer dest 'eof))
+     (if provide
+	 (insert (tinypath-tmp-autoload-file-footer dest footer)))
      (write-region (point-min) (point-max) dest))
     dest))
 
 ;;; ----------------------------------------------------------------------
 ;;;
 ;;;###autoload
-(defun tinylisp-autoload-quick-build-from-file (file &optional dest verb)
-  "Generate autoload from FILE to DEST"
+(defun tinylisp-autoload-quick-build-from-file
+  (file &optional dest provide footer verb)
+  "Generate autoload from FILE to DEST
+
+Input:
+
+  FILE	    Read FILE
+  DEST	    Destination file. Default is FILE-autoloads
+  PROVIDE   If non-nil, write `provide' statement.
+  FOOTER    If non-nil, write 'End of ...' footer.
+  VERB	    Enable verbose messages."
   (interactive
    (let* ((path  (buffer-file-name))
 	  (dir   (and path
@@ -5238,7 +5270,7 @@ If VERB is non-nil, display verbose messages."
 		      (file-name-nondirectory path))))
      (if (string= "" file)
 	 (error "No file name"))
-     (setq dest (tinylisp-file-name-add-suffix file "autoloads-plain"))
+     (setq dest (tinylisp-file-name-add-suffix file "autoloads"))
      (setq dest (read-file-name
 		 "Autoloads write: "
 		 (file-name-directory dest)
@@ -5251,27 +5283,46 @@ If VERB is non-nil, display verbose messages."
       file
       dest
       'verbose)))
-  (tinylisp-autoload-quick-build-from-file-1 file dest))
+  (unless (stringp dest)
+    (setq dest (tinylisp-file-name-add-suffix file "autoloads")))
+  (tinylisp-autoload-quick-build-from-file-1'
+   file dest provide footer))
 
 ;;; ----------------------------------------------------------------------
 ;;;
-(defun tinylisp-batch-autoload-quick-build-from-file ()
-  "Call `tinylisp-autoload-quick-build-from-file-1'.
-for `command-line-args-left'."
+(defun tinylisp-batch-autoload-quick-build-from-file
+  (&optional suffix provide footer)
+  "Call `tinylisp-autoload-quick-build-from-file-1'
+Read file list from `command-line-args-left'.
+
+Input:
+
+  SUFFIX    Destination file suffix. default is *-autoloads
+  PROVIDE   If non-nil, write `provide' statement.
+  FOOTER    If non-nil, write 'End of ...' footer."
   (tinylisp-with-command-line
    (tinylisp-autoload-quick-build-from-file-1
-    file
+    item
     (tinylisp-file-name-add-suffix
-     file
-     "autoloads-plain")
-    'verbose)))
+     item
+     (or suffix "autoloads"))
+    provide
+    footer)))
 
 ;;; ----------------------------------------------------------------------
 ;;;
 ;;;###autoload
 (defun tinylisp-autoload-quick-build-interactive-from-file
-  (file &optional dest verb)
-  "Collect interactive defuns from FILE. Optionally write to DEST, VERB."
+  (file &optional dest provide footer verb)
+"Read file list from `command-line-args-left'.
+Collect interactive defuns.
+
+Input:
+
+  SUFFIX    Destination file suffix. default is *-autoloads
+  PROVIDE   If non-nil, write `provide' statement.
+  FOOTER    If non-nil, write 'End of ...' footer.
+  VERB      If non-nil, write verbose messages."
   (interactive
    (let* ((path  (buffer-file-name))
 	  (dir   (and path
@@ -5289,7 +5340,7 @@ for `command-line-args-left'."
 	 (error "No file name"))
      (setq dest (tinylisp-file-name-add-suffix
 		 file
-		 "autoloads-plain-interactive"))
+		 "autoloads-interactive"))
      (setq dest (read-file-name
 		 "Autoloads write [RET = none]: "
 		 (file-name-directory dest)
@@ -5310,7 +5361,8 @@ for `command-line-args-left'."
      (dest
       (with-temp-buffer
 	(insert str)
-	(insert (tinypath-tmp-autoload-file-footer dest 'eof))
+	(if provide
+	    (insert (tinypath-tmp-autoload-file-footer provide footer)))
 	(write-region (point-min) (point-max) dest)))
      (t
       (with-current-buffer (tinylisp-get-buffer-create tinylisp-:buffer-autoload)
@@ -5321,15 +5373,18 @@ for `command-line-args-left'."
 
 ;;; ----------------------------------------------------------------------
 ;;;
-(defun tinylisp-batch-autoload-quick-build-interactive-from-file ()
+(defun tinylisp-batch-autoload-quick-build-interactive-from-file
+  (&optional provide footer)
   "Call `tinylisp-autoload-quick-build-interactive-from-file'
 for `command-line-args-left'."
   (tinylisp-with-command-line
    (tinylisp-autoload-quick-build-interactive-from-file
-    file
+    item
     (tinylisp-file-name-add-suffix
-     file
-     "autoloads-plain-interactive")
+     item
+     "autoloads-interactive")
+    provide
+    footer
     'verbose)))
 
 ;;; ----------------------------------------------------------------------
