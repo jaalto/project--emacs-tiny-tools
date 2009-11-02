@@ -7180,8 +7180,8 @@ Input:
   (let* ((fn     (file-name-nondirectory file))
          (regexp (concat
                   "^(\\("
-                  "defun"
-		  "\\|defmacro"
+                  "defun[*]?"
+		  "\\|defmacro[*]?"
 		  "\\|defsubst"
                   "\\|defun-maybe"
 		  "\\|defsubst-maybe"
@@ -7199,6 +7199,7 @@ Input:
          list
          args
          func
+	 match
          type
          str
          iact
@@ -7221,18 +7222,18 @@ Input:
           (if emacs-lisp-mode-hook  ;; Quiet ByteCompiler "unused var"
               (setq emacs-lisp-mode-hook nil))
           (emacs-lisp-mode)))
-      (ti::append-to-buffer
-       buffer
-       (format "\n;; %s\n" (file-name-nondirectory file)))
       (unless no-path
+	(ti::append-to-buffer
+	 buffer
+	 (format ";; %s\n" (file-name-nondirectory file)))
         (ti::append-to-buffer
          buffer
          (format ";; %s\n" file)))
-      (ti::append-to-buffer buffer "\n")
       (ti::pmin)
       (while (re-search-forward regexp nil t)
         (setq iact nil                  ;interactive flag
               args nil
+	      match (match-string 0)
               type (match-string 1)
               func (match-string 2))
         (when (and func
@@ -7250,10 +7251,11 @@ Input:
 			 (subst-char-in-string
 			  ;;  Convert multiline args to one line.
 			  ?\n ?\ (buffer-substring point (point)) ))))))
-        (if (re-search-forward
-             "[ \t\n]+([ \t]*interactive"
-             (save-excursion (end-of-defun) (point))
-             t)
+        (if (or (string-match "define.*mode" type)
+		(re-search-forward
+		 "[ \t\n]+([ \t]*interactive"
+		 (save-excursion (end-of-defun) (point))
+		 t))
             (setq iact "t"))
         (cond
          ((null args)
