@@ -4,7 +4,7 @@
 #
 #   File id
 #
-#       Copyright (C) 2000-2009 Jari Aalto
+#       Copyright (C) 2000-2010 Jari Aalto
 #
 #       This program is free software; you can redistribute it and/or
 #       modify it under the terms of the GNU General Public License as
@@ -25,25 +25,14 @@
 #
 #   Documentation
 #
-#       This program will update the year part of the copyright line.
-#
-#           Copyright (C)       2000-2008
-#
-#       =>
-#
-#           Copyright (C)       2000-2008
-#
-#       The Copyright year can be passed as command line option. If no
-#       option is given, current year is used.
+#       See --help for documentation.
 #
 #   Code Note
 #
-#       This code has been edited using Emacs editor, where M-x cperl-mode
-#       and M-x font-lock-mode was turned on. Due to highlighting problems,
-#       a simple Perl regexp marker // confused averything, so an alternative
-#       m,, match operator was used.
-#
-#   End
+#       This code has been edited using Emacs editor, where M-x
+#       cperl-mode and M-x font-lock-mode was turned on. Due to
+#       highlighting problems, a Perl regexp marker may // sometimes
+#       confuse thins, so an alternative m,, match operator was used.
 
 use autouse 'Pod::Text'     => qw( pod2text );
 use autouse 'Pod::Html'     => qw( pod2html );
@@ -66,7 +55,7 @@ use File::Find;
     #   The following variable is updated by Emacs setup whenever
     #   this file is saved. See http//tiny-tools.sourceforge.net/
 
-    my $VERSION = '2007.0906';
+    my $VERSION = '2009.1102.1502';
 
 # ****************************************************************************
 #
@@ -95,14 +84,14 @@ copyright-update.pl - Update Copyright year information
 This program updates the copyright year information for given files. The
 year is current year unless passed with B<--year> YEAR option.
 
-   perl -S copyright-update.pl --verbose 1 --test [--year 2002] *
+   copyright-update.pl --verbose 1 --test [--year 2002] *
 
 To change all files recursively from current directory, whose author is
 "Mr. Foo" use command below. The B<--regexp> option requires that
 file contains matching line. The lines affected are those matches
 by the --line regural expression.
 
-   perl -S copyright-update.pl \
+   copyright-update.pl \
         --recursive \
         --Regexp "Author:.*Mr. Foo" \
         --line '\bFoo\b' \
@@ -115,77 +104,64 @@ by the --line regural expression.
 For the above command, only files that contain lines like these would
 be updated:
 
-   Copyright (C)        2000-2008
-   Copyright: (C)       2000-2008
+   Copyright (C)        YYYY-YYYY
+   Copyright: (C)       YYYY-YYYY
 
-The format must be exatly as show aobve. Different amount of spaces is
-permitted, but the YEAR-YEAR must be kept together in files.
+The line must have word "Copyright", an ascii "(C)" and range of
+years. Varying amount of spaces are permitted, but there must be no
+spaces around the dash-character in YEAR-YEAR.
 
 =head1 OPTIONS
 
-=head2 Gneneral options
+=item B<-d, --debug LEVEL>
 
-=over 4
+Turn on debug. Level can be in range 0-10.
 
-=item B<--help -h>
+=item B<-h, --help>
 
 Print text help
 
 =item B<--Help-html>
 
-Print help in HTML format. You can pipe this to a browser:
-
-    perl -S copyright-update.pl --Help-html | lynx
+Print help in HTML format.
 
 =item B<--Help-man>
 
-Print help in Unix manual page format. You can pipe this to a comman:
+Print help in manual page C<man(1)> format.
 
-    perl -S copyright-update.pl --Help-man | nroff -man | less
-
-=item B<--ignore REGEXP>
+=item B<-i, --ignore REGEXP>
 
 Ignore files mathing regexp. The match is done against whole path.
 
-=item B<--line REGEXP>
+=item B<-l, --line REGEXP>
 
 Change only lines which match REGEXP. The match is case-insensitive.
 
-=item B<--recursive>
+=item B<-r, --recursive>
 
 Recursively search all direcotries given at command line.
 
-=item B<--Regexp REGEXP>
+=item B<-R, --Regexp REGEXP>
 
 Change only files whose content matches REGEXP.
 
-=item B<--test>
+=item B<-t, --test>
 
 hangedRun in test mode. Show what would happen. No files are changed.
 
-=item B<--verbose LEVEL>
+=item B<-v, --verbose LEVEL>
 
 Print informational messages. Increase numeric LEVEL for more
 verbosity.
 
-=item B<--Version>
+=item B<-V, --Version>
 
 Print contact and version information
 
-=item B<--year YEAR>
+=item B<-y, --year YEAR>
 
 Update files using YEAR. Year value must be four digits.
 The default is current calendar year.
-
-=back
-
-=head2 Miscellaneous options
-
-=over 4
-
-=item B<--debug LEVEL>
-
-Turn on debug. Level if 0-10.
 
 =back
 
@@ -233,16 +209,11 @@ Uses tandard Perl modules.
 
 C<any>
 
-=head1 VERSION
-
-$Id: copyright-update.pl,v 1.14 2007/05/01 17:20:27 jaalto Exp $
-
 =head1 AUTHOR
 
-Copyright (C) 2000-2009 Jari Aalto. All rights reserved.
-This program is free software; you can redistribute and/or modify program
-under the same terms as Perl itself or in terms of Gnu General Public
-license v2 or later.
+Copyright (C) 2000-2009 Jari Aalto. All rights reserved. This program
+is free software; you can redistribute and/or modify program under the
+terms of Gnu General Public license v2 or later.
 
 =cut
 
@@ -492,7 +463,7 @@ sub HandleFile ( % )
 
 	if ( $linere )
 	{
-	    if ($debug)
+	    if ( $debug )
 	    {
 		warn "s/(?:$linere).*\\K($copy$repeat)($yyyy)/\${1}$YEAR/gmi\n";
 		warn "s/($copy$repeat)$yyyy(.*$linere)/\${1}$YEAR\${2}/gmi\n";
@@ -548,7 +519,7 @@ sub wanted ()
     my $dir  = $File::Find::dir;
     my $file = $File::Find::name;  # complete path
 
-    if ( $dir =~ m,(CVS|RCS|\.(bzr|svn|git|darcs|arch))$,i )
+    if ( $dir =~ m,(CVS|RCS|\.(bzr|svn|git|darcs|arch|mtn|hg))$,i )
     {
         $File::Find::prune = 1;
         $debug  and  print "$id: Ignored directory: $dir\n";
