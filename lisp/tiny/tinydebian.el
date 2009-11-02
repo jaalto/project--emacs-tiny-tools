@@ -865,7 +865,7 @@ to generate updated list."
      tinydebian-:severity-selected
      tinydebian-:tags-list)))
 
-(defconst tinydebian-:version-time "2009.1018.1055"
+(defconst tinydebian-:version-time "2009.1029.1358"
   "Last edited time.")
 
 (defvar tinydebian-:bts-extra-headers
@@ -2198,6 +2198,17 @@ Return:
 
 ;;; ----------------------------------------------------------------------
 ;;;
+(defsubst tinydebian-trac-bug-type-p ()
+  "Check if bug context is Trac."
+  ;;  Can't detect, too generic: [PROJECT] #3124: ...
+  (let ((str (tinydebian-current-line-string)))
+    (goto-char (point-min))
+    (if (re-search-forward
+	 "X-Trac-Ticket-URL: *\\(http[^<> \t\r\n]+\\)" nil t)
+	(match-string-no-properties 1))))
+
+;;; ----------------------------------------------------------------------
+;;;
 (defsubst tinydebian-mercurial-bug-type-p ()
   "Check if bug context is Mercurial."
   (let ((str (tinydebian-current-line-string)))
@@ -2316,6 +2327,8 @@ Return: '(BTS-TYPE-STRING [BUG NUMBER | URL])."
 	(list "mysql" data))
        ((setq data (tinydebian-mercurial-bug-type-p))
 	(list "mercurial" data))
+       ((setq data (tinydebian-trac-bug-type-p))
+	(list "trac" data))
        ((setq data (tinydebian-launchpad-bug-type-p))
 	(list "launchpad" data))
        ((setq data (tinydebian-debian-bug-bts-type-p))
