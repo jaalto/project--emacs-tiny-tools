@@ -1,3 +1,8 @@
+2009-11-02  Jari Aalto  <jari.aalto@cante.net>
+
+	* copyright-update.pl (wanted): Ignore .hg and
+	.mtn version control directories.
+
 2008-09-20  Jari Aalto  <jari.aalto@cante.net>
 
 	* ripdoc.pl
