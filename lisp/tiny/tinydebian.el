@@ -3550,28 +3550,40 @@ In interactive call, toggle conrol address on and off."
 
 ;;; ----------------------------------------------------------------------
 ;;;
-(defun tinydebian-bts-mail-ctrl-command-add (string &optional re)
+(defun tinydebian-bts-mail-ctrl-command-add (string &optional re at-beg)
   "Add STRING containing control command.
-If optional RE is non-nil, remove all command lines matching RE"
+
+Input:
+  STRING   Commadn to add
+  RE       Optional. If non-nil, remove all command lines matching regexp
+  AT-BEG   Optional. If non-nil, add command to the beginning."
   (unless (tinydebian-bts-mail-ctrl-finalize-position)
     (tinydebian-bts-mail-ctrl-command-goto-body-start)
     (tinydebian-bts-mail-ctrl-command-finalize-add))
   (if re
       (tinydebian-bts-mail-ctrl-command-remove re))
-  (goto-char (tinydebian-bts-mail-ctrl-finalize-position))
+  (if at-beg
+      (tinydebian-bts-mail-ctrl-command-goto-body-start)
+    (goto-char (tinydebian-bts-mail-ctrl-finalize-position)))
   (tinydebian-bts-mail-ctrl-command-insert string))
 
 ;;; ----------------------------------------------------------------------
 ;;;
 (put 'tinydebian-bts-mail-ctrl-command-add-macro 'edebug-form-spec '(body))
 (put 'tinydebian-bts-mail-ctrl-command-add-macro 'lisp-indent-function 0)
-(defmacro tinydebian-bts-mail-ctrl-command-add-macro (cmd bug &optional string)
-  "Compose Control command from BUG CMD-NAME and optional CMD-STRING."
+(defmacro tinydebian-bts-mail-ctrl-command-add-macro (cmd bug &optional string at-beg)
+  "Compose Control command.
+
+Input:
+  CMD	  Command
+  BUG     Bug number
+  STRING  Optional. Additional parameter for CMD
+  AT-BEG  Optional. If non-nil, add command to the beginning."
   `(let ((str (if ,string
 		  (format "%s %s %s" ,cmd ,bug ,string)
 		(format "%s %s" ,cmd ,bug)))
 	 (re  (format "^[ \t]*%s" ,cmd)))
-     (tinydebian-bts-mail-ctrl-command-add str re)
+     (tinydebian-bts-mail-ctrl-command-add str re ,at-beg)
      ;; Add control@ address
      (tinydebian-mail-mode-address-type-add "control")
      ;; Position point to better place.
@@ -3748,7 +3760,7 @@ changes, the bug must be unarchived first."
   (interactive
    (list
     (tinydebian-mail-mode-debian-address-ask-bug)))
-  (tinydebian-bts-mail-ctrl-command-add-macro "unarchive" bug))
+  (tinydebian-bts-mail-ctrl-command-add-macro "unarchive" bug nil 'beg))
 
 ;;; ----------------------------------------------------------------------
 ;;;
@@ -3830,9 +3842,9 @@ Mode description:
     ["Add BTS Ctrl reopen"     tinydebian-bts-mail-ctrl-command-reopen   t]
     ["Add BTS Ctrl severity"   tinydebian-bts-mail-ctrl-command-severity t]
     ["Add BTS Ctrl tags"       tinydebian-bts-mail-ctrl-command-tags     t]
+    ["Add BTS Ctrl unarchive"  tinydebian-bts-mail-ctrl-command-unarchive t]
     ["Add BTS Ctrl usertag"    tinydebian-bts-mail-ctrl-command-usertag  t]
-    ["Insert Bug number"       tinydebian-bug-nbr-insert-at-point t]
-    ["Unarchive bug"           tinydebian-bts-mail-ctrl-command-unarchive t])
+    ["Insert Bug number"       tinydebian-bug-nbr-insert-at-point t])
 
    (progn
      (define-key map  "i"  'tinydebian-mail-mode-insert-bug-number)
@@ -3863,7 +3875,7 @@ Mode description:
      (define-key map  "cs"  'tinydebian-bts-mail-ctrl-command-severity)
      (define-key map  "ct"  'tinydebian-bts-mail-ctrl-command-tags)
      (define-key map  "cT"  'tinydebian-bts-mail-ctrl-command-usertag)
-     (define-key map  "cU"  'tinydebian-bts-mail-ctrl-command-unarchive)
+     (define-key map  "cu"  'tinydebian-bts-mail-ctrl-command-unarchive)
      (define-key map  "cw"  'tinydebian-bts-mail-ctrl-command-no-owner)
      (define-key map  "cx"  'tinydebian-bts-mail-ctrl-command-fixed)
      (define-key map  "cX"  'tinydebian-bts-mail-ctrl-command-notfixed))))
@@ -4638,7 +4650,7 @@ thanks
    (list (tinydebian-bts-mail-ask-bug-number)))
   (tinydebian-bts-mail-type-macro
    nil nil nil
-   (format "Reopen Bug#%s" bug)
+   (format "Bug#%s reopen" bug)
    (let (point)
      (insert (format "reopen %s\n" bug))
      (insert (format "owner %s !\n" bug))

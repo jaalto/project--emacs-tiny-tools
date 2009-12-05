@@ -1,3 +1,88 @@
+2009-12-05  Jari Aalto  <jari.aalto@cante.net>
+
+	* tiny/tinydebian.el (tinydebian-mail-mode-wizard):
+	adjust 'unarchive' command menu and key binding from
+	'U' to 'u'.
+	(tinydebian-bts-mail-ctrl-command-add): Add parameter AT-BEG.
+	(tinydebian-bts-mail-ctrl-command-add-macro): Add parameter AT-BEG.
+	(tinydebian-bts-mail-ctrl-command-unarchive): Add command to the
+	beginning.
+
+2009-10-29  Jari Aalto  <jari.aalto@cante.net>
+
+	* tiny/tinydebian.el (tinydebian-trac-bug-type-p): New.
+	(tinydebian-bug-bts-type-determine): Support Trac.
+
+2009-10-27  Jari Aalto  <jari.aalto@cante.net>
+
+	* tiny/tinydebian.el (tinydebian-bug-bts-type-determine):
+	Add freshmeat.net suport.
+	(tinydebian-freshmeat-bug-type-p): New.
+	(tinydebian-bug-url-forward): Add freshmeat.net suport.
+	(tinydebian-bug-nbr-debian-url-forward): Correct variable bug to
+	str.
+	(tinydebian-bug-ask-bts-and-number): Add freshmeat.net suport.
+
+2009-10-25  Jari Aalto  <jari.aalto@cante.net>
+
+	* tiny/tinylisp.el (tinylisp-autoload-quick-build-from-file-1):
+	Add arguments PROVIDE and FOOTER.
+	(tinylisp-autoload-quick-build-from-file): Add arguments
+	PROVIDE and FOOTER.
+	(tinylisp-batch-autoload-quick-build-from-file): Add arguments
+	PROVIDE and FOOTER.
+	(tinylisp-autoload-quick-build-interactive-from-file): Add
+	arguments PROVIDE and FOOTER.
+	(tinylisp-batch-autoload-quick-build-interactive-from-file): Add
+	arguments PROVIDE and FOOTER.
+	(tinylisp-autoload-real-directories): Add bzr, svn, hg, darcs
+	version control.
+	(tinylisp-with-command-line): Add lisp-indent-function and
+	edebug-form-spec.
+
+	* tiny/tinylib.el (ti::package-autoload-create-on-file):
+	Detect interactive type from define.*mode
+	(ti::package-autoload-create-on-file): obey `no-path'
+	to not write comments.
+
+2009-10-24  Jari Aalto  <jari.aalto@cante.net>
+
+	* tiny/tinylib.el (ti::package-autoload-create-on-file): Add
+	`define-minor-mode' to match regexp.
+	(ti::package-autoload-create-on-file): Add `defun*'.
+
+	* tiny/tinylisp.el (tinylisp-batch-autoload-generate-loaddefs-file):
+	Add argument `suffix'.
+	(tinylisp-autoload-generate-loaddefs-file-list): Add argument
+	`suffix'.
+	(tinylisp-batch-autoload-quick-build-from-file): Add argument
+	`suffix'.
+	(tinylisp-batch-autoload-generate-loaddefs-dir): New.
+	(tinylisp-with-command-line): Rewrite.
+	(tinylisp-batch-autoload-generate-loaddefs-file): use
+	`tinylisp-with-command-line::item'.
+	(tinylisp-batch-autoload-generate-loaddefs-dir): use
+	`tinylisp-with-command-line::item'.
+	(tinylisp-batch-autoload-quick-build-from-file): use
+	`tinylisp-with-command-line::item'.
+	(tinylisp-batch-autoload-quick-build-interactive-from-file): use
+	`tinylisp-with-command-line::item'.
+
+2009-10-22  Jari Aalto  <jari.aalto@cante.net>
+
+	* tiny/tinylisp.el (tinylisp-autoload-quick-build-from-file):
+	Define optional argument DEST.
+	(tinylisp-batch-autoload-quick-build-from-file): Remove 'verbose
+	from call to `tinylisp-autoload-quick-build-from-file-1'.
+	(tinylisp-batch-autoload-quick-build-from-file): Change
+	suffix *-autoloads-pain.el to *-autoloads.el.
+	(tinylisp-batch-autoload-quick-build-interactive-from-file): Change
+	suffix *-autoloads-pain-interactive.el to *-autoloads-interactive.el.
+
+2009-10-17  Jari Aalto  <jari.aalto@cante.net>
+
+	* tiny/tinydebian.el (tinydebian-bts-mail-ctrl-noowner): New.
+
 2009-10-13  Jari Aalto  <jari.aalto@cante.net>
 
 	* tiny/tinyeat.el (tinyeat-install-default-bindings): Use `kbd'
