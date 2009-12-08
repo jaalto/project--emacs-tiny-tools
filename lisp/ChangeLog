@@ -1,3 +1,8 @@
+2009-12-08  Jari Aalto  <jari.aalto@cante.net>
+
+	* tiny/tinydebian.el (tinydebian-bts-mail-ctrl-reassign): Correct
+	PACKAGE argument handling.
+
 2009-12-05  Jari Aalto  <jari.aalto@cante.net>
 
 	* tiny/tinydebian.el (tinydebian-mail-mode-wizard):

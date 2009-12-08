@@ -865,7 +865,7 @@ to generate updated list."
      tinydebian-:severity-selected
      tinydebian-:tags-list)))
 
-(defconst tinydebian-:version-time "2009.1029.1358"
+(defconst tinydebian-:version-time "2009.1208.1016"
   "Last edited time.")
 
 (defvar tinydebian-:bts-extra-headers
@@ -4239,8 +4239,13 @@ Mode description:
 (put 'tinydebian-bts-mail-type-macro 'lisp-indent-function 4)
 (defmacro tinydebian-bts-mail-type-macro (type pkg email subject &rest body)
   "Compose a TYPE request and run BODY.
-Variables available: bugnbr, type-orig, package, description; but these
-can all be nil."
+
+Variables bound during macro (can all be nil):
+
+  bugnbr
+  type-orig
+  package        Value of PKG is sent as an argument to macro
+  description"
   (let ((subj (gensym "subject-")))
     `(multiple-value-bind (bugnbr type-orig package description)
 	 (or (tinydebian-bts-parse-string-current-line)
@@ -4620,26 +4625,28 @@ thanks
 
 ;;; ----------------------------------------------------------------------
 ;;;
-(defun tinydebian-bts-mail-ctrl-reassign (bug &optional package)
+(defun tinydebian-bts-mail-ctrl-reassign (bug &optional package-to)
   "Compose BTS control message to a BUG amd reassign PACKAGE."
   (interactive
    (list (tinydebian-bts-mail-ask-bug-number)
 	 (read-string "Reassign to package: ")))
   (tinydebian-bts-mail-type-macro
-   nil nil nil
-   (format "Bug#%s%s reassign " bug (if package
-					(format " to package %s"
-						package)
-				      ""))
+   nil					;Type
+   package-to
+   nil					;Email
+   (format "Bug#%s reassign%s" bug (if package-to
+				       (format " to package %s"
+					       package-to)
+				     ""))
    (insert
     (format "\
 reassign %s %s
 thanks
 "
 	    bug
-	    (if (and package
-		     (not (string= "" package)))
-		package
+	    (if (and package-to
+		     (not (string= "" package-to)))
+		package-to
 	      "<to-package>")))))
 
 ;;; ----------------------------------------------------------------------
