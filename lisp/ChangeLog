@@ -1,3 +1,12 @@
+2009-12-30  Jari Aalto  <jari.aalto@cante.net>
+
+	* tiny/tinydebian.el (tinydebian-bts-mail-ctrl-command-owner): New.
+	(tinydebian-email-debian-control-commands): New.
+	(tinydebian-mail-mode-debian-address-ask-bug):
+	Use `tinydebian-email-debian-control-commands'.
+	(tinydebian-bug-nbr-any):
+	Use `tinydebian-email-debian-control-commands'.
+
 2009-12-08  Jari Aalto  <jari.aalto@cante.net>
 
 	* tiny/tinydebian.el (tinydebian-bts-mail-ctrl-reassign): Correct

@@ -865,7 +865,7 @@ to generate updated list."
      tinydebian-:severity-selected
      tinydebian-:tags-list)))
 
-(defconst tinydebian-:version-time "2009.1208.1016"
+(defconst tinydebian-:version-time "2009.1230.1352"
   "Last edited time.")
 
 (defvar tinydebian-:bts-extra-headers
@@ -2570,6 +2570,35 @@ If optional REGEXP is sebt, it must take number in submatch 1."
 
 ;;; ----------------------------------------------------------------------
 ;;;
+(defun tinydebian-email-debian-control-commands ()
+  "Read BTS number from DEbian control commands at the beginning."
+  (let (nbr
+	end
+	(re
+	 (concat
+	  "^"
+	  (regexp-opt
+	   ;; http://www.debian.org/Bugs/server-control
+	   '("quit"
+	     "stop"
+	     "thank"
+	     "thanks"
+	     "thankyou"
+	     "thank you"
+	     "--")))))
+    (goto-char (point-min))
+    (when (re-search-forward mail-header-separator nil t)
+      (forward-line 1)
+      (when (and (save-excursion
+		   (if (re-search-forward re nil t)
+		       (setq end (line-beginning-position))))
+		 (re-search-forward
+		  ;; <command> <bug number> <rest actions>
+		  "^[ \t]*[^ \r\n\t]+[ \t]+\\([0-9]+\\)\\>" end t))
+	(match-string-no-properties 1)))))
+
+;;; ----------------------------------------------------------------------
+;;;
 (defun tinydebian-bug-url-forward ()
   "Find url that looks like BTS from current point forward.
 In Gnus summary buffer, look inside original article."
@@ -2618,6 +2647,7 @@ At current point, current line, headers of the mail message
 	(tinydebian-email-cc-to-bug-nbr)
 	(tinydebian-email-subject-bug-nbr)
 	(tinydebian-bug-nbr-debian-url-forward)
+	(tinydebian-email-debian-control-commands)
 	(tinydebian-bug-nbr-forward)
 	(tinydebian-bug-nbr-buffer)
 	(tinydebian-bug-hash-forward)
@@ -3312,8 +3342,10 @@ Remove addresses by RE."
 ;;; ----------------------------------------------------------------------
 ;;;
 (defun tinydebian-mail-mode-debian-address-ask-bug ()
-  "Return bug number form To or Cc or ask with MSG."
-  (let ((nbr (tinydebian-email-cc-to-bug-nbr)))
+  "Return bug number from To, Cc fields etc. or ask with MSG."
+  (let ((nbr (or (tinydebian-email-cc-to-bug-nbr)
+		 (tinydebian-email-subject-bug-nbr)
+		 (tinydebian-email-debian-control-commands))))
     (if nbr
 	nbr
       (tinydebian-bts-mail-ask-bug-number))))
@@ -3682,6 +3714,15 @@ If LIST if nil, position point at pseudo header."
 
 ;;; ----------------------------------------------------------------------
 ;;;
+(defun tinydebian-bts-mail-ctrl-command-owner (bug)
+  "Add owner for the BUG."
+  (interactive
+   (list
+    (tinydebian-mail-mode-debian-address-ask-bug)))
+  (tinydebian-bts-mail-ctrl-command-add-macro "owner" bug "!"))
+
+;;; ----------------------------------------------------------------------
+;;;
 (defun tinydebian-bts-mail-ctrl-command-no-owner (bug)
   "Remove the owner of BUG."
   (interactive
@@ -3836,6 +3877,7 @@ Mode description:
     ["Add BTS Ctrl notfound"   tinydebian-bts-mail-ctrl-command-notfound t]
     ["Add BTS Ctrl merge"      tinydebian-bts-mail-ctrl-command-merge    t]
     ["Add BTS Ctrl No Ack"     tinydebian-bts-mail-ctrl-command-no-ack   t]
+    ["Add BTS Ctrl Owner"      tinydebian-bts-mail-ctrl-command-owner    t]
     ["Add BTS Ctrl No-owner"   tinydebian-bts-mail-ctrl-command-no-owner t]
     ["Add BTS Ctrl reassign"   tinydebian-bts-mail-ctrl-command-reassign t]
     ["Add BTS Ctrl retitle"    tinydebian-bts-mail-ctrl-command-retitle  t]
@@ -3876,7 +3918,8 @@ Mode description:
      (define-key map  "ct"  'tinydebian-bts-mail-ctrl-command-tags)
      (define-key map  "cT"  'tinydebian-bts-mail-ctrl-command-usertag)
      (define-key map  "cu"  'tinydebian-bts-mail-ctrl-command-unarchive)
-     (define-key map  "cw"  'tinydebian-bts-mail-ctrl-command-no-owner)
+     (define-key map  "cw"  'tinydebian-bts-mail-ctrl-command-owner)
+     (define-key map  "cW"  'tinydebian-bts-mail-ctrl-command-no-owner)
      (define-key map  "cx"  'tinydebian-bts-mail-ctrl-command-fixed)
      (define-key map  "cX"  'tinydebian-bts-mail-ctrl-command-notfixed))))
 
