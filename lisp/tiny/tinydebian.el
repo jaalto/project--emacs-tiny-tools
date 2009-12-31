@@ -3747,7 +3747,7 @@ If LIST if nil, position point at pseudo header."
   (interactive
    (list
     (tinydebian-mail-mode-debian-address-ask-bug)))
-  (tinydebian-bts-mail-ctrl-command-add-macro "reopen" bug))
+  (tinydebian-bts-mail-ctrl-command-add-macro "reopen" bug nil 'beg))
 
 ;;; ----------------------------------------------------------------------
 ;;;
@@ -3759,6 +3759,16 @@ If LIST if nil, position point at pseudo header."
       (tinydebian-mail-mode-debian-address-ask-bug)
       (read-string "New title: " subject))))
   (tinydebian-bts-mail-ctrl-command-add-macro "retitle" bug string))
+
+;;; ----------------------------------------------------------------------
+;;;
+(defun tinydebian-bts-mail-ctrl-command-submitter (bug address)
+  "Changes the originator of BUG to ADDRESS."
+  (interactive
+   (list
+    (tinydebian-mail-mode-debian-address-ask-bug)
+    (read-string "Set submitter address to: " "!")))
+  (tinydebian-bts-mail-ctrl-command-add-macro "submitter" bug address))
 
 ;;; ----------------------------------------------------------------------
 ;;;
@@ -3882,6 +3892,7 @@ Mode description:
     ["Add BTS Ctrl reassign"   tinydebian-bts-mail-ctrl-command-reassign t]
     ["Add BTS Ctrl retitle"    tinydebian-bts-mail-ctrl-command-retitle  t]
     ["Add BTS Ctrl reopen"     tinydebian-bts-mail-ctrl-command-reopen   t]
+    ["Add BTS Ctrl submitter"  tinydebian-bts-mail-ctrl-command-ubmitter t]
     ["Add BTS Ctrl severity"   tinydebian-bts-mail-ctrl-command-severity t]
     ["Add BTS Ctrl tags"       tinydebian-bts-mail-ctrl-command-tags     t]
     ["Add BTS Ctrl unarchive"  tinydebian-bts-mail-ctrl-command-unarchive t]
@@ -3915,6 +3926,7 @@ Mode description:
      (define-key map  "cr"  'tinydebian-bts-mail-ctrl-command-reassign)
      (define-key map  "cR"  'tinydebian-bts-mail-ctrl-command-retitle)
      (define-key map  "cs"  'tinydebian-bts-mail-ctrl-command-severity)
+     (define-key map  "cS"  'tinydebian-bts-mail-ctrl-command-submitter)
      (define-key map  "ct"  'tinydebian-bts-mail-ctrl-command-tags)
      (define-key map  "cT"  'tinydebian-bts-mail-ctrl-command-usertag)
      (define-key map  "cu"  'tinydebian-bts-mail-ctrl-command-unarchive)

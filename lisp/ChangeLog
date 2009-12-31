@@ -1,3 +1,9 @@
+2009-12-31  Jari Aalto  <jari.aalto@cante.net>
+
+	* tiny/tinydebian.el (tinydebian-bts-mail-ctrl-command-reopen):
+	Call `tinydebian-bts-mail-ctrl-command-add-macro' with arg 'at-start'.
+	(tinydebian-bts-mail-ctrl-command-submitter): New user command.
+
 2009-12-30  Jari Aalto  <jari.aalto@cante.net>
 
 	* tiny/tinydebian.el (tinydebian-bts-mail-ctrl-command-owner): New.
