@@ -1,3 +1,11 @@
+2010-01-05  Jari Aalto  <jari.aalto@cante.net>
+
+	* copyright-update.pl
+	(HELP::OPTIONS): Document --fsf-address.
+	(FsfAddress): New.
+	(Help): Add new user option --fsf-address.
+	(HandleFile): Use FsfAddress().
+
 2009-11-02  Jari Aalto  <jari.aalto@cante.net>
 
 	* copyright-update.pl (wanted): Ignore .hg and

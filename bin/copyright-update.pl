@@ -1,4 +1,4 @@
-#!/usr/bin/perl
+~#!/usr/bin/perl
 #
 # copyright-update.pl -- Update copyright year
 #
@@ -6,22 +6,18 @@
 #
 #       Copyright (C) 2000-2010 Jari Aalto
 #
-#       This program is free software; you can redistribute it and/or
-#       modify it under the terms of the GNU General Public License as
-#       published by the Free Software Foundation; either version 2 of
-#       the License, or (at your option) any later version.
+#       This program is free software; you can redistribute it and/or modify
+#       it under the terms of the GNU General Public License as published by
+#       the Free Software Foundation; either version 2 of the License, or
+#       (at your option) any later version.
 #
-#       This program is distributed in the hope that it will be useful, but
-#       WITHOUT ANY WARRANTY; without even the implied warranty of
-#       MERCHANTABILITY or FITNESS FOR A PARTICULAR PURPOSE.  See the GNU
-#       General Public License for more details.
+#       This program is distributed in the hope that it will be useful,
+#       but WITHOUT ANY WARRANTY; without even the implied warranty of
+#       MERCHANTABILITY or FITNESS FOR A PARTICULAR PURPOSE. See the
+#       GNU General Public License for more details.
 #
-#	You should have received a copy of the GNU General Public License
-#	along with program. If not, write to the
-#	Free Software Foundation, Inc., 51 Franklin Street, Fifth Floor,
-#	Boston, MA 02110-1301, USA.
-#
-#	Visit <http://www.gnu.org/copyleft/gpl.html> for more information
+#       You should have received a copy of the GNU General Public License
+#       along with this program. If not, see <http://www.gnu.org/licenses/>.
 #
 #   Documentation
 #
@@ -32,7 +28,7 @@
 #       This code has been edited using Emacs editor, where M-x
 #       cperl-mode and M-x font-lock-mode was turned on. Due to
 #       highlighting problems, a Perl regexp marker may // sometimes
-#       confuse thins, so an alternative m,, match operator was used.
+#       confuse things, so an alternative m,, match operator was used.
 
 use autouse 'Pod::Text'     => qw( pod2text );
 use autouse 'Pod::Html'     => qw( pod2html );
@@ -107,11 +103,28 @@ be updated:
    Copyright (C)        YYYY-YYYY
    Copyright: (C)       YYYY-YYYY
 
-The line must have word "Copyright", an ascii "(C)" and range of
-years. Varying amount of spaces are permitted, but there must be no
+The line must have word "Copyright", an ascii "(C)" and range of years.
+Varying amount of spaces and tabs are permitted, but there must be no
 spaces around the dash-character in YEAR-YEAR.
 
 =head1 OPTIONS
+
+=item B<-a, --fsf-address LEVEL>
+
+Correct FSF addresses, like:
+
+    You should have received a copy of the GNU General Public License
+    along with this program; if not, write to the Free Software
+    Foundation, Inc., 59 Temple Place, Suite 330, Boston, MA  02111-1307  USA
+
+    You should have received a copy of the GNU General Public License
+    along with this package; if not, write to the Free Software
+    Foundation, Inc., 51 Franklin St, Fifth Floor, Boston, MA  02110-1301 USA
+
+Into FSF recommendation, used in GPL v3 preamble:
+
+    You should have received a copy of the GNU General Public License
+    along with this program. If not, see <http://www.gnu.org/licenses/>.
 
 =item B<-d, --debug LEVEL>
 
@@ -312,6 +325,7 @@ sub HandleCommandLineArgs ()
         $OPT_RECURSIVE
         $OPT_REGEXP
         $OPT_REGEXP_IGNORE
+        $OPT_FSF_ADDRESS
     );
 
     Getopt::Long::config( qw
@@ -326,17 +340,18 @@ sub HandleCommandLineArgs ()
 
     GetOptions      # Getopt::Long
     (
-          "year=i"     => \$YEAR
-        , "help"       => \$help
-        , "Help-man"   => \$helpMan
-        , "Help-html"  => \$helpHtml
-        , "test"       => \$test
+        , "a|fsf-address" => \$OPT_FSF_ADDRESS
         , "debug:i"    => \$debug
-        , "verbose:i"  => \$verb
+        , "help"       => \$help
+        , "Help-html"  => \$helpHtml
+        , "Help-man"   => \$helpMan
         , "ignore=s"   => \$OPT_REGEXP_IGNORE
         , "line=s"     => \$OPT_LINE_REGEXP
         , "recursive"  => \$OPT_RECURSIVE
         , "Regexp=s"   => \$OPT_REGEXP
+        , "test"       => \$test
+        , "verbose:i"  => \$verb
+        , "year=i"     => \$YEAR
     );
 
     $help     and  Help();
@@ -362,6 +377,37 @@ sub HandleCommandLineArgs ()
     $verb = 5  if  $debug;
 }
 
+
+# ****************************************************************************
+#
+#   DESCRIPTION
+#
+#       Change FSF Address
+#
+#   INPUT PARAMETERS
+#
+#       $content	File content.
+#
+#   RETURN VALUES
+#
+#       $string
+#
+# ****************************************************************************
+
+sub FsfAddress ( $ ; $ )
+{
+    my $id     = "$LIB.FsfAddress";
+    local $ARG = shift;
+    my $file   = shift;
+
+    s
+    {^([^\r\n]*)You\s+should\s+have\s+received .*? write \s+to.*?Boston.*?USA}
+    {\1You should have received a copy of the GNU General Public License\n\1along with this program. If not, see <http://www.gnu.org/licenses/>.}smix
+    and $test
+    and print "$id: Would change: FSF address to URL\n";
+
+    $ARG;
+}
 
 # ****************************************************************************
 #
@@ -412,7 +458,7 @@ sub HandleFile ( % )
         # ..................................................... read ...
 
         unless ( open FILE, "<", $file )
-        {
+o        {
             $verb  and  print "$id: Cannot open $file\n";
             next;
         }
@@ -422,7 +468,7 @@ sub HandleFile ( % )
             $ARG = join '', <FILE>;
             close FILE;
 
-            unless ( $ARG )
+            unless ( /\w/ )
             {
                 $verb  and  print "$id: Empty file: $file\n";
                 return;
@@ -433,10 +479,13 @@ sub HandleFile ( % )
         {
             unless ( /$regexp/o )
             {
-                $verb  and
-                    print "$id: Content does not quelify regexp check: $file\n";
+                $verb and
+                    print "$id: Content does not qualify regexp check: $file\n";
+		next;
             }
         }
+
+	$ARG = FsfAddress $ARG, $file  if  $OPT_FSF_ADDRESS;
 
         my $yyyy    = '\d{4}';
         my $copy    = 'Copyright:?[ \t]+\([Cc]\)[ \t]+' . $yyyy;
@@ -447,7 +496,7 @@ sub HandleFile ( % )
         #
         #  If everything went ok, replace file.
 
-        unless ( /$copy$repeat($yyyy)/i )
+        unless ( /$copy$repeat($yyyy)/oi )
         {
             $verb > 1 and  print "$id: No Copyright statement   : $file\n";
             next;
