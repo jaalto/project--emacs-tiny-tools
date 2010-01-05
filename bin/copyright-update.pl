@@ -153,7 +153,7 @@ Change only lines which match REGEXP. The match is case-insensitive.
 
 Recursively search all direcotries given at command line.
 
-=item B<-R, --Regexp REGEXP>
+=item B<-R, --regexp REGEXP>
 
 Change only files whose content matches REGEXP.
 
@@ -174,6 +174,10 @@ Print contact and version information
 
 Update files using YEAR. Year value must be four digits.
 The default is current calendar year.
+
+=item B<-Y, --no-year>
+
+Disable updating year.
 
 =back
 
@@ -320,6 +324,7 @@ sub HandleCommandLineArgs ()
         $debug
 
         $YEAR
+        $OPT_NO_YEAR
         $OPT_LINE_REGEXP
         $OPT_RECURSIVE
         $OPT_REGEXP
@@ -346,8 +351,9 @@ sub HandleCommandLineArgs ()
         , "Help-man"   => \$helpMan
         , "ignore=s"   => \$OPT_REGEXP_IGNORE
         , "line=s"     => \$OPT_LINE_REGEXP
+        , "Y|no-year"  => \$OPT_NO_YEAR
         , "recursive"  => \$OPT_RECURSIVE
-        , "Regexp=s"   => \$OPT_REGEXP
+        , "R|regexp=s"   => \$OPT_REGEXP
         , "test"       => \$test
         , "verbose:i"  => \$verb
         , "year=i"     => \$YEAR
@@ -521,10 +527,11 @@ sub HandleFile ( % )
         }
 
         my $y = $1;
+	$y = "" if $OPT_NO_YEAR;
 
         if ( $y  and  $y eq $YEAR )
         {
-            $verb > 2  and  Print "Copyright is already $YEAR";
+	    $verb > 2  and  Print "Copyright is already $YEAR";
 	    $y = "";
         }
 
