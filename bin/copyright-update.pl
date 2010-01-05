@@ -562,7 +562,7 @@ sub HandleFile ( % )
         }
         else
         {
-	    $verb  and Print "wrote";
+	    $verb > 2 and Print "wrote";
             binmode FILE;
             print FILE $ARG;
             close FILE;
