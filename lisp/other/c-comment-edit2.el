@@ -3,6 +3,7 @@
 ;; This file is not part of Emacs
 
 ;; Copyright (C) 1987 Kyle Jones
+;; Copyright (C) 1997-2010 Jari Aalto
 ;; Author:       Kyle Jones
 ;; Maintainer:   Jari Aalto
 ;; Keywords:     extensions
