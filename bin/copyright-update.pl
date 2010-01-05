@@ -535,20 +535,23 @@ sub HandleFile ( % )
 	    $y = "";
         }
 
-	if ( $linere )
+	unless ( $OPT_NO_YEAR )
 	{
-	    if ( $debug )
+	    if ( $linere )
 	    {
-		warn "s/(?:$linere).*\\K($copy$repeat)($yyyy)/\${1}$YEAR/gmi\n";
-		warn "s/($copy$repeat)$yyyy(.*$linere)/\${1}$YEAR\${2}/gmi\n";
-	    }
+		if ( $debug )
+		{
+		    warn "s/(?:$linere).*\\K($copy$repeat)($yyyy)/\${1}$YEAR/gmi\n";
+		    warn "s/($copy$repeat)$yyyy(.*$linere)/\${1}$YEAR\${2}/gmi\n";
+		}
 
-	    s/(?:$linere).*\K($copy$repeat)$yyyy/$1$YEAR/gmi and $done++;
-	    s/($copy$repeat)$yyyy(.*$linere)/$1$YEAR$2/gmi and $done++;
-	}
-	else
-	{
-	    s/($copy$repeat)$yyyy/$1$YEAR/gmi and $done++;
+		s/(?:$linere).*\K($copy$repeat)$yyyy/$1$YEAR/gmi and $done++;
+		s/($copy$repeat)$yyyy(.*$linere)/$1$YEAR$2/gmi and $done++;
+	    }
+	    else
+	    {
+		s/($copy$repeat)$yyyy/$1$YEAR/gmi and $done++;
+	    }
 	}
 
         $verb   and  $y  and  Print "$msg $y => $YEAR";
