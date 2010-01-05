@@ -389,23 +389,25 @@ sub HandleCommandLineArgs ()
 #
 #   RETURN VALUES
 #
-#       $string
+#       $string		File content or empty if no chnages.
 #
 # ****************************************************************************
 
 sub FsfAddress ( $ ; $ )
 {
     my $id     = "$LIB.FsfAddress";
+    my $X      = "$id: " if $debug;
     local $ARG = shift;
     my $file   = shift;
+
+    my $done;
 
     s
     {^([^\r\n]*)You\s+should\s+have\s+received .*? write \s+to.*?Boston.*?USA[ \t.]*}
     {\1You should have received a copy of the GNU General Public License\n\1along with this program. If not, see <http://www.gnu.org/licenses/>.}smix
-    and $test
-    and print "$id: Would change FSF address to URL\n";
+    and $done++;
 
-    $ARG;
+    $ARG if $done;
 }
 
 # ****************************************************************************
@@ -430,6 +432,7 @@ sub FsfAddress ( $ ; $ )
 sub HandleFile ( % )
 {
     my $id  = "$LIB.HandleFile";
+    my $X   = "$id: " if $debug;
     my %arg = @ARG;
 
     my @files   = @{ $arg{-file} };
@@ -447,18 +450,27 @@ sub HandleFile ( % )
                        "-line [$linere]\n"
 		       ;
 
+    my $ffile;
+
+    sub Print(@);
+    local *Print = sub (@)
+    {
+	print "${X}$ffile: ", @_, "\n";
+    };
+
     local ( *FILE, $ARG );
 
     for my $file ( @files )
     {
+	$ffile = $file;			# For Print()
 
-        $debug  and  print "$id: Opening file: $file\n";
+        $debug  and  print "$id: $file: open\n";
 
         # ..................................................... read ...
 
         unless ( open FILE, "<", $file )
         {
-            $verb  and  print "$id: Cannot open $file\n";
+            $verb  and  Print "ERROR: cannot open";
             next;
         }
         else
@@ -469,7 +481,7 @@ sub HandleFile ( % )
 
             unless ( /\w/ )
             {
-                $verb  and  print "$id: Empty file: $file\n";
+                $verb  and  Print "WARN: empty file";
                 return;
             }
         }
@@ -479,12 +491,20 @@ sub HandleFile ( % )
             unless ( /$regexp/o )
             {
                 $verb and
-                    print "$id: Content does not qualify regexp check: $file\n";
+                    Print "WARN: failed regexp check: $regexp";
 		next;
             }
         }
 
-	$ARG = FsfAddress $ARG, $file  if  $OPT_FSF_ADDRESS;
+	my $done;
+        my $msg = $test ? "Would change" : "Changed";
+
+	if ( $OPT_FSF_ADDRESS  and  (my $fsf = FsfAddress $ARG, $file) )
+	{
+	    Print "$msg FSF address to URL";
+	    $ARG = $fsf;
+	    $done++;
+	}
 
         my $yyyy    = '\d{4}';
         my $copy    = 'Copyright:?[ \t]+\([Cc]\)[ \t]+' . $yyyy;
@@ -497,16 +517,14 @@ sub HandleFile ( % )
 
         unless ( /$copy$repeat($yyyy)/oi )
         {
-            $verb > 1 and  print "$id: No Copyright statement   : $file\n";
-            next;
+            $verb > 1 and  Print "No Copyright line" ;
         }
 
         my $y = $1;
 
-        if ( $y eq $YEAR )
+        if ( $y  and  $y eq $YEAR )
         {
-            $verb > 2  and  print "$id: Copyright is already $YEAR: $file\n";
-            next;
+            $verb > 2  and  Print "Copyright is already $YEAR";
         }
 
 	if ( $linere )
@@ -517,26 +535,26 @@ sub HandleFile ( % )
 		warn "s/($copy$repeat)$yyyy(.*$linere)/\${1}$YEAR\${2}/gmi\n";
 	    }
 
-	    s/(?:$linere).*\K($copy$repeat)$yyyy/$1$YEAR/gmi;
-	    s/($copy$repeat)$yyyy(.*$linere)/$1$YEAR$2/gmi;
+	    s/(?:$linere).*\K($copy$repeat)$yyyy/$1$YEAR/gmi and $done++;
+	    s/($copy$repeat)$yyyy(.*$linere)/$1$YEAR$2/gmi and $done++;
 	}
 	else
 	{
-	    s/($copy$repeat)$yyyy/$1$YEAR/gmi;
+	    s/($copy$repeat)$yyyy/$1$YEAR/gmi and $done++;
 	}
 
-        my $msg = $test ? "$id: Would change" : "$id: Changed";
+        $verb   and  $y  and  Print "$msg $y => $YEAR";
 
-        $verb  and  print "$msg $file $y => $YEAR\n";
-        $test  and  next;
+        $test   and  next;
+	! $done and  next;
 
         unless ( open FILE, ">", $file )
         {
-            print "$id: Cannot open for writing: $file\n";
+            Print "ERROR: Cannot open for write";
         }
         else
         {
-	    $verb  and print "$id: wrote file $file\n";
+	    $verb  and Print "wrote";
             binmode FILE;
             print FILE $ARG;
             close FILE;
