@@ -400,8 +400,8 @@ sub FsfAddress ( $ ; $ )
     my $file   = shift;
 
     s
-    {^([^\r\n]*)You\s+should\s+have\s+received .*? write \s+to.*?Boston.*?USA}
-    {\$1You should have received a copy of the GNU General Public License\n$1along with this program. If not, see <http://www.gnu.org/licenses/>.}smix
+    {^([^\r\n]*)You\s+should\s+have\s+received .*? write \s+to.*?Boston.*?USA[ \t.]*}
+    {\1You should have received a copy of the GNU General Public License\n\1along with this program. If not, see <http://www.gnu.org/licenses/>.}smix
     and $test
     and print "$id: Would change FSF address to URL\n";
 
