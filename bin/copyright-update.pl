@@ -1,4 +1,4 @@
-~#!/usr/bin/perl
+#!/usr/bin/perl
 #
 # copyright-update.pl -- Update copyright year
 #
@@ -30,11 +30,10 @@
 #       highlighting problems, a Perl regexp marker may // sometimes
 #       confuse things, so an alternative m,, match operator was used.
 
+use strict;
+
 use autouse 'Pod::Text'     => qw( pod2text );
 use autouse 'Pod::Html'     => qw( pod2html );
-
-use 5.004;
-use strict;
 
 use English;
 use Getopt::Long;
@@ -340,7 +339,7 @@ sub HandleCommandLineArgs ()
 
     GetOptions      # Getopt::Long
     (
-        , "a|fsf-address" => \$OPT_FSF_ADDRESS
+          "a|fsf-address" => \$OPT_FSF_ADDRESS
         , "debug:i"    => \$debug
         , "help"       => \$help
         , "Help-html"  => \$helpHtml
@@ -402,9 +401,9 @@ sub FsfAddress ( $ ; $ )
 
     s
     {^([^\r\n]*)You\s+should\s+have\s+received .*? write \s+to.*?Boston.*?USA}
-    {\1You should have received a copy of the GNU General Public License\n\1along with this program. If not, see <http://www.gnu.org/licenses/>.}smix
+    {\$1You should have received a copy of the GNU General Public License\n$1along with this program. If not, see <http://www.gnu.org/licenses/>.}smix
     and $test
-    and print "$id: Would change: FSF address to URL\n";
+    and print "$id: Would change FSF address to URL\n";
 
     $ARG;
 }
@@ -458,7 +457,7 @@ sub HandleFile ( % )
         # ..................................................... read ...
 
         unless ( open FILE, "<", $file )
-o        {
+        {
             $verb  and  print "$id: Cannot open $file\n";
             next;
         }
