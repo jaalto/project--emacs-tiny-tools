@@ -525,6 +525,7 @@ sub HandleFile ( % )
         if ( $y  and  $y eq $YEAR )
         {
             $verb > 2  and  Print "Copyright is already $YEAR";
+	    $y = "";
         }
 
 	if ( $linere )
