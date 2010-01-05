@@ -4,7 +4,7 @@
 #
 #   File id
 #
-#       Copyright (C)   1997-2009 Jari Aalto
+#       Copyright (C)   1997-2010 Jari Aalto
 #       Created:        1997-02
 #       Keywords:       Perl, text conversion
 #
@@ -310,7 +310,7 @@ C<any>
 
 =head1 AUTHOR
 
-Copyright (C) 1998-2009 Jari Aalto. All rights reserved. This program
+Copyright (C) 1998-2010 Jari Aalto. All rights reserved. This program
 is free software; you can redistribute it and/or modify it under the
 terms of Gnu General Public license v2 or any later version.
 

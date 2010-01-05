@@ -4,7 +4,7 @@
 #
 #  File id
 #
-#       Copyright (C) 2000-2009 Jari Aalto
+#       Copyright (C) 2000-2010 Jari Aalto
 #
 #       This program is free software; you can redistribute it and/or
 #       modify it under the terms of the GNU General Public License as
@@ -17,9 +17,7 @@
 #       General Public License for more details.
 #
 #	You should have received a copy of the GNU General Public License
-#	along with program. If not, write to the
-#	Free Software Foundation, Inc., 51 Franklin Street, Fifth Floor,
-#	Boston, MA 02110-1301, USA.
+#	along with this program. If not, see <http://www.gnu.org/licenses/>.
 #
 #	Visit <http://www.gnu.org/copyleft/gpl.html> for more information
 #
@@ -341,7 +339,7 @@ $Id: java-function-list.pl,v 2.11 2007/05/01 17:20:30 jaalto Exp $
 
 =head1 AUTHOR
 
-Copyright (C) 2000-2009 Jari Aalto. All rights reserved.
+Copyright (C) 2000-2010 Jari Aalto. All rights reserved.
 This program is free software; you can redistribute and/or modify program
 under the same terms as Perl itself or in terms of Gnu General Public
 license v2 or later.
