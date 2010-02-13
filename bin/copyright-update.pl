@@ -1,6 +1,6 @@
 #!/usr/bin/perl
 #
-# copyright-update.pl -- Update copyright year
+# copyright-update.pl -- Utility to update copyright information in files
 #
 #   File id
 #
@@ -14,10 +14,8 @@
 #       This program is distributed in the hope that it will be useful,
 #       but WITHOUT ANY WARRANTY; without even the implied warranty of
 #       MERCHANTABILITY or FITNESS FOR A PARTICULAR PURPOSE. See the
-#       GNU General Public License for more details.
-#
-#       You should have received a copy of the GNU General Public License
-#       along with this program. If not, see <http://www.gnu.org/licenses/>.
+#       GNU General Public License for more details at
+#       <http://www.gnu.org/licenses/>.
 #
 #   Documentation
 #
