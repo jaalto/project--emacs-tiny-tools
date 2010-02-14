@@ -480,7 +480,8 @@ Function mappings are:
     (multiple-value-bind (original alias) elt
       (ti::compat-character-define-macro original alias))))
 
-(ti::compat-define-compatibility-defalias)
+;; 2010-02-14 disabled. Something causes error in Emacs 23.x
+;; (ti::compat-define-compatibility-defalias)
 
 (defun-maybe char= (ch1 ch2 &optional ignored-arg) ;exists in  XEmacs 20.1
   (let* (case-fold-search)                         ;case sensitive
