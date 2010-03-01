@@ -1,3 +1,8 @@
+2010-03-01 Mon  Jari Aalto  <jari.aalto@cante.net>
+
+	* tiny/tinydebian.el (tinydebian-freshmeat-bug-type-p): remove
+	extra unused regexp. This fixes CPAN bug URL detection.
+
 2009-12-31  Jari Aalto  <jari.aalto@cante.net>
 
 	* tiny/tinydebian.el (tinydebian-bts-mail-ctrl-command-reopen):

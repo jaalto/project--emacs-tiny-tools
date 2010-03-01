@@ -863,7 +863,7 @@ to generate updated list."
      tinydebian-:severity-selected
      tinydebian-:tags-list)))
 
-(defconst tinydebian-:version-time "2009.1230.1352"
+(defconst tinydebian-:version-time "2010.0301.0606"
   "Last edited time.")
 
 (defvar tinydebian-:bts-extra-headers
@@ -2147,10 +2147,9 @@ Return:
       str)
      (t
       (goto-char (point-min))
-      (if (or (re-search-forward
-	       ;;  http://freshmeat.net/projects/wcd#release_307159
-	       "https?://freshmeat.net/[^<> \t\r\n]+[0-9][0-9][0-9]+" nil t)
-	      (re-search-forward "https?://rt.cpan.org" nil t))
+      (if (re-search-forward
+	   ;;  http://freshmeat.net/projects/wcd#release_307159
+	   "https?://freshmeat.net/[^<> \t\r\n]+[0-9][0-9][0-9]+" nil t)
 	  (match-string-no-properties 0))))))
 
 ;;; ----------------------------------------------------------------------
@@ -2164,7 +2163,7 @@ Return:
      (t
       (goto-char (point-min))
       (if (or (re-search-forward
-	       "https?://rt.cpan.org/[^<> \t\r\n]+[0-9]+" nil t)
+	       "https?://rt.cpan.org/[^<> \t\r\n]+[0-9]" nil t)
 	      (re-search-forward "https?://rt.cpan.org" nil t))
 	  (match-string-no-properties 0))))))
 
