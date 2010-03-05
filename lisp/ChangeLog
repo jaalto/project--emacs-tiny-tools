@@ -1,3 +1,8 @@
+2010-03-05 Fri  Jari Aalto  <jari.aalto@cante.net>
+
+	* tiny/tinydiff.el (tinydiff-patch): Display 'hunk' if TYPE is set
+	in questions.
+
 2010-03-01 Mon  Jari Aalto  <jari.aalto@cante.net>
 
 	* tiny/tinydebian.el (tinydebian-freshmeat-bug-type-p): remove

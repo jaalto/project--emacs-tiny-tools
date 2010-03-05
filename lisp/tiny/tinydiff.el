@@ -2172,7 +2172,10 @@ Input:
           (unless patch-buffer-file-name
             (setq default-directory "~"))
           (setq dest-file (read-file-name
-                           "Apply diff to: "
+                           (format "Apply diff %sto: "
+				   (if (eq type 'hunk)
+				       "hunk "
+				     ""))
                            guess-dir
                            nil
                            t
@@ -2183,6 +2186,7 @@ Input:
       (with-current-buffer orig-buffer
         (set (make-local-variable 'tinydiff-:patch-to-file) dest-file))
       ;; ........................................................... zip ...
+      ;;
       (when (string-match "\\(.*\\)\\.gz$" dest-file)
         (setq dest-file (match-string 1 dest-file))
         (setq ZIP t)
@@ -2197,6 +2201,7 @@ Input:
          (format "%s.gz" dest-file))
         (message "TinyDiff: Uncompressing %s file...done." dest-file))
       ;; ....................................................... rejects ...
+      ;;
       (when (file-exists-p (concat dest-file ".rej"))
         (setq rej-flag t))
       (when (and (not (or (null tinydiff-:patch-hunk-count)
@@ -2978,7 +2983,7 @@ Activate only if point underneath has 'mouse-property."
 ;;; ----------------------------------------------------------------------
 ;;;
 (defun tinydiff-block-apply-patch  ()
-  "Apply diff block around point.
+  "Apply diff hunk around point.
 References:
   `tinydiff-patch-set-option'."
   (interactive)
@@ -2994,7 +2999,7 @@ References:
          file)
     (if (and (interactive-p)
              (null region))
-        (message "TinyDiff: can't determine diff block bounds.")
+        (message "TinyDiff: can't determine diff hunk bounds.")
       (setq file (tinydiff-file-to-patch))
       (with-temp-buffer
         (insert header)
