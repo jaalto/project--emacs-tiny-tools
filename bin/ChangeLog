@@ -1,17 +1,3 @@
-2010-01-05  Jari Aalto  <jari.aalto@cante.net>
-
-	* copyright-update.pl
-	(HELP::OPTIONS): New options --fsf-address
-	and --no-year.
-	(FsfAddress): New.
-	(Help): Add new user option --fsf-address.
-	(HandleFile): Use FsfAddress().
-
-2009-11-02  Jari Aalto  <jari.aalto@cante.net>
-
-	* copyright-update.pl (wanted): Ignore .hg and
-	.mtn version control directories.
-
 2008-09-20  Jari Aalto  <jari.aalto@cante.net>
 
 	* ripdoc.pl
@@ -19,38 +5,6 @@
 	(HELP): Add proper short and --long options. Improve
 	documentation. Moved /* */ java example to the BUGS section.
 	(Main): Delete EOL whitespaces.
-
-2008-09-14  Jari Aalto  <jari.aalto@cante.net>
-
-	* copyright-update.pl (HELP): Document new option --line RE.
-	(HandleFile): Chnage only --line RE lines.
-
-2008-01-25  Jari Aalto  <jari.aalto@cante.net>
-
-	* copyright-update.pl (HandleCommandLineArgs): Accept
-	--debug LEVEL, instead of just -d.
-	(Main): Display warning if there are no matching files.
-	(wanted): Add git, darcs, arch version control directories
-	to default ignore list.
-
-2008-08-22  Jari Aalto  <jari.aalto@cante.net>
-
-	* copyright-update.pl (Help): Work around 5.10 bug for pod2text.
-
-2007-05-01  Jari Aalto  <jari.aalto@cante.net>
-
-	* copyright-update.pl (HandleFile): Variable $msg
-	had wrong number of double quotes.
-	(HandleFile): Missing semicolon from statement inside
-	'$y eq $YEAR'.
-	(wanted): $ignore pattern improved to cinlude ".#thisfile".
-
-2006-02-19  Jari Aalto  <jari.aalto@cante.net>
-
-	* copyright-update.pl:
-	(HandleCommandLineArgs): New --ignore option and variable
-	$OPT_REGEXP_IGNORE
-	(wanted): Check user's
 
 2005-08-17  Jari Aalto  <jari.aalto@cante.net>
 
@@ -84,10 +38,6 @@
 
 	* ddir.pl: Corrected #!-line. Added Main(). Small
 	changes to make the code more clean.
-
-	* copyright-update.pl (TOP OF FILE): Removed version
-	control Id-tag. Corrected #!-line. Removed extra newlines
-	from the code.
 
 2005-05-08  Jari Aalto  <jari.aalto@cante.net>
 
@@ -160,15 +110,6 @@
 
         * admin.bashrc: Added GPL license.
 
-        * copyright-update.pl (Main): 1.5 Rewritten.
-        (FileGlobs): 1.5 New.
-        (wanted): 1.5 New.
-        (HandleFile): 1.5 New.
-        (HandleCommandLineArgs): 1.5 Added option --recursive and --regexp.
-        (Help): 1.5 Added documentation about recursive changes.
-        (Help): 1.5 Added HTML help generation with --help-html and
-        Manual pages with --help-man
-
 2003-01-28  Jari Aalto  <jari.aalto@cante.net>
 
         * ripdoc.pl: Do not use #!/usr/local/bin/perl, but
@@ -199,9 +140,6 @@
         only #!perl. Suppose perl is along path.
 
         * ddir.pl: Do not use #!/usr/local/bin/perl, but
-        only #!perl. Suppose perl is along path.
-
-        * copyright-update.pl: Do not use #!/usr/local/bin/perl, but
         only #!perl. Suppose perl is along path.
 
         * c-function-list.pl: Do not use #!/usr/local/bin/perl, but
@@ -361,11 +299,6 @@
 
         * makefile.pl (TargetAutoload): Fixed autoload generation
         for Emacs, XEmacs trouble.
-
-2001-12-08  Jari Aalto  <jari.aalto@cante.net>
-
-        * copyright-update.pl New Program. Updates copyright information.
-        (other features can be added here.)
 
 2001-11-27  Jari Aalto  <jari.aalto@cante.net>
 
