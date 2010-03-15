@@ -33,25 +33,21 @@
 ;;{{{ Install
 
 ;; ....................................................... &t-install ...
-;; Put this file on your Emacs-Lisp `load-path', add following into your
+;; Put this file on your Emacs-Lisp `load-path' and add following into your
 ;; ~/.emacs startup file
 ;;
-;;      (require 'tinyreplace)
-;;
-;; Or you can use autoload (preferred) and your emacs starts up faster
-;;
+;;      (global-set-key "\M-&" 'tinyreplace-menu)
+;;      (autoload 'tinyreplace-menu			"tinyreplace" "" t)
 ;;      (autoload 'tinyreplace-replace-forward          "tinyreplace" "" t)
 ;;      (autoload 'tinyreplace-replace-region           "tinyreplace" "" t)
 ;;      (autoload 'tinyreplace-replace-over-files       "tinyreplace" "" t)
 ;;      (autoload 'tinyreplace-define-keys-compile-map  "tinyreplace" "" t)
 ;;      (autoload 'tinyreplace-replace-over-files-compile-buffer "tinyreplace" "" t)
-;;      (add-hook 'compilation-mode-hook 'tinyreplace-define-keys-compile-map)
 ;;
-;; For easy access to replace functions, bind function `tinyreplace-menu'
-;; to a free key. The default install uses M-&, which is next to
-;; standard M-% replace key.
+;; Or you can load this file directly:
 ;;
-;;      M-x tinyreplace-install  ;; C-u to uninstall
+;;      (add-hook 'tinyreplace-load-hook 'tinyreplace-install)       ;; M-& key
+;;      (require 'tinyreplace)
 ;;
 ;; Check that you have colors on, otherwise the replaced region may
 ;; not be visible.
@@ -487,27 +483,58 @@ Special commands:
 
 ;;; ----------------------------------------------------------------------
 ;;;###autoload
-(defun tinyreplace-install-default-keybings (&optional uninstall)
-  "Install or UNINSTALL M-& default keybing to run `tinyreplace-menu'."
+(defun tinyreplace-install-default-keybings ()
+  "Install M-& default keybing."
   (interactive)
   (let* ((key "\M-&")
          (def (lookup-key global-map key)))
     (when (featurep 'compile)
-      (tinyreplace-define-keys-compile-map))
-    (cond
-     (uninstall
-      (when (setq def (ti::keymap-bind-control 'global-map 'get 'tinymy key))
-        (global-set-key key def)))
-     (t
-      (ti::keymap-bind-control 'global-map 'set 'tinymy key)
-      (global-set-key key 'tinyreplace-menu)))))
+      (let (buffer (get-buffer "*compilation*"))
+	(when buffer
+	  (with-current-buffer buffer
+	    (tinyreplace-define-keys-compile-map)))))
+    (when (featurep 'grep)
+      (let (buffer (get-buffer "*grep*"))
+	(when buffer
+	  (with-current-buffer buffer
+	    (tinyreplace-define-keys-compile-map)))))
+    (global-set-key "\M-&" 'tinyreplace-menu)))
+
+;;; ----------------------------------------------------------------------
+;;;
+;;;###autoload
+(defun tinyreplace-define-keys-compile-map ()
+  "Define key binding M-& in local map. For compilation like modes."
+  (interactive)
+  (local-set-key "\M-&" 'tinyreplace-replace-over-files-compile-buffer))
+
+;;; ----------------------------------------------------------------------
+;;;
+;;;###autoload
+(defun tinyreplace-install-hooks (&optional uninstall)
+  "Install or UNINSTALL `tinyreplace-define-keys-compile-map' into hooks.
+See:
+  compilation-mode-hook
+  compilation-minor-mode-hook
+  grep-mode-hook"
+  (interactive "P")
+  (cond
+   (uninstall
+    (add-hook 'compilation-mode-hook 'tinyreplace-define-keys-compile-map)
+    (add-hook 'compilation-minor-mode-hook 'tinyreplace-define-keys-compile-map)
+    (add-hook 'grep-mode-hook 'tinyreplace-define-keys-compile-map))
+   (t
+    (remove-hook 'compilation-mode-hook 'tinyreplace-define-keys-compile-map)
+    (remove-hook 'compilation-minor-mode-hook 'tinyreplace-define-keys-compile-map)
+    (remove-hook 'grep-mode-hook 'tinyreplace-define-keys-compile-map))))
 
 ;;; ----------------------------------------------------------------------
 ;;;###autoload
-(defun tinyreplace-install (&optional uninstall)
-  "Call `tinyreplace-install-default-keybings' with optional UNINSTALL."
-  (interactive "p")
-  (tinyreplace-install-default-keybings uninstall))
+(defun tinyreplace-install ()
+  "Call `tinyreplace-install-default-keybings' and `tinyreplace-install-hooks'."
+  (interactive)
+  (tinyreplace-install-default-keybings)
+  (tinyreplace-install-hooks))
 
 ;;}}}
 ;;{{{ misc
@@ -520,33 +547,6 @@ Special commands:
   (if buffer-read-only
       (message "My: Cannot start replace, buffer is read-only.")
     (ti::menu-menu 'tinyreplace-:menu)))
-
-;;; ----------------------------------------------------------------------
-;;;
-(put 'tinyreplace-with-keymap 'lisp-indent-function 1)
-(defmacro tinyreplace-with-keymap (sym &rest body)
-  "If keymap SYM exists, run BODY. Variable `map' is set to keymap."
-  `(let (map)
-     (when (and (boundp ,sym)
-                (setq map (symbol-value ,sym))
-                (keymapp map))
-       ,@body)))
-
-;;; ----------------------------------------------------------------------
-;;;
-;;;###autoload
-(defun tinyreplace-define-keys-compile-map  ()
-  "Define key bindings."
-  (interactive)
-  (tinyreplace-with-keymap
-   'compilation-mode-map
-   (define-key map "%" 'tinyreplace-replace-over-files-compile-buffer))
-  (tinyreplace-with-keymap
-   'compilation-minor-mode-map
-   (define-key map "%" 'tinyreplace-replace-over-files-compile-buffer))
-  (tinyreplace-with-keymap
-   'grep-mode-map
-   (define-key map "%" 'tinyreplace-replace-over-files-compile-buffer)))
 
 ;;; ----------------------------------------------------------------------
 ;;;
@@ -1429,8 +1429,6 @@ Input:
       (tinyreplace-latex-blk-replace str1 str2 math-blocks))))
 
 ;;}}}
-
-(add-hook   'compilation-mode-hook 'tinyreplace-define-keys-compile-map)
 
 (provide    'tinyreplace)
 (run-hooks  'tinyreplace-load-hook)

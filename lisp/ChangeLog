@@ -1,3 +1,15 @@
+2010-03-12 Fri  Jari Aalto  <jari.aalto@cante.net>
+
+	* tiny/tinyreplace.el
+	(top level:Install): new instructions.
+	(tinyreplace-with-keymap): Remove.
+	(tinyreplace-define-keys-compile-map): Use `local-set-key'.
+	(tinyreplace-install-hooks): New. Hooks are no longer installed
+	by default at file load time.
+	(tinyreplace-install-default-keybings): Install to compile
+	and grep buffer. Remove UNINSTALL option.
+	(tinyreplace-install): Remove UNINSTALL option.
+
 2010-03-05 Fri  Jari Aalto  <jari.aalto@cante.net>
 
 	* tiny/tinydiff.el (tinydiff-patch): Display 'hunk' if TYPE is set
