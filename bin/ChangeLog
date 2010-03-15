@@ -1,3 +1,9 @@
+2010-03-15 Tue  Jari Aalto  <jari.aalto@cante.net>
+
+	* makefile.pl: Remove. This file is obsolete and not used for
+	5 years.
+	* ddir.pl: Remove. Moved to a separate project.
+
 2008-09-20  Jari Aalto  <jari.aalto@cante.net>
 
 	* ripdoc.pl
