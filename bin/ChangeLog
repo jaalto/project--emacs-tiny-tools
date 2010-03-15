@@ -3,6 +3,7 @@
 	* makefile.pl: Remove. This file is obsolete and not used for
 	5 years.
 	* ddir.pl: Remove. Moved to a separate project.
+	* admin.bashrc: Remove. Old Sourceforge maintainer file.
 
 2008-09-20  Jari Aalto  <jari.aalto@cante.net>
 
