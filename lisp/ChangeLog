@@ -1,3 +1,13 @@
+2010-03-21 Sun  Jari Aalto  <jari.aalto@cante.net>
+
+	* tiny/tinydebian.el (tinydebian-launchpad-bug-type-p): Read
+	'X-Launchpad-Bug:' field for product name.
+
+2010-03-20 Sat  Jari Aalto  <jari.aalto@cante.net>
+
+	* tiny/tinydebian.el (tinydebian-launchpad-bug-type-p): Fix
+	`re-search-forward' call arguments.
+
 2010-03-12 Fri  Jari Aalto  <jari.aalto@cante.net>
 
 	* tiny/tinyreplace.el

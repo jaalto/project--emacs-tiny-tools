@@ -863,7 +863,7 @@ to generate updated list."
      tinydebian-:severity-selected
      tinydebian-:tags-list)))
 
-(defconst tinydebian-:version-time "2010.0301.0606"
+(defconst tinydebian-:version-time "2010.0321.0629"
   "Last edited time.")
 
 (defvar tinydebian-:bts-extra-headers
@@ -2227,7 +2227,8 @@ Return URL."
 	bug
 	package)
     (cond
-     ((string-match "http.*launchpad.net/\\([^ /\t\r\n]+\\)/.bugs/\\([0-9]+\\)" str)
+     ((string-match
+       "http.*launchpad.net/\\([^ /\t\r\n]+\\)/.bugs/\\([0-9]+\\)" str)
       (setq package (match-string-no-properties 1)
 	    bug     (match-string-no-properties 2)))
      (t
@@ -2239,10 +2240,12 @@ Return URL."
 	(setq bug (match-string-no-properties 1))
 	(goto-char (point-min))
 	(cond
-	 ((re-search-forward "[*].*Changed in: +\\([^ \t\r\n]+\\)")
+	 ((or (re-search-forward
+	       "^X-Launchpad-Bug: product=\\([^;  \t\r\n]+\\)" nil t)
+	      (re-search-forward "[*].*Changed in: +\\([^ \t\r\n]+\\)" nil t))
 	  (setq package (match-string-no-properties 1)))
 	 (t
-	  (error "Cannot parse package name in Launchpad detected bug context"))))))
+	  (error "Cannot parse package name in a Launchpad bug context"))))))
     (when (and bug package)
       (tinydebian-launchpad-url-package-bugs package bug))))
 
