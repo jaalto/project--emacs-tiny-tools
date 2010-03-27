@@ -1,3 +1,7 @@
+2010-03-27 Sun  Jari Aalto  <jari.aalto@cante.net>
+
+	* tiny/tinydebian.el (tinydebian-:severity-list): Add tag "help".
+
 2010-03-27 Sat  Jari Aalto  <jari.aalto@cante.net>
 
 	* tiny/tinyeat.el (tinyeat-install-default-bindings): Change

@@ -330,6 +330,8 @@ who use the package.")
      "Severe violation of Debian policy (that is, it violates a
 \"must\" or \"required\" directive), or, in the package maintainer's
 opinion, makes the package unsuitable for release.")
+    ("help"
+     "A request for help to solve the bug.")
     ("important"
      "A bug which has a major effect on the usability of a package,
 without rendering it completely unusable to everyone.")
@@ -863,7 +865,7 @@ to generate updated list."
      tinydebian-:severity-selected
      tinydebian-:tags-list)))
 
-(defconst tinydebian-:version-time "2010.0321.0629"
+(defconst tinydebian-:version-time "2010.0327.2346"
   "Last edited time.")
 
 (defvar tinydebian-:bts-extra-headers
