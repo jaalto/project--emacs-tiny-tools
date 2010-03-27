@@ -328,17 +328,18 @@ Normally word is terminated by whitespace or newlines."
 
   (global-set-key (kbd "C-S-y")           'tinyeat-yank-overwrite)
 
+
+  ;;  Alt-backspace
+  (global-set-key (kbd "<M-backspace>")   'tinyeat-backward-preserve)
+
   ;;  was `kill-word'
   (global-set-key "\M-d"                  'tinyeat-forward-preserve)
   (global-set-key (kbd "<C-backspace>")   'tinyeat-forward-preserve)
   ;; secondary backup
   (global-set-key (kbd "<C-delete>")      'tinyeat-forward-preserve)
   (global-set-key (kbd "<C-deletechar>")  'tinyeat-forward-preserve)
+  (global-set-key (kbd "<M-delete>")      'tinyeat-forward-preserve)
 
-
-  ;;  Alt-backspace
-  (global-set-key (kbd "<M-delete>")      'tinyeat-backward-preserve)
-  (global-set-key (kbd "<M-backspace>")   'tinyeat-backward-preserve)
 
   (global-set-key (kbd "<S-backspace>")   'tinyeat-delete-whole-word)
   (global-set-key (kbd "<S-delete>")      'tinyeat-delete-whole-word)

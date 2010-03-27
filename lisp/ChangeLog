@@ -1,3 +1,10 @@
+2010-03-27 Sat  Jari Aalto  <jari.aalto@cante.net>
+
+	* tiny/tinyeat.el (tinyeat-install-default-bindings): Change
+	direction of delete. The key M-DEL now delete forward, not
+	backward to be compatible with other programs as DEL key
+	deletes forward.
+
 2010-03-21 Sun  Jari Aalto  <jari.aalto@cante.net>
 
 	* tiny/tinydebian.el (tinydebian-launchpad-bug-type-p): Read
