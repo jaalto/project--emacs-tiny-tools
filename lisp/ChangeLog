@@ -1,3 +1,13 @@
+2010-03-31 Wed  Jari Aalto  <jari.aalto@cante.net>
+
+	* tiny/tinydebian.el (tinydebian-command-show-wnpp-alert): sort
+	* displayed lines.
+
+2010-03-30 Tue  Jari Aalto  <jari.aalto@cante.net>
+
+	* tiny/tinydebian.el (tinydebian-mail-mode-debian-address-ask-bug):
+	Add many more bug detection methods.
+
 2010-03-27 Sat  Jari Aalto  <jari.aalto@cante.net>
 
 	* tiny/tinyeat.el (tinyeat-install-default-bindings): Change

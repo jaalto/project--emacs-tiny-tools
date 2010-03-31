@@ -863,7 +863,7 @@ to generate updated list."
      tinydebian-:severity-selected
      tinydebian-:tags-list)))
 
-(defconst tinydebian-:version-time "2010.0321.0629"
+(defconst tinydebian-:version-time "2010.0331.1705"
   "Last edited time.")
 
 (defvar tinydebian-:bts-extra-headers
@@ -3138,6 +3138,7 @@ Mode description:
 	(goto-char (point-min))
 	(save-excursion
 	  (tinydebian-command-show-wnpp-alert-format))
+	(sort-lines nil (point-min) (point-max))
 	(tinydebian-wnpp-alert-mode)
 	(turn-on-tinydebian-bts-mode)
 	(display-buffer buffer)
@@ -3345,7 +3346,11 @@ Remove addresses by RE."
   "Return bug number from To, Cc fields etc. or ask with MSG."
   (let ((nbr (or (tinydebian-email-cc-to-bug-nbr)
 		 (tinydebian-email-subject-bug-nbr)
-		 (tinydebian-email-debian-control-commands))))
+		 (tinydebian-bug-nbr-at-current-point)
+		 (tinydebian-email-debian-control-commands)
+		 (tinydebian-bug-nbr-current-line)
+		 (tinydebian-bug-nbr-forward)
+		 (tinydebian-bug-nbr-buffer))))
     (if nbr
 	nbr
       (tinydebian-bts-mail-ask-bug-number))))
