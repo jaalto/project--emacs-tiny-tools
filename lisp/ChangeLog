@@ -9,6 +9,7 @@
 	(tinydebian-:usertag-email-list): New.
 	(tinydebian-bts-mail-ctrl-usertag): add new arg `email'. Use
 	`tinydebian-:usertag-email-list'.
+	(tinydebian-:usertag-email-list): Add DEBEMAIL.
 
 2010-03-31 Wed  Jari Aalto  <jari.aalto@cante.net>
 

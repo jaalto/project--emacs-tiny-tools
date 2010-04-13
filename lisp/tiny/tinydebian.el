@@ -318,13 +318,17 @@ Only used if `tinydebian-:browse-url-function'is set to
   "*List of directororied to search for Debian development policy etc.")
 
 (defvar tinydebian-:usertag-email-list
-  (list
-   (cons user-mail-address 1)
-   ;; Package removals
-   ;; http://wiki.debian.org/ftpmaster_Removals
-   (cons "release.debian.org@packages.debian.org" 2)
-   )
-  "Email addresses for (Debian) BTS usertag comands.
+  (delq
+   nil
+   (list
+    (cons user-mail-address 1)
+    (let ((email (getenv "DEBEMAIL")))	;See dch(1)
+      (if email
+	  (cons email  2)))
+    ;; Package removals. See
+    ;; http://wiki.debian.org/ftpmaster_Removals
+    (cons "release.debian.org@packages.debian.org" 3)))
+  "Email addresses for (Debian) BTS 'usertag' comands.
 An alist of email addresses for use in `completing-read':
   '((EMAIL . NUMBER) (EMAIL . NUMBER) ...).")
 
