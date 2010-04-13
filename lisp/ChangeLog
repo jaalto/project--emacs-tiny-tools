@@ -1,5 +1,8 @@
 2010-04-13 Tue  Jari Aalto  <jari.aalto@cante.net>
 
+	* tiny/tinyadvice.el: (DOC::Install): Improve documentation.
+	(top level): remove all folding.el marks.
+
 	* tiny/tinydebian.el (tinydebian-mail-mode-debian-address-ask-bug):
 	Prefer taking bug number from current line before looking at mail
 	headers.

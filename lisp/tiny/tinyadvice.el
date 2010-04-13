@@ -2,8 +2,6 @@
 
 ;; This file is not part of Emacs
 
-;;{{{ Id
-
 ;; Copyright (C)    1996-2010 Jari Aalto
 ;; Keywords:        extensions
 ;; Author:          Jari Aalto
@@ -29,8 +27,6 @@
 ;;
 ;; Visit <http://www.gnu.org/copyleft/gpl.html> for more information
 
-;;}}}
-;;{{{ Install
 
 ;;; Install:
 
@@ -40,8 +36,8 @@
 ;;
 ;;     (require 'tinyadvice)
 ;;
-;; Loading this package takes lot of time. You might gain more comfortable
-;; Emacs startup "feel" using the following autoload suggestion:
+;; Loading this package takes some time. A more faster startup "feel"
+;; could be achieved with following delayed loading:
 ;;
 ;;     (require 'tinylib)
 ;;     (when (ti::emacs-p)                    ;Do not load in XEmacs
@@ -50,16 +46,17 @@
 ;;             '(lambda () (require 'tinyadvice)))
 ;;         (run-at-time "4 min" nil '(lambda () (require 'tinyadvice)))))
 ;;
-;; But before you leap into this, make sure you want to do it.
+;; But before you leap into that, make sure you want to do it.
 ;;
 ;;      CHECK IF YOUR EMACS IS SUPPORTED
 ;;      THESE ADVICES ARE FOR Emacs, expect trouble in XEmacs.
 ;;
-;;      Change `tinyadvice-:re' to try advices in non-supported Emacs versions
+;;      Advice activation  controlled by variable `tinyadvice-:re'
 ;;
-;; This file modifies original Emacs functions, so read the document
-;; carefully to tailor this package for you (enabling/disabling advices)
-;; The best up to date documentation can be generated from this file:
+;; This file modifies original Emacs functions, so read the
+;; documentation carefully to tailor package for personal use
+;; (enabling/disabling advices). The up to date documentation can be
+;; generated from this file with ocmmands:
 ;;
 ;;      M-x eval-current-buffer
 ;;      M-x load-library tinyliby.el
@@ -68,11 +65,6 @@
 ;; If you have any questions, use this function
 ;;
 ;;      M-x tinyadvice-submit-bug-report      send bug report or feedback
-;;
-
-;;}}}
-
-;;{{{ Documentation
 
 ;; ..................................................... &t-commentary ...
 
@@ -80,10 +72,10 @@
 
 ;;  Preface, Apr 1996
 ;;
-;;      What you see here is a selection of adviced functions that have
-;;      proven to be useful. Some of them have been written by
-;;      the author (if there is no author mentioned) and some of them have
-;;      been collected form the emacs newsgroups.
+;;      What you see here is a selection of adviced functions that
+;;      have proven to be useful. Some of them have been written by
+;;      the author (if there is no author mentioned) and some of them
+;;      have been collected form the Emacs newsgroups.
 ;;
 ;;      Here is one example how to to fontify automatically, whenever
 ;;      compilation buffer runs:
@@ -108,21 +100,20 @@
 ;;
 ;;  Note: XEmacs
 ;;
-;;      These advices are for Emacs and it would be a surprise if they
-;;      worked in XEmacs. Use at your own risk. Send fixed XEmacs
-;;      compatible advices to maintained if you try them.
+;;      These advices are for Emacs and it would be a surprise if any
+;;      of them worked in XEmacs. Use at your own risk.
 ;;
 ;;  These advises and Emacs releases
 ;;
 ;;      Many of these enhancements could have shipped with the Emacs
-;;      itself. And there was a time when these were suggested to be added
-;;      to the next Emacs release. For some reason the developers
-;;      were not interested in the features at that time.
+;;      itself. And there was a time when these were suggested to be
+;;      added to the next Emacs release, but the developers were not
+;;      interested in improving or changing functions at those times.
 ;;
 ;;  How to use this package
 ;;
-;;      The best way is to load this package, print the whole file and read
-;;      the comments about individual functions and how they change things.
+;;      The best way is to try. Load package read the comments about
+;;      individual functions and how they change things.
 ;;
 ;;  Overview of features
 ;;
@@ -162,7 +153,7 @@
 ;;          all emacs files). Find-file is done in non dedicated frame.
 ;;          TAB completes filenames.
 ;;
-;;      o   completion:  case sensitive filename completion
+;;      o   completion: case sensitive filename completion
 ;;
 ;;      o   grep: filename and directory completion with TAB key
 ;;
@@ -177,39 +168,37 @@
 ;;
 ;;  Handling advices
 ;;
-;;      If you have some other emacs version that is not supported in
+;;      If you have some other Emacs version that is not supported in
 ;;      the `tinyadvice-:advice-table' you can modify the regexps in
-;;      the list and try if the advice works in your emacs. If it
-;;      does, please drop me a mail immediately and I update the
-;;      regexp. If some advice annoys you, there is simple method how
-;;      you disable advice(s).
+;;      the list and try if the advice works. If it does, please drop
+;;      me a mail to have the regecp updated. If some advice is
+;;      annoying, there is simple method how you disable advice(s).
 ;;
 ;;          (setq tinyadvice-load-hook
 ;;                '(tinyadvice-install my-tinyadvice-load-hook))
 ;;
 ;;          (defun my-tinyadvice-load-hook ()
-;;            "Configure 'tiny tool's advices' to my taste."
+;;            "Configure advices"
 ;;            (interactive)
 ;;            ;; This diables two advices
 ;;            (tinyadvice-advice 'disable
 ;;               '(switch-to-buffer mouse-delete-other-windows)))
+;;
 ;;          (require 'tinyadvice)
 ;;
-;;  Disabling disturbing advice by hand
+;;  Disabling a disturbing advice by hand
 ;;
-;;      If some piece of advice disturbs or causes trouble in your
-;;      current emacs session, you can deactivate it
-;;      immediately. First you have to know the function name that
-;;      generates problems. Say you used `C-x' `C-b'
-;;      `switch-to-buffer' and you don't like the confirmation for
-;;      non-existent buffers. You can disable this behavior by
+;;      If some piece of advice disturbs or causes trouble, it is
+;;      possible to deactivate it immediately. First you have to know
+;;      the function name that generates problems. Say you used `C-x'
+;;      `C-b' `switch-to-buffer' and you don't like the confirmation
+;;      for non-existent buffers. You can disable this behavior by
 ;;      calling:
 ;;
 ;;          C-u M-x tinyadvice-advice
 ;;
-;;      and giving the function name `switch-to-buffer' to it. To
-;;      permanently turn it off in your emacs sessions, see previous
-;;      lisp code.
+;;      and give the function name `switch-to-buffer' to it. To
+;;      permanently turn the advice off, see previous lisp code.
 ;;
 ;;  Code note
 ;;
@@ -219,7 +208,7 @@
 ;;              (defadvice ..
 ;;
 ;;      If emacs version is wrong, the advice is _never_ actually
-;;      assembled.  You can't activate or deactivate this function
+;;      intrumented. You can't activate or deactivate those functions
 ;;      with `tinyadvice-advice'.
 ;;
 ;;  Many thanks to, in no particular order:
@@ -230,13 +219,9 @@
 ;;      Peter    Breton         <pbreton@i-kinetics.com>
 ;;      T. V.    Raman          <raman@adobe.com>
 
-;;}}}
-
 ;;; Change Log:
 
 ;;; Code:
-
-;;{{{ setup: require
 
 ;;; ......................................................... &require ...
 
@@ -254,9 +239,6 @@
 ** TinyAdvice: You must configure this package manually to XEmacs
                In general, do not use this packaage on XEmacs.")
     (load "overlay" 'noerr)))           ;19.15+
-
-;;}}}
-;;{{{ setup: public
 
 ;;; ......................................................... &v-hooks ...
 
@@ -395,9 +377,6 @@ The FLAG is optional and values can be:
   'xe   only works in Xemacs
   t     works both Emacs and XEmacs")
 
-;;}}}
-;;{{{ setup: private
-
 ;;; ....................................................... &v-private ...
 
 (defconst tinyadvice-:advice-re  "^tinyadvice"
@@ -408,9 +387,6 @@ The FLAG is optional and values can be:
 
 (defvar tinyadvice-:vc-p nil
   "Variable indicating if file in `vc-do-command' is version controlled.")
-
-;;}}}
-;;{{{ version
 
 ;;; ....................................................... &v-version ...
 
@@ -426,11 +402,7 @@ The FLAG is optional and values can be:
      tinyadvice-:write-file-no-confirm
      tinyadvice-:re)))
 
-;;}}}
-
 ;;; ########################################################### &Funcs ###
-
-;;{{{ tinyadvice: misc
 
 ;;; ----------------------------------------------------------------------
 ;;;
@@ -614,9 +586,6 @@ Return:
           (require 'jka-compr))))
   file)
 
-;;}}}
-;;{{{ built-ins
-
 ;;; ........................................................ &built-in ...
 
 ;;; ----------------------------------------------------------------------
@@ -631,8 +600,6 @@ Return:
        (buffer-name))))
     ad-do-it))
 
-;;}}}
-;;{{{ compile
 
 ;;; ......................................................... &compile ...
 
@@ -792,8 +759,6 @@ More smarter buffer saving, seefunction `tinyadvice-compile-save-buffers'."
     (tinyadvice-compile-save-buffers))
   (compile-internal compile-command "No more errors"))
 
-;;}}}
-;;{{{ completion and macros
 
 ;;; ...................................................... &completion ...
 
@@ -818,11 +783,7 @@ Set `completion-ignore-case' locally to nil."
         (setq completion-ignore-case nil))
     ad-do-it))
 
-;;}}}
-
-;;{{{ debugger
-
-;;; -------------------------------------------------------- &debugger ---
+;;; ----------------------------------------------------------------------
 ;;;
 (defadvice debugger-eval-expression (around tinyadvice dis)
   "Chnage interactive so that it offer word from buffer."
@@ -835,8 +796,6 @@ Set `completion-ignore-case' locally to nil."
      'read-expression-history)))
   ad-do-it)
 
-;;}}}
-;;{{{ dired
 
 ;;; ........................................................... &dired ...
 
@@ -867,10 +826,6 @@ Activates advice 'dired-mark-read-file-name during call."
   "Make sure man variables are initialized."
   (require 'man)
   (Man-init-defvars))
-
-;;}}}
-
-;;{{{ env
 
 ;;; ............................................................. &env ...
 
@@ -923,9 +878,6 @@ names are allowed."
       (message "%s" value)
     value))
 
-;;}}}
-;;{{{ grep, tag
-
 ;;; ------------------------------------------------------------ &grep ---
 ;;;
 (defadvice grep  (around tinyadvice  dis)
@@ -947,10 +899,6 @@ Read word from the current pointand put it into grep prompt."
 (defadvice find-tag (after tinyadvice-reposition-window act)
   "Call reposition-window after finding a tag."
   (reposition-window))
-
-;;}}}
-
-;;{{{ files.el
 
 ;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;
 ;;;
@@ -1089,9 +1037,6 @@ Confirm overwrite:
     (write-abbrev-file nil)
     (setq abbrevs-changed nil)))
 
-;;}}}
-;;{{{ gud
-
 ;;; ............................................................. &gud ...
 
 ;;; ----------------------------------------------------------------------
@@ -1111,9 +1056,6 @@ Confirm overwrite:
          (line-end-position)
          (current-buffer))))))
 
-;;}}}
-;;{{{ mail
-
 ;;; ............................................................ &mail ...
 
 ;;; ----------------------------------------------------------------------
@@ -1132,8 +1074,6 @@ Confirm overwrite:
     (setq abbrev-start-location (point) ; this hack stops expand-abbrev
           abbrev-start-location-buffer (current-buffer))))
 
-;;}}}
-;;{{{ map-ynp
 
 ;;; ......................................................... &map-ynp ...
 
@@ -1164,9 +1104,6 @@ Confirm overwrite:
     (if (listp last-nonmenu-event)
         ;; replace with some harmless value
         (setq last-nonmenu-event ?\n))))
-
-;;}}}
-;;{{{ mouse
 
 ;;; ........................................................... &mouse ...
 
@@ -1199,8 +1136,6 @@ Confirm overwrite:
       ad-do-it
     (message "")))
 
-;;}}}
-;;{{{ replace.el
 
 (defadvice occur  (before tinyadvice act)
   "Iinteractive change: ask if user want the occur to start from `point-min'.
@@ -1218,9 +1153,6 @@ also Possibly unfold/un-outline the code."
                (re-search-forward "\r" nil t))
              (y-or-n-p "TinyAdvice: Open buffer's selective display too? "))
         (ti::buffer-outline-widen))))
-
-;;}}}
-;;{{{ simple.el
 
 ;;; .......................................................... &simple ...
 
@@ -1347,9 +1279,6 @@ References:
         (select-frame (car free-frames))
         (switch-to-buffer buffer))))))
 
-;;}}}
-;;{{{ subr.el
-
 ;;; ----------------------------------------------------------------------
 ;;; - This puts cursor to generated list. Propably what we
 ;;;   want 99% of the time.
@@ -1358,9 +1287,6 @@ References:
   "Select buffer list after display."
   (if (interactive-p)
       (select-window (get-buffer-window "*Buffer List*"))))
-
-;;}}}
-;;{{{ Other
 
 ;;; ........................................................... &other ...
 
@@ -1405,8 +1331,6 @@ For `help-mode',switch `view-mode' off."
   (if (and (eq major-mode 'help-mode)
            (boundp view-mode) view-mode)
       (view-exit)))
-
-;;}}}
 
 (provide   'tinyadvice)
 (run-hooks 'tinyadvice-load-hook)
