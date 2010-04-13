@@ -4637,7 +4637,11 @@ thanks
      tinydebian-:usertag-email-list)))
   (tinydebian-bts-mail-type-macro
    nil nil nil
-   (format "Bug#%s change of usertag %s" bug (or tag-string ""))
+   (format "Bug#%s change of usertag%s"
+	   bug
+	   (if tag-string
+	       (format " %s" tag-string)
+	     ""))
    (insert
     (format "\
 %susertag %s +
