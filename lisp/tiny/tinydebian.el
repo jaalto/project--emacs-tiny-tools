@@ -317,6 +317,17 @@ Only used if `tinydebian-:browse-url-function'is set to
     "/usr/share/doc/developers-reference")
   "*List of directororied to search for Debian development policy etc.")
 
+(defvar tinydebian-:usertag-email-list
+  (list
+   (cons user-mail-address 1)
+   ;; Package removals
+   ;; http://wiki.debian.org/ftpmaster_Removals
+   (cons "release.debian.org@packages.debian.org" 2)
+   )
+  "Email addresses for (Debian) BTS usertag comands.
+An alist of email addresses for use in `completing-read':
+  '((EMAIL . NUMBER) (EMAIL . NUMBER) ...).")
+
 (defvar tinydebian-:severity-list
   '(("critical"
      "Makes unrelated software on the system (or the whole system) break,
@@ -863,7 +874,7 @@ to generate updated list."
      tinydebian-:severity-selected
      tinydebian-:tags-list)))
 
-(defconst tinydebian-:version-time "2010.0331.1705"
+(defconst tinydebian-:version-time "2010.0413.0548"
   "Last edited time.")
 
 (defvar tinydebian-:bts-extra-headers
@@ -3344,11 +3355,11 @@ Remove addresses by RE."
 ;;;
 (defun tinydebian-mail-mode-debian-address-ask-bug ()
   "Return bug number from To, Cc fields etc. or ask with MSG."
-  (let ((nbr (or (tinydebian-email-cc-to-bug-nbr)
-		 (tinydebian-email-subject-bug-nbr)
-		 (tinydebian-bug-nbr-at-current-point)
-		 (tinydebian-email-debian-control-commands)
+  (let ((nbr (or (tinydebian-bug-nbr-at-current-point)
 		 (tinydebian-bug-nbr-current-line)
+		 (tinydebian-email-cc-to-bug-nbr)
+		 (tinydebian-email-subject-bug-nbr)
+		 (tinydebian-email-debian-control-commands)
 		 (tinydebian-bug-nbr-forward)
 		 (tinydebian-bug-nbr-buffer))))
     (if nbr
@@ -4612,18 +4623,24 @@ thanks
 
 ;;; ----------------------------------------------------------------------
 ;;;
-(defun tinydebian-bts-mail-ctrl-usertag (bug &optional tag-string)
+(defun tinydebian-bts-mail-ctrl-usertag (bug &optional email tag-string)
   "Compose BTS control message usertag to a BUG with TAG-STRING."
   (interactive
-   (list (tinydebian-bts-mail-ask-bug-number)))
+   (list
+    (tinydebian-bts-mail-ask-bug-number)
+    (completing-read
+     "Usertag user (email): "
+     tinydebian-:usertag-email-list)))
   (tinydebian-bts-mail-type-macro
    nil nil nil
    (format "Bug#%s change of usertag %s" bug (or tag-string ""))
    (insert
     (format "\
-usertag %s +
+%susertag %s +
 thanks
 "
+	    (if email
+		(format "user %s\n" email))
 	    bug))
    (when (re-search-backward "[+]" nil t)
      (forward-char 2))))
@@ -4744,12 +4761,13 @@ thanks
 	      (setq pkg tmp))))
       (setq type (completing-read
 		  "Package remove request type: "
-		  '(("ROM" . 1)
-		    ("ROSRM" . 2)
-		    ("RoQA" . 3))
+		  '(("RM" . 1)
+		    ("ROM" . 2)
+		    ("ROSRM" . 3)
+		    ("RoQA" . 4))
 		  nil
 		  t
-		  "ROM"))
+		  nil))
       (setq package (read-string "Package name: " pkg))
       (setq suite (completing-read
 		   "Suite: "
@@ -4789,9 +4807,13 @@ MESSAGE is a short explanation that appears in Subject field.
 Optional SUITE is by default 'unstable'.
 
 TYPE is one of the uppercase strings:
-ROM     Package removal - Request Of Maintainer.
-ROSRM   Package removal - Request of Stable Release Manager.
-RoQA    Package removal - Requested by the QA team."
+RM      Package removal - Generic request
+ROM     Package removal - Request Of Maintainer
+ROP     Package removal - Request of Porter
+ROSRM   Package removal - Request of Stable Release Manager
+RoQA    Package removal - Requested by the QA team
+
+See http://wiki.debian.org/ftpmaster_Removals"
   (interactive
    (tinydebian-bts-mail-ctrl-remove-package-ask))
   (unless (string-match "^r" type)

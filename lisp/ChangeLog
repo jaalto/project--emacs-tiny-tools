@@ -1,3 +1,15 @@
+2010-04-13 Tue  Jari Aalto  <jari.aalto@cante.net>
+
+	* tiny/tinydebian.el (tinydebian-mail-mode-debian-address-ask-bug):
+	Prefer taking bug number from current line before looking at
+	mail headers.
+	(tinydebian-bts-mail-ctrl-remove-package-ask): Add 'RM' type.
+	(tinydebian-bts-mail-ctrl-remove-package): Update docstring to include
+	RM, ROP.
+	(tinydebian-:usertag-email-list): New.
+	(tinydebian-bts-mail-ctrl-usertag): add new arg `email'. Use
+	`tinydebian-:usertag-email-list'.
+
 2010-03-31 Wed  Jari Aalto  <jari.aalto@cante.net>
 
 	* tiny/tinydebian.el (tinydebian-command-show-wnpp-alert): sort
