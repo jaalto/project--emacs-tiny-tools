@@ -1,3 +1,26 @@
+2010-04-15 Thu  Jari Aalto  <jari.aalto@cante.net>
+
+	* tiny/tinyperl.el
+	(top level): New feature. There is menu entry to Lint the Perl
+	code in buffer using module Perl::Critic; which needs to be installed
+	separately.
+	(tinyperl-lint-perl-critic): New.
+	(tinyperl-:lint-buffer-name): New.
+	(tinyperl-:lint-default-file-name): New.
+	(tinyperl-:lint-severity): New.
+	(tinyperl-:lint-hook): New.
+
+	* tiny/tinycompile.el
+	(tinycompile-parse-line-goto-guess): New.
+	(tinycompile-parse-line-goto-basic): Rename. Was
+	`tinycompile-parse-line-goto'.
+	(tinycompile-parse-line-goto-main): New.
+	(tinycompile-parse-line-goto-basic): Add check to `current-local-map'.
+
+	* tiny/tinyliba.el (ti::buffer-parse-line-col): New.
+
+	* tiny/tinylib.el (ti::buffer-parse-line-col): New.
+
 2010-04-13 Tue  Jari Aalto  <jari.aalto@cante.net>
 
 	* tiny/tinyadvice.el: (DOC::Install): Improve documentation.
