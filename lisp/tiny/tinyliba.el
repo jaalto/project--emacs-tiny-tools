@@ -747,6 +747,7 @@ This function is run only once at tinynyliba.el load."
   (autoload 'ti::buffer-area-bounds               "tinylib" "" nil)
   (autoload 'ti::buffer-parse-grep-line           "tinylib" "" nil)
   (autoload 'ti::buffer-parse-grep-line2          "tinylib" "" nil)
+  (autoload 'ti::buffer-parse-line-col		  "tinylib" "" nil)
   (autoload 'ti::buffer-parse-line-main           "tinylib" "" nil)
   (autoload 'ti::buffer-join-region               "tinylib" "" t)
   (autoload 'ti::buffer-read-if-solid             "tinylib" "" nil)
