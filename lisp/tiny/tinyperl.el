@@ -91,17 +91,21 @@
 ;;
 ;;      In Windows, both Activestate Perl and native Cygwin Perl are
 ;;      supported. But you cannot use both. If you have accustomed to
-;;      Activestate Perl, consider moving to Cygwin Perl, because
-;;      it is more close to the Unix. With cygwin, you can install and upgrade
-;;      CPAN archives easily: "perl -eCPAN -e shell"
+;;      Activestate Perl, consider moving to Cygwin Perl, because it
+;;      is more close to the original one. With Cygwin, you can
+;;      install and upgrade CPAN archives easily:
 ;;
-;;      *Multiple* *perl* installations are _not_ _supported._ The one that
-;;      comes in path first is used. Perl advances each time so much that
-;;      you're much safer if you always have the latest version.
+;;		perl -MCPAN -e shell
+;;
+;;      Multiple Perl installations are _not_ _supported._ The one
+;;      that comes in path first is used. Perl advances each time so
+;;      much that you're much safer if you always have the latest
+;;      version.
 ;;
 ;;      `tinyperl-mode' minor mode:
 ;;
 ;;      o   Instant function help: See documentation of `shift', `pop'...
+;;      o   Lint perl code using Perl::Critic (if installed).
 ;;      o   Show Perl manual pages in *pod* buffer
 ;;      o   Load library source code into Emacs, like Devel::DProf.pm
 ;;      o   Grep through all Perl manual pages (.pod)
@@ -507,6 +511,7 @@
 (eval-when-compile (ti::package-use-dynamic-compilation))
 
 (eval-and-compile
+  (defvar tinycompile-:buffer-name)
   (defvar compilation-error-regexp-alist)
   ;;  Follow pod URLs and other url links like cut(1)
   ;; Go to grep result.
@@ -568,6 +573,11 @@ See `tinyperl-podchecker'."
   :type  'hook
   :group 'TinyPerl)
 
+(defcustom tinyperl-:lint-hook nil
+  "Hook run after calling `tinyperl-lint-perl-critic'."
+  :type  'hook
+  :group 'TinyPerl)
+
 ;;}}
 ;;{{ setup: public
 
@@ -575,6 +585,22 @@ See `tinyperl-podchecker'."
   "*If number, bigger than zero, dispaly informational messages.
 In error situations you can look old messages from *Messages* buffer."
   :type  '(integer :tag "Verbose level 0 ... 10")
+  :group 'TinyPerl)
+
+(defcustom tinyperl-:lint-buffer-name "*tinyperl-lint*"
+  "*The lint Buffer name."
+  :type  'string
+  :group 'TinyPerl)
+
+(defcustom tinyperl-:lint-default-file-name "~/test.pl"
+  "*The lint Buffer name."
+  :type  'string
+  :group 'TinyPerl)
+
+(defcustom tinyperl-:lint-severity 5	;Max
+  "*Default severity to run Perl::Critic with.
+As of 2010-04-15 Perl::Critic, this can be in range 1-5."
+  :type  'number
   :group 'TinyPerl)
 
 (defcustom tinyperl-:key-pageup-control 'heading
@@ -1471,6 +1497,7 @@ Mode description:
     ["Module source find-file"            tinyperl-module-find-file  t]
     ["Module generate stubs"              tinyperl-selfstubber-stubs t]
     "----"
+    ["Lint with Perl::Critic"             tinyperl-lint-perl-critic t]
     ["PAUSE copy file"                    tinyperl-pause-copy-file   t]
     ["PAUSE submit page"                  tinyperl-pause-url-submit-www-page  t]
     ;; ["Pause upload via FTP"]           tinyperl-pause-upload-via-ftp t]
@@ -1481,28 +1508,29 @@ Mode description:
     ["Mode off"                           tinyperl-mode              t])
 
    (progn
-     (define-key map  "?"  'tinyperl-mode-help)
-     (define-key map  "Hm" 'tinyperl-mode-help)
-     (define-key map  "Hc" 'tinyperl-commentary)
-     (define-key map  "Hv" 'tinyperl-version)
-     (define-key map "P"   'tinyperl-pod-by-manpage)
-     (define-key map "p"   'tinyperl-pod-by-module)
+     (define-key map "!"   'tinyperl-pod-podchecker)
+     (define-key map "?"   'tinyperl-mode-help)
+     (define-key map "?"   'tinyperl-mode-help)
+;;;   (define-key map "b"   'tinyperl-pod-jump)
+     (define-key map "S"   'tinyperl-selfstubber-stubs)
+     ;; C = CPAN interface, other keys like P (PAUSE) are already reserved.
+     (define-key map "Cc"   'tinyperl-pause-copy-file)
+     ;; (define-key map "Cf"   'tinyperl-pause-upload-via-ftp)
+     (define-key map "Cs"   'tinyperl-pause-url-submit-www-page)
+     (define-key map "d"   'tinyperl-perldoc)
      (define-key map "f"   'tinyperl-pod-find-file)
      (define-key map "F"   'tinyperl-pod-find-file-this-buffer)
      (define-key map "g"   'tinyperl-pod-grep)
      (define-key map "G"   'tinyperl-pod-grep-faq-answer)
+     (define-key map "Hc"  'tinyperl-commentary)
+     (define-key map "Hm"  'tinyperl-mode-help)
+     (define-key map "Hv"  'tinyperl-version)
      (define-key map "k"   'tinyperl-pod-kill-buffers)
-;;;   (define-key map "b"   'tinyperl-pod-jump)
-     (define-key map "!"   'tinyperl-pod-podchecker)
-     (define-key map "d"   'tinyperl-perldoc)
+     (define-key map "l"   'tinyperl-lint-perl-critic)
      (define-key map "m"   'tinyperl-module-find-file)
-     (define-key map "?"   'tinyperl-mode-help)
      (define-key map "M"   'tinyperl-mode)
-     (define-key map "S"   'tinyperl-selfstubber-stubs)
-     ;; C = CPAN interface, other keys like P (PAUSE) are already reserved.
-     (define-key map "Cc"   'tinyperl-pause-copy-file)
-     (define-key map "Cs"   'tinyperl-pause-url-submit-www-page)
-     ;; (define-key map "Cf"   'tinyperl-pause-upload-via-ftp)
+     (define-key map "p"   'tinyperl-pod-by-module)
+     (define-key map "P"   'tinyperl-pod-by-manpage)
      (define-key map "W"   'tinyperl-pod-write-mode)
      ;;  Borrow some commonly used keys from the "pod-write" mode
      (define-key map "'f"   'tinyperl-pod-write-skeleton-script-function)
@@ -3423,6 +3451,50 @@ been answered in FAQ'"
      (unless (save-match-data
                (string-match (regexp-quote date) (match-string 2)))
        (replace-match date nil nil nil 2)))))
+
+;;; ----------------------------------------------------------------------
+;;;
+(defun tinyperl-lint-perl-critic (&optional level)
+  "Run Lint with Perl::Critic.
+Optional prefix arg severity LEVEL.
+
+Turn on `tinycompile-mode' is available. With the mode on, the
+code line can be visited by selecting an error message. See mode
+description for details.
+
+See also:
+   http://search.cpan.org/~elliotjs => Perl-Critic"
+  (interactive "p")
+  (let ((current (current-buffer))
+	(buffer  (get-buffer-create tinyperl-:lint-buffer-name))
+	(file    (buffer-file-name))
+	(default-file tinyperl-:lint-default-file-name))
+    (or level
+	(setq level tinyperl-:lint-severity))
+    (unless file
+      (unless default-file
+	(error "No tinyperl-:lint-buffer-name to save buffer %s"
+	       (buffer-name)))
+      (write-region (point-min) (point-max) default-file)
+      (setq file default-file))
+    (with-current-buffer buffer
+      (erase-buffer)
+      (call-process "perl"
+		    nil
+		    (current-buffer)
+		    nil
+		    "-MPerl::Critic=critique"
+		    "-e"
+		    (format
+		     "print critique({-severity => %s}, shift)"
+		     (int-to-string level))
+		    (expand-file-name file))
+      (run-hooks 'tinyperl-:lint-hook)
+      (when (fboundp 'tinycompile-mode)
+	(tinycompile-mode 1)
+	(make-local-variable 'tinycompile-:buffer-name)
+	(setq tinycompile-:buffer-name current)))
+    (display-buffer buffer)))
 
 ;;; ----------------------------------------------------------------------
 ;;;
