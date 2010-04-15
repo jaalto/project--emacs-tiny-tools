@@ -122,7 +122,7 @@
      (?r    . ( (call-interactively 'tinycompile-hide-by-regexp-whole-line)))
      (?R    . ( (call-interactively 'tinycompile-hide-by-regexp)))
      (?U    . ( (call-interactively 'tinycompile-unhide)))
-     (?\C-m . ( (tinycompile-parse-line-goto)))
+     (?\C-m . ( (tinycompile-parse-line-goto-main)))
      (?x    . ( (turn-off-tinycompile-mode)))))
   "*TinyCompile echo menu.
 
@@ -186,7 +186,7 @@ Prefix key to access the minor mode is defined in
     tinycompile-:mode-easymenu-name
     ["Kill all matching file lines at point"  tinycompile-kill-all-file-lines t]
     ["Shorten directory names"            tinycompile-shorten-lines           t]
-    ["Goto file at point"                 tinycompile-parse-line-goto         t]
+    ["Goto file at point"                 tinycompile-parse-line-goto-main    t]
     "----"
     ["Show or hide comments (toggle)"     tinycompile-show-hide-toggle        t]
     ["Hide by regexp - partial"           tinycompile-hide-by-regexp          t]
@@ -201,8 +201,8 @@ Prefix key to access the minor mode is defined in
 
    (progn
      (if (ti::xemacs-p)
-         (define-key root-map [(button2)] 'tinycompile-parse-line-goto)
-       (define-key root-map [mouse-2]     'tinycompile-parse-line-goto))
+         (define-key root-map [(button2)] 'tinycompile-parse-line-goto-main)
+       (define-key root-map [mouse-2]     'tinycompile-parse-line-goto-main))
      (cond
       (tinycompile-:menu-use-flag
        ;;  Using menu to remeber commands is easier if you don't use
@@ -221,7 +221,7 @@ Prefix key to access the minor mode is defined in
        (define-key map  "Hc"     'tinycompile-commentary)
        (define-key map  "Hv"     'tinycompile-version)
        ;;  Overwrite {compilation-minor-mode|grep-mode} definition
-       (define-key root-map "\C-m" 'tinycompile-parse-line-goto))))))
+       (define-key root-map "\C-m" 'tinycompile-parse-line-goto-main))))))
 
 ;;; ----------------------------------------------------------------------
 ;;;
@@ -262,7 +262,6 @@ Format:
   :group 'TinyCompile)
 
 ;;}}}
-
 ;;{{{ code: macros
 
 ;;; ----------------------------------------------------------------------
@@ -363,14 +362,44 @@ Line format must be
 
 ;;; ----------------------------------------------------------------------
 ;;;
-(defun tinycompile-parse-line-goto ()
+(defvar tinycompile-:buffer-name nil
+  "Buffer name is asked from user.
+Varaible is made buffer local.
+See `tinycompile-parse-line-goto-guess'.")
+
+(defun tinycompile-parse-line-goto-guess ()
+  "Go to line under cursor by guessing context."
+  (interactive)
+  (let* ((elt  (ti::buffer-parse-line-col))
+	 (line (and elt (string-to-int (car elt))))
+	 (col  (and elt (string-to-int (nth 1 elt)))))
+    (when elt
+      (let ((buffer
+	     (or tinycompile-:buffer-name
+		 (completing-read
+		  "TinyCompile, buffer to associate: "
+		  (ti::list-to-assoc-menu
+		   (mapcar 'buffer-name (buffer-list)))
+		  nil
+		  t))))
+	(make-local-variable 'tinycompile-:buffer-name)
+	(setq tinycompile-:buffer-name buffer)
+	(pop-to-buffer tinycompile-:buffer-name)
+	(goto-line line)
+	(unless (zerop col)
+	  (setq col (1- col))		;Emacs columns are zero based
+	(move-to-column col))))))
+
+;;; ----------------------------------------------------------------------
+;;;
+(defun tinycompile-parse-line-goto-basic ()
   "Go to line under cursor.
-The found file is loaded to emacs and cursor put to line. This works
-like `compile-goto-error'.
+The found file is loaded to Emacs and cursor put on the line.
+This works like `compile-goto-error'.
 
 Note:
 
-  If TinyUrl package is present and current point holds TinyUrl overlay,
+  If `tinyurl' package is present and current point holds an overlay,
   then it is called to handle the line."
   (interactive)
   ;;    If TinyUrl is present, try it to resolve the line.
@@ -424,18 +453,28 @@ Note:
                  (find-file-noselect file)
                (error "TinyCompile: file not found `%s'" file))))))
         (when line
-          (goto-line line))))
-     (t
-      (message "TinyCompile: Can't read file/line information.")
-      ;;  We don't know how to handle this line, Let the mode
-      ;;  below us handle it
-      (let (tinycompile-mode
-            func)
-        (setq func (lookup-key (current-local-map) "\C-m"))
-        (message "TinyCompile: Passing control to underlying \C-m key: %s"
-                 (symbol-name func))
-        (when (fboundp func)
-          (funcall func)))))))
+          (goto-line line)))))))
+
+;;; ----------------------------------------------------------------------
+;;;
+(defun tinycompile-parse-line-goto-pass ()
+  "Let the mode handle the line."
+  (message "TinyCompile: Can't read file/line information.")
+  (let (tinycompile-mode
+	func)
+    (when (current-local-map)
+      (setq func (lookup-key (current-local-map) "\C-m"))
+      (when (fboundp func)
+	(funcall func)))))
+
+;;; ----------------------------------------------------------------------
+;;;
+(defun tinycompile-parse-line-goto-main ()
+  "Main controller for goto."
+  (interactive)
+  (or (tinycompile-parse-line-goto-basic)
+      (tinycompile-parse-line-goto-guess)
+      (tinycompile-parse-line-goto-pass)))
 
 ;;; ----------------------------------------------------------------------
 ;;;
