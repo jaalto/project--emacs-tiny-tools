@@ -105,7 +105,7 @@
 ;;      `tinyperl-mode' minor mode:
 ;;
 ;;      o   Instant function help: See documentation of `shift', `pop'...
-;;      o   Lint perl code using Perl::Critic (if installed).
+;;      o   Lint for Perl is available if Perl::Critic has been installed.
 ;;      o   Show Perl manual pages in *pod* buffer
 ;;      o   Load library source code into Emacs, like Devel::DProf.pm
 ;;      o   Grep through all Perl manual pages (.pod)
@@ -599,7 +599,7 @@ In error situations you can look old messages from *Messages* buffer."
 
 (defcustom tinyperl-:lint-severity 5	;Max
   "*Default severity to run Perl::Critic with.
-As of 2010-04-15 Perl::Critic, this can be in range 1-5."
+As of 2010-04-15 perlcritic(1), this can be in range 1-5."
   :type  'number
   :group 'TinyPerl)
 
@@ -1497,7 +1497,7 @@ Mode description:
     ["Module source find-file"            tinyperl-module-find-file  t]
     ["Module generate stubs"              tinyperl-selfstubber-stubs t]
     "----"
-    ["Lint with Perl::Critic"             tinyperl-lint-perl-critic t]
+    ["Lint with perlcritic"               tinyperl-lint-perl-critic t]
     ["PAUSE copy file"                    tinyperl-pause-copy-file   t]
     ["PAUSE submit page"                  tinyperl-pause-url-submit-www-page  t]
     ;; ["Pause upload via FTP"]           tinyperl-pause-upload-via-ftp t]
@@ -3463,6 +3463,7 @@ code line can be visited by selecting an error message. See mode
 description for details.
 
 See also:
+   perlcritic(1)
    http://search.cpan.org/~elliotjs => Perl-Critic"
   (interactive "p")
   (let ((current (current-buffer))
@@ -3479,6 +3480,9 @@ See also:
       (setq file default-file))
     (with-current-buffer buffer
       (erase-buffer)
+      ;; FIXME: Should be using the UI? perlcritic(1)
+      ;; On the other hand, now we get raw results and no ~/.perlcriticrc
+      ;; is read.
       (call-process "perl"
 		    nil
 		    (current-buffer)
