@@ -2494,30 +2494,39 @@ Return:
 
 ;;; ----------------------------------------------------------------------
 ;;;
+(defun ti::buffer-parse-line-col ()
+  "Parse lines like: at line 369, column 13. Return (LINE COL)."
+  (save-excursion
+    (beginning-of-line)
+    (if (looking-at ".*at +line[ :]+\\([0-9]+\\).*column[ :]+\\([0-9]+\\)")
+	(list (match-string-no-properties 1)
+	      (match-string-no-properties 2)))))
+
+;;; ----------------------------------------------------------------------
+;;;
 (defun ti::buffer-parse-line-main ()
   "Find directory from the previous 'cd' command.
-Look current line first and if it has no directory part,
-search backward.
+Look current line first and if it has no directory part, search backward.
 
 Line formats recognized are:
 
-  FILE:LINE: results
-  FILE LINE results
+  FILE:LINE: <content>
+  FILE LINE <cotent>
 
   Or the format can be following, where tokens can span multiple lines
 
-  line LINE, file LINE results
+  line LINE, file LINE <content>
 
 Note:
 
   You should probably call `ti::file-name-for-correct-system' to convert
-  the filename to current Emacs and OS. (Like reading Cygwin paths under
-  native NT Emacs)
+  the filename to current Emacs and OS. E.g. while reading Cygwin paths under
+  native NT Emacs.
 
 Return:
 
   (file line)         information
-  nil                 not valid line"
+  nil                 not a valid line"
   (let* ( ;;       (drive  "\\([a-zA-Z]:\\)?")
          (cd-re1 ".*cd +\\(.*\\)")
          (cd-re2 "^cd +\\(.*\\)")
