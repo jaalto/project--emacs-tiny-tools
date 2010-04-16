@@ -597,11 +597,23 @@ In error situations you can look old messages from *Messages* buffer."
   :type  'string
   :group 'TinyPerl)
 
-(defcustom tinyperl-:lint-severity 5	;Max
+(defcustom tinyperl-:lint-severity 1	;Max
   "*Default severity to run Perl::Critic with.
-As of 2010-04-15 perlcritic(1), this can be in range 1-5."
+As of 2010-04-15 perlcritic(1), this can be in range
+1 (brutal) .. 5 (gentle)."
   :type  'number
   :group 'TinyPerl)
+
+(defcustom tinyperl-:lint-arguments
+  "{-severity => %s}"
+  "*Default command line arguments passed to Perl::Critic constructor.
+
+The default value is:
+
+  {-severity => %s}
+
+And the string must contain one '%s' for the value of
+`tinyperl-:lint-severity'.")
 
 (defcustom tinyperl-:key-pageup-control 'heading
   "*How to use PgUp and PgDown keys. 'heading or 'normal."
@@ -3464,7 +3476,7 @@ description for details.
 
 See also:
    perlcritic(1)
-   http://search.cpan.org/~elliotjs => Perl-Critic"
+   http://perlcritic.tigris.org"
   (interactive "p")
   (let ((current (current-buffer))
 	(buffer  (get-buffer-create tinyperl-:lint-buffer-name))
@@ -3483,16 +3495,20 @@ See also:
       ;; FIXME: Should be using the UI? perlcritic(1)
       ;; On the other hand, now we get raw results and no ~/.perlcriticrc
       ;; is read.
-      (call-process "perl"
-		    nil
-		    (current-buffer)
-		    nil
-		    "-MPerl::Critic=critique"
-		    "-e"
-		    (format
-		     "print critique({-severity => %s}, shift)"
-		     (int-to-string level))
-		    (expand-file-name file))
+      (let ((command
+	     (format
+	      (concat "print critique("
+		      tinyperl-:lint-arguments
+		      ", shift)")
+	      (int-to-string level))))
+	(call-process "perl"
+		      nil
+		      (current-buffer)
+		      nil
+		      "-MPerl::Critic=critique"
+		      "-e"
+		      command
+		      (expand-file-name file)))
       (run-hooks 'tinyperl-:lint-hook)
       (when (fboundp 'tinycompile-mode)
 	(tinycompile-mode 1)

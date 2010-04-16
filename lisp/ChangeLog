@@ -1,3 +1,8 @@
+2010-04-16 Fri  Jari Aalto  <jari.aalto@cante.net>
+
+	* tiny/tinyperl.el (tinyperl-:lint-arguments): New.
+	(tinyperl-lint-perl-critic): Use `tinyperl-:lint-arguments'.
+
 2010-04-15 Thu  Jari Aalto  <jari.aalto@cante.net>
 
 	* tiny/tinyperl.el
