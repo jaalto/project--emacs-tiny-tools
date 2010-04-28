@@ -25,7 +25,7 @@
 ;; [Latest devel version]
 ;; Vcs-URL:     http://savannah.nongnu.org/projects/emacs-tiny-tools
 
-(defconst folding-version-time "2009.0905.0811"
+(defconst folding-version-time "2010.0428.2224"
   "Last edit time in format YYYY.MMDD.HHMM.")
 
 ;;{{{ GPL
@@ -2355,7 +2355,7 @@ too highly for selective display to make the change worthwhile."
   (unless folding-mode-prefix-map
     (setq folding-mode-prefix-map   (make-sparse-keymap)))
   (if (listp folding-default-keys-function)
-      (mapcar 'funcall folding-default-keys-function)
+      (mapc 'funcall folding-default-keys-function)
     (funcall folding-default-keys-function))
   (funcall folding-default-mouse-keys-function)
   (folding-easy-menu-define)
@@ -2652,8 +2652,7 @@ ACT
        ((eq act 'col-row)
         (funcall (symbol-function 'posn-col-row) el))
        (t
-        (error "Unknown request" act)))))
-
+        (error "Unknown request %s" act)))))
    (folding-xemacs-p
     (cond
      ((eq act 'mouse-point)
@@ -2665,7 +2664,7 @@ ACT
       (list (funcall (symbol-function 'event-x) event)
             (funcall (symbol-function 'event-y) event)))
      (t
-      (error "Unknown request" act))))
+      (error "Unknown request %s" act))))
    (t
     (error "This version of Emacs can't handle events."))))
 
@@ -2695,10 +2694,24 @@ When used on XEmacs, return nil if no character was under the mouse."
 
 ;;{{{ code: hook
 
+(defmacro folding-find-file-hook ()
+  "Return hook symbol for current version."
+  `(if (boundp 'find-file-hook)
+       'find-file-hook
+     'find-file-hooks))
+
+(defmacro folding-write-file-hook ()
+  "Return hook symbol for current version."
+  `(if (boundp 'write-file-functions)
+       'write-file-functions
+     'write-file-hooks))
+
 (defun folding-is-hooked ()
   "Check if folding hooks are installed."
-  (and (memq 'folding-mode-write-file write-file-hooks)
-       (memq 'folding-mode-find-file  find-file-hooks)))
+  (and (memq 'folding-mode-write-file
+	     (symbol-value (folding-write-file-hook)))
+       (memq 'folding-mode-find-file
+	     (symbol-value (folding-find-file-hook)))))
 
 ;;;###autoload
 (defun folding-uninstall-hooks ()
@@ -2713,8 +2726,8 @@ When used on XEmacs, return nil if no character was under the mouse."
   "Install folding hooks."
   (folding-mode-add-find-file-hook)
   (add-hook 'finder-mode-hook 'folding-mode)
-  (or (memq 'folding-mode-write-file write-file-hooks)
-      (add-hook 'write-file-hooks 'folding-mode-write-file 'end)))
+  (or (memq 'folding-mode-write-file (symbol-value (folding-write-file-hook)))
+      (add-hook (folding-write-file-hook) 'folding-mode-write-file 'end)))
 
 ;;;###autoload
 (defun folding-keep-hooked ()
@@ -2991,8 +3004,8 @@ folded-file: t
 
 The local variables can be inside a fold."
   (interactive)
-  (or (memq 'folding-mode-find-file find-file-hooks)
-      (add-hook 'find-file-hooks 'folding-mode-find-file 'end)))
+  (or (memq 'folding-mode-find-file (symbol-value (folding-find-file-hook)))
+      (add-hook (folding-find-file-hook) 'folding-mode-find-file 'end)))
 
 (defun folding-mode-write-file ()
   "Folded files must be controlled by folding before saving.

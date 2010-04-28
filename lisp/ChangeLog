@@ -1,3 +1,16 @@
+2010-04-28 Thu  Jari Aalto  <jari.aalto@cante.net>
+
+	* other/folding.el
+	- Fix emacs 23.x byte compile errors.
+	(folding-install-keymaps): Change `mapcar' to `mapc'; no list is
+	collected.
+	(folding-event-posn): Add missing "%s" format to `error'.
+	(folding-mode-add-find-file-hook): Call `folding-find-file-hook'.
+	(folding-is-hooked): Rewrite to use new hooks.
+	(folding-find-file-hook): New macro
+	(folding-write-file-hook): New macro.
+	(folding-install-hooks): use `folding-write-file-hook'.
+
 2010-04-16 Fri  Jari Aalto  <jari.aalto@cante.net>
 
 	* tiny/tinyperl.el (tinyperl-:lint-arguments): New.
