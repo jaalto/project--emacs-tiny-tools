@@ -25,7 +25,7 @@
 ;; [Latest devel version]
 ;; Vcs-URL:     http://savannah.nongnu.org/projects/emacs-tiny-tools
 
-(defconst folding-version-time "2010.0428.2224"
+(defconst folding-version-time "2010.0428.2238"
   "Last edit time in format YYYY.MMDD.HHMM.")
 
 ;;{{{ GPL
@@ -1630,7 +1630,14 @@
 
 ;;; ......................................................... &require ...
 
-(eval-when-compile (require 'cl))
+(eval-when-compile
+  (require 'cl))
+
+(eval-and-compile
+  (autoload 'font-lock-fontify-region "font-lock")
+  ;; Forward declaration
+  (defvar global-font-lock-mode))
+
 (require 'easymenu)
 
 (defvar folding-package-url-location
@@ -1925,7 +1932,6 @@ For the good ol' key bindings, please use the function
   (folding-kbd "\C-y"   'folding-show-current-subtree)
   (folding-kbd "\C-z"   'folding-hide-current-subtree)
   (folding-kbd "\C-n"   'folding-display-name)
-
   (folding-kbd "I"      'folding-insert-advertise-folding-mode))
 
 (defun folding-bind-backward-compatible-keys ()
@@ -3050,6 +3056,9 @@ It prevents 'binary pollution' upon save."
   ;;  handled from the property list.
   (destructuring-bind (beg end ignore)
       (folding-get-mode-marks (or mode major-mode))
+    ;; `ignore' is not used, add no-op for byte compiler
+    (or ignore
+	(setq ignore t))
     (setq beg (concat "^[ \t]*" (regexp-quote beg) "[^\r\n]+"))
     (setq end (concat "^[ \t]*" (regexp-quote end)))
     (list
@@ -3073,11 +3082,9 @@ It prevents 'binary pollution' upon save."
         (with-current-buffer buffer
           (when (and (eq major-mode mode)
                      (or font-lock-mode
-                         ;;  Hide variable from byte compiler.
-                         (let ((sym 'global-font-lock-mode))
-                           (and (boundp sym)
-                                (symbol-value sym)))))
-            ;; FIXME: should we use font-lock-fontify-buffer instead?
+			 (and (boundp 'global-font-lock-mode)
+			      global-font-lock-mode)))
+            ;; FIXME: Crude fix. should we use font-lock-fontify-buffer instead?
             (font-lock-mode -1)
             (font-lock-mode 1)))))))
 

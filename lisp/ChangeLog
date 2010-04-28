@@ -1,7 +1,8 @@
 2010-04-28 Thu  Jari Aalto  <jari.aalto@cante.net>
 
 	* other/folding.el
-	- Fix emacs 23.x byte compile errors.
+	- Fix byte compile errors (Emacs 23.x, XEmacs 21.4).
+	(top level): add `eval-and-compile'.
 	(folding-install-keymaps): Change `mapcar' to `mapc'; no list is
 	collected.
 	(folding-event-posn): Add missing "%s" format to `error'.
@@ -10,6 +11,10 @@
 	(folding-find-file-hook): New macro
 	(folding-write-file-hook): New macro.
 	(folding-install-hooks): use `folding-write-file-hook'.
+	(folding-font-lock-support-instantiate): simplify
+	`global-font-lock-mode' check.
+	(folding-font-lock-keywords): hide unused `ignore' variable
+	from byte compiler.
 
 2010-04-16 Fri  Jari Aalto  <jari.aalto@cante.net>
 
