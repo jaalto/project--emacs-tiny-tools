@@ -88,10 +88,20 @@
 
 ;;; Code:
 
+
 (eval-when-compile
+  (load "cl-seq")
   (require 'cl))
 
 (require 'tinylib)
+
+(defconst tiny-setup-:library-compile-order
+  '("tinylibenv.el"
+    "tinyliba.el"
+    "tinylibm.el"
+    "tinylibb.el")
+  "Order of compilation of the libraries.
+This variable is list of REGEXPS.")
 
 ;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;
 ;;
