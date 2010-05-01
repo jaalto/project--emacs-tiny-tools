@@ -1,3 +1,19 @@
+2010-05-01 Sat  Jari Aalto  <jari.aalto@cante.net>
+
+	* emacs-compile.pl (HandleCommandLineArgs): Remove
+	"require_order" from Getopt::Long::config().
+
+	* dos2unix.pl (HandleCommandLineArgs): Remove
+	"require_order" from Getopt::Long::config().
+
+	* ripdoc.pl (HandleCommandLineArgs): Remove
+	"require_order" from Getopt::Long::config().
+
+	* java-function-list.pl (HandleCommandLineArgs): Remove
+	"require_order" from Getopt::Long::config().
+	(HandleCommandLineArgs): Remove
+	"require_order" from Getopt::Long::config().
+
 2010-03-15 Tue  Jari Aalto  <jari.aalto@cante.net>
 
 	* makefile.pl: Remove. This file is obsolete and not used for

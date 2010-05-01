@@ -396,7 +396,6 @@ sub HandleCommandLineArgs ()
     (
         no_ignore_case
         no_ignore_case_always
-        require_order
     ));
 
     GetOptions      # Getopt::Long

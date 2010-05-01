@@ -376,12 +376,6 @@ sub HandleCommandLineArgs ()
 
     # .................................................... read args ...
 
-    Getopt::Long::config( qw
-    (
-        no_ignore_case
-        require_order
-    ));
-
     GetOptions      # Getopt::Long
     (
           "help"                => \$help
