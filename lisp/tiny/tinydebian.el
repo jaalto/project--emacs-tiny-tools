@@ -190,7 +190,13 @@ See function `tinydebian-command-audit-report-tiger'."
 
 (defcustom tinydebian-:buffer-wnpp-alert "*Tinydebian wnpp-alert*"
   "*Buffer name where to generate wnpp-alert(1) report.
-See function `tinydebian-command-wnpp-alert'."
+See function `tinydebian-command-show-wnpp-alert'."
+  :type  'string
+  :group 'TinyDebian)
+
+(defcustom tinydebian-:buffer-rc-alert "*Tinydebian rc-alert*"
+  "*Buffer name where to generate rc-alert(1) report.
+See function `tinydebian-command-show-rc-alert'."
   :type  'string
   :group 'TinyDebian)
 
@@ -981,7 +987,8 @@ Mode description:
      ["List of WNPP ITP"           tinydebian-url-list-wnpp-itp            t]
      ["List of RC bugs"            tinydebian-url-list-bugs-by-rc          t]
      ["List of items by usertag"   tinydebian-url-list-bugs-by-usertag     t]
-     ["Installed pkg problems"     tinydebian-command-show-wnpp-alert      t]
+     ["Installed wnpp problems"    tinydebian-command-show-wnpp-alert      t]
+     ["Installed rc problems"      tinydebian-command-show-rc-alert        t]
      ["Grep devel documentation"   tinydebian-grep-find-debian-devel       t]
 
      "----"
@@ -1030,9 +1037,9 @@ Mode description:
 
      ;;  (i)nfo (i)nstalled
      (define-key map  "ii" 'tinydebian-command-show-wnpp-alert)
-
-     ;;  (i)nfo (g)rep
-     (define-key map  "ig" 'tinydebian-grep-find-debian-devel)
+     (define-key map  "ig" 'tinydebian-grep-find-debian-devel) ;grep
+     ;; Release Critical
+     (define-key map  "ir" 'tinydebian-command-show-rc-alert)
 
      ;;  (L)ist Url commands
      ;; (b)ugs
@@ -1582,12 +1589,13 @@ Signal optional ERROR message is STR was empty."
 ;;;
 (defsubst tinydebian-call-process (prg &optional buffer &rest args)
   "Call PRG with list of ARGS and print output to current buffer or BUFFER."
-  (apply 'call-process
-	 prg
-	 (not 'infile)
-	 (or buffer (current-buffer))
-	 (not 'real-time-display)
-	 args))
+  (let ((default-directory (getenv "HOME")))
+    (apply 'call-process
+	   prg
+	   (not 'infile)
+	   (or buffer (current-buffer))
+	   (not 'real-time-display)
+	   args)))
 
 ;;; ----------------------------------------------------------------------
 ;;;
@@ -3135,7 +3143,7 @@ Mode description:
 ;;; ----------------------------------------------------------------------
 ;;;
 (defun tinydebian-command-show-wnpp-alert ()
-  "Check for installed packages up for adoption or orphaned.
+  "Check installed packages up for adoption or orphaned.
   Requires that program wnpp-alert(1) has been installed."
   (interactive)
   (let* ((bin  "wnpp-alert")
@@ -3156,6 +3164,33 @@ Mode description:
 	(sort-lines nil (point-min) (point-max))
 	(tinydebian-wnpp-alert-mode)
 	(turn-on-tinydebian-bts-mode)
+	(display-buffer buffer)
+	buffer)))))
+
+;;; ----------------------------------------------------------------------
+;;;
+(defun tinydebian-command-show-rc-alert ()
+  "Check installed packages for Release Critical bugs.
+  Requires that program rc-alert(1) has been installed."
+  (interactive)
+  (let* ((bin  "rc-alert")
+	 (path (executable-find bin)))
+    (cond
+     ((not bin)
+      (message "TinyDebian: [ERROR] program `%s' is not installed."
+	       bin))
+     (t
+      (tinydebian-with-buffer-macro
+	  tinydebian-:buffer-rc-alert
+	(message "TinyDebian: wait, running %s..." path)
+	(tinydebian-call-process path)
+	(message "TinyDebian: wait, running %s... Done." path)
+	(goto-char (point-min))
+	;; (save-excursion
+	;;   (tinydebian-command-show-wnpp-alert-format))
+	;; (sort-lines nil (point-min) (point-max))
+	;; (tinydebian-wnpp-alert-mode)
+	;; (turn-on-tinydebian-bts-mode)
 	(display-buffer buffer)
 	buffer)))))
 

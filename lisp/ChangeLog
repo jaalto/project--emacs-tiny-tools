@@ -1,3 +1,10 @@
+2010-05-02 Sun  Jari Aalto  <jari.aalto@cante.net>
+
+	* tiny/tinydebian.el (tinydebian-call-process): Set
+	`default-directory'.
+	(tinydebian-:buffer-rc-alert): New.
+	 (tinydebian-bts-mode): add `tinydebian-command-show-rc-alert'.
+
 2010-04-28 Thu  Jari Aalto  <jari.aalto@cante.net>
 
 	* other/folding.el
