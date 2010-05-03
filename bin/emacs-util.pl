@@ -1,32 +1,31 @@
 #!/usr/bin/perl
 #
-# emacs-util.pl -- Find patch for Emacs (different types of)
-#
 #  File id
 #
-#       Copyright (C)  2000-2010 Jari Aalto
+#	emacs-util.pl -- Find manual page etc. locations
 #
-#       This program is free software; you can redistribute it and/or
-#       modify it under the terms of the GNU General Public License as
-#       published by the Free Software Foundation; either version 2 of
-#       the License, or (at your option) any later version.
+#   Copyright
 #
-#       This program is distributed in the hope that it will be useful, but
-#       WITHOUT ANY WARRANTY; without even the implied warranty of
-#       MERCHANTABILITY or FITNESS FOR A PARTICULAR PURPOSE.  See the GNU
-#       General Public License for more details.
+#       Copyright (C) 2000-2010 Jari Aalto
 #
-#	You should have received a copy of the GNU General Public License
-#	along with this program. If not, see <http://www.gnu.org/licenses/>.
+#   License
 #
-#	Visit <http://www.gnu.org/copyleft/gpl.html> for more information
+#       This program is free software; you can redistribute it and/or modify
+#       it under the terms of the GNU General Public License as published by
+#       the Free Software Foundation; either version 2 of the License, or
+#       (at your option) any later version.
+#
+#       This program is distributed in the hope that it will be useful,
+#       but WITHOUT ANY WARRANTY; without even the implied warranty of
+#       MERCHANTABILITY or FITNESS FOR A PARTICULAR PURPOSE. See the
+#       GNU General Public License for more details.
+#
+#       You should have received a copy of the GNU General Public License
+#       along with this program. If not, see <http://www.gnu.org/licenses/>.
 
 BEGIN
 {
-    require 5.004;
-
     use vars qw( $timeBootA );
-
     $timeBootA = time();
 }
 
@@ -40,16 +39,10 @@ use File::Basename;
 use File::Find;
 use Cwd;
 
-    use vars qw ( $VERSION );
+#   The following variable is updated by developer's Emacs whenever
+#   this file is saved
 
-    #   This is for use of Makefile.PL and ExtUtils::MakeMaker
-    #   So that it puts the tardist number in format YYYY.MMDD
-    #   The REAL version number is defined later
-
-    #   The following variable is updated by Emacs setup whenever
-    #   this file is saved
-
-    $VERSION = '2007.0905.2134';
+our $VERSION = '2010.0503.0814';
 
 # ****************************************************************************
 #
@@ -77,7 +70,6 @@ sub Initialize ()
         $LIB
 
         $FILE_ID
-        $VERSION
         $CONTACT
         $URL
         $WIN32
@@ -96,11 +88,8 @@ sub Initialize ()
     $PROGNAME   = basename $PROGRAM_NAME;
     $LIB        = $PROGNAME;
     my $id      = "$LIB.Initialize";
-
-    $FILE_ID  = q$Id: emacs-util.pl,v 1.23 2007/05/01 17:20:30 jaalto Exp $;
-    $VERSION  = (split (' ', $FILE_ID))[2];
-    $CONTACT  = "";
-    $URL      = "http://tiny-tools.sourceforge.net/";
+    $CONTACT    = "";
+    $URL        = "";
 
     $WIN32    = 1   if  $OSNAME =~ /win32|cygwin/i;
 
@@ -133,7 +122,6 @@ sub Initialize ()
     $EXECUTABLE_REGEXP = '\.(exe|com|sh|bat|cmd)$';
 
     $GLOBAL_HOMEDIR    = ExpandHOME( "~" );
-    $GLOBAL_HOMEDIR2;
 
     #   Remove Drive prefix in Win32, cygwin /home/foo...
 
@@ -163,26 +151,31 @@ sub Initialize ()
 
 emacs-util.pl - Emacs help utility
 
-=head1 README
-
-Program to search for files and directories that are needed in
-setting Emacs package variables. The same could be done with
-Emacs lisp, but scanning many drectories recursively
-would be very slow. Perl is much faster.
-
 =head1 SYNOPSIS
 
     emacs-util.pl --regexp '*[el]' --Dir PATH ..
     emacs-util.pl --Version
     emacs-util.pl --help
 
+=head1 DESCRIPTION
+
+The program will help finding out information from the file system for
+use with creation of Emacs variable load-path, man-path, woman-manpath
+etc. If these do not mean anything to you, do not worry, package
+tinypath.el will know how to use this program. The same could be done
+by using pure Emacs lisp, but scanning many drectories recursively
+would be very slow. Perl a faster in this repect.
+
+All the messages are prefixed with a word so that the output would be
+easily parseable.
+
 =head1 OPTIONS
 
 =head2 Gneneral options
 
-=over 4
-
 Search files matching REGEXP.
+
+=over 4
 
 =item B<--Bin>
 
@@ -274,21 +267,20 @@ Ignore symlink directories.
 
 =over 4
 
-=item B<--debug -d LEVEL>
+=item B<-d, --debug LEVEL>
 
 Turn on debug with positive LEVEL number. Zero means no debug.
 
-=item B<--Exit -E>
+=item B<-E, --Exit>
 
 Exit immediately after the command line arguments have been
 processed. This will print what directories would be traversed.
 
-
-=item B<--help -h>
+=item B<-h, --help>
 
 Print help
 
-=item B<--help-html -h>
+=item B<--help-html>
 
 Print help in HTML format.
 
@@ -296,37 +288,21 @@ Print help in HTML format.
 
 Run in test mode. Do not actually execute anything.
 
-=item B<--verbose> B<-v>
+=item B<-v, --verbose>
 
 Turn on verbose messages.
 
-=item B<--Version>
+=item B<-V, --version>
 
 Print contact and version information
 
 =back
 
-=head1 DESCRIPTION
-
-Emacs is "The Editor" available at http://www.emacs.org/ and for
-Win32 platform at http://www.gnu.org/software/emacs/windows/ntemacs.html
-This program will help finding out information from the file
-system for use with creation of Emacs variable load-path, man-path,
-woman-manpath etc. If these do not mean anything to you, do not worry,
-package tinypath.el will know how to use this program.
-
-The purpose is to scan whole directory tree recursive and find
-directories that contain specific files. Perl is much more faster
-to this job than Eamcs Lisp.
-
-All the messages are prefixed with a word so that the output should
-be easily parseable.
-
 =head1 EXAMPLES
 
-To find out where are all your manual files are installed in system:
+To find out where are all manual page files are installed:
 
-    perl -S emacs-util.pl --verbose --Man f:/unix-root/cygwin
+    perl -S emacs-util.pl --verbose --Man c:/cygwin
 
 =head1 ENVIRONMENT
 
@@ -338,39 +314,36 @@ None.
 
 =head1 SEE ALSO
 
-emacs(1) xemacs(1)
+emacs(1)
+xemacs(1)
 
 =head1 BUGS
 
 No known bugs.
 
-=head1 AVAILABILITY
+=head1 EXIT STATUS
 
-This file is part of Emacs Tiny Tools kit
-available at http://tiny-tools.sourceforge.net/
+Not defined.
 
-=head1 SCRIPT CATEGORIES
+=head1 DEPENDENCIES
 
-CPAN/Administrative
+Uses standard Perl modules.
 
-=head1 COREQUISITES
+=head1 BUGS AND LIMITATIONS
 
 None.
 
-=head1 OSNAMES
-
-C<any>
-
-=head1 VERSION
-
-$Id: emacs-util.pl,v 1.23 2007/05/01 17:20:30 jaalto Exp $
-
 =head1 AUTHOR
 
-Copyright (C) 2000-2010 Jari Aalto. All rights reserved.
-This program is free software; you can redistribute and/or modify program
-under the same terms as Perl itself or in terms of Gnu General Public
-license v2 or later.
+Jari Aalto
+
+=head1 LICENSE AND COPYRIGHT
+
+Copyright (C) 2000-2010 Jari Aalto
+
+This program is free software; you can redistribute and/or modify
+program under the terms of GNU General Public license either version 2
+of the License, or (at your option) any later version.
 
 =cut
 
@@ -478,23 +451,18 @@ sub HandleCommandLineArgs ()
 
     GetOptions      # Getopt::Long
     (
-          "h|help"              => \$help
-        , "help-html"           => \$helpHTML
-        , "verbose:i"           => \$verb
-        , "Version"             => \$version
+          "Bin"                 => \$OPT_BIN
         , "debug:i"             => \$debug
-        , "test"                => \$test
-
-        , "regexp=s"              => \$REGEXP          #font "
-        , "ignore-emacs-regexp=s" => \$emacsIgnore     #font "
-        , "ignore-symlink"        => \$IGNORE_SYMLINK  #font "
-
         , "Dir"                 => \$OPT_DIR
         , "Exit"                => \$OPT_EXIT
         , "File"                => \$OPT_FILE
+        , "h|help"              => \$help
+        , "help-html"           => \$helpHTML
+
+        , "ignore-emacs-regexp=s" => \$emacsIgnore     #font "
+        , "ignore-symlink"        => \$IGNORE_SYMLINK  #font "
+
         , "Info"                => \$OPT_INFO
-        , "Man"                 => \$OPT_MAN
-        , "Bin"                 => \$OPT_BIN
 
         , "Lang-lisp-dir"       => \$OPT_CODE_LISP_DIR
         , "Lang-lisp-file"      => \$OPT_CODE_LISP_FILE
@@ -508,7 +476,15 @@ sub HandleCommandLineArgs ()
 
         , "Lang-java-src"       => \$OPT_CODE_JAVA_FILE
         , "Lang-java-jar"       => \$OPT_CODE_JAVA_JAR_FILE
+
+        , "Man"                 => \$OPT_MAN
+
+        , "regexp=s"              => \$REGEXP          #font "
         , "scan-type=s"         => \$OPT_SCAN_TYPE
+
+        , "test"                => \$test
+        , "verbose:i"           => \$verb
+        , "V|version"           => \$version
     );
 
     $version        and die "$VERSION $PROGNAME $CONTACT $URL\n";

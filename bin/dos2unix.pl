@@ -1,48 +1,39 @@
 #!/usr/bin/perl
 #
-# Perl -- Dos to unix and unix to dos line ending converter
-#
 #  File id
+#
+#	 Perl -- Dos to unix and unix to dos line ending converter
+#
+#   Copyright
 #
 #       Copyright (C) 2000-2010 Jari Aalto
 #
-#       This program is free software; you can redistribute it and/or
-#       modify it under the terms of the GNU General Public License as
-#       published by the Free Software Foundation; either version 2 of
-#       the License, or (at your option) any later version.
+#   License
 #
-#       This program is distributed in the hope that it will be useful, but
-#       WITHOUT ANY WARRANTY; without even the implied warranty of
-#       MERCHANTABILITY or FITNESS FOR A PARTICULAR PURPOSE.  See the GNU
-#       General Public License for more details.
+#       This program is free software; you can redistribute it and/or modify
+#       it under the terms of the GNU General Public License as published by
+#       the Free Software Foundation; either version 2 of the License, or
+#       (at your option) any later version.
 #
-#	You should have received a copy of the GNU General Public License
-#	along with this program. If not, see <http://www.gnu.org/licenses/>.
+#       This program is distributed in the hope that it will be useful,
+#       but WITHOUT ANY WARRANTY; without even the implied warranty of
+#       MERCHANTABILITY or FITNESS FOR A PARTICULAR PURPOSE. See the
+#       GNU General Public License for more details.
 #
-#	Visit <http://www.gnu.org/copyleft/gpl.html> for more information
+#       You should have received a copy of the GNU General Public License
+#       along with this program. If not, see <http://www.gnu.org/licenses/>.
 
 # {{{ Initial setup
 
-BEGIN { require 5.004 }
-
 use autouse 'Pod::Text'     => qw( pod2text );
-
 use strict;
-
 use English;
 use Getopt::Long;
 
-    use vars qw ( $VERSION );
+#   The following variable is updated by developer's Emacs whenever
+#   this file is saved
 
-    #   This is for use of Makefile.PL and ExtUtils::MakeMaker
-    #   So that it puts the tardist number in format YYYY.MMDD
-    #   The REAL version number is defined later
-
-    #   The following variable is updated by my Emacs setup whenever
-    #   this file is saved
-
-    $VERSION = '2007.0905.2133';
-
+our $VERSION = '2010.0503.0758';
 
 # ****************************************************************************
 #
@@ -66,22 +57,16 @@ sub Initialize ()
     (
         $PROGNAME
         $LIB
-
-        $FILE_ID
         $VERSION
         $CONTACT
         $URL
-
         $GO
     );
 
-    $PROGNAME   = "ripdoc.pl";
+    $PROGNAME   = "dos2unix.pl";
     $LIB        = $PROGNAME;
-
-    $FILE_ID  = q$Id: dos2unix.pl,v 2.10 2007/05/01 17:20:29 jaalto Exp $;
-    $VERSION  = (split (' ', $FILE_ID))[2];
     $CONTACT  = "";
-    $URL      = "http://tiny-tools.sourceforge.net/";
+    $URL      = "";
 
     $OUTPUT_AUTOFLUSH = 1;
 
@@ -104,17 +89,11 @@ sub Initialize ()
 #
 # ****************************************************************************
 
-
 =pod
 
 =head1 NAME
 
 dos2unix.pl - Convert between Dos and Unix line endings
-
-=head1 README
-
-This program converts between Unix and Dos text files. Without any
-options the files are converted to the opposite line endings.
 
 =head1 SYNOPSIS
 
@@ -122,26 +101,32 @@ options the files are converted to the opposite line endings.
     dos2unix.pl --dos  *
     dos2unix.pl --test *
 
+=head1 DESCRIPTION
+
+Thisi is cross-platform implementation of the binary dos2unix(1)
+program. It converts between Unix and Dos text files. Without any
+options the files are converted to the opposite line endings.
+
 =head1 OPTIONS
 
 =head2 Gneneral options
 
 =over 4
 
-=item B<--dos>
+=item B<-d, --dos>
 
 Convert to Dos
 
-=item B<--no-backup>
+=item B<-n, --no-backup>
 
 Delete backup after conversion (.orig)
 
-=item B<--test>
+=item B<-t, --test>
 
 Detect type, do no conversion. This cancels B<--dos> and
 B<--unix> and turns on B<--verbose>
 
-=item B<--unix>
+=item B<-u, --unix>
 
 Convert to Unix
 
@@ -151,21 +136,21 @@ Convert to Unix
 
 =over 4
 
-=item B<--Debug -d LEVEL>
+=item B<-D, --Debug LEVEL>
 
 Turn on debug with positive LEVEL number. Zero means no debug.
 
-=item B<--help -h>
+=item B<-h, --help>
 
 Print help
 
-=item B<--verbose>
+=item B<-v, --verbose>
 
 Print verbose mesages.
 
 Print help
 
-=item B<--Version>
+=item B<-V, --Version>
 
 Print contact and version information
 
@@ -198,41 +183,38 @@ with B<--no-backup>
 
 =head1 SEE ALSO
 
+dos2unix(1)
 flip(1)
 
-=head1 BUGS
+=head1 EXIT STATUS
 
-None known.
+Not defined.
+
+=head1 DEPENDENCIES
+
+Uses standard Perl modules.
+
+=head1 BUGS AND LIMITATIONS
+
+None.
 
 =head1 AVAILABILITY
 
 http://cpan.perl.org/modules/by-authors/id/J/JA/JARIAALTO/
 
-=head1 SCRIPT CATEGORIES
-
-CPAN/Administrative
-
-=head1 COREQUISITES
-
-<what CPAN modules are needed to run this program>
-
-=head1 OSNAMES
-
-C<any>
-
-=head1 VERSION
-
-$Id: dos2unix.pl,v 2.10 2007/05/01 17:20:29 jaalto Exp $
-
 =head1 AUTHOR
 
-Copyright (C) 2000-2010 Jari Aalto. All rights reserved.
-This program is free software; you can redistribute and/or modify program
-under the same terms as Perl itself or in terms of Gnu General Public
-license v2 or later.
+Jari Aalto
+
+=head1 LICENSE AND COPYRIGHT
+
+Copyright (C) 2000-2010 Jari Aalto
+
+This program is free software; you can redistribute and/or modify
+program under the terms of GNU General Public license either version 2
+of the License, or (at your option) any later version.
 
 =cut
-
 
 sub Help (;$)
 {
@@ -245,7 +227,6 @@ sub Help (;$)
 
     exit 1;
 }
-
 
 # ************************************************************** &args *******
 #
@@ -310,7 +291,6 @@ sub HandleCommandLineArgs ()
     $GO = ""     if $TEST;
 
     $verb = 1    if $TEST;
-
 }
 
 # ****************************************************************************
@@ -329,7 +309,6 @@ sub HandleCommandLineArgs ()
 #
 # ****************************************************************************
 
-
 sub Type ( ;$ )
 {
     my $ret;
@@ -345,7 +324,6 @@ sub Type ( ;$ )
 
     $ret;
 }
-
 
 # ****************************************************************************
 #
@@ -363,12 +341,11 @@ sub Type ( ;$ )
 #
 # ****************************************************************************
 
-
 sub Convert( $ )
 {
     my ( $type ) = @ARG;
 
-    if( $type eq "unix" )
+    if ( $type eq "unix" )
     {
         s/\r\n/\n/g;
     }
@@ -378,14 +355,29 @@ sub Convert( $ )
     }
 }
 
-# ............................................................. &main ...
+# ****************************************************************************
+#
+#   DESCRIPTION
+#
+#       Main function
+#
+#   INPUT PARAMETERS
+#
+#       None
+#
+#   RETURN VALUES
+#
+#       None
+#
+# ****************************************************************************
 
+sub Main ()
+{
     Initialize();
     HandleCommandLineArgs(),
 
     my $id = "$LIB.main";
     my ( @files, $source, $prev );
-
 
     for ( @ARGV )
     {
@@ -394,7 +386,6 @@ sub Convert( $ )
 
         push @files, grep -f, glob $ARG;
     }
-
 
     local ( *IN, *OUT );
 
@@ -420,13 +411,14 @@ sub Convert( $ )
             my ( $detected, $otype, $skip );
             my $type = $GO;                     # the wanted conversion
 
-
             binmode IN;
+
             while ( defined($ARG = <IN>) )
             {
                 unless ( $detected )
                 {
                     $otype = Type();
+
                     if ( $GO eq "flip" )
                     {
                         $type = Type( "flip" );
@@ -470,20 +462,21 @@ sub Convert( $ )
                 }
             }
 
-            if ( (!$skip and $source ne $prev) or $verb )
+            if ( (not $skip  and  $source ne $prev)  or  $verb )
             {
                 print "$file ($otype) $type  $skip\n";
             }
 
             #   Make sure this temporary file is gone.
 
-            unlink $out  if -e $out;
+            unlink $out  if  -e $out;
 
             $prev = $source;
-
         }
     }
+}
 
+Main();
 
 0;
 __END__

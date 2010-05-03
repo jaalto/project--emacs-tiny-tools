@@ -1,41 +1,37 @@
 #!/usr/bin/perl
 #
-# ripdoc.pl -- Rip file's documentation to Technical text format
+#  File id
 #
-#   File id
+#	 ripdoc.pl -- Rip file's documentation to Technical text format
 #
-#       Copyright (C)   1997-2010 Jari Aalto
-#       Created:        1997-02
-#       Keywords:       Perl, text conversion
+#   Copyright
 #
-#       This program is free software; you can redistribute it and/or
-#       modify it under the terms of the GNU General Public License as
-#       published by the Free Software Foundation; either version 2 of
-#       the License, or (at your option) any later version.
+#       Copyright (C) 1997-2010 Jari Aalto
 #
-#       This program is distributed in the hope that it will be useful, but
-#       WITHOUT ANY WARRANTY; without even the implied warranty of
-#       MERCHANTABILITY or FITNESS FOR A PARTICULAR PURPOSE.  See the GNU
-#       General Public License for more details at
-#	<http://www.gnu.org/copyleft/gpl.html>.
+#   License
+#
+#       This program is free software; you can redistribute it and/or modify
+#       it under the terms of the GNU General Public License as published by
+#       the Free Software Foundation; either version 2 of the License, or
+#       (at your option) any later version.
+#
+#       This program is distributed in the hope that it will be useful,
+#       but WITHOUT ANY WARRANTY; without even the implied warranty of
+#       MERCHANTABILITY or FITNESS FOR A PARTICULAR PURPOSE. See the
+#       GNU General Public License for more details.
+#
+#       You should have received a copy of the GNU General Public License
+#       along with this program. If not, see <http://www.gnu.org/licenses/>.
 
 use autouse 'Pod::Text'     => qw( pod2text );
-
-use 5.004;
 use strict;
 use English;
 use Getopt::Long;
 
-    use vars qw ( $VERSION );
+#   The following variable is updated by developer's Emacs whenever
+#   this file is saved
 
-    #   This is for use of Makefile.PL and ExtUtils::MakeMaker
-    #   So that it puts the tardist number in format YYYY.MMDD
-    #   The REAL version number is defined later
-    #
-    #   The following variable is updated by Emacs setup whenever
-    #   this file is saved
-
-    $VERSION = '2008.0920.1133';
+our $VERSION = '2010.0503.0743';
 
 # ****************************************************************************
 #
@@ -59,20 +55,14 @@ sub Initialize ()
     (
         $PROGNAME
         $LIB
-
-        $FILE_ID
-        $VERSION
         $CONTACT
         $URL
     );
 
     $PROGNAME   = "ripdoc.pl";
     $LIB        = $PROGNAME;
-
-    $FILE_ID  = q$Id: ripdoc.pl,v 2.18 2007/05/01 17:20:31 jaalto Exp $;
-    $VERSION = (split (' ', $FILE_ID))[2];
-    $CONTACT = "";
-    $URL     = "http://tiny-tools.sourceforge.net/";
+    $CONTACT    = "";
+    $URL        = "";
 
     $OUTPUT_AUTOFLUSH = 1;
 }
@@ -101,52 +91,9 @@ ripdoc.pl - Rip documentation from the beginning of file
 
 =head1 SYNOPSIS
 
-    ripdoc.pl FILE FILE ..
+    ripdoc.pl FILE ...
 
-=head1 OPTIONS
-
-=over 4
-
-=item B<--doc>
-
-Use default seach start: 'Documentation|Commentary'
-
-=item B<-b|--begin-regexp REGEXP>
-
-Search any beginning regexp mathing RE istead of default 'File id|Preface'
-
-=item B<-d|--doc>
-
-Set search regexp to 'Documentation:|Commentary:'.
-
-=item B<-D|--debug>
-
-Turn on debug.
-
-=item B<-e|--end-regexp REGEXP>
-
-Search any Ending regexp mathing RE istead of default 'Change Log|History'
-
-=item B<-h|--help>
-
-Display help page.
-
-=item B<-i|--ignore-regexp>
-
-Ignore lines matching RE. The default value ignores shell I<!/slash/bang>
-lines.
-
-=item B<-v|--verbose> B<-v>
-
-Turn on verbose messages.
-
-=item B<-V|--version>
-
-Display program version and contact info.
-
-=back
-
-=head1 README
+=head1 DESCRIPTION
 
 =head2 General
 
@@ -262,6 +209,49 @@ will handicap this utiity.
     #        txt txt xtx at column 8
     #        txt txt xtx at column 8
 
+=head1 OPTIONS
+
+=over 4
+
+=item B<--doc>
+
+Use default seach start: 'Documentation|Commentary'
+
+=item B<-b, --begin-regexp REGEXP>
+
+Search any beginning regexp mathing RE istead of default 'File id|Preface'
+
+=item B<-d, --doc>
+
+Set search regexp to 'Documentation:|Commentary:'.
+
+=item B<-D, --debug>
+
+Turn on debug.
+
+=item B<-e, --end-regexp REGEXP>
+
+Search any Ending regexp mathing RE istead of default 'Change Log|History'
+
+=item B<-h, --help>
+
+Display help page.
+
+=item B<-i, --ignore-regexp>
+
+Ignore lines matching RE. The default value ignores shell I<!/slash/bang>
+lines.
+
+=item B<-v, --verbose> B<-v>
+
+Turn on verbose messages.
+
+=item B<-V, --version>
+
+Display program version and contact info.
+
+=back
+
 =head1 EXAMPLES
 
 You can combine the procuced clear text output to a text to html
@@ -272,9 +262,20 @@ filter to generate html documentation out of the comments.
 
 =head1 SEE ALSO
 
-t2html(1), weblint(1), html2ps(1), ps2ascii(1)
+html2ps(1)
+ps2ascii(1)
+t2html(1)
+weblint(1)
 
-=head1 BUGS
+=head1 EXIT STATUS
+
+Not defined.
+
+=head1 DEPENDENCIES
+
+Uses standard Perl modules.
+
+=head1 BUGS AND LIMITATIONS
 
 You can run this program to rip out documentation from any file that
 follows the 4 character indentation rule, which is the basis of TF
@@ -283,36 +284,25 @@ markers are single lined. C and Java-styled I<comment-start>
 I<comment-end> combination cannot be handled, because the comment
 marker is determined from the beginning of line.
 
-          /* This comment documentation cannot be handled
-           *
-           */
+    /* This comment documentation cannot be handled
+     *
+     */
 
 =head1 AVAILABILITY
 
-CPAN entry is at http://www.perl.com/CPAN-local//scripts/
-
-=head1 SCRIPT CATEGORIES
-
-CPAN/Administrative
-html
-
-=head1 PREREQUISITES
-
-No additional CPAN modules required.
-
-=head1 COREQUISITES
-
-No optional CPAN modules needed.
-
-=head1 OSNAMES
-
-C<any>
+http://cpan.perl.org/modules/by-authors/id/J/JA/JARIAALTO/
 
 =head1 AUTHOR
 
-Copyright (C) 1998-2010 Jari Aalto. All rights reserved. This program
-is free software; you can redistribute it and/or modify it under the
-terms of Gnu General Public license v2 or any later version.
+Jari Aalto
+
+=head1 LICENSE AND COPYRIGHT
+
+Copyright (C) 1997-2010 Jari Aalto
+
+This program is free software; you can redistribute and/or modify
+program under the terms of GNU General Public license either version 2
+of the License, or (at your option) any later version.
 
 =cut
 
@@ -346,7 +336,7 @@ sub Help (;$)
 
 sub HandleCommandLineArgs ()
 {
-    my    $id = "$LIB.HandleCommandLineArgs";
+    my $id = "$LIB.HandleCommandLineArgs";
 
     my ( $help, $version, $doc );
 
@@ -355,7 +345,6 @@ sub HandleCommandLineArgs ()
         $BEGIN_REGEXP
         $END_REGEXP
         $IGNORE_REGEXP
-
         $QUIET
         $debug
         $verb
@@ -434,7 +423,6 @@ sub Main ()
 
         if ( $COMMENT eq "" )
         {
-
             #   Find out what commenting syntax is for this file
 
             $COMMENT = $1 if /([^\s\n]+)/;

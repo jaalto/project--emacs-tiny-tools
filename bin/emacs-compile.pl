@@ -1,30 +1,31 @@
 #!/usr/bin/perl
 #
-# emacs-compile.pl -- Perl, Compile Emacs lisp *.el files
-#
 #  File id
+#
+#	 emacs-compile.pl -- Perl, Compile Emacs lisp *.el files
+#
+#   Copyright
 #
 #       Copyright (C) 2000-2010 Jari Aalto
 #
-#       This program is free software; you can redistribute it and/or
-#       modify it under the terms of the GNU General Public License as
-#       published by the Free Software Foundation; either version 2 of
-#       the License, or (at your option) any later version.
+#   License
 #
-#       This program is distributed in the hope that it will be useful, but
-#       WITHOUT ANY WARRANTY; without even the implied warranty of
-#       MERCHANTABILITY or FITNESS FOR A PARTICULAR PURPOSE.  See the GNU
-#       General Public License for more details.
+#       This program is free software; you can redistribute it and/or modify
+#       it under the terms of the GNU General Public License as published by
+#       the Free Software Foundation; either version 2 of the License, or
+#       (at your option) any later version.
 #
-#	You should have received a copy of the GNU General Public License
-#	along with this program. If not, see <http://www.gnu.org/licenses/>.
+#       This program is distributed in the hope that it will be useful,
+#       but WITHOUT ANY WARRANTY; without even the implied warranty of
+#       MERCHANTABILITY or FITNESS FOR A PARTICULAR PURPOSE. See the
+#       GNU General Public License for more details.
 #
-#	Visit <http://www.gnu.org/copyleft/gpl.html> for more information
+#       You should have received a copy of the GNU General Public License
+#       along with this program. If not, see <http://www.gnu.org/licenses/>.
 
 use autouse 'Pod::Text'     => qw( pod2text );
 use autouse 'Pod::Html'     => qw( pod2html );
 
-use 5.004;
 use strict;
 use English;
 use Env;
@@ -32,16 +33,10 @@ use Cwd;
 use Getopt::Long;
 use File::Basename;
 
-    use vars qw ( $VERSION );
+#   The following variable is updated by developer's Emacs whenever
+#   this file is saved
 
-    #   This is for use of Makefile.PL and ExtUtils::MakeMaker
-    #   So that it puts the tardist number in format YYYY.MMDD
-    #   The REAL version number is defined later
-
-    #   The following variable is updated by my Emacs setup whenever
-    #   this file is saved
-
-    $VERSION = '2007.0905.2133';
+our $VERSION = '2010.0503.0704';
 
 # ****************************************************************************
 #
@@ -61,7 +56,6 @@ use File::Basename;
 
 sub Initialize ()
 {
-
     use vars qw
     (
         $debug
@@ -70,7 +64,6 @@ sub Initialize ()
         $LIB
 
         $FILE_ID
-        $VERSION
         $CONTACT
         $URL
         $WIN32
@@ -85,10 +78,8 @@ sub Initialize ()
     $LIB        = $PROGNAME;
     my $id      = "$LIB.Initialize";
 
-    $FILE_ID  = q$Id: emacs-compile.pl,v 2.15 2007/05/01 17:20:29 jaalto Exp $;
-    $VERSION  = (split (' ', $FILE_ID))[2];
     $CONTACT  = "";
-    $URL      = "http://tiny-tools.sourceforge.net/";
+    $URL      = "";
     $WIN32    = 1   if  $OSNAME =~ /win32/i;
 
     $OUTPUT_AUTOFLUSH = 1;
@@ -131,6 +122,32 @@ Win32 and Unix compatible Emacs lisp package compilation program
     emacs-compile.pl --verbose 2  *
     emacs-compile.pl --Version
     emacs-compile.pl --help
+
+
+=head1 DESCRIPTION
+
+Emacs is "The Editor" available at http://www.emacs.org/ and for
+win32 platform at http://www.gnu.org/software/emacs/windows/ntemacs.html
+This program compiles Emacs Lisp files (*.el) using wild cards in platform
+independ way. Windows doesn't expand wildcards as in Unix, so you cannot just
+say:
+
+    emacs -batch -f batch-byte-compile *
+
+But this program accepts list of file specs to match the compiled files.
+The files are compiled in the given order.
+
+    emacs-compile.pl --verbose file-spec ..
+
+Usually the byte compiler needs to know what is the C<load-path> in order
+to find additional packages that are requested by C<require> C<load> and
+C<autoload> commands inthe Emacs Lisp files. You should supply our own
+B<load-path.el> which defines adequate path for the compilation process.
+This file and any additional packages to load are requested with the B<--load>
+command line switch. Here the package C<jka-compr> is loaded first in order
+to be able to load lisp files that are in compressed format.
+
+    emacs-compile.pl -l jka-compr -l ~/elisp/load-path.el.gz *
 
 =head1 OPTIONS
 
@@ -184,37 +201,6 @@ Print contact and version information
 
 =back
 
-=head1 DESCRIPTION
-
-Emacs is "The Editor" available at http://www.emacs.org/ and for
-win32 platform at http://www.gnu.org/software/emacs/windows/ntemacs.html
-This program compiles Emacs Lisp files (*.el) using wild cards in platform
-independ way. Windows doesn't expand wildcards as in Unix, so you cannot just
-say:
-
-    emacs -batch -f batch-byte-compile *
-
-But this program accepts list of file specs to match the compiled files.
-The files are compiled in the given order.
-
-    emacs-compile.pl --verbose file-spec ..
-
-Usually the byte compiler needs to know what is the C<load-path> in order
-to find additional packages that are requested by C<require> C<load> and
-C<autoload> commands inthe Emacs Lisp files. You should supply our own
-B<load-path.el> which defines adequate path for the compilation process.
-This file and any additional packages to load are requested with the B<--load>
-command line switch. Here the package C<jka-compr> is loaded first in order
-to be able to load lisp files that are in compressed format.
-
-    emacs-compile.pl -l jka-compr -l ~/elisp/load-path.el.gz *
-
-=head1 TROUBLESHOOTING
-
-This program selects only files that have suffix C<.el>. You must rename any
-Emacs Lisp to have that suffix in order to compile the file with this program.
-That's why giving wildcard "*" is safe.
-
 =head1 EXAMPLES
 
 If distribution contain libraries: compile them first, before any
@@ -222,6 +208,12 @@ applications. Specify libraries in the compile line and rest of the
 files after that:
 
     perl -S emacs-compile.pl --verbose 2  tinyliba tinylibb  *lib*.el *
+
+=head1 TROUBLESHOOTING
+
+This program selects only files that have suffix C<.el>. You must rename any
+Emacs Lisp to have that suffix in order to compile the file with this program.
+That's why giving wildcard "*" is safe.
 
 =head1 ENVIRONMENT
 
@@ -236,38 +228,35 @@ None.
 
 =head1 SEE ALSO
 
-emacs(1) xemacs(1)
+emacs(1)
 
 =head1 BUGS
 
 No known bugs.
 
-=head1 AVAILABILITY
+=head1 EXIT STATUS
 
-http://tiny-tools.sourceforge.net/
+Not defined.
 
-=head1 SCRIPT CATEGORIES
+=head1 DEPENDENCIES
 
-CPAN/Administrative
+Uses standard Perl modules.
 
-=head1 COREQUISITES
+=head1 BUGS AND LIMITATIONS
 
 None.
 
-=head1 OSNAMES
-
-C<any>
-
-=head1 VERSION
-
-$Id: emacs-compile.pl,v 2.15 2007/05/01 17:20:29 jaalto Exp $
-
 =head1 AUTHOR
 
-Copyright (C) 2000 Jari Aalto. All rights reserved.
-This program is free software; you can redistribute and/or modify program
-under the same terms as Perl itself or in terms of Gnu General Public
-license v2 or later.
+Jari Aalto
+
+=head1 LICENSE AND COPYRIGHT
+
+Copyright (C) 2000-2010 Jari Aalto
+
+This program is free software; you can redistribute and/or modify
+program under the terms of GNU General Public license either version 2
+of the License, or (at your option) any later version.
 
 =cut
 

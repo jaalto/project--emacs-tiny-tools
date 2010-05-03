@@ -1,40 +1,30 @@
 #!/usr/bin/perl
 #
-# java-function-list.pl -- Grep all JDK/SDK Java funtions to a list
-#
 #  File id
+#
+#	java-function-list.pl -- Grep all JDK/SDK Java funtions to a list
+#
+#   Copyright
 #
 #       Copyright (C) 2000-2010 Jari Aalto
 #
-#       This program is free software; you can redistribute it and/or
-#       modify it under the terms of the GNU General Public License as
-#       published by the Free Software Foundation; either version 2 of
-#       the License, or (at your option) any later version.
+#   License
 #
-#       This program is distributed in the hope that it will be useful, but
-#       WITHOUT ANY WARRANTY; without even the implied warranty of
-#       MERCHANTABILITY or FITNESS FOR A PARTICULAR PURPOSE.  See the GNU
-#       General Public License for more details.
+#       This program is free software; you can redistribute it and/or modify
+#       it under the terms of the GNU General Public License as published by
+#       the Free Software Foundation; either version 2 of the License, or
+#       (at your option) any later version.
 #
-#	You should have received a copy of the GNU General Public License
-#	along with this program. If not, see <http://www.gnu.org/licenses/>.
+#       This program is distributed in the hope that it will be useful,
+#       but WITHOUT ANY WARRANTY; without even the implied warranty of
+#       MERCHANTABILITY or FITNESS FOR A PARTICULAR PURPOSE. See the
+#       GNU General Public License for more details.
 #
-#	Visit <http://www.gnu.org/copyleft/gpl.html> for more information
-#
-#   Description
-#
-#       Call program with
-#
-#           % perl java-function-list.pl --help
-#
-#   End
-
-BEGIN { require 5.004 }
+#       You should have received a copy of the GNU General Public License
+#       along with this program. If not, see <http://www.gnu.org/licenses/>.
 
 use autouse 'Pod::Text' => qw( pod2text );
-
 use strict;
-
 use English;
 use Env;
 use Cwd;
@@ -42,17 +32,10 @@ use Getopt::Long;
 use File::Basename;
 use File::Find;
 
-    use vars qw ( $VERSION );
+#   The following variable is updated by developer's Emacs whenever
+#   this file is saved
 
-    #   This is for use of Makefile.PL and ExtUtils::MakeMaker
-    #   So that it puts the tardist number in format YYYY.MMDD
-    #   The REAL version number is defined later
-
-    #   The following variable is updated by my Emacs setup whenever
-    #   this file is saved
-
-    $VERSION = '2007.0905.2135';
-
+our $VERSION = '2010.0503.0737';
 
 # {{{ Initial setup
 
@@ -74,7 +57,6 @@ use File::Find;
 
 sub Initialize ()
 {
-
     use vars qw
     (
         $debug
@@ -82,8 +64,6 @@ sub Initialize ()
         $PROGNAME
         $LIB
 
-        $FILE_ID
-        $VERSION
         $CONTACT
         $URL
         $WIN32
@@ -97,10 +77,8 @@ sub Initialize ()
     $LIB        = $PROGNAME;
     my $id      = "$LIB.Initialize";
 
-    $FILE_ID  = q$Id: java-function-list.pl,v 2.11 2007/05/01 17:20:30 jaalto Exp $;
-    $VERSION  = (split (' ', $FILE_ID))[2];
     $CONTACT  = "";
-    $URL      = "http://tiny-tools.sourceforge.net/";
+    $URL      = "";
     $WIN32    = 1   if  $OSNAME =~ /win32/i;
 
     $OUTPUT_AUTOFLUSH = 1;
@@ -124,11 +102,9 @@ sub Initialize ()
 
     $ENV{PATH} = join $sep, @PATH;
     $PATH      = $ENV{PATH};
-
 }
 
 # }}}
-
 
 
 # ***************************************************************** &help ****
@@ -155,8 +131,45 @@ java-function-list.pl - Grep all JDK/SDK Java funtions
 
 =head1 SYNOPSIS
 
-    % perl java-function-list.pl -recurse /where/is/your/jdk-root
-    % perl java-function-list.pl jdk-javadoc-page/BufferedReader.html [file ..]
+    java-function-list.pl -recurse /where/is/your/jdk-root
+    java-function-list.pl jdk-javadoc-page/BufferedReader.html [file ..]
+
+=head1 DESCRIPTION
+
+This file generates list of all Java methods, their return values,
+call parameters and thrown exections from javadoc generated HTML
+pages. The output format is as terse as possibly occupying only one
+line per function. The output is optimized for Emacs package
+tinytag.el, which can display function information while you write Java
+code. (See tiny tools project at AVAILABILITY section)
+
+Here is example which extracts functions from BufferedInputStream HTML page:
+
+    cd java/sun/jdk<version>/docs/api/java/io
+    java-function-list.pl Buffered*Input*
+
+    java.io.BufferedInputStream  BufferedInputStream(InputStream in)
+    java.io.BufferedInputStream  BufferedInputStream(InputStream in, int size)
+    java.io.BufferedInputStream  int available()  throws IOException
+    java.io.BufferedInputStream protected byte[] buf
+    java.io.BufferedInputStream  void close()  throws IOException
+    java.io.BufferedInputStream protected int count
+    java.io.BufferedInputStream  void mark(int readlimit) throws IOException
+    java.io.BufferedInputStream  boolean markSupported() throws IOException
+    java.io.BufferedInputStream protected int marklimit
+    java.io.BufferedInputStream protected int markpos
+    java.io.BufferedInputStream protected int pos
+    java.io.BufferedInputStream  int read()  throws IOException
+    java.io.BufferedInputStream  int read(byte[] b, int off, int len)  throws IOExce
+    ption
+    java.io.BufferedInputStream  void reset()  throws IOException
+    java.io.BufferedInputStream  long skip(long n)  throws IOException
+
+To generate full function and variable listing out of Java tree, use
+B<--recurse> option and instruct to start from Java installation
+directory. The result will be a very long listing.
+
+    java-function-list.pl --recurse java/sun/jdk<version>/docs > jdkVERSION.lst
 
 =head1 OPTIONS
 
@@ -198,62 +211,9 @@ Print contact and version information
 
 =back
 
-=head1 README
-
-This file generates list of all Java methods, their return values,
-call parameters and thrown exections from javadoc generated HTML
-pages. The output format is as terse as possibly occupying only one
-line per function. The output is optimized for Emacs package
-tinytag.el, which can display function information while you write Java
-code. (See tiny tools project at AVAILABILITY section)
-
-Here is example which extracts functions from BufferedInputStream HTML page:
-
-    % cd   java/sun/jdk1.2.2/docs/api/java/io
-    % perl java-function-list.pl Buffered*Input*
-
-    java.io.BufferedInputStream  BufferedInputStream(InputStream in)
-    java.io.BufferedInputStream  BufferedInputStream(InputStream in, int size)
-    java.io.BufferedInputStream  int available()  throws IOException
-    java.io.BufferedInputStream protected byte[] buf
-    java.io.BufferedInputStream  void close()  throws IOException
-    java.io.BufferedInputStream protected int count
-    java.io.BufferedInputStream  void mark(int readlimit) throws IOException
-    java.io.BufferedInputStream  boolean markSupported() throws IOException
-    java.io.BufferedInputStream protected int marklimit
-    java.io.BufferedInputStream protected int markpos
-    java.io.BufferedInputStream protected int pos
-    java.io.BufferedInputStream  int read()  throws IOException
-    java.io.BufferedInputStream  int read(byte[] b, int off, int len)  throws IOExce
-    ption
-    java.io.BufferedInputStream  void reset()  throws IOException
-    java.io.BufferedInputStream  long skip(long n)  throws IOException
-
-To generate full function and variable listing out of Java tree, use
-B<--recurse> option and instruct to start from Java installation
-directory. The result will be a very long listing.
-
-    % perl java-function-list.pl --recurse java/sun/jdk1.2.2/docs > jdk1.2.2.lst
-
 =head1 TROUBLESHOOTING
 
 Please turn on --debug with level 2 to check what happens inside.
-
-=head1 EXAMPLES
-
-No special examples.
-
-=head1 ENVIRONMENT
-
-No environment variables used.
-
-=head1 FILES
-
-No files generated.
-
-=head1 SEE ALSO
-
-Emacs(1) XEmacs(1) Java(1)
 
 =head1 BUGS
 
@@ -267,7 +227,7 @@ program does not hava any intelligence to cache or refer to base class
 definitions. Program does not know the OO relationships and it simply
 chews the envountered javadoc pages.
 
-Example:
+An example:
 
 If you look at the JDK documentation page in your Java installation
 sun/jdk1.2.2/docs/api/index.html and under C<System>, you will find
@@ -313,36 +273,43 @@ copy/paste to your generated function list
     java.lang.System.out  void write(int b)
     java.lang.System.out  void write(byte[] buf, int off, int len)
 
-=head1 AVAILABILITY
+=head1 ENVIRONMENT
 
-Author's CPAN entry is at
-http://cpan.perl.org/modules/by-authors/id/J/JA/JARIAALTO/
+No environment variables used.
 
-This file belongs to the Tiny Tools project at
-http://tiny-tools.sourceforge.net/
+=head1 FILES
 
-=head1 SCRIPT CATEGORIES
+No files generated.
 
-CPAN/Administrative
+=head1 SEE ALSO
 
-=head1 COREQUISITES
+emacs(1)
+java(1)
+xemacs(1)
 
-No external CPAN modules used.
+=head1 EXIT STATUS
 
-=head1 OSNAMES
+Not defined.
 
-C<any>
+=head1 DEPENDENCIES
 
-=head1 VERSION
+Uses standard Perl modules.
 
-$Id: java-function-list.pl,v 2.11 2007/05/01 17:20:30 jaalto Exp $
+=head1 BUGS AND LIMITATIONS
+
+None.
 
 =head1 AUTHOR
 
-Copyright (C) 2000-2010 Jari Aalto. All rights reserved.
-This program is free software; you can redistribute and/or modify program
-under the same terms as Perl itself or in terms of Gnu General Public
-license v2 or later.
+Jari Aalto
+
+=head1 LICENSE AND COPYRIGHT
+
+Copyright (C) 2000-2010 Jari Aalto
+
+This program is free software; you can redistribute and/or modify
+program under the terms of GNU General Public license either version 2
+of the License, or (at your option) any later version.
 
 =cut
 
@@ -357,7 +324,6 @@ sub Help (;$)
 
     exit 1;
 }
-
 
 # ************************************************************** &args *******
 #
@@ -417,11 +383,7 @@ sub HandleCommandLineArgs ()
     $verb  = 1      if  $test;
 
     $debug  and  warn "$id: rest command line args [@ARGV]\n";
-
-
 }
-
-
 
 # ****************************************************************************
 #
@@ -444,7 +406,6 @@ sub Format ( % )
 {
     my $id     = "$LIB.Format";
     my (%hash) = @ARG;
-
 
     my (@list, $class, $name, $type, $param, $ex , $str);
 
@@ -478,8 +439,6 @@ sub Format ( % )
     @list;
 }
 
-
-
 # ****************************************************************************
 #
 #   DESCRIPTION
@@ -505,7 +464,6 @@ sub HtmlClean ( $ )
     $arg =~ s,&[a-z]+;, ,g;
     $arg;
 }
-
 
 # ****************************************************************************
 #
@@ -535,7 +493,6 @@ sub HtmlParse ( $ ; $ )
     my    $id   = "$LIB.HtmlParse";
     local $ARG  = shift;
     my    $file = shift;
-
 
     # ........................................ Read class definition ...
 
@@ -570,17 +527,14 @@ sub HtmlParse ( $ ; $ )
 
     $verb  and  warn  "$id: Extracting $file";
 
-
     # ...................................................... cleanup ...
     #   Kill until this, the method details follow after it.
 
     s/^.*=== FIELD DETAIL ===//si;
 
-
     # ............................................. read definitions ...
 
     my %hash;
-
 
     #   <!-- ============ FIELD DETAIL =========== -->
     #
@@ -668,7 +622,6 @@ sub HtmlParse ( $ ; $ )
 
         $debug and
             warn "$id: $file MATCHED $qualified - $type - $param - $throw \n";
-
     }
 
     %hash;
@@ -728,8 +681,6 @@ sub FileParse ( $ )
     %hash;
 }
 
-
-
 # ****************************************************************************
 #
 #   DESCRIPTION
@@ -780,7 +731,6 @@ sub ExpandFiles ( @ )
     @files;
 }
 
-
 # ****************************************************************************
 #
 #   DESCRIPTION
@@ -807,7 +757,6 @@ sub FileOutput( $ )
 
     print @lines;
 }
-
 
 # ****************************************************************************
 #
@@ -889,7 +838,6 @@ sub Main ()
         FileOutput $file;
     }
 
-
     if ( defined @RECURSE  and  @RECURSE  )
     {
         $verb  and  warn "$id: Recursing .. [@RECURSE]\n";
@@ -918,7 +866,6 @@ sub Main ()
     {
         $verb and  die "$id: nothing to do. Did you forget option --recurse?";
     }
-
 }
 
 Main();

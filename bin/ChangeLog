@@ -1,3 +1,17 @@
+2010-05-03 Mon  Jari Aalto  <jari.aalto@cante.net>
+
+	* ripdoc.pl (Initialize): (top level): Correct Copyright, License, Help.
+
+	* java-function-list.pl: (top level): Correct Copyright, License, Help.
+
+	* find-version.pl: (top level): Correct Copyright, License, Help.
+
+	* emacs-util.pl: (top level): Correct Copyright, License, Help.
+
+	* emacs-compile.pl: (top level): Correct Copyright, License, Help.
+
+	* dos2unix.pl: (top level): Correct Copyright, License, Help.
+
 2010-05-01 Sat  Jari Aalto  <jari.aalto@cante.net>
 
 	* emacs-compile.pl (HandleCommandLineArgs): Remove

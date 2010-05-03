@@ -1,25 +1,27 @@
 #!/usr/bin/perl
 #
-# find-version.pl -- Find version number from files
-#
 #  File id
+#
+#	find-version.pl -- Find version number from files
+#
+#   Copyright
 #
 #       Copyright (C) 2000-2010 Jari Aalto
 #
-#       This program is free software; you can redistribute it and/or
-#       modify it under the terms of the GNU General Public License as
-#       published by the Free Software Foundation; either version 2 of
-#       the License, or (at your option) any later version.
+#   License
 #
-#       This program is distributed in the hope that it will be useful, but
-#       WITHOUT ANY WARRANTY; without even the implied warranty of
-#       MERCHANTABILITY or FITNESS FOR A PARTICULAR PURPOSE.  See the GNU
-#       General Public License for more details.
+#       This program is free software; you can redistribute it and/or modify
+#       it under the terms of the GNU General Public License as published by
+#       the Free Software Foundation; either version 2 of the License, or
+#       (at your option) any later version.
 #
-#	You should have received a copy of the GNU General Public License
-#	along with this program. If not, see <http://www.gnu.org/licenses/>.
+#       This program is distributed in the hope that it will be useful,
+#       but WITHOUT ANY WARRANTY; without even the implied warranty of
+#       MERCHANTABILITY or FITNESS FOR A PARTICULAR PURPOSE. See the
+#       GNU General Public License for more details.
 #
-#	Visit <http://www.gnu.org/copyleft/gpl.html> for more information
+#       You should have received a copy of the GNU General Public License
+#       along with this program. If not, see <http://www.gnu.org/licenses/>.
 #
 #   Description
 #
@@ -36,16 +38,10 @@ use English;
 use File::Find;
 use Getopt::Long;
 
-    use vars qw ( $VERSION );
+#   The following variable is updated by developer's Emacs whenever
+#   this file is saved
 
-    #   This is for use of Makefile.PL and ExtUtils::MakeMaker
-    #   So that it puts the tardist number in format YYYY.MMDD
-    #   The REAL version number is defined later
-
-    #   The following variable is updated by my Emacs setup whenever
-    #   this file is saved
-
-    $VERSION = '2007.0902.0850';
+our $VERSION = '2010.0503.0724';
 
 # ****************************************************************************
 #
@@ -65,7 +61,6 @@ use Getopt::Long;
 
 sub Initialize ()
 {
-
     use vars qw
     (
         $debug
@@ -74,7 +69,6 @@ sub Initialize ()
         $LIB
 
         $FILE_ID
-        $VERSION
         $CONTACT
         $URL
         $WIN32
@@ -84,14 +78,11 @@ sub Initialize ()
     $LIB        = $PROGNAME;
     my $id      = "$LIB.Initialize";
 
-    $FILE_ID  = q$Id: find-version.pl,v 2.14 2007/05/01 17:20:30 jaalto Exp $;
-    $VERSION  = (split (' ', $FILE_ID))[2];
     $CONTACT  = "";
-    $URL      = "http://tiny-tools.sourceforge.net/";
+    $URL      = "";
     $WIN32    = 1   if  $OSNAME =~ /win32/i;
 
     $OUTPUT_AUTOFLUSH = 1;
-
 }
 
 # ***************************************************************** &help ****
@@ -116,13 +107,13 @@ sub Initialize ()
 
 find-version.pl - Find version number from files
 
-=head1 README
-
-<short overall description here. This section is ripped by CPAN>
-
 =head1 SYNOPSIS
 
-    find-version.pl *
+    find-version.pl FILE ...
+
+=head1 DESCRIPTION
+
+Extract version information from files.
 
 =head1 OPTIONS
 
@@ -130,11 +121,11 @@ find-version.pl - Find version number from files
 
 =over 4
 
-=item B<--help -h>
+=item B<-h, --help>
 
 Print help
 
-=item B<--Version>
+=item B<-V, --Version>
 
 Print contact and version information
 
@@ -144,15 +135,11 @@ Print contact and version information
 
 =over 4
 
-=item B<--debug -d LEVEL>
+=item B<-d, --debug LEVEL>
 
 Turn on debug with positive LEVEL number. Zero means no debug.
 
 =back
-
-=head1 DESCRIPTION
-
-<Longer program description>
 
 =head1 TROUBLESHOOTING
 
@@ -162,50 +149,45 @@ None.
 
 None.
 
+=head1 BUGS
+
+None known.
+
 =head1 ENVIRONMENT
 
-<any environment variable settings>
+None.
 
 =head1 FILES
 
-<what files program generates uses>
+None.
 
 =head1 SEE ALSO
 
-<references to other programs>
+licensecheck(1) program in Debian.
 
-=head1 BUGS
+=head1 EXIT STATUS
 
-No known limitations.
+Not defined.
 
-=head1 AVAILABILITY
+=head1 DEPENDENCIES
 
-http://tiny-tools.sourceforge.net/
+Uses standard Perl modules.
 
-=head1 SCRIPT CATEGORIES
+=head1 BUGS AND LIMITATIONS
 
-CPAN/Administrative
-
-=head1 COREQUISITES
-
-Uses tandard Perl modules.
-
-=head1 OSNAMES
-
-C<any>
-
-=head1 VERSION
-
-$Id: find-version.pl,v 2.14 2007/05/01 17:20:30 jaalto Exp $
+None.
 
 =head1 AUTHOR
 
-Copyright (C) 2000-2010 Jari Aalto. All rights reserved.
-This program is free software; you can redistribute and/or modify program
-under the same terms as Perl itself or in terms of Gnu General Public
-license v2 or later.
+Jari Aalto
 
-This file is part of http://tiny-tools.sourceforge.net/
+=head1 LICENSE AND COPYRIGHT
+
+Copyright (C) 2000-2010 Jari Aalto
+
+This program is free software; you can redistribute and/or modify
+program under the terms of GNU General Public license either version 2
+of the License, or (at your option) any later version.
 
 =cut
 

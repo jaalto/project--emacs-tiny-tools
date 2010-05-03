@@ -1,41 +1,39 @@
 #!/usr/bin/perl
 #
-# Perl -- Like mkmf(1) to update Emacs lisp Makefile dependencies
-#
 #  File id
+#
+#	 Like mkmf(1) to update Emacs lisp Makefile dependencies
+#
+#   Copyright
 #
 #       Copyright (C) 1997-2010 Jari Aalto
 #
-#       This program is free software; you can redistribute it and/or
-#       modify it under the terms of the GNU General Public License as
-#       published by the Free Software Foundation; either version 2 of
-#       the License, or (at your option) any later version.
+#   License
 #
-#       This program is distributed in the hope that it will be useful, but
-#       WITHOUT ANY WARRANTY; without even the implied warranty of
-#       MERCHANTABILITY or FITNESS FOR A PARTICULAR PURPOSE.  See the GNU
-#       General Public License for more details.
+#       This program is free software; you can redistribute it and/or modify
+#       it under the terms of the GNU General Public License as published by
+#       the Free Software Foundation; either version 2 of the License, or
+#       (at your option) any later version.
 #
-#	You should have received a copy of the GNU General Public License
-#	along with this program. If not, see <http://www.gnu.org/licenses/>.
+#       This program is distributed in the hope that it will be useful,
+#       but WITHOUT ANY WARRANTY; without even the implied warranty of
+#       MERCHANTABILITY or FITNESS FOR A PARTICULAR PURPOSE. See the
+#       GNU General Public License for more details.
 #
-#	Visit <http://www.gnu.org/copyleft/gpl.html> for more information
-#
-#   Program description
-#
-#       See explained in the help page: run program with command
-#
-#       % PROGRAM_NAME -h
-#
+#       You should have received a copy of the GNU General Public License
+#       along with this program. If not, see <http://www.gnu.org/licenses/>.
 
 use autouse 'Pod::Text' => qw( pod2text );
-
-use 5.004;
 use strict;
 use Env;
 use English;
 use File::Basename;
 use Getopt::Long;
+
+#   The following variable is updated by developer's Emacs whenever
+#   this file is saved
+
+our $VERSION = '2010.0503.0807';
 
 # {{{ Initial setup
 
@@ -61,28 +59,20 @@ sub Initialize ()
     (
         $PROGNAME
         $LIB
-
-        $RCS_ID
-        $VERSION
         $CONTACT
         $URL
     );
 
-
     $LIB        = basename $PROGRAM_NAME;
     $PROGNAME   = $LIB;
-
-    $RCS_ID   = '$Id: emacs-mkmf.pl,v 2.10 2007/05/01 17:20:29 jaalto Exp $';
-    $VERSION  = (split (' ', $RCS_ID))[2];   # version number in format N.NN+
     $CONTACT  = "";
-    $URL      = "http://tiny-tools.sourceforge.net";
+    $URL      = "";
 
     $OUTPUT_AUTOFLUSH = 1;
 }
 
 # }}}
 # {{{ usage/help
-
 
 # ***************************************************************** &help ****
 #
@@ -108,57 +98,7 @@ emacs-mkmf.pl - Like mkmf(1), but update Emacs lisp Makefile dependencies
 
 =head1 SYNOPSIS
 
-=head2 General options
-
-=over 4
-
-=item B<--all>
-
-Include all dependencies, even files that are not
-in current directory.
-
-=item B<--dir DIR>
-
-Instead of reading *.el from current directory, read DIR
-
-=item B<--exclude REGEXP>
-
-Exclude files.
-
-=item B<--file MAKEFILE>
-
-Instead of updating 'Makefile', update FILE. if FILE is
-string "stdout", print the dependencies to stdout.
-
-=item B<--preserve COUNT>
-
-Instead of preserving last 2 lines preserve N lines.
-
-=item B<--tag REGEXP>
-
-Inser dependencies after REGEXP.
-Normally the dependencies are updated after standard mkmf(1) `###' line.
-
-=back
-
-=head2 Miscellaneous options
-
-=over 4
-
-=item B<--debug LEVEL -d LEVEL>
-
-Turn on debug with positive LEVEL number. Zero means no debug.
-This option turns on B<--verbose> too.
-
-=item B<--help> B<-h>
-
-Print help page.
-
-=item B<--Version -V>
-
-Print program's version information.
-
-=back
+    emacs-mkmf.pl *.el
 
 =head1 REAME
 
@@ -190,7 +130,89 @@ C<NOTE>
 Program automatically selects only *.el files, so it is safe to
 give following command to update all Emacs lisp file dependencies.
 
-    % mkmf-emacs-lisp.pl *
+    emacs-mkmf.pl *
+
+=head1 OPTIONS
+
+=over 4
+
+=item B<-a, --all>
+
+Include all dependencies, even files that are not
+in current directory.
+
+=item B<-D, --debug LEVEL>
+
+Turn on debug with positive LEVEL number. Zero means no debug.
+This option turns on B<--verbose> too.
+
+=item B<-d, --dir DIR>
+
+Instead of reading *.el from current directory, read DIR
+
+=item B<-e, --exclude REGEXP>
+
+Exclude files.
+
+=item B<-f, --file MAKEFILE>
+
+Instead of updating 'Makefile', update FILE. if FILE is
+string "stdout", print the dependencies to stdout.
+
+=item B<-h, --help> B<-h>
+
+Print help page.
+
+=item B<-p, --preserve COUNT>
+
+Instead of preserving last 2 lines preserve N lines.
+
+=item B<-t, --tag REGEXP>
+
+Inser dependencies after REGEXP.
+Normally the dependencies are updated after standard mkmf(1) `###' line.
+
+=item B<-V, --version>
+
+Print program's version information.
+
+=back
+
+=head1 ENVIRONMENT
+
+No environment settings.
+
+=head1 FILES
+
+None.
+
+=head1 SEE ALSO
+
+xmkmf(1)
+
+=head1 EXIT STATUS
+
+Not defined.
+
+=head1 DEPENDENCIES
+
+Uses standard Perl modules.
+
+=head1 BUGS AND LIMITATIONS
+
+None.
+
+=head1 AUTHOR
+
+Jari Aalto
+
+=head1 LICENSE AND COPYRIGHT
+
+Copyright (C) 1997-2010 Jari Aalto
+
+This program is free software; you can redistribute and/or modify
+program under the terms of GNU General Public license either version 2
+of the License, or (at your option) any later version.
 
 =cut
 
@@ -204,9 +226,7 @@ sub Help (;$)
     exit 1;
 }
 
-
 # }}}
-
 
 # ************************************************************** &args *******
 #
@@ -264,29 +284,23 @@ sub HandleCommandLineArgs ()
 
     GetOptions      # Getopt::Long
     (
-          "Version"         => \$version
-        , "verbose"         => \$verb
-        , "help"            => \$help
-
-        , "all"             => \$DEP_ALL
-
+          "all"             => \$DEP_ALL
         , "dir=s"           => \$DIR
-        , "debug:i"         => \$debug
+        , "D|debug:i"       => \$debug
         , "d"               => \$debug
-
-        , "file=s"          => \$MAKEFILE
-
-        , "preserve=i"      => \$PRESERVE_COUNT
-
-        , "tag"             => \$TAG
         , "exclude"         => \$EXCLUDE_RE
+        , "file=s"          => \$MAKEFILE
+        , "help"            => \$help
+        , "preserve=i"      => \$PRESERVE_COUNT
+        , "tag"             => \$TAG
+        , "verbose"         => \$verb
+        , "V|version"       => \$version
     );
 
 
     $version    and  die "$VERSION $PROGNAME $CONTACT $URL\n";
     $help       and  Help();
     $debug      and  $verb = 1;
-
 }
 
 # ****************************************************************************
@@ -308,28 +322,30 @@ sub HandleCommandLineArgs ()
 sub GetDependencies ($)
 {
     my $id = "$LIB.GetDep";
-    my( $file) = @ARG;
+    my ( $file) = @ARG;
 
-    my( %hash , $i, @ret, $efile);
+    my ( %hash, $i, @ret, $efile);
 
     local $ARG;
-    local *FILE;
+    my $FILE;
 
     #   Usinf %hash filters duplicates, but the order is random, that's
     #   why we use key $i to restore the order later.
 
-    unless ( open F, $file )
+    unless ( open $FILE, "<", $file )
     {
         warn "$id: Can't open [$file]";
     }
     else
     {
         $i = 0;
-        for ( <F> )
+
+        for ( <$FILE> )
         {
             next if /^\s*;/;    # Skip comments
 
             $i++;
+
             if ( /^\s*\(require\s+'([^\)\s]+)/ )
             {
                 $debug  and print "$id: 1 $file: $ARG";
@@ -344,11 +360,12 @@ sub GetDependencies ($)
                 $hash{$i} = $1; next;
             }
         }
-        close F;
+
+        close $FILE;
     }
 
     #   Preserve read order
-    #
+
     for ( sort keys %hash  )
     {
         $efile = "$hash{$ARG}.el";
@@ -356,11 +373,11 @@ sub GetDependencies ($)
 
         if ( $DEP_ALL )
         {
-            push ( @ret, $efile);
+            push @ret, $efile;
         }
         else
         {
-            push ( @ret, $efile ) if -f $efile;
+            push @ret, $efile  if  -f $efile;
         }
     }
 
@@ -368,40 +385,56 @@ sub GetDependencies ($)
     @ret;
 }
 
-# {{{ Main
+# ****************************************************************************
+#
+#   DESCRIPTION
+#
+#       Main function
+#
+#   INPUT PARAMETERS
+#
+#       None
+#
+#   RETURN VALUES
+#
+#       None
+#
+# ****************************************************************************
 
-# ............................................................ &main ...
-
+sub Main ()
+{
     Initialize();
     HandleCommandLineArgs();
 
     my $id = "$LIB.main" ;
 
-    my( $stdout , @slurp, %files, $i, $depList, @list, @depLines, $file);
+    my ( $stdout , @slurp, %files, $i, $depList, @list, @depLines, $file);
     my ( $target , @file , $tmp , $cont, $last );
 
-    local *MAKE;
+    my $MAKE;
 
     $stdout =  1    if $MAKEFILE =~ /^stdout$/;
 
-
     unless ( $stdout )
     {
-        open MAKE,"$MAKEFILE"   or die "$id: Can't open [$MAKEFILE] $ERRNO";
-        @slurp = <MAKE>; close MAKE;
+        open $MAKE,"<", $MAKEFILE   or die "$id: Can't open [$MAKEFILE] $ERRNO";
+        @slurp = <$MAKE>;
+	close $MAKE;
     }
 
-    my @files = grep (! /$EXCLUDE_RE/o &&  /\.el$/ , @ARGV );
+    my @files = grep ! /$EXCLUDE_RE/o &&  /\.el$/ , @ARGV;
 
     # ........................................... &remove-duplicates ...
 
     $i = 0;
+
     for ( @files )
     {
         $files{ $i++ } = $ARG;      # preserve order too with $i
     }
 
     @files = ();
+
     for ( keys %files )
     {
         push @files , $files{$ARG};
@@ -418,7 +451,7 @@ sub GetDependencies ($)
         $target     = "\n${file}c: ";
         @list       = GetDependencies $file;
 
-        for ($i = 0; $i < @list; $i++ )
+        for ( $i = 0; $i < @list; $i++ )
         {
             $target     .= " \\ \n" if $i == 0;
 
@@ -430,10 +463,7 @@ sub GetDependencies ($)
         push @depLines, $target . $depList . "\n" ;
     }
 
-
-
     # .................................................. &write-file ...
-
 
     if ( $stdout )
     {
@@ -442,6 +472,7 @@ sub GetDependencies ($)
     else
     {
         MAKE_IT:
+
         for ( @slurp )
         {
             if ( /$TAG/o )
@@ -468,14 +499,13 @@ sub GetDependencies ($)
 
         push @file, $last;
 
-        open MAKE, ">$MAKEFILE"         or die "$id: $MAKEFILE $ERRNO";
-        print MAKE @file;
-        close MAKE;
+        open $MAKE, ">", $MAKEFILE         or die "$id: $MAKEFILE $ERRNO";
+        print $MAKE @file;
+        close $MAKE;
     }
+}
 
-# }}}
+Main();
 
 0;
 __END__
-
-# mkmk-el.pl ends here
