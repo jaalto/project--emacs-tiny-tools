@@ -111,8 +111,8 @@
 (autoload 'mail-position-on-field       "sendmail")
 (autoload 'mail-fetch-field             "sendmail")
 (autoload 'regexp-opt                   "regexp-opt")
-
-(eval-when-compile (ti::package-use-dynamic-compilation))
+(autoload 'url-retrieve-synchronously   "url")
+(autoload 'mm-url-decode-entities-string "mm-url")
 
 (eval-and-compile
   ;;  Forward declarations to quiet byte compiler.
@@ -214,6 +214,12 @@ See function `tinydebian-command-show-rc-alert'."
 (defcustom tinydebian-:buffer-www "*Tinydebian WWW*"
   "*Buffer name where to put WWW call results.
 See `tinydebian-:browse-url-function'."
+  :type  'string
+  :group 'TinyDebian)
+
+(defcustom tinydebian-:buffer-http-get "*Tinydebian WWW HTTP*"
+  "*Buffer name where to put HTTP GET result.
+See `tinydebian-debian-url-bug-initialize'."
   :type  'string
   :group 'TinyDebian)
 
@@ -884,7 +890,7 @@ to generate updated list."
      tinydebian-:severity-selected
      tinydebian-:tags-list)))
 
-(defconst tinydebian-:version-time "2010.0413.0548"
+(defconst tinydebian-:version-time "2010.0506.2038"
   "Last edited time.")
 
 (defvar tinydebian-:bts-extra-headers
@@ -2126,11 +2132,10 @@ Return:
 	  (tinydebian-sourceforge-bug-type-parse-bug-string str)
 	(tinydebian-sourceforge-bug-url-1 project bug))))
    (t
-    (save-excursion
-      (goto-char (point-min))
-      (if (re-search-forward
-	   "https?://sourceforge.net/tracker/[^<> \t\r\n]+" nil t)
-	  (match-string-no-properties 0))))))
+    (goto-char (point-min))
+    (if (re-search-forward
+	 "https?://sourceforge.net/tracker/[^<> \t\r\n]+" nil t)
+	(match-string-no-properties 0)))))
 
 ;;; ----------------------------------------------------------------------
 ;;;
@@ -2847,6 +2852,282 @@ At current point, current line, headers of the mail message
 
 ;;; ----------------------------------------------------------------------
 ;;;
+(defun tinydebian-decode-hex (string)
+  "Decode %NN hex codes in STRING."
+  (with-temp-buffer
+    (save-match-data
+      (insert-string string)
+      (goto-char (point-min))
+      (while (re-search-forward "%\\([0-9][0-9]\\)" nil t)
+	(replace-match
+	 (save-match-data
+	   (format "%c"
+		   (radix
+		    (match-string-no-properties 1)
+		    16)))))
+      (buffer-string))))
+
+;;; ----------------------------------------------------------------------
+;;;
+(defsubst tinydebian-month-to-number (month &optional zero-padded)
+  "Convert MONTH, 3 character initcap month name e.g. `Jan' to number."
+  (cdr-safe
+   (assoc
+    month
+    '( ("Jan" . 1) ("Feb" . 2) ("Mar" . 3)
+       ("Apr" . 4) ("May" . 5) ("Jun" . 6)
+       ("Jul" . 7) ("Aug" . 8) ("Sep" . 9)
+       ("Oct" . 10) ("Nov" . 11) ("Dec" . 12)))))
+
+;;; ----------------------------------------------------------------------
+;;; (tinydebian-date-to-iso8691 "Tue, 29 Sep 2009 22:01:11 UTC")
+(defun tinydebian-date-to-iso8691 (string)
+  "Convert RFC 'Tue, 29 Sep 2009 22:01:11 UTC' STRING to ISO 8601."
+  (if (string-match
+       `,(concat "\\([a-z][a-z][a-z]\\), *"
+		 "\\([0-9]+\\) +"
+		 "\\([a-z][a-z][a-z]\\) +"
+		 "\\([0-9][0-9][0-9][0-9]\\) +"
+		 "\\([0-9][0-9]:[0-9][0-9:]+\\) +"
+		 "\\(.*\\)")
+       string)
+      (let ((day   (match-string-no-properties 1 string))
+	    (dd    (string-to-int (match-string-no-properties 2 string)))
+	    (month (match-string-no-properties 3 string))
+	    (yyyy  (match-string-no-properties 4 string))
+	    (time  (match-string-no-properties 5 string))
+	    (rest  (match-string-no-properties 6 string)))
+	(format "%s-%02d-%2d %s %s %s"
+		yyyy
+		(tinydebian-month-to-number month)
+		dd
+		time
+		rest
+		day))))
+
+;;; ----------------------------------------------------------------------
+;;;
+(defun tinydebian-debian-parse-bts-search (field &optional delimiter)
+  "Search <DELIMITER>FIELD: (.*)</DELIMITER> and return match 1."
+  (or delimiter
+      (setq delimiter "p"))
+  (if (re-search-forward
+       ;; <p><strong>Done:</strong> ...</p>
+       ;; <p>Severity: <em class="severity">serious</em></p>
+       (format
+	`,(concat
+	   "<%s>\\(?:<[a-z]+>\\)?"
+	   "%s:\\(?:</[a-z]+>\\)? *\\(?:<[^>]+> *\\)?"
+	   "\\([^<]+\\)"
+	   "\\(?:</[a-z]+>\\)?</%s>")
+	delimiter
+	field
+	delimiter)
+       nil t)
+      (tinydebian-decode-hex
+       (mm-url-decode-entities-string
+	(match-string-no-properties 1)))))
+
+;;; ----------------------------------------------------------------------
+;;;
+(defun tinydebian-debian-parse-bts-search-tag (re &optional tag)
+  "Search <TAG>(.*)</TAG> and return match 1. TAG defaults to 'p'."
+  (or tag
+      (setq tag "p"))
+  (if (re-search-forward
+       (format "<%s> *\\(?:%s\\)\\([^<]+\\)</%s>"
+	       tag
+	       re
+	       tag)
+       nil t)
+      (tinydebian-decode-hex
+       (mm-url-decode-entities-string
+	(match-string-no-properties 1)))))
+
+;;; ----------------------------------------------------------------------
+;;;
+(defsubst tinydebian-debian-parse-bts-bug-date ()
+  "Parse buffer content of Debian BTS (HTTP result)."
+  (tinydebian-debian-parse-bts-search "Date"))
+
+;;; ----------------------------------------------------------------------
+;;;
+(defsubst tinydebian-debian-parse-bts-bug-date-iso ()
+  "Parse buffer content of Debian BTS (HTTP result)."
+  (tinydebian-date-to-iso8691
+   (tinydebian-debian-parse-bts-bug-date)))
+
+;;; ----------------------------------------------------------------------
+;;;
+(defsubst tinydebian-debian-parse-bts-bug-title ()
+  "Parse buffer content of Debian BTS (HTTP result)."
+  (if (re-search-forward "<title>\\(.+\\)</title>" nil t)
+      (match-string-no-properties 1)))
+
+;;; ----------------------------------------------------------------------
+;;;
+(defsubst tinydebian-debian-parse-bts-bug-maintainer ()
+  "Parse buffer content of Debian BTS (HTTP result)."
+  (if (re-search-forward "Maintainer for .*maint=[^>]+> *\\([^<]+\\)" nil t)
+      (tinydebian-decode-hex
+       (mm-url-decode-entities-string
+	(match-string-no-properties 1)))))
+
+;;; ----------------------------------------------------------------------
+;;;
+(defsubst tinydebian-debian-parse-bts-bug-package ()
+  "Parse buffer content of Debian BTS (HTTP result)."
+       ;; ;package=levee"></a></div>
+  (if (re-search-forward "package=\\([^<\"\t\r\n]+\\)\"" nil t)
+      (match-string-no-properties 1)))
+
+;;; ----------------------------------------------------------------------
+;;;
+(defsubst tinydebian-debian-parse-bts-bug-title-parse (string)
+    "Parse STRING title.
+An example:
+  #548965 - levee: [PATCH] fails to build
+Returns:
+  '(\"548965\" \"levee: [PATCH] fails to build\")
+"
+    (if (and (stringp string)
+	     (string-match "#\\([0-9]+\\) +-+ +\\(.*\\)" string))
+	(list
+	 (match-string-no-properties 1 string)
+	 (match-string-no-properties 2 string))))
+
+;;; ----------------------------------------------------------------------
+;;;
+(defsubst tinydebian-debian-parse-bts-bug-field (field)
+  "Parse buffer content of Debian BTS (HTTP result).
+<p>FIELD: <p>"
+  (tinydebian-debian-parse-bts-search field "p"))
+
+;;; ----------------------------------------------------------------------
+;;;
+(defsubst tinydebian-debian-parse-bts-bug-reported-by ()
+  "Parse buffer content of Debian BTS (HTTP result).
+Return '(email field-conent)."
+  (if (re-search-forward
+       "Reported by:.*submitter=\\([^\"]+\\).>\\([^<]+\\)" nil t)
+      (list
+       (tinydebian-decode-hex (match-string-no-properties 1))
+       (mm-url-decode-entities-string (match-string-no-properties 2)))))
+
+;;; ----------------------------------------------------------------------
+;;;
+(defun tinydebian-debian-parse-bts-bug-p ()
+  "Check if content is parseable."
+  (goto-char (point-min))
+  (tinydebian-debian-parse-bts-bug-title))
+
+;; ----------------------------------------------------------------------
+;;;
+(defsubst tinydebian-debian-parse-bts-bug-info-raw ()
+  "Parse buffer content of Debian BTS (HTTP result).
+
+Return assoc list with keys:
+    bug package subject maintainer reported date severity tags found fixed done
+
+Were:
+    BUG		Bug number
+    DATE	ISO date
+    SEVERITY	Bug severity
+    REPORTED	Reported by information
+    DONE	If Done, the reporter information in (...)
+    TAGS	List of tags
+    SUBJECT	Bug subject"
+    (let (list)
+      (goto-char (point-min))
+      ;; This must be done in order
+      (multiple-value-bind (b str)
+	  (tinydebian-debian-parse-bts-bug-title-parse
+	   (tinydebian-debian-parse-bts-bug-title))
+	(push (cons "bug" b) list)
+	(push (cons "subject" str) list))
+      (push (cons "package" (tinydebian-debian-parse-bts-bug-package))
+	    list)
+      (push (cons "maintainer" (tinydebian-debian-parse-bts-bug-maintainer))
+	    list)
+      (multiple-value-bind (email rest)
+	  (tinydebian-debian-parse-bts-bug-reported-by)
+	(push (cons "reported" rest) list))
+      (let* ((str (tinydebian-debian-parse-bts-bug-date-iso))
+	     (date (if (and str
+			    (string-match "[0-9-]+" str))
+		       (match-string-no-properties 0 str))))
+	(push (cons "date" date) list))
+      (dolist (field '("severity"
+		       "tags"))
+	(push (cons field
+		    (tinydebian-debian-parse-bts-bug-field field))
+	      list))
+      (push (cons "found"
+		  (tinydebian-debian-parse-bts-search-tag "Found in version +"))
+	    list)
+      (push (cons "fixed"
+		  (tinydebian-debian-parse-bts-search-tag "Fixed in version +"))
+	    list)
+      (push (cons "done"
+		    (tinydebian-debian-parse-bts-bug-field "done"))
+	    list)
+      list))
+
+;;; ----------------------------------------------------------------------
+;;;
+(defun tinydebian-browse-url-http-get (url)
+  "Return content of URL as string."
+  (let ((url-http-attempt-keepalives t) ; Must be definedx
+	(buffer (url-retrieve-synchronously url)))
+    (if (not buffer)
+	(error "TinyDebian: Failed to connect to %s" url)
+      (with-current-buffer buffer
+	(buffer-substring-no-properties
+	 (point-min) (point-max))))))
+
+;;; ----------------------------------------------------------------------
+;;;
+(put 'tinydebian-debian-url-with 'lisp-indent-function 0)
+(put 'tinydebian-debian-url-with 'edebug-form-spec '(body))
+(defmacro tinydebian-debian-url-with (&rest body)
+  "Run BODY in 'tinydebian-:buffer-http-get'."
+  `(with-current-buffer (get-buffer-create tinydebian-:buffer-http-get)
+     ,@body))
+
+;;; ----------------------------------------------------------------------
+;;;
+(defun tinydebian-debian-url-bug-initialize-p (bug)
+  "Check if bug is on `tinydebian-:buffer-http-get'."
+  (tinydebian-debian-url-with
+    (let ((str (tinydebian-debian-parse-bts-bug-p)))
+      (if (and str
+	       (string-match bug str))
+	  str))))
+
+;;; ----------------------------------------------------------------------
+;;;
+(defun tinydebian-debian-url-bug-initialize (bug)
+  "HTTP GET Debian BUG to buffer `tinydebian-:buffer-http-get'.
+After that various tinydebian-debian-parse-bts-bug-* functions can be called."
+  (tinydebian-debian-url-with
+    (erase-buffer)
+    (insert (tinydebian-browse-url-http-get
+	     (tinydebian-debian-bts-url-compose
+	      (if (numberp bug)
+		  (int-to-string bug)
+		bug))))))
+
+;;; ----------------------------------------------------------------------
+;;;
+(defun tinydebian-debian-url-bug-info (bug)
+  "Fetch BUG and return `tinydebian-debian-parse-bts-bug-info-raw'."
+  (unless (tinydebian-debian-url-bug-initialize-p bug)
+    (tinydebian-debian-url-bug-initialize bug))
+  (tinydebian-debian-url-with
+    (tinydebian-debian-parse-bts-bug-info-raw)))
+
+;;; ----------------------------------------------------------------------
+;;;
 (defun tinydebian-browse-url-browse-url (url &rest args)
   "Call `browse-url' and ignore ARGS."
   (browse-url url))
@@ -2858,6 +3139,31 @@ At current point, current line, headers of the mail message
   If BUG is set, then read specific BUG page and create buffer for it.
   If buffer already exists, do nothing."
   (ti::process-http-request url (not 'port) (not 'timeout)))
+
+;;; ----------------------------------------------------------------------
+;;; FIXME: How to convert HTML into text in lisp?
+;;;
+(defun tinydebian-browse-url-basic (url &optional mode)
+  "Use url.el to retrive URL.
+  Optional MODE is hint to activate `tinydebian-bts-mode' on text buffer"
+  (message "TinyDebian: Wait, accessing %s" url)
+  (let ((buffer
+	 (url-retrieve-synchronously url)))
+    (if (not buffer)
+	(error "TinyDebian: Failed to connect to %s" url)
+      (tinydebian-with-buffer-macro
+	  tinydebian-:buffer-www
+	(insert-buffer-substring buffer)
+	(when mode
+	  (turn-on-tinydebian-bts-mode)
+	  (let ((font (tinydebian-url-page-font-lock-keywords mode)))
+	    (when (and font
+		       (or tinydebian-:font-lock-mode
+			   global-font-lock-mode))
+	      (setq font-lock-keywords font)
+	      (font-lock-mode 1))))
+	(goto-char (point-min))
+	(display-buffer (current-buffer))))))
 
 ;;; ----------------------------------------------------------------------
 ;;;
@@ -2898,8 +3204,9 @@ At current point, current line, headers of the mail message
 ;;; ----------------------------------------------------------------------
 ;;;
 (defun tinydebian-bug-browse-url-run (url &optional file)
-  "Browse URL and optionally save to FILE."
+  "Browse URL and optionally save to FILE."a
   (let ((tinydebian-:browse-url-function tinydebian-:browse-url-function))
+    ;; FIXME: the `file' is never used?
     (if file
 	(setq tinydebian-:browse-url-function
 	      (function tinydebian-browse-url-lynx-dump)))
@@ -2914,7 +3221,7 @@ At current point, current line, headers of the mail message
 	tinydebian-:buffer-www))))
 
 ;;; ----------------------------------------------------------------------
-;;; FIXME: remove, obsoleted by tinydebian-bug-browse-url-main
+;;; FIXME: to be removed, obsoleted by tinydebian-bug-browse-url-main
 (defun tinydebian-bug-browse-url-by-bug (bug &optional file)
   "Browse by Debian BUG number.
 
@@ -3002,7 +3309,8 @@ If parameters are passed, do not ask, just return URL."
 		   (file-name-directory prev)))
 	 (url-str (tinydebian-bug-url-forward))
 	 (url (multiple-value-bind (bts data)
-		  (tinydebian-bug-bts-type-determine)
+		  (save-excursion
+		    (tinydebian-bug-bts-type-determine))
 		(if (and (or (null data)
 			     (and (stringp data)
 				  (not (string-match "http" data))))
@@ -3883,6 +4191,60 @@ changes, the bug must be unarchived first."
 
 ;;; ----------------------------------------------------------------------
 ;;;
+(put 'tinydebian-debian-bug-info-macro 'edebug-form-spec '(body))
+(put 'tinydebian-debian-bug-info-macro 'lisp-indent-function 1)
+(defmacro tinydebian-debian-bug-info-macro (bug &rest body)
+  "Get BUG to variable `info', define function `field', and run BODY."
+  `(progn
+     (if (or (not (stringp ,bug))
+	     (not (string-match "^[0-9]+$" ,bug)))
+	 (error "Invalid bug number: %s" ,bug))
+     (let ((info (tinydebian-debian-url-bug-info ,bug)))
+       (flet ((field (x)
+		     (cdr-safe
+		      (assoc x info))))
+	 ,@body))))
+
+;;; ----------------------------------------------------------------------
+;;;
+(defun tinydebian-debian-bug-info-all-insert (bug)
+  "Insert bug information at point (after word)."
+  (interactive (list (tinydebian-bts-mail-ask-bug-number)))
+  (tinydebian-debian-bug-info-macro bug
+    (let (str)
+      (setq str
+	    (format
+	     "%s %s %s %s /%s/ [%s]  %s %s"
+	     (field "bug")
+	     (field "date")
+	     (field "package")
+	     (field "severity")
+	     (field "tags")
+	     (field "maintainer")
+	     (field "reported")
+	     (field "subject")))
+      (unless (string-match (format "%c" (char-syntax (char-before))) " ")
+	(skip-chars-forward "^ \t\r\n")
+	(if (eobp)
+	    (insert " ")
+	  (forward-char 1)))
+      (insert str))))
+
+;;; ----------------------------------------------------------------------
+;;;
+(defun tinydebian-debian-bug-info-subject-insert (bug)
+  "Insert bug subject at point (after word)."
+  (interactive (list (tinydebian-bts-mail-ask-bug-number)))
+  (tinydebian-debian-bug-info-macro bug
+    (unless (string-match (format "%c" (char-syntax (char-before))) " ")
+      (skip-chars-forward "^ \t\r\n")
+      (if (eobp)
+	  (insert " ")
+	(forward-char 1)))
+    (insert (field "subject"))))
+
+;;; ----------------------------------------------------------------------
+;;;
 (defsubst tinydebian-mail-mode-map-activate ()
   "Use local \\{tinydebian-:mail-mode-map} on this buffer."
   (use-local-map tinydebian-:mail-mode-map))
@@ -3931,6 +4293,11 @@ Mode description:
 
     "----"
 
+    ["Info bug insert all"     tinydebian-debian-bug-info-all-insert     t]
+    ["Info bug insert subject" tinydebian-debian-bug-info-subject-insert t]
+
+    "----"
+
     ["Add BTS Ctrl CC"         tinydebian-bts-mail-ctrl-command-cc       t]
 ;;;    ["Send BTS Ctrl close"      tinydebian-bts-mail-ctrl-command-close    t] ;; FIXME
     ["Add BTS Ctrl fixed"      tinydebian-bts-mail-ctrl-command-notfixed t]
@@ -3955,7 +4322,8 @@ Mode description:
     ["Insert Bug number"       tinydebian-bug-nbr-insert-at-point t])
 
    (progn
-     (define-key map  "i"  'tinydebian-mail-mode-insert-bug-number)
+     (define-key map  "ii" 'tinydebian-debian-bug-info-all-insert)
+     (define-key map  "is" 'tinydebian-debian-bug-info-subject-insert)
      (define-key map  "b"  'tinydebian-mail-mode-debian-address-bug-toggle)
      (define-key map  "m"  'tinydebian-mail-mode-debian-address-maintonly-toggle)
      (define-key map  "o"  'tinydebian-mail-mode-debian-address-close-toggle)

@@ -1,3 +1,31 @@
+2010-05-06 Thu  Jari Aalto  <jari.aalto@cante.net>
+
+	* tiny/tinydebian.el ()
+	(tinydebian-bug-browse-url-main-interactive): Add `save-excursion'.
+	(tinydebian-browse-url-basic): New.
+	(tinydebian-bug-browse-url-run): Use
+	`tinydebian-browse-url-basic'
+	(tinydebian-browse-url-http-get): New.
+	(tinydebian-decode-hex): New.
+	(tinydebian-debian-parse-bts-bug-subject): New.
+	(tinydebian-debian-url-bug-initialize): New.
+	(tinydebian-debian-parse-bts-bug-field): devel New.
+	(tinydebian-debian-parse-bts-bug-date-iso): New.
+	(tinydebian-debian-parse-bts-search): New.
+	(tinydebian-date-to-iso8691): New.
+	(tinydebian-debian-parse-bts-search-tag): New.
+	(tinydebian-debian-parse-bts-bug-info): New.
+	(tinydebian-debian-parse-bts-bug-p): New.
+	(tinydebian-debian-url-with): New.
+	(tinydebian-debian-url-bug-initialize-p): New.
+	(tinydebian-debian-url-bug-info): New.
+	(tinydebian-:buffer-http-get): New.
+	(tinydebian-debian-bug-info-all-insert): New user
+	command in mail mode 'ii'.
+	(tinydebian-debian-bug-info-subject-insert): New user
+	command in mail mode 'is'.
+	(tinydebian-debian-bug-info-macro): New.
+
 2010-05-02 Sun  Jari Aalto  <jari.aalto@cante.net>
 
 	* tiny/tinydebian.el (tinydebian-call-process): Set
