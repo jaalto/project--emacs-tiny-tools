@@ -1,3 +1,12 @@
+2010-05-06 Fri  Jari Aalto  <jari.aalto@cante.net>
+
+	* tiny/tinydebian.el (tinydebian-bug-browse-url-run): Remve typo;
+	variable "a".
+	(tinydebian-move-point-to-free-place): New.
+	(tinydebian-bts-mail-ask-bug-number): Add `save-excursion'.
+	(tinydebian-command-show-rc-alert): Call
+	`turn-on-tinydebian-bts-mode'.
+
 2010-05-06 Thu  Jari Aalto  <jari.aalto@cante.net>
 
 	* tiny/tinydebian.el ()

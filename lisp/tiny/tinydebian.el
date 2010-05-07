@@ -890,7 +890,7 @@ to generate updated list."
      tinydebian-:severity-selected
      tinydebian-:tags-list)))
 
-(defconst tinydebian-:version-time "2010.0506.2038"
+(defconst tinydebian-:version-time "2010.0506.2256"
   "Last edited time.")
 
 (defvar tinydebian-:bts-extra-headers
@@ -3204,7 +3204,7 @@ After that various tinydebian-debian-parse-bts-bug-* functions can be called."
 ;;; ----------------------------------------------------------------------
 ;;;
 (defun tinydebian-bug-browse-url-run (url &optional file)
-  "Browse URL and optionally save to FILE."a
+  "Browse URL and optionally save to FILE."
   (let ((tinydebian-:browse-url-function tinydebian-:browse-url-function))
     ;; FIXME: the `file' is never used?
     (if file
@@ -3498,7 +3498,7 @@ Mode description:
 	;;   (tinydebian-command-show-wnpp-alert-format))
 	;; (sort-lines nil (point-min) (point-max))
 	;; (tinydebian-wnpp-alert-mode)
-	;; (turn-on-tinydebian-bts-mode)
+	(turn-on-tinydebian-bts-mode)
 	(display-buffer buffer)
 	buffer)))))
 
@@ -4207,6 +4207,16 @@ changes, the bug must be unarchived first."
 
 ;;; ----------------------------------------------------------------------
 ;;;
+(defun tinydebian-move-point-to-free-place ()
+  "Move to place which is free (past word)."
+  (unless (string-match (format "%c" (char-syntax (char-before))) " ")
+    (skip-chars-forward "^ \t\r\n")
+    (if (eobp)
+	(insert " ")
+      (forward-char 1))))
+
+;;; ----------------------------------------------------------------------
+;;;
 (defun tinydebian-debian-bug-info-all-insert (bug)
   "Insert bug information at point (after word)."
   (interactive (list (tinydebian-bts-mail-ask-bug-number)))
@@ -4223,11 +4233,7 @@ changes, the bug must be unarchived first."
 	     (field "maintainer")
 	     (field "reported")
 	     (field "subject")))
-      (unless (string-match (format "%c" (char-syntax (char-before))) " ")
-	(skip-chars-forward "^ \t\r\n")
-	(if (eobp)
-	    (insert " ")
-	  (forward-char 1)))
+      (tinydebian-move-point-to-free-place)
       (insert str))))
 
 ;;; ----------------------------------------------------------------------
@@ -4236,11 +4242,7 @@ changes, the bug must be unarchived first."
   "Insert bug subject at point (after word)."
   (interactive (list (tinydebian-bts-mail-ask-bug-number)))
   (tinydebian-debian-bug-info-macro bug
-    (unless (string-match (format "%c" (char-syntax (char-before))) " ")
-      (skip-chars-forward "^ \t\r\n")
-      (if (eobp)
-	  (insert " ")
-	(forward-char 1)))
+    (tinydebian-move-point-to-free-place)
     (insert (field "subject"))))
 
 ;;; ----------------------------------------------------------------------
@@ -4772,7 +4774,8 @@ An example: '   #12345   ' => 12345."
 	    (if type
 		(concat type " ")
 	      ""))
-    (tinydebian-bug-nbr-any))))
+    (save-excursion
+      (tinydebian-bug-nbr-any)))))
 
 ;;; ----------------------------------------------------------------------
 ;;;
