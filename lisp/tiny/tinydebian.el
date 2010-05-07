@@ -899,7 +899,7 @@ to generate updated list."
      tinydebian-:severity-selected
      tinydebian-:tags-list)))
 
-(defconst tinydebian-:version-time "2010.0507.2018"
+(defconst tinydebian-:version-time "2010.0507.2147"
   "Last edited time.")
 
 (defvar tinydebian-:bts-extra-headers
@@ -996,6 +996,11 @@ Mode description:
 
     (list
      "Query information"
+     ["Bug title (subject)"	   tinydebian-debian-bug-info-subject-message  t]
+     ["Bug all info (details)"	   tinydebian-debian-bug-info-all-message  t]
+
+     "----"
+
      ["List of WNPP RFP"           tinydebian-url-list-wnpp-rfp            t]
      ["List of WNPP RFH"           tinydebian-url-list-wnpp-rfh            t]
      ["List of WNPP RFA"           tinydebian-url-list-wnpp-rfa            t]
@@ -1003,6 +1008,9 @@ Mode description:
      ["List of WNPP ITP"           tinydebian-url-list-wnpp-itp            t]
      ["List of RC bugs"            tinydebian-url-list-bugs-by-rc          t]
      ["List of items by usertag"   tinydebian-url-list-bugs-by-usertag     t]
+
+     "----"
+
      ["Installed wnpp problems"    tinydebian-command-show-wnpp-alert      t]
      ["Installed rc problems"      tinydebian-command-show-rc-alert        t]
      ["Grep devel documentation"   tinydebian-grep-find-debian-devel       t]
@@ -1053,10 +1061,12 @@ Mode description:
      (define-key map  "mi" 'tinydebian-bts-mail-message-info)
 
      ;;  (i)nfo (i)nstalled
+     (define-key map  "ia" 'tinydebian-debian-bug-info-all-message)
      (define-key map  "ii" 'tinydebian-command-show-wnpp-alert)
      (define-key map  "ig" 'tinydebian-grep-find-debian-devel) ;grep
      ;; Release Critical
      (define-key map  "ir" 'tinydebian-command-show-rc-alert)
+     (define-key map  "is" 'tinydebian-debian-bug-info-subject-message)
 
      ;;  (L)ist Url commands
      ;; (b)ugs
@@ -1280,7 +1290,7 @@ Activate on files whose path matches
 (put 'tinydebian-with-bug-context 'lisp-indent-function 0)
 (put 'tinydebian-with-bug-context 'edebug-form-spec '(body))
 (defmacro tinydebian-with-bug-context (&rest body)
-  "In Gnus Group buffer chnage to original article and run BODY."
+  "In Gnus Group buffer change to original article and run BODY."
   `(cond
     ((eq major-mode 'gnus-summary-mode)
      (tinydebian-with-gnus-article-buffer nil
@@ -4236,33 +4246,67 @@ changes, the bug must be unarchived first."
 
 ;;; ----------------------------------------------------------------------
 ;;;
+(put 'tinydebian-debian-bug-info-macro 'edebug-form-spec '(body))
+(put 'tinydebian-debian-bug-info-macro 'lisp-indent-function 1)
+(defmacro tinydebian-debian-bug-info-message-all-macro (bug &rest body)
+  "Set `str' tor BUG information string and run BODY."
+  `(tinydebian-debian-bug-info-macro ,bug
+     (let (str)
+       (setq str
+	     (format
+	      "%s %s %s %s /%s/ [%s]  %s %s"
+	      (field "bug")
+	      (field "date")
+	      (field "package")
+	      (field "severity")
+	      (field "tags")
+	      (field "maintainer")
+	      (field "reported")
+	      (field "subject")))
+       ,@body)))
+
+;;; ----------------------------------------------------------------------
+;;;
 (defun tinydebian-debian-bug-info-all-insert (bug)
-  "Insert bug information at point (after word)."
+  "Insert BUG information at point (after word).
+If `inteactive-p' and `buffer-read-only', display infromation only."
   (interactive (list (tinydebian-bts-mail-ask-bug-number)))
-  (tinydebian-debian-bug-info-macro bug
-    (let (str)
-      (setq str
-	    (format
-	     "%s %s %s %s /%s/ [%s]  %s %s"
-	     (field "bug")
-	     (field "date")
-	     (field "package")
-	     (field "severity")
-	     (field "tags")
-	     (field "maintainer")
-	     (field "reported")
-	     (field "subject")))
+  (tinydebian-debian-bug-info-message-all-macro bug
+    (if (and (interactive-p)
+	     buffer-read-only)
+	(message str)
       (tinydebian-move-point-to-free-place)
       (insert str))))
 
 ;;; ----------------------------------------------------------------------
 ;;;
+(defun tinydebian-debian-bug-info-all-message (bug)
+  "Display BUG information."
+  (interactive (list (tinydebian-bts-mail-ask-bug-number)))
+  (tinydebian-debian-bug-info-message-all-macro bug
+    (message str)))
+
+;;; ----------------------------------------------------------------------
+;;;
 (defun tinydebian-debian-bug-info-subject-insert (bug)
-  "Insert bug subject at point (after word)."
+  "Insert bug subject at point (after word).
+If `inteactive-p' and `buffer-read-only', display infromation only."
   (interactive (list (tinydebian-bts-mail-ask-bug-number)))
   (tinydebian-debian-bug-info-macro bug
-    (tinydebian-move-point-to-free-place)
-    (insert (field "subject"))))
+    (let ((subject (field "subject")))
+      (if (and (interactive-p)
+	       buffer-read-only)
+	  (message subject)
+	(tinydebian-move-point-to-free-place)
+	(insert subject)))))
+
+;;; ----------------------------------------------------------------------
+;;;
+(defun tinydebian-debian-bug-info-subject-message (bug)
+  "Display BUG title (subject)."
+  (interactive (list (tinydebian-bts-mail-ask-bug-number)))
+  (tinydebian-debian-bug-info-macro bug
+    (message (field "subject"))))
 
 ;;; ----------------------------------------------------------------------
 ;;;
@@ -4314,8 +4358,9 @@ Mode description:
 
     "----"
 
-    ["Info bug insert all"     tinydebian-debian-bug-info-all-insert     t]
-    ["Info bug insert subject" tinydebian-debian-bug-info-subject-insert t]
+    ["Info bug all insert"     tinydebian-debian-bug-info-all-insert     t]
+    ["Info bug all message"    tinydebian-debian-bug-info-all-message    t]
+    ["Info bug subject insert" tinydebian-debian-bug-info-subject-insert t]
 
     "----"
 
@@ -4343,8 +4388,10 @@ Mode description:
     ["Insert Bug number"       tinydebian-bug-nbr-insert-at-point t])
 
    (progn
-     (define-key map  "ii" 'tinydebian-debian-bug-info-all-insert)
+     (define-key map  "ia" 'tinydebian-debian-bug-info-all-insert)
+     (define-key map  "iA" 'tinydebian-debian-bug-info-all-message)
      (define-key map  "is" 'tinydebian-debian-bug-info-subject-insert)
+     (define-key map  "iS" 'tinydebian-debian-bug-info-subject-message)
      (define-key map  "b"  'tinydebian-mail-mode-debian-address-bug-toggle)
      (define-key map  "m"  'tinydebian-mail-mode-debian-address-maintonly-toggle)
      (define-key map  "o"  'tinydebian-mail-mode-debian-address-close-toggle)
@@ -4776,7 +4823,7 @@ Variables bound during macro (can all be nil):
 An example: '   #12345   ' => 12345."
   (if (stringp str)
       (replace-regexp-in-string
-       "^[ \t\r\n#]+"
+       "^[ \t\r\n#]#+"
        ""
        (replace-regexp-in-string
 	"[ \t\r\n]+$"
@@ -4787,7 +4834,7 @@ An example: '   #12345   ' => 12345."
 ;;;
 (defsubst tinydebian-bts-mail-ask-bug-number (&optional type)
   "Ask bug number. Return as '(bug) suitable for interactive"
-  (tinydebian-bts-bug-number-trim
+  (tinydebian-bug-nbr-string
    (read-string
     (format "BTS %sbug number: "
 	    (if type
@@ -5075,7 +5122,7 @@ Severity: wishlist
 ;;; ----------------------------------------------------------------------
 ;;;
 (defun tinydebian-bts-mail-ctrl-severity (bug severity)
-  "Compose BTS control message to a BUG and chnage SEVERITY."
+  "Compose BTS control message to a BUG and change SEVERITY."
   (interactive
    (list (tinydebian-bts-mail-ask-bug-number)
 	 (completing-read

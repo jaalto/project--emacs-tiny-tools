@@ -1,3 +1,12 @@
+2010-05-07 Sat  Jari Aalto  <jari.aalto@cante.net>
+
+	* tiny/tinydebian.el (tinydebian-debian-bug-info-subject-message): New.
+	(tinydebian-bts-mode): New user commands; query information about bug:
+	"C-cia" and "C-cis".
+	(tinydebian-debian-bug-info-subject-insert): Detect `buffer-read-only'.
+	(tinydebian-debian-bug-info-all-insert): Detect `buffer-read-only'.
+	(tinydebian-bts-mail-ask-bug-number): Use `tinydebian-bug-nbr-string'.
+
 2010-05-07 Fri  Jari Aalto  <jari.aalto@cante.net>
 
 	* tiny/tinydebian.el (tinydebian-bts-mail-type-it-nmu): New user command
@@ -24,6 +33,8 @@
 	(tinydebian-:removal-keyword-list): devel New.
 	(tinydebian-bts-mail-ctrl-remove-package-ask): Use
 	`tinydebian-bts-mail-ctrl-remove-package-ask-kwd'.
+	(tinydebian-debian-bug-info-macro): New.
+	(tinydebian-debian-bug-info-all-message): New user command "iI".
 
 2010-05-06 Fri  Jari Aalto  <jari.aalto@cante.net>
 
