@@ -439,6 +439,15 @@ fixed
     on releasing the package with the stable release of Debian.
     Currently, these are critical, grave and serious.")
 
+(defvar tinydebian-:removal-keyword-list
+  '("FTBFS"
+    "orphaned"
+    "RC-buggy"
+    "abandoned upstream"
+    "not maintained")
+  "*List of PAckage removal keywords.
+See http://wiki.debian.org/ftpmaster_Removals")
+
 (defvar tinydebian-:tags-list
   '(("already-in-ubuntu"
      "Package is in Ubuntu but not yet in Debian. This is a notice to a wishlist
@@ -890,7 +899,7 @@ to generate updated list."
      tinydebian-:severity-selected
      tinydebian-:tags-list)))
 
-(defconst tinydebian-:version-time "2010.0507.1931"
+(defconst tinydebian-:version-time "2010.0507.2018"
   "Last edited time.")
 
 (defvar tinydebian-:bts-extra-headers
@@ -960,7 +969,7 @@ Mode description:
      ["Send BTS RFP: request for packege"  tinydebian-bts-mail-type-rfp    t]
      ["Send BTS RFS: request for sponsor"  tinydebian-bts-mail-type-rfs    t]
      ["Send BTS O: orphan"                 tinydebian-bts-mail-type-orphan t]
-     ["Send BTS RM: remove"                tinydebian-bts-mail-type-remove t]
+;;     ["Send BTS RM: remove"                tinydebian-bts-mail-type-remove t]
      ["WNPP control menu"                  tinydebian-package-wnpp-main    t])
 
     (list
@@ -1038,7 +1047,7 @@ Mode description:
      (define-key map  "-P" 'tinydebian-bts-mail-type-itp)
      (define-key map  "-p" 'tinydebian-bts-mail-type-rfp)
      (define-key map  "-r" 'tinydebian-bts-mail-type-reply)
-     (define-key map  "-R" 'tinydebian-bts-mail-type-remove)
+;;     (define-key map  "-R" 'tinydebian-bts-mail-type-remove)
      (define-key map  "-s" 'tinydebian-bts-mail-type-rfs)
 
      (define-key map  "mi" 'tinydebian-bts-mail-message-info)
@@ -2753,6 +2762,7 @@ At current point, current line, headers of the mail message
 ;;; (tinydebian-bts-parse-string-1 "Bug#352533: Fixed in NMU of sa-exim 4.2-3")
 ;;; (tinydebian-bts-parse-string-1 "Bug#244582: UFO:AI is back")
 ;;; (tinydebian-bts-parse-string-1 "Re: RM: gcrontab/unstable -- ROM; not ported to GTK2, no upstream")
+;;; (tinydebian-bts-parse-string-1 "Re: Bug#575638: glitz: not maintained and probably should be removed")
 ;;; (tinydebian-bts-parse-string-1 "")
 (defun tinydebian-bts-parse-string-1 (str)
   "Parse STR and return '(bug type package description)."
@@ -2821,7 +2831,8 @@ At current point, current line, headers of the mail message
       (tinydebian-bug-package-name-header-package)
       (progn
 	(multiple-value-bind (bug type-orig package description)
-	    (tinydebian-bts-parse-string-subject)
+	    (or (tinydebian-bts-parse-string-current-line)
+		(tinydebian-bts-parse-string-subject))
 	  package))))
 
 ;;; ----------------------------------------------------------------------
@@ -4787,6 +4798,19 @@ An example: '   #12345   ' => 12345."
 
 ;;; ----------------------------------------------------------------------
 ;;;
+(defsubst tinydebian-bts-mail-ask-package (&optional prompt)
+  "Ask package name with optional PROMPT."
+  (let ((package (my-debian-bug-package-name-any)))
+    ;; FIXME: write smarter selection list
+    (completing-read
+     (or prompt "Package: ")
+     nil
+     nil
+     nil
+     package)))
+
+;;; ----------------------------------------------------------------------
+;;;
 (defun tinydebian-bts-mail-type-ita (bug)
   "Send an ITA request."
   (interactive (list (tinydebian-bts-mail-ask-bug-number "ITA")))
@@ -4882,7 +4906,7 @@ thanks
 (defun tinydebian-bts-mail-type-orphan (package desc)
   "Send an orphan request to PACKAGE with DESC."
   (interactive
-   (let* ((pkg (read-string "Orphan package: ")))
+   (let ((pkg (tinydebian-bts-mail-ask-package "Orphan package: ")))
      (list pkg (tinydebian-package-status-description-1 pkg))))
   (let ((subj-message
 	 (format "O: %s -- %s"
@@ -4905,14 +4929,14 @@ Severity: normal
 	(goto-char point)))))
 
 ;;; ----------------------------------------------------------------------
-;;;
+;;; FIXME: will be removed. Obsolete function.
 (defun tinydebian-bts-mail-type-remove (package type &optional desc)
   "Send a remove request.
 PACKAGE   package name
 TYPE      'RM' = remove, 'RoM' = request of maintainer
 DESC      apt-cache show <package>; first line description."
   (interactive
-   (let* ((pkg (read-string "RM package: "))
+   (let* ((pkg (tinydebian-bts-mail-ask-package "RM package: "))
 	  (type
 	   (if (y-or-n-p "Are you the maintainer? ")
 	       "RoM"
@@ -5199,6 +5223,23 @@ thanks
 
 ;;; ----------------------------------------------------------------------
 ;;; see "reportbug ftp.debian.org"
+(defun tinydebian-bts-mail-ctrl-remove-package-ask-kwd ()
+  "Ask removal keywords."
+  (let (tag
+	list)
+    (while (or (null tag)
+	       (not (string= "" tag)))
+      (setq tag (completing-read
+		 "Kwd [RET when done]: "
+		 tinydebian-:removal-keyword-list
+		 nil
+		 'match))
+      (unless (string= "" tag)
+	(push tag list)))
+    list))
+
+;;; ----------------------------------------------------------------------
+;;; see "reportbug ftp.debian.org"
 (defun tinydebian-bts-mail-ctrl-remove-package-ask ()
   "Interactive part of `tinydebian-bts-mail-ctrl-remove-package'."
   (let ((line (tinydebian-current-line-string)) ;; Gnus summary
@@ -5235,7 +5276,9 @@ thanks
 		   nil
 		   t
 		   "unstable"))
-      (setq message (read-string "Subject (40 chars): "))
+      (let ((list (tinydebian-bts-mail-ctrl-remove-package-ask-kwd)))
+	(if list
+	    (setq message (mapconcat 'concat llist "; "))))
       (list type package message suite))))
 
 ;;; ----------------------------------------------------------------------

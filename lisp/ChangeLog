@@ -13,6 +13,17 @@
 	(tinydebian-debian-parse-bts-bug-package): Use `tinydebian-decode-html'.
 	Treat src:<package> correctly.
 	(tinydebian-decode-hex): Add A-F range.
+	(tinydebian-bts-mail-ask-package): New.
+	(tinydebian-bts-mail-type-remove): Use
+	`tinydebian-bts-mail-ask-package'.
+	(tinydebian-bts-mail-type-orphan): Use
+	`tinydebian-bts-mail-ask-package'.
+	(my-debian-bug-package-name-any): Call
+	`tinydebian-bts-parse-string-current-line'.
+	(tinydebian-bts-mail-ctrl-remove-package-ask-kwd): New.
+	(tinydebian-:removal-keyword-list): devel New.
+	(tinydebian-bts-mail-ctrl-remove-package-ask): Use
+	`tinydebian-bts-mail-ctrl-remove-package-ask-kwd'.
 
 2010-05-06 Fri  Jari Aalto  <jari.aalto@cante.net>
 
