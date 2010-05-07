@@ -890,7 +890,7 @@ to generate updated list."
      tinydebian-:severity-selected
      tinydebian-:tags-list)))
 
-(defconst tinydebian-:version-time "2010.0506.2256"
+(defconst tinydebian-:version-time "2010.0507.1931"
   "Last edited time.")
 
 (defvar tinydebian-:bts-extra-headers
@@ -956,6 +956,7 @@ Mode description:
      ["Send BTS ITP: reponse to RFP"       tinydebian-bts-mail-type-itp    t]
      ["Send BTS RFA: request for adopt"    tinydebian-bts-mail-type-rfa    t]
      ["Send BTS RFH: request for help"     tinydebian-bts-mail-type-rfh    t]
+     ["Send BTS ITN: intent to NMU"        tinydebian-bts-mail-type-it-nmu t]
      ["Send BTS RFP: request for packege"  tinydebian-bts-mail-type-rfp    t]
      ["Send BTS RFS: request for sponsor"  tinydebian-bts-mail-type-rfs    t]
      ["Send BTS O: orphan"                 tinydebian-bts-mail-type-orphan t]
@@ -1032,6 +1033,7 @@ Mode description:
      (define-key map  "-a" 'tinydebian-bts-mail-type-ita)
      (define-key map  "-A" 'tinydebian-bts-mail-type-rfa)
      (define-key map  "-h" 'tinydebian-bts-mail-type-rfh)
+     (define-key map  "-n" 'tinydebian-bts-mail-type-it-nmu)
      (define-key map  "-o" 'tinydebian-bts-mail-type-orphan)
      (define-key map  "-P" 'tinydebian-bts-mail-type-itp)
      (define-key map  "-p" 'tinydebian-bts-mail-type-rfp)
@@ -2858,7 +2860,7 @@ At current point, current line, headers of the mail message
     (save-match-data
       (insert-string string)
       (goto-char (point-min))
-      (while (re-search-forward "%\\([0-9][0-9]\\)" nil t)
+      (while (re-search-forward "%\\([0-9A-F][0-9A-F]\\)" nil t)
 	(replace-match
 	 (save-match-data
 	   (format "%c"
@@ -2866,6 +2868,13 @@ At current point, current line, headers of the mail message
 		    (match-string-no-properties 1)
 		    16)))))
       (buffer-string))))
+
+;;; ----------------------------------------------------------------------
+;;;
+(defsubst tinydebian-decode-html (string)
+  "Simple HTML entity decoder."
+  (tinydebian-decode-hex
+   (mm-url-decode-entities-string string)))
 
 ;;; ----------------------------------------------------------------------
 ;;;
@@ -2924,9 +2933,8 @@ At current point, current line, headers of the mail message
 	field
 	delimiter)
        nil t)
-      (tinydebian-decode-hex
-       (mm-url-decode-entities-string
-	(match-string-no-properties 1)))))
+      (tinydebian-decode-html
+       (match-string-no-properties 1))))
 
 ;;; ----------------------------------------------------------------------
 ;;;
@@ -2940,9 +2948,8 @@ At current point, current line, headers of the mail message
 	       re
 	       tag)
        nil t)
-      (tinydebian-decode-hex
-       (mm-url-decode-entities-string
-	(match-string-no-properties 1)))))
+      (tinydebian-decode-html
+       (match-string-no-properties 1))))
 
 ;;; ----------------------------------------------------------------------
 ;;;
@@ -2962,16 +2969,14 @@ At current point, current line, headers of the mail message
 (defsubst tinydebian-debian-parse-bts-bug-title ()
   "Parse buffer content of Debian BTS (HTTP result)."
   (if (re-search-forward "<title>\\(.+\\)</title>" nil t)
-      (match-string-no-properties 1)))
+      (tinydebian-decode-html (match-string-no-properties 1))))
 
 ;;; ----------------------------------------------------------------------
 ;;;
 (defsubst tinydebian-debian-parse-bts-bug-maintainer ()
   "Parse buffer content of Debian BTS (HTTP result)."
   (if (re-search-forward "Maintainer for .*maint=[^>]+> *\\([^<]+\\)" nil t)
-      (tinydebian-decode-hex
-       (mm-url-decode-entities-string
-	(match-string-no-properties 1)))))
+      (tinydebian-decode-html (match-string-no-properties 1))))
 
 ;;; ----------------------------------------------------------------------
 ;;;
@@ -2979,7 +2984,10 @@ At current point, current line, headers of the mail message
   "Parse buffer content of Debian BTS (HTTP result)."
        ;; ;package=levee"></a></div>
   (if (re-search-forward "package=\\([^<\"\t\r\n]+\\)\"" nil t)
-      (match-string-no-properties 1)))
+      (let ((pkg (tinydebian-decode-html (match-string-no-properties 1))))
+	;; src:<package>
+	(if (string-match ":\\(.+\\)" pkg)
+	    (match-string 1 pkg)))))
 
 ;;; ----------------------------------------------------------------------
 ;;;
@@ -3011,8 +3019,8 @@ Return '(email field-conent)."
   (if (re-search-forward
        "Reported by:.*submitter=\\([^\"]+\\).>\\([^<]+\\)" nil t)
       (list
-       (tinydebian-decode-hex (match-string-no-properties 1))
-       (mm-url-decode-entities-string (match-string-no-properties 2)))))
+       (tinydebian-decode-html (match-string-no-properties 1))
+       (tinydebian-decode-html (match-string-no-properties 2)))))
 
 ;;; ----------------------------------------------------------------------
 ;;;
@@ -4800,6 +4808,37 @@ thanks
 
 ;;; ----------------------------------------------------------------------
 ;;;
+(defun tinydebian-bts-mail-type-it-nmu (bug)
+  "Send an ITN (Intent to NMU) request.
+In order to do a 'Non Maintainer Upload', it is polite to announce
+the intent to the BTS and wait a while to see if the maintainer is
+reponsive or working on the package.
+
+See documents:
+  http://dep.debian.net/deps/dep1.html (Official)
+  http://www.debian.org/doc/developers-reference/pkgs.html#nmu (Official)
+  http://wiki.debian.org/NmuDep (Complementary)"
+  (interactive (list (tinydebian-bts-mail-ask-bug-number "ITN")))
+  (tinydebian-debian-bug-info-macro bug
+    (let ((str (field "subject")))
+      ;;  package: <message string>
+      (if (string-match "^[a-z][^:]+: *\\(.+\\)" str)
+	  (setq str (match-string 1 str)))
+      (tinydebian-bts-mail-type-macro
+	  nil nil nil
+	  (format "%s: Intent to NMU (%s)"
+		  (field "package")
+		  str)
+	(insert
+	 (format "\
+This bug seems to be a candidate for NMU. I have some free time
+and I am offering to help fix it. Please let me know if this bug
+is already been worked on or if it's okay to NMU the package.
+
+"))))))
+
+;;; ----------------------------------------------------------------------
+;;;
 (defun tinydebian-bts-mail-type-itp (bug)
   "Reposnd to RFP with an ITP request."
   (interactive
@@ -5619,9 +5658,9 @@ Be sure to call `tinydebian-package-narrow-to-region' first."
 ;;;
 (defun tinydebian-package-parse-info-all ()
   "Parse all fields forward. Return '((field . info) (field . info) ..)."
-  (let* (name
-	 field
-	 alist)
+  (let (name
+	field
+	alist)
     (while (re-search-forward "^\\([^ \t\r\n]+\\):" nil t)
       (setq name (match-string-no-properties 0))
       (setq field (match-string-no-properties 1))

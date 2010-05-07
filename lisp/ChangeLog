@@ -1,3 +1,19 @@
+2010-05-07 Fri  Jari Aalto  <jari.aalto@cante.net>
+
+	* tiny/tinydebian.el (tinydebian-bts-mail-type-it-nmu): New user command
+	"C-c-cn. Help to compose "Intent to NMU" messages.
+	(tinydebian-dexcode-html): New.
+	(tinydebian-debian-parse-bts-search): Use 'tinydebian-decode-html'.
+	(tinydebian-debian-parse-bts-search-tag): Use `tinydebian-decode-html'.
+	(tinydebian-debian-parse-bts-bug-maintainer): Use
+	`tinydebian-decode-html'.'.
+	(tinydebian-debian-parse-bts-bug-reported-by): Use
+	`tinydebian-decode-html'.
+	(tinydebian-debian-parse-bts-bug-title): Use `tinydebian-decode-html'.
+	(tinydebian-debian-parse-bts-bug-package): Use `tinydebian-decode-html'.
+	Treat src:<package> correctly.
+	(tinydebian-decode-hex): Add A-F range.
+
 2010-05-06 Fri  Jari Aalto  <jari.aalto@cante.net>
 
 	* tiny/tinydebian.el (tinydebian-bug-browse-url-run): Remve typo;
