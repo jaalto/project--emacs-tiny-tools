@@ -1,3 +1,24 @@
+2010-05-09 Sun  Jari Aalto  <jari.aalto@cante.net>
+
+	* tiny/tinydebian.el (tinydebian-bts-mail-type-it-nmu): Correct
+	email address in parameter to `tinydebian-bts-mail-type-macro'.
+	(tinydebian-bts-mail-type-it-nmu): Use
+	`tinydebian-:bts-mail-type-it-nmu-message' and
+	`tinydebian-bts-mail-type-it-nmu-hook'
+
+2010-05-08 Sun  Jari Aalto  <jari.aalto@cante.net>
+
+	* tiny/tinydebian.el (tinydebian-debian-url-bug-initialize-p): Check
+	error condition.
+	(tinydebian-debian-parse-bts-bug-package): Fix case, when there is no colon
+	in package name.
+
+2010-05-08 Sat  Jari Aalto  <jari.aalto@cante.net>
+
+	* tiny/tinydebian.el (tinydebian-bug-nbr-string): Read plain NUMBER.
+	(tinydebian-debian-parse-bts-bug-title): Remove cryft.
+	(tinydebian-date-to-iso8691): Add `stringp' test.
+
 2010-05-07 Sat  Jari Aalto  <jari.aalto@cante.net>
 
 	* tiny/tinydebian.el (tinydebian-debian-bug-info-subject-message): New.
@@ -6,6 +27,7 @@
 	(tinydebian-debian-bug-info-subject-insert): Detect `buffer-read-only'.
 	(tinydebian-debian-bug-info-all-insert): Detect `buffer-read-only'.
 	(tinydebian-bts-mail-ask-bug-number): Use `tinydebian-bug-nbr-string'.
+	(tinydebian-:removal-keyword-list): Update.
 
 2010-05-07 Fri  Jari Aalto  <jari.aalto@cante.net>
 

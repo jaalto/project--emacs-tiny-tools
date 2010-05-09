@@ -229,6 +229,20 @@ See `tinydebian-buffer-url-bug'."
   :type  'string
   :group 'TinyDebian)
 
+(defcustom tinydebian-:bts-mail-type-it-nmu-message
+  "This bug seems to be a candidate for NMU. I have some free time
+and I am offering to help fix it. Please let me know if this bug
+is already been worked on or if it's okay to NMU the package."
+  "*Message to insert in `tinydebian-bts-mail-type-it-nmu'.
+See also `tinydebian-bts-mail-type-it-nmu-hook'."
+  :type  'string
+  :group 'TinyDebian)
+
+(defcustom tinydebian-bts-mail-type-it-nmu-hook nil
+  "*Hook to run at the end of `tinydebian-bts-mail-type-it-nmu'."
+  :type  'hook
+  :group 'TinyDebian)
+
 (defcustom tinydebian-:install-gnus-newsgroup-name-regexp
   "debian"
   "*Newsgroup name regexp to match to activate `tinydebian-bts-mode'."
@@ -440,11 +454,18 @@ fixed
     Currently, these are critical, grave and serious.")
 
 (defvar tinydebian-:removal-keyword-list
-  '("FTBFS"
-    "orphaned"
+  '(
+    "FTBFS"
     "RC-buggy"
-    "abandoned upstream"
-    "not maintained")
+    "abandoned upstream"		; Upstream is there, but not developing anymore
+    "buggy"
+    "no upstream"			; No upstream at all an more
+    "old"
+    "orphaned (no maintainer)"
+    "rquested by upstream"		; Upstream has requested to remove the package
+    "transitional pkg"
+    "unmaintained"
+    )
   "*List of PAckage removal keywords.
 See http://wiki.debian.org/ftpmaster_Removals")
 
@@ -899,7 +920,7 @@ to generate updated list."
      tinydebian-:severity-selected
      tinydebian-:tags-list)))
 
-(defconst tinydebian-:version-time "2010.0507.2147"
+(defconst tinydebian-:version-time "2010.0509.1745"
   "Last edited time.")
 
 (defvar tinydebian-:bts-extra-headers
@@ -962,10 +983,10 @@ Mode description:
     (list
      "BTS WNPP messages"
      ["Send BTS ITA: intent to adopt"      tinydebian-bts-mail-type-ita    t]
+     ["Send BTS ITN: intent to NMU"        tinydebian-bts-mail-type-it-nmu t]
      ["Send BTS ITP: reponse to RFP"       tinydebian-bts-mail-type-itp    t]
      ["Send BTS RFA: request for adopt"    tinydebian-bts-mail-type-rfa    t]
      ["Send BTS RFH: request for help"     tinydebian-bts-mail-type-rfh    t]
-     ["Send BTS ITN: intent to NMU"        tinydebian-bts-mail-type-it-nmu t]
      ["Send BTS RFP: request for packege"  tinydebian-bts-mail-type-rfp    t]
      ["Send BTS RFS: request for sponsor"  tinydebian-bts-mail-type-rfs    t]
      ["Send BTS O: orphan"                 tinydebian-bts-mail-type-orphan t]
@@ -2461,7 +2482,7 @@ Bug#NNNN: O: package -- description."
 (defun tinydebian-bug-nbr-string (str)
   "Read bug nbr from STR."
   (when (stringp str)
-    (or (and (string-match "#\\([0-9]+\\)" str) ;; Bug#NNNN Debian
+    (or	(and (string-match "#\\([0-9]+\\)" str) ;; Bug#NNNN Debian
 	     (match-string 1 str))
 	;; [Bug 192841] Ubuntu
 	(and (string-match "[[]Bug \\([0-9]+\\)[]]" str)
@@ -2487,6 +2508,9 @@ Bug#NNNN: O: package -- description."
 	(and (string-match (concat "\\<\\(?:owner\\|retitle\\) "
 				   "\\([0-9][0-9][0-9][0-9][0-9][0-9]\\)\\>")
 			   str)
+	     (match-string 1 str))
+	(and (string-match          ;; Plain NUMBER
+	      "^[ \t\r\n]*\\([0-9]+\\)" str)
 	     (match-string 1 str)))))
 
 ;;; ----------------------------------------------------------------------
@@ -2913,27 +2937,28 @@ At current point, current line, headers of the mail message
 ;;; (tinydebian-date-to-iso8691 "Tue, 29 Sep 2009 22:01:11 UTC")
 (defun tinydebian-date-to-iso8691 (string)
   "Convert RFC 'Tue, 29 Sep 2009 22:01:11 UTC' STRING to ISO 8601."
-  (if (string-match
-       `,(concat "\\([a-z][a-z][a-z]\\), *"
-		 "\\([0-9]+\\) +"
-		 "\\([a-z][a-z][a-z]\\) +"
-		 "\\([0-9][0-9][0-9][0-9]\\) +"
-		 "\\([0-9][0-9]:[0-9][0-9:]+\\) +"
-		 "\\(.*\\)")
-       string)
-      (let ((day   (match-string-no-properties 1 string))
-	    (dd    (string-to-int (match-string-no-properties 2 string)))
-	    (month (match-string-no-properties 3 string))
-	    (yyyy  (match-string-no-properties 4 string))
-	    (time  (match-string-no-properties 5 string))
-	    (rest  (match-string-no-properties 6 string)))
-	(format "%s-%02d-%2d %s %s %s"
-		yyyy
-		(tinydebian-month-to-number month)
-		dd
-		time
-		rest
-		day))))
+  (when (stringp string)
+    (if (string-match
+	 `,(concat "\\([a-z][a-z][a-z]\\), *"
+		   "\\([0-9]+\\) +"
+		   "\\([a-z][a-z][a-z]\\) +"
+		   "\\([0-9][0-9][0-9][0-9]\\) +"
+		   "\\([0-9][0-9]:[0-9][0-9:]+\\) +"
+		   "\\(.*\\)")
+	 string)
+	(let ((day   (match-string-no-properties 1 string))
+	      (dd    (string-to-int (match-string-no-properties 2 string)))
+	      (month (match-string-no-properties 3 string))
+	      (yyyy  (match-string-no-properties 4 string))
+	      (time  (match-string-no-properties 5 string))
+	      (rest  (match-string-no-properties 6 string)))
+	  (format "%s-%02d-%2d %s %s %s"
+		  yyyy
+		  (tinydebian-month-to-number month)
+		  dd
+		  time
+		  rest
+		  day)))))
 
 ;;; ----------------------------------------------------------------------
 ;;;
@@ -2990,7 +3015,11 @@ At current point, current line, headers of the mail message
 (defsubst tinydebian-debian-parse-bts-bug-title ()
   "Parse buffer content of Debian BTS (HTTP result)."
   (if (re-search-forward "<title>\\(.+\\)</title>" nil t)
-      (tinydebian-decode-html (match-string-no-properties 1))))
+      (replace-regexp-in-string
+       " *- *Debian Bug report logs *"
+       ""
+       (tinydebian-decode-html
+	(match-string-no-properties 1)))))
 
 ;;; ----------------------------------------------------------------------
 ;;;
@@ -3008,7 +3037,8 @@ At current point, current line, headers of the mail message
       (let ((pkg (tinydebian-decode-html (match-string-no-properties 1))))
 	;; src:<package>
 	(if (string-match ":\\(.+\\)" pkg)
-	    (match-string 1 pkg)))))
+	    (match-string 1 pkg)
+	  pkg))))
 
 ;;; ----------------------------------------------------------------------
 ;;;
@@ -3128,10 +3158,15 @@ Were:
 (defun tinydebian-debian-url-bug-initialize-p (bug)
   "Check if bug is on `tinydebian-:buffer-http-get'."
   (tinydebian-debian-url-with
-    (let ((str (tinydebian-debian-parse-bts-bug-p)))
-      (if (and str
-	       (string-match bug str))
-	  str))))
+    (goto-char (point-min))
+    (cond
+     ((re-search-forward "There is no record of Bug" nil t)
+      nil)
+     (t
+      (let ((str (tinydebian-debian-parse-bts-bug-p)))
+	(if (and str
+		 (string-match bug str))
+	    str))))))
 
 ;;; ----------------------------------------------------------------------
 ;;;
@@ -3144,7 +3179,9 @@ After that various tinydebian-debian-parse-bts-bug-* functions can be called."
 	     (tinydebian-debian-bts-url-compose
 	      (if (numberp bug)
 		  (int-to-string bug)
-		bug))))))
+		bug))))
+    (if (eq (point-min) (point-max))
+	(error "TinyDebian: Failed to fetch Bug %s" bug))))
 
 ;;; ----------------------------------------------------------------------
 ;;;
@@ -4226,7 +4263,7 @@ changes, the bug must be unarchived first."
   "Get BUG to variable `info', define function `field', and run BODY."
   `(progn
      (if (or (not (stringp ,bug))
-	     (not (string-match "^[0-9]+$" ,bug)))
+	     (not (string-match "^[0-9][0-9]+$" ,bug)))
 	 (error "Invalid bug number: %s" ,bug))
      (let ((info (tinydebian-debian-url-bug-info ,bug)))
        (flet ((field (x)
@@ -4246,8 +4283,8 @@ changes, the bug must be unarchived first."
 
 ;;; ----------------------------------------------------------------------
 ;;;
-(put 'tinydebian-debian-bug-info-macro 'edebug-form-spec '(body))
-(put 'tinydebian-debian-bug-info-macro 'lisp-indent-function 1)
+(put 'tinydebian-debian-bug-info-message-all-macro 'edebug-form-spec '(body))
+(put 'tinydebian-debian-bug-info-message-all-macro 'lisp-indent-function 1)
 (defmacro tinydebian-debian-bug-info-message-all-macro (bug &rest body)
   "Set `str' tor BUG information string and run BODY."
   `(tinydebian-debian-bug-info-macro ,bug
@@ -4896,17 +4933,15 @@ See documents:
       (if (string-match "^[a-z][^:]+: *\\(.+\\)" str)
 	  (setq str (match-string 1 str)))
       (tinydebian-bts-mail-type-macro
-	  nil nil nil
+	  nil				;type
+	  nil				;pkg
+	  (tinydebian-bts-email-compose bug)
 	  (format "%s: Intent to NMU (%s)"
 		  (field "package")
 		  str)
-	(insert
-	 (format "\
-This bug seems to be a candidate for NMU. I have some free time
-and I am offering to help fix it. Please let me know if this bug
-is already been worked on or if it's okay to NMU the package.
-
-"))))))
+	(if (stringp tinydebian-:bts-mail-type-it-nmu-message)
+	    (insert tinydebian-:bts-mail-type-it-nmu-message))
+	(run-hooks 'tinydebian-bts-mail-type-it-nmu-hook)))))
 
 ;;; ----------------------------------------------------------------------
 ;;;
