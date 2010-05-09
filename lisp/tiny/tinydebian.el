@@ -920,7 +920,7 @@ to generate updated list."
      tinydebian-:severity-selected
      tinydebian-:tags-list)))
 
-(defconst tinydebian-:version-time "2010.0509.1745"
+(defconst tinydebian-:version-time "2010.0509.2023"
   "Last edited time.")
 
 (defvar tinydebian-:bts-extra-headers
@@ -4936,7 +4936,7 @@ See documents:
 	  nil				;type
 	  nil				;pkg
 	  (tinydebian-bts-email-compose bug)
-	  (format "%s: Intent to NMU (%s)"
+	  (format "%s: Intent to NMU -- %s"
 		  (field "package")
 		  str)
 	(if (stringp tinydebian-:bts-mail-type-it-nmu-message)

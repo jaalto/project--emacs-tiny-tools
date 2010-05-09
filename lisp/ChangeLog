@@ -5,6 +5,9 @@
 	(tinydebian-bts-mail-type-it-nmu): Use
 	`tinydebian-:bts-mail-type-it-nmu-message' and
 	`tinydebian-bts-mail-type-it-nmu-hook'
+	(tinydebian-bts-mail-type-it-nmu): chnage Subject to use '--' not
+	parentheses because Debian BTS server returns confirmation also on
+	parenheses; they would double.
 
 2010-05-08 Sun  Jari Aalto  <jari.aalto@cante.net>
 
