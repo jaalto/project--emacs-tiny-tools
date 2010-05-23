@@ -1,3 +1,8 @@
+2010-05-23 Sun  Jari Aalto  <jari.aalto@cante.net>
+
+	* tiny/tinydebian.el (tinydebian-bug-nbr-at-current-point-hash):
+	check that word contains hash.
+
 2010-05-09 Sun  Jari Aalto  <jari.aalto@cante.net>
 
 	* tiny/tinydebian.el (tinydebian-bts-mail-type-it-nmu): Correct

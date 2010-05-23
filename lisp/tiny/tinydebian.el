@@ -456,7 +456,7 @@ fixed
 (defvar tinydebian-:removal-keyword-list
   '(
     "FTBFS"
-    "RC-buggy"
+    "rc-buggy"
     "abandoned upstream"		; Upstream is there, but not developing anymore
     "buggy"
     "no upstream"			; No upstream at all an more
@@ -920,7 +920,7 @@ to generate updated list."
      tinydebian-:severity-selected
      tinydebian-:tags-list)))
 
-(defconst tinydebian-:version-time "2010.0509.2023"
+(defconst tinydebian-:version-time "2010.0523.1256"
   "Last edited time.")
 
 (defvar tinydebian-:bts-extra-headers
@@ -1013,7 +1013,9 @@ Mode description:
      ["Send BTS Ctrl reassign"     tinydebian-bts-mail-ctrl-reassign t]
      ["Send BTS Ctrl retitle"      tinydebian-bts-mail-ctrl-retitle  t]
      ["Send BTS Ctrl reopen"       tinydebian-bts-mail-ctrl-reopen   t]
-     ["Send BTS Ctrl remove ROM"   tinydebian-bts-mail-ctrl-remove-package t])
+     ["Send BTS Ctrl remove ROM"   tinydebian-bts-mail-ctrl-remove-package t]
+;;;     ["Send BTS Ctrl unarchive"    tinydebian-bts-mail-ctrl-command-unarchive t]
+     )
 
     (list
      "Query information"
@@ -2516,12 +2518,14 @@ Bug#NNNN: O: package -- description."
 ;;; ----------------------------------------------------------------------
 ;;;
 (defun tinydebian-bug-nbr-at-current-point-hash ()
-  "Read bug number with hash (#) mark from current point."
+  "Read bug number with hash mark from current point (#NNNN)."
   (let ((table (syntax-table))
 	word)
     (with-syntax-table table
       (modify-syntax-entry ?# "w" table)
-      (tinydebian-bug-nbr-string (current-word)))))
+      (let ((word (current-word)))
+	(if (string-match "#" word)
+	    (tinydebian-bug-nbr-string word))))))
 
 ;;; ----------------------------------------------------------------------
 ;;;
