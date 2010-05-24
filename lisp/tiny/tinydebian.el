@@ -920,7 +920,7 @@ to generate updated list."
      tinydebian-:severity-selected
      tinydebian-:tags-list)))
 
-(defconst tinydebian-:version-time "2010.0524.1101"
+(defconst tinydebian-:version-time "2010.0524.1929"
   "Last edited time.")
 
 (defvar tinydebian-:bts-extra-headers
@@ -987,7 +987,7 @@ Mode description:
      ["Send BTS ITP: reponse to RFP"       tinydebian-bts-mail-type-itp    t]
      ["Send BTS RFA: request for adopt"    tinydebian-bts-mail-type-rfa    t]
      ["Send BTS RFH: request for help"     tinydebian-bts-mail-type-rfh    t]
-     ["Send BTS RFP: request for packege"  tinydebian-bts-mail-type-rfp    t]
+     ["Send BTS RFP/ITP: request for packege" tinydebian-bts-mail-type-rfp    t]
      ["Send BTS RFS: request for sponsor"  tinydebian-bts-mail-type-rfs    t]
      ["Send BTS O: orphan"                 tinydebian-bts-mail-type-orphan t]
 ;;     ["Send BTS RM: remove"                tinydebian-bts-mail-type-remove t]
@@ -5125,11 +5125,17 @@ Severity: wishlist
 
 ;;; ----------------------------------------------------------------------
 ;;;
-(defun tinydebian-bts-mail-type-rfp (package license homepage desc)
-  "Send an ITP request."
+(defun tinydebian-bts-mail-type-rfp (package license homepage desc &optional itp)
+  "Send an RFP request.
+If optional `current-prefix-arg' ITP is set, then use ITP instead
+of RFP in header to directly send pacging notice."
   (interactive
    (let* ((name    (read-string
-		    "RFP package name [required; lowercase]: "))
+		    (format
+		     "%s package name [required; lowercase]: "
+		     (if current-prefix-arg
+			 "ITP"
+		       "RFP"))))
 	  (desc    (read-string
 		    "Package description [required]: "))
 	  (license (completing-read
@@ -5139,7 +5145,12 @@ Severity: wishlist
 			    tinydebian-:wnpp-template-licenses-alist)))
 	  (url     (read-string
 		    "Project homepage URL [required]: ")))
-     (list name license url desc)))
+     (list name
+	   license
+	   url
+	   desc
+	   (if current-prefix-arg
+	       'itp))))
   (flet ((replace (regexp str &optional point all)
 		  (when (and (stringp str)
 			     (not (string= "" str)))
@@ -5161,7 +5172,11 @@ Severity: wishlist
 				      (mail-position-on-field "Subject")
 				      (beginning-of-line)
 				      (replace ": \\(.*\\)"
-					       (format "RFP: %s -- %s" package desc)
+					       (format "%s: %s -- %s"
+						       (if itp
+							   "ITP"
+							 "RFP")
+						       package desc)
 					       (point))
 				      (goto-char (point-max))
 				      (run-hooks 'tinydebian-:rfp-hook)))))
