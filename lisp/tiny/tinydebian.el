@@ -920,7 +920,7 @@ to generate updated list."
      tinydebian-:severity-selected
      tinydebian-:tags-list)))
 
-(defconst tinydebian-:version-time "2010.0523.1256"
+(defconst tinydebian-:version-time "2010.0524.1101"
   "Last edited time.")
 
 (defvar tinydebian-:bts-extra-headers
@@ -2794,6 +2794,8 @@ At current point, current line, headers of the mail message
 	    (match-string 2 str))))))
 
 ;;; ----------------------------------------------------------------------
+;;;  Test cases. Do not delete
+;;;
 ;;; (tinydebian-bts-parse-string-1 "Bug#353353: RFP: appweb -- very ...")
 ;;; (tinydebian-bts-parse-string-1 "Bug#352429: marked as done (ITA: cdrdao  -- records CDs in Disk-At-Once (DAO) mode)")
 ;;; (tinydebian-bts-parse-string-1 "Bug#351502: fixed in nvu 1.0final-1")
@@ -2801,6 +2803,7 @@ At current point, current line, headers of the mail message
 ;;; (tinydebian-bts-parse-string-1 "Bug#244582: UFO:AI is back")
 ;;; (tinydebian-bts-parse-string-1 "Re: RM: gcrontab/unstable -- ROM; not ported to GTK2, no upstream")
 ;;; (tinydebian-bts-parse-string-1 "Re: Bug#575638: glitz: not maintained and probably should be removed")
+;;  (tinydebian-bts-parse-string-1 "Bug#582879: Acknowledgement (RFP: lsx -- list executables in a directory tree)")
 ;;; (tinydebian-bts-parse-string-1 "")
 (defun tinydebian-bts-parse-string-1 (str)
   "Parse STR and return '(bug type package description)."
@@ -2823,6 +2826,11 @@ At current point, current line, headers of the mail message
       (if (and (stringp desc)
 	       (string= desc ""))
 	  (setq desc nil))
+      (if desc
+	  ;; Remove trailing ")" that is in return messages
+	  ;; Bug#NNNNN: Acknowledgement (RFP: ...)
+	  (setq desc
+		(replace-regexp-in-string  ")$" "" desc)))
       (if (and bug desc)
 	  (list bug type package desc)))))
 
@@ -4950,7 +4958,7 @@ See documents:
 ;;; ----------------------------------------------------------------------
 ;;;
 (defun tinydebian-bts-mail-type-itp (bug)
-  "Reposnd to RFP with an ITP request."
+  "Repond to a RFP with an ITP request."
   (interactive
    (list (tinydebian-bts-mail-ask-bug-number "ITP response to RFP")))
   (tinydebian-bts-mail-type-macro

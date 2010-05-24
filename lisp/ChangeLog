@@ -1,3 +1,8 @@
+2010-05-24 Mon  Jari Aalto  <jari.aalto@cante.net>
+
+	* tiny/tinydebian.el (tinydebian-bts-parse-string-1): Delete
+	trailing ")" that usually appear in returned BTS messages.
+
 2010-05-23 Sun  Jari Aalto  <jari.aalto@cante.net>
 
 	* tiny/tinydebian.el (tinydebian-bug-nbr-at-current-point-hash):
