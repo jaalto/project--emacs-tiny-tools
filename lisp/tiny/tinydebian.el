@@ -920,7 +920,7 @@ to generate updated list."
      tinydebian-:severity-selected
      tinydebian-:tags-list)))
 
-(defconst tinydebian-:version-time "2010.0524.1929"
+(defconst tinydebian-:version-time "2010.0602.1707"
   "Last edited time.")
 
 (defvar tinydebian-:bts-extra-headers
@@ -1006,6 +1006,7 @@ Mode description:
      ["Send BTS Ctrl forwarded"    tinydebian-bts-mail-ctrl-forwarded-main  t]
      ["Send BTS Ctrl fixed"        tinydebian-bts-mail-ctrl-fixed    t]
      ["Send BTS Ctrl notfixed"     tinydebian-bts-mail-ctrl-notfixed t]
+     ["Send BTS Ctrl owner"        tinydebian-bts-mail-ctrl-owner    t]
      ["Send BTS Ctrl noowner"      tinydebian-bts-mail-ctrl-noowner  t]
      ["Send BTS Ctrl found"        tinydebian-bts-mail-ctrl-found    t]
      ["Send BTS Ctrl notfound"     tinydebian-bts-mail-ctrl-notfound t]
@@ -1132,6 +1133,7 @@ Mode description:
      (define-key map  "cs"  'tinydebian-bts-mail-ctrl-severity)
      (define-key map  "ct"  'tinydebian-bts-mail-ctrl-tags)
      (define-key map  "cT"  'tinydebian-bts-mail-ctrl-usertag)
+     (define-key map  "cw"  'tinydebian-bts-mail-ctrl-owner)
      (define-key map  "cW"  'tinydebian-bts-mail-ctrl-noowner)
      (define-key map  "cx"  'tinydebian-bts-mail-ctrl-fixed)
      (define-key map  "cX"  'tinydebian-bts-mail-ctrl-notfixed)
@@ -2524,7 +2526,8 @@ Bug#NNNN: O: package -- description."
     (with-syntax-table table
       (modify-syntax-entry ?# "w" table)
       (let ((word (current-word)))
-	(if (string-match "#" word)
+	(if (and word
+		 (string-match "#" word))
 	    (tinydebian-bug-nbr-string word))))))
 
 ;;; ----------------------------------------------------------------------
@@ -5515,12 +5518,29 @@ See http://wiki.debian.org/ftpmaster_Removals"
   (interactive
    (list
     (tinydebian-bts-mail-ask-bug-number)
-    (read-string "Package version where bug was *not* fixed: ")))
+    (read-string "Version where bug was *not* fixed: ")))
   (tinydebian-bts-mail-type-macro
       nil nil nil
       (format "Bug#%s status change - notfixed in version %s" bug version)
    (let (point)
      (insert (format "notfixed %s %s" bug version))
+     (setq point (point))
+     (insert "\nthanks\n")
+     (goto-char point))))
+
+;;; ----------------------------------------------------------------------
+;;;
+(defun tinydebian-bts-mail-ctrl-owner (bug &optional email)
+  "Compose BTS control message to mark BUG owner EMAIL.
+Default owner is the value of 'From:', that is `user-mail-address'."
+  (interactive
+   (list
+    (tinydebian-bts-mail-ask-bug-number)))
+  (tinydebian-bts-mail-type-macro
+      nil nil nil
+      (format "Bug#%s status change - owner" bug)
+   (let (point)
+     (insert (format "owner %s %s" bug (or email "!")))
      (setq point (point))
      (insert "\nthanks\n")
      (goto-char point))))

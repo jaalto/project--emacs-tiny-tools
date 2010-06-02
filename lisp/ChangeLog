@@ -1,3 +1,11 @@
+2010-06-02 Wed  Jari Aalto  <jari.aalto@cante.net>
+
+	* tiny/tinydesk.el: Adjust documentation a little.
+
+	* tiny/tinydebian.el (tinydebian-bts-mail-ctrl-owner): New user
+	command.
+	(tinydebian-bts-mail-ctrl-notfixed): Adjust interactive message.
+
 2010-05-24 Mon  Jari Aalto  <jari.aalto@cante.net>
 
 	* tiny/tinydebian.el (tinydebian-bts-parse-string-1): Delete
