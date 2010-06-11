@@ -4,7 +4,7 @@
 
 ;;{{{ Id
 
-;; Copyright (C)    1995-2007 Jari Aalto
+;; Copyright (C)    1995-2010 Jari Aalto
 ;; Keywords:        extensions
 ;; Author:          Jari Aalto
 ;; Maintainer:      Jari Aalto
@@ -21,13 +21,11 @@
 ;;
 ;; This program is distributed in the hope that it will be useful, but
 ;; WITHOUT ANY WARRANTY; without even the implied warranty of MERCHANTABILITY
-;; or FITNESS FOR A PARTICULAR PURPOSE.  See the GNU General Public License
+;; or FITNESS FOR A PARTICULAR PURPOSE. See the GNU General Public License
 ;; for more details.
 ;;
 ;; You should have received a copy of the GNU General Public License
-;; along with program. If not, write to the
-;; Free Software Foundation, Inc., 51 Franklin Street, Fifth Floor,
-;; Boston, MA 02110-1301, USA.
+;; along with this program. If not, see <http://www.gnu.org/licenses/>.
 ;;
 ;; Visit <http://www.gnu.org/copyleft/gpl.html> for more information
 
@@ -35,11 +33,11 @@
 ;;{{{ Install
 
 ;; ........................................................ &t-install ...
-;;   Put this file on your Emacs-Lisp load path, add following into your
+;;   Put this file on your Emacs-Lisp `load-path', add following into your
 ;;   $HOME/.emacs startup file
 ;;
-;;      (add-hook 'tinydesk-:load-hook 'tinydesk-default-emacs-keybindings)
-;;      (add-hook 'tinydesk-:load-hook 'tinydesk-recover-last-state)
+;;      ;; (add-hook 'tinydesk-:load-hook 'tinydesk-recover-last-state)
+;;      (add-hook 'tinydesk-:load-hook 'tinydesk-install-default-keybindings)
 ;;      (require 'tinydesk)
 ;;
 ;;   or use the autoload feature. Notice that the automatic "file
@@ -55,7 +53,7 @@
 ;;      (autoload 'tinydesk-edit-state-file "tinydesk" "" t)
 ;;
 ;;   Suggested keybindings. These are inlcuded in function
-;;   `tinydesk-default-keybindings'.
+;;   `tinydesk-install-default-keybindings'.
 ;;
 ;;      (define-key ctl-x-4-map "S" 'tinydesk-save-state)
 ;;      (define-key ctl-x-4-map "R" 'tinydesk-recover-state)
@@ -84,16 +82,17 @@
 ;;      just wait there nicely and there is seldom a need for a sophisticated
 ;;      session saver.
 ;;
-;;      But sometimes sometimes it may be necessary to visit lab next
+;;      But sometimes it may be necessary to visit lab next
 ;;      floor to see what's troubling a C++ program. There has to be a way
 ;;      to transfer the list of files that was being editing and bring
 ;;      them into lab where person can replicate the setup.
 ;;
-;;      These functions save Emacs configuration into file, which can later be
-;;      opened again in Emacs somewhere else. Later Emacs versions
-;;      introduced "~/.saves*" files that you may find disturbing occupying
-;;      your home directory with many files. With this package all the
-;;      files are grouped in only one "state" state file, which can be reused.
+;;      These functions save Emacs file list into a file which can
+;;      later be opened again in Emacs somewhere else. Later Emacs
+;;      versions introduced "~/.saves*" files that I found disturbing
+;;      occupying the home directory. With this package all the files
+;;      are grouped in only one "state" state file, which can be
+;;      reused.
 ;;
 ;;      Hopefully someone finds use for this also, although there exist
 ;;      much more better desktop savers, which save points, marks and
@@ -127,18 +126,17 @@
 ;;          If Emacs crashes you can recover the previous session.
 ;;          See function `tinydesk-auto-save' for more. Similar functionality
 ;;          (".saves") is in new Emacs releases, but this package
-;;          was originally written using 19.28
+;;          was originally written for Emacs 19.28.
 ;;
 ;;      o   CRASH RECOVERY: If Emacs crashes, or you have to kill it
 ;;          with `-HUP' if it hangs, it leaves autosaved files around. When
 ;;          you boot up again, you need to reload the existing files AND
 ;;          recover any autosaved files. The best way to get your Emacs
 ;;          back where it was, is that you load the state file for editing:
-;;          `M-x' `tinydesk-edit-state-file' And from the edit
-;;          mode hit command `tinydesk-find-file-whole-buffer' which is
-;;          bound to C-c b and `tinydesk-recover-file-whole-buffer' which
-;;          is bound to C-c B. And you'll be up again with your latest
-;;          files.
+;;          `M-x' `tinydesk-edit-state-file' And from the edit mode
+;;          hit command `tinydesk-find-file-whole-buffer' and
+;;          `tinydesk-recover-file-whole-buffer' which and you'll be
+;;          up again with your latest files.
 ;;
 ;;  Quick start
 ;;
@@ -147,20 +145,21 @@
 ;;
 ;;      o   You have Emacs session open with bunch of files. Now you
 ;;          believe that it's time to save this session. You do
-;;          C-x 4 s and give some name "state.c" if you edited c project.
+;;          `C-x' `4' `s' and give some name "state.c" if you worked
+;;          with a C project.
 ;;
-;;      Now, it all depends what you want to do after that. If you find more
-;;      files to Emacs; or kill some unwanted buffers, you can re-execute
-;;      C-x 4 s whenever you like. You can even edit the state file with
-;;      C-x 4 e to remove some files that you don't want to include to
-;;      that "project".
+;;      Now, it all depends what you want to do after that. You may
+;;      `find-file' more files to Emacs; or kill few unwanted
+;;      buffers. Re-execute `C-x' `4' `s' whenever you like. You can
+;;      even edit the state file with `C-x' `4' `e' to remove some files
+;;      that you don't want to include to that "project".
 ;;
 ;;      o   Next time you open Emacs you can load any state file with
 ;;          C-x 4 r "state.c"
 ;;
 ;;      If you want to switch between projects; unload first the current
-;;      project with C-x 4 u "state.c" and reload some other project
-;;      with C-x 4 r, eg your current C++ project "state.cc"
+;;      project with `C-x' `4' `u' "state.c" and reload some other project
+;;      with `C-x' `4' `r', e.g. your current C++ project "state.cc"
 ;;
 ;;  Automatic one time session saver
 ;;
@@ -168,13 +167,14 @@
 ;;      when Emacs starts again. I must say that this is not necessarily
 ;;      the best, because when you start Emacs for some quick job, you
 ;;      don't necessarily want it to load the saved session (loading all
-;;      files take time considerably). Loading Emacs with -q is not the
+;;      files takes some time). Loading Emacs with `-q' is not the
 ;;      choice, if you still like to have your other Emacs goodies active.
 ;;
-;;      Here is semi-automatic save and restore, put all these lines near
-;;      the end of your $HOME/.emacs. The setup saves the state when
-;;      Emacs exists and asks if you want to return to saved session on
-;;      Emacs startup. (You did also copy the installation lines too...)
+;;      Here is semi-automatic save and restore, put all these, in
+;;      addition to ones mentioned at the "install" section, lines
+;;      near the end of your $HOME/.emacs. The setup saves the state
+;;      when Emacs exists and asks if you want to return to saved
+;;      session on Emacs startup.
 ;;
 ;;          (defconst tinydesk-:directory-location "~/elisp/config")
 ;;
@@ -196,7 +196,7 @@
 ;;  Face setup
 ;;
 ;;      This program uses some faces to catch your attention when you're
-;;      working with the state files. I you restore state from a file and
+;;      working with the state files. If you restore state from a file and
 ;;      some file reference cannot be loaded, the state file will be shown
 ;;      to you and the problematic lines are highlighted. If you open the
 ;;      state file for editing, you can selectively load files. The mouse
@@ -242,7 +242,7 @@
 ;;  Development note
 ;;
 ;;      There is no plan to duplicate *desktop.el* functionality to save points
-;;      and modes and so on. This is for simple state restoring only.
+;;      and modes and so on. This is for simple file/directory restoring only.
 
 ;;}}}
 
