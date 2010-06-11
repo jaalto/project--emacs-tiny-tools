@@ -161,7 +161,7 @@
 ;;      project with `C-x' `4' `u' "state.c" and reload some other project
 ;;      with `C-x' `4' `r', e.g. your current C++ project "state.cc"
 ;;
-;;  Automatic one time session saver
+;;  Automatic session handling
 ;;
 ;;      Some people just want to save the session on exit and reopen it
 ;;      when Emacs starts again. I must say that this is not necessarily
@@ -174,24 +174,53 @@
 ;;      addition to ones mentioned at the "install" section, lines
 ;;      near the end of your $HOME/.emacs. The setup saves the state
 ;;      when Emacs exists and asks if you want to return to saved
-;;      session on Emacs startup.
+;;      session on Emacs startup. Thanks to Gary
+;;      <help-gnu-emacs@garydjones.name> for the command line option
+;;      code.
 ;;
-;;          (defconst tinydesk-:directory-location "~/elisp/config")
+;;          ;; tinydesk-activate.el -- Automatic desktop save and recover
+;;
+;;          (defconst my-tinydesk-session-mode 'ask
+;;            "If 'ask, confirm before resatoring last session.
+;;          If nil, automatically restore last session; but if command
+;;          line opion --no-desktop is set, do not load session.")
+;;
+;;          (setq tinydesk-:directory-location "~/tmp")
 ;;
 ;;          (defconst my-tinydesk-session
-;;            (concat tinydesk-:directory-location "/state.last-session"))
+;;            (format "%s/%s" tinydesk-:directory-location "state.last-session"))
 ;;
-;;          (add-hook 'kill-emacs-hook 'my-save-session)
+;;          (autoload 'tinydesk-recover-state "tinydesk" "" t)
+;;          (autoload 'tinydesk-save-state    "tinydesk" "" t)
 ;;
 ;;          (defun my-save-session ()
 ;;            "Save loaded files to state file."
 ;;            ;;  if you want to save dired buffers too.
 ;;            ;;  use (tinydesk-save-state my-tinydesk-session '(4))
-;;            (tinydesk-save-state my-tinydesk-session) nil)
+;;            (tinydesk-save-state my-tinydesk-session)
+;;            nil)
 ;;
-;;          (if (and (file-exists-p my-tinydesk-session)
+;;          (defun my-tinydesk-activate ()
+;;            ;; To save at exit
+;;            (add-hook 'kill-emacs-hook 'my-save-session)
+;;            ;; To save periodically
+;;            (add-hook 'auto-save-hook 'my-save-session))
+;;
+;;          (my-tinydesk-activate)
+;;
+;;          ;; Should we recover?
+;;          (cond
+;;           (my-tinydesk-session-mode
+;;            (when (and (file-exists-p my-tinydesk-session)
 ;;                   (y-or-n-p "Recover session "))
-;;              (tinydesk-recover-state my-tinydesk-session))
+;;              (tinydesk-recover-state my-tinydesk-session)))
+;;            ((member "--no-desktop" command-line-args)
+;;             (message "My: option --no-desktop; bypass recovering Tiny Desktop session."))
+;;            ((file-exists-p my-tinydesk-session)
+;;             (message "My: recovering Tiny desktop session %s" my-tinydesk-session)
+;;             (tinydesk-recover-state my-tinydesk-session)))
+;;
+;;          ;; End of file
 ;;
 ;;  Face setup
 ;;
