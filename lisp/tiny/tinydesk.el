@@ -21,7 +21,7 @@
 ;;
 ;; This program is distributed in the hope that it will be useful, but
 ;; WITHOUT ANY WARRANTY; without even the implied warranty of MERCHANTABILITY
-;; or FITNESS FOR A PARTICULAR PURPOSE.  See the GNU General Public License
+;; or FITNESS FOR A PARTICULAR PURPOSE. See the GNU General Public License
 ;; for more details.
 ;;
 ;; You should have received a copy of the GNU General Public License
@@ -82,16 +82,17 @@
 ;;      just wait there nicely and there is seldom a need for a sophisticated
 ;;      session saver.
 ;;
-;;      But sometimes sometimes it may be necessary to visit lab next
+;;      But sometimes it may be necessary to visit lab next
 ;;      floor to see what's troubling a C++ program. There has to be a way
 ;;      to transfer the list of files that was being editing and bring
 ;;      them into lab where person can replicate the setup.
 ;;
-;;      These functions save Emacs configuration into file, which can later be
-;;      opened again in Emacs somewhere else. Later Emacs versions
-;;      introduced "~/.saves*" files that you may find disturbing occupying
-;;      your home directory with many files. With this package all the
-;;      files are grouped in only one "state" state file, which can be reused.
+;;      These functions save Emacs file list into a file which can
+;;      later be opened again in Emacs somewhere else. Later Emacs
+;;      versions introduced "~/.saves*" files that I found disturbing
+;;      occupying the home directory. With this package all the files
+;;      are grouped in only one "state" state file, which can be
+;;      reused.
 ;;
 ;;      Hopefully someone finds use for this also, although there exist
 ;;      much more better desktop savers, which save points, marks and
@@ -132,11 +133,10 @@
 ;;          you boot up again, you need to reload the existing files AND
 ;;          recover any autosaved files. The best way to get your Emacs
 ;;          back where it was, is that you load the state file for editing:
-;;          `M-x' `tinydesk-edit-state-file' And from the edit
-;;          mode hit command `tinydesk-find-file-whole-buffer' which is
-;;          bound to C-c b and `tinydesk-recover-file-whole-buffer' which
-;;          is bound to C-c B. And you'll be up again with your latest
-;;          files.
+;;          `M-x' `tinydesk-edit-state-file' And from the edit mode
+;;          hit command `tinydesk-find-file-whole-buffer' and
+;;          `tinydesk-recover-file-whole-buffer' which and you'll be
+;;          up again with your latest files.
 ;;
 ;;  Quick start
 ;;
@@ -242,7 +242,7 @@
 ;;  Development note
 ;;
 ;;      There is no plan to duplicate *desktop.el* functionality to save points
-;;      and modes and so on. This is for simple state restoring only.
+;;      and modes and so on. This is for simple file/directory restoring only.
 
 ;;}}}
 
