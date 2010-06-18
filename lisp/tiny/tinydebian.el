@@ -3640,7 +3640,9 @@ If parameters are passed, do not ask, just return URL."
 		  (t
 		   (or (tinydebian-bug-ask-url-for-bts-and-number
 			bts
-			(tinydebian-bug-nbr-search))
+			(if (> (string-to-number data)  1)
+			    data
+			  (tinydebian-bug-nbr-search)))
 		       (error "TinyDebian: ERROR, No BTS information."))))))
 	  (file (if ask-file
 		    (read-file-name
