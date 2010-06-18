@@ -6841,9 +6841,7 @@ ii  libc6                         2.2.5-3    GNU C Library: Shared libraries an"
 	 (tinydebian-launchpad-email-compose "new") subject nil nil nil nil))
       (message-mode)
       (ti::mail-text-start 'move)
-      (cond
-       (t
-	(insert "
+      (insert "
 Body:
 
 \<Remeber: in order to submit bugs via email you have to sign the message with a
@@ -6880,7 +6878,7 @@ GPG key that is registered in Launchpad.>
 	;; 	    tinydebian-:launchpad-status-list)))
 	;;   (unless (string= "" str)
 	;;     (insert " status " str "\n")))
-	(insert " done\n"))))))))
+	(insert " done\n")))))
 
 ;;; ----------------------------------------------------------------------
 ;;;
