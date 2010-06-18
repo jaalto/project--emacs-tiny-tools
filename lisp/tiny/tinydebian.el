@@ -3526,6 +3526,9 @@ After that various tinydebian-debian-parse-bts-bug-* functions can be called."
 	(setq tinydebian-:browse-url-function
 	      (function tinydebian-browse-url-lynx-dump)))
     (when url
+      ;; Display the URL, so that it gets stored in *Messages* buffer for
+      ;; later copy/paste
+      (message "Accessing %s" url)
       (tinydebian-browse-url-1 url)
       (if file
 	  (with-current-buffer (get-buffer tinydebian-:buffer-www)

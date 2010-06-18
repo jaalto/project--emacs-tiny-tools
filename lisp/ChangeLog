@@ -38,6 +38,8 @@
 	(tinydebian-bug-report-debian-bts-mail): Remove confirmation question.
 	(tinydebian-bug-report-gnu-bts-mail):  Remove confirmation question.
 	(tinydebian-bug-browse-url-main-interactive): Correct bug number handling.
+	(tinydebian-bug-browse-url-run): Display URL. This stores it to *Messages*
+	buffer for later copy/paste.
 
 2010-06-02 Wed  Jari Aalto  <jari.aalto@cante.net>
 
