@@ -12,6 +12,16 @@
 	(tinydebian-bug-report-gnu-bts-mail): New.
 	(tinydebian-system-os-debian-p): New.
 	(tinydebian-bts-email-compose): Add GNU coreutils.
+	(tinydebian-bug-gnu-bts-gnus-summary-p): New.
+	(tinydebian-gnu-bts-bug-type-p): New.
+	(tinydebian-bug-gnu-bts-buffer-p): New.
+	(tinydebian-bug-gnu-bts-re-search-p): New.
+	(tinydebian-bug-gnu-bts-re-search-email): New.
+	(tinydebian-bug-gnu-bts-gnus-article-p): New.
+	(tinydebian-bug-gnu-bts-gnus-summary-line-p): New.
+	(tinydebian-gnu-bts-bug-url-compose): New.
+	(tinydebian-:gnu-bts-url-http-bugs): New.
+	(tinydebian-bug-gnu-emacs-bts-gnus-summary-line-p): Correct regexp.
 
 2010-06-02 Wed  Jari Aalto  <jari.aalto@cante.net>
 

@@ -102,6 +102,9 @@
 
 ;;{{{ setup: libraries
 
+(defconst tinydebian-:version-time "2010.0616.1707"
+  "Last edited time.")
+
 (require 'tinylibm)
 
 (autoload 'gnus-eval-in-buffer-window   "gnus-util" "" nil 'macro)
@@ -690,6 +693,12 @@ Second %s is placeholder for the BUG number.")
   "Email address for GNU Bug Tracking System.
 See <http://debbugs.gnu.org>.")
 
+(defvar tinydebian-:gnu-bts-url-http-bugs
+  ;; http://debbugs.gnu.org/cgi/bugreport.cgi?bug=6004
+  "http://debbugs.gnu.org/%s"
+  "HTTP address of an individual bug in Emacs Bug Tracking System.
+The %s is placeholder for a bug number.")
+
 (defvar tinydebian-:emacs-bts-email-address "emacsbugs.donarmstrong.com"
   "Email address for Emacs Bug Tracking System.")
 
@@ -923,9 +932,6 @@ to generate updated list."
      tinydebian-:severity-list
      tinydebian-:severity-selected
      tinydebian-:tags-list)))
-
-(defconst tinydebian-:version-time "2010.0602.1707"
-  "Last edited time.")
 
 (defvar tinydebian-:bts-extra-headers
   (format "X-Bug-User-Agent: Emacs %s and tinydebian.el %s\n"
@@ -1393,6 +1399,15 @@ String is anything that is attached to
 
 ;;; ----------------------------------------------------------------------
 ;;;
+(defsubst tinydebian-gnu-bts-bug-url-compose (bug)
+  "Compose GNU BTS URL for a BUG number."
+  (format tinydebian-:gnu-bts-url-http-bugs
+	  (if (numberp bug)
+	      (int-to-string bug)
+	    bug)))
+
+;;; ----------------------------------------------------------------------
+;;;
 (defsubst tinydebian-emacs-bts-bug-url-compose (bug)
   "Compose Emacs BTS URL for a BUG number."
   (format tinydebian-:emacs-bts-url-http-bugs
@@ -1530,6 +1545,9 @@ Input:
     (tinydebian-launchpad-email-compose bug))
    ((string-match "emacs" bts)
     (tinydebian-emacs-bts-bug-url-compose bug))
+   ((string-match "coreutils" bts)
+    ;; FIXME: handle GNU BTS
+    (error "coreutils not implemented yet"))
    ((string-match "debian" bts)
     (tinydebian-debian-bts-url-compose bug))
    (t
@@ -1579,7 +1597,7 @@ Judging from optional BUFFER."
   (with-current-buffer (or buffer (current-buffer))
     (cond
      ;; FIXME launchpad
-     (nil ;; (tinydebian-gnu-bug-type-p)
+     ((tinydebian-gnu-bts-bug-type-p)
       (tinydebian-gnu-bts-email-control))
      ((tinydebian-emacs-bug-type-p)
       (tinydebian-emacs-bts-email-control))
@@ -2021,6 +2039,119 @@ This function needs network connection."
 
 ;;; ----------------------------------------------------------------------
 ;;;
+(defun tinydebian-bug-gnu-bts-re-search-email ()
+  "Search from current point for `tinydebian-:emacs-bts-email-address'.
+Return:
+  '(bug-number email)"
+  (let ((email (regexp-quote tinydebian-:gnu-bts-email-address)))
+    (cond
+     ((re-search-forward (format
+			  "\\(\\([0-9]+\\)@%s\\>\\)"
+			  email)
+			  nil t)
+      ;; Thank you for filing a new bug report with GNU.
+      ;;
+      ;; This is an automatically generated reply to let you know your message
+      ;; has been received.
+      ;;
+      ;; Your message is being forwarded to the package maintainers and other
+      ;; interested parties for their attention; they will reply in due course.
+      ;;
+      ;; Your message has been sent to the package maintainer(s):
+      ;;  bug-coreutils@gnu.org
+      ;;
+      ;; If you wish to submit further information on this problem, please
+      ;; send it to NNNN@debbugs.gnu.org.
+      ;;
+      ;; Please do not send mail to help-debbugs@gnu.org unless you wish
+      ;; to report a problem with the Bug-tracking system.
+      ;;       (list (match-string 2)
+      (list (match-string-no-properties 2)
+	    (match-string-no-properties 1)))
+     ((and nil				;FIXME, not implemented (copy of emacs)
+	   (save-excursion
+	     (re-search-forward (concat
+				 email
+				 "\\|Emacs bugs database")
+				nil t)))
+      ;; Processing commands for control@<address>:
+      ;;
+      ;; > severity NNNN minor
+      ;; bug#NNN: <<subject>
+      ;; Severity set to `minor' from `normal'
+      ;;
+      ;; > thanks
+      ;; Stopping processing here.
+      ;;
+      ;; Please contact me if you need assistance.
+      ;;
+      ;; Foo Bar
+      ;; (administrator, Emacs bugs database)
+      (let ((bug (tinydebian-bug-nbr-forward)))
+	(list bug))))))
+
+;;; ----------------------------------------------------------------------
+;;;
+(defun tinydebian-bug-gnu-bts-re-search-p (&optional point)
+  "Search from `point-min' or optional POINT for Emacs BTS response.
+Return:
+  '(bug-number email)."
+  (save-excursion
+    (goto-char (or point (point-min)))
+    (tinydebian-bug-gnu-bts-re-search-email)))
+
+;;; ----------------------------------------------------------------------
+;;;
+(defun tinydebian-bug-gnu-bts-buffer-p ()
+  "Check if bug context is Emacs BTS."
+  (multiple-value-bind (bug email)
+      (tinydebian-bug-gnu-bts-re-search-p)
+    (if email
+	bug)))
+
+;;; ----------------------------------------------------------------------
+;;;
+(defun tinydebian-bug-gnu-bts-gnus-summary-line-p ()
+  (let* ((str (tinydebian-current-line-string))
+	 (bug (tinydebian-bug-gnu-emacs-bts-string-p str)))
+    (cond
+     (bug
+      (tinydebian-gnu-bts-bug-url-compose bug))
+     (t
+      ;;  [  21: GNU bug Tracking System] bug#1234: Acknowledgement (coreutils:
+      (string-match "GNU bug Tracking\\|.*debbugs\\.gnu" str)))))
+
+;;; ----------------------------------------------------------------------
+;;;
+(defun tinydebian-bug-gnu-bts-gnus-article-p ()
+  "Check if bug context is GNU BTS in current article buffer."
+  (tinydebian-with-gnus-article-buffer nil
+    (let ((bug (tinydebian-bug-gnu-bts-buffer-p)))
+      (when bug
+	(tinydebian-gnu-bts-bug-url-compose bug)))))
+
+;;; ----------------------------------------------------------------------
+;;;
+(defsubst tinydebian-bug-gnu-bts-gnus-summary-p ()
+  "Check if bug context is GNU BTS at Gnus summary line."
+  (or (tinydebian-bug-gnu-bts-gnus-summary-line-p)
+      (tinydebian-bug-gnu-bts-gnus-article-p)))
+
+;;; ----------------------------------------------------------------------
+;;;
+(defun tinydebian-gnu-bts-bug-type-p ()
+  "Check if bug context is GNU BTS."
+  (cond
+   ((eq major-mode 'gnus-summary-mode)
+    (tinydebian-bug-gnu-bts-gnus-summary-p))
+   ((memq major-mode '(message-mode
+		       mail-mode
+		       gnus-original-article-mode
+		       gnus-article-mode))
+    (tinydebian-bug-gnu-bts-buffer-p))))
+
+;;; ----------------------------------------------------------------------
+;;;
 (defun tinydebian-sourceforge-bug-url-main (str)
   "Return URL for STR foo-Bugs-2040281"
   (multiple-value-bind (project bug)
@@ -2056,8 +2187,8 @@ Return:
       ;;
       ;; Please do not send mail to owner@<address> unless you wish
       ;; to report a problem with the Bug-tracking system.
-      (list (match-string 2)
-	    (match-string 1)))
+      (list (match-string-no-properties 2)
+	    (match-string-no-properties 1)))
      ((save-excursion
 	(re-search-forward (concat
 			    email
@@ -2106,11 +2237,9 @@ Return:
     (cond
      (bug
       (tinydebian-emacs-bts-bug-url-compose bug))
-     ((save-excursion
-	(goto-char (line-beginning-position))
-	;; [  46: -> submit@emacsbugs.don] [PATCH] ...
-	(looking-at ".*@emacsbug"))
-      t))))
+     (t
+      ;; [  46: -> submit@emacsbugs.don] [PATCH] ...
+      (strong-match "@emacsbug" str)))))
 
 ;;; ----------------------------------------------------------------------
 ;;;
@@ -2120,19 +2249,6 @@ Return:
     (let ((bug (tinydebian-bug-gnu-emacs-bts-buffer-p)))
       (when bug
 	(tinydebian-emacs-bts-bug-url-compose bug)))))
-
-;;; ----------------------------------------------------------------------
-;;;
-(defun tinydebian-emacs-gnu-type-p ()
-  "Check if bug context is GNU BTS."
-  (cond
-   ((eq major-mode 'gnus-summary-mode)
-    (tinydebian-bug-gnu-bts-gnus-summary-p)) ;FIXME not implemented
-   ((memq major-mode '(message-mode
-		       mail-mode
-		       gnus-original-article-mode
-		       gnus-article-mode))
-    (tinydebian-bug-gnu-bts-buffer-p)))) ;FIXME not implemented
 
 ;;; ----------------------------------------------------------------------
 ;;;
