@@ -6833,7 +6833,7 @@ ii  libc6                         2.2.5-3    GNU C Library: Shared libraries an"
       (let ((subject (read-string
 		      (format "[Launcpad BTS %s] bug Subject: " ""))))
 	(mail-setup
-	 (tinydebian-launchpad-email-compose "submit") subject nil nil nil nil))
+	 (tinydebian-launchpad-email-compose "new") subject nil nil nil nil))
       (message-mode)
       (ti::mail-text-start 'move)
       (cond
