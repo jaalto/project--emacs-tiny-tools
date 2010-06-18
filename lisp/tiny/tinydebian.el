@@ -1,4 +1,4 @@
-;;; tinydebian.el --- Debian, Ubuntu and Emacs Bug Tracking utilities.
+;;; tinydebian.el --- Debian, Ubuntu, Emacs, GNU Bug Tracking Utilities
 
 ;;{{{ Id
 
@@ -56,43 +56,62 @@
 
 ;;  Overview of features
 ;;
+;;	Summary: Few Debian spefific utlitities and a Generic interface to many BTS's.
+;;
 ;;      http://www.emacswiki.org/emacs/TinyDebian
 ;;
-;;      This package contains utilities for the package authors
-;;      (Debian developers, Ubuntu Developers, Emacs Pretest
-;;      Developers) to help managing Bug reports from the Bug Tracking
-;;      Systems (BTS). The Bug interface hooks up in Gnus *Summary*
-;;      (http://www.gnus.org/) buffer and a separate menu to send
-;;      commands appear.
+;;      This package contains utilities for the package authors to help
+;;      reporting and managing bug reports at various Bug Tracking Systems (BTS).
+;;      The Bug interface hooks up in Gnus *Summary* (http://www.gnus.org/)
+;;      buffer where separate menu to send commands appear.
 ;;
 ;;      There are also minor modes that can be turned on for `M-x'
 ;;      `mail' (C-x m) to use BTS control commands.
 ;;
+;;      The heuristics are based in Gnus Summary and Article buffers how to
+;;      decide which bug tracking system will be used.
+;;
 ;;      Briefly:
 ;;
+;;      Debian utilities:
+;;
 ;;      o   Colorize /var/log files like messages, syslog etc.
+;;      o   Access important Debian developer documents (FAQ, WNPP)
+;;      o   Query Debian WWW information: package page, PTS page, package bugs page
+;;      o   System information: wnpp-alert(1) listing to show what packages have
+;;          problems and which as suspect for removal (not maintained).
+;;
+;;      BTS utilities in Gnus (and M-x mail, message-mode)
+;;
+;;      o   The "debbugs" mail based BTS's: full support to manipulatte bug messages for
+;;          Debian, Emacs and GNU bug tracking systems.
+;;      o   Other BTS: limited support for visting bugs at Sourceforge,
+;;          Launchpad, Freshmeat, Kde, Gnome, MySQL, Perl CPAN, Redhat Sourcewre,
+;;	    Mercurial version control, Trac. You can manipulate those bugs via their
+;;          Web interface
 ;;      o   In Gnus *Summary* buffer, there is new menu "Tdeb" to
-;;          administrate bug reports. Useful for Debian/Ubuntu/Emacs
+;;          administrate "debbugs" bug reports. Useful for Debian, GNU and Emacs
 ;;          developers.
-;;      o   To report a bug to a Debian package, similar to  reportbug(1),
-;;          use 'M-x' 'tinydebian-reportbug'
+;;      o   To send on issue (wishlist or bug) to any of the "debbugs" systems,
+;;          similar to Debian's reportbug(1), use 'M-x' 'tinydebian-reportbug'.
 ;;
 ;;  History
 ;;
-;;      This package is called 'tinydebian', because it was first
-;;      developed to help administering a Debian system. Support for
-;;      the Debian BTS interface
-;;      (http://www.debian.org/Bugs/server-control) is a big part of
-;;      the package. Later when GNU Emacs development moved
-;;      to same bug tracking system, support for Emacs BTS was added.
-;;      Support to detect Emacs bugs from Debian bugs were added.
+;;      This package is called 'tinydebian', because it was first developed
+;;      to help administering Debian GNU/Linux. Support for the Debian BTS was added
+;;      afterwards. The Debian mail based BTS is called "debbugs". For more information,
+;;      see http://www.debian.org/Bugs/server-control
 ;;
-;;      Ubuntu Launchpad.net BTS can also be controlled by email and
+;;      Later GNU Emacs development moved also to "debbugs" and support for
+;;      Emacs BTS was added. In 2010 the GNU coreutils also started using
+;;      "debbugs" and support was added. For more information, see
+;;      http://debbugs.gnu.org/
+;;
+;;  Todo
+;;
+;;      Ubuntu Launchpad.net BTS could also be controlled by email and
 ;;      it has similarities to the Debian BTS. The Launchpad email
 ;;      interface is in planned state.
-;;
-;;      The heuristics are based in Gnus Summary and Article buffers
-;;      how to decide which bug tracking system will be used.
 
 ;;}}}
 
@@ -393,6 +412,42 @@ tag should be used instead."))
 This is set to normal by default, but can be overridden either by supplying a Severity line in the pseudo-header when the bug is submitted Severity or error.
 http://www.debian.org/Bugs/Developer#severities")
 
+(defvar tinydebian-:launchpad-status-list ;FIXME add descriptions
+  '(("confirmed"
+     "")
+    ("new"
+     "")
+    ("invalid"
+     "")
+    ("wontfix"
+     "")
+    ("confirmed"
+     "")
+    ("triaged"
+     "")
+    ("inprogress"
+     "")
+    ("incomplete"
+     "")
+    ("fixcommitted"
+     "")
+    ("fixreleased"
+     ""))
+  "List of status values and their explanations '((value description) ...).")
+
+(defvar tinydebian-:launchpad-importance-list ;FIXME add descriptions
+  '(("wishlist"
+     "")
+    ("low"
+     "")
+    ("medium"
+     "")
+    ("high"
+     "")
+    ("critical"
+     ""))
+  "List of importance values and their explanations '((value description) ...).")
+
 (defvar tinydebian-:severity-selected nil
   "Function `tinydebian-severity-select-*' sets this to user selection.")
 
@@ -674,6 +729,10 @@ See also `tinydebian-:rfs-template'")
 ;; https://help.launchpad.net/UsingMaloneEmail
 (defvar tinydebian-:launchpad-email-address "bugs.launchpad.net"
   "Email address for Launchpad Bug Tracking System.")
+
+(defvar tinydebian-:launchpad-email-address "bugs.launchpad.net"
+  "Email address for Launchpad Bug Tracking System.
+See <https://help.launchpad.net/Bugs/EmailInterface?action=show&redirect=BugTrackerEmailInterface>.")
 
 (defconst tinydebian-:launchpad-url-http-package-bugs
   "https://bugs.launchpad.net/%s/+bug/%s"
@@ -1387,6 +1446,12 @@ String is anything that is attached to
 
 ;;; ----------------------------------------------------------------------
 ;;;
+(defsubst tinydebian-launchpad-email-compose (address)
+  "Send message to ADDRESS@<gnu bts>."
+  (format "%s@%s" address tinydebian-:launchpad-email-address))
+
+;;; ----------------------------------------------------------------------
+;;;
 (defsubst tinydebian-gnu-bts-email-compose (address)
   "Send message to ADDRESS@<gnu bts>."
   (format "%s@%s" address tinydebian-:gnu-bts-email-address))
@@ -1414,6 +1479,12 @@ String is anything that is attached to
 	  (if (numberp bug)
 	      (int-to-string bug)
 	    bug)))
+
+;;; ----------------------------------------------------------------------
+;;;
+(defsubst tinydebian-launchpad-email-control ()
+  "Compose control."
+  (tinydebian-launchpad-email-compose "control"))
 
 ;;; ----------------------------------------------------------------------
 ;;;
@@ -6673,10 +6744,7 @@ Versions of packages autolog depends on:
 ii  cron                          3.0pl1-72  management of regular background p
 ii  libc6                         2.2.5-3    GNU C Library: Shared libraries an"
   (interactive
-   (progn
-     (if (y-or-n-p "[Debian BTS] Submit bug report? ")
-	 (list (tinydebian-package-info))
-       nil)))
+   (list (tinydebian-package-info)))
   (let ((status  (or (cdr-safe (assoc "Status" info)) ""))
 	(package (or (cdr-safe (assoc "Package" info)) "")))
     (cond
@@ -6710,13 +6778,12 @@ ii  libc6                         2.2.5-3    GNU C Library: Shared libraries an"
   "Submit GNU bug report to PACKAGE."
   (interactive
    (list
-    (if (y-or-n-p "[GNU BTS] Submit bug report? ")
-	(completing-read
-	 "[GNU BTS] package: "
-	 '(("emacs" . 1)
-	   ("coreutils" . 1))
-	 nil
-	 t))))
+    (completing-read
+     "[GNU BTS] package: "
+     '(("emacs" . 1)
+       ("coreutils" . 1))
+     nil
+     t)))
   (cond
    ((not (stringp package))
     (error "No package name"))
@@ -6750,6 +6817,69 @@ ii  libc6                         2.2.5-3    GNU C Library: Shared libraries an"
 ;;; ----------------------------------------------------------------------
 ;;;
 ;;;###autoload
+(defun tinydebian-bug-report-launchpad-mail ()
+  "Submit GNU bug report to PACKAGE."
+  (interactive)
+  (let* ((name (format "*mail* Launchpad Bug"))
+	 buffer)
+    (cond
+     ((and (setq buffer (get-buffer name))
+	   (null (y-or-n-p
+		  "Delete previous bug report? ")))
+      (pop-to-buffer buffer))
+     (t
+      (pop-to-buffer (get-buffer-create name))
+      (erase-buffer)
+      (let ((subject (read-string
+		      (format "[Launcpad BTS %s] bug Subject: " ""))))
+	(mail-setup
+	 (tinydebian-launchpad-email-compose "submit") subject nil nil nil nil))
+      (message-mode)
+      (ti::mail-text-start 'move)
+      (cond
+       (t
+	(insert "
+Body:
+
+\<Remeber: in order to submit bugs via email you have to sign the message with a
+GPG key that is registered in Launchpad.>
+
+ affects <distribution|package|product>
+")
+	(let ((str (mail-fetch-field "Subject")))
+	  (insert " summary " str "\n"))
+
+	(let ((str (completing-read
+		    "[Launchpad BTS] Importance: "
+		    tinydebian-:launchpad-importance-list)))
+	  (unless (string= "" str)
+	    (insert " importance " str "\n")))
+
+	(let ((str (completing-read
+		    "[Launchpad BTS] Is this security bug: "
+		    '(("yes" . 1)
+		      ("no" . 1)))))
+	  (unless (string= "" str)
+	    (insert " security " str "\n")))
+
+	(let ((str (read-string "Subscribe to bug [launchpad id|email]: ")))
+	  (unless (string= "" str)
+	    (insert " subscribe " str "\n")))
+
+	(let ((str (read-string "Assignee [name|email|'nobody']: ")))
+	  (unless (string= "" str)
+	    (insert " assignee " str "\n")))
+
+	;; (let ((str (completing-read
+	;; 	    "[Launchpad BTS] Status: "
+	;; 	    tinydebian-:launchpad-status-list)))
+	;;   (unless (string= "" str)
+	;;     (insert " status " str "\n")))
+	(insert " done\n"))))))))
+
+;;; ----------------------------------------------------------------------
+;;;
+;;;###autoload
 (defun tinydebian-bug-report-generic-bts-mail (bts)
   "Select BTS and submit a bug report.
 This function can only be callaed interactively."
@@ -6772,7 +6902,7 @@ This function can only be callaed interactively."
      ((string-match "coreutils" bts)
       (tinydebian-bug-report-gnu-bts-mail "coreutils"))
      ((string-match "launchpad" bts)
-      (message "BTS handling not implemented yet")))))
+      (tinydebian-bug-report-launchpad-mail)))))
 
 ;;}}}
 ;;{{{ Admin functions: MAIL reports
@@ -6867,7 +6997,7 @@ You can select region and these commands to shell `sh' with command
 (add-hook 'tinydebian-:mail-mode-define-keys-hook
 	  'tinydebian-mail-mode-define-keys)
 
-(defalias 'tinydebian-reportbug 'tinydebian-bug-report-debian-bts-mail)
+(defalias 'tinydebian-reportbug 'tinydebian-bug-report-generic-bts-mail)
 
 (provide   'tinydebian)
 (run-hooks 'tinydebian-:load-hook)

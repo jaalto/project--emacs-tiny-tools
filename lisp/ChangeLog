@@ -27,6 +27,16 @@
 	(tinydebian-bts-url-bug-compose): Add GNU BTS.
 	(tinydebian-bug-url-forward): Add check for Debian context.
 	(tinydebian-bug-url-forward): Add GNU BTS. Clean MIME "3D" from URL.
+	(tinydebian-reportbug): Point to `tinydebian-bug-report-generic-bts-mail',
+	not just Debian.
+	(tinydebian-bug-report-launchpad-mail): New.
+	(tinydebian-launchpad-email-control): New.
+	(tinydebian-launchpad-email-compose): New.
+	(tinydebian-:launchpad-email-address): New.
+	(tinydebian-:launchpad-status-list): New.
+	(tinydebian-:launchpad-importance-list): New.
+	(tinydebian-bug-report-debian-bts-mail): Remove confirmation question.
+	(tinydebian-bug-report-gnu-bts-mail):  Remove confirmation question.
 
 2010-06-02 Wed  Jari Aalto  <jari.aalto@cante.net>
 
