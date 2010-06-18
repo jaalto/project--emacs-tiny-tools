@@ -1545,9 +1545,8 @@ Input:
     (tinydebian-launchpad-email-compose bug))
    ((string-match "emacs" bts)
     (tinydebian-emacs-bts-bug-url-compose bug))
-   ((string-match "coreutils" bts)
-    ;; FIXME: handle GNU BTS
-    (error "coreutils not implemented yet"))
+   ((string-match "gnu" bts)
+    (tinydebian-gnu-bts-bug-url-compose bug))
    ((string-match "debian" bts)
     (tinydebian-debian-bts-url-compose bug))
    (t
@@ -2545,6 +2544,8 @@ Return: '(BTS-TYPE-STRING [BUG NUMBER | URL])."
 	(list "savannah" data))
        ((setq data (tinydebian-bug-gnu-emacs-bts-buffer-p))
 	(list "emacs" data))
+       ((setq data (tinydebian-bug-gnu-bts-buffer-p))
+	(list "gnu" data))
        ((setq data (tinydebian-sourceforge-bug-type-p))
 	(list "sourceforge" data))
        ((setq data (tinydebian-gnome-bug-type-p))
@@ -2855,13 +2856,19 @@ In Gnus summary buffer, look inside original article."
 		     "\\|launchpad[^ \t\r\n]+[0-9]"
 		     "\\|savannah[^ \t\r\n]+[0-9]"
 		     "\\|issue[^ \t\r\n]+[0-9]"
+		     "\\|gnu.org[^ \t\r\n]+[0-9]"
 		     "\\|forge[^ \t\r\n]+[0-9]"
 		     "\\|rt.cpan.org[^ \t\r\n]+[0-9]"
 		     "\\|freshmeat.net[^ \t\r\n]+[0-9][0-9][0-9]"
 		     "\\)")
 	   nil t)
-	  (thing-at-point 'url))
-	 ((setq nbr (tinydebian-bug-nbr-search))
+	  (let ((str (thing-at-point 'url)))
+	    ;; Clean MIME, bug=3D<number>
+	    (replace-regexp-in-string "bug=3D" "bug=" str)))
+	 ((and (setq nbr (tinydebian-bug-nbr-search))
+	       (progn
+		 (goto-char (point-min))
+		 (re-search-forward "^From:.*@debian.org" nil  t)))
 	  (tinydebian-bug-url-current-buffer nbr)))))))
 
 ;;; ----------------------------------------------------------------------
@@ -3500,16 +3507,17 @@ Article buffers."
   (setq bts (completing-read
 	     "Select BTS (no input = debian): "
 	     '(("debian" . 1)
-	       ("launchpad" . 2)
-	       ("emacs" . 3)
-	       ("savannah" . 4)
-	       ("gnome" . 5)
-	       ("kde" . 6)
-	       ("perl-cpan" . 7)
-	       ("sourceware" . 8)
-	       ("mysql" . 9)
-	       ("google" . 10)
-	       ("freshmeat" . 11))
+	       ("launchpad" . 1)
+	       ("emacs" . 1)
+	       ("gnu" . 1)
+	       ("savannah" . 1)
+	       ("gnome" . 1)
+	       ("kde" . 1)
+	       ("perl-cpan" . 1)
+	       ("sourceware" . 1)
+	       ("mysql" . 1)
+	       ("google" . 1)
+	       ("freshmeat" . 1))
 	     nil ; predicate
 	     t   ; require-match
 	     bts

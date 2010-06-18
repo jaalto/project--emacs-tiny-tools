@@ -22,6 +22,11 @@
 	(tinydebian-gnu-bts-bug-url-compose): New.
 	(tinydebian-:gnu-bts-url-http-bugs): New.
 	(tinydebian-bug-gnu-emacs-bts-gnus-summary-line-p): Correct regexp.
+	(tinydebian-bug-bts-type-determine): Detect GNU BTS.
+	(tinydebian-bug-ask-bts-and-number): Add GNU BTS.
+	(tinydebian-bts-url-bug-compose): Add GNU BTS.
+	(tinydebian-bug-url-forward): Add check for Debian context.
+	(tinydebian-bug-url-forward): Add GNU BTS. Clean MIME "3D" from URL.
 
 2010-06-02 Wed  Jari Aalto  <jari.aalto@cante.net>
 
