@@ -1,3 +1,18 @@
+2010-06-18  Jari Aalto  <jari.aalto@cante.net>
+
+	* tiny/tinydebian.el (tinydebian-:gnu-bts-email-address): New.
+	(tinydebian-gnu-bts-email-compose): New.
+	(tinydebian-gnu-bts-email-control): New.
+	(tinydebian-bts-generic-email-control): Detect GNU debbugs.
+	(tinydebian-emacs-gnu-type-p): New.
+	(tinydebian-bug-report-generic-bts-mail): New.
+	(tinydebian-bug-report-debian-bts-mail): Rename.
+	(tinydebian-bts-mode): "Report a new bug" calls
+	`tinydebian-bug-report-generic-bts-mail'.
+	(tinydebian-bug-report-gnu-bts-mail): New.
+	(tinydebian-system-os-debian-p): New.
+	(tinydebian-bts-email-compose): Add GNU coreutils.
+
 2010-06-02 Wed  Jari Aalto  <jari.aalto@cante.net>
 
 	* tiny/tinydesk.el: Adjust documentation a little.

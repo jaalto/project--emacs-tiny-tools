@@ -686,13 +686,17 @@ Second %s is placeholder for the BUG number.")
   "http://savannah.gnu.org/support"
   "The savanah.gnus.org site request URL without parameter")
 
+(defvar tinydebian-:gnu-bts-email-address "debbugs.gnu.org"
+  "Email address for GNU Bug Tracking System.
+See <http://debbugs.gnu.org>.")
+
 (defvar tinydebian-:emacs-bts-email-address "emacsbugs.donarmstrong.com"
   "Email address for Emacs Bug Tracking System.")
 
 (defvar tinydebian-:emacs-bts-url-http-bugs
   "http://emacsbugs.donarmstrong.com/%s"
   "HTTP address of an individual bug in Emacs Bug Tracking System.
-The %s is placeholder for bug number.")
+The %s is placeholder for a bug number.")
 
 (defvar tinydebian-:emacs-bts-line-regexp
   "Emacs.*Bug#\\([0-9]+\\)"
@@ -968,8 +972,8 @@ Mode description:
 
    (list
     tinydebian-:bts-mode-easymenu-name
-    ["Reply to a bug"                tinydebian-bts-mail-type-reply        t]
-    ["Report a new bug"              tinydebian-bug-report-mail            t]
+    ["Reply to a bug"                tinydebian-bts-mail-type-reply         t]
+    ["Report a new bug"              tinydebian-bug-report-generic-bts-mail t]
 
     "----"
 
@@ -1066,7 +1070,7 @@ Mode description:
      (define-key map  "b"  'tinydebian-bug-browse-url-main)
 
      (define-key map  "B"  'tinydebian-bug-browse-url-by-package-bugs)
-     (define-key map  "M"  'tinydebian-bug-report-mail)
+     (define-key map  "M"  'tinydebian-bug-report-generic-bts-mail)
      (define-key map  "p"  'tinydebian-bug-browse-url-by-package-name)
      (define-key map  "r"  'tinydebian-bts-mail-type-reply )
      (define-key map  "w"  'tinydebian-package-wnpp-main)
@@ -1258,8 +1262,8 @@ Activate on files whose path matches
   ;;  This just hides from byte compiler function definition
   ;;  so that it does not remember how amny arguments it takes
   ;;
-  ;;  function tinydebian-bug-report-mail used to take 0+ arguments,
-  ;;  now takes 1 function tinydebian-bug-report-mail defined multiple
+  ;;  function tinydebian-bug-report-debian-bts-mail used to take 0+ arguments,
+  ;;  now takes 1 function tinydebian-bug-report-debian-bts-mail defined multiple
   ;;  times in this file
   ;;
   (cond
@@ -1377,6 +1381,12 @@ String is anything that is attached to
 
 ;;; ----------------------------------------------------------------------
 ;;;
+(defsubst tinydebian-gnu-bts-email-compose (address)
+  "Send message to ADDRESS@<gnu bts>."
+  (format "%s@%s" address tinydebian-:gnu-bts-email-address))
+
+;;; ----------------------------------------------------------------------
+;;;
 (defsubst tinydebian-emacs-bts-email-compose (address)
   "Send message to ADDRESS@<emacs bts>."
   (format "%s@%s" address tinydebian-:emacs-bts-email-address))
@@ -1389,6 +1399,12 @@ String is anything that is attached to
 	  (if (numberp bug)
 	      (int-to-string bug)
 	    bug)))
+
+;;; ----------------------------------------------------------------------
+;;;
+(defsubst tinydebian-gnu-bts-email-control ()
+  "Compose control."
+  (tinydebian-gnu-bts-email-compose "control"))
 
 ;;; ----------------------------------------------------------------------
 ;;;
@@ -1429,6 +1445,13 @@ String is anything that is attached to
 	  (if (numberp bug)
 	      (int-to-string bug)
 	    bug)))
+
+;;; ----------------------------------------------------------------------
+;;;
+(defsubst tinydebian-system-os-debian-p ()
+  "Test if running on Debian OS."
+  (or (string-match "by Debian" (emacs-version))
+      (file-exists-p "/usr/bin/dpkg")))
 
 ;;; ----------------------------------------------------------------------
 ;;;
@@ -1475,8 +1498,10 @@ The BTS-TYPE can be:
        (error "Can't compose NNNN-ADDRESS from values `%s' `%s'"
 	      address bug))))
    (cond
-    ((string= bts-type "emacs")  ;; (tinydebian-emacs-bug-type-p)
+    ((string= bts-type "emacs")
      (tinydebian-emacs-bts-email-compose address))
+    ((string= bts-type "coreutils")
+     (tinydebian-gnu-bts-email-compose address))
     (t
      (tinydebian-bts-email-compose-1 address))))
 
@@ -1554,6 +1579,8 @@ Judging from optional BUFFER."
   (with-current-buffer (or buffer (current-buffer))
     (cond
      ;; FIXME launchpad
+     ((tinydebian-gnu-bug-type-p)
+      (tinydebian-gnu-bts-email-control))
      ((tinydebian-emacs-bug-type-p)
       (tinydebian-emacs-bts-email-control))
      (t
@@ -2093,6 +2120,19 @@ Return:
     (let ((bug (tinydebian-bug-gnu-emacs-bts-buffer-p)))
       (when bug
 	(tinydebian-emacs-bts-bug-url-compose bug)))))
+
+;;; ----------------------------------------------------------------------
+;;;
+(defun tinydebian-emacs-gnu-type-p ()
+  "Check if bug context is GNU BTS."
+  (cond
+   ((eq major-mode 'gnus-summary-mode)
+    (tinydebian-bug-gnu-bts-gnus-summary-p)) ;FIXME not implemented
+   ((memq major-mode '(message-mode
+		       mail-mode
+		       gnus-original-article-mode
+		       gnus-article-mode))
+    (tinydebian-bug-gnu-bts-buffer-p)))) ;FIXME not implemented
 
 ;;; ----------------------------------------------------------------------
 ;;;
@@ -6131,14 +6171,13 @@ References:
   "Get PACKAGE information. See`tinydebian-package-status'.
 If PACKAGE is nil and `tinydebian-:bin-dpkg' is not available,
 ask with PROMPT."
-  (let* ((dpkg  tinydebian-:bin-dpkg))
+  (let ((dpkg tinydebian-:bin-dpkg))
     (or package
 	(setq package (read-string
 		       (or prompt
 			   "[TinyDebian] Package name: "))))
     (or (and dpkg
 	     (tinydebian-package-status-main package)))))
-	;; FIXME: todo
 
 ;;}}}
 ;;{{{ Bug reporting interface
@@ -6487,8 +6526,8 @@ Locale: %s"
 ;;; ----------------------------------------------------------------------
 ;;;
 ;;;###autoload
-(defun tinydebian-bug-report-mail (info)
-  "Submit Debian bug report. INFO is alist of attributes for package.
+(defun tinydebian-bug-report-debian-bts-mail (info)
+  "Submit Debian bug report. INFO is alist of attributes for a package.
 An example ´reportbug(1)' looks like
 
 To: submit@bugs.debian.org
@@ -6511,7 +6550,7 @@ ii  cron                          3.0pl1-72  management of regular background p
 ii  libc6                         2.2.5-3    GNU C Library: Shared libraries an"
   (interactive
    (progn
-     (if (y-or-n-p "[TinyDebian] Submit bug report? ")
+     (if (y-or-n-p "[Debian BTS] Submit bug report? ")
 	 (list (tinydebian-package-info))
        nil)))
   (let ((status  (or (cdr-safe (assoc "Status" info)) ""))
@@ -6528,17 +6567,88 @@ ii  libc6                         2.2.5-3    GNU C Library: Shared libraries an"
 	(cond
 	 ((and (setq buffer (get-buffer name))
 	       (null (y-or-n-p
-		      "[TinyDebian] delete previous bug report? ")))
+		      "Delete previous bug report? ")))
 	  (pop-to-buffer buffer))
 	 (t
 	  (pop-to-buffer (get-buffer-create name))
 	  (erase-buffer)
-	  (let ((subject (read-string "[TinyDebian] bug Subject: ")))
+	  (let ((subject (read-string "[Debian BTS] bug Subject: ")))
 	    (mail-setup
 	     (tinydebian-bts-email-submit) subject nil nil nil nil))
 	  (message-mode)
 	  (tinydebian-bts-insert-headers)
 	  (tinydebian-bug-report-mail-insert-details info))))))))
+
+;;; ----------------------------------------------------------------------
+;;;
+;;;###autoload
+(defun tinydebian-bug-report-gnu-bts-mail (package)
+  "Submit GNU bug report to PACKAGE."
+  (interactive
+   (list
+    (if (y-or-n-p "[GNU BTS] Submit bug report? ")
+	(completing-read
+	 "[GNU BTS] package: "
+	 '(("emacs" . 1)
+	   ("coreutils" . 1))
+	 nil
+	 t))))
+  (cond
+   ((not (stringp package))
+    (error "No package name"))
+   (t
+    (let* ((name (format "*mail* GNU Bug %s" package))
+	   buffer)
+      (cond
+       ((and (setq buffer (get-buffer name))
+	     (null (y-or-n-p
+		    "Delete previous bug report? ")))
+	(pop-to-buffer buffer))
+       (t
+	(pop-to-buffer (get-buffer-create name))
+	(erase-buffer)
+	(let ((subject (read-string
+			(format "[GNU BTS %s] bug Subject: " package))))
+	  (mail-setup
+	    (tinydebian-gnu-bts-email-compose "submit") subject nil nil nil nil))
+	(message-mode)
+	(ti::mail-text-start 'move)
+	(cond
+	 ((tinydebian-system-os-debian-p)
+	  (let ((info (tinydebian-package-info package)))
+	    (tinydebian-bug-report-mail-insert-details info)))
+	 (t
+	  (insert (format "Package: %s\n" package))
+	  (insert (format "Version: \n"))
+	  (insert (fromat "Severity: %s\n\n"
+			  (tinydebian-bug-severity)))))))))))
+
+;;; ----------------------------------------------------------------------
+;;;
+;;;###autoload
+(defun tinydebian-bug-report-generic-bts-mail (bts)
+  "Select BTS and submit a bug report.
+This function can only be callaed interactively."
+  (interactive
+   (list
+    (completing-read
+     "Bug report BTS: "
+     '(("debian" . 1)
+       ("gnu-emacs" . 1)
+       ("gnu-coreutils" . 1)
+       ("launchpad" . 1))
+     nil
+     t)))
+  (when (stringp bts)
+    (cond
+     ((string-match "debian" bts)
+      (call-interactively 'tinydebian-bug-report-debian-bts-mail))
+     ((string-match "emacs" bts)
+      (tinydebian-bug-report-gnu-bts-mail "emacs"))
+     ((string-match "coreutils" bts)
+      (tinydebian-bug-report-gnu-bts-mail "coreutils"))
+     ((string-match "launchpad" bts)
+      (message "BTS handling not implemented yet")))))
 
 ;;}}}
 ;;{{{ Admin functions: MAIL reports
@@ -6633,7 +6743,7 @@ You can select region and these commands to shell `sh' with command
 (add-hook 'tinydebian-:mail-mode-define-keys-hook
 	  'tinydebian-mail-mode-define-keys)
 
-(defalias 'tinydebian-reportbug 'tinydebian-bug-report-mail)
+(defalias 'tinydebian-reportbug 'tinydebian-bug-report-debian-bts-mail)
 
 (provide   'tinydebian)
 (run-hooks 'tinydebian-:load-hook)
