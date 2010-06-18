@@ -1579,7 +1579,7 @@ Judging from optional BUFFER."
   (with-current-buffer (or buffer (current-buffer))
     (cond
      ;; FIXME launchpad
-     ((tinydebian-gnu-bug-type-p)
+     (nil ;; (tinydebian-gnu-bug-type-p)
       (tinydebian-gnu-bts-email-control))
      ((tinydebian-emacs-bug-type-p)
       (tinydebian-emacs-bts-email-control))
