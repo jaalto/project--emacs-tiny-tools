@@ -121,7 +121,7 @@
 
 ;;{{{ setup: libraries
 
-(defconst tinydebian-:version-time "2010.0616.1707"
+(defconst tinydebian-:version-time "2010.1015.0648"
   "Last edited time.")
 
 (require 'tinylibm)
@@ -2309,7 +2309,7 @@ Return:
       (tinydebian-emacs-bts-bug-url-compose bug))
      (t
       ;; [  46: -> submit@emacsbugs.don] [PATCH] ...
-      (strong-match "@emacsbug" str)))))
+      (string-match "@emacsbug" str)))))
 
 ;;; ----------------------------------------------------------------------
 ;;;
@@ -4658,8 +4658,8 @@ Mode description:
 
     ["Add BTS Ctrl CC"         tinydebian-bts-mail-ctrl-command-cc       t]
 ;;;    ["Send BTS Ctrl close"      tinydebian-bts-mail-ctrl-command-close    t] ;; FIXME
-    ["Add BTS Ctrl fixed"      tinydebian-bts-mail-ctrl-command-notfixed t]
-    ["Add BTS Ctrl notfixed"   tinydebian-bts-mail-ctrl-command-fixed    t]
+    ["Add BTS Ctrl fixed"      tinydebian-bts-mail-ctrl-command-fixed t]
+    ["Add BTS Ctrl notfixed"   tinydebian-bts-mail-ctrl-command-notfixed    t]
     ["Add BTS Ctrl forward"    tinydebian-bts-mail-ctrl-command-forwarded  t]
     ["Add BTS Ctrl notforwarded"    tinydebian-bts-mail-ctrl-command-notforwarded  t]
 ;;;    ["Addend BTS Ctrl forwarded"  tinydebian-bts-mail-ctrl-command-forward  t] ;; FIXME
@@ -5191,7 +5191,10 @@ See documents:
 	  nil				;type
 	  nil				;pkg
 	  (tinydebian-bts-email-compose bug)
-	  (format "%s: Intent to NMU -- %s"
+	  ;;   Standard Debian BTS message format is:
+	  ;;   'Bug#NNNN: <action> (<description>)'
+	  (format "Bug#%s: Intent to NMU (%s: %s)"
+		  bug
 		  (field "package")
 		  str)
 	(if (stringp tinydebian-:bts-mail-type-it-nmu-message)

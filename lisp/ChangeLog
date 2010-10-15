@@ -1,3 +1,8 @@
+2010-10-12 Tue  Jari Aalto  <jari.aalto@cante.net>
+
+	* tiny/tinydebian.el (tinydebian-mail-mode): Correct
+	menu entry for "notfixed" and "fixed" BTS control commands.
+
 2010-06-18  Jari Aalto  <jari.aalto@cante.net>
 
 	* tiny/tinydebian.el (tinydebian-:gnu-bts-email-address): New.
