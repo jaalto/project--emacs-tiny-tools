@@ -121,7 +121,7 @@
 
 ;;{{{ setup: libraries
 
-(defconst tinydebian-:version-time "2010.1015.0648"
+(defconst tinydebian-:version-time "2010.1016.0628"
   "Last edited time.")
 
 (require 'tinylibm)
@@ -3339,12 +3339,15 @@ Return assoc list with keys:
 
 Were:
     BUG		Bug number
-    DATE	ISO date
-    SEVERITY	Bug severity
+    DATE	Report date in ISO format
+    DONE	If done, the reporter information in (...)
+    FIXED       if fixed, version(s) where fixed
+    MAINTAINER  package maintainer
+    PACKAGE     package name
     REPORTED	Reported by information
-    DONE	If Done, the reporter information in (...)
-    TAGS	List of tags
-    SUBJECT	Bug subject"
+    SEVERITY	Bug severity
+    SUBJECT	Bug subject
+    TAGS	List of tags"
     (let (list)
       (goto-char (point-min))
       ;; This must be done in order
@@ -4515,7 +4518,8 @@ changes, the bug must be unarchived first."
 (put 'tinydebian-debian-bug-info-macro 'edebug-form-spec '(body))
 (put 'tinydebian-debian-bug-info-macro 'lisp-indent-function 1)
 (defmacro tinydebian-debian-bug-info-macro (bug &rest body)
-  "Get BUG to variable `info', define function `field', and run BODY."
+  "Get BUG to variable `info', define function `field', and run BODY.
+See `tinydebian-debian-parse-bts-bug-info-raw' for INFO structure."
   `(progn
      (if (or (not (stringp ,bug))
 	     (not (string-match "^[0-9][0-9]+$" ,bug)))
@@ -5230,6 +5234,23 @@ thanks
   (interactive (list (tinydebian-bts-mail-ask-bug-number "Reply to bug")))
   (let ((subject (my-tinydebian-subject-any))
 	tinydebian-:bts-compose-type)
+    (unless (and (stringp bug)
+		 (string-match bug subject))
+      ;; User gave different bug number than where the currenly line is.
+      ;; Can't use that subject as is.
+      (tinydebian-debian-bug-info-macro bug
+	(let ((fsub (field "subject"))
+	      (fpkg (field "package"))
+	      (pkg ""))
+	  ;; Check '<package>: <message>' standard bug report format
+	  ;; Add one if it's not in bug report by default.
+	  (unless (string-match fpkg fsub)
+	    (setq pkg (format "%s: " fpkg)))
+	  (setq subject
+		(format "Re: Bug#%s: %s%s"
+			bug
+			pkg
+			fsub)))))
     (tinydebian-bts-mail-compose-macro
      bug
      "reply"

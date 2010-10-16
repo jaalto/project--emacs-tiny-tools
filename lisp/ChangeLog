@@ -1,3 +1,19 @@
+2010-10-16 Sat  Jari Aalto  <jari.aalto@cante.net>
+
+	* tiny/tinydebian.el (tinydebian-debian-bug-info-macro):
+	Document INFO structure in docstring.
+	(tinydebian-debian-parse-bts-bug-info-raw): Add missing fields
+	to docstring.
+	(tinydebian-bts-mail-type-reply): if bug report number is
+	different from current line, query BTS directly with HTTP
+	to retrieve correct subject for the composed email.
+
+2010-10-15 Fri  Jari Aalto  <jari.aalto@cante.net>
+
+	* tiny/tinydebian.el (tinydebian-bts-mail-type-it-nmu): Chnage
+	subject to follow standard Debian BTS message format
+	'Bug#NNNN: <action> (<description>)'
+
 2010-10-12 Tue  Jari Aalto  <jari.aalto@cante.net>
 
 	* tiny/tinydebian.el (tinydebian-mail-mode): Correct
