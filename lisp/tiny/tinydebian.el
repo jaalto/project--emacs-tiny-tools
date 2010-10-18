@@ -121,7 +121,7 @@
 
 ;;{{{ setup: libraries
 
-(defconst tinydebian-:version-time "2010.1016.0628"
+(defconst tinydebian-:version-time "2010.1018.0936"
   "Last edited time.")
 
 (require 'tinylibm)
@@ -1065,6 +1065,8 @@ Mode description:
     (list
      "BTS Control messages"
      ["Send BTS Ctrl affects"      tinydebian-bts-mail-ctrl-affects  t]
+     ["Send BTS bug subscribe"     tinydebian-bts-mail-ctrl-bug-subscribe t]
+     ["Send BTS bug unsubscribe"   tinydebian-bts-mail-ctrl-bug-unsubscribe t]
      ["Send BTS Ctrl clone"        tinydebian-bts-mail-ctrl-clone    t]
      ["Send BTS Ctrl close"        tinydebian-bts-mail-ctrl-close    t]
      ["Send BTS Ctrl severity"     tinydebian-bts-mail-ctrl-severity t]
@@ -1184,6 +1186,9 @@ Mode description:
 
      ;;  (C)ontrol commands alphabetically
      (define-key map  "ca"  'tinydebian-bts-mail-ctrl-affects)
+     (define-key map  "cbs"  'tinydebian-bts-mail-ctrl-bug-subscribe)
+     (define-key map  "cbu"  'tinydebian-bts-mail-ctrl-bug-unsubscribe)
+
      (define-key map  "cc"  'tinydebian-bts-mail-ctrl-close)
      (define-key map  "cC"  'tinydebian-bts-mail-ctrl-clone)
 
@@ -5935,6 +5940,48 @@ Default owner is the value of 'From:', that is `user-mail-address'."
 	 (insert "<space separated list of packages affected by this bug>"))
      (insert "\nthanks\n")
      (goto-char point))))
+
+;;; ----------------------------------------------------------------------
+;;;
+(defun tinydebian-bts-mail-ctrl-bug-subscribe (bug &optional email)
+  "Compose BTS control message a BUG for subscription."
+  (interactive
+   (list (tinydebian-bts-mail-ask-bug-number)
+	 (read-string "Subscribe email: " user-mail-address)))
+  (tinydebian-bts-mail-type-macro
+      (not 'type)
+      (not 'pkg)
+      (tinydebian-bts-email-compose
+       (format "%s-subscribe-%s"
+	       bug
+	       (replace-regexp-in-string "@" "=" email)))
+      (format "Bug#%s subscribe" bug)
+    (let (point)
+      (insert
+       "# To use different address, change the \"To\" header\n"
+       "# nnn-subscribe-localpart=example.com@bugs.debian.org\n")
+      (insert "thanks\n"))))
+
+;;; ----------------------------------------------------------------------
+;;;
+(defun tinydebian-bts-mail-ctrl-bug-unsubscribe (bug &optional email)
+  "Compose BTS control message a BUG for unsubscription."
+  (interactive
+   (list (tinydebian-bts-mail-ask-bug-number)
+	 (read-string "Unsubscribe email: " user-mail-address)))
+  (tinydebian-bts-mail-type-macro
+      (not 'type)
+      (not 'pkg)
+      (tinydebian-bts-email-compose
+       (format "%s-unsubscribe-%s"
+	       bug
+	       (replace-regexp-in-string "@" "=" email)))
+      (format "Bug#%s subscribe" bug)
+    (let (point)
+      (insert
+       "# To use different address, change the \"To\" header\n"
+       "# nnn-unsubscribe-localpart=example.com@bugs.debian.org\n")
+      (insert "thanks\n"))))
 
 ;;; ----------------------------------------------------------------------
 ;;;

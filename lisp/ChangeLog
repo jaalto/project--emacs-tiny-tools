@@ -1,3 +1,9 @@
+2010-10-18 Mon  Jari Aalto  <jari.aalto@cante.net>
+
+	* tiny/tinydebian.el
+	(tinydebian-bts-mail-ctrl-bug-subscribe): New user command.
+	(tinydebian-bts-mail-ctrl-bug-unsubscribe): New user command.
+
 2010-10-16 Sat  Jari Aalto  <jari.aalto@cante.net>
 
 	* tiny/tinydebian.el (tinydebian-debian-bug-info-macro):
