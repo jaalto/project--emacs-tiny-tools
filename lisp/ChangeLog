@@ -1,3 +1,20 @@
+2010-10-21 Thu  Jari Aalto  <jari.aalto@cante.net>
+
+	* tiny/tinydebian.el (tinydebian-bts-mail-ctrl-usertag):
+	Set default to user-mail-address in interactive prompt.
+	(tinydebian-bts-mail-ctrl-usertag): Position cursor after
+	'+' sign.
+
+2010-10-20 Wed  Jari Aalto  <jari.aalto@cante.net>
+
+	* tiny/tinydebian.el (tinydebian-bts-mail-ctrl-usertag):
+	Improve docstring.
+
+2010-10-19 Tue  Jari Aalto  <jari.aalto@cante.net>
+
+	* tiny/tinydebian.el (tinydebian-:bts-mail-type-it-nmu-message):
+	Adjust wording.
+
 2010-10-18 Mon  Jari Aalto  <jari.aalto@cante.net>
 
 	* tiny/tinydebian.el

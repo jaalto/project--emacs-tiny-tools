@@ -121,7 +121,7 @@
 
 ;;{{{ setup: libraries
 
-(defconst tinydebian-:version-time "2010.1018.0936"
+(defconst tinydebian-:version-time "2010.1021.2042"
   "Last edited time.")
 
 (require 'tinylibm)
@@ -253,7 +253,7 @@ See `tinydebian-buffer-url-bug'."
 
 (defcustom tinydebian-:bts-mail-type-it-nmu-message
   "This bug seems to be a candidate for NMU. I have some free time
-and I am offering to help fix it. Please let me know if this bug
+and I am offering help. Please let me know if this bug
 is already been worked on or if it's okay to NMU the package."
   "*Message to insert in `tinydebian-bts-mail-type-it-nmu'.
 See also `tinydebian-bts-mail-type-it-nmu-hook'."
@@ -5478,13 +5478,23 @@ thanks
 ;;; ----------------------------------------------------------------------
 ;;;
 (defun tinydebian-bts-mail-ctrl-usertag (bug &optional email tag-string)
-  "Compose BTS control message usertag to a BUG with TAG-STRING."
+  "Compose BTS control message usertag to a BUG with TAG-STRING.
+Message format:
+    user user@domain.tld
+    usertags <#bug> [+-] <tagname>
+    usertags ...
+
+References:
+    http://wiki.debian.org/bugs.debian.org/usertags"
   (interactive
    (list
     (tinydebian-bts-mail-ask-bug-number)
     (completing-read
      "Usertag user (email): "
-     tinydebian-:usertag-email-list)))
+     tinydebian-:usertag-email-list
+     nil
+     nil
+     user-mail-address)))
   (tinydebian-bts-mail-type-macro
    nil nil nil
    (format "Bug#%s change of usertag%s"
@@ -5501,7 +5511,8 @@ thanks
 		(format "user %s\n" email))
 	    bug))
    (when (re-search-backward "[+]" nil t)
-     (forward-char 2))))
+     (forward-char 1)
+     (skip-chars-forward " "))))
 
 ;;; ----------------------------------------------------------------------
 ;;;
