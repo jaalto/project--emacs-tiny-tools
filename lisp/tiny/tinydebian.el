@@ -122,7 +122,7 @@
 
 ;;{{{ setup: libraries
 
-(defconst tinydebian-:version-time "2010.1022.0730"
+(defconst tinydebian-:version-time "2010.1022.0753"
   "Last edited time.")
 
 (require 'tinylibm)
@@ -6061,7 +6061,7 @@ Optional PACAGE name and VERSION number can be supplied."
      (format "Bug#%s Close%s"
 	     bug
 	     (if bts
-		 (format " in BTS:%s" bts)
+		 (format " bts:%s" bts)
 	       ""))
      (insert
       (if (not (stringp package))
