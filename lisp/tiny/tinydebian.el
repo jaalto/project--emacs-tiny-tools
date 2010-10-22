@@ -122,7 +122,7 @@
 
 ;;{{{ setup: libraries
 
-(defconst tinydebian-:version-time "2010.1022.0644"
+(defconst tinydebian-:version-time "2010.1022.0730"
   "Last edited time.")
 
 (require 'tinylibm)
@@ -1413,6 +1413,13 @@ Activate on files whose path matches
 
 ;;; ----------------------------------------------------------------------
 ;;;
+(defsubst tinydebian-bts-type-debbugs-p (bts)
+  "Return non-nil if BTS type is debbugs."
+  (and (stringp bts)
+       (string-match "debian\\|emacs\\|gnu" bts)))
+
+;;; ----------------------------------------------------------------------
+;;;
 (defsubst tinydebian-sourceware-bts-url-compose (bug)
   "Return Gnome URL for BUG."
   (format "http://sourceware.org/bugzilla/show_bug.cgi?id=%s" bug))
@@ -1592,6 +1599,8 @@ The BTS-TYPE can be:
    (cond
     ((string= bts-type "emacs")
      (tinydebian-emacs-bts-email-compose address))
+    ((string= bts-type "gnu")
+     (tinydebian-gnu-bts-email-compose address))
     ((string= bts-type "coreutils")
      (tinydebian-gnu-bts-email-compose address))
     (t
@@ -3589,10 +3598,20 @@ Article buffers."
 Input notes:
   If PROJECT is \"ask\", then query project name from user.
   Otherwise the PROJECT is asked only for certain BTSs."
-  ;; FIXME: Launchpad, Emacs BTS
+  ;;
+  ;; (completing-read PROMPT COLLECTION &optional PREDICATE REQUIRE-MATCH
+  ;;  INITIAL-INPUT HIST DEF INHERIT-INPUT-METHOD)
+  ;;
+  (unless bts
+    (multiple-value-bind (guess-bts guess-bug)
+	(tinydebian-bug-bts-type-determine)
+      (or nbr
+	  (setq nbr guess-bug))
+      (setq bts guess-bts)))
+
   (setq bts (completing-read
-	     "Select BTS (no input = debian): "
-	     '(("debian" . 1)
+	     "Select BTS (no input = debian): " ;; prompt
+	     '(("debian" . 1)			;; collection
 	       ("launchpad" . 1)
 	       ("emacs" . 1)
 	       ("gnu" . 1)
@@ -3604,26 +3623,28 @@ Input notes:
 	       ("mysql" . 1)
 	       ("google" . 1)
 	       ("freshmeat" . 1))
-	     nil ; predicate
-	     t   ; require-match
-	     bts
-	     nil ; initial-input
-	     nil ; hist
-	     "debian" ; def
+	     nil				;; predicate
+	     t					;; require-match
+	     bts				;; initial-input
+	     nil				;; hist
+	     "debian"				;; def
 	     ))
   (if (string= bts "")
      (setq bts "debian"))
   (cond
-   ((or (string-match "google\\|freshmeat\\|debian" bts)
+   ((or (string-match "google\\|freshmeat\\|debian\\|emacs" bts)
 	(and (stringp project)
 	     (string-match "ask" project)))
     (setq project (read-string
-		   (format "[%s] Project or package name: "
-			   bts)))))
+		   (format "[%s] %s name: "
+			   bts
+			   (if (tinydebian-bts-type-debbugs-p bts)
+			       "Package"
+			     "Project"))))))
   (if (and (stringp project)
 	   (string= project ""))
       (setq project nil))
-  (setq nbr (read-string"Bug number: " nbr))
+  (setq nbr (tinydebian-bts-mail-ask-bug-number bts nbr))
   (when (or (not (stringp nbr))
 	    (not (string-match "[0-9]" nbr)))
     (error "TinyDebian: Error, no bug number given"))
@@ -5147,16 +5168,18 @@ An example: '   #12345   ' => 12345."
 
 ;;; ----------------------------------------------------------------------
 ;;;
-(defsubst tinydebian-bts-mail-ask-bug-number (&optional type)
-  "Ask bug number. Return as '(bug) suitable for interactive"
+(defsubst tinydebian-bts-mail-ask-bug-number (&optional type default)
+  "Ask bug number for optional Bts TYPE (string) with DEFAULT value.
+Return as '(bug) suitable for interactive"
   (tinydebian-bug-nbr-string
    (read-string
     (format "BTS %sbug number: "
 	    (if type
 		(concat type " ")
 	      ""))
-    (save-excursion
-      (tinydebian-bug-nbr-any)))))
+    (or default
+	(save-excursion
+	  (tinydebian-bug-nbr-any))))))
 
 ;;; ----------------------------------------------------------------------
 ;;;
@@ -6019,29 +6042,35 @@ Optional PACAGE name and VERSION number can be supplied."
      (let (;; (bug      (tinydebian-bts-mail-ask-bug-number))
 	   ;;  (package  (read-string "Package name [RET=ignore]: "))
 	   version)
-       (if (tinydebian-string-p project)
-	   (setq version (read-string "Version: "))
-	 (setq project nil))
+       (when (tinydebian-bts-type-debbugs-p bts)
+	 (if (tinydebian-string-p project)
+	     (setq version (read-string "Version: "))
+	   (setq project nil)))
      (list bug
 	   project
 	   (if (tinydebian-string-p version)
-	       version
-	     nil)))))
-  (let* ((email (tinydebian-bts-email-compose (format "%s-done" bug bts)))
-	 (pkg   project))
+	       version)
+	   bts))))
+  (let ((email (tinydebian-bts-email-compose
+		(format "%s-done" bug) bug bts))
+	 (pkg   package))
     (tinydebian-bts-mail-type-macro
      nil
      pkg
      email
-     (format "Bug#%s Close" bug)
+     (format "Bug#%s Close%s"
+	     bug
+	     (if bts
+		 (format " in BTS:%s" bts)
+	       ""))
      (insert
-      (if (not (stringp project))
+      (if (not (stringp package))
 	  ""
 	(format "\
-Project: %s
+Package: %s
 Version: %s
 "
-		project
+		package
 		(or version "")))
       "\nReason for close:\n"))))
 

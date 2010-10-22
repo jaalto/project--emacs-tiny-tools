@@ -2,6 +2,16 @@
 
 	* tiny/tinydebian.el (tinydebian-bts-mail-ctrl-bug-unsubscribe):
 	Correct subject text in email by adding (un) to (subscribe).
+	(tinydebian-bug-ask-bts-and-number): if PROJECT is "ask", query
+	user.
+	(tinydebian-bts-mail-ctrl-close): Add support for multiple BTSs,
+	e.g. Closing bug report in Emacs BTS.
+	(tinydebian-bts-type-debbugs-p): devel New.
+	(tinydebian-bts-mail-ask-bug-number): add parameter DEFAULT.
+	Update docstring.
+	(tinydebian-bts-email-compose): devel Add BTS gnu.
+	(tinydebian-bug-ask-bts-and-number): Call
+	`tinydebian-bug-bts-type-determine' to guess current BTS.
 
 2010-10-21 Thu  Jari Aalto  <jari.aalto@cante.net>
 
