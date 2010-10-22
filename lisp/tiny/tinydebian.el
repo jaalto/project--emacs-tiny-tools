@@ -121,7 +121,7 @@
 
 ;;{{{ setup: libraries
 
-(defconst tinydebian-:version-time "2010.1021.2042"
+(defconst tinydebian-:version-time "2010.1022.0547"
   "Last edited time.")
 
 (require 'tinylibm)
@@ -5987,7 +5987,7 @@ Default owner is the value of 'From:', that is `user-mail-address'."
        (format "%s-unsubscribe-%s"
 	       bug
 	       (replace-regexp-in-string "@" "=" email)))
-      (format "Bug#%s subscribe" bug)
+      (format "Bug#%s unsubscribe" bug)
     (let (point)
       (insert
        "# To use different address, change the \"To\" header\n"

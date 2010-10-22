@@ -1,3 +1,8 @@
+2010-10-22 Fri  Jari Aalto  <jari.aalto@cante.net>
+
+	* tiny/tinydebian.el (tinydebian-bts-mail-ctrl-bug-unsubscribe):
+	Correct subject text in email by adding (un) to (subscribe).
+
 2010-10-21 Thu  Jari Aalto  <jari.aalto@cante.net>
 
 	* tiny/tinydebian.el (tinydebian-bts-mail-ctrl-usertag):
