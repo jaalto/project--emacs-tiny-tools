@@ -56,7 +56,8 @@
 
 ;;  Overview of features
 ;;
-;;	Summary: Few Debian spefific utlitities and a Generic interface to many BTS's.
+;;	Summary: Few Debian spefific utlitities and a Generic interface
+;;      to many BTS's.
 ;;
 ;;      http://www.emacswiki.org/emacs/TinyDebian
 ;;
@@ -121,7 +122,7 @@
 
 ;;{{{ setup: libraries
 
-(defconst tinydebian-:version-time "2010.1022.0547"
+(defconst tinydebian-:version-time "2010.1022.0644"
   "Last edited time.")
 
 (require 'tinylibm)
@@ -3584,7 +3585,10 @@ Article buffers."
 ;;; ----------------------------------------------------------------------
 ;;;
 (defun tinydebian-bug-ask-bts-and-number (&optional bts nbr project)
-  "Ask BTS system and bug number. Return '(BTS NBR)."
+  "Ask BTS system and bug number. Return '(BTS NBR) PROJECT.
+Input notes:
+  If PROJECT is \"ask\", then query project name from user.
+  Otherwise the PROJECT is asked only for certain BTSs."
   ;; FIXME: Launchpad, Emacs BTS
   (setq bts (completing-read
 	     "Select BTS (no input = debian): "
@@ -3605,11 +3609,21 @@ Article buffers."
 	     bts
 	     nil ; initial-input
 	     nil ; hist
-	     "debian"))
+	     "debian" ; def
+	     ))
+  (if (string= bts "")
+     (setq bts "debian"))
   (cond
-   ((string= "google\\|freshmeat" bts)
-    (setq project (read-string "Project name: "))))
-  (setq nbr (read-string"bug number: " nbr))
+   ((or (string-match "google\\|freshmeat\\|debian" bts)
+	(and (stringp project)
+	     (string-match "ask" project)))
+    (setq project (read-string
+		   (format "[%s] Project or package name: "
+			   bts)))))
+  (if (and (stringp project)
+	   (string= project ""))
+      (setq project nil))
+  (setq nbr (read-string"Bug number: " nbr))
   (when (or (not (stringp nbr))
 	    (not (string-match "[0-9]" nbr)))
     (error "TinyDebian: Error, no bug number given"))
@@ -5996,36 +6010,38 @@ Default owner is the value of 'From:', that is `user-mail-address'."
 
 ;;; ----------------------------------------------------------------------
 ;;;
-(defun tinydebian-bts-mail-ctrl-close (bug &optional package version)
+(defun tinydebian-bts-mail-ctrl-close (bug &optional package version bts)
   "Compose BTS control message to close BUG.
 Optional PACAGE name and VERSION number can be supplied."
   (interactive
-   (let ((bug      (tinydebian-bts-mail-ask-bug-number))
-	 (package  (read-string "Package name [RET=ignore]: "))
-	 version)
-     (if (tinydebian-string-p package)
-	 (setq version (read-string "Version: "))
-       (setq package nil))
+   (multiple-value-bind (bts bug project)
+       (tinydebian-bug-ask-bts-and-number)
+     (let (;; (bug      (tinydebian-bts-mail-ask-bug-number))
+	   ;;  (package  (read-string "Package name [RET=ignore]: "))
+	   version)
+       (if (tinydebian-string-p project)
+	   (setq version (read-string "Version: "))
+	 (setq project nil))
      (list bug
-	   package
+	   project
 	   (if (tinydebian-string-p version)
 	       version
-	     nil))))
-  (let* ((email (tinydebian-bts-email-compose (format "%s-done" bug)))
-	 (pkg   package))
+	     nil)))))
+  (let* ((email (tinydebian-bts-email-compose (format "%s-done" bug bts)))
+	 (pkg   project))
     (tinydebian-bts-mail-type-macro
      nil
      pkg
      email
      (format "Bug#%s Close" bug)
      (insert
-      (if (not (stringp package))
+      (if (not (stringp project))
 	  ""
 	(format "\
-Package: %s
+Project: %s
 Version: %s
 "
-		package
+		project
 		(or version "")))
       "\nReason for close:\n"))))
 
