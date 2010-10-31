@@ -122,7 +122,7 @@
 
 ;;{{{ setup: libraries
 
-(defconst tinydebian-:version-time "2010.1031.1152"
+(defconst tinydebian-:version-time "2010.1031.1157"
   "Last edited time.")
 
 (require 'tinylibm)
@@ -5226,11 +5226,16 @@ thanks
 	      (setq package (field "package"))))
 	  (unless description
 	    (tinydebian-debian-bug-info-macro bug
-	      (setq description
-		    (replace-regexp-in-string
-		     "^.*-- *\\|O: *"
-		     ""
-		     (field "subject")))))
+	      (let ((str (field "subject")))
+		(setq description
+		      (replace-regexp-in-string
+		       "^.*-- *\\|O: *"
+		       ""
+		       str))
+		;; ITA: package -- Description
+		(when (string-match "wnpp" package)
+		  (if (string-match ": *\\([^ \t\r\n]+\\) *--" str)
+		      (setq package (match-string 1 str)))))))
 	  (let ((string
 		 (format "ITA: %s -- %s"
 			 (or package "")
