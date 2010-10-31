@@ -122,7 +122,7 @@
 
 ;;{{{ setup: libraries
 
-(defconst tinydebian-:version-time "2010.1022.0753"
+(defconst tinydebian-:version-time "2010.1031.1152"
   "Last edited time.")
 
 (require 'tinylibm)
@@ -132,7 +132,7 @@
 (autoload 'gnus-summary-display-article "gnus-sum")
 (autoload 'url-retrieve-synchronously   "url")
 (autoload 'mail-position-on-field       "sendmail")
-(autoload 'mail-fetch-field             "sendmail")
+(autoload 'mail-fetch-field             "mail-utils")
 (autoload 'regexp-opt                   "regexp-opt")
 (autoload 'url-retrieve-synchronously   "url")
 (autoload 'mm-url-decode-entities-string "mm-url")
@@ -514,14 +514,15 @@ fixed
 
 (defvar tinydebian-:removal-keyword-list
   '(
-    "FTBFS"
-    "rc-buggy"
-    "abandoned upstream"		; Upstream is there, but not developing anymore
+    "abandoned upstream"		; Upstream no longer developing it
     "buggy"
-    "no upstream"			; No upstream at all an more
+    "dead upstream"			; No upstream at all an more
+    "FTBFS"				; Fails to build from source
     "old"
     "orphaned (no maintainer)"
-    "rquested by upstream"		; Upstream has requested to remove the package
+    "other alternatives"
+    "rc-buggy"
+    "rquested by upstream"		; Upstream has requested removal
     "transitional pkg"
     "unmaintained"
     )
@@ -3949,18 +3950,25 @@ Optional bug checks BUG-TYPE@ address."
 ;;;
 (defun tinydebian-mail-header-set (header value)
   "Set HEADER to VALUE. if VALUE is nil, remove field."
-  (save-restriction
-    (mail-position-on-field header)
-    (mail-header-narrow-to-field)
-    (cond
-     ((stringp value)
-      (re-search-forward "^[^ \t\r\n]+: ?")
-      (delete-region (point) (point-max))
-      (insert value)
-      (if (not (string-match "\n\\'" value))
-	  (insert "\n")))
-     (t
-      (delete-region (point-min) (point-max))))))
+  (save-excursion
+    (save-restriction
+      (mail-position-on-field header)
+      (mail-header-narrow-to-field)
+      (cond
+       ((stringp value)
+	(re-search-forward "^[^ \t\r\n]+: ?")
+	(delete-region (point) (point-max))
+	(insert value)
+	(if (not (string-match "\n\\'" value))
+	    (insert "\n")))
+       (t
+	(delete-region (point-min) (point-max)))))))
+
+;;; ----------------------------------------------------------------------
+;;;
+(defsubst tinydebian-mail-header-subject-set (value)
+  "Set Subject header to VALUE."
+  (tinydebian-mail-header-set "Subject" value))
 
 ;;; ----------------------------------------------------------------------
 ;;;
@@ -5200,7 +5208,10 @@ Return as '(bug) suitable for interactive"
   "Send an ITA request."
   (interactive (list (tinydebian-bts-mail-ask-bug-number "ITA")))
   (tinydebian-bts-mail-type-macro
-      "ITA" nil nil nil
+      "ITA"
+      (not 'pkg)
+      (not 'email)
+      (not 'subject)
     (insert
      (format "\
 retitle %s %s
@@ -5208,12 +5219,28 @@ owner %s !
 thanks
 "
 	     bug
-	     (concat "ITA: "
-		     (if package
-			 (format "%s -- " package)
-		       "")
-		     (or description ""))
-	     bug))))
+	(let (fsub
+	      fpkg)
+	  (unless package
+	    (tinydebian-debian-bug-info-macro bug
+	      (setq package (field "package"))))
+	  (unless description
+	    (tinydebian-debian-bug-info-macro bug
+	      (setq description
+		    (replace-regexp-in-string
+		     "^.*-- *\\|O: *"
+		     ""
+		     (field "subject")))))
+	  (let ((string
+		 (format "ITA: %s -- %s"
+			 (or package "")
+			 (or description ""))))
+	    string))
+	bug))
+    (when (re-search-backward "ITA:" nil t)
+      (let ((string (buffer-substring (point) (line-end-position))))
+	(tinydebian-mail-header-subject-set string)))
+    (goto-char (point-max))))
 
 ;;; ----------------------------------------------------------------------
 ;;;

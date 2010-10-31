@@ -1,3 +1,11 @@
+2010-10-31 Sun  Jari Aalto  <jari.aalto@cante.net>
+
+	* tiny/tinydebian.el (tinydebian-mail-header-subject-set): New.
+	(tinydebian-bts-mail-type-ita): Retrieve information about
+	bug package and message subject. Write composed Subject and
+	control message content more intelligently.
+	(tinydebian-mail-header-set): Add `save-excursion'.
+
 2010-10-22 Fri  Jari Aalto  <jari.aalto@cante.net>
 
 	* tiny/tinydebian.el (tinydebian-bts-mail-ctrl-bug-unsubscribe):
