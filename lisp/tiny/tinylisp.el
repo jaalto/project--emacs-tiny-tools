@@ -1465,10 +1465,10 @@ P       List running processes.")
 /       Back to root menu
 q       Quit menu
 
-s       Try to loate file where symbol was defined. This relies on
+s       Try to locate file where symbol was defined. This relies on
         internal representation of symbols inside Emacs `load-history'.
 
-l       Load one Lisp library with completion into Emacs. (evaluate)
+l       Load one library with completion into Emacs. (evaluate)
 
 L       Load again libraries inside Emacs matching regexp. E.g. if you want to
         reload all of present gnus, supply regexp `gnus'

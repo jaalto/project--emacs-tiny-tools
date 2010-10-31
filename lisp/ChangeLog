@@ -1,5 +1,8 @@
 2010-10-31 Sun  Jari Aalto  <jari.aalto@cante.net>
 
+	* tiny/tinylisp.el (tinylisp-:menu-lisp-library): Fix typo
+	in docstring.
+
 	* tiny/tinydebian.el (tinydebian-mail-header-subject-set): New.
 	(tinydebian-bts-mail-type-ita): Retrieve information about
 	bug package and message subject. Write composed Subject and
