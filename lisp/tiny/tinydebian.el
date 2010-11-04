@@ -122,7 +122,7 @@
 
 ;;{{{ setup: libraries
 
-(defconst tinydebian-:version-time "2010.1031.1157"
+(defconst tinydebian-:version-time "2010.1104.2158"
   "Last edited time.")
 
 (require 'tinylibm)
@@ -6024,7 +6024,10 @@ Default owner is the value of 'From:', that is `user-mail-address'."
 ;;; ----------------------------------------------------------------------
 ;;;
 (defun tinydebian-bts-mail-ctrl-bug-subscribe (bug &optional email)
-  "Compose BTS control message a BUG for subscription."
+  "Compose BTS control message a BUG for subscription.
+
+Return:
+ email buffer"
   (interactive
    (list (tinydebian-bts-mail-ask-bug-number)
 	 (read-string "Subscribe email: " user-mail-address)))
@@ -6040,12 +6043,16 @@ Default owner is the value of 'From:', that is `user-mail-address'."
       (insert
        "# To use different address, change the \"To\" header\n"
        "# nnn-subscribe-localpart=example.com@bugs.debian.org\n")
-      (insert "thanks\n"))))
+      (insert "thanks\n")
+      (current-buffer))))
 
 ;;; ----------------------------------------------------------------------
 ;;;
 (defun tinydebian-bts-mail-ctrl-bug-unsubscribe (bug &optional email)
-  "Compose BTS control message a BUG for unsubscription."
+  "Compose BTS control message a BUG for unsubscription.
+
+Return:
+ email buffer"
   (interactive
    (list (tinydebian-bts-mail-ask-bug-number)
 	 (read-string "Unsubscribe email: " user-mail-address)))
@@ -6061,7 +6068,8 @@ Default owner is the value of 'From:', that is `user-mail-address'."
       (insert
        "# To use different address, change the \"To\" header\n"
        "# nnn-unsubscribe-localpart=example.com@bugs.debian.org\n")
-      (insert "thanks\n"))))
+      (insert "thanks\n")
+      (current-buffer))))
 
 ;;; ----------------------------------------------------------------------
 ;;;

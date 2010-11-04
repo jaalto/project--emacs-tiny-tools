@@ -1,3 +1,9 @@
+2010-11-04 Thu  Jari Aalto  <jari.aalto@cante.net>
+
+	* tiny/tinydebian.el (tinydebian-bts-mail-ctrl-bug-subscribe): Add
+	return value.
+	(tinydebian-bts-mail-ctrl-bug-subscribe): Add return value.
+
 2010-10-31 Sun  Jari Aalto  <jari.aalto@cante.net>
 
 	* tiny/tinylisp.el (tinylisp-:menu-lisp-library): Fix typo
