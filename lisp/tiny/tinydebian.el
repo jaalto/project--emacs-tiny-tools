@@ -122,7 +122,7 @@
 
 ;;{{{ setup: libraries
 
-(defconst tinydebian-:version-time "2010.1104.2158"
+(defconst tinydebian-:version-time "2010.1104.2230"
   "Last edited time.")
 
 (require 'tinylibm)
@@ -1552,6 +1552,18 @@ String is anything that is attached to
   "Test if running on Debian OS."
   (or (string-match "by Debian" (emacs-version))
       (file-exists-p "/usr/bin/dpkg")))
+
+;;; ----------------------------------------------------------------------
+;;;
+(defsubst tinydebian-mail-send-and-exit ()
+  "In email buffer, invoke send action."
+  (cond
+   ((eq major-mode 'mail-mode)
+    (mail-send-and-exit))
+   ((eq major-mode 'message-mode)
+    (message-send-and-exit))
+   (t
+    (error "TinyDebian: Unknown mail mode. Can't send."))))
 
 ;;; ----------------------------------------------------------------------
 ;;;
@@ -6023,14 +6035,26 @@ Default owner is the value of 'From:', that is `user-mail-address'."
 
 ;;; ----------------------------------------------------------------------
 ;;;
-(defun tinydebian-bts-mail-ctrl-bug-subscribe (bug &optional email)
-  "Compose BTS control message a BUG for subscription.
+(defun tinydebian-bts-mail-ctrl-bug-subscribe (bug &optional email send)
+  "Compose BTS control message using BUG for subscription.
 
+Input:
+    BUG		Bug number
+    EMAIL	Optional: email address, defaults to `user-mail-address'
+    SEND	Optional: if non-nil, send message. In interactive call
+		this is `current-prefix-arg' and it causes bypassing question
+		about EMAIL too.
 Return:
  email buffer"
   (interactive
-   (list (tinydebian-bts-mail-ask-bug-number)
-	 (read-string "Subscribe email: " user-mail-address)))
+   (list
+    (tinydebian-bts-mail-ask-bug-number)
+    (if current-prefix-arg
+	user-mail-address
+      (read-string "Unsubscribe email: " user-mail-address))
+    current-prefix-arg))
+  (if send
+      (window-configuration-to-register ?\*)) ;FIXME, a hack
   (tinydebian-bts-mail-type-macro
       (not 'type)
       (not 'pkg)
@@ -6044,18 +6068,36 @@ Return:
        "# To use different address, change the \"To\" header\n"
        "# nnn-subscribe-localpart=example.com@bugs.debian.org\n")
       (insert "thanks\n")
-      (current-buffer))))
+      (cond
+       (send
+	(tinydebian-mail-send-and-exit)
+	(jump-to-register ?\*))		;FIXME, a hack
+       (t
+	(current-buffer))))))
 
 ;;; ----------------------------------------------------------------------
 ;;;
-(defun tinydebian-bts-mail-ctrl-bug-unsubscribe (bug &optional email)
-  "Compose BTS control message a BUG for unsubscription.
+(defun tinydebian-bts-mail-ctrl-bug-unsubscribe (bug &optional email send)
+  "Compose BTS control message using BUG for unsubscription.
+
+Input:
+    BUG		Bug number
+    EMAIL	Optional: email address, defaults to `user-mail-address'
+    SEND	Optional: if non-nil, send message. In interactive call
+		this is `current-prefix-arg' and it causes bypassing question
+		about EMAIL too.
 
 Return:
- email buffer"
+    buffer, only if SEND is non-nil."
   (interactive
-   (list (tinydebian-bts-mail-ask-bug-number)
-	 (read-string "Unsubscribe email: " user-mail-address)))
+   (list
+    (tinydebian-bts-mail-ask-bug-number)
+    (if current-prefix-arg
+	user-mail-address
+      (read-string "Unsubscribe email: " user-mail-address))
+    current-prefix-arg))
+  (if send
+      (window-configuration-to-register ?\*)) ;FIXME, a hack
   (tinydebian-bts-mail-type-macro
       (not 'type)
       (not 'pkg)
@@ -6069,7 +6111,12 @@ Return:
        "# To use different address, change the \"To\" header\n"
        "# nnn-unsubscribe-localpart=example.com@bugs.debian.org\n")
       (insert "thanks\n")
-      (current-buffer))))
+      (cond
+       (send
+	(tinydebian-mail-send-and-exit)
+	(jump-to-register ?\*))		;FIXME, a hack
+       (t
+	(current-buffer))))))
 
 ;;; ----------------------------------------------------------------------
 ;;;
