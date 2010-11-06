@@ -1,3 +1,8 @@
+2010-11-06 Sat  Jari Aalto  <jari.aalto@cante.net>
+
+	* tiny/tinydebian.el (tinydebian-bts-mail-ctrl-retitle): Fetch bug
+	title from BTS.
+
 2010-11-04 Fri  Jari Aalto  <jari.aalto@cante.net>
 
 	* tiny/tinydebian.el (tinydebian-mail-send-and-exit): New.

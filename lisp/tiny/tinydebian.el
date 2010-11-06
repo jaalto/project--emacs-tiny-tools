@@ -122,7 +122,7 @@
 
 ;;{{{ setup: libraries
 
-(defconst tinydebian-:version-time "2010.1104.2230"
+(defconst tinydebian-:version-time "2010.1106.1347"
   "Last edited time.")
 
 (require 'tinylibm)
@@ -5843,9 +5843,14 @@ See http://wiki.debian.org/ftpmaster_Removals"
 (defun tinydebian-bts-mail-ctrl-retitle (bug title)
   "Compose BTS control message to a BUG and change TITLE."
   (interactive
-   (list (tinydebian-bts-mail-ask-bug-number)
-	 (read-string "New title: "
-		      (tinydebian-bts-mail-title-read))))
+   (let ((title (tinydebian-bts-mail-title-read))
+	 (bug   (tinydebian-bts-mail-ask-bug-number)))
+     (unless (string-match bug title)
+       (tinydebian-debian-bug-info-macro bug
+	 (setq title (field "subject"))))
+     (list
+      bug
+      (read-string "New title: " title))))
   (tinydebian-bts-mail-type-macro
    nil nil nil
    (format "Bug#%s retitle" bug)
