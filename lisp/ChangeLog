@@ -1,3 +1,13 @@
+2010-11-15 Mon  Jari Aalto  <jari.aalto@cante.net>
+
+	* tiny/tinydebian.el (tinydebian-bts-save-window-excursion-if-send): New.
+	(tinydebian-bts-mail-ctrl-bug-package-unsubscribe): New user command.
+	(tinydebian-bts-mail-ctrl-bug-package-subscribe): New user command.
+	(tinydebian-bts-mail-ctrl-bug-subscribe): Remove hack and use
+	'tinydebian-bts-save-window-excursion-if-send'.
+	(tinydebian-bts-mail-ctrl-bug-unsubscribe): Remove hack and use
+	'tinydebian-bts-save-window-excursion-if-send'.
+
 2010-11-06 Sat  Jari Aalto  <jari.aalto@cante.net>
 
 	* tiny/tinydebian.el (tinydebian-bts-mail-ctrl-retitle): Fetch bug

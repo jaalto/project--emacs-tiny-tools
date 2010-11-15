@@ -122,7 +122,7 @@
 
 ;;{{{ setup: libraries
 
-(defconst tinydebian-:version-time "2010.1106.1347"
+(defconst tinydebian-:version-time "2010.1115.0750"
   "Last edited time.")
 
 (require 'tinylibm)
@@ -1069,6 +1069,8 @@ Mode description:
      ["Send BTS Ctrl affects"      tinydebian-bts-mail-ctrl-affects  t]
      ["Send BTS bug subscribe"     tinydebian-bts-mail-ctrl-bug-subscribe t]
      ["Send BTS bug unsubscribe"   tinydebian-bts-mail-ctrl-bug-unsubscribe t]
+     ["Send BTS bug pkg subscribe" tinydebian-bts-mail-ctrl-bug-package-subscribe t]
+     ["Send BTS bug pkg unsubscribe" tinydebian-bts-mail-ctrl-bug-package-unsubscribe t]
      ["Send BTS Ctrl clone"        tinydebian-bts-mail-ctrl-clone    t]
      ["Send BTS Ctrl close"        tinydebian-bts-mail-ctrl-close    t]
      ["Send BTS Ctrl severity"     tinydebian-bts-mail-ctrl-severity t]
@@ -1190,6 +1192,8 @@ Mode description:
      (define-key map  "ca"  'tinydebian-bts-mail-ctrl-affects)
      (define-key map  "cbs"  'tinydebian-bts-mail-ctrl-bug-subscribe)
      (define-key map  "cbu"  'tinydebian-bts-mail-ctrl-bug-unsubscribe)
+     (define-key map  "cbp"  'tinydebian-bts-mail-ctrl-bug-package-subscribe)
+     (define-key map  "cbP"  'tinydebian-bts-mail-ctrl-bug-package-unsubscribe)
 
      (define-key map  "cc"  'tinydebian-bts-mail-ctrl-close)
      (define-key map  "cC"  'tinydebian-bts-mail-ctrl-clone)
@@ -5094,6 +5098,19 @@ Mode description:
 
 ;;; ----------------------------------------------------------------------
 ;;;
+(put 'tinydebian-bts-save-window-excursion-if-send 'edebug-form-spec '(body))
+(put 'tinydebian-bts-save-window-excursion-if-send 'lisp-indent-function 1)
+(defmacro tinydebian-bts-save-window-excursion-if-send (send-it &rest body)
+  "Run BODY withing `save-excusion' if variable `send-it' is non-nil."
+  `(cond
+    (,send-it
+     (save-window-excursion
+       ,@body))
+    (t
+     ,@body)))
+
+;;; ----------------------------------------------------------------------
+;;;
 (put 'tinydebian-bts-mail-compose-macro 'edebug-form-spec '(body))
 (put 'tinydebian-bts-mail-compose-macro 'lisp-indent-function 5)
 (defmacro tinydebian-bts-mail-compose-macro
@@ -6040,6 +6057,82 @@ Default owner is the value of 'From:', that is `user-mail-address'."
 
 ;;; ----------------------------------------------------------------------
 ;;;
+(defun tinydebian-bts-mail-ctrl-bug-package-unsubscribe
+  (package-name &optional email send)
+  "Compose PTS control message using PACKAGE for unsubscription.
+
+Cancel receiving bug report notifications for PACKAGE.
+
+Input:
+    PACKAHE	Package name
+    EMAIL	Optional: email address, defaults to `user-mail-address'
+    SEND	Optional: if non-nil, send message. In interactive call
+		this is `current-prefix-arg' and it causes bypassing question
+		about EMAIL too.
+Return:
+   email buffer if SEND is nil."
+  (interactive
+   (list
+    (read-string "Unsubscribe to bugs in package: ") ;; FIXME smart default value
+    (if current-prefix-arg
+	user-mail-address
+      (read-string "Unsubscribe email: " user-mail-address))
+    current-prefix-arg))
+  (tinydebian-bts-save-window-excursion-if-send send
+    (tinydebian-bts-mail-type-macro
+	(not 'type)
+	(not 'pkg)
+	"pts@qa.debian.org"
+	(format "%s: unsubscribe to all Debian bugs" package-name)
+      (let (point)
+	(insert
+	 (format "unsubscribe %s %s"
+		 package-name
+		 (or email user-mail-address)))
+	(unless send
+	  (current-buffer))))))
+
+;;; ----------------------------------------------------------------------
+;;;
+(defun tinydebian-bts-mail-ctrl-bug-package-subscribe
+  (package-name &optional email send)
+  "Compose PTS control message using PACKAGE for subscription.
+
+Subscribing to a package enables receiving all bug reports. This is
+useful for NMUers that upload fixes and want to follow if NMU causes
+further reports.
+
+Input:
+    PACKAHE	Package name
+    EMAIL	Optional: email address, defaults to `user-mail-address'
+    SEND	Optional: if non-nil, send message. In interactive call
+		this is `current-prefix-arg' and it causes bypassing question
+		about EMAIL too.
+Return:
+   email buffer if SEND is nil."
+  (interactive
+   (list
+    (read-string "Subscribe to bugs in package: ") ;; FIXME smart default value
+    (if current-prefix-arg
+	user-mail-address
+      (read-string "Subscribe email: " user-mail-address))
+    current-prefix-arg))
+  (tinydebian-bts-save-window-excursion-if-send send
+    (tinydebian-bts-mail-type-macro
+	(not 'type)
+	(not 'pkg)
+	"pts@qa.debian.org"
+	(format "%s: subscribe to all Debian bugs" package-name)
+      (let (point)
+	(insert
+	 (format "subscribe %s %s"
+		 package-name
+		 (or email user-mail-address)))
+	(unless send
+	  (current-buffer))))))
+
+;;; ----------------------------------------------------------------------
+;;;
 (defun tinydebian-bts-mail-ctrl-bug-subscribe (bug &optional email send)
   "Compose BTS control message using BUG for subscription.
 
@@ -6050,7 +6143,7 @@ Input:
 		this is `current-prefix-arg' and it causes bypassing question
 		about EMAIL too.
 Return:
- email buffer"
+   email buffer if SEND is nil."
   (interactive
    (list
     (tinydebian-bts-mail-ask-bug-number)
@@ -6058,27 +6151,22 @@ Return:
 	user-mail-address
       (read-string "Unsubscribe email: " user-mail-address))
     current-prefix-arg))
-  (if send
-      (window-configuration-to-register ?\*)) ;FIXME, a hack
-  (tinydebian-bts-mail-type-macro
-      (not 'type)
-      (not 'pkg)
-      (tinydebian-bts-email-compose
-       (format "%s-subscribe-%s"
-	       bug
-	       (replace-regexp-in-string "@" "=" email)))
-      (format "Bug#%s subscribe" bug)
-    (let (point)
-      (insert
-       "# To use different address, change the \"To\" header\n"
-       "# nnn-subscribe-localpart=example.com@bugs.debian.org\n")
-      (insert "thanks\n")
-      (cond
-       (send
-	(tinydebian-mail-send-and-exit)
-	(jump-to-register ?\*))		;FIXME, a hack
-       (t
-	(current-buffer))))))
+  (tinydebian-bts-save-window-excursion-if-send send
+    (tinydebian-bts-mail-type-macro
+	(not 'type)
+	(not 'pkg)
+	(tinydebian-bts-email-compose
+	 (format "%s-subscribe-%s"
+		 bug
+		 (replace-regexp-in-string "@" "=" email)))
+	(format "Bug#%s subscribe" bug)
+      (let (point)
+	(insert
+	 "# To use different address, change the \"To\" header\n"
+	 "# nnn-subscribe-localpart=example.com@bugs.debian.org\n")
+	(insert "thanks\n")
+	(unless send
+	  (current-buffer))))))
 
 ;;; ----------------------------------------------------------------------
 ;;;
@@ -6093,7 +6181,7 @@ Input:
 		about EMAIL too.
 
 Return:
-    buffer, only if SEND is non-nil."
+   email buffer if SEND is nil."
   (interactive
    (list
     (tinydebian-bts-mail-ask-bug-number)
@@ -6101,27 +6189,22 @@ Return:
 	user-mail-address
       (read-string "Unsubscribe email: " user-mail-address))
     current-prefix-arg))
-  (if send
-      (window-configuration-to-register ?\*)) ;FIXME, a hack
-  (tinydebian-bts-mail-type-macro
-      (not 'type)
-      (not 'pkg)
-      (tinydebian-bts-email-compose
-       (format "%s-unsubscribe-%s"
-	       bug
-	       (replace-regexp-in-string "@" "=" email)))
-      (format "Bug#%s unsubscribe" bug)
-    (let (point)
-      (insert
-       "# To use different address, change the \"To\" header\n"
-       "# nnn-unsubscribe-localpart=example.com@bugs.debian.org\n")
-      (insert "thanks\n")
-      (cond
-       (send
-	(tinydebian-mail-send-and-exit)
-	(jump-to-register ?\*))		;FIXME, a hack
-       (t
-	(current-buffer))))))
+  (tinydebian-bts-save-window-excursion-if-send send
+    (tinydebian-bts-mail-type-macro
+	(not 'type)
+	(not 'pkg)
+	(tinydebian-bts-email-compose
+	 (format "%s-unsubscribe-%s"
+		 bug
+		 (replace-regexp-in-string "@" "=" email)))
+	(format "Bug#%s unsubscribe" bug)
+      (let (point)
+	(insert
+	 "# To use different address, change the \"To\" header\n"
+	 "# nnn-unsubscribe-localpart=example.com@bugs.debian.org\n")
+	(insert "thanks\n")
+	(unless send
+	  (current-buffer))))))
 
 ;;; ----------------------------------------------------------------------
 ;;;
