@@ -84,8 +84,9 @@
 ;;
 ;;      BTS utilities in Gnus (and M-x mail, message-mode)
 ;;
-;;      o   The "debbugs" mail based BTS's: full support to manipulatte bug messages for
-;;          Debian, Emacs and GNU bug tracking systems.
+;;      o   The "debbugs" mail based BTS's: full support to manipulatte
+;;          bug messages for Debian, Emacs and GNU bug tracking
+;;          systems.
 ;;      o   Other BTS: limited support for visting bugs at Sourceforge,
 ;;          Launchpad, Freshmeat, Kde, Gnome, MySQL, Perl CPAN, Redhat Sourcewre,
 ;;	    Mercurial version control, Trac. You can manipulate those bugs via their
@@ -98,10 +99,11 @@
 ;;
 ;;  History
 ;;
-;;      This package is called 'tinydebian', because it was first developed
-;;      to help administering Debian GNU/Linux. Support for the Debian BTS was added
-;;      afterwards. The Debian mail based BTS is called "debbugs". For more information,
-;;      see http://www.debian.org/Bugs/server-control
+;;      This package is called 'tinydebian', because it was first
+;;      developed to help administering Debian GNU/Linux. Support for
+;;      the Debian BTS was added afterwards. The Debian mail based BTS
+;;      is called "debbugs". For more information, see
+;;      http://www.debian.org/Bugs/server-control
 ;;
 ;;      Later GNU Emacs development moved also to "debbugs" and support for
 ;;      Emacs BTS was added. In 2010 the GNU coreutils also started using
@@ -122,7 +124,7 @@
 
 ;;{{{ setup: libraries
 
-(defconst tinydebian-:version-time "2010.1115.0750"
+(defconst tinydebian-:version-time "2010.1118.1242"
   "Last edited time.")
 
 (require 'tinylibm)
@@ -5731,7 +5733,10 @@ thanks
 ;;; ----------------------------------------------------------------------
 ;;; see "reportbug ftp.debian.org"
 (defun tinydebian-bts-mail-ctrl-remove-package-ask ()
-  "Interactive part of `tinydebian-bts-mail-ctrl-remove-package'."
+  "Interactive part of `tinydebian-bts-mail-ctrl-remove-package'.
+For removal request types, see
+  http://ftp-master.debian.org/removals.txt
+"
   (let ((line (tinydebian-current-line-string)) ;; Gnus summary
 	package
 	suite)
@@ -5748,7 +5753,8 @@ thanks
 		  '(("RM" . 1)
 		    ("ROM" . 2)
 		    ("ROSRM" . 3)
-		    ("RoQA" . 4))
+		    ("RoQA" . 4)
+		    ("ANAIS" . 5))
 		  nil
 		  t
 		  nil))
