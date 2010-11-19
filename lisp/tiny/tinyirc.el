@@ -462,7 +462,7 @@ package load and when `tinyirc-pastebot-mode' is called."
   :group 'TinyIrc)
 
 (defcustom tinyirc-:pastebot-config-directory
-  (let* ((dir "~/.pbotutil"))
+  (let ((dir "~/.pbotutil"))
     (unless (file-directory-p dir)
       (message
        (concat
@@ -674,7 +674,7 @@ Match 1 contains line numer, 2 contains rest of the line."
 ;;;
 (defun tinyird-line-number-add-region (beg end)
   "Add line numbers to region BEG END. Point is moved."
-  (let* ((i 1))
+  (let ((i 1))
     (goto-char beg)
     (beginning-of-line)
     (catch 'stop
@@ -780,31 +780,31 @@ References:
 ;;;
 (defun tinyirc-pastebot-message-format (service user msg url)
   "Format message using SERVICE USER MSG URL with timestamp."
-  (let* ((time      (tinyirc-time-string))
-         (eol       (if (string-match "\n$" msg)
-                        ""
-                      "\n")))
+  (let ((time (tinyirc-time-string))
+	(eol  (if (string-match "\n$" msg)
+		  ""
+		"\n")))
     (format "%s %s %s %s %s%s" time service user url msg eol)))
 
 ;;; ----------------------------------------------------------------------
 ;;;
 (defun tinyirc-pastebot-program-1 ()
   "Return location of `tinyirc-:pastebot-program'."
-  (let*  ((prg       (tinyirc-pastebot-program-name))
+  (let*  ((prg        (tinyirc-pastebot-program-name))
           (saved-abs  (get 'tinyirc-pastebot-program 'absolute))
           (saved-orig (get 'tinyirc-pastebot-program 'original))
-          (path      (cond
-                      ((and saved-abs
-                            (file-exists-p saved-abs)
-                            ;;  Program has not changed since
-                            (string= prg saved-orig))
-                       ;;  `executable-find' is heavy; use cached file.
-                       saved-abs)
-                      ((and prg
-                            (file-exists-p prg))
-                       (expand-file-name prg))
-                      (t
-                       (executable-find prg)))))
+          (path       (cond
+		       ((and saved-abs
+			     (file-exists-p saved-abs)
+			     ;;  Program has not changed since
+			     (string= prg saved-orig))
+			;;  `executable-find' is heavy; use cached file.
+			saved-abs)
+		       ((and prg
+			     (file-exists-p prg))
+			(expand-file-name prg))
+		       (t
+			(executable-find prg)))))
     (put 'tinyirc-pastebot-program 'original prg)
     (put 'tinyirc-pastebot-program 'absolute path)
     path))
@@ -854,8 +854,8 @@ References:
 ;;;
 (defun tinyirc-pastebot-service-list-from-file ()
   "Read `tinyirc-:pastebot-config-directory' and parse `servers' file."
-  (let* ((file (tinyirc-pastebot-service-file-name))
-         list)
+  (let ((file (tinyirc-pastebot-service-file-name))
+	list)
     (with-temp-buffer
       (insert-file-contents-literally file)
       (goto-char (point-min))
@@ -966,8 +966,8 @@ return value is program's error message."
   "Send FILE to SERVICE using optional MSG and USER.
 USER defaults to variable `user-login-name', environment variable USER
 or string `anon'."
-  (let* ((function tinyirc-:pastebot-message-format-function)
-         url)
+  (let ((function tinyirc-:pastebot-message-format-function)
+	url)
     (or user
         (setq user (or (and (boundp 'user-login-name) ;; Emacs only variable
                             (symbol-value 'user-login-name))
@@ -987,9 +987,9 @@ or string `anon'."
 ;;;
 (defun tinyirc-pastebot-receive-message (url msg)
   "Write URL's MSG to `tinyirc-:pastebot-buffer-name-received'."
-  (let* ((time   (tinyirc-time-string))
-         (buffer (get-buffer-create
-                  tinyirc-:pastebot-buffer-name-received)))
+  (let ((time   (tinyirc-time-string))
+	(buffer (get-buffer-create
+		 tinyirc-:pastebot-buffer-name-received)))
     ;;  Make sure there is final newline
     (unless (string-match "\n$" msg)
       (setq msg (concat msg "\n")))
@@ -1049,7 +1049,7 @@ Point is at the beginning of line."
 ;;;
 (defun tinyirc-pastebot-url-at-point ()
   "Return HTTP url at point if any."
-  (let* ((word (tinyirc-word-at-point)))
+  (let ((word (tinyirc-word-at-point)))
     (when (and word
                (string-match "http://" word))
       word)))
@@ -1123,7 +1123,7 @@ arbitrary user supplied URL.
 In buffer `tinyirc-:pastebot-buffer-name-received' this function
 automatically asks what URL to receive."
   (interactive
-   (let* (url)
+   (let (url)
      (cond
       ((string= (buffer-name)
                 tinyirc-:pastebot-buffer-name-sent)
@@ -1163,9 +1163,9 @@ automatically asks what URL to receive."
         (tinyirc-pastebot-message-region)
       (if (not (and beg end))
           (message "TinyIrc:  Cannot find message's region.")
-        (let* ((number-p (save-excursion
-                           (goto-char beg)
-                           (tinyirc-line-number-p))))
+        (let ((number-p (save-excursion
+			  (goto-char beg)
+			  (tinyirc-line-number-p))))
           (save-excursion
             (if number-p
                 (tinyird-line-number-delete-region beg end)
@@ -1373,7 +1373,7 @@ References:
   `tinyirc-:pastebot-program'
   `tinyirc-:pastebot-program-url'"
   (interactive)
-  (let* ((config-default-content tinyirc-:pastebot-config-default-content))
+  (let ((config-default-content tinyirc-:pastebot-config-default-content))
     (let* ( ;; (win32  (file-directory-p "c:/"))
            ;;  (cygwin (string-match "cygwin" "emacs-version"))
            (dir    (tinyirc-path tinyirc-:pastebot-config-directory))
@@ -1452,12 +1452,11 @@ manual page for details.
 References:
   `tinyirc-:pastebot-send-file'."
   (interactive
-   (let* ( ;;  Make assoc list
-          (list (mapcar (function
-                         (lambda (x)
-                           (cons x 1)))
-                        (tinyirc-pastebot-service-list)))
-          (file tinyirc-:pastebot-send-file))
+   (let ((list (mapcar (function ;;  Make assoc list
+			(lambda (x)
+			  (cons x 1)))
+		       (tinyirc-pastebot-service-list)))
+	 (file tinyirc-:pastebot-send-file))
      (tinyirc-pastebot-program-name)	;signal error if no program
      (unless list
        (error (concat "Tinyirc: Cannot get completions."
