@@ -498,8 +498,8 @@ Ignore big mailboxes."
 (defun tinymailbox-font-lock ()
   "Add/remove font lock support if `font-lock-mode' exists."
   (interactive)
-  (let* ((sym 'font-lock-keywords)
-         orig)
+  (let ((sym 'font-lock-keywords)
+	orig)
     (when (and (boundp sym)
                (ti::colors-supported-p))
       (cond
@@ -541,9 +541,9 @@ Ignore big mailboxes."
 (put 'tinymailbox-message-macro 'edebug-form-spec '(body))
 (defmacro tinymailbox-message-macro (&rest body)
   "Do BODY on message. You can refer to `beg' and `end' for message region."
-  `(let* ((opoint  (point))
-          beg
-          end)
+  `(let ((opoint  (point))
+	 beg
+	 end)
      ;; Just to make byteCompiler happy
      (if (null opoint)  (setq opoint nil))
      (if beg            (setq beg t))
@@ -566,8 +566,8 @@ Ignore big mailboxes."
 (put 'tinymailbox-header-macro 'lisp-indent-function 0)
 (defmacro tinymailbox-header-macro (&rest body)
   "Do BODY on message. You can refer to `beg' and `end' for message region."
-  `(let* (beg
-          end)
+  `(let (beg
+	 end)
      ;; Just to make byteCompiler happy
      (if beg
          (setq beg t))
@@ -605,10 +605,10 @@ Ignore big mailboxes."
 ;;;
 (defun tinymailbox-overlay (act &optional beg end)
   "If ACT is 'hide, hide overlay, otherwise highlight BEG END."
-  (let* ((ov
-          (if (boundp 'mouse-drag-overlay) ;Emacs, use this by default
-              'mouse-drag-overlay
-            'primary-selection-extent)))
+  (let ((ov
+	 (if (boundp 'mouse-drag-overlay) ;Emacs, use this by default
+	     'mouse-drag-overlay
+	   'primary-selection-extent)))
     (cond
      ((eq act 'hide)
       (ti::compat-overlay-move ov 1 1)
@@ -718,12 +718,12 @@ Ignore big mailboxes."
 (eval-and-compile
   (defun tinymailbox-fmacro-move-1 (func doc move-func re msg &rest body)
     "Use `tinymailbox-fmacro-move with FUNC DOC MOVE-FUNC RE MSG and BODY."
-    (let* ((sym (intern (symbol-name `,func))))
+    (let ((sym (intern (symbol-name `,func))))
       `(defun ,sym (&optional arg)
          ,doc
          (interactive "P")
-         (let* ((Opoint  (point))
-                stat)
+         (let ((Opoint  (point))
+	       stat)
            (if (eq ,move-func 're-search-backward)
                (beginning-of-line)
              (end-of-line))
@@ -782,8 +782,8 @@ Created function arguments: (&optional arg)"
 (defun tinymailbox-backward-body ()
   "Go to previous message body."
   (interactive)
-  (let* ((opoint (point))
-         stat)
+  (let ((opoint (point))
+	stat)
     ;;  We must move to message beginning first.
     (tinymailbox-message-move-beginning)
     (forward-line -1)
@@ -820,8 +820,8 @@ Created function arguments: (&optional arg)"
 (defun tinymailbox-begin (&optional backward)
   "Move to next message begin. Optionally BACKWARD."
   (interactive "P")
-  (let* ((re tinymailbox:-header-begin-regexp)
-         case-fold-search)
+  (let ((re tinymailbox:-header-begin-regexp)
+	case-fold-search)
     (cond
      (backward
       (if (re-search-backward re nil t)
@@ -968,19 +968,19 @@ Try Subject: or From:"
 References:
   `mail-mode-hook'"
   (interactive)
-  (let* ((buffer (current-buffer))
-         from
-         from-email
-         to-dest
-         to
-         to-list
-	 reply-to
-         cc
-         cc-list
-         references
-         subject
-         start
-         body)
+  (let ((buffer (current-buffer))
+	from
+	from-email
+	to-dest
+	to
+	to-list
+	reply-to
+	cc
+	cc-list
+	references
+	subject
+	start
+	body)
     ;;  We must "require", because `mail-yank-prefix' is not otherwise
     ;;  defined.
     (if (not (boundp 'mail-yank-prefix))
