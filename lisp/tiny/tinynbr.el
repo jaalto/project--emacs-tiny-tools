@@ -9,7 +9,6 @@
 ;; Author:          Jari Aalto
 ;; Maintainer:      Jari Aalto
 ;;
-;; To get information on this program, call M-x tinynbr-version.
 ;; Look at the code with folding.el.
 
 ;; This program is free software; you can redistribute it and/or modify it
@@ -89,17 +88,6 @@
   "*Hook run when file has been loaded."
   :type  'hook
   :group 'TinyNbr)
-
-;;;###autoload (autoload 'tinynbr-version "tinynbr" "Display commentary." t)
-
-(eval-and-compile
-  (ti::macrof-version-bug-report
-   "tinynbr.el"
-   "tinynbr"
-   tinynbr-:version-id
-   "$Id: tinynbr.el,v 2.40 2007/05/01 17:20:51 jaalto Exp $"
-   '(tinynbr-:version-id
-     tinynbr-:load-hook)))
 
 (defun tinynbr-read-number-at-point (&optional reverse base)
   "Read base 1= or 16 number at point."
