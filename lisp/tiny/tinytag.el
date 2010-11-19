@@ -9,7 +9,6 @@
 ;; Author:          Jari Aalto
 ;; Maintainer:      Jari Aalto
 ;;
-;; To get information on this program, call M-x tinytag-version.
 ;; Look at the code with folding.el.
 
 ;; This program is free software; you can redistribute it and/or modify it
@@ -83,9 +82,8 @@
 ;;
 ;;      M-x tinytag-submit-bug-report
 ;;
-;;  Pleace, send any other programming language database that you may use,
-;;  even an different C prototypes in different platform. Let's share the
-;;  information with others!
+;;  You can send any other programming language database that you may
+;;  use, even an different C prototypes in different platform.
 ;;
 ;;  C/C++ database help
 ;;
@@ -609,39 +607,10 @@ Should accept one ARG, which is list of matched lines from databases."
   :group 'TinyTag)
 
 ;;}}}
-;;{{{ version
+;;{{{ code: install
 
 ;;;### (autoload 'tinytab-debug-toggle "tinytag"  t t)
-
 (eval-and-compile (ti::macrof-debug-standard "tinytag" "-:"))
-
-(eval-and-compile
-  (ti::macrof-version-bug-report
-   "tinytag.el"
-   "tinytag"
-   tinytag-:version-id
-   "$Id: tinytag.el,v 2.53 2007/05/01 17:21:00 jaalto Exp $"
-   '(tinytag-:version-id
-     tinytag-:debug
-     tinytag-:load-hook
-     tinytag-:try-hook
-     tinytag-:set-database-hook
-     tinytag-:last-word-lookup
-     tinytag-:noerror
-     tinytag-:post-command-hook-counter
-     tinytag-:post-command-hook-wakeup
-     tinytag-:example-db-map-c++
-     tinytag-:example-db-re-c++
-     tinytag-:database-dir
-     tinytag-:database-map
-     tinytag-:regexp-to-databases
-     tinytag-:display-function
-     post-command-idle-hook
-     post-command-hook)
-   '(tinytag-:debug-buffer)))
-
-;;}}}
-;;{{{ code: install
 
 ;;; ----------------------------------------------------------------------
 ;;;
