@@ -73,6 +73,9 @@
 
 (require 'tinylibb)                     ;Backward compatible functions
 
+(defconst tinylibm-version-time "2010.1119.2324"
+  "Latest version number.")
+
 ;;{{{ function tests
 
 ;;; ----------------------------------------------------------------------
@@ -199,7 +202,6 @@ Return:
               (concat
                msg
                "Tinylibm.el: tinylib-ad.el load reason: 1\n")))
-
     (if (and (fboundp 'define-key-after) ;; Emacs function
              (not
               (string-match
@@ -210,7 +212,6 @@ Return:
          (concat
           msg
           "Tinylibm.el: tinylib-ad.el load reason: define-key-after\n")))
-
     (if (and
          (not
           (string-match "noerr" (or (ti::function-args-p 'require) ""))))
@@ -218,7 +219,6 @@ Return:
               (concat
                msg
                "Tinylibm.el: tinylib-ad.el load reason: require\n")))
-
     (if (and
          (ti::win32-p)
          ;;  It is unlikely that these are not in path, so this should not
@@ -233,7 +233,6 @@ Return:
          (concat
           msg
           "Tinylibm.el: tinylib-ad.el load reason: executable-find\n")))
-
     (when (and (fboundp 'read-char-exclusive)
                (not (string-match
                      "prompt"
@@ -243,11 +242,9 @@ Return:
        (concat
         msg
         "Tinylibm.el: tinylib-ad.el load reason: read-char-exclusive")))
-
     (when (or (assoc "-debug-init" command-switch-alist)
               (assoc "--debug-init" command-switch-alist))
       (message msg))
-
     (when t ;; Enaled now.
       ;; 2000-01-05  If compiled this file in Win32 XEmacs 21.2.32
       ;; All the problems started. Make sure this is NOT compiled.
@@ -309,35 +306,6 @@ In your programs, like:
      ;; ... code
      (my-package-debug \"here\" var1 win1ptr buffer \"\\n\" )
      ;; ... code)")
-
-;;}}}
-
-;;{{{ setup: version
-
-(defconst tinylibm-version
-  (substring "$Revision: 2.91 $" 11 16)
-  "Latest version number.")
-
-(defconst tinylibm-version-id
-  "$Id: tinylibm.el,v 2.91 2007/05/07 10:50:07 jaalto Exp $"
-  "Latest modification time and version number.")
-
-;;; ----------------------------------------------------------------------
-;;;
-(defun tinylibm-version (&optional arg)
-  "Show version information. ARG will instruct to print message to echo area."
-  (interactive "P")
-  (ti::package-version-info "tinylibm.el" arg))
-
-;;; ----------------------------------------------------------------------
-;;;
-(defun tinylibm-submit-bug-report ()
-  "Submit bug report."
-  (interactive)
-  (ti::package-submit-bug-report
-   "tinylibm.el"
-   tinylibm-version-id
-   '(tinylibm-version-id)))
 
 ;;}}}
 ;;{{{ code: small FORMS
@@ -586,12 +554,6 @@ Example:
   (goto-char (point-max)))
 
 ;;; ----------------------------------------------------------------------
-;;;
-(defmacro-maybe int-to-float (nbr)
-  "Convert integer NBR to float."
-  `(read (concat (number-to-string ,nbr) ".0")))
-
-;;; ----------------------------------------------------------------------
 ;;; see also:  (dotimes (var 5) ..
 ;;;
 (put 'ti::dotimes 'lisp-indent-function 3)
@@ -632,179 +594,6 @@ Warning:
   `(let* ((func ,func-sym))
      (when (fboundp ,func-sym)
        (apply func ,@args nil))))
-;;; Old
-;;;   (apply (symbol-function (, func-sym)) (,@ args) nil)
-
-;;; ----------------------------------------------------------------------
-;;; Emacs distribution, sun-fns.el -- Jeff Peck
-;;;
-(defun-maybe logtest (x y)
-  "Tinylibm: True if any bits set in X are also set in Y.
-Just like the Common Lisp function of the same name."
-  (not (zerop (logand x y))))
-
-;;; ----------------------------------------------------------------------
-;;;
-(defun-maybe bin-string-to-int (8bit-string)
-  "Convert 8BIT-STRING  string to integer."
-  (let* ((list  '(128 64 32 16 8 4 2 1))
-         (i   0)
-         (int 0))
-    (while (< i 8)
-      (if (not (string= "0" (substring 8bit-string i (1+ i))))
-          (setq int (+ int (nth i list) )))
-      (incf  i))
-    int))
-
-;;; ----------------------------------------------------------------------
-;;;
-(defun-maybe int-to-bin-string (n &optional length)
-  "Convert integer N to bit string (LENGTH, default 8)."
-  (let* ((i    0)
-         (len  (or length 8))
-         (s    (make-string len ?0)))
-    (while (< i len)
-      (if (not (zerop (logand n (ash 1 i))))
-          (aset s (- len (1+ i)) ?1))
-      (setq i (1+ i)))
-    s))
-
-;;; ----------------------------------------------------------------------
-;;;
-(defun-maybe int-to-hex-string (n &optional separator pad)
-  "Convert integer N to hex string. SEPARATOR between hunks is \"\".
-PAD says to padd hex string with leading zeroes."
-  (or separator
-      (setq separator ""))
-  (mapconcat
-   (function (lambda (x)
-               (setq x (format "%X" (logand x 255)))
-               (if (= 1 (length x))
-                   (concat "0" x) x)))
-   (list (ash n -24)
-         (ash n -16)
-         (ash n -8)
-         n)
-   separator))
-
-;;; ----------------------------------------------------------------------
-;;;
-(defun-maybe int-to-oct-string (n &optional separator)
-  "Convert integer N into Octal. SEPARATOR between hunks is \"\"."
-  (or separator
-      (setq separator ""))
-  (mapconcat
-   (function (lambda (x)
-               (setq x (format "%o" (logand x 511)))
-               (if (= 1 (length x)) (concat "00" x)
-                 (if (= 2 (length x)) (concat "0" x) x))))
-   (list (ash n -27) (ash n -18) (ash n -9) n)
-   separator))
-
-;;; ----------------------------------------------------------------------
-;;;
-(defun radix (str base)
-  "Convert STR according to BASE."
-  (let ((chars "0123456789abcdefghijklmnopqrstuvwxyz")
-        (case-fold-search t)
-        (n 0)
-        i)
-    (mapcar '(lambda (c)
-               (setq i (string-match (make-string 1 c) chars))
-               (if (>= (or i 65536) base)
-                   (error "%c illegal in base %d" c base))
-               (setq n (+ (* n base) i)))
-            (append str nil))
-    n))
-
-;;; ----------------------------------------------------------------------
-;;;
-(defun-maybe bin-to-int (str)
-  "Convert STR into binary."
-  (radix str 2))
-
-;;; ----------------------------------------------------------------------
-;;;
-(defun-maybe oct-to-int (str)
-  "Convert STR into octal."
-  (radix str 8))
-
-;;; ----------------------------------------------------------------------
-;;;
-(defun hex-to-int (str)
-  "Convert STR into hex."
-  (if (string-match "\\`0x" str)
-      (setq str (substring str 2)))
-  (radix str 16))
-
-;;; ----------------------------------------------------------------------
-;;;
-(defun-maybe int-to-net (float)
-  "Decode packed FLOAT 32 bit IP addresses."
-  (format "%d.%d.%d.%d"
-          (truncate (% float 256))
-          (truncate (% (/ float 256.0) 256))
-          (truncate (% (/ float (* 256.0 256.0)) 256))
-          (truncate (% (/ float (* 256.0 256.0 256.0)) 256))))
-
-;;; ----------------------------------------------------------------------
-;;;
-(defun-maybe rmac (string)
-  "Decode STRING x-mac-creator and x-mac-type numbers."
-  (if (numberp string)
-      (setq string (format "%X" string)))
-  (let ((i 0)
-        (r ""))
-    (while (< i (length string))
-      (setq r (concat
-               r
-               (make-string
-                1
-                ;;  EWas call to 'rhex'
-                (hex-to-int (concat (make-string 1 (aref string i))
-                                    (make-string 1 (aref string (1+ i)))))))
-            i (+ i 2)))
-    r))
-
-;;; ----------------------------------------------------------------------
-;;;
-(defun-maybe ctime (time)
-  "Print a time_t TIME."
-  (if (and (stringp time) (string-match "\\`[0-9]+\\'" time))
-      (setq time (string-to-number (concat time ".0"))))
-  (let* ((top (floor (/ time (ash 1 16))))
-         ;; (bot (floor (mod time (1- (ash 1 16)))))
-         (bot (floor (- time (* (ash 1 16) (float top))))))
-    (current-time-string (cons top bot))))
-
-;;; ----------------------------------------------------------------------
-;;;
-(defsubst rand0 (n)
-  "Random number in [0 .. N]."
-  (cond
-   ((<= n 0)
-    0)
-   (t
-    (abs (% (random) n)))))
-
-;;; ----------------------------------------------------------------------
-;;;
-(defsubst-maybe rand1 (n)
-  "Random number [1 .. N]."
-  (1+ (rand0 n)))
-
-;;; ----------------------------------------------------------------------
-;;;
-(defun-maybe randij (i j)
-  "Random number [I .. J]."
-  (cond
-   ((< i j) (+ i (rand0 (1+ (- j i)))))
-   ((= i j) i)
-   ((> i j) (+ j (rand0 (1+ (- i j)))))
-   (t
-    (error "randij wierdness %s %s"
-           (ti::string-value i)
-           (ti::string-value j)))))
 
 ;;; ----------------------------------------------------------------------
 ;;;
