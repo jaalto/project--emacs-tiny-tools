@@ -36,7 +36,7 @@
 ;; emacs startup file.
 ;;
 ;;      ;; Rebind BACKSPACE and DEL-related keys
-;;      (setq tinyeat-:load-hook '(tinyeat-install))
+;;      (setq tinyeat--load-hook '(tinyeat-install))
 ;;      (require 'tinyeat)
 ;;      (global-set-key "\M-z"   'tinyeat-kill-buffer-lines-main)
 ;;
@@ -233,7 +233,7 @@
 (require 'tinylibm)
 (eval-when-compile (ti::package-use-dynamic-compilation))
 
-(ti::package-defgroup-tiny TinyEat tinyeat-: extension
+(ti::package-defgroup-tiny TinyEat tinyeat-- extension
   "Eat blocks of text forward, backward.
 Overview of features
 
@@ -242,17 +242,17 @@ Overview of features
             next statement , next comment ... whatever is appropriate
         o   Can also eat only 'inside' words: WordsThatAreLikeThis")
 
-(defcustom tinyeat-:load-hook nil
+(defcustom tinyeat--load-hook nil
   "*Hook that is run when package is loaded."
   :type  'hook
   :group 'TinyEat)
 
-(defcustom tinyeat-:verbose-flag t
+(defcustom tinyeat--verbose-flag t
   "*Non-nil means allow informational messages to be displayed."
   :type  'boolean
   :group 'TinyEat)
 
-(defcustom tinyeat-:non-word-chars
+(defcustom tinyeat--non-word-chars
   "][=_~+!@#$%&*:;'\"`,.<>(){}$<>?/|\\\\\n \t-"
   "*Characters that _stop_ eating word.
 Character ][ be in this order and in the beginning of variable,
@@ -260,7 +260,7 @@ because this string is converted into regexp later."
   :type  '(string :tag "Charset")
   :group 'TinyEat)
 
-(defcustom tinyeat-:eat-full-word-charset  "^][ \t\n(){};'\","
+(defcustom tinyeat--eat-full-word-charset  "^][ \t\n(){};'\","
   "*Character set to use when determining word boundary.
 Normally word is terminated by whitespace or newlines."
   :type  '(string :tag "Charset")
@@ -272,7 +272,7 @@ Normally word is terminated by whitespace or newlines."
 ;;;###autoload (autoload 'tinyeat-debug-toggle "tinyeat" "" t)
 ;;;###autoload (autoload 'tinyeat-debug-show   "tinyeat" "" t)
 
-(eval-and-compile (ti::macrof-debug-standard "tinyeat" "-:"))
+(eval-and-compile (ti::macrof-debug-standard "tinyeat" "--"))
 
 ;;; ----------------------------------------------------------------------
 ;;;
@@ -348,10 +348,10 @@ Normally word is terminated by whitespace or newlines."
 ;;;
 (put 'tinyeat-verbose-macro 'lisp-indent-function 0)
 (defmacro tinyeat-verbose-macro (&rest body)
-  "Run BODY if tinyeat-:verbose-flag' is set.
+  "Run BODY if tinyeat--verbose-flag' is set.
 Minibuffer is excluded."
   `(when (and (not (ti::buffer-minibuffer-p))
-              tinyeat-:verbose-flag)
+              tinyeat--verbose-flag)
      ,@body))
 
 ;;; ----------------------------------------------------------------------
@@ -446,10 +446,10 @@ Minibuffer is excluded."
 (defun tinyeat-delete-whole-word-1-main  (&optional charset)
   "Delete one word at point. Optional CHARSET is for `skip-chars-backward'.
 References:
-  `tinyeat-:eat-full-word-charset'"
+  `tinyeat--eat-full-word-charset'"
   (interactive)
   (or charset
-      (setq charset tinyeat-:eat-full-word-charset))
+      (setq charset tinyeat--eat-full-word-charset))
   (cond
    ((or (looking-at "[ \t\r\n][ \t\r\n]")
         (and (not (bolp))
@@ -475,7 +475,7 @@ References:
 - If on top of word, delete whole word.
 
 References:
-  `tinyeat-:eat-full-word-charset'"
+  `tinyeat--eat-full-word-charset'"
   (interactive "p")
   (tinyeat-repeat-macro (or count 1)
                         (tinyeat-delete-whole-word-1-main)))
@@ -624,7 +624,7 @@ if BACK is non-nil the deletion is headed backward."
 (defun tinyeat-word-move-point (&optional back)
   "Move to suitable word kill point. Mixed case words are special.
 Optionally BACK.
-See variable `tinyeat-:non-word-chars' how to delimit word parts.
+See variable `tinyeat--non-word-chars' how to delimit word parts.
 
 * = cursor position
 
@@ -636,7 +636,7 @@ THISmixedWord   --> THISmixedWord
          (charf       (if back
 			  'skip-chars-backward
 			'skip-chars-forward))
-         (non-word    tinyeat-:non-word-chars)
+         (non-word    tinyeat--non-word-chars)
          (nonw-re     (concat "[" non-word "]+"))
          (ch          (ti::buffer-read-char back))
          p
@@ -774,7 +774,7 @@ C.  when it is NON-NIL and BACK t
 
 References:
 
-  `tinyeat-:non-word-chars'"
+  `tinyeat--non-word-chars'"
   (let ((fid        "tinyeat-eat ")
         (p          (point))
         (syntaxf    (if back 'skip-syntax-backward 'skip-syntax-forward))
@@ -874,6 +874,6 @@ References:
 ;;}}}
 
 (provide   'tinyeat)
-(run-hooks 'tinyeat-:load-hook)
+(run-hooks 'tinyeat--load-hook)
 
 ;;; tinyeat.el ends here
