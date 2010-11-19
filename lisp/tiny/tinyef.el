@@ -480,9 +480,8 @@ If current buffer is the *mini-buffer* return name of previous-window."
   (interactive)
   (with-output-to-temp-buffer "*Completions*"
     (display-completion-list (symbol-value minibuffer-history-variable))
-    (save-excursion
-      (set-buffer standard-output)
-      (setq completion-base-size 0))))
+    (with-current-buffer standard-output
+      (setq completion-base-position 0))))
 
 ;;; ----------------------------------------------------------------------
 ;;;
@@ -530,13 +529,13 @@ If current buffer is the *mini-buffer* return name of previous-window."
 ;;;
 (defun tinyef-step (&optional back)
   "Position cursor, optionally BACK."
-  (let ((set    tinyef--step-delete-chars)
-	(rset   (concat "^" set))      ;reverse set
-	(func   (if back
-		    'skip-chars-backward
-		  'skip-chars-forward))
-	(point  (point))
-	limit)
+  (let* ((set    tinyef--step-delete-chars)
+	 (rset   (concat "^" set))      ;reverse set
+	 (func   (if back
+		     'skip-chars-backward
+		   'skip-chars-forward))
+	 (point  (point))
+	 limit)
     (if back
         (setq limit (line-beginning-position))
       (setq limit (line-end-position)))
@@ -560,7 +559,7 @@ turn off function `tinyef-mode' and insert character as is.
 Input:
 
   CHARACTER  The character is read from input argument or it it is nil, then
-             `last-command-char' is used.
+             `last-command-event' is used.
   ACTION     If nil `tinyef--mode-key-table' is consulted for character.
              If non-nil, then should ve valid action symbol.
 
@@ -568,18 +567,18 @@ Current keymap:
 
 \\{tinyef--mode-map}"
   (interactive)
-  (let ((char          (or character
-			   last-command-char)) ;char pressed
-	(act           (or action
-			   (tinyef-action char)))
-	(re            '(".*@"  ".*:"))
-	(e-list        '(?/  ?@ ?\" ?\'))
-	(pnow          (point))
-	(point         (point))
-	str
-	eolp
-	bolp
-	hits)
+  (let* ((char          (or character
+			    last-command-event)) ;char pressed
+	 (act           (or action
+			    (tinyef-action char)))
+	 (re            '(".*@"  ".*:"))
+	 (e-list        '(?/  ?@ ?\" ?\'))
+	 (pnow          (point))
+	 (point         (point))
+	 str
+	 eolp
+	 bolp
+	 hits)
     (if (or (null act)                  ;no action recognized
             (and (interactive-p)
                  (not (eq (selected-window) (minibuffer-window)))
