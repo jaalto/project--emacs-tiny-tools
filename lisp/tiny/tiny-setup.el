@@ -748,7 +748,7 @@ Symptoms for tinypath.el usage:
 
     (require 'cl)
 
-    (setq tinypath-:load-path-root '(\"~/your-lisp-dir-location\"))
+    (setq tinypath--load-path-root '(\"~/your-lisp-dir-location\"))
     (pushnew \"/ABSOLUTE/INSTALLATION-PATH/HERE\"
              load-path
              :test 'string=)
