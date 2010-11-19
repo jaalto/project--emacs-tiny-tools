@@ -1572,12 +1572,9 @@ References:
         (setq table (make-syntax-table))
         ;;   We want everything to look like word
         (ti::dotimes counter 0 255 (modify-syntax-entry counter "w" table))
-        (mapcar
-         (function
-          (lambda (x)
-            (modify-syntax-entry (string-to-char (car x)) "(" table)
-            (modify-syntax-entry (string-to-char (cdr x)) ")" table)))
-         pairs)
+        (dolist (x pairs)
+	  (modify-syntax-entry (string-to-char (car x)) "(" table)
+	  (modify-syntax-entry (string-to-char (cdr x)) ")" table))
         (put 'tinymy--vi-type-paren-match-list 'syntax-table table))
       ;;  In lisp; only () are matched.
       (when (not (string-match "lisp" (symbol-name major-mode)))
