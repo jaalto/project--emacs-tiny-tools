@@ -479,7 +479,7 @@ delayed loading for some packages that you use most of the time.
 
    ;; Delayed loading of these packages, when Emacs goes idle.
 
-   (setq tinyload-:load-list
+   (setq tinyload--load-list
      '(\"tinyadvice\"           ;; NOTE: for Emacs only.
        \"tinymy\"
        \"tinymail\"
