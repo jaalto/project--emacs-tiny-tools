@@ -36,7 +36,7 @@
 ;; ~/.emacs startup file. Move all your `require' commands into
 ;; the load list.
 ;;
-;;     (setq tinyload-:load-list '("package" "package" ...))
+;;     (setq tinyload--load-list '("package" "package" ...))
 ;;     (require 'tinyload)
 ;;
 ;; TinyLoad can't be autoloaded, because it installs an idle-timer
@@ -85,13 +85,13 @@
 ;;      o   Delayed (Lazy) loading of packages (at some later time); after
 ;;          15 seconds of idle time, remaining files are loaded one by one.
 ;;      o   You no longer have to use `require' in your .emacs, instead,
-;;          you define `tinyload-:load-list' where you put the requests.
+;;          you define `tinyload--load-list' where you put the requests.
 ;;      o   Your .emacs starts faster when the extra `require' and
 ;;          `load' commands be moved to load list.
 ;;
 ;;      If you're a first time Emacs user or if you consider lisp
 ;;      difficult, have a look at simpler setup than what is described
-;;      below from C-h v `tinyload-:load-file'. The idea is that you
+;;      below from C-h v `tinyload--load-file'. The idea is that you
 ;;      tell the configuration file which lists packages that you
 ;;      want to load in format:
 ;;
@@ -168,7 +168,7 @@
 ;;      then contact the author: there must be an unresolved deadlock and
 ;;      a bug in the program.
 ;;
-;;      When the `tinyload-:load-list' has been handled, the loader process
+;;      When the `tinyload--load-list' has been handled, the loader process
 ;;      terminates itself. The following message tells that the process has
 ;;      ceased to exist. If you want to start reading the list again,
 ;;      call `M-x' `tinyload-install'.
@@ -253,7 +253,7 @@
 ;;          ;;  ........................................... lazy loading ....
 ;;          ;;  We can afford to load these later
 ;;
-;;          (setq tinyload-:load-list
+;;          (setq tinyload--load-list
 ;;            '(("emacs-rc-font")
 ;;              ("emacs-rc-hooks")
 ;;              ("emacs-rc-ding")
@@ -268,7 +268,7 @@
 ;;      When Emacs load this startup, only the most important files are
 ;;      loaded saving the start time considerably. After `tinyload' finds
 ;;      that your Emacs is idle it starts loading all the rest of the
-;;      packages you defined in the `tinyload-:load-list'. For more complex
+;;      packages you defined in the `tinyload--load-list'. For more complex
 ;;      setup, refer to end of tinyload.el source file, where you can
 ;;      find a complete example setup.
 ;;
@@ -341,7 +341,7 @@
 ;;          (autoload ....
 ;;
 ;;      And the missing `require' entry has been moved to
-;;      `tinyload-:load-list'.
+;;      `tinyload--load-list'.
 ;;
 ;;  Use separate rc file for load definitions
 ;;
@@ -352,7 +352,7 @@
 ;;          ;;
 ;;          ;; If you compile this file, `defconst' shuts up Byte Compiler
 ;;
-;;          (defconst tinyload-:load-list
+;;          (defconst tinyload--load-list
 ;;            '(...
 ;;              ...))
 ;;          (require 'tinyload)
@@ -375,15 +375,15 @@
 ;;
 ;;  About implementation
 ;;
-;;      When `tinyload-:load-list' is set, the value of the variable is
+;;      When `tinyload--load-list' is set, the value of the variable is
 ;;      saved under property `original'. When the idle timer runs, the list
 ;;      is read from the beginning and each package at a time is loaded.
 ;;      The last unloaded package position is saved under property 'pos.
 ;;
 ;;      The situation looks like this:
 ;;
-;;          tinyload-:load-list 'original   --> (list) original contents
-;;          tinyload-:load-list 'pos        --> (nth nbr) next package to load.
+;;          tinyload--load-list 'original   --> (list) original contents
+;;          tinyload--load-list 'pos        --> (nth nbr) next package to load.
 ;;
 ;;      If your do something in your emacs while the list is being looped,
 ;;      or when the loader function is about to be called, that interrupts
@@ -416,7 +416,7 @@
 ;;      loader process exits, it will check all Emacs functions for autoload
 ;;      definitions and load those packages as well.
 ;;
-;;          (add-hook 'tinyload-:process-uninstall-hook
+;;          (add-hook 'tinyload--process-uninstall-hook
 ;;                    'tinyload-autoload-function-load)
 ;;
 ;;  Restart and cancel
@@ -461,11 +461,11 @@
 
 (eval-when-compile (ti::package-use-dynamic-compilation))
 
-(ti::package-defgroup-tiny TinyLoad tinyload-: extensions
+(ti::package-defgroup-tiny TinyLoad tinyload-- extensions
   "Overview of features
         o  Delayed loading of packages (in some later time)
         o  You no longer have to use `require' in your .emacs, instead,
-           you can put the package to `tinyload-:load-list' and have it loaded
+           you can put the package to `tinyload--load-list' and have it loaded
            when Emacs is idle.
         o  Your .emacs starts faster when the `require' commands are out.")
 
@@ -475,17 +475,17 @@
 
 ;;; ......................................................... &v-hooks ...
 
-(defcustom tinyload-:load-hook nil
+(defcustom tinyload--load-hook nil
   "*Hook that is run when package is loaded."
   :type  'hook
   :group 'TinyLoad)
 
-(defcustom tinyload-:process-install-hook nil
+(defcustom tinyload--process-install-hook nil
   "*Hook run when `tinyload-install' is called."
   :type  'hook
   :group 'TinyLoad)
 
-(defcustom tinyload-:process-uninstall-hook nil
+(defcustom tinyload--process-uninstall-hook nil
   "*Hook run when `tinyload-cancel' is called."
   :type  'hook
   :group 'TinyLoad)
@@ -496,7 +496,7 @@
 ;;; ........................................................ &v-public ...
 ;;; User configurable
 
-(defcustom tinyload-:idle-time 20
+(defcustom tinyload--idle-time 20
   "*When Emacs is this many seconds idle, start load process.
 Warning: Do not set this value below 4 seconds, because the previous
 call must complete before the timer process is called again. Some
@@ -504,14 +504,14 @@ big packages may take a while to load."
   :type  'integer
   :group 'TinyLoad)
 
-(defcustom tinyload-:init-time 2
+(defcustom tinyload--init-time 2
   "*Time in seconds to wait before activating loader for the first time.
 This is the initial time it takes before the loader process starts for the
 first time. The default is 2 seconds."
   :type  'integer
   :group 'TinyLoad)
 
-(defcustom tinyload-:wait-next-load 0.5
+(defcustom tinyload--wait-next-load 0.5
   "*Time in seconds in load process to see if there is user activity.
 This is the time loader process waits before it tries to load next package;
 a time gap where any activity cancels the process from continuing
@@ -520,13 +520,13 @@ Suggested value range: 0.2 - 1.5 seconds."
   :type   'integer
   :group  'TinyLoad)
 
-(defcustom tinyload-:load-file nil
+(defcustom tinyload--load-file nil
   "*File to liast packages to load.
-If you set this variable, you can't use `tinyload-:load-list', because
-`tinyload-:load-list' is initalized from this file's content.
+If you set this variable, you can't use `tinyload--load-list', because
+`tinyload--load-list' is initalized from this file's content.
 
 This variable is menat for simpler load control than what
-could be done in lisp level with `tinyload-:load-list'.
+could be done in lisp level with `tinyload--load-list'.
 
 The format of the FILE is simple:
 
@@ -557,9 +557,9 @@ The recognized configuration tokens, that must form a single word, are:
   :type   'file
   :group  'TinyLoad)
 
-(defcustom tinyload-:load-list nil
+(defcustom tinyload--load-list nil
   "*List of packages to load when emacs has been idle.
-The idle time in seconds to load packages is defined in `tinyload-:idle-time'.
+The idle time in seconds to load packages is defined in `tinyload--idle-time'.
 
 References:
 
@@ -596,17 +596,17 @@ Note:
   Nil entries in this table are skipped. This allows you to construct
   dynamic load list entry like this:
 
-      (setq tinyload-:load-list
+      (setq tinyload--load-list
         (list
          (if (and (ti::emacs-p)
                   (= 28 emacs-minor-version))
              (list \"~/rc/emacs-rc-19.28\" 'rc-28))))
 
-  The `tinyload-:load-list' would be '(nil) in non-19.28 Emacs
+  The `tinyload--load-list' would be '(nil) in non-19.28 Emacs
 
 Example:
 
-  (setq tinyload-:load-list
+  (setq tinyload--load-list
     '(\"ffap.el\"
       \"tinylibmail.el\"))"
   :type  '(repeat sexp)
@@ -618,10 +618,10 @@ Example:
 ;;; ....................................................... &v-private ...
 ;;; Private variables
 
-(defvar tinyload-:timer-elt nil
+(defvar tinyload--timer-elt nil
   "The timer process if used in current Emacs.")
 
-(defvar tinyload-:process-busy-p nil
+(defvar tinyload--process-busy-p nil
   "When load process is loading something this flag is non-nil.
 This prevents invoking multiple load processes.")
 
@@ -641,43 +641,43 @@ the list pointer to 0."
   (tinyload-config-file-load-default)
   ;;  Kill old process(es)
   (ti::compat-timer-cancel-function 'tinyload-loader-process)
-  (setq tinyload-:timer-elt nil)
+  (setq tinyload--timer-elt nil)
   (cond
    ((or remove
-        (null tinyload-:load-list))
+        (null tinyload--load-list))
     (let ((str (concat
 		"TinyLoad: Loader process terminated."
-		(if (null tinyload-:load-list)
-		    " `tinyload-:load-list' is empty."
+		(if (null tinyload--load-list)
+		    " `tinyload--load-list' is empty."
 		  ""))))
       (tinyload-message str))
     (tinyload-debug "Tinyload: Install, stopped. HOOK"
-                    tinyload-:process-uninstall-hook)
-    (run-hooks 'tinyload-:process-uninstall-hook))
+                    tinyload--process-uninstall-hook)
+    (run-hooks 'tinyload--process-uninstall-hook))
    (t
-    (put 'tinyload-:load-list 'pos 0)
-    (put 'tinyload-:load-list 'fatal-list nil)
+    (put 'tinyload--load-list 'pos 0)
+    (put 'tinyload--load-list 'fatal-list nil)
     ;;  Put startup info into *Messages*" buffer
     (tinyload-message
      (format
       (concat "TinyLoad: Started with %d items in load list."
               " Init %d and interval %d seconds.")
-      (length tinyload-:load-list)
-      tinyload-:init-time
-      tinyload-:idle-time))
+      (length tinyload--load-list)
+      tinyload--init-time
+      tinyload--idle-time))
     (tinyload-debug "Tinyload: Install, started. HOOK"
-                    tinyload-:process-install-hook)
+                    tinyload--process-install-hook)
     (display-time)
-    (setq tinyload-:timer-elt
+    (setq tinyload--timer-elt
           (run-at-time
-           (format "%d sec" tinyload-:init-time)
-           tinyload-:idle-time
+           (format "%d sec" tinyload--init-time)
+           tinyload--idle-time
            'tinyload-loader-process))
     (tinyload-debug "tinyload-install: `run-at-time' timer elt"
-                    tinyload-:timer-elt)
-    (run-hooks 'tinyload-:process-install-hook)))
-  (setq tinyload-:process-busy-p nil)
-  tinyload-:timer-elt)
+                    tinyload--timer-elt)
+    (run-hooks 'tinyload--process-install-hook)))
+  (setq tinyload--process-busy-p nil)
+  tinyload--timer-elt)
 
 ;;; ----------------------------------------------------------------------
 ;;;
@@ -736,7 +736,7 @@ To start loader process, call \\[tinyload-install]."
 ;;;
 (defun tinyload-feature-p (pkg &optional feature)
   "Check if feature has been loaded.
-See PKG and FEATURE from `tinyload-:load-list'"
+See PKG and FEATURE from `tinyload--load-list'"
   ;;  User didn't give us separate feature name, construct
   ;;  one from package name ~/elisp/test.el --> "test"
   (let* ((fid "tinyload-feature-p")
@@ -792,11 +792,11 @@ See PKG and FEATURE from `tinyload-:load-list'"
 (defun tinyload-status ()
   "Print status. How many packages are left in load list."
   (interactive)
-  (if (null tinyload-:timer-elt)
+  (if (null tinyload--timer-elt)
       (message "TinyLoad process is not alive any more.")
     (message "Position %s/%s in load list."
-             (get 'tinyload-:load-list 'pos)
-             (length tinyload-:load-list))))
+             (get 'tinyload--load-list 'pos)
+             (length tinyload--load-list))))
 
 ;;}}}
 ;;{{{ Load list manipulation support functions
@@ -804,14 +804,14 @@ See PKG and FEATURE from `tinyload-:load-list'"
 ;;; ----------------------------------------------------------------------
 ;;;
 (defun tinyload-load-list-search-elt (search position)
-  "SEARCH item in `tinyload-:load-list' by checking POSITION.
+  "SEARCH item in `tinyload--load-list' by checking POSITION.
 
 package feature noerr nomsg before after
 0       1       2     3     4      5
 
 The SEARCH item is checked with `equal' function."
   (let (picked)
-    (dolist (elt tinyload-:load-list)
+    (dolist (elt tinyload--load-list)
       ;;  package feature noerr nomsg before after
       (setq picked (nth position elt))
       (when (equal picked search)
@@ -820,45 +820,45 @@ The SEARCH item is checked with `equal' function."
 ;;; ----------------------------------------------------------------------
 ;;;
 (defun tinyload-load-list-search-function (function)
-  "Search FUNCTION in `tinyload-:load-list'."
+  "Search FUNCTION in `tinyload--load-list'."
   (tinyload-load-list-search-elt function 4))
 
 ;;; ----------------------------------------------------------------------
 ;;;
 (defun tinyload-load-list-search-package (package)
-  "Search PACKAGE in `tinyload-:load-list'."
+  "Search PACKAGE in `tinyload--load-list'."
   (tinyload-load-list-search-elt package 0))
 
 ;;; ----------------------------------------------------------------------
 ;;;
 (defun tinyload-load-list-add-function (function)
-  "Add FUNCTION to `tinyload-:load-list'.
+  "Add FUNCTION to `tinyload--load-list'.
 This function places a null entry to the laod list, so that only the
 load-before form is exected: it runs the FUNCTION."
   (let ((elt   (list "run-function-only" nil 'noerr 'nomsg function nil))
         (entry (tinyload-load-list-search-function function)))
     (unless entry
-      (push elt tinyload-:load-list))))
+      (push elt tinyload--load-list))))
 
 ;;; ----------------------------------------------------------------------
 ;;;
 (defun tinyload-load-list-add-package (package &optional feature)
-  "Add PACKAGE FEATURE with 'noerr 'nomsg attributes to `tinyload-:load-list'."
+  "Add PACKAGE FEATURE with 'noerr 'nomsg attributes to `tinyload--load-list'."
   (let ((elt   (list package feature 'noerr 'nomsg))
         (entry (tinyload-load-list-search-package package)))
     (unless entry
-      (push elt tinyload-:load-list))))
+      (push elt tinyload--load-list))))
 
 ;;; ----------------------------------------------------------------------
 ;;;
 (defun tinyload-load-list-delete-elt (elt)
-  "Remove ELT from `tinyload-:load-list'."
-  (setq tinyload-:load-list (delete elt tinyload-:load-list)))
+  "Remove ELT from `tinyload--load-list'."
+  (setq tinyload--load-list (delete elt tinyload--load-list)))
 
 ;;; ----------------------------------------------------------------------
 ;;;
 (defun tinyload-load-list-delete-function (function)
-  "Remove FUNCTION from `tinyload-:load-list'."
+  "Remove FUNCTION from `tinyload--load-list'."
   (let ((entry (tinyload-load-list-search-function function)))
     (when entry
       (tinyload-load-list-delete-elt entry))))
@@ -866,7 +866,7 @@ load-before form is exected: it runs the FUNCTION."
 ;;; ----------------------------------------------------------------------
 ;;;
 (defun tinyload-load-list-delete-package (package)
-  "Remove PACKAGE from `tinyload-:load-list'."
+  "Remove PACKAGE from `tinyload--load-list'."
   (let ((entry (tinyload-load-list-search-package package)))
     (when entry
       (tinyload-load-list-delete-elt entry))))
@@ -933,7 +933,7 @@ are ignored.
 Return:
 
   Similar list than what is described for variable
-  `tinyload-:load-list'"
+  `tinyload--load-list'"
   (let ((fid "tinyload-config-file-parse")
 	list
 	test
@@ -954,7 +954,7 @@ Return:
 ;;; ----------------------------------------------------------------------
 ;;;
 (defun tinyload-config-file-load-1 (file)
-  "Load configuration file and return list in format `tinyload-:load-list'."
+  "Load configuration file and return list in format `tinyload--load-list'."
   (interactive "fTinyLoad configuration file: ")
   (with-temp-buffer
     (insert-file-contents file)
@@ -963,19 +963,19 @@ Return:
 ;;; ----------------------------------------------------------------------
 ;;;
 (defun tinyload-config-file-load-default ()
-  "Load `tinyload-:load-file' and return list in format `tinyload-:load-list'."
-  (let ((file tinyload-:load-file))
+  "Load `tinyload--load-file' and return list in format `tinyload--load-list'."
+  (let ((file tinyload--load-file))
     (tinyload-debug "tinyload-config-file-load-default"
-                    "tinyload-:load-file"
+                    "tinyload--load-file"
                     file)
     (cond
      ((not (stringp file))
       nil)
-     ((not (file-exists-p tinyload-:load-file))
-      (message "Tinyload: tinyload-:load-file does not exist %s"
-               tinyload-:load-file))
+     ((not (file-exists-p tinyload--load-file))
+      (message "Tinyload: tinyload--load-file does not exist %s"
+               tinyload--load-file))
      (t
-      (setq tinyload-:load-list
+      (setq tinyload--load-list
             (tinyload-config-file-load-1 file))))))
 
 ;;}}}
@@ -1022,7 +1022,7 @@ Return status '(continue no-action no-input)."
       (prin1-to-string no-action)
       (prin1-to-string no-input)
       (prin1-to-string continue)
-      (if tinyload-:process-busy-p
+      (if tinyload--process-busy-p
           "yes"
         "no")))
 
@@ -1065,11 +1065,11 @@ Return status '(continue no-action no-input)."
 ;;; ----------------------------------------------------------------------
 ;;;
 (defun tinyload-load-failure (pkg elt)
-  "Record PKG ELT failure to `tinyload-:load-list'. Return failed-list."
+  "Record PKG ELT failure to `tinyload--load-list'. Return failed-list."
   ;;  Record failed entries.
-  (let ((failed-list (get 'tinyload-:load-list 'failed-list)))
+  (let ((failed-list (get 'tinyload--load-list 'failed-list)))
     (add-to-list 'failed-list elt)
-    (put 'tinyload-:load-list 'failed-list failed-list)
+    (put 'tinyload--load-list 'failed-list failed-list)
     (let ((str
            (format "TinyLoad: [ERROR] while loading %s" pkg)))
       (ding)
@@ -1085,22 +1085,22 @@ Return status '(continue no-action no-input)."
 ;;; ----------------------------------------------------------------------
 ;;;
 (defun tinyload-initialize ()
-  "Initialise `tinyload-:load-list'.
+  "Initialise `tinyload--load-list'.
 Return:
 
  '(load-list pointer)."
-  (let ((orig (get 'tinyload-:load-list 'original)))
+  (let ((orig (get 'tinyload--load-list 'original)))
     ;; first invocation
-    (put 'tinyload-:process-busy-p 'count 0)
+    (put 'tinyload--process-busy-p 'count 0)
     ;;  No original values available, so set defaults
     (unless orig
-      (put 'tinyload-:load-list 'original tinyload-:load-list))
-    (unless (integerp (get 'tinyload-:load-list 'pos))
-      (put 'tinyload-:load-list 'pos 0))
+      (put 'tinyload--load-list 'original tinyload--load-list))
+    (unless (integerp (get 'tinyload--load-list 'pos))
+      (put 'tinyload--load-list 'pos 0))
     ;; user has recently changed "list", do update.
-    (unless (equal orig tinyload-:load-list)
-      (put 'tinyload-:load-list 'original tinyload-:load-list)
-      (put 'tinyload-:load-list 'pos 0))))
+    (unless (equal orig tinyload--load-list)
+      (put 'tinyload--load-list 'original tinyload--load-list)
+      (put 'tinyload--load-list 'pos 0))))
 
 ;;; ----------------------------------------------------------------------
 ;;;
@@ -1112,32 +1112,32 @@ Return:
   ;;  19.34 bug: Process can't remove itself. Ack. Fixed in
   ;;  new Emacs releases.
   (tinyload-message "TinyLoad: Bye, No more packages to load.")
-  (setq tinyload-:process-busy-p nil)
+  (setq tinyload--process-busy-p nil)
   (tinyload-install 'remove))
 
 ;;; ----------------------------------------------------------------------
 ;;;
 (defun tinyload-busy-count ()
-  "Return `tinyload-:process-busy-p' busy count."
-  (get 'tinyload-:process-busy-p 'count))
+  "Return `tinyload--process-busy-p' busy count."
+  (get 'tinyload--process-busy-p 'count))
 
 ;;; ----------------------------------------------------------------------
 ;;;
 (defun tinyload-busy-count-incf ()
-  "Increase `tinyload-:process-busy-p' busy count."
+  "Increase `tinyload--process-busy-p' busy count."
   ;;  - If counter keeps incrementing all the time,
   ;;    then the main loop never cleared the flag
   ;;  - Keep on eye on the counter and prevent deadlock by resetting
   ;;    the busy signal.
-  (let  ((busy-count (get 'tinyload-:process-busy-p 'count)))
+  (let  ((busy-count (get 'tinyload--process-busy-p 'count)))
     (cond
      ;; Not yet defined, set initial value
      ((not (integerp busy-count))
       (setq busy-count 0))
      (t
       (incf busy-count)))
-    (put 'tinyload-:process-busy-p 'count  busy-count)
-    (put 'tinyload-:process-busy-p 'count2 busy-count)))
+    (put 'tinyload--process-busy-p 'count  busy-count)
+    (put 'tinyload--process-busy-p 'count2 busy-count)))
 
 ;;; ----------------------------------------------------------------------
 ;;;
@@ -1160,14 +1160,14 @@ Return CONTINUE if there is no activity."
 ;;; ----------------------------------------------------------------------
 ;;;
 (defun tinyload-failed-list-update (elt)
-  "Update `tinyload-:load-list' property 'failed-list with ELT."
+  "Update `tinyload--load-list' property 'failed-list with ELT."
   (let ((fid         "tinyload-failed-list-update")
-	(failed-list (get 'tinyload-:load-list 'failed-list)))
+	(failed-list (get 'tinyload--load-list 'failed-list)))
     (unless fid ;; No-op. XEmacs byte compiler silencer
       (setq fid nil))
     ;;  Remove entry from failed list
     (setq failed-list (delete elt failed-list))
-    (put 'tinyload-:load-list 'failed-list failed-list)
+    (put 'tinyload--load-list 'failed-list failed-list)
     (tinyload-debug
      (format "TinyLoad: [Debug] %s failed-list: "  fid) failed-list)))
 
@@ -1175,7 +1175,7 @@ Return CONTINUE if there is no activity."
 ;;;
 (defun tinyload-library-info (pkg noerr)
   "Record PKG NOERR library info under debug."
-  (when tinyload-:debug
+  (when tinyload--debug
     (message "TinyLoad: [debug] locating library %s %s"
              pkg (prin1-to-string noerr))
     (let ((tmp (locate-library pkg)))
@@ -1219,7 +1219,7 @@ Return:
     (when (> busy-count 5)
       (tinyload-debug "Tinyload: busy count too high, clearing DEADLOCK")
       (tinyload-message "TinyLoad: Deadlock detected, clearing...")
-      (setq tinyload-:process-busy-p nil
+      (setq tinyload--process-busy-p nil
             busy-count               0
             ;;  If there is infnite prompt open, we never would get
             ;;  past it, because the input-pending-p tests later would
@@ -1236,7 +1236,7 @@ Return:
             ;;  ==> if too hight, only then FORCE load.
             ;;
             deadlock t))
-    (put  'tinyload-:process-busy-p 'count busy-count)
+    (put  'tinyload--process-busy-p 'count busy-count)
     deadlock))
 
 ;;; ----------------------------------------------------------------------
@@ -1244,7 +1244,7 @@ Return:
 ;;;
 ;;;###autoload
 (defun tinyload-loader-process (&optional force)
-  "Load packages defined in `tinyload-:load-list'.
+  "Load packages defined in `tinyload--load-list'.
 If called interactively, FORCE loading all packages in the list."
   (interactive (list 'force))
   (let (continue
@@ -1256,9 +1256,9 @@ If called interactively, FORCE loading all packages in the list."
                     "INPUT PENDING STATUS"
                     (input-pending-p)
                     "TIMER ELT"
-                    tinyload-:timer-elt)
+                    tinyload--timer-elt)
     ;; ................................................... zombie test ...
-    ;;  tinyload-:timer-elt
+    ;;  tinyload--timer-elt
     ;;
     ;;  - Emacs 19.34 has a bug. If the load list has been finished and _this_
     ;;    function tries to remove itseld with (tinyload-install 'remove);
@@ -1275,25 +1275,25 @@ If called interactively, FORCE loading all packages in the list."
     ;;
     ;;  There may be previous function still loading; don't
     ;;  interrupt it; but terminate this invocation.
-    (when tinyload-:timer-elt
+    (when tinyload--timer-elt
       (setq continue (tinyload-continue-check force))
       (if (tinyload-busy-count-controller)
           (setq force     t
                 continue  t)))
     (tinyload-debug "TinyLoad: [debug] main() continue status: "
                     continue
-                    (if tinyload-:process-busy-p
+                    (if tinyload--process-busy-p
                         "process busy" "process not busy"))
     (when (or force
               (and continue
-                   (null tinyload-:process-busy-p)))
+                   (null tinyload--process-busy-p)))
       (unwind-protect
           (catch 'exit
             (tinyload-initialize)
             ;; ........................................... load list ...
-            (setq pos  (get 'tinyload-:load-list 'pos)
-                  len  (length tinyload-:load-list)
-                  list (nthcdr pos tinyload-:load-list))
+            (setq pos  (get 'tinyload--load-list 'pos)
+                  len  (length tinyload--load-list)
+                  list (nthcdr pos tinyload--load-list))
             (tinyload-debug
              (format "TinyLoad: [Debug] list pointer: pos %d len %d" pos len))
             (unless list
@@ -1301,7 +1301,7 @@ If called interactively, FORCE loading all packages in the list."
               (throw 'exit t))
             (tinyload-debug "TinyLoad: [Debug] list" list)
             (dolist (elt list)
-              (setq tinyload-:process-busy-p 'busy)
+              (setq tinyload--process-busy-p 'busy)
               ;;  simple STRING is package name only
               (when elt
                 (setq elt (ti::list-make elt)))
@@ -1322,7 +1322,7 @@ If called interactively, FORCE loading all packages in the list."
                   ;;  if we can't sit still that long, user is
                   ;;  doing something..
                   (tinyload-debug "TinyLoad: >>> 1 -- input pending?")
-                  (let ((wait (or tinyload-:wait-next-load 0.3)))
+                  (let ((wait (or tinyload--wait-next-load 0.3)))
                     (unless (and (sit-for wait)
                                  (not (input-pending-p)))
                       (tinyload-debug
@@ -1332,7 +1332,7 @@ If called interactively, FORCE loading all packages in the list."
                   (tinyload-debug "TinyLoad: >>> 2 -- feature present?")
                   (setq stat (tinyload-feature-p pkg feature))
                   (incf  pos)
-                  (put 'tinyload-:load-list 'pos pos)
+                  (put 'tinyload--load-list 'pos pos)
                   (tinyload-debug
                    (format "TinyLoad: >>> 3, pkg %s feature `%s' status: %s"
                            (prin1-to-string pkg)
@@ -1366,7 +1366,7 @@ If called interactively, FORCE loading all packages in the list."
                           (eq stat 'fatal))
                   (throw 'exit t)))))
         ;; .................................................... unwind ...
-        (setq tinyload-:process-busy-p nil)))))
+        (setq tinyload--process-busy-p nil)))))
 
 ;;}}}
 ;;{{{ example
@@ -1407,7 +1407,7 @@ If called interactively, FORCE loading all packages in the list."
   (let* ((w  (ti::compat-window-system)) ;XEmacs and Emacs detection
          (x  (eq w 'x))                  ;x windowed
          (win32 (eq w 'win32)))          ;Windows
-    (setq tinyload-:load-list
+    (setq tinyload--load-list
           (list
            ;;  Those with 'noerr flag are not essential packages
            ;;
@@ -1498,7 +1498,7 @@ If called interactively, FORCE loading all packages in the list."
 
 (tinyload-install)
 (provide   'tinyload)
-(run-hooks 'tinyload-:load-hook)
+(run-hooks 'tinyload--load-hook)
 
 ;;}}}
 
