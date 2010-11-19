@@ -1126,8 +1126,8 @@ Examples:
   -->  ((2 1) (4 3))"
   (let ((spec-name (gensym)))
     `(mapcar (lambda (,spec-name)
-                 (apply ,function-form ,spec-name) )
-               ,list-form )))
+                 (apply ,function-form ,spec-name))
+               ,list-form)))
 
 ;;; ----------------------------------------------------------------------
 ;;;
