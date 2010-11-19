@@ -394,7 +394,7 @@
             the file. Uses X-popup [imenu] for showing those book marks and
             moving between them.")
 
-(defvar tinybookmark--version-time "2010.1119.1109"
+(defvar tinybookmark--version-time "2010.1119.1448"
   "Last modified time.")
 
 ;;}}}
@@ -871,7 +871,7 @@ References:
         (if (funcall func (ti::read-current-line) id point)
             ;;  Nothing magic in this expression, just build list
             ;;  '((id point) (id .point) ..)
-            (ti::nconc list (cons id p)))))
+            (ti::nconc list (cons id point)))))
     list))
 
 ;;; ----------------------------------------------------------------------
