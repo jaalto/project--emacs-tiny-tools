@@ -9,7 +9,6 @@
 ;; Author:          Jari Aalto
 ;; Maintainer:      Jari Aalto
 ;;
-;; To get information on this program, call M-x tinyindent-version.
 ;; Look at the code with folding.el
 
 ;; COPYRIGHT NOTICE
@@ -54,12 +53,7 @@
 ;;      For some PC:s in nonWindowed, this is same as S-tab
 ;;      --> check out with C-h l
 ;;
-;;
 ;;      (define-key esc-map  "OI" 'tinyindent-mode)
-;;
-;; If you have any questions, use this function
-;;
-;;      M-x tinyindent-submit-bug-report
 
 ;;}}}
 ;;{{{ Documentation
@@ -228,30 +222,7 @@ REM        Oracle Sqlplus, SQL files in general"
   "Current minor mode status displayed. Changed dynamically.")
 (make-variable-buffer-local ' tinyindent-:mode-name)
 
-;;; ......................................................... &version ...
-
-;;;###autoload (autoload 'tinyindent-version "tinyindent" "Display commentary." t)
-
-(eval-and-compile
-  (ti::macrof-version-bug-report
-   "tinyindent.el"
-   "tinyindent"
-   tinyindent-:version-id
-   "$Id: tinyindent.el,v 2.42 2007/05/01 17:20:44 jaalto Exp $"
-   '(tinyindent-:version-id
-     tinyindent-:mode-map
-     tinyindent-:mode-prefix-map
-     tinyindent-:mode-load-hook
-     tinyindent-:mode-hook
-     tinyindent-:mode-define-keys-hook
-     tinyindent-:special-regexp
-     tinyindent-:mode-str-orig
-     tinyindent-:mode-str)))
-
 ;;}}}
-
-;;; ########################################################### &Funcs ###
-
 ;;{{{ code: misc
 
 ;;; ----------------------------------------------------------------------
@@ -294,8 +265,6 @@ thru global variable `tinyindent-:RET'."
 
 ;;}}}
 ;;{{{ engine
-
-;;; .......................................................... &engine ...
 
 ;;; ----------------------------------------------------------------------
 ;;;
