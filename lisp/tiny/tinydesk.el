@@ -637,10 +637,10 @@ path, garbage at line...Hooks may check the contents of this.")
 ;;;
 (defun tinydesk-get-save-dir ()
   "Return suggested save directory."
-  (let ((type      tinydesk--directory-save-suggested)
-	(last      tinydesk--directory-last)
-	(dir       tinydesk--directory-location)
-	(ret       dir))               ;set default return value
+  (let* ((type      tinydesk--directory-save-suggested)
+	 (last      tinydesk--directory-last)
+	 (dir       tinydesk--directory-location)
+	 (ret       dir))               ;set default return value
     (if (and (eq type 'last)
              (stringp last)
              (file-writable-p last))
@@ -1277,8 +1277,8 @@ Mode description:
 (defun turn-off-tinydesk-mode ()
   "Turn off `tinydesk-mode'."
   (interactive)
-  (if (functionp default-major-mode)
-      (funcall default-major-mode)
+  (if (functionp major-mode)
+      (funcall major-mode)
     (fundamental-mode)))
 
 ;;; ----------------------------------------------------------------------
