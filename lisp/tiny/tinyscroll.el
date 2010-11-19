@@ -9,7 +9,6 @@
 ;; Author:       Jari Aalto
 ;; Maintainer:   Jari Aalto
 ;;
-;; To get information on this program, call M-x tinyscroll-version.
 ;; Look at the code with folding.el.
 
 ;; COPYRIGHT NOTICE
@@ -58,10 +57,9 @@
 ;;
 ;;      tinyscroll-:list
 ;;
-;; If you have any questions, use these functions
+;; To investigate problems:
 ;;
 ;;      M-x tinyscroll-debug-toggle             to toggle the package debug.
-;;      M-x tinyscroll-submit-bug-report      to send bug report
 
 ;;}}}
 
@@ -196,25 +194,6 @@ Format: '((buffer-name-string . max-point) (BN . POINT) ..)"
   "Timer process.")
 
 ;;}}}
-;;{{{ version
-
-;;;###autoload (autoload 'tinyscroll-version "tinyscroll" "Commentary." t)
-(eval-and-compile
-  (ti::macrof-version-bug-report
-   "tinyscroll.el"
-   "tinyscroll"
-   tinyscroll-:version-id
-   "$Id: tinyscroll.el,v 2.41 2007/05/01 17:21:00 jaalto Exp $"
-   '(tinyscroll-:version-id
-     tinyscroll-:debug
-     tinyscroll-:load-hook
-     tinyscroll-:interval
-     tinyscroll-:list
-     tinyscroll-:tmp-buffer
-     tinyscroll-:timer-elt)
-   '(tinyscroll-:debug-buffer)))
-
-;;}}}
 ;;{{{ code: misc
 
 ;;;### (autoload 'tinyscroll-debug-toggle "tinyscroll" "" t)
@@ -245,7 +224,7 @@ Format: '((buffer-name-string . max-point) (BN . POINT) ..)"
   "Find BUFFER-NAME; return t if MAX is not stored `point-max' for BUFFER-NAME.
 Also updates new `point-max' if MAX is different.
 If buffer does not exist, do nothing and return nil."
-  (let* ((elt (tinyscroll-active-buffer-p buffer-name)))
+  (let ((elt (tinyscroll-active-buffer-p buffer-name)))
     (tinyscroll-debug "Max-p check" elt buffer-name max "\n")
     (when (and elt (not (eq (cdr elt) max)))
       (setcdr elt max)
@@ -280,8 +259,8 @@ Return:
 
   nil           Yes, buffer is in list
   t             action not done"
-  (let* ((exist (tinyscroll-active-buffer-p buffer-name))
-         ret)
+  (let ((exist (tinyscroll-active-buffer-p buffer-name))
+	ret)
     (cond
      ((or (and remove           (null exist))
           (and (null remove)    exist))
@@ -298,8 +277,8 @@ Return:
   "Return windows that have auto scroll enabled.
 Return:
    window list or nil"
-  (let* (win
-         win-list)
+  (let (win
+	win-list)
     (dolist (frame (frame-list))
       (dolist (buffer (tinyscroll-buffers))
         (if (setq win (get-buffer-window buffer frame))
@@ -361,9 +340,9 @@ Return:
  t      report generated to temporary buffer
  nil    no report"
   (interactive)
-  (let* ((str   (ti::list-to-string (mapcar 'car tinyscroll-:list)))
-         (verb  (interactive-p))
-         ret)
+  (let ((str   (ti::list-to-string (mapcar 'car tinyscroll-:list)))
+	(verb  (interactive-p))
+	ret)
     (if (and (string= str "")  verb)
         (message "TinyScroll: no entries in `tinyscroll-:list'.")
       (setq ret t)
@@ -413,11 +392,11 @@ Input:
          (ti::read-current-line)
        (buffer-name))) ;; completing-read
     current-prefix-arg))
-  (let* ((bufferp       (if (bufferp buffer-or-pointer)
-                            buffer-or-pointer
-                          (get-buffer buffer-or-pointer)))
-         buffern
-         msg)
+  (let ((bufferp       (if (bufferp buffer-or-pointer)
+			   buffer-or-pointer
+			 (get-buffer buffer-or-pointer)))
+	buffern
+	msg)
     (ti::verb)
     ;;  Check non-interactive errors
     (if (or (null bufferp)
