@@ -985,7 +985,6 @@ Also add textual comment to the end of line if needed."
             (setq word (tinydesk-read-word))
             (if (and word (file-exists-p word))
                 nil
-	      ;;         (ti::d! word)
               (tinydesk-line-property-set-error) ;put color on line
               ;;  Show to user that does not see the color
               (move-to-column err-col t)
@@ -1064,7 +1063,6 @@ Example:
               (setq maxlp (1- (match-beginning sub-level)))))
           (if (< maxlp (1+ (point)))    ;beg of line COMMENT exist
               (progn
-;;;             (ti::d! "skipped" (ti::read-current-line))
                 nil)
             (skip-syntax-forward " " maxlp) ;ignore whitespace
             (setq bp (point))
@@ -1082,7 +1080,6 @@ Example:
               ;;    want that here.
               (setq file (buffer-substring bp ep))
               (setq file (tinydesk-file-name-absolute file))
-;;;           (ti::d! bp ep (point) file )
               (goto-char ep)
               (if (looking-at "[ \t;]")
                   (delete-region (point) elp)) ;delete other marks
@@ -1676,7 +1673,6 @@ Return:
         ;; --``-- --``-- --``-- --``-- --``-- --``-- --``-- --``-- --``--
         (when word
           (setq load (expand-file-name word))
-;;;       (ti::d! "buffer?" (get-file-buffer load) (ti::file-find-file-p load) load)
           (when (or recover
                     (or load            ;file grabbed from line
                         (not (get-file-buffer load)))) ;already in Emacs
@@ -1711,7 +1707,6 @@ Return:
       (forward-line 1))
     (if verb
         (message "TinyDesk: %s...done" msg-str))
-;;;    (ti::d! "load-end" count ERR not-loaded)
     (list count ERR not-loaded first-entry)))
 
 ;;}}}
