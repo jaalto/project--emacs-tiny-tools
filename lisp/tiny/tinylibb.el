@@ -9,7 +9,6 @@
 ;; Author:          Jari Aalto
 ;; Maintainer:      Jari Aalto
 ;;
-;; To get information on this program, call M-x tinylibb-version.
 ;; Look at the code with folding.el
 
 ;; COPYRIGHT NOTICE
@@ -30,15 +29,6 @@
 ;; Visit <http://www.gnu.org/copyleft/gpl.html> for more information
 
 ;;}}}
-;;{{{ Install
-
-;; ........................................................ &t-install ...
-;; DO NOT LOAD THIS FILE, but load the central library "m". It loads this
-;; file and autoload library "a"
-;;
-;;      (require 'tinylibm)
-
-;;}}}
 ;;{{{ Documentation
 
 ;; ..................................................... &t-commentary ...
@@ -48,8 +38,7 @@
 ;;  Preface, 1998
 ;;
 ;;      This is lisp function library, package itself does nothing.
-;;      This library defines new [X]Emacs release functions for older
-;;      [X]Emacs releases.
+;;      This library defines some Emacs backward compatibility function.
 ;;
 ;;  Usage
 ;;
@@ -71,20 +60,6 @@
 ;;      A single statement will arrange everything:
 ;;
 ;;          (require 'tinylibm)
-;;
-;;  Notes
-;;
-;;      2000-09-12 <ttn@revel.glug.org> in gnu.emacs.sources
-;;      http://www.glug.org/people/ttn/software/ttn-pers-elisp/ reported that:
-;;      New file core/veneration.el allows GNU Emacs 19 support.
-;;      In this file some functions are available
-;;      in GNU Emacs 20, but not in GNU Emacs 19: `compose-mail' and
-;;      minimal supporting functions (see mail-n-news/compose-mail.el),
-;;      `shell-command-to-string', and `char-before'. We also redefine
-;;      `match-data' to handle arguments.
-;;
-;;      1998-10 SEMI's poe*el libraries also emulate various Emacs
-;;      versions.
 
 ;;}}}
 
@@ -103,53 +78,10 @@
   (defvar temporary-file-directory)
   (autoload 'ti::replace-match "tinylibm"))
 
-(defconst tinylibb-version-time "2009.0515.0753"
+(defconst tinylibb-version-time "2010.1119.2256"
   "Latest version number as last modified time.")
 
 ;;; ....................................................... &emulation ...
-
-(defun-maybe force-mode-line-update  ()
-  ;; XEmacs, labels this obsolete
-  ;; In older Emacs it does not exist
-  (set-buffer-modified-p (buffer-modified-p)))
-
-;; Some XEmacs doesn't have 'buffer-flush-undo
-(defalias-maybe 'buffer-disable-undo 'buffer-flush-undo)
-
-(defalias-maybe 'number-to-string 'int-to-string)
-
-(defalias-maybe 'set-text-properties 'ignore)
-
-(defalias-maybe 'string-to-number 'string-to-int)
-
-;; Doesn't exist in Emacs
-(defalias-maybe 'read-directory-name 'read-file-name)
-
-(and (fboundp 'insert-file-contents-literally)
-     ;;  Emacs includes `insert-file-literally'.
-     (defalias-maybe 'insert-file-literally 'insert-file-contents-literally))
-
-(defun-maybe find-buffer-visiting (file) ;not in XEmacs 19.14
-  ;;  "Find buffer for FILE."
-  ;;   file-truename  dies if there is no directory part in the name
-  ;;   Check it first
-  (or (and (string-match "^/" file)
-           (get-file-buffer (file-truename file)))
-      (get-file-buffer file)))
-
-(defun-maybe backward-line (&optional arg)
-  (forward-line (if (integerp arg)
-                    (- 0 arg)
-                  -1)))
-
-(defun-maybe int-to-float (nbr)
-  "Convert integer NBR to float."
-  (read (concat (int-to-string nbr) ".0")))
-
-(defun-maybe logtest (x y)
-  "Tinylibm: True if any bits set in X are also set in Y.
-Just like the Common Lisp function of the same name."
-  (not (zerop (logand x y))))
 
 (defun-maybe bin-string-to-int (8bit-string)
   "Convert 8BIT-STRING  string to integer."
@@ -288,81 +220,10 @@ PAD says to padd hex string with leading zeroes."
 ;;; .. .. .. .. .. .. .. .. .. .. .. .. .. .. .. .. .. .. higher Emacs . .
 ;;:  Features found from new emacs only 20.xx
 
-(defun-maybe replace-char-in-string (ch1 ch2 string)
-  ;;  "Search CH1, change it with CH2 in STRING."
-  (nsubstitute ch1 ch2 string))
-
-(defun-maybe string-prefix-p (s1 s2)
-  ;;  "True if string S1 is a prefix of S2 (i.e. S2 starts with S1)"
-  (equal 0 (string-match (regexp-quote s1) s2)))
-
-(put 'with-temp-buffer 'lisp-indent-function 0)
-(put 'with-temp-buffer 'edebug-form-spec '(body))
-(defmacro-maybe with-temp-buffer (&rest forms)
-  "Create a temporary buffer, and evaluate FORMS there like `progn'."
-  (let ((temp-buffer (make-symbol "temp-buffer")))
-    `(let ((,temp-buffer
-            (get-buffer-create (generate-new-buffer-name " *temp*"))))
-       (unwind-protect
-           (save-excursion
-             (set-buffer ,temp-buffer)
-             ,@forms)
-         (and (buffer-name ,temp-buffer)
-              (kill-buffer ,temp-buffer)) ))))
-
-(defun-maybe compilation-start
-  (cmd &optional mode name-function highlight-regexp)
-  "Emacs compatibility."
-  (autoload 'compile-internal "compile")
-  (compile-internal
-   cmd
-   "No more lines."
-   mode
-   nil ;; parser
-   highlight-regexp
-   name-function))
-
 (defun-maybe byte-compiling-files-p ()
   "Return t if currently byte-compiling files."
   (string= (buffer-name) " *Compiler Input*"))
 
-(defun-maybe string-to-number (str) ;; Emacs 22.x
-  "Emacs compatibility."
-  (string-to-int str))
-
-;;; ----------------------------------------------------------------------
-;;;
-(unless (fboundp 'with-buffer-modified)
-  ;;  Appeared in Emacs 21.2
-  (put 'with-buffer-modified 'lisp-indent-function 0)
-  (put 'with-buffer-modified 'edebug-form-spec '(body))
-  (defmacro with-buffer-modified (&rest body)
-    "This FORM saves modified state during execution of body.
-Suppose buffer is _not_ modified when you do something in the BODY,
-e.g. set face properties: changing face also signifies
-to Emacs that buffer has been modified. But the result is that when
-BODY finishes; the original buffer modified state is restored.
-
-This form will also make the buffer writable for the execution of body,
-but at the end of form it will restore the possible read-only state as
-seen my `buffer-read-only'
-
-\(with-buffer-modified
-   (set-text-properties 1 10 '(face highlight)))
-
-"
-    `(let* ((Buffer-Modified (buffer-modified-p))
-              (Buffer-Read-Only buffer-read-only))
-         (prog1
-             (progn
-               (setq buffer-read-only nil)
-               ,@body))
-         (if Buffer-Modified
-             (set-buffer-modified-p t)
-           (set-buffer-modified-p nil))
-         (if Buffer-Read-Only
-             (setq buffer-read-only t)
-           (setq buffer-read-only nil)))))
 
 (defmacro-maybe with-output-to-file (file &rest body)
   "Open FILE and run BODY.
@@ -395,33 +256,6 @@ arguments.  If ARGS is not a list, no argument will be passed."
                               (point-max))))
       (file-error nil))))
 
-
-;; Emacs 20.3 uses functions names `line-beginning-position'
-;; `line-end-position' while XEmacs introduced point-* function
-;; names 1996: `point-at-eol' and `point-at-bol'.
-
-(defsubst-maybe line-beginning-position (&optional n)
-  "Return begin position of line forward N."
-  (save-excursion
-    (if n
-        (forward-line n))
-    (beginning-of-line) (point)))
-
-(defsubst-maybe line-end-position (&optional n)
-  "Return end position of line forward N."
-  (save-excursion
-    (if n
-        (forward-line n))
-    (end-of-line) (point)))
-
-(defsubst-maybe insert-file-literally (file) ;; XEmacs 21.4 does not have this
-  "Insert contents of file FILENAME into buffer after point with no conversion."
-  (let (find-file-hooks
-        write-file-hooks
-        auto-save-hook
-        auto-save-default)
-    (insert-file file)))
-
 (defun-maybe executable-find-in-system (program-name) ;Handle Win32 case too.
   ;;   "Find PROGRAM-NAME along `exec-path'.
   ;; The PROGRAM-NAME should not contain system dependent prefixes; an
@@ -434,71 +268,6 @@ arguments.  If ARGS is not a list, no argument will be passed."
     (executable-find program-name)))
 
 ;;; .. .. .. .. .. .. .. .. .. .. .. .. .. .. .. .. .. .. .. XEmacs20 char . .
-
-(defmacro ti::compat-character-define-macro (function1 function2)
-  "Define XEmacs compatible character FUNCTION2 as an alias for FUNCTION1."
-  `(when (or (not (fboundp ,function1))
-             (and (ti::emacs-p)
-                  (fboundp ,function1)
-                  (or (not (equal (symbol-function ,function1)
-                                  ,function2))
-                      ;;  If the definition is 'ignore, reassign correct
-                      ;;  function.
-                      (equal (symbol-function ,function1)
-                             'ignore))))
-     (defalias ,function1 ,function2)))
-
-(defun ti::compat-char-int-p (ch)     ;Not in Emacs (in XEmacs20 MULE)
-  (and (integerp ch)
-       (> ch -1)                        ;valid range 0-255
-       (< ch 255)))
-
-(defun ti::compat-define-compatibility-defalias ()
-  "Emacs and XEmacs compatibility.
-Define XEmacs character functions to work in Emacs.
-Function mappings are:
-
-  int-to-char      identity
-  char-equal       equal
-  char-to-int      identity
-  chars-in-string  length
-  characterp       integerp
-  char-int-p       ti::compat-char-int-p
-  char-int         identity"
-  ;;  - In Emacs the characters are treated as integers
-  ;;  - In XEmacs charactersa are their own data type
-  (dolist (elt '((int-to-char identity)
-                 (char-equal  equal)
-                 ;;  Not in Emacs (exist in XEmacs 20)
-                 (char-to-int identity)
-                 ;;  Emacs 20.2/20.3 change
-                 (chars-in-string length)
-                 ;;  exists only in XEmacs
-                 (characterp integerp)
-                 (char-int-p ti::compat-char-int-p)
-                 (char-int   identity)))
-    (multiple-value-bind (original alias) elt
-      (ti::compat-character-define-macro original alias))))
-
-;; 2010-02-14 disabled. Something causes error in Emacs 23.x
-;; (ti::compat-define-compatibility-defalias)
-
-(defun-maybe char= (ch1 ch2 &optional ignored-arg) ;exists in  XEmacs 20.1
-  (let* (case-fold-search)                         ;case sensitive
-    (char-equal ch1 ch2)))
-
-;;  eshell-mode.el fix
-(eval-after-load "eshell-mode"
-  '(progn (ti::compat-define-compatibility-defalias)))
-
-;;  eshell-2.4.1/esh-mode.el  mistakenly defines characterp
-;;  as alias to `ignore' => breaks many things
-(eval-after-load "esh-mode"
-  '(progn (ti::compat-define-compatibility-defalias)))
-
-;;  Gnus MIME handling also behaves wrong
-(eval-after-load "mm-decode"
-  '(progn (ti::compat-define-compatibility-defalias)))
 
 ;; See cplus-md.el
 (defun-maybe count-char-in-string (c s)
@@ -540,19 +309,6 @@ count-lines function , but (count-char-in-region ?\\n)"
               ret nil) ))
     ret))
 
-;;  XEmacs : replace-in-string
-;;  Emacs 20.4
-(defun-maybe subst-char-in-string (fromchar tochar string &optional inplace)
-  "Replace FROMCHAR with TOCHAR in STRING each time it occurs.
-INPLACE is ignored."
-  (let ((len   (length string))
-        (ret   (copy-sequence string))) ;because 'aset' is destructive
-    (while (> len 0)
-      (if (char-equal (aref string (1- len)) fromchar)
-          (aset ret (1- len) tochar))
-      (decf len))
-    ret))
-
 (defun-maybe subst-char-with-string (string &optional char to-string)
   "In STRING, convert CHAR with TO-STRING.
 Default is to convert all tabs in STRING with spaces."
@@ -575,34 +331,6 @@ Default is to convert all tabs in STRING with spaces."
         (incf  i))))
     ret))
 
-(eval-and-compile
-  (when (or (featurep 'xemacs)
-            (boundp 'xemacs-logo))
-    ;;   Just a forward declaration, because byte-compiler cannot see through
-    ;;   defun-maybe. If this function already exists, this autoload
-    ;;   definition is no-op.
-    (autoload 'subst-char-in-string "tinylibb.el")))
-
-;; Emacs and XEmacs differ here. Convert Emacs function --> XEmacs name
-
-(cond
- ((and (fboundp 'exec-to-string)
-       (not (fboundp 'shell-command-to-string)))
-  (defalias-maybe 'shell-command-to-string 'exec-to-string))
- ((not (fboundp 'shell-command-to-string))
-  (defun-maybe shell-command-to-string (command)
-    "Returns shell COMMAND's ouput as string. Tinylibm."
-    (with-temp-buffer
-      (shell-command command (current-buffer))
-      (buffer-string)))))
-
-;;; XEmacs ilisp.el :: describe-symbol-find-file
-(defun-maybe describe-symbol-find-file (symbol) ;; XEmacs
-  "Find SYMBOL defined in file."
-  (loop for (file . load-data) in load-history
-        do (when (memq symbol load-data)
-             (return file))))
-
 ;; shell.el, term.el, terminal.el
 
 (unless (boundp 'explicit-shell-file-name)
@@ -611,25 +339,9 @@ Default is to convert all tabs in STRING with spaces."
 (unless (boundp 'shell-command-output-buffer)
   (defvar shell-command-output-buffer "*Shell Command Output*"))
 
-(when (or (not (boundp 'temporary-file-directory))
-          (not (stringp temporary-file-directory))
-          (not (file-directory-p temporary-file-directory)))
-  (let* ((temp (or (getenv "TEMP")
-                   (getenv "TEMPDIR")
-                   (getenv "TMPDIR"))))
-    (defvar temporary-file-directory    ;Emacs 20.3
-      (or temp
-          (cond
-           ((file-directory-p "/tmp") "/tmp")
-           ((file-directory-p "~/tmp") "~/tmp")
-           ((file-directory-p "C:/temp") "C:/temp")
-           ;; don't know what to do, maybe this exists.
-           (t "/")))
-      "*Tinylib: XEmacs and Emacs compatibility.")))
-
 ;;; ........................................................... &other ...
 
-;; Emacs 20.7 - 21.2 does not have this
+;; Emacs 20.7 - 22.2 does not have this
 (defun-maybe turn-off-font-lock ()
   "Turn off font lock."
   (font-lock-mode -1))
@@ -675,28 +387,15 @@ font-lock.el"
          ;;  used to return (mark-marker)
          (mark 'noerr)))))
 
-(unless (and (fboundp 'find-file-binary) ;; Emacs function --> XEmacs
-             (boundp 'buffer-file-coding-system))
-  (defun find-file-binary (file)
-    "Read FILE without conversiosn."
-    (let* ((buffer-file-coding-system 'binary))
-      (unless buffer-file-coding-system
-        (setq buffer-file-coding-system nil)) ;Quiet Bytecompiler "unused  var".
-      (find-file file))))
-
 ;;}}}
 ;;{{{ code: function test
 
-;;; ...................................................... &func-tests ...
-;;; We define these here because they are used lated in this library
-;;; "define before using"
-
-(eval-and-compile
+;;; We define these here because they are used elsewhere
 
 ;;; ----------------------------------------------------------------------
 ;;;
-  (defun ti::function-args-p (symbol)
-    "Return function SYMBOL's argument list as string or nil.
+(defun ti::function-args-p (symbol)
+  "Return function SYMBOL's argument list as string or nil.
 Works for byte compiled functions too.
 
 Notes:
@@ -753,9 +452,7 @@ Notes:
             (setq ret (match-string 1 str)))
            ((string-match args-re str)
             (setq ret (match-string 1 str)))))))
-      ret)))
-
-;;; --++-- --++-- --++-- --++-- --++-- --++-- --++--  eval-and-compile --
+      ret))
 
 ;;}}}
 ;;{{{ code: Cygwin support
@@ -813,7 +510,6 @@ Variable `hell-file-name' is locally bound during call."
   ;;             ==
   ;;
   ;;  \\network\path\this
-
   (let (list
         (regexp
          (save-excursion
@@ -1062,8 +758,7 @@ Be sure to call `expand-file-name' before you pass PATH to the function."
 
 (when (and nil                          ;Disabled now
            (null (get 'concat 'byte-optimizer)))
-  (put  'concat 'byte-optimizer 'tinylibb-byte-optimize-concat)
-
+  (put 'concat 'byte-optimizer 'tinylibb-byte-optimize-concat)
   ;; Like `concat', but this macro expands to optimized form.
   ;; Many times you want to divide complex regexps on separate lines like
   ;; this
@@ -1086,7 +781,6 @@ Be sure to call `expand-file-name' before you pass PATH to the function."
   ;;         (apply 'concat args)
   ;;       (cons 'concat args)))
   ;;
-
   (defun tinylibb-byte-optimize-concat (form)
     (let ((args (cdr form))
           (constant t))
@@ -1095,7 +789,6 @@ Be sure to call `expand-file-name' before you pass PATH to the function."
             ;;  Stop there
             (setq constant nil))
         (setq args (cdr args)))
-
       (if constant
           (eval form)
         form))))
