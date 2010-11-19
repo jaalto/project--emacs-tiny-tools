@@ -9,7 +9,6 @@
 ;; Author:       Jari Aalto
 ;; Maintainer:   Jari Aalto
 ;;
-;; To get information on this program, call M-x tinyhotlist-version
 ;; Look at the code with folding.el
 
 ;; COPYRIGHT NOTICE
@@ -57,10 +56,6 @@
 ;;
 ;; Before you can use hot list, read the documentation of function
 ;; `tinyhotlist-control'. Example setup is at the end of file.
-;;
-;; If you have any questions, use this function
-;;
-;;      M-x tinyhotlist-submit-bug-report
 
 ;;}}}
 ;;{{{ Briefly
@@ -429,23 +424,6 @@ Please look at the many examples that are in the end of tinyhotlist.el"
   :group 'TinyHotlist)
 
 ;;}}}
-
-;;{{{ version
-
-(eval-and-compile
-  (ti::macrof-version-bug-report
-   "tinyhotlist.el"
-   "tinyhotlist"
-   tinyhotlist-:version-id
-   "$Id: tinyhotlist.el,v 2.49 2007/05/01 17:20:43 jaalto Exp $"
-   '(tinyhotlist-:version-id
-     tinyhotlist-:list-max
-     tinyhotlist-:use-x-popup
-     tinyhotlist-:default-regexp
-     tinyhotlist-:abbreviate-file-name-table)))
-
-;;}}}
-
 ;;{{{ menu handle
 
 ;;; ----------------------------------------------------------------------
