@@ -9,7 +9,6 @@
 ;; Author:          Jari Aalto
 ;; Maintainer:      Jari Aalto
 ;;
-;; To get information on this program, call M-x tinyxreg-version.
 ;; Look at the code with folding.el.
 
 ;; COPYRIGHT NOTICE
@@ -57,10 +56,6 @@
 ;;      (autoload 'tinyxreg-point-to-register-mouse "tinyxreg" "" t)
 ;;      (autoload 'tinyxreg-remove-reg              "tinyxreg" "" t)
 ;;      (autoload 'tinyxreg-trash                   "tinyxreg" "" t))
-;;
-;; If you have any questions or comments, use this function
-;;
-;;      M-x tinyxreg-submit-bug-report
 
 ;;}}}
 ;;{{{ Documentation
@@ -69,7 +64,7 @@
 
 ;;; Commentary:
 
-;;  Preface, oct 1995
+;;  Preface, Oct 1995
 ;;
 ;;      There was a post in comp.emacs by  <cpg@cs.utexas.edu> Carlos Puchol
 ;;
@@ -181,30 +176,6 @@ common beginning for all win cfg registers."
 
 (defvar tinyxreg-:wreg  nil
   "Hold window markers.")
-
-;;}}}
-;;{{{ setup: version
-
-;;; ....................................................... &v-version ...
-
-;;;###autoload (autoload 'tinyxreg-version "tinyxreg" "Display commentary." t)
-
-(eval-and-compile
-  (ti::macrof-version-bug-report
-   "tinyxreg.el"
-   "tinyreg"
-   tinyxreg-:version-id
-   "$Id: tinyxreg.el,v 2.43 2007/05/06 23:15:20 jaalto Exp $"
-   '(tinyxreg-:version-id
-     tinyxreg-:load-hook
-     tinyxreg-:preg
-     tinyxreg-:wreg
-     tinyxreg-:x-coord
-     tinyxreg-:y-coord
-     tinyxreg-:description-func
-     tinyxreg-:title
-     tinyxreg-:buffer-fmt
-     tinyxreg-:wcfg-fmt)))
 
 ;;}}}
 ;;{{{ misc
