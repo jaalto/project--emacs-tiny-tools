@@ -432,10 +432,10 @@ Please look at the many examples that are in the end of tinyhotlist.el"
   "Find buffer for corresponding menu ITEM.
 The buffer is loaded from disk if it does not exist in Emacs.
 NO-CONFIRM suppresses confirm of loading ange-ftp files."
-  (let* (buffer
-         file
-         elt
-         ptr)
+  (let (buffer
+	file
+	elt
+	ptr)
     (setq elt (assoc item tinyhotlist-:cache))
     (setq buffer (car elt)
           file   (cdr elt))
@@ -486,11 +486,11 @@ NO-CONFIRM suppresses confirm of loading ange-ftp files."
   "Abbreviate FILE by looking at `tinyhotlist-:abbreviate-file-name-table'.
 If RESTORE is passed, the convert abbreviated FILE into absolute path
 using `tinyhotlist-:abbreviate-file-name-table'."
-  (let* (case-fold-search
-         str
-         substitute
-         match
-         replace)
+  (let (case-fold-search
+	str
+	substitute
+	match
+	replace)
     (dolist (elt tinyhotlist-:abbreviate-file-name-table)
       (setq str (nth 0 elt)  substitute (nth 1 elt))
       (setq match (if restore substitute str)
@@ -511,10 +511,10 @@ using `tinyhotlist-:abbreviate-file-name-table'."
 
 Returns:
    t or nil if added."
-  (let* (buffer-file
-         ptr
-         exist
-         ret)
+  (let (buffer-file
+	ptr
+	exist
+	ret)
     (dolist (buffer (ti::list-make buffer))
       ;;  We have to check if it exists already...
       ;;  this is a  bit inefficent way to check list, but because
@@ -577,9 +577,9 @@ Input:
 Return
 
  nil t   if removed."
-  (let* (list
-         func
-         ret)
+  (let (list
+	func
+	ret)
     (cond
      ((eq type 'menu-item)
       (when (and (stringp arg)
@@ -662,9 +662,9 @@ Return:
 
  nil t"
   (interactive "P")
-  (let* ((file  tinyhotlist-:hotlist-file)
-         buffer
-         list)
+  (let ((file tinyhotlist-:hotlist-file)
+	buffer
+	list)
     (cond
      ;; ......................................................... load ...
      ((null save)
@@ -714,9 +714,9 @@ Return:
   "Show LIST in completion menu.
 Return:
  buffer or nil"
-  (let* ((menu  (ti::list-to-assoc-menu list))
-         (def   (car-safe tinyhotlist-:history))
-         ret)
+  (let ((menu (ti::list-to-assoc-menu list))
+	(def  (car-safe tinyhotlist-:history))
+	ret)
     (setq ret (completing-read "hot item: " menu nil t def 'tinyhotlist-:history))
     (if (ti::nil-p ret)                 ;really selected ?
         nil
@@ -769,14 +769,14 @@ Optional ARG can be:
   2 x \\[universal-argument]       Save hotlist
   3 x \\[universal-argument]       load hotlist."
   (interactive "e\nP")
-  (let* ((buffer (buffer-name))
-         (menu   (or tinyhotlist-:cache
-                     ;;  See if there is any buffers matching user's
-                     ;;  regexp to make the initial hotlist.
-                     (and tinyhotlist-:default-regexp
-                          (tinyhotlist-set-defaults)
-                          tinyhotlist-:cache)))
-         ret)
+  (let ((buffer (buffer-name))
+	(menu   (or tinyhotlist-:cache
+		    ;;  See if there is any buffers matching user's
+		    ;;  regexp to make the initial hotlist.
+		    (and tinyhotlist-:default-regexp
+			 (tinyhotlist-set-defaults)
+			 tinyhotlist-:cache)))
+	ret)
     (cond
      ;; ...................................................... display ...
      ((null arg)
