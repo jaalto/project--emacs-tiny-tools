@@ -56,16 +56,17 @@
 ;;
 ;;      http://www.emacswiki.org/emacs/TinyDebian
 ;;
-;;      This package contains utilities for the package authors to help
-;;      reporting and managing bug reports at various Bug Tracking Systems (BTS).
-;;      The Bug interface hooks up in Gnus *Summary* (http://www.gnus.org/)
-;;      buffer where separate menu to send commands appear.
+;;      This package contains utilities for the package authors to
+;;      help reporting and managing bug reports at various Bug
+;;      Tracking Systems (BTS). The Bug interface hooks up in Gnus
+;;      *Summary* (http://www.gnus.org/) buffer where separate menu to
+;;      send commands appear.
 ;;
 ;;      There are also minor modes that can be turned on for `M-x'
 ;;      `mail' (C-x m) to use BTS control commands.
 ;;
-;;      The heuristics are based in Gnus Summary and Article buffers how to
-;;      decide which bug tracking system will be used.
+;;      The heuristics are based in Gnus Summary and Article buffers
+;;      how to decide which bug tracking system will be used.
 ;;
 ;;      Briefly:
 ;;
@@ -73,9 +74,11 @@
 ;;
 ;;      o   Colorize /var/log files like messages, syslog etc.
 ;;      o   Access important Debian developer documents (FAQ, WNPP)
-;;      o   Query Debian WWW information: package page, PTS page, package bugs page
-;;      o   System information: wnpp-alert(1) listing to show what packages have
-;;          problems and which as suspect for removal (not maintained).
+;;      o   Query Debian WWW information: package page, PTS page,
+;;          package bugs page
+;;      o   System information: wnpp-alert(1) listing to show what
+;;          packages have problems and which as suspect for removal
+;;          (not maintained).
 ;;
 ;;      BTS utilities in Gnus (and M-x mail, message-mode)
 ;;
@@ -83,14 +86,15 @@
 ;;          bug messages for Debian, Emacs and GNU bug tracking
 ;;          systems.
 ;;      o   Other BTS: limited support for visting bugs at Sourceforge,
-;;          Launchpad, Freshmeat, Kde, Gnome, MySQL, Perl CPAN, Redhat Sourcewre,
-;;	    Mercurial version control, Trac. You can manipulate those bugs via their
-;;          Web interface
+;;          Launchpad, Freshmeat, Kde, Gnome, MySQL, Perl CPAN, Redhat
+;;          Sourcewre, Mercurial version control, Trac. You can
+;;          manipulate those bugs via their Web interface
 ;;      o   In Gnus *Summary* buffer, there is new menu "Tdeb" to
-;;          administrate "debbugs" bug reports. Useful for Debian, GNU and Emacs
-;;          developers.
-;;      o   To send on issue (wishlist or bug) to any of the "debbugs" systems,
-;;          similar to Debian's reportbug(1), use 'M-x' 'tinydebian-reportbug'.
+;;          administrate "debbugs" bug reports. Useful for Debian, GNU
+;;          and Emacs developers.
+;;      o   To send on issue (wishlist or bug) to any of the "debbugs"
+;;          systems, similar to Debian's reportbug(1), use 'M-x'
+;;          'tinydebian-reportbug'.
 ;;
 ;;  History
 ;;
@@ -119,7 +123,7 @@
 
 ;;{{{ setup: libraries
 
-(defconst tinydebian--version-time "2010.1119.1435"
+(defconst tinydebian--version-time "2010.1119.1436"
   "Last edited time.")
 
 (require 'tinylibm)
