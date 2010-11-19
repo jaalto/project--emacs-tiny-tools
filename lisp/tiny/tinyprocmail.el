@@ -1223,7 +1223,6 @@ Input:
     (buffer-name)
     (or tinyprocmail--procmail-version "")
     (ti::string-match "[0-9][0-9.]+" 0 tinyprocmail--version-id)
-
     (if (buffer-file-name)
         (concat "cd " (file-name-directory (buffer-file-name)) "\n")
       ""))))
@@ -1318,8 +1317,8 @@ Input:
   "Point must be at the end of conditions.
 This checks if the actions line is ok."
   (interactive)
-  (let ((opoint (point))
-	(point  opoint))
+  (let* ((opoint (point))
+	 (point  opoint))
     ;;  Suppose there is no action line at all
     ;;
     ;;  :0
