@@ -274,8 +274,8 @@ Mode description:
   "Activate `tinypad-mode' on or off everywhere, depending on var `tinypad-mode'."
   (unless (get 'tinypad-mode 'self-call)
     (run-hooks 'tinypad-:mode-define-keys-hook))
-  (let* ((i 0)
-         tinypad-:mode-define-keys-hook)
+  (let ((i 0)
+	tinypad-:mode-define-keys-hook)
     (unwind-protect
         (progn
           ;;  Raise the flag to prevent calling us
