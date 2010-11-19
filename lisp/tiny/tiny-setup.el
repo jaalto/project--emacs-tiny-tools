@@ -501,11 +501,11 @@ packages are loaded (look into each file for interesting things).
                    '(tinytf-mode-define-keys tinytf-mode-define-f-keys))
 
     (setq tinymy-:define-key-force t)
-    (setq tinyef-:mode-key \"\\C-cmr\")
+    (setq tinyef--mode-key \"\\C-cmr\")
 
     (setq tinylock-:auto-lock-interval1 45)     ;in minutes
 
-    (setq tinyef-:mode-key-table
+    (setq tinyef--mode-key-table
           '((?\[   . step-delete-back)          ;KEY -- action symbol
             (?\]   . step-delete-fwd)
             (?\*   . chunk-delete)
