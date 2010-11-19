@@ -9,7 +9,6 @@
 ;; Author:       Jari Aalto
 ;; Maintainer:   Jari Aalto
 ;;
-;; To get information on this program, call M-x tinypair-version.
 ;; Look at the code with folding.el.
 
 ;; COPYRIGHT NOTICE
@@ -53,11 +52,7 @@
 ;; If you want to turn the pairing off, use this:
 ;;
 ;;      M-x turn-off-tinypair-mode
-;;
-;; If you have any questions, use this function
-;;
-;;      M-x tinypair-submit-bug-report
-;;
+#
 ;; If you find any incorrect behavior, please immediately
 ;;
 ;;      o   Turn on debug M-x tinypair-debug-toggle
@@ -366,31 +361,6 @@ so that you get this:
            *"
   :type  '(repeat character :tag "syntax class")
   :group 'TinyPair)
-
-;;}}}
-;;{{{ setup: version
-
-;;;###autoload (autoload 'tinypair-version "tinypair" "Display commentary." t)
-
-(eval-and-compile
-  (ti::macrof-version-bug-report
-   "tinypair.el"
-   "tinypair"
-   tinypair-:version-id
-   "$Id: tinypair.el,v 2.47 2007/05/01 17:20:51 jaalto Exp $"
-   '(tinypair-:version-id
-     tinypair-:debug
-     tinypair-:load-hook
-     tinypair-:us-alist
-     tinypair-:european-alist
-     tinypair-:alist
-     tinypair-:all-pairing-disabled-function
-     tinypair-:disable-mode-list
-     tinypair-:automatic-word-pairing
-     tinypair-:word-positioning-function
-     tinypair-:word-positioning
-     tinypair-:word-syntax-classes)
-   '(tinypair-:debug-buffer)))
 
 ;;}}}
 ;;{{{ misc
