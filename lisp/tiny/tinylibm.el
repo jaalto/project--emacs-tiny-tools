@@ -1079,17 +1079,13 @@ Input:
 Return:
 
   character  character type"
-  (let* (ch)
+  (let (ch)
     (cond
      ((null list)
       (while (symbolp (setq ch (ti::read-char-safe prompt)))))
      (list
       ;;  Check args or we're thrown on planetary ride, which never ends
       (if (or (not (ti::listp list))
-              ;;   eshell-2.4.1/esh-mode.el  mistakenly defines characterp
-              ;;   make sure this function is always correct.
-              (prog1 nil
-                (ti::compat-character-define-macro 'characterp 'integerp))
               (not (characterp (car list))))
           (error "Invalid list, must contain character in LIST %s" list))
       ;;  We don't have to do character conversion, because they are
