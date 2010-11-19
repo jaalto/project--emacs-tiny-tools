@@ -456,7 +456,8 @@
 
 (require 'tinylibm)
 
-(eval-when-compile (ti::package-use-dynamic-compilation))
+(defconst tinyprocmail--version-time "2010.1119.2130"
+  "*Version of last edit.")
 
 (eval-and-compile
   (defvar tinytab-mode nil)
@@ -1222,7 +1223,7 @@ Input:
     (ti::date-standard-date 'minutes)
     (buffer-name)
     (or tinyprocmail--procmail-version "")
-    (ti::string-match "[0-9][0-9.]+" 0 tinyprocmail--version-id)
+    tinyprocmail--version-time
     (if (buffer-file-name)
         (concat "cd " (file-name-directory (buffer-file-name)) "\n")
       ""))))
