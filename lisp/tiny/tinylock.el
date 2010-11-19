@@ -412,19 +412,15 @@ Input:
   "Return all processes in string format, or KILL all processes (not timer)."
   (let ((list (process-list))
          ret)
-    (if list
-        (mapcar
-         (function
-          (lambda (x)
-            (cond
-             ((null kill)
-              (setq ret (concat (or ret "") (prin1-to-string x))))
-             (t
-              ;;  let's not kill the timer
-              (if (not (string-match "display-time\\|timer"
-                                     (prin1-to-string x)))
-                  (delete-process x))))))
-         list))
+    (dolist (x list)
+      (cond
+       ((null kill)
+	(setq ret (concat (or ret "") (prin1-to-string x))))
+       (t
+	;;  let's not kill the timer
+	(if (not (string-match "display-time\\|timer"
+			       (prin1-to-string x)))
+	    (delete-process x)))))
     ret))
 
 ;;; ----------------------------------------------------------------------
