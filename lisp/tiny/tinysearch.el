@@ -9,7 +9,6 @@
 ;; Author:          Jari Aalto
 ;; Maintainer:      Jari Aalto
 ;;
-;; To get information on this program, call M-x tinysearch-version.
 ;; Look at the code with folding.el.
 
 ;; COPYRIGHT NOTICE
@@ -160,8 +159,6 @@
 
 (require 'tinylibm)
 
-(eval-when-compile (ti::package-use-dynamic-compilation))
-
 (ti::package-defgroup-tiny TinySearch tinysearch-: extensions
   "search word under cursor: backward, forward.")
 
@@ -237,24 +234,6 @@ Return values of function:
   nil       do not accept search, continue searching next word."
   :type  'function
   :group 'TinySearch)
-
-;;; ....................................................... &v-version ...
-
-(eval-and-compile
-  (ti::macrof-version-bug-report
-   "tinysearch.el"
-   "tinysearch"
-   tinysearch-:version-id
-   "$Id: tinysearch.el,v 2.49 2007/05/07 10:50:14 jaalto Exp $"
-   '(tinysearch-:version-id
-     tinysearch-:before-hook
-     tinysearch-:final-hook
-     tinysearch-:load-hook
-     tinysearch-:direction
-     tinysearch-:search-status
-     tinysearch-:overlay
-     tinysearch-:word-boundary-set
-     tinysearch-:wrap-flag)))
 
 ;;}}}
 
