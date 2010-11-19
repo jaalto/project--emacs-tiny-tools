@@ -276,9 +276,9 @@ Moves point 1 line forward af ter done.
 Returns:
   filling pattern to use at front of line or nil"
   ;;  Look for some special lines, like C++
-  (let* ((s-re     tinyindent-:special-regexp)
-         fill
-         line)
+  (let ((s-re tinyindent-:special-regexp)
+	fill
+	line)
     (when (looking-at s-re)
       ;;  back to original line
       ;;
@@ -316,20 +316,18 @@ in BODY use relative indent."
 References:
   `tinyindent-:special-regexp'"
   (interactive)
-  (let* ((bolp-flag     tinyindent-:bol)
-         (p             (point))
-         (cur-col       (current-column))
-         (imode         t)
-         (SPC           (char-to-int ?\ ))
-
-         prev-empty
-         prev-col
-         bp ep                          ;BEG END point
-         fill
-         line
-         ch
-         skip)
-
+  (let ((bolp-flag     tinyindent-:bol)
+	(p             (point))
+	(cur-col       (current-column))
+	(imode         t)
+	(SPC           (char-to-int ?\ ))
+	prev-empty
+	prev-col
+	bp ep                          ;BEG END point
+	fill
+	line
+	ch
+	skip)
     (catch 'cancel
       (save-excursion
         (save-excursion
@@ -339,23 +337,19 @@ References:
           (setq prev-empty (looking-at "[ \t]*$"))
           (end-of-line)
           (setq prev-col (current-column)))
-
         ;;  make sure these are NOT nil
-
-        (if (null tinyindent-:cp) (setq tinyindent-:cp 0))
-        (if (null tinyindent-:cl) (setq tinyindent-:cl 0))
-
+        (if (null tinyindent-:cp)
+	    (setq tinyindent-:cp 0))
+        (if (null tinyindent-:cl)
+	    (setq tinyindent-:cl 0))
         ;;  Count lines has A BUG! , If I'm at the beg of line
         ;;  or 1 char forward it gives different values!
-
         (setq line (count-lines 1 p))
-
-        (if (or (eq p bp) (eobp))
+        (if (or (eq p bp)
+		(eobp))
             (setq line (1+ line)))      ;BEG of line error
-
         ;;   - the user has answered to question, we are on the same line
         ;;   - if he is at the beginning, then ALWAYS ask (forced ask)
-
         (if prev-empty
             (if (and                    ;already asked ?
                  (>= tinyindent-:cp bp)
@@ -366,18 +360,12 @@ References:
           (if (< prev-col cur-col)
               ;;  previous line is shorter
               (setq skip 3)))
-
-;;;  (ti::d! skip "POINT" p  " " tinyindent-:cl line " bp ep  " bp ep tinyindent-:cp)
-
         (if skip
             (throw 'cancel t))          ;we were on this line already
-
         (setq tinyindent-:cl line)      ;update line number
         (setq tinyindent-:cp p)         ;current point position
-
         ;;^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^
         ;;  The real engine
-
         (setq tinyindent-:RET nil)
         (cond
          ((bobp)
@@ -394,7 +382,6 @@ References:
                 (setq imode (tinyindent-confirm "indent relative?")))))
           ;; this was pressed
           (setq ch tinyindent-:RET)))))
-
     ;; ^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^ catch end ^^^
     (if fill
         (insert fill)                 ;see save-excursion, fill is set
@@ -421,11 +408,8 @@ References:
           (tab-to-tab-stop)             ;use hard tab
           ;;  kill the TAB char
           (setq ch nil)))))
-
-      ;; (ti::d! imode ch (ti::print-p ch)))
       ;;  the TAB char automatically moves to tab-to-tab-stop
       ;;  if it's inserted
-
       (if (and (characterp ch)
                (ti::print-p ch)
                (not (eq ch SPC)))
@@ -436,8 +420,6 @@ References:
 ;;}}}
 ;;{{{ modes
 
-;;; ........................................................... &modes ...
-
 ;;; ----------------------------------------------------------------------
 ;;;
 ;;;###autoload
@@ -447,11 +429,9 @@ References:
   (ti::bool-toggle tinyindent-tt-mode arg) ;toggle mode variable
   (cond
    (tinyindent-tt-mode
-
     (unless tinyindent-mode    ;turn on the major mode tinyindent-mode
       (tinyindent-mode)                 ;turn it on
       (setq tinyindent-tt-mode t))
-
     (setq tinyindent-:mode-name tinyindent-:tt-mode-str-orig))
    (t
     (setq tinyindent-:mode-name tinyindent-:mode-str-orig)))
