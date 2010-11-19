@@ -564,7 +564,7 @@
 
 (eval-and-compile
   (defvar tinytab-mode            nil)
-  (defvar tinytab-:div-factor     nil)
+  (defvar tinytab--div-factor     nil)
   ;;  Just forward declarations to shut up byte compiler.
   (defvar font-lock-keywords)
   (defvar font-lock-mode)
@@ -1325,7 +1325,7 @@ Mode description:
          (unless tinytab-mode ;;Turn on this mode
            (setq tinytf-:saved-tinytab-mode nil)
            (turn-on-tinytab-mode))
-         (setq tinytab-:div-factor 4) ;; advance by four spaces
+         (setq tinytab--div-factor 4) ;; advance by four spaces
          ;;  Make sure RETURN key continues indent.
          (turn-on-tinytab-return-key-mode)
          ;;  Single space ends sentence. The Emacs default is some
