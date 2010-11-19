@@ -948,10 +948,10 @@ when it matches REGEXP and set variable SYM to that value, effectively:
   "Return path if MODULE(.pm) is known to ´tinyperl-:inc-module-list'."
   (unless (string-match "\\.pm$" module)
     (setq module (concat module ".pm")))
-  (let* ((elt (assoc module tinyperl-:inc-module-list))
-         (file (if (string-match ".*::\\(.*\\)" module)
-                   (match-string 1 module)
-                 module)))
+  (let ((elt (assoc module tinyperl-:inc-module-list))
+	(file (if (string-match ".*::\\(.*\\)" module)
+		  (match-string 1 module)
+		module)))
     (when elt
       (concat (file-name-as-directory (cdr elt))
               file))))
@@ -1015,7 +1015,7 @@ variable `tinyperl-:perl-bin' are set to properties:
   'type             =>  'win32-activestate
                         'win32-cygwin
                         'perl"
-  (let* ((info (ti::process-perl-version perl)))
+  (let ((info (ti::process-perl-version perl)))
     (put 'tinyperl-:perl-bin 'version-answer (nth 3 info))
     (put 'tinyperl-:perl-bin 'type (nth 1 info))))
 
@@ -1042,10 +1042,10 @@ variable `tinyperl-:perl-bin' are set to properties:
 Return:
   t      If some path needed fixing. This means that cache must be resaved."
   (interactive "P")
-  (let* (ok)
+  (let (ok)
     (flet ((exec-set
             (sym bin &optional regexp) ;; Parameters
-            (let* ((value (symbol-value sym)))
+            (let ((value (symbol-value sym)))
               (when (or force
                         ;;  Value is set, possibly read from the cache,
                         ;;  but that binary does not exist any more.
@@ -1617,7 +1617,7 @@ Mode description:
 (defun tinyperl-pod-view-heading-backward (&optional regexp)
   "Go to one heading backward. Optionally use REGEXP."
   (interactive)
-  (let* (case-fold-search)
+  (let (case-fold-search)
     (or (and (re-search-backward (or regexp "^\\(  \\)?[A-Z]") nil t)
              (prog1 1 t
                     (beginning-of-line)
@@ -1630,7 +1630,7 @@ Mode description:
   "Go to one heading forward. Optionally use REGEXP."
   (interactive)
   (end-of-line)
-  (let* (case-fold-search)
+  (let (case-fold-search)
     (or (and (re-search-forward (or regexp "^\\(  \\)?[A-Z]") nil t)
              (prog1 t
                (beginning-of-line)
@@ -2138,11 +2138,11 @@ Hee is one suggestion ofr Module.pm POD layout
 \(tinyperl-inc-split-win32-path \"C:\\Program files\\this  c:\\temp\")
 -->
 '(\"C:\\Program files\\this\" \"c:\\temp\")"
-  (let* (locations
-         beg
-         end
-         ret
-         str)
+  (let (locations
+	beg
+	end
+	ret
+	str)
     (with-temp-buffer
       (insert string)
       (ti::pmin)
@@ -2161,12 +2161,12 @@ Hee is one suggestion ofr Module.pm POD layout
 ;;;
 (defun tinyperl-inc-split (inc)
   "Split @INC in INC string, where entries are separated by spaces."
-  (let* ((fid "tinyperl-inc-split")
-         (perl-type (tinyperl-perl-type))
-         ;;  We can't just explode RESULT with Emacs function `split'
-         ;;  because in Win32 it may contain spaces
-         ;;  c:\Program files\activestate\perl\lib
-         list)
+  (let ((fid "tinyperl-inc-split")
+	(perl-type (tinyperl-perl-type))
+	;;  We can't just explode RESULT with Emacs function `split'
+	;;  because in Win32 it may contain spaces
+	;;  c:\Program files\activestate\perl\lib
+	list)
     (when inc
       (cond
        ((and (ti::win32-p)
@@ -2227,8 +2227,7 @@ If Emacs is win32 application, convert to DOS style paths."
   ;;
   ;;  #todo: XEmacs is different game, it can be built as Cygwin native
   ;;  #todo: How to check if running Cygwin or Win32 XEmacs ?
-
-  (let* ((perl-type (tinyperl-perl-type)))
+  (let ((perl-type (tinyperl-perl-type)))
     (cond
      ((and (ti::emacs-p)
            ;;  #todo: if Emacs is built as native cygwin application,
@@ -2393,10 +2392,10 @@ References:
 ;;;
 (defun tinyperl-build-pod-files ()
   "Build files under pod path."
-  (let* ((path  (or tinyperl-:pod-path
-                    (error "TinyPerl: No tinyperl-:pod-path")))
-         files
-         ret)
+  (let ((path  (or tinyperl-:pod-path
+		   (error "TinyPerl: No tinyperl-:pod-path")))
+	files
+	ret)
     (setq files (ti::directory-files path "\\.pod"))
     (dolist (file files)
       (push (cons file (ti::file-name-forward-slashes path)) ret))
@@ -2412,14 +2411,14 @@ SEARCH-LIST corresponds to `tinyperl-:inc-path'
 Return:
 
   '((package.pm . path) (package::package.pm . path) ..)"
-  (let* ((INC (or search-list
-                  (error "TinyPerl: No SEARCH-LIST")))
-         files
-         dirs
-         dirs2
-         dirs3
-         package
-         ret)
+  (let ((INC (or search-list
+		 (error "TinyPerl: No SEARCH-LIST")))
+	files
+	dirs
+	dirs2
+	dirs3
+	package
+	ret)
     (flet ((my-add
             (file pfx path)
             ;;  As long as the name of the .pl file is unique (not yet
@@ -2490,7 +2489,7 @@ Return:
 (defun tinyperl-podchecker (file &optional buffer)
   "Run Pod::Checker/podchecker() on FILE and put output to BUFFER.
 Default value for BUFFER is `tinyperl-:perldoc-buffer'."
-  (let* ((fid "tinyperl-podchecker"))
+  (let ((fid "tinyperl-podchecker"))
     (or (tinyperl-perl-module-exists-p "Pod::Checker.pm")
         (error "\
 TinyPerl: Pod::Checker.pm is not known to this Perl version. @INC trouble?"))
@@ -2512,24 +2511,24 @@ TinyPerl: Pod::Checker.pm is not known to this Perl version. @INC trouble?"))
                       (expand-file-name file))
         (run-hooks 'tinyperl-:podchecker-after-hook)))
     (when t
-      (let* (compilation-error-regexp-alist
-             ;;  `shell-quote-argument'  does not work here correctly.
-             ;;  This tackles bash.exe and  Win32 command-com
-             (quote (if (and (ti::win32-p)
-                             (string-match "cmd\\|command"
-                                           shell-file-name))
-                        "\""
-                      "'"))
-             (cmd (concat
-                   tinyperl-:perl-bin
-                   " -MPod::Checker"
-                   " -e"
-                   " "
-                   quote
-                   "podchecker shift, undef, -warnings , q(on)"
-                   quote
-                   " "
-                   (expand-file-name file))))
+      (let (compilation-error-regexp-alist
+	    ;;  `shell-quote-argument'  does not work here correctly.
+	    ;;  This tackles bash.exe and  Win32 command-com
+	    (quote (if (and (ti::win32-p)
+			    (string-match "cmd\\|command"
+					  shell-file-name))
+		       "\""
+		     "'"))
+	    (cmd (concat
+		  tinyperl-:perl-bin
+		  " -MPod::Checker"
+		  " -e"
+		  " "
+		  quote
+		  "podchecker shift, undef, -warnings , q(on)"
+		  quote
+		  " "
+		  (expand-file-name file))))
         ;;  Keep the old values and add this regexp.
         ;;  2 = filename, 1 = line number
         ;; *** WARNING: 2 unescaped <> in paragraph at line 1994 in file xxx
@@ -2616,9 +2615,9 @@ TinyPerl: Pod::Checker.pm is not known to this Perl version. @INC trouble?"))
 ;;;
 (defun tinyperl-pod-manpage-to-file (pod)
   "Convert POD `perldoc.pod' or `perldoc' into absolute filename."
-  (let* ((elt (assoc (ti::string-verify-ends pod ".pod")
-                     (or tinyperl-:pod-list
-                         (error "TinyPerl: No tinyperl-:pod-list")))))
+  (let ((elt (assoc (ti::string-verify-ends pod ".pod")
+		    (or tinyperl-:pod-list
+			(error "TinyPerl: No tinyperl-:pod-list")))))
     (when elt
       (concat (cdr elt) (car elt)))))
 
@@ -2749,7 +2748,7 @@ Rerefences:
   `tinyperl-:pod-buffer-control'."
   (if (memq tinyperl-:pod-buffer-control '(nil one single))
       tinyperl-:pod-buffer-name
-    (let* ((name module)) ;; (replace-regexp-in-string "\.pm$" "" module)))
+    (let ((name module)) ;; (replace-regexp-in-string "\.pm$" "" module)))
       (concat "*pod: " name "*"))))
 
 ;;; ----------------------------------------------------------------------
@@ -2769,7 +2768,7 @@ Rerefences:
 ;;;
 (defun tinyperl-pod-pop-to-buffer (regexp &optional buffer)
   "Pop to POD buffer if REGEXP matches. Return non-nil if ok."
-  (let* ((elt (tinyperl-pod-re-search regexp buffer)))
+  (let ((elt (tinyperl-pod-re-search regexp buffer)))
     (when elt
       (pop-to-buffer (car elt))
       (goto-char (cdr elt)))))
@@ -2822,15 +2821,15 @@ Call arguments are in ARG-LIST."
            arg-list))
    (t
     (with-current-buffer buffer
-      (let* ((perl-type (tinyperl-perl-type))
-             (cmd       (if (ti::win32-shell-p)
-                            ;;  Must not contain path name
-                            ;;  I don't know if the exact problem was due to
-                            ;;  SPACES in the path name.
-                            "perldoc"
-                          tinyperl-:perldoc-bin))
-             (call-type (tinyperl-external-command-format cmd))
-             (args (ti::list-to-string arg-list)))
+      (let ((perl-type (tinyperl-perl-type))
+	    (cmd       (if (ti::win32-shell-p)
+			   ;;  Must not contain path name
+			   ;;  I don't know if the exact problem was due to
+			   ;;  SPACES in the path name.
+			   "perldoc"
+			 tinyperl-:perldoc-bin))
+	    (call-type (tinyperl-external-command-format cmd))
+	    (args (ti::list-to-string arg-list)))
         ;;  Add "perl" to the front of command if it is "perldoc".
         ;;  This will work under Windows/Cygwin and Unix
         (if (listp call-type)
@@ -2871,19 +2870,19 @@ References:
    (list
     (read-string "Perldoc -f: "  (ti::buffer-read-word))
     current-prefix-arg))
-  (let* ((buffer (get-buffer-create tinyperl-:perldoc-buffer))
-         (last   (get 'tinyperl-perldoc 'string))
-         (cmd    (format
-                  "%s -f %s"
-                  (if (ti::win32-shell-p)
-                      ;;  Must not contain path name
-                      ;;  I don't know if the exact problem was due to
-                      ;;  SPACES in the path name.
-                      "perldoc"
-                    tinyperl-:perldoc-bin)
-                  string))
-         run
-         win)
+  (let ((buffer (get-buffer-create tinyperl-:perldoc-buffer))
+	(last   (get 'tinyperl-perldoc 'string))
+	(cmd    (format
+		 "%s -f %s"
+		 (if (ti::win32-shell-p)
+		     ;;  Must not contain path name
+		     ;;  I don't know if the exact problem was due to
+		     ;;  SPACES in the path name.
+		     "perldoc"
+		   tinyperl-:perldoc-bin)
+		 string))
+	run
+	win)
     (ti::verb)
     (when (or force
               (and buffer
@@ -2899,7 +2898,7 @@ References:
       (when verb
         (tinyperl-verbose-macro
 	    2
-	 (message "TinyPerl: Running %s" cmd)))
+	  (message "TinyPerl: Running %s" cmd)))
       ;; Win32 call-process fails if the binary c:\prgram files\..
       ;; name contains spaces. This is special problems for perldoc.bat
       ;; Because it is in fact full of perl code and called again. See
@@ -2914,7 +2913,7 @@ References:
           (when verb
             (tinyperl-verbose-macro
 		2
-	     (message "TinyPerl: No matches. Trying without -f ...")))
+	      (message "TinyPerl: No matches. Trying without -f ...")))
           (tinyperl-perldoc-1 buffer (list string))
           (setq cmd (format "%s %s"
                             tinyperl-:perldoc-bin
@@ -2922,11 +2921,11 @@ References:
           (when verb
             (tinyperl-verbose-macro
 		2
-	     (message "TinyPerl: No matches. Trying without -f ...Done.")))))
+	      (message "TinyPerl: No matches. Trying without -f ...Done.")))))
       (when verb
         (tinyperl-verbose-macro
 	    2
-	 (message "TinyPerl: Running %s. Done." cmd))))
+	  (message "TinyPerl: Running %s. Done." cmd))))
     (cond
      ((setq win (or (get-buffer-window buffer t) ;In another frame
                     (get-buffer-window buffer)))
@@ -3059,7 +3058,7 @@ Input:
      (if (buffer-file-name)
          (file-name-nondirectory (buffer-file-name))
        ""))))
-  (let* ((buffer (tinyperl-podchecker file)))
+  (let ((buffer (tinyperl-podchecker file)))
     (display-buffer buffer)))
 
 ;;; ----------------------------------------------------------------------
@@ -3091,7 +3090,7 @@ If file contains pod documentation section, it will be formatted nicely."
 (defun tinyperl-pod-jump (module)
   "Jump to Perl MODULE POD if it exists or do nothing."
   (interactive)
-  (let* ((buffer (get-buffer (tinyperl-pod-buffer-name module))))
+  (let ((buffer (get-buffer (tinyperl-pod-buffer-name module))))
     (when buffer
       (ti::pop-to-buffer-or-window buffer))))
 
@@ -3146,16 +3145,15 @@ to the correct position."
                          (error "TinyPerl: No tinyperl-:pod-path"))))
   (unless (file-directory-p pod-path)
     (error "POD directory not found [%s]" pod-path))
-  (let* ((grep (tinyperl-grep-program))
-
-         ;;  Have to set this variable, because we can't
-         ;;  allow to pass full path to the grep. in Win32 Emacs would
-         ;;  send path in DOS style, but Cygwin does not accept those;
-         ;;  only unix style paths.
-                                        ;:
-         ;;  So, it's enough to Emacs to do an "cd" to directory.
-         ;;
-         (default-directory (file-name-directory pod-path)))
+  (let ((grep (tinyperl-grep-program))
+	;;  Have to set this variable, because we can't
+	;;  allow to pass full path to the grep. in Win32 Emacs would
+	;;  send path in DOS style, but Cygwin does not accept those;
+	;;  only unix style paths.
+	;:
+	;;  So, it's enough to Emacs to do an "cd" to directory.
+	;;
+	(default-directory (file-name-directory pod-path)))
     (setq pod-path "")
     (if (fboundp 'igrep)
         (ti::funcall 'igrep nil regexp "*.pod" pod-path)
@@ -3411,7 +3409,7 @@ been answered in FAQ'"
 ;;;
 (defun tinyperl-version-stamp ()
   "Find $VERSION = '1234.1234'; variable and update ISO 8601 date."
-  (let* ((date (format-time-string "%Y.%m%d" (current-time))))
+  (let ((date (format-time-string "%Y.%m%d" (current-time))))
     (tinyperl-version-macro
      ;; Replace only if it is not current date
      (unless (save-match-data
@@ -3480,9 +3478,9 @@ Input:
   USE-DATE    if non-nil, use file-yyyy.mmdd.pl, otherwise
               try to guess verison number from a Perl variable in script.
               See function `tinyperl-version-stamp-re-search-forward'."
-  (let* (kill
-         buffer
-         ret)
+  (let (kill
+	buffer
+	ret)
     (setq buffer (or (and filename
                           (find-buffer-visiting filename))
                      (prog1
@@ -3490,20 +3488,20 @@ Input:
                        (setq kill t))))
     (with-current-buffer buffer
       (tinyperl-version-macro
-       (let* ((ver   (or (match-string 2)
-                         (and use-date
-                              (format-time-string
-                               "%Y.%m%d"
-                               (current-time)))))
-              (name1 (file-name-nondirectory
-                      (or filename
-                          (buffer-file-name)
-                          (error "TinyPerl: No `buffer-file-name'"))))
-              (name  (file-name-sans-extension name1))
-              (ext   (file-name-extension name1)))
-         (when (and (stringp ver)
-                    (string-match "^[0-9]+" ver))
-           (setq ret (format "%s-%s.%s" name ver ext))))))
+	(let* ((ver   (or (match-string 2)
+			  (and use-date
+			       (format-time-string
+				"%Y.%m%d"
+				(current-time)))))
+	       (name1 (file-name-nondirectory
+		       (or filename
+			   (buffer-file-name)
+			   (error "TinyPerl: No `buffer-file-name'"))))
+	       (name  (file-name-sans-extension name1))
+	       (ext   (file-name-extension name1)))
+	  (when (and (stringp ver)
+		     (string-match "^[0-9]+" ver))
+	    (setq ret (format "%s-%s.%s" name ver ext))))))
     (if kill                            ;We loaded this from disk
         (kill-buffer buffer))
     ret))
@@ -3617,12 +3615,12 @@ Input:
                     nil nil 'match
                     (file-name-nondirectory buffer-file-name))
     current-prefix-arg))
-  (let* ((name (file-name-nondirectory file))
-         tmp
-         buffer
-         cmd-1
-         beg
-         end)
+  (let ((name (file-name-nondirectory file))
+	tmp
+	buffer
+	cmd-1
+	beg
+	end)
     (setq file (expand-file-name file))
     (unwind-protect
         (progn
@@ -3659,7 +3657,6 @@ Input:
 	      tinyperl-:perl-bin
 	      cmd-1)))
           ;; ........................................... find-position ...
-
           (and (setq beg (ti::re-search-check
                           "BEGIN:[ \t]+Devel::SelfStubber"))
                (setq end (ti::re-search-check
