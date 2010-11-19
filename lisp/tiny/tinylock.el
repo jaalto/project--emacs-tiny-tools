@@ -270,7 +270,7 @@ this in you ~/.emacs")
 (defun tinylock-auto-lock-set-password ()
   "Set auto lock password."
   (interactive)
-  (let* (pass)
+  (let (pass)
     (if (ti::nil-p (setq pass (ti::query-read-input-as-password
                                "TinyLock, give autolock password: ")))
         (error "Password is empty.")
@@ -401,7 +401,7 @@ Input:
 ;;;
 (defun tinylock-add-history (passwd)
   "Add login attempt to `tinylock-:history'.PASSWD is the attempted login password."
-  (let* ((d (current-time-string)))
+  (let ((d (current-time-string)))
     (setq tinylock-:history
           (append  tinylock-:history
                    (list (list d passwd))))))
@@ -410,7 +410,7 @@ Input:
 ;;;
 (defun tinylock-kill-process-control (&optional kill)
   "Return all processes in string format, or KILL all processes (not timer)."
-  (let* ((list  (process-list))
+  (let ((list (process-list))
          ret)
     (if list
         (mapcar
@@ -433,7 +433,7 @@ Input:
 (defun tinylock-history ()
   "Displays login history. Optionally to given buffer BUFFER."
   (interactive)
-  (let* ((i 0))
+  (let ((i 0))
     (switch-to-buffer-other-window
      (get-buffer-create tinylock-:buffer-login-history))
     (erase-buffer)
@@ -445,7 +445,7 @@ Input:
 ;;;
 (defun tinylock-blank-control (&optional unblank)
   "Blank display or UNBLANK."
-  (let* ((blank (get-buffer-create tinylock-:buffer-blank)))
+  (let ((blank (get-buffer-create tinylock-:buffer-blank)))
     (cond
      (unblank
       (ti::kill-buffer-safe blank))
@@ -480,15 +480,16 @@ If LOCK-NOW is non-nil emacs is immediately locked with PSW."
     (progn
       (message "Now enter lock string...") (sit-for 1)
       (ti::query-read-input-invisible))))
-  (let* ((cursor-in-echo-area nil)
-         ;;  It's good programming style NOT to use globals directly
-         ;;  inside code This way maintainer sees at glance what it uses.
-         (key-msg        "This emacs is locked, enter key:")
-         (entry-err      "Unauthorized access.")
-         (wait           tinylock-:login-error-sleep)
-         (loop           t)
-         (msg            (or msg "Lock Emacs ? "))
-         ans)
+  (let ((cursor-in-echo-area nil)
+	;;  It's good programming style NOT to use globals directly
+	;;  inside code This way maintainer sees at glance what it uses.
+	(key-msg        "This emacs is locked, enter key:")
+	(entry-err      "Unauthorized access.")
+	(wait           tinylock-:login-error-sleep)
+	(loop           t)
+	ans)
+    (or msg
+	(setq msg "Lock Emacs ? "))
     (catch 'done
       (if (ti::nil-p psw)
           (error "Password is empty."))
