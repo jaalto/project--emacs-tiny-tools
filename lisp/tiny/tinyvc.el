@@ -35,7 +35,7 @@
 
 ;; ....................................................... &t-install ...
 ;; Put this file on your Emacs-Lisp `load-path', add following into your
-;; ~/.emacs startup file. Before doing require see tinyvc-:load-hook.
+;; ~/.emacs startup file. Before doing require see tinyvc--load-hook.
 ;;
 ;;      (require 'tinyvc)
 ;;
@@ -48,14 +48,14 @@
 ;; at all, use this code:
 ;;
 ;;      (defadvice vc-print-log (after tirl act)
-;;        "Run hook tinyvc-:vc-print-log-hook."
+;;        "Run hook tinyvc--vc-print-log-hook."
 ;;        (require 'tinyvc)
-;;        (run-hooks 'tinyvc-:vc-print-log-hook))
+;;        (run-hooks 'tinyvc--vc-print-log-hook))
 ;;
 ;; If you define your own bindings and use menu, Update following variable
 ;; and call M-x `tinyvc-install-mode'.
 ;;
-;;     tinyvc-:mode-menu-main
+;;     tinyvc--mode-menu-main
 
 ;;}}}
 
@@ -113,7 +113,7 @@
   (ti::package-use-dynamic-compilation)
   (autoload 'font-lock-mode "font-lock" t t))
 
-(ti::package-defgroup-tiny TinyVc tinyvc-: tools
+(ti::package-defgroup-tiny TinyVc tinyvc-- tools
   "Version control rlog minor mode. ChecOut, CheckIn.
   Overview of features
         o   Companion to vc.el, Minor mode forlog buffer (C-x v l)
@@ -125,7 +125,7 @@
 ;;}}}
 ;;{{{ setup: mode
 
-(defcustom tinyvc-:menu-use-p t
+(defcustom tinyvc--menu-use-p t
   "*Should we use echo-area menu?."
   :type  'boolean
   :group 'TinyVc)
@@ -137,7 +137,7 @@
 (eval-and-compile
 
   (ti::macrof-minor-mode-wizard
-   "tinyvc-" " Rlog" "'" "Rlog" 'TinyVc "tinyvc-:" ;1-6
+   "tinyvc-" " Rlog" "'" "Rlog" 'TinyVc "tinyvc--" ;1-6
 
    "RCS Log minor mode.
 With this mode you can CheckOut, Lock, unlock the file whose version
@@ -146,17 +146,17 @@ to temporary buffer e.g. to look at some changes in that version.
 
 By default the commands are accessed through guided echo menu. You
 can use the normal Emacs keymap choice too by settings
-`tinyvc-:menu-use-p' to nil and calling `tinyvc-install-mode'.
+`tinyvc--menu-use-p' to nil and calling `tinyvc-install-mode'.
 
 Mode description:
 
-\\{tinyvc-:mode-prefix-map}"
+\\{tinyvc--mode-prefix-map}"
 
    "RCS rlog "
    nil
    "RCS Rlog minor mode menu."
    (list
-    tinyvc-:mode-easymenu-name
+    tinyvc--mode-easymenu-name
     ["Do CheckOut at point"           tinyvc-do-co                    t]
     ["Do CheckOut at point (lock) "   tinyvc-do-co-l                  t]
     ["Do CheckOut head "              tinyvc-do-co-head               t]
@@ -187,18 +187,18 @@ Mode description:
 
 ;;; ......................................................... &v-hooks ...
 
-(defcustom tinyvc-:load-hook nil
+(defcustom tinyvc--load-hook nil
   "*Hook that is run when package is loaded."
   :type  'hook
   :group 'TinyVc)
 
-(defcustom tinyvc-:vc-print-log-hook
+(defcustom tinyvc--vc-print-log-hook
   '(turn-on-tinyvc-mode
     tinyvc-rename-buffer
     tinyvc-select-backend
     turn-on-font-lock-mode-maybe)
   "*Hook run after `vc-print-log' command.
-See also `tinyvc-:invoked-buffer' what the functions in this hook
+See also `tinyvc--invoked-buffer' what the functions in this hook
 can examine."
   :type  'hook
   :group 'TinyVc)
@@ -206,7 +206,7 @@ can examine."
 ;;}}}
 ;;{{{ setup: public, user configurable
 
-(defcustom tinyvc-:cmd-function 'tinyvc-cmd-get-rcs
+(defcustom tinyvc--cmd-function 'tinyvc-cmd-get-rcs
   "*Return RCS executable shell command.
 See `tinyvc-cmd-get' source code. Input parameters are symbols:
 
@@ -221,16 +221,16 @@ Note:
 
   This variable is set to buffer local and one of the above choices is
   set if `tinyvc-select-backend' function, which is installed in
-  `tinyvc-:vc-print-log-hook' recognized the backend."
+  `tinyvc--vc-print-log-hook' recognized the backend."
   :type  'hook
   :group 'TinyVc)
 
-(defcustom tinyvc-:locker-name (user-login-name)
+(defcustom tinyvc--locker-name (user-login-name)
   "*Your RCS locker ID that apperas in the lock statement."
   :type  'string
   :group 'TinyVc)
 
-(defcustom tinyvc-:font-lock-keywords
+(defcustom tinyvc--font-lock-keywords
   '((".*file:[ \t]+\\([^\n]+\\)"    1 'region)
     ("^head:.*"                     0 font-lock-reference-face)
     ("^locks:[ \t]+\\([^\n]+\\)"    1 font-lock-keyword-face)
@@ -247,28 +247,28 @@ Note:
 ;;}}}
 ;;{{{ setup: private
 
-(defvar tinyvc-:invoked-buffer nil
+(defvar tinyvc--invoked-buffer nil
   "When you call `vc-print-log', the buffer-pointer is recored here.")
-(put 'tinyvc-:invoked-buffer 'permanent-local t)
+(put 'tinyvc--invoked-buffer 'permanent-local t)
 
-(defvar tinyvc-:shell-buffer "*tinyvc-tmp*"
+(defvar tinyvc--shell-buffer "*tinyvc-tmp*"
   "Shell buffer.")
 
 ;;}}}
 ;;{{{ Minor mode
 
-(defvar tinyvc-:mode-menu-main
+(defvar tinyvc--mode-menu-main
   '("\
 uU)nlock l)ock o=co l=co-l h=co-head  p)op f)ind  m)ark k)ill r)eload [scM]"
     ((?u  . ( (call-interactively 'tinyvc-cancel-co)))
-     (?U  . ( (tinyvc-unlock-unsafely ti::menu-:prefix-arg 'verb)))
+     (?U  . ( (tinyvc-unlock-unsafely ti::menu--prefix-arg 'verb)))
      (?o  . ( (call-interactively 'tinyvc-do-co)))
      (?l  . ( (call-interactively 'tinyvc-do-co-l)))
      (?h  . ( (call-interactively 'tinyvc-do-co-head)))
-     (?f  . ( (tinyvc-find-file-tmp ti::menu-:prefix-arg 'verb)))
+     (?f  . ( (tinyvc-find-file-tmp ti::menu--prefix-arg 'verb)))
      (?p  . ( (call-interactively 'tinyvc-pop-to-buffer)))
      (?k  . ( (call-interactively 'tinyvc-kill-tmp)))
-     (?m  . ( (tinyvc-mark ti::menu-:prefix-arg 'verb)))
+     (?m  . ( (tinyvc-mark ti::menu--prefix-arg 'verb)))
      (?r  . ( (call-interactively 'tinyvc-reload)))
      (?s  . ( (call-interactively 'tinyvc-status)))
      (?c  . ( (call-interactively 'tinyvc-chmod-toggle)))
@@ -296,7 +296,7 @@ uU = Cancel Checkout with 'co'")
 (defun tinyvc-mode-menu (&optional arg)
   "Call Echo area mode menu with ARG."
   (interactive "P")
-  (ti::menu-menu 'tinyvc-:mode-menu-main arg))
+  (ti::menu-menu 'tinyvc--mode-menu-main arg))
 
 ;;; ----------------------------------------------------------------------
 ;;;
@@ -466,12 +466,12 @@ Input:
 
 References:
 
-  `tinyvc-:cmd-function'"
-  (let* ((exe    (funcall tinyvc-:cmd-function sym))
+  `tinyvc--cmd-function'"
+  (let* ((exe    (funcall tinyvc--cmd-function sym))
          (send   (if (string-match "%s" shell-cmd)
                      (format shell-cmd exe sym)
                    (format "%s %s" exe shell-cmd)))
-         (out   (or buffer (ti::temp-buffer tinyvc-:shell-buffer 'clear))))
+         (out   (or buffer (ti::temp-buffer tinyvc--shell-buffer 'clear))))
     (shell-command send out)))
 
 ;;; ----------------------------------------------------------------------
@@ -510,10 +510,10 @@ References:
 ;;; ----------------------------------------------------------------------
 ;;;
 (defun tinyvc-load-to-buffer (dest &optional noerr)
-  "Examine `tinyvc-:shell-buffer' and copy the output to DEST buffer.
+  "Examine `tinyvc--shell-buffer' and copy the output to DEST buffer.
 If DEST does not exist, it is created. NOERR ignores errors."
   (interactive)
-  (let ((shell tinyvc-:shell-buffer)
+  (let ((shell tinyvc--shell-buffer)
         point)
     (with-current-buffer shell
       (ti::pmin)
@@ -547,7 +547,7 @@ If DEST does not exist, it is created. NOERR ignores errors."
     (tinyvc-cmd-exec 'rlog file nil 'noerr)
     (erase-buffer)
     (tinyvc-load-to-buffer (current-buffer))
-    (run-hook-with-args-until-success 'tinyvc-:vc-print-log-hook)
+    (run-hook-with-args-until-success 'tinyvc--vc-print-log-hook)
     (if verb
         (message "Updated."))))
 
@@ -585,9 +585,9 @@ If DEST does not exist, it is created. NOERR ignores errors."
 ;;; ----------------------------------------------------------------------
 ;;;
 (defun tinyvc-select-backend ()
-  "Select RCS or CVS command for the log buffer: set `tinyvc-:cmd-function'."
+  "Select RCS or CVS command for the log buffer: set `tinyvc--cmd-function'."
   (interactive)
-  (let ((buffer  tinyvc-:invoked-buffer)
+  (let ((buffer  tinyvc--invoked-buffer)
 	file
 	type)
     (when (and
@@ -599,12 +599,12 @@ If DEST does not exist, it is created. NOERR ignores errors."
           (setq type (ti::funcall 'vc-buffer-backend))
         ;;  nope; that function does not exist. (19.28, 21.2+)
         (setq type (vc-file-getprop file 'vc-backend)))
-      (make-local-variable 'tinyvc-:cmd-function)
+      (make-local-variable 'tinyvc--cmd-function)
       (cond
        ((equal type 'RCS)
-        (setq tinyvc-:cmd-function 'tinyvc-cmd-get-rcs))
+        (setq tinyvc--cmd-function 'tinyvc-cmd-get-rcs))
        ((equal type 'CVS)
-        (setq tinyvc-:cmd-function 'tinyvc-cmd-get-rcs))))))
+        (setq tinyvc--cmd-function 'tinyvc-cmd-get-rcs))))))
 
 ;;; ----------------------------------------------------------------------
 ;;;
@@ -806,10 +806,10 @@ Input:
   VERB      Verbose messags.
 
 Notes:
- `tinyvc-:locker-name'  other locks are not touched ever.
+ `tinyvc--locker-name'  other locks are not touched ever.
  No buffer reverting is attempted."
   (interactive)
-  (let ((name  tinyvc-:locker-name)
+  (let ((name  tinyvc--locker-name)
 	user
 	ver
 	file
@@ -960,22 +960,22 @@ is read-only. VERB."
 ;;}}}
 
 (if (boundp 'vc-print-log-hook)         ;Not Exist in 19.34
-    (ti::add-hooks 'vc-print-log-hook tinyvc-:vc-print-log-hook)
+    (ti::add-hooks 'vc-print-log-hook tinyvc--vc-print-log-hook)
   (eval-when-compile (require 'advice))
   (defadvice vc-print-log (around tirl act)
-    "Run hook `tinyvc-:vc-print-log-hook'."
+    "Run hook `tinyvc--vc-print-log-hook'."
     (let ((BuffeR (current-buffer)))
       ad-do-it
-      (make-local-variable 'tinyvc-:invoked-buffer)
-      (put 'tinyvc-:invoked-buffer 'permanent-local t)
-      (setq tinyvc-:invoked-buffer BuffeR)
-      (run-hooks 'tinyvc-:vc-print-log-hook))))
+      (make-local-variable 'tinyvc--invoked-buffer)
+      (put 'tinyvc--invoked-buffer 'permanent-local t)
+      (setq tinyvc--invoked-buffer BuffeR)
+      (run-hooks 'tinyvc--vc-print-log-hook))))
 
-(add-hook 'tinyvc-:mode-define-keys-hook 'tinyvc-mode-define-keys)
+(add-hook 'tinyvc--mode-define-keys-hook 'tinyvc-mode-define-keys)
 
 (provide   'tinyvc)
 
 (tinyvc-install-to-emacs)
-(run-hooks 'tinyvc-:load-hook)
+(run-hooks 'tinyvc--load-hook)
 
 ;;; tinyvc.el ends here
