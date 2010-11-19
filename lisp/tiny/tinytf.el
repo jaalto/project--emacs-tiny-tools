@@ -2478,8 +2478,8 @@ This function calls `tinytf-utility-programs-check' with 'force."
 ;;;
 (defun tinytf-fontify-current-buffer-window ()
   "Fontify current buffer's window."
-  (let ((buffer (current-buffer))
-	(win    (get-buffer-window buffer)))
+  (let* ((buffer (current-buffer))
+	 (win    (get-buffer-window buffer)))
     (when (and win
                (window-live-p win)
                (or font-lock-mode
