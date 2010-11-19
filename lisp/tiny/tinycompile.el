@@ -474,9 +474,10 @@ Return:
 
  '((\"filename\" . NBR) ...)
  or whatever format LIST-FUNC says."
-  (let* ((max-point   (or max-point (point-max)))
-         table
-         elt)
+  (let ((max-point (or max-point
+		       (point-max)))
+	table
+	elt)
     (save-excursion
       (while (and (re-search-forward "^\\([^:]+\\):[0-9]+:" nil t)
                   (< (point) max-point))
@@ -492,16 +493,16 @@ Return:
 (defun tinycompile-kill-all-file-lines ()
   "Kill all lines associated with the file on the current line."
   (interactive)
-  (let* ((fid  'tinycompile-kill-all-file-lines)
-         (elt  (ti::buffer-parse-line-main))
-         (cd   (save-excursion
-                 (goto-char (point-min))
-                 (when (looking-at "^cd \\(.+\\)")
-                   (match-string-no-properties 1))))
-         file
-         file2
-         re
-         point)
+  (let ((fid  'tinycompile-kill-all-file-lines)
+	(elt  (ti::buffer-parse-line-main))
+	(cd   (save-excursion
+		(goto-char (point-min))
+		(when (looking-at "^cd \\(.+\\)")
+		  (match-string-no-properties 1))))
+	file
+	file2
+	re
+	point)
     (unless fid ;; XEmacs byte compiler silencer
       (setq fid nil))
     (if (null elt)
@@ -539,9 +540,9 @@ Return:
 References:
  `tinycompile-:table-hide'"
   (interactive)
-  (let* ((list tinycompile-:table-hide)
-         search
-         show)
+  (let ((list tinycompile-:table-hide)
+	search
+	show)
     (save-excursion
       (unless regexp                    ;Find right value
         (setq show (y-or-n-p "Y = show, N = hide "))
