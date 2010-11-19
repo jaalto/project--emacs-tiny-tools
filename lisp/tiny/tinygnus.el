@@ -147,7 +147,7 @@
 ;;      Some domains have opened specific addresses where you can send
 ;;      these complains, e.g. abuse@aol.com, fraud@uu.net. If you know a
 ;;      specific address where to send the complaint, update
-;;      `tinygnus-:ube-abuse-account-table'
+;;      `tinygnus--ube-abuse-account-table'
 ;;
 ;;  Gathering information from articles (e.g. URLs)
 ;;
@@ -160,7 +160,7 @@
 ;;
 ;;      Function steps through all marked articles (Mark command in summary
 ;;      buffer is in M P submap), examines each message and puts the urls
-;;      in `tinygnus-:output-buffer'. You can clear and display with
+;;      in `tinygnus--output-buffer'. You can clear and display with
 ;;      commands:
 ;;
 ;;          C-c ' g d       tinygnus-summary-gather-display
@@ -169,7 +169,7 @@
 ;;  Configuring the user format functions
 ;;
 ;;      Before you load this file, it might be good to configure variable
-;;      `tinygnus-:uff-table' so that it won't clash the definitions of
+;;      `tinygnus--uff-table' so that it won't clash the definitions of
 ;;      your own `gnus-user-format-function-X'. If you load this file
 ;;      without modifying the table, it will replace all existing functions
 ;;      according to that table. In case you don't know what this is all
@@ -242,7 +242,7 @@
 ;;      meaning in nntp group and non-nntp groups and this enchancement
 ;;      does just that. You get fast Summary with dormants now and you
 ;;      don't need to separately limit the buffer to show the dormants. To
-;;      turn off this feature, set `tinygnus-:show-dormants' to nil.
+;;      turn off this feature, set `tinygnus--show-dormants' to nil.
 ;;
 ;;  Compressed Gnus newsrc files
 ;;
@@ -261,11 +261,11 @@
 ;;      file to compressed one is easy:
 ;;
 ;;      .   gzip your .newsrc and .eld files
-;;      .   (setq tinygnus-:z ".gz")
+;;      .   (setq tinygnus--z ".gz")
 ;;      .   M-x load-library RET tinygnus RET
 ;;
 ;;      If you later want to restore this settings: Unzip, do (setq
-;;      tinygnus-:z nil), and reload the package. But if you're low
+;;      tinygnus--z nil), and reload the package. But if you're low
 ;;      of quota, you propably do the reverse operation.
 ;;
 ;;       Gnus version note
@@ -317,7 +317,7 @@
 ;;
 ;;      As you saw above, the %uE function, or more precisely,
 ;;      `tinygnus-uff-group-expiry' controls what information is returned by
-;;      looking at `tinygnus-:uff-table'. Please configure it to display
+;;      looking at `tinygnus--uff-table'. Please configure it to display
 ;;      whatever you want from group parameters.
 ;;
 ;;  Article wash functions
@@ -340,7 +340,7 @@
 ;;
 ;;      Thre is no detailled instructions how to fix the situation after
 ;;      the function has run, but the printed results in
-;;      `tinygnus-:debug-buffer' should at least give better clues. LOOK
+;;      `tinygnus--debug-buffer' should at least give better clues. LOOK
 ;;      CLOSELY THE RESULTS. And supply them to gnus newsgroup or mailing
 ;;      list. Maybe someone can by looking at the values what's the
 ;;      problem.
@@ -363,7 +363,7 @@
 ;;
 ;;          (defun my-tinygnus-summary-mode-hook ()
 ;;            "Define new keybindings."
-;;            (let ((map tinygnus-:summary-mode-map))
+;;            (let ((map tinygnus--summary-mode-map))
 ;;              (define-key map [(alt ?<)]
 ;;                'tinygnus-gnus-summary-search-article-forward)
 ;;              (define-key map [(control ?<)]
@@ -422,10 +422,10 @@
   ;;  Yes, this variable is purposively put to "tinypath" package.
   ;;  See that package for better explanation.
   ;;
-  (defconst tinypath-:gnus-load-path
+  (defconst tinypath--gnus-load-path
     (locate-library "gnus"))
   (message "tinygnus.el: Gnus path %s"
-           (or tinypath-:gnus-load-path "<path not found>"))
+           (or tinypath--gnus-load-path "<path not found>"))
   (defvar bbdb/gnus-summary-show-bbdb-names)
   (defvar bbdb/gnus-summary-prefer-bbdb-data)
   (defvar bbdb/gnus-summary-prefer-real-names)
@@ -508,7 +508,7 @@ tinymail.el: ** No bbdb.el along load-path. Please do not compile this file.
         "emacs-[0-9]+\\.[0-9]+"
         ;; Unix Emacs installs to /usr/share/emacs/20.6/lisp/
         "\\|/emacs/[0-9]+\\.[0-9]+/")
-       (or tinypath-:gnus-load-path
+       (or tinypath--gnus-load-path
            (locate-library "gnus")
            ""))))
 
@@ -560,24 +560,24 @@ tinymail.el: ** No bbdb.el along load-path. Please do not compile this file.
 ;;}}}
 ;;{{{ setup: variables
 
-(ti::package-defgroup-tiny TinyGnus tinygnus-: extensions
+(ti::package-defgroup-tiny TinyGnus tinygnus-- extensions
   "Gnus utilities grabbag.")
 
-(defcustom tinygnus-:load-hook nil
+(defcustom tinygnus--load-hook nil
   "*Hook run when file has been loaded."
   :type  'hook
   :group 'TinyGnus)
 
-(defcustom tinygnus-:summary-ube-send-to-postmasters-hook nil
+(defcustom tinygnus--summary-ube-send-to-postmasters-hook nil
   "Hook run after each UBE message has been forwarded to postmasters."
   :type  'hook
   :group 'TinyGnus)
 
-(defcustom tinygnus-:article-ube-send-to-postmasters-hook nil
+(defcustom tinygnus--article-ube-send-to-postmasters-hook nil
   "Hook run after the UBE forward has been composed.
 References:
   `tinygnus-article-ube-send-to-postmasters'
-  `tinygnus-:use-postmaster-addresses'"
+  `tinygnus--use-postmaster-addresses'"
   :type  'hook
   :group 'TinyGnus)
 
@@ -594,24 +594,24 @@ References:
 ;;      xx.aol.com  --> aol.com
 ;;      yy.aol.com
 
-(defcustom tinygnus-:canonilize-ip-functions
+(defcustom tinygnus--canonilize-ip-functions
   '(tinygnus-domain tinygnus-article-received-top-level-domain-maybe)
   "List of function to change host address.
 Function should top level domain for passed HOST.
 Eg: '(\"aa.foo.com\" \"bb.foo.com\") --> '(\"foo.com\")
 References:
-  `tinygnus-:domain-table'"
+  `tinygnus--domain-table'"
   :type  '(list function)
   :group 'TinyGnus)
 
-(defcustom tinygnus-:ube-forward-mail-addresses
+(defcustom tinygnus--ube-forward-mail-addresses
   ;; "uce@ftc.gov" no more active
   '()
   "*Addresses of archives where to send UBE messages."
   :type  '(list string)
   :group 'TinyGnus)
 
-(defcustom tinygnus-:show-dormants  t
+(defcustom tinygnus--show-dormants  t
   "*If non-nil, show dormants immediately when entering non-nntp group.
 Some people like to use dormant mark ? as `important todo' in their
 private mail groups, while gnus usually reserves dormant mark to
@@ -619,7 +619,7 @@ articles that do not need to show up if there is no replies."
   :type  'boolean
   :group 'TinyGnus)
 
-(defcustom tinygnus-:save-mail-notify-regexp (user-login-name)
+(defcustom tinygnus--save-mail-notify-regexp (user-login-name)
   "Regexp to match To field when mail is saved.
 A message is printed in the echo area when the regexp matches.
 References:
@@ -627,27 +627,27 @@ References:
   :type  'regexp
   :group 'TinyGnus)
 
-(defcustom tinygnus-:nslookup-file
+(defcustom tinygnus--nslookup-file
   (ti::package-config-file-prefix "tinygnus.el")
-  "File where to store `tinygnus-:nslookup-table' cache.
+  "File where to store `tinygnus--nslookup-table' cache.
 This speeds up processing the UBE messages so that nslookup hosts can
 be found from cache instead of calling expensive `nslookup'"
   :type  'file
   :group 'TinyGnus)
 
-(defcustom tinygnus-:z nil ;; ".gz"
+(defcustom tinygnus--z nil ;; ".gz"
   "*Extension to use in .newsrc and .eld files.
 If you set this to `.gz' then compressed files are in use.
 You have to reload the package every time you change this settings."
   :type 'string
   :group  'TinyGnus)
 
-(defcustom tinygnus-:gnus-version-for-advice "."
+(defcustom tinygnus--gnus-version-for-advice "."
   "Which version of gnus should have compressed .eld.gz support."
   :type   'regexp
   :group  'TinyGnus)
 
-(defcustom tinygnus-:ube-exclude-ip-regexp nil
+(defcustom tinygnus--ube-exclude-ip-regexp nil
   "Regexp to matc IP domains that are not included in SPAM complain.
 When function `tinygnus-ube-send-to-postmasters' is called, all the IP
 addresses in Received headers are gathered and a message to all
@@ -657,7 +657,7 @@ A good value would be to filter out your local domain."
   :type  'regexp
   :group 'TinyGnus)
 
-(defcustom tinygnus-:ube-abuse-account-table
+(defcustom tinygnus--ube-abuse-account-table
   '(("aol\\|globecomm\\|nortel\\.net\\|\\<usa\\.net"
      . "abuse")
     ("mindspring"
@@ -682,7 +682,7 @@ Format:
   :type   '(repeat (list regexp (string :tag "Account")))
   :group  'TinyGnus)
 
-(defcustom tinygnus-:domain-table
+(defcustom tinygnus--domain-table
   '(("aol\\."           . "aol.com")
     ("soon\\.fi"        . "soon.fi")
     ("yahoo"            . "yahoo.com")
@@ -701,7 +701,7 @@ Table format:
   :type   '(repeat (list regexp (string :tag "Domain")))
   :group  'TinyGnus)
 
-(defcustom tinygnus-:uff-table
+(defcustom tinygnus--uff-table
   '(
     ;;  *Group* buffer format functions in big letter
 
@@ -733,7 +733,7 @@ run expiry function through %uE modified the elt in the pable is
           (symbol :tag "Used TinyGnus function"))
   :group  'TinyGnus)
 
-(defcustom tinygnus-:uff-summary-date
+(defcustom tinygnus--uff-summary-date
   '(format "%02d-%02d" (string-to-number date-mon)  date-day)
   "This variable contain Lisp FORM to return summary line date string.
 If you want to customize this variable you have to look at the source
@@ -755,7 +755,7 @@ Here is value for YY-MM-DD:
   :type  'sexp
   :group 'TinyGnus)
 
-(defcustom tinygnus-:expiry-in-group-string "."
+(defcustom tinygnus--expiry-in-group-string "."
   "Character to add to the end of expiry count if value is defined in group.
 When `tinygnus-uff-group-expiry' is called the number of days is returned.
 But if the expiry-wait is defined in group parameters, this string
@@ -763,7 +763,7 @@ is added to the number."
   :type  'string
   :group 'TinyGnus)
 
-(defcustom tinygnus-:additional-group-info
+(defcustom tinygnus--additional-group-info
   '((gcc-self     t eq "g")
     (total-expire t eq "t"))
   "*What additional grup parameter `tinygnus-uff-group-expiry' would return.
@@ -789,7 +789,7 @@ Format:
           (string   :tag "returned val"))
   :group 'TinyGnus)
 
-(defcustom tinygnus-:get-news-symbolic-levels
+(defcustom tinygnus--get-news-symbolic-levels
   '(("primary Mail"     . 1)
     ("secondary Mail"   . 2)
     ("mailing lists"    . 3)
@@ -826,25 +826,25 @@ NUMBER-OR-FUNCTION-OR-LIST
 ;;}}}
 ;;{{{ setup: private
 
-(defvar tinygnus-:use-postmaster-addresses nil
+(defvar tinygnus--use-postmaster-addresses nil
   "Variable contains postmaster address used to compose UBE response.
-You can use this in `tinygnus-:article-ube-send-to-postmasters-hook'
+You can use this in `tinygnus--article-ube-send-to-postmasters-hook'
 This variable also has following properties: 'ip-list 'ns-list (nslookup)")
 
-(defvar tinygnus-:output-buffer "*tinygnus-buffer*"
+(defvar tinygnus--output-buffer "*tinygnus-buffer*"
   "Temporary buffer to store miscellaneous user selected information.")
 
 ;; Reloading file will reset this; which is good.
 ;; By sitting on the Group Line in *Group* Try
 ;;
-;;      (get 'tinygnus-:gnus-group-info (make-symbol (gnus-group-group-name)))
+;;      (get 'tinygnus--gnus-group-info (make-symbol (gnus-group-group-name)))
 ;;      (symbol-plist 'tinygnus-group-info)
 
-(defconst tinygnus-:gnus-group-info nil
+(defconst tinygnus--gnus-group-info nil
   "Miscellaneous group information kept in property list.
 Keyed by full prefixed group name.")
 
-(defvar tinygnus-:nslookup-table nil
+(defvar tinygnus--nslookup-table nil
   "List of nslookup's.")
 
 ;;}}}
@@ -855,7 +855,7 @@ Keyed by full prefixed group name.")
 ;;;###autoload (autoload 'tinygnus-debug-toggle "tinygnus" "" t)
 ;;;###autoload (autoload 'tinygnus-debug-show   "tinygnus" "" t)
 
-(eval-and-compile (ti::macrof-debug-standard  "tinygnus" "-:"))
+(eval-and-compile (ti::macrof-debug-standard  "tinygnus" "--"))
 
 ;;}}}
 
@@ -870,7 +870,7 @@ Keyed by full prefixed group name.")
 
 (eval-and-compile
   (ti::macrof-minor-mode-wizard
-   "tinygnus-summary-" " Tg" "\C-c'"  "Tgnus" 'TinyGnus "tinygnus-:summary-"
+   "tinygnus-summary-" " Tg" "\C-c'"  "Tgnus" 'TinyGnus "tinygnus--summary-"
 
    "Gnus utilities.
 This minor mode defines some additional commands to Gnus Group buffer.
@@ -879,9 +879,9 @@ See also `tinygnus-summary-mode'
 Mode description:
 
 Prefix key to access the minor mode is defined in
-`tinygnus-:summary-mode-prefix-key' which is by deafult C - c '
+`tinygnus--summary-mode-prefix-key' which is by deafult C - c '
 
-\\{tinygnus-:summary-mode-prefix-map}"
+\\{tinygnus--summary-mode-prefix-map}"
 
    "Gnus summary mode extras"
    (progn                               ;Some mode specific things
@@ -893,7 +893,7 @@ Prefix key to access the minor mode is defined in
         (symbol-name major-mode))))
    "TinyGnus summary mode"
    (list                                ;arg 10
-    tinygnus-:summary-mode-easymenu-name
+    tinygnus--summary-mode-easymenu-name
 
     ["Repeat search forward"  tinygnus-gnus-summary-search-article-forward   t]
     ["Repeat search backward" tinygnus-gnus-summary-search-article-backward  t]
@@ -962,15 +962,15 @@ Prefix key to access the minor mode is defined in
 
 (eval-and-compile
   (ti::macrof-minor-mode-wizard
-   "tinygnus-group-" " Tg" "\C-c'"  "Tgnus" 'TinyGnus "tinygnus-:group-"
+   "tinygnus-group-" " Tg" "\C-c'"  "Tgnus" 'TinyGnus "tinygnus--group-"
 
    "Gnus utilities.
 
 Mode description:
 
-Prefix key to access the minor mode is defined in `tinygnus-:group-mode-prefix-key'
+Prefix key to access the minor mode is defined in `tinygnus--group-mode-prefix-key'
 
-\\{tinygnus-:group-mode-prefix-map}"
+\\{tinygnus--group-mode-prefix-map}"
    "TinyGnus"
    (progn                               ;Some mode specific things
      (when (and tinygnus-group-mode
@@ -979,7 +979,7 @@ Prefix key to access the minor mode is defined in `tinygnus-:group-mode-prefix-k
        (error "Mode Can only be used in Gnus Group buffer.")))
    "Gnus group mode extras"
    (list                                ;arg 10
-    tinygnus-:group-mode-easymenu-name
+    tinygnus--group-mode-easymenu-name
     ["Read news with symbolic levels" tinygnus-gnus-group-get-news-symbolic  t]
     ["Crash box delete"               tinygnus-crash-box-delete              t]
     ["Crash box find-file"            tinygnus-crash-box-find-file           t]
@@ -1071,16 +1071,16 @@ Prefix key to access the minor mode is defined in `tinygnus-:group-mode-prefix-k
 	hook
 	hook-list)
     (tinygnus-uff-table-install)
-    (ti::add-hooks  'tinygnus-:summary-ube-send-to-postmasters-hook
+    (ti::add-hooks  'tinygnus--summary-ube-send-to-postmasters-hook
                     'tinygnus-mark-deleted
                     uninstall)
-    (ti::add-hooks  'tinygnus-:summary-mode-define-keys-hook
+    (ti::add-hooks  'tinygnus--summary-mode-define-keys-hook
                     'tinygnus-summary-mode-define-keys
                     uninstall)
-    (ti::add-hooks  'tinygnus-:group-mode-define-keys-hook
+    (ti::add-hooks  'tinygnus--group-mode-define-keys-hook
                     'tinygnus-group-mode-define-keys
                     uninstall)
-    (ti::add-hooks 'tinygnus-:article-ube-send-to-postmasters-hook
+    (ti::add-hooks 'tinygnus--article-ube-send-to-postmasters-hook
                    '(tinygnus-ube-cc-spam-archive
                      tinygnus-ube-postmaster-inform)
                    uninstall)
@@ -1107,13 +1107,13 @@ Prefix key to access the minor mode is defined in `tinygnus-:group-mode-prefix-k
 ;;; ----------------------------------------------------------------------
 ;;;
 (defun tinygnus-uff-table-install ()
-  "Install `tinygnus-:uff-table'. Previous Gnus user functions will be wiped."
+  "Install `tinygnus--uff-table'. Previous Gnus user functions will be wiped."
   (interactive)
   (let (func
 	gnus-func)
-    (dolist (elt tinygnus-:uff-table)
+    (dolist (elt tinygnus--uff-table)
       (unless (fboundp (setq func  (nth 1 elt)))
-        (error "Internal error. tinygnus-:uff-table, No func %s" func))
+        (error "Internal error. tinygnus--uff-table, No func %s" func))
       (setq gnus-func
             (intern (format "gnus-user-format-function-%s"
                             (char-to-string (car elt)))))
@@ -1129,7 +1129,7 @@ Prefix key to access the minor mode is defined in `tinygnus-:group-mode-prefix-k
   (interactive)
   (tinygnus-gnus-compile-1
    (mapcar (function (lambda (x) (car x)))
-           tinygnus-:uff-table)))
+           tinygnus--uff-table)))
 
 ;;; ----------------------------------------------------------------------
 ;;;
@@ -1230,7 +1230,7 @@ The variable `nbr' has the current article number. Use command
   "Run BODY inside articles that are marked.
 Variable `out' contains the output buffer and `buffer' points
 to the article buffer."
-  `(let ((out (get-buffer-create tinygnus-:output-buffer))
+  `(let ((out (get-buffer-create tinygnus--output-buffer))
 	 buffer)
      (tinygnus-summary-map-articles-macro
       (gnus-summary-select-article 'all nil 'pseudo nbr)
@@ -1244,11 +1244,11 @@ to the article buffer."
 ;;;
 (put 'tinygnus-output-buffer-macro 'lisp-indent-function 0)
 (defmacro tinygnus-output-buffer-macro (&rest body)
-  "Run BODY if `tinygnus-:output-buffer' exists. Signal error otherwise."
-  `(let ((buffer (get-buffer tinygnus-:output-buffer)))
+  "Run BODY if `tinygnus--output-buffer' exists. Signal error otherwise."
+  `(let ((buffer (get-buffer tinygnus--output-buffer)))
      (if buffer
          (progn ,@body)
-       (error "TinyGnus: buffer %s does not exist." tinygnus-:output-buffer))))
+       (error "TinyGnus: buffer %s does not exist." tinygnus--output-buffer))))
 
 ;;; ----------------------------------------------------------------------
 ;;;
@@ -1321,7 +1321,7 @@ Returns [N.N.N] for pure ip addresses."
 1998-06:
   http://www.spam-archive.org/         --> spam-list@toby.han.de
   http://www.ftc.gov/os/9806/email.htm --> uce@ftc.gov"
-  (dolist (address tinygnus-:ube-forward-mail-addresses)
+  (dolist (address tinygnus--ube-forward-mail-addresses)
     (ti::mail-add-to-field-string "CC" address  "To")))
 
 ;;; ----------------------------------------------------------------------
@@ -1342,11 +1342,11 @@ Thank you beforehand for your co-operation to stop UBE in the net.\n"))
 ;;;
 ;;;###autoload
 (defun tinygnus-nslookup-save (&optional read)
-  "READ or save `tinygnus-:nslookup-table' to `tinygnus-:nslookup-file'.
+  "READ or save `tinygnus--nslookup-table' to `tinygnus--nslookup-file'.
 See function `tinygnus-article-ube-send-to-postmasters'."
   (interactive "P")
   (let ((fid  "tinygnus-nslookup-save")
-	(file tinygnus-:nslookup-file))
+	(file tinygnus--nslookup-file))
     (unless fid ;; No-op. XEmacs byte compiler silencer
       (setq fid nil))
     (when (and (stringp file)
@@ -1360,29 +1360,29 @@ See function `tinygnus-article-ube-send-to-postmasters'."
       (cond
        (read
         (load file)
-        (put 'tinygnus-:nslookup-table 'pos (length tinygnus-:nslookup-table))
+        (put 'tinygnus--nslookup-table 'pos (length tinygnus--nslookup-table))
         (if (interactive-p)
             "TinyGnus: nslookup loaded."))
        (t
         (ti::write-file-variable-state
          file
          "TinyGnus.el nslookup cache file"
-         '(tinygnus-:nslookup-table)))))))
+         '(tinygnus--nslookup-table)))))))
 
 ;;; ----------------------------------------------------------------------
 ;;;
 (defun tinygnus-nslookup-maybe-save ()
   "Save every 5th new nslookup."
   (let ((fid   "tinygnus-nslookup-maybe-save")
-	(count (get   'tinygnus-:nslookup-table 'pos))
-	(len   (length tinygnus-:nslookup-table)))
+	(count (get   'tinygnus--nslookup-table 'pos))
+	(len   (length tinygnus--nslookup-table)))
     (unless fid ;; No-op. XEmacs byte compiler silencer
       (setq fid nil))
     (when (or (not (integerp count))
               (> (- len count) 4))
       (tinygnus-debug fid "Calling save" len)
       (tinygnus-nslookup-save)
-      (put 'tinygnus-:nslookup-table 'pos len))))
+      (put 'tinygnus--nslookup-table 'pos len))))
 
 ;;}}}
 ;;{{{ Article functions
@@ -1493,7 +1493,7 @@ confirmations."
      (tinygnus-article-ube-send-to-postmasters
       'send (not no-confirm)
       kill-flag)
-     (run-hooks 'tinygnus-:summary-ube-send-to-postmasters-hook)
+     (run-hooks 'tinygnus--summary-ube-send-to-postmasters-hook)
      (setq kill-flag t)
      (incf  count))
     (if (interactive-p)
@@ -1502,14 +1502,14 @@ confirmations."
 ;;; ----------------------------------------------------------------------
 ;;;
 (defun tinygnus-domain (address)
-  "Change ADDRESS xx.domain.com --> domain.com using `tinygnus-:domain-table'."
+  "Change ADDRESS xx.domain.com --> domain.com using `tinygnus--domain-table'."
   (let ((ret address))
-    (when tinygnus-:domain-table
-      (dolist (elt tinygnus-:domain-table)
+    (when tinygnus--domain-table
+      (dolist (elt tinygnus--domain-table)
         (when (string-match (car elt) address)
           (setq ret (cdr elt))
           (if (not (stringp ret))
-              (error "Invalid format in tinygnus-:domain-table: %s" elt))
+              (error "Invalid format in tinygnus--domain-table: %s" elt))
           (return)))
       ret)))
 
@@ -1584,12 +1584,12 @@ Shorten the address to 2 significant parts only
 ;;; ----------------------------------------------------------------------
 ;;;
 (defun tinygnus-host-canonilize (host)
-  "Send HOST to `tinygnus-:canonilize-ip-functions'."
+  "Send HOST to `tinygnus--canonilize-ip-functions'."
   (let ((fid   "tinygnus-host-canonilize")
         ret)
     (unless fid ;; No-op. XEmacs byte compiler silencer
       (setq fid nil))
-    (dolist (function tinygnus-:canonilize-ip-functions)
+    (dolist (function tinygnus--canonilize-ip-functions)
       (when (setq ret (funcall function host))
         (tinygnus-debug
          (format "%s: %s (%s => %s)" fid function host ret))
@@ -1612,7 +1612,7 @@ Return:
 
 References:
 
-  `tinygnus-:nslookup-table' contains previous nslookup address."
+  `tinygnus--nslookup-table' contains previous nslookup address."
   (let ((fid  "tinygnus-nslookup-filter")
         elt
         ns-lookup-list
@@ -1625,11 +1625,11 @@ References:
         ;;    xx.aaa.com --> aaa.com
         ;;    yy.aaa.com
         (setq ip (tinygnus-host-canonilize ip))
-        (if (or (null tinygnus-:nslookup-table)
+        (if (or (null tinygnus--nslookup-table)
                 (and (null (setq elt
-                                 (assoc ip tinygnus-:nslookup-table)))
+                                 (assoc ip tinygnus--nslookup-table)))
                      (null (setq elt
-                                 (rassoc ip tinygnus-:nslookup-table)))))
+                                 (rassoc ip tinygnus--nslookup-table)))))
             ;; Not known, put into ask list
             ;; Sometimes we get address 8.8.5/8.7.3, which is actually
             ;; a sendmail version. Filter out false hits
@@ -1647,7 +1647,7 @@ References:
 (defun tinygnus-nslookup-do (list)
   "Run nslookup for LIST.
 Failed addresses are returned in ERR-LIST. Good address
-are added to `tinygnus-:nslookup-table'.
+are added to `tinygnus--nslookup-table'.
 
 Return:
 
@@ -1661,7 +1661,7 @@ Return:
     (dolist (elt (ti::mail-nslookup list nil 'verb))
       (tinygnus-debug fid elt)
       (if (nth 1 elt) ;; Add new members to the cache.
-          (add-to-list 'tinygnus-:nslookup-table (nth 1 elt))
+          (add-to-list 'tinygnus--nslookup-table (nth 1 elt))
         (push (car elt) err-list)))
     (tinygnus-debug fid "ERR-LIST" (mapcar 'car err-list))
     (list err-list)))
@@ -1750,7 +1750,7 @@ Return:
       (cond
        (done)                           ;do nothing
        ((stringp str)
-        (let  ((abuse-list tinygnus-:ube-abuse-account-table)
+        (let  ((abuse-list tinygnus--ube-abuse-account-table)
                tmp
                login
                email)
@@ -1776,8 +1776,8 @@ Return:
         (when (stringp (tinygnus-compose-return-address str))
           (add-to-list 'ns-err-list str)))))
     ;;  Save the values so that hook functions can use them.
-    (setq tinygnus-:use-postmaster-addresses addr-list)
-    (put  'tinygnus-:use-postmaster-addresses 'ns-list ns-list)
+    (setq tinygnus--use-postmaster-addresses addr-list)
+    (put  'tinygnus--use-postmaster-addresses 'ns-list ns-list)
     (tinygnus-debug fid "ADDR-LIST" addr-list)
     addr-list))
 
@@ -1801,10 +1801,10 @@ Input:
 
 References:
 
-  `tinygnus-:ube-exclude-ip-regexp'
-  `tinygnus-:use-postmaster-addresses'
-  `tinygnus-:nslookup-table'
-  `tinygnus-:nslookup-file'"
+  `tinygnus--ube-exclude-ip-regexp'
+  `tinygnus--use-postmaster-addresses'
+  `tinygnus--nslookup-table'
+  `tinygnus--nslookup-file'"
   (interactive "P")
   (let ((message-included-forward-headers ".")
 	(fid           'tinygnus-article-ube-send-to-postmasters)
@@ -1838,7 +1838,7 @@ References:
     (unless (get-buffer gnus-original-article-buffer)
       (error "TinyGnus: panic, no gnus-original-article-buffer exist."))
     ;;   Get the cache table if not set
-    (or tinygnus-:nslookup-table
+    (or tinygnus--nslookup-table
         (tinygnus-nslookup-save 'read))
     (with-current-buffer gnus-original-article-buffer
       (setq subject (mail-fetch-field "Subject"))
@@ -1846,9 +1846,9 @@ References:
       ;; ............................................ received-headers ...
       ;;   We have to do nslookup for each ip to find out if
       ;;   it is alive and filter out duplicates
-      (setq ip-list (ti::mail-parse-received tinygnus-:ube-exclude-ip-regexp))
+      (setq ip-list (ti::mail-parse-received tinygnus--ube-exclude-ip-regexp))
       (tinygnus-debug fid "IP-LIST" ip-list)
-      (put  'tinygnus-:use-postmaster-addresses 'ip-list ip-list)
+      (put  'tinygnus--use-postmaster-addresses 'ip-list ip-list)
       ;; ........................................ &check-need-nslookup ...
       ;;  Check if we have done nslookup for this already.
       (multiple-value-bind (nok ok)
@@ -1880,7 +1880,7 @@ References:
         ;; disable few settings, like TinyPgp
         (setq tinypgp-mode      nil
               mail-send-hook (delq 'tinypgp-auto-action mail-send-hook))
-        (run-hooks 'tinygnus-:article-ube-send-to-postmasters-hook)
+        (run-hooks 'tinygnus--article-ube-send-to-postmasters-hook)
         (when ns-err-list
           (ti::mail-text-start 'move)
           (insert "\nReceived header IP addresses that failed nslookup,\n"
@@ -2011,7 +2011,7 @@ in groups where you want to use it."
 ;;;
 (defun tinygnus-uff-summary-date (header)
   "Return a date string from the Article HEADER.
-The format of date string is defined in `tinygnus-:uff-summary-date'"
+The format of date string is defined in `tinygnus--uff-summary-date'"
   (let* ((header-lines  (mail-header-lines header))
          (header-date   (mail-header-date header))
          (date-vector   (ignore-errors (timezone-parse-date header-date))))
@@ -2032,7 +2032,7 @@ The format of date string is defined in `tinygnus-:uff-summary-date'"
                                     "???"))
              (string-day        (format "%d" (or date-day "?"))))
         ;;  No-ops. Bytecomp silencers. User can use these dynamically bound
-        ;;  variables in tinygnus-:uff-summary-date, but ByteCompiler can't
+        ;;  variables in tinygnus--uff-summary-date, but ByteCompiler can't
         ;;  kow that and it would say: variable bound but not referenced.
         ;;
         ;;  Using "IF no-op-test NOTHING" statements silence byte compiler
@@ -2040,8 +2040,8 @@ The format of date string is defined in `tinygnus-:uff-summary-date'"
         (if (null string-mon)   (setq string-mon t))
         (if (null string-lines) (setq string-lines t))
         (if (null date-yyyy)    (setq date-yyyy t))
-        (if tinygnus-:uff-summary-date
-            (eval tinygnus-:uff-summary-date)
+        (if tinygnus--uff-summary-date
+            (eval tinygnus--uff-summary-date)
           "")))))
 
 ;;; ----------------------------------------------------------------------
@@ -2065,18 +2065,18 @@ Return:
    N     Global `nnmail-expiry-wait' used
 
    N.    Value was defined in Group parameter. See
-         `tinygnus-:expiry-in-group-string'
+         `tinygnus--expiry-in-group-string'
 
    ?    Something is wrong
 
 References:
 
-  `tinygnus-:additional-group-info' Additional chacters added"
+  `tinygnus--additional-group-info' Additional chacters added"
   (if (not (boundp 'gnus-tmp-group))
       ""
     (let ((group       (symbol-value 'gnus-tmp-group))
 ;;;        (re          gnus-auto-expirable-newsgroups)
-	  (group-char  tinygnus-:expiry-in-group-string)
+	  (group-char  tinygnus--expiry-in-group-string)
 	  (fmt         "%s")           ; I used to have e:%s
 	  (ret         "")
 	  arg
@@ -2114,7 +2114,7 @@ References:
            ;; This group isn't defined as expirable.
            ""))))
       ;; ......................................................... other ...
-      (dolist (elt tinygnus-:additional-group-info)
+      (dolist (elt tinygnus--additional-group-info)
         (setq param (nth 0 elt)
               val   (nth 1 elt)
               func  (nth 2 elt)
@@ -2174,7 +2174,7 @@ Returned strings:
 ;;;
 (defun tinygnus-summary-move-article (&optional n)
   "Move articles N to another mail group.
-See `tinygnus-:summary-move-article-table'"
+See `tinygnus--summary-move-article-table'"
   (interactive "P")
   (let* ((group    gnus-newsgroup-name)
          (articles (gnus-summary-work-articles n))
@@ -2257,7 +2257,7 @@ Input:
 ;;; ----------------------------------------------------------------------
 ;;;
 (defun tinygnus-summary-gather-headers  ()
-  "Read marked messages and gather all headers to `tinygnus-:output-buffer'.
+  "Read marked messages and gather all headers to `tinygnus--output-buffer'.
 When you see some suspicious messages, the headers are all you need to spot
 the problem. This function makes it easy to collect such messages."
   (interactive)
@@ -2304,7 +2304,7 @@ Input:
        (message "TinyGnus: msg %d, %d (%d urls) %s"
                 nbr count total subject-field)))
     ;;  Turn on th URL jump mode.
-    (with-current-buffer tinygnus-:output-buffer
+    (with-current-buffer tinygnus--output-buffer
       (when (and (fboundp 'turn-on-tinyurl-mode-1)
                  (boundp 'tinyurl-mode)
                  (null (symbol-value 'tinyurl-mode)))
@@ -2313,19 +2313,19 @@ Input:
 ;;; ----------------------------------------------------------------------
 ;;;
 (defun tinygnus-summary-gather-display  ()
-  "Display `tinygnus-:output-buffer'."
+  "Display `tinygnus--output-buffer'."
   (interactive)
   (tinygnus-output-buffer-macro (pop-to-buffer buffer)))
 
 ;;; ----------------------------------------------------------------------
 ;;;
 (defun tinygnus-summary-gather-clear  ()
-  "Clear `tinygnus-:output-buffer'."
+  "Clear `tinygnus--output-buffer'."
   (interactive)
-  (let ((buffer (get-buffer-create tinygnus-:output-buffer)))
+  (let ((buffer (get-buffer-create tinygnus--output-buffer)))
     (ti::erase-buffer buffer)
     (if (interactive-p)
-        (message "TinyGnus: %s cleared" tinygnus-:output-buffer))))
+        (message "TinyGnus: %s cleared" tinygnus--output-buffer))))
 
 ;;}}}
 
@@ -2408,7 +2408,7 @@ Input:
   "Save extra GROUP information to group symbol plist."
   (tinygnus-set-group)
   (let ((path      (tinygnus-group-pathname group))
-	(sym       'tinygnus-:gnus-group-info)
+	(sym       'tinygnus--gnus-group-info)
 	attr
 	list)
     (when (and path
@@ -2441,7 +2441,7 @@ If this is file group, check if the underlying file has changed and
 read it. Otherwise do nothing. This is like doing 'g' before entering
 the group."
   (tinygnus-set-group)
-  (let ((sym   'tinygnus-:gnus-group-info)
+  (let ((sym   'tinygnus--gnus-group-info)
 	(path (tinygnus-group-pathname))
 	info
 	attr-now
@@ -2766,15 +2766,15 @@ Contact maintainer."))))
 f ELT is nil then gel news for all groups.
 
 References:
-  `tinygnus-:get-news-symbolic-levels'"
+  `tinygnus--get-news-symbolic-levels'"
   (interactive
-   (let ((table tinygnus-:get-news-symbolic-levels)
+   (let ((table tinygnus--get-news-symbolic-levels)
 	 ans)
      (setq
       ans
       (completing-read
        "Get new nwes [empty=all levels]: "
-       tinygnus-:get-news-symbolic-levels nil nil))
+       tinygnus--get-news-symbolic-levels nil nil))
      (list (assoc ans table) )))
   (let ((cdr-elt (if elt
 		     (cdr elt))))
@@ -2799,7 +2799,7 @@ References:
 ;;;
 (defun tinygnus-gnus-debug-insert-line (key value &optional id)
   "Insert KEY and VALUE into buffer. Optionally prefix with function ID."
-  (with-current-buffer (get-buffer-create tinygnus-:debug-buffer)
+  (with-current-buffer (get-buffer-create tinygnus--debug-buffer)
     (ti::pmax)
     (insert (format "  %s%-30s: %s\n"
                     (if (null id)
@@ -2946,7 +2946,7 @@ Possibly REPLCE existing entry."
 
 ;;; 5.8.2
 (defadvice gnus-summary-read-group-1 (around t-tinygnus-debug dis)
-  "Output trace to tinygnus-:debug-buffer"
+  "Output trace to tinygnus--debug-buffer"
   ;; (group show-all no-article kill-buffer no-display &optional select-articles)
   (flet ((pr (x y)
              (tinygnus-gnus-debug-insert-line x y 'gnus-summary-read-group-1 )))
@@ -3109,7 +3109,7 @@ Possibly REPLCE existing entry."
 ;; 5.8.2
 (defadvice gnus-select-newsgroup (around tinygnus-debug dis)
   ;; (group &optional read-all select-articles)
-  "Output trace to tinygnus-:debug-buffer"
+  "Output trace to tinygnus--debug-buffer"
   ;; (group &optional read-all select-articles)
   ;;  "Select newsgroup GROUP.
   ;;If READ-ALL is non-nil, all articles in the group are selected.
@@ -3406,7 +3406,7 @@ Possibly REPLCE existing entry."
 
 ;;; 5.8.2
 (defadvice gnus-activate-group (around tinygnus-debug dis)
-  "Output trace to tinygnus-:debug-buffer"
+  "Output trace to tinygnus--debug-buffer"
   ;; (group &optional scan dont-check method)
   ;; Check whether a group has been activated or not.
   ;; If SCAN, request a scan of that group as well.
@@ -3453,7 +3453,7 @@ Possibly REPLCE existing entry."
 ;;; 5.8.2
 (defadvice nnml-request-group (around tinygnus-debug dis)
   ;; (group &optional server dont-check)
-  "Output trace to tinygnus-:debug-buffer"
+  "Output trace to tinygnus--debug-buffer"
   (tinygnus-debug-gnus-macro 'nnml-request-group
     (pr '(CALL-ARGS group dont-check gnus-command-method)
 	(list group dont-check gnus-command-method))
@@ -3483,7 +3483,7 @@ Possibly REPLCE existing entry."
 
 (defadvice nnml-possibly-change-directory (around tinygnus-debug dis)
   ;; (group &optional server)
-  "Output trace to tinygnus-:debug-buffer"
+  "Output trace to tinygnus--debug-buffer"
   (tinygnus-debug-gnus-macro 'nnml-possibly-change-directory
     (pr '(CALL-ARGS group server) (list group server))
     (when (and server
@@ -3509,7 +3509,7 @@ Possibly REPLCE existing entry."
   ;; (defun my-gnus-request-group (group &optional dont-check gnus-command-method)
   ;; (group &optional dont-check gnus-command-method)
   ;; "Request GROUP.  If DONT-CHECK, no information is required."
-  "Output trace to tinygnus-:debug-buffer"
+  "Output trace to tinygnus--debug-buffer"
   (tinygnus-debug-gnus-macro 'gnus-request-group
     (pr '(CALL-ARGS group &optional dont-check gnus-command-method)
 	(list group dont-check gnus-command-method))
@@ -3570,7 +3570,7 @@ Possibly REPLCE existing entry."
      (ti::list-to-assoc-menu (list (gnus-group-group-name))))))
   (let* ((method  (gnus-find-method-for-group group))
          (server  (nth 1 method))
-         (buffer  (get-buffer-create tinygnus-:debug-buffer))
+         (buffer  (get-buffer-create tinygnus--debug-buffer))
          info
          info-method
          elt
@@ -3634,7 +3634,7 @@ Possibly REPLCE existing entry."
         (tinygnus-gnus-debug-off)
         (display-buffer (current-buffer))
         (message "TinyGnus: Investigation ready. Check results from %s"
-                 tinygnus-:debug-buffer)))))
+                 tinygnus--debug-buffer)))))
 
 ;;; ----------------------------------------------------------------------
 ;;;
@@ -3694,14 +3694,14 @@ backends when Gnus is unplugged."
 ;;; ----------------------------------------------------------------------
 ;;;
 (defun tinygnus-gnus-debug-on (&optional verb)
-  "Turn on Gnus debug. See `tinygnus-:debug-buffer'. VERB.
+  "Turn on Gnus debug. See `tinygnus--debug-buffer'. VERB.
 If you experience a problem during entering a group
 
   cannot select group
   couldn't open server
 
 Call this function and it will record the state of several Gnus functions
-and call parameters and gateher them to `tinygnus-:debug-buffer'. Examining
+and call parameters and gateher them to `tinygnus--debug-buffer'. Examining
 the results may reveal where the problem is."
   (interactive)
   (ti::verb)
@@ -3719,7 +3719,7 @@ the results may reveal where the problem is."
 ;;; ----------------------------------------------------------------------
 ;;;
 (defun tinygnus-gnus-debug-off (&optional verb)
-  "Turn off Gnus debug. See `tinygnus-:debug-buffer'. VERB."
+  "Turn off Gnus debug. See `tinygnus--debug-buffer'. VERB."
   (interactive)
   (ti::verb)
   (let ((re "^tinygnus-debug"))
@@ -3745,9 +3745,9 @@ the results may reveal where the problem is."
 ;;;  #Todo: 2000-01 puts gnus to infinite loop. Fix this.
 ;;;
 (defadvice gnus-summary-limit-children (around tinygnus-show-dormants dis)
-  "Replace function if `tinygnus-:show-dormants' is t.
+  "Replace function if `tinygnus--show-dormants' is t.
 Make dormants immediately visible in non-nntp groups."
-  (if (null tinygnus-:show-dormants)
+  (if (null tinygnus--show-dormants)
       ad-do-it
     ;; Return 1 if this subthread is visible and 0 if it is not
     (when (ad-get-arg 0)                ;thread flag
@@ -3822,13 +3822,13 @@ group only shows those new articles. This makes reading group faster."
 
 ;;; --++-- --++-- --++-- --++-- --++-- --++-- --++-- --+ &advice-start --
 (when (and nil
-           (string-match  tinygnus-:gnus-version-for-advice gnus-version)
-           (stringp tinygnus-:z))
+           (string-match  tinygnus--gnus-version-for-advice gnus-version)
+           (stringp tinygnus--z))
 
   (defadvice gnus-check-first-time-used (around tinygnus  act)
     "Replace function."
     (if (or (> (length gnus-newsrc-alist) 1)
-            (file-exists-p (concat gnus-startup-file (concat ".eld" tinygnus-:z)))
+            (file-exists-p (concat gnus-startup-file (concat ".eld" tinygnus--z)))
             (file-exists-p gnus-startup-file)
             (file-exists-p (concat gnus-startup-file ".el"))
             (file-exists-p (concat gnus-startup-file ".eld")))
@@ -3885,7 +3885,7 @@ group only shows those new articles. This makes reading group faster."
                  (or force
                      (and (file-newer-than-file-p newsrc-file quick-file)
                           (file-newer-than-file-p
-                           newsrc-file (concat quick-file "d" tinygnus-:z)))
+                           newsrc-file (concat quick-file "d" tinygnus--z)))
                      (not gnus-newsrc-alist)))
             ;; We read the .newsrc file.  Note that if there if a
             ;; .newsrc.eld file exists, it has already been read, and
@@ -3909,7 +3909,7 @@ group only shows those new articles. This makes reading group faster."
 
   (defadvice gnus-read-newsrc-el-file (around tinygnus act)
     "Replace function."
-    (let ((ding-file (concat file "d" tinygnus-:z)))
+    (let ((ding-file (concat file "d" tinygnus--z)))
       ;; We always, always read the .eld file.
       (gnus-message 5 "Reading %s..." ding-file)
       (let (gnus-newsrc-assoc)
@@ -3934,10 +3934,10 @@ group only shows those new articles. This makes reading group faster."
      (let* ((file (expand-file-name file nil))
             (real-file (concat file "-" (nth 1 gnus-select-method))))
        (cond
-        ((file-exists-p (concat real-file ".el" tinygnus-:z))
-         (concat real-file  ".el" tinygnus-:z))
-        ((file-exists-p (concat file tinygnus-:z))
-         (concat file tinygnus-:z))
+        ((file-exists-p (concat real-file ".el" tinygnus--z))
+         (concat real-file  ".el" tinygnus--z))
+        ((file-exists-p (concat file tinygnus--z))
+         (concat file tinygnus--z))
         ((or (file-exists-p real-file)
              (file-exists-p (concat real-file ".el"))
              (file-exists-p (concat real-file ".eld")))
@@ -3973,7 +3973,7 @@ group only shows those new articles. This makes reading group faster."
             (make-local-variable 'version-control)
             (setq version-control 'never)
             (setq buffer-file-name
-                  (concat gnus-current-startup-file ".eld" tinygnus-:z))
+                  (concat gnus-current-startup-file ".eld" tinygnus--z))
             (setq default-directory (file-name-directory buffer-file-name))
             (gnus-add-current-to-buffer-list)
             (buffer-disable-undo (current-buffer))
@@ -3996,6 +3996,6 @@ group only shows those new articles. This makes reading group faster."
 (provide   'tinygnus)
 
 (tinygnus-install)
-(run-hooks 'tinygnus-:load-hook)
+(run-hooks 'tinygnus--load-hook)
 
 ;;; tinygnus.el ends here
