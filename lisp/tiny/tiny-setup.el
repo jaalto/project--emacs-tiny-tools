@@ -1243,7 +1243,7 @@ TinySetup: [NOTE] The automatic setup will not make much much good,
 
 (defun tiny-setup-tinyhotlist-autoload ()
   "Autoload."
-  (add-hook 'tinyhotlist-:load-hook 'tinyhotlist-load-hotlist))
+  (add-hook 'tinyhotlist--load-hook 'tinyhotlist-load-hotlist))
 
 (defun tiny-setup-tinyhotlist-bindmouse (&optional force)
   "Bind."
