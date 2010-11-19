@@ -94,9 +94,9 @@
 This function is run only once at tinynyliba.el load."
     (let* ((pkg   (featurep 'tinypath))
            (mode  (if (and pkg
-                           (boundp 'tinypath-:cache-mode))
+                           (boundp 'tinypath--cache-mode))
                       ;; Quiet Byte Compiler
-                      (symbol-value 'tinypath-:cache-mode))))
+                      (symbol-value 'tinypath--cache-mode))))
       ;; Turn off advices and cache only IF the package is active
       (if (and pkg mode)
           (let ((func 'tinypath-cache-mode))
