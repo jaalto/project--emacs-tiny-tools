@@ -629,9 +629,7 @@ You can install this function e.g. into
        ((setq str (ti::string-match "\\([^@<]+\\)" 1 to)))
        (t
         (setq str to)))
-
       (setq str (replace-regexp-in-string "['\"]" "" str)) ;remove extra cruft
-
       (setq str
             (concat
              (if (ti::mail-news-buffer-p)
@@ -663,7 +661,6 @@ You can call this only once, just after the buffer is initially created"
     ;;  That's why you can only call this function once.
     ;;  When you use C-x m, and fill the fields, there is no way
     ;;  to detect afterwards if the mail buffer was simple mail or not
-
     (cond
      ((or (string-match "news" (symbol-name 'major-mode))
           news)
@@ -684,152 +681,6 @@ to mailing list or otherwise Group is not considered mailing list."
         (gnus-group-get-parameter group 'to-list) ))))
 
 ;;}}}
-;;{{{ macros: VM, RMAIL, GNUS
-
-;;; ----------------------------------------------------------------------
-;;;
-(put 'ti::mail-vm-macro 'lisp-indent-function 0)
-(put 'ti::mail-vm-macro 'edebug-form-spec '(body))
-(defmacro ti::mail-vm-macro (&rest body)
-  "Do BODY in VM's active buffer.
-The `save-excursion' -- set buffer form is executed."
-  `(let* ((BuffeR-S  (when (boundp 'vm-mail-buffer)
-                       (symbol-value 'vm-mail-buffer))))
-     (if (or (null BuffeR-S)
-             (not (buffer-live-p (get-buffer BuffeR-S))))
-         (error "vm-mail-buffer invalid")
-       (with-current-buffer BuffeR-S
-         ,@body))))
-
-;;; ----------------------------------------------------------------------
-;;;
-(put 'ti::mail-mh-macro 'lisp-indent-function 0)
-(put 'ti::mail-mh-macro 'edebug-form-spec '(body))
-(defmacro ti::mail-mh-macro (&rest body)
-  "Do BODY in MH's active buffer.
-The `save-excursion' -- set buffer form is executed."
-  `(let* ((BuffeR-S  (when (boundp 'mh-show-buffer)
-                       (symbol-value 'mh-show-buffer))))
-     (if (or (null BuffeR-S)
-             (not (buffer-live-p (get-buffer BuffeR-S))))
-         (error "mh-show-buffer invalid")
-       (with-current-buffer BuffeR-S
-         ,@body))))
-
-;;; ----------------------------------------------------------------------
-;;;
-(put 'ti::mail-gnus-macro 'lisp-indent-function 0)
-(put 'ti::mail-gnus-macro 'edebug-form-spec '(body))
-(defmacro ti::mail-gnus-macro (&rest body)
-  "Do BODY in Gnus `gnus-article-buffer' if it exists.
-The `save-excursion' -- set buffer form is executed."
-  `(let* ((BuffeR-S  (when (boundp 'gnus-article-buffer)
-                       (symbol-value 'gnus-article-buffer))))
-     (if (or (null BuffeR-S)
-             (not (buffer-live-p (get-buffer BuffeR-S))))
-         (error "gnus-article-buffer invalid")
-       (with-current-buffer BuffeR-S
-         ,@body))))
-
-;;; ----------------------------------------------------------------------
-;;;
-(put 'ti::mail-rmail-macro 'lisp-indent-function 0)
-(put 'ti::mail-rmail-macro 'edebug-form-spec '(body))
-(defmacro ti::mail-rmail-macro (&rest body)
-  "Do BODY in RMAIL's active buffer. You have be in RMAIL summary."
-  `(let* ((BuffeR-R
-           ;;  This variable is available in Rmail-summary
-           ;;
-           (or (if (boundp 'rmail-buffer) (symbol-value 'rmail-buffer))
-               (get-buffer "RMAIL"))))
-     (if (or (null BuffeR-R)
-             (not (buffer-live-p (get-buffer BuffeR-R))))
-         (error "rmail-buffer buffer invalid")
-       (with-current-buffer BuffeR-R
-         ,@body))))
-
-;;; ----------------------------------------------------------------------
-;;;
-(put 'ti::mail-rmail-do-message-macro 'lisp-indent-function 2)
-(put 'ti::mail-rmail-do-message-macro 'edebug-form-spec '(body))
-(defmacro ti::mail-rmail-do-message-macro (nbr mode &rest body)
-  "Go to message without showing it and execute body.
-Must be in RMAIL buffer already.
-
-Input:
- NBR    message number, like `rmail-current-message'
- MODE   if non-nil then the area narrows to full stored message
-        with original headers. If nil, then area narrows to displayed
-        message.
- BODY   forms to execute in are narrowed to message."
-  `(let ((beg (rmail-msgbeg ,nbr))
-         (end (rmail-msgend ,nbr)))
-     (save-window-excursion
-       (ti::widen-safe
-         (goto-char beg)
-         (forward-line 1)
-         (if (null ,mode)
-             (search-forward "\n*** EOOH ***\n" end t))
-         (narrow-to-region (point) end)
-         (goto-char (point-min))
-         ,@body))))
-
-;;; ----------------------------------------------------------------------
-;;;
-(defun ti::mail-rmail-copy-message (&optional nbr separate)
-  "Copy message NBR with header. Defaults to `rmail-current-message'.
-Current buffer must me in RMAIL already.
-
-Input:
-
-  NBR       message number
-  SEPARATE  if non-nil, then the headers and message body are returned
-            separately in format (hdr-string . body-string)
-
-Return:
-
- string
- list       see mode."
-  (interactive)
-  (let* (beg
-         end
-         hdr
-         ret)
-    (setq nbr  (or nbr rmail-current-message)
-          beg  (rmail-msgbeg nbr)
-          end  (rmail-msgend nbr))
-
-    (or (integerp nbr)
-        (error "NBR %s" nbr))
-    ;; The BEG isn't exactly the message beginning, skip 3 lines,
-    ;; also don't copy the original heades only.
-    ;;
-    ;; 
-    ;; 1, answered,,
-    ;; Summary-line: 23-Mar #Please Help Yourself, Help Ot...
-    ;; <ORIGINAL HEADERS>
-    ;;
-    ;; *** EOOH ***
-    ;; <HEADERS SHOWN IN RMAIL>
-    ;;
-    ;; <MESSAGE BODY>
-    (ti::widen-safe
-      (goto-char beg) (forward-line 3)
-      (setq beg (point))
-      (re-search-forward "^[ \t]*$")
-      (setq hdr (buffer-substring beg (point)))
-      ;;  Already sitting at empty line, move away.
-      (forward-line 1)
-      (re-search-forward "^[ \t]*$")
-      (setq beg (point))
-      ;;  Now make HDR + BODY of message
-      (if separate
-          (setq ret (cons hdr (buffer-substring beg end)))
-        (setq ret (concat hdr (buffer-substring beg end)))))
-    ret))
-
-;;}}}
-
 ;;{{{ PGP general, tests
 
 ;;; ----------------------------------------------------------------------
