@@ -119,7 +119,7 @@
 
 ;;{{{ setup: libraries
 
-(defconst tinydebian-:version-time "2010.1119.1429"
+(defconst tinydebian-:version-time "2010.1119.1434"
   "Last edited time.")
 
 (require 'tinylibm)
@@ -1705,8 +1705,8 @@ Judging from optional BUFFER."
   "Search dpkg -s result from current point forward and narrow around it.
 Point is put at the beginning of region.
 Variable `package' contains the package name."
-  `(let* (beg-narrow
-	  package)
+  `(let (beg-narrow
+	 package)
      (when (re-search-forward "^Package: +\\([^ \t\r\n]+\\) *$" nil t)
        (setq beg-narrow (line-beginning-position))
        (setq package (match-string 1))
@@ -1814,10 +1814,10 @@ Optional: SEARCH-ON DISTRIBUTION SECTION."
   "Add color support to various log files by setting
 `font-lock-keywords'."
   (interactive)
-  (let* ((today  (ti::date-standard-rfc-regexp "mon-date"))
-	 ;; (cs     (or comment-start-skip "[ \t]+"))
-	 (file   "")
-	 keywords)
+  (let ((today  (ti::date-standard-rfc-regexp "mon-date"))
+	;; (cs     (or comment-start-skip "[ \t]+"))
+	(file   "")
+	keywords)
     (when (stringp buffer-file-name)
       (setq file (or buffer-file-name "no-name?")))
     (setq
@@ -2051,7 +2051,7 @@ The URL buffer is killed at exit."
 ;;;
 (defun tinydebian-sourceforge-bug-name-to-group-id (project)
   "Visit PROJECT web page to determine group ID."
-  (let* ((url (format "http://sourceforge.net/projects/%s" project)))
+  (let ((url (format "http://sourceforge.net/projects/%s" project)))
     (tinydebian-retrieve-synchronously-macro url
       (if (re-search-forward
 	   (concat
@@ -3138,7 +3138,7 @@ At current point, current line, headers of the mail message
 ;;;
 (defsubst tinydebian-email-subject-type-parse ()
   "Read BTS Subject and return '(TYPE SUBJECT)"
-  (let* ((subject (mail-fetch-field "Subject")))
+  (let ((subject (mail-fetch-field "Subject")))
     (when subject
       ;;  Bug#292579: marked as done (RFP: miwm -- MIcroscopic Window
       (let (type subject bug)
@@ -4783,7 +4783,7 @@ Mode description:
 ;;;
 (defsubst tinydebian-url-debian-mentors-url (package &optional section)
   "Return PACKAGE URL to mentors.debian.net in optional SECTION (def. main)."
-  (let* ((first-char (substring package 0 1)))
+  (let ((first-char (substring package 0 1)))
     (format "%s/%s/%s/%s"
 	    (tinydebian-url-page-compose 'mentors-pkg-pool)
 	    (or section "main")
@@ -5371,11 +5371,11 @@ PACKAGE   package name
 TYPE      'RM' = remove, 'RoM' = request of maintainer
 DESC      apt-cache show <package>; first line description."
   (interactive
-   (let* ((pkg (tinydebian-bts-mail-ask-package "RM package: "))
-	  (type
-	   (if (y-or-n-p "Are you the maintainer? ")
-	       "RoM"
-	     "RM")))
+   (let ((pkg (tinydebian-bts-mail-ask-package "RM package: "))
+	 (type
+	  (if (y-or-n-p "Are you the maintainer? ")
+	      "RoM"
+	    "RM")))
      (list pkg type (tinydebian-package-status-description-1 pkg))))
   (let ((subj-message
 	 (format "%s: %s -- %s"
@@ -5400,7 +5400,7 @@ Severity: wishlist
 
 ;;; ----------------------------------------------------------------------
 ;;;
-(defun tinydebian-pkg-read-details-directory (directory)
+(defun tinydebian-pkg-read-details-directory (directory);; FIXME: Not implemented
   "Assuming a simgle debian package is in DIRECTORY, extract details.
   The directory should contain files:
   -rw-r--r-- 1 jaalto jaalto  19885 2006-11-19 18:12 pkg_0.2.4-4.diff.gz
@@ -5418,7 +5418,7 @@ Severity: wishlist
    (dsc            . \"pkg_0.2.4-4.dsc\")
    (deb            . \"pkg_0.2.4-4.dsc\")
    "
-  (let* ()))
+  (let ()))
 
 ;;; ----------------------------------------------------------------------
 ;;;
@@ -5449,20 +5449,20 @@ Severity: wishlist
 	   (ita-url     (tinydebian-debian-bts-url-compose bug))
 	   (pkg-url     (tinydebian-debian-bts-url-compose package)))
       (tinydebian-bts-mail-type-macro "RFS"
-				      arg-pkg (tinydebian-list-email-compose "debian-mentors") nil
-				      (insert tinydebian-:rfs-template)
-				      (replace "\\(<package>.*\\)"    package nil 'all)
-				      (replace "\\(<bugs:.*\\)"       pkg-url)
-				      (replace "\\(<ita:.*\\)"        ita-url)
-				      (replace "\\(<mentors:.*\\)"    mentors-url)
-				      (replace "\\(<license:.*\\)"    license)
-				      (mail-position-on-field "Subject")
-				      (beginning-of-line)
-				      (replace ": \\(.*\\)"
-					       (format "RFS: %s -- %s" package desc)
-					       (point))
-				      (goto-char (point-max))
-				      (run-hooks 'tinydebian-:rfs-hook)))))
+	  arg-pkg (tinydebian-list-email-compose "debian-mentors") nil
+	(insert tinydebian-:rfs-template)
+	(replace "\\(<package>.*\\)"    package nil 'all)
+	(replace "\\(<bugs:.*\\)"       pkg-url)
+	(replace "\\(<ita:.*\\)"        ita-url)
+	(replace "\\(<mentors:.*\\)"    mentors-url)
+	(replace "\\(<license:.*\\)"    license)
+	(mail-position-on-field "Subject")
+	(beginning-of-line)
+	(replace ": \\(.*\\)"
+		 (format "RFS: %s -- %s" package desc)
+		 (point))
+	(goto-char (point-max))
+	(run-hooks 'tinydebian-:rfs-hook)))))
 
 ;;; ----------------------------------------------------------------------
 ;;;
@@ -6228,9 +6228,9 @@ Version: %s
 ;;;
 (defun tinydebian-bts-mail-ctrl-forward-upstream (bug)
   "Compose BTS control message: forward BUG report to upstream."
-  (let* ((email-forward (tinydebian-bts-email-compose
-			 (format "%s-forwarded" bug)))
-	 (email-bug (tinydebian-bts-email-compose bug)))
+  (let ((email-forward (tinydebian-bts-email-compose
+			(format "%s-forwarded" bug)))
+	(email-bug (tinydebian-bts-email-compose bug)))
     (tinydebian-bts-mail-type-macro
      nil nil "<upstream address>"
      (format "Debian Bug#%s -- forwarded upstream" bug)
@@ -6312,10 +6312,10 @@ and not forwarded any Debian mailing lists."
   (interactive
    (list (tinydebian-bts-mail-ask-bug-number)
 	 current-prefix-arg))
-  (let* ((email (tinydebian-bts-email-compose
-		 (if quiet
-		     (format "%s-maintonly" bug)
-		   bug))))
+  (let ((email (tinydebian-bts-email-compose
+		(if quiet
+		    (format "%s-maintonly" bug)
+		  bug))))
     (tinydebian-bts-mail-type-macro
      nil nil email
      (format "Debian Bug#%s " bug))))
@@ -6327,8 +6327,8 @@ and not forwarded any Debian mailing lists."
 ;;;
 (defun tinydebian-package-read-field-content-1 ()
   "Read content. Point must be positionioned at Field:-!-."
-  (let* ((str (if (looking-at " +\\(.*\\)")
-		  (match-string-no-properties 1))))
+  (let ((str (if (looking-at " +\\(.*\\)")
+		 (match-string-no-properties 1))))
     (while (and (not (eobp))
 		(zerop (forward-line 1)) ;; Did it
 		(looking-at "^\\( +.*\\)"))
@@ -6377,10 +6377,10 @@ Be sure to call `tinydebian-package-narrow-to-region' first."
 (defun tinydebian-package-status-parse-depends-1 ()
   "Parse `Depends' field content from current point forward.
 There must nothing else in the buffer."
-  (let* (name
-	 op
-	 ver
-	 list)
+  (let (name
+	op
+	ver
+	list)
     (while (re-search-forward "\\([a-z][^ ,()\t\r\n]+\\)" nil t)
       (setq name (ti::remove-properties (match-string 1))
 	    op   nil
@@ -6416,7 +6416,7 @@ Returned list is
 ;;; #todo:
 (defun tinydebian-package-status-apt-file (package)
   "Use apt-file PACKAGE (must be installed separately) to find upstream."
-  (let* ((bin (executable-find "apt-file")))
+  (let ((bin (executable-find "apt-file")))
     (cond
      ((null bin)
       (message
@@ -6446,7 +6446,7 @@ Returned list is
 ;;;
 (defun tinydebian-package-status-dpkg-s-main (package)
   "Consult dpkg -s PACKAGE"
-  (let* ((dpkg tinydebian-:bin-dpkg))
+  (let ((dpkg tinydebian-:bin-dpkg))
     (cond
      ((not dpkg)
       (message "TinyDebian: no `dpkg' found along PATH (emacs `exec-path').")
@@ -6502,7 +6502,7 @@ Returned list is
 (defun tinydebian-package-status-dpkg-S-main (file)
   "Consult dpkg -S FILE
 In this case, the package is unknown."
-  (let* ((dpkg  tinydebian-:bin-dpkg))
+  (let ((dpkg  tinydebian-:bin-dpkg))
     (cond
      ((not dpkg)
       (message "TinyDebian: no `dpkg' found along PATH (emacs `exec-path').")
@@ -6549,8 +6549,8 @@ In this case, the package is unknown."
 ;;;
 (defun tinydebian-package-status-grep-available (package)
   "Consult grep-available(1) for PACKAGE from 'Provides' field."
-  (let* ((bin tinydebian-:bin-grep-available)
-	 (re  (format ".*[ ,]+%s([, \t]|[ \t]*$)" package)))
+  (let ((bin tinydebian-:bin-grep-available)
+	(re  (format ".*[ ,]+%s([, \t]|[ \t]*$)" package)))
     (cond
      ((not bin)
       (message (concat "TinyDebian: no `grep-available' "
@@ -6565,8 +6565,8 @@ In this case, the package is unknown."
 	       (list "--field=Provides"
 		     "--eregex"
 		     re))
-	(let* ((info (tinydebian-package-info-from-buffer
-		      (current-buffer))))
+	(let ((info (tinydebian-package-info-from-buffer
+		     (current-buffer))))
 	  (cond
 	   ((null info)
 	    (message
@@ -6591,7 +6591,7 @@ References:
 (defun tinydebian-buffer-ask-input (message buffer &optional clear)
   "Write MESSAGE to the buffer ans ask user to type input.
 The MESSAGE should contgain properly formatted text."
-  (let* ((buffer (ti::temp-buffer buffer clear)))))
+  (let ((buffer (ti::temp-buffer buffer clear)))))
     ;; (switch-to-buffer buffer)
     ;; #todo:
 
@@ -6677,9 +6677,9 @@ Example:
   Versions of packages autolog depends on:
   ii  cron            3.0pl1-72  management of regular background p
   ii  libc6           2.2.5-3    GNU C Library: Shared libraries an."
-  (let* ((depends (tinydebian-package-info-by-key
-		   (or depend-key "Depends")
-		   info))
+  (let ((depends (tinydebian-package-info-by-key
+		  (or depend-key "Depends")
+		  info))
 	 str)
     (when depends
       (setq str "")
@@ -6692,9 +6692,9 @@ Example:
 		(setq op op))
 	    (if version
 		(setq version version))
-	    (let* (info2
-		   desc
-		   ver)
+	    (let (info2
+		  desc
+		  ver)
 	      (setq info2
 		    (tinydebian-package-info
 		     package
@@ -6982,12 +6982,12 @@ Locale: %s"
   (insert "Package: " (cdr (assoc "Package" info)) "\n")
   (insert "Version: " (cdr (assoc "Version" info)) "\n")
   (insert "Severity: " (tinydebian-bug-severity)   "\n\n")
-  (let* ((point       (point))
-	 (depends     (tinydebian-bug-system-info-depends info "Depends"))
-	 (pre-depends (tinydebian-bug-system-info-depends info "Pre-Depends"))
-	 (package     (or (and info
-			       (cdr (assoc "Package" info)))
-			  (error "No package information."))))
+  (let ((point       (point))
+	(depends     (tinydebian-bug-system-info-depends info "Depends"))
+	(pre-depends (tinydebian-bug-system-info-depends info "Pre-Depends"))
+	(package     (or (and info
+			      (cdr (assoc "Package" info)))
+			 (error "No package information."))))
     (insert "\n\n-- System Information\n"
 	    (tinydebian-bug-system-info-os)
 	    (format "\n\n-- Versions of packages `%s depends on'.\n"
@@ -7036,8 +7036,8 @@ ii  libc6                         2.2.5-3    GNU C Library: Shared libraries an"
       (message "TinyDebian: bug report skipped. ´%s' status is [%s]"
 	       package status))
      (t
-      (let* ((name   (format "*mail* Debian Bug %s" package))
-	     buffer)
+      (let ((name (format "*mail* Debian Bug %s" package))
+	    buffer)
 	(cond
 	 ((and (setq buffer (get-buffer name))
 	       (null (y-or-n-p
@@ -7070,8 +7070,8 @@ ii  libc6                         2.2.5-3    GNU C Library: Shared libraries an"
    ((not (stringp package))
     (error "No package name"))
    (t
-    (let* ((name (format "*mail* GNU Bug %s" package))
-	   buffer)
+    (let ((name (format "*mail* GNU Bug %s" package))
+	  buffer)
       (cond
        ((and (setq buffer (get-buffer name))
 	     (null (y-or-n-p
@@ -7102,8 +7102,8 @@ ii  libc6                         2.2.5-3    GNU C Library: Shared libraries an"
 (defun tinydebian-bug-report-launchpad-mail ()
   "Submit GNU bug report to PACKAGE."
   (interactive)
-  (let* ((name (format "*mail* Launchpad Bug"))
-	 buffer)
+  (let ((name (format "*mail* Launchpad Bug"))
+	buffer)
     (cond
      ((and (setq buffer (get-buffer name))
 	   (null (y-or-n-p
@@ -7191,11 +7191,11 @@ This function can only be callaed interactively."
 ;;;
 (defun tinydebian-command-audit-report-tiger-make-chmod (file line)
   "Make suotable chmod command for FILE according to LINE report."
-  (let* ((operand "+")
-	 group
-	 group-cmd
-	 type
-	 type-cmd)
+  (let ((operand "+")
+	group
+	group-cmd
+	type
+	type-cmd)
     (when (string-match
 	   "should .*+have +\\([^ \t\r\n]+\\) +\\([^ \t\r\n.]+\\)"
 	   line)
@@ -7238,10 +7238,10 @@ For which a corresponding command to correct the error is generated.
 You can select region and these commands to shell `sh' with command
 `shell-command-on-region' which can be called with \\[shell-command-on-region]."
   (interactive "r")
-  (let* ((buffer (get-buffer-create tinydebian-:buffer-tiger))
-	 done
-	 file
-	 str)
+  (let ((buffer (get-buffer-create tinydebian-:buffer-tiger))
+	done
+	file
+	str)
     (goto-char beg)
     (while (re-search-forward
 	    "--WARN-- +[^ \t\r\n]+ +\\(\\([^ \t\r\n]+\\).*\\)"
