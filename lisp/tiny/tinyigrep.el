@@ -9,7 +9,6 @@
 ;; Author:          Jari Aalto
 ;; Maintainer:      Jari Aalto
 ;;
-;; To get information on this program, call M-x tinyigrep-version
 ;; Look at the code with folding.el
 
 ;; COPYRIGHT NOTICE
@@ -57,10 +56,6 @@
 ;;        (require 'emacs-rc-tinygrep))
 ;;
 ;;      (add-hook 'tinyigrep-:load-hook 'my-tinyigrep-load-hook)
-;;
-;; If you have any questions, suggestions, bug reports, use function
-;;
-;;      M-x tinyigrep-submit-bug-report
 ;;
 ;; If you find any incorrect behavior, please immediately
 ;;
@@ -1556,33 +1551,8 @@ GREP is program to used for grepping. Default is `egrep'."
              (ti::compat-Info-directory-list)))))
     (message "TinyIgrep: Wait, initialising default databases...done")))
 
-;;}}}
-;;{{{ version
-
-;;; ....................................................... &v-version ...
-
-(eval-and-compile
-
-;;;###autoload (autoload 'tinyigrep-version "tinyigrep "Package Description." t)
-
-  (ti::macrof-version-bug-report
-   "tinyigrep.el"
-   "tinyigrep"
-   tinyigrep-:version-id
-   "$Id: tinyigrep.el,v 2.89 2007/05/07 10:50:07 jaalto Exp $"
-   '(tinyigrep-:version-id
-     tinyigrep-:debug
-     igrep-version
-     tinyigrep-:load-hook
-     tinyigrep-:igrep-previous-args
-     tinyigrep-:history-igrep
-     tinyigrep-:history-database
-     tinyigrep-:special-database
-     tinyigrep-:database)
-   '(tinyigrep-:debug-buffer)))
 
 ;;;### (autoload 'tinyigrep-debug-toggle "tinyigrep" t t)
-
 (eval-and-compile (ti::macrof-debug-standard "tinyigrep" ":-"))
 
 ;;}}}
