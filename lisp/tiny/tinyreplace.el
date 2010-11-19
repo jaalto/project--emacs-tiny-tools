@@ -233,7 +233,6 @@
             matching looking-at regexp at the beginning of line.")
 
 ;;}}}
-
 ;;{{{ setup: hooks
 
 (defcustom tinyreplace-load-hook nil
@@ -462,8 +461,8 @@ Special commands:
 (defun tinyreplace-install-default-keybings ()
   "Install M-& default keybing."
   (interactive)
-  (let ((key "\M-&")
-	(def (lookup-key global-map key)))
+  (let* ((key "\M-&")
+	 (def (lookup-key global-map key)))
     (when (featurep 'compile)
       (let (buffer (get-buffer "*compilation*"))
 	(when buffer
