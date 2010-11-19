@@ -1523,10 +1523,6 @@ Return:
   nil"
   `(if (and (not (null ,ch))       ;it must not be nil
 	    (or (ti::char-in-list-case ,ch '(?\t ?\n ?\r ?\f))
-		;;  esh-mode.el makes wrong definition of
-		;;  `char-int'. Fix it.
-		(prog1 t
-		  (ti::compat-character-define-macro 'char-int 'identity))
 		(and
 		 (> ,ch 31)
 		 (< ,ch 127))))
