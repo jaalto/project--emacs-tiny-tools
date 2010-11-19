@@ -1145,17 +1145,17 @@ Contact maintaner with M-x tinymy-submit-bug-report.")))
 (defun tinymy-package-save-get-file-name ()
   "See `tinymy-package-save-to-file'. Find out package file name.
 Return '(file-name  point)."
-  (let ((fid "tinymy-package-save-get-file-name:")
-	;;  - the file start and it's name
-	;;  - The regexp will jump until there is a-zA-Z0-9
-	(com "^\\(#\\|;;+\\)")
-	(re1 (concat com "[ \t]+\\([^ \t]+\\.el\\)[ \t]+[-][-]+"))
-	(re2 (concat com "[ \t]+\\([^ \t]+\\)[ \t]+[-][-]+[ \t]"))
-	(re3 (concat com "[ \t]+\\(.*\\)[ \t]+[-][-]+"))
-	(re4 (concat com "[ \t]+\\(.*\\)[ \t]+[-]+"))
-	(re5 "^\\(;;;*\\)[ \t]+\\([^ \t\n]+\\.el\\)[ \t]+")
-	file
-	point)
+  (let* ((fid "tinymy-package-save-get-file-name:")
+	 ;;  - the file start and it's name
+	 ;;  - The regexp will jump until there is a-zA-Z0-9
+	 (com "^\\(#\\|;;+\\)")
+	 (re1 (concat com "[ \t]+\\([^ \t]+\\.el\\)[ \t]+[-][-]+"))
+	 (re2 (concat com "[ \t]+\\([^ \t]+\\)[ \t]+[-][-]+[ \t]"))
+	 (re3 (concat com "[ \t]+\\(.*\\)[ \t]+[-][-]+"))
+	 (re4 (concat com "[ \t]+\\(.*\\)[ \t]+[-]+"))
+	 (re5 "^\\(;;;*\\)[ \t]+\\([^ \t\n]+\\.el\\)[ \t]+")
+	 file
+	 point)
     (unless fid ;; No-op. XEmacs byte compiler silencer
       (setq fid nil))
     (save-excursion
