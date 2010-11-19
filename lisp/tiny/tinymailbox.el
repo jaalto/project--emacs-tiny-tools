@@ -34,18 +34,18 @@
 ;;  ~/.emacs startup file. Code can be extracted with function
 ;;  tinylib.el/ti::package-rip-magic
 ;;
-;;      (add-hook 'tinymailbox-:load-hook 'tinymailbox-install)
+;;      (add-hook 'tinymailbox--load-hook 'tinymailbox-install)
 ;;      (require 'tinymailbox)
 ;;
 ;;  Or you can also use the preferred way: autoload
 ;;
-;;      (add-hook 'tinymailbox-:load-hook 'tinymailbox-install)
+;;      (add-hook 'tinymailbox--load-hook 'tinymailbox-install)
 ;;      (autoload 'tinymailbox-mode          "tinymailbox "" t)
 ;;      (autoload 'turn-on-tinymailbox-mode  "tinymailbox "" t)
 ;;      (autoload 'turn-off-tinymailbox-mode "tinymailbox "" t)
 ;;
 ;;  You can toggle the mode with `M-x' `tinymailbox-mode'. The default
-;;  mailbox type files are liested in `tinymailbox-:auto-mode-alist'.
+;;  mailbox type files are liested in `tinymailbox--auto-mode-alist'.
 ;;  To add more mailbox files for the mode, use code like:
 ;;
 ;;      (require 'cl)
@@ -107,7 +107,7 @@
 ;;
 ;;      When you go from this message with `tinymailbox-forward', the headers
 ;;      that you're interested in are only shown according to
-;;      `tinymailbox-:header-show-regexp'. The messages headers are collapsed
+;;      `tinymailbox--header-show-regexp'. The messages headers are collapsed
 ;;      as you move around the messages. This approach was chosen, so that
 ;;      parsing a big message file (Gnus nnfolder backend) wouldn't put you
 ;;      on hold while the headers were collapsed. Now the headers are
@@ -123,7 +123,7 @@
 ;;          X-Gnus-Article-Number: 4   Sun Sep 28 20:57:48 1997
 ;;
 ;;      By default all the `X-' headers are shown, so you may want to make
-;;      the `tinymailbox-:header-show-regexp' a bit more restrictive if
+;;      the `tinymailbox--header-show-regexp' a bit more restrictive if
 ;;      messages contain too many X-headers. You can toggle this message
 ;;      hiding feature with
 ;;
@@ -141,11 +141,11 @@
 ;;  Moving between the messages
 ;;
 ;;      There are couple of movement commands that let you jump from
-;;      one message to another. See also variable `tinymailbox-:move-header-regexp'
+;;      one message to another. See also variable `tinymailbox--move-header-regexp'
 ;;
 ;;          C-p     tinymailbox-forward-body  or Ctrl-home
 ;;          C-n     tinymailbox-backward-body or Ctrl-end
-;;          home    tinymailbox-forward (see tinymailbox-:move-header-regexp)
+;;          home    tinymailbox-forward (see tinymailbox--move-header-regexp)
 ;;          end     tinymailbox-backward
 ;;
 ;;}}}
@@ -164,7 +164,7 @@
   (autoload 'mail-position-on-field     "mail-utils")
   (autoload 'string-rectangle           "rect" "" t))
 
-(ti::package-defgroup-tiny TinyMailbox tinymailbox-: tools
+(ti::package-defgroup-tiny TinyMailbox tinymailbox-- tools
   "Mailbox management minor mode.
   Overview of features
 
@@ -180,12 +180,12 @@
 
 ;;; ......................................................... &v-hooks ...
 
-(defcustom tinymailbox-:load-hook nil
+(defcustom tinymailbox--load-hook nil
   "*Hook run when package has been loaded."
   :type  'hook
   :group 'TinyMailbox)
 
-(defcustom tinymailbox-:mail-setup-hook nil
+(defcustom tinymailbox--mail-setup-hook nil
   "*Hook run when mail has been composed.
 The point is at the beginning of message."
   :type  'hook
@@ -193,7 +193,7 @@ The point is at the beginning of message."
 
 ;;; ......................................................... &private ...
 
-(defvar tinymailbox-:last-file nil
+(defvar tinymailbox--last-file nil
   "Last file used by `tinymailbox-message-to-folder'.")
 
 (defvar tinymailbox:-header-begin-regexp
@@ -202,7 +202,7 @@ The point is at the beginning of message."
 
 ;;; ........................................................ &v-public ...
 
-(defcustom tinymailbox-:font-lock-keywords
+(defcustom tinymailbox--font-lock-keywords
   '(("From:[ \t]*\\(.*\\)"
      (1 font-lock-function-name-face))
 
@@ -218,7 +218,7 @@ The point is at the beginning of message."
   :type   'sexp
   :group  'TinyMailbox)
 
-(defcustom tinymailbox-:auto-mode-alist
+(defcustom tinymailbox--auto-mode-alist
   '(("\\.mbo?x\\'"    . turn-on-tinymailbox-mode-maybe)
     ;;  Gnus spool file: Incoming
     ("Incoming"       . turn-on-tinymailbox-mode-maybe)
@@ -233,30 +233,30 @@ The point is at the beginning of message."
            (const 'tinymailbox-mode)))
   :group  'TinyMailbox)
 
-(defcustom tinymailbox-:move-header-regexp "^Subject:"
+(defcustom tinymailbox--move-header-regexp "^Subject:"
   "Regexp that is use in movement commands. See `tinymailbox-forward'."
   :type   'string
   :group  'TinyMailbox)
 
-(defcustom tinymailbox-:header-show-regexp
+(defcustom tinymailbox--header-show-regexp
   "^Subject:\\|^To:\\|^From:\\|^Newsgroups:\\|^X-\\|^Date:"
   "Regexp to show the interesting headers. Others will be hidden."
   :type  'string
   :group 'TinyMailbox)
 
-(defcustom tinymailbox-:header-hide-mode t
+(defcustom tinymailbox--header-hide-mode t
   "If non-nil then uninteresting headers are hidden while you move."
   :type  'boolean
   :group 'TinyMailbox)
 
 ;;; .......................................................... &v-menu ...
 
-(defcustom tinymailbox-:menu-use-flag t
+(defcustom tinymailbox--menu-use-flag t
   "*Non-nil means to use echo-area menu."
   :type  'boolean
   :group 'TinyMailbox)
 
-(defvar tinymailbox-:menu-main
+(defvar tinymailbox--menu-main
   (list
    '(format
      "%sTinyMbx: hdr)+-C-q  copy)RETSPC m)ail oO)ccur f)ld F)ile ?H) d)el x)mode off"
@@ -274,8 +274,8 @@ The point is at the beginning of message."
      (?O     . ( (call-interactively 'tinymailbox-occur-subject)))
      (?f     . ( (call-interactively 'tinymailbox-message-to-folder)))
      (?F     . ( (call-interactively 'tinymailbox-message-write-file)))
-     (??     . 'tinymailbox-:menu-help)
-     (?H     . 'tinymailbox-:menu-help)
+     (??     . 'tinymailbox--menu-help)
+     (?H     . 'tinymailbox--menu-help)
      (?x     . ( (call-interactively 'turn-off-tinymailbox-help)))))
   "*TinyMailbox echo menu.
 
@@ -316,7 +316,7 @@ Miscellaneous
 
 (eval-and-compile
   (ti::macrof-minor-mode-wizard
-   "tinymailbox-" " Mbx" "\C-c'"  "Mbx" 'TinyMailbox "tinymailbox-:"
+   "tinymailbox-" " Mbx" "\C-c'"  "Mbx" 'TinyMailbox "tinymailbox--"
 
    "Unix mailbox minor mode.
 
@@ -339,9 +339,9 @@ file format is as follows. notice that there is no mistake, the first
 
 Mode description:
 
-Prefix key to access the minor mode is defined in `tinymailbox-:mode-prefix-key'
+Prefix key to access the minor mode is defined in `tinymailbox--mode-prefix-key'
 
-\\{tinymailbox-:mode-map}"
+\\{tinymailbox--mode-map}"
 
    "TinyMailbox"
 
@@ -358,7 +358,7 @@ Prefix key to access the minor mode is defined in `tinymailbox-:mode-prefix-key'
 
    "Mailbox mode"
    (list                                ;arg 10
-    tinymailbox-:mode-easymenu-name
+    tinymailbox--mode-easymenu-name
     "----"
     ["Message forward"	    tinymailbox-forward			t]
     ["Message backward"	    tinymailbox-backward		t]
@@ -387,7 +387,7 @@ Prefix key to access the minor mode is defined in `tinymailbox-:mode-prefix-key'
     ["Mode off"		    turn-off-tinymailbox-mode		t])
    (progn
      (cond
-      (tinymailbox-:menu-use-flag
+      (tinymailbox--menu-use-flag
        ;;  Using menu to remeber commands is easier if you don't use
        ;;  menu bar at all.
        (define-key   root-map [(home)]          'tinymailbox-backward)
@@ -427,7 +427,7 @@ Prefix key to access the minor mode is defined in `tinymailbox-:mode-prefix-key'
 (defun tinymailbox-menu-main (&optional arg)
   "Show echo area menu and pass ARG to `ti::menu-menu'."
   (interactive "P")
-  (ti::menu-menu 'tinymailbox-:menu-main arg))
+  (ti::menu-menu 'tinymailbox--menu-main arg))
 
 ;;}}}
 ;;{{{ Install
@@ -474,7 +474,7 @@ Ignore big mailboxes."
     ;; Signal that we were called. This is checked inside mode wizard
     (put 'tinymailbox-install 'install-done t))
   (ti::assoc-replace-maybe-add 'auto-mode-alist
-                               tinymailbox-:auto-mode-alist
+                               tinymailbox--auto-mode-alist
                                uninstall)
   (ti::add-hooks 'find-file-hooks
                  'turn-on-tinymailbox-mode-maybe
@@ -505,18 +505,18 @@ Ignore big mailboxes."
       (cond
        (tinymailbox-mode
         (ti::string-syntax-kill-double-quote)
-        ;; (make-variable-buffer-local 'tinymailbox-:font-lock-keywords)
-        (make-local-variable 'tinymailbox-:font-lock-keywords)
-        (unless (get 'tinymailbox-:font-lock-keywords 'original)
-          (put 'tinymailbox-:font-lock-keywords
+        ;; (make-variable-buffer-local 'tinymailbox--font-lock-keywords)
+        (make-local-variable 'tinymailbox--font-lock-keywords)
+        (unless (get 'tinymailbox--font-lock-keywords 'original)
+          (put 'tinymailbox--font-lock-keywords
                'original
                (symbol-value sym)))
-        (set sym tinymailbox-:font-lock-keywords)
+        (set sym tinymailbox--font-lock-keywords)
         (turn-on-font-lock))
        (t
         (when (ti::listp
                (setq orig
-                     (get 'tinymailbox-:font-lock-keywords 'original)))
+                     (get 'tinymailbox--font-lock-keywords 'original)))
           (set sym orig))))
       (when (and (boundp 'font-lock-mode)
                  (symbol-value 'font-lock-mode))
@@ -641,8 +641,8 @@ Ignore big mailboxes."
 ;;; ----------------------------------------------------------------------
 ;;;
 (defun tinymailbox-header-show-or-hide ()
-  "Check `tinymailbox-:header-hide-mode' and act according to it."
-  (if tinymailbox-:header-hide-mode
+  "Check `tinymailbox--header-hide-mode' and act according to it."
+  (if tinymailbox--header-hide-mode
       (tinymailbox-header-hide)
     (tinymailbox-header-show)))
 
@@ -656,9 +656,9 @@ Ignore big mailboxes."
 ;;; ----------------------------------------------------------------------
 ;;;
 (defun tinymailbox-header-hide (&optional show)
-  "Hide or SHOW headers according to `tinymailbox-:header-show-regexp'."
+  "Hide or SHOW headers according to `tinymailbox--header-show-regexp'."
   (interactive "P")
-  (let* ((re     tinymailbox-:header-show-regexp)
+  (let* ((re     tinymailbox--header-show-regexp)
          (prop   'invisible)
          (propl  (list 'owner 'timbx
                        'tinymailbox-stat 'hidden
@@ -755,7 +755,7 @@ Created function arguments: (&optional arg)"
 (tinymailbox-fmacro-move
  tinymailbox-forward
  "Go to next message."
- 're-search-forward tinymailbox-:move-header-regexp
+ 're-search-forward tinymailbox--move-header-regexp
  "TinyMailbox: message forward stop.")
 
 ;;; ----------------------------------------------------------------------
@@ -764,7 +764,7 @@ Created function arguments: (&optional arg)"
 (tinymailbox-fmacro-move
  tinymailbox-backward
  "Go to previous message."
- 're-search-backward tinymailbox-:move-header-regexp
+ 're-search-backward tinymailbox--move-header-regexp
  "TinyMailbox: message backward stop.")
 
 ;;; ----------------------------------------------------------------------
@@ -805,10 +805,10 @@ Created function arguments: (&optional arg)"
   "Toggle header hiding mode with ARG when moving between messages. VERB."
   (interactive "P")
   (ti::verb)
-  (ti::bool-toggle tinymailbox-:header-hide-mode)
+  (ti::bool-toggle tinymailbox--header-hide-mode)
   (when verb
     (message "Header hiding mode is %s"
-             (if tinymailbox-:header-hide-mode "on" "off")))
+             (if tinymailbox--header-hide-mode "on" "off")))
   (tinymailbox-header-show-or-hide))
 
 ;;}}}
@@ -885,14 +885,14 @@ Created function arguments: (&optional arg)"
    (list
     (read-file-name
      "Append to folder: "
-     (if tinymailbox-:last-file
-         (file-name-directory tinymailbox-:last-file))
+     (if tinymailbox--last-file
+         (file-name-directory tinymailbox--last-file))
      nil
      nil
-     (if tinymailbox-:last-file
-         (file-name-nondirectory tinymailbox-:last-file)))))
+     (if tinymailbox--last-file
+         (file-name-nondirectory tinymailbox--last-file)))))
   (tinymailbox-message-macro
-   (setq tinymailbox-:last-file file)
+   (setq tinymailbox--last-file file)
    (append-to-file beg (min (1+ end) (point-max)) file)
    (goto-char opoint)))
 
@@ -904,14 +904,14 @@ Created function arguments: (&optional arg)"
    (list
     (read-file-name
      "Write to file: "
-     (if tinymailbox-:last-file
-         (file-name-directory tinymailbox-:last-file))
+     (if tinymailbox--last-file
+         (file-name-directory tinymailbox--last-file))
      nil
      nil
-     (if tinymailbox-:last-file
-         (file-name-nondirectory tinymailbox-:last-file)))))
+     (if tinymailbox--last-file
+         (file-name-nondirectory tinymailbox--last-file)))))
   (tinymailbox-message-macro
-   (setq tinymailbox-:last-file file)
+   (setq tinymailbox--last-file file)
    (write-region beg (min (1+ end) (point-max)) file)
    (goto-char opoint)))
 
@@ -1039,13 +1039,13 @@ References:
          mail-yank-prefix
        "| "))
     (goto-char start)
-    (run-hooks 'tinymailbox-:mail-setup-hook)))
+    (run-hooks 'tinymailbox--mail-setup-hook)))
 
 ;;}}}
 
-(add-hook  'tinymailbox-:mode-define-keys-hook 'tinymailbox-mode-define-keys)
+(add-hook  'tinymailbox--mode-define-keys-hook 'tinymailbox-mode-define-keys)
 (provide   'tinymailbox)
 
-(run-hooks 'tinymailbox-:load-hook)
+(run-hooks 'tinymailbox--load-hook)
 
 ;;; tinymailbox.el ends here
