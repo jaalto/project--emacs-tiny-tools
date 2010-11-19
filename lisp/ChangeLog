@@ -1,5 +1,40 @@
 2010-11-19 Sat  Jari Aalto  <jari.aalto@cante.net>
 
+	* tiny/tinylibb.el
+	(top level): Drop all XEmacs support and backward compatibility functions
+	that are already available in current Emacs.
+	(force-mode-line-update): Remove.
+	(buffer-disable-undo): Remove.
+	(number-to-string): Remove.
+	(set-text-properties): Remove.
+	(string-to-number): Remove.
+	(read-directory-name): Remove.
+	(insert-file-contents-literally): Remove.
+	(find-buffer-visiting): Remove.
+	(backward-line): Remove.
+	(int-to-float): Remove.
+	(logtest): Remove.
+	(replace-char-in-string): Remove.
+	(string-prefix-p): Remove.
+	(with-temp-buffer): Remove.
+	(compilation-start): Remove.
+	(string-to-number): Remove.
+	(fboundp): Remove.
+	(line-beginning-position): Remove.
+	(line-end-position): Remove.
+	(insert-file-literally): Remove.
+	(ti::compat-char-int-p): Remove.
+	(ti::compat-define-compatibility-defalias): Remove.
+	(ti::compat-character-define-macro): Remove.
+	(char=): Remove.
+	(eshell-mode.el): Remove Fix.
+	(esh-mode.el): Remove Fix.
+	(mm-decode.el): Remove Fix.
+	(subst-char-in-string): Remove.
+	(describe-symbol-find-file): Remove.
+	(temporary-file-directory): Remove.
+	(find-file-binary): Remove.
+
 	* tiny/tinyxreg.el: devel
 	(top level): Replace all variables from *-:* to *--*.
 	Use let* only where needed.
