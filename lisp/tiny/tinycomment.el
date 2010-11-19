@@ -450,21 +450,22 @@ Return:
   nil           unable to find proper code indent"
   (let ((re-com  (concat
 		  "^[ \t]*" (regexp-quote com-start)
-		  "\\|^[ \t]*$"))      ;skip empty lines.
+		  "\\|^[ \t]*$"))	;skip empty lines.
 	(move t)
-	p                              ;point mark
+	point				;point mark
 	ret)
     (save-excursion
-      (while (and move (eq ret nil))    ;while RET is not set
+      (while (and move
+		  (eq ret nil))		;while RET is not set
         (re-search-backward "[^ \t]+" nil t)
         (if (save-excursion
               (beginning-of-line)
               (looking-at re-com))      ;ignore full comment lines.
-            (if (eq (point) p)          ;have we moved since?
-                (setq move nil))        ;we're stucked .. :-C
+            (if (eq (point) point)	;have we moved since?
+                (setq move nil))
           ;; Maybe this real code line?
           (setq ret (1+ (current-column)))) ;1+ due to re-search
-        (setq p (point))))
+        (setq point (point))))
     ret))
 
 ;;}}}
