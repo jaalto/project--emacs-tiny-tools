@@ -1528,8 +1528,8 @@ Return:
 		(prog1 t
 		  (ti::compat-character-define-macro 'char-int 'identity))
 		(and
-		 (> (char-int ,ch) 31)
-		 (< (char-int ,ch) 127))))
+		 (> ,ch 31)
+		 (< ,ch 127))))
        t nil))
 
 ;;; ----------------------------------------------------------------------
@@ -1542,9 +1542,9 @@ Return:
   nil   lowercase
   nbr   if character isn't in set [A-Za-z] it returns CHAR."
   (cond
-   ((and (>= (char-int char)  97) (<= (char-int char) 122))
+   ((and (>= char  97) (<= char 122))
     nil)
-   ((and (>= (char-int char)  65) (<= (char-int char) 90))
+   ((and (>= char 65) (<= char 90))
     t)
    (t
     char)))
@@ -3460,9 +3460,7 @@ Input:
         (ti::pop-to-buffer-or-window buffer))
       (select-window (get-buffer-window buffer))
       (if line
-	  ;; => goto-line
-	  (goto-char (point-min)) (forward-line (1- line))))
-
+	  (ti::goto-line line)))
     buffer))
 
 ;;}}}
