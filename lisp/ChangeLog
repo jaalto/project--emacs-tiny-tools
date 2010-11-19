@@ -1,5 +1,10 @@
 2010-11-19 Sat  Jari Aalto  <jari.aalto@cante.net>
 
+	* tiny/tinylibm.el (ti::print-p): Remove
+	`ti::compat-character-define-macro'.
+	(ti::read-char-safe-until): Remove
+	`ti::compat-character-define-macro'.
+
 	* tiny/tinylibb.el
 	(top level): Drop all XEmacs support and backward compatibility functions
 	that are already available in current Emacs.
@@ -34,6 +39,11 @@
 	(describe-symbol-find-file): Remove.
 	(temporary-file-directory): Remove.
 	(find-file-binary): Remove.
+	(turn-on-font-lock): Remove.
+	(turn-off-font-lock): Remove.
+	(turn-on-auto-fill-mode): Remove.
+	(rmac): Remove.
+	(ctime): Remove.
 
 	* tiny/tinyxreg.el: devel
 	(top level): Replace all variables from *-:* to *--*.
