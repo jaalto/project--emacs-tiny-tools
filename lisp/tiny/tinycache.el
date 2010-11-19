@@ -300,7 +300,7 @@ Format: (BUFFER-POINTER BP ..)")
 
 ;;; ----------------------------------------------------------------------
 ;;;
-(defun tinycache-install (&optional unstall)
+(defun tinycache-install (&optional uninstall)
   "Install or UNINSTALL cache."
   (interactive)
   (cond
