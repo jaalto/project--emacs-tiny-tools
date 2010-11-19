@@ -271,9 +271,9 @@ This code is directly taken from function `isearch-done' By Daniel LaLiberte."
 ;;;
 (defun tinysearch-accept-word  (word)
   "Determine if we accept searched WORD."
-  (let* ((type      (symbol-name major-mode))
-         (ret       t)                  ;default, accept search
-         space-word)
+  (let ((type (symbol-name major-mode))
+	(ret  t)                  ;default, accept search
+	space-word)
     (cond
      ((string-match "^c-\\|^cc-\\|c[+]+" type)
       ;; Check C/C++ dependent variables, where rg. 'a' is
@@ -297,17 +297,19 @@ This code is directly taken from function `isearch-done' By Daniel LaLiberte."
   "Gets word under cursor limited by CHARSET string.
 Optional BEG and END gives maximum search limits.
 Default boundary is line limit."
-  (let* (re-word-boundary
-         re-word
-         ;;  We accept ':' and '-' , beasuse they are used in c++ and lisp
-         (charset (or charset "-:A-Za-z0-9_"))
-         (beg (or beg (line-beginning-position)))
-         (end (or end (line-end-position)))
-         pb
-         pe
-         p
-         re
-         ret)
+  (let (re-word-boundary
+	re-word
+	;;  Accept ':' and '-' , beasuse they are used in c++ and lisp
+	(charset (or charset "-:A-Za-z0-9_"))
+	pb
+	pe
+	p
+	re
+	ret)
+    (or beg
+	(setq beg (line-beginning-position)))
+    (or end
+	(setq end (line-end-position)))
     (setq re-word-boundary  (concat  "[^" charset "]"))
     (setq re-word (concat  "[" charset "]")) ;considered single word
     ;; Note:  the first search goes backwards to find the start of the
@@ -465,8 +467,8 @@ NOTE:
 ;;;
 (defun tinysearch-charset-control ()
   "Dynamic character set change according to mode. This is example function."
-  (let* ((type (symbol-name major-mode))
-         set)
+  (let ((type (symbol-name major-mode))
+	set)
     (cond
      ((string-match  "^c-\\|^cc-\\|c[+]+" type)
       (setq set "A-Za-z0-9_"))
