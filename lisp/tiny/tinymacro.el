@@ -155,7 +155,7 @@ are restored to original functions.
 References:
   tinymacro--function-list     list is cleared too."
   (interactive)
-  (let* ((list  tinymacro--function-list))
+  (let ((list tinymacro--function-list))
     (if (null list)
         (if (interactive-p)
             (message "TinyMacro: No macros active."))
@@ -170,12 +170,12 @@ References:
 ;;;
 (defun tinymacro-create-symbol ()
   "Creates macro variable. Returns NEW or EXISTING SYMBOL."
-  (let* ((max   tinymacro--stack-max)
-         (q     tinymacro--ask-when-stack-wrap-flag)
-         (name  tinymacro--macro-function-name-prefix)
-         (stack-pointer tinymacro--stack-ptr)
-         new
-         ret)
+  (let ((max   tinymacro--stack-max)
+	(q     tinymacro--ask-when-stack-wrap-flag)
+	(name  tinymacro--macro-function-name-prefix)
+	(stack-pointer tinymacro--stack-ptr)
+	new
+	ret)
     (if (or (null q)
             (< stack-pointer max))                 ; yes, go ahead with new
         (setq new (format "%s%d"
@@ -230,15 +230,15 @@ References:
 (defun tinymacro-macro-info ()
   "Show which macros are assigned to which keys."
   (interactive)
-  (let* ((stack-pointer tinymacro--stack-ptr)
-         (max    tinymacro--stack-max)
-         (buffer tinymacro--tmp-buffer)
-         (base   tinymacro--macro-function-name-prefix)
-         (i      0)
-         (round  0)
-         buffer-pointer
-         name
-         key)
+  (let ((stack-pointer tinymacro--stack-ptr)
+	(max    tinymacro--stack-max)
+	(buffer tinymacro--tmp-buffer)
+	(base   tinymacro--macro-function-name-prefix)
+	(i      0)
+	(round  0)
+	buffer-pointer
+	name
+	key)
     (while (< i (1+ max))
       (setq name (concat base i)
 	    i    (1+ i)
