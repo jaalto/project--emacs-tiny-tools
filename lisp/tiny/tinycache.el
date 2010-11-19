@@ -537,7 +537,9 @@ Setting 'list' to nil terminates this macro."
             (dired-mark 1))))))
     (if verb
         (message "%d cached files %smarked" i
-                 (if unmark "un" "") ))))
+                 (if unmark
+		     "un"
+		   "") ))))
 
 ;;; ----------------------------------------------------------------------
 ;;;
