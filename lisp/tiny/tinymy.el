@@ -826,8 +826,8 @@ has changed in Emacs 21.x. Unable to install handler."))
   "Toggle current buffer's Read-Write permission permanently on disk. VERB.
 Does nothing if buffer is not visiting a file or file is not owned by us."
   (interactive)
-  (let* ((file  (buffer-file-name))
-         stat)
+  (let ((file (buffer-file-name))
+	stat)
     (ti::verb)
     (when (and file (file-modes file))  ;File modes is nil in Ange-ftp
       (setq stat (ti::file-chmod-w-toggle file))
@@ -852,7 +852,7 @@ Does nothing if buffer is not visiting a file or file is not owned by us."
   "Compress or uncompress current file buffer with gzip."
   (interactive)
   (save-buffer)
-  (let* ((gzip "gzip"))
+  (let ((gzip "gzip"))
     (cond
      ((or (not (stringp buffer-file-name))
           (null (file-modes buffer-file-name))) ;Ange ftp
@@ -888,14 +888,14 @@ Important, If file is vc controlled:
     read-only, but sometimes it is convenient to put buffer to read-only
     state to prevent changing anything in there for a while."
   (interactive)
-  (let* ((fid      "tinymy-buffer-read-only")
-         (key-func (if (or (featurep 'vc)
-                           (featurep 'vc-hooks))
-                       'vc-toggle-read-only
-                     'toggle-read-only))
-         state
-         call
-         turn-mode)
+  (let ((fid      "tinymy-buffer-read-only")
+	(key-func (if (or (featurep 'vc)
+			  (featurep 'vc-hooks))
+		      'vc-toggle-read-only
+		    'toggle-read-only))
+	state
+	call
+	turn-mode)
     (unless fid ;; No-op. XEmacs byte compiler silencer
       (setq fid nil))
     (tinymy-debug fid
@@ -996,11 +996,11 @@ Important, If file is vc controlled:
 If buffer is associated to file:  -rwx-rw-r-- 20k /absolute/path/file.txt
 If no file: SIZEk SIZE-IN-BYTES"
   (interactive)
-  (let* ((file  buffer-file-name)
-         (ssize (buffer-size))
-         (size  (/ ssize 1000)) ;; well, it's 1024 to exact but this suffices
-         (modes "")
-         lines)
+  (let ((file  buffer-file-name)
+	(ssize (buffer-size))
+	(size  (/ ssize 1000)) ;; well, it's 1024 to exact but this suffices
+	(modes "")
+	lines)
     ;;  E.g. Gnus defines `buffer-file-name' for Draft messages,
     ;;  but the file is not actually written, so we test for existense
     ;;  to prevent suprises from happening.
@@ -1070,13 +1070,13 @@ Show information on echo-area:
     TinyMy: -rw-r--r-- 108k /users/jaalto/elisp/tinymy.el"
 
   (interactive "e")
-  (let* ((case-fold-search  t)
-         frame
-         win
-         mini
-         bottom
-         point
-         p)
+  (let ((case-fold-search  t)
+	frame
+	win
+	mini
+	bottom
+	point
+	p)
     (cond
      ((and (fboundp 'event-window)
            (eventp  event))
@@ -1149,17 +1149,17 @@ Contact maintaner with M-x tinymy-submit-bug-report.")))
 (defun tinymy-package-save-get-file-name ()
   "See `tinymy-package-save-to-file'. Find out package file name.
 Return '(file-name  point)."
-  (let* ((fid "tinymy-package-save-get-file-name:")
-         ;;  - the file start and it's name
-         ;;  - The regexp will jump until there is a-zA-Z0-9
-         (com "^\\(#\\|;;+\\)")
-         (re1 (concat com "[ \t]+\\([^ \t]+\\.el\\)[ \t]+[-][-]+"))
-         (re2 (concat com "[ \t]+\\([^ \t]+\\)[ \t]+[-][-]+[ \t]"))
-         (re3 (concat com "[ \t]+\\(.*\\)[ \t]+[-][-]+"))
-         (re4 (concat com "[ \t]+\\(.*\\)[ \t]+[-]+"))
-         (re5 "^\\(;;;*\\)[ \t]+\\([^ \t\n]+\\.el\\)[ \t]+")
-         file
-         point)
+  (let ((fid "tinymy-package-save-get-file-name:")
+	;;  - the file start and it's name
+	;;  - The regexp will jump until there is a-zA-Z0-9
+	(com "^\\(#\\|;;+\\)")
+	(re1 (concat com "[ \t]+\\([^ \t]+\\.el\\)[ \t]+[-][-]+"))
+	(re2 (concat com "[ \t]+\\([^ \t]+\\)[ \t]+[-][-]+[ \t]"))
+	(re3 (concat com "[ \t]+\\(.*\\)[ \t]+[-][-]+"))
+	(re4 (concat com "[ \t]+\\(.*\\)[ \t]+[-]+"))
+	(re5 "^\\(;;;*\\)[ \t]+\\([^ \t\n]+\\.el\\)[ \t]+")
+	file
+	point)
     (unless fid ;; No-op. XEmacs byte compiler silencer
       (setq fid nil))
     (save-excursion
@@ -1331,13 +1331,13 @@ before writing."
                           (file-name-nondirectory file))
           buffer
           point)))))
-  (let* ((fid           "tinymy-package-save-to-file:")
-         (orig-point    (point))
-         p1
-         p2
-         ans
-         str
-         point)
+  (let ((fid        "tinymy-package-save-to-file:")
+	(orig-point (point))
+	p1
+	p2
+	ans
+	str
+	point)
     (unless fid ;; No-op. XEmacs byte compiler silencer
       (setq fid nil))
     (or code-buffer
@@ -1669,13 +1669,13 @@ Regular buffer:
 buffer with no filename:
 
    nil"
-  (let* ((rcs-re    "retrieving revision +\\(.*\\)")
-         (v1        "")
-         (v2        "")
-         type
-         ver
-         file
-         msg)
+  (let ((rcs-re    "retrieving revision +\\(.*\\)")
+	(v1        "")
+	(v2        "")
+	type
+	ver
+	file
+	msg)
     (save-excursion
       (ti::pmin)
       (cond
@@ -1725,8 +1725,8 @@ The subject line is constructed by looking at the buffer content:
 eg if buffer contains rcsdiff of diff,
 The subject line will tell the versions."
   (interactive)
-  (let* ((data-buffer   (current-buffer))
-         subj)
+  (let ((data-buffer (current-buffer))
+	subj)
     (setq subj (tinymy-mail-subject-get))
     (compose-mail)
     ;;  This package gives nice alias expansion
@@ -1763,13 +1763,13 @@ Supported modes:
   perl
   awk
   lisp"
-  (let* ((mode                (or (ti::id-info) (symbol-name major-mode)))
-         (max-lines           1500)   ;rows, function cannot be bigger
-         (skip-lines          1300)     ;maximum skip lines backward
-         (start               (point))
-         beg end
-         range point
-         fwd-flag)
+  (let ((mode                (or (ti::id-info) (symbol-name major-mode)))
+	(max-lines           1500)   ;rows, function cannot be bigger
+	(skip-lines          1300)     ;maximum skip lines backward
+	(start               (point))
+	beg end
+	range point
+	fwd-flag)
     (cond
      ((string-match "lisp" mode)
       ;;  Only lisp has decent find functions
@@ -1851,10 +1851,10 @@ Supported modes:
 (defun tinymy-beginning-of-defun (&optional end-of-fun)
   "See `tinymy-function-bounds'. END-OF-FUN must be nil or t."
   (interactive)
-  (let* ((bounds (tinymy-function-bounds  end-of-fun))
-         (beg    (car-safe bounds))
-         (end    (cdr-safe bounds))
-         (point  (if end-of-fun end beg)))
+  (let ((bounds (tinymy-function-bounds end-of-fun))
+	(beg    (car-safe bounds))
+	(end    (cdr-safe bounds))
+	(point  (if end-of-fun end beg)))
     (if (null bounds)
         (message "TinyMy: Sorry, can't find function.")
       (goto-char point))))
@@ -1875,7 +1875,6 @@ Supported modes:
   "Add or Multiply columns in rectangle in START END.
 With optional arg INSERT, insert the sum and product to
 the current point."
-
   (interactive "r\nP")
   (require 'rect)
   (let ((sum        0)
@@ -1970,8 +1969,8 @@ Note:
   ;;    command in normal lisp code.
 
   (interactive "P")
-  (let* ((mode   tinymy-:scroll-mode)
-         lines)
+  (let ((mode tinymy-:scroll-mode)
+	lines)
     (cond
      ((ti::line-wrap-p)
       ;; ............................................. wrapping line ...
@@ -2048,7 +2047,7 @@ Note:
 List of  files can include shell regexps. The result is put into
 `tinymy-:register'."
   (interactive
-   (let* (arg1)
+   (let (arg1)
      (setq arg1
            (ti::file-complete-filename-minibuffer-macro
              (read-from-minibuffer
@@ -2311,10 +2310,8 @@ References:
          (fid       "tinymy-compile-run-command")
          (file      (buffer-file-name))
          (mname     (symbol-name major-mode))
-
          (type      (or (ti::id-info)
                         mname))
-
          (buffer    (current-buffer))
          elt
          run-it
@@ -2366,7 +2363,7 @@ References:
 (defun tinymy-compile-run-command (&optional clear)
   "See `tinymy-compile-run-command-ask'."
   (interactive "P")
-  (let* ((cmd (tinymy-compile-run-command-ask clear)))
+  (let ((cmd (tinymy-compile-run-command-ask clear)))
     (when (not (ti::nil-p cmd))
       (compilation-start cmd)
       (pop-to-buffer "*compilation*"))))
@@ -2558,7 +2555,7 @@ Mode description:
 (defun tinymy-sort-column (beg end nbr)
   "Sort region BEG END according to column NBR."
   (interactive "r\np")
-  (let* ((opoint (point)))
+  (let ((opoint (point)))
     (untabify beg end)
     (goto-char (min beg end))           ;Sort breaks otherwise
     (sort-fields nbr beg end)
