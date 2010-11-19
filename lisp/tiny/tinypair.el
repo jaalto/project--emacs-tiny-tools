@@ -52,7 +52,7 @@
 ;; If you want to turn the pairing off, use this:
 ;;
 ;;      M-x turn-off-tinypair-mode
-#
+;;
 ;; If you find any incorrect behavior, please immediately
 ;;
 ;;      o   Turn on debug M-x tinypair-debug-toggle
