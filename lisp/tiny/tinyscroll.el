@@ -408,9 +408,8 @@ Input:
             (setq msg "TinyScroll: buffer already removed."))
       ;;  Keep the process alive all the time
       (tinyscroll-timer-process-control)
-      (save-excursion
+      (with-current-buffer buffern
         ;;  We have to record the point-max
-        (set-buffer buffern)
         (if (tinyscroll--list-add buffern (point-max))
             (setq msg "TinyScroll: Already in list.")) ))
     (if verb
