@@ -9,7 +9,6 @@
 ;; Author:          Jari Aalto
 ;; Maintainer:      Jari Aalto
 ;;
-;; To get information on this program, call M-x tinyreplace-version.
 ;; Look at the code with folding.el.
 
 ;; COPYRIGHT NOTICE
@@ -462,24 +461,7 @@ Special commands:
     L  calls function `tinyreplace-latex-math-replace'")
 
 ;;}}}
-;;{{{ version and install
-
-;;; ----------------------------------------------------------------------
-;;;
-(eval-and-compile
-  (ti::macrof-version-bug-report
-   "tinyreplace.el"
-   "tinyreplace"
-   tinyreplace-:version-id
-   "$Id: tinyreplace.el,v 2.59 2007/05/07 10:50:13 jaalto Exp $"
-   '(tinyreplace-:version-id
-     tinyreplace-:arrow-state
-     tinyreplace-:narrow-state
-     tinyreplace-:arrow-initial-state
-     tinyreplace-:face
-     tinyreplace-:word-boundary
-     tinyreplace-:symmetry
-     tinyreplace-:symmetry-rest)))
+;;{{{ install
 
 ;;; ----------------------------------------------------------------------
 ;;;###autoload
