@@ -587,11 +587,11 @@ The function is called with list of files in storage."
 User must be in dired buffer. Makes the `dired-mode-map'
 local to current buffer."
   (interactive)
-  (let* ((list
-          '("abb" "abp" "as" "aS" "ar" "aR" "ac" "aq" "ag" "ap"
-            "t!" "tf" "tg" "tk" "tl" "tp" "t<" "t>"
-            "tmd" "tml" "tms" "tmS" "tmv"
-            "tvi" "tvo" "tvu")))
+  (let ((list
+	 '("abb" "abp" "as" "aS" "ar" "aR" "ac" "aq" "ag" "ap"
+	   "t!" "tf" "tg" "tk" "tl" "tp" "t<" "t>"
+	   "tmd" "tml" "tms" "tmS" "tmv"
+	   "tvi" "tvo" "tvu")))
     (when (and (memq major-mode '(dired-mode))
                dired-mode-map)
       (make-local-variable 'dired-mode-map)
@@ -609,7 +609,7 @@ local to current buffer."
 (defun tinydired-hook-control (&optional remove)
   "Add hooks to dired mode. Optional REMOVE all hooks inserted by package."
   (interactive "P")
-  (let* ((list (ti::list-make tinydired-:bind-hook)))
+  (let ((list (ti::list-make tinydired-:bind-hook)))
     (cond
      (remove
       (ti::add-hooks 'dired-after-readin-hook tinydired-:readin-hook 'remove)
@@ -674,9 +674,9 @@ local to current buffer."
 (defun tinydired-advice-control-old (&optional disable verb)
   "Activate all advises. Use extra argument to DISABLE all. VERB."
   (interactive "P")
-  (let* ((re    "^tdd")
-         (doit  t)
-         msg)
+  (let ((re    "^tdd")
+	(doit  t)
+	msg)
     (ti::verb)
     (if verb
         (setq
@@ -748,8 +748,8 @@ Buffer read-only is removed.
 
 The BODY should move the pointer to next file and bol, until eob reached."
   (`
-   (let* ((end (tinydired-last-file-point))
-          buffer-read-only)
+   (let ((end (tinydired-last-file-point))
+	 buffer-read-only)
      (beginning-of-line)
      (while (and (not (eobp))
                  (< (point) end))
@@ -780,8 +780,8 @@ that current line is skipped when BODY finishes.
 
 The buffer is writable during mapping."
   (`
-   (let* (buffer-read-only
-          (ReGexp (dired-marker-regexp)))
+   (let (buffer-read-only
+	 (ReGexp (dired-marker-regexp)))
      (progn
        (tinydired-map-over-files
         (if (looking-at ReGexp)
@@ -819,8 +819,8 @@ START and END defaults to all files"
 ;;;
 (defun tinydired-get-tmp-dir ()
   "Return temp directory with slash at the end."
-  (let* ((dir   tinydired-:tmp-dir)
-         (func  tinydired-:tmp-dir-function))
+  (let ((dir   tinydired-:tmp-dir)
+	(func  tinydired-:tmp-dir-function))
     (unless (not (file-exists-p dir))
       (setq dir (funcall func)))
     (setq dir (expand-file-name dir))
@@ -930,8 +930,8 @@ START and END defaults to all files"
 ;;;
 (defun tinydired-kill-files ()
   "After each dired read, remove unwanted files."
-  (let* ((re     tinydired-:unwanted-files-regexp)
-         buffer-read-only)
+  (let ((re     tinydired-:unwanted-files-regexp)
+	buffer-read-only)
     (unless (tinydired-feature-p 'auto-delete)
       ;;  Is this new directory buffer ..
       (if (and (eq major-mode 'dired-mode)
@@ -958,9 +958,9 @@ Return list:
   ((mark file) ..)      default
 
 The `mark' is first character in the left for file or dir."
-  (let* (last-point
-         list
-         file)
+  (let (last-point
+	list
+	file)
     (save-excursion
       (setq last-point (tinydired-last-file-point))
       (tinydired-first-line)
@@ -1104,7 +1104,7 @@ With prefix arg, prompt for second argument SWITCHES,
 (defun tinydired-read-dir-as-is ()
   "Read the directory without any filtering."
   (interactive)
-  (let* (dired-after-readin-hook)
+  (let (dired-after-readin-hook)
     (revert-buffer)))
 
 ;;; ----------------------------------------------------------------------
@@ -1136,8 +1136,8 @@ Exceptions:
   Only reload files in Emacs whose modify flag is non-nil.
   If file does not exist in Emacs, do nothing."
   (interactive "P")
-  (let* ((list (tinydired-get-marked-files))
-         buffer)
+  (let ((list (tinydired-get-marked-files))
+	buffer)
     (dolist (file list)
       (when (setq buffer (get-file-buffer file))
         (with-current-buffer buffer
@@ -1187,12 +1187,14 @@ References:
      (dired-get-marked-files
       t current-prefix-arg))
     current-prefix-arg))
-  (let* ((to-dir  (tinydired-get-tmp-dir))
-         (ange    (ange-ftp-ftp-name dired-directory))
-         (on-each (not (string-match "\\*" command)))
-         host user dir
-         file-list
-         list)
+  (let ((to-dir  (tinydired-get-tmp-dir))
+	(ange    (ange-ftp-ftp-name dired-directory))
+	(on-each (not (string-match "\\*" command)))
+	host
+	user
+	dir
+	file-list
+	list)
     (cond
      ((null ange)
       ;; Simple local dired.
@@ -1229,10 +1231,10 @@ References:
 This may take a while, because the whole directory structure must
 be read again."
   (interactive)
-  (let* ((line   (ti::current-line-number))
-         file
-         marks
-         buffer-read-only)
+  (let ((line   (ti::current-line-number))
+	file
+	marks
+	buffer-read-only)
     (when (tinydired-normal-buffer-p)
       ;;        Now create copy of original directory.
       (tinydired-dir-original dired-directory)
@@ -1267,8 +1269,8 @@ be read again."
 (defun tinydired-shorten-links ()
   "Shortens all linked files. The link part is removed."
   (interactive)
-  (let* ((line (ti::current-line-number))
-         buffer-read-only)
+  (let ((line (ti::current-line-number))
+	buffer-read-only)
     (when (tinydired-normal-buffer-p)
       (ti::pmin)
       (while (not (eobp))
@@ -1328,7 +1330,7 @@ You can get the marks back with `tinydired-marks-restore'."
 (defun tinydired-first-line ()
   "Move to first _line_ in dired."
   (interactive)
-  (let* (point)
+  (let (point)
     (save-excursion
       (ti::pmin)
       (forward-line 2)
@@ -1347,7 +1349,7 @@ You can get the marks back with `tinydired-marks-restore'."
 (defun tinydired-first-file ()
   "Move to first file in dired."
   (interactive)
-  (let* (point)
+  (let (point)
     (save-excursion
       (ti::pmin)
       (while (and (null point)
@@ -1367,7 +1369,7 @@ You can get the marks back with `tinydired-marks-restore'."
 (defun tinydired-last-file ()
   "Move to last file in dired."
   (interactive)
-  (let* (point)
+  (let (point)
     (save-excursion
       (ti::pmax)
       (while (and (null point)
@@ -1403,7 +1405,7 @@ You can get the marks back with `tinydired-marks-restore'."
   "Remove unmarked lines. Ignore directories and symlinks."
   (interactive)
   (tinydired-map-over-unmarked
-   (let* (char)
+   (let (char)
      ;; We're at the beginning of line, suppose std unix 'ls'
      ;; drwx--x--x
      (setq char (buffer-substring (+ 2 (point)) (+ 3 (point))))
@@ -1420,7 +1422,7 @@ You can get the marks back with `tinydired-marks-restore'."
 (defun tinydired-kill-lines (re)
   "Delete lines matching RE."
   (interactive "sKill files re: ")
-  (let* (buffer-read-only)
+  (let (buffer-read-only)
     (unless (ti::nil-p re)
       (ti::save-line-column-macro (tinydired-first-file) (dired-move-to-filename)
         (tinydired-first-file) ;; do this in ti::save-line-column-macro
@@ -1447,8 +1449,8 @@ You can easily undo this with reverting the buffer (dired \"g\")."
 (defun tinydired-pop-to-buffer ()
   "Pop to buffer if it exists in Emacs."
   (interactive)
-  (let* ((file (ignore-errors (dired-get-filename)))
-         buffer)
+  (let ((file (ignore-errors (dired-get-filename)))
+	buffer)
     (cond
      ((and (stringp file)
            (setq buffer (get-file-buffer file)))
@@ -1489,7 +1491,7 @@ on current filename."
 (defun tinydired-mark-writable-files ()
   "Mark Your files that have writable flag set."
   (interactive)
-  (let* ((re    ".*.w..[-w]..[-w]. "))
+  (let ((re ".*.w..[-w]..[-w]. "))
     (tinydired-map-over-files
      (if (not (looking-at re))
          (forward-line)
@@ -1500,7 +1502,7 @@ on current filename."
 (defun tinydired-mark-read-only-files ()
   "Mark Your files that have writable flag set."
   (interactive)
-  (let* ((re    ".*r-.[-r]..[-r].. "))
+  (let ((re ".*r-.[-r]..[-r].. "))
     (tinydired-map-over-files
      (if (not (looking-at re))
          (forward-line)
@@ -1512,7 +1514,7 @@ on current filename."
   "Mark opposite files.
 Ie. if you have marked some files, unmark those and mark all other files."
   (interactive)
-  (let* ((re  (dired-marker-regexp)))
+  (let ((re (dired-marker-regexp)))
     (ti::save-line-column-macro nil nil
       (tinydired-map-over-files
        (beginning-of-line)
@@ -1528,11 +1530,11 @@ Ie. if you have marked some files, unmark those and mark all other files."
   "Mark all files in the current _view_ that are in Emacs _and_ in VC control.
 Optionally UNMARK. VERB."
   (interactive)
-  (let* ((dir           (expand-file-name dired-directory))
-         (msg           (if unmark
-                            "Unmarking..."
-                          "Marking..."))
-         list)
+  (let ((dir (expand-file-name dired-directory))
+	(msg (if unmark
+		 "Unmarking..."
+	       "Marking..."))
+	list)
     (ti::verb)
     (if (null dir)
         (setq dir dir))                 ;Shut up XEmacs 19.14 ByteComp
@@ -1572,11 +1574,11 @@ Return:
  t              if refreshed
  nil"
   (interactive)
-  (let* ((cache         (tinydired-file-list 'no-path-names 're))
-         (line          (ti::current-line-number)) ;save user position
-         (re            "")
-         buffer-read-only               ;allow write
-         marks)
+  (let ((cache (tinydired-file-list 'no-path-names 're))
+	(line  (ti::current-line-number)) ;save user position
+	(re    "")
+	buffer-read-only               ;allow write
+	marks)
     (ti::verb)
     (cond
      (cache
@@ -1615,10 +1617,10 @@ Return:
 Does not load files which are already in Emacs.
 If ARG is non-nil, remove mark if file was loaded. VERB."
   (interactive "P")
-  (let* ((files         (tinydired-get-marked-files))
-         (loaded        0)
-         (not-loaded    0)
-         (all           0))
+  (let ((files         (tinydired-get-marked-files))
+	(loaded        0)
+	(not-loaded    0)
+	(all           0))
     (ti::verb)
     (cond
      ((and verb (null files))
@@ -1651,11 +1653,11 @@ If ARG is non-nil, examine file whether it was in Emacs or not.
 Note:
   Please be patient, taking diffs may be slow per file."
   (interactive)
-  (let* ((list  (tinydired-get-marked-files))
-         fn
-         buffer
-         vc-reg-stat
-         diff-no-stat)
+  (let ((list (tinydired-get-marked-files))
+	fn
+	buffer
+	vc-reg-stat
+	diff-no-stat)
     (dolist (file list)
       (setq fn          (file-name-nondirectory file)
             buffer      (get-file-buffer file)
@@ -1676,7 +1678,8 @@ Note:
   "Revert all version controlled/no changed/marked files. Ignore ARG. VERB."
   (interactive "P")
   (let* ((list          (tinydired-get-marked-files))
-         (display       (if list t))
+         (display       (if list
+			    t))
          (vc-dired-mode nil)            ;turn mode off
          (count         0)
          (handled       0)
@@ -1726,17 +1729,17 @@ Optional ARG skips all load confirmations.
 
 Marks are left only to files which were loaded into Emacs."
   (interactive "P")
-  (let* ((list          (tinydired-get-marked-files))
-         (dired-vc-mode nil)            ;turn mode off
-         (count         0)
-         (loaded        0)
-         (handled       0)
-         fn
-         buffer
-         load
-         vc-reg-stat
-         modify-stat
-         read-stat)
+  (let ((list          (tinydired-get-marked-files))
+	(dired-vc-mode nil)            ;turn mode off
+	(count         0)
+	(loaded        0)
+	(handled       0)
+	fn
+	buffer
+	load
+	vc-reg-stat
+	modify-stat
+	read-stat)
     (if dired-vc-mode
         (setq dired-vc-mode nil))       ;ByteComp silencer
     (dolist (file list)
@@ -1830,17 +1833,17 @@ Bugs:
 
   Anyway, the mark is gone."
   (interactive "P")
-  (let* ((list          (tinydired-get-marked-files))
-         (count         0)
-         (handled       0)
-         (loaded        0)
-         fn
-         buffer
-         load                           ;flag
-         diff-no-stat
-         modify-stat
-         read-stat
-         vc-reg-stat)
+  (let ((list          (tinydired-get-marked-files))
+	(count         0)
+	(handled       0)
+	(loaded        0)
+	fn
+	buffer
+	load                           ;flag
+	diff-no-stat
+	modify-stat
+	read-stat
+	vc-reg-stat)
     (ti::verb)
     (if (and (null vc-dired-mode)
              (y-or-n-p "Buffer must be in VC dired mode. Turn it on? "))
@@ -1974,7 +1977,7 @@ enabled outside of that function."
 
 If you have loaded dired-x and it contains variable
 `dired-find-subdir', this advice does nothing."
-  (let* ((dired-buffer (current-buffer)))
+  (let ((dired-buffer (current-buffer)))
     (prog1
         ad-do-it
       (if (and (eq major-mode 'dired-mode)
@@ -2009,7 +2012,7 @@ If you have loaded dired-x and it contains variable
 (defun tinydired-store-filename ()
   "Save current filename into variable."
   (interactive)
-  (let* ((file (tinydired-get-filename)))
+  (let ((file (tinydired-get-filename)))
     (if (member file tinydired-:file-store)
         (message "TinyDireds: %s already in storage." file)
       (push  file tinydired-:file-store) file)
@@ -2021,7 +2024,7 @@ If you have loaded dired-x and it contains variable
 (defun tinydired-store-delete-filename ()
   "Remove filename from store."
   (interactive)
-  (let* ((file (tinydired-get-filename)))
+  (let ((file (tinydired-get-filename)))
     (setq tinydired-:file-store (delete file tinydired-:file-store))
     (if (interactive-p)
         (message "Tinydired: %s" (ti::list-to-string tinydired-:file-store)))))
@@ -2040,10 +2043,10 @@ If you have loaded dired-x and it contains variable
 (defun tinydired-store-remove-file ()
   "Delete current filename from storage."
   (interactive)
-  (let* ((file   (tinydired-get-filename))
-         (verb   (interactive-p))
-         (store  tinydired-:file-store)
-         list)
+  (let ((file   (tinydired-get-filename))
+	(verb   (interactive-p))
+	(store  tinydired-:file-store)
+	list)
     (if (null store)
         (if verb (message "Tinydired: Storage is empty."))
       (dolist (x store)
@@ -2066,8 +2069,8 @@ If you have loaded dired-x and it contains variable
   "Add marked files into store. No duplicates are inserted.
 If parameter DELETE is non-nil, removes marked files from store. VERB."
   (interactive)
-  (let* ((list    tinydired-:file-store)
-         (marked  (tinydired-get-marked-files-no-dir)))
+  (let ((list    tinydired-:file-store)
+	(marked  (tinydired-get-marked-files-no-dir)))
     (ti::verb)
     (if (null delete)
         (dolist (x marked)
@@ -2095,7 +2098,7 @@ If parameter DELETE is non-nil, removes marked files from store. VERB."
   "Switch back to dired buffer, which is associated with ange-ftp buffer.
 If no such buffer is found, do nothing."
   (interactive)
-  (let* ((buffer (ti::buffer-find-ange-to-dired-buffer)))
+  (let ((buffer (ti::buffer-find-ange-to-dired-buffer)))
     (if buffer
         (pop-to-buffer (car buffer))
       (message "Tinydired: No dired buffer found."))))
@@ -2109,7 +2112,7 @@ If no such buffer is found, do nothing."
   "Kill the current dired buffer and possible ange-ftp buffer. VERB.
 This is like `dired-delete-and-exit'."
   (interactive)
-  (let* ((buffer  (tinydired-ange-ftp-buffer-for-this-dired)))
+  (let ((buffer (tinydired-ange-ftp-buffer-for-this-dired)))
     (ti::verb)
     (if buffer
         (kill-buffer buffer))
@@ -2126,13 +2129,13 @@ This is like `dired-delete-and-exit'."
 (defun tinydired-kill-all-ange-and-dired-buffers (&optional verb)
   "Kill all ange-ftp buffers _and_ all remote dired buffers. VERB."
   (interactive)
-  (let* ((ange  (ti::buffer-get-ange-buffer-list))
-         (dired (ti::dolist-buffer-list
-                 (and (eq major-mode 'dired-mode)
-                      (string-match tinydired-:dired-directory-ange-regexp
-                                    dired-directory))))
-         (ange-count  0)
-         (dired-count 0))
+  (let ((ange  (ti::buffer-get-ange-buffer-list))
+	(dired (ti::dolist-buffer-list
+		(and (eq major-mode 'dired-mode)
+		     (string-match tinydired-:dired-directory-ange-regexp
+				   dired-directory))))
+	(ange-count  0)
+	(dired-count 0))
     (ti::verb)
     (dolist (elt ange)
       (kill-buffer elt)
@@ -2161,8 +2164,8 @@ Don't worry about the dired buffers, Ange will automatically
 create connection, if you use \"g\" -- rever-buffer, in a dired
 that is associated with ange-ftp."
   (interactive)
-  (let* ((list  (ti::buffer-get-ange-buffer-list))
-         (i     0))
+  (let ((list  (ti::buffer-get-ange-buffer-list))
+	(i     0))
     (dolist (elt list)
       (incf  i) (kill-buffer elt))
     (if (> i 0 )
@@ -2176,9 +2179,9 @@ that is associated with ange-ftp."
   "Gather all ange FTP buffers and offer completion menu.
 If there is only one Ange buffer, switches to it without asking."
   (interactive)
-  (let* ((list  (ti::buffer-get-ange-buffer-list))
-         buffer
-         go)
+  (let ((list (ti::buffer-get-ange-buffer-list))
+	buffer
+	go)
     (if (null list)
         (message "no Ange-ftp sessions at the moment.")
       (if (eq 1 (length list))
@@ -2210,11 +2213,11 @@ Return
   nil                   no action taken.
   t"
   (interactive)
-  (let* ((file    tinydired-:mput-last-ftp)
-         (buffer  (current-buffer))
-         list
-         host
-         ret)
+  (let ((file    tinydired-:mput-last-ftp)
+	(buffer  (current-buffer))
+	list
+	host
+	ret)
     (cond
      ((null tinydired-:mput-last-ftp)
       (message "Tinydired: Sorry, No mput information."))
@@ -2253,10 +2256,11 @@ Return
 ;;;
 (defun tinydired-ange-ftp-buffer-for-this-dired (&optional file)
   "Return ange ftp buffer-name-string for current dired or FILE, or nil."
-  (let* (host
-         buffer
-         list)
-    (setq file (or file (dired-get-filename)))
+  (let (host
+	buffer
+	list)
+    (or file
+	(setq file (dired-get-filename)))
     ;;  This return 3 member list: SITE LOGIN DIRECTORY/FILE
     (setq list  (ange-ftp-ftp-name file)
           host  (nth 0 list))
@@ -2291,8 +2295,8 @@ Binds local keys in ftp buffer
  C - c ad           insert directory name
  C - c ab           switch back to dired buffer"
   (interactive)
-  (let* (buffer
-         dir)
+  (let (buffer
+	dir)
     (ti::verb)
     ;;  1.  try normal ange ftp
     ;;  2.  did user used 'put' to remove site ?
@@ -2346,14 +2350,14 @@ Binds local keys in ftp buffer
 (defun tinydired-store-ftp-mget ()
   "Send command to ange to fetch all files in store."
   (interactive)
-  (let* ((files         tinydired-:file-store)
-         (down          tinydired-:download-dir)
-         (store         (tinydired-store-get-string))
-         (ange          (ange-ftp-ftp-name dired-directory))
-         to-dir
-         host
-         user
-         dir)
+  (let ((files         tinydired-:file-store)
+	(down          tinydired-:download-dir)
+	(store         (tinydired-store-get-string))
+	(ange          (ange-ftp-ftp-name dired-directory))
+	to-dir
+	host
+	user
+	dir)
     (cond
      ((null ange)
       (message "Tinydired: Can't find ftp process. Start one first."))
@@ -2405,13 +2409,13 @@ Binds local keys in ftp buffer
       (error "Tinydired: Must execute command in dired buffer."))
   ;;    Record the site name where the mput was made
   (setq tinydired-:mput-last-ftp ange-ref-to)
-  (let* ((files         tinydired-:file-store)
-         (store         (tinydired-store-get-string))
-         (dir           dired-directory)
-         ange
-         to-dir
-         host
-         user)
+  (let ((files         tinydired-:file-store)
+	(store         (tinydired-store-get-string))
+	(dir           dired-directory)
+	ange
+	to-dir
+	host
+	user)
     ;;  If user is in remote dired buffer, signal error
     ;;  We don't support this. At least not now.
     ;;
