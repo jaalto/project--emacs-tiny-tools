@@ -2027,7 +2027,7 @@ Note:
                   ;;  - If the lines are longer than window-width; then this
                   ;;    whole next-line call may end anywhere...can't help
                   ;;    that
-                  ;;  - The safe do is here in case this calls error,
+                  ;;  - The ignore-errors is here in case this calls error,
                   ;;    which it does if the buffer size has changes, like
                   ;;    in live *Messages* buffer
                   (ignore-errors (next-line (- lines 1))))
@@ -2534,17 +2534,14 @@ Mode description:
 ;;
 ;; (defun tinymy-sort-column-0 (beg end)
 ;;    (interactive "*r") (tinymy-sort-column beg end 0))
-(mapcar
- (function
-  (lambda (x)
-    (let ((sym (intern (format "tinymy-sort-mode-column-%d" x)))
-          def)
-      (setq def
-            `(defun ,sym (beg end)
-	       (interactive "*r")
-	       (tinymy-sort-column beg end ,x )))
-      (eval def))))
- '(1 2 3 4 5 6 7 8 9))
+(dolist (x '(1 2 3 4 5 6 7 8 9))
+  (let ((sym (intern (format "tinymy-sort-mode-column-%d" x)))
+	def)
+    (setq def
+	  `(defun ,sym (beg end)
+	     (interactive "*r")
+	     (tinymy-sort-column beg end ,x )))
+    (eval def)))
 
 ;;; ----------------------------------------------------------------------
 ;;;
