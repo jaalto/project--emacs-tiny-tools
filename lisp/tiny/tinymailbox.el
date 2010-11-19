@@ -9,7 +9,6 @@
 ;; Author:          Jari Aalto
 ;; Maintainer:      Jari Aalto
 ;;
-;; To get information on this program, call M-x tinymailbox-version.
 ;; Look at the code with folding.el.
 
 ;; This program is free software; you can redistribute it and/or modify it
@@ -56,10 +55,6 @@
 ;;      (pushnew '("\\.mbo?x\\'" . turn-on-tinymailbox-mode-maybe)
 ;;               auto-mode-alist
 ;;               :test 'equal)
-;;
-;;  If you have any questions, use this function to contact author
-;;
-;;       M-x tinymailbox-submit-bug-report
 
 ;;}}}
 ;;{{{ Documentation
@@ -162,9 +157,6 @@
 ;;{{{ setup: require
 
 (require 'tinylibm)
-;; (require 'sendmail)
-
-(eval-when-compile (ti::package-use-dynamic-compilation))
 
 (eval-and-compile
   (defvar mail-yank-prefix) ;; Byte compiler silencer
@@ -312,25 +304,6 @@ Miscellaneous
     ?    Help menu
     H    Help menu
     x    Exit mode")
-
-;;;###autoload (autoload 'tinymailbox-version "tinymailbox" "Display commentary" t)
-(eval-and-compile
-  (ti::macrof-version-bug-report
-   "tinymailbox.el"
-   "tinymailbox"
-   tinymailbox-:version-id
-   "$Id: tinymailbox.el,v 2.79 2007/05/06 23:15:20 jaalto Exp $"
-   '(tinymailbox-:version-id
-     tinymailbox-:load-hook
-     tinymailbox-:last-file
-     tinymailbox-:font-lock-keywords
-     tinymailbox-:auto-mode-alist
-     tinymailbox-:move-header-regexp
-     tinymailbox-:header-show-regexp
-     tinymailbox-:header-hide-mode
-     tinymailbox-:menu-use-flag
-     tinymailbox-:menu-main)
-   '(tinymailbox-:debug-buffer)))
 
 ;;}}}
 ;;{{{ minor mode
