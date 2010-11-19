@@ -260,23 +260,23 @@ left untouched, because adjusting may push it out of the window edge."
 
 ;;; ----------------------------------------------------------------------
 ;;;
-(defun tinycomment-find-prev-com-col (com-start &optional not-this-col CF)
+(defun tinycomment-find-prev-com-col (com-start &optional not-this-col column-further)
   "Look upward to find previous comment column.
 
 Input:
 
-  COM-START     comment start string.
-  NOT-THIS-COL  if given,  scan backward until different column
-                is found.
-  CF            tell that comment searched must reside further in
-                in the line than this column.
+  COM-START      comment start string.
+  NOT-THIS-COL   if given,  scan backward until different column
+                 is found.
+  COLUMN-FURTHER If number, comment searched must reside further
+                 in in the line than this column.
 
 Return:
 
   nil   unable to find previous comment
   col"
-  (let ((re   com-start)
-	(loop t)
+  (let ((loop t)
+	(re   com-start)
 	ret
 	found)
     (save-excursion
@@ -290,13 +290,12 @@ Return:
                 (null not-this-col))
             nil
           (if (not (= ret not-this-col))
-              (setq loop nil)                   ;this will do !
-            (setq loop t found nil)))           ;keep searching
-
+              (setq loop nil)		;this will do !
+            (setq loop t found nil)))	;keep searching
         (if (or (null found)
-                (null CF))
+                (null column-further))
             nil
-          (if (> ret CF)                ;this IS suitable !
+          (if (> ret column-further)	;this IS suitable !
               (setq loop nil)
             (setq loop t found nil))))) ;keep going
     ret))
