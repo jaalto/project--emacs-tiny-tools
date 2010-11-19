@@ -244,31 +244,6 @@ this in you ~/.emacs")
   :group 'TinyLock)
 
 ;;}}}
-;;{{{ setup: version
-
-;;; ....................................................... &v-version ...
-
-;;;###autoload (autoload 'tinylock-version "tinylock" "Display commentary." t)
-(eval-and-compile
-  (ti::macrof-version-bug-report
-   "tinylock.el"
-   "tinylock"
-   tinylock-:version-id
-   "$Id: tinylock.el,v 2.42 2007/05/06 23:15:20 jaalto Exp $"
-   '(tinylock-:version-id
-     tinylock-:before-lock-hook
-     tinylock-:after-lock-hook
-     tinylock-:load-hook
-     tinylock-:auto-lock-data
-     tinylock-:auto-lock-password
-     tinylock-:auto-lock-interval
-     tinylock-:idle-timer-process
-     tinylock-:login-error-sleep
-     tinylock-:buffer-login-history
-     tinylock-:buffer-blank
-     tinylock-:blank-when-locked-flag)))
-
-;;}}}
 ;;{{{ code: macros, advices
 
 (defmacro tinylock-time-dd (time)
