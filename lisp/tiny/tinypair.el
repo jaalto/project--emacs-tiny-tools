@@ -743,7 +743,7 @@ Input:
   (let*  ((fid          "tinypair-self-insert-command: ")
           (nbr          (prefix-numeric-value arg))
           (word-pair    tinypair--automatic-word-pairing)
-          (ch           last-command-char)
+          (ch           last-command-event)
           (elt          (assoc ch tinypair--alist))
           ;;  If TinyEf is active in minibuffer prompt, turn ourself off.
           (pair-allow
