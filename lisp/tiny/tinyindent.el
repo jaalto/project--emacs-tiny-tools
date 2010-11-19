@@ -320,7 +320,7 @@ References:
 	(p             (point))
 	(cur-col       (current-column))
 	(imode         t)
-	(SPC           (char-to-int ?\ ))
+	(SPC           ?\ )
 	prev-empty
 	prev-col
 	bp ep                          ;BEG END point
