@@ -1344,7 +1344,7 @@ TinySetup: [NOTE] The automatic setup will not make much much good,
   "Bind."
   ;;#todo:
   ;; (ti::use-prefix-key "\C-z")          ;; Free C-z for us.
-  ;; (tiny-setup-define-key "\C-zp" (ti::definteractive (ti::menu-menu global-map 'tinylpr-:menu)))
+  ;; (tiny-setup-define-key "\C-zp" (ti::definteractive (ti::menu-menu global-map 'tinylpr--menu)))
   nil)
 
 (defun tiny-setup-tinymacro-bind (&optional force)
