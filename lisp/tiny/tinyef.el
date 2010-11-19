@@ -9,7 +9,6 @@
 ;; Author:          Jari Aalto
 ;; Maintainer:      Jari Aalto
 ;;
-;; To get information on this program call M-x tinyef-version.
 ;; Look at the code with folding.el
 
 ;; COPYRIGHT NOTICE
@@ -45,10 +44,6 @@
 ;;      (add-hook 'tinyef-load-hook 'tinyef-minibuffer-define-key-extras)
 ;;      (autoload 'turn-on-tinyef-mode "tinyef" "" t)
 ;;      (add-hook 'minibuffer-setup-hook 'turn-on-tinyef-mode)
-;;
-;; If you have any questions, use this function to contact maintainer
-;;
-;;      M-x tinyef-submit-bug-report
 
 ;;}}}
 
@@ -258,24 +253,6 @@ See `tinyef-:mode-key'."
   :group 'TinyEf)
 
 ;;}}}
-;;{{{ version
-
-(eval-and-compile
-  (ti::macrof-version-bug-report
-   "tinyef.el"
-   "tinyef"
-   tinyef-:version-id
-   "$Id: tinyef.el,v 2.42 2007/05/01 17:20:43 jaalto Exp $"
-   '(tinyef-:version-id
-     tinyef-:load-hook
-     tinyef-:mode-hook
-     tinyef-mode
-     tinyef-:mode-map
-     tinyef-:mode-defined-maps
-     tinyef-:mode-name
-     tinyef-:mode-key-table)))
-
-;;}}}
 ;;{{{ code: misc, keys, install
 
 ;;;###autoload (autoload 'tinyef-mode           "tinyef" "" t)
@@ -460,7 +437,6 @@ Always clears the keymap first and reinstalls the minor mode."
       (define-key map [(button3)]         'tinyef-chunk-delete)))))
 
 ;;}}}
-
 ;;{{{ code: extra minibuffer commands
 
 ;;; ----------------------------------------------------------------------
