@@ -748,7 +748,7 @@ environment."
 (put 'tinycygwin-install-menu-function-macro 'lisp-indent-function 0)
 (defmacro tinycygwin-install-menu-function-macro (template value variable)
   "Generate ti::menu TEMPLATE, VALUE using VARIABLE."
-  (let* ((sym (intern (format template value))))
+  (let ((sym (intern (format template value))))
     `(defun ,sym ()
        (interactive)
        (setq  ,variable , value))))
@@ -771,9 +771,9 @@ followed by indented two space explanation. An example:
 
   item
     The item is ..."
-  (let* ((string (tinycygwin-variable-documentation variable-sym))
-         case-fold-search
-         list)
+  (let ((string (tinycygwin-variable-documentation variable-sym))
+	case-fold-search
+	list)
     (when string
       (with-temp-buffer
         (insert string)
@@ -945,9 +945,9 @@ inserted in `message-mode' with \\[mml-attach-file]."
 (defun tinycygwin-message-mode-attach-cygcheck ()
   "Insert cygcheck retults to the end of buffer as a MIME attachement."
   (interactive)
-  (let* ((file (make-temp-file "emacs-tinycygwin-cygcheck"))
-         point
-         status)
+  (let ((file (make-temp-file "emacs-tinycygwin-cygcheck"))
+	point
+	status)
     (save-current-buffer
       (goto-char (point-max))
       (message "Wait, calling cygcheck [may take a while]... ")
@@ -961,8 +961,8 @@ inserted in `message-mode' with \\[mml-attach-file]."
 ;;;
 (defun tinycygwin-program-parse-version ()
   "Parse version information from program's version output."
-  (let* ((list  '(("[0-9]+\\.[0-9]+\\([0-9.]+\\)?" 0)))
-         version)
+  (let ((list '(("[0-9]+\\.[0-9]+\\([0-9.]+\\)?" 0)))
+	version)
     (dolist (elt list)
       (goto-char (point-min))
       (multiple-value-bind (regexp subexp) elt
@@ -1404,10 +1404,10 @@ If not found, goto `point-max'."
 ;;;
 (defun tinycygwin-update-file-autoloads (dir)
   "Generate autoloads in DIR."
-  (let* ((default-directory dir)
-         (generated-autoload-file
-          (concat (file-name-as-directory dir)
-                  "tinycygwin-autoloads.el")))
+  (let ((default-directory dir)
+	(generated-autoload-file
+	 (concat (file-name-as-directory dir)
+		 "tinycygwin-autoloads.el")))
     (unless (file-exists-p generated-autoload-file)
       (message "TinyCygwin: [WARN] %s does not exist. Creating it."
                generated-autoload-file)
@@ -1546,7 +1546,7 @@ is started. Here are few inportant Eamcs commands to help you:
 ;;;
 (defun tinycygwin-path-to-cygwin (path)
   "Chnage Win32 path to Cygwin path."
-  (let* ((root tinycygwin--root-dir))
+  (let ((root tinycygwin--root-dir))
     (when (and path
                (stringp path))
       (replace-regexp-in-string root "" path))))
@@ -1557,8 +1557,8 @@ is started. Here are few inportant Eamcs commands to help you:
   "Convert Cygwin PATH, like /, to OS absolute patch like C:/cygwin.
  Trailing slash is stripped."
   (when path
-    (let* ((root tinycygwin--root-dir)
-           ret)
+    (let ((root tinycygwin--root-dir)
+	  ret)
       (setq ret
             (cond
              ((string= root "/")
@@ -1614,21 +1614,17 @@ is started. Here are few inportant Eamcs commands to help you:
 (defun tinycygwin-font-lock-keywords (&optional uninstall)
   "Add color support to various log files by setting
 `font-lock-keywords'."
-  (let* ((today   "xxx") ;; (ti::date-standard-rfc-regexp "mon-date"))
-         ;; (cs     (or comment-start-skip "[ \t]+"))
-         (file   "")
-         keywords)
-
+  (let ((today   "xxx") ;; (ti::date-standard-rfc-regexp "mon-date"))
+	;; (cs     (or comment-start-skip "[ \t]+"))
+	(file   "")
+	keywords)
     (when (stringp buffer-file-name)
       (setq file (or buffer-file-name "no-name?")))
-
     (setq
      keywords
      (cond
-
       ;; ............................................. Linux log files ...
       ;; /var/log/
-
       ((string-match "/log/messages$" file)
        ;; font-lock-constant-face
        (make-local-variable 'font-lock-defaults)
@@ -1983,7 +1979,7 @@ References:
 (put 'tinycygwin-sysinfo-with 'lisp-indent-function 0)
 (defmacro tinycygwin-sysinfo-with (&rest body)
   "Run BODY at sysinfo buffer."
-  `(let* ((buffer (tinycygwin-sysinfo-buffer)))
+  `(let ((buffer (tinycygwin-sysinfo-buffer)))
      (when buffer
        (with-current-buffer buffer
          ,@body))))
@@ -2020,7 +2016,7 @@ References:
 ;;;
 (defun tinycygwin-sysinfo-version-syscall-parse ()
   "Parse version number from currnt buffer."
-  (let* (ret)
+  (let (ret)
     (goto-char (point-min))
     (when (re-search-forward "\\([0-9]\\.[0-9.]*[0-9]\\)" nil t)
       (match-string 1))))
@@ -2046,13 +2042,13 @@ References:
 Optional VERSION-ARG defaults to --version."
   (when program
     (with-temp-buffer
-      (let* ((bin (executable-find program))
-             (args (list (or version-arg "--version"))))
+      (let ((bin (executable-find program))
+	    (args (list (or version-arg "--version"))))
         (unless bin
           ;;  This was not a .exe program, but a shell script or something
           ;;  like that. E.g. 'automake' is in /usr/bin/automake
-          (let* ((found (tinycygwin-executable-find program))
-                 shell)
+          (let ((found (tinycygwin-executable-find program))
+		shell)
             (when (and found
                        (setq shell (executable-find "sh")))
               (setq bin  shell
@@ -2163,7 +2159,7 @@ Return:
 '((version \"1.5.7\")
   (api     \"0.109\")  ;; Major.Minor
   (cvs-tag     \"cr-0x9e\"))"
-  (let* ((str (tinycygwin-sysinfo-os-cygwin-dll-all)))
+  (let ((str (tinycygwin-sysinfo-os-cygwin-dll-all)))
     (when str
       (let (ret)
         (when (string-match "CVS tag:[ \t]*\\(.*[^ \t\r\n]\\)" str)
@@ -2183,11 +2179,11 @@ Return:
 ;;;
 (defun tinycygwin-sysinfo-os-cygwin-dll-version-string  ()
   "Make DLL version information string."
-  (let* ((info (tinycygwin-sysinfo-os-cygwin-dll-info)))
+  (let ((info (tinycygwin-sysinfo-os-cygwin-dll-info)))
     (when info
-      (let* ((ver (nth 1 (assq 'version info)))
-             (api (nth 1 (assq 'api info)))
-             (cvs (nth 1 (assq 'cvs-tag info))))
+      (let ((ver (nth 1 (assq 'version info)))
+	    (api (nth 1 (assq 'api info)))
+	    (cvs (nth 1 (assq 'cvs-tag info))))
         (concat
          (if ver
              ver
@@ -2221,7 +2217,7 @@ Return:
 (put 'tinycygwin-package-buffer-with 'lisp-indent-function 1)
 (defmacro tinycygwin-package-buffer-with (package &rest body)
   "In Cygwin documentation buffer for PACKAGE, run BODY."
-  `(let* ((buffer (tinycygwin-package-buffer package)))
+  `(let ((buffer (tinycygwin-package-buffer package)))
      (when buffer
        (with-current-buffer buffer
          ,@body))))
@@ -2368,7 +2364,7 @@ Optinally add ADD-LIST to the returned list."
 ;;;
 (defun tinycygwin-database-buffer-insert ()
   "Insert `tinycygwin--file-install-db'."
-  (let* ((file (tinycygwin-path tinycygwin--file-install-db)))
+  (let ((file (tinycygwin-path tinycygwin--file-install-db)))
     (if (file-exists-p file)
         (insert-file-contents file)
       (message "TinyCygwin: Not found %s" file))))
@@ -2378,8 +2374,8 @@ Optinally add ADD-LIST to the returned list."
 (defun tinycygwin-database-buffer-package-info (package)
   "Return PACKAGE install.db information."
   (tinycygwin-install-database-buffer-with
-   (let* ((case-fold-search t)
-          (regexp (format "^%s +.+" package)))
+   (let ((case-fold-search t)
+	 (regexp (format "^%s +.+" package)))
      (goto-char (point-min))
      (when (re-search-forward regexp nil t)
        (match-string 0)))))
@@ -2412,9 +2408,9 @@ Optinally add ADD-LIST to the returned list."
             (string-match
              "^\\([a-z0-9]+[0-9]?\\)-\\([0-9]+[0-9.-]*[0-9]\\)\\(.*\\)"
              string))
-    (let* ((name (match-string 1 string))
-           (ver  (match-string 2 string))
-           rel)
+    (let ((name (match-string 1 string))
+	  (ver  (match-string 2 string))
+	  rel)
       (setq string (match-string 3 string)) ;; The rest
       ;;  Release cannot be more than 2 numbers.
       (when (string-match "^\\([0-9][0-9]?\\)\\([^0-9]+\\|$\\)" string)
@@ -2470,7 +2466,7 @@ Optinally add ADD-LIST to the returned list."
 (defun tinycygwin-package-info-name (package)
   "Return PACKAGE name from `tinycygwin--path-doc-cygwin-list'.
 This is ismilar function to `tinycygwin-database-buffer-package-info'."
-  (let* ((file (tinycygwin-package-info-path-doc-cygwin-package package)))
+  (let ((file (tinycygwin-package-info-path-doc-cygwin-package package)))
     (when file
       (replace-regexp-in-string
        "\\.README"
@@ -2839,13 +2835,13 @@ package ask list."
 ;;;
 (defun tinycygwin-bug-system-info-locale ()
   "Get locale information."
-  (let* ((list
-          '("LC_ALL"
-	    "LANG"
-	    "LC_MESSAGES"
-            "LC_CTYPE"))
-         val
-         ret)
+  (let ((list
+	 '("LC_ALL"
+	   "LANG"
+	   "LC_MESSAGES"
+	   "LC_CTYPE"))
+	val
+	ret)
     (dolist (var list)
       (when (setq val (getenv var))
         (setq val (format "%s=%s" var val))
@@ -3010,10 +3006,10 @@ Optional TYPE
   "Insert package INFO details with optional bug SEVERITY level."
   (goto-char (point-min))
   (tinycygwin-goto-mail-header-separator)
-  (let* ((status  (tinycygwin-package-info-field-status  info))
-         (package (tinycygwin-package-info-field-package info))
-         (version (tinycygwin-package-info-field-version info))
-         (release (tinycygwin-package-info-field-release info)))
+  (let ((status  (tinycygwin-package-info-field-status  info))
+	(package (tinycygwin-package-info-field-package info))
+	(version (tinycygwin-package-info-field-version info))
+	(release (tinycygwin-package-info-field-release info)))
     (dolist (elt (list
                   (list "Package"   package)
                   (list "Version"   (concat
@@ -3160,8 +3156,8 @@ Optional TYPE
 ;;;
 (defun tinycygwin-bug-report-mail-mode-subject-tags ()
   "Add subject tags [patch] etc. if needed"
-  (let* (value
-         tag)
+  (let (value
+	tag)
     (save-current-buffer
       (when (and (setq value (tinycygwin-bug-report-mail-body-header-value
                               "Severity"))
@@ -3176,9 +3172,9 @@ Optional TYPE
 (defun tinycygwin-bug-report-mail-mode-subject-split (str)
   "Split subject STR on ':' or if it does not exist return BUG ID."
   (when (stringp str)
-    (let* (prefix
-           rest
-           list)
+    (let (prefix
+	  rest
+	  list)
       (cond
        ((and (string-match ":" str)
              (setq list (split-string str ":")))
@@ -3452,7 +3448,7 @@ For lisp calls, The INFO variables is like:
 ;;;
 (defun tinycygwin-bug-report-mail-type-update-xxx-todo (info)
   "Request update of package whose INFO is old."
-  (let* ((status (assoc "Status" info)))
+  (let ((status (assoc "Status" info)))
     (when status
       (setq info (delete status info)))
     (push '("Status" "old") info)))
@@ -3508,7 +3504,7 @@ For lisp calls, The INFO variables is like:
 report handling semaphore, which delegates the task to correct
 function. INFO is alist of package's attributes. FILE-LIST contains
 files to attach."
-  (let* ((package (tinycygwin-package-info-field-package info)))
+  (let ((package (tinycygwin-package-info-field-package info)))
     (tinycygwin-debug
      (message "TinyCygwin: Mail-type type [%s] info: %s files: %s"
               type info file-list))
