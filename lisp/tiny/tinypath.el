@@ -9,7 +9,6 @@
 ;; Author:          Jari Aalto
 ;; Maintainer:      Jari Aalto
 ;;
-;; To get information on this program, call M-x tinypath-version.
 ;; Look at the code with folding.el.
 
 ;; COPYRIGHT NOTICE
@@ -145,8 +144,7 @@
 ;;      Start Emacs and call report function to investigate any problems,
 ;;      like duplicate packages that shadow each other. See documentation
 ;;      below for more. The general rule is that you should delete
-;;      any offending packages (use `C-d' to delete file in the buffer
-;;      that displays the problem report)
+;;      any offending packages. key `C-d' to delete offending file permanently.
 ;;
 ;;          C-u M-x tinypath-cache-problem-report   (or without C-u argument)
 ;;
@@ -169,7 +167,8 @@
 ;;
 ;;          ~/elisp    (in new Emacs: ~/.emacs.d)
 ;;
-;;      Complete kits are usually installed directly under the root:
+;;      Bigger packages are usually installed directly under their release
+;;      directories:
 ;;
 ;;          ~/elisp/packages/bbdb-2.00.06/
 ;;          ~/elisp/packages/psgml-1.0.3/
@@ -180,12 +179,12 @@
 ;;      time you install a new version. It is only matter of updating
 ;;      the symlink:
 ;;
-;;          ~/elisp/packages/pcl-cvs/  --> ~/elisp/packages/pcl-cvs-2.9.2/
+;;          ~/elisp/packages/foo  --> ~/elisp/packages/foo-2.9.2
 ;;          |
 ;;          This path is in the `load-path'
 ;;
 ;;      In network, where Windows is coupled with Unix workstations via SAMBA,
-;;      you may have mapped the _H:_ disk to you Unix _$HOME_:
+;;      you may have mapped some disk, say H:, to you Unix _$HOME_:
 ;;
 ;;          H:  --> Unix $HOME  \\SERVER\DIRECTORY\YOUR-LOGIN-DIR
 ;;
@@ -210,16 +209,17 @@
 ;;      all and do the hard work: "There, that is the root(s) of all Emacs
 ;;      lisp, go and search all the directories and update `load-path'"
 ;;
-;;      That was what this package originally was all about. Nowadays
-;;      it does a little more than that. The `load-path' is updated
-;;      automatically without any manual work. Only the start ROOT
-;;      path(s) of installed lisp hierarchies need to be known. This
-;;      package is highly effective: scanning thousands of files in a
-;;      matter of seconds and once the cache has been created, it
-;;      takes only a snap to load it in next sessions. All `require'
-;;      and `load' commands also execute faster than previously,
-;;      because the information about existing files is immediately
-;;      available. The speedup is helped through advised functions.
+;;      That was what this package originally was all about. Later it
+;;      evolved to contains a little more than that. The `load-path'
+;;      is updated automatically without any manual work. Only the
+;;      start ROOT path(s) of installed lisp hierarchies need to be
+;;      known. This package is highly effective: scanning thousands of
+;;      files in a matter of seconds and once the cache has been
+;;      created, it takes only a snap to load it in next sessions. All
+;;      `require' and `load' commands also execute faster than
+;;      previously, because the information about existing files is
+;;      immediately available. The speedup is helped through advised
+;;      functions.
 ;;
 ;;  Overview of features
 ;;
@@ -485,7 +485,7 @@
 ;;      o   Any temporary directories named .../t/ .../T/ .../tmp* .../temp*
 ;;          are ignored.
 ;;      o   Directories that do not contain any files ending to .el or .elc are
-;;          ignored. (it's fatser to do the above checks first).
+;;          ignored. (it's faster to do the above checks first).
 ;;
 ;;  Gnus and other 3rd party packages
 ;;
@@ -515,8 +515,8 @@
 ;;
 ;;      There is very simple way. Put your regular expression to
 ;;      `tinypath-:ignore-file-regexp-extra' and it will tell which
-;;      directories to ignore. Naturally you must define the ignore regexp
-;;      before loading TiyPath:
+;;      directories to ignore. Define the ignore regexp before loading
+;;      TinyPath:
 ;;
 ;;          (setq tinypath-:load-path-ignore-regexp-extra
 ;;                "\\|[/\\]x?emacs[/\\0-9.]+[/\\]lisp[/\\]gnus")
@@ -551,14 +551,14 @@
 ;;                     tinypath-:load-path-ignore-regexp
 ;;                     "[/\\]x?emacs[/\\0-9.]+[/\\]lisp[/\\]gnus"))))
 ;;
-;;      #todo: What about XEmacs public/private Gnus installations?
+;;      FIXME: What about XEmacs public/private Gnus installations?
 ;;
 ;;  Updating new lisp packages
 ;;
 ;;      Suppose you have installed a new version of a package:
 ;;
-;;          ~/elisp/gnus/pgnus-0.74/
-;;          ~/elisp/gnus/pgnus-0.95/    ;; NEW
+;;          ~/elisp/gnus/foo-0.74/
+;;          ~/elisp/gnus/foo-0.95/    ;; NEW
 ;;
 ;;      Both these directories end up being added to the `load-path',
 ;;      but that is not preferable. It is the latest version that
@@ -568,8 +568,8 @@
 ;;      to start with a word "tmp-". All directories that start with
 ;;      prefix *tmp* are ignored.
 ;;
-;;          % mv ~/elisp/gnus/pgnus-0.74/ ~/elisp/gnus/tmp-pgnus-0.74/
-;;                                                     ====
+;;          % mv ~/elisp/gnus/foo-0.74/ ~/elisp/gnus/tmp-foo-0.74/
+;;                                                   ====
 ;;
 ;;      However if you update package in a site-lisp directory, there
 ;;      may be a distant problem that somebody needs older version of
@@ -1268,10 +1268,7 @@
 ;;
 ;;  Thoughts
 ;;
-;;      o   In theory it is possible to load remote files with ange-ftp/EFS in
-;;          manner of `load-library' RET /user@host:/path/to/file but that
-;;          has never been tested.
-;;      o   It theory it would be possible to add /user@host:/path/to/dir/
+;;      o   In theory it would be possible to add /user@host:/path/to/dir/
 ;;          to `load-path', but that has never been tested.
 
 ;;}}}
