@@ -9,8 +9,7 @@
 ;; Author:       Jari Aalto
 ;; Maintainer:   Jari Aalto
 ;;
-;; To get information on this program use ident(1) or call M-x
-;; tinycomment-version Look at the code with folding.el
+;; Look at the code with folding.el
 
 ;; COPYRIGHT NOTICE
 ;;
@@ -44,10 +43,6 @@
 ;;
 ;;      (global-set-key  "\M-;" 'tinycomment-indent-for-comment)
 ;;      (autoload 'tinycomment-indent-for-comment "tinycomment" "" t)
-;;
-;;   If you have any questions, use this function to contact author
-;;
-;;          M-x tinycomment-submit-bug-report
 
 ;;}}}
 ;;{{{ Commentary
@@ -123,9 +118,6 @@
 ;;; ......................................................... &require ...
 
 (require 'tinylibm)
-
-(eval-when-compile
-  (ti::package-use-dynamic-compilation))
 
 (ti::package-defgroup-tiny TinyComment tinycomment-: extensions
   "Smart comment setting utility
@@ -264,31 +256,6 @@ left untouched, because adjusting may push it out of the window edge."
   :group 'TinyComment)
 
 ;;}}}
-;;{{{ setup: -- version notice
-
-;;; ....................................................... &v-version ...
-
-;;;###autoload (autoload 'tinycomment-version "tinycomment" "Display commentary." t)
-(eval-and-compile
-  (ti::macrof-version-bug-report
-   "tinycomment.el"
-   "tinycomment"
-   tinycomment-:version-id
-   "$Id: tinycomment.el,v 2.38 2007/05/01 17:20:42 jaalto Exp $"
-   '(tinycomment-:version-id
-     tinycomment-:not-comment-re
-     tinycomment-:tab-call-no-alist
-     tinycomment-:adj-no-alist
-     tinycomment-:comment-notify
-     tinycomment-:def-com-pos
-     tinycomment-:comment-extra-arg
-     tinycomment-:comment-extra-stop
-     tinycomment-:comment-extra)))
-
-;;}}}
-
-;;; ########################################################### &Funcs ###
-
 ;;{{{ code: misc
 
 ;;; ----------------------------------------------------------------------
