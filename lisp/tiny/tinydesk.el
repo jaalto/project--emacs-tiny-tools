@@ -35,16 +35,16 @@
 ;;   Put this file on your Emacs-Lisp `load-path', add following into your
 ;;   $HOME/.emacs startup file
 ;;
-;;      ;; (add-hook 'tinydesk-:load-hook 'tinydesk-recover-last-state)
-;;      (add-hook 'tinydesk-:load-hook 'tinydesk-install-default-keybindings)
+;;      ;; (add-hook 'tinydesk--load-hook 'tinydesk-recover-last-state)
+;;      (add-hook 'tinydesk--load-hook 'tinydesk-install-default-keybindings)
 ;;      (require 'tinydesk)
 ;;
 ;;   or use the autoload feature. Notice that the automatic "file
 ;;   state backup feature" gets enables only when this file is loaded.
 ;;   If you want that feature, then use require.
 ;;
-;;      (add-hook 'tinydesk-:load-hook 'tinydesk-default-emacs-keybindings)
-;;      (add-hook 'tinydesk-:load-hook 'tinydesk-recover-last-state)
+;;      (add-hook 'tinydesk--load-hook 'tinydesk-default-emacs-keybindings)
+;;      (add-hook 'tinydesk--load-hook 'tinydesk-recover-last-state)
 ;;      (autoload 'tinydesk-mode            "tinydesk" "" t)
 ;;      (autoload 'tinydesk-save-state      "tinydesk" "" t)
 ;;      (autoload 'tinydesk-unload          "tinydesk" "" t)
@@ -180,10 +180,10 @@
 ;;          If nil, automatically restore last session; but if command
 ;;          line opion --no-desktop is set, do not load session.")
 ;;
-;;          (setq tinydesk-:directory-location "~/tmp")
+;;          (setq tinydesk--directory-location "~/tmp")
 ;;
 ;;          (defconst my-tinydesk-session
-;;            (format "%s/%s" tinydesk-:directory-location "state.last-session"))
+;;            (format "%s/%s" tinydesk--directory-location "state.last-session"))
 ;;
 ;;          (autoload 'tinydesk-recover-state "tinydesk" "" t)
 ;;          (autoload 'tinydesk-save-state    "tinydesk" "" t)
@@ -278,7 +278,7 @@
 
 (eval-when-compile (ti::package-use-dynamic-compilation))
 
-(ti::package-defgroup-tiny TinyDesk tinydesk-: extensions
+(ti::package-defgroup-tiny TinyDesk tinydesk-- extensions
   "Simple desktop: only filenames and directories are read/saved.
 
             Unlike the other desktop savers, this one can also UNLOAD files
@@ -295,40 +295,40 @@
 
 ;;; ......................................................... &v-hooks ...
 
-(defcustom tinydesk-:mode-define-keys-hook
+(defcustom tinydesk--mode-define-keys-hook
   '(tinydesk-default-mode-bindings)
   "*List of functions to run which define keys to `tinydesk-mode-map'."
   :type  'hook
   :group 'TinyDesk)
 
-(defcustom tinydesk-:load-hook nil
+(defcustom tinydesk--load-hook nil
   "*Hook run when file has been loaded."
   :type  'hook
   :group 'TinyDesk)
 
-(defcustom tinydesk-:save-before-hook nil
+(defcustom tinydesk--save-before-hook nil
   "*Hook run just before _writing_ files to STATE file.
 begins. This is your chance to do something to the buffers."
   :type  'hook
   :group 'TinyDesk)
 
-(defcustom tinydesk-:save-after-hook nil
+(defcustom tinydesk--save-after-hook nil
   "*Hook just before _saving_ of STATE file.
 The files are there, possibly in sorted order, and the title is there."
   :type  'hook
   :group 'TinyDesk)
 
-(defcustom tinydesk-:mode-hook nil
+(defcustom tinydesk--mode-hook nil
   "*Hook run after the `tinydesk-mode' is turned on."
   :type  'hook
   :group 'TinyDesk)
 
-(defcustom tinydesk-:recover-before-hook nil
+(defcustom tinydesk--recover-before-hook nil
   "*Hook run after recover file is loaded, just before processing start."
   :type  'hook
   :group 'TinyDesk)
 
-(defcustom tinydesk-:recover-after-hook nil
+(defcustom tinydesk--recover-after-hook nil
   "*Hook run after recover file is _parsed_ AND no errors during load."
   :type  'hook
   :group 'TinyDesk)
@@ -338,60 +338,60 @@ The files are there, possibly in sorted order, and the title is there."
 
 ;;; ................................................... &v-user-config ...
 
-(defcustom tinydesk-:comment-characters ";#"
+(defcustom tinydesk--comment-characters ";#"
   "*A string containing comment start characters in state file.
 The default value is ';#'."
   :type  'string
   :group 'TinyDesk)
 
-(defcustom tinydesk-:mode-name "TinyDesk"
+(defcustom tinydesk--mode-name "TinyDesk"
   "*Editing STATE files mode name."
   :type  'string
   :group 'TinyDesk)
 
-(defcustom tinydesk-:directory-location
+(defcustom tinydesk--directory-location
   (or
    (file-name-as-directory
     (file-name-directory (ti::package-config-file-prefix "tinydesk.el")))
    (and (file-directory-p "~/tmp")
         "~/tmp")
    (error "\
-TinyDesk: Can't set default value for `tinydesk-:directory-location'"))
+TinyDesk: Can't set default value for `tinydesk--directory-location'"))
   "*Default directory where to save and restore files."
   :type 'directory
   :group 'TinyDesk)
 
-(defcustom tinydesk-:directory-save-suggested 'default
+(defcustom tinydesk--directory-save-suggested 'default
   "*How the state file's directory location is suggested.
 'last        Offer last saved directory.
-'default     Always offer the default directory `tinydesk-:directory-location'"
+'default     Always offer the default directory `tinydesk--directory-location'"
   :type  '(choice
            (const last)
            (const default))
   :group 'TinyDesk)
 
-(defcustom tinydesk-:auto-save-interval 5
+(defcustom tinydesk--auto-save-interval 5
   "*Interval between doing auto-save of Emacs state.
 If set to 5, after every 5th `write-file' the state is saved.
 
 The interval cannot be smaller than 5. It is reseted to 10 if
 it's smaller than 5.
 
-See variable `tinydesk-:auto-save-name-function' and
+See variable `tinydesk--auto-save-name-function' and
 function `tinydesk-auto-save' for more information."
   :type  '(integer :tag "Save interval")
   :group 'TinyDesk)
 
-(defcustom tinydesk-:auto-save-name-function  nil
+(defcustom tinydesk--auto-save-name-function  nil
   "*Function to return a full path name for auto-save file.
 If this variable is nil, then default name is derived from frame's
-first element and it used in `tinydesk-:directory-location'
+first element and it used in `tinydesk--directory-location'
 
 For full documentation, see function `tinydesk-auto-save'"
   :type 'function
   :group 'TinyDesk)
 
-(defcustom tinydesk-:save-exclude-regexp
+(defcustom tinydesk--save-exclude-regexp
   (concat
 
    ;; Gnus
@@ -418,14 +418,14 @@ For full documentation, see function `tinydesk-auto-save'"
 match is case sensitive. If you do want not case sensitive match, you
 have to do set this variable to nil and use your own line delete:
 
-   (setq tinydesk-:save-after-hook      'my-tinydesk-:save-after-hook)
-   (defun my-tinydesk-:save-after-hook ()
+   (setq tinydesk--save-after-hook      'my-tinydesk--save-after-hook)
+   (defun my-tinydesk--save-after-hook ()
       (flush-lines REGEXP))"
 
   :type  '(string :tag "Regexp")
   :group 'TinyDesk)
 
-(defcustom tinydesk-:save-title
+(defcustom tinydesk--save-title
   '(progn
      (format "\
 ;; Emacs tinydesk.el state file
@@ -445,7 +445,7 @@ have to do set this variable to nil and use your own line delete:
   :type  'sexp
   :group 'TinyDesk)
 
-(defcustom tinydesk-:save-and-sort t
+(defcustom tinydesk--save-and-sort t
   "*Non-nil to sort the file list in state file.
 nil to preserve `buffer-list' order."
   :type  'boolean
@@ -453,7 +453,7 @@ nil to preserve `buffer-list' order."
 
 ;;  Set to nil if you don't want title.
 
-(defcustom tinydesk-:get-save-file-function 'tinydesk-get-save-files
+(defcustom tinydesk--get-save-file-function 'tinydesk-get-save-files
   "*Function to return list of filenames that are stored to state file.
 This function isn't run if `tinydesk-save-state' is explicitely
 run with parameter FILES.
@@ -464,13 +464,13 @@ Arguments passed to function:
   :type  'function
   :group 'TinyDesk)
 
-(defcustom tinydesk-:face-table
+(defcustom tinydesk--face-table
   '((file-pick .  highlight)
     (error     .  italic))
   "*Alist of faces used for marking text.
 The default value is
 
-\(setq tinydesk-:face-table
+\(setq tinydesk--face-table
   '((file-pick .  highlight)
     (error     .  italic)))"
   :type '(list
@@ -490,37 +490,37 @@ The default value is
 (defvar tinydesk-mode-map nil
   "Local keymap for STATE files loaded by edit.")
 
-(defvar tinydesk-:directory-last nil
+(defvar tinydesk--directory-last nil
   "Directory that was used for last save.")
 
-(defvar tinydesk-:tmp-buffer "*tmp*"
+(defvar tinydesk--tmp-buffer "*tmp*"
   "The work buffer used, created and killed when needed.")
 
-(defvar tinydesk-:trash-tmp-buffer  t
+(defvar tinydesk--trash-tmp-buffer  t
   "If non-nil, the work buffer is always deleted.")
 
-(defvar tinydesk-:message-column 60
+(defvar tinydesk--message-column 60
   "Column where to put possible messages regarding file.")
 
-(defvar tinydesk-:auto-save-counter 0
+(defvar tinydesk--auto-save-counter 0
   "Counter incremented every every time `write-file' event happens.
 See. `tinydesk-auto-save'.")
 
-(defvar tinydesk-:loaded-file-list nil
+(defvar tinydesk--loaded-file-list nil
   "Overwritten when files are loaded. List.
 Contain files that were loaded by `tinydesk-find-file-whole-buffer'.
 Hooks may check the contents of this.")
 
-(defvar tinydesk-:rejected-file-list nil
+(defvar tinydesk--rejected-file-list nil
   "Overwritten when files are loaded. List.
 Contain files that were *not* loaded by
 `tinydesk-find-file-whole-buffer'. Reason may be anything: incorrect filename,
 path, garbage at line...Hooks may check the contents of this.")
 
-(defconst tinydesk-:comment-start-level 1
+(defconst tinydesk--comment-start-level 1
   "Which sub expression is the comment start.")
 
-(defvar tinydesk-:last-state-file  nil
+(defvar tinydesk--last-state-file  nil
   "Last state file loaded is stored here.")
 
 ;;}}}
@@ -604,16 +604,16 @@ path, garbage at line...Hooks may check the contents of this.")
   (make-string
    2
    (string-to-char
-    (substring tinydesk-:comment-characters 0 1 ))))
+    (substring tinydesk--comment-characters 0 1 ))))
 
 ;;; ----------------------------------------------------------------------
 ;;;
 (defsubst tinydesk-comment-re ()
   "Return comment regexp."
   (concat "[^\n"
-          tinydesk-:comment-characters
+          tinydesk--comment-characters
           "]*\\(["
-          tinydesk-:comment-characters
+          tinydesk--comment-characters
           "].*\\)"))
 
 ;;; ----------------------------------------------------------------------
@@ -633,7 +633,7 @@ path, garbage at line...Hooks may check the contents of this.")
 ;;;
 (defsubst tinydesk-tmp-buffer (&optional clear)
   "Return temp buffer. optionally CLEAR it."
-  (ti::temp-buffer tinydesk-:tmp-buffer clear))
+  (ti::temp-buffer tinydesk--tmp-buffer clear))
 
 ;;; ----------------------------------------------------------------------
 ;;;
@@ -665,9 +665,9 @@ path, garbage at line...Hooks may check the contents of this.")
 ;;;
 (defun tinydesk-get-save-dir ()
   "Return suggested save directory."
-  (let ((type      tinydesk-:directory-save-suggested)
-	(last      tinydesk-:directory-last)
-	(dir       tinydesk-:directory-location)
+  (let ((type      tinydesk--directory-save-suggested)
+	(last      tinydesk--directory-last)
+	(dir       tinydesk--directory-location)
 	(ret       dir))               ;set default return value
     (if (and (eq type 'last)
              (stringp last)
@@ -690,7 +690,7 @@ path, garbage at line...Hooks may check the contents of this.")
   "Remove comments BEG END and empty lines from region and leave 1st word.
 This way you can rip off all comments and leave filenames."
   (interactive "r")
-  (let ((sub-level     tinydesk-:comment-start-level)
+  (let ((sub-level     tinydesk--comment-start-level)
 	(comment-re    (tinydesk-comment-re))
 	(empty-re      "^[ \t]*$\\|$")
 	mark-end
@@ -732,11 +732,11 @@ This way you can rip off all comments and leave filenames."
   "Kill temporary buffer if user has requested it.
 
 References:
-  `tinydesk-:tmp-buffer'
-  `tinydesk-:trash-tmp-buffer'"
-  (and tinydesk-:trash-tmp-buffer
-       (get-buffer tinydesk-:tmp-buffer)
-       (kill-buffer  (get-buffer tinydesk-:tmp-buffer))))
+  `tinydesk--tmp-buffer'
+  `tinydesk--trash-tmp-buffer'"
+  (and tinydesk--trash-tmp-buffer
+       (get-buffer tinydesk--tmp-buffer)
+       (kill-buffer  (get-buffer tinydesk--tmp-buffer))))
 
 ;;; ----------------------------------------------------------------------
 ;;;
@@ -768,10 +768,10 @@ References:
 (defun tinydesk-auto-save-file-name ()
   "Return state file name for auto save. See function `tinydesk-auto-save'.
 References:
-  `tinydesk-:directory-location'
-  `tinydesk-:auto-save-name-function'."
-  (let* ((func       tinydesk-:auto-save-name-function)
-         (dir        (or tinydesk-:directory-location "~" ))
+  `tinydesk--directory-location'
+  `tinydesk--auto-save-name-function'."
+  (let* ((func       tinydesk--auto-save-name-function)
+         (dir        (or tinydesk--directory-location "~" ))
          (name       (or (and (boundp 'command-line-args)
                               (nth 1 (member "-name" command-line-args)))
                          "periodic"))
@@ -798,7 +798,7 @@ is saved, so that you can recover the same session if Emacs crashes.
 
 The default state name is derived in the following manner
 
-o  use directory `tinydesk-:directory-location'
+o  use directory `tinydesk--directory-location'
 o  add string \"emacs-tinydesk-autosave-\"
 o  get frame's first word, usually the one that gets set when
    you use -name XXX switch in Emacs command line. If Emacs is being
@@ -809,29 +809,29 @@ o  if there is no frame name, then use \"periodic\"
 
 References:
 
-  `tinydesk-:auto-save-counter'
-  `tinydesk-:auto-save-interval'       every Nth write"
+  `tinydesk--auto-save-counter'
+  `tinydesk--auto-save-interval'       every Nth write"
   (interactive "P")
   (let ((backup-inhibited t)
 	(save-to (tinydesk-auto-save-file-name)))
     (when (stringp save-to)
       ;;  - Be extra careful, because we're in write file hook
       ;;  - Make sure we always succeed
-      (if (not (integerp tinydesk-:auto-save-counter)) ;; init if not int
-          (setq tinydesk-:auto-save-counter 0))
-      (if (not (integerp tinydesk-:auto-save-interval)) ;; user didn't set this?
-          (setq tinydesk-:auto-save-interval 10))
-      (if (< tinydesk-:auto-save-interval 5) ;; Must be more than 5
-          (setq tinydesk-:auto-save-interval 10))
-      (incf tinydesk-:auto-save-counter)
+      (if (not (integerp tinydesk--auto-save-counter)) ;; init if not int
+          (setq tinydesk--auto-save-counter 0))
+      (if (not (integerp tinydesk--auto-save-interval)) ;; user didn't set this?
+          (setq tinydesk--auto-save-interval 10))
+      (if (< tinydesk--auto-save-interval 5) ;; Must be more than 5
+          (setq tinydesk--auto-save-interval 10))
+      (incf tinydesk--auto-save-counter)
       ;;  time's up? Select name if it's string.
       (cond
        ((or force
-            (> tinydesk-:auto-save-counter tinydesk-:auto-save-interval))
+            (> tinydesk--auto-save-counter tinydesk--auto-save-interval))
         ;;   Actually tinydesk-save-state generates new call to this
         ;;   function but, it won't come in this COND, because the counter
         ;;   value is different.
-        (setq tinydesk-:auto-save-counter 0)
+        (setq tinydesk--auto-save-counter 0)
         ;; Try chmod, if it fails, then signal error
         (if (and (file-exists-p save-to)
                  (not (file-writable-p save-to)))
@@ -860,7 +860,7 @@ TinyDesk: Can't do state autosave: [%s] is not writable." save-to))
 (defun tinydesk-face (face)
   "Return FACE."
   ;;  This way the global variable does not float around the file
-  (cdr (assoc face tinydesk-:face-table)))
+  (cdr (assoc face tinydesk--face-table)))
 
 ;;; ----------------------------------------------------------------------
 ;;;
@@ -874,8 +874,8 @@ TinyDesk: Can't do state autosave: [%s] is not writable." save-to))
 (defun tinydesk-clear-buffer-properties ()
   "Remove properties and EOL comments from buffer."
   (interactive)
-  (let ((c-chars       tinydesk-:comment-characters)
-	(c-lev         tinydesk-:comment-start-level)
+  (let ((c-chars       tinydesk--comment-characters)
+	(c-lev         tinydesk--comment-start-level)
 	(c-re          (tinydesk-comment-re))
 	beg)
     (tinydesk-clear-region-properties (point-min) (point-max))
@@ -922,7 +922,7 @@ TinyDesk: Can't do state autosave: [%s] is not writable." save-to))
   (let* ((file       (file-name-nondirectory text))
          (loaded     (get-buffer file)) ;in Emacs already ?
          (comment    (tinydesk-comment))
-         (err-col    tinydesk-:message-column))
+         (err-col    tinydesk--message-column))
     (cond
      ((eq p (tinydesk-face 'file-pick))
       (cond
@@ -954,7 +954,7 @@ Marking is only done if word is valid filename."
      (point-min)
      (point-max)
      (tinydesk-comment-re)
-     tinydesk-:comment-start-level
+     tinydesk--comment-start-level
      (or (interactive-p)
          verb))))
 
@@ -965,11 +965,11 @@ Marking is only done if word is valid filename."
 Also add textual comment to the end of line if needed."
   (interactive "r")
   (let ((empty-re      "^[ \t]*$")
-	(sub-level     tinydesk-:comment-start-level)
-	(c-chars       tinydesk-:comment-characters)
+	(sub-level     tinydesk--comment-start-level)
+	(c-chars       tinydesk--comment-characters)
 	(comment       (tinydesk-comment))
 	(comment-re    (tinydesk-comment-re))
-	(err-col       tinydesk-:message-column)
+	(err-col       tinydesk--message-column)
 	word)
     (save-excursion
       (save-restriction
@@ -1036,10 +1036,10 @@ Example:
 
   com-re     = '.*\\\\(#\\\\)'
   sub-level  = 1 , because there is paren"
-  (let ((err-col       tinydesk-:message-column)
+  (let ((err-col       tinydesk--message-column)
 	(file-face     (tinydesk-face 'file-pick))
 	(sub-level     (or sub-level 0))
-	(c-chars       tinydesk-:comment-characters)
+	(c-chars       tinydesk--comment-characters)
 	(comment       (tinydesk-comment))
 	bp ep                          ;beg, end points
 	elp                            ;end line point
@@ -1115,12 +1115,12 @@ Example:
 ;;; ----------------------------------------------------------------------
 ;;;
 (defun tinydesk-remove-file-coments  ()
-  "Remove all comment at `tinydesk-:message-column'."
+  "Remove all comment at `tinydesk--message-column'."
   (interactive)
   (ti::save-line-column-macro nil nil
     (ti::pmin)
     (while (re-search-forward (tinydesk-comment) nil t)
-      (if (eq (current-column) (+ 2 tinydesk-:message-column))
+      (if (eq (current-column) (+ 2 tinydesk--message-column))
           (delete-region (- (point) 2) (line-end-position))))))
 
 ;;; ----------------------------------------------------------------------
@@ -1148,7 +1148,7 @@ Example:
       (beginning-of-line)
       (or (and (re-search-forward (tinydesk-comment) nil t)
                (progn (delete-region (point) (line-end-position)) t))
-          (and (move-to-column tinydesk-:message-column t)
+          (and (move-to-column tinydesk--message-column t)
                (insert ";;")))
 
       (insert " unloaded")
@@ -1266,7 +1266,7 @@ Mode description:
   (if (null no-face)
       (tinydesk-mark-buffer-loadable verb))
   (tinydesk-mode-map-activate)          ;turn on the map
-  (setq  mode-name   tinydesk-:mode-name)
+  (setq  mode-name   tinydesk--mode-name)
   (setq  major-mode 'tinydesk-mode) ;; for C-h m
   (when verb
     (message
@@ -1277,7 +1277,7 @@ Mode description:
        "error \\[tinydesk-set-face-non-files-buffer] "
        "mark \\[tinydesk-mark-buffer-loadable]")))
     (sleep-for 1))
-  (run-hooks 'tinydesk-:mode-hook))
+  (run-hooks 'tinydesk--mode-hook))
 
 ;;; ----------------------------------------------------------------------
 ;;;
@@ -1289,10 +1289,10 @@ Mode description:
 ;;; ----------------------------------------------------------------------
 ;;;
 (defun turn-on-tinydesk-mode-maybe ()
-  "Turn on `tinydesk-mode' if `tinydesk-:save-title' is found."
+  "Turn on `tinydesk-mode' if `tinydesk--save-title' is found."
   (interactive)
   (let ((string (substring
-		 (or (eval tinydesk-:save-title)
+		 (or (eval tinydesk--save-title)
 		     "####No-string-available###")
 		 0 40)))
     (save-excursion
@@ -1372,27 +1372,27 @@ Input:
                  '(16)  \\[universal-argument] \\[universal-argument], Use absolute paths to HOME.
 
   FILES         filenames , absolute ones. If nil then
-                `tinydesk-:get-save-file-function' is run to get files.
+                `tinydesk--get-save-file-function' is run to get files.
   VERB          verbose flag"
   (interactive
    (list (read-file-name "Save state to: " (tinydesk-get-save-dir))
          current-prefix-arg))
   (let ((tmp-buffer    (tinydesk-tmp-buffer 'clear))
-	(save-func     tinydesk-:get-save-file-function)
-	(sort          tinydesk-:save-and-sort)
-	(title         tinydesk-:save-title)
-	(re-no         tinydesk-:save-exclude-regexp)
+	(save-func     tinydesk--get-save-file-function)
+	(sort          tinydesk--save-and-sort)
+	(title         tinydesk--save-title)
+	(re-no         tinydesk--save-exclude-regexp)
 	(absolute-p    (equal mode '(16)))
 	buffer)
     (ti::verb)
-    (setq tinydesk-:directory-last (file-name-directory file))
+    (setq tinydesk--directory-last (file-name-directory file))
     ;;  #todo: Kill buffer if it is not modified and reload it
     ;;  after save
     (when (setq buffer (get-file-buffer file))
       (pop-to-buffer buffer)
       (error "\
 TinyDesk: State saving aborted. Please save to new file or kill buffer: %s" file ))
-    (run-hooks 'tinydesk-:save-before-hook)
+    (run-hooks 'tinydesk--save-before-hook)
     (or files
         (setq files (and (fboundp save-func)
                          (funcall save-func mode))))
@@ -1429,7 +1429,7 @@ TinyDesk: State saving aborted. Please save to new file or kill buffer: %s" file
       (when title
         (ti::pmin)
         (insert (eval title)))
-      (run-hooks 'tinydesk-:save-after-hook)
+      (run-hooks 'tinydesk--save-after-hook)
       (write-region (point-min) (point-max) file)
       (not-modified) (message "")
       (kill-buffer tmp-buffer)
@@ -1516,7 +1516,7 @@ Input:
   FILE          state file to load
 
   ULP           'unload previous' if non-nil then unload previously
-                loaded files according to `tinydesk-:last-state-file'
+                loaded files according to `tinydesk--last-state-file'
 
   POP           if non-nil, then show (pop to) first buffer in saved
                 state file. This flag is set to t in interactive calls.
@@ -1526,9 +1526,9 @@ Input:
 
 References:
 
-  `tinydesk-:last-state-file'       Name of state file that was loaded.
-  `tinydesk-:recover-before-hook'   Hook to run before state file processing.
-  `tinydesk-:recover-after-hook'    Hook to run after state file processing."
+  `tinydesk--last-state-file'       Name of state file that was loaded.
+  `tinydesk--recover-before-hook'   Hook to run before state file processing.
+  `tinydesk--recover-after-hook'    Hook to run after state file processing."
   (interactive
    (list
     (read-file-name "Tinydesk: load state file: "
@@ -1537,7 +1537,7 @@ References:
     t))
   (let ((count         0)
 	(state-file    (expand-file-name file))
-	(last-state    tinydesk-:last-state-file)
+	(last-state    tinydesk--last-state-file)
 	buffer
 	kill-buffer
 	err
@@ -1570,7 +1570,7 @@ References:
       (cond
        ((null err)
         (if verb (message (format "TinyDesk: %d files loaded" count)))
-        (run-hooks 'tinydesk-:recover-after-hook)
+        (run-hooks 'tinydesk--recover-after-hook)
         ;;  kill the buffer only if it was loaded by us
         (and kill-buffer
              (kill-buffer buffer)))
@@ -1582,7 +1582,7 @@ References:
         (tinydesk-mode 'no-face 'verbosee)
         (tinydesk-set-face-non-files-buffer)
         (ti::pmin)))
-      (setq tinydesk-:last-state-file file))))
+      (setq tinydesk--last-state-file file))))
 
 ;;; ----------------------------------------------------------------------
 ;;;
@@ -1590,8 +1590,8 @@ References:
 (defun tinydesk-recover-last-state ()
   "If Emacs was closed / crashed, recover last saved session.
 References:
-  `tinydesk-:auto-save-interval'
-  `tinydesk-:auto-save-name-function'"
+  `tinydesk--auto-save-interval'
+  `tinydesk--auto-save-name-function'"
   (let ((file (tinydesk-auto-save-file-name)))
     (if file
         (tinydesk-recover-state file)
@@ -1619,9 +1619,9 @@ Input:
 
 References:
 
-  `tinydesk-:loaded-file-list'
-  `tinydesk-:rejected-file-list'
-  `tinydesk-:recover-before-hook'   Hook to run before state file processing.
+  `tinydesk--loaded-file-list'
+  `tinydesk--rejected-file-list'
+  `tinydesk--recover-before-hook'   Hook to run before state file processing.
 
 Return:
 
@@ -1633,7 +1633,7 @@ Return:
    first-entry          first entry"
   (interactive "P")
   (let ((count         0)
-	(sub-level     tinydesk-:comment-start-level)
+	(sub-level     tinydesk--comment-start-level)
 	(ignore-re     (tinydesk-comment-re))
 	(empty-re      "^[ \t]*$")
 	(msg-str       (if recover
@@ -1648,9 +1648,9 @@ Return:
 	err                            ;per file basis
 	ERR)                           ;return status
     (ti::verb)
-    (setq   tinydesk-:loaded-file-list   nil ;<< reset GLOBALS
-            tinydesk-:rejected-file-list        nil)
-    (run-hooks 'tinydesk-:recover-before-hook)
+    (setq   tinydesk--loaded-file-list   nil ;<< reset GLOBALS
+            tinydesk--rejected-file-list        nil)
+    (run-hooks 'tinydesk--recover-before-hook)
     (ti::pmin)                          ;there is *no* save excursion
     (while (not (eobp))
       (setq bp (point)  err nil)        ;BEG of line
@@ -1689,11 +1689,11 @@ Return:
                 (setq count (1+ count))
                 (if (null first-entry)
                     (setq first-entry word))
-                (ti::nconc tinydesk-:loaded-file-list word)))))
+                (ti::nconc tinydesk--loaded-file-list word)))))
         ;; --``-- --``-- --``-- --``-- --``-- --``-- --``-- --``-- --``--
         (when err
           (setq ERR t)
-          (push word tinydesk-:rejected-file-list)
+          (push word tinydesk--rejected-file-list)
           (and (interactive-p)
                (tinydesk-line-property-set-error))
           (setq  not-loaded
@@ -1717,7 +1717,7 @@ Return:
   (interactive "p")
   (unless tinydesk-mode-map
     (setq tinydesk-mode-map (make-sparse-keymap))
-    (run-hooks 'tinydesk-:mode-define-keys-hook))
+    (run-hooks 'tinydesk--mode-define-keys-hook))
   (cond
    (uninstall
     (remove-hook 'write-file-hooks 'tinydesk-auto-save)
@@ -1729,6 +1729,6 @@ Return:
 (tinydesk-install)
 
 (provide   'tinydesk)
-(run-hooks 'tinydesk-:load-hook)
+(run-hooks 'tinydesk--load-hook)
 
 ;;; tinydesk.el ends here
