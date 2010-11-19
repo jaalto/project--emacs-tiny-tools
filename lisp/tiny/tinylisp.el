@@ -71,10 +71,6 @@
 ;;
 ;;      M-x     tinylisp-install
 ;;      M-x     tinylisp-uninstall
-;;
-;; If you have any questions, use this function
-;;
-;;      M-x tinylisp-submit-bug-report
 
 ;;}}}
 ;;{{{ Documentation
@@ -1996,32 +1992,6 @@ Spell checking doc-strings:
     install into Ispell on the fly, but only if Ispell is not already
     running.  Use `Ispell-kill-Ispell' to make checkdoc restart it with
     these words enabled.")
-
-;;}}}
-;;{{{ version
-
-;;; ....................................................... &v-version ...
-
-;;;###autoload (autoload 'tinylisp-version "tinylisp" "Display commentary" t)
-(eval-and-compile
-  (ti::macrof-version-bug-report
-   "tinylisp.el"
-   "tinylisp"
-   tinylisp-:version-id
-   "$Id: tinylisp.el,v 2.88 2007/05/01 17:20:46 jaalto Exp $"
-   '(tinylisp-:version-id
-     tinylisp-:debug
-     tinylisp-:load-hook
-     tinylisp-:find-func-list-hook
-     tinylisp-:find-var-list-hook
-     tinylisp-:menu-use-flag
-     tinylisp-:macroexpand-function-list
-     tinylisp-:table-reverse-eval-alist
-     tinylisp-:table-snoop-variables
-     tinylisp-:regexp-macro-definition
-     tinylisp-:regexp-function
-     tinylisp-:regexp-variable)
-   '(tinylisp-:debug-buffer)))
 
 ;;}}}
 ;;{{{ macros
@@ -6008,7 +5978,7 @@ Optionally goes BACK."
                (null (setq go-buffer (get-buffer file))))
           (message "TinyLisp: buffer not exist %s" file)
         (pop-to-buffer go-buffer)
-        (goto-line line)
+        (ti::goto-line line)
         (message str)))))
 
 ;;}}}
