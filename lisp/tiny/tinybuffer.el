@@ -9,7 +9,6 @@
 ;; Author:       Jari Aalto
 ;; Maintainer:   Jari Aalto
 ;;
-;; To get information on this program, call M-x tinybuffer-version.
 ;; Look at the code with folding.el
 
 ;; This program is free software; you can redistribute it and/or modify it
@@ -141,11 +140,7 @@
 
 ;;; Code:
 
-;;; ......................................................... &require ...
-
 (require 'tinylibm)
-
-(eval-when-compile (ti::package-use-dynamic-compilation))
 
 (ti::package-defgroup-tiny TinyBuffer tinybuffer-: extensions
   "Changing buffers in current window.
@@ -155,7 +150,6 @@
 
 ;;{{{ setup: -- variables
 
-;;; ........................................................ &v-public ...
 ;;; User configurable
 
 (defcustom tinybuffer-:load-hook '(tinybuffer-install-default-bindings)
@@ -193,169 +187,13 @@ See \\[tinybuffer-iswitch-to-buffer]."
   :type  'boolean
   :group 'TinyBuffer)
 
-;;; ....................................................... &v-private ...
 ;;; Internal variables
 
 (defvar tinybuffer-:buffer-list  nil
   "Global buffer list for `tinybuffer-iswitch-to-buffer'.")
 
-;;; ....................................................... &v-version ...
-
-;;;###autoload (autoload 'tinybuffer-version "tinybuffer" "Display commentary." t)
-(eval-and-compile
-  (ti::macrof-version-bug-report
-   "tinybuffer.el"
-   "tinybuffer"
-   tinybuffer-:version-id
-   "$Id: tinybuffer.el,v 2.41 2007/05/01 17:20:42 jaalto Exp $"
-   '(tinybuffer-:version-id
-     tinybuffer-:load-hook
-     tinybuffer-:ignore-regexp
-     tinybuffer-:sort-flag
-     tinybuffer-:iswitch-to-buffer-keys
-     tinybuffer-:iswitch-show-directory-flag
-     tinybuffer-:buffer-list)))
-
 ;;}}}
-;;{{{ code: functions
-
-;;; ########################################################### &Funcs ###
-
-;;; ----------------------------------------------------------------------
-;;;
-(defun tinybuffer-install-default-bindings ()
-  "Define default global keys."
-  (interactive)
-  (global-set-key [(control <)]      'tinybuffer-previous-buffer)
-  (global-set-key [(control >)]      'tinybuffer-next-buffer)
-  (global-set-key [(control meta <)] 'tinybuffer-iswitch-to-buffer)
-  (global-set-key [(control meta >)] 'tinybuffer-sort-mode-toggle))
-
-;;; ----------------------------------------------------------------------
-;;;
-(defun tinybuffer-start-list  (buffer-pointer list)
-  "Let BUFFER-POINTER be first and arrange LIST."
-  (let* ((start (memq buffer-pointer list))
-         (rev   (reverse list))
-         before
-         ret)
-    ;; Basic idea is this, say pointer is at B:
-    ;;
-    ;; list:   A B C D
-    ;; start:    B C D
-    ;; rev     D C B A
-    ;; before      B A  --> take cdr --> A
-    ;;
-    ;; ret     start + before = B C D A
-    ;;
-    (unless start
-      (error "No such elt in list %s" buffer-pointer))
-    (setq before (cdr-safe (memq buffer-pointer rev)))
-    (setq ret start)
-    (if before
-        (union (reverse start) before))
-    ret))
-
-;;; ----------------------------------------------------------------------
-;;;
-(defun tinybuffer-buffer-filter (&optional blist)
-  "Filter BLIST, which defaults to `buffer-list'.
-References:
-  `tinybuffer-:ignore-regexp'"
-  (let* (ret)
-    (dolist (elt (or blist (buffer-list))  )
-      (if (not (string-match tinybuffer-:ignore-regexp
-                             (buffer-name elt)))
-          (push elt ret)))
-    ret))
-
-;;; ----------------------------------------------------------------------
-;;;
-(defun tinybuffer-sort-buffer-list-1 (&optional blist reverse)
-  "Sort BLIST, which defaults to `buffer-list'. Optionally REVERSE."
-  (let* ((list  (or blist (buffer-list))))
-    (setq
-     list
-     (if reverse
-         (sort list
-               (function
-                (lambda (a b)
-                  (string< (buffer-name b) (buffer-name a)))))
-       (sort list
-             (function
-              (lambda (a b)
-                (string< (buffer-name a) (buffer-name b)))))))
-    list))
-
-;;; ----------------------------------------------------------------------
-;;;
-(defun tinybuffer-sort-buffer-list  (&optional reverse blist)
-  "Sort buffer list, optionally REVERSE and use BLIST."
-  (let* (sorted
-         part
-         list)
-    (setq sorted (tinybuffer-sort-buffer-list-1 blist reverse))
-
-    ;;  What is this? Okay, you see, when we sort the buffer list...
-    ;;     A B C D E F G
-    ;;         ^
-    ;;     #############  'sorted' holds all
-    ;;           %%%%%%%  'part'   contains only these
-    ;;
-    ;;  We're currently in C, and next one must be D. But if we're
-    ;;  at the end, we're in G, and no buffers follow.
-    ;;
-    ;;  So, to get past G, we have to make list in following way:
-    ;;
-    ;;      @@@@@@ =  %%%%%    ############
-    ;;      list   =  'part' + 'sorted
-    ;;
-    ;;  Sure, there is redundancy, since the 'sorted' holds all elements,
-    ;;  but since we actually ignore buffers in the moving loop, we need
-    ;;  all buffers past G.
-
-    (when (setq part (memq (current-buffer) sorted))
-      (setq list (cdr part))
-      (ti::nconc list sorted))
-    sorted))
-
-;;; ----------------------------------------------------------------------
-;;;
-(defun tinybuffer-buffer-list-next (&optional reverse)
-  "Switch to next buffer in list, skipping unwanted ones. Optionally REVERSE.
-See variable `tinybuffer-:ignore-regexp'."
-  (let* ((re  tinybuffer-:ignore-regexp)
-         list go)
-    (cond
-     (tinybuffer-:sort-flag
-      (setq list (tinybuffer-sort-buffer-list reverse)))
-     (reverse
-      (setq list (reverse (buffer-list))))
-     (t
-      (setq list (buffer-list))))
-    (setq list (delq (current-buffer) list))
-    (dolist (buffer list)
-      (unless (string-match re (buffer-name buffer))
-        (setq go buffer)                ;Stop and select it
-        (return)))
-    (if (null go)
-        (message
-	 (concat
-	  "TinyBuffer: No buffers to circulate; "
-	  "see `tinybuffer-:ignore-regexp'")))
-    (if go
-        (switch-to-buffer go))))
-
-;;; ----------------------------------------------------------------------
-;;;
-(defun tinybuffer-init-buffer-list  ()
-  "Initialize global variable `tinybuffer-:buffer-list'."
-  (let* ((list  (tinybuffer-buffer-filter)))
-    (if tinybuffer-:sort-flag
-        (setq list (tinybuffer-start-list
-                    (current-buffer)
-                    (tinybuffer-sort-buffer-list-1 list))))
-    (setq tinybuffer-:buffer-list list)))
+;;{{{ code: macros, functions
 
 ;;; ----------------------------------------------------------------------
 ;;;
@@ -381,6 +219,141 @@ See variable `tinybuffer-:ignore-regexp'."
      (push last list)                           ;add to the end
      (setq tinybuffer-:buffer-list list)        ;update list
      ret))
+
+;;; ----------------------------------------------------------------------
+;;;
+(defun tinybuffer-install-default-bindings ()
+  "Define default global keys."
+  (interactive)
+  (global-set-key [(control <)]      'tinybuffer-previous-buffer)
+  (global-set-key [(control >)]      'tinybuffer-next-buffer)
+  (global-set-key [(control meta <)] 'tinybuffer-iswitch-to-buffer)
+  (global-set-key [(control meta >)] 'tinybuffer-sort-mode-toggle))
+
+;;; ----------------------------------------------------------------------
+;;;
+(defun tinybuffer-start-list  (buffer-pointer list)
+  "Let BUFFER-POINTER be first and arrange LIST."
+  (let ((start (memq buffer-pointer list))
+	(rev   (reverse list))
+	before
+	ret)
+    ;; Basic idea is this, say pointer is at B:
+    ;;
+    ;; list:   A B C D
+    ;; start:    B C D
+    ;; rev     D C B A
+    ;; before      B A  --> take cdr --> A
+    ;;
+    ;; ret     start + before = B C D A
+    ;;
+    (unless start
+      (error "No such elt in list %s" buffer-pointer))
+    (setq before (cdr-safe (memq buffer-pointer rev)))
+    (setq ret start)
+    (if before
+        (union (reverse start) before))
+    ret))
+
+;;; ----------------------------------------------------------------------
+;;;
+(defun tinybuffer-buffer-filter (&optional blist)
+  "Filter BLIST, which defaults to `buffer-list'.
+References:
+  `tinybuffer-:ignore-regexp'"
+  (let (ret)
+    (dolist (elt (or blist (buffer-list))  )
+      (if (not (string-match tinybuffer-:ignore-regexp
+                             (buffer-name elt)))
+          (push elt ret)))
+    ret))
+
+;;; ----------------------------------------------------------------------
+;;;
+(defun tinybuffer-sort-buffer-list-1 (&optional blist reverse)
+  "Sort BLIST, which defaults to `buffer-list'. Optionally REVERSE."
+  (let ((list (or blist (buffer-list))))
+    (setq
+     list
+     (if reverse
+         (sort list
+               (function
+                (lambda (a b)
+                  (string< (buffer-name b) (buffer-name a)))))
+       (sort list
+             (function
+              (lambda (a b)
+                (string< (buffer-name a) (buffer-name b)))))))
+    list))
+
+;;; ----------------------------------------------------------------------
+;;;
+(defun tinybuffer-sort-buffer-list  (&optional reverse blist)
+  "Sort buffer list, optionally REVERSE and use BLIST."
+  (let (sorted
+	part
+	list)
+    (setq sorted (tinybuffer-sort-buffer-list-1 blist reverse))
+    ;;  What is this? Okay, you see, when we sort the buffer list...
+    ;;     A B C D E F G
+    ;;         ^
+    ;;     #############  'sorted' holds all
+    ;;           %%%%%%%  'part'   contains only these
+    ;;
+    ;;  We're currently in C, and next one must be D. But if we're
+    ;;  at the end, we're in G, and no buffers follow.
+    ;;
+    ;;  So, to get past G, we have to make list in following way:
+    ;;
+    ;;      @@@@@@ =  %%%%%    ############
+    ;;      list   =  'part' + 'sorted
+    ;;
+    ;;  Sure, there is redundancy, since the 'sorted' holds all elements,
+    ;;  but since we actually ignore buffers in the moving loop, we need
+    ;;  all buffers past G.
+    (when (setq part (memq (current-buffer) sorted))
+      (setq list (cdr part))
+      (ti::nconc list sorted))
+    sorted))
+
+;;; ----------------------------------------------------------------------
+;;;
+(defun tinybuffer-buffer-list-next (&optional reverse)
+  "Switch to next buffer in list, skipping unwanted ones. Optionally REVERSE.
+See variable `tinybuffer-:ignore-regexp'."
+  (let ((re  tinybuffer-:ignore-regexp)
+	list
+	go)
+    (cond
+     (tinybuffer-:sort-flag
+      (setq list (tinybuffer-sort-buffer-list reverse)))
+     (reverse
+      (setq list (reverse (buffer-list))))
+     (t
+      (setq list (buffer-list))))
+    (setq list (delq (current-buffer) list))
+    (dolist (buffer list)
+      (unless (string-match re (buffer-name buffer))
+        (setq go buffer)                ;Stop and select it
+        (return)))
+    (if (null go)
+        (message
+	 (concat
+	  "TinyBuffer: No buffers to circulate; "
+	  "see `tinybuffer-:ignore-regexp'")))
+    (if go
+        (switch-to-buffer go))))
+
+;;; ----------------------------------------------------------------------
+;;;
+(defun tinybuffer-init-buffer-list  ()
+  "Initialize global variable `tinybuffer-:buffer-list'."
+  (let ((list (tinybuffer-buffer-filter)))
+    (if tinybuffer-:sort-flag
+        (setq list (tinybuffer-start-list
+                    (current-buffer)
+                    (tinybuffer-sort-buffer-list-1 list))))
+    (setq tinybuffer-:buffer-list list)))
 
 ;;}}}
 ;;{{{ code: interactive
@@ -442,7 +415,6 @@ References:
               mode nil))
       (setq ch (ti::read-char-safe-until
                 (format fmt str (or dir "") (or mode "" ))))
-;;;      (ti::d! str buffer (char-equal ch key-back) (char-equal ch key-fw) go-list)
       (cond
        ((and ch (char-equal ch key-back))
         (setq buffer (tinybuffer-iswitch-previous)))
