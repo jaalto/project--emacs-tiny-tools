@@ -503,7 +503,7 @@ packages are loaded (look into each file for interesting things).
     (setq tinymy-:define-key-force t)
     (setq tinyef--mode-key \"\\C-cmr\")
 
-    (setq tinylock-:auto-lock-interval1 45)     ;in minutes
+    (setq tinylock--auto-lock-interval1 45)     ;in minutes
 
     (setq tinyef--mode-key-table
           '((?\[   . step-delete-back)          ;KEY -- action symbol
