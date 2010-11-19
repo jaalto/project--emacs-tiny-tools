@@ -73,7 +73,7 @@
 
 (require 'tinylibb)                     ;Backward compatible functions
 
-(defconst tinylibm-version-time "2010.1119.2324"
+(defconst tinylibm-version-time "2010.1119.2329"
   "Latest version number.")
 
 ;;{{{ function tests
@@ -107,10 +107,9 @@ Return:
 ;;;
 (defun ti::defalias-p (symbol)
   "If function SYMBOL is alias, return it's truename. Otw Return nil."
-  (let* (sym
-         prev
-         ret)
-
+  (let (sym
+	prev
+	ret)
     (if (or (sequencep symbol)          ;lambda form ?
             (not (symbolp symbol))
             (not (fboundp symbol)))
@@ -160,7 +159,7 @@ Return:
   symbol     this can be truename of the function if it was aliased
   nil"
   ;;  Get the REAL name if it is alias or use the func's SYMBOL name
-  (let* ((func (or (ti::defalias-p symbol) symbol)))
+  (let ((func (or (ti::defalias-p symbol) symbol)))
     (ti::function-car-test func 'autoload)))
 
 ;;; ----------------------------------------------------------------------
@@ -173,7 +172,7 @@ or otherwise result from this function is undefined.
 Return:
   string   Name of the library where symbol autolaod point to."
   ;;  Get the REAL name if it is alias or use the func's SYMBOL name
-  (let* ((doc (prin1-to-string (symbol-function symbol))))
+  (let ((doc (prin1-to-string (symbol-function symbol))))
     (when (and (stringp doc)
                (string-match "autoload[ \t\"]+\\([^\"\r\n)]+\\)" doc))
       (match-string 1 doc))))
@@ -294,8 +293,8 @@ In your programs, like:
   (defmacro my-package-debug (&rest args)
     \"Record debug info.\"
     (`
-     (let* ( ;; write data to package private buffer.
-            (ti:m-debug-buffer my-package-:debug-buffer))
+     (let ( ;; write data to package private buffer.
+           (ti:m-debug-buffer my-package-:debug-buffer))
        (if my-package-:debug
            (ti::d!! (,@ args))))))
 
@@ -395,7 +394,7 @@ This FORM preserves restriction and excursion with one command."
 (put 'ti::narrow-to-paragraph 'edebug-form-spec '(body))
 (defmacro ti::narrow-to-paragraph (&rest body)
   "Narrow to paragraph. Point must be already inside a paragraph."
-  `(let* (beg)
+  `(let (beg)
      (when (re-search-backward "^[ \t]*$" nil t)
        (forward-line 1)
        (setq beg (point))
@@ -472,9 +471,9 @@ Float time value in seconds is sent to FUNCTION.
 
   (ti::with-time-this '(lambda (time) (message \"Secs %f\" time))
      (sit-for 4))."
-  `(let* ((Time-A (current-time))
-          Time-B
-          Time-Diff)
+  `(let ((Time-A (current-time))
+	 Time-B
+	 Time-Diff)
      (prog1
          (progn ,@body))
      (setq Time-B (current-time))
@@ -488,7 +487,7 @@ Float time value in seconds is sent to FUNCTION.
 (defmacro ti::with-coding-system-raw-text (&rest body)
   "Bind `coding-system-for-write' to Unix style raw write during BODY."
   ;;  #todo: 'raw-text is for Emacs, is this different in XEmacs?
-  `(let* ((coding-system-for-write 'raw-text))
+  `(let ((coding-system-for-write 'raw-text))
        ,@body))
 
 ;;}}}
@@ -500,9 +499,9 @@ Float time value in seconds is sent to FUNCTION.
 (defsubst ti::process-mark (&optional buffer)
   "Return process mark for current buffer or optional BUFFER.
 If there is no process mark, return nil."
-  (let* ((proc (get-buffer-process
-                (or buffer
-                    (current-buffer)))))
+  (let ((proc (get-buffer-process
+	       (or buffer
+		   (current-buffer)))))
     (if proc
         (process-mark proc))))
 
@@ -591,7 +590,7 @@ Warning:
   `symbol-function' doesn't return a function to call. Rearrange
   code so that you do (require 'package) or (ti::autoload-p func) test before
   using ti::funcall."
-  `(let* ((func ,func-sym))
+  `(let ((func ,func-sym))
      (when (fboundp ,func-sym)
        (apply func ,@args nil))))
 
@@ -615,7 +614,7 @@ The ARGS can be anything.
 
 Example:
    (print1cat nil buffer frame overlay list)"
-  (let* ((ret  ""))
+  (let ((ret  ""))
     (or separator
         (setq separator " "))
 
@@ -695,7 +694,7 @@ If the COUNT exeeds string length or is zero, whole string is returned."
 (defsubst ti::string-right (str count)
   "Use STR and read COUNT chars from right.
 If the COUNT exeeds string length or is zero, whole string is returned."
-  (let* ((pos (- (length str)  count)))
+  (let ((pos (- (length str)  count)))
     (if (> pos 0)
         (substring str (- 0 count))
       str)))
@@ -725,8 +724,8 @@ Input:
   "Return month regexp separated by ' \\\\|' or CAT-STR.
 There is intentional space, since short month name is supposed to
 follow something else."
-  (let* ((ret
-          (mapconcat    'concat    (ti::month-list) (or cat-str " \\|"))))
+  (let ((ret
+	 (mapconcat    'concat    (ti::month-list) (or cat-str " \\|"))))
     ;;  The last item must be handled separately
     (if (null cat-str)
         (concat ret " "))))
@@ -790,8 +789,8 @@ There is intentional SPACE after each date.
 
 Input:
   CAT-STR      default is \" \\\\|\""
-  (let* ((ret
-          (mapconcat    'concat    (ti::date-eu-list) (or cat-str " \\|"))))
+  (let ((ret
+	 (mapconcat    'concat    (ti::date-eu-list) (or cat-str " \\|"))))
     ;;  The last item must be handled separately
     (if (null cat-str)
         (concat ret " "))))
@@ -1550,7 +1549,7 @@ Input:
   POS-FUNCTION  is used to position the point if regexp was found.
                 The point used is read after POS-FUNCTION.
   END           max search point."
-  (let* (list)
+  (let (list)
     (dolist (re regexp-list)
       (save-excursion
         (when (re-search-forward re end t)
@@ -1584,8 +1583,8 @@ Example:
 
   -->
   '( (1 . (a b x)) (2 . (c d))))"
-  `(let* (EL-T
-          LIS-T)
+  `(let (EL-T
+	 LIS-T)
      (if (not (setq EL-T (funcall ,func ,key ,list)))
          (push (cons ,key (list ,add)) ,list)
        (setq LIS-T (cdr EL-T))
@@ -1621,10 +1620,10 @@ Return:
 
   nil       Nothing done
   t         Something done."
-  (let* (regexp
-         cdr-elt
-         ret
-         copy)
+  (let (regexp
+	cdr-elt
+	ret
+	copy)
     ;;  1.  We try to find the regexp. This may change from emacs to emacs
     ;;  2.  If it is found (same as in previous emacs release), then change
     ;;      "in place"
@@ -1739,8 +1738,8 @@ If argument is already a list this macro is no-op."
 ;;;
 (defun ti::list-join (list &optional join-str)
   "Joins string LIST with JOIN-STR, whic defaults to space."
-  (let* (ret
-         (ch  (or join-str " ")))
+  (let (ret
+	(ch (or join-str " ")))
     (while list
       (setq ret (concat (or ret "") (car list)))
       (setq list (cdr list))
@@ -1758,9 +1757,9 @@ Items are numbered starting from 0.
 
 This is useful, if you call x popup menu or completion. For example:
 
-(completing-read \"complete number: \"
+\(completing-read \"complete number: \"
                  (ti::list-to-assoc-menu '(111 222 333 444)))"
-  (let* ((i 0)
+  (let ((i 0)
          ret)
     (dolist (elt list)
       (if (integerp elt)
@@ -1773,7 +1772,7 @@ This is useful, if you call x popup menu or completion. For example:
 ;;;
 (defsubst ti::list-to-cons (list)
   "Turn list to paired cons list '(1 2 3 4) --> '((1 . 2) (3 .4))."
-  (let* (ret)
+  (let (ret)
     (while list
       (push (cons (pop list) (pop list)) ret))
     ret))
@@ -1796,8 +1795,8 @@ Example:
   --> '(1 2 3)
   (ti::list-remove-successive '(\"1\" \"1\" \"2\" \"2\" \"3\") 'string=)
   --> '(\"1\" \"2\" \"3\")"
-  (let* (new-list
-         prev)
+  (let (new-list
+	prev)
     (dolist (elt list)
       (unless (funcall function prev elt)
         (setq prev elt)                 ;prev value
@@ -1824,7 +1823,7 @@ Example:
   (ti::list-merge-elements 1 2 'some '(type here))
   -->
   '(1 2 some type here)"
-  (let* (ret)
+  (let (ret)
     (dolist (elt args)
       (if (ti::listp elt)
           (dolist (x elt) (push x ret))
@@ -1877,8 +1876,8 @@ Input:
 
 Return:
   nil  ,no ARG in list"
-  (let* ((i 0)
-         ret)
+  (let ((i 0)
+	ret)
     (while list
       (if (if test-form
               (eval test-form)
@@ -2027,7 +2026,7 @@ Add this statement to the beginning of file:
 ;;;
 (defun ti::function-autoload-file (function)
   "Return filename where autoload FUNCTION refers to"
-  (let* ((str (prin1-to-string (symbol-function function))))
+  (let ((str (prin1-to-string (symbol-function function))))
     (when (and str
                (string-match "autoload[ \t\\]+\"\\([^\\\"]+\\)" str))
       (match-string 1 str))))
@@ -2340,8 +2339,8 @@ Example:
   ;;  Add 2 functions to 2 hooks
 
   (ti::add-hooks '(mode1-hook mode2-hook) '(hook1 hook2))"
-  (let* ((list  (ti::list-make single-or-list))
-         (hlist (ti::list-make hook-or-list)))
+  (let ((list  (ti::list-make single-or-list))
+	(hlist (ti::list-make hook-or-list)))
     (dolist (hook hlist)
       (dolist (x list)
         (when (or (null check)
@@ -2356,8 +2355,8 @@ Example:
 (defun-maybe subst-char-with-string (string &optional char to-string)
   "In STRING, converts CHAR with TO-STRING.
 Default is to convert all tabs in STRING with spaces."
-  (let* ((len           (length string))
-         (i             0)
+  (let ((len (length string))
+         (i  0)
          elt
          ret)
     (cond
@@ -2507,7 +2506,7 @@ VAR is set to following values when ARG is:
 ;;;
 (defun ti::last-message-line ()
   "Return last line from message buffer."
-  (let* ((buffer (ti::buffer-pointer-of-messages)))
+  (let ((buffer (ti::buffer-pointer-of-messages)))
     (when buffer
       (with-current-buffer buffer
         (ti::pmax)
@@ -2554,9 +2553,9 @@ Examples:
   ;;  Get all buffers in `dired-mode'
   (ti::dolist-buffer-list '(eq major-mode 'dired-mode))
 "
-  `(let* (OK
-          BN
-          return-list)
+  `(let (OK
+	 BN
+	 return-list)
      (dolist (buffer  (buffer-list))
        (setq BN (buffer-name buffer))
        (when (stringp BN)               ;it's killed if no name
@@ -2729,7 +2728,7 @@ Input:
   PUT-VALUE     value to put. If this is non-nil value is stored.
   FORCE-SET     flag, if non-nil then put anything that was in  put-value
                 E.g. value nil can be stored this way."
-  (let* (sym)
+  (let (sym)
     (if (null (setq sym (ti::vector-table-get table item)))
         (error "No bucket found for item. [item not in table] %s" item)
       (if (or put-value force-set)
@@ -2801,9 +2800,9 @@ If possible, unintern all symbols."
 (defun ti::write-file-with-wrapper (file)
   "Write file, possibly compressed. Crypt++ compatibility.
 Bind `crypt-auto-write-buffer' to t for Crypt++."
-  (let* ((crypt-auto-write-buffer t)
-         (buffer (find-buffer-visiting file))
-         load)
+  (let ((crypt-auto-write-buffer t)
+	(buffer (find-buffer-visiting file))
+	load)
     (unless crypt-auto-write-buffer     ;Bytecomp silencer
       (setq crypt-auto-write-buffer nil))
 
@@ -2853,7 +2852,7 @@ Tinylibm: Can't write to file. Modified buffer with the same name in Emacs."))))
 (put 'ti::write-file-binary-macro 'lisp-indent-function 0)
 (defmacro ti::write-file-as-is-macro (&rest body)
   "Write file without any coding conversions."
-  `(let* ((buffer-file-coding-system 'no-conversion)) ;; #todo: XEmacs?
+  `(let ((buffer-file-coding-system 'no-conversion)) ;; #todo: XEmacs?
      ,@body))
 
 ;;; ----------------------------------------------------------------------
@@ -2880,7 +2879,7 @@ Following variables are set during BODY:
 `dir-list' All directories under `dir'."
   `(flet ((recurse
            (dir)
-           (let* ((dir-list (ti::directory-list dir)))
+           (let ((dir-list (ti::directory-list dir)))
              ,@body
              (when dir-list
                (dolist (elt dir-list)
@@ -3074,18 +3073,19 @@ Return:
 
   buffer pointer"
   (interactive "fFind file: ")
-  (let* ( ;;   This mode does not run any hooks.
-         (default-major-mode 'fundamental-mode)
-         ;;   This makes sure we truly load the file.
-         ;;   If there were that file in emacs, emacs won't load it.
-         (fn  (file-name-nondirectory file))
-         ;;   Prohibit emacs from doing anything fancy while
-         ;;   we load the file
-         enable-local-eval
-         ;; jka doen't use this, but crypt++ does. Prevent running mode hooks
-         ;; etc.
-         (find-file-hooks (if (featurep 'crypt++) '(crypt-find-file-hook)))
-         tmp)
+  (let ( ;;   This mode does not run any hooks.
+	(default-major-mode 'fundamental-mode)
+	;;   This makes sure we truly load the file.
+	;;   If there were that file in emacs, emacs won't load it.
+	(fn  (file-name-nondirectory file))
+	;;   Prohibit emacs from doing anything fancy while
+	;;   we load the file
+	enable-local-eval
+	;; jka doen't use this, but crypt++ does. Prevent running mode hooks
+	;; etc.
+	(find-file-hooks (if (featurep 'crypt++)
+			     '(crypt-find-file-hook)))
+	tmp)
     (ti::verb)
     (or buffer
         (setq buffer (generate-new-buffer fn)))
@@ -3110,7 +3110,7 @@ Return:
 The advantage over `load-file' is that physical loading also uncompresses
 the file if there is proper elisp package to handle it, thus your elisp
 can be in any file *form* that packages allow for loading."
-  (let* (buffer)
+  (let (buffer)
     (setq buffer (ti::find-file-literally file))
     (with-current-buffer buffer
       (if (and (ti::xemacs-p)           ;XEmacs compatibility
@@ -3123,9 +3123,9 @@ can be in any file *form* that packages allow for loading."
 ;;;
 (defun ti::directory-writable-p (file-or-dir)
   "Check if FILE-OR-DIR is writable."
-  (let* ((dir           (file-name-directory (expand-file-name file-or-dir)))
-         (file          "#9#_%")
-         (fn            (concat dir file)))
+  (let* ((dir  (file-name-directory (expand-file-name file-or-dir)))
+         (file "#9#_%")
+         (fn   (concat dir file)))
     (if (not (stringp file))
         (error "invalid arg"))
     (file-writable-p fn)))
@@ -3136,8 +3136,8 @@ can be in any file *form* that packages allow for loading."
 (defun ti::file-delete-safe (files)
   "Deletes file or list of FILES. Read only files are chmod'd to writable.
 All errors are ignored."
-  (let* ((list (ti::list-make files))
-         mods)
+  (let ((list (ti::list-make files))
+	mods)
     (dolist (file list)
       (ignore-errors
         (when (file-exists-p file)
@@ -3191,7 +3191,7 @@ Input:
 ;;;
 (defun ti::pop-to-buffer-or-window (buffer &optional point)
   "Like `pop-to-buffer' BUFFER and POINT, but find any visible window."
-  (let* (win)
+  (let (win)
     (setq win (get-buffer-window buffer t))
     (if (null win)
         (pop-to-buffer buffer)
@@ -3217,24 +3217,18 @@ Input:
  OTHER-WIN      display in other window."
   (let* ((buffer (or (find-buffer-visiting file)
                      (get-buffer file)
-
                      ;; We may have mistakenly grabbed 'cd' command and
                      ;; stucked it with buffers name.
                      ;; /users/foo/*scratch*  --> *scratch*
-
                      (get-buffer (file-name-nondirectory file))))
-
          ;;  If buffer exists and is diplayed in another frame, use it.
-
          (win    (and buffer (get-buffer-window buffer t))))
-
     (unless (and buffer win)
       (when (or (file-exists-p file)
                 (null must-exist))       ;Not exist, but still ok
         (ti::select-frame-non-dedicated) ;Can't do find file otherwise
         (setq buffer
               (find-file-noselect file))))
-
     (when buffer
       (if other-win
           (display-buffer buffer)
@@ -3399,7 +3393,6 @@ name `PACKAGE-PREFIX-submit-bug-report' is derived."
   (let* ((args (ti::funcall 'widget-get widget ':func-args)) ;; #TODO
          (arg1 (eval (nth 1 args)))
          (arg2 (nth 2 args))
-
          ;;  from variable pfx "tipgp-:" --> to function prefix "tipgp-"
          (pfx   (substring arg1 0 (1- (length arg1))))
          (func  (concat pfx "submit-bug-report"))
@@ -3529,8 +3522,8 @@ No other values are preserved. Also the `select-window'
 is executed if the original buffer had `window-live-p'. (ie. it was visible)
 
 Use this if you want to e.g. scroll some buffer."
-  `(let* ((oRig-Buf (current-buffer))
-          (oRig-Win (get-buffer-window oRig-Buf)))
+  `(let ((oRig-Buf (current-buffer))
+	 (oRig-Win (get-buffer-window oRig-Buf)))
      (prog1
          (progn
            ,@body)
@@ -3554,7 +3547,7 @@ Notes:
 
   Make sure you don't insert to immediate marker position, because
   markers moves along with the text!"
-  `(let* ((MarK (point-marker)))
+  `(let ((MarK (point-marker)))
      (prog1
          (progn ,@body)
        (when (marker-position MarK)
@@ -3600,8 +3593,8 @@ Example:
 Return:
 
   Last value returned by BODY"
-  `(let* ((SLC-sLc-col  (current-column)) ;prevent variable suicide
-	  (SLC-sLc-line (ti::current-line-number)))
+  `(let ((SLC-sLc-col  (current-column)) ;prevent variable suicide
+	 (SLC-sLc-line (ti::current-line-number)))
      (prog1
 	 (progn
 	   ,@body)
@@ -3754,7 +3747,7 @@ Example usage:
 ;;;
 (defun ti::pp-variable-list (list &optional buffer def-token)
   "Print LIST of variables to BUFFER. DEF-TOKEN defaults to `defconst'."
-  (let* (val)
+  (let (val)
     (or buffer
         (setq buffer (current-buffer)))
     (or def-token
