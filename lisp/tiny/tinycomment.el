@@ -119,7 +119,7 @@
 
 (require 'tinylibm)
 
-(ti::package-defgroup-tiny TinyComment tinycomment-: extensions
+(ti::package-defgroup-tiny TinyComment tinycomment-- extensions
   "Smart comment setting utility
   Overview of features:
 
@@ -142,7 +142,7 @@
 
 ;;; ......................................................... &v-hooks ...
 
-(defcustom tinycomment-:load-hook nil
+(defcustom tinycomment--load-hook nil
   "*Hook run when package has been loaded."
   :type 'hook
   :group 'TinyComment)
@@ -150,7 +150,7 @@
 ;;; ........................................................ &v-public ...
 ;;; User configurable
 
-(defcustom tinycomment-:not-comment-re ".*[$]\\(#\\)[a-zA-Z]"
+(defcustom tinycomment--not-comment-re ".*[$]\\(#\\)[a-zA-Z]"
   "*Reject comment position according to subexpression 1.
 When searching for comment position, the position found will be
 rejected, if comment subexpression 1 match's position is the same as
@@ -163,7 +163,7 @@ the beginnning of line.
   :type 'regexp
   :group 'TinyComment)
 
-(defcustom tinycomment-:tab-call-no-alist
+(defcustom tinycomment--tab-call-no-alist
   '(fundamental-mode
     text-mode)
   "*List of modes which enable using TIC's own indent-for-code algorithm.
@@ -175,7 +175,7 @@ tab key."
   :type '(repeat (function :tag "Mode function"))
   :group 'TinyComment)
 
-(defcustom tinycomment-:adj-no-alist
+(defcustom tinycomment--adj-no-alist
   '(lisp-interaction-mode
     lisp-mode
     emacs-lisp-mode
@@ -195,7 +195,7 @@ and the normal `indent-for-comment' is used."
   :type '(repeat (function :tag "Mode function"))
   :group 'TinyComment)
 
-(defcustom tinycomment-:comment-notify nil
+(defcustom tinycomment--comment-notify nil
   "*If non-nil allow printing notify messages.
 When the comment syntax wasn't found according to file name.
 The message is _not_ displayed when `buffer-name' contains '*'.
@@ -206,7 +206,7 @@ you can turn off the warning."
   :type 'boolean
   :group 'TinyComment)
 
-(defcustom tinycomment-:def-com-pos 'code
+(defcustom tinycomment--def-com-pos 'code
   "*Default comment position for empty lines.
 Possible choices are:
 
@@ -221,18 +221,18 @@ well _inside_ functions"
            (const cpos))
   :group 'TinyComment)
 
-(defcustom tinycomment-:comment-extra-arg 1
-  "*See documentation of `tinycomment-:comment-extra'."
+(defcustom tinycomment--comment-extra-arg 1
+  "*See documentation of `tinycomment--comment-extra'."
   :type 'integer
   :group 'TinyComment)
 
-(defcustom tinycomment-:comment-extra-stop 63 ;TAB position 64
-  "*See documentation of `tinycomment-:comment-extra'.
+(defcustom tinycomment--comment-extra-stop 63 ;TAB position 64
+  "*See documentation of `tinycomment--comment-extra'.
 The comment movement is not done if `current-column' > this variable."
   :type 'integer
   :group 'TinyComment)
 
-(defcustom tinycomment-:comment-extra 'tab
+(defcustom tinycomment--comment-extra 'tab
   "*This affects function `tinycomment-set-com'. Let's see an example:
 
     abcd abcd abcd abcd abcd abcd[x] abcd abcd # COMMENT
@@ -245,10 +245,10 @@ Current choices are:
     'tab      Insert tab between code and comment, so that they get
               separated. Any previous whitespace is deleted.
     'spc      Same, but insert space instead. The number or spaces inserted
-              is told in variable  `tinycomment-:comment-extra-arg'
+              is told in variable  `tinycomment--comment-extra-arg'
 
 None of these actions are carried out if the comment was placed in
-column `tinycomment-:comment-extra-stop' +1 or further. Such comment is
+column `tinycomment--comment-extra-stop' +1 or further. Such comment is
 left untouched, because adjusting may push it out of the window edge."
   :type  '(choice
            (const tab)
@@ -309,7 +309,7 @@ Return:
 
    nil
    nbr  column."
-  (let ((no-com   (or tinycomment-:not-comment-re   "dummy"))
+  (let ((no-com   (or tinycomment--not-comment-re   "dummy"))
         (max      (save-excursion (end-of-line) (point)))
         (clen     (length comment-start))
         (re       comment-start)
@@ -493,18 +493,18 @@ Features:
    optional artgument NEW is given. In that case, nothing is considered
    as old comments.
 -  If line is too long for comment column it inserts additional SPC or TAB
-   between the code and comment. See variable `tinycomment-:comment-extra'
+   between the code and comment. See variable `tinycomment--comment-extra'
 
 Return:
 
   t             position changed OR new comment added
   nil           position not allowed"
-  (let* ((xtra     tinycomment-:comment-extra)
-         (x-spc    (make-string tinycomment-:comment-extra-arg ?\ ))
+  (let* ((xtra     tinycomment--comment-extra)
+         (x-spc    (make-string tinycomment--comment-extra-arg ?\ ))
          (x-spc    (if (eq 'tab xtra)
 		       "\t"
 		     x-spc)) ; what's the insert type ?
-         (stop-col tinycomment-:comment-extra-stop)
+         (stop-col tinycomment--comment-extra-stop)
          (ep       (save-excursion
 		     (end-of-line)
 		     (point)))
@@ -597,8 +597,8 @@ Code note:
 -  Considered adding 4th choice: indent like previous comment,
    but I decided 4th choice or 4 taps was too much...3 seemed ideal,
    so I left it out from 'full comment line'."
-  (let* ((def-place tinycomment-:def-com-pos)
-         (tab-alist tinycomment-:tab-call-no-alist)
+  (let* ((def-place tinycomment--def-com-pos)
+         (tab-alist tinycomment--tab-call-no-alist)
          (ci        (current-indentation))
          (cc        (current-column))
          (com       comment-start)
@@ -756,12 +756,12 @@ that has no file name cannot be identified by this function, so
 it passes control directly to mode. There is a chance you might not
 even notice that this function is working on the background.
 
-Verbose warnings are enabled by `tinycomment-:comment-notify'
-Special cases are handled by tinycomment-:comment-extra* variables
+Verbose warnings are enabled by `tinycomment--comment-notify'
+Special cases are handled by tinycomment--comment-extra* variables
 Version info is on \\[tinycomment-version]."
   (interactive)
-  (let* ((warn          tinycomment-:comment-notify) ;; shorter name
-         (no-list       tinycomment-:adj-no-alist)
+  (let* ((warn          tinycomment--comment-notify) ;; shorter name
+         (no-list       tinycomment--adj-no-alist)
          (com-col       48)         ;default comment column if not set
          elt
          (mode-desc     (or (ti::id-info nil 'variable-lookup)
@@ -835,6 +835,6 @@ Version info is on \\[tinycomment-version]."
 ;;}}}
 
 (provide 'tinycomment)
-(run-hooks 'tinycomment-:load-hook)
+(run-hooks 'tinycomment--load-hook)
 
 ;;; tinycomment.el ends here
