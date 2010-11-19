@@ -473,6 +473,7 @@ This function is run only once at tinynyliba.el load."
 
   ;;{{{ code: Autoload
 
+  (autoload 'ti::goto-line                        "tinylibm" "" nil) ;;defsubst
   (autoload 'ti::function-car-test                "tinylibm" "" nil)
   (autoload 'ti::defalias-p                       "tinylibm" "" nil)
   (autoload 'ti::subrp-p                          "tinylibm" "" nil)
