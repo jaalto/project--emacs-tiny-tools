@@ -2206,7 +2206,7 @@ Return:
   alias        = the alias definition
   expansion    = expanded alias"
   (let* ((abbrevs   (tinymail-mail-aliases))
-         pre-abbrev-expand-hook ;; prevent recursion
+         abbrev-expand-functions ;; prevent recursion
          exp-list
          hit)
     (dolist (elt list)
@@ -3314,7 +3314,7 @@ INFO is '(string beg end) of the completion word"
 Ignore ARG."
   (interactive "P")
   (let ((fid "tinymail-complete-guest-packages:")
-	(ch  last-command-char))
+	(ch  last-command-event))
     (unless fid ;; No-op. XEmacs byte compiler silencer
       (setq fid nil))
     (tinymail-debug fid 'ARG arg 'MODE major-mode 'POINT (point))
