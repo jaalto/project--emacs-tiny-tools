@@ -36,11 +36,11 @@
 ;;  ~/.emacs startup file.
 ;;
 ;;      ;;  Make sure the keys will be defined.
-;;      (setq tinydired-:force-add-keys-flag 'override)
+;;      (setq tinydired--force-add-keys-flag 'override)
 ;;
 ;;      (autoload 'tinydired-hook-control                   "tinydired" "" t)
 ;;      (autoload 'tinydired-switch-to-some-ange-ftp-buffer "tinydired" "" t)
-;;      (add-hook 'tinydired-:load-hook                 'tinydired-hook-control)
+;;      (add-hook 'tinydired--load-hook                 'tinydired-hook-control)
 ;;      (add-hook 'dired-mode-hook '(lambda () (require 'tinydired) nil))
 ;;
 ;;  For more personal setup, you have to look at the calls in function
@@ -55,7 +55,7 @@
 ;;
 ;;  If you don't want default keybindings, modify variable
 ;;
-;;      tinydired-:bind-hook
+;;      tinydired--bind-hook
 ;;
 ;;  Help about keys - do this in dired buffer after you've loaded this file
 ;;
@@ -129,7 +129,7 @@
 ;;      can control if you want to have only one dired buffer when
 ;;      ascending to another directory. See variable:
 ;;
-;;          tinydired-:use-only-one-buffer-flag
+;;          tinydired--use-only-one-buffer-flag
 ;;
 ;;  Dired and ange-ftp additions
 ;;
@@ -313,7 +313,7 @@
   ** tinydired.el: Error, this Emacs did not define dired-move-to-filename-regexp"))
   (defvar dired-move-to-filename-regexp))
 
-(ti::package-defgroup-tiny TinyDired tinydired-: extensions
+(ti::package-defgroup-tiny TinyDired tinydired-- extensions
   "Dired enchancements. Backgroud Ange ftp support.
   Overview of features
 
@@ -337,7 +337,7 @@
 ;;; .......................................................... &v-bind ...
 ;;; handle extra keybindings.
 
-(defcustom tinydired-:bind-hook
+(defcustom tinydired--bind-hook
   '(tinydired-default-ange-bindings
     tinydired-default-other-bindings)
   "*Single function or list of functions to bind keys.
@@ -348,7 +348,7 @@ is loaded."
 
 ;;; ......................................................... &v-hooks ...
 
-(defcustom tinydired-:readin-hook
+(defcustom tinydired--readin-hook
   (delq nil
         (list
          (cond
@@ -369,37 +369,37 @@ in the dired listing."
   :type  'hook
   :group 'Tinydired)
 
-(defcustom tinydired-:load-hook nil
+(defcustom tinydired--load-hook nil
   "*Hook run when package has been loaded."
   :type  'hook
   :group 'Tinydired)
 
 ;;; ....................................................... &v-private ...
 
-(defvar tinydired-:file-store nil
+(defvar tinydired--file-store nil
   "Private. Storage of filenames.")
-(make-variable-buffer-local 'tinydired-:file-store)
+(make-variable-buffer-local 'tinydired--file-store)
 
-(defvar tinydired-:directory nil
+(defvar tinydired--directory nil
   "Private. Directory name.")
 
-(defvar tinydired-:mark-list nil
+(defvar tinydired--mark-list nil
   "Private. Saved filename mark list.")
 
-(defvar tinydired-:mput-last-ftp nil
+(defvar tinydired--mput-last-ftp nil
   "Private. Last ftp mput site string.")
-(make-variable-buffer-local 'tinydired-:mput-last-ftp)
+(make-variable-buffer-local 'tinydired--mput-last-ftp)
 
-(defvar tinydired-:mput-history nil
+(defvar tinydired--mput-history nil
   "Private. History variable.")
 
-(defvar tinydired-:previous-buffer nil
+(defvar tinydired--previous-buffer nil
   "Private. Recorded buffer, before leaping in another.")
 
-(defvar tinydired-:dir-copy-buffer "*tinydired-dir*"
+(defvar tinydired--dir-copy-buffer "*tinydired-dir*"
   "Private. Copy of current directory. Created every time when needed.")
 
-(defvar tinydired-:dired-directory-ange-regexp "[@:]"
+(defvar tinydired--dired-directory-ange-regexp "[@:]"
   "Regexp to match `dired-directory' to find ange-ftp buffers.")
 
 ;;}}}
@@ -408,7 +408,7 @@ in the dired listing."
 ;;; ........................................................ &v-public ...
 ;;; User configurable
 
-(defcustom tinydired-:tmp-dir
+(defcustom tinydired--tmp-dir
   (dolist (dir '("~/tmp/dired/"
                  "~/tmp"
                  "~"))
@@ -421,7 +421,7 @@ same filenames."
   :type  'directory
   :group 'Tinydired)
 
-(defcustom tinydired-:download-dir
+(defcustom tinydired--download-dir
   (dolist (dir '("~/tmp/ftp"
                  "~/ftp"
                  "~/tmp"
@@ -432,26 +432,26 @@ same filenames."
   :type  'directory
   :group 'Tinydired)
 
-(defcustom tinydired-:force-add-keys-flag 'overrride
+(defcustom tinydired--force-add-keys-flag 'overrride
   "*Non-nil means to install and override default keys to dired.
 Normally the keys are defined _only_ if the prefix key is in state
 'undefined"
   :type  'boolean
   :group 'Tinydired)
 
-(defcustom tinydired-:use-only-one-buffer-flag t
+(defcustom tinydired--use-only-one-buffer-flag t
   "*Non-nil means the previous dired buffer is killed when ascending to next.
 This makes sure you have only one dired buffer for each dired session.
 This feature is not used if dired-x is present."
   :type 'boolean
   :group 'Tinydired)
 
-(defcustom tinydired-:page-step 10
+(defcustom tinydired--page-step 10
   "*Page Up step size in lines."
   :type  'integer
   :group 'Tinydired)
 
-(defcustom tinydired-:unwanted-files-regexp
+(defcustom tinydired--unwanted-files-regexp
   "\\.o$\\|~$\\|\\.class\\|\\.pyc"
   "*Regexp to match files that should not be shown in dired buffer.
 Set to nil, if you want to see all files.
@@ -459,26 +459,26 @@ This feature is not used if dired-x is present."
   :type  '(string :tag "Regexp")
   :group 'Tinydired)
 
-(defcustom tinydired-:backup-file-regexp
+(defcustom tinydired--backup-file-regexp
   ;;  Like files from CVS: .#ChangeLog.1.3288
   "\\(\\.bak\\|\\.backup\\|[~#]\\)\\|\\.#$"
   "*Backup filename regexp, used by advised `dired-flag-backup-files'."
   :type  '(string :tag "Regexp")
   :group 'Tinydired)
 
-(defcustom tinydired-:mput-sites nil
+(defcustom tinydired--mput-sites nil
   "*List of ange-ftp style site location strings, where user can upload files.
 
 Format '(\"ANGE-FTP-REF\" ..),  ange-ftp-ref is like /login@site:dir/dir/"
   :type  '(repeat (string :tag "Ange-Ftp"))
   :group 'Tinydired)
 
-(defcustom tinydired-:tmp-dir-function 'tinydired-create-tmp-dir
-  "*Create directory for `tinydired-:tmp-dir'."
+(defcustom tinydired--tmp-dir-function 'tinydired-create-tmp-dir
+  "*Create directory for `tinydired--tmp-dir'."
   :type  'function
   :group 'Tinydired)
 
-(defcustom tinydired-:show-storage-function
+(defcustom tinydired--show-storage-function
   (function
    (lambda (args)
      (message  "%d: %s" (length args)  (ti::list-to-string args))))
@@ -497,7 +497,7 @@ The function is called with list of files in storage."
   (interactive)
   ;;  "a" for Ange ftp related commands, since the file information
   ;;  stored is best used in *ftp* buffer itself.
-  (when (or tinydired-:force-add-keys-flag
+  (when (or tinydired--force-add-keys-flag
             force
             (eq 'undefined (lookup-key  dired-mode-map "a")))
     ;; clear this only it the map is not in our use.
@@ -527,7 +527,7 @@ The function is called with list of files in storage."
 ;;;
 (defun tinydired-default-other-bindings (&optional force)
   "Add extra dired bindings. Optionally FORCE adding bindings."
-  (when (or tinydired-:force-add-keys-flag
+  (when (or tinydired--force-add-keys-flag
             force
             (eq 'undefined (lookup-key  dired-mode-map "t")))
     ;;  make prefix key available for us.
@@ -609,14 +609,14 @@ local to current buffer."
 (defun tinydired-hook-control (&optional remove)
   "Add hooks to dired mode. Optional REMOVE all hooks inserted by package."
   (interactive "P")
-  (let ((list (ti::list-make tinydired-:bind-hook)))
+  (let ((list (ti::list-make tinydired--bind-hook)))
     (cond
      (remove
-      (ti::add-hooks 'dired-after-readin-hook tinydired-:readin-hook 'remove)
-      (ti::add-hooks 'dired-mode-hook     tinydired-:bind-hook  'remove))
+      (ti::add-hooks 'dired-after-readin-hook tinydired--readin-hook 'remove)
+      (ti::add-hooks 'dired-mode-hook     tinydired--bind-hook  'remove))
      (t
       ;;  Now, install the package
-      (ti::add-hooks 'dired-after-readin-hook tinydired-:readin-hook)
+      (ti::add-hooks 'dired-after-readin-hook tinydired--readin-hook)
       (dolist (x list)                  ;bind the keys
         (add-hook 'dired-mode-hook x)
         ;;  This is due to autoload: while the package is beeing loaded,
@@ -814,15 +814,15 @@ START and END defaults to all files"
 ;;; ----------------------------------------------------------------------
 ;;;
 (defun tinydired-create-tmp-dir ()
-  "Create directory `tinydired-:tmp-dir' if possible."
-  (make-directory (expand-file-name tinydired-:tmp-dir)))
+  "Create directory `tinydired--tmp-dir' if possible."
+  (make-directory (expand-file-name tinydired--tmp-dir)))
 
 ;;; ----------------------------------------------------------------------
 ;;;
 (defun tinydired-get-tmp-dir ()
   "Return temp directory with slash at the end."
-  (let ((dir   tinydired-:tmp-dir)
-	(func  tinydired-:tmp-dir-function))
+  (let ((dir   tinydired--tmp-dir)
+	(func  tinydired--tmp-dir-function))
     (unless (not (file-exists-p dir))
       (setq dir (funcall func)))
     (setq dir (expand-file-name dir))
@@ -932,7 +932,7 @@ START and END defaults to all files"
 ;;;
 (defun tinydired-kill-files ()
   "After each dired read, remove unwanted files."
-  (let ((re     tinydired-:unwanted-files-regexp)
+  (let ((re     tinydired--unwanted-files-regexp)
 	buffer-read-only)
     (unless (tinydired-feature-p 'auto-delete)
       ;;  Is this new directory buffer ..
@@ -1042,14 +1042,14 @@ The `mark' is first character in the left for file or dir."
 ;;;
 (defun tinydired-dir-original (dir &optional buffer)
   "Do same as `dired-insert-directory'.
-Insert DIR to BUFFER, which defaults to `tinydired-:dir-copy-buffer'"
+Insert DIR to BUFFER, which defaults to `tinydired--dir-copy-buffer'"
   (save-excursion
     ;;  See dired.el dired-readin-insert
     (ti::temp-buffer (or buffer
-			 tinydired-:dir-copy-buffer)
+			 tinydired--dir-copy-buffer)
 		     'clear)
     (set-buffer (or buffer
-		    tinydired-:dir-copy-buffer))
+		    tinydired--dir-copy-buffer))
     (insert-directory (expand-file-name dir)
                       dired-listing-switches nil t)))
 
@@ -1064,7 +1064,7 @@ Return:
   line
   nil   ,no line was found"
   (save-excursion
-    (set-buffer tinydired-:dir-copy-buffer)
+    (set-buffer tinydired--dir-copy-buffer)
     (ti::pmin)
     ;;  Pick first match
     (if (re-search-forward (concat " " file) nil t)
@@ -1183,7 +1183,7 @@ Input:
 
 References:
 
-  `tinydired-:tmp-dir'"
+  `tinydired--tmp-dir'"
   (interactive
    (list
     (dired-read-shell-command
@@ -1295,7 +1295,7 @@ Use this function if you know next operation will remove the marks.
 You can get the marks back with `tinydired-marks-restore'."
   (interactive)
   (save-excursion                       ;due to next command
-    (tinydired-remember-marks tinydired-:mark-list)
+    (tinydired-remember-marks tinydired--mark-list)
     (message "TinyDired: Marks saved.")))
 
 ;;; ----------------------------------------------------------------------
@@ -1304,11 +1304,11 @@ You can get the marks back with `tinydired-marks-restore'."
 (defun tinydired-marks-restore ()
   "Restore mark list saved by `tinydired-marks-save'."
   (interactive)
-  (if (null tinydired-:mark-list)
+  (if (null tinydired--mark-list)
       (message
        (substitute-command-keys
         "No marks saved. Use '\\[tinydired-marks-save]' first."))
-    (dired-mark-remembered tinydired-:mark-list)))
+    (dired-mark-remembered tinydired--mark-list)))
 
 ;;; ----------------------------------------------------------------------
 ;;;
@@ -1316,7 +1316,7 @@ You can get the marks back with `tinydired-marks-restore'."
 (defun tinydired-pgup ()
   "Move cursor to _last_ file in dired mode."
   (interactive)
-  (dired-next-line (- tinydired-:page-step))
+  (dired-next-line (- tinydired--page-step))
   (if (bobp)
       (tinydired-first-line)))
 
@@ -1326,7 +1326,7 @@ You can get the marks back with `tinydired-marks-restore'."
 (defun tinydired-pgdown ()
   "Move cursor up."
   (interactive)
-  (dired-next-line tinydired-:page-step)
+  (dired-next-line tinydired--page-step)
   (if (eobp)
       (tinydired-last-file)))
 
@@ -1949,9 +1949,9 @@ Bugs:
 (defadvice dired-flag-backup-files (around tdd dis)
   "Replace original function.
 This function honours the `backup-file-name-p' function and
-additionally flag files that match regexp `tinydired-:backup-file-regexp'."
+additionally flag files that match regexp `tinydired--backup-file-regexp'."
   (let ((dired-marker-char      (if unflag-p ?\040 dired-del-marker))
-        (re                     tinydired-:backup-file-regexp)
+        (re                     tinydired--backup-file-regexp)
         file)
     (dired-mark-if
      (progn
@@ -1989,7 +1989,7 @@ If you have loaded dired-x and it contains variable
       (if (and (eq major-mode 'dired-mode)
                (not (eq (current-buffer) dired-buffer))
                (or current-prefix-arg
-                   tinydired-:use-only-one-buffer-flag)
+                   tinydired--use-only-one-buffer-flag)
                (or (not (featurep 'dired-x)) ;not loaded
                    (and (featurep 'dired-x) ;is loaded, but this var not exist
                         (not (boundp 'dired-find-subdir)))))
@@ -2002,16 +2002,16 @@ If you have loaded dired-x and it contains variable
 ;;;
 (defsubst tinydired-store-get-string ()
   "Return content of storage as string."
-  (ti::list-to-string tinydired-:file-store))
+  (ti::list-to-string tinydired--file-store))
 
 ;;; ----------------------------------------------------------------------
 ;;;
 (defun tinydired-store-show ()
   "Show filenames in storage."
   (interactive)
-  (if (null tinydired-:file-store)
+  (if (null tinydired--file-store)
       (message "Tinydired: Store is empty.")
-    (funcall tinydired-:show-storage-function tinydired-:file-store)))
+    (funcall tinydired--show-storage-function tinydired--file-store)))
 
 ;;; ----------------------------------------------------------------------
 ;;;
@@ -2019,9 +2019,9 @@ If you have loaded dired-x and it contains variable
   "Save current filename into variable."
   (interactive)
   (let ((file (tinydired-get-filename)))
-    (if (member file tinydired-:file-store)
+    (if (member file tinydired--file-store)
         (message "TinyDireds: %s already in storage." file)
-      (push  file tinydired-:file-store) file)
+      (push  file tinydired--file-store) file)
     (if (interactive-p)
         (tinydired-store-show))))
 
@@ -2031,16 +2031,16 @@ If you have loaded dired-x and it contains variable
   "Remove filename from store."
   (interactive)
   (let ((file (tinydired-get-filename)))
-    (setq tinydired-:file-store (delete file tinydired-:file-store))
+    (setq tinydired--file-store (delete file tinydired--file-store))
     (if (interactive-p)
-        (message "Tinydired: %s" (ti::list-to-string tinydired-:file-store)))))
+        (message "Tinydired: %s" (ti::list-to-string tinydired--file-store)))))
 
 ;;; ----------------------------------------------------------------------
 ;;;
 (defun tinydired-store-clear ()
   "Clear variable holding files."
   (interactive)
-  (setq tinydired-:file-store nil)
+  (setq tinydired--file-store nil)
   (if (interactive-p)
       (message "Tinydired: Storage cleared.")))
 
@@ -2051,14 +2051,14 @@ If you have loaded dired-x and it contains variable
   (interactive)
   (let ((file   (tinydired-get-filename))
 	(verb   (interactive-p))
-	(store  tinydired-:file-store)
+	(store  tinydired--file-store)
 	list)
     (if (null store)
         (if verb (message "Tinydired: Storage is empty."))
       (dolist (x store)
         (if (not (string= x file))
             (push x list)) )
-      (setq tinydired-:file-store list)
+      (setq tinydired--file-store list)
       (if verb
           (tinydired-store-show)))))
 
@@ -2075,17 +2075,17 @@ If you have loaded dired-x and it contains variable
   "Add marked files into store. No duplicates are inserted.
 If parameter DELETE is non-nil, removes marked files from store. VERB."
   (interactive)
-  (let ((list    tinydired-:file-store)
+  (let ((list    tinydired--file-store)
 	(marked  (tinydired-get-marked-files-no-dir)))
     (ti::verb)
     (if (null delete)
         (dolist (x marked)
           (if (not (member x list))
-              (push x tinydired-:file-store)))
+              (push x tinydired--file-store)))
       (dolist (x marked)
         (if (member x list)
-            (setq tinydired-:file-store
-                  (delete x tinydired-:file-store)))))
+            (setq tinydired--file-store
+                  (delete x tinydired--file-store)))))
     (if verb
         (tinydired-store-show))))
 
@@ -2138,7 +2138,7 @@ This is like `dired-delete-and-exit'."
   (let ((ange  (ti::buffer-get-ange-buffer-list))
 	(dired (ti::dolist-buffer-list
 		(and (eq major-mode 'dired-mode)
-		     (string-match tinydired-:dired-directory-ange-regexp
+		     (string-match tinydired--dired-directory-ange-regexp
 				   dired-directory))))
 	(ange-count  0)
 	(dired-count 0))
@@ -2211,29 +2211,29 @@ Binds local keys to ftp buffer
 
 References:
 
-  `tinydired-:previous-buffer'
-  `tinydired-:mput-last-ftp'
+  `tinydired--previous-buffer'
+  `tinydired--mput-last-ftp'
 
 Return
 
   nil                   no action taken.
   t"
   (interactive)
-  (let ((file    tinydired-:mput-last-ftp)
+  (let ((file    tinydired--mput-last-ftp)
 	(buffer  (current-buffer))
 	list
 	host
 	ret)
     (cond
-     ((null tinydired-:mput-last-ftp)
+     ((null tinydired--mput-last-ftp)
       (message "Tinydired: Sorry, No mput information."))
      ((not (string-match "/.*@.*:" file))
-      (message "Tinydired: Sorry, No ange reference in `tinydired-:mput-last-ft'p"))
+      (message "Tinydired: Sorry, No ange reference in `tinydired--mput-last-ft'p"))
      (t
       ;;  This return 3 member list: SITE LOGIN DIRECTORY/FILE
       (setq list  (ange-ftp-ftp-name file)
             host  (nth 0 list))
-      (setq tinydired-:previous-buffer buffer)
+      (setq tinydired--previous-buffer buffer)
       ;;  Try to find buffer , ange uses SITE name for buffer names
       ;;  *ftp omc@venus*
       (cond
@@ -2251,7 +2251,7 @@ Return
                         (lambda ()
                           "TinyDired: mput ange, back to previous buffer"
                           (interactive)
-                          (pop-to-buffer tinydired-:previous-buffer))))
+                          (pop-to-buffer tinydired--previous-buffer))))
         (setq ret t))
        (t
         (message
@@ -2272,7 +2272,7 @@ Return
           host  (nth 0 list))
     (when list                       ;This dired is not in remote site
       ;;  Remove that ange-ftp site information from the string.
-      (setq tinydired-:directory
+      (setq tinydired--directory
             (ti::string-index-substring dired-directory ?: nil 'right))
       ;;  Try to find buffer , ange uses SITE name for buffer names
       ;;  *ftp omc@venus*
@@ -2293,7 +2293,7 @@ Return
   "If the dired is ange ftp buffer, switch to the real ftp buffer. VERB.
 
 Sets global
- `tinydired-:directory'   filename for current line
+ `tinydired--directory'   filename for current line
 
 Binds local keys in ftp buffer
 
@@ -2310,8 +2310,8 @@ Binds local keys in ftp buffer
     (setq buffer (tinydired-ange-ftp-buffer-for-this-dired))
     (cond
      ((and (null buffer)
-           tinydired-:file-store
-           tinydired-:mput-last-ftp
+           tinydired--file-store
+           tinydired--mput-last-ftp
            (null (tinydired-switch-to-mput-ange-ftp-buffer)))
       (if verb
           (message "Tinydired: can't locate associated ftp buffer.")))
@@ -2320,7 +2320,7 @@ Binds local keys in ftp buffer
           (message "Tinydired: can't locate associated ftp buffer.")))
      (buffer
       (switch-to-buffer-other-window buffer)
-      (set (make-local-variable 'tinydired-:directory) dir)
+      (set (make-local-variable 'tinydired--directory) dir)
       (ti::pmax)
       ;;  "f"  for file information
       (local-set-key
@@ -2340,7 +2340,7 @@ Binds local keys in ftp buffer
         (lambda ()
           "TinyDired: Inserts dired's directory string."
           (interactive)
-          (insert tinydired-:directory))))
+          (insert tinydired--directory))))
       ;; Switching back to dired (b)uffer
       (local-set-key
        "\C-cab"
@@ -2356,8 +2356,8 @@ Binds local keys in ftp buffer
 (defun tinydired-store-ftp-mget ()
   "Send command to ange to fetch all files in store."
   (interactive)
-  (let ((files         tinydired-:file-store)
-	(down          tinydired-:download-dir)
+  (let ((files         tinydired--file-store)
+	(down          tinydired--download-dir)
 	(store         (tinydired-store-get-string))
 	(ange          (ange-ftp-ftp-name dired-directory))
 	to-dir
@@ -2389,7 +2389,7 @@ Binds local keys in ftp buffer
           (message "Tinydired: Cancelled.")
         ;; ................................................. then part ...
         ;; - First update the value, so that user gets the old selection
-        (setq tinydired-:download-dir to-dir)
+        (setq tinydired--download-dir to-dir)
         ;; Next, get all needed parameters
         (setq host  (nth 0 ange)
               user  (nth 1 ange)
@@ -2408,14 +2408,14 @@ Binds local keys in ftp buffer
    (list
     (completing-read
      "mput site: "
-     (ti::list-to-assoc-menu tinydired-:mput-sites)
-     nil nil tinydired-:mput-last-ftp
-     'tinydired-:mput-history)))
+     (ti::list-to-assoc-menu tinydired--mput-sites)
+     nil nil tinydired--mput-last-ftp
+     'tinydired--mput-history)))
   (if (null dired-directory)
       (error "Tinydired: Must execute command in dired buffer."))
   ;;    Record the site name where the mput was made
-  (setq tinydired-:mput-last-ftp ange-ref-to)
-  (let ((files         tinydired-:file-store)
+  (setq tinydired--mput-last-ftp ange-ref-to)
+  (let ((files         tinydired--file-store)
 	(store         (tinydired-store-get-string))
 	(dir           dired-directory)
 	ange
@@ -2456,6 +2456,6 @@ Binds local keys in ftp buffer
 (provide   'tinydired)
 
 (tinydired-install)
-(run-hooks 'tinydired-:load-hook)
+(run-hooks 'tinydired--load-hook)
 
 ;;; tinydired.el ends here
