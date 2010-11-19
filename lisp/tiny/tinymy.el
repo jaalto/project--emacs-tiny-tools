@@ -1,4 +1,4 @@
-;;; tinymy.el --- Collection of simple solutions.
+;;; tinymy.el --- Collection of simple utilities
 
 ;; This file is not part of Emacs
 
@@ -9,7 +9,6 @@
 ;; Author:          Jari Aalto
 ;; Maintainer:      Jari Aalto
 ;;
-;; To get information on this program, call M-x tinymy-version.
 ;; Look at the code with folding.el
 
 ;; COPYRIGHT NOTICE
@@ -97,7 +96,6 @@
 ;;   describe what you did and where went wrong.
 ;;
 ;;      M-x tinymy-debug-toggle
-;;      M-x tinymy-submit-bug-report
 
 ;;}}}
 ;;{{{ Documentation
@@ -632,51 +630,13 @@ Example:
           (string :tag "Shell command"))
   :group 'TinyMy)
 
-;;}}}
-;;{{{ setup: other, version
-
 (defvar tinymy-:buffer-info-cache nil
   "Cached buffer data values in function `tinymy-buffer-info'.
 Format:
   '((buffer-pointer size message-string)
     ...)")
 
-;;;###autoload (autoload 'tinymy-version "tinymy" "Display commentary." t)
-
-(eval-and-compile
-  (ti::macrof-version-bug-report
-   "tinymy.el"
-   "tinymy"
-   tinymy-:version-id
-   "$Id: tinymy.el,v 2.86 2007/05/07 10:50:08 jaalto Exp $"
-   '(tinymy-:version-id
-     tinymy-:debug
-     tinymy-:vi-type-paren-match-list
-     tinymy-:define-key-force
-     tinymy-:define-key-table
-     tinymy-:load-hook
-     tinymy-:mail-buffer-hook
-     tinymy-:install-select-window-auto
-     tinymy-:register
-     tinymy-:scroll-mode
-     tinymy-:copy-file-suffix
-     tinymy-:vi-type-paren-match-special-list
-     tinymy-:move-word-set
-     tinymy-:move-word-case-set
-     tinymy-:move-word-case-modes
-     tinymy-:tar-command
-     tinymy-:shar-command
-     tinymy-:compile-table
-     tinymy-:save-buffer-modes
-     tinymy-:save-buffer-regexp
-     tinymy-:force-revert
-     tinymy-:revert-in-progress
-     tinymy-:revert-buffer-info-list
-     tinymy-:window-previous)
-   '(tinymy-:debug-buffer)))
-
 ;;;### (autoload 'tinymy-debug-toggle "tinymy" t t)
-
 (eval-and-compile (ti::macrof-debug-standard "tinymy" "-:"))
 
 ;;}}}
@@ -688,42 +648,29 @@ Format:
 (defun tinymy-define-keys ()
   "Install keys."
   (interactive)
-
   (when (boundp 'shared-lisp-mode-map)
     (defvar shared-lisp-mode-map nil) ;; Byte compiler silencer
     (define-key shared-lisp-mode-map    "%" 'tinymy-vi-type-paren-match))
-
   (define-key emacs-lisp-mode-map       "%" 'tinymy-vi-type-paren-match)
   (define-key lisp-mode-map             "%" 'tinymy-vi-type-paren-match)
-
   ;;  was C-xq was kbd-macro-query
-
   (global-set-key "\C-xq"    'tinymy-buffer-file-chmod)
-
   ;;  Redefine scroll keys, we don't confirm these...
-
   (global-set-key [(prior)]             'tinymy-scroll-up)
   (global-set-key [(next)]              'tinymy-scroll-down)
-
   ;;  In XEmacs these already have default bindings, but we override them.
-
   (global-set-key [(control right)]     'tinymy-word-forward)
   (global-set-key [(control left)]      'tinymy-word-backward)
   (global-set-key [(control up)]        'tinymy-beginning-of-defun)
   (global-set-key [(control down)]      'tinymy-end-of-defun)
-
   (unless (ti::compat-window-system)
     (global-set-key [(meta f)] 'tinymy-word-forward)
     (global-set-key [(meta b)] 'tinymy-word-backward))
-
   ;; Use C-z prefix because it is most user friendly to pinky
   ;; Pretty useless in X-windowed Emacs, and in windowed
   ;; Emacs you seldom use suspend-emacs because emacs has M-x shell
-
   (ti::use-prefix-key global-map "\C-z")
-
   ;;  Set global keys, confirm these
-
   (mapcar
    (function
     (lambda (x)
@@ -734,16 +681,15 @@ Format:
                                 (cdr x)
                                 'tinymy-define-key-error))))
    tinymy-:define-key-table)
+  (add-hook 'makefile-mode-hook 'tinymy-makefile-mode-hook))
 
-  ;; .................................................... &emacs-modes ...
-
-  (add-hook 'makefile-mode-hook 'tinymy-makefile-mode-hook)
-
-  (defun tinymy-makefile-mode-hook ()
-    "Define key C-c/ to adjust \\ continuing lines."
-    (define-key
-      (symbol-value 'makefile-mode-map) "\C-c\\"
-      'ti::buffer-backslash-fix-paragraph)))
+;;; ----------------------------------------------------------------------
+;;;
+(defun tinymy-makefile-mode-hook ()
+  "Define key C-c/ to adjust \\ continuing lines."
+  (define-key
+    (symbol-value 'makefile-mode-map) "\C-c\\"
+    'ti::buffer-backslash-fix-paragraph))
 
 ;;; ----------------------------------------------------------------------
 ;;;
