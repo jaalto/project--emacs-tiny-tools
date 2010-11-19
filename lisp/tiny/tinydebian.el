@@ -123,7 +123,7 @@
 
 ;;{{{ setup: libraries
 
-(defconst tinydebian--version-time "2010.1119.1613"
+(defconst tinydebian--version-time "2010.1119.1646"
   "Last edited time.")
 
 (require 'tinylibm)
@@ -144,6 +144,7 @@
 
 (eval-and-compile
   ;;  Forward declarations to quiet byte compiler.
+  (defvar tinydebian--mail-mode-map)
   (defvar gnus-original-article-buffer)
   (defvar message-reply-buffer)
   (defvar gnus-newsgroup-name)
