@@ -75,10 +75,9 @@
 ;;{{{ code: Emacs compatibility, aliases, byteCompiler
 
 (eval-and-compile
-  (defvar temporary-file-directory)
   (autoload 'ti::replace-match "tinylibm"))
 
-(defconst tinylibb-version-time "2010.1119.2256"
+(defconst tinylibb-version-time "2010.1119.2315"
   "Latest version number as last modified time.")
 
 ;;; ....................................................... &emulation ...
@@ -169,32 +168,6 @@ PAD says to padd hex string with leading zeroes."
           (truncate (% (/ float (* 256.0 256.0)) 256))
           (truncate (% (/ float (* 256.0 256.0 256.0)) 256))))
 
-(defun-maybe rmac (string)
-  "Decode STRING x-mac-creator and x-mac-type numbers."
-  (if (numberp string)
-      (setq string (format "%X" string)))
-  (let ((i 0)
-        (r ""))
-    (while (< i (length string))
-      (setq r (concat
-               r
-               (make-string
-                1
-                ;;  EWas call to 'rhex'
-                (hex-to-int (concat (make-string 1 (aref string i))
-                                    (make-string 1 (aref string (1+ i)))))))
-            i (+ i 2)))
-    r))
-
-(defun-maybe ctime (time)
-  "Print a time_t TIME."
-  (if (and (stringp time) (string-match "\\`[0-9]+\\'" time))
-      (setq time (string-to-number (concat time ".0"))))
-  (let* ((top (floor (/ time (ash 1 16))))
-         ;; (bot (floor (mod time (1- (ash 1 16)))))
-         (bot (floor (- time (* (ash 1 16) (float top))))))
-    (current-time-string (cons top bot))))
-
 (defsubst rand0 (n)
   "Random number in [0 .. N]."
   (cond
@@ -233,8 +206,6 @@ PAD says to padd hex string with leading zeroes."
      (let ((standard-output (current-buffer)))
        ,@body)))
 
-;; Emacs 19.30 and below don't have this
-
 ;; This is from pcvs.el
 (defun-maybe file-to-string (file &optional oneline args)
   "Read the content of FILE and return it as a string.
@@ -259,7 +230,7 @@ arguments.  If ARGS is not a list, no argument will be passed."
 (defun-maybe executable-find-in-system (program-name) ;Handle Win32 case too.
   ;;   "Find PROGRAM-NAME along `exec-path'.
   ;; The PROGRAM-NAME should not contain system dependent prefixes; an
-  ;; .exe is added automatically on PC."
+  ;; .exe is added automatically."
   (if (ti::win32-p)
       (or (executable-find (concat program-name ".exe"))
           (executable-find (concat program-name ".com"))
@@ -341,20 +312,6 @@ Default is to convert all tabs in STRING with spaces."
 
 ;;; ........................................................... &other ...
 
-;; Emacs 20.7 - 22.2 does not have this
-(defun-maybe turn-off-font-lock ()
-  "Turn off font lock."
-  (font-lock-mode -1))
-
-;; Emacs 21.3 includes `turn-on-font-lock'
-(defun-maybe turn-on-font-lock-mode ()
-  "Turn on font lock."
-  (font-lock-mode 1))
-
-(defun-maybe turn-on-auto-fill-mode ()
-  "Turn on Auto Fill mode."
-  (auto-fill-mode 1))
-
 (defun font-lock-mode-maybe (&optional mode check-global)
   "Pass MODE to function `font-lock-mode' only on color display.
 If CHECK-GLOBAL is non-nil, the `global-font-lock-mode' flag must also
@@ -389,8 +346,6 @@ font-lock.el"
 
 ;;}}}
 ;;{{{ code: function test
-
-;;; We define these here because they are used elsewhere
 
 ;;; ----------------------------------------------------------------------
 ;;;
@@ -457,7 +412,7 @@ Notes:
 ;;}}}
 ;;{{{ code: Cygwin support
 
-;;; Patch for these functions has been submitted to Emacs 21.2
+;;; These functions has been submitted to Emacs 21.2
 ;;; (w32-fns.el)
 
 (defvar w32-cygwin-mount-table nil
@@ -751,9 +706,6 @@ Be sure to call `expand-file-name' before you pass PATH to the function."
   path)
 
 ;;}}}
-
-;;; ################################################### &byte-optimize ###
-
 ;;{{{ misc
 
 (when (and nil                          ;Disabled now
