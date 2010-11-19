@@ -336,7 +336,7 @@ Defined keys:
 ;;;
 (defmacro tinyef-function-macro (action)
   "Define interactive command ACTION."
-  (let* ((sym (intern (format "tinyef-%s" (symbol-name `,action)))))
+  (let ((sym (intern (format "tinyef-%s" (symbol-name `,action)))))
     `(defun ,sym ()
        (interactive)
        (tinyef-char nil (quote ,action)))))
@@ -363,9 +363,9 @@ Defined keys:
 The install is done only once, but you can FORCE reinstall.
 
 See `tinyef-:mode-defined-maps'."
-  (let* ((key   tinyef-:mode-key)
-         (fun   'tinyef-mode)
-         map)
+  (let ((key   tinyef-:mode-key)
+	(fun   'tinyef-mode)
+	map)
     (dolist (x tinyef-:mode-defined-maps)
       (setq map (eval x))
       (if remove
@@ -462,8 +462,8 @@ If current buffer is the *mini-buffer* return name of previous-window."
 (defun tinyef-insert-buffer-dir-name ()
   "Insert dir name of most recent buffer."
   (interactive)
-  (let* ((bfn (buffer-file-name
-               (get-buffer (tinyef-buffer-name-not-minibuffer)))))
+  (let ((bfn (buffer-file-name
+	      (get-buffer (tinyef-buffer-name-not-minibuffer)))))
     (if bfn
         (insert (file-name-directory bfn)))))
 
@@ -472,8 +472,8 @@ If current buffer is the *mini-buffer* return name of previous-window."
 (defun tinyef-insert-buffer-file-name ()
   "Insert file name of most recent buffer."
   (interactive)
-  (let* ((bfn (buffer-file-name
-               (get-buffer (tinyef-buffer-name-not-minibuffer)))))
+  (let ((bfn (buffer-file-name
+	      (get-buffer (tinyef-buffer-name-not-minibuffer)))))
     (if bfn
         (insert bfn))))
 
@@ -534,11 +534,13 @@ If current buffer is the *mini-buffer* return name of previous-window."
 ;;;
 (defun tinyef-step (&optional back)
   "Position cursor, optionally BACK."
-  (let* ((set    tinyef-:step-delete-chars)
-         (rset   (concat "^" set))      ;reverse set
-         (func   (if back 'skip-chars-backward 'skip-chars-forward))
-         (point  (point))
-         limit)
+  (let ((set    tinyef-:step-delete-chars)
+	(rset   (concat "^" set))      ;reverse set
+	(func   (if back
+		    'skip-chars-backward
+		  'skip-chars-forward))
+	(point  (point))
+	limit)
     (if back
         (setq limit (line-beginning-position))
       (setq limit (line-end-position)))
@@ -570,16 +572,18 @@ Current keymap:
 
 \\{tinyef-:mode-map}"
   (interactive)
-  (let* ((char          (or character last-command-char)) ;char pressed
-         (act           (or action (tinyef-action char)))
-         (re            '(".*@"  ".*:"))
-         (e-list        '(?/  ?@ ?\" ?\'))
-         (pnow          (point))
-         (point         (point))
-         str
-         eolp
-         bolp
-         hits)
+  (let ((char          (or character
+			   last-command-char)) ;char pressed
+	(act           (or action
+			   (tinyef-action char)))
+	(re            '(".*@"  ".*:"))
+	(e-list        '(?/  ?@ ?\" ?\'))
+	(pnow          (point))
+	(point         (point))
+	str
+	eolp
+	bolp
+	hits)
     (if (or (null act)                  ;no action recognized
             (and (interactive-p)
                  (not (eq (selected-window) (minibuffer-window)))
