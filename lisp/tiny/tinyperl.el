@@ -115,10 +115,10 @@
 ;;
 ;;  Package startup
 ;;
-;;      At package startup the perl binary's `tinyperl-:perl-bin'
+;;      At package startup the perl binary's `tinyperl--perl-bin'
 ;;      `@INC' content is cached. If you have modules somewhere else than
 ;;      the standard `@INC', then add additional `-I' switches to the
-;;      `tinyperl-:inc-path-switches' so that these additional paths are
+;;      `tinyperl--inc-path-switches' so that these additional paths are
 ;;      cached too.
 ;;
 ;;      In addition the Perl POD manual pages and paths are cached at startup.
@@ -144,7 +144,7 @@
 ;;      The cache information is expired periodically, so it should keep up
 ;;      with the environment changes quite well. The default cache period
 ;;      is 7 days, but this can be set via
-;;      `tinyperl-:cache-file-days-old-max'.
+;;      `tinyperl--cache-file-days-old-max'.
 ;;
 ;;  Perl Minor Mode description
 ;;
@@ -208,17 +208,17 @@
 ;;      references or URLs found are marked. If you do not want to use
 ;;      TinyUrl package, add this setup:
 ;;
-;;          (add-hook tinyperl-:load-hook 'my-tinyperl-:load-hook)
+;;          (add-hook tinyperl--load-hook 'my-tinyperl--load-hook)
 ;;
-;;          (defun my-tinyperl-:load-hook ()
+;;          (defun my-tinyperl--load-hook ()
 ;;            "My TinyPerl customisations."
-;;            (remove-hook 'tinyperl-:pod2text-after-hook
+;;            (remove-hook 'tinyperl--pod2text-after-hook
 ;;                         'turn-on-tinyurl-mode-1))
 ;;
 ;;      In *pod* buffer where the pod documentation is displayed, an
 ;;      additional browsing mode, `tinyperl-pod-view-mode', is turned on to
 ;;      help moving around topics. If you find the PgUp keys non-customary,
-;;      see variable `tinyperl-:key-pageup-control'.
+;;      see variable `tinyperl--key-pageup-control'.
 ;;
 ;;          ;;  moving down/up topics
 ;;
@@ -242,7 +242,7 @@
 ;;      By default the POD documentation is kept in a single buffer where
 ;;      you can conveniently use C-s and C-r searches. If you would like to
 ;;      use separate POD buffers instead, a la M-x man, set variable
-;;      `tinyperl-:pod-buffer-control' to 'many. The opposite is 'single.
+;;      `tinyperl--pod-buffer-control' to 'many. The opposite is 'single.
 ;;
 ;;  POD Write mode description
 ;;
@@ -504,7 +504,7 @@
 (require 'tinylibm)
 
 (eval-and-compile
-  (defvar tinycompile-:buffer-name)
+  (defvar tinycompile--buffer-name)
   (defvar compilation-error-regexp-alist)
   ;;  Follow pod URLs and other url links like cut(1)
   ;; Go to grep result.
@@ -519,7 +519,7 @@
   ;; (autoload 'turn-off-tinyperl-mode    "tinyperl" "" t)
   (defvar font-lock-keywords))
 
-(ti::package-defgroup-tiny TinyPerl tinyperl-: extensions
+(ti::package-defgroup-tiny TinyPerl tinyperl-- extensions
   "Additional function to perl programming.
   Overview of features
 
@@ -535,38 +535,38 @@
 ;;}}}
 ;;{{{ setup: public variables
 
-(defcustom tinyperl-:load-hook '(tinyperl-install)
+(defcustom tinyperl--load-hook '(tinyperl-install)
   "*Hook run when file has been loaded."
   :type  'hook
   :group 'TinyPerl)
 
-(defcustom tinyperl-:pod2text-before-hook  nil
+(defcustom tinyperl--pod2text-before-hook  nil
   "Hook run before calling pod2text pod buffer See `tinyperl-pod2text'."
   :type  'hook
   :group 'TinyPerl)
 
-(defcustom tinyperl-:pod2text-after-hook  nil
+(defcustom tinyperl--pod2text-after-hook  nil
   "Hook run after calling podchecker in that buffer.
 See `tinyperl-podchecker'."
   :type  'hook
   :group 'TinyPerl)
 
-(defcustom tinyperl-:podchecker-before-hook  nil
+(defcustom tinyperl--podchecker-before-hook  nil
   "Hook run before calling pod2text pod buffer See `tinyperl-podchecker'."
   :type  'hook
   :group 'TinyPerl)
 
-(defcustom tinyperl-:podchecker-after-hook  nil
+(defcustom tinyperl--podchecker-after-hook  nil
   "Hook run after calling pod2text in that buffer. See `tinyperl-pod2text'."
   :type  'hook
   :group 'TinyPerl)
 
-(defcustom tinyperl-:perldoc-hook nil
+(defcustom tinyperl--perldoc-hook nil
   "Hook run after calling `tinyperl-perldoc'."
   :type  'hook
   :group 'TinyPerl)
 
-(defcustom tinyperl-:lint-hook nil
+(defcustom tinyperl--lint-hook nil
   "Hook run after calling `tinyperl-lint-perl-critic'."
   :type  'hook
   :group 'TinyPerl)
@@ -574,30 +574,30 @@ See `tinyperl-podchecker'."
 ;;}}
 ;;{{ setup: public
 
-(defcustom tinyperl-:verbose 1
+(defcustom tinyperl--verbose 1
   "*If number, bigger than zero, dispaly informational messages.
 In error situations you can look old messages from *Messages* buffer."
   :type  '(integer :tag "Verbose level 0 ... 10")
   :group 'TinyPerl)
 
-(defcustom tinyperl-:lint-buffer-name "*tinyperl-lint*"
+(defcustom tinyperl--lint-buffer-name "*tinyperl-lint*"
   "*The lint Buffer name."
   :type  'string
   :group 'TinyPerl)
 
-(defcustom tinyperl-:lint-default-file-name "~/test.pl"
+(defcustom tinyperl--lint-default-file-name "~/test.pl"
   "*The lint Buffer name."
   :type  'string
   :group 'TinyPerl)
 
-(defcustom tinyperl-:lint-severity 1	;Max
+(defcustom tinyperl--lint-severity 1	;Max
   "*Default severity to run Perl::Critic with.
 As of 2010-04-15 perlcritic(1), this can be in range
 1 (brutal) .. 5 (gentle)."
   :type  'number
   :group 'TinyPerl)
 
-(defcustom tinyperl-:lint-arguments
+(defcustom tinyperl--lint-arguments
   "{-severity => %s}"
   "*Default command line arguments passed to Perl::Critic constructor.
 
@@ -606,26 +606,26 @@ The default value is:
   {-severity => %s}
 
 And the string must contain one '%s' for the value of
-`tinyperl-:lint-severity'.")
+`tinyperl--lint-severity'.")
 
-(defcustom tinyperl-:key-pageup-control 'heading
+(defcustom tinyperl--key-pageup-control 'heading
   "*How to use PgUp and PgDown keys. 'heading or 'normal."
   :type '(choice (const heading)
                  (const normal))
   :group  'TinyPerl)
 
-(defcustom tinyperl-:pod-buffer-control 'one
+(defcustom tinyperl--pod-buffer-control 'one
   "*How to display POD documentation. 'single or 'many windows."
   :type  '(choice (const one)
                   (const many))
   :group 'TinyPerl)
 
-(defcustom tinyperl-:skeleton-script-ftp-url nil
+(defcustom tinyperl--skeleton-script-ftp-url nil
   "*URL where your Perl code is available. Used by skeleton."
   :type  'string
   :group 'TinyPerl)
 
-(defcustom tinyperl-:pause-directory nil
+(defcustom tinyperl--pause-directory nil
   "*Directory where to copy your PAUSE uploads.
 A Perl script must have unique naming before it can be accepted
 for PAUSE upload. If you do not know what PAUSE (The Perl Authors Upload
@@ -639,7 +639,7 @@ See also http://cpan.perl.org/authors/id/NEILB/ cpan-upload-1.9.tar.gz."
   :type  'directory
   :group 'TinyPerl)
 
-(defcustom tinyperl-:copyright-function 'tinyperl-copyright
+(defcustom tinyperl--copyright-function 'tinyperl-copyright
   "*Copyright notice for your Perl programs."
   :type  'function
   :group 'TinyPerl)
@@ -657,21 +657,21 @@ See also http://cpan.perl.org/authors/id/NEILB/ cpan-upload-1.9.tar.gz."
 ;;  if your HOME points to the same location. E.g. the stored perl
 ;;  interpreter name and location is completely different in the cache.
 
-(defcustom tinyperl-:cache-file-prefix
+(defcustom tinyperl--cache-file-prefix
   (ti::package-config-file-prefix "tinyperl")
   "*Prefix part of the cache filename where @INC content is recorded.
 See function `tinyperl-save-state' and `tinypath-cache-file-name'."
   :type   'string
   :group  'TinyPerl)
 
-(defcustom tinyperl-:cache-file-postfix ".el"
-  "*Extension for cache file. See `tinypath-:cache-file-prefix'.
+(defcustom tinyperl--cache-file-postfix ".el"
+  "*Extension for cache file. See `tinypath--cache-file-prefix'.
 Normally \".el\"  but to save space this could be set to \".el.gz\"."
   :type  'string
   :group 'TinyPath)
 
-(defcustom tinyperl-:cache-file-days-old-max 7
-  "Maximum days before expiring `tinyperl-:cache-file'.
+(defcustom tinyperl--cache-file-days-old-max 7
+  "Maximum days before expiring `tinyperl--cache-file'.
 If your Perl environmnt lives a lot, new packages are installed in periodic
 intervals, then keep this value withing 7 days. If your environment is on the
 other hand very stable and packages don't change often, then you can set
@@ -682,14 +682,14 @@ You can always rebuild the cached Perl information with
   :type  'integer
   :group 'TinyPerl)
 
-(defcustom tinyperl-:perl-bin
+(defcustom tinyperl--perl-bin
   (or (executable-find  "perl")
       (error "TinyPerl: Can't find binary: perl"))
   "*Perl interpreter used. Must be Perl 5.x."
   :type  'string
   :group 'TinyPerl)
 
-(defcustom tinyperl-:perldoc-bin
+(defcustom tinyperl--perldoc-bin
   ;;  In Win32, this is perldoc.bat and old `executable-find' command
   ;;  does not search .bat files.
   (or (or (executable-find  "perldoc")
@@ -708,7 +708,7 @@ You can always rebuild the cached Perl information with
   :type  'string
   :group 'TinyPerl)
 
-(defcustom tinyperl-:pod2text-bin
+(defcustom tinyperl--pod2text-bin
   (or (executable-find  "pod2text")
       (ti::file-get-load-path "pod2text" exec-path) ;; Cygwin perl file
       (error "TinyPerl: Can't find binary: pod2text"))
@@ -716,13 +716,13 @@ You can always rebuild the cached Perl information with
   :type 'string
   :group  'TinyPerl)
 
-(defcustom tinyperl-:inc-path-switches nil
+(defcustom tinyperl--inc-path-switches nil
   "*List of swithes you want to pass to perl to add mode @INC paths.
 Example : '(\"-I\" \"/path/path\"."
   :type  'string
   :group 'TinyPerl)
 
-(defcustom tinyperl-:pod-font-lock-keywords ;; &fonts
+(defcustom tinyperl--pod-font-lock-keywords ;; &fonts
   (list
    ;; ....................................................... pod2text ...
    ;; Remeber that the order of the regular expressions is significant.
@@ -863,7 +863,7 @@ Example : '(\"-I\" \"/path/path\"."
 ;;}}}
 ;;{{{ setup: private
 
-(defvar tinyperl-:inc-path nil
+(defvar tinyperl--inc-path nil
   "The content of @INC.
 The path names are not in pure rwa @INC format, but they
 have been processed to meet host Emacs's understanding of underlying
@@ -873,42 +873,42 @@ E.g Win32/Cygwin/perl returns paths in native Unix format which must
 be translated to Emacs that is running. For GNU Emacs, this means
 paths in DOS style.")
 
-(defvar tinyperl-:inc-module-list nil
+(defvar tinyperl--inc-module-list nil
   "The content .pm files under @INC.")
 
-(defvar tinyperl-:pod-path  nil
+(defvar tinyperl--pod-path  nil
   "Path to perl distribution POD files.")
 
-(defvar tinyperl-:pod-list  nil
+(defvar tinyperl--pod-list  nil
   "List of pod files. '((file.pod . path) (file.pod . path) ..).")
 
-(defvar tinyperl-:pod-buffer-name "*pod*"
+(defvar tinyperl--pod-buffer-name "*pod*"
   "Buffer where to print POD.")
 
-(defvar tinyperl-:faq-buffer-name "*pod FAQ-grep*"
+(defvar tinyperl--faq-buffer-name "*pod FAQ-grep*"
   "Buffer where to put context exerpts after grep search.
 See `tinyperl-pod-grep-faq-answer'")
 
-(defvar tinyperl-:perldoc-buffer "*perldoc*"
+(defvar tinyperl--perldoc-buffer "*perldoc*"
   "Buffer where to output perldoc.")
 
-(defvar tinyperl-:podchecker-buffer "*podchecker*"
+(defvar tinyperl--podchecker-buffer "*podchecker*"
   "Buffer where to output Pod::Checker::podchecker().")
 
 ;;}}}
 ;;{{{ Macros
 
 ;;;### (autoload 'tinyperl-debug-toggle "tinyperl" t t)
-(eval-and-compile (ti::macrof-debug-standard "tinyperl" "-:"))
+(eval-and-compile (ti::macrof-debug-standard "tinyperl" "--"))
 
 ;;; ----------------------------------------------------------------------
 ;;;
 (put 'tinyperl-verbose-macro 'lisp-indent-function 1)
 (defmacro tinyperl-verbose-macro (level &rest body)
-  "When LEVEL is =< `tinyperl-:verbose' run BODY."
-  `(when (and (numberp tinyperl-:verbose)
-              (or (= ,level tinyperl-:verbose)
-                  (< ,level tinyperl-:verbose)))
+  "When LEVEL is =< `tinyperl--verbose' run BODY."
+  `(when (and (numberp tinyperl--verbose)
+              (or (= ,level tinyperl--verbose)
+                  (< ,level tinyperl--verbose)))
      ,@body))
 
 ;;; ----------------------------------------------------------------------
@@ -930,11 +930,11 @@ See `tinyperl-pod-grep-faq-answer'")
 This is shorthand of saying, that locate the BIN in the `exec-path'
 when it matches REGEXP and set variable SYM to that value, effectively:
 
-    (setq tinyperl-:perldoc-bin
+    (setq tinyperl--perldoc-bin
           (tinyperl-executable-find-path
-           \"perldoc\" tinyperl-:perldoc-bin \"perldoc\"))
+           \"perldoc\" tinyperl--perldoc-bin \"perldoc\"))
 
---> (tinyperl-executable-set 'tinyperl-:perldoc-bin \"perldoc\")"
+--> (tinyperl-executable-set 'tinyperl--perldoc-bin \"perldoc\")"
   `(set ,sym
         (tinyperl-executable-find-path
          ,bin
@@ -945,10 +945,10 @@ when it matches REGEXP and set variable SYM to that value, effectively:
 ;;; ----------------------------------------------------------------------
 ;;;
 (defun tinyperl-perl-module-exists-p (module)
-  "Return path if MODULE(.pm) is known to ´tinyperl-:inc-module-list'."
+  "Return path if MODULE(.pm) is known to ´tinyperl--inc-module-list'."
   (unless (string-match "\\.pm$" module)
     (setq module (concat module ".pm")))
-  (let ((elt (assoc module tinyperl-:inc-module-list))
+  (let ((elt (assoc module tinyperl--inc-module-list))
 	(file (if (string-match ".*::\\(.*\\)" module)
 		  (match-string 1 module)
 		module)))
@@ -979,10 +979,10 @@ when it matches REGEXP and set variable SYM to that value, effectively:
                   (if dos-format
                       (ti::file-name-backward-slashes var)
                     (ti::file-name-forward-slashes var))))
-    (setq tinyperl-:pod2text-bin (convert tinyperl-:pod2text-bin))
-    (setq tinyperl-:perldoc-bin  (convert tinyperl-:perldoc-bin))
-    (setq tinyperl-:perl-bin     (convert tinyperl-:perl-bin))
-    (setq tinyperl-:pod-path     (convert tinyperl-:pod-path))))
+    (setq tinyperl--pod2text-bin (convert tinyperl--pod2text-bin))
+    (setq tinyperl--perldoc-bin  (convert tinyperl--perldoc-bin))
+    (setq tinyperl--perl-bin     (convert tinyperl--perl-bin))
+    (setq tinyperl--pod-path     (convert tinyperl--pod-path))))
 
 ;;; --------------------------------------------------------------------
 ;;;
@@ -993,7 +993,7 @@ when it matches REGEXP and set variable SYM to that value, effectively:
            (not (file-directory-p old-value)))
       old-value
     (setq program
-          (if (and tinyperl-:perl-bin
+          (if (and tinyperl--perl-bin
                    ;;  This could return "perl5.005"
                    (string-match regexp old-value))
               (match-string 0 old-value)
@@ -1009,36 +1009,36 @@ when it matches REGEXP and set variable SYM to that value, effectively:
   "Check type of PERL. Return 'win32-activestate 'win32-cygwin 'perl.
 Perl is called with -v. Following properties are stored in
 
-variable `tinyperl-:perl-bin' are set to properties:
+variable `tinyperl--perl-bin' are set to properties:
 
   'version-answer   =>  The -v result string
   'type             =>  'win32-activestate
                         'win32-cygwin
                         'perl"
   (let ((info (ti::process-perl-version perl)))
-    (put 'tinyperl-:perl-bin 'version-answer (nth 3 info))
-    (put 'tinyperl-:perl-bin 'type (nth 1 info))))
+    (put 'tinyperl--perl-bin 'version-answer (nth 3 info))
+    (put 'tinyperl--perl-bin 'type (nth 1 info))))
 
 ;;; ----------------------------------------------------------------------
 ;;;
 (defsubst tinyperl-perl-type ()
   "Return Perl type. Provided `tinyperl-perl-examine' has been called."
-  (or (get 'tinyperl-:perl-bin 'type)
-      (progn (tinyperl-perl-examine tinyperl-:perl-bin)
-             (get 'tinyperl-:perl-bin 'type))))
+  (or (get 'tinyperl--perl-bin 'type)
+      (progn (tinyperl-perl-examine tinyperl--perl-bin)
+             (get 'tinyperl--perl-bin 'type))))
 
 ;;; ----------------------------------------------------------------------
 ;;;
 (defsubst tinyperl-perl-type-version-info ()
   "Return Perl -v info. Provided `tinyperl-perl-examine' has been called."
-  (or (get 'tinyperl-:perl-bin 'version-answer)
-      (progn (tinyperl-perl-examine tinyperl-:perl-bin)
-             (get 'tinyperl-:perl-bin 'version-answer))))
+  (or (get 'tinyperl--perl-bin 'version-answer)
+      (progn (tinyperl-perl-examine tinyperl--perl-bin)
+             (get 'tinyperl--perl-bin 'version-answer))))
 
 ;;; ----------------------------------------------------------------------
 ;;;
 (defun tinyperl-install-variables-binaries (&optional force)
-  "Install or FORCE setting binary variables like `tinyperl-:perl-bin'
+  "Install or FORCE setting binary variables like `tinyperl--perl-bin'
 Return:
   t      If some path needed fixing. This means that cache must be resaved."
   (interactive "P")
@@ -1063,11 +1063,11 @@ Check variable `exec-path'"
                            (symbol-name sym)))))))
       ;;  `perl5' `perl5.004' ...
       ;;  If the name does not contain number, use "perl".
-      (exec-set 'tinyperl-:perl-bin
+      (exec-set 'tinyperl--perl-bin
                 "perl" "perl[-.0-9]*\\.exe\\|perl[^\\/]*")
-      (exec-set 'tinyperl-:perldoc-bin  "perldoc")
-      (exec-set 'tinyperl-:pod2text-bin "pod2text")
-      (tinyperl-perl-examine tinyperl-:perl-bin)
+      (exec-set 'tinyperl--perldoc-bin  "perldoc")
+      (exec-set 'tinyperl--pod2text-bin "pod2text")
+      (tinyperl-perl-examine tinyperl--perl-bin)
       ;;  Leave trace to Message buffer.
       (tinyperl-verbose-macro 2
 	(message "TinyPerl: [Perl version] => %s"
@@ -1089,10 +1089,10 @@ Input:
 
 References:
 
-  `tinyperl-:inc-path'
-  `tinyperl-:inc-module-list'
-  `tinyperl-:pod-path'
-  `tinyperl-:pod-list'"
+  `tinyperl--inc-path'
+  `tinyperl--inc-module-list'
+  `tinyperl--pod-path'
+  `tinyperl--pod-list'"
   (interactive)
   (flet ((set-maybe
 	  (symbol eval-form)
@@ -1107,25 +1107,25 @@ References:
       (tinyperl-verbose-macro 1
 	(message "TinyPerl: Wait, setting up variables...")))
     (unless (set-maybe
-             'tinyperl-:inc-path
-             '(tinyperl-inc-path tinyperl-:perl-bin))
-      (error "TinyPerl: Setup failure tinyperl-:inc-path,\
-tinyperl-:perl-bin Unrecognized. Need Perl 5. [%s]"
-             tinyperl-:perl-bin))
+             'tinyperl--inc-path
+             '(tinyperl-inc-path tinyperl--perl-bin))
+      (error "TinyPerl: Setup failure tinyperl--inc-path,\
+tinyperl--perl-bin Unrecognized. Need Perl 5. [%s]"
+             tinyperl--perl-bin))
     (unless (set-maybe
-             'tinyperl-:inc-module-list
+             'tinyperl--inc-module-list
              '(tinyperl-build-list-of-inc-files
-               tinyperl-:inc-path
+               tinyperl--inc-path
                verb))
-      (error "TinyPerl: Setup failure tinyperl-:inc-module-list"))
+      (error "TinyPerl: Setup failure tinyperl--inc-module-list"))
     (unless (set-maybe
-             'tinyperl-:pod-path
-             '(tinyperl-pod-path tinyperl-:perl-bin))
-      (error "TinyPerl: Setup failure tinyperl-:pod-path"))
+             'tinyperl--pod-path
+             '(tinyperl-pod-path tinyperl--perl-bin))
+      (error "TinyPerl: Setup failure tinyperl--pod-path"))
     (unless (set-maybe
-             'tinyperl-:pod-list
+             'tinyperl--pod-list
              '(tinyperl-build-pod-files))
-      (error "TinyPerl: Setup failure tinyperl-:pod-list"))
+      (error "TinyPerl: Setup failure tinyperl--pod-list"))
     (when verb
       (tinyperl-verbose-macro 1
 	(message "TinyPerl: Wait, setting up variables...Done.")))))
@@ -1161,10 +1161,10 @@ Don't touch this code unless you know what you're doing.
 
 References:
 
-  `tinyperl-:cache-file-prefix'.
-  `tinyperl-:cache-file-postfix'"
-  (concat (if (stringp tinyperl-:cache-file-prefix)
-              (concat tinyperl-:cache-file-prefix "-")
+  `tinyperl--cache-file-prefix'.
+  `tinyperl--cache-file-postfix'"
+  (concat (if (stringp tinyperl--cache-file-prefix)
+              (concat tinyperl--cache-file-prefix "-")
             "emacs-config")
           ;; (if (ti::win32-p) "win32-" "unix-")
           (if (ti::emacs-p)
@@ -1175,20 +1175,20 @@ References:
             (if sym
                 (symbol-name sym)
               (error "TinyPerl: Perl type is not known.")))
-          (if (stringp tinyperl-:cache-file-postfix)
-              tinyperl-:cache-file-postfix
+          (if (stringp tinyperl--cache-file-postfix)
+              tinyperl--cache-file-postfix
             "")))
 
 ;;; ----------------------------------------------------------------------
 ;;;
 (defun tinyperl-load-state-if-recent-enough ()
   "Load `(tinyperl-cache-file-name)'.
-But only if less than `tinyperl-:cache-file-days-old-max'"
+But only if less than `tinyperl--cache-file-days-old-max'"
   (interactive)
   (let ((file (tinyperl-cache-file-name)))
     (if (and (file-exists-p file)
              (< (ti::file-days-old file)
-                tinyperl-:cache-file-days-old-max))
+                tinyperl--cache-file-days-old-max))
         (tinyperl-save-state 'load 'message))))
 
 ;;; ----------------------------------------------------------------------
@@ -1208,7 +1208,7 @@ Input:
 	ok)
     ;;  The FORCE Flag says that we should start all over, no
     ;;  matter how broken our setup is. In case the unfortunate
-    ;;  accident of tinyperl-:perl-bin being in format
+    ;;  accident of tinyperl--perl-bin being in format
     ;;  e:USRLOCALBINPERLBINperl.exe  we can recover the state here
     ;;  and start over (that Win32 backslash problem: \usr\local ...).
     ;;
@@ -1223,7 +1223,7 @@ Input:
     ;;  We must use forward slashes, because if we save the cache file,
     ;;  It would look like:
     ;;
-    ;;  (defconst tinyperl-:perl-bin
+    ;;  (defconst tinyperl--perl-bin
     ;;     "e:\USR\LOCAL\BIN\PERL\BIN\perl.exe")
     ;;
     ;;   --> e:USRLOCALBINPERLBINperl.exe  when read from
@@ -1246,7 +1246,7 @@ Input:
 ;;;###autoload
 (defun tinyperl-install (&optional uninstall force)
   "The main installer. Set up everything: hooks and variables.
-This function is best put into `tinyperl-:load-hook'.
+This function is best put into `tinyperl--load-hook'.
 
 Input:
 
@@ -1300,13 +1300,13 @@ When LOAD: If `(tinyperl-cache-file-name)' does not exist. return nil."
       (ti::write-file-variable-state
        file
        "TinyPerl.el saved state"
-       '(tinyperl-:inc-path
-         tinyperl-:inc-module-list
-         tinyperl-:pod-path
-         tinyperl-:pod-list
-         tinyperl-:perl-bin
-         tinyperl-:perldoc-bin
-         tinyperl-:pod2text-bin))
+       '(tinyperl--inc-path
+         tinyperl--inc-module-list
+         tinyperl--pod-path
+         tinyperl--pod-list
+         tinyperl--perl-bin
+         tinyperl--perldoc-bin
+         tinyperl--pod2text-bin))
       (when verb
         (tinyperl-verbose-macro 1
 	  (message "TinyPerl: state saved [%s]" file)))
@@ -1340,33 +1340,33 @@ When LOAD: If `(tinyperl-cache-file-name)' does not exist. return nil."
   "Install default hooks or REMOVE. VERB."
   (interactive "P")
   (ti::verb)
-  (ti::add-hooks 'tinyperl-:perldoc-hook
+  (ti::add-hooks 'tinyperl--perldoc-hook
                  '(tinyperl-pod-font-lock
                    turn-on-tinyurl-mode-1
                    ti::buffer-strip-control-m)
                  remove)
-  (ti::add-hooks '(tinyperl-:pod2text-after-hook
-                   tinyperl-:podchecker-after-hook)
+  (ti::add-hooks '(tinyperl--pod2text-after-hook
+                   tinyperl--podchecker-after-hook)
                  '(turn-on-tinyurl-mode-1
                    turn-on-tinyperl-pod-view-mode
                    ti::buffer-strip-control-m)
                  remove)
-  (ti::add-hooks 'tinyperl-:pod-view-mode-hook
+  (ti::add-hooks 'tinyperl--pod-view-mode-hook
                  'tinyperl-pod-font-lock
                  remove)
-  (ti::add-hooks 'tinyperl-:pod-write-mode-hook
+  (ti::add-hooks 'tinyperl--pod-write-mode-hook
                  'tinyperl-pod-font-lock
                  remove)
   (ti::add-hooks '(perl-mode-hook
                    cperl-mode-hook)
                  'turn-on-tinyperl-mode
                  remove)
-  (ti::add-hooks 'tinyperl-:mode-define-keys-hook
+  (ti::add-hooks 'tinyperl--mode-define-keys-hook
                  'tinyperl-mode-define-keys remove)
-  (ti::add-hooks 'tinyperl-:pod-view-mode-define-keys-hook
+  (ti::add-hooks 'tinyperl--pod-view-mode-define-keys-hook
                  'tinyperl-pod-view-mode-define-keys
                  remove)
-  (ti::add-hooks 'tinyperl-:pod-write-mode-define-keys-hook
+  (ti::add-hooks 'tinyperl--pod-write-mode-define-keys-hook
                  'tinyperl-pod-write-mode-define-keys
                  remove)
   (ti::add-hooks 'write-file-hooks
@@ -1397,7 +1397,7 @@ license v2 or later."))
 (eval-and-compile
 
   (ti::macrof-minor-mode-wizard
-   "tinyperl-" " pod" "\C-c'" "Tperl" 'TinyPerl "tinyperl-:" ;1-6
+   "tinyperl-" " pod" "\C-c'" "Tperl" 'TinyPerl "tinyperl--" ;1-6
 
    "Additional commands to fetch perl module and perl manpage information
 
@@ -1426,7 +1426,7 @@ you should in general turn it off.
 
 Mode description:
 
-\\{tinyperl-:mode-map}"
+\\{tinyperl--mode-map}"
 
    "TinyPerl"
 
@@ -1435,7 +1435,7 @@ Mode description:
    "Perl extras (pod)"
 
    (list
-    tinyperl-:mode-easymenu-name
+    tinyperl--mode-easymenu-name
 
     (list
      "Skeleton"
@@ -1513,7 +1513,7 @@ Mode description:
 (eval-and-compile
 
   (ti::macrof-minor-mode-wizard
-   "tinyperl-pod-view-" " POD" "\C-c'" "POD" 'TinyPerl "tinyperl-:pod-view-"
+   "tinyperl-pod-view-" " POD" "\C-c'" "POD" 'TinyPerl "tinyperl--pod-view-"
 
    "View `pod2text' formatted output.
 If you have manual pages in the current buffer, this mode makes
@@ -1525,7 +1525,7 @@ movement controls.
 
 Mode description:
 
-\\{tinyperl-:pod-view-mode-map}"
+\\{tinyperl--pod-view-mode-map}"
 
    "TinyPerl Pod View"
 
@@ -1534,7 +1534,7 @@ Mode description:
    "POD view mode."
 
    (list
-    tinyperl-:pod-view-mode-easymenu-name
+    tinyperl--pod-view-mode-easymenu-name
     ["Heading forward"            tinyperl-pod-view-heading-forward     t]
     ["Heading backward"           tinyperl-pod-view-heading-backward    t]
     ["Sub Heading forward"        tinyperl-pod-view-heading-forward2    t]
@@ -1587,18 +1587,18 @@ Mode description:
 ;;; ----------------------------------------------------------------------
 ;;;
 (defun  tinyperl-pod-view-pageup ()
-  "See `tinyperl-:key-pageup-control'."
+  "See `tinyperl--key-pageup-control'."
   (interactive)
-  (if (eq tinyperl-:key-pageup-control 'heading)
+  (if (eq tinyperl--key-pageup-control 'heading)
       (tinyperl-pod-view-heading-backward)
     (scroll-down)))
 
 ;;; ----------------------------------------------------------------------
 ;;;
 (defun  tinyperl-pod-view-pagedown ()
-  "See `tinyperl-:key-pageup-control'."
+  "See `tinyperl--key-pageup-control'."
   (interactive)
-  (if (eq tinyperl-:key-pageup-control 'heading)
+  (if (eq tinyperl--key-pageup-control 'heading)
       (tinyperl-pod-view-heading-forward)
     (scroll-up)))
 
@@ -1663,13 +1663,13 @@ Mode description:
 (eval-and-compile
 
   (ti::macrof-minor-mode-wizard
-   "tinyperl-pod-write-" " PODw" "\C-c." "PODw" 'TinyPerl "tinyperl-:pod-write-"
+   "tinyperl-pod-write-" " PODw" "\C-c." "PODw" 'TinyPerl "tinyperl--pod-write-"
 
    "Minor mode to thelp writing POD in place.
 
 Mode description:
 
-\\{tinyperl-:pod-write-mode-map}"
+\\{tinyperl--pod-write-mode-map}"
 
    "TinyPerl Pod Write"
 
@@ -1678,7 +1678,7 @@ Mode description:
    "POD Write mode."
 
    (list
-    tinyperl-:pod-write-mode-easymenu-name
+    tinyperl--pod-write-mode-easymenu-name
     ["Heading forward"            tinyperl-pod-write-heading-forward    t]
     ["Heading backward"           tinyperl-pod-write-heading-backward   t]
     ["Token forward"              tinyperl-pod-write-token-forward      t]
@@ -1890,7 +1890,7 @@ Print contact and version information
 
 "
 
-    (or tinyperl-:skeleton-script-ftp-url
+    (or tinyperl--skeleton-script-ftp-url
         (skeleton-read "Availabillity: " "<URL Where to get the program>"))
 
     "
@@ -1919,7 +1919,7 @@ $\Id$
 
 "
 
-    (funcall tinyperl-:copyright-function)
+    (funcall tinyperl--copyright-function)
 
     "
 
@@ -2044,7 +2044,7 @@ See function description `tinyperl-pod-write-skeleton-module-function'."
 
 "
 
-    (funcall tinyperl-:copyright-function)
+    (funcall tinyperl--copyright-function)
 
     "
 
@@ -2199,10 +2199,10 @@ Hee is one suggestion ofr Module.pm POD layout
                 "TinyPerl: [ERROR] Active Perl is first in you PATH [%s]"
                 "Arrange your PATH to find Cygwin perl first "
                 "under Cygwin Emacs/XEmacs.")
-               (if (not (string-match "[\\/]" tinyperl-:perl-bin))
+               (if (not (string-match "[\\/]" tinyperl--perl-bin))
                    ;;  Contains path, show it as-is
-                   (executable-find tinyperl-:perl-bin)
-                 tinyperl-:perl-bin)))
+                   (executable-find tinyperl--perl-bin)
+                 tinyperl--perl-bin)))
        (t
         (setq list (split-string inc))))
       (setq list (delete "." list))
@@ -2255,14 +2255,14 @@ If Emacs is win32 application, convert to DOS style paths."
 
 References:
 
-  `tinyperl-:inc-path-switches' is included in call."
+  `tinyperl--inc-path-switches' is included in call."
   (with-temp-buffer
     (apply 'call-process
            perl
            nil
            (current-buffer)
            nil
-           (append tinyperl-:inc-path-switches
+           (append tinyperl--inc-path-switches
                    '("-e"
                      ;; "print 11"
                      "print(qq,@INC,)")))
@@ -2271,13 +2271,13 @@ References:
       ret)))
 
 ;;; ----------------------------------------------------------------------
-;;; (tinyperl-inc-path tinyperl-:perl-bin)
+;;; (tinyperl-inc-path tinyperl--perl-bin)
 ;;;
 (defun tinyperl-inc-path (&optional perl)
   "Return @INC and and var PERL5LIB libs for PERL which defaults to `perl'.
 
 References:
- `tinyperl-:inc-path-switches'"
+ `tinyperl--inc-path-switches'"
   (let* ((fid "tinyperl-inc-path")
          (path (or perl
                    (executable-find  "perl")))
@@ -2330,10 +2330,10 @@ References:
       (error
        (format
         (concat "TinyPerl: Can't parse @INC. Please check"
-                " tinyperl-:perl-bin = %s"
+                " tinyperl--perl-bin = %s"
                 " result: %s"
                 " path5: %s")
-        (prin1-to-string tinyperl-:perl-bin)
+        (prin1-to-string tinyperl--perl-bin)
         (prin1-to-string result)
         (prin1-to-string path5))))
     (tinyperl-debug fid "ret" ret)
@@ -2392,8 +2392,8 @@ References:
 ;;;
 (defun tinyperl-build-pod-files ()
   "Build files under pod path."
-  (let ((path  (or tinyperl-:pod-path
-		   (error "TinyPerl: No tinyperl-:pod-path")))
+  (let ((path  (or tinyperl--pod-path
+		   (error "TinyPerl: No tinyperl--pod-path")))
 	files
 	ret)
     (setq files (ti::directory-files path "\\.pod"))
@@ -2406,7 +2406,7 @@ References:
 ;;;
 (defun tinyperl-build-list-of-inc-files (&optional search-list verb)
   "Build list of files under @INC. Only 3 subdir levels are scanned.
-SEARCH-LIST corresponds to `tinyperl-:inc-path'
+SEARCH-LIST corresponds to `tinyperl--inc-path'
 
 Return:
 
@@ -2488,20 +2488,20 @@ Return:
 ;;;
 (defun tinyperl-podchecker (file &optional buffer)
   "Run Pod::Checker/podchecker() on FILE and put output to BUFFER.
-Default value for BUFFER is `tinyperl-:perldoc-buffer'."
+Default value for BUFFER is `tinyperl--perldoc-buffer'."
   (let ((fid "tinyperl-podchecker"))
     (or (tinyperl-perl-module-exists-p "Pod::Checker.pm")
         (error "\
 TinyPerl: Pod::Checker.pm is not known to this Perl version. @INC trouble?"))
     (or buffer
-        (setq buffer (get-buffer-create tinyperl-:podchecker-buffer)))
+        (setq buffer (get-buffer-create tinyperl--podchecker-buffer)))
     (or (get-buffer buffer)
         (setq buffer (get-buffer-create buffer)))
     (when nil ;; disabled
       (with-current-buffer buffer
         (ti::pmax)
-        (run-hooks 'tinyperl-:podchecker-before-hook)
-        (call-process tinyperl-:perl-bin
+        (run-hooks 'tinyperl--podchecker-before-hook)
+        (call-process tinyperl--perl-bin
                       nil
                       buffer
                       nil
@@ -2509,7 +2509,7 @@ TinyPerl: Pod::Checker.pm is not known to this Perl version. @INC trouble?"))
                       "-e"
                       "podchecker shift, undef, -warnings => q(on)"
                       (expand-file-name file))
-        (run-hooks 'tinyperl-:podchecker-after-hook)))
+        (run-hooks 'tinyperl--podchecker-after-hook)))
     (when t
       (let (compilation-error-regexp-alist
 	    ;;  `shell-quote-argument'  does not work here correctly.
@@ -2520,7 +2520,7 @@ TinyPerl: Pod::Checker.pm is not known to this Perl version. @INC trouble?"))
 		       "\""
 		     "'"))
 	    (cmd (concat
-		  tinyperl-:perl-bin
+		  tinyperl--perl-bin
 		  " -MPod::Checker"
 		  " -e"
 		  " "
@@ -2555,7 +2555,7 @@ TinyPerl: Pod::Checker.pm is not known to this Perl version. @INC trouble?"))
     ;;  Append text to the end of buffer.
     (with-current-buffer buffer
       (setq buffer-read-only nil)
-      (run-hooks 'tinyperl-:pod2text-before-hook)
+      (run-hooks 'tinyperl--pod2text-before-hook)
       (ti::pmax)
       ;; Move point to the end of visible window
       ;; #todo: was I thinking of something here ?...
@@ -2581,7 +2581,7 @@ TinyPerl: Pod::Checker.pm is not known to this Perl version. @INC trouble?"))
 	(t
 	 ;; NOTE: Perl 5.x has bug in -MPod::Text
 	 ;; FIXME Nothing we can do?
-	 (call-process tinyperl-:perl-bin
+	 (call-process tinyperl--perl-bin
 		       nil
 		       buffer
 		       nil
@@ -2605,9 +2605,9 @@ TinyPerl: Pod::Checker.pm is not known to this Perl version. @INC trouble?"))
       (ti::pmin)
       (tinyperl-debug
        fid
-       "tinyperl-:pod2text-after-hook"
-       tinyperl-:pod2text-after-hook)
-      (run-hooks 'tinyperl-:pod2text-after-hook)
+       "tinyperl--pod2text-after-hook"
+       tinyperl--pod2text-after-hook)
+      (run-hooks 'tinyperl--pod2text-after-hook)
       (setq buffer-read-only t)
       buffer)))
 
@@ -2616,8 +2616,8 @@ TinyPerl: Pod::Checker.pm is not known to this Perl version. @INC trouble?"))
 (defun tinyperl-pod-manpage-to-file (pod)
   "Convert POD `perldoc.pod' or `perldoc' into absolute filename."
   (let ((elt (assoc (ti::string-verify-ends pod ".pod")
-		    (or tinyperl-:pod-list
-			(error "TinyPerl: No tinyperl-:pod-list")))))
+		    (or tinyperl--pod-list
+			(error "TinyPerl: No tinyperl--pod-list")))))
     (when elt
       (concat (cdr elt) (car elt)))))
 
@@ -2651,8 +2651,8 @@ TinyPerl: Pod::Checker.pm is not known to this Perl version. @INC trouble?"))
   (let ((word (tinyperl-read-word-module)))
     (completing-read
      (or msg "Module: ")
-     (or tinyperl-:inc-module-list
-         (error "TinyPerl: No tinyperl-:inc-module-list"))
+     (or tinyperl--inc-module-list
+         (error "TinyPerl: No tinyperl--inc-module-list"))
      nil
      (not 'require-match)
      (if word
@@ -2667,7 +2667,7 @@ TinyPerl: Pod::Checker.pm is not known to this Perl version. @INC trouble?"))
 Input:
 
   MODULE    String, name of perl module that should be along
-            `tinyperl-:inc-module-list'
+            `tinyperl--inc-module-list'
   NO-GUESS  Flag, if non-nil don't try searching suffixes .pm and .pl. Trus
             MODULE to be exact name.
 
@@ -2675,10 +2675,10 @@ Return:
 
  '(module . path)"
   (if no-guess
-      (assoc module tinyperl-:inc-module-list)
-    (or (assoc module tinyperl-:inc-module-list)
-        (assoc (concat module ".pm") tinyperl-:inc-module-list)
-        (assoc (concat module ".pl") tinyperl-:inc-module-list))))
+      (assoc module tinyperl--inc-module-list)
+    (or (assoc module tinyperl--inc-module-list)
+        (assoc (concat module ".pm") tinyperl--inc-module-list)
+        (assoc (concat module ".pl") tinyperl--inc-module-list))))
 
 ;;; ----------------------------------------------------------------------
 ;;;
@@ -2713,7 +2713,7 @@ The word must be in lowercase and start with 'perl'."
   (tinyperl-pod-manpage-to-file
    (completing-read
     "View pod manpage: "
-    tinyperl-:pod-list
+    tinyperl--pod-list
     (not 'predicate)
     'match-it
     (let ((word (tinyperl-manpage-at-point)))
@@ -2723,7 +2723,7 @@ The word must be in lowercase and start with 'perl'."
 ;;; ----------------------------------------------------------------------
 ;;;
 (defun tinyperl-pod-font-lock ()
-  "Turn on `font-lock-mode' and set `tinyperl-:pod-font-lock-keywords'.
+  "Turn on `font-lock-mode' and set `tinyperl--pod-font-lock-keywords'.
 The `font-lock-mode' is turned on only if `ti::colors-supported-p'
 returns non-nil."
   (interactive)
@@ -2733,7 +2733,7 @@ returns non-nil."
     ;;  to take in effect.
     ;;
     (turn-on-font-lock-mode)
-    (setq font-lock-keywords tinyperl-:pod-font-lock-keywords)
+    (setq font-lock-keywords tinyperl--pod-font-lock-keywords)
     (font-lock-fontify-buffer)
     nil))
 
@@ -2744,10 +2744,10 @@ returns non-nil."
 
 Rerefences:
 
-  `tinyperl-:pod-buffer-name'   Always is single POD buffer in effect
-  `tinyperl-:pod-buffer-control'."
-  (if (memq tinyperl-:pod-buffer-control '(nil one single))
-      tinyperl-:pod-buffer-name
+  `tinyperl--pod-buffer-name'   Always is single POD buffer in effect
+  `tinyperl--pod-buffer-control'."
+  (if (memq tinyperl--pod-buffer-control '(nil one single))
+      tinyperl--pod-buffer-name
     (let ((name module)) ;; (replace-regexp-in-string "\.pm$" "" module)))
       (concat "*pod: " name "*"))))
 
@@ -2800,12 +2800,12 @@ If BIN name contain .bat .cmd etc, return BIN as it.
 Otherwise prepend \"perl\" at from and return '(\"perl\" . BIN)."
   (if (string-match "\\....?$" bin) ;; .ex or .ext
       bin
-    (cons tinyperl-:perl-bin bin)))
+    (cons tinyperl--perl-bin bin)))
 
 ;;; ----------------------------------------------------------------------
 ;;;
 (defun tinyperl-perldoc-1 (buffer arg-list)
-  "Call ´tinyperl-:perldoc-bin'. Insert results to BUFFER.
+  "Call ´tinyperl--perldoc-bin'. Insert results to BUFFER.
 Call arguments are in ARG-LIST."
   ;; Win32 call-process fails if the binary c:\prgram files\..
   ;; name contains spaces. This is special problems for perldoc.bat
@@ -2814,7 +2814,7 @@ Call arguments are in ARG-LIST."
   (cond
    ((not (ti::win32-p))
     (apply 'call-process
-           tinyperl-:perldoc-bin
+           tinyperl--perldoc-bin
            nil
            buffer
            nil
@@ -2827,7 +2827,7 @@ Call arguments are in ARG-LIST."
 			   ;;  I don't know if the exact problem was due to
 			   ;;  SPACES in the path name.
 			   "perldoc"
-			 tinyperl-:perldoc-bin))
+			 tinyperl--perldoc-bin))
 	    (call-type (tinyperl-external-command-format cmd))
 	    (args (ti::list-to-string arg-list)))
         ;;  Add "perl" to the front of command if it is "perldoc".
@@ -2851,7 +2851,7 @@ Call arguments are in ARG-LIST."
 ;;;###autoload
 (defun tinyperl-perldoc (string &optional force verb)
   "Run perldoc with STRING. First try with -f then without it.
-Show content in `tinyperl-:perldoc-buffer'. If buffer is visible in
+Show content in `tinyperl--perldoc-buffer'. If buffer is visible in
 some other frame, the cursor is not moved there. Only contents is updated.
 
 The last used STRING is cached and if called next time with same
@@ -2865,12 +2865,12 @@ Input:
 
 References:
 
-  `tinyperl-:perldoc-hook'"
+  `tinyperl--perldoc-hook'"
   (interactive
    (list
     (read-string "Perldoc -f: "  (ti::buffer-read-word))
     current-prefix-arg))
-  (let ((buffer (get-buffer-create tinyperl-:perldoc-buffer))
+  (let ((buffer (get-buffer-create tinyperl--perldoc-buffer))
 	(last   (get 'tinyperl-perldoc 'string))
 	(cmd    (format
 		 "%s -f %s"
@@ -2879,7 +2879,7 @@ References:
 		     ;;  I don't know if the exact problem was due to
 		     ;;  SPACES in the path name.
 		     "perldoc"
-		   tinyperl-:perldoc-bin)
+		   tinyperl--perldoc-bin)
 		 string))
 	run
 	win)
@@ -2916,7 +2916,7 @@ References:
 	      (message "TinyPerl: No matches. Trying without -f ...")))
           (tinyperl-perldoc-1 buffer (list string))
           (setq cmd (format "%s %s"
-                            tinyperl-:perldoc-bin
+                            tinyperl--perldoc-bin
                             string))
           (when verb
             (tinyperl-verbose-macro
@@ -2936,7 +2936,7 @@ References:
     (when run
       (with-current-buffer buffer
         (setq buffer-read-only nil)
-        (run-hooks 'tinyperl-:perldoc-hook)
+        (run-hooks 'tinyperl--perldoc-hook)
         (setq buffer-read-only t)))
     ;;  save the last query string.
     (if string
@@ -2953,7 +2953,7 @@ References:
 ;;; ----------------------------------------------------------------------
 ;;;
 (defun tinyperl-pod-search-regexp-by-module (module)
-  "Generate a search regexp for `tinyperl-:pod-buffer-name' for MODULE."
+  "Generate a search regexp for `tinyperl--pod-buffer-name' for MODULE."
   (if (string-match "^\\(.+\\)\\.pm" module)
       (setq module (match-string 1 module)))
   (let ((name (regexp-quote module)))
@@ -3003,7 +3003,7 @@ Input:
         (error
          (substitute-command-keys
           (concat
-           "TinyPerl: Can't find module from `tinyperl-:inc-module-list'. "
+           "TinyPerl: Can't find module from `tinyperl--inc-module-list'. "
            "If new perl modules have been installed from CPAN, use "
            "\\[tinyperl-install-force] to rebuild cache."))))
       ;;  In FEW cases the *.pm file does not contain the documentation,
@@ -3141,8 +3141,8 @@ more pleasant manner. Few C-s searches or \\[occur] will take you
 to the correct position."
   (interactive "sPod grep regexp: ")
   (or pod-path
-      (setq pod-path (or tinyperl-:pod-path
-                         (error "TinyPerl: No tinyperl-:pod-path"))))
+      (setq pod-path (or tinyperl--pod-path
+                         (error "TinyPerl: No tinyperl--pod-path"))))
   (unless (file-directory-p pod-path)
     (error "POD directory not found [%s]" pod-path))
   (let ((grep (tinyperl-grep-program))
@@ -3345,11 +3345,11 @@ This function also gathers all =head topics that match the REGEXP.
 You can use generated page as an answer to 'Has this this question
 been answered in FAQ'"
   (interactive "sPod FAQ search regexp: ")
-  (let* ((path (or tinyperl-:pod-path
-                   (error "TinyPerl: No tinyperl-:pod-path")))
+  (let* ((path (or tinyperl--pod-path
+                   (error "TinyPerl: No tinyperl--pod-path")))
          (default-directory (file-name-directory path))
          (buffer     "*grep*")
-         (out-buffer tinyperl-:faq-buffer-name)
+         (out-buffer tinyperl--faq-buffer-name)
          (grep (tinyperl-grep-program))
          data)
     (ti::verb)
@@ -3431,14 +3431,14 @@ See also:
    http://perlcritic.tigris.org"
   (interactive "p")
   (let ((current (current-buffer))
-	(buffer  (get-buffer-create tinyperl-:lint-buffer-name))
+	(buffer  (get-buffer-create tinyperl--lint-buffer-name))
 	(file    (buffer-file-name))
-	(default-file tinyperl-:lint-default-file-name))
+	(default-file tinyperl--lint-default-file-name))
     (or level
-	(setq level tinyperl-:lint-severity))
+	(setq level tinyperl--lint-severity))
     (unless file
       (unless default-file
-	(error "No tinyperl-:lint-buffer-name to save buffer %s"
+	(error "No tinyperl--lint-buffer-name to save buffer %s"
 	       (buffer-name)))
       (write-region (point-min) (point-max) default-file)
       (setq file default-file))
@@ -3450,7 +3450,7 @@ See also:
       (let ((command
 	     (format
 	      (concat "print critique("
-		      tinyperl-:lint-arguments
+		      tinyperl--lint-arguments
 		      ", shift)")
 	      (int-to-string level))))
 	(call-process "perl"
@@ -3461,11 +3461,11 @@ See also:
 		      "-e"
 		      command
 		      (expand-file-name file)))
-      (run-hooks 'tinyperl-:lint-hook)
+      (run-hooks 'tinyperl--lint-hook)
       (when (fboundp 'tinycompile-mode)
 	(tinycompile-mode 1)
-	(make-local-variable 'tinycompile-:buffer-name)
-	(setq tinycompile-:buffer-name current)))
+	(make-local-variable 'tinycompile--buffer-name)
+	(setq tinycompile--buffer-name current)))
     (display-buffer buffer)))
 
 ;;; ----------------------------------------------------------------------
@@ -3516,14 +3516,14 @@ The file is copied under name FILE-VERSION.pl to DIRECTORY in
 this order:
 
   1. DIRECTORY (available only as a lisp call)
-  2. `tinyperl-:pause-directory' (user's default setting)
+  2. `tinyperl--pause-directory' (user's default setting)
   3. or to current directory
 
 References:
 
-  `tinyperl-:pause-directory'."
+  `tinyperl--pause-directory'."
   (interactive
-   (let ((path tinyperl-:pause-directory))
+   (let ((path tinyperl--pause-directory))
      (list
       (read-file-name "TinyPerl: [PAUSE dir]: "
                       (and path (file-name-directory path))
@@ -3654,7 +3654,7 @@ Input:
 	    (message ;Record it to *Messages* buffer
 	     (format
 	      "%s -MDevel::SelfStubber -e %s"
-	      tinyperl-:perl-bin
+	      tinyperl--perl-bin
 	      cmd-1)))
           ;; ........................................... find-position ...
           (and (setq beg (ti::re-search-check
@@ -3668,7 +3668,7 @@ Input:
               (forward-line 1)
               (delete-region (point) end)
               (insert "\n")
-              (call-process tinyperl-:perl-bin
+              (call-process tinyperl--perl-bin
                             nil
                             (current-buffer)
                             nil
@@ -3679,7 +3679,7 @@ Input:
               (tinyperl-verbose-macro 1
 		(message "TinyPerl: stubs updated in buffer"))))
            (t                           ;No previoous STUBS
-            (call-process tinyperl-:perl-bin
+            (call-process tinyperl--perl-bin
                           nil
                           (current-buffer)
                           nil
@@ -3694,6 +3694,6 @@ Input:
 (tinyperl-skeleton-setup)
 
 (provide   'tinyperl)
-(run-hooks 'tinyperl-:load-hook)
+(run-hooks 'tinyperl--load-hook)
 
 ;;; tinyperl.el ends here
