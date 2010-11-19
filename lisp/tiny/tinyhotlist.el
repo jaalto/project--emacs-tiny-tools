@@ -202,7 +202,7 @@
 ;;
 ;;          (add-hook 'kill-emacs-hook 'tinyhotlist-save-hotlist)
 ;;
-;;  Example
+;;  An example
 ;;
 ;;      Here is complete example setup how you could configure this package.
 ;;
@@ -439,7 +439,6 @@ NO-CONFIRM suppresses confirm of loading ange-ftp files."
     (setq elt (assoc item tinyhotlist-:cache))
     (setq buffer (car elt)
           file   (cdr elt))
-
     (cond
      (file
       ;; Find ange-ftp dired buffer
@@ -764,7 +763,8 @@ Optional ARG can be:
   0             kill all members from hotlist.
   9             kill all, but initalize with defaults.
   nbr           any number, add current active buffer to hotlist
-  -             negative number, remove item from hotlist. E.g. \\[universal-argument]  -
+  -             negative number, remove item from hotlist.
+                E.g. \\[universal-argument] -
   1 x \\[universal-argument]       remove current buffer from hotlist
   2 x \\[universal-argument]       Save hotlist
   3 x \\[universal-argument]       load hotlist."
@@ -836,7 +836,6 @@ Optional ARG can be:
 
 ;;; ----------------------------------------------------------------------
 ;;;
-;;;
 ;;;###autoload
 (defun tinyhotlist-add ()
   "Add current buffer to hotlist."
@@ -844,7 +843,6 @@ Optional ARG can be:
   (tinyhotlist-control nil 1))
 
 ;;; ----------------------------------------------------------------------
-;;;
 ;;;
 ;;;###autoload
 (defun tinyhotlist-remove ()
