@@ -9,7 +9,6 @@
 ;; Author:          Jari Aalto
 ;; Maintainer:      Jari Aalto
 ;;
-;; To get information on this program, call M-x tinybookmark-version
 ;; Look at the code with folding.el
 
 ;; COPYRIGHT NOTICE
@@ -75,8 +74,8 @@
 ;;
 ;; BE SURE THAT
 ;;
-;;      Define comment syntax, otherwise the inserted field
-;;      won't have proper prefix + ending
+;;      Variables `comment-start' and `comment-end' are defined,
+;;      otherwise the inserted text won't have proper prefix abd ending.
 
 ;;}}}
 ;;{{{ Documentation
@@ -121,22 +120,22 @@
 ;;
 ;;      To summarize:
 ;;
-;;      o   folding.el      -- for hide unneeded code,
-;;                             clear view on the structure
-;;      o   tinybookmark.el -- Jump between/finding  _large_ code sections
-;;      o   imenu.el        -- finding specific function, more detailed control.
-;;      o   tinyhotlist.el  -- Add/remove files from permanent X-popup list
+;;      o   folding.el      - For hide unneeded code,
+;;                            clear view on the structure
+;;      o   tinybookmark.el - Jump between/finding  _large_ code sections
+;;      o   imenu.el        - Finding specific function, more detailed control.
+;;      o   tinyhotlist.el  - Add/remove files from permanent X-popup list
 ;;
 ;;  How to use this package
 ;;
 ;;      There is following function that inserts book mark on the current line
 ;;
-;;          tinybookmark-insert
+;;          M-x tinybookmark-insert
 ;;
 ;;      There is also normal repeat function, that fills line with your
 ;;      pattern:
 ;;
-;;          tinybookmark-repeat
+;;          M-x tinybookmark-repeat
 ;;
 ;;      Normally the usual book mark separator is the "." <dot> , which
 ;;      isn't so "noisy" as continuous '-' line. Normally you add some
@@ -166,7 +165,7 @@
 ;;          ............. breakName ...         ;prefered, starting low
 ;;          ............. BreakName ...         ;watch out for mixed case!
 ;;
-;;      it is also adviced that you choose some common beginning for the
+;;      It is also adviced that you choose some common beginning for the
 ;;      identifier, so that they get sorted nicely. If you define variables
 ;;      at the beginning of file it might be good idea to attach beginning
 ;;      letter like `v-' for variables before the real identifier name
@@ -264,7 +263,7 @@
 ;;
 ;;          ^^^  ^^^  ^^^  ^^^  ^^^  ^^^  ^^^  ^^^  ^^^  ^^^  ^^^  ^^^  ^^^
 ;;
-;;     Book Mark cache
+;;     Book Mark Cache
 ;;
 ;;      So that imenu works fast, it is not desirable that the breaks are
 ;;      always parsed from scratch, because it takes time to scan the file
@@ -383,8 +382,6 @@
   (autoload 'imenu--mouse-menu          "imenu"    "" t)
   (autoload 'folding-show-current-entry "folding"  "" t))
 
-(eval-when-compile (ti::package-use-dynamic-compilation))
-
 (ti::package-defgroup-tiny TinyBookmark tinybookmark-: tools
   "Minor mode for writing text in 'Technical text format'.
   Overview of features
@@ -397,7 +394,7 @@
             the file. Uses X-popup [imenu] for showing those book marks and
             moving between them.")
 
-(defvar tinybookmark-:version-time "2009.0515.0717"
+(defvar tinybookmark-:version-time "2010.1119.1109"
   "Last modified time.")
 
 ;;}}}
@@ -614,22 +611,22 @@ References:
 ;;;
 (defun tinybookmark-calc-max-col ()
   "Calculates column for mode."
-  (let* ((mode          (symbol-name major-mode))
-         (cs            (or comment-start ""))
-         (def-len       70))            ; like "# " + 70 chars
+  (let ((mode (symbol-name major-mode))
+	(cs   (or comment-start ""))
+	(len  70))            ; like "# " + 70 chars
     (cond
      ((string-match "lisp" mode)
       74)
      (t
       (if (string-match "[ \t]+" cs)  ;does it already have space "# "
-          (+ def-len (length cs)) ;no it does not "#", add room for it.
-        (1+ (+ def-len (length cs))))))))
+          (+ len (length cs)) ;no it does not "#", add room for it.
+        (1+ (+ len (length cs))))))))
 
 ;;; ----------------------------------------------------------------------
 ;;;
 (defun tinybookmark-goto (point)
   "Go to the selected POINT."
-  (let* ((re  ".*{{{"))
+  (let ((re ".*{{{"))
     (cond
      ((and (featurep 'folding)
            (symbol-value 'folding-mode))
@@ -653,7 +650,7 @@ Ignore FULL-LINE POS ID."
 ;;;
 (defun tinybookmark-comment-end ()
   "Return appropriate comment end, according to mode."
-  (let* ((str (or comment-end "")))
+  (let ((str (or comment-end "")))
     (unless (equal "" str)
       (setq str (ti::string-add-space str)))
     str))
@@ -662,9 +659,8 @@ Ignore FULL-LINE POS ID."
 ;;;
 (defun tinybookmark-comment-start ()
   "Return appropriate comment, according to mode."
-  (let* ((str (or comment-start "")))   ;comment
+  (let ((str (or comment-start "")))   ;comment
     ;;   Lisp is special, due to it's comment usage
-
     (when (memq major-mode  '(lisp-mode emacs-lisp-mode lisp-interaction-mode))
       (if (bolp)
           (setq str ";;;")
@@ -680,23 +676,20 @@ Ignore FULL-LINE POS ID."
 References: `tinybookmark-cache-update'"
   (let* ((mode       tinybookmark-:cache-update)
          (end        (marker-position (point-max-marker)))
-         (cache-end  (or tinybookmark-:cache-char-count  end))
+         (cache-end  (or tinybookmark-:cache-char-count
+			 end))
          (limit      tinybookmark-:cache-threshold-val)
          diff)
     (cond
      ((eq mode nil)
       nil)                              ;manual
-
      ((eq mode 'always)
       (tinybookmark-parse))
-
      ((eq mode 'threshold)
       (setq diff (abs (- end cache-end)))
-;;;         (ti::d! diff limit end cache-end )
       (if (< diff limit) nil
         ;; Hmm, should we print a message "threshold exceeded, reparsing..?"
         ;; Let's be transparent this time: no messages.
-;;;     (ti::d! "reparsing..")
         (tinybookmark-parse))))))
 
 ;;}}}
@@ -723,7 +716,6 @@ STRICT has effect only if COL is given:
           of STR if necessary"
 
   (interactive "sString:\nsCount[0=eol]: ")
-
   (let* ((swide (or col 79))            ;screen width
          (i     0)
          (ok    t)
@@ -731,65 +723,55 @@ STRICT has effect only if COL is given:
          c
          len
          p)
-
-    (if (or (not (stringp str))         ;it's not string
-            (eq 0 (length str)))        ;string is empty
-        (throw 'done nil))
-
-    (cond
-     ((stringp count)
-      (if (equal "" count)
-          (setq c -1)                   ;interactive
-        (setq c (string-to-number count))))
-     ((numberp count)
-      (setq c count))
-     (t
-      (error "Invalid count arg %s" count)))
-
-;;;    (ti::d! "c-val" c)
-
-    ;; ... ... ... ... ... ... ... ... ... ... ... ... ... ... ... ... ...
-    (cond
-     ((eq c -1)                        ;ask confirmation every time...
-      (while ok
-        (message "insert? <spc,enter> ") (setq ch (read-char))
-        (cond
-         ((or (char-equal ch ?\C-m ) (char-equal ch ?\ ))
-          (insert str))
-         (t (setq ok nil))))
-      (message ""))
-
-     ;; ... ... ... ... ... ... ... ... ... ... ... ... ... ... ... ... ...
-
-     ((eq c 0)
-      (setq len         (length str)
-            p           (current-column))
-
-      ;; we have to remove tabs from this line to get count right
-
-      (untabify (line-beginning-position) (line-end-position))
-      (move-to-column p)                ;restore position
-
-      ;; the added str must not move point further than COL
-
-      (while (<= (+ len (current-column)) swide)
-        (insert str))
-
-;;;      (ti::d!  "c-val 0" (current-column) swide)
-
-      ;;   Check if it was multicharacter and we didn't get to last position
-      ;;   Insert the last string and cut after COL
-
-      (if (null strict) nil
-        (if (= (current-column) swide) nil
-          (insert str)
-          (ti::buffer-move-to-col swide)
-          (delete-region (point) (progn (end-of-line) (point))))))
-
-     ;; ... ... ... ... ... ... ... ... ... ... ... ... ... ... ... ... ...
-     (t                                 ;straight number !
-      (while (< i c)
-        (insert str) (setq i (1+ i)))))))
+    (unless (or (not (stringp str))         ;it's not string
+		(eq 0 (length str)))        ;string is empty
+      (cond
+       ((stringp count)
+	(if (equal "" count)
+	    (setq c -1)                   ;interactive
+	  (setq c (string-to-number count))))
+       ((numberp count)
+	(setq c count))
+       (t
+	(error "Invalid count arg %s" count)))
+      ;; ... ... ... ... ... ... ... ... ... ... ... ... ... ... ... ... ...
+      (cond
+       ((eq c -1)                        ;ask confirmation every time...
+	(while ok
+	  (message "insert? <spc,enter> ")
+	  (setq ch (read-char))
+	  (cond
+	   ((or (char-equal ch ?\C-m )
+		(char-equal ch ?\ ))
+	    (insert str))
+	   (t (setq ok nil))))
+	(message ""))
+       ;; ... ... ... ... ... ... ... ... ... ... ... ... ... ... ... ... ...
+       ((eq c 0)
+	(setq len         (length str)
+	      p           (current-column))
+	;; we have to remove tabs from this line to get count right
+	(untabify (line-beginning-position) (line-end-position))
+	(move-to-column p)                ;restore position
+	;; the added str must not move point further than COL
+	(while (<= (+ len (current-column)) swide)
+	  (insert str))
+	;;   Check if it was multicharacter and we didn't get to last position
+	;;   Insert the last string and cut after COL
+	(if (null strict)
+	    nil
+	  (if (= (current-column) swide)
+	      nil
+	    (insert str)
+	    (ti::buffer-move-to-col swide)
+	    (delete-region (point)
+			   (progn
+			     (end-of-line)
+			     (point))))))
+       ;; ... ... ... ... ... ... ... ... ... ... ... ... ... ... ... ... ...
+       (t                                 ;straight number !
+	(while (< i c)
+	  (insert str) (setq i (1+ i))))))))
 
 ;;; ----------------------------------------------------------------------
 ;;;
@@ -797,8 +779,8 @@ STRICT has effect only if COL is given:
 (defun tinybookmark-insert (txt sep &optional strict)
   "Add book mark until the end of line.
 Normally line is filled as long as the pattern fits below max column,
-but if the optional argument is given, it will be filled in _full_ ,
-truncating if necessary. To see an example, try with some _long_
+but if the optional argument is given, it will be filled in full ,
+truncating if necessary. To see an example, try with some long
 pattern.
 
 Input:
@@ -812,10 +794,9 @@ Input:
 
 References:
 
-        `tinybookmark-:insert-strict'"
+  `tinybookmark-:insert-strict'"
   (interactive "sBookmark: \nsSep: \nP")
-  (let* (
-         (strict-def  tinybookmark-:insert-strict)
+  (let* ((strict-def  tinybookmark-:insert-strict)
          (cs-func     tinybookmark-:comment-start-func)
          (ce-func     tinybookmark-:comment-end-func)
          (line-col    (eval tinybookmark-:max-col))
@@ -826,70 +807,48 @@ References:
          col
          cs
          ce)
-
     (cond
      ((eq nil strict)                   ;use default
       (setq strict strict-def))
-
      ((eq 0 strict)
       (setq strict nil))
-
      ((eq 1 strict)
       (setq strict t))) ;; cond end
-
     (if (= 0 (length sep))
         (error "No separator"))
-
     ;;  Add surrounding spaces if they are not included
-
     (unless (equal "" txt)
       (setq txt (ti::string-add-space txt)
             txt (ti::string-add-space txt t)))
-
     (setq cs (funcall cs-func)          ;Set comments
           ce (funcall ce-func))
-
     ;;  I tried to turn overwrite-mode on, but SUPRISE!
     ;;  - While it was on, and I tried to do 'insert',
     ;;    it didn't _overwrite_; emacs why can't you behave as expected ?
     ;;  - So I have to hack with delete-region instead.
-
     ;;  - skip lenght of comment start
-
     (ti::buffer-move-to-col (+ cur-col (length cs)))
-
     ;; We must clear the rest of line
-
     (unless (looking-at "$")
       (delete-region (point) (line-end-position)))
-
     ;;  - draw the line until max col
-
     (setq col line-col)                 ;maximum repeat column
-
     (tinybookmark-repeat sep 0 col strict) ;insert full separator
-
     ;;  - Now cut room for identifier
-
     (backward-char (+ (length txt) trail-len)) ;leave trailer space
     (delete-region (point) (+ (point) (length txt)))
-
     ;;  - write the identifier
-
     (insert txt)
     (end-of-line)
     (insert ce)                         ;comment end
-
     ;;  - delete spaces at front and replace it with comment start
-
     (goto-char orig-point)
     (delete-region (point) (+ (point) (length cs)))
     (insert cs)
-
     (goto-char orig-point)))
 
 ;;}}}
-;;{{{ Book Mark find, cacheing
+;;{{{ Book Mark find, caching
 
 ;;; #################################################### &bookmarkScan ###
 
@@ -901,17 +860,15 @@ Return list: (id . beginning-of-line-point).
 
 References:
   `tinybookmark-:scan-filter-func'"
-  (let* ((func tinybookmark-:scan-filter-func) ;should we filter something ?
-         id
-         p
-         list)
-
+  (let ((func tinybookmark-:scan-filter-func) ;should we filter something ?
+	id
+	point
+	list)
     (while (re-search-forward re nil t)
-;;;      (ti::d! (match-string 1) (ti::read-current-line))
       (when (setq id (match-string 1))
-        (setq p (line-beginning-position))
+        (setq point (line-beginning-position))
         ;;  Is this line allowed to add ?
-        (if (funcall func (ti::read-current-line) id p)
+        (if (funcall func (ti::read-current-line) id point)
             ;;  Nothing magic in this expression, just build list
             ;;  '((id point) (id .point) ..)
             (ti::nconc list (cons id p)))))
@@ -923,15 +880,14 @@ References:
   "Search buffer for automatic book mark identifier 'BookMarkRegexp'.
 Returns regexp defined in it. if is doesn't exist returns default
 book mark regexp."
-  (let* ((id          "BookMarkRegexp")
-         (re-default  (tinybookmark-regexp-default))
-         id-val
-         fixed-val
-         ret)
+  (let ((id          "BookMarkRegexp")
+	(re-default  (tinybookmark-regexp-default))
+	id-val
+	fixed-val
+	ret)
     (setq id-val (ti::vc-rcs-str-find-buffer id t))
     ;;  while reading from buffer the \ doubles, convert it back to \
     (setq fixed-val (ti::string-plain-string-to-regexp id-val))
-
     (if (or  (null fixed-val)
              ;;  We must find the '' marks
              (not (string-match "'\\(.+\\)'" fixed-val)))
@@ -950,19 +906,17 @@ Return:
   t     cache was built.
   nil   book marks not found or error happened. Cache untouched."
   (interactive)
-  (let* ((op             (point))       ;user's original point
-         (beg            (point-min-marker))
-         (end            (point-max-marker))
-         (end-pos        (marker-position (point-max-marker)))
-         (end-max        (point-max))
-         end-wmax
-         re
-         ret
-         list)
-
+  (let ((op             (point))       ;user's original point
+	(beg            (point-min-marker))
+	(end            (point-max-marker))
+	(end-pos        (marker-position (point-max-marker)))
+	(end-max        (point-max))
+	end-wmax
+	re
+	ret
+	list)
     (run-hooks 'tinybookmark-:parse-before-hook)
-    (setq tinybookmark-:cache-char-count end-pos) ;<< GLOBAL
-
+    (setq tinybookmark-:cache-char-count end-pos) ;Set GLOBAL
     (if (null (setq re (tinybookmark-regexp-read-from-buffer)))
         (message "TinyBookmark: No book mark syntax Identifier found.")
       (unwind-protect                   ;handle narrowed buffers too
@@ -1012,13 +966,11 @@ Called with mouse EVENT. VERB displays message."
 (defun tinybookmark-selection (event)
   "Display cache menu. Called with mouse EVENT."
   (interactive "e")
-  (let* ((go-func   tinybookmark-:goto-func)
-         cache
-         data)
-
+  (let ((go-func   tinybookmark-:goto-func)
+	cache
+	data)
     (tinybookmark-cache-update)
     (setq cache     tinybookmark-:cache)
-
     (if (null cache)
         (message "TinyBookmark: No book marks found.")
       (cond
@@ -1027,7 +979,6 @@ Called with mouse EVENT. VERB displays message."
        (t
         (setq data (completing-read "Select: " cache))
         (setq data (assoc data cache))))
-
       (if data
           (funcall go-func (cdr data))))))
 
@@ -1035,7 +986,7 @@ Called with mouse EVENT. VERB displays message."
 ;;;
 (defun tinybookmark-cache-regenerate (&optional force)
   "Regenerate cache if needed. Optional FORCE."
-  (let* ((cache-ok   tinybookmark-:cache))
+  (let ((cache-ok tinybookmark-:cache))
     (when (or (null cache-ok)
               force)
       (message "TinyBookmark: building cache...")
