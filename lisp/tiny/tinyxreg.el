@@ -107,7 +107,7 @@
 (require 'tinylibm)
 (eval-when-compile (ti::package-use-dynamic-compilation))
 
-(ti::package-defgroup-tiny TinyXreg tinyxreg-: tools
+(ti::package-defgroup-tiny TinyXreg tinyxreg-- tools
   "Restoring points/win cfg stroed in reg. via X-popup
   Overview of features
 
@@ -119,7 +119,7 @@
 ;;}}}
 ;;{{{ setup: hooks
 
-(defcustom tinyxreg-:load-hook nil
+(defcustom tinyxreg--load-hook nil
   "*Hook that is run when package is loaded."
   :type  'hook
   :group 'TinyXreg)
@@ -127,28 +127,28 @@
 ;;}}}
 ;;{{{ setup: public, user configurable
 
-(defcustom tinyxreg-:x-coord 170
+(defcustom tinyxreg--x-coord 170
   "*Default menu coordinate."
   :type  'integer
   :group 'TinyXreg)
 
-(defcustom tinyxreg-:y-coord 170
+(defcustom tinyxreg--y-coord 170
   "*Default menu coordinate."
   :type  'integer
   :group 'TinyXreg)
 
-(defcustom tinyxreg-:description-func  'tinyxreg-description
+(defcustom tinyxreg--description-func  'tinyxreg-description
   "*Function to return popup description string.
 Function should accept two arguments: REGISTER and WINDOW-ARG"
   :type 'function
   :group 'TinyXreg)
 
-(defcustom tinyxreg-:title  "Register list"
+(defcustom tinyxreg--title  "Register list"
   "*Popup title."
   :type  'string
   :group 'TinyXreg)
 
-(defcustom tinyxreg-:buffer-fmt "%-20s"
+(defcustom tinyxreg--buffer-fmt "%-20s"
   "*Format for filename.
 Filename length reserved for default popup description.
 
@@ -157,7 +157,7 @@ affects only new entries."
   :type  '(string :tag "Format string")
   :group 'TinyXreg)
 
-(defcustom tinyxreg-:wcfg-fmt '(concat "\177 Win " bn)
+(defcustom tinyxreg--wcfg-fmt '(concat "\177 Win " bn)
   "*Lisp form to for window configuration.
 This is the Window config FORM that is evaled when
 the description is put into the list. You can use variable BN
@@ -171,10 +171,10 @@ common beginning for all win cfg registers."
 ;;}}}
 ;;{{{ setup: private
 
-(defvar tinyxreg-:preg  nil
+(defvar tinyxreg--preg  nil
   "Hold point markers.")
 
-(defvar tinyxreg-:wreg  nil
+(defvar tinyxreg--wreg  nil
   "Hold window markers.")
 
 ;;}}}
@@ -184,14 +184,14 @@ common beginning for all win cfg registers."
 ;;;
 (defun tinyxreg-event ()
   "Return fake event."
-  (ti::compat-make-fake-event tinyxreg-:x-coord tinyxreg-:y-coord))
+  (ti::compat-make-fake-event tinyxreg--x-coord tinyxreg--y-coord))
 
 ;;; ----------------------------------------------------------------------
 ;;;
 (defun tinyxreg-list ()
   "Return register list, point list + window list."
-  (let ((ptr   tinyxreg-:wreg)
-	(list  (copy-sequence tinyxreg-:preg)))
+  (let ((ptr   tinyxreg--wreg)
+	(list  (copy-sequence tinyxreg--preg)))
     ;;  concat two lists
     (dolist (elt ptr)
       (push elt list))
@@ -221,20 +221,20 @@ common beginning for all win cfg registers."
 ARG suggests looking in window list."
   (interactive "cRemove register: \nP")
   (let ((ptr (if arg
-		 tinyxreg-:wreg
-	       tinyxreg-:preg))
+		 tinyxreg--wreg
+	       tinyxreg--preg))
 	elt)
     (when (setq elt (rassq char ptr))
       (if arg
-          (setq tinyxreg-:wreg (delete elt tinyxreg-:wreg))
-        (setq tinyxreg-:preg (delete elt tinyxreg-:preg))))))
+          (setq tinyxreg--wreg (delete elt tinyxreg--wreg))
+        (setq tinyxreg--preg (delete elt tinyxreg--preg))))))
 
 ;;; ----------------------------------------------------------------------
 ;;;
 (defun tinyxreg-update ()
   "Kill all registers from lists that are not alive any more.
 Eg. marker dies if you revert the buffer; kill and load it again."
-  (let ((ptr tinyxreg-:preg)
+  (let ((ptr tinyxreg--preg)
 	reg
          list)
     ;;  We simple copy valid elements to another list
@@ -242,8 +242,8 @@ Eg. marker dies if you revert the buffer; kill and load it again."
       (setq reg (cdr elt))
       (if (ti::register-live-p reg)
           (push elt list)))
-    (setq tinyxreg-:preg list)
-    (setq ptr tinyxreg-:wreg)))
+    (setq tinyxreg--preg list)
+    (setq ptr tinyxreg--wreg)))
 
 ;;; ----------------------------------------------------------------------
 ;;;
@@ -251,7 +251,7 @@ Eg. marker dies if you revert the buffer; kill and load it again."
 (defun tinyxreg-trash ()
   "Empties both window and point caches."
   (interactive)
-  (setq tinyxreg-:preg nil   tinyxreg-:wreg nil)
+  (setq tinyxreg--preg nil   tinyxreg--wreg nil)
   (if (interactive-p)
       (message "TinyXreg: Register lists trashed.")))
 
@@ -272,8 +272,8 @@ ARG tells to store to window list. DESC is string to use."
                  (char-to-string char)))
          (data (cons desc char)))
     (if arg
-        (push data tinyxreg-:wreg)
-      (push data tinyxreg-:preg))))
+        (push data tinyxreg--wreg)
+      (push data tinyxreg--preg))))
 
 ;;}}}
 ;;{{{ storing
@@ -286,8 +286,8 @@ ARG tells to store to window list. DESC is string to use."
 REGISTER is stored register and if ARG is non-nil the register
 contains window configuration."
   (let ((bn   (file-name-nondirectory (buffer-name)))
-	(cfg  tinyxreg-:wcfg-fmt))
-    (format (concat tinyxreg-:buffer-fmt " %4s %s")
+	(cfg  tinyxreg--wcfg-fmt))
+    (format (concat tinyxreg--buffer-fmt " %4s %s")
             (if arg
                 ;;  the 177 should print nice block
                 ;;  so that sorting puts cfg entries last
@@ -336,7 +336,7 @@ configuration."
       (message (concat msg (char-to-string CHAR)))
       CHAR)
     current-prefix-arg))
-  (let ((dfunc tinyxreg-:description-func)
+  (let ((dfunc tinyxreg--description-func)
 	desc)
     (setq desc                          ;get the popup description
           (if (fboundp dfunc)
@@ -385,7 +385,7 @@ Input:
   (interactive "e\nP")
   (let ((event (or event
 		   (ti::compat-make-fake-event
-		    tinyxreg-:x-coord tinyxreg-:y-coord)))
+		    tinyxreg--x-coord tinyxreg--y-coord)))
 	(title  (interactive-p))
 	ref-list
 	list
@@ -424,6 +424,6 @@ Input:
 ;;}}}
 
 (provide   'tinyxreg)
-(run-hooks 'tinyxreg-:load-hook)
+(run-hooks 'tinyxreg--load-hook)
 
 ;;; tinyxreg.el ends here
