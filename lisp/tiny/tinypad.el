@@ -9,7 +9,6 @@
 ;; Author:       Jari Aalto
 ;; Maintainer:   Jari Aalto
 ;;
-;; To get information on this program, call M-x tinypad-version.
 ;; Look at the code with folding.el.
 
 ;; This program is free software; you can redistribute it and/or modify it
@@ -44,10 +43,6 @@
 ;;      ;;  n)otepad emulation mode
 ;;      ;;
 ;;      (global-set-key "\C-cmn"  'tinypad-mode)
-;;
-;;  If you have any questions, use this function to contact author
-;;
-;;       M-x tinypad-submit-bug-report
 
 ;;}}}
 ;;{{{ Documentation
@@ -116,16 +111,6 @@
 
 (ti::package-defgroup-tiny TinyPad tinypad-: tools
   "Emulate Windows notepad with extra menu")
-
-;;;###autoload (autoload 'tinypad-version "tinypad" "Display commentary." t)
-
-(eval-and-compile
-  (ti::macrof-version-bug-report
-   "tinypad.el"
-   "tipad"
-   tinypad-:version-id
-   "$Id: tinypad.el,v 2.39 2007/05/07 10:50:08 jaalto Exp $"
-   '(tinypad-:version-id tinypad-:load-hook)))
 
 (defcustom tinypad-:load-hook nil
   "*Hook run when file has been loaded."
