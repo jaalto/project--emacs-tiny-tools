@@ -9,7 +9,6 @@
 ;; Author:          Jari Aalto
 ;; Maintainer:      Jari Aalto
 ;;
-;; To get information on this program, call M-x tinyvc-version.
 ;; Look at the code with folding.el.
 
 ;; COPYRIGHT NOTICE
@@ -57,10 +56,6 @@
 ;; and call M-x `tinyvc-install-mode'.
 ;;
 ;;     tinyvc-:mode-menu-main
-;;
-;; If you have any questions, use this function
-;;
-;;      M-x tinyvc-submit-bug-report
 
 ;;}}}
 
@@ -138,8 +133,6 @@
 ;;;###autoload (autoload 'tinyvc-mode          "tinyvc" "" t)
 ;;;###autoload (autoload 'turn-on-tinyvc-mode  "tinyvc" "" t)
 ;;;###autoload (autoload 'turn-off-tinyvc-mode "tinyvc" "" t)
-;;;###autoload (autoload 'tinyvc-commentary    "tinyvc" "" t)
-;;;###autoload (autoload 'tinyvc-version       "tinyvc" "" t)
 
 (eval-and-compile
 
@@ -176,8 +169,6 @@ Mode description:
     ["Kill temporary files (flush)"   tinyvc-kill-tmp                 t]
     ["Reload rlog"                    tinyvc-reload                   t]
     "----"
-    ["Package version"                tinyvc-version                  t]
-    ["Package commentary"             tinyvc-commentary               t]
     ["Mode help"                      tinyvc-mode-help                t]
     ["Mode off"                       tinyvc-mode                     t])
    (progn
@@ -192,9 +183,7 @@ Mode description:
      (define-key map  "u" 'tinyvc-cancel-co)
      (define-key map  "U" 'tinyvc-unlock-unsafely)
      (define-key map  "?"  'tinyvc-mode-help)
-     (define-key map  "Hm" 'tinyvc-mode-help)
-     (define-key map  "Hc" 'tinyvc-commentary)
-     (define-key map  "Hv" 'tinyvc-version))))
+     (define-key map  "Hm" 'tinyvc-mode-help))))
 
 ;;; ......................................................... &v-hooks ...
 
@@ -264,20 +253,6 @@ Note:
 
 (defvar tinyvc-:shell-buffer "*tinyvc-tmp*"
   "Shell buffer.")
-
-;;}}}
-;;{{{ version
-
-(eval-and-compile
-  (ti::macrof-version-bug-report
-   "tinyvc.el"
-   "tinyvc"
-   tinyvc-:version-id
-   "$Id: tinyvc.el,v 2.47 2007/05/01 17:21:01 jaalto Exp $"
-   '(tinyvc-:version-id
-     tinyvc-:load-hook
-     tinyvc-:mode-name
-     tinyvc-:mode-prefix-key)))
 
 ;;}}}
 ;;{{{ Minor mode
