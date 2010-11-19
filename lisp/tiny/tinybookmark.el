@@ -394,7 +394,7 @@
             the file. Uses X-popup [imenu] for showing those book marks and
             moving between them.")
 
-(defvar tinybookmark--version-time "2010.1119.1448"
+(defvar tinybookmark--version-time "2010.1119.1452"
   "Last modified time.")
 
 ;;}}}
@@ -515,9 +515,6 @@ Cache where book marks are stored in alist \(bookMarkName . point\)")
 (make-variable-buffer-local 'tinybookmark--bookmark-regexp)
 
 ;;}}}
-
-;;; ########################################################## &macros ###
-
 ;;{{{ Macros
 
 ;;; ----------------------------------------------------------------------
@@ -547,9 +544,6 @@ References:
    tinybookmark--re-default-chars "+"))
 
 ;;}}}
-
-;;; ########################################################### &Funcs ###
-
 ;;{{{ movement functions
 
 ;;; ........................................................ &movement ...
@@ -694,8 +688,6 @@ References: `tinybookmark-cache-update'"
 
 ;;}}}
 ;;{{{ book mark line insert
-
-;;; ##################################################### &bookmarkAdd ###
 
 ;;; ----------------------------------------------------------------------
 ;;;
@@ -850,8 +842,6 @@ References:
 ;;}}}
 ;;{{{ Book Mark find, caching
 
-;;; #################################################### &bookmarkScan ###
-
 ;;; ----------------------------------------------------------------------
 ;;;
 (defun tinybookmark-scan (re)
@@ -930,18 +920,16 @@ Return:
               (setq ret t)
               (setq tinybookmark--cache list)))
         (save-excursion
-          (set-buffer (marker-buffer beg))
-          ;; what about after widen ? Were we in narrow mode ?
-          (unless (= end-wmax end-max)
-            (narrow-to-region beg end)))))
+          (with-current-buffer (marker-buffer beg)
+	    ;; what about after widen ? Were we in narrow mode ?
+	    (unless (= end-wmax end-max)
+	      (narrow-to-region beg end))))))
     ;; only reasonable way to return to current point
     (goto-char op)
     ret))
 
 ;;}}}
 ;;{{{ mouse
-
-;;; ################################################### &mouseHandling ###
 
 ;;; ----------------------------------------------------------------------
 ;;;
