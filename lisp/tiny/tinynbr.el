@@ -177,8 +177,8 @@ Mode description:
             `(defun ,sym1 (&optional insert reverse)
                  "If prefix arg INSERT is non-nil, insert result to buffer."
                  (interactive "P")
-                 (let* ((nbr (tinynbr-read-number reverse))
-                        ret)
+                 (let ((nbr (tinynbr-read-number reverse))
+		       ret)
                    (when nbr
                      (if (string-match "^0[Xx]\\(.*\\)" nbr)
                          (setq nbr (match-string 1 nbr)))
