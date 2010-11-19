@@ -37,7 +37,7 @@
 ;; Put this file on your Emacs-Lisp `load-path', add following into your
 ;; ~/.emacs startup file. Rip code with tinylib.el/ti::package-rip-magic
 ;;
-;;      (add-hook 'tinyhotlist-:load-hook 'tinyhotlist-load-hotlist)
+;;      (add-hook 'tinyhotlist--load-hook 'tinyhotlist-load-hotlist)
 ;;      (require 'tinyhotlist)
 ;;
 ;; or use autoload, preferred because your emacs starts up faster
@@ -159,7 +159,7 @@
 ;;      The typical menu item is quite long, because there is buffer name
 ;;      and filename part. The default rule shortens the home directory
 ;;      names to "" but if your file is elsewhere, you have to modify the
-;;      `tinyhotlist-:abbreviate-file-name-table'. There is examples how to use it
+;;      `tinyhotlist--abbreviate-file-name-table'. There is examples how to use it
 ;;      at the end of source file. Like:
 ;;
 ;;          /user@site.com:~user/project/this/  --> ~ftp1
@@ -171,22 +171,22 @@
 ;;
 ;;  Hooks: saving hot list after each cache update
 ;;
-;;      The buffers are stored into variable `tinyhotlist-:cache' and there
+;;      The buffers are stored into variable `tinyhotlist--cache' and there
 ;;      is two hooks that run after the entry is deleted or added to the
-;;      cache. The hooks are `tinyhotlist-:add-hook' and
-;;      `tinyhotlist-:remove-hook'. They contain default value
+;;      cache. The hooks are `tinyhotlist--add-hook' and
+;;      `tinyhotlist--remove-hook'. They contain default value
 ;;      `tinyhotlist-save-hotlist' which updates the cache on disk after
 ;;      each change. You can set these hooks to nil if you want to manually
 ;;      control when to save cache. (Maybe you load BASE cache every time
 ;;      and modify it during Emacs session, but you don't want to save
 ;;      this "session" hot list).
 ;;
-;;          (add-hook 'tinyhotlist-:load-hook 'my-tinyhotlist-load-hook)
+;;          (add-hook 'tinyhotlist--load-hook 'my-tinyhotlist-load-hook)
 ;;
 ;;          (defun my-tinyhotlist-load-hook ()
 ;;            "My hotlist settings"
 ;;            (setq tinyhotlist-save-hotlist nil)
-;;            (setq tinyhotlist-:remove-hook nil))
+;;            (setq tinyhotlist--remove-hook nil))
 ;;
 ;;  Saving and restoring the hot list
 ;;
@@ -196,7 +196,7 @@
 ;;
 ;;      To automatically restore the hot list when package loads:
 ;;
-;;          (add-hook 'tinyhotlist-:load-hook 'tinyhotlist-load-hotlist)
+;;          (add-hook 'tinyhotlist--load-hook 'tinyhotlist-load-hotlist)
 ;;
 ;;      To save the _current_ hot list automatically when Emacs exists:
 ;;
@@ -207,15 +207,15 @@
 ;;      Here is complete example setup how you could configure this package.
 ;;
 ;;          (autoload  'tinyhotlist-control "tinyhotlist" "" t)
-;;          (ti::add-hooks 'tinyhotlist-:load-hook
+;;          (ti::add-hooks 'tinyhotlist--load-hook
 ;;               '(tinyhotlist-load-hotlist my-tinyhotlist-init))
 ;;
 ;;          (defun my-tinyhotlist-init ()
 ;;            "Sets defaults for hotlist"
-;;            (setq tinyhotlist-:default-function       'my-tinyhotlist-defaults)
+;;            (setq tinyhotlist--default-function       'my-tinyhotlist-defaults)
 ;;            (global-set-key [(control shift mouse-3)] 'tinyhotlist-control))
 ;;
-;;            (defconst tinyhotlist-:abbreviate-file-name-table
+;;            (defconst tinyhotlist--abbreviate-file-name-table
 ;;              (list
 ;;               ;;   Remember: the substitution order must be _BIGGEST_
 ;;               ;;   substitution first.
@@ -230,7 +230,7 @@
 ;;               (list elisp  "")   ;; and wont show this either
 ;;               (list h        ""))))   ;; don't display the home
 ;;
-;;          (defconst tinyhotlist-:default-regexp
+;;          (defconst tinyhotlist--default-regexp
 ;;            (concat
 ;;             "^RMAIL$\\|scratc\\|diff\\|buffer menu\\|diff\\|Messages"
 ;;
@@ -269,32 +269,32 @@
 
 (eval-when-compile (ti::package-use-dynamic-compilation))
 
-(ti::package-defgroup-tiny TinyHotlist tinyhotlist-: tools
+(ti::package-defgroup-tiny TinyHotlist tinyhotlist-- tools
   "Hotlist of important buffers and files, easy add, easy remove")
 
 ;;}}}
 ;;{{{ setup: private
 ;;; .......................................................... &v-bind ...
 
-(defvar tinyhotlist-:history-keymap nil
+(defvar tinyhotlist--history-keymap nil
   "Keymap for history.")
 
 ;; completion keymap unused currently, #todo someday
 
-(if tinyhotlist-:history-keymap
+(if tinyhotlist--history-keymap
     nil
-  (setq tinyhotlist-:history-keymap (make-sparse-keymap))
-  (define-key  tinyhotlist-:history-keymap      [(up)]   'ignore)
-  (define-key  tinyhotlist-:history-keymap      [(down)] 'ignore))
+  (setq tinyhotlist--history-keymap (make-sparse-keymap))
+  (define-key  tinyhotlist--history-keymap      [(up)]   'ignore)
+  (define-key  tinyhotlist--history-keymap      [(down)] 'ignore))
 
 ;;; ......................................................... &v-hooks ...
 
-(defcustom tinyhotlist-:load-hook '(tinyhotlist-load-hotlist)
+(defcustom tinyhotlist--load-hook '(tinyhotlist-load-hotlist)
   "*Hook run when file is loaded."
   :type  'hook
   :group 'TinyHotlist)
 
-(defcustom tinyhotlist-:add-hook '(tinyhotlist-save-hotlist)
+(defcustom tinyhotlist--add-hook '(tinyhotlist-save-hotlist)
   "*Hook run when new buffer is added with `tinyhotlist-add-internal'.
 Functions in hook are called with two arguments:
 
@@ -304,7 +304,7 @@ Default value is `tinyhotlist-save-hotlist' which saves cache after every change
   :type  'hook
   :group 'TinyHotlist)
 
-(defcustom tinyhotlist-:remove-hook '(tinyhotlist-save-hotlist)
+(defcustom tinyhotlist--remove-hook '(tinyhotlist-save-hotlist)
   "*Hook run when new buffer is added with `tinyhotlist-remove-internal'.
 Functions in hook are called with two arguments:
 
@@ -316,7 +316,7 @@ Default value is `tinyhotlist-save-hotlist' which saves cache after every change
 
 ;;; ....................................................... &v-private ...
 
-(defvar tinyhotlist-:cache nil
+(defvar tinyhotlist--cache nil
   "Hotlist cache.
 Format:
   '((\"BUFFER-NAME[ DIRECTORY]\" . [FILE-NAME])
@@ -330,20 +330,20 @@ the DIRECTORY contains leading space if the directory part is included
   'buffer'     -- single entry
   'buffer2 ~/' -- buffer and filename.")
 
-(defvar tinyhotlist-:history nil
+(defvar tinyhotlist--history nil
   "History for completion.")
 
-(defcustom tinyhotlist-:hotlist-file
+(defcustom tinyhotlist--hotlist-file
   (ti::package-config-file-prefix "tinyhotlist.el")
   "*Default hotlist configuration file. You can edit as you want.
-If you edit the order of this file, set `tinyhotlist-:cache-sort-flag' to nil."
+If you edit the order of this file, set `tinyhotlist--cache-sort-flag' to nil."
   :type  'file
   :group 'TinyHotlist)
 
-(defcustom tinyhotlist-:cache-sort-flag t
+(defcustom tinyhotlist--cache-sort-flag t
   "Non-nil means Sort the entries in hotlist after adding a buffer to it.
 If you want to edit by hand the order of the hotlist file
-`tinyhotlist-:hotlist-file', then set this variable to nil, and the raw
+`tinyhotlist--hotlist-file', then set this variable to nil, and the raw
 order is preserved."
   :type  'boolean
   :group 'TinyHotlist)
@@ -353,12 +353,12 @@ order is preserved."
 
 ;;; ........................................................ &v-public ...
 
-(defcustom tinyhotlist-:list-max 40
+(defcustom tinyhotlist--list-max 40
   "*Maximum members in hotlist."
   :type  'integer
   :group 'TinyHotlist)
 
-(defcustom tinyhotlist-:title "     hotlist     "
+(defcustom tinyhotlist--title "     hotlist     "
   "*Title of menu."
   :type  'string
   :group 'TinyHotlist)
@@ -366,17 +366,17 @@ order is preserved."
 ;;  handy if you want to call from non-mouse, e.g. pressing key.
 ;;  --> set event parameter to nil when calling func  tinyhotlist-control
 
-(defcustom tinyhotlist-:x-coord 170
+(defcustom tinyhotlist--x-coord 170
   "*Default menu coordinate."
   :type  'integer
   :group 'TinyHotlist)
 
-(defcustom tinyhotlist-:y-coord 170
+(defcustom tinyhotlist--y-coord 170
   "*Default menu coordinate."
   :type  'integer
   :group 'TinyHotlist)
 
-(defcustom tinyhotlist-:use-x-popup t
+(defcustom tinyhotlist--use-x-popup t
   "*If non-nil, don't use popups.
 If you prefer not to use popup-like dialog box for hotlist items,
 then set ths variable to nil. This variable is valid only if you're
@@ -384,13 +384,13 @@ running in X-windowed system."
   :type  'boolean
   :group 'TinyHotlist)
 
-(defcustom tinyhotlist-:default-regexp nil
+(defcustom tinyhotlist--default-regexp nil
   "*Regexp to match buffers when initialising hotlist menu.
 See `tinyhotlist-control'."
   :type  'string
   :group 'TinyHotlist)
 
-(defcustom tinyhotlist-:abbreviate-file-name-table
+(defcustom tinyhotlist--abbreviate-file-name-table
   (list
    (list
     (or (and (getenv "HOME")
@@ -403,7 +403,7 @@ See `tinyhotlist-control'."
   "How to substitute absolute path names. The PATH value is case sensitive.
 Changes in this variable will only affect the new buffers added to the
 hotlist. If you want to rebuild the whole hotlist using the
-`tinyhotlist-:default-regexp', call `tinyhotlist-build-default-hotlist'
+`tinyhotlist--default-regexp', call `tinyhotlist-build-default-hotlist'
 
 Format:
  '((PATH  SUBSTITUTE) (P S) ..)
@@ -436,7 +436,7 @@ NO-CONFIRM suppresses confirm of loading ange-ftp files."
 	file
 	elt
 	ptr)
-    (setq elt (assoc item tinyhotlist-:cache))
+    (setq elt (assoc item tinyhotlist--cache))
     (setq buffer (car elt)
           file   (cdr elt))
     (cond
@@ -482,15 +482,15 @@ NO-CONFIRM suppresses confirm of loading ange-ftp files."
 ;;; ----------------------------------------------------------------------
 ;;;
 (defun tinyhotlist-abbreviate-file-name (file &optional restore)
-  "Abbreviate FILE by looking at `tinyhotlist-:abbreviate-file-name-table'.
+  "Abbreviate FILE by looking at `tinyhotlist--abbreviate-file-name-table'.
 If RESTORE is passed, the convert abbreviated FILE into absolute path
-using `tinyhotlist-:abbreviate-file-name-table'."
+using `tinyhotlist--abbreviate-file-name-table'."
   (let (case-fold-search
 	str
 	substitute
 	match
 	replace)
-    (dolist (elt tinyhotlist-:abbreviate-file-name-table)
+    (dolist (elt tinyhotlist--abbreviate-file-name-table)
       (setq str (nth 0 elt)  substitute (nth 1 elt))
       (setq match (if restore substitute str)
             replace
@@ -533,9 +533,9 @@ Returns:
       (cond
        (buffer-file
         (setq exist
-              (member buffer-file (mapcar (function cdr) tinyhotlist-:cache))))
+              (member buffer-file (mapcar (function cdr) tinyhotlist--cache))))
        (t
-        (setq exist (ti::list-find tinyhotlist-:cache (regexp-quote buffer)))))
+        (setq exist (ti::list-find tinyhotlist--cache (regexp-quote buffer)))))
       ;; ............................................. push to hotlist ...
       (unless exist
         (when buffer-file ;;  Get the directory name
@@ -549,24 +549,24 @@ Returns:
                 (setq elt (format "%-25s %s" buffer abbrev))
               (setq elt (concat buffer " " abbrev)))
             (push (cons elt (abbreviate-file-name buffer-file))
-                  tinyhotlist-:cache)))))
+                  tinyhotlist--cache)))))
     ;;  Keep it in sorted order.
-    (when tinyhotlist-:cache-sort-flag
+    (when tinyhotlist--cache-sort-flag
       (setq
-       tinyhotlist-:cache
+       tinyhotlist--cache
        (sort
-        tinyhotlist-:cache
+        tinyhotlist--cache
         (function
          (lambda (a b)
            (string-lessp (car b) (car a)))))))
     (setq ret (not exist)) ;; buffer was added if didn't exist
-    (run-hook-with-args 'tinyhotlist-:add-hook buffer ret)
+    (run-hook-with-args 'tinyhotlist--add-hook buffer ret)
     ret))
 
 ;;; ----------------------------------------------------------------------
 ;;;
 (defun tinyhotlist-remove-internal (arg type)
-  "Remove according to ARG and MODE a item from `tinyhotlist-:cache'.
+  "Remove according to ARG and MODE a item from `tinyhotlist--cache'.
 
 Input:
 
@@ -582,9 +582,9 @@ Return
     (cond
      ((eq type 'menu-item)
       (when (and (stringp arg)
-                 (setq arg (assoc arg tinyhotlist-:cache)))
+                 (setq arg (assoc arg tinyhotlist--cache)))
         (setq ret t)
-        (setq tinyhotlist-:cache (delete arg tinyhotlist-:cache))))
+        (setq tinyhotlist--cache (delete arg tinyhotlist--cache))))
      ((eq type 'file)
       (setq func 'cdr))
      ((eq type 'buffer)
@@ -594,13 +594,13 @@ Return
        (t
         (setq func 'car)))))
     (when func
-      (dolist (elt tinyhotlist-:cache)
+      (dolist (elt tinyhotlist--cache)
         (if (string-match (regexp-quote arg) (or (funcall func elt) "" ))
             (setq ret t)
           (push elt list))
-        (setq tinyhotlist-:cache list))
-      (setq tinyhotlist-:cache list))
-    (run-hook-with-args 'tinyhotlist-:remove-hook arg ret)
+        (setq tinyhotlist--cache list))
+      (setq tinyhotlist--cache list))
+    (run-hook-with-args 'tinyhotlist--remove-hook arg ret)
     ret))
 
 ;;; ----------------------------------------------------------------------
@@ -620,25 +620,25 @@ against temporary buffers too. Otherwise they are not counted."
 (defun tinyhotlist-kill (&optional default)
   "Kill hotlist or initialise with defaults if DEFAULT flag is non-nil.
 References:
-   `tinyhotlist-:default-regexp'."
+   `tinyhotlist--default-regexp'."
   (interactive)
-  (setq tinyhotlist-:cache nil)
-  (if (and default (stringp tinyhotlist-:default-regexp))
-      (tinyhotlist-add-by-regexp tinyhotlist-:default-regexp)))
+  (setq tinyhotlist--cache nil)
+  (if (and default (stringp tinyhotlist--default-regexp))
+      (tinyhotlist-add-by-regexp tinyhotlist--default-regexp)))
 
 ;;; ----------------------------------------------------------------------
 ;;;
 (defun tinyhotlist-set-defaults ()
-  "Initialise hotlist according to `tinyhotlist-:default-regexp'."
+  "Initialise hotlist according to `tinyhotlist--default-regexp'."
   (tinyhotlist-kill 'init))
 
 ;;; ----------------------------------------------------------------------
 ;;;
 (defun tinyhotlist-build-default-hotlist ()
-  "Delete existing hotlist and build with `tinyhotlist-:default-regexp'.
-See variable `tinyhotlist-:abbreviate-file-name-table'."
+  "Delete existing hotlist and build with `tinyhotlist--default-regexp'.
+See variable `tinyhotlist--abbreviate-file-name-table'."
   (interactive)
-  (setq tinyhotlist-:cache nil)
+  (setq tinyhotlist--cache nil)
   (tinyhotlist-set-defaults))
 
 ;;; ----------------------------------------------------------------------
@@ -653,15 +653,15 @@ See variable `tinyhotlist-:abbreviate-file-name-table'."
 ;;;
 ;;;###autoload
 (defun tinyhotlist-load-hotlist (&optional save)
-  "Load or SAVE hotlist configuration from `tinyhotlist-:hotlist-file'.
+  "Load or SAVE hotlist configuration from `tinyhotlist--hotlist-file'.
 When the hotlist file is loaded, only valid entries from there
-are selected to `tinyhotlist-:cache': If File does not exist, it is dropped.
+are selected to `tinyhotlist--cache': If File does not exist, it is dropped.
 
 Return:
 
  nil t"
   (interactive "P")
-  (let ((file tinyhotlist-:hotlist-file)
+  (let ((file tinyhotlist--hotlist-file)
 	buffer
 	list)
     (cond
@@ -669,7 +669,7 @@ Return:
      ((null save)
       (when (file-exists-p file)
         (load-file file)
-        (dolist (elt tinyhotlist-:cache)
+        (dolist (elt tinyhotlist--cache)
           (setq buffer (car elt)
                 file   (cdr elt))
           ;;  Drop away non-existing files.
@@ -685,14 +685,14 @@ Return:
                           (file-exists-p file))))
             (push (cons buffer file) list)))
         ;;  Reverse must be used due to push.
-        (setq tinyhotlist-:cache (nreverse list))
+        (setq tinyhotlist--cache (nreverse list))
         t))
      ;; ......................................................... save ...
      (t
-      (let* ((file tinyhotlist-:hotlist-file)
+      (let* ((file tinyhotlist--hotlist-file)
              (dir  (file-name-directory file)))
         (if (not (stringp dir))
-            (error (concat "TinyHotlist: `tinyhotlist-:hotlist-file'"
+            (error (concat "TinyHotlist: `tinyhotlist--hotlist-file'"
                            " must be absolute path [%s]")
                    file)
           ;;  Make sure that file can be saved to a directory
@@ -702,7 +702,7 @@ Return:
           (ti::write-file-variable-state
            file
            "Emacs TinyHotlist.el cache file."
-           '(tinyhotlist-:cache))))))))
+           '(tinyhotlist--cache))))))))
 
 ;;}}}
 ;;{{{ X menu
@@ -714,14 +714,14 @@ Return:
 Return:
  buffer or nil"
   (let ((menu (ti::list-to-assoc-menu list))
-	(def  (car-safe tinyhotlist-:history))
+	(def  (car-safe tinyhotlist--history))
 	ret)
     (setq ret (completing-read "hot item: "
 			       menu
 			       nil
 			       t
 			       def
-			       'tinyhotlist-:history))
+			       'tinyhotlist--history))
     (if (ti::nil-p ret)                 ;really selected ?
         nil
       ret)))
@@ -735,10 +735,10 @@ If EVENT is nil, use default coordinates to display the menu and TITLE.
 Return:
   menu item or nil."
   (interactive "e")
-  (let* ((list   (mapcar (function car) tinyhotlist-:cache))
-         (title  (or title tinyhotlist-:title))
+  (let* ((list   (mapcar (function car) tinyhotlist--cache))
+         (title  (or title tinyhotlist--title))
          (x      (cond
-                  ((and tinyhotlist-:use-x-popup ;; permits use of popup
+                  ((and tinyhotlist--use-x-popup ;; permits use of popup
                         (ti::compat-window-system))
                    t)
                   (t
@@ -754,7 +754,7 @@ Return:
   "Same as `tinyhotlist-control' with ARG, but you can call this from keyboard."
   (interactive "P")
   (tinyhotlist-control
-   (ti::compat-make-fake-event tinyhotlist-:x-coord tinyhotlist-:y-coord) arg))
+   (ti::compat-make-fake-event tinyhotlist--x-coord tinyhotlist--y-coord) arg))
 
 ;;; ----------------------------------------------------------------------
 ;;;
@@ -775,12 +775,12 @@ Optional ARG can be:
   3 x \\[universal-argument]       load hotlist."
   (interactive "e\nP")
   (let ((buffer (buffer-name))
-	(menu   (or tinyhotlist-:cache
+	(menu   (or tinyhotlist--cache
 		    ;;  See if there is any buffers matching user's
 		    ;;  regexp to make the initial hotlist.
-		    (and tinyhotlist-:default-regexp
+		    (and tinyhotlist--default-regexp
 			 (tinyhotlist-set-defaults)
-			 tinyhotlist-:cache)))
+			 tinyhotlist--cache)))
 	ret)
     (cond
      ;; ...................................................... display ...
@@ -836,7 +836,7 @@ Optional ARG can be:
      ((equal '(64) arg)
       (if (tinyhotlist-load-hotlist)
           (message "TinyHotlist: loaded")
-        (message "TinyHotlist: Can't load %s" tinyhotlist-:hotlist-file))
+        (message "TinyHotlist: Can't load %s" tinyhotlist--hotlist-file))
       (sleep-for 2)))))
 
 ;;; ----------------------------------------------------------------------
@@ -858,6 +858,6 @@ Optional ARG can be:
 ;;}}}
 
 (provide   'tinyhotlist)
-(run-hooks 'tinyhotlist-:load-hook)
+(run-hooks 'tinyhotlist--load-hook)
 
 ;;; tinyhotlist.el ends here
