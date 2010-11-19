@@ -9,7 +9,6 @@
 ;; Author:          Jari Aalto
 ;; Maintainer:      Jari Aalto
 ;;
-;; To get information on this program, call -x tinylock-version.
 ;; Look at the code with folding.el
 
 ;; COPYRIGHT NOTICE
@@ -50,11 +49,6 @@
 ;;   downcase-region.
 ;;
 ;;      (global-set-key "\M-l" 'tinylock-lock)     ;; Suggested keybinding.
-;;
-;;
-;;   If you have any questions, use this function
-;;
-;;      M-x tinylock-submit-feedback
 ;;
 ;;   See also Example section at the end of file.
 
@@ -169,10 +163,6 @@
 (require 'tinylibm)
 
 (eval-and-compile
-  ;; If this is not 19.34+, then we need advice code, otherwise it is
-  ;; skipped.
-  (unless (fboundp 'run-with-idle-timer)
-    (require 'advice))
   (ti::package-package-require-timer))
 
 (eval-when-compile (ti::package-use-dynamic-compilation))
@@ -288,33 +278,6 @@ this in you ~/.emacs")
 (defmacro tinylock-time-hh (time)
   "Return hour from TIME."
   (list  'string-to-int (list 'substring time -13 -11)))
-
-(eval-and-compile
-  (unless (fboundp 'run-with-idle-timer) ;we need this if not 19.34+
-    (require 'advice)
-    ;;   What else easy means we have to tell that user is working with
-    ;;   the emacs ?
-    ;;
-    ;;   The advice shouldn't disturb normal emacs behavior and the functions
-    ;;   calls are _inlined_, ie. function is expanded to point
-    ;;   when byte compiled, so that the advice works as fast as possible
-    ;;   and doesn't take time from the original function.
-    ;;
-    ;; (ti::advice-control '(switch-to-buffer other-window)  "^til$" 'dis)
-    ;;
-    (defadvice switch-to-buffer  (before til act) ;C-x C-b
-      "Tell to Emacs auto lock that there is user activity."
-      (if (interactive-p)
-          (inline (tinylock-user-activity))))
-
-    (defadvice execute-extended-command  (before til act) ;; M-x called
-      "Tell to Emacs auto lock that there is user activity."
-      (if (interactive-p) (inline (tinylock-user-activity))))
-
-    (defadvice other-window  (before til act) ;C-x o
-      "Tell to Emacs auto lock that there is user activity."
-      (if (interactive-p)
-          (inline (tinylock-user-activity))))))
 
 ;;}}}
 ;;{{{ code: misc funcs
