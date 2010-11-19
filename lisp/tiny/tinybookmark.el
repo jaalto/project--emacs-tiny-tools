@@ -382,7 +382,7 @@
   (autoload 'imenu--mouse-menu          "imenu"    "" t)
   (autoload 'folding-show-current-entry "folding"  "" t))
 
-(ti::package-defgroup-tiny TinyBookmark tinybookmark-: tools
+(ti::package-defgroup-tiny TinyBookmark tinybookmark-- tools
   "Minor mode for writing text in 'Technical text format'.
   Overview of features
 
@@ -394,7 +394,7 @@
             the file. Uses X-popup [imenu] for showing those book marks and
             moving between them.")
 
-(defvar tinybookmark-:version-time "2010.1119.1109"
+(defvar tinybookmark--version-time "2010.1119.1109"
   "Last modified time.")
 
 ;;}}}
@@ -402,12 +402,12 @@
 
 ;;; ......................................................... &v-hooks ...
 
-(defcustom tinybookmark-:parse-before-hook nil
+(defcustom tinybookmark--parse-before-hook nil
   "*Hook that is run just before the buffer is scanned for book marks."
   :type  'hook
   :group 'TinyBookmark)
 
-(defcustom tinybookmark-:load-hook nil
+(defcustom tinybookmark--load-hook nil
   "*Hook run when file is loaded."
   :type  'hook
   :group 'TinyBookmark)
@@ -417,20 +417,20 @@
 
 ;;; ........................................................ &v-public ...
 
-(defcustom tinybookmark-:cache-update 'threshold
+(defcustom tinybookmark--cache-update 'threshold
   "*Method when to update cache.
 
 nil         manual update -- you have to call `tinybookmark-parse'
 'always     always update cache when menu displayed.
 'threshold  update happens when buffer's total character change
-            exceeds previous value of `tinybookmark-:cache-threshold-val'."
+            exceeds previous value of `tinybookmark--cache-threshold-val'."
   :type '(choice
           (const nil)
           (const 'always)
           (const 'threshold))
   :group 'TinyBookmark)
 
-(defcustom tinybookmark-:cache-threshold-val 100
+(defcustom tinybookmark--cache-threshold-val 100
   "*When cache is constructed, the total character count is saved.
 When user adds more code, the total count changes accordingly. If the
 difference between current count and last saved count gets bigger than
@@ -438,35 +438,35 @@ this value the cache is re-read."
   :type  'integer
   :group 'TinyBookmark)
 
-(defcustom tinybookmark-:re-default-chars "[-~+=*%/|#.,'`^]"
+(defcustom tinybookmark--re-default-chars "[-~+=*%/|#.,'`^]"
   "*Default book mark repeat chars."
   :type  'string
   :group 'TinyBookmark)
 
-(defcustom tinybookmark-:max-col '(progn  (tinybookmark-calc-max-col))
+(defcustom tinybookmark--max-col '(progn  (tinybookmark-calc-max-col))
   "*Last column to extend the break.
 This can be FORM which evaluates to column number"
   :type  'sexp
   :group 'TinyBookmark)
 
-(defcustom tinybookmark-:trailer-space-len 3
+(defcustom tinybookmark--trailer-space-len 3
   "*How much space is left to the right before the book mark ID ends."
   :type  'integer
   :group 'TinyBookmark)
 
-(defcustom tinybookmark-:comment-start-func 'tinybookmark-comment-start
+(defcustom tinybookmark--comment-start-func 'tinybookmark-comment-start
   "*Function that return appropriate start comment.
 Must return empty string if comment not defined."
   :type  'function
   :group 'TinyBookmark)
 
-(defcustom tinybookmark-:comment-end-func 'tinybookmark-comment-end
+(defcustom tinybookmark--comment-end-func 'tinybookmark-comment-end
   "*Function that return appropriate end comment.
 Must return empty string if comment not defined."
   :type  'function
   :group 'TinyBookmark)
 
-(defcustom tinybookmark-:scan-filter-func 'tinybookmark-scan-filter
+(defcustom tinybookmark--scan-filter-func 'tinybookmark-scan-filter
   "*Filter out match.
 When building up the book marks from file, there may be false hits,
 or you may look at special lines only. This function accepts three arguments:
@@ -478,7 +478,7 @@ If the function return nil the line is not added to the cache."
   :type  'function
   :group 'TinyBookmark)
 
-(defcustom tinybookmark-:goto-func 'tinybookmark-goto
+(defcustom tinybookmark--goto-func 'tinybookmark-goto
   "*Function that handles moving to the point.
 If you have folding in effect around that point you may wish
 to open it in your custom function.
@@ -487,7 +487,7 @@ This function receives one argument: POINT"
   :type  'function
   :group 'TinyBookmark)
 
-(defcustom tinybookmark-:insert-strict t
+(defcustom tinybookmark--insert-strict t
   "*Controls if the book Mark insertion is strict when no argument is given.
 See `tinybookmark-insert'"
   :type  'boolean
@@ -498,21 +498,21 @@ See `tinybookmark-insert'"
 
 ;;; ....................................................... &v-private ...
 
-(defvar tinybookmark-:cache nil
+(defvar tinybookmark--cache nil
   "Private.
 Cache where book marks are stored in alist \(bookMarkName . point\)")
-(make-variable-buffer-local 'tinybookmark-:cache)
+(make-variable-buffer-local 'tinybookmark--cache)
 
 ;;  We don't want cache to be wiped away when major mode changes
-(put 'tinybookmark-:cache           'permanent-local t)
+(put 'tinybookmark--cache           'permanent-local t)
 
-(defvar tinybookmark-:cache-char-count nil
+(defvar tinybookmark--cache-char-count nil
   "Private. Totals characters in buffer.")
-(make-variable-buffer-local 'tinybookmark-:cache-char-count)
+(make-variable-buffer-local 'tinybookmark--cache-char-count)
 
-(defvar tinybookmark-:bookmark-regexp nil
+(defvar tinybookmark--bookmark-regexp nil
   "Private. Hold buffers book mark regexp.")
-(make-variable-buffer-local 'tinybookmark-:bookmark-regexp)
+(make-variable-buffer-local 'tinybookmark--bookmark-regexp)
 
 ;;}}}
 
@@ -527,9 +527,9 @@ Cache where book marks are stored in alist \(bookMarkName . point\)")
 If the local value where the regexp is stored is nil, the rescan buffer.
 
 References:
-  `tinybookmark-:bookmark-regexp'"
-  (or tinybookmark-:bookmark-regexp     ;changing mode kill local vars
-      (setq tinybookmark-:bookmark-regexp
+  `tinybookmark--bookmark-regexp'"
+  (or tinybookmark--bookmark-regexp     ;changing mode kill local vars
+      (setq tinybookmark--bookmark-regexp
             (tinybookmark-search-bm-re))))
 
 ;;; ----------------------------------------------------------------------
@@ -539,12 +539,12 @@ References:
 (defsubst tinybookmark-regexp-default  ()
   "Return default book mark regexp.
 References:
-  `tinybookmark-:re-default-chars'"
+  `tinybookmark--re-default-chars'"
   (concat
-   tinybookmark-:re-default-chars
-   tinybookmark-:re-default-chars "+"
+   tinybookmark--re-default-chars
+   tinybookmark--re-default-chars "+"
    " &+\\([^ \t]+\\) "
-   tinybookmark-:re-default-chars "+"))
+   tinybookmark--re-default-chars "+"))
 
 ;;}}}
 
@@ -674,11 +674,11 @@ Ignore FULL-LINE POS ID."
 (defun tinybookmark-cache-update ()
   "Determines when and how to update cache.
 References: `tinybookmark-cache-update'"
-  (let* ((mode       tinybookmark-:cache-update)
+  (let* ((mode       tinybookmark--cache-update)
          (end        (marker-position (point-max-marker)))
-         (cache-end  (or tinybookmark-:cache-char-count
+         (cache-end  (or tinybookmark--cache-char-count
 			 end))
-         (limit      tinybookmark-:cache-threshold-val)
+         (limit      tinybookmark--cache-threshold-val)
          diff)
     (cond
      ((eq mode nil)
@@ -788,19 +788,19 @@ Input:
   TXT       book mark name
   SEP       separator string that is repeated.
   STRICT
-            0       strict is nil in spite of `tinybookmark-:insert-strict'
-            1       strict is t   in spite of `tinybookmark-:insert-strict'
-            nil     use default value in `tinybookmark-:insert-strict'
+            0       strict is nil in spite of `tinybookmark--insert-strict'
+            1       strict is t   in spite of `tinybookmark--insert-strict'
+            nil     use default value in `tinybookmark--insert-strict'
 
 References:
 
-  `tinybookmark-:insert-strict'"
+  `tinybookmark--insert-strict'"
   (interactive "sBookmark: \nsSep: \nP")
-  (let* ((strict-def  tinybookmark-:insert-strict)
-         (cs-func     tinybookmark-:comment-start-func)
-         (ce-func     tinybookmark-:comment-end-func)
-         (line-col    (eval tinybookmark-:max-col))
-         (trail-len   tinybookmark-:trailer-space-len) ;how much to leave
+  (let* ((strict-def  tinybookmark--insert-strict)
+         (cs-func     tinybookmark--comment-start-func)
+         (ce-func     tinybookmark--comment-end-func)
+         (line-col    (eval tinybookmark--max-col))
+         (trail-len   tinybookmark--trailer-space-len) ;how much to leave
          (bolp        (line-beginning-position))
          (cur-col     (current-column))
          (orig-point  (+ bolp cur-col))
@@ -859,8 +859,8 @@ References:
 Return list: (id . beginning-of-line-point).
 
 References:
-  `tinybookmark-:scan-filter-func'"
-  (let ((func tinybookmark-:scan-filter-func) ;should we filter something ?
+  `tinybookmark--scan-filter-func'"
+  (let ((func tinybookmark--scan-filter-func) ;should we filter something ?
 	id
 	point
 	list)
@@ -915,8 +915,8 @@ Return:
 	re
 	ret
 	list)
-    (run-hooks 'tinybookmark-:parse-before-hook)
-    (setq tinybookmark-:cache-char-count end-pos) ;Set GLOBAL
+    (run-hooks 'tinybookmark--parse-before-hook)
+    (setq tinybookmark--cache-char-count end-pos) ;Set GLOBAL
     (if (null (setq re (tinybookmark-regexp-read-from-buffer)))
         (message "TinyBookmark: No book mark syntax Identifier found.")
       (unwind-protect                   ;handle narrowed buffers too
@@ -928,7 +928,7 @@ Return:
             (if (null list)
                 (message "TinyBookmark: No book marks found.")
               (setq ret t)
-              (setq tinybookmark-:cache list)))
+              (setq tinybookmark--cache list)))
         (save-excursion
           (set-buffer (marker-buffer beg))
           ;; what about after widen ? Were we in narrow mode ?
@@ -966,11 +966,11 @@ Called with mouse EVENT. VERB displays message."
 (defun tinybookmark-selection (event)
   "Display cache menu. Called with mouse EVENT."
   (interactive "e")
-  (let ((go-func   tinybookmark-:goto-func)
+  (let ((go-func   tinybookmark--goto-func)
 	cache
 	data)
     (tinybookmark-cache-update)
-    (setq cache     tinybookmark-:cache)
+    (setq cache     tinybookmark--cache)
     (if (null cache)
         (message "TinyBookmark: No book marks found.")
       (cond
@@ -986,7 +986,7 @@ Called with mouse EVENT. VERB displays message."
 ;;;
 (defun tinybookmark-cache-regenerate (&optional force)
   "Regenerate cache if needed. Optional FORCE."
-  (let ((cache-ok tinybookmark-:cache))
+  (let ((cache-ok tinybookmark--cache))
     (when (or (null cache-ok)
               force)
       (message "TinyBookmark: building cache...")
@@ -1005,12 +1005,12 @@ Optional ARG rebuilds cache."
      (if current-prefix-arg
          (tinybookmark-cache-regenerate t))
      (let* ((ans (completing-read "TinyBookmark: "
-                                  tinybookmark-:cache nil 'match)))
+                                  tinybookmark--cache nil 'match)))
        (list ans
              current-prefix-arg))))
   (unless (interactive-p)
     (tinybookmark-cache-regenerate arg))
-  (let* ((elt (assoc bookmark tinybookmark-:cache)))
+  (let* ((elt (assoc bookmark tinybookmark--cache)))
     (if (not elt)
         (message
          (substitute-command-keys
@@ -1032,6 +1032,6 @@ Optional ARG rebuilds cache."
 ;;}}}
 
 (provide   'tinybookmark)
-(run-hooks 'tinybookmark-:load-hook)
+(run-hooks 'tinybookmark--load-hook)
 
 ;;; tinybookmark.el ends here
