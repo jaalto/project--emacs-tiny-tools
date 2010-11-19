@@ -408,7 +408,6 @@ Always clears the keymap first and reinstalls the minor mode."
    (arg
     (remove-hook        'minibuffer-setup-hook  'tinyef-minibuffer-setup)
     (remove-hook        'minibuffer-exit-hook   'turn-off-tinyef-mode)
-
     (ti::keymap-add-minor-mode 'tinyef-mode nil nil     'remove)
     (tinyef-install-maps  'remove))
    (t
@@ -614,7 +613,6 @@ Current keymap:
        ((eq act 'undo)
         (undo))
        ;; ... ... ... ... ... ... ... ... ... ... ... ... ... .. chunk ..
-
        ((eq act 'chunk-delete)
         (delete-region point (point))) ;; The kill point is already set
        ;; ... ... ... ... ... ... ... ... ... ... ... ... ... ... step ..
