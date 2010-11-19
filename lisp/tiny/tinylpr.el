@@ -9,7 +9,6 @@
 ;; Author:       Jari Aalto
 ;; Maintainer:   Jari Aalto
 ;;
-;; To get information on this program, call M-x tinylpr-version.
 ;; Look at the code with folding.el
 
 ;; COPYRIGHT NOTICE
@@ -55,10 +54,6 @@
 ;;
 ;;   You must copy the user variables and put your own definitions
 ;;   there. The ones that ship with this module are only examples
-;;
-;;   If you have any questions, use this function
-;;
-;;      M-x tinylpr-submit-feedback
 
 ;;}}}
 ;;{{{ Documentation
@@ -298,25 +293,6 @@ Example
 
 (defvar tinylpr-:print-style-history nil
   "Private. History list for tinylpr-print-style-completions.")
-
-;;; ....................................................... &v-version ...
-
-(eval-and-compile
-  (ti::macrof-version-bug-report
-   "tinylpr.el"
-   "tinylpr"
-   tinylpr-:version-id
-   "$Id: tinylpr.el,v 2.42 2007/05/01 17:20:49 jaalto Exp $"
-   '(tinylpr-:version-id
-     tinylpr-:load-hook
-     tinylpr-:set-ps-lpr-switches
-     tinylpr-:queue-cmd
-     tinylpr-:printer-list
-     tinylpr-:print-style-list
-     tinylpr-:current-printer
-     tinylpr-:current-print-style
-     tinylpr-:printer-list-history
-     tinylpr-:print-style-history)))
 
 (defvar tinylpr-:menu
   '((format
