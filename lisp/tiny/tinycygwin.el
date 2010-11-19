@@ -1641,7 +1641,6 @@ is started. Here are few inportant Eamcs commands to help you:
                        "\\|ignoring"
                        "\\|Linux version.*")
                0 'font-lock-comment-face))))
-
       ((string-match "mail\\.log\\|mail\\.info" file)
        ;; font-lock-constant-face
        (make-local-variable 'font-lock-defaults)
@@ -1658,7 +1657,6 @@ is started. Here are few inportant Eamcs commands to help you:
               (list
                (concat "\\(from\\|to\\)=\\([^ ,\t\r\n]+\\)")
                2 'font-lock-comment-face))))
-
       ((string-match "daemon\\.log" file)
        ;; font-lock-constant-face
        (make-local-variable 'font-lock-defaults)
@@ -1675,7 +1673,6 @@ is started. Here are few inportant Eamcs commands to help you:
                (concat "signal +[0-9]+\\|no such user"
                        "\\|connect from .*")
                0 'font-lock-comment-face))))
-
       ((string-match "auth\\.log" file)
        ;; font-lock-constant-face
        (make-local-variable 'font-lock-defaults)
@@ -1698,7 +1695,6 @@ is started. Here are few inportant Eamcs commands to help you:
                  1 font-lock-comment-face)
               '( "for user +\\([^ \t\r\n]+\\)"
                  1 font-lock-comment-face))))
-
       ((string-match "syslog" file)
        ;; font-lock-constant-face
        (make-local-variable 'font-lock-defaults)
