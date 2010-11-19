@@ -79,8 +79,6 @@
 
 (require 'tinylibm)
 
-(eval-when-compile (ti::package-use-dynamic-compilation))
-
 (ti::package-defgroup-tiny TinyMacro tinymacro-- extensions
   "Fast way to assign newly created macro to key
   Overview of features.
