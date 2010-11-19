@@ -1442,7 +1442,6 @@ Eg.
                         "3 " (and (string-match word diff)
                                   list
                                   (not (stringp tinydiff-:last-data))))
-
         (cond
          ;; ................................................... case-1 ...
          ((or (string= word rcsdiff)
@@ -1809,7 +1808,6 @@ Return:
                   (ti::re-search-check
                    "^patch:.*--aborting" 1 nil 'get-matched-text))
             (setq file (list file)))
-
        ;;  In SunOS it simply prints the following on success.
        ;;
        ;;       Looks like a new-style context diff.
