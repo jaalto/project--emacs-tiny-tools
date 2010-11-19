@@ -716,7 +716,12 @@ Return:
   (let ((menu (ti::list-to-assoc-menu list))
 	(def  (car-safe tinyhotlist-:history))
 	ret)
-    (setq ret (completing-read "hot item: " menu nil t def 'tinyhotlist-:history))
+    (setq ret (completing-read "hot item: "
+			       menu
+			       nil
+			       t
+			       def
+			       'tinyhotlist-:history))
     (if (ti::nil-p ret)                 ;really selected ?
         nil
       ret)))
