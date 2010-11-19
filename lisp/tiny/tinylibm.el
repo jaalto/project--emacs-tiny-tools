@@ -68,6 +68,9 @@
 
 ;;{{{ Load forms
 
+(eval-when-compile
+  (autoload 'member* "cl-seq"))
+
 (require 'tinylibb)                     ;Backward compatible functions
 
 ;;{{{ function tests
@@ -1012,7 +1015,7 @@ Input:
   "If CHAR can be found in LIST, return a pointer to it.
 The match is case sensitive."
   (when char
-    (let* (case-fold-search)
+    (let (case-fold-search)
       (member* char list :test 'char-equal))))
 
 ;;; ----------------------------------------------------------------------
