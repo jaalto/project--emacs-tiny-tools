@@ -179,7 +179,7 @@
 (eval-and-compile
   (autoload 'apropos-internal "apropos"))
 
-(ti::package-defgroup-tiny TinyEf tinyef-: extensions
+(ti::package-defgroup-tiny TinyEf tinyef-- extensions
   "Electric file minor mode. Designed for minibuffer file prompt editing.
   Overview of features
 
@@ -191,17 +191,17 @@
 ;;}}}
 ;;{{{ setup: variables
 
-(defcustom tinyef-:load-hook nil
+(defcustom tinyef--load-hook nil
   "*Hook that is run when package is loaded."
   :type  'hook
   :group 'TinyEf)
 
-(defcustom tinyef-:mode-key "\C-c/"
+(defcustom tinyef--mode-key "\C-c/"
   "*Key to toggle function `tinyef-mode' on/off in minibuffer map."
   :type  '(string :tag "Key sequence")
   :group 'TinyEf)
 
-(defcustom tinyef-:mode-key-table
+(defcustom tinyef--mode-key-table
   '((?\<   . step-delete-back)
     (?\>   . step-delete-fwd)
     (?\|   . chunk-delete)
@@ -229,13 +229,13 @@ If you change this; you must call function \\[tinyef-mode-map-define-keys]."
             (const undo))))
   :group 'TinyEf)
 
-(defcustom tinyef-:step-delete-chars "-./@:"
+(defcustom tinyef--step-delete-chars "-./@:"
   "*When using step-delete action, kill until these chars. This is charset.
 The \"-\" character must be first in the string."
   :type '(string "Charset")
   :group 'TinyEf)
 
-(defcustom tinyef-:mode-defined-maps ;== if you need to change this; report
+(defcustom tinyef--mode-defined-maps ;== if you need to change this; report
   (delq nil                             ;== change to maintainer
         (list
          'global-map
@@ -248,7 +248,7 @@ The \"-\" character must be first in the string."
          (if (boundp 'minibuffer-local-ns-map)
              'minibuffer-local-ns-map)))
   "*Keymap list where to install Electric file minor mode hotkey-
-See `tinyef-:mode-key'."
+See `tinyef--mode-key'."
   :type  '(symbol :tag "Keymap")
   :group 'TinyEf)
 
@@ -264,7 +264,7 @@ See `tinyef-:mode-key'."
 (eval-and-compile
 
   (ti::macrof-minor-mode-wizard
-   "tinyef-" " Tef" nil "Tef" 'TinyEf "tinyef-:" ;1-6
+   "tinyef-" " Tef" nil "Tef" 'TinyEf "tinyef--" ;1-6
 
    "Electric file name mode.
 This mode helps you composing filename more easily. Some keys
@@ -273,11 +273,11 @@ character \"~/$\" are electric. Some other keys have special meaning and you
 cannot insert them into buffer unless you press C-q before the key-.
 These special keys do are mapped to movement keys and delete keys.
 
-See variable `tinyef-:mode-key-table' which specifies actions
-for each electric character. Consult also `tinyef-:step-delete-chars'.
+See variable `tinyef--mode-key-table' which specifies actions
+for each electric character. Consult also `tinyef--step-delete-chars'.
 The default action table is as follows:
 
-    (setq tinyef-:mode-key-table
+    (setq tinyef--mode-key-table
       '((?\<   . step-delete-back)              ;KEY -- action symbol
         (?\>   . step-delete-fwd)
         (?|    . chunk-delete)
@@ -324,7 +324,7 @@ o   []  means which action the character triggered
 
 Defined keys:
 
-\\{tinyef-:mode-map}"
+\\{tinyef--mode-map}"
 
    "Tief"
    nil
@@ -354,7 +354,7 @@ Defined keys:
 ;;;
 (defsubst tinyef-action (char)
   "Return action for CHAR."
-  (cdr-safe (char-assq char tinyef-:mode-key-table)))
+  (cdr-safe (char-assq char tinyef--mode-key-table)))
 
 ;;; ----------------------------------------------------------------------
 ;;;
@@ -362,11 +362,11 @@ Defined keys:
   "Define Electric file mode's hot key. Optionally REMOVE.
 The install is done only once, but you can FORCE reinstall.
 
-See `tinyef-:mode-defined-maps'."
-  (let ((key   tinyef-:mode-key)
+See `tinyef--mode-defined-maps'."
+  (let ((key   tinyef--mode-key)
 	(fun   'tinyef-mode)
 	map)
-    (dolist (x tinyef-:mode-defined-maps)
+    (dolist (x tinyef--mode-defined-maps)
       (setq map (eval x))
       (if remove
           ;; eval or symbol-value function
@@ -375,7 +375,7 @@ See `tinyef-:mode-defined-maps'."
         (unless (get 'tinyef-install-maps 'installed)
           (if (lookup-key map key)
               (progn
-                ;;(message "TinyMy: tinyef-:mode-key already taken in %s"
+                ;;(message "TinyMy: tinyef--mode-key already taken in %s"
                 ;;  (symbol-name x))
                 nil)
             (define-key (eval x) key fun)))))
@@ -385,18 +385,18 @@ See `tinyef-:mode-defined-maps'."
 ;;; ----------------------------------------------------------------------
 ;;;
 (defun tinyef-mode-map-define-keys ()
-  "Define `tinyef-:mode-map' keys.
+  "Define `tinyef--mode-map' keys.
 Always clears the keymap first and reinstalls the minor mode."
   (interactive)
-  (setq tinyef-:mode-map  (make-sparse-keymap)) ;always refresh
+  (setq tinyef--mode-map  (make-sparse-keymap)) ;always refresh
   ;;  Minor modes have copy of the keymap. Get rid of it and
   ;;  replace it with new one.
   (ti::keymap-add-minor-mode    'tinyef-mode nil nil    'remove)
-  (dolist (elt tinyef-:mode-key-table)
-    (define-key tinyef-:mode-map (char-to-string (car elt)) 'tinyef-char))
+  (dolist (elt tinyef--mode-key-table)
+    (define-key tinyef--mode-map (char-to-string (car elt)) 'tinyef-char))
   (ti::keymap-add-minor-mode 'tinyef-mode
-                             'tinyef-:mode-name
-                             tinyef-:mode-map))
+                             'tinyef--mode-name
+                             tinyef--mode-map))
 
 ;;; ----------------------------------------------------------------------
 ;;;
@@ -534,7 +534,7 @@ If current buffer is the *mini-buffer* return name of previous-window."
 ;;;
 (defun tinyef-step (&optional back)
   "Position cursor, optionally BACK."
-  (let ((set    tinyef-:step-delete-chars)
+  (let ((set    tinyef--step-delete-chars)
 	(rset   (concat "^" set))      ;reverse set
 	(func   (if back
 		    'skip-chars-backward
@@ -565,12 +565,12 @@ Input:
 
   CHARACTER  The character is read from input argument or it it is nil, then
              `last-command-char' is used.
-  ACTION     If nil `tinyef-:mode-key-table' is consulted for character.
+  ACTION     If nil `tinyef--mode-key-table' is consulted for character.
              If non-nil, then should ve valid action symbol.
 
 Current keymap:
 
-\\{tinyef-:mode-map}"
+\\{tinyef--mode-map}"
   (interactive)
   (let ((char          (or character
 			   last-command-char)) ;char pressed
@@ -675,6 +675,6 @@ Current keymap:
 (tinyef-install)
 (provide 'tinyef)
 
-(run-hooks 'tinyef-:load-hook)
+(run-hooks 'tinyef--load-hook)
 
 ;;; tinyef.el ends here
