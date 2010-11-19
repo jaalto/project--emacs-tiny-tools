@@ -190,8 +190,8 @@ common beginning for all win cfg registers."
 ;;;
 (defun tinyxreg-list ()
   "Return register list, point list + window list."
-  (let* ((ptr   tinyxreg-:wreg)
-         (list  (copy-sequence tinyxreg-:preg)))
+  (let ((ptr   tinyxreg-:wreg)
+	(list  (copy-sequence tinyxreg-:preg)))
     ;;  concat two lists
     (dolist (elt ptr)
       (push elt list))
@@ -220,8 +220,10 @@ common beginning for all win cfg registers."
   "Remove register CHAR from stored window and point lists.
 ARG suggests looking in window list."
   (interactive "cRemove register: \nP")
-  (let* ((ptr (if arg tinyxreg-:wreg  tinyxreg-:preg))
-         elt)
+  (let ((ptr (if arg
+		 tinyxreg-:wreg
+	       tinyxreg-:preg))
+	elt)
     (when (setq elt (rassq char ptr))
       (if arg
           (setq tinyxreg-:wreg (delete elt tinyxreg-:wreg))
@@ -232,8 +234,8 @@ ARG suggests looking in window list."
 (defun tinyxreg-update ()
   "Kill all registers from lists that are not alive any more.
 Eg. marker dies if you revert the buffer; kill and load it again."
-  (let* ((ptr tinyxreg-:preg)
-         reg
+  (let ((ptr tinyxreg-:preg)
+	reg
          list)
     ;;  We simple copy valid elements to another list
     (dolist (elt ptr)
@@ -283,8 +285,8 @@ ARG tells to store to window list. DESC is string to use."
   "Return description text for popup list.
 REGISTER is stored register and if ARG is non-nil the register
 contains window configuration."
-  (let* ((bn   (file-name-nondirectory (buffer-name)))
-         (cfg  tinyxreg-:wcfg-fmt))
+  (let ((bn   (file-name-nondirectory (buffer-name)))
+	(cfg  tinyxreg-:wcfg-fmt))
     (format (concat tinyxreg-:buffer-fmt " %4s %s")
             (if arg
                 ;;  the 177 should print nice block
@@ -334,8 +336,8 @@ configuration."
       (message (concat msg (char-to-string CHAR)))
       CHAR)
     current-prefix-arg))
-  (let* ((dfunc   tinyxreg-:description-func)
-         desc)
+  (let ((dfunc tinyxreg-:description-func)
+	desc)
     (setq desc                          ;get the popup description
           (if (fboundp dfunc)
               (funcall dfunc char arg)
@@ -381,14 +383,14 @@ Input:
   REMOVE    flag, if non-nil, remove register.
   VERB      flag, Allow verbose messages."
   (interactive "e\nP")
-  (let* ((event  (or event
-                     (ti::compat-make-fake-event
-                      tinyxreg-:x-coord tinyxreg-:y-coord)))
-         (title  (interactive-p))
-         ref-list
-         list
-         data
-         char)
+  (let ((event (or event
+		   (ti::compat-make-fake-event
+		    tinyxreg-:x-coord tinyxreg-:y-coord)))
+	(title  (interactive-p))
+	ref-list
+	list
+	data
+	char)
     (ti::verb)
     (tinyxreg-update)                   ;update register list
     (setq ref-list (tinyxreg-list)
