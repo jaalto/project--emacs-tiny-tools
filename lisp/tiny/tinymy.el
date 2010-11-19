@@ -671,16 +671,13 @@ Format:
   ;; Emacs you seldom use suspend-emacs because emacs has M-x shell
   (ti::use-prefix-key global-map "\C-z")
   ;;  Set global keys, confirm these
-  (mapcar
-   (function
-    (lambda (x)
-      (if tinymy--define-key-force
-          (define-key global-map (car x) (cdr x))
-        (ti::define-key-if-free global-map
-                                (car x)
-                                (cdr x)
-                                'tinymy-define-key-error))))
-   tinymy--define-key-table)
+  (dolist (x tinymy--define-key-table)
+    (if tinymy--define-key-force
+	(define-key global-map (car x) (cdr x))
+      (ti::define-key-if-free global-map
+			      (car x)
+			      (cdr x)
+			      'tinymy-define-key-error)))
   (add-hook 'makefile-mode-hook 'tinymy-makefile-mode-hook))
 
 ;;; ----------------------------------------------------------------------
@@ -995,11 +992,11 @@ Important, If file is vc controlled:
 If buffer is associated to file:  -rwx-rw-r-- 20k /absolute/path/file.txt
 If no file: SIZEk SIZE-IN-BYTES"
   (interactive)
-  (let ((file  buffer-file-name)
-	(ssize (buffer-size))
-	(size  (/ ssize 1000)) ;; well, it's 1024 to exact but this suffices
-	(modes "")
-	lines)
+  (let* ((file  buffer-file-name)
+	 (ssize (buffer-size))
+	 (size  (/ ssize 1000)) ;; well, it's 1024 to exact but this suffices
+	 (modes "")
+	 lines)
     ;;  E.g. Gnus defines `buffer-file-name' for Draft messages,
     ;;  but the file is not actually written, so we test for existense
     ;;  to prevent suprises from happening.
