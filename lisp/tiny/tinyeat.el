@@ -9,8 +9,7 @@
 ;; Author:          Jari Aalto
 ;; Maintainer:      Jari Aalto
 ;;
-;; To get information on this program  call C-u M-x
-;; tinyeat-version. Look at the code with folding.el
+;; Look at the code with folding.el
 
 ;; COPYRIGHT NOTICE
 ;;
@@ -66,10 +65,6 @@
 ;;
 ;;      M-x tinyeat-debug-toggle
 ;;      M-x tinyeat-debug-show
-;;
-;; If you have any questions, use this function to contact maintainer
-;;
-;;      M-x tinyeat-submit-bug-report
 
 ;;}}}
 ;;{{{ Documentation
@@ -270,24 +265,6 @@ because this string is converted into regexp later."
 Normally word is terminated by whitespace or newlines."
   :type  '(string :tag "Charset")
   :group 'TinyEat)
-
-;;}}}
-;;{{{ version
-
-;;;###autoload (autoload 'tinyeat-version "tinyeat" "Display commentary." t)
-(eval-and-compile
-  (ti::macrof-version-bug-report
-   "tinyeat.el"
-   "tinyeat"
-   tinyeat-:version-id
-   "$Id: tinyeat.el,v 2.62 2007/05/01 17:20:43 jaalto Exp $"
-   '(tinyeat-:version-id
-     tinyeat-:debug
-     tinyeat-:load-hook
-     tinyeat-:verbose-flag
-     tinyeat-:non-word-chars
-     tinyeat-:eat-full-word-charset)
-   '(tinyeat-:debug-buffer)))
 
 ;;}}}
 ;;{{{ install
