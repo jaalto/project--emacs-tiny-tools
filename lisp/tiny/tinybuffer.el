@@ -142,6 +142,8 @@
 
 (require 'tinylibm)
 
+(eval-when-compile (require 'cl))
+
 (ti::package-defgroup-tiny TinyBuffer tinybuffer-- extensions
   "Changing buffers in current window.
         With this small package you can switch to next or previous buffer
