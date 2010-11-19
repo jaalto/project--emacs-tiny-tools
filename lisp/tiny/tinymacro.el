@@ -208,9 +208,9 @@ References:
 	new)
     (if (or q (< stack-pointer max))                  ; yes, go ahead with new
         (setq new
-              (concat n (if (< stack-pointer max)     ; 0..max
-                            (setq stack-pointer (1+ stack-pointer))
-                          (setq stack-pointer 0))))
+              (concat new (if (< stack-pointer max)     ; 0..max
+			      (setq stack-pointer (1+ stack-pointer))
+			    (setq stack-pointer 0))))
       (if (y-or-n-p "Macro stack full, wrap? ")
           (setq new (concat name-prefix
 			    (if (< stack-pointer max) ; 0..max
