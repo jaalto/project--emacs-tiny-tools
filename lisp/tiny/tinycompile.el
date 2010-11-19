@@ -9,7 +9,6 @@
 ;; Author:          Jari Aalto
 ;; Maintainer:      Jari Aalto
 ;;
-;; To get information on this program, call M-x tinycompile-version
 ;; Look at the code with folding.el
 
 ;; COPYRIGHT NOTICE
@@ -136,20 +135,6 @@ RET  Goto current file and line
 x    Turn mode off.")
 
 ;;; ............................................................ &mode ...
-
-;;;###autoload (autoload 'tinycompile-version "tinycompile" "Display commentary." t)
-(ti::macrof-version-bug-report
- "tinycompile.el"
- "tinycompile"
- tinycompile-:version-id
- "$Id: tinycompile.el,v 2.52 2007/08/04 10:09:46 jaalto Exp $"
- '(tinycompile-:version-id
-   tinycompile-:debug
-   tinycompile-:menu-use-flag
-   tinycompile-:menu-main
-   tinycompile-:load-hook
-   tinycompile-:table-hide)
- '(tinycompile-:debug-buffer))
 
 ;;;### (autoload 'tinycompile-debug-toggle "tinycompile" "" t)
 ;;;### (autoload 'tinycompile-debug-show   "tinycompile" "" t)
