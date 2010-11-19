@@ -500,7 +500,7 @@ packages are loaded (look into each file for interesting things).
     (ti::add-hooks 'tinytf-:mode-define-keys-hook
                    '(tinytf-mode-define-keys tinytf-mode-define-f-keys))
 
-    (setq tinymy-:define-key-force t)
+    (setq tinymy--define-key-force t)
     (setq tinyef--mode-key \"\\C-cmr\")
 
     (setq tinylock--auto-lock-interval1 45)     ;in minutes
