@@ -345,8 +345,7 @@ If 'ver' of 'file' cannot be set, print message and do nothing with BODY."
        (let (buffer)
          (cond
           ((setq buffer (get-buffer file))
-           (save-excursion
-             (set-buffer buffer)
+           (with-current-buffer buffer
              (setq file buffer-file-name)))
           (t
            (error "Can't find absolute filename %s" file)))))
@@ -692,8 +691,7 @@ Return:
         (if (tinyvc-cmd-diff-p file)
             (setq ret t))))
      (buffer                            ;cond2:
-      (save-excursion                   ;already loaded into emacs
-        (set-buffer buffer)
+      (with-current-buffer buffer	;already loaded into emacs
         (unless (buffer-modified-p)
           (setq untouched t))
         (if untouched
