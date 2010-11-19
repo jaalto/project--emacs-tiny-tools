@@ -296,19 +296,13 @@ Normally word is terminated by whitespace or newlines."
 (defun tinyeat-install-default-bindings ()
   "Bind default keys to various 'eat' functions."
   (interactive)
-
   ;; was `kill-sentence'
   (global-set-key "\M-k"                  'tinyeat-kill-line-backward)
-
   ;; was kill-sexp
   (global-set-key "\C-\M-k"               'tinyeat-zap-line)
-
   (global-set-key (kbd "C-S-y")           'tinyeat-yank-overwrite)
-
-
   ;;  Alt-backspace
   (global-set-key (kbd "<M-backspace>")   'tinyeat-backward-preserve)
-
   ;;  was `kill-word'
   (global-set-key "\M-d"                  'tinyeat-forward-preserve)
   (global-set-key (kbd "<C-backspace>")   'tinyeat-forward-preserve)
@@ -316,23 +310,17 @@ Normally word is terminated by whitespace or newlines."
   (global-set-key (kbd "<C-delete>")      'tinyeat-forward-preserve)
   (global-set-key (kbd "<C-deletechar>")  'tinyeat-forward-preserve)
   (global-set-key (kbd "<M-delete>")      'tinyeat-forward-preserve)
-
-
   (global-set-key (kbd "<S-backspace>")   'tinyeat-delete-whole-word)
   (global-set-key (kbd "<S-delete>")      'tinyeat-delete-whole-word)
-
 ;;;    (when (ti::xemacs-p)
 ;;;      (global-set-key (kbd "M-BS")     'tinyeat-backward-preserve)
 ;;;      (global-set-key (kbd "C-BS")     'tinyeat-forward-preserve))
-
   ;;  Was `down-list'
   (global-set-key "\C-\M-d"               'tinyeat-delete-paragraph)
   (global-set-key (kbd "<C-S-backspace>") 'tinyeat-delete-paragraph)
   (global-set-key (kbd "<C-S-delete>")    'tinyeat-delete-paragraph)
-
   (unless (ti::compat-window-system)
     (tinyeat-install-default-bindings-terminal))
-
   (message "TinyEat: ** keys were bound to TinyEat functions."))
 
 ;;; ----------------------------------------------------------------------
@@ -445,8 +433,8 @@ Minibuffer is excluded."
 ;;;
 (defun tinyeat-delete-whole-word-1-charset (charset)
   "Delete word based on CHARSET. See `skip-chars-backward' and *-forward."
-  (let* (beg
-         end)
+  (let (beg
+	end)
     (skip-chars-backward charset)
     (setq beg (point))
     (skip-chars-forward  charset)
@@ -558,9 +546,9 @@ This way you can retain mouse selection in cut buffer."
 (defun  tinyeat-delete-paragraph ()
   "Delete current paragraph, separated by empty lines."
   (interactive "*")
-  (let* ((re "^[ \t]*$")
-         beg
-         end)
+  (let ((re "^[ \t]*$")
+	beg
+	end)
     (cond
      ((save-excursion                   ;sitting on empty line
         (beginning-of-line)         ;kill empty lines around the point
@@ -599,12 +587,12 @@ This way you can retain mouse selection in cut buffer."
   "Delete whitespace at point. Optionally BACK.
 If optional PRESERVE is given, then deletes towards the BACK only.
 if BACK is non-nil the deletion is headed backward."
-  (let* ( ;; character function selection
-         (charf   (if back 'skip-chars-backward 'skip-chars-forward))
-         (p       (point))
-         (ch      (ti::buffer-read-char back 0)) ;sitting on it if looking fwd
-         (ch-p    (ti::buffer-read-char back -1))
-         (ch-n    (ti::buffer-read-char back 1)))
+  (let ( ;; character function selection
+	(charf   (if back 'skip-chars-backward 'skip-chars-forward))
+	(p       (point))
+	(ch      (ti::buffer-read-char back 0)) ;sitting on it if looking fwd
+	(ch-p    (ti::buffer-read-char back -1))
+	(ch-n    (ti::buffer-read-char back 1)))
     (cond
      ((and back
            (ti::space-p (or ch-p ?\ ))
@@ -612,7 +600,7 @@ if BACK is non-nil the deletion is headed backward."
       (delete-horizontal-space)
       (if (null back)
           (tinyeat-verbose-macro
-           (message "TinyEat: line cleared")))
+	    (message "TinyEat: line cleared")))
       t)
      ((char-equal ch ?\n)                    ;no spaces before, do nothing
       nil)
@@ -645,7 +633,9 @@ ThisIsMixedWord --> ThisIsMixedWord
 THISmixedWord   --> THISmixedWord
 *                       *"
   (let* ((fid         "tinyeat-word-move-point")
-         (charf       (if back 'skip-chars-backward 'skip-chars-forward))
+         (charf       (if back
+			  'skip-chars-backward
+			'skip-chars-forward))
          (non-word    tinyeat-:non-word-chars)
          (nonw-re     (concat "[" non-word "]+"))
          (ch          (ti::buffer-read-char back))
@@ -740,9 +730,9 @@ THISmixedWord   --> THISmixedWord
 (defun tinyeat-yank-overwrite ()
   "Yank text by overwriting previous content."
   (interactive)
-  (let* ((p  (point))                   ;insertion point
-         len
-         end)
+  (let ((p (point))			;insertion point
+	len
+	end)
     (with-temp-buffer
       (yank)
       (setq len (1- (point-max))))      ;how many chars in there ?
