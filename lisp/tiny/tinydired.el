@@ -9,8 +9,7 @@
 ;; Author:          Jari Aalto
 ;; Maintainer:      Jari Aalto
 ;;
-;; To get information on this program use ident(1) or call M-x
-;; tinydired-version. Look at code with folding.el
+;; Look at code with folding.el
 
 ;; COPYRIGHT NOTICE
 ;;
@@ -62,10 +61,6 @@
 ;;
 ;;      t C-h           enchanced "tiny" dired commands
 ;;      a C-h           enchanced "ange-ftp" commands
-;;
-;;  If you have any questions, always use function
-;;
-;;      M-x tinydired-submit-bug-report
 
 ;;}}}
 ;;{{{ Documentation
@@ -493,42 +488,6 @@ The function is called with list of files in storage."
   :group 'Tinydired)
 
 ;;}}}
-;;{{{ version
-
-;;; ....................................................... &v-version ...
-
-(eval-and-compile
-  (ti::macrof-version-bug-report
-   "tinydired.el"
-   "tinydired"
-   tinydired-:version-id
-   "$Id: tinydired.el,v 2.49 2007/05/06 23:15:19 jaalto Exp $"
-   '(tinydired-:version-id
-     tinydired-:bind-hook
-     tinydired-:readin-hook
-     tinydired-:load-hook
-     tinydired-:file-store
-     tinydired-:mark-list
-     tinydired-:mput-last-ftp
-     tinydired-:mput-last-ftp
-     tinydired-:previous-buffer
-     tinydired-:dir-copy-buffer
-     tinydired-:tmp-dir
-     tinydired-:tmp-dir-function
-     tinydired-:force-add-keys-flag
-     tinydired-:use-only-one-buffer-flag
-     tinydired-:unwanted-files-regexp
-     tinydired-:download-dir
-     tinydired-:mput-sites
-     tinydired-:show-storage-function
-     tinydired-:page-step
-     ;;  This tells if used has dired-x loaded
-     dired-find-subdir)))
-
-;;}}}
-
-;;; ########################################################### &Funcs ###
-
 ;;{{{ code: install, bind, hook control
 
 ;;; ----------------------------------------------------------------------
