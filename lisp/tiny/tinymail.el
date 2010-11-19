@@ -1685,9 +1685,9 @@ Prefix key to access the minor mode is defined in `tinymail--mode-prefix-key'
 ;;;
 (defun tinymail-modeline-update (&rest plugged-status)
   "Udate `tinymail--mode-name' to show ! in plugged state."
-  (let* ((status (if (not (zerop (length plugged-status)))
-                     (car plugged-status)
-                   (ti::mail-plugged-p))))
+  (let ((status (if (not (zerop (length plugged-status)))
+		    (car plugged-status)
+		  (ti::mail-plugged-p))))
     (if status
         (unless (string-match "!" tinymail--mode-name)
           (setq tinymail--mode-name (concat tinymail--mode-name "!")))
@@ -1726,17 +1726,17 @@ This function should be bound to SPACE key."
 ;;;
 (defun tinymail-install-hooks (&optional remove verb)
   "Install needed hooks, optionally REMOVE. VERB."
-  (let* ((list '(
-                 ;; tinymail-complete-everything
-                 ;; tinymail-complete-bbdb-fuzzy ;honor BBDB first
-                 ;;  tinymail-complete-bbdb <NO GOOD> because displays
-                 ;;  BBDB record.
-                 tinymail-complete-simple
-                 tinymail-complete-guess-in-headers ; then passwd
-                 ;;  tinymail-complete-bbdb <NO GOOD> because displays
-                 ;;  BBDB record. fuzzy is better
-                 ;; tinymail-complete-bbdb-fuzzy
-                 tinymail-complete-headers-nothing-found)))
+  (let ((list '(
+		;; tinymail-complete-everything
+		;; tinymail-complete-bbdb-fuzzy ;honor BBDB first
+		;;  tinymail-complete-bbdb <NO GOOD> because displays
+		;;  BBDB record.
+		tinymail-complete-simple
+		tinymail-complete-guess-in-headers ; then passwd
+		;;  tinymail-complete-bbdb <NO GOOD> because displays
+		;;  BBDB record. fuzzy is better
+		;; tinymail-complete-bbdb-fuzzy
+		tinymail-complete-headers-nothing-found)))
     ;; tinymail-complete-guest-packages
     ;; tinymail-complete-abbrevs
     ;; tinymail-complete-headers-move-to-next-field
@@ -2086,8 +2086,8 @@ Input:
 References:
 
   `tinymail--feature-hook'."
-  (let* ((fid "tinymail-mail")
-         to-list)
+  (let ((fid "tinymail-mail")
+	to-list)
     (unless fid ;; No-op. XEmacs byte compiler silencer
       (setq fid nil))
     (tinymail-debug
@@ -2223,9 +2223,9 @@ Return:
 (defun tinymail-password-save (&optional load verb)
   "Save passwd completions to file `tinymail--password-file'. Optionally LOAD.
 If that variable is nil, then do nothing. VERB."
-  (let* ((file  tinymail--password-file)
-;;;      (list  tinymail--password-completion-alist)
-         (list2 tinymail--password-alist))
+  (let ((file  tinymail--password-file)
+;;;     (list  tinymail--password-completion-alist)
+	(list2 tinymail--password-alist))
     (ti::verb)
     (tinymail-debug "tinymail-password-save" file load verb)
     (when (stringp file)
@@ -2320,12 +2320,12 @@ The String must be delimited by comma as in mail header are.
 
 Return:
  (beg-marker end-marker string)"
-  (let* ((fid    "tinymail-complete-string-read")
-         (point  (point))
-         (heder-p (ti::mail-point-at-header-p))
-         string
-         beg-marker
-         end-marker)
+  (let ((fid    "tinymail-complete-string-read")
+	(point  (point))
+	(heder-p (ti::mail-point-at-header-p))
+	string
+	beg-marker
+	end-marker)
     (unless fid ;; No-op. XEmacs byte compiler silencer
       (setq fid nil))
     (when (and (not (bolp))             ;Nothing to read
@@ -2390,13 +2390,13 @@ Input MODE:
 
   The default match is made against all the alias expansion ('string mode).
   With 'alias, only the alias names are matched."
-  (let* ((fid    "tinymail-complete-guess-2-choices: ")
-         (list   (tinymail-mail-aliases))
-         (mail   (ti::mail-mail-p))
-         elt
-         beg
-         end
-         str)
+  (let ((fid    "tinymail-complete-guess-2-choices: ")
+	(list   (tinymail-mail-aliases))
+	(mail   (ti::mail-mail-p))
+	elt
+	beg
+	end
+	str)
     (unless fid ;; No-op. XEmacs byte compiler silencer
       (setq fid nil))
     (tinymail-debug fid "in" mode 'mail-p mail)
@@ -2462,16 +2462,18 @@ Return:
 
   t         completed
   nil"
-  (let* ((fid    "tinymail-complete-guess-2: ")
-         (list   (tinymail-mail-aliases))
-         (mail   (ti::mail-mail-p))
-         (check-regexp  tinymail--confirm-mailrc-regexp)
-         user-selected-p
-         data
-         elt
-         beg end str
-         done
-         ret)
+  (let ((fid    "tinymail-complete-guess-2: ")
+	(list   (tinymail-mail-aliases))
+	(mail   (ti::mail-mail-p))
+	(check-regexp  tinymail--confirm-mailrc-regexp)
+	user-selected-p
+	data
+	elt
+	beg
+	end
+	str
+	done
+	ret)
     (unless fid ;; No-op. XEmacs byte compiler silencer
       (setq fid nil))
     (tinymail-debug fid "in" mode verb mail)
@@ -2583,13 +2585,13 @@ Return:
   t     completed
   nil   nothing done"
   (interactive "P")
-  (let* ((fid      "tinymail-complete-passwd")
-         (header-p (< (point) (ti::mail-hmax) ))
-         ret
-         table
-         word
-         str
-         completions)
+  (let ((fid      "tinymail-complete-passwd")
+	(header-p (< (point) (ti::mail-hmax) ))
+	ret
+	table
+	word
+	str
+	completions)
     (unless fid ;; No-op. XEmacs byte compiler silencer
       (setq fid nil))
     (ti::verb)
@@ -2672,16 +2674,16 @@ Return:
                ;;  It doesn't make sense to search items that already
                ;;  look like email,  this@here.com
                (not (string-match "@" (nth 2 data))))
-      (let* ((fid           "tinymail-complete-everything:")
-             (check-regexp  tinymail--confirm-mailrc-regexp)
-             (mode          tinymail--complete-mode)
-             matches
-             (beg (nth 0 data))
-             (end (nth 1 data))
-             choice
-             done
-             ret
-             user-selected-p)
+      (let ((fid           "tinymail-complete-everything:")
+	    (check-regexp  tinymail--confirm-mailrc-regexp)
+	    (mode          tinymail--complete-mode)
+	    matches
+	    (beg (nth 0 data))
+	    (end (nth 1 data))
+	    choice
+	    done
+	    ret
+	    user-selected-p)
         (unless fid ;; No-op. XEmacs byte compiler silencer
           (setq fid nil))
         ;; .......................................... clean duplicates ...
@@ -2752,10 +2754,10 @@ Return:
   "Like `tinymail-complete-guess', but complete only in body. Ignore ARG."
   (interactive)
   (when (>(point) (ti::mail-hmax))
-    (let* ((fid    "tinymail-complete-guess-in-body")
-           (hook   tinymail--complete-body-hook)
-           (data  (tinymail-complete-string-read))
-           ret)
+    (let ((fid    "tinymail-complete-guess-in-body")
+	  (hook   tinymail--complete-body-hook)
+	  (data  (tinymail-complete-string-read))
+	  ret)
       (unless fid ;; No-op. XEmacs byte compiler silencer
         (setq fid nil))
       (tinymail-debug 'tinymail-complete-guess-in-body
@@ -2782,7 +2784,7 @@ Return:
   "Call bbdb-complete-name' if is bbdb loaded and ignore ARGS."
   (when (and (fboundp 'bbdb-complete-name)
              (tinymail-field-in-to-cc-p))
-    (let* ((point (point)))
+    (let ((point (point)))
       (call-interactively 'bbdb-complete-name)
       (if (eq (point) point)
           nil                          ;Point not moved, not completed
@@ -2834,14 +2836,14 @@ leaves RECORD [ .. ]."
 ;;;
 (defun  tinymail-bbdb-data-read ()
   "Read user information based on current line in `bbdb-file'."
-  (let* ((fid   "tinymail-bbdb-data-read:")
-         (point (point))
-         (case-fold-search
-          tinymail--complete-bbdb-case-fold-search)
-         one
-         two
-         key
-         record)
+  (let ((fid   "tinymail-bbdb-data-read:")
+	(point (point))
+	(case-fold-search
+	 tinymail--complete-bbdb-case-fold-search)
+	one
+	two
+	key
+	record)
     (unless fid ;; No-op. XEmacs byte compiler silencer
       (setq fid nil))
     (beginning-of-line)
@@ -2872,11 +2874,11 @@ leaves RECORD [ .. ]."
 ;;;
 (defun tinymail-bbdb-record-net-completions (record)
   "Construct email completions for RECORD."
-  (let* ((fid "tinymail-bbdb-record-net-completions:")
-         completion
-         tmp
-         name
-         list)
+  (let ((fid "tinymail-bbdb-record-net-completions:")
+	completion
+	tmp
+	name
+	list)
     (unless fid ;; No-op. XEmacs byte compiler silencer
       (setq fid nil))
     (dolist (net (bbdb-record-net record))
@@ -3039,12 +3041,12 @@ Input:
             ;;   ["John Doe" nil #<marker at 114932 in bbdb-data.el> nil]])
             (when (and fields record)
               ;;  #todo: Is there function to `dolist' over vector list?
-              (let* ((i   0)
-                     (len (if (integerp fields)
-                              fields
-                            3))
-                     (max (1- (length record)))
-                     elt)
+              (let ((i   0)
+		    (len (if (integerp fields)
+			     fields
+			   3))
+		    (max (1- (length record)))
+		    elt)
                 (when (>= (length regexp) len)
                   (while (< i max)
                     (setq elt (aref record i))
@@ -3188,8 +3190,8 @@ INFO contains list '(begin-point end-point text-between-points)."
 ;;;
 (defun tinymail-header-complete-choices (field)
   "Return completion choices for HEADER-FIELD."
-  (let* ((fid  "tinymail-header-complete-choices:")
-         (ret  (nth 1 (assoc field tinymail--table-header-complete))))
+  (let ((fid "tinymail-header-complete-choices:")
+	(ret (nth 1 (assoc field tinymail--table-header-complete))))
     (unless fid ;; No-op. XEmacs byte compiler silencer
       (setq fid nil))
     (tinymail-debug fid 'CHOICES-RAW ret)
@@ -3311,8 +3313,8 @@ INFO is '(string beg end) of the completion word"
   "Support minor modes like tinytab and tinyindent which also use TAB key.
 Ignore ARG."
   (interactive "P")
-  (let* ((fid     "tinymail-complete-guest-packages:")
-         (ch      last-command-char))
+  (let ((fid "tinymail-complete-guest-packages:")
+	(ch  last-command-char))
     (unless fid ;; No-op. XEmacs byte compiler silencer
       (setq fid nil))
     (tinymail-debug fid 'ARG arg 'MODE major-mode 'POINT (point))
@@ -3343,10 +3345,10 @@ Input:
 
   MODE is the value of  `tinymail--complete-mode'.
   DATA can contain values returned from `tinymail-complete-string-read'."
-  (let* ((fid  "tinymail-complete-list-passwd")
-         str
-         table
-         completions)
+  (let ((fid "tinymail-complete-list-passwd")
+	str
+	table
+	completions)
     (unless fid ;; No-op. XEmacs byte compiler silencer
       (setq fid nil))
     (when (or data
@@ -3367,7 +3369,7 @@ Input:
   (when list
     (if flash
         (message (ti::list-to-string (mapcar 'car list)))
-      (let* ((buffer (ti::temp-buffer tinymail--temp-buffer 'clear)))
+      (let ((buffer (ti::temp-buffer tinymail--temp-buffer 'clear)))
         (with-current-buffer buffer
           (dolist (elt list)
             (insert (format "%-10s %s\n"  (car elt) (or (cdr elt) "")))))
@@ -3408,8 +3410,8 @@ Input:
   "Move to next field if cursor is at the end of field in header."
   (interactive)
   (ti::mail-point-in-header-macro
-   (let* ((str (buffer-substring (line-beginning-position) (point)))
-          (max (ti::mail-text-start)))
+   (let ((str (buffer-substring (line-beginning-position) (point)))
+	 (max (ti::mail-text-start)))
      (when (and (not (ti::nil-p str))
                 (eolp))
        (when (re-search-forward ":." max t)
@@ -3490,14 +3492,14 @@ functions. Each function is passed the word info at point: '(BEG END STRING)."
                                (progn (forward-line -2) (point))
                                (progn (forward-line 2) (point)))
                               "\n************ END **********\n")))
-    (let* ((fid    "tinymail-complete-key:")
-           ;; Make copies of these
-           (tinytab--tab-insert-hook
-            (if (boundp 'tinytab--tab-insert-hook)
-                (symbol-value 'tinytab--tab-insert-hook)))
-           (tinymail--complete-key-hook tinymail--complete-key-hook)
-           string
-           ret)
+    (let ((fid "tinymail-complete-key:")
+	  ;; Make copies of these
+	  (tinytab--tab-insert-hook
+	   (if (boundp 'tinytab--tab-insert-hook)
+	       (symbol-value 'tinytab--tab-insert-hook)))
+	  (tinymail--complete-key-hook tinymail--complete-key-hook)
+	  string
+	  ret)
       (unless fid ;; No-op. XEmacs byte compiler silencer
         (setq fid nil))
       ;; Avoid resursive calls by removing all tinymail entries
@@ -3637,7 +3639,7 @@ All other Agents have some sort of 'todo' message save feature."
 ;;;
 (defun tinymail-report-get-email-word (str)
   "Return first word, separated by space from STR."
-  (let* ((word str))                    ;set default
+  (let ((word str))                    ;set default
     (when (string-match "From \\([^ ]+\\) " str)
       (setq word (substring str (match-beginning 1)  (match-end 1))))
     word))
@@ -3648,9 +3650,9 @@ All other Agents have some sort of 'todo' message save feature."
   "Break email STR into two words.
 Return:
    (ACCOUNT SITE)  or nil"
-  (let* (w1
-         w2
-         ret)
+  (let (w1
+	w2
+	ret)
     (when (string-match "[@!]" str)
       (setq w1 (substring str 0 (match-beginning 0))
             w2 (substring str (1+ (match-beginning 0))))
@@ -3689,14 +3691,14 @@ Return:
 
    list       (line line ..)  Berkeley MBOX 'From ' lines. Oldest first.
    nil        No new mail"
-  (let* ((default-directory  default-directory)
-         (buffer             (get-buffer-create tinymail--report-spool-buffer))
-         (kill-p             (eq tinymail--report-spool-buffer-control 'kill))
+  (let ((default-directory  default-directory)
+	(buffer             (get-buffer-create tinymail--report-spool-buffer))
+	(kill-p             (eq tinymail--report-spool-buffer-control 'kill))
 ;;; #todo: not yet used
 ;;;      (timeout            tinymail--report-asychronous-timeout)
-         (tmp-dir            "/tmp/")
-         (kill-re            tinymail--report-mail-kill-line-regexp)
-         ret)
+	(tmp-dir            "/tmp/")
+	(kill-re            tinymail--report-mail-kill-line-regexp)
+	ret)
     (unwind-protect
         (with-current-buffer buffer
           (erase-buffer)
@@ -3741,12 +3743,12 @@ Return:
 ;;;
 (defun tinymail-report-get-mail-info-string ()
   "Return mail string: last sender and mail count."
-  (let* ((list          (tinymail-report-mail-info))
-         (re            tinymail--report-mail-info-shorten-regexp)
-         (ret           tinymail--report-no-mail-string)
-         last-line
-         email
-         count)
+  (let ((list          (tinymail-report-mail-info))
+	(re            tinymail--report-mail-info-shorten-regexp)
+	(ret           tinymail--report-no-mail-string)
+	last-line
+	email
+	count)
     (tinymail-debug 'tinymail-report-get-mail-info-string list)
     (cond
      ((ti::listp list)
@@ -3857,7 +3859,7 @@ References:
   (if (featurep 'reportmail)
       (message "\
 TinyMail: tinymail-report-mail-install: 'reportmail feature found, install ignored.")
-    (let* (process-connection-type)     ;Nicer process communication
+    (let (process-connection-type)     ;Nicer process communication
       (if tinymail--display-time
           (display-time))) ;; time.el
     ;; In XEmacs the frame must be configured by hand
@@ -3905,7 +3907,7 @@ E.g. in XEmacs you can use package reportmail.el."
   (when (and (stringp tinymail--from-anti-ube-regexp)
              (stringp user-mail-address)
              user-mail-address)
-    (let* ((group (mail-fetch-field "Newsgroups")))
+    (let ((group (mail-fetch-field "Newsgroups")))
       (when (string-match tinymail--from-anti-ube-regexp
                           (or group ""))
         ;;  - Because the anti-ube returns different email every
@@ -4200,12 +4202,12 @@ Input:
 
   TYPE      nil: Find Fcc folder. 'gcc: Find Gcc folder.
   HSIZE     The header size precalculated."
-  (let* ((fid    "tinymail-field-fcc: ")
-         fld
-         sym
-         str
-         folder
-         prev)
+  (let ((fid    "tinymail-field-fcc: ")
+	fld
+	sym
+	str
+	folder
+	prev)
     (unless fid ;; No-op. XEmacs byte compiler silencer
       (setq fid nil))
     (tinymail-debug fid "in TYPE" type "HSIZE"  hsize)
@@ -4240,7 +4242,7 @@ Input:
   "Disable TinyMail by space COUNT for FIELD.
 2  spaces disables Cc tracking
 3  spaces disables both Cc and other tracking."
-  (let* (str)
+  (let (str)
     (setq str (make-string (or count 2) ?\ ))
     (setq field (or field "to"))
     (tinymail-debug "tinymail-field-to-off, count, field" count field)
@@ -4296,11 +4298,11 @@ it toggless both Cc and X-Sender-Info tracking."
 ;;;
 (defun tinymail-iso8601-date-value ()
   "Read Date field and return ISO 8601 date: WEEKDAY YYYY-MM-DD."
-  (let* ((date "")
-         yyyy
-         mm
-         dd
-         week-day)
+  (let ((date "")
+	yyyy
+	mm
+	dd
+	week-day)
     (when (setq date (or (mail-fetch-field "date")
                          (and (featurep 'message)
                               message-reply-headers
@@ -4402,7 +4404,7 @@ Return:
             (string-match
              "^gmane"
              (or (mail-fetch-field "Newsgroups") "")))
-    (let* ((id (tinymail-message-id-value)))
+    (let ((id (tinymail-message-id-value)))
       (concat "Message-Id: " id))))
 
 ;;; ----------------------------------------------------------------------
@@ -4415,8 +4417,8 @@ This function works best with Gnus:
   The mailing list status is indicated by Gnus group property `to-list'.
 - Newsgroup replies contain URL reference.
 - Private mail does _not_ include any extra references."
-  (let* ((url  (or (tinymail-url-reference-google-group)
-                   (tinymail-url-reference-mailing-list))))
+  (let ((url  (or (tinymail-url-reference-google-group)
+		  (tinymail-url-reference-mailing-list))))
     (when (stringp url)
       (concat "* " url "\n"))))
 
@@ -4472,8 +4474,8 @@ a handly way to refer to past articles."
         (when (= (length components) 1)
           ;; Only a single recipient
           (setq recipient (nth 1 (car components)))
-          (let* ((record (bbdb-search-simple nil recipient))
-                 gpg)
+          (let ((record (bbdb-search-simple nil recipient))
+		gpg)
             (when record
               (setq gpg (bbdb-get-field record 'gnus-gpg)))
             (when (> (length gpg) 0)
@@ -4516,13 +4518,13 @@ a handly way to refer to past articles."
 This function should be called interactive only when debugging errors:
 C-u M-x tinymail-process-1."
   (interactive "P")
-  (let* ((fid           "tinymail-process: ")
-         (last-to       tinymail--last-to-field)
-         (alias-alist   (tinymail-mail-aliases))
-         to
-         from
-         hsize
-         ohsize)
+  (let ((fid           "tinymail-process: ")
+	(last-to       tinymail--last-to-field)
+	(alias-alist   (tinymail-mail-aliases))
+	to
+	from
+	hsize
+	ohsize)
     (unless fid ;; No-op. XEmacs byte compiler silencer
       (setq fid nil))
     ;;  - If "To:" field content has two spaces at front, this is signal
