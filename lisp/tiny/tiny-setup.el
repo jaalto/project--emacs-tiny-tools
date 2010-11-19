@@ -1152,11 +1152,11 @@ Do nothing if folding is already installed."
   "Autoload. This is for Emacs only.
 You may want to set
 
-  (setq tinydired-:force-add-keys 'override)."
+  (setq tinydired--force-add-keys 'override)."
   (if (ti::xemacs-p)
       (message "\
 TinySetup: tinydired.el works only with Emacs. Package not loaded.")
-    (add-hook 'tinydired-:load-hook    'tinydired-hook-control)
+    (add-hook 'tinydired--load-hook    'tinydired-hook-control)
     (add-hook 'dired-mode-hook '(lambda () (require 'tinydired) nil))
     ;;  If dired is already loaded, install immediately
     (dolist (buffer (buffer-list))
