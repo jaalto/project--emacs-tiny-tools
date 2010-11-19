@@ -9,7 +9,6 @@
 ;; Author:          Jari Aalto
 ;; Maintainer:      Jari Aalto
 ;;
-;; To get information on this program, call M-x tinyurl-version.
 ;; Look at the code with folding.el.
 
 ;; This program is free software; you can redistribute it and/or modify it
@@ -74,10 +73,6 @@
 ;;
 ;;      ;;  Select backend for EMAIL urls. See variable's documentation.
 ;;      (setq mail-user-agent 'message-user-agent)
-;;
-;;   If you have any questions, use this function to contact author
-;;
-;;       M-x tinyurl-submit-bug-report
 
 ;;}}}
 ;;{{{ Documentation
@@ -887,44 +882,6 @@ there was url'")
 Can't find 'shellex' along `exec-path' with function `executable-find'.
 Visit http://www.tertius.com/projects/library/ and get shellex.exe")))
   "*Win32 program or Emacs function to launch native Win32 programs.")
-
-;;;###autoload (autoload 'tinyurl-version "tinyurl" "Display commentary." t)
-(eval-and-compile
-  (ti::macrof-version-bug-report
-   "tinyurl.el"
-   "tinyurl"
-   tinyurl-:version-id
-   "$Id: tinyurl.el,v 2.85 2007/05/07 10:50:14 jaalto Exp $"
-   '(tinyurl-:version-id
-     tinyurl-:debug
-     tinyurl-:dispatch-hook
-     tinyurl-:validate-hook
-     tinyurl-:load-hook
-     timer-idle-list
-     timer-list
-     itimer-list
-     tinyurl-:load-hook
-     tinyurl-:dispatch-hook
-     tinyurl-:validate-hook
-     tinyurl-:display-glyph
-     tinyurl-:file-filter-table
-     tinyurl-:plugged-function
-     tinyurl-:exclude-function
-     tinyurl-:url-handler-function
-     tinyurl-:command-table
-     tinyurl-:email-regexp
-     tinyurl-:post-command-hook-threshold
-     tinyurl-:url-cache-buffer
-     tinyurl-:reject-url-regexp
-     tinyurl-:cleaner-regexp
-     tinyurl-:command-table-current
-     tinyurl-:event
-     tinyurl-:timer-elt
-     tinyurl-:history
-     tinyurl-:mouse-yank-at-point
-     tinyurl-:overlay-plist
-     tinyurl-:win32-shell-execute-helper)
-   '(tinyurl-:debug-buffer)))
 
 ;;}}}
 ;;{{{ mode and install
@@ -2278,7 +2235,7 @@ Convert URL ftp:// to ange-ftp format and use `find-file'."
       (ti::select-frame-non-dedicated)
       (prog1 (ti::find-file-or-window url line (not 'must-exist) info)
         (when info
-          (goto-line (cdr info))))))))
+          (ti::goto-line (cdr info))))))))
 
 ;;; ----------------------------------------------------------------------
 ;;;
