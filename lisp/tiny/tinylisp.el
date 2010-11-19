@@ -991,9 +991,8 @@ The default command is `macroexpand'."
       post-command-hook
       post-command-idle-hook))
     ("hook-file"
-     (write-file-hooks
+     (write-file-functions
       find-file-hook
-      find-file-hooks
       after-save-hook))
     ("hook-mail"
      (mail-mode-hook
@@ -1013,9 +1012,8 @@ The default command is `macroexpand'."
      (pre-command-hook
       post-command-hook
       post-command-idle-hook
-      write-file-hooks
+      write-file-functions
       find-file-hook
-      find-file-hooks
       after-save-hook
       after-init-hook)))
   "*List of interesting variables printed from `tinylisp-snoop-variables'.
@@ -2032,9 +2030,9 @@ Following variables are set during BODY:
 (put 'tinylisp-with-file-env-macro 'edebug-form-spec '(body))
 (defmacro tinylisp-with-file-env-macro (&rest body)
   "Run BODY with all the interfering hooks turned off."
-  `(let* (find-file-hooks
-	  find-file-not-found-hooks
-          write-file-hooks
+  `(let* (find-file-hook
+	  find-file-not-found-functions
+          write-file-functions
 	  write-file-functions
           font-lock-mode
           ;; buffer-auto-save-file-name
@@ -2049,12 +2047,12 @@ Following variables are set during BODY:
      ;;  When each file is loaded to emacs, do not turn on lisp-mode
      ;;  or anything else => cleared file hooks. These are byte compiler
      ;;  silencers:
-     (if (null find-file-hooks)
-         (setq find-file-hooks nil))
-     (if (null find-file-not-found-hooks)
-         (setq find-file-not-found-hooks nil))
-     (if (null write-file-hooks)
-         (setq write-file-hooks nil))
+     (if (null find-file-hook)
+         (setq find-file-hook nil))
+     (if (null find-file-not-found-functions)
+         (setq find-file-not-found-functions nil))
+     (if (null write-file-functions)
+         (setq write-file-functions nil))
      (if (null write-file-functions)
          (setq write-file-functions nil))
      (if (null font-lock-mode)
@@ -2743,19 +2741,15 @@ Shrink and print message if not exist."
   nil)
 
 ;; Real functions are defined here.
-
-(mapcar
- (function
-  (lambda (x)
-    (let ((sym (intern (format "tinylisp-b-%s" x)))
-          (var (intern (format "tinylisp-:buffer-%s" x)))
-          def)
-      (setq def
-            `(defun ,sym (&optional pmin)
-                 (interactive "P")
-                 (tinylisp-b-display ,var pmin)))
-      (eval def))))
- '("eval" "record" "variables" "funcs" "autoload" ))
+(dolist (x '("eval" "record" "variables" "funcs" "autoload"))
+  (let ((sym (intern (format "tinylisp-b-%s" x)))
+	(var (intern (format "tinylisp-:buffer-%s" x)))
+	def)
+    (setq def
+	  `(defun ,sym (&optional pmin)
+	     (interactive "P")
+	     (tinylisp-b-display ,var pmin)))
+    (eval def)))
 
 ;;; ----------------------------------------------------------------------
 ;;;
@@ -3253,18 +3247,15 @@ harness run is over."
 
 ;;; ----------------------------------------------------------------------
 ;;;
-(mapcar
- (function
-  (lambda (x)
-    (let ((sym (intern (format "tinylisp-elp-summary-sort-column-%d" x)))
-          def)
-      (setq def
-            `(defun ,sym (&optional arg)
+(dolist (x '(1 2 3 4 5 6 7 8 9)) ;; Can't use dotimes which starts from 0
+  (let ((sym (intern (format "tinylisp-elp-summary-sort-column-%d" x)))
+	def)
+    (setq def
+	  `(defun ,sym (&optional arg)
 ;;;              "Sort by field. ARG to reverse sort."
-                 (interactive "P")
-                 (tinylisp-elp-summary-sort-column ,x arg)))
-      (eval def))))
- '(1 2 3 4 5 6 7 8 9))
+	     (interactive "P")
+	     (tinylisp-elp-summary-sort-column ,x arg)))
+    (eval def)))
 
 ;;; ----------------------------------------------------------------------
 ;;;
@@ -3638,8 +3629,7 @@ References:
           ;;  No load-history so try searching all buffers in Emacs
           (setq buffer nil)
           (dolist (buf (buffer-list))
-            (save-excursion
-              (set-buffer buf)
+            (with-current-buffer buf
               (when (re-search-forward re nil t)
                 (setq buffer (current-buffer))
                 (setq point  (line-beginning-position))
@@ -3696,7 +3686,7 @@ See `tinylisp-jump-to-definition'. VERB."
   "Search forward or BACK a user variable or user callable function. VERB."
   (interactive
    (list
-    universal-argument
+    current-prefix-arg
     'interactive))
   (let* ((opoint (point))
          type
@@ -4378,51 +4368,51 @@ Return:
          path)
     (ti::verb)
     (tinylisp-with-current-buffer buffer
-                                  (dolist (pkg load-history)
-                                    (when (stringp (setq name (car pkg)))
-                                      (setq path (ti::system-load-history-where-is-source name)))
-                                    ;;  Go to next element, these will have dependency information
-                                    ;;  ("tinycom" (require . tinylibm) byte-compile-dynamic ...
-                                    ;;                      |
-                                    ;;                      Get these
-                                    (pop pkg)
-                                    (while  (ti::consp (car pkg))
-                                      (push (cdr (car pkg)) dep-list)
-                                      (pop pkg))
-                                    ;;  User has evaled the package 'in place' and not loaded it.
-                                    (unless (stringp name)
-                                      (setq name unknown))
-                                    (insert
-                                     (format
-                                      "%-15s %3d %-35s %s %s\n"
-                                      (concat
-                                       (if (string-match "^/" (or name ""))
-                                           "*"
-                                         "")
-                                       (file-name-nondirectory name))
-                                      (length pkg)
-                                      (if path
-                                          (file-name-directory path)
-                                        "<no path>")
-                                      (mapconcat
-                                       (function (lambda (x) (symbol-name x)))
-                                       dep-list
-                                       " ")
-                                      ;;  - If the package name is unknow, print some symbol
-                                      ;;    names that it defined so that user can use grep later
-                                      ;;    to find out what packagage it was
-                                      ;;
-                                      (if (not (string= name unknown))
-                                          ""
-                                        (format "%s ..." (ti::string-left (prin1-to-string pkg) 80)))))
-                                    (if verb
-                                        (message "TinyLisp: lib info %d/%d %s" i max name))
-                                    (incf  i)
-                                    (setq dep-list  nil
-                                          pkg       nil)))
+      (dolist (pkg load-history)
+	(when (stringp (setq name (car pkg)))
+	  (setq path (ti::system-load-history-where-is-source name)))
+	;;  Go to next element, these will have dependency information
+	;;  ("tinycom" (require . tinylibm) byte-compile-dynamic ...
+	;;                      |
+	;;                      Get these
+	(pop pkg)
+	(while  (ti::consp (car pkg))
+	  (push (cdr (car pkg)) dep-list)
+	  (pop pkg))
+	;;  User has evaled the package 'in place' and not loaded it.
+	(unless (stringp name)
+	  (setq name unknown))
+	(insert
+	 (format
+	  "%-15s %3d %-35s %s %s\n"
+	  (concat
+	   (if (string-match "^/" (or name ""))
+	       "*"
+	     "")
+	   (file-name-nondirectory name))
+	  (length pkg)
+	  (if path
+	      (file-name-directory path)
+	    "<no path>")
+	  (mapconcat
+	   (function (lambda (x) (symbol-name x)))
+	   dep-list
+	   " ")
+	  ;;  - If the package name is unknow, print some symbol
+	  ;;    names that it defined so that user can use grep later
+	  ;;    to find out what packagage it was
+	  ;;
+	  (if (not (string= name unknown))
+	      ""
+	    (format "%s ..." (ti::string-left (prin1-to-string pkg) 80)))))
+	(if verb
+	    (message "TinyLisp: lib info %d/%d %s" i max name))
+	(incf  i)
+	(setq dep-list  nil
+	      pkg       nil)))
     (tinylisp-with-current-buffer buffer
-                                  (ti::pmin)
-                                  (sort-lines nil (point-min) (point-max)))
+      (ti::pmin)
+      (sort-lines nil (point-min) (point-max)))
     (when verb
       (pop-to-buffer buffer)
       (ti::pmin)
@@ -4436,7 +4426,7 @@ Return:
   (save-excursion
     (if (looking-at "[ \t\n]")          ;only spaces ahead?
         (ti::read-current-line)
-      ;;  go backward until space(word) or function call
+      ;;  Go backward until space(word) or function call
       (unless (char-equal (following-char) ?\( )
         (re-search-backward "[( \t\n]" nil t)
         (skip-chars-forward " \t\n")))
@@ -5182,7 +5172,8 @@ Optionally EXCLUDE files by regexp."
   (interactive "fLoaddedfs from file: ")
   (let* ((dest (format "%s-loaddefs.el"
                        (file-name-sans-extension file))))
-    (tinylisp-autoload-real-update-autoloads-loaddefs-1 file dest)))
+    (tinylisp-autoload-real-update-update-file-autoloads-1
+     file dest)))
 
 ;;; ----------------------------------------------------------------------
 ;;;
@@ -5371,7 +5362,7 @@ Obey optional INCLUDE and EXCLUDE regexps."
        ((string-match "-\\(loaddefs\\|autoload.*\\)\\.el" file))
        ((and (stringp exclude)
              (not (string-match "^[ \t]*$" exclude))
-             ((string-match exclude file))))
+             (string-match exclude file)))
        ((or (not (stringp include))
             (string-match "^[ \t]*$" include)
             (string-match include file))
@@ -5401,7 +5392,7 @@ Obey optional INCLUDE and EXCLUDE regexps."
   "Go to next `def' forward or `BACK'. VERB."
   (interactive
    (list
-    universal-argument
+    current-prefix-arg
     'interactive))
   (let* ((opoint (point))
          ret)
