@@ -86,9 +86,9 @@
 ;;; ......................................................... &require ...
 
 (require 'tinyliba)
+(require 'cl)
 
 (eval-when-compile
-  (require 'cl)
   (defvar mode-line-mode-menu)
   (defvar tinyurl-mode))
 
@@ -356,8 +356,8 @@ See `tinycompile-parse-line-goto-guess'.")
   "Go to line under cursor by guessing context."
   (interactive)
   (let* ((elt  (ti::buffer-parse-line-col))
-	 (line (and elt (string-to-int (car elt))))
-	 (col  (and elt (string-to-int (nth 1 elt)))))
+	 (line (and elt (string-to-number (car elt))))
+	 (col  (and elt (string-to-number (nth 1 elt)))))
     (when elt
       (let ((buffer
 	     (or tinycompile--buffer-name
@@ -370,7 +370,7 @@ See `tinycompile-parse-line-goto-guess'.")
 	(make-local-variable 'tinycompile--buffer-name)
 	(setq tinycompile--buffer-name buffer)
 	(pop-to-buffer tinycompile--buffer-name)
-	(goto-line line)
+	(ti::goto-line line)
 	(unless (zerop col)
 	  (setq col (1- col))		;Emacs columns are zero based
 	(move-to-column col))))))
@@ -438,7 +438,7 @@ Note:
                  (find-file-noselect file)
                (error "TinyCompile: file not found `%s'" file))))))
         (when line
-          (goto-line line)))))))
+	  (ti::goto-line line)))))))
 
 ;;; ----------------------------------------------------------------------
 ;;;
