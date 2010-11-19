@@ -89,8 +89,7 @@
 
 (eval-when-compile
   (defvar mode-line-mode-menu)
-  (defvar tinyurl-mode)
-  (ti::package-use-dynamic-compilation))
+  (defvar tinyurl-mode))
 
 (ti::package-defgroup-tiny TinyCompile tinycompile-: tools
   "Compile buffers additions.
