@@ -52,10 +52,6 @@
 ;; not be visible.
 ;;
 ;;      (set-face-background 'highlight "blue")
-;;
-;; If you have any questions, contact maintainer with function
-;;
-;;      M-x tinyreplace-submit-bug-report
 
 ;;}}}
 ;;{{{ Documentation
