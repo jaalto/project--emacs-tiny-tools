@@ -58,7 +58,7 @@
 ;; ..................................................... &t-commentary ...
 ;;; Commentary:
 
-;;  Preface, jun 1996
+;;  Preface, Jun 1996
 ;;
 ;;      I had found paged.el by Michelangelo Grigni <mic@mathcs.emory.edu>
 ;;      one year or so ago and had liked it very much. Unfortunately
@@ -471,9 +471,9 @@ Mode description:
 (defun tinypage-page-region (&optional verb)
   "Return region (BEG . END) of page. VERB."
   (interactive)
-  (let* (beg
-         end
-         ret)
+  (let (beg
+	end
+	ret)
     (save-excursion
       (beginning-of-line)
       (if (looking-at "^[ \t]*\C-l")
@@ -493,7 +493,7 @@ Mode description:
 ;;;
 (defun tinypage-count-pages ()
   "Count page characters ^L."
-  (let* ((count 0))
+  (let ((count 0))
     (save-excursion
       (ti::pmin)
       (while (re-search-forward "^[ \t]*\C-l" nil t)
@@ -517,15 +517,15 @@ Mode description:
 (defun tinypage-current-page ()
   "Current page."
   (interactive)
-  (let* ((re    "^[ \t]*\C-l")
-         (p     (point))
-         (count 0))
+  (let ((re    "^[ \t]*\C-l")
+	(point (point))
+	(count 0))
     (save-excursion
       (ti::pmin)
-      (while (re-search-forward re p t)
-        (incf  count)))
+      (while (re-search-forward re point t)
+        (incf count)))
     (if (looking-at re)
-        (incf  count))
+        (incf count))
     count))
 
 ;;; ----------------------------------------------------------------------
@@ -533,10 +533,10 @@ Mode description:
 (defun tinypage-update-mode-line ()
   "Update modeline info."
   (interactive)
-  (let* ((mode-string  tinypage-:mode-name-string)
-         pages
-         now
-         lines)
+  (let ((mode-string  tinypage-:mode-name-string)
+	pages
+	now
+	lines)
     (setq pages (tinypage-count-pages))
     (setq now   (tinypage-current-page))
     (setq lines (tinypage-count-lines-in-page))
@@ -560,7 +560,7 @@ Mode description:
 ;;;
 (defun tinypage-overlay (act &optional beg end)
   "If ACT is 'hide, hide overlay, otherwise highlight BEG END."
-  (let* ((ov (ti::compat-overlay-some)))
+  (let ((ov (ti::compat-overlay-some)))
     (cond
      ((eq act 'hide)
       (ti::compat-overlay-move ov 1 1))
@@ -600,10 +600,10 @@ Return:
 
   t             if successfull
   nil"
-  (let* ((doit (if maybe
-                   (and beg end)
-                 t))
-         (reg tinypage-:register))
+  (let ((doit (if maybe
+		  (and beg end)
+		t))
+	(reg tinypage-:register))
     (cond
      ((null doit)
       nil)
@@ -682,8 +682,8 @@ References:
 (defun tinypage-renumber-forward (&optional verb)
   "Renumber all found headings forward. VERB."
   (interactive "P")
-  (let* ((data   tinypage-:renumber-format)
-         (re     (nth 0 data)))
+  (let ((data   tinypage-:renumber-format)
+	(re     (nth 0 data)))
     (ti::verb)
     ;; Well, we do lot of extra work here, because the
     ;; tinypage-renumber-level-forward goes alway to the bottom,
@@ -712,8 +712,8 @@ References:
 ;;;
 (defsubst tinypage-get-index-list ()
   "Return list of strings."
-  (let* ((list (ti::buffer-grep-lines (nth 0 tinypage-:renumber-format)))
-         ret)
+  (let ((list (ti::buffer-grep-lines (nth 0 tinypage-:renumber-format)))
+	ret)
     (dolist (elt list)
       (push (ti::string-remove-whitespace elt) ret))
     ret))
@@ -730,12 +730,13 @@ NO-SHOW doesn't show buffer after creating table of content.
 Return:
   buffer"
   (interactive "P")
-  (let* ((list          (ti::buffer-grep-lines (nth 0 tinypage-:renumber-format)))
-         (buffer        (ti::temp-buffer tinypage-:buffer-toc 'clear))
-         dots
-         padd
-         heading
-         text)
+  (let ((list          (ti::buffer-grep-lines
+			(nth 0 tinypage-:renumber-format)))
+	(buffer        (ti::temp-buffer tinypage-:buffer-toc 'clear))
+	dots
+	padd
+	heading
+	text)
     (with-current-buffer buffer
       (dolist (elt list)
         (setq elt (ti::string-remove-whitespace elt))
@@ -776,11 +777,11 @@ Return:
 (defun tinypage-toc-x-popup (event)
   "Create index. Show it in X-popup with EVENT."
   (interactive "e")
-  (let* ((len    tinypage-:x-popup-line-len)
-         (title  "Index")
-         list
-         val
-         point)
+  (let ((len    tinypage-:x-popup-line-len)
+	(title  "Index")
+	list
+	val
+	point)
     (cond
      ((null (ti::compat-window-system))
       (message "Sorry, Requires X to use X-popup"))
@@ -878,14 +879,15 @@ Return:
   "Yank page from register, but _after_ current page.
 Optionally BEFORE with MSG and VERB."
   (interactive)
-  (let* ((msg   (or msg  "Yanked after this page.")))
-    (ti::verb)
-    (ti::save-with-marker-macro
-      (when (tinypage-go-next before verb)
-        (insert-register tinypage-:register)
-        (tinypage-overlay 'hide)
-        (if (and verb msg)
-            (message msg))))))
+  (or msg
+      (setq msg "Yanked after this page."))
+  (ti::verb)
+  (ti::save-with-marker-macro
+    (when (tinypage-go-next before verb)
+      (insert-register tinypage-:register)
+      (tinypage-overlay 'hide)
+      (if (and verb msg)
+	  (message msg)))))
 
 ;;; ----------------------------------------------------------------------
 ;;;
@@ -902,9 +904,9 @@ Optionally BEFORE with MSG and VERB."
 (defun tinypage-go-next (&optional back verb)
   "Go to next page, optionally BACK. Return point if moved. VERB."
   (interactive)
-  (let* ((point (point))
-         func
-         ret)
+  (let ((point (point))
+	func
+	ret)
     (ti::verb)
     (cond
      (back
