@@ -682,7 +682,9 @@ local to current buffer."
         (setq
          doit
          (y-or-n-p (format "advices %s: No mistake here? "
-                           (if disable "off" "on")))))
+                           (if disable
+			       "off"
+			     "on")))))
     (when doit
       (cond
        (disable
@@ -964,7 +966,8 @@ The `mark' is first character in the left for file or dir."
     (save-excursion
       (setq last-point (tinydired-last-file-point))
       (tinydired-first-line)
-      (if (setq file (ignore-errors (dired-get-filename arg)))
+      (if (setq file (ignore-errors
+		       (dired-get-filename arg)))
           (cond
            ((eq mode 're)
             (beginning-of-line)
@@ -1042,8 +1045,11 @@ The `mark' is first character in the left for file or dir."
 Insert DIR to BUFFER, which defaults to `tinydired-:dir-copy-buffer'"
   (save-excursion
     ;;  See dired.el dired-readin-insert
-    (ti::temp-buffer (or buffer tinydired-:dir-copy-buffer) 'clear)
-    (set-buffer (or buffer tinydired-:dir-copy-buffer))
+    (ti::temp-buffer (or buffer
+			 tinydired-:dir-copy-buffer)
+		     'clear)
+    (set-buffer (or buffer
+		    tinydired-:dir-copy-buffer))
     (insert-directory (expand-file-name dir)
                       dired-listing-switches nil t)))
 
@@ -1627,7 +1633,7 @@ If ARG is non-nil, remove mark if file was loaded. VERB."
       (message "Tinydired: No marked files."))
      ((y-or-n-p "Tinydired: Load all marked files, No kidding? ")
       (dolist (file files)
-        (incf  all)
+        (incf all)
         (if (get-file-buffer file)
             (incf  not-loaded)
           (incf  loaded)
@@ -1752,7 +1758,7 @@ Marks are left only to files which were loaded into Emacs."
             (set-buffer buffer)
             (setq modify-stat (buffer-modified-p)
                   read-stat   buffer-read-only)))
-      (incf  count)
+      (incf count)
       ;; ... ... ... ... ... ... ... ... ... ... ... ... possible load . .
       (cond
        ((and (null buffer)
@@ -1761,7 +1767,7 @@ Marks are left only to files which were loaded into Emacs."
              (or arg
                  (y-or-n-p
                   (concat "file " fn " not in Emacs. Load? " ))))
-        (incf  loaded)
+        (incf loaded)
         (setq buffer (find-file-noselect file)
               load   t)))
       ;; ... ... ... ... ... ... ... ... ... ... ... ... ... .. handle . .
@@ -1863,7 +1869,7 @@ Bugs:
              (y-or-n-p (concat "file " fn " not in Emacs. Load? " )))
         (setq buffer (find-file-noselect file)
               load   t)
-        (incf  loaded)))
+        (incf loaded)))
       ;; ... ... ... ... ... ... ... ... ... ... ... ... ... ...  stat . .
       (cond
        ((setq buffer (get-file-buffer file))
@@ -2139,7 +2145,7 @@ This is like `dired-delete-and-exit'."
     (ti::verb)
     (dolist (elt ange)
       (kill-buffer elt)
-      (incf  ange-count))
+      (incf ange-count))
     (dolist (elt dired)
       (kill-buffer elt)
       (incf  dired-count))
