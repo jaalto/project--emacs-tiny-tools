@@ -9,7 +9,6 @@
 ;; Author:          Jari Aalto
 ;; Maintainer:      Jari Aalto
 ;;
-;; To get information on this program, call M-x tinygnus-version.
 ;; Look at the code with folding.el.
 
 ;; This program is free software; you can redistribute it and/or modify it
@@ -43,10 +42,6 @@
 ;;  with Gnus startup:
 ;;
 ;;      (add-hook 'gnus-startup-hook '(lambda () (require 'tinygnus)))
-;;
-;;  If you have any questions, use this function to contact maintainer
-;;
-;;       M-x tinygnus-submit-bug-report
 
 ;;}}}
 ;;{{{ Documentation
@@ -865,40 +860,6 @@ Keyed by full prefixed group name.")
 ;;}}}
 
 ;;{{{ minor mode
-
-;;;###autoload (autoload 'tinygnus-version "tinygnus" "Display commentary." t)
-
-(eval-and-compile
-  (ti::macrof-version-bug-report
-   "tinygnus.el"
-   "tinygnus"
-   tinygnus-:version-id
-   "$Id: tinygnus.el,v 2.72 2007/08/03 20:16:25 jaalto Exp $"
-   '(tinygnus-:version-id
-     tinygnus-:debug
-     tinygnus-:load-hook
-     tinygnus-:gnus-group-info
-     tinygnus-:summary-ube-send-to-postmasters-hook
-     tinygnus-:article-ube-send-to-postmasters-hook
-     tinygnus-:canonilize-ip-functions
-     tinygnus-:ube-forward-mail-addresses
-     tinygnus-:output-buffer
-     tinygnus-:nslookup-table
-     tinygnus-:show-dormants
-     tinygnus-:save-mail-notify-regexp
-     tinygnus-:nslookup-file
-     tinygnus-:z
-     tinygnus-:gnus-version-for-advice
-     tinygnus-:ube-exclude-ip-regexp
-     tinygnus-:ube-abuse-account-table
-     tinygnus-:use-postmaster-addresses
-     tinygnus-:domain-table
-     tinygnus-:uff-table
-     tinygnus-:uff-summary-date
-     tinygnus-:expiry-in-group-string
-     tinygnus-:additional-group-info
-     tinygnus-:get-news-symbolic-levels)
-   '(tinygnus-:debug-buffer)))
 
 ;;;###autoload (autoload 'tinygnus-summary-install-mode  "tinygnus" "" t)
 ;;;###autoload (autoload 'tinygnus-summary-mode          "tinygnus" "" t)
