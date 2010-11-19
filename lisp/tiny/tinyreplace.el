@@ -216,7 +216,7 @@
 
 (eval-when-compile (ti::package-use-dynamic-compilation))
 
-(ti::package-defgroup-tiny TinyReplace tinyreplace-: tools
+(ti::package-defgroup-tiny TinyReplace tinyreplace-- tools
   "Overview of features
 
         o   Companion to emacs's query-replace. Simple interface.
@@ -243,12 +243,12 @@
   :type 'hook
   :group 'TinyReplace)
 
-(defcustom tinyreplace-:args-keymap-hook  nil
-  "*Hook which can define additional key bindings to `tinyreplace-:args-keymap'."
+(defcustom tinyreplace--args-keymap-hook  nil
+  "*Hook which can define additional key bindings to `tinyreplace--args-keymap'."
   :type 'hook
   :group 'TinyReplace)
 
-(defcustom tinyreplace-:pre-replace-hook  nil
+(defcustom tinyreplace--pre-replace-hook  nil
   "*Hook to run just before replacing start in a buffer."
   :type 'hook
   :group 'TinyReplace)
@@ -256,12 +256,12 @@
 ;;}}}
 ;;{{{ setup: public, User configurable
 
-(defcustom tinyreplace-:goto-region-beginning t
+(defcustom tinyreplace--goto-region-beginning t
   "If non-nil go to beginning of region before replace starts."
   :type 'boolean
   :group 'TinyReplace)
 
-(defcustom tinyreplace-:exclude-line  nil
+(defcustom tinyreplace--exclude-line  nil
   "*When search stops to found position, this variable is consulted.
 
 It can be:
@@ -276,7 +276,7 @@ It can be:
 
 Example:
 
-  (setq tinyreplace-:exclude-line 'my-tinyreplace-exclude)
+  (setq tinyreplace--exclude-line 'my-tinyreplace-exclude)
   (defun my-tinyreplace-exclude ()
     ;;  Exclude comment lines
     (cond
@@ -286,14 +286,14 @@ Example:
   :type  '(string :tag "Regexp")
   :group 'TinyReplace)
 
-(defcustom tinyreplace-:arrow "=>"
+(defcustom tinyreplace--arrow "=>"
   "*Line marker where the replace takes effect.
 Especially useful, when term cannot display colours to show the
 replacement place."
   :type  '(string :tag "Arrow string")
   :group 'TinyReplace)
 
-(defcustom tinyreplace-:arrow-initial-state 'show
+(defcustom tinyreplace--arrow-initial-state 'show
   "*When replacing interactively, this is the default arrow state.
 If your terminal supports highlighting you may want to set this to 'hide.
 
@@ -303,12 +303,12 @@ The only valid values are 'show and 'hide."
           (const hide))
   :group 'TinyReplace)
 
-(defcustom tinyreplace-:face 'highlight
+(defcustom tinyreplace--face 'highlight
   "*The match area overlay face."
   :type 'face
   :group 'TinyReplace)
 
-(defcustom tinyreplace-:word-boundary "[^a-zA-Z0-9_]"
+(defcustom tinyreplace--word-boundary "[^a-zA-Z0-9_]"
   "*This is complement set of characters forming a word.
 For example if you want to replace 'i' with 'j' , you don't want to match
 
@@ -318,7 +318,7 @@ The complement makes sure the word is full word."
   :type  '(string :tag "Word complement charset")
   :group 'TinyReplace)
 
-(defcustom tinyreplace-:symmetry nil
+(defcustom tinyreplace--symmetry nil
   "*Non-nil perform replacement using same symmetry.
 When replacing text, it may be desirable to have the same symmetry,
 the case of the characters, to be preserved while replace takes effect.
@@ -337,14 +337,14 @@ If the symmetry is nil, then the normal replace would have given:
   :type  'boolean
   :group 'TinyReplace)
 
-(defcustom tinyreplace-:symmetry-rest nil
+(defcustom tinyreplace--symmetry-rest nil
   "*If non-nil then rest of the characters follow previous symmetry."
   :type  'boolean
   :group 'TinyReplace)
 
 ;; Not in defcustom; advanced feature and expert knows what to to with this.
 ;;
-(defvar tinyreplace-:read-args-function  'tinyreplace-read-args
+(defvar tinyreplace--read-args-function  'tinyreplace-read-args
   "*Function to ask two arguments ARG1 and ARG2 for replace.
 Input:
 
@@ -357,7 +357,7 @@ Output:
 Function must terminate with error if it cannot return list of
 two strings.")
 
-(defcustom tinyreplace-:user-function 'ti::buffer-outline-widen
+(defcustom tinyreplace--user-function 'ti::buffer-outline-widen
   "*User function fun from command prompt key 'U'."
   :type  'function
   :group 'TinyReplace)
@@ -365,44 +365,44 @@ two strings.")
 ;;}}}
 ;;{{{ setup: private
 
-(defvar tinyreplace-:replace-region-overlay nil
+(defvar tinyreplace--replace-region-overlay nil
   "Overlay used to show the replaced region.")
 
-(defvar tinyreplace-:transient-mark-mode nil
+(defvar tinyreplace--transient-mark-mode nil
   "Transient mark mode state (Emacs).")
 
-(defvar tinyreplace-:arrow-state nil
+(defvar tinyreplace--arrow-state nil
   "Arrow display state.")
 
-(defvar tinyreplace-:narrow-state nil
+(defvar tinyreplace--narrow-state nil
   "Narrowed to function state.")
 
-(defvar tinyreplace-:args-history  nil
+(defvar tinyreplace--args-history  nil
   "History of replace strings.")
 
-(defvar tinyreplace-:args-keymap nil
+(defvar tinyreplace--args-keymap nil
   "Keymap for reading arguments.")
 
-(defvar tinyreplace-:replace-buffer  nil
+(defvar tinyreplace--replace-buffer  nil
   "Buffer where to replace.")
 
-(defvar tinyreplace-:tmp-buffer  "*tinyreplace-temp*"
+(defvar tinyreplace--tmp-buffer  "*tinyreplace-temp*"
   "Temp buffer.")
 
-(defvar tinyreplace-:err-buffer  "*tinyreplace-error*"
+(defvar tinyreplace--err-buffer  "*tinyreplace-error*"
   "Error message buffer.")
 
-(defvar tinyreplace-:read-point  nil
+(defvar tinyreplace--read-point  nil
   "This variable is used in interactive word reading.
 It tells where the current point is.")
 
-(defvar tinyreplace-:o-exclude  nil
+(defvar tinyreplace--o-exclude  nil
   "Private. Temporary variable to keep state when calling another function.")
 
-(defvar tinyreplace-:string1  nil
+(defvar tinyreplace--string1  nil
   "Private. The asked string1. Set in `tinyreplace-read-args'.")
 
-(defvar tinyreplace-:word-match-mode nil
+(defvar tinyreplace--word-match-mode nil
   "Not a user variable. Hold value t if user switch to exact word matching.
 Property 're will have the original regexp.")
 
@@ -411,7 +411,7 @@ Property 're will have the original regexp.")
 ;;  You propably want to copy this to your ~/.emacs and define your
 ;;  own key combinations. See tinylibmenu.el how to use the menu variable
 
-(defvar tinyreplace-:menu
+(defvar tinyreplace--menu
   '("\
 replace: (f)wd (r)eg (w)ord (c)ompile buffer (f)iles (lL)atex (?)help "
     (
@@ -520,17 +520,17 @@ See:
 ;;; ----------------------------------------------------------------------
 ;;;###autoload
 (defun tinyreplace-menu ()
-  "Run `tinyreplace-:menu'."
+  "Run `tinyreplace--menu'."
   (interactive)
   (if buffer-read-only
       (message "My: Cannot start replace, buffer is read-only.")
-    (ti::menu-menu 'tinyreplace-:menu)))
+    (ti::menu-menu 'tinyreplace--menu)))
 
 ;;; ----------------------------------------------------------------------
 ;;;
 (defmacro tinyreplace-interactive-region-args  (string)
   "Construct interactive tag for functions that need region.
-STRING is argument to `tinyreplace-:read-args-function'.
+STRING is argument to `tinyreplace--read-args-function'.
 
 Return:
  '(BEG END ARG1-STRING ARG2-STRING)"
@@ -538,16 +538,16 @@ Return:
        (ti::list-merge-elements
 	(region-beginning)
 	(region-end)
-	(funcall tinyreplace-:read-args-function ,string))
+	(funcall tinyreplace--read-args-function ,string))
      (error "TinyReplace: Region is not active. Please select one.")))
 
 ;;; ----------------------------------------------------------------------
 ;;;
 (defun tinyreplace-make-word-regexp  (string)
-  "See `tinyreplace-:word-boundary'. Make regexp from STRING."
-  (concat tinyreplace-:word-boundary
+  "See `tinyreplace--word-boundary'. Make regexp from STRING."
+  (concat tinyreplace--word-boundary
           "\\(" (regexp-quote string) "\\)"
-          tinyreplace-:word-boundary))
+          tinyreplace--word-boundary))
 
 ;;; ----------------------------------------------------------------------
 ;;;
@@ -558,21 +558,21 @@ Return:
 	arg2)
     ;; Disable electric file minor mode, which defines specilal
     ;; characters.
-    (setq tinyreplace-:replace-buffer   (current-buffer)
-          tinyreplace-:read-point       (point)
-          tinyreplace-:string1          nil)
+    (setq tinyreplace--replace-buffer   (current-buffer)
+          tinyreplace--read-point       (point)
+          tinyreplace--string1          nil)
     (tinyreplace-args-keymap-create)
     (setq arg1
           (ti::remove-properties
            (read-from-minibuffer
             (concat (or prompt "") " Search: ") nil
-            tinyreplace-:args-keymap nil tinyreplace-:args-history)))
-    (setq tinyreplace-:string1 arg1)    ;Now available
+            tinyreplace--args-keymap nil tinyreplace--args-history)))
+    (setq tinyreplace--string1 arg1)    ;Now available
     (setq arg2
           (ti::remove-properties
            (read-from-minibuffer
             "Replace with: " nil
-            tinyreplace-:args-keymap nil tinyreplace-:args-history)))
+            tinyreplace--args-keymap nil tinyreplace--args-history)))
     (goto-char opoint)                  ;restore
     (list arg1 arg2)))
 
@@ -581,14 +581,14 @@ Return:
 ;;;
 ;;;###autoload
 (defun tinyreplace-symmetry-toggle (&optional arg verb)
-  "Toggle variable` tinyreplace-:symmetry' with ARG. VERB."
+  "Toggle variable` tinyreplace--symmetry' with ARG. VERB."
   (interactive "P")
   (ti::verb)
-  (ti::bool-toggle tinyreplace-:symmetry arg)
-  (put 'tinyreplace-replace-1 'tinyreplace-:symmetry tinyreplace-:symmetry)
+  (ti::bool-toggle tinyreplace--symmetry arg)
+  (put 'tinyreplace-replace-1 'tinyreplace--symmetry tinyreplace--symmetry)
   (if verb
       (message "TinyReplace: Symmetry is now %s"
-               (if tinyreplace-:symmetry
+               (if tinyreplace--symmetry
                    "on"
                  "off"))))
 
@@ -601,11 +601,11 @@ This is done only if function exists. MODE can be 'write or 'read."
              (boundp 'transient-mark-mode)) ;XEmacs doesn't have this
     (cond
      ((eq mode 'write)
-      (setq tinyreplace-:transient-mark-mode
+      (setq tinyreplace--transient-mark-mode
             (let ((var 'transient-mark-mode)) ;XEmacs 19.14 byteComp silencer
               (symbol-value var))))
      ((eq mode 'read)
-      tinyreplace-:transient-mark-mode))))
+      tinyreplace--transient-mark-mode))))
 
 ;;; ----------------------------------------------------------------------
 ;;;
@@ -620,7 +620,7 @@ Input:
 
 Sets global:
 
-  `tinyreplace-:arrow-state'
+  `tinyreplace--arrow-state'
 
 Returns:
 
@@ -636,19 +636,19 @@ Returns:
 
    ((eq mode 'maybe)
     (cond
-     ((null tinyreplace-:arrow-state)
+     ((null tinyreplace--arrow-state)
       (setq mode 'show))
      (t
       ;;  follow the mode which is active
-      (setq mode tinyreplace-:arrow-state)))))
+      (setq mode tinyreplace--arrow-state)))))
   (cond
    ((or (eq mode 'show)
         (eq mode 'move))
-    (ti::buffer-arrow-control buffer mode tinyreplace-:arrow  (point))
-    (setq tinyreplace-:arrow-state 'show))
+    (ti::buffer-arrow-control buffer mode tinyreplace--arrow  (point))
+    (setq tinyreplace--arrow-state 'show))
    ((eq mode 'hide)
     (ti::buffer-arrow-control buffer 'hide str)
-    (setq tinyreplace-:arrow-state 'hide)))
+    (setq tinyreplace--arrow-state 'hide)))
   mode)
 
 ;;; ----------------------------------------------------------------------
@@ -662,8 +662,8 @@ Input:
 
 Note:
 
-  `tinyreplace-:o-exclude'    must be set in the calling function"
-  (let ((o-exclude  tinyreplace-:o-exclude)
+  `tinyreplace--o-exclude'    must be set in the calling function"
+  (let ((o-exclude  tinyreplace--o-exclude)
 	(loop       t)
 	msg
 	ans)
@@ -680,11 +680,11 @@ Note:
                (if (> (length from-str) 18)
                    (concat (ti::string-left to-str 16) "..")
                  to-str)
-               (if tinyreplace-:narrow-state "N " "")
-               (if tinyreplace-:symmetry  "S" "")
+               (if tinyreplace--narrow-state "N " "")
+               (if tinyreplace--symmetry  "S" "")
                (if case-fold-search "" "C")
-               (if tinyreplace-:word-match-mode "W" "")
-               (if tinyreplace-:exclude-line "X" "")))
+               (if tinyreplace--word-match-mode "W" "")
+               (if tinyreplace--exclude-line "X" "")))
       (setq ans (ti::read-char-safe-until msg))
       ;;  There is purposively a dummy COND case.
       (cond
@@ -695,27 +695,27 @@ Note:
        ((char-equal ?s ans)
         (tinyreplace-symmetry-toggle))
        ((char-equal ?w ans)
-        (ti::bool-toggle tinyreplace-:word-match-mode)
+        (ti::bool-toggle tinyreplace--word-match-mode)
         (put 'tinyreplace-replace-1
-             'tinyreplace-:word-match-mode
-             tinyreplace-:word-match-mode))
+             'tinyreplace--word-match-mode
+             tinyreplace--word-match-mode))
        ((char-equal ?c ans)
         (ti::bool-toggle case-fold-search)
         (put 'tinyreplace-replace-1 'case-fold-search case-fold-search))
        ((char-equal ?\  ans)
         (setq ans ?y))
        ((char-equal ?x ans)                  ;exclude toggle
-        (if tinyreplace-:exclude-line
-            (setq tinyreplace-:exclude-line nil)
+        (if tinyreplace--exclude-line
+            (setq tinyreplace--exclude-line nil)
           ;; Dynamically bound in call func
-          (setq tinyreplace-:exclude-line o-exclude)))
+          (setq tinyreplace--exclude-line o-exclude)))
        ((char-equal ?F ans)
         (tinyreplace-show-function-name (point)))
        ((char-equal ?N ans)
-        (setq  tinyreplace-:narrow-state t)
+        (setq  tinyreplace--narrow-state t)
         (setq ans ?N))
        ((char-equal ?U ans)
-        (funcall tinyreplace-:user-function)
+        (funcall tinyreplace--user-function)
         (setq ans ?U))
        ((ti::char-in-list-case ans '(?\177 ?\b ?n))
         (setq ans ?n)))
@@ -740,10 +740,10 @@ Note:
 ;;;
 (defun tinyreplace-move-overlay (beg end)
   "Move overlay to BEG END."
-  (ti::compat-overlay-move 'tinyreplace-:replace-region-overlay beg end  nil)
+  (ti::compat-overlay-move 'tinyreplace--replace-region-overlay beg end  nil)
   (ti::compat-overlay-put
-   'tinyreplace-:replace-region-overlay
-   'face tinyreplace-:face))
+   'tinyreplace--replace-region-overlay
+   'face tinyreplace--face))
 
 ;;; ----------------------------------------------------------------------
 ;;;
@@ -772,9 +772,9 @@ This function is meant to position you to to right word which you can
 then insert into the replace prompt with \\[tinyreplace-key-yank-word]. When"
   (interactive)
   (let* ((obuffer (current-buffer)))
-    (select-window (get-buffer-window tinyreplace-:replace-buffer))
+    (select-window (get-buffer-window tinyreplace--replace-buffer))
     (forward-word (or count 1))
-    (setq tinyreplace-:read-point (point))
+    (setq tinyreplace--read-point (point))
     (message "TinyReplace: reading point %d:%s..."
              (point)
              (ti::string-left
@@ -795,18 +795,18 @@ then insert into the replace prompt with \\[tinyreplace-key-yank-word]. When"
 (defun tinyreplace-key-yank-string1  ()
   "Yank previous string (search string)."
   (interactive)
-  (if tinyreplace-:string1
-      (insert tinyreplace-:string1)
+  (if tinyreplace--string1
+      (insert tinyreplace--string1)
     (message "TinyReplace: Sorry, there is no STRING1 to yank yet ")))
 
 ;;; ----------------------------------------------------------------------
 ;;;
 (defun tinyreplace-key-yank-word ()
-  "Yank word from buffer. `tinyreplace-:replace-buffer' must be set."
+  "Yank word from buffer. `tinyreplace--replace-buffer' must be set."
   (interactive)
   (let (word)
-    (with-current-buffer tinyreplace-:replace-buffer
-      (goto-char  tinyreplace-:read-point)
+    (with-current-buffer tinyreplace--replace-buffer
+      (goto-char  tinyreplace--read-point)
       ;;  This is just because of the space-word-command
       ;;
       ;;     Word-here
@@ -822,13 +822,13 @@ then insert into the replace prompt with \\[tinyreplace-key-yank-word]. When"
 ;;;
 (defun tinyreplace-args-keymap-create  ()
   "Create keymap."
-  (setq tinyreplace-:args-keymap (copy-keymap minibuffer-local-map))
-  (define-key tinyreplace-:args-keymap "\C-l"  'tinyreplace-key-yank-word)
-  (define-key tinyreplace-:args-keymap "\C-o"  'tinyreplace-key-yank-string1)
-  (define-key tinyreplace-:args-keymap "\C-p"  'tinyreplace-key-clear-input)
-  (define-key tinyreplace-:args-keymap "\C-b"  'tinyreplace-key-backward-word)
-  (define-key tinyreplace-:args-keymap "\C-f"  'tinyreplace-key-forward-word)
-  (run-hooks 'tinyreplace-:args-keymap-hook))
+  (setq tinyreplace--args-keymap (copy-keymap minibuffer-local-map))
+  (define-key tinyreplace--args-keymap "\C-l"  'tinyreplace-key-yank-word)
+  (define-key tinyreplace--args-keymap "\C-o"  'tinyreplace-key-yank-string1)
+  (define-key tinyreplace--args-keymap "\C-p"  'tinyreplace-key-clear-input)
+  (define-key tinyreplace--args-keymap "\C-b"  'tinyreplace-key-backward-word)
+  (define-key tinyreplace--args-keymap "\C-f"  'tinyreplace-key-forward-word)
+  (run-hooks 'tinyreplace--args-keymap-hook))
 
 ;;}}}
 ;;{{{ main
@@ -872,7 +872,7 @@ Search modes
  c                      Mode: toggle case sensitivity in search.
  w                      Mode: toggle word only search.
  a                      Mode: toggle arrow display.
- x                      Mode: toggle `tinyreplace-:exclude-line' variable on/off.
+ x                      Mode: toggle `tinyreplace--exclude-line' variable on/off.
 
 Search control forward/backward
 
@@ -893,11 +893,11 @@ Moving point of search
                         You can't cancel this if you use it. The
                         'N' is indicated in the command line,
 
- U                      Run user function `tinyreplace-:user-function'
+ U                      Run user function `tinyreplace--user-function'
 
 References:
 
-  `tinyreplace-:exclude-line'
+  `tinyreplace--exclude-line'
 
 Return:
 
@@ -905,10 +905,10 @@ Return:
           parameter, because replacing text modifies the buffer's points."
   (let* (case-fold-search
          (arrow-orig    overlay-arrow-string)
-         (arrow-init    tinyreplace-:arrow-initial-state)
-         (symm-rest     tinyreplace-:symmetry-rest)
-         (tinyreplace-:exclude-line tinyreplace-:exclude-line) ;Make local copy
-         (o-exclude     tinyreplace-:exclude-line) ;original value
+         (arrow-init    tinyreplace--arrow-initial-state)
+         (symm-rest     tinyreplace--symmetry-rest)
+         (tinyreplace--exclude-line tinyreplace--exclude-line) ;Make local copy
+         (o-exclude     tinyreplace--exclude-line) ;original value
          (level         (or level 0))              ;default value
          (buffer        (current-buffer))
          (func          (or func 're-search-forward))
@@ -929,20 +929,20 @@ Return:
          bypass)               ;This is flag to skip searching in loop
     ;; Se same defaults as previous time
     (when ask
-      (setq tinyreplace-:word-match-mode
-            (get 'tinyreplace-replace-1 'tinyreplace-:word-match-mode))
-      (setq tinyreplace-:symmetry
-            (get 'tinyreplace-replace-1 'tinyreplace-:symmetry))
+      (setq tinyreplace--word-match-mode
+            (get 'tinyreplace-replace-1 'tinyreplace--word-match-mode))
+      (setq tinyreplace--symmetry
+            (get 'tinyreplace-replace-1 'tinyreplace--symmetry))
       (setq case-fold-search
             (get 'tinyreplace-replace-1 'case-fold-search)))
-    (put 'tinyreplace-:word-match-mode 're re)
-    (put 'tinyreplace-:word-match-mode 'word (tinyreplace-make-word-regexp re))
-    (setq tinyreplace-:o-exclude o-exclude)
+    (put 'tinyreplace--word-match-mode 're re)
+    (put 'tinyreplace--word-match-mode 'word (tinyreplace-make-word-regexp re))
+    (setq tinyreplace--o-exclude o-exclude)
     (tinyreplace-transient-mark-mode 'write)
     (transient-mark-mode 0)             ;turn this off for now..
-    (setq tinyreplace-:arrow-state arrow-init) ;<< set global, see 'maybe
+    (setq tinyreplace--arrow-state arrow-init) ;<< set global, see 'maybe
     (tinyreplace-arrow-control buffer 'maybe)
-    (setq tinyreplace-:narrow-state nil) ;reset
+    (setq tinyreplace--narrow-state nil) ;reset
     (cond
      ((eq func 're-search-forward)
       (setq minp (min beg end)          ;logical min and max
@@ -957,7 +957,7 @@ Return:
     (save-excursion
       (unwind-protect
           (catch 'cancel
-            (run-hooks 'tinyreplace-:pre-replace-hook)
+            (run-hooks 'tinyreplace--pre-replace-hook)
             ;;  Peek a little before we start
             ;;
             (cond
@@ -969,7 +969,7 @@ Return:
 There is no matches forward. Go to beginning of buffer? "))))
               (ti::pmin))
              ((and (region-active-p)
-                   (or tinyreplace-:goto-region-beginning
+                   (or tinyreplace--goto-region-beginning
                        (y-or-n-p "\
 Region is active. Go to beginning of region? "))
                    (if (eq func 're-search-forward)
@@ -985,7 +985,7 @@ Region is active. Go to beginning of region? "))
                         me (match-end level)))
               (setq bypass nil)
               ;; .. .. .. .. .. .. .. .. .. .. .. .. .. exclude line ..
-              (setq c-exclude tinyreplace-:exclude-line)
+              (setq c-exclude tinyreplace--exclude-line)
               (save-excursion
                 (cond
                  ((null c-exclude)   ;; No exclude patterns
@@ -1021,11 +1021,11 @@ Region is active. Go to beginning of region? "))
                                    str))
                     (setq do-ask nil)
                     (cond
-                     (tinyreplace-:word-match-mode
-                      (setq re (get 'tinyreplace-:word-match-mode 'word))
+                     (tinyreplace--word-match-mode
+                      (setq re (get 'tinyreplace--word-match-mode 'word))
                       (setq level 1))
                      (t
-                      (setq re (get 'tinyreplace-:word-match-mode 're))
+                      (setq re (get 'tinyreplace--word-match-mode 're))
                       (setq level 0)))
                     ;; ... ... ... ... ... ... ... ... ... ... ... ... ...
                     (cond
@@ -1058,7 +1058,7 @@ Region is active. Go to beginning of region? "))
                           (setq MARK-MAXP (point-marker))
                           (goto-char minp))
                          (t
-                          (setq tinyreplace-:narrow-state nil)
+                          (setq tinyreplace--narrow-state nil)
                           (message "TinyReplace: Can't find narrow bounds.")
                           (sit-for 1))))
                        (t
@@ -1071,7 +1071,7 @@ Region is active. Go to beginning of region? "))
                           (setq MARK-MAXP (point-marker))
                           (goto-char minp))
                          (t
-                          (setq tinyreplace-:narrow-state nil)
+                          (setq tinyreplace--narrow-state nil)
                           (message "TinyReplace: Can't find narrow bounds.")
                           (sit-for 1)))))
                       (setq replace nil))
@@ -1112,7 +1112,7 @@ Region is active. Go to beginning of region? "))
                       (tinyreplace-replace-1
                        mb me
                        (ti::string-case-replace str read-string
-                                                tinyreplace-:symmetry symm-rest))
+                                                tinyreplace--symmetry symm-rest))
                       (tinyreplace-move-overlay mb me)
                       (setq replace nil  do-ask t))
                      ;; ... ... ... ... ... ... ... ... ... ... ... ... ..
@@ -1135,14 +1135,14 @@ Region is active. Go to beginning of region? "))
                    mb me
                    (ti::string-case-replace
                     read-string str-to
-                    tinyreplace-:symmetry symm-rest)))))) ;; cancel - while
+                    tinyreplace--symmetry symm-rest)))))) ;; cancel - while
         ;; ............................ condition
         ;; - Clean up if Ctrl-g pressed
         ;; - We're done, dehilit and restore possible transient mode
-        (if (and tinyreplace-:replace-region-overlay
+        (if (and tinyreplace--replace-region-overlay
                  (ti::overlay-supported-p))
             (ti::funcall
-             'overlay-put tinyreplace-:replace-region-overlay 'face nil))
+             'overlay-put tinyreplace--replace-region-overlay 'face nil))
         (setq pos maxp)                 ;update return value
         (tinyreplace-arrow-control buffer 'hide arrow-orig) ;remove it
         (if (tinyreplace-transient-mark-mode 'read) ;if it were on previously
@@ -1207,7 +1207,7 @@ Input:
   (let ((o-frame        (selected-frame))
         (w-frame        (ti::non-dedicated-frame))
         (func           (or func 'tinyreplace-replace-forward))
-        (err-buffer     (ti::temp-buffer tinyreplace-:err-buffer 'clear))
+        (err-buffer     (ti::temp-buffer tinyreplace--err-buffer 'clear))
         (read-only      0)
         no-confirm
         buffer
@@ -1316,7 +1316,7 @@ Input:
   "Find STR1 and replace with STR2 from current point forward.
 See C-h f `tinyreplace-args-keymap-create' what key bindings
 you can use. Normally C - l yanks, and \"\\\" key deletes line."
-  (interactive (funcall tinyreplace-:read-args-function))
+  (interactive (funcall tinyreplace--read-args-function))
   (tinyreplace-replace-region-1
    (point)
    (point-max)
