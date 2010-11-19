@@ -9,7 +9,6 @@
 ;; Author:          Jari Aalto
 ;; Maintainer:      Jari Aalto
 ;;
-;; To get information on this program, call M-x tinyload-version.
 ;; Look at the code with folding.el
 
 ;; COPYRIGHT NOTICE
@@ -49,7 +48,6 @@
 ;; From the *Messages* buffer and describe what was happening
 ;;
 ;;      M-x tinyload-debug-toggle
-;;      M-x tinyload-submit-bug-report
 
 ;;}}}
 
@@ -628,36 +626,9 @@ Example:
 This prevents invoking multiple load processes.")
 
 ;;}}}
-;;{{{ version
-
-;;; ....................................................... &v-version ...
-
-(eval-and-compile
-  (ti::macrof-version-bug-report
-   "tinyload.el"
-   "tinyload"
-   tinyload-:version-id
-   "$Id: tinyload.el,v 2.66 2007/05/06 23:06:11 jaalto Exp $"
-   '(tinyload-:version-id
-     tinyload-:debug
-     tinyload-:load-hook
-     tinyload-:load-list
-     tinyload-:load-file
-     tinyload-:process-install-hook
-     tinyload-:process-uninstall-hook
-     tinyload-:timer-elt
-     tinyload-:process-busy-p
-     tinyload-:idle-time
-     tinyload-:init-time
-     tinyload-:wait-next-load)
-   '(tinyload-:debug-buffer)))
-
-;;;### (autoload 'tinyload-debug-toggle "tinyload" t t)
-
-(eval-and-compile (ti::macrof-debug-standard "tinyload" "-:"))
-
-;;}}}
 ;;{{{ installation
+
+(eval-and-compile (ti::macrof-debug-standard "tinyload" "--"))
 
 ;;; --------------------------------------------------------- &install ---
 ;;;
@@ -674,11 +645,11 @@ the list pointer to 0."
   (cond
    ((or remove
         (null tinyload-:load-list))
-    (let* ((str (concat
-                 "TinyLoad: Loader process terminated."
-                 (if (null tinyload-:load-list)
-                     " `tinyload-:load-list' is empty."
-                   ""))))
+    (let ((str (concat
+		"TinyLoad: Loader process terminated."
+		(if (null tinyload-:load-list)
+		    " `tinyload-:load-list' is empty."
+		  ""))))
       (tinyload-message str))
     (tinyload-debug "Tinyload: Install, stopped. HOOK"
                     tinyload-:process-uninstall-hook)
@@ -909,8 +880,8 @@ load-before form is exected: it runs the FUNCTION."
   "Test STRING for xemacs, emacs and win32."
   (if (null string)
       t
-    (let* ((emacs-ok 'not-tested)
-           (os-ok    'not-tested))
+    (let ((emacs-ok 'not-tested)
+	  (os-ok    'not-tested))
       (when (string-match "win32" string)
         (setq os-ok (ti::win32-p)))
       (when (string-match "emacs" string)
@@ -963,10 +934,10 @@ Return:
 
   Similar list than what is described for variable
   `tinyload-:load-list'"
-  (let* ((fid "tinyload-config-file-parse")
-         list
-         test
-         file)
+  (let ((fid "tinyload-config-file-parse")
+	list
+	test
+	file)
     (unless fid ;; No-op. XEmacs byte compiler silencer
       (setq fid nil))
     (ti::pmin)
@@ -993,7 +964,7 @@ Return:
 ;;;
 (defun tinyload-config-file-load-default ()
   "Load `tinyload-:load-file' and return list in format `tinyload-:load-list'."
-  (let* ((file tinyload-:load-file))
+  (let ((file tinyload-:load-file))
     (tinyload-debug "tinyload-config-file-load-default"
                     "tinyload-:load-file"
                     file)
@@ -1033,10 +1004,10 @@ Return:
 (defun tinyload-process-continue (&optional force)
   "Check if process is clear to continue and Emacs is not busy.
 Return status '(continue no-action no-input)."
-  (let* ((fid "tinyload-process-continue")
-         no-action
-         no-input
-         continue)
+  (let ((fid "tinyload-process-continue")
+	no-action
+	no-input
+	continue)
     (unless fid ;; No-op. XEmacs byte compiler silencer
       (setq fid nil))
     (setq no-action (tinyload-no-action)
@@ -1065,11 +1036,11 @@ Return status '(continue no-action no-input)."
       (if form
           (eval form))
     (error
-     (let* ((str
-             (format "Tinyload: [ERROR] EVAL %s generated an error %s %s"
-                     type
-                     (prin1-to-string err)
-                     (prin1-to-string form))))
+     (let ((str
+	    (format "Tinyload: [ERROR] EVAL %s generated an error %s %s"
+		    type
+		    (prin1-to-string err)
+		    (prin1-to-string form))))
        (message str)
        (tinyload-debug str)))))
 
@@ -1077,7 +1048,7 @@ Return status '(continue no-action no-input)."
 ;;;
 (defun tinyload-load (pkg noerr nomsg)
   "Load PKG with NOERR NOMSG. Return load status."
-  (let* (stat)
+  (let (stat)
     (cond
      (noerr
       (condition-case data
@@ -1096,7 +1067,7 @@ Return status '(continue no-action no-input)."
 (defun tinyload-load-failure (pkg elt)
   "Record PKG ELT failure to `tinyload-:load-list'. Return failed-list."
   ;;  Record failed entries.
-  (let* ((failed-list (get 'tinyload-:load-list 'failed-list)))
+  (let ((failed-list (get 'tinyload-:load-list 'failed-list)))
     (add-to-list 'failed-list elt)
     (put 'tinyload-:load-list 'failed-list failed-list)
     (let ((str
@@ -1190,8 +1161,8 @@ Return CONTINUE if there is no activity."
 ;;;
 (defun tinyload-failed-list-update (elt)
   "Update `tinyload-:load-list' property 'failed-list with ELT."
-  (let* ((fid         "tinyload-failed-list-update")
-         (failed-list (get 'tinyload-:load-list 'failed-list)))
+  (let ((fid         "tinyload-failed-list-update")
+	(failed-list (get 'tinyload-:load-list 'failed-list)))
     (unless fid ;; No-op. XEmacs byte compiler silencer
       (setq fid nil))
     ;;  Remove entry from failed list
@@ -1215,25 +1186,25 @@ Return CONTINUE if there is no activity."
 ;;;
 (defun tinyload-load-ignore-message (pkg pos len)
   "Print PKG POS LEN status. Already in Emacs."
-  (let* ((str (format "\
+  (let ((str (format "\
 TinyLoad: %-15s %s (%2d%% %2d/%2d) <ignored, feature already in emacs>"
-                      pkg
-                      "ok"
-                      (/ (* 100 pos) len)
-                      (1+ pos) (1+ len))))
+		     pkg
+		     "ok"
+		     (/ (* 100 pos) len)
+		     (1+ pos) (1+ len))))
     (tinyload-message str)))
 
 ;;; ----------------------------------------------------------------------
 ;;;
 (defun tinyload-load-ok-message (pkg pos len stat)
   "Print PKG POS LEN status. Loaded."
-  (let* ((str (format "TinyLoad: %-15s %s (%2d%% %2d/%2d)"
-                      pkg
-                      (if stat
-                          "ok"
-                        "'noerr!")
-                      (/ (* 100 (1+ pos)) len)
-                      (1+ pos) len)))
+  (let ((str (format "TinyLoad: %-15s %s (%2d%% %2d/%2d)"
+		     pkg
+		     (if stat
+			 "ok"
+		       "'noerr!")
+		     (/ (* 100 (1+ pos)) len)
+		     (1+ pos) len)))
     (tinyload-message str)))
 
 ;;; ----------------------------------------------------------------------
@@ -1242,8 +1213,8 @@ TinyLoad: %-15s %s (%2d%% %2d/%2d) <ignored, feature already in emacs>"
   "Handle busy checking and deadlocks.
 Return:
   deadlock     if non-nil, deadlock was detected."
-  (let* ((busy-count (tinyload-busy-count-incf))
-         deadlock)
+  (let ((busy-count (tinyload-busy-count-incf))
+	deadlock)
     (incf  busy-count)
     (when (> busy-count 5)
       (tinyload-debug "Tinyload: busy count too high, clearing DEADLOCK")
@@ -1276,11 +1247,11 @@ Return:
   "Load packages defined in `tinyload-:load-list'.
 If called interactively, FORCE loading all packages in the list."
   (interactive (list 'force))
-  (let* (continue
-         list
-         pos
-         len
-         stat)
+  (let (continue
+	list
+	pos
+	len
+	stat)
     (tinyload-debug "TinyLoad: [debug] main()"
                     "INPUT PENDING STATUS"
                     (input-pending-p)
@@ -1351,7 +1322,7 @@ If called interactively, FORCE loading all packages in the list."
                   ;;  if we can't sit still that long, user is
                   ;;  doing something..
                   (tinyload-debug "TinyLoad: >>> 1 -- input pending?")
-                  (let* ((wait (or tinyload-:wait-next-load 0.3)))
+                  (let ((wait (or tinyload-:wait-next-load 0.3)))
                     (unless (and (sit-for wait)
                                  (not (input-pending-p)))
                       (tinyload-debug
@@ -1499,8 +1470,8 @@ If called interactively, FORCE loading all packages in the list."
     (when (boundp 'filladapt-token-table)
       (defvar filladapt-token-table nil)
       (defconst filladapt-mode-line-string " Fa")
-      (let* ((tok  "[*]+")
-             (elt (assoc tok filladapt-token-table)))
+      (let ((tok  "[*]+")
+	    (elt (assoc tok filladapt-token-table)))
         ;;  Clear the old definition
         (cond
          ((setq  filladapt-token-table (delq elt filladapt-token-table))
