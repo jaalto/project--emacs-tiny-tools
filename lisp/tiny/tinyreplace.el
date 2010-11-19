@@ -214,8 +214,6 @@
 (eval-and-compile
   (autoload 'vc-registered "vc"))
 
-(eval-when-compile (ti::package-use-dynamic-compilation))
-
 (ti::package-defgroup-tiny TinyReplace tinyreplace-- tools
   "Overview of features
 
