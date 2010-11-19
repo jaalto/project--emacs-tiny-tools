@@ -1138,12 +1138,12 @@ Format:
 ;;;
 (defun tinytf-tmp-swallow-empty-backwards ()
   (interactive)
-  (previous-line 1)
+  (forward-line 1)
   (while
       (and
        (not (bobp))
        (looking-at "^$"))
-    (previous-line 1)))
+    (forward-line 1)))
 
 ;;; ----------------------------------------------------------------------
 ;;; #todo:
@@ -1159,7 +1159,7 @@ Format:
         (and
          (not (bobp))
          (looking-at re))
-      (previous-line 1))
+      (forward-line 1))
     (if (and
          (not (bobp))
          (looking-at empty))
