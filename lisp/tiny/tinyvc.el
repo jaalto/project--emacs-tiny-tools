@@ -587,9 +587,9 @@ If DEST does not exist, it is created. NOERR ignores errors."
 (defun tinyvc-select-backend ()
   "Select RCS or CVS command for the log buffer: set `tinyvc-:cmd-function'."
   (interactive)
-  (let* ((buffer  tinyvc-:invoked-buffer)
-         file
-         type)
+  (let ((buffer  tinyvc-:invoked-buffer)
+	file
+	type)
     (when (and
            buffer
            (get-buffer buffer)
@@ -613,7 +613,7 @@ If DEST does not exist, it is created. NOERR ignores errors."
 Other vc commands normally destroy the log buffer, so renaming
 it keeps it alive until next rlog command."
   (interactive)
-  (let* ((buffer (get-buffer "*Rlog*")))
+  (let ((buffer (get-buffer "*Rlog*")))
     (when (string= "*vc*" (buffer-name))
       (if buffer (kill-buffer buffer)) ;  Remove old log buffer if it exists.
       (rename-buffer "*Rlog*"))))
@@ -681,9 +681,9 @@ If the file is not in emacs, run rcsdiff.
 Return:
  str    buffer's RCS version if untouched.
  t      if file was not in emacs and there was no rcsdiff."
-  (let* (buffer
-         untouched
-         ret)
+  (let (buffer
+	untouched
+	ret)
     (setq buffer (get-file-buffer file))
     (cond
      ((null buffer)                     ;cond1
@@ -774,9 +774,9 @@ Input:
  NO-POP     do not `pop-to-buffer' after rcs call.
  VERB       Verbose messages."
   (interactive "P")
-  (let* (file
-         ver
-         buffer)
+  (let (file
+	ver
+	buffer)
     (ti::verb)
     (tinyvc-do-macro
      (setq buffer (format "*%s %s*" (file-name-nondirectory file) ver))
@@ -809,11 +809,11 @@ Notes:
  `tinyvc-:locker-name'  other locks are not touched ever.
  No buffer reverting is attempted."
   (interactive)
-  (let* ((name  tinyvc-:locker-name)
-         user
-         ver
-         file
-         done)
+  (let ((name  tinyvc-:locker-name)
+	user
+	ver
+	file
+	done)
     (ti::verb)
     (if (and verb
              (null (y-or-n-p "unlock: Are you absolutely sure ")))
@@ -848,10 +848,10 @@ Notice that the lock status is based on the buffer content. Do
 
 Chmod undelying file to read-only."
   (interactive)
-  (let* (buffer
-         ver
-         file
-         llist)
+  (let (buffer
+	ver
+	file
+	llist)
     (ti::verb)
     (tinyvc-do-macro
      (setq llist  (tinyvc-lock-list))
@@ -876,9 +876,9 @@ Chmod undelying file to read-only."
 (defun tinyvc-do-co-l ()
   "Do co and lock the version number on the line."
   (interactive)
-  (let* (old-buffer
-         ver
-         file)
+  (let (old-buffer
+	ver
+	file)
     (tinyvc-do-macro
      (setq old-buffer (get-file-buffer file))
      (if (not (tinyvc-file-untouched-p file))
@@ -911,49 +911,50 @@ Chmod undelying file to read-only."
 REPLACE current emacs buffer with this version if the existing file in emacs
 is read-only. VERB."
   (interactive "P")
-  (let* (verb
-         ver file
-         untouched
-         buffer
-         buffer-ver
-         ret)
+  (let (verb
+	ver
+	file
+	untouched
+	buffer
+	buffer-ver
+	ret)
     (ti::verb)
     (tinyvc-do-macro
      (setq buffer     (find-buffer-visiting  file)
            untouched  (tinyvc-file-untouched-p file)
            buffer-ver (or (tinyvc-buffer-version file) ""))
      (tinyvc-file-confirm-macro file verb
-                                (cond
-                                 ((string= ver buffer-ver)
-                                  (if verb
-                                      (message (format "%s v%s already in emacs." buffer ver)))
-                                  (setq ret buffer))
-                                 ((or (and
-                                       (file-writable-p file)
-                                       (y-or-n-p "Writable file, needs chmod, ok? ")
-                                       (progn
-                                         (set-file-modes
-                                          file (ti::file-mode-make-read-only (file-modes file)))
-                                         t))
-                                      (null buffer)
-                                      untouched)
-                                  (when (or (null verb)
-                                            (null buffer)
-                                            (and verb
-                                                 (y-or-n-p
-                                                  (format "Untouched %s, replace %s with version %s ?"
-                                                          (file-name-nondirectory file)
-                                                          buffer-ver ver))))
-                                    ;;  (if buffer (kill-buffer buffer))
-                                    (tinyvc-cmd-exec 'co (format "-r%s %s " ver file))
-                                    (with-current-buffer buffer
-                                      (revert-buffer nil 'no-confirm)
-                                      (setq buffer (current-buffer)))
-                                    (if verb
-                                        (display-buffer buffer))))
-                                 (t
-                                  (if verb
-                                      (message (format "Changed buffer exist, cancelled.")))))))
+       (cond
+	((string= ver buffer-ver)
+	 (if verb
+	     (message (format "%s v%s already in emacs." buffer ver)))
+	 (setq ret buffer))
+	((or (and
+	      (file-writable-p file)
+	      (y-or-n-p "Writable file, needs chmod, ok? ")
+	      (progn
+		(set-file-modes
+		 file (ti::file-mode-make-read-only (file-modes file)))
+		t))
+	     (null buffer)
+	     untouched)
+	 (when (or (null verb)
+		   (null buffer)
+		   (and verb
+			(y-or-n-p
+			 (format "Untouched %s, replace %s with version %s ?"
+				 (file-name-nondirectory file)
+				 buffer-ver ver))))
+	   ;;  (if buffer (kill-buffer buffer))
+	   (tinyvc-cmd-exec 'co (format "-r%s %s " ver file))
+	   (with-current-buffer buffer
+	     (revert-buffer nil 'no-confirm)
+	     (setq buffer (current-buffer)))
+	   (if verb
+	       (display-buffer buffer))))
+	(t
+	 (if verb
+	     (message (format "Changed buffer exist, cancelled.")))))))
     ret))
 
 ;;}}}
@@ -963,7 +964,7 @@ is read-only. VERB."
   (eval-when-compile (require 'advice))
   (defadvice vc-print-log (around tirl act)
     "Run hook `tinyvc-:vc-print-log-hook'."
-    (let* ((BuffeR (current-buffer)))
+    (let ((BuffeR (current-buffer)))
       ad-do-it
       (make-local-variable 'tinyvc-:invoked-buffer)
       (put 'tinyvc-:invoked-buffer 'permanent-local t)
