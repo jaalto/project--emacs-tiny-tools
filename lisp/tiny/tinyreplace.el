@@ -418,7 +418,7 @@ Property 're will have the original regexp.")
 
 (defvar tinyreplace-:menu
   '("\
-replace: (f)wd (r)eg (w)ord (c)ompile buffer files (f)iles (lL)atex (?)help "
+replace: (f)wd (r)eg (w)ord (c)ompile buffer (f)iles (lL)atex (?)help "
     (
      ;;  If `tinyreplace-menu' is bound to M-%, then the "5" key makes
      ;;  sense, because "%" is shift-5.
@@ -486,8 +486,8 @@ Special commands:
 (defun tinyreplace-install-default-keybings ()
   "Install M-& default keybing."
   (interactive)
-  (let* ((key "\M-&")
-         (def (lookup-key global-map key)))
+  (let ((key "\M-&")
+	(def (lookup-key global-map key)))
     (when (featurep 'compile)
       (let (buffer (get-buffer "*compilation*"))
 	(when buffer
@@ -575,9 +575,9 @@ Return:
 ;;;
 (defun tinyreplace-read-args (&optional prompt)
   "Read two arguments with PROMPT. Return '(ARG1 ARG2)."
-  (let* ((opoint   (point))
-         arg1
-         arg2)
+  (let ((opoint (point))
+	arg1
+	arg2)
     ;; Disable electric file minor mode, which defines specilal
     ;; characters.
     (setq tinyreplace-:replace-buffer   (current-buffer)
@@ -624,7 +624,7 @@ This is done only if function exists. MODE can be 'write or 'read."
     (cond
      ((eq mode 'write)
       (setq tinyreplace-:transient-mark-mode
-            (let* ((var 'transient-mark-mode)) ;XEmacs 19.14 byteComp silencer
+            (let ((var 'transient-mark-mode)) ;XEmacs 19.14 byteComp silencer
               (symbol-value var))))
      ((eq mode 'read)
       tinyreplace-:transient-mark-mode))))
@@ -685,10 +685,10 @@ Input:
 Note:
 
   `tinyreplace-:o-exclude'    must be set in the calling function"
-  (let* ((o-exclude  tinyreplace-:o-exclude)
-         (loop       t)
-         msg
-         ans)
+  (let ((o-exclude  tinyreplace-:o-exclude)
+	(loop       t)
+	msg
+	ans)
     (while loop
       (setq from-str (ti::string-format-percent from-str)
             to-str   (ti::string-format-percent to-str))
@@ -826,7 +826,7 @@ then insert into the replace prompt with \\[tinyreplace-key-yank-word]. When"
 (defun tinyreplace-key-yank-word ()
   "Yank word from buffer. `tinyreplace-:replace-buffer' must be set."
   (interactive)
-  (let* (word)
+  (let (word)
     (with-current-buffer tinyreplace-:replace-buffer
       (goto-char  tinyreplace-:read-point)
       ;;  This is just because of the space-word-command
@@ -1234,7 +1234,6 @@ Input:
     (tinyreplace-interactive-region-args "Compile")
     nil
     t))
-  ;; ................................................. interactive end ...
   (let ((o-frame        (selected-frame))
         (w-frame        (ti::non-dedicated-frame))
         (func           (or func 'tinyreplace-replace-forward))
@@ -1266,22 +1265,6 @@ Input:
            ((and file (not (member file cache)))
             (raise-frame (select-frame w-frame))
             (push file cache)           ;Now we have dealt with it
-
-            ;;  If it's under RCS and not locked, ask if we should
-            ;;  CheckOut it.
-;; FIXME: RCS is not longer used. Remove this code
-;;             (when (and (vc-registered file)
-;;                        (eq 'RCS (vc-backend file))
-;;                        (not (file-writable-p file))
-;;                        (y-or-n-p (format "Co rcs file: %s" file)))
-;;               (unless (call-process
-;;                        "co"
-;;                        nil
-;;                        err-buffer
-;;                        nil
-;;                        "-l"
-;;                        (expand-file-name file))
-;;                 (pop-to-buffer err-buffer)))
             (cond
              ((not (file-writable-p file))
               (incf  read-only)
