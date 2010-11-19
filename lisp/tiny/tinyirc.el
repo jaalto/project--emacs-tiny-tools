@@ -381,9 +381,6 @@
 
 (require 'cl)
 
-(eval-when-compile
-  (setq byte-compile-dynamic t))
-
 (eval-and-compile
   ;; predeclare - Byte compiler silencer.
   (defvar font-lock-keywords))
