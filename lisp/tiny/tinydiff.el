@@ -1124,7 +1124,7 @@ Switches to BUFFER and go to LINE and calls `beginning-of-defun'"
 	ret)
     (with-current-buffer buffer
       (ti::widen-safe
-        (goto-line line)
+        (ti::goto-line line)
         (ignore-errors
           (setq point (point))
           (funcall find-func)           ;exit , if error generated
@@ -2753,7 +2753,7 @@ Input:
   (let ((ob     (current-buffer))      ;original buffer
 	(delay  0.1))
     (switch-to-buffer-other-window buffer)
-    (goto-line line)
+    (ti::goto-line line)
     ;; Flash the cursor and go back to diff buffer
     (and delay
          (sit-for delay))
