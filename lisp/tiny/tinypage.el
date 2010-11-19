@@ -217,7 +217,7 @@ tinypage: ** you need XEmacs overlay.el library.
 
 (eval-when-compile (ti::package-use-dynamic-compilation))
 
-(ti::package-defgroup-tiny TinyPage tinypage-: tools
+(ti::package-defgroup-tiny TinyPage tinypage-- tools
   "Minor mode for Handling ^L delimeted text rerions (pages).
   Overview of features
         o   Copy, cut, paste, yank (after/before current page) ^L pages.
@@ -230,7 +230,7 @@ tinypage: ** you need XEmacs overlay.el library.
 ;;}}}
 ;;{{{ setup: private
 
-(defcustom tinypage-:load-hook nil
+(defcustom tinypage--load-hook nil
   "*Hook that is run when package is loaded."
   :type 'hook
   :group 'TinyPage)
@@ -238,53 +238,53 @@ tinypage: ** you need XEmacs overlay.el library.
 ;;}}}
 ;;{{{ setup: private variables
 
-(defvar tinypage-:post-command-wakeup-counter nil
+(defvar tinypage--post-command-wakeup-counter nil
   "Updated by program.")
 
-(make-variable-buffer-local 'tinypage-:post-command-wakeup-counter)
+(make-variable-buffer-local 'tinypage--post-command-wakeup-counter)
 
-(defvar tinypage-:buffer-toc "*toc*"
+(defvar tinypage--buffer-toc "*toc*"
   "Where to create index.")
 
 ;;}}}
 ;;{{{ setup: public, user configurable
 
-(defcustom tinypage-:register ?p
+(defcustom tinypage--register ?p
   "*Register used for clipboard."
   :type  'character
   :group 'TinyPage)
 
 ;;; This is _not_ one char "^L", it is two chars "^" + "L"
 
-(defcustom tinypage-:mode-name-string " ^L"
+(defcustom tinypage--mode-name-string " ^L"
   "*Minor mode name. User variable."
   :type  'string
   :group 'TinyPage)
 
-(defcustom tinypage-:post-command-wakeup-count 40
+(defcustom tinypage--post-command-wakeup-count 40
   "*How often to wake up to update modeline info.
 Don't put too low value, since it slows down Emacs."
   :type ' integer
   :group 'TinyPage)
 
-(defcustom tinypage-:x-coord 170
+(defcustom tinypage--x-coord 170
   "*Default X menu coordinate."
   :type  'integer
   :group 'TinyPage)
 
-(defcustom tinypage-:y-coord 170
+(defcustom tinypage--y-coord 170
   "*Default Y menu coordinate."
   :type  'integer
   :group 'TinyPage)
 
-(defcustom tinypage-:x-popup-line-len 35
+(defcustom tinypage--x-popup-line-len 35
   "*Maximum line length in popup."
   :type  'integer
   :group 'TinyPage)
 
 ;;  Do not change this ! Unless you know what you do...
 
-(defcustom tinypage-:renumber-format
+(defcustom tinypage--renumber-format
   '( "^[ \t]*\\([0-9.]+\\.\\)\\([0-9]+\\)"  1 2)
   "*Regexp for renumbered lines.
 
@@ -313,7 +313,7 @@ section numbers won't do:
           (integer :tag "Submatch in regexp"))
   :group 'TinyPage)
 
-(defcustom tinypage-:modeline-function 'tinypage-update-mode-line
+(defcustom tinypage--modeline-function 'tinypage-update-mode-line
   "*The modeline function that keep it up to date whenever called."
   :type 'integer
   :group 'TinyPage)
@@ -326,19 +326,19 @@ section numbers won't do:
 ;;;###autoload (autoload 'turn-off-tinypage-mode "tinypage" "" t)
 ;;;###autoload (autoload 'tinypage-commentary    "tinypage" "" t)
 
-(defvar tinypage-:mode-name " ^L"
+(defvar tinypage--mode-name " ^L"
   "Minor mode name. Changed by program. not user variable.")
 
-(make-variable-buffer-local 'tinypage-:mode-name)
+(make-variable-buffer-local 'tinypage--mode-name)
 
 (eval-and-compile
 
 ;;; Prefix keys is "\" by default: this one
 ;;; was nicely non-shifted and near HP-UX return key. You can Change it
-;;; prior loading the package with (setq tinypage-:pref
+;;; prior loading the package with (setq tinypage--pref
 
   (ti::macrof-minor-mode-wizard
-   "tinypage-" " ^L" "\\" "Tpage" 'TinyPage "tinypage-:" ;1-6
+   "tinypage-" " ^L" "\\" "Tpage" 'TinyPage "tinypage--" ;1-6
 
    "Paged minor mode. This mode allows you to handle ^L delimited
 region as page: you can e.g. cut, copy, and select it.
@@ -349,11 +349,11 @@ it'd be too heavy task to monitor user constantly. Please use command
 
 To adjust the user tracking threshold, modify value:
 
-  `tinypage-:post-command-wakeup-count'
+  `tinypage--post-command-wakeup-count'
 
 Mode description:
 
-  \\{tinypage-:mode-prefix-map}"
+  \\{tinypage--mode-prefix-map}"
 
    "Paged ^L mode"
 
@@ -376,7 +376,7 @@ Mode description:
      (ti::compat-modeline-update))
    "TinyPage menu"
    (list
-    tinypage-:mode-easymenu-name
+    tinypage--mode-easymenu-name
     ["Cut"                     tinypage-cut                            t]
     ["Copy"                    tinypage-copy                           t]
     ["Select"                  tinypage-select                         t]
@@ -464,7 +464,7 @@ Mode description:
 (defun tinypage-modeline ()
   "Update modeline information."
   (interactive)
-  (funcall tinypage-:modeline-function))
+  (funcall tinypage--modeline-function))
 
 ;;; ----------------------------------------------------------------------
 ;;;
@@ -533,14 +533,14 @@ Mode description:
 (defun tinypage-update-mode-line ()
   "Update modeline info."
   (interactive)
-  (let ((mode-string  tinypage-:mode-name-string)
+  (let ((mode-string  tinypage--mode-name-string)
 	pages
 	now
 	lines)
     (setq pages (tinypage-count-pages))
     (setq now   (tinypage-current-page))
     (setq lines (tinypage-count-lines-in-page))
-    (setq tinypage-:mode-name
+    (setq tinypage--mode-name
           (format  " %s %s/%s/%s" mode-string now pages (or lines "-")))))
 
 ;;; ----------------------------------------------------------------------
@@ -548,12 +548,12 @@ Mode description:
 (defun tinypage-post-command ()
   "Keep page info in modeline up to date."
   (when tinypage-mode                   ;only now!
-    (if (not (integerp tinypage-:post-command-wakeup-counter))
-        (setq tinypage-:post-command-wakeup-counter 0))
-    (incf  tinypage-:post-command-wakeup-counter)
+    (if (not (integerp tinypage--post-command-wakeup-counter))
+        (setq tinypage--post-command-wakeup-counter 0))
+    (incf  tinypage--post-command-wakeup-counter)
 
-    (when (eq 0 (% tinypage-:post-command-wakeup-counter
-                   tinypage-:post-command-wakeup-count))
+    (when (eq 0 (% tinypage--post-command-wakeup-counter
+                   tinypage--post-command-wakeup-count))
       (tinypage-modeline))))
 
 ;;; ----------------------------------------------------------------------
@@ -594,7 +594,7 @@ Input:
 
 References:
 
-  `tinypage-:register'
+  `tinypage--register'
 
 Return:
 
@@ -603,7 +603,7 @@ Return:
   (let ((doit (if maybe
 		  (and beg end)
 		t))
-	(reg tinypage-:register))
+	(reg tinypage--register))
     (cond
      ((null doit)
       nil)
@@ -636,9 +636,9 @@ the level and call this function
 
 References:
 
-  `tinypage-:renumber-format'"
+  `tinypage--renumber-format'"
   (interactive "P")
-  (let* ((data   tinypage-:renumber-format)
+  (let* ((data   tinypage--renumber-format)
          (re     (nth 0 data))
          (lev1   (nth 1 data))
          (lev2   (nth 2 data))
@@ -682,7 +682,7 @@ References:
 (defun tinypage-renumber-forward (&optional verb)
   "Renumber all found headings forward. VERB."
   (interactive "P")
-  (let ((data   tinypage-:renumber-format)
+  (let ((data   tinypage--renumber-format)
 	(re     (nth 0 data)))
     (ti::verb)
     ;; Well, we do lot of extra work here, because the
@@ -712,7 +712,7 @@ References:
 ;;;
 (defsubst tinypage-get-index-list ()
   "Return list of strings."
-  (let ((list (ti::buffer-grep-lines (nth 0 tinypage-:renumber-format)))
+  (let ((list (ti::buffer-grep-lines (nth 0 tinypage--renumber-format)))
 	ret)
     (dolist (elt list)
       (push (ti::string-remove-whitespace elt) ret))
@@ -731,8 +731,8 @@ Return:
   buffer"
   (interactive "P")
   (let ((list          (ti::buffer-grep-lines
-			(nth 0 tinypage-:renumber-format)))
-	(buffer        (ti::temp-buffer tinypage-:buffer-toc 'clear))
+			(nth 0 tinypage--renumber-format)))
+	(buffer        (ti::temp-buffer tinypage--buffer-toc 'clear))
 	dots
 	padd
 	heading
@@ -770,14 +770,14 @@ Return:
   "Create index. Show it in X-popup."
   (interactive)
   (tinypage-toc-x-popup
-   (ti::compat-make-fake-event tinypage-:x-coord tinypage-:y-coord)))
+   (ti::compat-make-fake-event tinypage--x-coord tinypage--y-coord)))
 
 ;;; ----------------------------------------------------------------------
 ;;;
 (defun tinypage-toc-x-popup (event)
   "Create index. Show it in X-popup with EVENT."
   (interactive "e")
-  (let ((len    tinypage-:x-popup-line-len)
+  (let ((len    tinypage--x-popup-line-len)
 	(title  "Index")
 	list
 	val
@@ -807,7 +807,7 @@ Return:
 (defun tinypage-toc-occur ()
   "Create occur buffer for jumpig to Headings easily."
   (interactive)
-  (occur (nth 0 tinypage-:renumber-format)))
+  (occur (nth 0 tinypage--renumber-format)))
 
 ;;}}}
 ;;{{{ interactive funcs
@@ -860,7 +860,7 @@ Return:
 (defun tinypage-yank (&optional verb)
   "Yank page from register. VERB."
   (interactive "P")
-  (insert-register tinypage-:register)
+  (insert-register tinypage--register)
   (tinypage-overlay 'hide))
 
 ;;; ----------------------------------------------------------------------
@@ -884,7 +884,7 @@ Optionally BEFORE with MSG and VERB."
   (ti::verb)
   (ti::save-with-marker-macro
     (when (tinypage-go-next before verb)
-      (insert-register tinypage-:register)
+      (insert-register tinypage--register)
       (tinypage-overlay 'hide)
       (if (and verb msg)
 	  (message msg)))))
@@ -925,9 +925,9 @@ Optionally BEFORE with MSG and VERB."
 
 ;;}}}
 
-(add-hook 'tinypage-:mode-define-keys-hook 'tinypage-mode-define-keys)
+(add-hook 'tinypage--mode-define-keys-hook 'tinypage-mode-define-keys)
 
 (provide   'tinypage)
-(run-hooks 'tinypage-:load-hook)
+(run-hooks 'tinypage--load-hook)
 
 ;;; tinypage.el ends here
