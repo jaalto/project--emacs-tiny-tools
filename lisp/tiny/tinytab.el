@@ -9,7 +9,6 @@
 ;; Author:          Jari Aalto
 ;; Maintainer:      Jari Aalto
 ;;
-;; To get information on this program, call M-x tinytab-version.
 ;; Look at the code with folding.el.
 
 ;; COPYIGHT NOTICE
@@ -206,24 +205,12 @@
 
 ;;; Code:
 
-;;{{{ setup: require
-
-;; (require 'tinylibm)
-
-;;}}}
-;;{{{ version
-
-(defvar tinytab-:version-id
-  "$Id: tinytab.el,v 2.61 2007/05/06 23:15:20 jaalto Exp $")
-
-;;}}}
 ;;{{{ setup: mode
 
 ;;;###autoload (autoload 'tinytab-mode                  "tinytab" "" t)
 ;;;###autoload (autoload 'turn-on-tinytab-mode          "tinytab" "" t)
 ;;;###autoload (autoload 'turn-off-tinytab-mode         "tinytab" "" t)
 ;;;###autoload (autoload 'tinytab-commentary            "tinytab" "" t)
-;;;###autoload (autoload 'tinytab-version               "tinytab" "" t)
 
 (eval-and-compile
 
@@ -270,8 +257,6 @@ Mode description:
     ["Change step factor"            tinytab-change-tab-width            t]
     ["Return-key indent mode"        tinytab-return-key-mode             t]
     "----"
-    ["Package version"               tinytab-version                     t]
-    ["Package commentary"            tinytab-commentary                  t]
     ["Mode help"                     tinytab-mode-help                   t]
     ["Mode off"                      turn-off-tinytab-mode               t])
    (progn
@@ -508,10 +493,10 @@ o  the line is empty
 
 This way you can partly mix e.g. C++ mode and this minor mode."
   (interactive)
-  (let* ((sym  (intern (format "%s-map" (symbol-name major-mode))))
-         (point (point))
-         map
-         func)
+  (let ((sym  (intern (format "%s-map" (symbol-name major-mode))))
+	(point (point))
+	map
+	func)
     ;;  If we're at the beginnning of line, see if there is keymap for
     ;;  this current mode. Then try to find function for "\t" key
     ;;  and call it
@@ -548,14 +533,14 @@ Return:
   t             ,if TAB handled in this function.
   nil           ,nothing done."
   (interactive)
-  (let* (line
-         rest
-         indent
-         pindent                        ;previous
-         col
-         ret                            ;flag
-         handle
-         equal)
+  (let (line
+	rest
+	indent
+	pindent                        ;previous
+	col
+	ret                            ;flag
+	handle
+	equal)
     ;; ... ... ... ... ... ... ... ... ... ... ... ... ... check brace ...
     (save-excursion
       (beginning-of-line)
@@ -674,8 +659,8 @@ If optional ARG is given, behave exactly like 'newline' function."
 (defun tinytab-set-mode-name ()
   "Set mode name according to tab count in effect."
   (interactive)
-  (let* ((base  tinytab-:mode-name-base)
-         (val   (tinytab-width)))
+  (let ((base  tinytab-:mode-name-base)
+	(val   (tinytab-width)))
     (setq tinytab-:mode-name (format "%s%d" (or base "") val))
     (if (fboundp 'force-mode-line-update)
         (force-mode-line-update))))
@@ -685,10 +670,10 @@ If optional ARG is given, behave exactly like 'newline' function."
 (defun tinytab-change-tab-width ()
   "Toggle tab width according to `tinytab-:width-table'."
   (interactive)
-  (let* ((verb  (interactive-p))
-         (val   (tinytab-width))
-         (table tinytab-:width-table)
-         elt)
+  (let ((verb  (interactive-p))
+	(val   (tinytab-width))
+	(table tinytab-:width-table)
+	elt)
     (cond
      ((not (integerp val))
       (setq val (car table)))           ;default value
@@ -931,16 +916,16 @@ If region is active, indent all lines backward."
 (defun tinytab-return-key-mode (&optional mode verb)
   "Toggle auto indent MODE / regular newline mode. VERB."
   (interactive)
-  (let* ((func 'tinytab-auto-indent)
-         (now
-          (or (and
-               ;;  e.g. in fundamental-map this value is nil and
-               ;;  nil cannot be used as an keymap for lookup-key
-               ;;
-               (current-local-map)
-               (lookup-key  (current-local-map) "\C-m"))
-              (lookup-key  (current-global-map) "\C-m")))
-         to)
+  (let ((func 'tinytab-auto-indent)
+	(now
+	 (or (and
+	      ;;  e.g. in fundamental-map this value is nil and
+	      ;;  nil cannot be used as an keymap for lookup-key
+	      ;;
+	      (current-local-map)
+	      (lookup-key  (current-local-map) "\C-m"))
+	     (lookup-key  (current-global-map) "\C-m")))
+	to)
     ;;  If we redefine return key here, user will nver get out.
     ;;  C-m is exit-minibuffer.
     (if (string-match "minibuf" (buffer-name))
@@ -975,33 +960,33 @@ LEFT   RIGHT
    a   s      by 2
    z   x      by 4"
   (interactive "*r")
-  (let* ((i     1)
-         (k     tinytab-:indent-region-key-list)
-         (msg   tinytab-:indent-region-key-message)
-         ch
-         EXIT)
-    (if (not (eq (length k) 7))
+  (let ((count 1)
+	(list    tinytab-:indent-region-key-list)
+	(message tinytab-:indent-region-key-message)
+	ch
+	EXIT)
+    (if (not (eq (length list) 7))
         (error "Not enough members in tinytab-:indent-region-key-list."))
-    (setq EXIT (nth 6 k))
+    (setq EXIT (nth 6 list))
     (while (not (eq EXIT (setq ch
                                (downcase
-                                (read-char-exclusive msg)))))
-      (setq i nil)
+                                (read-char-exclusive message)))))
+      (setq count nil)
       (cond
-       ((eq ch (nth 0 k))
-        (setq i -1))
-       ((eq ch (nth 1 k))
-        (setq i 1))
-       ((eq ch (nth 2 k))
-        (setq i -2))
-       ((eq ch (nth 3 k))
-        (setq i 2))
-       ((eq ch (nth 4 k))
-        (setq i -4))
-       ((eq ch (nth 5 k))
-        (setq i 4)))
-      (if i
-          (indent-rigidly (region-beginning) (region-end) i)))))
+       ((eq ch (nth 0 list))
+        (setq count -1))
+       ((eq ch (nth 1 list))
+        (setq count 1))
+       ((eq ch (nth 2 list))
+        (setq count -2))
+       ((eq ch (nth 3 list))
+        (setq count 2))
+       ((eq ch (nth 4 list))
+        (setq count -4))
+       ((eq ch (nth 5 list))
+        (setq count 4)))
+      (if count
+          (indent-rigidly (region-beginning) (region-end) count)))))
 
 ;;}}}
 
