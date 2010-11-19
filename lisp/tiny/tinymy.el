@@ -706,7 +706,6 @@ Format:
   "Install or UNINSTALL `tinymy-mouse-movement-handler'
 References:
   `tinymy-:install-select-window-auto'."
-
   (when (and (not uninstall)
              (ti::compat-window-system))
     (let ((ok
