@@ -1283,7 +1283,7 @@ be read again."
         (if (looking-at ".* +->\\([^\n]+\\)")
             (ti::replace-match 1))
         (forward-line 1))
-      (goto-line line)
+      (ti::goto-line line)
       (dired-move-to-filename))))
 
 ;;; ----------------------------------------------------------------------
@@ -1489,7 +1489,7 @@ on current filename."
     (tinydired-first-file)
     (if (re-search-forward re nil t)
         (dired-move-to-filename)
-      (goto-line line)
+      (ti::goto-line line)
       (dired-move-to-filename))))
 
 ;;; ----------------------------------------------------------------------
@@ -1604,7 +1604,7 @@ Return:
       (let ((case-fold-search nil))     ;case sensitive
         (delete-non-matching-lines re))
       (dired-mark-remembered marks)
-      (goto-line line)
+      (ti::goto-line line)
       (dired-move-to-filename)
       (if verb
           (message "TinyDired: Refresh done."))
