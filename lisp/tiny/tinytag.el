@@ -617,7 +617,7 @@ Should accept one ARG, which is list of matched lines from databases."
 (defun tinytag-initialize  ()
   "Start package and verify that some variables exist."
   (interactive)
-  (let* ()
+  (let ()
     (if (or (not (stringp tinytag-:database-dir))
             (not (file-exists-p tinytag-:database-dir)))
         (error "\
@@ -629,13 +629,13 @@ TinyTag: `tinytag-:database-dir' is not a directory. Please configure"))))
 (defun tinytag-install (&optional uninstall)
   "Install package. Optionally UNINSTALL."
   (interactive "P")
-  (let* ((hook  (if (boundp 'post-command-idle-hook)
-                    ;; post-command-idle-hook became obsolete in 19.34
-                    'post-command-idle-hook
-                  'post-command-hook))
-         (cmd   (if uninstall
-                    'remove-hook
-                  'add-hook)))
+  (let ((hook  (if (boundp 'post-command-idle-hook)
+		   ;; post-command-idle-hook became obsolete in 19.34
+		   'post-command-idle-hook
+		 'post-command-hook))
+	(cmd   (if uninstall
+		   'remove-hook
+		 'add-hook)))
     (cond
      ((ti::idle-timer-supported-p)
       (ti::compat-timer-cancel-function 'tinytag-post-command)
@@ -726,11 +726,11 @@ The output is written to FILE."
   "Install Java database from Sub JDK documentation."
   (interactive)
   (tinytag-initialize)
-  (let* ((java-info  (progn
-                       (message "TinyTag: Wait, checking java...")
-                       (prog1 (ti::process-java-version)
-                         (message "TinyTag: Wait, checking java...done."))))
-         (case-fold-search t))
+  (let ((java-info  (progn
+		      (message "TinyTag: Wait, checking java...")
+		      (prog1 (ti::process-java-version)
+			(message "TinyTag: Wait, checking java...done."))))
+	(case-fold-search t))
     (cond
      ((not java-info)
       (message
@@ -861,13 +861,13 @@ Output matched to tinytag-:output-buffer too."
 ;;;
 (defun tinytag-filter-default-function  (string)
   "Default filter function. Reject STRING."
-  (let* ((fid       "tinytag-filter-default-function: ")
-         (id        (or (ti::id-info nil 'variable-lookup)
-                        (symbol-name major-mode)))
-         (table     tinytag-:filter-word-table)
-         (accept    t)
-         (case-fold-search nil)         ;Case is important here
-         elt)
+  (let ((fid       "tinytag-filter-default-function: ")
+	(id        (or (ti::id-info nil 'variable-lookup)
+		       (symbol-name major-mode)))
+	(table     tinytag-:filter-word-table)
+	(accept    t)
+	(case-fold-search nil)         ;Case is important here
+	elt)
     (when (and (setq elt (ti::list-find table id))
                (eval (nth 1 elt)))
       (setq accept nil))
@@ -953,14 +953,14 @@ Return:
 
   list  '(line line ..)  matched lines or nil."
   (tinytag-initialize)
-  (let* ((fid       "tinytag-search-db: ")
-         (table     tinytag-:database-map)
-         (noerr     tinytag-:noerror)
-         (dir       (file-name-as-directory tinytag-:database-dir))
-         (list      (ti::list-make single-or-list))
-         buffer
-         file
-         ret)
+  (let ((fid       "tinytag-search-db: ")
+	(table     tinytag-:database-map)
+	(noerr     tinytag-:noerror)
+	(dir       (file-name-as-directory tinytag-:database-dir))
+	(list      (ti::list-make single-or-list))
+	buffer
+	file
+	ret)
     (tinytag-debug fid " input" re single-or-list "\n")
     (dolist (elt list)
       (when (setq elt (assq elt table))
@@ -996,12 +996,12 @@ References:
 
 Return:
   list   '(db-matched-line ..)  or nil"
-  (let* ((fid   "tinytag-do-search: ")
-         (table tinytag-:regexp-to-databases)
-         e
-         db
-         re
-         ret)
+  (let ((fid   "tinytag-do-search: ")
+	(table tinytag-:regexp-to-databases)
+	e
+	db
+	re
+	ret)
     (tinytag-debug fid "string" string "\n")
     (when (run-hook-with-args-until-success
            'tinytag-:word-filter-hook string)
@@ -1023,11 +1023,11 @@ Return:
   "Pick word at point and show info if word was same as previously looked.
 NOERR ignores errors."
   (interactive)
-  (let* ((word          (tinytag-word-at-point))
-         (prev-word     (car-safe tinytag-:last-word-lookup))
-         (prev-info     (cdr-safe tinytag-:last-word-lookup))
-         (err           (or noerr tinytag-:noerror))
-         (fid           "tinytag-try-function-show-cached-word: "))
+  (let ((word          (tinytag-word-at-point))
+	(prev-word     (car-safe tinytag-:last-word-lookup))
+	(prev-info     (cdr-safe tinytag-:last-word-lookup))
+	(err           (or noerr tinytag-:noerror))
+	(fid           "tinytag-try-function-show-cached-word: "))
     (catch 'quit
       (tinytag-debug fid
                      "word"          word
@@ -1052,9 +1052,9 @@ NOERR ignores errors."
   "Do lookup, pick word at point and search databases.
 Show the matched word from database."
   (interactive)
-  (let* ((fid    "tinytag-try-function-search-db: ")
-         (word   (tinytag-word-at-point))
-         info)
+  (let ((fid    "tinytag-try-function-search-db: ")
+	(word   (tinytag-word-at-point))
+	info)
     (tinytag-debug fid "word" word "\n")
     (when (and (stringp word)
                (run-hook-with-args-until-success 'tinytag-:set-database-hook)
@@ -1068,11 +1068,11 @@ Show the matched word from database."
 (defun tinytag-try-function-man ()
   "Suggest man page search for current word."
   (interactive)
-  (let* ((word          (ti::buffer-read-word))
-         ;; only in 19.30
+  (let ((word (ti::buffer-read-word))
+	;; only in 19.30
 ;;;      (syntax-elt    (fexec 'c-guess-basic-syntax))
 ;;;      (syntax        (car-safe syntax-elt))
-         ans)
+	ans)
     (when
         (and word ;; (memq syntax '(statement nil))
              (y-or-n-p (concat "Run man on " word))
@@ -1135,8 +1135,8 @@ References:
   `tinytag-:noerror'
   `tinytag-:post-command-hook-wakeup'
   `tinytag-:set-database-hook'"
-  (let* ((tinytag-:noerror  t)
-         it-is-time)
+  (let ((tinytag-:noerror  t)
+	it-is-time)
     (when (and (not (ti::compat-executing-macro))
                ;; Having this mode operate in the minibuffer
                ;; makes it impossible to
@@ -1179,13 +1179,13 @@ References:
   "Set correct database values according to buffer content.
 Return:
   non-nil or nil  was the database set according to buffer?"
-  (let* ((id    (or (ti::id-info nil 'variable-lookup)
-                    (symbol-name major-mode)))
-         ;;    read last word, delete rest
-         ;;
-         (table tinytag-:database-setup-table)
-         elt
-         did-it)
+  (let ((id (or (ti::id-info nil 'variable-lookup)
+		(symbol-name major-mode)))
+	;;    read last word, delete rest
+	;;
+	(table tinytag-:database-setup-table)
+	elt
+	did-it)
     (cond
      ((and (setq elt (ti::list-find table id))
            (setq elt (nth 1 elt)))      ;Get second list
