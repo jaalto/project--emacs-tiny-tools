@@ -9,7 +9,6 @@
 ;; Author:          Jari Aalto
 ;; Maintainer:      Jari Aalto
 ;;
-;; To get information on this program, call M-x tinycache-version.
 ;; Look at the code with folding.el
 
 ;; This program is free software; you can redistribute it and/or modify it
@@ -33,6 +32,7 @@
 ;;   Put this file on your Emacs-Lisp `load-path', add following into
 ;;   ~/.emacs startup file:
 ;;
+;;       (add-hook tinycache-:load-hook 'tinycache-install)
 ;;       (add-hook tinycache-:load-hook 'tinycache-install-msb)
 ;;       (require 'tinycache)
 ;;
@@ -227,7 +227,9 @@
 
 (defcustom tinycache-:load-hook nil
   "*Hook run when file has been loaded.
-Suggested function `tinycache-install-msb'."
+Suggested functions:
+  `tinycache-install'
+  `tinycache-install-msb'."
   :type  'hook
   :group 'TinyCache)
 
@@ -268,26 +270,6 @@ Format: (BUFFER-POINTER BP ..)")
 
 (put 'tinycache-:cache            'permanent-local t)
 
-;;; ....................................................... &v-version ...
-
-;;;###autoload (autoload 'tinycache-version "tinycache" "Display commentary." t)
-(eval-and-compile
-  (ti::macrof-version-bug-report
-   "tinycache.el"
-   "tinycache"
-   tinycache-:version-id
-   "$Id: tinycache.el,v 2.45 2007/05/06 23:15:19 jaalto Exp $"
-   '(tinycache-:version-id
-     tinycache-:mode-on-string
-     tinycache-:mode-off-string
-     tinycache-:load-hook
-     tinycache-:find-file-buffer-hook
-     tinycache-:mode-name
-     tinycache-mode
-     tinycache-:info
-     tinycache-:mode-user-flag
-     tinycache-:cache)))
-
 ;;}}}
 ;;{{{ code: misc functions
 
@@ -318,15 +300,32 @@ Format: (BUFFER-POINTER BP ..)")
 
 ;;; ----------------------------------------------------------------------
 ;;;
+(defun tinycache-install (&optional unstall)
+  "Install or UNINSTALL cache."
+  (interactive)
+  (cond
+   (uninstall
+    (remove-hook 'buffer-menu-mode-hook 'tinycache-buffer-list-bindings-on)
+    (remove-hook 'compilation-mode-hook 'tinycache-define-default-keys)
+    (remove-hook 'dired-mode-hook       'tinycache-add-local-hook)
+    (remove-hook 'dired-mode-hook       'tinycache-define-default-keys))
+   (t
+    (add-hook 'buffer-menu-mode-hook 'tinycache-buffer-list-bindings-on)
+    (add-hook 'compilation-mode-hook 'tinycache-define-default-keys)
+    (add-hook 'dired-mode-hook       'tinycache-add-local-hook)
+    (add-hook 'dired-mode-hook       'tinycache-define-default-keys))))
+
+;;; ----------------------------------------------------------------------
+;;;
 (defun tinycache-install-msb ()
   "Install new cache menu to msb.el if it is loaded."
-  (let* ((elt
-          '((and (boundp 'tinycache-mode)
-                 tinycache-mode)
-            1005
-            "Cached compile files (%d)"))
-         (sym  'msb-menu-cond)
-         menu)
+  (let ((elt
+	 '((and (boundp 'tinycache-mode)
+		tinycache-mode)
+	   1005
+	   "Cached compile files (%d)"))
+	(sym  'msb-menu-cond)
+	menu)
     (when (and (featurep 'msb)
                ;;  Install only once.
                ;;  symbol-value just silences byteComp
@@ -340,9 +339,8 @@ Format: (BUFFER-POINTER BP ..)")
 (defun tinycache-define-default-keys ()
   "Define keys to `compilation-minor-mode-map'."
   (interactive)
-  (let* (map)
+  (let (map)
     ;;  Avoid byte compilation warnings this way....
-    ;;
     (when (and (boundp  'compilation-minor-mode-map)
                (setq map (symbol-value 'compilation-minor-mode-map))
                (keymapp map))
@@ -391,14 +389,14 @@ Format: (BUFFER-POINTER BP ..)")
 (defun tinycache-maybe-view-mode ()
   "Turen on view (minor) mode if needed."
   (interactive)
-  (let* ((zip-re ;; arc-mode's zip file prompt
-          ;; M Filemode      Length  Date         Time      File
-          ;; - ----------  --------  -----------  --------  ---------
-          ;; -rw-r--r--      9695  10-Sep-1993  17:53:46  Makefile
-          ;; -rw-r--r--      7441   8-Sep-1993  14:21:20  README
-          ;;
-          ".*Filemode[ \t]+Length[ \t]+Date[ \t]+Time[ \t]+File[ \t]*$")
-         func)
+  (let ((zip-re ;; arc-mode's zip file prompt
+	 ;; M Filemode      Length  Date         Time      File
+	 ;; - ----------  --------  -----------  --------  ---------
+	 ;; -rw-r--r--      9695  10-Sep-1993  17:53:46  Makefile
+	 ;; -rw-r--r--      7441   8-Sep-1993  14:21:20  README
+	 ;;
+	 ".*Filemode[ \t]+Length[ \t]+Date[ \t]+Time[ \t]+File[ \t]*$")
+	func)
     ;;  Now; if you load from dired a .zip or .tar file; you don't
     ;;  want view mode on, check buffer file name.
     (cond
@@ -406,9 +404,7 @@ Format: (BUFFER-POINTER BP ..)")
            (ti::emacs-p)
            (< emacs-minor-version 30)
            (require 'mview nil 'noerr)
-           ;;
            ;; Not loaded from dired-view-file, but from compile buffer?
-           ;;
            (not (eq major-mode 'view-mode)))
       (when (fboundp 'view-mode)        ;Turn off this mode.
         (ti::funcall 'view-mode 0)) ;in 19.28 won't work, but try anyway
@@ -450,11 +446,11 @@ so that they don't clash with the toplevel definitions.
     'LisT'      current list of buffers to loop over.
 
 Setting 'list' to nil terminates this macro."
-  `(let* (NamE)
+  `(let (NamE)
      (dolist (BuffeR (tinycache-cached-file-list ,off) )
        (setq NamE (buffer-name BuffeR))
        (if (null NamE)
-           (setq NamE nil))             ;NoOp, Silence ButeComp
+           (setq NamE nil))             ; No-op, silence byte compiler
        ,@body)))
 
 ;;; ----------------------------------------------------------------------
@@ -521,7 +517,7 @@ Setting 'list' to nil terminates this macro."
 (defun tinycache-dired-mark (&optional unmark verb)
   "Mark cached files. Optionally UNMARK. VERB."
   (interactive)
-  (let* ((i 0)
+  (let ((i 0)
          file)
     (ti::verb)
     (ti::save-line-column-macro nil nil
@@ -560,7 +556,7 @@ Setting 'list' to nil terminates this macro."
   "Make `kill-buffer-hook' local to this buffer. And add `tinycache-flush' to it.
 When you kill the dired buffer, cached buffers loaded from this
 buffer are also killed."
-  (let* (buffer)
+  (let (buffer)
     ;; Make sure this hook does not contain tinycache-flush outside
     ;; the compilation buffer
     (remove-hook 'kill-buffer-hook 'tinycache-flush)
@@ -617,9 +613,9 @@ cache (tinycache-mode is off for buffer)
 
 if optional OFF is non-nil, then return buffers whose `tinycache-:cache'
 has been turned manually off."
-  (let* ((modes '(compilation-mode compilation-minor-mode dired-mode))
-         buffers
-         blist2)
+  (let ((modes '(compilation-mode compilation-minor-mode dired-mode))
+	buffers
+	blist2)
     (dolist (elt (buffer-list))
       (with-current-buffer elt
         (when (and (memq major-mode modes)
@@ -698,8 +694,8 @@ the cache is flushed with \\[tinycache-flush]."
 (defun tinycache-flush-all-compilation (&optional verb)
   "Kill all cached files by stepping through all compilation buffers. VERB."
   (interactive)
-  (let* ((count  0)
-         (verb   (or verb (interactive-p))))
+  (let ((count  0)
+	(verb   (or verb (interactive-p))))
     (tinycache-map-over-buffers nil
                                 (when (buffer-live-p  (get-buffer BuffeR))
                                   (kill-buffer BuffeR)
@@ -717,9 +713,9 @@ You must be in the Compilation/Dired buffer to execute this command.
 If you're not in dired buffer, function tries to find compilation
 buffer and kill compilation cached files."
   (interactive)
-  (let* ((cache-buffer  (current-buffer))
-         count
-         do-it)
+  (let ((cache-buffer  (current-buffer))
+	count
+	do-it)
     (ti::verb)
     (unless (eq major-mode 'dired-mode)
       ;;  This calls error if no compile buffer found...
@@ -797,13 +793,6 @@ Kill the dired buffer to kill cached files."
         (tinycache-activate this-buffer buffer)))))
 
 ;;}}}
-
-;;   delayed install
-
-(add-hook 'buffer-menu-mode-hook 'tinycache-buffer-list-bindings-on)
-(add-hook 'compilation-mode-hook 'tinycache-define-default-keys)
-(add-hook 'dired-mode-hook       'tinycache-add-local-hook)
-(add-hook 'dired-mode-hook       'tinycache-define-default-keys)
 
 (provide   'tinycache)
 (run-hooks 'tinycache-:load-hook)
