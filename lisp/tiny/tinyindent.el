@@ -108,7 +108,7 @@
 (require 'tinylibm)
 (eval-when-compile (ti::package-use-dynamic-compilation))
 
-(ti::package-defgroup-tiny TinyIndent tinyindent-: tools
+(ti::package-defgroup-tiny TinyIndent tinyindent-- tools
   "like `indented-text-mode', but minor-mode.
   Overview of features
 
@@ -130,25 +130,25 @@
 
 ;;; .......................................................... &v-bind ...
 
-(defvar tinyindent-:mode-map nil
+(defvar tinyindent--mode-map nil
   "Minor keymap, only for TAB key. Copy of `current-local-map'.")
 
-(defvar tinyindent-:mode-prefix-map nil
+(defvar tinyindent--mode-prefix-map nil
   "Prefix minor keymap, only for TAB key.")
 
 ;;; ......................................................... &v-hooks ...
 
-(defcustom tinyindent-:mode-load-hook nil
+(defcustom tinyindent--mode-load-hook nil
   "*Hook run when file is loaded."
   :type 'hook
   :group 'TinyIndent)
 
-(defcustom tinyindent-:mode-hook nil
+(defcustom tinyindent--mode-hook nil
   "*Hook run when function `tinyindent-mode' turned on."
   :type 'hook
   :group 'TinyIndent)
 
-(defcustom tinyindent-:mode-define-keys-hook 'tinyindent-mode-map-define-keys
+(defcustom tinyindent--mode-define-keys-hook 'tinyindent-mode-map-define-keys
   "*Hook to define keys for mode."
   :type 'hook
   :group 'TinyIndent)
@@ -166,16 +166,16 @@ This variable isautomatically set by invoking \\[tinyindent-mode].")
 
 ;;; ....................................................... &v-private ...
 
-(defvar tinyindent-:RET nil
+(defvar tinyindent--RET nil
   "Global return value used, when multiple values are neede.
 Shouldn't interest regular user.")
-(make-variable-buffer-local 'tinyindent-:RET)
+(make-variable-buffer-local 'tinyindent--RET)
 
-(defvar tinyindent-:cp 0  "Internal. Current point.")
-(make-variable-buffer-local 'tinyindent-:cp)
+(defvar tinyindent--cp 0  "Internal. Current point.")
+(make-variable-buffer-local 'tinyindent--cp)
 
-(defvar tinyindent-:cl 0  "Internal. Current line.")
-(make-variable-buffer-local 'tinyindent-:cl)
+(defvar tinyindent--cl 0  "Internal. Current line.")
+(make-variable-buffer-local 'tinyindent--cl)
 
 ;;; ........................................................ &v-public ...
 ;;; User configurable
@@ -184,12 +184,12 @@ Shouldn't interest regular user.")
 ;;   point is line start: you decide indentation or cursor positioning with
 ;;   that first keystroke.
 
-(defcustom tinyindent-:bol t
+(defcustom tinyindent--bol t
   "*Flag that determines if beg. of line should be treated differently."
   :type  'boolean
   :group 'TinyIndent)
 
-(defcustom tinyindent-:special-regexp
+(defcustom tinyindent--special-regexp
   (concat
    "^[ \t]*\\(//\\|\#\\|!\\|REM\\)[ \t]*"
    ;;   don't put ;;+, since someone may draw ;;;;;;;;;;...
@@ -206,21 +206,21 @@ REM        Oracle Sqlplus, SQL files in general"
   :type  'string
   :group 'TinyIndent)
 
-(defcustom tinyindent-:mode-str-orig " Tii"
+(defcustom tinyindent--mode-str-orig " Tii"
   "*String to be displayed in mode line."
   :type 'string
   :group 'TinyIndent)
 
-(defcustom tinyindent-:tt-mode-str-orig " TiiT"
+(defcustom tinyindent--tt-mode-str-orig " TiiT"
   "*String to be displayed in mode line."
   :type  'string
   :group 'TinyIndent)
 
 ;;  This is not a user variable
 
-(defvar tinyindent-:mode-name tinyindent-:mode-str-orig
+(defvar tinyindent--mode-name tinyindent--mode-str-orig
   "Current minor mode status displayed. Changed dynamically.")
-(make-variable-buffer-local ' tinyindent-:mode-name)
+(make-variable-buffer-local ' tinyindent--mode-name)
 
 ;;}}}
 ;;{{{ code: misc
@@ -228,16 +228,16 @@ REM        Oracle Sqlplus, SQL files in general"
 ;;; ----------------------------------------------------------------------
 ;;;
 (defun tinyindent-mode-map-define-keys ()
-  "Defines keybindings to `tinyindent-:mode-map'."
+  "Defines keybindings to `tinyindent--mode-map'."
 
-  (define-key  tinyindent-:mode-map "\t" 'tinyindent-tab-key)
+  (define-key  tinyindent--mode-map "\t" 'tinyindent-tab-key)
 
   ;;  e.g. lisp-mode uses backward-delete-char-untabify which is
   ;;  uncomfortable in editing.
   ;;
   ;;  The 2nd bind works in X env only
 
-  (define-key  tinyindent-:mode-map "\177" 'delete-backward-char))
+  (define-key  tinyindent--mode-map "\177" 'delete-backward-char))
 
 ;;; ----------------------------------------------------------------------
 ;;;
@@ -245,21 +245,21 @@ REM        Oracle Sqlplus, SQL files in general"
 (ti::macrof-minor-mode-install
  tinyindent-install-mode
  tinyindent-mode
- tinyindent-:mode-map
- tinyindent-:mode-prefix-map
- tinyindent-:mode-name
- tinyindent-:mode-define-keys-hook)
+ tinyindent--mode-map
+ tinyindent--mode-prefix-map
+ tinyindent--mode-name
+ tinyindent--mode-define-keys-hook)
 
 ;;; ----------------------------------------------------------------------
 ;;;
 (defun tinyindent-confirm (msg)
   "Confirms action with MSG.
 RET/SPC = ok. The real character pressed is available
-thru global variable `tinyindent-:RET'."
-  (setq tinyindent-:RET (ti::read-char-safe msg))
-  (if (and (characterp tinyindent-:RET)
-           (or (char-equal tinyindent-:RET ?\C-m)
-               (char-equal tinyindent-:RET ?\ ))) ; RET/SPC
+thru global variable `tinyindent--RET'."
+  (setq tinyindent--RET (ti::read-char-safe msg))
+  (if (and (characterp tinyindent--RET)
+           (or (char-equal tinyindent--RET ?\C-m)
+               (char-equal tinyindent--RET ?\ ))) ; RET/SPC
       t
     nil))
 
@@ -276,7 +276,7 @@ Moves point 1 line forward af ter done.
 Returns:
   filling pattern to use at front of line or nil"
   ;;  Look for some special lines, like C++
-  (let ((s-re tinyindent-:special-regexp)
+  (let ((s-re tinyindent--special-regexp)
 	fill
 	line)
     (when (looking-at s-re)
@@ -314,9 +314,9 @@ in BODY use relative indent."
 - if above line IS empty, then ask if normal TAB/relative indent.
 
 References:
-  `tinyindent-:special-regexp'"
+  `tinyindent--special-regexp'"
   (interactive)
-  (let ((bolp-flag     tinyindent-:bol)
+  (let ((bolp-flag     tinyindent--bol)
 	(p             (point))
 	(cur-col       (current-column))
 	(imode         t)
@@ -338,10 +338,10 @@ References:
           (end-of-line)
           (setq prev-col (current-column)))
         ;;  make sure these are NOT nil
-        (if (null tinyindent-:cp)
-	    (setq tinyindent-:cp 0))
-        (if (null tinyindent-:cl)
-	    (setq tinyindent-:cl 0))
+        (if (null tinyindent--cp)
+	    (setq tinyindent--cp 0))
+        (if (null tinyindent--cl)
+	    (setq tinyindent--cl 0))
         ;;  Count lines has A BUG! , If I'm at the beg of line
         ;;  or 1 char forward it gives different values!
         (setq line (count-lines 1 p))
@@ -352,8 +352,8 @@ References:
         ;;   - if he is at the beginning, then ALWAYS ask (forced ask)
         (if prev-empty
             (if (and                    ;already asked ?
-                 (>= tinyindent-:cp bp)
-                 (<= tinyindent-:cp ep))
+                 (>= tinyindent--cp bp)
+                 (<= tinyindent--cp ep))
                 (setq skip 1))
           (if (null (bolp))
               (setq skip 2))            ;BOL ?
@@ -362,11 +362,11 @@ References:
               (setq skip 3)))
         (if skip
             (throw 'cancel t))          ;we were on this line already
-        (setq tinyindent-:cl line)      ;update line number
-        (setq tinyindent-:cp p)         ;current point position
+        (setq tinyindent--cl line)      ;update line number
+        (setq tinyindent--cp p)         ;current point position
         ;;^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^
         ;;  The real engine
-        (setq tinyindent-:RET nil)
+        (setq tinyindent--RET nil)
         (cond
          ((bobp)
           (tab-to-tab-stop))
@@ -381,7 +381,7 @@ References:
                   (setq imode t)
                 (setq imode (tinyindent-confirm "indent relative?")))))
           ;; this was pressed
-          (setq ch tinyindent-:RET)))))
+          (setq ch tinyindent--RET)))))
     ;; ^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^ catch end ^^^
     (if fill
         (insert fill)                 ;see save-excursion, fill is set
@@ -432,9 +432,9 @@ References:
     (unless tinyindent-mode    ;turn on the major mode tinyindent-mode
       (tinyindent-mode)                 ;turn it on
       (setq tinyindent-tt-mode t))
-    (setq tinyindent-:mode-name tinyindent-:tt-mode-str-orig))
+    (setq tinyindent--mode-name tinyindent--tt-mode-str-orig))
    (t
-    (setq tinyindent-:mode-name tinyindent-:mode-str-orig)))
+    (setq tinyindent--mode-name tinyindent--mode-str-orig)))
   (ti::compat-modeline-update))
 
 ;;; ----------------------------------------------------------------------
@@ -461,7 +461,7 @@ TAB TAB     inserts hard tab
 TAB SPC     indent relative without inserting space char.
 TAB x       indents relative and inserting character x
 
-\\{tinyindent-:mode-map}"
+\\{tinyindent--mode-map}"
   (interactive "P")
 
   (if (null (assq 'tinyindent-mode minor-mode-alist))
@@ -472,17 +472,17 @@ TAB x       indents relative and inserting character x
   (cond
    (tinyindent-mode
     (unless tinyindent-tt-mode
-      (setq tinyindent-:mode-name
-            tinyindent-:mode-str-orig))
-    (run-hooks 'tinyindent-:mode-hook))
+      (setq tinyindent--mode-name
+            tinyindent--mode-str-orig))
+    (run-hooks 'tinyindent--mode-hook))
    (t
     (setq tinyindent-tt-mode nil)))
   (ti::compat-modeline-update))
 
 ;;}}}
 
-(add-hook 'tinyindent-:mode-define-keys-hook 'tinyindent-mode-map-define-keys)
+(add-hook 'tinyindent--mode-define-keys-hook 'tinyindent-mode-map-define-keys)
 (provide   'tinyindent)
-(run-hooks 'tinyindent-:mode-load-hook)
+(run-hooks 'tinyindent--mode-load-hook)
 
 ;;; tinyindent.el ends here
