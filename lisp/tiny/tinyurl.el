@@ -655,12 +655,12 @@ non windowed Emacs."
   :group 'TinyUrl)
 
 (defcustom tinyurl-:file-filter-table
-  (let* ((doc    (executable-find "catdoc"))
-         (gimp   (executable-find "gimp"))
-         (xv     (executable-find "xv"))
-         (nroff  (executable-find "nroff"))
-         (col    (executable-find "col"))
-         (winzip (executable-find "winzip")))
+  (let ((doc    (executable-find "catdoc"))
+	(gimp   (executable-find "gimp"))
+	(xv     (executable-find "xv"))
+	(nroff  (executable-find "nroff"))
+	(col    (executable-find "col"))
+	(winzip (executable-find "winzip")))
     (list
      '("\\.pod$" . tinyurl-filter-pod)
      (if doc
@@ -845,9 +845,9 @@ there was url'")
 ;;      shown in the line.
 
 (defcustom tinyurl-:overlay-plist
-  (let* ((face (if (ti::compat-window-system)
-                   'mouse-face
-                 'face)))
+  (let ((face (if (ti::compat-window-system)
+		  'mouse-face
+		'face)))
     (if (ti::emacs-p)
         (list
          'rear-nonsticky   t
@@ -1079,8 +1079,8 @@ This function must not be called directly, not even from Lisp. Use
 function `tinyurl-mode' function instead. VERB."
   (unless (get 'tinyurl-mode 'self-call)
     (run-hooks 'tinyurl-:mode-define-keys-hook))
-  (let* ((i 0)
-         tinyurl-:mode-define-keys-hook)
+  (let ((i 0)
+	tinyurl-:mode-define-keys-hook)
     (unwind-protect
         (progn
           ;;  Raise the flag to prevent calling us
@@ -1137,7 +1137,7 @@ function `tinyurl-mode' function instead. VERB."
   "Make TinyUrl default top level url handler: GNUS, TM, VM etc.
 Optionally RESTORE-ORIGINAL url handlers."
   (interactive "P")
-  (let* ()
+  (let ()
 ;;;         (list '(gnus-button-url
 ;;;                 gnus-button-embedded-url
 ;;;                 tm:browse-url
@@ -1248,7 +1248,7 @@ Optionally RESTORE-ORIGINAL url handlers."
 When mode is nil, assume unplugged unless `ti::mail-plugged-p'
 \(Gnus) says otherwise."
   (interactive "P")
-  (let* ((mode (get 'tinyurl-plugged-p 'mode)))
+  (let ((mode (get 'tinyurl-plugged-p 'mode)))
     (ti::verb)
     (ti::bool-toggle mode arg)
     (put 'tinyurl-plugged-p 'mode mode)
@@ -1315,9 +1315,9 @@ function ´tinyurl-default-exclude', which you can recall with:
 ;;;
 (defun tinyurl-command-table-put (table key value)
   "Use command TABLE entry and change KEY's value to new VALUE."
-  (let* (elt
-         new
-         ok)
+  (let (elt
+	new
+	ok)
     (while (setq elt (pop table))
       (when (eq (car elt) key)
         (setq elt (cons key value)
@@ -1332,11 +1332,11 @@ function ´tinyurl-default-exclude', which you can recall with:
 (defun tinyurl-command-table-put-2nd (table key1 key2 value)
   "Use command TABLE, find KEY1, change 2nd level KEY2's value to new VALUE.
 The TABLE is modified in place."
-  (let* (elt
-         list
-         mem
-         new
-         ok)
+  (let (elt
+	list
+	mem
+	new
+	ok)
     (or (setq elt (assq key1 table))
         (error "TinyUrl: Key1 %s does not exist" key1))
     (setq list (nth 1 elt))
@@ -1379,7 +1379,7 @@ The TABLE is modified in place."
 ;;;
 (defun tinyurl-user-default-browser-type ()
   "What kind of browser user used before? \"netscape\" or \"iexplore."
-  (let* ((browse  (tinyurl-browse-url-browser-function))
+  (let* ((browse (tinyurl-browse-url-browser-function))
          (user-default
           (when browse
             (cond
@@ -1398,7 +1398,7 @@ The TABLE is modified in place."
   "Return default command table choice.
 This might be \"netscape\" or \"iexplore\"."
   (interactive)
-  (let* ((default (tinyurl-user-default-browser-type)))
+  (let ((default (tinyurl-user-default-browser-type)))
     (cond
      ((ti::win32-p)                     ;Win32
       (let ((net (executable-find "netscape")))
@@ -1411,7 +1411,7 @@ This might be \"netscape\" or \"iexplore\"."
       (if (not (ti::compat-window-system))
           "w3"
         ;;  In Unix the name has "r" at the end
-        (let* ((ie (executable-find "iexplorer")))
+        (let ((ie (executable-find "iexplorer")))
           (cond
            (ie
             "iexplore")
@@ -1501,7 +1501,7 @@ Has brose-url.el been loaded?")))
 ;;;
 (defun tinyurl-command-table-default ()
   "Return \"default\" entry."
-  (let* ((entry (tinyurl-command-table-default-1)))
+  (let ((entry (tinyurl-command-table-default-1)))
     ;; (setq entry (tinyurl-command-table-put
     ;;              entry
     ;;              'url
@@ -1513,7 +1513,7 @@ Has brose-url.el been loaded?")))
 ;;;
 (defun tinyurl-command-table-netscape ()
   "Return Netscape entry."
-  (let* ((entry (tinyurl-command-table-default-1)))
+  (let ((entry (tinyurl-command-table-default-1)))
     (when (executable-find "netscape")
       (setq entry (tinyurl-command-table-put
                    entry 'url 'browse-url-netscape))
@@ -1524,7 +1524,7 @@ Has brose-url.el been loaded?")))
 ;;;
 (defun tinyurl-command-table-iexplore ()
   "Return Unix Iexplorer entry."
-  (let* ((entry (tinyurl-command-table-default-1)))
+  (let ((entry (tinyurl-command-table-default-1)))
     (when (executable-find "iexplorer") ;; Extra "r" in name
       (setq entry (tinyurl-command-table-put
                    entry 'url 'browse-url-iexplore))
@@ -1535,7 +1535,7 @@ Has brose-url.el been loaded?")))
 ;;;
 (defun tinyurl-command-table-netscape-win32 ()
   "Return Netscape entry."
-  (let* ((entry (tinyurl-command-table-default-1)))
+  (let ((entry (tinyurl-command-table-default-1)))
     (setq entry (tinyurl-command-table-put
                  entry 'url 'tinyurl-find-url-win32-netscape))
     (tinyurl-command-table-before-string entry "!")
@@ -1545,7 +1545,7 @@ Has brose-url.el been loaded?")))
 ;;;
 (defun tinyurl-command-table-iexplore-win32 ()
   "Return Netscape entry."
-  (let* ((entry (tinyurl-command-table-default-1)))
+  (let ((entry (tinyurl-command-table-default-1)))
     (setq entry (tinyurl-command-table-put
                  entry 'url 'tinyurl-find-url-win32-iexplore))
     (tinyurl-command-table-before-string entry "@")
@@ -1555,7 +1555,7 @@ Has brose-url.el been loaded?")))
 ;;;
 (defun tinyurl-command-table-lynx ()
   "Return Lynx entry."
-  (let* ((entry (tinyurl-command-table-default-1)))
+  (let ((entry (tinyurl-command-table-default-1)))
     (setq entry (tinyurl-command-table-put
                  entry 'url 'browse-url-lynx-emacs))
     (tinyurl-command-table-before-string entry "*")
@@ -1565,7 +1565,7 @@ Has brose-url.el been loaded?")))
 ;;;
 (defun tinyurl-command-table-w3 ()
   "Return W3 entry."
-  (let* ((entry (tinyurl-command-table-default-1)))
+  (let ((entry (tinyurl-command-table-default-1)))
     (setq entry (tinyurl-command-table-put
                  entry 'url 'browse-url-w3))
     (tinyurl-command-table-before-string entry "?")
@@ -1648,9 +1648,9 @@ Has brose-url.el been loaded?")))
   "Return copy of active command table.
 References:
   `tinyurl-:display-glyph'"
-  (let* ((table (tinyurl-table
-                 (or table
-                     tinyurl-:command-table-current))))
+  (let ((table (tinyurl-table
+		(or table
+		    tinyurl-:command-table-current))))
     (when (and table
                (null tinyurl-:display-glyph))
       ;;  Make local copy and changing `before-string' to ""
@@ -1722,7 +1722,7 @@ References:
 ;;;
 (defsubst tinyurl-overlay-get (&optional point)
   "Reeturn overlay from current POINT if there is any '(owner tinyurl)."
-  (let* ((list (overlays-at (or point (point)))))
+  (let ((list (overlays-at (or point (point)))))
     (if list
         (ti::overlay-get-prop list '(owner tinyurl)))))
 
@@ -1736,11 +1736,11 @@ References:
 ;;;
 (defun tinyurl-filter-pod (url)
   "Handle Perl pod URL."
-  (let* ((pod   (or (get 'tinyurl-filter-pod 'pod2text)
-                    (executable-find "pod2text")
-                    (message "TinyUrl: No `pod2text' command found.")
-                    nil))
-         (buffer  shell-command-output-buffer))
+  (let ((pod   (or (get 'tinyurl-filter-pod 'pod2text)
+		   (executable-find "pod2text")
+		   (message "TinyUrl: No `pod2text' command found.")
+		   nil))
+	(buffer  shell-command-output-buffer))
     (put 'tinyurl-filter-pod 'pod2text pod)
     (if (null pod)
         (find-file url)
@@ -1766,11 +1766,11 @@ References:
 (defun tinyurl-dispatcher-1  (url)
   "Redirect URL to proper agent handler."
   (interactive)
-  (let* ((fid                       "tinyurl-dispatcher-1:")
-         (tinyurl-:file-filter-table  tinyurl-:file-filter-table) ;; make copy
-         url-type
-         tmp
-         ret)
+  (let ((fid                       "tinyurl-dispatcher-1:")
+	(tinyurl-:file-filter-table  tinyurl-:file-filter-table) ;; make copy
+	url-type
+	tmp
+	ret)
     ;; ....................................................... do-it ...
     (cond
      ((and tinyurl-:validate-hook
@@ -1820,10 +1820,10 @@ References:
 ;;;
 (defun tinyurl-call-original-mouse (event)
   "Call original mouse-2 function, unless in compilation buffer."
-  (let* ((mode      (symbol-name major-mode))
+  (let* ((mode (symbol-name major-mode))
          (function
-          (let* ((local (current-local-map))
-                 tinyurl-mode)
+          (let ((local (current-local-map))
+		tinyurl-mode)
             (or (and local
                      (if (ti::emacs-p)
                          (lookup-key local [mouse-2])
@@ -1937,10 +1937,10 @@ Return:
   t         URL accepted
   string    Error Message."
 
-  (let* ((fid  "tinyurl-validate-url-default:")
-         (info (ti::file-path-and-line-info url)) ;FILE:NBR --> FILE
-         (type (tinyurl-type url))
-         ret)
+  (let ((fid  "tinyurl-validate-url-default:")
+	(info (ti::file-path-and-line-info url)) ;FILE:NBR --> FILE
+	(type (tinyurl-type url))
+	ret)
     (if info
         (setq url (car info)))
     (setq
@@ -2025,7 +2025,7 @@ E.g. Following url would be targetted as email, because it has <.*@.*>
 ;;;
 (defun tinyurl-find-url-lisp (url)
   "Find Emacs Llisp package URL."
-  (let* ((file (ti::string-match "[\"']\\([^\"')]+\\)" 1 url)))
+  (let ((file (ti::string-match "[\"']\\([^\"')]+\\)" 1 url)))
     (when file
       (setq file (replace-regexp-in-string "c$" "" file))
       (setq file (ti::string-verify-ends file "\\.el" ".el")))
@@ -2052,14 +2052,14 @@ E.g. Following url would be targetted as email, because it has <.*@.*>
 (defun tinyurl-find-url-php-compile (url)
   "Find PHP compiler error URL."
   ;; <b>Parse error</b>:  parse error in <b>FILE.php</b> on line <b>161</b><br>
-  (let* ((file (ti::string-match
-                "parse error in <b>\\([^<\n]+\\)</b> *on line"
-                1
-                url))
-         (line (ti::string-match
-                "parse error in.*on line <b>\\([0-9]+\\)"
-                1
-                url)))
+  (let ((file (ti::string-match
+	       "parse error in <b>\\([^<\n]+\\)</b> *on line"
+	       1
+	       url))
+	(line (ti::string-match
+	       "parse error in.*on line <b>\\([0-9]+\\)"
+	       1
+	       url)))
     (if (null line)                   ;Quiet byte compiler: unused var
         (setq line nil))
     ;; FIXME:  Actually the general FILE-FIND URL method already can grab
@@ -2073,7 +2073,7 @@ E.g. Following url would be targetted as email, because it has <.*@.*>
 (defun tinyurl-find-url-perl-pod-manpage (url)
   "Find perl POD manpage URL."
   (setq url (ti::string-match "perl[^] ,.\n\t]+" 0 url))
-  (let* (point)
+  (let (point)
     ;; Check if the referenced pod page is on the current buffer
     ;; NAME
     ;;    perlfunc - Perl builtin functions
@@ -2095,11 +2095,11 @@ E.g. Following url would be targetted as email, because it has <.*@.*>
 ;;;
 (defun tinyurl-find-url-perl-1 (file &optional method)
   "Go to Perl FILE and put point to optional METHOD."
-  (let* ((regexp (if method
-                     (concat "^[ \t]*sub[ \t\n\r]*"
-                             method
-                             "\\>")))
-         elt)
+  (let ((regexp (if method
+		    (concat "^[ \t]*sub[ \t\n\r]*"
+			    method
+			    "\\>")))
+	elt)
     (if (null (setq elt (tinyperl-locate-library file)))
         (message "TinyUrl: No Perl module found, %s" file)
       (switch-to-buffer (tinyperl-library-find-file elt))
@@ -2111,8 +2111,8 @@ E.g. Following url would be targetted as email, because it has <.*@.*>
 ;;;
 (defun tinyurl-find-url-perl-method (url)
   "Find Perl Foo::Bar->new(...) URL."
-  (let* (file
-         method)
+  (let (file
+	method)
     (when (string-match "\\([^ \t\n]+\\)->\\([^ \t\n]+\\)" url)
       (setq file   (match-string 1 url)
             method (match-string 2 url)))
@@ -2127,7 +2127,7 @@ E.g. Following url would be targetted as email, because it has <.*@.*>
 ;;;
 (defun tinyurl-find-url-perl (url)
   "Find Perl `require' and `use' URL."
-  (let* (file)
+  (let (file)
     (cond
      ((setq file (ti::string-match
                   "use[ \t]+\\([^ \t\n;]+\\)" 1 url))
@@ -2150,9 +2150,9 @@ E.g. Following url would be targetted as email, because it has <.*@.*>
     at FILE line LINE.
 
 If NOERR is non-nil, signal no error if file does not exist."
-  (let* ((fid "tinyurl-find-url-perl-compile:")
-         file
-         line)
+  (let ((fid "tinyurl-find-url-perl-compile:")
+	file
+	line)
     (cond
      ((or (string-match "in file +\\([^ \t\n]+\\) at line \\([0-9]+\\)" url)
           (string-match "at +\\([^ \t\n]+\\) line \\([0-9]+\\)" url))
@@ -2179,7 +2179,7 @@ If NOERR is non-nil, signal no error if file does not exist."
   "Check URL and LINE for filter in `tinyurl-:file-filter-table'.
 Return:
   non-nil if Filter was used."
-  (let* ((filter (tinyurl-get-filter url)))
+  (let ((filter (tinyurl-get-filter url)))
     (tinyurl-debug "tinyurl-file-name-filter" url filter)
     (cond
      ((stringp filter)
@@ -2193,7 +2193,7 @@ Return:
 ;;;
 (defun tinyurl-guess-line-number-at-point ()
   "Read current line and guess the line number."
-  (let* ()
+  (let ()
     (save-excursion
       (beginning-of-line)
       (cond
@@ -2213,8 +2213,8 @@ Return:
   "Go to ULR and optional LINE.
 If LINE is not given, it is guessed freom the context.
 Convert URL ftp:// to ange-ftp format and use `find-file'."
-  (let* ((fid  "tinyurl-find-url-file: ")
-         (info (ti::file-path-and-line-info url)))
+  (let ((fid  "tinyurl-find-url-file: ")
+	(info (ti::file-path-and-line-info url)))
     (when info
       (setq url (car info)))
     (unless line
@@ -2314,7 +2314,7 @@ Convert URL ftp:// to ange-ftp format and use `find-file'."
 ;;;
 (defun tinyurl-cache-url (url)
   "Add URL to the beginning of buffer `tinyurl-:url-cache-buffer'."
-  (let* ((buffer (get-buffer-create tinyurl-:url-cache-buffer)))
+  (let ((buffer (get-buffer-create tinyurl-:url-cache-buffer)))
     (tinyurl-debug "tinyurl-cache-url" url)
     (if (eq (current-buffer) buffer)
         (error "TinyUrl: Can't cache URL in `tinyurl-:url-cache-buffer'")
@@ -2451,15 +2451,15 @@ Returned types (symbols) are:
 (defun tinyurl-handler-main (url &optional type)
   "Handle URL and forward it to right agent function. TYPE of url can be given.
 References: `tinyurl-:command-table'"
-  (let* ((fid       "tinyurl-handler-main")
-         (raw-list '(url-message-id
-                     compiler-perl-in-file-at-line
-                     compiler-perl-at-line))
-         (unplugged (not (funcall tinyurl-:plugged-function)))
-         func
-         to
-         subject
-         clean)
+  (let ((fid       "tinyurl-handler-main")
+	(raw-list '(url-message-id
+		    compiler-perl-in-file-at-line
+		    compiler-perl-at-line))
+	(unplugged (not (funcall tinyurl-:plugged-function)))
+	func
+	to
+	subject
+	clean)
     (or type
         (setq type (tinyurl-type url)))
     (setq clean  (tinyurl-url-clean url type))
@@ -2490,7 +2490,7 @@ References: `tinyurl-:command-table'"
 (defun tinyurl-mark-process-post-command  ()
   "Used in `post-command-hook'."
   (when tinyurl-mode
-    (let* (counter)
+    (let (counter)
       (unless (integerp (setq counter (get 'tinyurl-mode 'counter)))
         (setq counter 0))
       (incf  counter)
@@ -2512,7 +2512,7 @@ References: `tinyurl-:command-table'"
           (goto-char (window-start))
           (forward-line line)
 ;;;          (ti::d! (ti::read-current-line))
-          (let* ((end (line-end-position)))
+          (let ((end (line-end-position)))
             (when (not (eq end
                            (get 'tinyurl-mark-line 'mouse)))
               (put 'tinyurl-mark-line 'mouse end)
@@ -2529,7 +2529,7 @@ References: `tinyurl-:command-table'"
                       (and (fboundp tinyurl-:auto-activate-function)
                            (funcall tinyurl-:auto-activate-function)))))
     ;; Check if we have already marked this line
-    (let* ((end (line-end-position)))
+    (let ((end (line-end-position)))
       (when (not (eq end
                      (get 'tinyurl-mark-line 'point)))
         (put 'tinyurl-mark-line 'point end)
@@ -2551,15 +2551,15 @@ VALIDATE-HANDLER    Function to discard and check marked url"
   (let* ((site       "[-a-z0-9.]+")
          (white      " \t\r\n\f")       ;whitespace
          (white-file " *?\t\r\n\f")     ;whitespace, exclude wildcards
-         (white-re   (concat "[" white "]"))
-         (nwhite-re  (concat "[^" white "]"))
-         (word       (concat "[^][(){}<>$^*?:\"'" white "]")) ;; filename word
-         (word+      (concat word "+"))
-;;;      (word*      (concat word "*"))
-         (url-word+  (concat "[^][{}<>$^*\"'" white "]+")) ;; include ?
-         (url-word*  (concat "[^][{}<>$^*\"'" white "]*"))
-         (non-spc    (concat "[^\"';" white "]"))
-         (non-spc+   (concat non-spc "+"))
+         (white-re   `,(concat "[" white "]"))
+         (nwhite-re  `,(concat "[^" white "]"))
+         (word       `,(concat "[^][(){}<>$^*?:\"'" white "]")) ;; filename word
+         (word+      `,(concat word "+"))
+;;;      (word*      `,(concat word "*"))
+         (url-word+  `,(concat "[^][{}<>$^*\"'" white "]+")) ;; include ?
+         (url-word*  `,(concat "[^][{}<>$^*\"'" white "]*"))
+         (non-spc    `,(concat "[^\"';" white "]"))
+         (non-spc+   `,(concat non-spc "+"))
          ;;      (non-spc*  (concat non-spc "*"))
          (slash    (if (ti::win32-p)
                        "\\/"            ;Accept both
@@ -2572,20 +2572,20 @@ VALIDATE-HANDLER    Function to discard and check marked url"
          (maybe-number "\\(:[0-9]+\\)?")
          (table
           (list
-           (list (concat "\\<mailto:" white-re "*" nwhite-re "+") 0 'span)
+           (list `,(concat "\\<mailto:" white-re "*" nwhite-re "+") 0 'span)
            ;; This must come first
            (list "<URL:\\([^>]+\\)>" 1 'span)
            (list
-            (concat
-             "\\(Message-Id:\\|References:\\|In Article\\)"
-             white-re "*<[^>" white  "]+>")
+            `,(concat
+	       "\\(Message-Id:\\|References:\\|In Article\\)"
+	       white-re "*<[^>" white  "]+>")
             0
             'span)
            (list
-            (concat
-             "\\(\\(\\(ftp\\|https?\\|telnet\\|gopher\\|www\\|wais\\|news\\)://"
-             "\\|file:/\\)\\)"
-             url-word+)
+            `,(concat
+	       "\\(\\(\\(ftp\\|https?\\|telnet\\|gopher\\|www\\|wais\\|news\\)://"
+	       "\\|file:/\\)\\)"
+	       url-word+)
             0)
            (list tinyurl-:email-regexp 0 nil 'tinyurl-validate-url-email)
            ;; If it starets with "www" and ends to 2-3 characters, it must
@@ -2594,18 +2594,18 @@ VALIDATE-HANDLER    Function to discard and check marked url"
            ;; The regexp starts with "[^/], so that http://www match isn't
            ;; replaced with this.
            (list
-            (concat
-             "[^/]www\\.\\([-a-z0-9]+\.\\)+[a-z][a-z][a-z]?"
-             url-word*
-             "\\>")
+            `,(concat
+	       "[^/]www\\.\\([-a-z0-9]+\.\\)+[a-z][a-z][a-z]?"
+	       url-word*
+	       "\\>")
             0)
            ;; C/C++
            ;;
            ;;   #include <stdio.h>
            (list
-            (concat
-             "^[ \t]*#include +<[^>]+>"
-             "\\|^[ \t]*#include +\"[^\"]+\"")
+            `,(concat
+	       "^[ \t]*#include +<[^>]+>"
+	       "\\|^[ \t]*#include +\"[^\"]+\"")
             0)
            ;; Debian
            ;;
@@ -2615,19 +2615,19 @@ VALIDATE-HANDLER    Function to discard and check marked url"
            ;;   Closes: #NNNNNN
            ;;
            (list
-            (concat
-             "\\<bug#[0-9]+\\>"
-             "\\|Closes:? +#[0-9]+\\>"
-             "\\|\\<\\(RF.\\|IT\\.\\|O\\) +[0-9]+\\>")
+            `,(concat
+	       "\\<bug#[0-9]+\\>"
+	       "\\|Closes:? +#[0-9]+\\>"
+	       "\\|\\<\\(RF.\\|IT\\.\\|O\\) +[0-9]+\\>")
             0)
            ;; Perl code statements
            ;;
            ;;   require 'library.pl';
            ;;   use      Module;
            (list
-            (concat
-             "\\<require[ \t\"']+[_a-z0-9.]+pl[ \t\"']*;"
-             "\\|\\<use[ \t]+[_a-z0-9:]+[ \t]*;")
+            `,(concat
+	       "\\<require[ \t\"']+[_a-z0-9.]+pl[ \t\"']*;"
+	       "\\|\\<use[ \t]+[_a-z0-9:]+[ \t]*;")
             0)
            ;;  Perl Foo::Bar->new(...);
            '("\\<[A-Za-z]+::[A-Za-z]+\\(->[A-Za-z]+\\)?"
@@ -2645,12 +2645,12 @@ VALIDATE-HANDLER    Function to discard and check marked url"
            ;;    perlretut.
            ;;    "Regexp Quote-Like Operators" in perlop.
            (list
-            (concat
-             "\\<perl" nwhite-re "+" white-re "+manpage"
-             "\\|\\[perl" nwhite-re "+\\]"
-             "\\|[A-Z][a-z]+::[A-Z][a-z]" white-re "+manpage"
-             "\\|^[ \t]+perl" nwhite-re "+\\.[ \t]*$"
-             "\\|in[ \t]+perl" nwhite-re "+\\.[ \t]*$")
+            `,(concat
+	       "\\<perl" nwhite-re "+" white-re "+manpage"
+	       "\\|\\[perl" nwhite-re "+\\]"
+	       "\\|[A-Z][a-z]+::[A-Z][a-z]" white-re "+manpage"
+	       "\\|^[ \t]+perl" nwhite-re "+\\.[ \t]*$"
+	       "\\|in[ \t]+perl" nwhite-re "+\\.[ \t]*$")
             0
             'span)
            ;; [Compiler output]
@@ -2661,9 +2661,9 @@ VALIDATE-HANDLER    Function to discard and check marked url"
            ;;
            ;;       syntax error in file ./fle.pl at line 268
            (list
-            (concat
-             " in file +" non-spc+ " +at +line +[0-9]+"
-             "\\| at +"   non-spc+ " +line +[0-9]+")
+            `,(concat
+	       " in file +" non-spc+ " +at +line +[0-9]+"
+	       "\\| at +"   non-spc+ " +line +[0-9]+")
             0)
            ;; Manual pages . Examples from HP-UX
            ;;
@@ -2680,9 +2680,9 @@ VALIDATE-HANDLER    Function to discard and check marked url"
            ;;  (load-file       "file.el")
            ;;  (require 'feature)
            (list
-            (concat
-             "(\\(load\\|load-library\\|load-file\\|require\\)[ \t\"']+"
-             word+)
+            `,(concat
+	       "(\\(load\\|load-library\\|load-file\\|require\\)[ \t\"']+"
+	       word+)
             0)
            ;; ............................................ local files ...
            ;; Local files, this must be last because the regexp is "loose"
@@ -2704,23 +2704,23 @@ VALIDATE-HANDLER    Function to discard and check marked url"
            ;; () grouped regexp reads:  (SLASH NOT-SLASH|~SLASH)word*nbr?
            ;; The purpose is not to match double slash C++ comments //
            (list
-            (concat
-             ;; Must be at the begining of line, or after whitespace
-             "\\(^\\|[ \t]\\)"
-             "\\(" "\\(" drive "\\|//\\|[\\][\\]\\)?"
-             slash-re "[^" white-file slash "]"
-             "\\|~" slash-re "?\\)"
-             word+
-             maybe-number
-             ;;  Must be 'alone' and separated from others.
-             "\\([ \t]\\|$\\)")
+            `,(concat
+	       ;; Must be at the begining of line, or after whitespace
+	       "\\(^\\|[ \t]\\)"
+	       "\\(" "\\(" drive "\\|//\\|[\\][\\]\\)?"
+	       slash-re "[^" white-file slash "]"
+	       "\\|~" slash-re "?\\)"
+	       word+
+	       maybe-number
+	       ;;  Must be 'alone' and separated from others.
+	       "\\([ \t]\\|$\\)")
             0
             nil
             'tinyurl-validate-url-default)
            ;; Last try, the file may be inside Emacs already
            ;;  this-file.el:12:   The matched line...
            (list
-            (concat "^\\(" nwhite-re "+\\)" compiler-number )
+            `,(concat "^\\(" nwhite-re "+\\)" compiler-number )
             0
             nil
             'tinyurl-validate-url-default)))) ;; list of regexps end
@@ -2735,19 +2735,19 @@ Return:
 
   '((ov ov ..) (regexp regexp ..))"
   (interactive)
-  (let* ((fid      "tinyurl-mark-line:")
-         (plist    (tinyurl-overlay-plist))
-         (table    (tinyurl-default-mark-table))
-         regexp
-         level
-         function
-         url
-         ov-stat
-         olist
-         ov-list
-         match-list
-         end
-         type)
+  (let ((fid      "tinyurl-mark-line:")
+	(plist    (tinyurl-overlay-plist))
+	(table    (tinyurl-default-mark-table))
+	regexp
+	level
+	function
+	url
+	ov-stat
+	olist
+	ov-list
+	match-list
+	end
+	type)
     ;;  Delete old overlays first
     (tinyurl-overlay-kill)
     (tinyurl-modeline-update) ;; update plugged status
