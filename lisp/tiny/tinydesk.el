@@ -844,7 +844,6 @@ References:
                      (not (file-writable-p save-to))))
             (error "\
 TinyDesk: Can't do state autosave: [%s] is not writable." save-to))
-
         (save-window-excursion
           (save-excursion
             (message "TinyDesk: state backup in file %s" save-to)
