@@ -426,11 +426,11 @@ Defined keys:
 ;;;
 (defun tinypair-word-class-skip (&optional back)
   "Skip forward all `tinypair-:word-syntax-class' characters. Optionally BACK."
-  (let* ((ptr           tinypair-:word-syntax-classes)
-         (func          (if back
-                            'skip-syntax-backward
-                          'skip-syntax-forward))
-         (point         (point)))
+  (let ((ptr           tinypair-:word-syntax-classes)
+	(func          (if back
+			   'skip-syntax-backward
+			 'skip-syntax-forward))
+	(point         (point)))
     (while ptr
       (funcall func (char-to-string (car ptr)))
       (if (eq (point) point)
@@ -492,7 +492,7 @@ See `tinypair-:word-syntax-classes' for word definition."
 is tag end,\"slash\", it's not desirable to have <>. Several other HTML
 cases are checked too."
   (setq ch1 ch2) ;;  Byte compiler silencer
-  (let* ((ret 1))
+  (let ((ret 1))
     (cond
      ((memq (following-char) '(?/ ))
       (setq ret nil))
@@ -528,9 +528,9 @@ cases are checked too."
   "Check if \"  character can be paired. Looks backward if previous word
 has starting pair.
 "
-  (let* ((ret 1)                        ;default is main handling
-         prev                           ;char
-         point)
+  (let ((ret 1)                        ;default is main handling
+	prev                           ;char
+	point)
     ;;  The prev is nil if point is in BOB
     (setq  prev (char-syntax (or (ti::buffer-read-char nil -1) ?\ )))
     (if (and prev
@@ -621,16 +621,17 @@ BEG is start point and CHAR is starting pair character."
 ;;;
 (defun tinypair-word-pair (arg ch-beg ch-end)
   "Insert pair around word(s) ARG times using CH-BEG and CH-END."
-  (let* ((fid       "tinypair-word-pair: ")
-         (pos-flag  tinypair-:word-positioning)
-         (pos-func  tinypair-:word-positioning-function)
-         ch1
-         ch2
-         read-ch
-         count
-         syntax-now syntax-prev
-         tmp
-         beg)
+  (let ((fid       "tinypair-word-pair: ")
+	(pos-flag  tinypair-:word-positioning)
+	(pos-func  tinypair-:word-positioning-function)
+	ch1
+	ch2
+	read-ch
+	count
+	syntax-now
+	syntax-prev
+	tmp
+	beg)
     (setq syntax-prev  (char-syntax
                         (setq ch1 (or (preceding-char) ?\ ))))
     (setq syntax-now  (char-syntax
