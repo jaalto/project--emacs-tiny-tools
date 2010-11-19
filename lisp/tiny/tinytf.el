@@ -1106,7 +1106,7 @@ Format:
 ;;; #todo: experimental
 (defun tinytf-code-p (&optional limit)
   "Determine if current text is code. LIMIT parameter is passed by font-lock."
-  (let ((re `,(concat "^" (make-string 12 ?\ )))))
+  (let ((re `,(concat "^" (make-string 12 ?\ ))))
     (and
      (save-excursion
        (beginning-of-line)
