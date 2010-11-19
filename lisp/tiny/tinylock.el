@@ -78,8 +78,8 @@
 ;;      processes. Use the appropriate hook to activate those processes
 ;;      again after the emacs is unlocked. Use hooks
 ;;
-;;          tinylock-:before-lock-hook       ;; Save processes here
-;;          tinylock-:after-lock-hook        ;; restore processes here
+;;          tinylock--before-lock-hook       ;; Save processes here
+;;          tinylock--after-lock-hook        ;; restore processes here
 ;;
 ;;      and following function which tells you what processes are running.
 ;;
@@ -93,7 +93,7 @@
 ;;
 ;;  About auto locking feature, Emacs prior 19.34
 ;;
-;;      When you load this package the `tinylock-:load-hook' runs
+;;      When you load this package the `tinylock--load-hook' runs
 ;;      `tinylock-install-lock-timer' command that setup up a timer process that
 ;;      wakes up periodically. If the emacs has not changed compared to
 ;;      last saved emacs state, then the auto locking takes in effect
@@ -140,11 +140,11 @@
 ;;      Or by putting this code in your ~/.emacs
 ;;
 ;;          ;; First define the hook, so that we can append to it
-;;          (setq tinylock-:load-hook
+;;          (setq tinylock--load-hook
 ;;             '(tinylock-timer-control tinylock-auto-lock-set-password)
 ;;
 ;;          ;; add function to the end
-;;          (add-hook 'tinylock-:load-hook 'my-tinylock-auto-lock-set-interval 'append)
+;;          (add-hook 'tinylock--load-hook 'my-tinylock-auto-lock-set-interval 'append)
 ;;
 ;;
 ;;          (defun my-tinylock-auto-lock-set-interval ()
@@ -167,7 +167,7 @@
 
 (eval-when-compile (ti::package-use-dynamic-compilation))
 
-(ti::package-defgroup-tiny TinyLock tinylock-: extensions
+(ti::package-defgroup-tiny TinyLock tinylock-- extensions
   "Simple emacs locking utility.
  Overview of features
 
@@ -180,66 +180,66 @@
 ;;}}}
 ;;{{{ setup: variables
 
-(defcustom tinylock-:load-hook nil
+(defcustom tinylock--load-hook nil
   "*Hook run after file is loaded."
   :type  'hook
   :group 'TinyLock)
 
-(defcustom tinylock-:before-lock-hook  nil
+(defcustom tinylock--before-lock-hook  nil
   "*Hook that is run when the locking process initiates.
 This is your chance to save frame configurations or processes before
 they are killed."
   :type  'hook
   :group 'TinyLock)
 
-(defcustom tinylock-:after-lock-hook nil
+(defcustom tinylock--after-lock-hook nil
   "*Hook that is run after lock is removed."
   :type  'hook
   :group 'TinyLock)
 
 ;;; ....................................................... &v-private ...
 
-(defvar tinylock-:history nil
+(defvar tinylock--history nil
   "\(DATE PASSWD\) A storage where attempts of entering locked Emacs is put.
 Cleared every time lock takes effect.")
 
-(defvar tinylock-:auto-lock-data  nil
+(defvar tinylock--auto-lock-data  nil
   "Data to tell about the idle state, updated by timer process.
 Contains:
 '(current-time          ;; time stamp of user activity
   (BUFFER-LIST)
   (SIZE SIZE SIZE ..))   ;; every buffers size.")
 
-(defvar tinylock-:auto-lock-password  nil
+(defvar tinylock--auto-lock-password  nil
   "Password in auto lock situation.
 Password is asked when you load this file. You shouldn't define
 this in you ~/.emacs")
 
-(defvar tinylock-:auto-lock-interval  nil
+(defvar tinylock--auto-lock-interval  nil
   "The timer interval in minutes. Use \\[tinylock-auto-lock-set-interval].")
 
-(defvar tinylock-:idle-timer-process  nil
+(defvar tinylock--idle-timer-process  nil
   "19.34+ timer process.")
 
 ;;; ........................................................ &v-config ...
 
-(defcustom tinylock-:login-error-sleep 2
+(defcustom tinylock--login-error-sleep 2
   "*Time in seconds that is waited until new login to is possible."
   :type '(integer :tag "Seconds")
   :group 'TinyLock)
 
-(defcustom tinylock-:buffer-login-history "*tinylock-hist*"
+(defcustom tinylock--buffer-login-history "*tinylock-hist*"
   "*Buffer to output the history data."
   :type 'string
   :group 'TinyLock)
 
-(defcustom tinylock-:buffer-blank "*blank*"
+(defcustom tinylock--buffer-blank "*blank*"
   "*Buffer name used when screen is blanked."
   :type 'string
   :group 'TinyLock)
 
-(defcustom tinylock-:blank-when-locked-flag t
-  "*Non-nil means show `tinylock-:buffer-blank' buffer."
+(defcustom tinylock--blank-when-locked-flag t
+  "*Non-nil means show `tinylock--buffer-blank' buffer."
   :type 'string
   :group 'TinyLock)
 
@@ -274,14 +274,14 @@ this in you ~/.emacs")
     (if (ti::nil-p (setq pass (ti::query-read-input-as-password
                                "TinyLock, give autolock password: ")))
         (error "Password is empty.")
-      (setq tinylock-:auto-lock-password pass))
+      (setq tinylock--auto-lock-password pass))
     nil))
 
 ;;; ----------------------------------------------------------------------
 ;;;
 (defun tinylock-process-on ()
   "Start auto lock process."
-  (tinylock-install-lock-timer nil tinylock-:auto-lock-interval))
+  (tinylock-install-lock-timer nil tinylock--auto-lock-interval))
 
 ;;; ----------------------------------------------------------------------
 ;;;
@@ -295,28 +295,28 @@ Input:
   (interactive "P")
   ;; .......................................................... kill ...
   (ti::compat-timer-cancel-function 'tinylock-process)
-  (setq tinylock-:idle-timer-process nil)
+  (setq tinylock--idle-timer-process nil)
   ;; .................................................... set values ...
-  (setq tinylock-:auto-lock-interval
+  (setq tinylock--auto-lock-interval
         (or interval
-            tinylock-:auto-lock-interval
+            tinylock--auto-lock-interval
             20))                        ;Default 20 minutes
   ;; ................................................... maybe start ...
   (unless uninstall
     (cond
      ((fboundp 'run-with-idle-timer)    ;19.34+
       (setq
-       tinylock-:idle-timer-process
+       tinylock--idle-timer-process
        (ti::funcall
         'run-with-idle-timer
-        (* tinylock-:auto-lock-interval 60)
+        (* tinylock--auto-lock-interval 60)
         'repeat
         'tinylock-lock-now)))
      (t
       (tinylock-process-data-set)
       (run-at-time
        "1 sec"
-       (* tinylock-:auto-lock-interval 60)
+       (* tinylock--auto-lock-interval 60)
        'tinylock-process))))
   (if (interactive-p)
       (message "Autolock process %s"
@@ -329,7 +329,7 @@ Input:
 (defun tinylock-user-activity ()
   "Tell to timer process that the has bee user activity."
   (or
-   (ignore-errors (setcar tinylock-:auto-lock-data (current-time)))
+   (ignore-errors (setcar tinylock--auto-lock-data (current-time)))
    ;;  Hmm, data is corrupted... reset it.
    (tinylock-process-data-set)))
 
@@ -337,7 +337,7 @@ Input:
 ;;;
 (defun tinylock-process-data-set ()
   "Update timer process data."
-  (setq tinylock-:auto-lock-data
+  (setq tinylock--auto-lock-data
         (list
          (current-time)
          (buffer-list)
@@ -354,14 +354,14 @@ Input:
 ;;;
 (defun tinylock-process-data-unchanged-p ()
   "Return t if timer data has not changed = No activity in."
-  (let* ((data          tinylock-:auto-lock-data)
+  (let* ((data          tinylock--auto-lock-data)
          (time          (nth 0 data))
          (buffer-list   (nth 1 data))
          (size-list     (nth 2 data))
          (list          (buffer-list))
          (i             0)
          unchanged)
-    (if (null tinylock-:auto-lock-data)
+    (if (null tinylock--auto-lock-data)
         (tinylock-process-data-set)
       ;; o if buffer list order is the same, the user may not have
       ;;   done any new work...
@@ -369,7 +369,7 @@ Input:
       ;;   user hasn't done any work in emacs.
       (condition-case nil
           (and (> (ti::date-time-difference (current-time) time)
-                  (- (* tinylock-:auto-lock-interval 60) 5)) ;5 sec timeframe
+                  (- (* tinylock--auto-lock-interval 60) 5)) ;5 sec timeframe
                (equal list buffer-list)
                (progn
                  (setq unchanged t)
@@ -400,10 +400,10 @@ Input:
 ;;; ----------------------------------------------------------------------
 ;;;
 (defun tinylock-add-history (passwd)
-  "Add login attempt to `tinylock-:history'.PASSWD is the attempted login password."
+  "Add login attempt to `tinylock--history'.PASSWD is the attempted login password."
   (let ((d (current-time-string)))
-    (setq tinylock-:history
-          (append  tinylock-:history
+    (setq tinylock--history
+          (append  tinylock--history
                    (list (list d passwd))))))
 
 ;;; ----------------------------------------------------------------------
@@ -431,9 +431,9 @@ Input:
   (interactive)
   (let ((i 0))
     (switch-to-buffer-other-window
-     (get-buffer-create tinylock-:buffer-login-history))
+     (get-buffer-create tinylock--buffer-login-history))
     (erase-buffer)
-    (dolist (elt tinylock-:history)
+    (dolist (elt tinylock--history)
       (insert (format "%2d: %-27s %s\n" i (nth 0 elt) (or (nth 1 elt) "<nil>") ))
       (setq i (1+ i)))))
 
@@ -441,7 +441,7 @@ Input:
 ;;;
 (defun tinylock-blank-control (&optional unblank)
   "Blank display or UNBLANK."
-  (let ((blank (get-buffer-create tinylock-:buffer-blank)))
+  (let ((blank (get-buffer-create tinylock--buffer-blank)))
     (cond
      (unblank
       (ti::kill-buffer-safe blank))
@@ -462,7 +462,7 @@ Input:
 ;;;
 (defun tinylock-lock-now ()
   "Lock up Emac."
-  (tinylock-lock tinylock-:auto-lock-password "Autolocking.. emacs " 'doit ))
+  (tinylock-lock tinylock--auto-lock-password "Autolocking.. emacs " 'doit ))
 
 ;;; ------------------------------------------------------------ &main ---
 ;;;
@@ -481,7 +481,7 @@ If LOCK-NOW is non-nil emacs is immediately locked with PSW."
 	;;  inside code This way maintainer sees at glance what it uses.
 	(key-msg        "This emacs is locked, enter key:")
 	(entry-err      "Unauthorized access.")
-	(wait           tinylock-:login-error-sleep)
+	(wait           tinylock--login-error-sleep)
 	(loop           t)
 	ans)
     (or msg
@@ -493,7 +493,7 @@ If LOCK-NOW is non-nil emacs is immediately locked with PSW."
                (null (y-or-n-p msg)))
           (throw 'done t))
       (save-window-excursion
-        (run-hooks 'tinylock-:before-lock-hook))
+        (run-hooks 'tinylock--before-lock-hook))
       ;;  It's better to save work, you may forgot the password :-/
       (save-some-buffers 'noAsk)
       (ti::compat-timer-list-control     'save)
@@ -506,7 +506,7 @@ If LOCK-NOW is non-nil emacs is immediately locked with PSW."
         (save-excursion
           ;; Now we make interrupting impossible, C-g won't work now on...
           (setq inhibit-quit t)
-          (setq tinylock-:history nil)  ;clear the log buffer
+          (setq tinylock--history nil)  ;clear the log buffer
           (message "TinyLock: Emacs LOCKED %s " (ti::date-standard-date))
           (sleep-for 1)
           (message "")
@@ -530,7 +530,7 @@ If LOCK-NOW is non-nil emacs is immediately locked with PSW."
       (setq quit-flag nil inhibit-quit nil) ; restore flags
       (ti::compat-timer-list-control 'restore)
       (tinylock-process-on)
-      (run-hooks 'tinylock-:after-lock-hook)
+      (run-hooks 'tinylock--after-lock-hook)
       nil)))
 
 ;;}}}
@@ -553,20 +553,20 @@ If LOCK-NOW is non-nil emacs is immediately locked with PSW."
   (when (fboundp 'timi-report-install-maybe)
     (ti::funcall 'timi-report-install-maybe)))
 
-(add-hook 'tinylock-:load-hook 'tinylock-process-on)
+(add-hook 'tinylock--load-hook 'tinylock-process-on)
 
 ;; Ask lock password at startup
 
-(if tinylock-:auto-lock-password
-    (remove-hook 'tinylock-:load-hook 'tinylock-auto-lock-set-password)
-  (add-hook 'tinylock-:load-hook 'tinylock-auto-lock-set-password))
+(if tinylock--auto-lock-password
+    (remove-hook 'tinylock--load-hook 'tinylock-auto-lock-set-password)
+  (add-hook 'tinylock--load-hook 'tinylock-auto-lock-set-password))
 
-(add-hook 'tinylock-:before-lock-hook 'tinylock-before-lock-function)
-(add-hook 'tinylock-:after-lock-hook  'tinylock-after-lock-function)
+(add-hook 'tinylock--before-lock-hook 'tinylock-before-lock-function)
+(add-hook 'tinylock--after-lock-hook  'tinylock-after-lock-function)
 
 ;;}}}
 
 (provide   'tinylock)
-(run-hooks 'tinylock-:load-hook)
+(run-hooks 'tinylock--load-hook)
 
 ;;; tinylock.el ends here
