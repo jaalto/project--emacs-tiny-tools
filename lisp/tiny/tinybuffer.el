@@ -44,9 +44,9 @@
 ;;  You don't need to copy these if you used the `require', but in order
 ;;  to trigger autoload you must insert these into your ~/.emacs. These
 ;;  are also the defaults bindings. If you use something other that these,
-;;  reset the `tinybuffer-:load-hook' variable.
+;;  reset the `tinybuffer--load-hook' variable.
 ;;
-;;    (setq tinybuffer-:load-hook nil)  ;; Don't load default bindings.
+;;    (setq tinybuffer--load-hook nil)  ;; Don't load default bindings.
 ;;
 ;;    ;;    If you use Emacs with X window, these could be suitable keys.
 ;;
@@ -103,7 +103,7 @@
 ;;      If you don't want default bindings, clear the installation with
 ;;      following command. This must be prior the 'require statement.
 ;;
-;;          (setq tinybuffer-:load-hook nil)
+;;          (setq tinybuffer--load-hook nil)
 ;;
 ;;      To change buffers forward or backward, the default setup would install
 ;;      following key bindings:
@@ -126,7 +126,7 @@
 ;;              "TinyIswitch: test           <dired> ~/tmp/test"
 ;;              "TinyIswitch: *Messages*     <fundamental-mode>"
 ;;
-;;      Have a look at `tinybuffer-:ignore-regex' which you can configure
+;;      Have a look at `tinybuffer--ignore-regex' which you can configure
 ;;      to ignore some buffers permanently.
 ;;
 ;;  Thanks
@@ -142,7 +142,7 @@
 
 (require 'tinylibm)
 
-(ti::package-defgroup-tiny TinyBuffer tinybuffer-: extensions
+(ti::package-defgroup-tiny TinyBuffer tinybuffer-- extensions
   "Changing buffers in current window.
         With this small package you can switch to next or previous buffer
         in a current window. If you only have small amount of buffers
@@ -152,13 +152,13 @@
 
 ;;; User configurable
 
-(defcustom tinybuffer-:load-hook '(tinybuffer-install-default-bindings)
+(defcustom tinybuffer--load-hook '(tinybuffer-install-default-bindings)
   "*Hook run when file has been loaded.
 Default value contains function `tinybuffer-install-default-bindings'."
   :type  'hook
   :group 'TinyBuffer)
 
-(defcustom tinybuffer-:ignore-regexp
+(defcustom tinybuffer--ignore-regexp
   (concat
    "^ "                                 ;hidden buffers
    "\\|completion\\|summary"
@@ -168,12 +168,12 @@ Default value contains function `tinybuffer-install-default-bindings'."
   :type  'regexp
   :group 'TinyBuffer)
 
-(defcustom tinybuffer-:sort-flag nil
+(defcustom tinybuffer--sort-flag nil
   "*Non-nil means that buffers are switched in sorted order."
   :type  'boolean
   :group 'TinyBuffer)
 
-(defcustom tinybuffer-:iswitch-to-buffer-keys  '(?< ?>)
+(defcustom tinybuffer--iswitch-to-buffer-keys  '(?< ?>)
   "*Keys to scroll buffers backward and forward in iswitch mode.
 See \\[tinybuffer-iswitch-to-buffer]."
   :type '(list
@@ -181,7 +181,7 @@ See \\[tinybuffer-iswitch-to-buffer]."
           (character :tag "Forward"))
   :group 'TinyBuffer)
 
-(defcustom tinybuffer-:iswitch-show-directory-flag  t
+(defcustom tinybuffer--iswitch-show-directory-flag  t
   "*Non-nil means that directory name is shown in iswitch mode.
 See \\[tinybuffer-iswitch-to-buffer]."
   :type  'boolean
@@ -189,7 +189,7 @@ See \\[tinybuffer-iswitch-to-buffer]."
 
 ;;; Internal variables
 
-(defvar tinybuffer-:buffer-list  nil
+(defvar tinybuffer--buffer-list  nil
   "Global buffer list for `tinybuffer-iswitch-to-buffer'.")
 
 ;;}}}
@@ -199,25 +199,25 @@ See \\[tinybuffer-iswitch-to-buffer]."
 ;;;
 (defmacro tinybuffer-iswitch-next ()
   "Return next buffer in list."
-  `(let* ((first (car tinybuffer-:buffer-list))
-          (rest  (cdr tinybuffer-:buffer-list))
+  `(let* ((first (car tinybuffer--buffer-list))
+          (rest  (cdr tinybuffer--buffer-list))
           (ret   (car rest)))
      (setq list rest)
      (ti::nconc list first)                     ;add to the end
-     (setq tinybuffer-:buffer-list list)        ;update list
+     (setq tinybuffer--buffer-list list)        ;update list
      ret))
 
 ;;; ----------------------------------------------------------------------
 ;;;
 (defmacro tinybuffer-iswitch-previous ()
   "Return previous buffer in list."
-  `(let* ((rev   (reverse tinybuffer-:buffer-list))
+  `(let* ((rev   (reverse tinybuffer--buffer-list))
           (last  (car rev))
           (rest  (reverse (cdr rev)))
           (ret   last))
      (setq list rest)
      (push last list)                           ;add to the end
-     (setq tinybuffer-:buffer-list list)        ;update list
+     (setq tinybuffer--buffer-list list)        ;update list
      ret))
 
 ;;; ----------------------------------------------------------------------
@@ -260,10 +260,10 @@ See \\[tinybuffer-iswitch-to-buffer]."
 (defun tinybuffer-buffer-filter (&optional blist)
   "Filter BLIST, which defaults to `buffer-list'.
 References:
-  `tinybuffer-:ignore-regexp'"
+  `tinybuffer--ignore-regexp'"
   (let (ret)
     (dolist (elt (or blist (buffer-list))  )
-      (if (not (string-match tinybuffer-:ignore-regexp
+      (if (not (string-match tinybuffer--ignore-regexp
                              (buffer-name elt)))
           (push elt ret)))
     ret))
@@ -320,12 +320,12 @@ References:
 ;;;
 (defun tinybuffer-buffer-list-next (&optional reverse)
   "Switch to next buffer in list, skipping unwanted ones. Optionally REVERSE.
-See variable `tinybuffer-:ignore-regexp'."
-  (let ((re  tinybuffer-:ignore-regexp)
+See variable `tinybuffer--ignore-regexp'."
+  (let ((re  tinybuffer--ignore-regexp)
 	list
 	go)
     (cond
-     (tinybuffer-:sort-flag
+     (tinybuffer--sort-flag
       (setq list (tinybuffer-sort-buffer-list reverse)))
      (reverse
       (setq list (reverse (buffer-list))))
@@ -340,20 +340,20 @@ See variable `tinybuffer-:ignore-regexp'."
         (message
 	 (concat
 	  "TinyBuffer: No buffers to circulate; "
-	  "see `tinybuffer-:ignore-regexp'")))
+	  "see `tinybuffer--ignore-regexp'")))
     (if go
         (switch-to-buffer go))))
 
 ;;; ----------------------------------------------------------------------
 ;;;
 (defun tinybuffer-init-buffer-list  ()
-  "Initialize global variable `tinybuffer-:buffer-list'."
+  "Initialize global variable `tinybuffer--buffer-list'."
   (let ((list (tinybuffer-buffer-filter)))
-    (if tinybuffer-:sort-flag
+    (if tinybuffer--sort-flag
         (setq list (tinybuffer-start-list
                     (current-buffer)
                     (tinybuffer-sort-buffer-list-1 list))))
-    (setq tinybuffer-:buffer-list list)))
+    (setq tinybuffer--buffer-list list)))
 
 ;;}}}
 ;;{{{ code: interactive
@@ -372,10 +372,10 @@ Note:
 
 References:
 
-  `tinybuffer-:iswitch-to-buffer-keys'    keys to scroll buffer list"
+  `tinybuffer--iswitch-to-buffer-keys'    keys to scroll buffer list"
   (interactive)
-  (let* ((keys      tinybuffer-:iswitch-to-buffer-keys)
-         (show-dir  tinybuffer-:iswitch-show-directory-flag)
+  (let* ((keys      tinybuffer--iswitch-to-buffer-keys)
+         (show-dir  tinybuffer--iswitch-show-directory-flag)
          (go-list   '(?\C-m ?\t ?\ ?\e ?\q ?\Q))
          (quit-list '(?\e ?\q ?\Q))
          (key-back  (nth 0 keys))
@@ -451,15 +451,15 @@ References:
 (defun tinybuffer-sort-mode-toggle ()
   "Sort mode on/off."
   (interactive)
-  (setq tinybuffer-:sort-flag (not tinybuffer-:sort-flag))
+  (setq tinybuffer--sort-flag (not tinybuffer--sort-flag))
   (message (concat "TinyBuffer: sort mode "
-                   (if tinybuffer-:sort-flag
+                   (if tinybuffer--sort-flag
                        "on"
                      "off"))))
 
 ;;}}}
 
 (provide   'tinybuffer)
-(run-hooks 'tinybuffer-:load-hook)
+(run-hooks 'tinybuffer--load-hook)
 
 ;;; tinybuffer.el ends here
