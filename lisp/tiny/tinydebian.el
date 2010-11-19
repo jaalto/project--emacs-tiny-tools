@@ -8,7 +8,6 @@
 ;; Maintainer:      Jari Aalto
 ;; Created:         2001
 ;;
-;; To get information on this program, call M-x tinydebian-version.
 ;; Look at the code with folding.el
 
 ;; COPYRIGHT NOTICE
@@ -42,10 +41,6 @@
 ;;   If you have any questions about this Emacs package:
 ;;
 ;;      M-x tinydebian-submit-bug-report    send question, feedback, bugs
-;;
-;;  To read the documentation after file has been loaded, call
-;;
-;;      M-x tinydebian-version
 
 ;;}}}
 ;;{{{ Documentation
@@ -124,7 +119,7 @@
 
 ;;{{{ setup: libraries
 
-(defconst tinydebian-:version-time "2010.1118.1242"
+(defconst tinydebian-:version-time "2010.1119.1429"
   "Last edited time.")
 
 (require 'tinylibm)
@@ -975,32 +970,6 @@ to generate updated list."
 	  (pop-to-buffer buffer)
 	  (erase-buffer)
 	  (insert (pp (nreverse list))))))))
-
-;;}}}
-;;{{{ setup: -- version
-
-;;; ....................................................... &v-version ...
-
-;;;###autoload (autoload 'tinydebian-version "tinydebian" "Display commentary." t)
-(eval-and-compile
-  (ti::macrof-version-bug-report
-   "tinydebian.el"
-   "tinydebian"
-   tinydebian-:version-id
-   "$Id: tinydebian.el,v 1.97 2007/08/04 10:09:46 jaalto Exp $"
-   '(tinydebian-version-id
-     tinydebian-:load-hook
-     tinydebian-:font-lock-keywords-adaptive-date
-     tinydebian-:bin-dpkg
-     tinydebian-:severity-list
-     tinydebian-:severity-selected
-     tinydebian-:tags-list)))
-
-(defvar tinydebian-:bts-extra-headers
-  (format "X-Bug-User-Agent: Emacs %s and tinydebian.el %s\n"
-	  emacs-version
-	  tinydebian-:version-time)
-  "Header to add to BTS control mails.")
 
 ;;}}}
 ;;{{{ Install: bindings
