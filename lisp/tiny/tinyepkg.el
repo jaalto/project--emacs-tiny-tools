@@ -223,7 +223,7 @@
 ;;
 ;;	The rest of the fields are optional, but highly recommended:
 ;;
-;;          Depends: <'emacs[-VERSION]', 'xemacs[-VERSION]', 'pkg[-VER]'>
+;;          Depends: <[x]emacs [(>= VERSION)], package ...>
 ;;	    Conflicts: <like Depends field>
 ;;          Status: <kewords; remarks, see below>
 ;;          Homepage: <URL to upstream project page>
@@ -296,7 +296,7 @@
 
 ;;; Code:
 
-(defconst epackage-version-time "2010.1119.1334"
+(defconst epackage-version-time "2010.1119.1337"
   "*Version of last edit.")
 
 (defcustom epackage--load-hook nil
