@@ -109,10 +109,10 @@
 
 (eval-when-compile (require 'advice))
 
-(ti::package-defgroup-tiny TinyPad tinypad-: tools
+(ti::package-defgroup-tiny TinyPad tinypad-- tools
   "Emulate Windows notepad with extra menu")
 
-(defcustom tinypad-:load-hook nil
+(defcustom tinypad--load-hook nil
   "*Hook run when file has been loaded."
   :type  'hook
   :group 'TinyPad)
@@ -126,7 +126,7 @@
 
 (eval-and-compile
   (ti::macrof-minor-mode-wizard
-   "tinypad-" " TinyPad" nil  "TinyPad" 'TinyPad "tinypad-:"
+   "tinypad-" " TinyPad" nil  "TinyPad" 'TinyPad "tinypad--"
    "Emulate Windows Notepad (tm).
 This mode is global to all buffers; allthough it is a minor mode.
 
@@ -138,7 +138,7 @@ how you can make your Alt key produce Meta, so that the keybindings work
 like in Windows.
 
 Mode description:
-\\{tinypad-:mode-prefix-map}"
+\\{tinypad--mode-prefix-map}"
 
    "Notepad emulation menu"
 
@@ -154,7 +154,7 @@ Mode description:
        (tinypad-mode-action)))
    "Tiny Notepad mode"
    (list                                ;arg 10
-    tinypad-:mode-easymenu-name
+    tinypad--mode-easymenu-name
     (list
      "F)ile"
      ["N)ew"                 erase-buffer                t]
@@ -191,7 +191,7 @@ Mode description:
      ["A)bout Tinypad"       tinypad-version             t]
      ["V)ersion, mode desc." tinypad-mode-help           t]))
    (progn
-;;;    (set map (setq tinypad-:mode-map (make-keymap)))
+;;;    (set map (setq tinypad--mode-map (make-keymap)))
      (define-key   root-map [(meta f) (n)]  'tinypad-erase-buffer)
      (define-key   root-map [(meta f) (o)]  'find-file)
      (define-key   root-map [(meta f) (s)]  'save-buffer)
@@ -263,7 +263,7 @@ Mode description:
 ;;; ----------------------------------------------------------------------
 ;;;
 (defun tinypad-find-file-hook  ()
-  "Turn on tipad mode if `tinypad-:mode-global' is non-nil."
+  "Turn on tipad mode if `tinypad--mode-global' is non-nil."
   (when (and (get 'tinypad-mode 'global)
              (null tinypad-mode))
     (setq tinypad-mode 1)))
@@ -273,9 +273,9 @@ Mode description:
 (defun tinypad-mode-action ()
   "Activate `tinypad-mode' on or off everywhere, depending on var `tinypad-mode'."
   (unless (get 'tinypad-mode 'self-call)
-    (run-hooks 'tinypad-:mode-define-keys-hook))
+    (run-hooks 'tinypad--mode-define-keys-hook))
   (let ((i 0)
-	tinypad-:mode-define-keys-hook)
+	tinypad--mode-define-keys-hook)
     (unwind-protect
         (progn
           ;;  Raise the flag to prevent calling us
@@ -295,9 +295,9 @@ Mode description:
 
 ;;}}}
 
-(add-hook 'tinypad-:mode-define-keys-hook 'tinypad-mode-define-keys)
+(add-hook 'tinypad--mode-define-keys-hook 'tinypad-mode-define-keys)
 
 (provide   'tinypad)
-(run-hooks 'tinypad-:load-hook)
+(run-hooks 'tinypad--load-hook)
 
 ;;; tinypad.el ends here
