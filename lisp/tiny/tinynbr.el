@@ -81,10 +81,10 @@
 
 (require 'tinylibm)
 
-(ti::package-defgroup-tiny TinyNbr tinynbr-: tools
+(ti::package-defgroup-tiny TinyNbr tinynbr-- tools
   "Number conversion minor mode oct/bin/hex.")
 
-(defcustom tinynbr-:load-hook nil
+(defcustom tinynbr--load-hook nil
   "*Hook run when file has been loaded."
   :type  'hook
   :group 'TinyNbr)
@@ -116,18 +116,18 @@
 
 (eval-and-compile
   (ti::macrof-minor-mode-wizard
-   "tinynbr-" " Tnbr" "z" "Nbr" 'Tnbr "tinynbr-:"
+   "tinynbr-" " Tnbr" "z" "Nbr" 'Tnbr "tinynbr--"
    "Simple number conversion minor mode.
 
 Mode description:
 
-\\{tinynbr-:mode-prefix-map}"
+\\{tinynbr--mode-prefix-map}"
 
    "TinyNbr"
    nil
    "Number conversion mode"
    (list                                ;arg 10
-    tinynbr-:mode-easymenu-name
+    tinynbr--mode-easymenu-name
     ["int to hex"  tinynbr-int-to-hex  t]
     ["int to oct"  tinynbr-int-to-bin  t]
     ["int to bin"  tinynbr-int-to-oct  t]
@@ -217,8 +217,8 @@ Mode description:
 
 ;;}}}
 
-(add-hook  'tinynbr-:mode-hook 'tinynbr-mode-define-keys)
+(add-hook  'tinynbr--mode-hook 'tinynbr-mode-define-keys)
 (provide   'tinynbr)
-(run-hooks 'tinynbr-:load-hook)
+(run-hooks 'tinynbr--load-hook)
 
 ;;; tinynbr.el ends here
