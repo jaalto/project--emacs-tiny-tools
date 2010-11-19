@@ -9,7 +9,6 @@
 ;; Author:          Jari Aalto
 ;; Maintainer:      Jari Aalto
 ;;
-;; To get information on this program run M-x tinymail-version
 ;; Look at the code with folding.el
 
 ;; COPYRIGHT NOTICE
@@ -780,7 +779,6 @@
 (autoload 'mml-secure-message-encrypt-pgpmime  "mml")
 
 (eval-and-compile
-  (ti::package-use-dynamic-compilation)
   (ti::package-require-mail-abbrevs)
 
   ;;  forward declarations for byte compiler
@@ -807,10 +805,6 @@
 
   (autoload 'mail-header-from   "nnheader" "" nil 'macro)
   (autoload 'mail-header-date   "nnheader" "" nil 'macro))
-
-(eval-when-compile
-  ;; (require 'advice)
-  (ti::package-use-dynamic-compilation))
 
 (ti::package-defgroup-tiny TinyMail tinymail-: mail
   "Some mail additions: dynamic Fcc, Cc
