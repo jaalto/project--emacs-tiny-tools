@@ -165,9 +165,9 @@ Mode description:
 ;;;###autoload (autoload 'tinynbr-oct-to-int    "tinynbr" "" t)
 ;;;###autoload (autoload 'tinynbr-bin-to-int    "tinynbr" "" t)
 
-(mapcar
- (function
-  (lambda (x)
+(dolist (x  '((hex 16)
+	      (oct 8)
+	      (bin 2)))
     (let ((sym1  (intern (format "tinynbr-%s-to-int"  (car x))))
           (sym2  (intern (format "tinynbr-int-to-%s"  (car x))))
           (sym3  (intern (format "int-to-%s-string" (car x))))
@@ -213,11 +213,7 @@ Mode description:
                  "If prefix arg INSERT is non-nil, insert result to buffer."
                  (interactive "P")
                  (,sym1 insert 'reverse)))
-      (eval def))))
- '(
-   (hex 16)
-   (oct 8)
-   (bin 2)))
+      (eval def)))
 
 ;;}}}
 
