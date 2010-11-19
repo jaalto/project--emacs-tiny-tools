@@ -3918,7 +3918,7 @@ Input:
 If FILE is nil, then return first existing directory in DIR-LIST.
 
 Note: directory list passed can contain non-string entries. They are ignored."
-  (let* (ret)
+  (let (ret)
     (dolist (dir dir-list)
       (when (stringp dir)
 	(when (string-match "[/\\]$" dir) ;Remove trailing slash
@@ -3935,15 +3935,15 @@ Note: directory list passed can contain non-string entries. They are ignored."
 (defsubst tinypath-path-ok-this-emacs-p (path)
   "Check that /emacs path is for Emacs and /xemacs path is for XEmacs.
 Return t if path is ok for current Emacs."
-  (let* ((no-emacs-regexp (if (inline tinypath-:xemacs-p)
-			      ".*[/\\]emacs"
-			    ".*[/\\]xemacs"))
-	 (this-emacs-regexp (if (inline tinypath-:xemacs-p)
-				".*[/\\]xemacs"
-			      ".*[/\\]emacs"))
-	 (correct-emacs   t)
-	 len1
-	 len2)
+  (let ((no-emacs-regexp (if (inline tinypath-:xemacs-p)
+			     ".*[/\\]emacs"
+			   ".*[/\\]xemacs"))
+	(this-emacs-regexp (if (inline tinypath-:xemacs-p)
+			       ".*[/\\]xemacs"
+			     ".*[/\\]emacs"))
+	(correct-emacs   t)
+	len1
+	len2)
     (when (string-match no-emacs-regexp path)
       (setq len1 (length (match-string 0 path)))
       ;;  If path contains both the word Emacs and XEmacs, then it
@@ -4027,7 +4027,7 @@ Return t if path is ok for current Emacs."
 ;;;
 (defun tinypath-subdirectory-list (path)
   "Return all subdirectories under PATH."
-  (let* (list)
+  (let (list)
     (dolist (elt (directory-files path 'absolute) )
       (when (and (not (string-match "\\.\\.?$" elt)) ;; skip . and ..
 		 (file-directory-p elt)) ;; take only directories
@@ -4041,7 +4041,7 @@ Return t if path is ok for current Emacs."
 ;;;
 (defun tinypath-self-location-load-history ()
   "Return `load-history' entry"
-  (let* (file)
+  (let (file)
     (dolist (elt load-history)
       (setq file (car elt))
       (when (and (stringp file)
@@ -4054,7 +4054,7 @@ Return t if path is ok for current Emacs."
 (defun tinypath-self-location ()
   "If package was loaded with absolute path, return path.
 Uses `load-history' and `load-path' information."
-  (let* ((ret (tinypath-self-location-load-history)))
+  (let ((ret (tinypath-self-location-load-history)))
     (unless ret ;; No luck with load-history, try load-path
       (dolist (path load-path)
 	(setq path (file-name-as-directory (expand-file-name path)))
@@ -4082,14 +4082,14 @@ Uses `load-history' and `load-path' information."
 ;;;
 (defun tinypath-autoload-file-name (function)
   "Load package if FUNCTION is in autoload state."
-  (let* ((str (prin1-to-string (symbol-function function))))
+  (let ((str (prin1-to-string (symbol-function function))))
     (when (string-match "^(autoload[ \t]+\"\\([^\"]+\\)" str)
       (setq str (match-string 1 str))
       ;;  there is one problem. prin1-to-string doubles every backslash
       ;;  c:\\\\dir\\\\ ... (XEmacs problem)
       (if (string-match "/" str)
 	  str
-	(let* ((final ""))
+	(let ((final ""))
 	  ;; It's easier and faster to do this in buffer, than
 	  ;; parsing STRING
 	  (tinypath-with-temp-buffer
@@ -4108,7 +4108,7 @@ Uses `load-history' and `load-path' information."
 (defun tinypath-autoload-require (function &optional noerr nomsg)
   "Load package if FUNCTION is in autoload state.
 NOERR NOMSG are parameters to `load'."
-  (let* ((file (tinypath-autoload-file-name function)))
+  (let ((file (tinypath-autoload-file-name function)))
     (when file
       (load file noerr nomsg))))
 
@@ -4150,24 +4150,24 @@ NOERR NOMSG are parameters to `load'."
 ;;;
 (defun tinypath-external-output-parse-1-cache ()
   "Parse files in format `tinypath-:cache'."
-  (let* ((i 0)
-	 (personal-count 0) ;; User files 0 .. 2000
-	 (other-count 2000)
-	 (emacs-count 5000)
-	 (font-lock-mode nil)
-	 (lazy-lock-mode nil)
-	 (regexp (concat "^LISP-FILE[ \t]+"
-			 "\\("
-			 "\\([^ \t\r\n]+[\\/]\\)"
-			 "\\([^ \t\r\n]+\\)"
-			 "\\)"))
-	 path
-	 dir
-	 file
-	 emacs
-	 other
-	 personal
-	 elt)
+  (let ((i 0)
+	(personal-count 0) ;; User files 0 .. 2000
+	(other-count 2000)
+	(emacs-count 5000)
+	(font-lock-mode nil)
+	(lazy-lock-mode nil)
+	(regexp (concat "^LISP-FILE[ \t]+"
+			"\\("
+			"\\([^ \t\r\n]+[\\/]\\)"
+			"\\([^ \t\r\n]+\\)"
+			"\\)"))
+	path
+	dir
+	file
+	emacs
+	other
+	personal
+	elt)
     (goto-char (point-min))
     (while (re-search-forward regexp nil t)
       (setq path (match-string 1)
@@ -4207,10 +4207,10 @@ NOERR NOMSG are parameters to `load'."
 ;;;
 (defun tinypath-external-output-parse-1 (id)
   "Parse ID from current buffer. See `tinypath-external-helper'."
-  (let* ((case-fold-search t)
-	 (regexp (concat "^" id "[ \t]+\\([^ \t\r\n]+\\)"))
-	 string
-	 list)
+  (let ((case-fold-search t)
+	(regexp (concat "^" id "[ \t]+\\([^ \t\r\n]+\\)"))
+	string
+	list)
     (goto-char (point-min))
     (while (re-search-forward regexp nil t)
       (setq string (match-string 1))
@@ -4225,9 +4225,9 @@ NOERR NOMSG are parameters to `load'."
 ;;;
 (defun tinypath-external-output-parse-main ()
   "Parse current buffer. See'`tinypath-external-helper'."
-  (let* (list
-	 data
-	 name)
+  (let (list
+	data
+	name)
     ;;  Speedier processing
     (buffer-disable-undo)
     ;;  Clear text properties so that the data structures are clean
@@ -4264,9 +4264,9 @@ NOERR NOMSG are parameters to `load'."
   "Return location of BINARY. Look from the installation dir.
 Look up `exec-path' and the kit installation directory. See
 Manual \\[tinypath-version] for more."
-  (let* ((path  (tinypath-executable-find file))
-	 (ret   path)
-	 self)
+  (let ((path  (tinypath-executable-find file))
+	(ret   path)
+	self)
     (when (and (null path)
 	       (setq self (tinypath-self-location)))
       ;;  PATH/to/.../lisp/tiny/<tinypath.el>
@@ -4413,7 +4413,7 @@ Return:
 ;;;
 (defun tinypath-external-setup-cache (data)
   "Set `tinypath-:cache from DATA '((cache (DATA) ..)."
-  (let* ((list (assq 'cache data)))
+  (let ((list (assq 'cache data)))
     (when list
       (setq list (cdr list))
       (setq tinypath-:cache list))))
@@ -4452,8 +4452,8 @@ Return:
 (defun tinypath-external-load-path-lookup-regexp ()
   "Return candidate `load-path' lookup regexp.
 This is combination of `load-path' and `tinypath-:load-path-root'."
-  (let* ((lisp-roots (append load-path
-			     tinypath-:load-path-root)))
+  (let ((lisp-roots (append load-path
+			    tinypath-:load-path-root)))
     ;; Make lookup regexp
     (mapconcat
      (function
@@ -4467,9 +4467,9 @@ This is combination of `load-path' and `tinypath-:load-path-root'."
 ;;;
 (defun tinypath-external-setup-parse-data (data)
   "Parse external tool's DATA structure."
-  (let* ((lisp-lookup (tinypath-external-load-path-lookup-regexp))
-	 correct-emacs
-	 type)
+  (let ((lisp-lookup (tinypath-external-load-path-lookup-regexp))
+	correct-emacs
+	type)
     (when data
       (dolist (elt data)
 	(setq type (car elt))
@@ -4571,10 +4571,10 @@ Input:
   PACKAGE   vt100
   CHOICES   '(\"vt100\" \".el.gz\" \".el\" ...)
   REGEXP    If string, ignore files matching this regexp. E.g. '\.elc'."
-  (let* ((fid  "tinypath-cache-p-1-new-cache-lookup")
-	 (file package)
-	 try
-	 ret)
+  (let ((fid  "tinypath-cache-p-1-new-cache-lookup")
+	(file package)
+	try
+	ret)
     ;; Remove extension
     (when (string-match "^\\(.*\\)\\(\\.elc?\\)$" package)
       (setq file (match-string 1 package))
@@ -4721,7 +4721,7 @@ This is converted into search:
 
    vt100"
   ;; Do not search absolute paths
-  (let* ((fid "tinypath-cache-p-1-new "))
+  (let ((fid "tinypath-cache-p-1-new "))
     (tinypath-verbose-macro 10
       (message "%s Searching for... %s" fid package))
     (cond
@@ -4967,7 +4967,7 @@ References:
   `tinypath-:cache-expiry-days'."
   (when (and (file-exists-p file)
 	     (integerp tinypath-:cache-expiry-days))
-    (let* ((days  (tinypath-days-old file)))
+    (let ((days (tinypath-days-old file)))
       (when (> days tinypath-:cache-expiry-days)
 	(tinypath-verbose-macro 2
 	  (message "TinyPath: Cache is too old: %s days" days))
@@ -5012,7 +5012,7 @@ References:
 ;;;
 (defun tinypath-cache-file-load ()
   "Load cache."
-  (let* (stat)
+  (let (stat)
     (dolist (file (tinypath-cache-file-name-all))
       (setq stat (file-exists-p file))
       (tinypath-verbose-macro 2
@@ -5030,7 +5030,7 @@ References:
 (defun tinypath-cache-file-find-file ()
   "Display cache by calling `find-file'."
   (interactive)
-  (let* ((file (tinypath-cache-file-name)))
+  (let ((file (tinypath-cache-file-name)))
     (tinypath-verbose-macro 2
       (message "TinyPath: find-file cache %s" file))
     (find-file file)))
@@ -5039,8 +5039,8 @@ References:
 ;;;
 (defun tinypath-cache-file-need-sync-p ()
   "Load cache. If cache needs synchronization, return non-nil."
-  (let* (ret
-	 found)
+  (let (ret
+	found)
     ;;  Using a simple variable is faster than
     ;;  checking (if load-path   , because load-path may be very big
     ;;
@@ -5147,10 +5147,10 @@ Returned list in the above case is '(\"Tar\" \"Fileutils\")."
     (put 'tinypath-info-files-in-directory
 	 'compress-extensions
 	 (tinypath-file-extension-compressed)))
-  (let* ((files      (directory-files dir))
-	 (extensions (cons "" (get 'tinypath-info-files-in-directory
-				   'compress-extensions)))
-	 ret)
+  (let ((files      (directory-files dir))
+	(extensions (cons "" (get 'tinypath-info-files-in-directory
+				  'compress-extensions)))
+	ret)
     (dolist (file files)
       (when (catch 'exit
 	      (dolist (ext extensions)
@@ -5178,8 +5178,8 @@ Returned list in the above case is '(\"Tar\" \"Fileutils\")."
 ;;;
 (defun tinypath-info-directory-entry-p (entry)
   "Search for info ENTRY."
-  (let* ((point (point)) ;; Faster than using save-excursion.
-	 ret)
+  (let ((point (point)) ;; Faster than using save-excursion.
+	ret)
     (goto-char (point-min))
     ;;  This check relies on using the same ENTRY for filename
     ;;
@@ -5233,9 +5233,9 @@ Return:
       (setq buffer-read-only nil)
       (tinypath-verbose-macro 1
 	(message "TinyPath: [INFO] found %s" file))
-      (let* ((entries (or info-files
-			  (tinypath-info-files-in-directory
-			   (file-name-directory file)))))
+      (let ((entries (or info-files
+			 (tinypath-info-files-in-directory
+			  (file-name-directory file)))))
 	(dolist (entry entries)
 	  (unless (tinypath-info-directory-entry-p entry)
 	    (goto-char (point-max))
@@ -5267,7 +5267,7 @@ Return:
 ;;;
 (defun tinypath-info-handler-DIR (dir)
   "Handle creating/updating central info file DIR `dir' to current directory."
-  (let* ((dir-file (tinypath-info-file-DIR dir)))
+  (let ((dir-file (tinypath-info-file-DIR dir)))
     (unless (file-exists-p dir-file)  ;No central dir, generate one...
       (tinypath-verbose-macro 3
 	(message "TinyPath: [INFO] missing central `dir' generating %s"
@@ -5301,10 +5301,10 @@ Return
   ;;
   (if (interactive-p)
       (tinypath-info-initialize))
-  (let* ((list     (tinypath-info-files-in-directory dir))
-	 (dir-file (concat (file-name-as-directory dir) "dir"))
-	 cleanup
-	 done)
+  (let ((list     (tinypath-info-files-in-directory dir))
+	(dir-file (concat (file-name-as-directory dir) "dir"))
+	cleanup
+	done)
     (when (and (null list)
 	       (interactive-p))
       (message "Tinypath: No info file candidates in %s" dir))
@@ -5392,8 +5392,8 @@ Return
 
   t   if any changes made."
   (interactive)
-  (let* (seen
-	 done)
+  (let (seen
+	done)
     (or list
 	(setq list (append (tinypath-Info-default-directory-list)
 			   tinypath-:Info-default-directory-list)))
@@ -5433,9 +5433,9 @@ E.g., if you want to calculate days; you'd do
 ;;;
 (defun tinypath-time-results (buffer)
   "Write load time results to BUFFER. Return buffer pointer."
-  (let* (time
-	 min
-	 sec)
+  (let (time
+	min
+	sec)
     (with-current-buffer (get-buffer-create buffer)
       (erase-buffer)
       (dolist (elt tinypath-:time-data)
@@ -5480,7 +5480,7 @@ E.g., if you want to calculate days; you'd do
 (put 'tinypath-time-macro 'edebug-form-spec '(body))
 (defmacro tinypath-time-macro (package &rest body)
   "Record PACKAGE timing to `tinypath-:time-data' and run BODY."
-  `(let* ((start-time (current-time)))
+  `(let ((start-time (current-time)))
      (prog1
 	 (progn ,@body)
        (tinypath-time-record ,package start-time))))
@@ -5614,9 +5614,9 @@ Return
   '(path ..)    If option ALL was set."
   (unless (get 'tinypath-cache-p-1 'extension-cache)
     (tinypath-cache-p-1-initialize))
-  (let* (case-fold-search ;; Case sensitive match.
-	 file
-	 ret)
+  (let (case-fold-search ;; Case sensitive match.
+	file
+	ret)
     (tinypath-verbose-macro 5
       (message
        (concat
@@ -5631,9 +5631,9 @@ Return
 		     (not (string-match
 			   tinypath-:load-path-ignore-regexp
 			   dir))))
-	(let* ((try     (if  (string-match "\\.elc?$" package)
-			    (file-name-sans-extension package)
-			  package))
+	(let ((try (if  (string-match "\\.elc?$" package)
+		       (file-name-sans-extension package)
+		     package))
 	       (choices (tinypath-cache-p-1-extensions package))
 	       (files   (directory-files
 			 dir
@@ -5775,9 +5775,9 @@ lisp code. With it, the check will spend much more time."
 - User paths at the beginning (HOME dir paths)
 - Next anything in any order (site-lisp)
 - Last core Emacs paths."
-  (let* (personal
-	 emacs
-	 other)
+  (let (personal
+	emacs
+	other)
     (dolist (path load-path)
       (cond
        ((tinypath-load-path-emacs-distribution-p path)
@@ -5838,11 +5838,9 @@ LIST can contains single elements or lists:
 	(tinypath-verbose-macro 3
 	  (message "TinyPath: root does NOT exist: %s" root))
       (setq root (tinypath-expand-file-name root))
-
       (tinypath-verbose-macro 3
 	(message "TinyPath: root %s" root))
-
-      (let* ((list (tinypath-subdirectory-list root)))
+      (let ((list (tinypath-subdirectory-list root)))
 	(when (tinypath-path-ok-p root)
 	  (tinypath-verbose-macro 5
 	    (message "TinyPath: adding        %s" root))
@@ -5869,9 +5867,9 @@ LIST can contains single elements or lists:
 (defun tinypath-load-path-remove (regexp)
   "Remove any matching REGEXP from `load-path'.
 Return t if removed something."
-  (let* ((spare load-path)
-	 list
-	 status)
+  (let ((spare load-path)
+	list
+	status)
     (dolist (elt load-path)
       (if (string-match regexp elt)
 	  (setq status t)
@@ -5891,7 +5889,7 @@ Return t if removed something."
 (defun tinypath-load-path-remove-cache (regexp)
   "Remove any matching REGEXP from `tinypath-:cache'.
 Return t if removed something."
-  (let* ((spare tinypath-:cache)
+  (let ((spare tinypath-:cache)
 	 status)
     (dolist (elt tinypath-:cache)
       (when (string-match regexp
@@ -5989,10 +5987,10 @@ You should call `tinypath-cache-setup-scan' after this function."
 ;;;
 (defun tinypath-cache-setup-scan (&optional traditional)
   "Build the cache either by using external program or Emacs Lisp."
-  (let* ((external (not traditional))
-	 ;;  While loading this package Cygwin XEmacs garbage collects like mad.
-	 ;;  Ease it up for a while. This is 30Meg
-	 (gc-cons-threshold (* 1024 1024 30)))
+  (let ((external (not traditional))
+	;;  While loading this package Cygwin XEmacs garbage collects like mad.
+	;;  Ease it up for a while. This is 30Meg
+	(gc-cons-threshold (* 1024 1024 30)))
     (or (and external
 	     (tinypath-external-setup))
 	(progn
@@ -6202,20 +6200,20 @@ References:
   `tinypath-:cache-duplicate-report-hook'
   `tinypath-cache-problem-report'."
   (interactive "P")
-  (let* ((ignore-functions
-	  tinypath-:cache-duplicate-report-ignore-functions)
-	 (report-buffer tinypath-:report-buffer)
-	 accept
-	 list
-	 stat
-	 size
-	 date
-	 list-tmp
-	 list-dup
-	 file
-	 path
-	 ptr
-	 seen)
+  (let ((ignore-functions
+	 tinypath-:cache-duplicate-report-ignore-functions)
+	(report-buffer tinypath-:report-buffer)
+	accept
+	list
+	stat
+	size
+	date
+	list-tmp
+	list-dup
+	file
+	path
+	ptr
+	seen)
     ;; .................................................... build list ...
     ;;  result: ( (FILE . (PATH PATH PATH ..)) (FILE . (PATH ..)) )
     (dolist (elt tinypath-:cache)
@@ -6290,8 +6288,8 @@ References:
 (defun tinypath-report-timing-summary ()
   "Gather timing summary from *Message* buffer if `tinypath-:verbose-timing'."
   (interactive)
-  (let* ((buffer (tinypath-message-get-buffer))
-	 string)
+  (let ((buffer (tinypath-message-get-buffer))
+	string)
     (pop-to-buffer buffer)
     (goto-char (point-min))
     (while (re-search-forward "^TinyPath: load time.*" nil t)
@@ -6327,7 +6325,7 @@ References:
 (defun tinypath-report-mode-find-file ()
   "Load file in current line to Emacs."
   (interactive)
-  (let* ((file (tinypath-report-mode-file-name)))
+  (let ((file (tinypath-report-mode-file-name)))
     (cond
      ((null file)
       (message "TinyPath: No file in this line.")
@@ -6359,7 +6357,7 @@ References:
       (read-file-name "Dired: " dir))))
   (unless dir
     (error "TinyPath: DIR missing: `%s'" dir))
-  (let* ((dired (tinypath-ti::dired-buffer dir)))
+  (let ((dired (tinypath-ti::dired-buffer dir)))
     (cond
      (dired
       (pop-to-buffer dired))
@@ -6377,8 +6375,8 @@ References:
   "Delete file in the current line. FORCE deleting.
 See also `tinypath-report-mode-delete-file-noconfirm'."
   (interactive "P")
-  (let* ((file (tinypath-report-mode-file-name))
-	 (point (point)))
+  (let ((file (tinypath-report-mode-file-name))
+	(point (point)))
     (cond
      ((null file)
       (message "TinyPath: No file in this line."))
@@ -6519,10 +6517,10 @@ Warning:
   packages or if you have added new Lisp files to your system. Keep also
   `tinypath-:cache-expiry-days' relatively small if you update often."
   (interactive "P")
-  (let* ((list '( ;; autoload   => see below
-		 locate-library
-		 load
-		 require)))
+  (let ((list '( ;; autoload   => see below
+		locate-library
+		load
+		require)))
     ;; In Emacs (at least on 20.7), load-library is a wrapper for load. So,
     ;; it makes no sense advising it, because the cache is searched twice.
     ;; #todo: check this code .. and xemacs `load-library'
@@ -6710,11 +6708,11 @@ otherwise turn mode off."
     "Use `tinypath-:cache' for fast lookup of files.
 Property (get 'require 'tinypath-load-list) contains list
 of required packages: '((feature . path)."
-    (let* ((feature  (ad-get-arg 0))
-	   (opt      (ad-get-arg 1))    ;the optional "file" parameter
-	   (alist    (get 'require 'tinypath-load-list))
-	   lib
-	   path)
+    (let ((feature  (ad-get-arg 0))
+	  (opt      (ad-get-arg 1))    ;the optional "file" parameter
+	  (alist    (get 'require 'tinypath-load-list))
+	  lib
+	  path)
       (unless (symbolp feature)
 	(error "Parameter FEATURE is not a symbol %s"
 	       (prin1-to-string feature)))
@@ -6761,8 +6759,8 @@ References:
 
   `tinypath-:load-path-dump-file'"
   (interactive "sUnix $HOME is equivalent to: \nf")
-  (let* ((home      (file-truename (tinypath-expand-file-name "~")))
-	 (load-path load-path))
+  (let ((home      (file-truename (tinypath-expand-file-name "~")))
+	(load-path load-path))
     (setq tinypath-dumped-load-path nil)
     (or file
 	(setq file tinypath-:load-path-dump-file))
@@ -6783,7 +6781,7 @@ References:
 ;;;
 (defun tinypath-load-path-setup-win32 ()
   "Load `tinypath-:load-path-dump-file' in win32."
-  (let* ((file tinypath-:load-path-dump-file))
+  (let ((file tinypath-:load-path-dump-file))
     (when (and tinypath-:win32-p
 	       (load file 'noerr))
       ;; Merge these unix paths with the NT Emacs paths.
@@ -6800,7 +6798,7 @@ References:
 ;;;
 (defun tinypath-manpage-handler (path)
   "If PATH has manual pages, add to `tinypath-:extra-manpath'."
-  (let* (ret)
+  (let (ret)
     (unless (member path tinypath-:extra-manpath)
       (dolist (file (directory-files path))
 	(when (string-match "\\.[0-9]$" file)
@@ -6855,7 +6853,7 @@ References:
 ;;;
 (defun tinypath-cygwin-setup ()
   "If Cygwin is present add it to `tinypath-:extra-path-root'."
-  (let* ((cygwin-path (tinypath-ti::win32-cygwin-p))) ;; has trailing slash
+  (let ((cygwin-path (tinypath-ti::win32-cygwin-p))) ;; has trailing slash
     (if (null cygwin-path)
 	(tinypath-verbose-macro 2
 	  (message "TinyPath: [Cygwin] not found from PATH."))
@@ -6885,8 +6883,8 @@ References:
 Reference:
   `tinypath-cache-setup-maybe'  15min, idle timer calls this periodically."
   (interactive "P")
-  (let* (timer
-	 status)
+  (let (timer
+	status)
     (when (fboundp 'run-with-idle-timer)
       ;;
       ;;  I don't think this ever fails, but be bullet proof anyway
@@ -6956,9 +6954,9 @@ Reference:
 ;;;
 (defun tinypath-gnus-load-path-list ()
   "Return Gnus locations in `load-path' by searching regexp gnus/?$"
-  (let* (list
-	 found
-	 previous)
+  (let (list
+	found
+	previous)
     (dolist (path load-path)
       ;; cvs-packages/gnus/etc/gnus
       ;;
@@ -6981,8 +6979,8 @@ Reference:
   "Find out gnus version numbers along `load-path' or PATH-LIST.
 The PATH-LIST must conatins the root directoryies of Gnus installations.
 Return ((VER . PATH) ..)."
-  (let* (file
-	 list)
+  (let (file
+	list)
     ;; There is no way we can say which Gnus version is the latest without
     ;; loading the gnus.el and looking inside the file
     (tinypath-with-temp-buffer
@@ -7025,9 +7023,9 @@ Return structure is ordered so, that the latest version is first:
 
 Development versions starting with 0.N are condired newer that
 any N.N version."
-  (let* ((ver    (tinypath-gnus-versions path-list))
-	 zero
-	 sorted)
+  (let ((ver (tinypath-gnus-versions path-list))
+	zero
+	sorted)
     (when ver
       (setq sorted
 	    (sort
@@ -7049,7 +7047,7 @@ any N.N version."
 ;;;
 (defun tinypath-insinuate-gnus ()
   "Examine `load-path' and leave the latest Gnus version."
-  (let* ((list (tinypath-gnus-load-path-list)))
+  (let ((list (tinypath-gnus-load-path-list)))
     (cond
      ((null list)
       (tinypath-verbose-macro 7
@@ -7114,10 +7112,10 @@ holds the last stored value."
 (defun tinypath-install ()
   "Install package. There is no uninstall."
   (interactive)
-  (let* ((fid     "tinypath-install")
-	 (time-a  (current-time))
-	 time-b
-	 diff)
+  (let ((fid     "tinypath-install")
+	(time-a  (current-time))
+	time-b
+	diff)
     (message "TinyPath: %s BEGIN %s" fid (tinypath-time-string))
     (message "TinyPath: [INFO] (defmacro) Info-default-directory-list: %s"
 	     (prin1-to-string (tinypath-Info-default-directory-list)))
