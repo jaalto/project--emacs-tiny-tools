@@ -1,3 +1,315 @@
+2010-11-19 Sat  Jari Aalto  <jari.aalto@cante.net>
+
+	* tiny/tinyxreg.el: devel
+	(top level): Replace all variables from *-:* to *--*.
+	Use let* only where needed.
+	(tinyxreg-version): Remove.
+
+	* tiny/tinyvc.el:
+	(top level): Replace all variables from *-:* to *--*.
+	Use let* only where needed. Replace `set-buffer' with
+	`with-current-buffer'.
+	(tinyvc-version): Remove.
+
+	* tiny/tinyurl.el:
+	(top level): Replace all variables from *-:* to *--*.
+	Use let* only where needed.
+	(tinyurl-version): Remove.
+	(tinyurl-default-mark-table): Optimize `concat' strings with macro
+	expansion.
+
+	* tiny/tinytf.el:
+	(top level): Replace `previous-line' with `forward-line'.
+
+2010-11-19 Fri  Jari Aalto  <jari.aalto@cante.net>
+
+	* tiny/tinytf.el
+	(top level): Replace all variables from *-:* to *--*.
+	Use let* only where needed.
+	(tinytf-code-p): Replace `eval-when-compile' with macro call.
+	(tinytf-tmp-dxc-code-p): Replace `eval-when-compile' with macro call.
+	(tinytf-version): Remove.
+
+	* tiny/tinytag.el:
+	(top level): Replace all variables from *-:* to *--*.
+	Use let* only where needed.
+	(tinytag-version): Remove.
+
+	* tiny/tinytab.el
+	(top level): Replace all variables from *-:* to *--*.
+	Use let* only where needed.
+	(tinytab-version): Remove.
+	(tinytab-:version-id): Remove.
+	(tinytab-indent-region-dynamically): Use readable variable names.
+
+	* tiny/tinysearch.el:
+	(top level): Replace all variables from *-:* to *--*.
+	Use let* only where needed.
+	(tinysearch-version): Remove.
+
+	* tiny/tinyscroll.el:
+	(top level): Replace all variables from *-:* to *--*.
+	Use let* only where needed.
+	(tinyscroll-version): Remove.
+	(tinyscroll-control): Remove `set-buffer'.
+
+	* tiny/tinyprocmail.el:
+	(top level): Replace all variables from *-:* to *--*.
+	Use let* only where needed.
+	(tinyprocmail-version): Remove.
+	(tinyprocmail--version-time): New.
+
+	* tiny/tinypath.el:
+	(top level): Replace all variables from *-:* to *--*.
+	Use let* only where needed. fix indent.
+
+	* tiny/tinypair.el:
+	(top level): Replace all variables from *-:* to *--*.
+	Use let* only where needed.
+	(tinypair-version): Remove.
+	(tinypair-self-insert-command): Use `last-command-event'.
+
+	* tiny/tinypage.el:
+	(top level): Replace all variables from *-:* to *--*.
+	Use let* only where needed.
+	(tinypage-version): Remove.
+	(tinypage-current-page): Use readable variable names.
+	(tinypage-yank-after): Remove `let'.
+
+	* tiny/tinypad.el
+	(top level): Replace all variables from *-:* to *--*.
+	Use let* only where needed.
+	(tinypad-version): Remove.
+
+	* tiny/tinynbr.el: devel
+	(top level): Replace all variables from *-:* to *--*.
+	Use let* only where needed. Change `mapcar' to `dolist' in order
+	to define functions with eval.
+	(tinynbr-version): Remove.
+
+	* tiny/tinymy.el:
+	(top level): Replace all variables from *-:* to *--*.
+	Use let* only where needed.
+	(tinymy-version): Remove.
+	(tinymy-define-keys): Change `mapcar' to `dolist'.
+	(tinymy-vi-type-paren-match): Change `mapcar' to `dolist'.
+
+	* tiny/tinymailbox.el:
+	(top level): Replace all variables from *-:* to *--*.
+	Use let* only where needed.
+	(tinymailbox-version): Remove.
+
+	* tiny/tinylpr.el:
+	(top level): Replace all variables from *-:* to *--*.
+	Use let* only where needed.
+	(tinylpr-version): Remove.
+
+	* tiny/tinylock.el:
+	(top level): Replace all variables from *-:* to *--*.
+	Use let* only where needed. Remove obsoltet 19.34 defadvice code
+	(tinylock-kill-process-control): Change `mapcar' to `dolist'.
+
+	* tiny/tinyload.el
+	(top level): Replace all variables from *-:* to *--*.
+	Use let* only where needed.
+	(tinyload-version): Remove.
+
+	* tiny/tinyurl.el (tinyurl-find-url-file): Use
+	`ti::goto-line'.
+
+	* tiny/tinylisp.el
+	(top level): Replace all variables from *-:* to *--*.
+	Use let* only where needed. Relocate `defsubst' definitions and
+	fix loads of byte compiler errors. Replace obsolete
+	`find-file-hooks' with `find-file-hook', `find-file-not-found-hooks'
+	with `find-file-not-found-functions', `write-file-hooks with
+	`write-file-functions'.
+	(tinylisp-occur-select-forward): Use `ti::goto-line'.
+	(tinylisp-version): Remove.
+	(tinylisp-b-record): Change `mapcar' to 'dolist'.
+	(tinylisp-forward-user-option): Correct `universal-argument' to
+	`current-prefix-arg'.
+	(tinylisp-autoload-quick-autoload-build-dir): Fix `cond' exclude test.
+	(tinylisp-forward-def):  Correct `universal-argument' to
+	`current-prefix-arg'.
+	(tinylisp-autoload-real-update-file-autoloads): Correct call to
+	`tinylisp-autoload-real-update-update-file-autoloads-1'.
+	(tinylisp-jump-to-definition): Remove `set-buffer'.
+
+	* tiny/tinyliba.el
+	(ti::goto-line): New.
+
+	* tiny/tinylibm.el:
+	(top level): Add (autoload 'member* "cl-seq").
+	(ti::find-file-or-window): Use `ti::goto-line'.
+	(ti::save-line-column-macro): Use `ti::goto-line'.
+	(ti::goto-line): New.
+	(ti::find-file-or-window): Use `ti::goto-line'.
+	(ti::print-p): Remove `char-int'.
+	(ti::char-case-p):  Remove `char-int'.
+
+	* tiny/tinydebian.el:
+	(top level): Replace all variables from *-:* to *--*.
+	Use let* only where needed. Relocate `defsubst' definitions and
+	fix loads of byte compiler errors.
+	(tinydebian-version): Remove.
+	(tinydebian-launchpad-email-compose): Remove duplicate.
+	(tinydebian--bts-extra-headers): New.
+
+	* tiny/tinycygwin.el:
+	(top level): Replace all variables from *-:* to *--*.
+	Use let* only where needed.
+
+	* tiny/tinyef.el:
+	(top level): Replace all variables from *-:* to *--*.
+	Use let* only where needed.
+	(tinyef-version): Remove.
+	(tinyef-complete-from-minibuffer-history): Remove `set-buffer'.
+	Use `completion-base-position'.
+
+	* tiny/tinyirc.el
+	(top level): Replace all variables from *-:* to *--*.
+	Use let* only where needed.
+	(byte-compile-dynamic): Remove.
+
+	* tiny/tinyindent.el:
+	(top level): Replace all variables from *-:* to *--*.
+	Use let* only where needed.
+	(tinyindent-version): Remove.
+	(tinyindent-relative): Remove `char-to-int'.
+
+	* tiny/tinyhotlist.el:
+	(top level): Replace all variables from *-:* to *--*.
+	Use let* only where needed.
+	(tinyhotlist-version): Remove.
+	(tinyhotlist-complete): Fix indentation.
+
+	* tiny/tinygnus.el:
+	(top level): Replace all variables from *-:* to *--*.
+	Use let* only where needed.
+	(tinygnus-version): Remove.
+
+	* tiny/tinyepkg.el: New.
+
+	* tiny/tinyeat.el:
+	(top level): Replace all variables from *-:* to *--*.
+	Use let* only where needed.
+	(tinyeat-version): Remove.
+
+	* tiny/tinydired.el:
+	(top level): Replace all variables from *-:* to *--*.
+	Use let* only where needed. Replace single `cond' with `when'.
+	(tinydired-version): Remove.
+	(tinydired-shorten-links): Use `ti::goto-line'.
+	(tinydired-mark-today-files): Use `ti::goto-line'.
+	(tinydired-refresh-view): Use `ti::goto-line'.
+	(tinydired-remember-marks): Update macro syntax.
+	(tinydired-map-over-unmarked): Update macro syntax.
+	(tinydired-map-over-files): Update macro syntax.
+	(tinydired-map-over-regexp): Update macro syntax.
+	(tinydired-dir-original-get-line): Remove `set-buffer'.
+	(ange-ftp-set-binary-mode): Remove `set-buffer'.
+	(tinydired-dir-original): Remove `set-buffer'.
+	(tinydired-marked-vc-co): Remove `set-buffer'.
+
+	* tiny/tinydiff.el:
+	(top level): Replace all variables from *-:* to *--*.
+	Use let* only where needed.
+	(tinydiff-version): Remove.
+	(tinydiff-get-function-name): Use `ti::goto-line'.
+	(tinydiff-goto): Use `ti::goto-line'.
+
+	* tiny/tinydesk.el:
+	(top level): Replace all variables from *-:* to *--*.
+	Use let* only where needed.
+	(tinydesk-version): Remove.
+	(turn-off-tinydesk-mode): Change obsolete `default-major-mode'
+	to `major-mode'.
+
+	* tiny/tinyigrep.el:
+	(top level): Replace all variables from *-:* to *--*.
+	Use let* only where needed.
+	(tinyigrep-version): Remove.
+
+	* tiny/tinyperl.el:
+	(top level): Replace all variables from *-:* to *--*.
+	Use let* only where needed.
+	(tinyperl-version): Remove.
+	(tinyperl-pod-grep-faq-data-context-1): Use `ti::goto-line'.
+	(tinyperl-pod-grep-faq-data-context-all-files): Use `ti::goto-line'.
+
+	* tiny/tinycompile.el:
+	(top level): Replace all variables from *-:* to *--*.
+	Use let* only where needed. Add (require 'cl).
+	(tinycompile-version): Remove.
+	(tinycompile-parse-line-goto-guess): Change obsolete
+	`string-to-int' to `string-to-number'.
+	(tinycompile-parse-line-goto-basic): Use `ti::goto-line'.
+	(tinycompile-parse-line-goto-guess): Use `ti::goto-line'.
+
+	* tiny/tinycomment.el:
+	(top level): Replace all variables from *-:* to *--*.
+	Use let* only where needed.
+	(tinycomment-version): Remove.
+	(tinycomment-find-code-col): Use descriptive variable names.
+	(tinycomment-find-prev-com-col): Use descriptive variable names.
+
+	* tiny/tinycache.el:
+	(top level): Replace all variables from *-:* to *--*
+	(tinycache-version): Remove.
+	(tinycache-install): New.
+
+	* tiny/tinyreplace.el
+	(top level): Replace all variables from *-:* to *--*.
+	Use let* only where needed.
+	(tinyreplace-version): Remove.
+	(tinyreplace-replace-over-files-compile-buffer): Remove RCS
+	version control support.
+	(tinyreplace-install-default-keybings): Add let*.
+
+	* tiny/tinymail.el:
+	(top level): Replace all variables from *-:* to *--*.
+	Use let* only where needed.
+	(ti::package-use-dynamic-compilation): Remove.
+	(tinymail-version): Remove.
+	(tinymail-complete-guest-packages): Use `last-command-event'.
+	(tinymail-resolve-abbrevs): Use `abbrev-expand-functions'.
+
+	* tiny/tinybuffer.el
+	(top level): Replace all variables from *-:* to *--*.
+	Add (require 'cl).
+	(ti::macrof-version-bug-report): Remove `tinybuffer-version'.
+
+	* tiny/tinybookmark.el:
+	(top level): Replce all variables from *-:* to *--*
+	(tinybookmark-version): Remove.
+	(ti::package-use-dynamic-compilation): Removed.
+	(tinybookmark-repeat): Remove `throw'.
+	(tinybookmark-parse): Remove `set-buffer'.
+
+	* tiny/tinymacro.el
+	(top level): Replace all variables from *-:* to *--*.
+	Use let* only where needed. Remove dynamic compilation.
+	(tinymacro-macro-info): Use descriptive	variable names.
+	(tinymacro-create-name): Use descriptive variable names.
+	(tinymacro-create-symbol): Use descriptive variable names.
+	(ti::macrof-version-bug-report): Remove. Not used.
+	(tinymacro-assign): Correct regexp ^tim to ^tinymacro.
+	(tinymacro-create-name): Use descriptive variable names.
+
+	* tiny/tinylibmail.el:
+	(ti::mail-vm-macro). Remove. Not used anywhere.
+	(ti::mail-mh-macro): Remove. Not used anywhere.
+	(ti::mail-gnus-macro): Remove. Not used anywhere.
+	(ti::mail-rmail-macro): Remove. Not used anywhere.
+	(ti::mail-rmail-do-message-macro): Remove. Not used anywhere.
+	(ti::mail-rmail-copy-message): Remove. Not used anywhere.
+
+2010-11-16 Tue  Jari Aalto  <jari.aalto@cante.net>
+
+	* tiny/tinydebian.el (tinydebian-bts-mail-ctrl-remove-package-ask):
+	Add removal request types URL.
+
 2010-11-15 Mon  Jari Aalto  <jari.aalto@cante.net>
 
 	* tiny/tinydebian.el (tinydebian-bts-save-window-excursion-if-send): New.
