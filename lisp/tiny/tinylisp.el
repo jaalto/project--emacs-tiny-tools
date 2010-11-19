@@ -2016,7 +2016,7 @@ Following variables are set during BODY:
 `dir-list' All directories under `dir'."
   `(flet ((recurse
            (dir)
-           (let* ((dir-list (tinylisp-directory-list dir)))
+           (let ((dir-list (tinylisp-directory-list dir)))
              ,@body
              (when dir-list
                (dolist (elt dir-list)
@@ -2030,18 +2030,18 @@ Following variables are set during BODY:
 (put 'tinylisp-with-file-env-macro 'edebug-form-spec '(body))
 (defmacro tinylisp-with-file-env-macro (&rest body)
   "Run BODY with all the interfering hooks turned off."
-  `(let* (find-file-hook
-	  find-file-not-found-functions
-          write-file-functions
-	  write-file-functions
-          font-lock-mode
-          ;; buffer-auto-save-file-name
-          auto-save-hook
-          auto-save-default
-	  after-insert-file-functions
-          (auto-save-interval 0)
-          (original-backup-inhibited backup-inhibited)
-          (backup-inhibited t))
+  `(let (find-file-hook
+	 find-file-not-found-functions
+	 write-file-functions
+	 write-file-functions
+	 font-lock-mode
+	 ;; buffer-auto-save-file-name
+	 auto-save-hook
+	 auto-save-default
+	 after-insert-file-functions
+	 (auto-save-interval 0)
+	 (original-backup-inhibited backup-inhibited)
+	 (backup-inhibited t))
      ;; Reset also global
      (setq-default backup-inhibited t)
      ;;  When each file is loaded to emacs, do not turn on lisp-mode
@@ -2144,12 +2144,11 @@ If function does not exist or is string cannot be read, then return nil
   \"(function arg1\"  --> 'function
   \"(defvar xx\"      --> 'xx
    'xxx-symbol        --> 'xxx-symbol"
-  (let* ((re-f    (substring tinylisp-:regexp-function
-                             1 (length tinylisp-:regexp-function)))
-
-         (re-v    (substring tinylisp-:regexp-variable
-                             1 (length tinylisp-:regexp-variable)))
-         sym)
+  (let ((re-f    (substring tinylisp-:regexp-function
+			    1 (length tinylisp-:regexp-function)))
+	(re-v    (substring tinylisp-:regexp-variable
+			    1 (length tinylisp-:regexp-variable)))
+	sym)
     (cond
      ((and (or (string-match re-f string)
                (string-match re-v string))
@@ -2180,7 +2179,7 @@ Optionally POP. VERB prints message."
       (push data tinylisp-:call-chain)
     (if (null tinylisp-:call-chain)
         (error "tinylisp-:call-chain is empty, nothing to pop.")
-      (let* ((mark (pop tinylisp-:call-chain)))
+      (let ((mark (pop tinylisp-:call-chain)))
         (goto-char mark)))))
 
 ;;; ----------------------------------------------------------------------
@@ -2227,7 +2226,7 @@ Bound variables in macro:
 
 You use this macro to bounds of Lisp defun, defvar, defconst
 structures."
-  `(let* ((buffer  (current-buffer))
+  `(let ((buffer (current-buffer))
           str
           beg
           end)
@@ -2325,7 +2324,7 @@ Same as `tinylisp-defun-macro' But define `name' and `sym' for function name."
 ;;;
 (defun tinylisp-install-hooks (&optional uninstall)
   "Install or UNINSTALL hooks that activate TinyLisp minor mode."
-  (let* ()
+  (let ()
     (ti::add-hooks '(emacs-lisp-mode-hook
                      lisp-interaction-mode-hook
                      debugger-mode-hook
@@ -2450,7 +2449,7 @@ If you see this message when calling following, there is bug in TinyLisp.
 ;;;
 (defun tinylisp-process-kill ()
   "Kill running processes with y-n-p."
-  (let* ((list (process-list)))
+  (let ((list (process-list)))
     (if (null list)
         (message "TinyLisp: no running processes to kill.")
       (list-processes)
@@ -2462,9 +2461,9 @@ If you see this message when calling following, there is bug in TinyLisp.
 ;;;
 (defun tinylisp-face-list-unique (face-list)
   "Return unique faces '((var face) ..) from FACE-LIST."
-  (let* ((getface 'get-face)
-         face
-         list)
+  (let ((getface 'get-face)
+	face
+	list)
     (dolist (var face-list)
       (when (and
              (not (string-match "^:" (symbol-name var)))
@@ -2488,11 +2487,11 @@ If you see this message when calling following, there is bug in TinyLisp.
 (defun tinylisp-face-print (buffer face-list &optional details)
   "Insert description to BUFFER for each symbol in FACE-LIST.
 If optional DETAILS is non-nil, display also 'face-defface-spec properties."
-  (let* ((list (tinylisp-face-list-unique face-list))
-         beg
-         var
-         face
-	 plist)
+  (let ((list (tinylisp-face-list-unique face-list))
+	beg
+	var
+	face
+	plist)
     (when list
       (setq buffer (ti::temp-buffer tinylisp-:buffer-tmp 'clear))
       (with-current-buffer buffer
@@ -2551,14 +2550,14 @@ See also \\[list-colors-display]."
 Optionally give DETAILS of each face.
 See also \\[list-colors-display]."
   (interactive "P")
-  (let* ((symbols (ti::system-get-symbols
-                   "face"
-                   '(or (boundp sym)
-                        (and (fboundp 'get-face) ;;  XEmacs
-                             (get-face sym))
-                        ;; Only works in Emacs. Returns nil in XEmacs
-                        (facep sym))))
-         (buffer  (ti::temp-buffer tinylisp-:buffer-tmp 'clear)))
+  (let ((symbols (ti::system-get-symbols
+		  "face"
+		  '(or (boundp sym)
+		       (and (fboundp 'get-face) ;;  XEmacs
+			    (get-face sym))
+		       ;; Only works in Emacs. Returns nil in XEmacs
+		       (facep sym))))
+	(buffer  (ti::temp-buffer tinylisp-:buffer-tmp 'clear)))
     (tinylisp-face-print buffer symbols details)
     (display-buffer buffer)))
 
@@ -2624,11 +2623,11 @@ o  Go backward to opening parenthesis and evaluate command.
 
 Return:
  (point function-name-string statement)"
-  (let* ((opoint   (point))
-         (word     (save-excursion (tinylisp-read-word)))
-         point
-         func
-         statement)
+  (let ((opoint (point))
+	(word   (save-excursion (tinylisp-read-word)))
+	point
+	func
+	statement)
     (save-excursion
       (cond
        ((and (stringp word)
@@ -2710,9 +2709,9 @@ References:
 (defun tinylisp-b-display (buffer point-min)
   "Display BUFFER (must be string) if it exists and go to optional POINT-MIN.
 Shrink and print message if not exist."
-  (let* ((win           (get-buffer-window buffer))
-         (frame-win     (get-buffer-window buffer t))
-         (owin          (selected-window)))
+  (let ((win           (get-buffer-window buffer))
+	(frame-win     (get-buffer-window buffer t))
+	(owin          (selected-window)))
     (if (not (buffer-live-p (get-buffer buffer)))
         (message "TinyLisp: Buffer does not exist, %s" buffer)
       ;;  Do nothing special if window is already visible
@@ -2780,8 +2779,8 @@ Shrink and print message if not exist."
 ;;;
 (defun tinylisp-ad-match-1 (regexp)
   "Return '((function class name) ..) that are adviced matching NAME REGEXP."
-  (let* (list
-         sym-name)
+  (let (list
+	sym-name)
     (ad-do-advised-functions (advised-function)
       (dolist (class '(before after around))
         (dolist (info (ad-get-advice-info-field advised-function class))
@@ -2797,7 +2796,7 @@ Shrink and print message if not exist."
   (interactive "sAd name match Regexp: ")
   (if (ti::nil-p regexp)
       (error "Invalid regexp"))
-  (let* ((list (tinylisp-ad-match-1 regexp)))
+  (let ((list (tinylisp-ad-match-1 regexp)))
     (ti::verb)
     (tinylisp-with-current-buffer
      (ti::temp-buffer tinylisp-:buffer-data 'clear)
@@ -2834,7 +2833,7 @@ prefix ARG is given.
 
 LIST defaults to `elp-all-instrumented-list`. VERB."
   (interactive "P")
-  (let* (str)
+  (let (str)
     (ti::verb)
     (setq list (or list
                    elp-all-instrumented-list)
@@ -2916,7 +2915,7 @@ Insert STRING after the record stamp. VERB."
   "Ask args for `tinylisp-elp-instrument-buffer'.
 PFX-ARG is usually `current-prefix-arg' if you know that already.
 IACT signifies interactive spec."
-  (let* (pfx)
+  (let (pfx)
     (setq pfx
           (read-from-minibuffer
            (format
@@ -2993,7 +2992,7 @@ TinyLisp: %sinstrumented package '%s'. Count of functions is unknown."
 (defun tinylisp-elp-instrument-function ()
   "Instrument current function. Search the function name."
   (interactive)
-  (let* ((func (ti::buffer-defun-function-name)))
+  (let ((func (ti::buffer-defun-function-name)))
     (if (not func)
         (message "TinyLisp: Can't find function name.")
       ;;  This evaluates the function prior elp'ing it.
@@ -3008,9 +3007,9 @@ TinyLisp: %sinstrumented package '%s'. Count of functions is unknown."
 (defun tinylisp-elp-mapsym (regexp &optional not-regexp real-name)
   "Return list of function matching REGEXP NOT-REGEXP REAL-NAME.
 See `tinylisp-elp-instrument-by-regexp'."
-  (let* (list
-         name
-         real)
+  (let (list
+	name
+	real)
     (mapatoms
      (function
       (lambda (sym)
@@ -3077,8 +3076,10 @@ Input:
   (if (ti::nil-p not-regexp)         ;It's "" after RET in interactive
       (setq not-regexp nil))
 
-  (let* ((list (tinylisp-elp-mapsym regexp not-regexp real-name))
-         (msg  (if uninstrument "un" "")))
+  (let ((list (tinylisp-elp-mapsym regexp not-regexp real-name))
+	(msg  (if uninstrument
+		  "un"
+		"")))
     (if uninstrument
         (elp-restore-list list)
       (elp-instrument-list list))
@@ -3108,7 +3109,7 @@ Input:
 (defun tinylisp-elp-restore-buffer ()
   "Read functions from the buffer and cancel elp for them."
   (interactive)
-  (let* ((args (tinylisp-elp-instrument-buffer-i-args 'pfx 'iact)))
+  (let ((args (tinylisp-elp-instrument-buffer-i-args 'pfx 'iact)))
     (tinylisp-elp-instrument-buffer
      (nth 0 args)
      (nth 1 args)
@@ -3120,7 +3121,7 @@ Input:
 (defun tinylisp-elp-restore-function ()
   "Remove elp code from current function. Search the function name."
   (interactive)
-  (let* ((func (ti::buffer-defun-function-name)))
+  (let ((func (ti::buffer-defun-function-name)))
     (if (not func)
         (message "TinyLisp: ELP,  Can't find function name.")
       (tinylisp-symbol-do-macro func nil
@@ -3210,7 +3211,8 @@ harness run is over."
     (save-excursion
       (ti::pmin)
       (when (re-search-forward "tinylisp-:harness-flag" nil t)
-        (setq beg (line-beginning-position)  h-found t)))
+        (setq beg (line-beginning-position))
+	(setq h-found t)))
     (or beg                             ;we already found it
         (setq beg (point)))             ;nope, use current point
     (if (null elp-all-instrumented-list)
@@ -3347,13 +3349,13 @@ DebugTag: 22-56 file.el
 (defun tinylisp-error-find-2 ()
   "Start from point min and Eval region at time until error occurs."
   (interactive)
-  (let* ((p         -1)
-         (opoint    (point))
-         last-p)
+  (let ((point -1)
+	(opoint (point))
+	last-p)
     (ti::pmin)
     (setq last-p (point))
-    (while (not (eq p (point)))
-      (setq p (point))
+    (while (not (eq point (point)))
+      (setq point (point))
       (eval-region last-p (point))
       (setq last-p (point))
       (end-of-defun))
@@ -3479,25 +3481,25 @@ References:
   (interactive (list current-prefix-arg
                      (tinylisp-read-word)))
 
-  (let* ((f-re
-          (concat "^(\\(defun\\*?\\|defmacro\\*?\\|defsubst\\|deffoo"
-                  "\\|defun-maybe\\|defsubst-maybe"
-                  "\\|define-derived-mode\\|define-minor-mode"
-                  "\\|defalias\\|fset"
-                  ;;  See grep.el::define-compilation-mode
-                  "\\|define-[^ \t\r\n]+-mode"
-                  "\\)[ \t']+%s[ \t\r\n]"))
-         (v-re
-          "^(\\(defvar\\|defconst\\|defcustom\\|defvoo\\)[ \t]+%s[ \t\r\n]")
-         (reg  tinylisp-:register)
-         (call-chain-data  (point-marker))
-         re
-         type
-         point
-         file
-         sym
-         alias
-         buffer)
+  (let ((f-re
+	 (concat "^(\\(defun\\*?\\|defmacro\\*?\\|defsubst\\|deffoo"
+		 "\\|defun-maybe\\|defsubst-maybe"
+		 "\\|define-derived-mode\\|define-minor-mode"
+		 "\\|defalias\\|fset"
+		 ;;  See grep.el::define-compilation-mode
+		 "\\|define-[^ \t\r\n]+-mode"
+		 "\\)[ \t']+%s[ \t\r\n]"))
+	(v-re
+	 "^(\\(defvar\\|defconst\\|defcustom\\|defvoo\\)[ \t]+%s[ \t\r\n]")
+	(reg  tinylisp-:register)
+	(call-chain-data (point-marker))
+	re
+	type
+	point
+	file
+	sym
+	alias
+	buffer)
     (ti::verb)
     (if (ti::nil-p word)
         (error "TinyLisp: searched WORD is nil.")
@@ -3688,12 +3690,12 @@ See `tinylisp-jump-to-definition'. VERB."
    (list
     current-prefix-arg
     'interactive))
-  (let* ((opoint (point))
-         type
-         sym
-         point
-         beg
-         end)
+  (let ((opoint (point))
+	type
+	sym
+	point
+	beg
+	end)
     (while (and (null point)
                 (prog1 (setq beg (if back
                                      (tinylisp-forward-def 'back)
@@ -3769,8 +3771,8 @@ See `tinylisp-jump-to-definition'. VERB."
 If you give prefix argument DISASSEMBLE, then the function is also
 disassembled to byte code format. VERB."
   (interactive "P")
-  (let* ((debug-on-error t)
-         name)
+  (let ((debug-on-error t)
+	name)
     (ti::verb)
     (tinylisp-defun-macro
      (setq name (ti::string-match "def[a-zA-Z]+ +\\([^() \t\n\]+\\)" 1 str))
@@ -3803,7 +3805,7 @@ wise to compile using `byte-compile-file'.
 Instead we cal anmother copy of Emacs to do the compilation so that
 you would catch any errors with undefined variables and functions."
   (interactive)
-  (let* ((byte-compile-generate-call-tree  nil)
+  (let ((byte-compile-generate-call-tree nil)
          (file  (buffer-file-name)))
     (if (null file)
         (message "TinyLisp: Buffer %s is not visiting file." (buffer-name))
@@ -3814,8 +3816,8 @@ you would catch any errors with undefined variables and functions."
 (defun tinylisp-byte-compile-display-call-tree ()
   "See bytecomp.el `display-call-tree'."
   (interactive)
-  (let* ((byte-compile-generate-call-tree  t)
-         (file  (buffer-file-name)))
+  (let ((byte-compile-generate-call-tree  t)
+	(file (buffer-file-name)))
     (if (null file)
         (message (concat "TinyLisp: Buffer %s is not visiting file."
                          " Cannot display call tree.")
@@ -3840,7 +3842,7 @@ means that the functions were declared defsubst.\n"))
 With this function you can find out what other packages are needed to
 run a file."
   (interactive)
-  (let* ((buffer (tinylisp-byte-compile-display-call-tree)))))
+  (let ((buffer (tinylisp-byte-compile-display-call-tree)))))
 
 ;;; ----------------------------------------------------------------------
 ;;;
@@ -3850,11 +3852,11 @@ ARG can be
  \\[universal-argument]  'restore variable's content
  \\[universal-argument]\\[universal-argument]  'backup variable's value"
   (interactive "P")
-  (let* ((var  (tinylisp-read-word))
-         (cmd  (cond
-                ((equal arg '(4))  'restore)
-                ((equal arg '(16)) 'bup))) ;Back it up
-         val)
+  (let ((var  (tinylisp-read-word))
+	(cmd  (cond
+	       ((equal arg '(4))  'restore)
+	       ((equal arg '(16)) 'bup))) ;Back it up
+	val)
     (if (ti::nil-p var)
         (message "TinyLisp: Couldn't read variable at point")
       (tinylisp-symbol-do-macro var 'noerr
@@ -3889,9 +3891,9 @@ is appended to record buffer.
   Call it, possibly interactively
 - If it's variable, eval it, possibly yielding the content."
   (interactive "P")
-  (let* ((str       (tinylisp-read-word))
-         sym
-         type)
+  (let ((str (tinylisp-read-word))
+	sym
+	type)
     (if (or (ti::nil-p str)
             (null (setq sym (intern-soft str))))
         (message "TinyLisp: Can't use word to eval (void?): %s "
@@ -4049,19 +4051,19 @@ The defconst must have initial value: we supply 'nil"
 (defun tinylisp-eval-current-buffer-defconst ()
   "Eval buffer as defconst and print message."
   (interactive)
-  (let* ((obuffer   (current-buffer))
-         (name      (buffer-name))
-         (beg       (point-min))        ;maybe narrowed?
-         (end       (point-max)))
+  (let ((obuffer   (current-buffer))
+	(name      (buffer-name))
+	(beg       (point-min))        ;maybe narrowed?
+	(end       (point-max)))
     (tinylisp-with-current-buffer
-     (ti::temp-buffer tinylisp-:buffer-tmp 'clear)
-     (insert-buffer-substring obuffer beg end)
-     (ti::pmin)
-     (while (re-search-forward "^(defvar \\|^(defcustom " nil t)
-       (replace-match "(defconst "))
-     ;; We have to do another sweep
-     (tinylisp-eval-fix-defconst)
-     (tinylisp-defcustom-macro (tinylisp-eval-current-buffer)))
+	(ti::temp-buffer tinylisp-:buffer-tmp 'clear)
+      (insert-buffer-substring obuffer beg end)
+      (ti::pmin)
+      (while (re-search-forward "^(defvar \\|^(defcustom " nil t)
+	(replace-match "(defconst "))
+      ;; We have to do another sweep
+      (tinylisp-eval-fix-defconst)
+      (tinylisp-defcustom-macro (tinylisp-eval-current-buffer)))
     (message "TinyLisp: ok, evaled buffer %s as defconst." name)))
 
 ;;; ----------------------------------------------------------------------
@@ -4176,14 +4178,14 @@ return:
 
  '((type-string . name) ...)"
   (interactive)
-  (let* ((re        tinylisp-:regexp-function)
-         (buffer    tinylisp-:buffer-data)
-         (loop      t)
-         list
-         type
-         var
-         str
-         func)
+  (let ((re     tinylisp-:regexp-function)
+	(buffer tinylisp-:buffer-data)
+	(loop   t)
+	list
+	type
+	var
+	str
+	func)
     (while loop
       (setq loop nil)
       (save-excursion
@@ -4247,14 +4249,14 @@ input:
   SHOW-TYPE     if non-nil, then show `user-variable-p' and
                 `defcustom' information too."
   (interactive "p")
-  (let* ((re        tinylisp-:regexp-variable)
-         (buffer    tinylisp-:buffer-variables)
-         str
-         sym
-         type var
-         vl                             ;def(v)ar   (l)ist
-         cl                             ;def(c)onst (l)ist
-         list)
+  (let ((re     tinylisp-:regexp-variable)
+	(buffer tinylisp-:buffer-variables)
+	str
+	sym
+	type var
+	vl                             ;def(v)ar   (l)ist
+	cl                             ;def(c)onst (l)ist
+	list)
     (save-excursion
       (ti::pmin)
       (while (re-search-forward re nil t)
@@ -4297,9 +4299,9 @@ input:
 (defun tinylisp-narrow-to-function ()
   "Narrow to current function around point."
   (interactive)
-  (let* ((re   tinylisp-:regexp-function)
-         beg
-         end)
+  (let ((re tinylisp-:regexp-function)
+	beg
+	end)
     (save-excursion
       (beginning-of-line)
       (if (not (looking-at re))
@@ -4359,13 +4361,13 @@ Return:
 
  buffer     `tinylisp-:buffer-data'"
   (interactive)
-  (let* ((max       (length load-history ))
-         (buffer    (ti::temp-buffer tinylisp-:buffer-library 'clear))
-         (i         0)
-         (unknown   "--unknown--")
-         dep-list
-         name
-         path)
+  (let ((max       (length load-history ))
+	(buffer    (ti::temp-buffer tinylisp-:buffer-library 'clear))
+	(i         0)
+	(unknown   "--unknown--")
+	dep-list
+	name
+	path)
     (ti::verb)
     (tinylisp-with-current-buffer buffer
       (dolist (pkg load-history)
@@ -4485,9 +4487,9 @@ Return:
   List of possible paths. Example:
   '(\"/path/to/package.el\" \"/path/to/package.elc\")
 "
-  (let* ((compressions '("" ".gz" ".Z" ".z" ".bz2" ".zip"))
-         try
-         ret)
+  (let ((compressions '("" ".gz" ".Z" ".z" ".bz2" ".zip"))
+	try
+	ret)
     (setq file (file-name-sans-extension
                 (file-name-nondirectory file)))
     (or extensions
@@ -4554,10 +4556,10 @@ Return:
   buffer  Content of Commentary: section"
   (interactive
    (list (tinylisp-library-read-name 'el) current-prefix-arg))
-  (let* ((list (tinylisp-library-locate-library-1 file '(".el") ))
-         str
-         file
-         buffer)
+  (let ((list (tinylisp-library-locate-library-1 file '(".el") ))
+	str
+	file
+	buffer)
     (when list
       (when (interactive-p)
         (setq file (car list))
@@ -4605,7 +4607,7 @@ Return:
   "`find-file' a lisp library FILE along `load-path'.
 In interactive call, the FILE is completed using `load-path' libraries."
   (interactive (list (tinylisp-library-read-name 'el)))
-  (let* ((path (locate-library file)))
+  (let ((path (locate-library file)))
     (if (not path)
         (message "TinyLisp: file %s not along `load-path'" file)
       (find-file path))))
@@ -4615,7 +4617,7 @@ In interactive call, the FILE is completed using `load-path' libraries."
 (defun tinylisp-library-load-library (file)
   "Like `load-library' but offer completion of lisp files."
   (interactive (list (tinylisp-library-read-name)))
-  (let* ((file (locate-library file)))
+  (let ((file (locate-library file)))
     (if (not file)
         (message "TinyLisp: file %s not along `load-path'" file)
       (load-library file))))
@@ -4903,10 +4905,10 @@ Dot-dirs and version control directories are filtered out."
   "Read all defuns and construct autoloads from LIBRARY on `load-path'."
   (interactive
    (list (tinylisp-library-read-name)))
-  (let* ((path (if (file-name-absolute-p library)
-                   library
-                 (or (locate-library library)
-                     (error "TinyLisp: Can't locate library %s" library)))))
+  (let ((path (if (file-name-absolute-p library)
+		  library
+		(or (locate-library library)
+		    (error "TinyLisp: Can't locate library %s" library)))))
     ;; The name MUST end to .el, because that is the source of autoloads
     (cond
      ((string-match "\\.elc$" path)
@@ -5010,14 +5012,14 @@ Input:
               `tinylisp-:buffer-autoload'
   VERB        Optional flag, if non-nil pop to result buffer."
   (interactive "DAutoload directory: \nsFiles matching regexp: \nP")
-  (let* ((files (if (file-directory-p file-or-dir)
-                    (ti::directory-files
-                     file-or-dir
-                     regexp
-                     'absolute
-                     '(and (not (file-directory-p arg))
-                           (string-match "\\.el$" arg)))
-                  (list file-or-dir))))        ;single filename
+  (let ((files (if (file-directory-p file-or-dir)
+		   (ti::directory-files
+		    file-or-dir
+		    regexp
+		    'absolute
+		    '(and (not (file-directory-p arg))
+			  (string-match "\\.el$" arg)))
+		 (list file-or-dir))))        ;single filename
     (or buffer
         (setq buffer (tinylisp-get-buffer-create tinylisp-:buffer-autoload)))
     (ti::verb)
@@ -5170,8 +5172,8 @@ Optionally EXCLUDE files by regexp."
 (defun tinylisp-autoload-real-update-file-autoloads (file)
   "Update autoload from FILE to FILE-loaddefs.el"
   (interactive "fLoaddedfs from file: ")
-  (let* ((dest (format "%s-loaddefs.el"
-                       (file-name-sans-extension file))))
+  (let ((dest (format "%s-loaddefs.el"
+		      (file-name-sans-extension file))))
     (tinylisp-autoload-real-update-update-file-autoloads-1
      file dest)))
 
@@ -5394,8 +5396,8 @@ Obey optional INCLUDE and EXCLUDE regexps."
    (list
     current-prefix-arg
     'interactive))
-  (let* ((opoint (point))
-         ret)
+  (let ((opoint (point))
+	ret)
     ;;  Before doing slow loop, try this. This may fail; because
     ;;  the 'defun macro' doesn't land always to right spot. Try negative
     ;;  indent inside fuction
@@ -5434,9 +5436,9 @@ Obey optional INCLUDE and EXCLUDE regexps."
 VERB."
   (interactive
    (list 'verb))
-  (let* (msg
-         beg
-         end)
+  (let (msg
+	beg
+	end)
     (and (save-excursion
            (and (setq beg (tinylisp-forward-def 'back))
                 (setq msg (ti::string-left (ti::read-current-line) 60)))
@@ -5472,49 +5474,49 @@ references:
       nil
       nil
       (car tinylisp-:macroexpand-function-list)))))
-  (let* ((mac-re tinylisp-:regexp-macro-definition)
-         (opoint (point))
-         point
-         symbol
-         sym
-         to-buffer)
+  (let ((mac-re tinylisp-:regexp-macro-definition)
+	(opoint (point))
+	point
+	symbol
+	sym
+	to-buffer)
     (when (not (and (symbolp expand-function)
                     (fboundp expand-function)))
       (error "Not a function %s" expand-function))
     (tinylisp-defun-macro
-     (if (setq symbol (ti::string-match "[^() \t\n\]+" 0 str))
-         (setq sym (intern-soft symbol)))
-     (cond
-      ((and (stringp symbol)
-            ;; These are macros
-            (not (string-match mac-re symbol))
-            ;;  Others are supposed to be function definitions
-            (string-match "^def" symbol)
-            (not (ti::defmacro-p sym)))
-       (message
-        "TinyLisp: grabbed %s, but it is not a macro's call statement"
-        symbol))
-      ((and (stringp symbol)
-            sym
-            (ti::defmacro-p sym))
-       (setq to-buffer (ti::temp-buffer tinylisp-:buffer-macro 'clear))
-       (append-to-buffer to-buffer beg end)
-       (goto-char opoint)               ;restore position
-       (pop-to-buffer to-buffer)
-       (ti::pmin)
-       (emacs-lisp-mode)
-       (insert "(" (symbol-name expand-function) " '\n"  )
-       (ti::pmax) (insert ")")
-       (setq point (point))
-       (eval-last-sexp 'output)
-       (delete-region (point-min) point)
-       (ti::pmin))
-      ((and (stringp symbol)
-            (fboundp sym))
-       (message "TinyLisp: macroexpand, sexp was function: %s" symbol))
-      (t
-       (message "TinyLisp: macroexpand, skipped: %s"
-                (or str "<can't read>")))))))
+      (if (setq symbol (ti::string-match "[^() \t\n\]+" 0 str))
+	  (setq sym (intern-soft symbol)))
+      (cond
+       ((and (stringp symbol)
+	     ;; These are macros
+	     (not (string-match mac-re symbol))
+	     ;;  Others are supposed to be function definitions
+	     (string-match "^def" symbol)
+	     (not (ti::defmacro-p sym)))
+	(message
+	 "TinyLisp: grabbed %s, but it is not a macro's call statement"
+	 symbol))
+       ((and (stringp symbol)
+	     sym
+	     (ti::defmacro-p sym))
+	(setq to-buffer (ti::temp-buffer tinylisp-:buffer-macro 'clear))
+	(append-to-buffer to-buffer beg end)
+	(goto-char opoint)               ;restore position
+	(pop-to-buffer to-buffer)
+	(ti::pmin)
+	(emacs-lisp-mode)
+	(insert "(" (symbol-name expand-function) " '\n"  )
+	(ti::pmax) (insert ")")
+	(setq point (point))
+	(eval-last-sexp 'output)
+	(delete-region (point-min) point)
+	(ti::pmin))
+       ((and (stringp symbol)
+	     (fboundp sym))
+	(message "TinyLisp: macroexpand, sexp was function: %s" symbol))
+       (t
+	(message "TinyLisp: macroexpand, skipped: %s"
+		 (or str "<can't read>")))))))
 
 ;;}}}
 ;;{{{ properties display
@@ -5524,11 +5526,10 @@ references:
 (defun tinylisp-post-command-config (&optional restore)
   "Disable modes that echo something to the echo-ares.
 User can't see string echoed otherwise. Optionally RESTORE."
-  (let* ((list '(
-                 ("lisp" . eldoc-mode)
-                 ("."    . paren-message-offscreen)))
-         sym
-         re)
+  (let ((list '(("lisp" . eldoc-mode)
+		("."    . paren-message-offscreen)))
+	sym
+	re)
     (dolist (elt list)
       (setq re (car elt)  sym (cdr elt))
       (when (and (boundp sym)
@@ -5616,9 +5617,9 @@ User can't see string echoed otherwise. Optionally RESTORE."
   "Display property info according to `tinylisp-:property-show-mode'.
 This is post command."
   (when (tinylisp-post-command-run-p)
-    (let* ((record (equal '(64) tinylisp-:property-show-mode))
-           (ch     (char-to-string (following-char)))
-           str)
+    (let ((record (equal '(64) tinylisp-:property-show-mode))
+	  (ch     (char-to-string (following-char)))
+	  str)
       (setq str
             (format
              "%s:%s"
@@ -5721,8 +5722,8 @@ VERB                    verbose flag"
                  (lambda (a b)
                    (string< (symbol-name a)
                             (symbol-name b)))))))
-    (let* (var
-           val)
+    (let (var
+	  val)
       (or buffer
           (setq buffer (current-buffer)))
       (pop-to-buffer (tinylisp-get-buffer-create tinylisp-:buffer-variables))
@@ -5761,8 +5762,8 @@ VERB                    verbose flag"
 (defun tinylisp-find-autoload-functions (&optional buffer)
   "Display all autoload functions."
   (interactive)
-  (let* ((list (ti::system-autoload-function-list))
-         doc)
+  (let ((list (ti::system-autoload-function-list))
+	doc)
     (if (null list)
         (message "TinyLisp: No autoload functions found in Emacs.")
       (or buffer
@@ -5836,21 +5837,21 @@ Flags when viewing, editing echo-area:
 +w   Is shown when you're actually modifying the contents.
 !    is shown if the variable's state has been saved and is non-nil."
   (interactive (tinylisp-snoop-variables-i-args))
-  (let* ((write     (equal arg '(4)))
-         (read      (eq arg nil))
-         (record    (eq arg 1))
-         (save      (eq arg 0))
-         (restore   (eq arg 9))
-         (kill      (eq arg 8))
-         (reset     (eq arg 5))
-         (msg       (format
-                     "(%s) %s"
-                     (length list)
-                     (mapconcat 'symbol-name list " ")))
-         (prop      'tinylisp-original)
-         str
-         val
-         ok)
+  (let ((write     (equal arg '(4)))
+	(read      (eq arg nil))
+	(record    (eq arg 1))
+	(save      (eq arg 0))
+	(restore   (eq arg 9))
+	(kill      (eq arg 8))
+	(reset     (eq arg 5))
+	(msg       (format
+		    "(%s) %s"
+		    (length list)
+		    (mapconcat 'symbol-name list " ")))
+	(prop      'tinylisp-original)
+	str
+	val
+	ok)
     (dolist (elt list)
       (setq ok  (boundp elt))
       (cond
@@ -5859,7 +5860,7 @@ Flags when viewing, editing echo-area:
             (setq val (prin1-to-string (symbol-value elt)))
           (setq val "<variable does not exist>"))
         (tinylisp-record-macro record
-                               (insert (format "%s %s\n" (symbol-name elt)  val)))
+	  (insert (format "%s %s\n" (symbol-name elt)  val)))
         ;; Using rsz-mini we can show whole content.
         (setq str (read-from-minibuffer
                    (format "%s%s%s: "
@@ -5907,7 +5908,7 @@ Flags when viewing, editing echo-area:
   "Run occur on REGEXP for whole buffer.
 If ARG is non-nil, do not filter comment lines."
   (interactive (list (tinylisp-occur-i-args) current-prefix-arg))
-  (let* ((obuffer (current-buffer)))
+  (let ((obuffer (current-buffer)))
     (ti::occur-macro regexp nil
       (ti::text-re-search-forward regexp)
       (ti::pmin)
@@ -5936,11 +5937,11 @@ If ARG is non-nil, do not filter comment lines."
   "Select next line from the occur buffer. You must first run `tinylisp-occur'.
 Optionally goes BACK."
   (interactive "P")
-  (let* ((buffer (get-buffer tinylisp-:occur-buffer-name))
-         line
-         file
-         str
-         go-buffer)
+  (let ((buffer (get-buffer tinylisp-:occur-buffer-name))
+	line
+	file
+	str
+	go-buffer)
     (if (null buffer)
         (message "TinyLisp: No occur buffer exist.")
       (tinylisp-with-current-buffer
@@ -6085,7 +6086,7 @@ See `tinylisp-edebug-table-remove-entry'"
 (defun tinylisp-edebug-table-remove-entry (function)
   "Remove FUNCTION from `tinylisp-:edebug-instrument-table'."
   (interactive)
-  (let* ((elt (assq function tinylisp-:edebug-instrument-table)))
+  (let ((elt (assq function tinylisp-:edebug-instrument-table)))
     (setq tinylisp-:edebug-instrument-table
           (delete elt tinylisp-:edebug-instrument-table))))
 
@@ -6100,7 +6101,7 @@ See `tinylisp-edebug-table-remove-entry'"
 (defun tinylisp-edebug-instrument-buffer ()
   "Read whole buffer and instrument every found left flushed `defun'."
   (interactive)
-  (let* (edebug-all-defs)
+  (let (edebug-all-defs)
     (save-excursion
       (ti::pmin)
       (while (re-search-forward "^(defun " nil t)
@@ -6116,25 +6117,25 @@ Show results in `tinylisp-:buffer-record'. The display shows
 
   FUNCTION-NAME  BUFFER-OF-EVAL  LIVE-BUFFER FILE-NAME-FOR-BUFFER"
   (interactive)
-  (let* ((buffer (ti::temp-buffer tinylisp-:buffer-record))
-         function
-         name
-         live-buffer
-         live-name
-         file)
+  (let ((buffer (ti::temp-buffer tinylisp-:buffer-record))
+	function
+	name
+	live-buffer
+	live-name
+	file)
     (display-buffer buffer)
     (tinylisp-with-current-buffer buffer
-                                  (ti::pmax)
-                                  (dolist (elt tinylisp-:edebug-instrument-table)
-                                    (setq function    (nth 0 elt)
-                                          name        (symbol-name function)
-                                          buffer      (nth 1 elt)
-                                          live-buffer (if (buffer-live-p buffer) (get-buffer buffer))
-                                          live-name   (if live-buffer            (buffer-name live-buffer))
+      (ti::pmax)
+      (dolist (elt tinylisp-:edebug-instrument-table)
+	(setq function    (nth 0 elt)
+	      name        (symbol-name function)
+	      buffer      (nth 1 elt)
+	      live-buffer (if (buffer-live-p buffer) (get-buffer buffer))
+	      live-name   (if live-buffer            (buffer-name live-buffer))
 ;;;         key         (or live-buffer file)
-                                          file        (nth 2 elt))
-                                    (insert (format "\n%-20s %-15s %-15s %s"
-                                                    name buffer live-name file))))))
+	      file        (nth 2 elt))
+	(insert (format "\n%-20s %-15s %-15s %s"
+			name buffer live-name file))))))
 
 ;;; ----------------------------------------------------------------------
 ;;;
@@ -6148,16 +6149,16 @@ all Edebug instrumentation when you think you no longer need them.
 This function looks up `tinylisp-:edebug-instrument-table' and with raw
 force reloads every package again thus wiping out Edebug instrumentation."
   (interactive)
-  (let* (file-list
-         buffer-list
-         function
-         name
-         buffer
-         live-buffer
-         live-name
-         file
-         key
-         tmp)
+  (let (file-list
+	buffer-list
+	function
+	name
+	buffer
+	live-buffer
+	live-name
+	file
+	key
+	tmp)
     (dolist (elt tinylisp-:edebug-instrument-table)
       (setq function    (nth 0 elt)
             name        (symbol-name function)
@@ -6257,12 +6258,12 @@ See `checkdoc-interactive'."
   "Take notes from current point forward or START from beginning of buffer."
   (interactive "P")
   (tinylisp-require 'checkdoc)
-  (let* ((buffer (symbol-value 'checkdoc-diagnostic-buffer))
-         (checkdoc-arguments-in-order-flag      t)
-         (checkdoc-verb-check-experimental-flag t)
-         (checkdoc-bouncy-flag                  t) ;; No auto fixing
-         checkdoc-spellcheck-documentation-flag    ;; Don't call spell
-         checkdoc-autofix-flag)
+  (let ((buffer (symbol-value 'checkdoc-diagnostic-buffer))
+	(checkdoc-arguments-in-order-flag      t)
+	(checkdoc-verb-check-experimental-flag t)
+	(checkdoc-bouncy-flag                  t) ;; No auto fixing
+	checkdoc-spellcheck-documentation-flag    ;; Don't call spell
+	checkdoc-autofix-flag)
     (save-excursion
       (if start
           (ti::pmin))
@@ -6344,10 +6345,10 @@ Return:
  'fixed
  nil         Means ok."
   (ti::pmin)
-  (let* ((regexp (concat "^;+[ \t]*" tag ":[ \t]*$"))
-         (reference (format ";;; %s:" tag))
-         status
-         case-fold-search)
+  (let ((regexp (concat "^;+[ \t]*" tag ":[ \t]*$"))
+	(reference (format ";;; %s:" tag))
+	status
+	case-fold-search)
     (if (not (re-search-forward regexp nil t))
         (setq status 'missing)
       (unless (string= (match-string 0) reference)
@@ -6375,9 +6376,9 @@ Return:
   "Check all Lisp commentary tags and fix as needed. Stop ON-ERROR.
 Return: '((missing-tags) (fixed-tags))."
   (interactive "P")
-  (let* (missing
-         fixed
-         stat)
+  (let (missing
+	fixed
+	stat)
     (if (and (featurep 'folding)
              folding-mode)
         (folding-open-buffer))
@@ -6410,8 +6411,8 @@ Return: '((missing-tags) (fixed-tags))."
 Return.
  '((file ((missing-tags) (fixed-tags))) ..)."
   (interactive "DDir: \nP")
-  (let* (stat
-         list)
+  (let (stat
+	list)
     (dolist (file (directory-files dir 'abs "\\.el$"))
       (setq stat (tinylisp-lisp-mnt-tag-check-and-fix-file file on-error))
       (if stat
