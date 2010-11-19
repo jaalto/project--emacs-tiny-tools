@@ -66,7 +66,7 @@
 ;;      o   Easy filename editing. Deletes directories at time, delete line
 ;;          backward, electric tilde, electric slash, electric colon etc.
 ;;      o   Useful to go along with `C-x' `C-f' command prompt.
-;;      o   Mouse-3 in minibuffers clears the input.
+;;      o   Mouse-3 in minibuffer clears the input.
 ;;
 ;;  Description
 ;;
@@ -159,9 +159,6 @@
 ;;
 ;;      o   Mouse-3 = BIG erase backward from point
 ;;      o   C-mouse-1 = Small delete backward
-;;
-;;      This should give your free hands to cut, paste and Delete, without
-;;      lifting your hand off the mouse.
 
 ;;}}}
 
