@@ -58,10 +58,6 @@
 ;;      (define-key ctl-x-4-map "R" 'tinydesk-recover-state)
 ;;      (define-key ctl-x-4-map "E" 'tinydesk-edit-state-file)
 ;;      (define-key ctl-x-4-map "U" 'tinydesk-unload)
-;;
-;;  To read the documentation after file has been loaded, call
-;;
-;;      M-x tinydesk-version
 
 ;;}}}
 ;;{{{ Documentation
@@ -393,26 +389,16 @@ For full documentation, see function `tinydesk-auto-save'"
 
 (defcustom tinydesk--save-exclude-regexp
   (concat
-
    ;; Gnus
-
    "dribble\\|drafts"
-
    ;;  Do save mail buffers; because you want to call M-x rmail
    ;;  instead.
-
    "\\|RMAIL\\|VM\\|MH"
-
    ;;  TinyDesk suggested "state.<name>" files
-
    "\\|state\\."
-
    ;;  No ange ftp buffers
-
    "\\(ftp\\|anonymous\\)@.*/"
-
    ;;  No files from these directories
-
    "\\|^/tmp/\\|/junk/\\|/trash/\\|/[aA]utosaved?/")
   "*Regexp of files that are not saved to state file.
 match is case sensitive. If you do want not case sensitive match, you
@@ -433,7 +419,6 @@ have to do set this variable to nil and use your own line delete:
 ;;
 ;;       Date: %s
 ;;       M-x load-library RET tinydesk RET
-;;       M-x tinydesk-version RET   ;; To read manual
 ;;       M-x tinydesk-recover-state RET %s RET
 
 "
@@ -546,45 +531,32 @@ path, garbage at line...Hooks may check the contents of this.")
     ;;  - Don't want to use mouse-2 because it's for PASTE.
     ;;  - The others are put to mouse-2 because there is not
     ;;    not always 3 button mouse available.
-
     (define-key tinydesk-mode-map [mouse-3] 'tinydesk-mouse-load-file)
-
     ;;  - When editing a file, those colors might be too annoyinng,
     ;;    so you can remove properties with this. Loading is disabled too
     ;;  - Remeber, Emacs is slow with this... wait some time.
-
     (define-key tinydesk-mode-map [S-mouse-2]
       'tinydesk-clear-buffer-properties)
-
     ;;  To make buffer loadable by mouse again, run this
-
     (define-key tinydesk-mode-map [C-mouse-2]
       'tinydesk-mark-buffer-loadable)
-
     ;;  To mark files that are not loadable, check for possibly typo in
     ;;  filename
-
     (define-key tinydesk-mode-map [C-M-mouse-2]
       'tinydesk-set-face-non-files-buffer))
 
   (when (ti::xemacs-p)
-
     (define-key tinydesk-mode-map [(button3)]
       'tinydesk-mouse-load-file)
-
     (define-key tinydesk-mode-map [(shift button2)]
       'tinydesk-clear-buffer-properties)
-
     (define-key tinydesk-mode-map [(control button2)]
       'tinydesk-mark-buffer-loadable)
-
     (define-key tinydesk-mode-map [(control alt button2)]
       'tinydesk-set-face-non-files-buffer))
 
-  ;; ............................................. users with no mouse ...
-
+  ;;  Non-window system
   (define-key tinydesk-mode-map "\C-c\C-m" 'tinydesk-load-file)
-
   (define-key tinydesk-mode-map "\C-cc" 'tinydesk-clear-buffer-properties)
   (define-key tinydesk-mode-map "\C-cl" 'tinydesk-mark-buffer-loadable)
   (define-key tinydesk-mode-map "\C-cn" 'tinydesk-set-face-non-files-buffer)
@@ -720,7 +692,6 @@ This way you can rip off all comments and leave filenames."
               (progn
                 (ti::buffer-kill-line) (throw 'next t)))
           (setq word (tinydesk-read-word))
-;;;       (setq word (tinydesk-read-word p maxp))
           (ti::buffer-kill-line)
           ;; The \n make cursor forward
           (if word
