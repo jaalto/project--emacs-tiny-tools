@@ -188,11 +188,11 @@ References:
                 (if (< stack-pointer max)          ; 0..max
                     (setq stack-pointer (1+ stack-pointer))
                   (setq stack-pointer 0)))))
-    (when new                           ;  Must update stack
+    (when new                                      ;  Must update stack
       (setq tinymacro--stack-ptr stack-pointer
-            ret (intern-soft new))      ; return symbol
+            ret (intern-soft new))                 ; return symbol
       (if ret
-	  nil                       ; Already exists
+	  nil                                      ; Already exists
         ;;   a) make it b)s et to nil c) put into ret val
         (let ((sym (intern new)))
 	  (set sym nil)
@@ -208,9 +208,9 @@ References:
 	(name-prefix	tinymacro--macro-function-name-prefix)
 	(q		tinymacro--ask-when-stack-wrap-flag)
 	new)
-    (if (or q (< stack-pointer max))               ; yes, go ahead with new
+    (if (or q (< stack-pointer max))                  ; yes, go ahead with new
         (setq new
-              (concat n (if (< stack-pointer max)  ; 0..max
+              (concat n (if (< stack-pointer max)     ; 0..max
                             (setq stack-pointer (1+ stack-pointer))
                           (setq stack-pointer 0))))
       (if (y-or-n-p "Macro stack full, wrap? ")
@@ -218,7 +218,7 @@ References:
 			    (if (< stack-pointer max) ; 0..max
 				(setq stack-pointer (1+ stack-pointer))
 			      (setq stack-pointer 0))))))
-    (if new                             ; Must update stack
+    (if new                                           ; Must update stack
         (setq tinymacro--stack-ptr stack-pointer))
     new))
 
@@ -297,18 +297,11 @@ Return:
   t    is assigned
   nil  not assigned `keyboard-quit'"
   (interactive)
-
-  (let* ((funcname    "")                 ;func name
-         do-it
-         macro-name                     ;our new macro !
-         lookup                         ;what was found
-         ;; --- 1 ---
-         ;; The bullet proof way to find key bind for abort
-         ;; (ti::keymap-function-bind-info 'keyboard-quit global-map)
-         ;; --- 2 --
-         ;; - Or we just say where it is... Nobody relocates it anyway
-         ;; - We use this because function2key does not work in XEmacs
-         (abort-ch (char-to-string ?\007)))
+  (let ((funcname "")
+	(abort-ch (char-to-string ?\007)) ; C-g
+	do-it
+	macro-name                     ;newly created macro
+	lookup)                        ;what was found
     (ti::verb)
     (if (null key)
         (setq key
@@ -323,13 +316,13 @@ Return:
             (or (and (current-local-map) ;in fundamental-mode this is nil.
                      (lookup-key (current-local-map) key))
                 (lookup-key global-map key) key))
-      ;; ................................................... occupied? ...
+      ;;  occupied?
       (when lookup
         (if (and (symbolp lookup)
                  (fboundp lookup))      ;just plain function
             (setq funcname (symbol-name lookup))
           (setq funcname  (prin1-to-string lookup))))
-      ;; ............................................. ask permission? ...
+      ;;  ask permission
       (when
           (and verb
                (not (null lookup)))
@@ -337,7 +330,7 @@ Return:
               (y-or-n-p
                (format
                 "Key already occupied by %s; continue? " funcname))))
-      ;; ................................................ assign macro ...
+      ;;  assign macro
       (cond
        ((and verb (null do-it))
         (message
@@ -349,12 +342,12 @@ Return:
         ;;  save previous
         (when (and (symbolp lookup)
                    (fboundp lookup)
-                   (not (string-match "^tim" funcname))
+                   (not (string-match "^tinymacro" funcname))
                    (not (assoc key tinymacro--function-list)))
           (push (list key lookup) tinymacro--function-list))
         (global-set-key key macro-name)
-        (setq tinymacro--last-macro-func  macro-name ;set >> GLOBALS <<
-              tinymacro--last-macro-key   key)
+        (setq tinymacro--last-macro-func macro-name ;set GLOBALS
+              tinymacro--last-macro-key  key)
         (if verb
             (message
              "TinyMacro: Created function: %s" (symbol-name macro-name)))
