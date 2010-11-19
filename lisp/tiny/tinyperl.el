@@ -3206,7 +3206,7 @@ TEXT-DATA      ends to cr/lf"
       ;; These values are rough guesses.
       (save-excursion
         (when line
-          (goto-line line))
+          (ti::goto-line line))
         (setq point      (point))
         (setq min        (context-min point 7))
         (setq max        (context-max point 5))
@@ -3288,8 +3288,7 @@ Return:
 	    (message "TinyPerl: reading faq context %s" file)))
         (setq buffer (find-file-noselect file)))
       (with-current-buffer buffer
-        (goto-line grep-line))
-
+        (ti::goto-line grep-line))
       ;;  read enough context
       (when (setq data
                   (tinyperl-pod-grep-faq-data-context
