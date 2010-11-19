@@ -731,11 +731,11 @@ Which is due to missing variables
 This advice resets them to some default values, so that you don't get
 errors."
   (save-excursion
-    (set-buffer (ange-ftp-ftp-process-buffer host user))
-    (if (null ange-ftp-ascii-hash-mark-size)
-        (setq ange-ftp-ascii-hash-mark-size 1024))
-    (if (null ange-ftp-binary-hash-mark-size)
-        (setq ange-ftp-binary-hash-mark-size 1024))))
+    (with-current-buffer (ange-ftp-ftp-process-buffer host user)
+      (if (null ange-ftp-ascii-hash-mark-size)
+	  (setq ange-ftp-ascii-hash-mark-size 1024))
+      (if (null ange-ftp-binary-hash-mark-size)
+	  (setq ange-ftp-binary-hash-mark-size 1024)))))
 
 ;;}}}
 ;;{{{ code: misc
@@ -749,17 +749,16 @@ Start from current point. The point is positioned at the beginning of line.
 Buffer read-only is removed.
 
 The BODY should move the pointer to next file and bol, until eob reached."
-  (`
-   (let ((end (tinydired-last-file-point))
+  `(let ((end (tinydired-last-file-point))
 	 buffer-read-only)
      (beginning-of-line)
      (while (and (not (eobp))
                  (< (point) end))
        (beginning-of-line)
-       (if (looking-at (, re))
+       (if (looking-at ,re)
            (progn
-             (,@ body))
-         (forward-line 1))))))
+             ,@ body)
+         (forward-line 1)))))
 
 ;;; ----------------------------------------------------------------------
 ;;;
@@ -767,10 +766,9 @@ The BODY should move the pointer to next file and bol, until eob reached."
 (defmacro tinydired-map-over-files (&rest body)
   "Map over files. No No dirs are included.
 You must advance the cursor in the BODY. See `tinydired-map-over-regexp'."
-  (`
-   (progn
+  `(progn
      (tinydired-first-file)
-     (tinydired-map-over-regexp "^. +[^d]" (,@ body)))))
+     (tinydired-map-over-regexp "^. +[^d]" ,@ body)))
 
 ;;; ----------------------------------------------------------------------
 ;;;
@@ -781,28 +779,26 @@ The calling BODY should position the cursor for next search so
 that current line is skipped when BODY finishes.
 
 The buffer is writable during mapping."
-  (`
-   (let (buffer-read-only
+  `(let (buffer-read-only
 	 (ReGexp (dired-marker-regexp)))
      (progn
        (tinydired-map-over-files
         (if (looking-at ReGexp)
             (forward-line 1)
           (beginning-of-line)
-          (,@ body)))))))
+          ,@ body)))))
 
 ;;; ----------------------------------------------------------------------
 ;;;
 (defmacro tinydired-remember-marks (var-sym &optional beg end)
   "Save mark list to variable VAR-SYM between points BEG and END.
 START and END defaults to all files"
-  (`
-   (setq (, var-sym)
-         (dired-remember-marks
-          (or (, beg)
+  `(setq ,var-sym
+	 (dired-remember-marks
+          (or ,beg
               (tinydired-first-line-point))
-          (or (, end)
-              (tinydired-last-file-point))))))
+          (or ,end
+              (tinydired-last-file-point)))))
 
 ;;; ----------------------------------------------------------------------
 ;;;
@@ -999,7 +995,8 @@ The `mark' is first character in the left for file or dir."
   "Put directories first in dired listing."
   (let (buffer-read-only
         marks
-        p1 p2                           ;points
+        p1
+	p2                           ;point
         region)
     ;;  - Buffer gets narrowed in some dired internal operations, like
     ;;    pressing "l", dired-do-redisplay
@@ -1048,10 +1045,10 @@ Insert DIR to BUFFER, which defaults to `tinydired--dir-copy-buffer'"
     (ti::temp-buffer (or buffer
 			 tinydired--dir-copy-buffer)
 		     'clear)
-    (set-buffer (or buffer
-		    tinydired--dir-copy-buffer))
-    (insert-directory (expand-file-name dir)
-                      dired-listing-switches nil t)))
+    (with-current-buffer (or buffer
+			     tinydired--dir-copy-buffer)
+      (insert-directory (expand-file-name dir)
+			dired-listing-switches nil t))))
 
 ;;; ----------------------------------------------------------------------
 ;;;
@@ -1064,11 +1061,11 @@ Return:
   line
   nil   ,no line was found"
   (save-excursion
-    (set-buffer tinydired--dir-copy-buffer)
-    (ti::pmin)
-    ;;  Pick first match
-    (if (re-search-forward (concat " " file) nil t)
-        (ti::read-current-line))))
+    (with-current-buffer tinydired--dir-copy-buffer
+      (ti::pmin)
+      ;;  Pick first match
+      (if (re-search-forward (concat " " file) nil t)
+	  (ti::read-current-line)))))
 
 ;;}}}
 ;;{{{ code: interactive
@@ -1292,9 +1289,9 @@ be read again."
 (defun tinydired-marks-save ()
   "Save mark list to private storage.
 Use this function if you know next operation will remove the marks.
-You can get the marks back with `tinydired-marks-restore'."
+Restore saved marks with `tinydired-marks-restore'."
   (interactive)
-  (save-excursion                       ;due to next command
+  (save-excursion                       ;due to next line
     (tinydired-remember-marks tinydired--mark-list)
     (message "TinyDired: Marks saved.")))
 
@@ -1314,7 +1311,7 @@ You can get the marks back with `tinydired-marks-restore'."
 ;;;
 ;;;###autoload
 (defun tinydired-pgup ()
-  "Move cursor to _last_ file in dired mode."
+  "Move cursor to last file in dired mode."
   (interactive)
   (dired-next-line (- tinydired--page-step))
   (if (bobp)
@@ -1755,21 +1752,20 @@ Marks are left only to files which were loaded into Emacs."
             load        nil)
       (if buffer                      ;read stat only if it's in Emacs
           (save-excursion
-            (set-buffer buffer)
-            (setq modify-stat (buffer-modified-p)
-                  read-stat   buffer-read-only)))
+	    (with-current-buffer buffer
+	      (setq modify-stat (buffer-modified-p)
+		    read-stat   buffer-read-only))))
       (incf count)
       ;; ... ... ... ... ... ... ... ... ... ... ... ... possible load . .
-      (cond
-       ((and (null buffer)
-             vc-reg-stat                        ;; in VC
-             (not (file-writable-p file))       ;; -r--r--r--
-             (or arg
-                 (y-or-n-p
-                  (concat "file " fn " not in Emacs. Load? " ))))
+      (when (and (null buffer)
+		 vc-reg-stat                        ;; in VC
+		 (not (file-writable-p file))       ;; -r--r--r--
+		 (or arg
+		     (y-or-n-p
+		      (concat "file " fn " not in Emacs. Load? " ))))
         (incf loaded)
         (setq buffer (find-file-noselect file)
-              load   t)))
+              load   t))
       ;; ... ... ... ... ... ... ... ... ... ... ... ... ... .. handle . .
       (cond
        (load
@@ -1862,25 +1858,23 @@ Bugs:
             load        nil)
       (incf  count)
       ;; ... ... ... ... ... ... ... ... ... ... ... ... possible load . .
-      (cond
-       ((and (null buffer)
-             vc-reg-stat
-             (file-writable-p file)  ; "-r--r--r--" , not ci'able file
-             (y-or-n-p (concat "file " fn " not in Emacs. Load? " )))
+      (when (and (null buffer)
+		 vc-reg-stat
+		 (file-writable-p file)  ; "-r--r--r--" , not ci'able file
+		 (y-or-n-p (concat "file " fn " not in Emacs. Load? " )))
         (setq buffer (find-file-noselect file)
               load   t)
-        (incf loaded)))
+        (incf loaded))
       ;; ... ... ... ... ... ... ... ... ... ... ... ... ... ...  stat . .
-      (cond
-       ((setq buffer (get-file-buffer file))
+      (when (setq buffer (get-file-buffer file))
         (save-excursion
-          (set-buffer buffer)
-          (setq modify-stat (buffer-modified-p)
-                read-stat   buffer-read-only)
-          ;;  Can't ask stat if not in VC control
-          (and vc-reg-stat
-               (setq diff-no-stat
-                     (vc-workfile-unchanged-p file 'get-diffs))))))
+	  (with-current-buffer
+	      (setq modify-stat (buffer-modified-p)
+		    read-stat   buffer-read-only)
+	    ;;  Can't ask stat if not in VC control
+	    (and vc-reg-stat
+		 (setq diff-no-stat
+		       (vc-workfile-unchanged-p file 'get-diffs))))))
       ;; ... ... ... ... ... ... ... ... ... ... ... ... set diff stat . .
       (cond
        ((and buffer
@@ -1907,7 +1901,7 @@ Bugs:
               (kill-buffer buffer))))
        ((and buffer
              vc-reg-stat)
-        (incf  handled)
+        (incf handled)
         (save-excursion
           (save-window-excursion
             (unwind-protect
