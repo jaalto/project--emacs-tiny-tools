@@ -36,7 +36,7 @@
 ;;  ~/.emacs startup file.
 ;;
 ;;      ;; You could also call M-x tinycompile-install / tinycompile-uninstall
-;;      (add-hook tinycompile-:load-hook 'tinycompile-install)
+;;      (add-hook tinycompile--load-hook 'tinycompile-install)
 ;;      (require 'tinycompile)
 ;;
 ;;  or use this autoload; your ~/.emacs loads quicker
@@ -91,7 +91,7 @@
   (defvar mode-line-mode-menu)
   (defvar tinyurl-mode))
 
-(ti::package-defgroup-tiny TinyCompile tinycompile-: tools
+(ti::package-defgroup-tiny TinyCompile tinycompile-- tools
   "Compile buffers additions.
   Overview of features
 
@@ -101,12 +101,12 @@
 
 ;;; .......................................................... &v-menu ...
 
-(defcustom tinycompile-:menu-use-flag t
+(defcustom tinycompile--menu-use-flag t
   "*Non-nil means to use echo-area menu."
   :type  'boolean
   :group 'TinyCompile)
 
-(defvar tinycompile-:menu-main
+(defvar tinycompile--menu-main
   (list
    '(format
      "%sTinyCompile: k)ill files s)horten SPC)hide rRU)egexp RET)parse x)mode off"
@@ -138,7 +138,7 @@ x    Turn mode off.")
 ;;;### (autoload 'tinycompile-debug-toggle "tinycompile" "" t)
 ;;;### (autoload 'tinycompile-debug-show   "tinycompile" "" t)
 
-(eval-and-compile (ti::macrof-debug-standard "tinycompile" "-:"))
+(eval-and-compile (ti::macrof-debug-standard "tinycompile" "--"))
 
 ;;;###autoload (autoload 'turn-on-tinycompile-mode      "tinycompile" "" t)
 ;;;###autoload (autoload 'turn-off-tinycompile-mode     "tinycompile" "" t)
@@ -147,7 +147,7 @@ x    Turn mode off.")
 
 (eval-and-compile
   (ti::macrof-minor-mode-wizard
-   "tinycompile-" " Tco" "\C-c:" "Tco" 'TinyCompile "tinycompile-:" ;1-6
+   "tinycompile-" " Tco" "\C-c:" "Tco" 'TinyCompile "tinycompile--" ;1-6
 
    "Additional commands to Compile buffer. You can kill lines or
 shorten the file names and hide comments.
@@ -155,10 +155,10 @@ shorten the file names and hide comments.
 Defined keys:
 
 Prefix key to access the minor mode is defined in
-`tinycompile-:mode-prefix-key'
+`tinycompile--mode-prefix-key'
 
-\\{tinycompile-:mode-map}
-\\{tinycompile-:mode-prefix-map}"
+\\{tinycompile--mode-map}
+\\{tinycompile--mode-prefix-map}"
 
    "TinyCompile"
    (progn
@@ -167,7 +167,7 @@ Prefix key to access the minor mode is defined in
          (message "TinyCompile: Are you sure this is compile buffer?")))
    "Compile buffer extras."
    (list
-    tinycompile-:mode-easymenu-name
+    tinycompile--mode-easymenu-name
     ["Kill all matching file lines at point"  tinycompile-kill-all-file-lines t]
     ["Shorten directory names"            tinycompile-shorten-lines           t]
     ["Goto file at point"                 tinycompile-parse-line-goto-main    t]
@@ -188,7 +188,7 @@ Prefix key to access the minor mode is defined in
          (define-key root-map [(button2)] 'tinycompile-parse-line-goto-main)
        (define-key root-map [mouse-2]     'tinycompile-parse-line-goto-main))
      (cond
-      (tinycompile-:menu-use-flag
+      (tinycompile--menu-use-flag
        ;;  Using menu to remeber commands is easier if you don't use
        ;;  menu bar at all.
        (define-key root-map p 'tinycompile-menu-main))
@@ -212,11 +212,11 @@ Prefix key to access the minor mode is defined in
 (defun tinycompile-menu-main (&optional arg)
   "Show echo area menu and pass ARG to `ti::menu-menu'."
   (interactive "P")
-  (ti::menu-menu 'tinycompile-:menu-main arg))
+  (ti::menu-menu 'tinycompile--menu-main arg))
 
 ;;; ......................................................... &v-hooks ...
 
-(defcustom tinycompile-:load-hook nil
+(defcustom tinycompile--load-hook nil
   "*Hook that is run when package is loaded."
   :type 'hook
   :group 'TinyCompile)
@@ -227,7 +227,7 @@ Prefix key to access the minor mode is defined in
 ;;; ........................................................ &v-public ...
 ;;; User configurable
 
-(defcustom tinycompile-:table-hide
+(defcustom tinycompile--table-hide
   '(("^.*\\.el:"                        ;lisp
      "^.*:[ \t]*[;\"'].*")
     ("^.*\\.\\([cC][cC]?\\|[hH][hH]?\\):" ;C/C++
@@ -346,7 +346,7 @@ Line format must be
 
 ;;; ----------------------------------------------------------------------
 ;;;
-(defvar tinycompile-:buffer-name nil
+(defvar tinycompile--buffer-name nil
   "Buffer name is asked from user.
 Varaible is made buffer local.
 See `tinycompile-parse-line-goto-guess'.")
@@ -359,16 +359,16 @@ See `tinycompile-parse-line-goto-guess'.")
 	 (col  (and elt (string-to-int (nth 1 elt)))))
     (when elt
       (let ((buffer
-	     (or tinycompile-:buffer-name
+	     (or tinycompile--buffer-name
 		 (completing-read
 		  "TinyCompile, buffer to associate: "
 		  (ti::list-to-assoc-menu
 		   (mapcar 'buffer-name (buffer-list)))
 		  nil
 		  t))))
-	(make-local-variable 'tinycompile-:buffer-name)
-	(setq tinycompile-:buffer-name buffer)
-	(pop-to-buffer tinycompile-:buffer-name)
+	(make-local-variable 'tinycompile--buffer-name)
+	(setq tinycompile--buffer-name buffer)
+	(pop-to-buffer tinycompile--buffer-name)
 	(goto-line line)
 	(unless (zerop col)
 	  (setq col (1- col))		;Emacs columns are zero based
@@ -538,9 +538,9 @@ Return:
 (defun tinycompile-show-hide-toggle (&optional regexp)
   "Hide or show comment lines matching REGEXP.
 References:
- `tinycompile-:table-hide'"
+ `tinycompile--table-hide'"
   (interactive)
-  (let ((list tinycompile-:table-hide)
+  (let ((list tinycompile--table-hide)
 	search
 	show)
     (save-excursion
@@ -560,7 +560,7 @@ References:
        (t
         (if (null regexp)
             (message
-             "TinyCompile: No matching regexp in tinycompile-:table-hide")
+             "TinyCompile: No matching regexp in tinycompile--table-hide")
           (ti::text-re-search
            regexp nil nil nil
            (if show
@@ -599,9 +599,9 @@ See `tinycompile-hide-by-regexp' and `tinycompile-hide-by-regexp-whole-line'."
 (if (default-value 'tinycompile-mode)
     (setq-default tinycompile-mode nil))
 
-(add-hook 'tinycompile-:mode-define-keys-hook  'tinycompile-mode-define-keys)
+(add-hook 'tinycompile--mode-define-keys-hook  'tinycompile-mode-define-keys)
 
 (provide   'tinycompile)
-(run-hooks 'tinycompile-:load-hook)
+(run-hooks 'tinycompile--load-hook)
 
 ;;; tinycompile.el ends here
