@@ -34,8 +34,8 @@
 ;;   Put this file on your Emacs-Lisp `load-path', add following into your
 ;;   $HOME/.emacs startup file
 ;;
-;;      (setq tinydebian-:novice-mode t)  ;; or nil
-;;      (add-hook 'tinydebian-:load-hook 'tinydebian-install)
+;;      (setq tinydebian--novice-mode t)  ;; or nil
+;;      (add-hook 'tinydebian--load-hook 'tinydebian-install)
 ;;      (require 'tinydebian)
 ;;
 ;;   If you have any questions about this Emacs package:
@@ -119,7 +119,7 @@
 
 ;;{{{ setup: libraries
 
-(defconst tinydebian-:version-time "2010.1119.1434"
+(defconst tinydebian--version-time "2010.1119.1435"
   "Last edited time.")
 
 (require 'tinylibm)
@@ -144,7 +144,7 @@
   (defvar font-lock-defaults)
   (defvar gnus-article-buffer))
 
-(ti::package-defgroup-tiny TinyDebian tinydebian-: extensions
+(ti::package-defgroup-tiny TinyDebian tinydebian-- extensions
   "Debian System administrator's grabbag of utilities.")
 
 ;;}}}
@@ -152,35 +152,35 @@
 
 ;;; ......................................................... &v-hooks ...
 
-(defcustom tinydebian-:novice-mode t
+(defcustom tinydebian--novice-mode t
   "*If nil, do no hand-holding. Thi removed all extra help
 messages inserted e.g. in BTS control send message templates."
   :type  'boolean
   :group 'TinyDebian)
 
-(defcustom tinydebian-:load-hook nil
+(defcustom tinydebian--load-hook nil
   "*Hook run when file has been loaded."
   :type  'hook
   :group 'TinyDebian)
 
-(defcustom tinydebian-:find-bug-nbr-hook '(tinydebian-bug-nbr-any)
+(defcustom tinydebian--find-bug-nbr-hook '(tinydebian-bug-nbr-any)
   "*Functions to return Debian bug tracking number as string.
 Default value is '(tinydebian-bug-nbr-any)."
   :type  'function
   :group 'TinyDebian)
 
-(defcustom tinydebian-:find-email-hook '(tinydebian-email-any)
+(defcustom tinydebian--find-email-hook '(tinydebian-email-any)
   "*Functions to return Email address as string.
 Default value is '(tinydebian-email-any)."
   :type  'function
   :group 'TinyDebian)
 
-(defcustom tinydebian-:load-hook nil
+(defcustom tinydebian--load-hook nil
   "*Hook run when file has been loaded."
   :type  'hook
   :group 'TinyDebian)
 
-(defcustom tinydebian-:browse-url-function
+(defcustom tinydebian--browse-url-function
   (function tinydebian-browse-url-browse-url)
   "*Function to run for HTTP URLs. Default is `browse-url'.
 To use text mode buffer inside Emacs, set value to
@@ -195,61 +195,61 @@ See also `browse-url-browser-function'."
 
 ;;; ................................................... &v-user-config ...
 
-(defcustom tinydebian-:install-buffer-file-name-regexp
+(defcustom tinydebian--install-buffer-file-name-regexp
   "/debian/\\(changelog\\|.*README\\)"
   "*Activate `tinydebian-bts-mode' on buffers whose file name match regexp.
 This variable is used when function `tinydebian-install' is called."
   :type  'regexp
   :group 'TinyDebian)
 
-(defcustom tinydebian-:buffer-tiger "*Tinydebian tiger*"
+(defcustom tinydebian--buffer-tiger "*Tinydebian tiger*"
   "*Buffer name where to generate tiger(1) mail report chmod fixes.
 See function `tinydebian-command-audit-report-tiger'."
   :type  'string
   :group 'TinyDebian)
 
-(defcustom tinydebian-:buffer-wnpp-alert "*Tinydebian wnpp-alert*"
+(defcustom tinydebian--buffer-wnpp-alert "*Tinydebian wnpp-alert*"
   "*Buffer name where to generate wnpp-alert(1) report.
 See function `tinydebian-command-show-wnpp-alert'."
   :type  'string
   :group 'TinyDebian)
 
-(defcustom tinydebian-:buffer-rc-alert "*Tinydebian rc-alert*"
+(defcustom tinydebian--buffer-rc-alert "*Tinydebian rc-alert*"
   "*Buffer name where to generate rc-alert(1) report.
 See function `tinydebian-command-show-rc-alert'."
   :type  'string
   :group 'TinyDebian)
 
-(defcustom tinydebian-:wnpp-alert-mode-name "TwnppAlert"
+(defcustom tinydebian--wnpp-alert-mode-name "TwnppAlert"
   "*Editing mode for WNPP alert buffer."
   :type  'string
   :group 'TinyDebian)
 
-(defcustom tinydebian-:wnpp-alert-mode-hook
+(defcustom tinydebian--wnpp-alert-mode-hook
   '(tinydebian-wnpp-alert-default-mode-bindings)
   "*Hook run after the `tinydebian-wnpp-alert-mode' is turned on."
   :type  'hook
   :group 'TinyDebian)
 
-(defcustom tinydebian-:buffer-www "*Tinydebian WWW*"
+(defcustom tinydebian--buffer-www "*Tinydebian WWW*"
   "*Buffer name where to put WWW call results.
-See `tinydebian-:browse-url-function'."
+See `tinydebian--browse-url-function'."
   :type  'string
   :group 'TinyDebian)
 
-(defcustom tinydebian-:buffer-http-get "*Tinydebian WWW HTTP*"
+(defcustom tinydebian--buffer-http-get "*Tinydebian WWW HTTP*"
   "*Buffer name where to put HTTP GET result.
 See `tinydebian-debian-url-bug-initialize'."
   :type  'string
   :group 'TinyDebian)
 
-(defcustom tinydebian-:buffer-bug-format "*Tinydebian bug#%s*"
+(defcustom tinydebian--buffer-bug-format "*Tinydebian bug#%s*"
   "*A `format' string for buffer, where %s is substituted with bug number.
 See `tinydebian-buffer-url-bug'."
   :type  'string
   :group 'TinyDebian)
 
-(defcustom tinydebian-:bts-mail-type-it-nmu-message
+(defcustom tinydebian--bts-mail-type-it-nmu-message
   "This bug seems to be a candidate for NMU. I have some free time
 and I am offering help. Please let me know if this bug
 is already been worked on or if it's okay to NMU the package."
@@ -263,13 +263,13 @@ See also `tinydebian-bts-mail-type-it-nmu-hook'."
   :type  'hook
   :group 'TinyDebian)
 
-(defcustom tinydebian-:install-gnus-newsgroup-name-regexp
+(defcustom tinydebian--install-gnus-newsgroup-name-regexp
   "debian"
   "*Newsgroup name regexp to match to activate `tinydebian-bts-mode'."
   :type  'string
   :group 'TinyDebian)
 
-(defface tinydebian-:warn-face
+(defface tinydebian--warn-face
   '((((class color) (background light))
      (:background "green"))
     (((class color) (background dark))
@@ -285,7 +285,7 @@ See also `tinydebian-bts-mail-type-it-nmu-hook'."
 
 ;;; Color loading section  This is messy *Blech!*
 ;;
-(defface tinydebian-:item-face
+(defface tinydebian--item-face
   '((((class color) (background light))
      (:foreground "green4"))
     (((class color) (background dark))
@@ -293,7 +293,7 @@ See also `tinydebian-bts-mail-type-it-nmu-hook'."
   "Face used for noticing important items."
   :group 'TinyDebian)
 
-(defcustom tinydebian-:font-lock-mode t
+(defcustom tinydebian--font-lock-mode t
   "If non-nil, allow turning on `font-lock-mode'."
   :type  'boolean
   :group 'TinyDebian)
@@ -303,10 +303,10 @@ See also `tinydebian-bts-mail-type-it-nmu-hook'."
 
 ;;; ....................................................... &v-private ...
 
-(defvar tinydebian-:wnpp-alert-mode-map nil
+(defvar tinydebian--wnpp-alert-mode-map nil
   "Local keymap for WNPP alert listing.")
 
-(defvar tinydebian-:font-lock-keywords-adaptive-date t
+(defvar tinydebian--font-lock-keywords-adaptive-date t
   "Flag to signal that current time is used to display today's log.
 For exmple in /etc/syslog today's log log entries are highlighted
 differently that previous days. However this must be changed in
@@ -314,9 +314,9 @@ next day, because the day changes.
 
 This flags says, that adaptive-date regexps are be used.")
 
-(make-variable-buffer-local 'tinydebian-:font-lock-keywords-adaptive-date)
+(make-variable-buffer-local 'tinydebian--font-lock-keywords-adaptive-date)
 
-(defvar tinydebian-:font-lock-keywords-bugs-rc ;; &font
+(defvar tinydebian--font-lock-keywords-bugs-rc ;; &font
   ;; Package: [59]bookmarks (optional; [60]Tobias Toedter) [bookmarks/1.4 ; =] [[61]
   ;; add/edit comment]
   ;; [62]401275 [P        N ] Remove two sites which force the user to enter a 24 mo
@@ -335,35 +335,35 @@ This flags says, that adaptive-date regexps are be used.")
     '(1 'font-lock-type-face)
     '(2 'font-lock-keyword-face)))
   "Font lock keywords to set after calling `tinydebian-url-list-bugs-by-rc'.
-Only used if `tinydebian-:browse-url-function'is set to
+Only used if `tinydebian--browse-url-function'is set to
 `tinydebian-browse-url-lynx-dump'.")
 
-(defvar tinydebian-:font-lock-package-bugs
+(defvar tinydebian--font-lock-package-bugs
   (list
    (list
     "Package: *\\[[0-9]+\\] *\\([a-z0-9.-]+\\)"
     1 'font-lock-builtin-face))
   "Font lock keywords to set after calling `tinydebian-url-list-bugs-by-rc'.
-Only used if `tinydebian-:browse-url-function'is set to
+Only used if `tinydebian--browse-url-function'is set to
 `tinydebian-browse-url-lynx-dump'.")
 
-(defconst tinydebian-:bin-dpkg (executable-find "dpkg")
+(defconst tinydebian--bin-dpkg (executable-find "dpkg")
   "Location of `dpkg' binary.")
 
-(defconst tinydebian-:bin-apt-cache (executable-find "apt-cache")
+(defconst tinydebian--bin-apt-cache (executable-find "apt-cache")
   "Location of `apt-cache' binary.")
 
-(defconst tinydebian-:bin-grep-available (executable-find "grep-available")
+(defconst tinydebian--bin-grep-available (executable-find "grep-available")
   "Location of `grep-available' binary.")
 
-(defvar tinydebian-:grep-find-devel-docdir-list
+(defvar tinydebian--grep-find-devel-docdir-list
   '("/usr/share/doc/debian-policy"
     "/usr/share/doc/debian-reference-en"
     "/usr/share/doc/debian-reference-en"
     "/usr/share/doc/developers-reference")
   "*List of directororied to search for Debian development policy etc.")
 
-(defvar tinydebian-:usertag-email-list
+(defvar tinydebian--usertag-email-list
   (delq
    nil
    (list
@@ -378,7 +378,7 @@ Only used if `tinydebian-:browse-url-function'is set to
 An alist of email addresses for use in `completing-read':
   '((EMAIL . NUMBER) (EMAIL . NUMBER) ...).")
 
-(defvar tinydebian-:severity-list
+(defvar tinydebian--severity-list
   '(("critical"
      "Makes unrelated software on the system (or the whole system) break,
 or causes serious data loss, or introduces a security hole on systems where
@@ -410,7 +410,7 @@ tag should be used instead."))
 This is set to normal by default, but can be overridden either by supplying a Severity line in the pseudo-header when the bug is submitted Severity or error.
 http://www.debian.org/Bugs/Developer#severities")
 
-(defvar tinydebian-:launchpad-status-list ;FIXME add descriptions
+(defvar tinydebian--launchpad-status-list ;FIXME add descriptions
   '(("confirmed"
      "")
     ("new"
@@ -433,7 +433,7 @@ http://www.debian.org/Bugs/Developer#severities")
      ""))
   "List of status values and their explanations '((value description) ...).")
 
-(defvar tinydebian-:launchpad-importance-list ;FIXME add descriptions
+(defvar tinydebian--launchpad-importance-list ;FIXME add descriptions
   '(("wishlist"
      "")
     ("low"
@@ -446,10 +446,10 @@ http://www.debian.org/Bugs/Developer#severities")
      ""))
   "List of importance values and their explanations '((value description) ...).")
 
-(defvar tinydebian-:severity-selected nil
+(defvar tinydebian--severity-selected nil
   "Function `tinydebian-severity-select-*' sets this to user selection.")
 
-(defconst tinydebian-:menu-severity
+(defconst tinydebian--menu-severity
   '("\
 Severity: ?h)elp c)rit g)rave s)erious i)import RET-n)orm m)inor w)ish f)ixed"
     ;; NOTE: These function are automatically created, you don't find
@@ -509,7 +509,7 @@ fixed
     on releasing the package with the stable release of Debian.
     Currently, these are critical, grave and serious.")
 
-(defvar tinydebian-:removal-keyword-list
+(defvar tinydebian--removal-keyword-list
   '(
     "abandoned upstream"		; Upstream no longer developing it
     "buggy"
@@ -526,7 +526,7 @@ fixed
   "*List of PAckage removal keywords.
 See http://wiki.debian.org/ftpmaster_Removals")
 
-(defvar tinydebian-:tags-list
+(defvar tinydebian--tags-list
   '(("already-in-ubuntu"
      "Package is in Ubuntu but not yet in Debian. This is a notice to a wishlist
 See <http://utnubu.alioth.debian.org/>.xm")
@@ -592,34 +592,34 @@ These tags are displayed in the list of bugs when you look at a
 package's page, and when you look at the full bug log.
 See <http://www.debian.org/Bugs/Developer#tags>.")
 
-(defvar tinydebian-:wnpp-buffer "*TinyDebian WNPP*"
+(defvar tinydebian--wnpp-buffer "*TinyDebian WNPP*"
   "WNPP question buffer.")
 
-(defvar tinydebian-:menu-wnpp-selected nil
-  "Placeholder of selection from `tinydebian-:menu-wnpp'.")
+(defvar tinydebian--menu-wnpp-selected nil
+  "Placeholder of selection from `tinydebian--menu-wnpp'.")
 
-(defconst tinydebian-:menu-wnpp
+(defconst tinydebian--menu-wnpp
   (list
    '(format
      "TinyDebian:WNPP%s 1i)tp 2o)rphan 3a)dopt 4n)ew package ?)help q)uit"
-     (if tinydebian-:menu-wnpp-selected
-	 (format ";%s " (symbol-name tinydebian-:menu-wnpp-selected))
+     (if tinydebian--menu-wnpp-selected
+	 (format ";%s " (symbol-name tinydebian--menu-wnpp-selected))
        ""))
    (list
-    '(?1 . ( (setq tinydebian-:menu-wnpp-selected 'package)))
-    '(?i . ( (setq tinydebian-:menu-wnpp-selected 'package)))
-    '(?I . ( (setq tinydebian-:menu-wnpp-selected 'package)))
-    '(?p . ( (setq tinydebian-:menu-wnpp-selected 'package)))
-    '(?P . ( (setq tinydebian-:menu-wnpp-selected 'package)))
-    '(?2 . ( (setq tinydebian-:menu-wnpp-selected 'oprhan)))
-    '(?o . ( (setq tinydebian-:menu-wnpp-selected 'oprhan)))
-    '(?O . ( (setq tinydebian-:menu-wnpp-selected 'oprhan)))
-    '(?3 . ( (setq tinydebian-:menu-wnpp-selected 'adopt)))
-    '(?a . ( (setq tinydebian-:menu-wnpp-selected 'adopt)))
-    '(?A . ( (setq tinydebian-:menu-wnpp-selected 'adopt)))
-    '(?4 . ( (setq tinydebian-:menu-wnpp-selected 'new)))
-    '(?n . ( (setq tinydebian-:menu-wnpp-selected 'new)))
-    '(?N . ( (setq tinydebian-:menu-wnpp-selected 'new)))))
+    '(?1 . ( (setq tinydebian--menu-wnpp-selected 'package)))
+    '(?i . ( (setq tinydebian--menu-wnpp-selected 'package)))
+    '(?I . ( (setq tinydebian--menu-wnpp-selected 'package)))
+    '(?p . ( (setq tinydebian--menu-wnpp-selected 'package)))
+    '(?P . ( (setq tinydebian--menu-wnpp-selected 'package)))
+    '(?2 . ( (setq tinydebian--menu-wnpp-selected 'oprhan)))
+    '(?o . ( (setq tinydebian--menu-wnpp-selected 'oprhan)))
+    '(?O . ( (setq tinydebian--menu-wnpp-selected 'oprhan)))
+    '(?3 . ( (setq tinydebian--menu-wnpp-selected 'adopt)))
+    '(?a . ( (setq tinydebian--menu-wnpp-selected 'adopt)))
+    '(?A . ( (setq tinydebian--menu-wnpp-selected 'adopt)))
+    '(?4 . ( (setq tinydebian--menu-wnpp-selected 'new)))
+    '(?n . ( (setq tinydebian--menu-wnpp-selected 'new)))
+    '(?N . ( (setq tinydebian--menu-wnpp-selected 'new)))))
   ;;  This message is straight from reportbug(1)
   ;;  'apt-get install reportbug'
   "What request type? If none of these things mean anything to you, or
@@ -645,7 +645,7 @@ you are trying to report a bug in an existing package)
 q      Quit menu.
 ")
 
-(defconst tinydebian-:rfp-template "\
+(defconst tinydebian--rfp-template "\
 Package: wnpp
 Severity: wishlist
 
@@ -662,11 +662,11 @@ Severity: wishlist
   "Wnpp RFP/ITP template.
 NOTE: The <TAG:> constructs must be retained.")
 
-(defvar tinydebian-:rfp-hook nil
+(defvar tinydebian--rfp-hook nil
   "Hook run after function `tinydebian-bts-mail-type-rfp'.
-See also `tinydebian-:rfp-template'")
+See also `tinydebian--rfp-template'")
 
-(defconst tinydebian-:wnpp-template-licenses-alist
+(defconst tinydebian--wnpp-template-licenses-alist
   '( ;; List updated 2008-11-03
     "Apache-2.0"
     "Artistic"
@@ -686,7 +686,7 @@ See also `tinydebian-:rfp-template'")
 See also <http://www.debian.org/legal/licenses/> and
 <http://people.debian.org/~bap/dfsg-faq.html>.")
 
-(defconst tinydebian-:rfs-template "\
+(defconst tinydebian--rfs-template "\
 
 I'm looking for sponsor:
 
@@ -716,103 +716,103 @@ NOTE: The <TAG:> constructs must be retained and are replaced in message:
   License         : <license: GPL, LGPL, BSD, MIT/X, Artistic, etc.>
   Programming Lang: <C, C++, C#, Perl, Python, etc.>
 
-See also `tinydebian-:rfs-hook'.")
+See also `tinydebian--rfs-hook'.")
 
-(defvar tinydebian-:rfs-hook nil
+(defvar tinydebian--rfs-hook nil
   "Hook run after function `tinydebian-bts-mail-type-rfs'.
-See also `tinydebian-:rfs-template'")
+See also `tinydebian--rfs-template'")
 
-(defvar tinydebian-:debian-bts-email-address "bugs.debian.org"
+(defvar tinydebian--debian-bts-email-address "bugs.debian.org"
   "Email address for Debian Bug Tracking System.")
 
 ;; https://help.launchpad.net/UsingMaloneEmail
-(defvar tinydebian-:launchpad-email-address "bugs.launchpad.net"
+(defvar tinydebian--launchpad-email-address "bugs.launchpad.net"
   "Email address for Launchpad Bug Tracking System.")
 
-(defvar tinydebian-:launchpad-email-address "bugs.launchpad.net"
+(defvar tinydebian--launchpad-email-address "bugs.launchpad.net"
   "Email address for Launchpad Bug Tracking System.
 See <https://help.launchpad.net/Bugs/EmailInterface?action=show&redirect=BugTrackerEmailInterface>.")
 
-(defconst tinydebian-:launchpad-url-http-package-bugs
+(defconst tinydebian--launchpad-url-http-package-bugs
   "https://bugs.launchpad.net/%s/+bug/%s"
   "HTTP address of an individual bug in Launchpad.
 First %s is placeholder for the PACKAGE.
 Second %s is placeholder for the BUG number.")
 
-(defconst tinydebian-:gnu-savannah-url-http-package-bugs
+(defconst tinydebian--gnu-savannah-url-http-package-bugs
   "http://savannah.gnu.org/bugs"
   "The savanah.gnus.org bug URL without parameter")
 
-(defconst tinydebian-:gnu-savannah-url-http-site-support-bugs
+(defconst tinydebian--gnu-savannah-url-http-site-support-bugs
   "http://savannah.gnu.org/support"
   "The savanah.gnus.org site request URL without parameter")
 
-(defvar tinydebian-:gnu-bts-email-address "debbugs.gnu.org"
+(defvar tinydebian--gnu-bts-email-address "debbugs.gnu.org"
   "Email address for GNU Bug Tracking System.
 See <http://debbugs.gnu.org>.")
 
-(defvar tinydebian-:gnu-bts-url-http-bugs
+(defvar tinydebian--gnu-bts-url-http-bugs
   ;; http://debbugs.gnu.org/cgi/bugreport.cgi?bug=6004
   "http://debbugs.gnu.org/%s"
   "HTTP address of an individual bug in Emacs Bug Tracking System.
 The %s is placeholder for a bug number.")
 
-(defvar tinydebian-:emacs-bts-email-address "emacsbugs.donarmstrong.com"
+(defvar tinydebian--emacs-bts-email-address "emacsbugs.donarmstrong.com"
   "Email address for Emacs Bug Tracking System.")
 
-(defvar tinydebian-:emacs-bts-url-http-bugs
+(defvar tinydebian--emacs-bts-url-http-bugs
   "http://emacsbugs.donarmstrong.com/%s"
   "HTTP address of an individual bug in Emacs Bug Tracking System.
 The %s is placeholder for a bug number.")
 
-(defvar tinydebian-:emacs-bts-line-regexp
+(defvar tinydebian--emacs-bts-line-regexp
   "Emacs.*Bug#\\([0-9]+\\)"
   "Regexp to return Emacs BTS bug number from submatch 1.
 E.g. in `gnus-summary-mode':
 
    [  16: Emacs bug Tracking Syst] Processed: Bug#2217 Change of severity / minor")
 
-(defvar tinydebian-:list-email-address "lists.debian.org"
+(defvar tinydebian--list-email-address "lists.debian.org"
   "Email address or Debian mailing lists.")
 
-(defvar tinydebian-:url-http-package-search
+(defvar tinydebian--url-http-package-search
   ;; http://packages.debian.net/search?keywords=chbg&searchon=names
   "http://packages.debian.net/search?"
   "The packages Debian control URL without parameter, up to '?' token.")
 
-(defconst tinydebian-:debian-url-http-package-bugs
+(defconst tinydebian--debian-url-http-package-bugs
   "http://bugs.debian.org/%s"
   "The bugs Debian control URL without parameter, up to '/' token.")
 
-(defvar tinydebian-:debian-url-http-www
+(defvar tinydebian--debian-url-http-www
   "http://www.debian.org"
   "The main WWW page of Debian.")
 
-(defvar tinydebian-:debian-url-http-wnpp-page-main
+(defvar tinydebian--debian-url-http-wnpp-page-main
   "http://www.debian.org/devel/wnpp"
   "The WNPP main page URL address. No trailing slash.")
 
-(defconst tinydebian-:debian-url-http-wnpp-page-alist
+(defconst tinydebian--debian-url-http-wnpp-page-alist
   '(("RFA" . "rfa_bypackage")
     ("O"   . "orphaned")
     ("RFH" . "help_request")
     ("RFP" . "requested")
     ("ITP" . "being_packaged"))
-  "List of pages under `tinydebian-:debian-url-http-wnpp-page-main'.")
+  "List of pages under `tinydebian--debian-url-http-wnpp-page-main'.")
 
 ;; FIXME: Not yet used
-(defvar tinydebian-:bts-compose-type
+(defvar tinydebian--bts-compose-type
   "Dynamically bound variable which is set during BTS Control actions.
 Values: nil (Debian), 'emacs', 'launchpad'.")
 
-(defconst tinydebian-:debian-url-page-alist
+(defconst tinydebian--debian-url-page-alist
   (list
    '(bts-control
      "http://www.debian.org/Bugs/server-control")
    ;; 2006-11-06 unofficial
    (list 'bugs-rc
 	 "http://bts.turmzimmer.net/details.php"
-	 tinydebian-:font-lock-keywords-bugs-rc)
+	 tinydebian--font-lock-keywords-bugs-rc)
    '(qa-developer-status
      "http://qa.debian.org/developer.php?")
    '(qa-developer-bugs
@@ -848,9 +848,9 @@ Format:
    ...)
 
 The FONT-LOCK-KEYWORDS is only used if the results appear in
-`tinydebian-:buffer-www'. See `tinydebian-:browse-url-function'.")
+`tinydebian--buffer-www'. See `tinydebian--browse-url-function'.")
 
-(defvar tinydebian-:debian-virtual-package-list
+(defvar tinydebian--debian-virtual-package-list
   ;; Updated 2008-03-08
   '(("awk" "a suitable /usr/bin/{awk,nawk} (*)")
     ("c-shell" "a suitable /bin/csh (*)")
@@ -942,7 +942,7 @@ To refresh:
 (defun tinydebian-virtual-package-parse-buffer ()
   "Parse content of virtual package file.
 This is strictly maintainer's function. Download the file
-mentioned in `tinydebian-:debian-virtual-package-list' and run this function
+mentioned in `tinydebian--debian-virtual-package-list' and run this function
 to generate updated list."
   (interactive)
   (let (beg
@@ -985,9 +985,9 @@ to generate updated list."
 ;;;###autoload (autoload 'tinydebian-bts-mode          "tinydebian" "" t)
 ;;;###autoload (autoload 'turn-on-tinydebian-bts-mode  "tinydebian" "" t)
 ;;;###autoload (autoload 'turn-off-tinydebian-bts-mode "tinydebian" "" t)
-;;;###autoload (defvar tinydebian-:bts-mode-prefix-key "\C-c-")
+;;;###autoload (defvar tinydebian--bts-mode-prefix-key "\C-c-")
   (ti::macrof-minor-mode-wizard
-   "tinydebian-bts-" " Tdeb" "\C-c-" "Tdeb" 'TinyDebian "tinydebian-:bts-" ;1-6
+   "tinydebian-bts-" " Tdeb" "\C-c-" "Tdeb" 'TinyDebian "tinydebian--bts-" ;1-6
 
    "Debian Bug Tracking System (BTS) Minor mode. With this mode you can
 jump to a bug report at or near current point (using browser), send
@@ -996,11 +996,11 @@ ITP etc.
 
 Prefix key is:
 
-  tinydebian-:bts-mode-prefix-key
+  tinydebian--bts-mode-prefix-key
 
 Mode description:
 
-\\{tinydebian-:bts-mode-prefix-map}"
+\\{tinydebian--bts-mode-prefix-map}"
 
    "TinyDebian BTS"
 
@@ -1009,7 +1009,7 @@ Mode description:
    "TinyDebian BTS minor mode menu."
 
    (list
-    tinydebian-:bts-mode-easymenu-name
+    tinydebian--bts-mode-easymenu-name
     ["Reply to a bug"                tinydebian-bts-mail-type-reply         t]
     ["Report a new bug"              tinydebian-bug-report-generic-bts-mail t]
 
@@ -1230,9 +1230,9 @@ Buffer should contains a word 'Debian' or 'Emacs'."
 	    def)
 	(setq def
 	      `(defun ,sym ()
-		 "Set Severity level `tinydebian-:severity-selected'."
+		 "Set Severity level `tinydebian--severity-selected'."
 		 (interactive)
-		 (setq  tinydebian-:severity-selected ,x)))
+		 (setq  tinydebian--severity-selected ,x)))
 	(eval def))))
    '("critical"
      "grave"
@@ -1267,7 +1267,7 @@ Install `font-lock-keywords' for log files."
 Run also `tinydebian-mail-mode-debian-default-keybindings' in all mail buffer.
 Activate on Gnus summary and article modes if there is word 'Debian'.
 Activate on files whose path matches
-`tinydebian-:install-buffer-file-name-regexp'."
+`tinydebian--install-buffer-file-name-regexp'."
   (flet ((search (regexp)
 		 (save-excursion
 		   (goto-char (point-min))
@@ -1281,13 +1281,13 @@ Activate on files whose path matches
 	      (turn-on-tinydebian-bts-mode)))
 	  (cond
 	   ((and (stringp buffer-file-name)
-		 (string-match tinydebian-:install-buffer-file-name-regexp
+		 (string-match tinydebian--install-buffer-file-name-regexp
 			       buffer-file-name))
 	    (setq doit t))
 	   ((and (eq major-mode 'gnus-summary-mode)
 		 (boundp 'gnus-newsgroup-name)
 		 (string-match
-		  tinydebian-:install-gnus-newsgroup-name-regexp
+		  tinydebian--install-gnus-newsgroup-name-regexp
 		  gnus-newsgroup-name))
 	    (setq doit t))
 	   ((and (eq major-mode 'gnus-article-mode)
@@ -1430,32 +1430,32 @@ Activate on files whose path matches
 (defsubst tinydebian-debian-bts-url-compose (string)
   "Return Debian URL for STRING.
 String is anything that is attached to
-`tinydebian-:debian-url-http-package-bugs'"
-  (format tinydebian-:debian-url-http-package-bugs string))
+`tinydebian--debian-url-http-package-bugs'"
+  (format tinydebian--debian-url-http-package-bugs string))
 
 ;;; ----------------------------------------------------------------------
 ;;;
 (defsubst tinydebian-launchpad-email-compose (address)
   "Send message to ADDRESS@<gnu bts>."
-  (format "%s@%s" address tinydebian-:launchpad-email-address))
+  (format "%s@%s" address tinydebian--launchpad-email-address))
 
 ;;; ----------------------------------------------------------------------
 ;;;
 (defsubst tinydebian-gnu-bts-email-compose (address)
   "Send message to ADDRESS@<gnu bts>."
-  (format "%s@%s" address tinydebian-:gnu-bts-email-address))
+  (format "%s@%s" address tinydebian--gnu-bts-email-address))
 
 ;;; ----------------------------------------------------------------------
 ;;;
 (defsubst tinydebian-emacs-bts-email-compose (address)
   "Send message to ADDRESS@<emacs bts>."
-  (format "%s@%s" address tinydebian-:emacs-bts-email-address))
+  (format "%s@%s" address tinydebian--emacs-bts-email-address))
 
 ;;; ----------------------------------------------------------------------
 ;;;
 (defsubst tinydebian-gnu-bts-bug-url-compose (bug)
   "Compose GNU BTS URL for a BUG number."
-  (format tinydebian-:gnu-bts-url-http-bugs
+  (format tinydebian--gnu-bts-url-http-bugs
 	  (if (numberp bug)
 	      (int-to-string bug)
 	    bug)))
@@ -1464,7 +1464,7 @@ String is anything that is attached to
 ;;;
 (defsubst tinydebian-emacs-bts-bug-url-compose (bug)
   "Compose Emacs BTS URL for a BUG number."
-  (format tinydebian-:emacs-bts-url-http-bugs
+  (format tinydebian--emacs-bts-url-http-bugs
 	  (if (numberp bug)
 	      (int-to-string bug)
 	    bug)))
@@ -1491,7 +1491,7 @@ String is anything that is attached to
 ;;;
 (defsubst tinydebian-launchpad-email-compose (address)
   "Send message to ADDRESS@<launchpad>."
-  (format "%s@%s" address tinydebian-:launchpad-email-address))
+  (format "%s@%s" address tinydebian--launchpad-email-address))
 
 ;;; ----------------------------------------------------------------------
 ;;;
@@ -1503,19 +1503,19 @@ String is anything that is attached to
 ;;;
 (defsubst tinydebian-list-email-compose (address)
   "Send message to ADDRESS@<debian mailing list>."
-  (format "%s@%s" address tinydebian-:list-email-address))
+  (format "%s@%s" address tinydebian--list-email-address))
 
 ;;; ----------------------------------------------------------------------
 ;;;
 (defsubst tinydebian-bts-email-compose-1 (address)
   "Send message to ADDRESS@<debian bts>."
-  (format "%s@%s" address tinydebian-:debian-bts-email-address))
+  (format "%s@%s" address tinydebian--debian-bts-email-address))
 
 ;;; ----------------------------------------------------------------------
 ;;;
 (defsubst tinydebian-launchpad-url-package-bugs (package bug)
   "Return Launchpad URL for PACKAGE and BUG number."
-  (format tinydebian-:launchpad-url-http-package-bugs
+  (format tinydebian--launchpad-url-http-package-bugs
 	  package
 	  (if (numberp bug)
 	      (int-to-string bug)
@@ -1549,10 +1549,10 @@ String is anything that is attached to
     (when (or (re-search-forward
 	       "\\(http://bugs.debian[^<> \t\r\n]+\\)" nil t)
 	      (re-search-forward
-	       (format "[0-9]+@%s" tinydebian-:debian-bts-email-address) nil t)
+	       (format "[0-9]+@%s" tinydebian--debian-bts-email-address) nil t)
 	      (re-search-forward
 	       (concat
-		tinydebian-:list-email-address
+		tinydebian--list-email-address
 		"\\|"
 		"debian\\.org\\>") nil t))
       (let ((str (or (match-string 1)
@@ -1780,7 +1780,7 @@ Signal optional ERROR message is STR was empty."
   "Return URL search string.
 Argument: KEYWORD
 Optional: SEARCH-ON DISTRIBUTION SECTION."
-  (format (concat tinydebian-:url-http-package-search
+  (format (concat tinydebian--url-http-package-search
 		  "keywords=%s&"
 		  "searchon=%s&"
 		  "subword=1&"
@@ -1801,12 +1801,12 @@ Optional: SEARCH-ON DISTRIBUTION SECTION."
 ;;;
 (defsubst tinydebian-read-license (message)
   "Ask license with MESSAGE.
-  See `tinydebian-:wnpp-template-licenses-alist'."
+  See `tinydebian--wnpp-template-licenses-alist'."
   (completing-read
    message
    (mapcar (lambda (x)
 	     (cons x 1))
-	   tinydebian-:wnpp-template-licenses-alist)))
+	   tinydebian--wnpp-template-licenses-alist)))
 
 ;;; ----------------------------------------------------------------------
 ;;;
@@ -1854,7 +1854,7 @@ Optional: SEARCH-ON DISTRIBUTION SECTION."
 		"^... +[0-9]+ ++[0-9]+:+[0-9]+:+[0-9]+")
 	       0 'font-lock-reference-face)
 	      '("timed out\\|did not.*"
-		0 tinydebian-:warn-face)
+		0 tinydebian--warn-face)
 	      (list
 	       (concat "\\(from\\|to\\)=\\([^ ,\t\r\n]+\\)")
 	       2 'font-lock-comment-face))))
@@ -1870,7 +1870,7 @@ Optional: SEARCH-ON DISTRIBUTION SECTION."
 	       0 'font-lock-reference-face)
 	      (list
 	       (concat "connection attempt") ;See "iplogger" package
-	       0 'tinydebian-:warn-face)
+	       0 'tinydebian--warn-face)
 	      (list
 	       (concat "signal +[0-9]+\\|no such user"
 		       "\\|connect from .*")
@@ -1889,7 +1889,7 @@ Optional: SEARCH-ON DISTRIBUTION SECTION."
 	       0 'font-lock-reference-face)
 	      (list
 	       (concat "opened +for +[^ \t\r\n]+")
-	       0 'tinydebian-:warn-face)
+	       0 'tinydebian--warn-face)
 	      '( "for user \\(root\\)"
 		 1 font-lock-string-face)
 	      '( "from \\([^ \t\r\n]+\\)"
@@ -1922,7 +1922,7 @@ Optional: SEARCH-ON DISTRIBUTION SECTION."
 		       ;;  apm -s failed
 		       "\\| failed"
 		       "\\|did not .*")
-	       0 'tinydebian-:warn-face)
+	       0 'tinydebian--warn-face)
 	      '("to=\\([^ \t\r\n]+\\)"
 		1 font-lock-comment-face)
 	      '("(\\([^ )\t\r\n]+\\)) CMD "
@@ -1942,7 +1942,7 @@ Optional: SEARCH-ON DISTRIBUTION SECTION."
        (uninstall
 	(setq font-lock-keywords nil))
        ((or font-lock-mode
-	    tinydebian-:font-lock-mode
+	    tinydebian--font-lock-mode
 	    global-font-lock-mode
 	    (font-lock-mode-maybe 1))
 	(setq font-lock-keywords keywords))))))
@@ -2028,8 +2028,8 @@ At current point, current line, headers of the mail message."
 ;;; ----------------------------------------------------------------------
 ;;;
 (defsubst tinydebian-email-search ()
-  "Call hook `tinydebian-:find-email-hook' until value returned."
-  (run-hook-with-args-until-success 'tinydebian-:find-email-hook))
+  "Call hook `tinydebian--find-email-hook' until value returned."
+  (run-hook-with-args-until-success 'tinydebian--find-email-hook))
 
 ;;; ----------------------------------------------------------------------
 ;;;
@@ -2113,10 +2113,10 @@ This function needs network connection."
 ;;; ----------------------------------------------------------------------
 ;;;
 (defun tinydebian-bug-gnu-bts-re-search-email ()
-  "Search from current point for `tinydebian-:emacs-bts-email-address'.
+  "Search from current point for `tinydebian--emacs-bts-email-address'.
 Return:
   '(bug-number email)"
-  (let ((email (regexp-quote tinydebian-:gnu-bts-email-address)))
+  (let ((email (regexp-quote tinydebian--gnu-bts-email-address)))
     (cond
      ((re-search-forward (format
 			  "\\(\\([0-9]+\\)@%s\\>\\)"
@@ -2237,16 +2237,16 @@ Return:
 (defun tinydebian-bug-gnu-emacs-bts-string-p (str)
   "Test if STR looks like Emacs BTS support request."
   ;; [  23: Emacs bug Tracking Syst] bug#2134:
-  (if (string-match tinydebian-:emacs-bts-line-regexp str)
+  (if (string-match tinydebian--emacs-bts-line-regexp str)
       (match-string-no-properties 1 str)))
 
 ;;; ----------------------------------------------------------------------
 ;;;
 (defun tinydebian-bug-gnu-emacs-bts-re-search-email ()
-  "Search from current point for `tinydebian-:emacs-bts-email-address'.
+  "Search from current point for `tinydebian--emacs-bts-email-address'.
 Return:
   '(bug-number email)"
-  (let ((email (regexp-quote tinydebian-:emacs-bts-email-address)))
+  (let ((email (regexp-quote tinydebian--emacs-bts-email-address)))
     (cond
      ((re-search-forward (format
 			  "\\(\\([0-9]+\\)@%s\\>\\)"
@@ -2379,7 +2379,7 @@ Return:
       (cond
        ((setq bug (tinydebian-bug-gnu-savannah-site-support-string-p str))
 	(format "%s/?%s"
-		tinydebian-:gnu-savannah-url-http-site-support-bugs
+		tinydebian--gnu-savannah-url-http-site-support-bugs
 		bug)))))
    (t
     (tinydebian-bug-gnu-savannah-buffer-url-p))))
@@ -2730,7 +2730,7 @@ Bug#NNNN: O: package -- description."
 	  bug)
 	;;   NNNN@bugs.debian.org
 	(and (string-match (concat "\\([0-9]+\\)\\(?:-[a-z]+\\)?@"
-				   tinydebian-:debian-bts-email-address)
+				   tinydebian--debian-bts-email-address)
 			   str)
 	     (match-string 1 str))
 	;;   BTS message lines: "owner NNNNNN"
@@ -2974,8 +2974,8 @@ At current point, current line, headers of the mail message
 ;;; ----------------------------------------------------------------------
 ;;;
 (defsubst tinydebian-bug-nbr-search ()
-  "Call hook `tinydebian-:find-bug-nbr-hook' until value returned."
-  (run-hook-with-args-until-success 'tinydebian-:find-bug-nbr-hook))
+  "Call hook `tinydebian--find-bug-nbr-hook' until value returned."
+  (run-hook-with-args-until-success 'tinydebian--find-bug-nbr-hook))
 
 ;;; ----------------------------------------------------------------------
 ;;;
@@ -3404,14 +3404,14 @@ Were:
 (put 'tinydebian-debian-url-with 'lisp-indent-function 0)
 (put 'tinydebian-debian-url-with 'edebug-form-spec '(body))
 (defmacro tinydebian-debian-url-with (&rest body)
-  "Run BODY in 'tinydebian-:buffer-http-get'."
-  `(with-current-buffer (get-buffer-create tinydebian-:buffer-http-get)
+  "Run BODY in 'tinydebian--buffer-http-get'."
+  `(with-current-buffer (get-buffer-create tinydebian--buffer-http-get)
      ,@body))
 
 ;;; ----------------------------------------------------------------------
 ;;;
 (defun tinydebian-debian-url-bug-initialize-p (bug)
-  "Check if bug is on `tinydebian-:buffer-http-get'."
+  "Check if bug is on `tinydebian--buffer-http-get'."
   (tinydebian-debian-url-with
     (goto-char (point-min))
     (cond
@@ -3426,7 +3426,7 @@ Were:
 ;;; ----------------------------------------------------------------------
 ;;;
 (defun tinydebian-debian-url-bug-initialize (bug)
-  "HTTP GET Debian BUG to buffer `tinydebian-:buffer-http-get'.
+  "HTTP GET Debian BUG to buffer `tinydebian--buffer-http-get'.
 After that various tinydebian-debian-parse-bts-bug-* functions can be called."
   (tinydebian-debian-url-with
     (erase-buffer)
@@ -3473,13 +3473,13 @@ After that various tinydebian-debian-parse-bts-bug-* functions can be called."
     (if (not buffer)
 	(error "TinyDebian: Failed to connect to %s" url)
       (tinydebian-with-buffer-macro
-	  tinydebian-:buffer-www
+	  tinydebian--buffer-www
 	(insert-buffer-substring buffer)
 	(when mode
 	  (turn-on-tinydebian-bts-mode)
 	  (let ((font (tinydebian-url-page-font-lock-keywords mode)))
 	    (when (and font
-		       (or tinydebian-:font-lock-mode
+		       (or tinydebian--font-lock-mode
 			   global-font-lock-mode))
 	      (setq font-lock-keywords font)
 	      (font-lock-mode 1))))
@@ -3499,14 +3499,14 @@ After that various tinydebian-debian-parse-bts-bug-* functions can be called."
     (if (not path)
 	(error "TinyDebian: [ERROR] `lynx' not found in PATH for %s" url)
       (tinydebian-with-buffer-macro
-	tinydebian-:buffer-www
+	tinydebian--buffer-www
 	(message "TinyDebian: Wait, accessing %s" url)
 	(tinydebian-call-process path nil "-dump" url)
 	(when mode
 	  (turn-on-tinydebian-bts-mode)
 	  (let ((font (tinydebian-url-page-font-lock-keywords mode)))
 	    (when (and font
-		       (or tinydebian-:font-lock-mode
+		       (or tinydebian--font-lock-mode
 			   global-font-lock-mode))
 	      (setq font-lock-keywords font)
 	      (font-lock-mode 1))))
@@ -3516,20 +3516,20 @@ After that various tinydebian-debian-parse-bts-bug-* functions can be called."
 ;;; ----------------------------------------------------------------------
 ;;;
 (defun tinydebian-browse-url-1 (url &optional mode)
-  "Call `tinydebian-:browse-url-function' with URL.
+  "Call `tinydebian--browse-url-function' with URL.
   Optional MODE is hint to activate `tinydebian-bts-mode' on result buffer."
-  (if tinydebian-:browse-url-function
-      (funcall tinydebian-:browse-url-function url mode)
+  (if tinydebian--browse-url-function
+      (funcall tinydebian--browse-url-function url mode)
     (tinydebian-browse-url-browse-url url)))
 
 ;;; ----------------------------------------------------------------------
 ;;;
 (defun tinydebian-bug-browse-url-run (url &optional file)
   "Browse URL and optionally save to FILE."
-  (let ((tinydebian-:browse-url-function tinydebian-:browse-url-function))
+  (let ((tinydebian--browse-url-function tinydebian--browse-url-function))
     ;; FIXME: the `file' is never used?
     (if file
-	(setq tinydebian-:browse-url-function
+	(setq tinydebian--browse-url-function
 	      (function tinydebian-browse-url-lynx-dump)))
     (when url
       ;; Display the URL, so that it gets stored in *Messages* buffer for
@@ -3537,12 +3537,12 @@ After that various tinydebian-debian-parse-bts-bug-* functions can be called."
       (message "Accessing %s" url)
       (tinydebian-browse-url-1 url)
       (if file
-	  (with-current-buffer (get-buffer tinydebian-:buffer-www)
+	  (with-current-buffer (get-buffer tinydebian--buffer-www)
 	    (write-region (point-min) (point-max) file)
 	    (if (interactive-p)
 		  (message "Wrote %s" file))
 	    file)
-	tinydebian-:buffer-www))))
+	tinydebian--buffer-www))))
 
 ;;; ----------------------------------------------------------------------
 ;;; FIXME: to be removed, obsoleted by tinydebian-bug-browse-url-main
@@ -3573,9 +3573,9 @@ Article buffers."
   (when (or (not (stringp bug))
 	    (not (string-match "^[0-9]+$" bug)))
     (error "TinyDebian: Invalid bug number format `%s'." bug))
-  (let ((tinydebian-:browse-url-function tinydebian-:browse-url-function))
+  (let ((tinydebian--browse-url-function tinydebian--browse-url-function))
     (if file
-	(setq tinydebian-:browse-url-function
+	(setq tinydebian--browse-url-function
 	      (function tinydebian-browse-url-lynx-dump)))
     (tinydebian-bug-browse-url-run (tinydebian-bug-url bug))))
 
@@ -3699,7 +3699,7 @@ In Gnus summary buffer, the Article buffer is consulted for bug."
 (defsubst tinydebian-bug-buffer-name (bug)
   (or bug
       (error "TinyDebian: BUG argument is empty"))
-  (format tinydebian-:buffer-bug-format bug))
+  (format tinydebian--buffer-bug-format bug))
 
 ;;; ----------------------------------------------------------------------
 ;;;
@@ -3749,15 +3749,15 @@ In Gnus summary buffer, the Article buffer is consulted for bug."
 ;;; ----------------------------------------------------------------------
 ;;;
 (defun tinydebian-wnpp-alert-default-mode-bindings ()
-  "Define default key bindings to `tinydebian-:wnpp-alert-mode-map'."
-  (define-key tinydebian-:wnpp-alert-mode-map
+  "Define default key bindings to `tinydebian--wnpp-alert-mode-map'."
+  (define-key tinydebian--wnpp-alert-mode-map
     (kbd "RET") 'tinydebian-bug-browse-url-by-bug))
 
 ;;; ----------------------------------------------------------------------
 ;;;
 (defsubst tinydebian-wnpp-alert-mode-map-activate ()
-  "Use local \\{tinydebian-:wnpp-alert-mode-map} on this buffer."
-  (use-local-map tinydebian-:wnpp-alert-mode-map))
+  "Use local \\{tinydebian--wnpp-alert-mode-map} on this buffer."
+  (use-local-map tinydebian--wnpp-alert-mode-map))
 
 ;;; ----------------------------------------------------------------------
 ;;;
@@ -3767,13 +3767,13 @@ In Gnus summary buffer, the Article buffer is consulted for bug."
 
 Mode description:
 
-\\{tinydebian-:wnpp-alert-mode-map}"
+\\{tinydebian--wnpp-alert-mode-map}"
   (interactive)
-  (setq mode-name   tinydebian-:wnpp-alert-mode-name)
+  (setq mode-name   tinydebian--wnpp-alert-mode-name)
   (setq major-mode 'tinydebian-wnpp-alert-mode)
-  (unless tinydebian-:wnpp-alert-mode-map
-    (setq tinydebian-:wnpp-alert-mode-map (make-sparse-keymap)))
-  (run-hooks 'tinydebian-:wnpp-alert-mode-hook)
+  (unless tinydebian--wnpp-alert-mode-map
+    (setq tinydebian--wnpp-alert-mode-map (make-sparse-keymap)))
+  (run-hooks 'tinydebian--wnpp-alert-mode-hook)
   (tinydebian-wnpp-alert-mode-map-activate))
 
 ;;; ----------------------------------------------------------------------
@@ -3814,7 +3814,7 @@ Mode description:
 	       bin))
      (t
       (tinydebian-with-buffer-macro
-	  tinydebian-:buffer-wnpp-alert
+	  tinydebian--buffer-wnpp-alert
 	(message "TinyDebian: wait, running %s..." path)
 	(tinydebian-call-process path)
 	(message "TinyDebian: wait, running %s... Done." path)
@@ -3841,7 +3841,7 @@ Mode description:
 	       bin))
      (t
       (tinydebian-with-buffer-macro
-	  tinydebian-:buffer-rc-alert
+	  tinydebian--buffer-rc-alert
 	(message "TinyDebian: wait, running %s..." path)
 	(tinydebian-call-process path)
 	(message "TinyDebian: wait, running %s... Done." path)
@@ -4201,7 +4201,7 @@ In interactive call, toggle conrol address on and off."
    "maintonly" bug remove (interactive-p)))
 
 
-(defvar tinydebian-:bts-mail-ctrl-finalize-line-regexp
+(defvar tinydebian--bts-mail-ctrl-finalize-line-regexp
   (concat "^[ \t]*"
 	  (regexp-opt
 	   '("quit"
@@ -4226,7 +4226,7 @@ In interactive call, toggle conrol address on and off."
   (save-excursion
     (goto-char (or point (point-min)))
     (when (re-search-forward
-	   tinydebian-:bts-mail-ctrl-finalize-line-regexp
+	   tinydebian--bts-mail-ctrl-finalize-line-regexp
 	   nil t)
       (match-beginning 0))))
 
@@ -4235,7 +4235,7 @@ In interactive call, toggle conrol address on and off."
 (defun tinydebian-bts-mail-ctrl-command-finalize-line-p ()
   "Check current line is control command end (finalize line)."
   (string-match
-   tinydebian-:bts-mail-ctrl-finalize-line-regexp
+   tinydebian--bts-mail-ctrl-finalize-line-regexp
    (tinydebian-current-line-string)))
 
 ;;; ----------------------------------------------------------------------
@@ -4501,7 +4501,7 @@ If LIST if nil, position point at pseudo header."
     (tinydebian-mail-mode-debian-address-ask-bug)
     (completing-read
      "Bug severity: "
-     tinydebian-:severity-list
+     tinydebian--severity-list
      nil
      'match)))
   (tinydebian-bts-mail-ctrl-command-add-macro "severity" bug severity))
@@ -4642,28 +4642,28 @@ If `inteactive-p' and `buffer-read-only', display infromation only."
 ;;; ----------------------------------------------------------------------
 ;;;
 (defsubst tinydebian-mail-mode-map-activate ()
-  "Use local \\{tinydebian-:mail-mode-map} on this buffer."
-  (use-local-map tinydebian-:mail-mode-map))
+  "Use local \\{tinydebian--mail-mode-map} on this buffer."
+  (use-local-map tinydebian--mail-mode-map))
 
 (eval-and-compile
 
 ;;;###autoload (autoload 'tinydebian-mail-mode          "tinydebian" "" t)
 ;;;###autoload (autoload 'turn-on-tinydebian-mail-mode  "tinydebian" "" t)
 ;;;###autoload (autoload 'turn-off-tinydebian-mail-mode "tinydebian" "" t)
-;;;###autoload (defvar tinydebian-:mail-mode-prefix-key "\C-c-")
+;;;###autoload (defvar tinydebian--mail-mode-prefix-key "\C-c-")
   (ti::macrof-minor-mode-wizard
-   "tinydebian-mail-" " Tbts" "\C-c-" "Tbts" 'TinyDebian "tinydebian-:mail-" ;1-6
+   "tinydebian-mail-" " Tbts" "\C-c-" "Tbts" 'TinyDebian "tinydebian--mail-" ;1-6
 
    "Debian Bug Tracking System (BTS) Minor mode. This mode helps
 composing the BTS messages in mail send buffer.
 
 Prefix key is:
 
-  tinydebian-:mail-mode-prefix-key
+  tinydebian--mail-mode-prefix-key
 
 Mode description:
 
-\\{tinydebian-:mail-mode-prefix-map}"
+\\{tinydebian--mail-mode-prefix-map}"
 
    "TinyDebian BTS mail send mode"
 
@@ -4672,7 +4672,7 @@ Mode description:
    "TinyDebian BTS mail send minor mode menu."
 
    (list
-    tinydebian-:mail-mode-easymenu-name
+    tinydebian--mail-mode-easymenu-name
     ["Address Bug"         tinydebian-mail-mode-debian-address-bug-toggle       t]
     ["Address Control"     tinydebian-mail-mode-debian-address-control-toggle   t]
     ["Address Quiet"       tinydebian-mail-mode-debian-address-quiet-toggle     t]
@@ -4765,10 +4765,10 @@ Mode description:
 (put 'tinydebian-with-url-page-type-macro 'edebug-form-spec '(body))
 (put 'tinydebian-with-url-page-type-macro 'lisp-indent-function 1)
 (defmacro tinydebian-with-url-page-type-macro (page-type &rest body)
-  "Retrieve PAGE-TYPE from `tinydebian-:debian-url-page-alist' and run BODY.
+  "Retrieve PAGE-TYPE from `tinydebian--debian-url-page-alist' and run BODY.
   Variable `page'is bound to the retrieved value.
   Signal error if PAGE-TYPE is not found."
-  `(let ((page (assoc ,page-type tinydebian-:debian-url-page-alist)))
+  `(let ((page (assoc ,page-type tinydebian--debian-url-page-alist)))
      (unless page
        (error "TinyDebian: unknown page-typpe `%s'" ,page-type))
      ,@body))
@@ -4956,7 +4956,7 @@ Mode description:
   (let ((path-list (mapconcat
 		    'concat
 		    (delq nil
-			  tinydebian-:grep-find-devel-docdir-list)
+			  tinydebian--grep-find-devel-docdir-list)
 		    " "))
 	cmd)
     (setq cmd
@@ -4976,16 +4976,16 @@ Mode description:
 ;;;
 (defsubst tinydebian-url-wnpp-compose (page-type)
   "Return URL to search"
-  (let ((page (assoc page-type tinydebian-:debian-url-http-wnpp-page-alist)))
+  (let ((page (assoc page-type tinydebian--debian-url-http-wnpp-page-alist)))
     (unless page
       (error "TinyDebian: unknow page-typpe `%s'" page-type))
-    (format "%s/%s" tinydebian-:debian-url-http-wnpp-page-main (cdr page))))
+    (format "%s/%s" tinydebian--debian-url-http-wnpp-page-main (cdr page))))
 
 ;;; ----------------------------------------------------------------------
 ;;;
 (defsubst tinydebian-url-usertag-compose (tag)
   "Return URL to search"
-  (format "%s/usertag:%s" tinydebian-:debian-url-http-www tag))
+  (format "%s/usertag:%s" tinydebian--debian-url-http-www tag))
 
 ;;; ----------------------------------------------------------------------
 ;;;
@@ -5044,9 +5044,9 @@ Mode description:
 ;;; ----------------------------------------------------------------------
 ;;;
 (defsubst tinydebian-package-virtual-p (name)
-  "Check if package NAME is in `tinydebian-:debian-virtual-package-list'."
-  (and tinydebian-:debian-virtual-package-list
-       (assoc name tinydebian-:debian-virtual-package-list)))
+  "Check if package NAME is in `tinydebian--debian-virtual-package-list'."
+  (and tinydebian--debian-virtual-package-list
+       (assoc name tinydebian--debian-virtual-package-list)))
 
 ;;; ----------------------------------------------------------------------
 ;;;
@@ -5058,8 +5058,8 @@ Mode description:
 ;;; ----------------------------------------------------------------------
 ;;;
 (defun tinydebian-bts-insert-headers ()
-  "Insert tinydebian-:bts-extra-headers' to mail buffer."
-  (let ((headers tinydebian-:bts-extra-headers))
+  "Insert tinydebian--bts-extra-headers' to mail buffer."
+  (let ((headers tinydebian--bts-extra-headers))
     (when (stringp headers)
       (save-excursion
 	(goto-char (point-min))
@@ -5275,8 +5275,8 @@ See documents:
 		  bug
 		  (field "package")
 		  str)
-	(if (stringp tinydebian-:bts-mail-type-it-nmu-message)
-	    (insert tinydebian-:bts-mail-type-it-nmu-message))
+	(if (stringp tinydebian--bts-mail-type-it-nmu-message)
+	    (insert tinydebian--bts-mail-type-it-nmu-message))
 	(run-hooks 'tinydebian-bts-mail-type-it-nmu-hook)))))
 
 ;;; ----------------------------------------------------------------------
@@ -5307,7 +5307,7 @@ thanks
   "Reply to bug found at current point or line"
   (interactive (list (tinydebian-bts-mail-ask-bug-number "Reply to bug")))
   (let ((subject (my-tinydebian-subject-any))
-	tinydebian-:bts-compose-type)
+	tinydebian--bts-compose-type)
     (unless (and (stringp bug)
 		 (string-match bug subject))
       ;; User gave different bug number than where the currenly line is.
@@ -5347,7 +5347,7 @@ thanks
 	 (format "O: %s -- %s"
 		 package
 		 (or desc
-		     (if tinydebian-:novice-mode
+		     (if tinydebian--novice-mode
 			 "<description>")
 		     ""))))
   (tinydebian-bts-mail-type-macro
@@ -5359,7 +5359,7 @@ Severity: normal
 
 "))
       (let ((point (point)))
-	(if tinydebian-:novice-mode
+	(if tinydebian--novice-mode
 	    (insert "<describe orphan detail>\n"))
 	(goto-char point)))))
 
@@ -5382,7 +5382,7 @@ DESC      apt-cache show <package>; first line description."
 		 type
 		 package
 		 (or desc
-		     (if tinydebian-:novice-mode
+		     (if tinydebian--novice-mode
 			 "<description>")
 		     ""))))
     (tinydebian-bts-mail-type-macro
@@ -5394,7 +5394,7 @@ Severity: wishlist
 
 "))
       (let ((point (point)))
-	(if tinydebian-:novice-mode
+	(if tinydebian--novice-mode
 	    (insert "<describe reason for removal>\n"))
 	(goto-char point)))))
 
@@ -5450,7 +5450,7 @@ Severity: wishlist
 	   (pkg-url     (tinydebian-debian-bts-url-compose package)))
       (tinydebian-bts-mail-type-macro "RFS"
 	  arg-pkg (tinydebian-list-email-compose "debian-mentors") nil
-	(insert tinydebian-:rfs-template)
+	(insert tinydebian--rfs-template)
 	(replace "\\(<package>.*\\)"    package nil 'all)
 	(replace "\\(<bugs:.*\\)"       pkg-url)
 	(replace "\\(<ita:.*\\)"        ita-url)
@@ -5462,7 +5462,7 @@ Severity: wishlist
 		 (format "RFS: %s -- %s" package desc)
 		 (point))
 	(goto-char (point-max))
-	(run-hooks 'tinydebian-:rfs-hook)))))
+	(run-hooks 'tinydebian--rfs-hook)))))
 
 ;;; ----------------------------------------------------------------------
 ;;;
@@ -5483,7 +5483,7 @@ of RFP in header to directly send pacging notice."
 		    "License [required]: "
 		    (mapcar (lambda (x)
 			      (cons x 1))
-			    tinydebian-:wnpp-template-licenses-alist)))
+			    tinydebian--wnpp-template-licenses-alist)))
 	  (url     (read-string
 		    "Project homepage URL [required]: ")))
      (list name
@@ -5505,7 +5505,7 @@ of RFP in header to directly send pacging notice."
     (let ((arg-pkg package)) ;; Due to macro which reserves var `package'.
       (tinydebian-bts-mail-type-macro "ITP"
 				      arg-pkg (tinydebian-bts-email-submit) nil
-				      (insert tinydebian-:rfp-template)
+				      (insert tinydebian--rfp-template)
 				      (replace "\\(<package>.*\\)"    package nil 'all)
 				      (replace "\\(<homepage:.*\\)"   homepage)
 				      (replace "\\(<license:.*\\)"    license)
@@ -5520,7 +5520,7 @@ of RFP in header to directly send pacging notice."
 						       package desc)
 					       (point))
 				      (goto-char (point-max))
-				      (run-hooks 'tinydebian-:rfp-hook)))))
+				      (run-hooks 'tinydebian--rfp-hook)))))
 
 ;;; ----------------------------------------------------------------------
 ;;;
@@ -5530,7 +5530,7 @@ of RFP in header to directly send pacging notice."
    (list (tinydebian-bts-mail-ask-bug-number)
 	 (completing-read
 	  "BTS severity: "
-	  tinydebian-:severity-list
+	  tinydebian--severity-list
 	  nil
 	  'match)))
   (tinydebian-bts-mail-type-macro
@@ -5560,7 +5560,7 @@ References:
     (tinydebian-bts-mail-ask-bug-number)
     (completing-read
      "Usertag user (email): "
-     tinydebian-:usertag-email-list
+     tinydebian--usertag-email-list
      nil
      nil
      user-mail-address)))
@@ -5609,7 +5609,7 @@ thanks
 	       (not (string= "" tag)))
       (setq tag (completing-read
 		 "BTS tag [RET when done]: "
-		 tinydebian-:tags-list
+		 tinydebian--tags-list
 		 nil
 		 'match))
       (unless (string= "" tag)
@@ -5692,7 +5692,7 @@ thanks
 	       (not (string= "" tag)))
       (setq tag (completing-read
 		 "Kwd [RET when done]: "
-		 tinydebian-:removal-keyword-list
+		 tinydebian--removal-keyword-list
 		 nil
 		 'match))
       (unless (string= "" tag)
@@ -5815,7 +5815,7 @@ See http://wiki.debian.org/ftpmaster_Removals"
 	 (insert "Package: ftp.debian.org\n"
 		 "Severity: normal\n\n"))
        (setq point (point))
-       (if tinydebian-:novice-mode
+       (if tinydebian--novice-mode
 	   (insert "<Describe reasons to remove package>"))
        (goto-char point)))))
 
@@ -5864,7 +5864,7 @@ See http://wiki.debian.org/ftpmaster_Removals"
    (let (point)
      (insert (format "fixed %s " bug))
      (setq point (point))
-     (if tinydebian-:novice-mode
+     (if tinydebian--novice-mode
 	 (insert "<version>"))
      (insert "\nthanks\n")
      (goto-char point))))
@@ -5916,7 +5916,7 @@ Default owner is the value of 'From:', that is `user-mail-address'."
    (let (point)
      (insert (format "noowner %s" bug))
      (setq point (point))
-     (if tinydebian-:novice-mode
+     (if tinydebian--novice-mode
 	 (insert "<explain reason, remember also to 'retitle' as needed>"))
      (insert "\nthanks\n")
      (goto-char point))))
@@ -5935,7 +5935,7 @@ Default owner is the value of 'From:', that is `user-mail-address'."
    (let (point)
      (insert (format "found %s %s" bug version))
      (setq point (point))
-     (if tinydebian-:novice-mode
+     (if tinydebian--novice-mode
 	 (insert "\n# Records that #bug has been encountered"
 		 "in the given version of the package"))
      (insert "\nthanks\n")
@@ -5971,7 +5971,7 @@ Default owner is the value of 'From:', that is `user-mail-address'."
    (let (point)
      (insert (format "notforwarded %s" bug))
      (setq point (point))
-     (if tinydebian-:novice-mode
+     (if tinydebian--novice-mode
 	 (insert "\n# Reason: The URL bug was forwarded does not exist"))
      (insert "\nthanks\n")
      (goto-char point))))
@@ -5988,7 +5988,7 @@ Default owner is the value of 'From:', that is `user-mail-address'."
    (let (point)
      (insert (format "merge %s " bug))
      (setq point (point))
-     (if tinydebian-:novice-mode
+     (if tinydebian--novice-mode
 	 (insert "<bug nbr that is duplicate of this bug>"))
      (insert "\nthanks\n")
      (goto-char point))))
@@ -6005,10 +6005,10 @@ Default owner is the value of 'From:', that is `user-mail-address'."
    (let (point)
      (insert (format "clone %s -1" bug))
      (setq point (point))
-     (if tinydebian-:novice-mode
+     (if tinydebian--novice-mode
 	 (insert " <To copy to new package: reassign -1 package>"))
      (insert "\nretitle -1")
-     (if tinydebian-:novice-mode
+     (if tinydebian--novice-mode
 	 (insert " <New bug's title>"))
      (insert "\nthanks\n")
      (goto-char point))))
@@ -6025,7 +6025,7 @@ Default owner is the value of 'From:', that is `user-mail-address'."
    (let (point)
      (insert (format "affect %s " bug))
      (setq point (point))
-     (if tinydebian-:novice-mode
+     (if tinydebian--novice-mode
 	 (insert "<space separated list of packages affected by this bug>"))
      (insert "\nthanks\n")
      (goto-char point))))
@@ -6253,7 +6253,7 @@ Version: %s
    (let (point)
      (insert (format "forwarded %s " bug))
      (setq point (point))
-     (if tinydebian-:novice-mode
+     (if tinydebian--novice-mode
 	 (insert "<http://upstream.example.com/bug-tracking/nbr>"))
      (insert "thanks\n")
      (goto-char point))))
@@ -6279,7 +6279,7 @@ Version: %s
      (if (and package
 	      (not (string= "" package)))
 	 (insert package)
-       (if tinydebian-:novice-mode
+       (if tinydebian--novice-mode
 	   (insert "<add upstream Bug tracker submission URL here>")))
      (insert "\nthanks\n")
      (goto-char point))))
@@ -6446,7 +6446,7 @@ Returned list is
 ;;;
 (defun tinydebian-package-status-dpkg-s-main (package)
   "Consult dpkg -s PACKAGE"
-  (let ((dpkg tinydebian-:bin-dpkg))
+  (let ((dpkg tinydebian--bin-dpkg))
     (cond
      ((not dpkg)
       (message "TinyDebian: no `dpkg' found along PATH (emacs `exec-path').")
@@ -6502,7 +6502,7 @@ Returned list is
 (defun tinydebian-package-status-dpkg-S-main (file)
   "Consult dpkg -S FILE
 In this case, the package is unknown."
-  (let ((dpkg  tinydebian-:bin-dpkg))
+  (let ((dpkg  tinydebian--bin-dpkg))
     (cond
      ((not dpkg)
       (message "TinyDebian: no `dpkg' found along PATH (emacs `exec-path').")
@@ -6549,7 +6549,7 @@ In this case, the package is unknown."
 ;;;
 (defun tinydebian-package-status-grep-available (package)
   "Consult grep-available(1) for PACKAGE from 'Provides' field."
-  (let ((bin tinydebian-:bin-grep-available)
+  (let ((bin tinydebian--bin-grep-available)
 	(re  (format ".*[ ,]+%s([, \t]|[ \t]*$)" package)))
     (cond
      ((not bin)
@@ -6580,11 +6580,11 @@ In this case, the package is unknown."
 (defun tinydebian-package-wnpp-main-interactive ()
   "Ask the type of request for WNPP package.
 References:
-  `tinydebian-:menu-wnpp'
-  `tinydebian-:menu-wnpp-selected'"
-  (setq tinydebian-:menu-wnpp-selected nil)
-  (ti::menu-menu 'tinydebian-:menu-wnpp)
-  tinydebian-:menu-wnpp-selected)
+  `tinydebian--menu-wnpp'
+  `tinydebian--menu-wnpp-selected'"
+  (setq tinydebian--menu-wnpp-selected nil)
+  (ti::menu-menu 'tinydebian--menu-wnpp)
+  tinydebian--menu-wnpp-selected)
 
 ;;; ----------------------------------------------------------------------
 ;;;
@@ -6612,7 +6612,7 @@ REQUEST-TYPE can be symbol:
 
 References:
 
-  `tinydebian-:menu-wnpp'."
+  `tinydebian--menu-wnpp'."
   (interactive (list (tinydebian-package-wnpp-main-interactive)))
   (cond
    ((eq request-type 'package)
@@ -6646,9 +6646,9 @@ References:
 ;;;
 (defun tinydebian-package-info (&optional package prompt)
   "Get PACKAGE information. See`tinydebian-package-status'.
-If PACKAGE is nil and `tinydebian-:bin-dpkg' is not available,
+If PACKAGE is nil and `tinydebian--bin-dpkg' is not available,
 ask with PROMPT."
-  (let ((dpkg tinydebian-:bin-dpkg))
+  (let ((dpkg tinydebian--bin-dpkg))
     (or package
 	(setq package (read-string
 		       (or prompt
@@ -6715,10 +6715,10 @@ Example:
 ;;;
 (defun tinydebian-bug-system-info-os-architecture ()
   "Read architecture. Return empty string if cannot read."
-  (when tinydebian-:bin-dpkg
+  (when tinydebian--bin-dpkg
     (with-temp-buffer
       (tinydebian-call-process
-       tinydebian-:bin-dpkg  nil "--print-architecture")
+       tinydebian--bin-dpkg  nil "--print-architecture")
       (tinydebian-string-delete-newlines
        (buffer-string)))))
 
@@ -6818,10 +6818,10 @@ with CACHE as input."
 ;;;
 (defun tinydebian-bug-system-info-apt-cache-policy-query ()
   "Return result of 'apt-cache policy'."
-  (when tinydebian-:bin-dpkg
+  (when tinydebian--bin-dpkg
    (with-temp-buffer
      (tinydebian-call-process
-      tinydebian-:bin-apt-cache nil "policy")
+      tinydebian--bin-apt-cache nil "policy")
      (buffer-string))))
 
 ;;; ----------------------------------------------------------------------
@@ -6966,13 +6966,13 @@ Locale: %s"
 ;;;
 (defun tinydebian-bug-severity ()
   "Select bug severity."
-  (setq tinydebian-:severity-selected nil)
-  (while (null tinydebian-:severity-selected)
-    (ti::menu-menu 'tinydebian-:menu-severity)
-    (unless tinydebian-:severity-selected
+  (setq tinydebian--severity-selected nil)
+  (while (null tinydebian--severity-selected)
+    (ti::menu-menu 'tinydebian--menu-severity)
+    (unless tinydebian--severity-selected
       (message "TinyDebian: Please select severity.")
       (sit-for 1)))
-  tinydebian-:severity-selected)
+  tinydebian--severity-selected)
 
 ;;; ----------------------------------------------------------------------
 ;;;
@@ -7131,7 +7131,7 @@ GPG key that is registered in Launchpad.>
 
 	(let ((str (completing-read
 		    "[Launchpad BTS] Importance: "
-		    tinydebian-:launchpad-importance-list)))
+		    tinydebian--launchpad-importance-list)))
 	  (unless (string= "" str)
 	    (insert " importance " str "\n")))
 
@@ -7152,7 +7152,7 @@ GPG key that is registered in Launchpad.>
 
 	;; (let ((str (completing-read
 	;; 	    "[Launchpad BTS] Status: "
-	;; 	    tinydebian-:launchpad-status-list)))
+	;; 	    tinydebian--launchpad-status-list)))
 	;;   (unless (string= "" str)
 	;;     (insert " status " str "\n")))
 	(insert " done\n")))))
@@ -7238,7 +7238,7 @@ For which a corresponding command to correct the error is generated.
 You can select region and these commands to shell `sh' with command
 `shell-command-on-region' which can be called with \\[shell-command-on-region]."
   (interactive "r")
-  (let ((buffer (get-buffer-create tinydebian-:buffer-tiger))
+  (let ((buffer (get-buffer-create tinydebian--buffer-tiger))
 	done
 	file
 	str)
@@ -7271,15 +7271,15 @@ You can select region and these commands to shell `sh' with command
 
 (tinydebian-install-severity-functions) ;; Auto-created functions
 
-(add-hook 'tinydebian-:bts-mode-define-keys-hook
+(add-hook 'tinydebian--bts-mode-define-keys-hook
 	  'tinydebian-bts-mode-define-keys)
 
-(add-hook 'tinydebian-:mail-mode-define-keys-hook
+(add-hook 'tinydebian--mail-mode-define-keys-hook
 	  'tinydebian-mail-mode-define-keys)
 
 (defalias 'tinydebian-reportbug 'tinydebian-bug-report-generic-bts-mail)
 
 (provide   'tinydebian)
-(run-hooks 'tinydebian-:load-hook)
+(run-hooks 'tinydebian--load-hook)
 
 ;;; tinydebian.el ends here
