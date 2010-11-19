@@ -9,7 +9,6 @@
 ;; Author:          Jari Aalto
 ;; Maintainer:      Jari Aalto
 ;;
-;; To get information on this program, call M-x tinydesk-version.
 ;; Look at the code with folding.el
 
 ;; COPYRIGHT NOTICE
@@ -59,10 +58,6 @@
 ;;      (define-key ctl-x-4-map "R" 'tinydesk-recover-state)
 ;;      (define-key ctl-x-4-map "E" 'tinydesk-edit-state-file)
 ;;      (define-key ctl-x-4-map "U" 'tinydesk-unload)
-;;
-;;   If you have any questions, use this function:
-;;
-;;      M-x tinydesk-submit-bug-report
 ;;
 ;;  To read the documentation after file has been loaded, call
 ;;
@@ -527,42 +522,6 @@ path, garbage at line...Hooks may check the contents of this.")
 
 (defvar tinydesk-:last-state-file  nil
   "Last state file loaded is stored here.")
-
-;;}}}
-;;{{{ setup: -- version
-
-;;; ....................................................... &v-version ...
-
-;;;###autoload (autoload 'tinydesk-version "tinydesk" "Display commentary." t)
-(eval-and-compile
-  (ti::macrof-version-bug-report
-   "tinydesk.el"
-   "tinydesk"
-   tinydesk-:version-id
-   "$Id: tinydesk.el,v 2.52 2007/05/06 23:15:19 jaalto Exp $"
-   '(tinydesk-version-id
-     tinydesk-:mode-define-keys-hook
-     tinydesk-mode-map
-     tinydesk-:load-hook
-     tinydesk-:save-before-hook
-     tinydesk-:save-after-hook
-     tinydesk-:mode-hook
-     tinydesk-:recover-before-hook
-     tinydesk-:recover-after-hook
-     tinydesk-:directory-last
-     tinydesk-:tmp-buffer
-     tinydesk-:trash-tmp-buffer
-     tinydesk-:message-column
-     tinydesk-:loaded-file-list
-     tinydesk-:rejected-file-list
-     tinydesk-:comment-start-level
-     tinydesk-:mode-name
-     tinydesk-:directory-save-suggested
-     tinydesk-:save-exclude-regexp
-     tinydesk-:comment-characters
-     tinydesk-:save-title
-     tinydesk-:save-and-sort
-     tinydesk-:face-table)))
 
 ;;}}}
 ;;{{{ Install: bindings
