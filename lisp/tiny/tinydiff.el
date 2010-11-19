@@ -9,8 +9,7 @@
 ;; Author:          Jari Aalto
 ;; Maintainer:      Jari Aalto
 ;;
-;; To get information on this program use ident(1) or call M-x
-;; tinydiff-version Look at the code with folding.el
+;; Look at the code with folding.el
 
 ;; COPYRIGHT NOTICE
 ;;
@@ -59,11 +58,10 @@
 ;;      (global-set-key "\C-cmdd"         'tinydiff-diff-show)
 ;;      (global-set-key "\C-cmdp"         'tinydiff-patch)
 ;;
-;;   If you have any questions, use these functions
+;;   To debug problems:
 ;;
 ;;      M-x tinydiff-debug-toggle         turn on debug
 ;;      <... do as you did ...>
-;;      M-x tinydiff-submit-bug-report    send bug report
 
 ;;}}}
 ;;{{{ Documentation
@@ -72,7 +70,7 @@
 
 ;;; Commentary:
 
-;;  Preface, jan 1996
+;;  Preface, Jan 1996
 ;;
 ;;      Long ago there was set of simple functions lying around to generate
 ;;      instant diffs for the file that was being edited, before it was
@@ -790,43 +788,6 @@ This variable is made local to current patch/diff buffer.")
 (defvar tinydiff-:patch-hunk-count nil
   "Counter how many patch hunks hvae been applied
 This variable is made local to current patch/diff buffer.")
-
-;;}}}
-;;{{{ setup: version
-
-;;; ....................................................... &v-version ...
-
-;;;###autoload (autoload 'tinydiff-version "tinydiff" "Display commentary." t)
-
-(eval-and-compile
-  (ti::macrof-version-bug-report
-   "tinydiff.el"
-   "tinydiff"
-   tinydiff-:version-id
-   "$Id: tinydiff.el,v 2.83 2007/05/01 17:20:43 jaalto Exp $"
-   '(tinydiff-:version-id
-     tinydiff-:debug
-     tinydiff-:load-hook
-     tinydiff-:mode-hook
-     tinydiff-:diff-hook
-     tinydiff-:mode-name
-     tinydiff-:diff-program
-     tinydiff-:rcsdiff-program
-     tinydiff-:cvsdiff-program
-     tinydiff-:source-buffer-function
-     tinydiff-:function-name-handle-function
-     tinydiff-:register-function-name
-     tinydiff-:find-ref-function
-     tinydiff-:source-buffer-function
-     tinydiff-:mode-define-keys-hook
-     tinydiff-:register-diff
-     tinydiff-:diff-buffer
-     tinydiff-:diff-option
-     tinydiff-:diff-tmp-file
-     tinydiff-:diff-tmp-buffer
-     tinydiff-:patch-global-option
-     tinydiff-:patch-program)
-   '(tinydiff-:debug-buffer)))
 
 ;;}}}
 ;;{{{ code: minor mode definition
