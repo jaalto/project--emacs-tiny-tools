@@ -214,13 +214,13 @@ changing printer."
     :group 'TinyLpr)
 
   (defcustom tinylpr-:print-style-list
-    (let* ((mp   (executable-find "mpage")) ;HP-UX multipage
-           (lp   (executable-find "lp"))
-           (lpr  (executable-find "lpr"))
-           (nl   (executable-find "nl"))
-           (ens  (executable-find "enscript"))
-           (gs   (executable-find "gs"))
-           (gs32 (executable-find "gs386"))) ;; Ghostscript in Win32
+    (let ((mp   (executable-find "mpage")) ;HP-UX multipage
+	  (lp   (executable-find "lp"))
+	  (lpr  (executable-find "lpr"))
+	  (nl   (executable-find "nl"))
+	  (ens  (executable-find "enscript"))
+	  (gs   (executable-find "gs"))
+	  (gs32 (executable-find "gs386"))) ;; Ghostscript in Win32
       (delq
        nil                              ;Remove empty entries
        (list
@@ -345,7 +345,7 @@ TinyLpr: %s(ps) rR)egion bB)uffer sS)Spool d)espool "
 (defun tinylpr-install-lpr-command ()
   "Set correct shell for `lpr-command'."
   (interactive)
-  (let* (sh)
+  (let (sh)
     (unless (string-match "sh\\|bash\\|cmd.exe\\|command.exe"
                           (or lpr-command ""))
       ;; NT Cygnus users get served too by putting sh,bash test first.
@@ -383,9 +383,9 @@ TinyLpr: sh, bash or cmd.exe not available. Can't set lpr-command." ))))))
   "Adds line numbers to buffer and prints it. After printing,
 removes line numbers."
   (interactive)
-  (let* (buffer-read-only
-         fmt
-         len)
+  (let (buffer-read-only
+	fmt
+	len)
     (with-buffer-modified
       (save-excursion
         (ti::pmax)
@@ -405,9 +405,9 @@ removes line numbers."
 ;;;
 (defun tinylpr-print-style-completions ()
   "Build up the completion array."
-  (let* ((list  tinylpr-:print-style-list)
-         (i 0)
-         completions)
+  (let ((list  tinylpr-:print-style-list)
+	(i 0)
+	completions)
     (mapcar
      (function
       (lambda (x)
@@ -421,7 +421,7 @@ removes line numbers."
 (defun tinylpr-setting-status ()
   "Return current settings."
   (interactive)
-  (let* ((stat  (nth 1 lpr-switches)))
+  (let ((stat (nth 1 lpr-switches)))
     (if (interactive-p)
         (message stat))
     stat))
@@ -431,8 +431,8 @@ removes line numbers."
 (defun tinylpr-queue ()
   "Return queue status."
   (interactive)
-  (let* ((cmd       tinylpr-:queue-cmd)
-         (buffer    (ti::temp-buffer "*tmp*" 'clear)))
+  (let ((cmd       tinylpr-:queue-cmd)
+	(buffer    (ti::temp-buffer "*tmp*" 'clear)))
     (display-buffer buffer)
     (shell-command cmd buffer)))
 
@@ -468,9 +468,9 @@ removes line numbers."
      nil
      t)))
 
-  (let* ((printer (or tinylpr-:current-printer ""))
-         elt
-         args)
+  (let ((printer (or tinylpr-:current-printer ""))
+	elt
+	args)
     ;;  Try to find the style in assoc array
     (if (not (and arg (setq elt (assoc arg tinylpr-:print-style-list))))
         (message "No such style")
