@@ -1004,16 +1004,12 @@ Region is active. Go to beginning of region? "))
                   nil                   ;submatch error
                 (tinyreplace-move-overlay mb me)
                 ;; ^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^ ask user  ^^^
-;;;               (ti::d! ask)
                 (setq read-string
                       (buffer-substring-no-properties mb me))
                 (setq str-to str)
                 (if (null ask)
                     (setq replace t)    ;automatic
-
                   (tinyreplace-arrow-control buffer 'maybe)
-;;;                 (ti::d!  tinyreplace-:arrow-state )
-
                   (setq do-ask t)
                   (setq read-string
                         (buffer-substring-no-properties mb me))
@@ -1053,7 +1049,6 @@ Region is active. Go to beginning of region? "))
                       (cond
                        ((eq func 're-search-forward)
                         ;;  The other call isn't executed if first fails
-                        ;;
                         (and (setq fmin (ti::beginning-of-defun-point))
                              (setq fmax (ti::beginning-of-defun-point 'end)))
                         (cond
@@ -1093,7 +1088,6 @@ Region is active. Go to beginning of region? "))
                             (message "TinyReplace: No more hits.")
                             (setq replace nil))
                         (goto-char me)
-;;;                     (setq undo-string (buffer-substring mb me))
                         (tinyreplace-move-overlay mb me))
                       (setq replace nil
                             do-ask  t))
@@ -1103,7 +1097,6 @@ Region is active. Go to beginning of region? "))
                         (if PREV-ME
                             (goto-char PREV-ME))
                         (setq mb nil me nil)
-;;;                     (setq P (point)   R (regexp-quote str)   M minp)
                         (when (re-search-backward (regexp-quote str) minp t)
                           (setq mb (match-beginning level)
                                 me (match-end level))))
@@ -1112,7 +1105,6 @@ Region is active. Go to beginning of region? "))
                             (message "TinyReplace: No previous hit.")
                             (setq replace nil))
                         (goto-char me)
-;;;                     (setq undo-string (buffer-substring mb me))
                         (tinyreplace-move-overlay mb me))
                       (setq replace nil  do-ask t))
                      ;; ... ... ... ... ... ... ... ... ... ... ... ... ..
@@ -1296,8 +1288,6 @@ Input:
                         ;;
                         ;;  In here we want to be sure that the right buffer
                         ;;  "the replace buffer" is touched.
-                        ;;
-                        ;;
                         (with-current-buffer buffer (save-buffer))
                         (kill-buffer buffer)))))))))))
           (select-frame o-frame)
