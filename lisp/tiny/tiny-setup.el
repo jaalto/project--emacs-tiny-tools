@@ -80,7 +80,7 @@
 ;;; Code:
 
 (error
- "tiny-setup.el is OBSOLETE and it will be soon removed. Packages are install manually.")
+ "tiny-setup.el is OBSOLETE and it will be removed. See individual packages how to install them.")
 
 (eval-when-compile
   (require 'cl))
