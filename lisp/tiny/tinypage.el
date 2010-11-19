@@ -9,7 +9,6 @@
 ;; Author:          Jari Aalto
 ;; Maintainer:      Jari Aalto
 ;;
-;; To get information on this program, call M-x tinypage-version.
 ;; Look at the code with folding.el.
 
 ;; COPYRIGHT NOTICE
@@ -51,11 +50,6 @@
 ;;
 ;;      M-x tinypage-mode
 ;;      C-h m
-;;
-;;  If you have any questions, use this function
-;;
-;;      M-x tinypage-submit-bug-report       ,send bug report
-;;
 
 ;;}}}
 
@@ -323,38 +317,6 @@ section numbers won't do:
   "*The modeline function that keep it up to date whenever called."
   :type 'integer
   :group 'TinyPage)
-
-;;}}}
-;;{{{ version
-
-;;;###autoload (autoload 'tinypage-version "tinypage" "Display commentary." t)
-(eval-and-compile
-  (ti::macrof-version-bug-report
-   "tinypage.el"
-   "tinypage"
-   tinypage-:version-id
-   "$Id: tinypage.el,v 2.47 2007/05/07 10:50:08 jaalto Exp $"
-   '(tinypage-:version-id
-     map
-     tinypage-:load-hook
-     tinypage-:mode-define-keys-hook
-     tinypage-:mode-hook
-     tinypage-mode
-     tinypage-:mode-name
-     tinypage-:mode-menu
-     tinypage-:buffer-toc
-     tinypage-:register
-     tinypage-:mode-name-string
-     tinypage-:mode-menu-name
-     tinypage-:mode-prefix-key
-     tinypage-:post-command-wakeup-count
-     tinypage-:x-coord
-     tinypage-:y-coord
-     tinypage-:x-popup-line-len
-     tinypage-:modeline-function
-     tinypage-:renumber-format
-     tinypage-:post-command-wakeup-counter
-     tinypage-:version-id)))
 
 ;;}}}
 ;;{{{ Minor Mode
