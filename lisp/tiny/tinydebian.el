@@ -123,7 +123,7 @@
 
 ;;{{{ setup: libraries
 
-(defconst tinydebian--version-time "2010.1119.1646"
+(defconst tinydebian--version-time "2010.1119.2259"
   "Last edited time.")
 
 (require 'tinylibm)
@@ -1608,7 +1608,7 @@ String is anything that is attached to
   "Compose GNU BTS URL for a BUG number."
   (format tinydebian--gnu-bts-url-http-bugs
           (if (numberp bug)
-              (int-to-string bug)
+              (number-to-string bug)
             bug)))
 
 ;;; ----------------------------------------------------------------------
@@ -1617,7 +1617,7 @@ String is anything that is attached to
   "Compose Emacs BTS URL for a BUG number."
   (format tinydebian--emacs-bts-url-http-bugs
           (if (numberp bug)
-              (int-to-string bug)
+              (number-to-string bug)
             bug)))
 
 ;;; ----------------------------------------------------------------------
@@ -1663,7 +1663,7 @@ String is anything that is attached to
   (format tinydebian--launchpad-url-http-package-bugs
           package
           (if (numberp bug)
-              (int-to-string bug)
+              (number-to-string bug)
             bug)))
 
 ;;; ----------------------------------------------------------------------
@@ -3491,7 +3491,7 @@ After that various tinydebian-debian-parse-bts-bug-* functions can be called."
     (insert (tinydebian-browse-url-http-get
              (tinydebian-debian-bts-url-compose
               (if (numberp bug)
-                  (int-to-string bug)
+                  (number-to-string bug)
                 bug))))
     (if (eq (point-min) (point-max))
         (error "TinyDebian: Failed to fetch Bug %s" bug))))
@@ -3960,7 +3960,7 @@ Optional bug checks BUG-TYPE@ address."
                 (format "%s@" type)
               (format  "%s-%s@"
                        (if (numberp bug)
-                           (int-to-string bug)
+                           (number-to-string bug)
                          bug)
                        type))))
     (tinydebian-mail-address-match-p re)))

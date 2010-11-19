@@ -589,7 +589,7 @@ Example:
 ;;;
 (defmacro-maybe int-to-float (nbr)
   "Convert integer NBR to float."
-  `(read (concat (int-to-string ,nbr) ".0")))
+  `(read (concat (number-to-string ,nbr) ".0")))
 
 ;;; ----------------------------------------------------------------------
 ;;; see also:  (dotimes (var 5) ..
@@ -815,7 +815,7 @@ a character: (ti::string-value 65) ==> \"65\" not \"A\"."
   (cond
    ((stringp x) x)
    ((symbolp x) (symbol-name x))
-   ((numberp x) (int-to-string x))
+   ((numberp x) (number-to-string x))
    (t           (prin1-to-string x))))
 
 ;;; ----------------------------------------------------------------------
@@ -1983,7 +1983,7 @@ This is useful, if you call x popup menu or completion. For example:
          ret)
     (dolist (elt list)
       (if (integerp elt)
-          (setq elt (int-to-string elt)))
+          (setq elt (number-to-string elt)))
       (push (cons elt i) ret)
       (incf  i))
     ret))
@@ -2531,7 +2531,7 @@ Return:
 If ARG is string, the length of string is returned."
   (let ((val arg))
     (if (integerp arg)
-        (setq val (int-to-string arg)))
+        (setq val (number-to-string arg)))
     (length val)))
 
 ;;; ----------------------------------------------------------------------
@@ -2600,7 +2600,7 @@ Default is to convert all tabs in STRING with spaces."
   "Return a string describing the current prefix argument ARG."
   (cond
    ((null     arg)    "")
-   ((integerp arg)    (int-to-string arg))
+   ((integerp arg)    (number-to-string arg))
    ((eq '-    arg)    "C-u - ")
    ((integerp arg)    (format "C-u %d " current-prefix-arg))
    (t

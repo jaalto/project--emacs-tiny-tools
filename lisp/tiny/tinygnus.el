@@ -2097,7 +2097,7 @@ References:
           (arg
            (cond
             ((integerp arg)
-             (format fmt (concat (int-to-string arg) group-char )))
+             (format fmt (concat (number-to-string arg) group-char )))
             ((symbolp arg)
              (substring (symbol-name arg) 0 1))
             (t
@@ -2105,7 +2105,7 @@ References:
           ((gnus-group-auto-expirable-p group)
            (cond
             ((numberp nnmail-expiry-wait)
-             (format fmt (int-to-string nnmail-expiry-wait)))
+             (format fmt (number-to-string nnmail-expiry-wait)))
             ((symbolp nnmail-expiry-wait)
              (substring (symbol-name arg) 0 1))
             (t
@@ -2165,7 +2165,7 @@ Returned strings:
         (setq size (/ size 1000))
         (if (zerop size)
             ""
-          (int-to-string size)))))))
+          (number-to-string size)))))))
 
 ;;}}}
 ;;{{{ Summary: misc functions
@@ -2883,7 +2883,7 @@ References:
          (file  (or nbr
                     (cdr (tinygnus-nnml-file-range dir))))
          (path  (concat (file-name-as-directory dir)
-                        (int-to-string file))))
+                        (number-to-string file))))
     (with-current-buffer (get-buffer-create buffer)
       (ti::pmax)
       (insert-file-contents-literally path)

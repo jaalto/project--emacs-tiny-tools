@@ -1231,7 +1231,7 @@ also Possibly unfold/un-outline the code."
   ;;  since it thinks it's formatting code
   (princ (concat
           ad-return-value
-          (int-to-string (ti::widen-safe (ti::current-line-number))))))
+          (number-to-string (ti::widen-safe (ti::current-line-number))))))
 
 ;;; ----------------------------------------------------------------------
 ;;;

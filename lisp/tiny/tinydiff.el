@@ -1342,7 +1342,7 @@ Eg.
                      (> nbr 1)))
             ;;  2.2 --> 2.1
             (setq revision (1- revision))
-            (setq tmp (ti::replace-match 1 (int-to-string revision) tmp))
+            (setq tmp (ti::replace-match 1 (number-to-string revision) tmp))
             (tinydiff-debug fid "1>CHANGED" revision tmp))
            ((and (> i 1)
                  (= nbr 1))

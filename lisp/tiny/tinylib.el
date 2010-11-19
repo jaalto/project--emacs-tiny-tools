@@ -832,8 +832,8 @@ Return list form: \( dd mm ...\)
     (setq yyyy (substring time -4 nil))
     (cond
      (zero-form                         ;convert "7" --> "07"
-      (setq dd (int-to-string dd))
-      (setq mm (int-to-string mm))
+      (setq dd (number-to-string dd))
+      (setq mm (number-to-string mm))
       (if (not (eq (length dd) 2))
           (setq dd (concat "0" dd)))
       (if (not (eq (length mm) 2))
@@ -1787,15 +1787,15 @@ Input:
         (setq nbr (cdr (assoc (nth 5 list) (ti::month-mm-alist))))
         (concat
          (nth 6 list) "-"
-         (int-to-string nbr)
+         (number-to-string nbr)
          "-"
-         (int-to-string (nth 0 list))
+         (number-to-string (nth 0 list))
          (if (not (eq type 'minutes))
              ""
            (concat " " (nth 3 list)))))
        (t
         (concat (nth 5 list) " "
-                (int-to-string (nth 0 list))
+                (number-to-string (nth 0 list))
                 (ti::string-nth-from-number  (nth 0 list)) " "
                 (nth 6 list) " "
                 (nth 3 list)))))))
@@ -3235,7 +3235,7 @@ Return:
          (fmt           (or format
                             (concat
                              "%0"
-                             (int-to-string
+                             (number-to-string
                               (if (or (= digits 1) (eq digits 2))
                                   2 digits))
                              "d:%s")))
@@ -3294,7 +3294,7 @@ If region contains less than 2 lines, lines are left untouched."
       ;;    Prefix lines with a random number and a space
       (goto-char (point-min))
       (while (not (eobp))
-        (insert (int-to-string (random 32000)) " ")
+        (insert (number-to-string (random 32000)) " ")
         (forward-line 1))
       ;;  Sort lines according to first field (random number)
       (sort-numeric-fields 1 (point-min) (point-max))
@@ -3358,7 +3358,7 @@ You just give RE \"r\\([0-9]+\\)\" and start value 1, increment 1"
         (setq beg (match-beginning level)
               end (match-end level)
               len (- end beg)
-              fmt (concat "%0" (int-to-string len) "d"))
+              fmt (concat "%0" (number-to-string len) "d"))
         (delete-region beg end)
         (goto-char beg)
         (insert (format fmt inc-val))
@@ -3391,7 +3391,7 @@ Prefix ARG is the increment value. Defaults to 1."
       (setq len (length (match-string 0)))
       (setq num (string-to-int (match-string 0)))
       ;;  E.g. 0001 --> 0002
-      (setq out (format (concat "%0" (int-to-string len) "d")
+      (setq out (format (concat "%0" (number-to-string len) "d")
                         (+ increment num)))
       (replace-match out))
     (beginning-of-line)
@@ -3527,7 +3527,7 @@ Requirements:
         "perl -ne '"
         (if len
             (concat "$line = substring($_,0, "
-                    (int-to-string len)
+                    (number-to-string len)
                     ");")
           "$line = $_;")
 
@@ -3883,7 +3883,7 @@ Return:
                         (buffer-substring point (point)))
                        2))
           (and verb
-               (message (concat (int-to-string ret) " characters."))))))
+               (message (concat (number-to-string ret) " characters."))))))
     ret))
 
 ;;; ----------------------------------------------------------------------

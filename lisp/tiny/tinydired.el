@@ -1475,7 +1475,7 @@ on current filename."
          (line   (ti::current-line-number))
          ;;      1024 Oct  3
          (re     (concat ".*[0-9] " (nth 5 list) " +"
-                         (int-to-string (nth 0 list))
+                         (number-to-string (nth 0 list))
                          " +"
                          ;;  This year's file have time in this field
                          "[0-9]+:")))

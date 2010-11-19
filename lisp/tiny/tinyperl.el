@@ -3451,7 +3451,7 @@ See also:
 	      (concat "print critique("
 		      tinyperl--lint-arguments
 		      ", shift)")
-	      (int-to-string level))))
+	      (number-to-string level))))
 	(call-process "perl"
 		      nil
 		      (current-buffer)

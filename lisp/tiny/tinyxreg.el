@@ -295,7 +295,7 @@ contains window configuration."
               bn)
             (if arg
                 ""
-              (int-to-string
+              (number-to-string
                (count-lines (point-min-marker) (line-beginning-position))))
             (char-to-string register))))
 

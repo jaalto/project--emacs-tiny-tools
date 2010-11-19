@@ -5606,7 +5606,7 @@ User can't see string echoed otherwise. Optionally RESTORE."
                "%sov%s%s "
                ov-str
                (if prefix-ok
-                   (int-to-string count)
+                   (number-to-string count)
                  "")
                (prin1-to-string (ti::compat-overlay-properties elt))))))
     (concat face-str " " ov-str)))

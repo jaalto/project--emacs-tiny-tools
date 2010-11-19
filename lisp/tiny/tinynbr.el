@@ -204,7 +204,7 @@ Mode description:
                        (save-excursion
                          (end-of-line)
                          (insert " " (if (numberp ret)
-                                         (int-to-string ret)
+                                         (number-to-string ret)
                                        ret)))))))))
       (eval def)
 

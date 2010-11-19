@@ -668,7 +668,7 @@ References:
               (setq counter (string-to-number nbr))
             (incf  counter)
             ;;  Replace the last number with the right increment
-            (ti::replace-match lev2 (int-to-string counter))))))
+            (ti::replace-match lev2 (number-to-string counter))))))
     (when verb
       (cond
        ((null counter)

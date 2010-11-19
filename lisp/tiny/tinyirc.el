@@ -894,7 +894,7 @@ Valid SERVICE is one that is defined in dire$ctory
 `tinyirc--pastebot-config-directory' and file `servers'."
   (let ((prg (tinyirc-pastebot-program)))
     (if (integerp id)
-        (setq id (int-to-string id)))
+        (setq id (number-to-string id)))
     (with-temp-buffer
       (message "TinyIrc: pastebot receiving ID %s from %s ..." id service)
       (call-process "perl"

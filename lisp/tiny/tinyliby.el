@@ -672,7 +672,7 @@ No '%s feature found, are you absolutely sure you have loaded the file? "
             ;;  show every symbol...
             (if (and verb
                      (= 0 (% count 10)))
-                (message (concat (int-to-string count) ": " sym-name)))
+                (message (concat (number-to-string count) ": " sym-name)))
             ;; ... ... ... ... ... ... ... ... ... ... ... ... .. func ...
             (cond
              ((and (string-match "defadvice" type)
