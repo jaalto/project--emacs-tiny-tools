@@ -9,7 +9,6 @@
 ;; Author:       Jari Aalto
 ;; Maintainer:   Jari Aalto
 ;;
-;; To get information on this program, call M-x tinyperl-version.
 ;; Look at the code with folding.el
 
 ;; COPYRIGHT NOTICE
@@ -56,10 +55,6 @@
 ;;  To completely uninstall package, call:
 ;;
 ;;      C-u M-x tinyperl-install-main
-;;
-;;  If you have any questions, suggestions, use this function
-;;
-;;      M-x tinyperl-submit-bug-report
 
 ;;}}}
 
@@ -508,8 +503,6 @@
 
 (require 'tinylibm)
 
-(eval-when-compile (ti::package-use-dynamic-compilation))
-
 (eval-and-compile
   (defvar tinycompile-:buffer-name)
   (defvar compilation-error-regexp-alist)
@@ -903,49 +896,10 @@ See `tinyperl-pod-grep-faq-answer'")
   "Buffer where to output Pod::Checker::podchecker().")
 
 ;;}}}
-;;{{{ version
-
-;;;###autoload (autoload 'tinyperl-version "tinyperl" "Display commentary." t)
-
-(eval-and-compile
-  (ti::macrof-version-bug-report
-   "tinyperl.el"
-   "tinyperl"
-   tinyperl-:version-id
-   "$Id: tinyperl.el,v 2.85 2007/08/03 20:16:25 jaalto Exp $"
-   '(tili-:version-id
-     tinyperl-:load-hook
-     tinyperl-:pod2text-before-hook
-     tinyperl-:pod2text-after-hook
-     tinyperl-:podchecker-before-hook
-     tinyperl-:podchecker-after-hook
-     tinyperl-:perldoc-hook
-     tinyperl-:key-pageup-control
-     tinyperl-:pod-buffer-control
-     tinyperl-:skeleton-script-ftp-url
-     tinyperl-:pause-directory
-     tinyperl-:copyright-function
-     tinyperl-:cache-file-prefix
-     tinyperl-:cache-file-postfix
-     tinyperl-:perl-bin
-     tinyperl-:perldoc-bin
-     tinyperl-:pod2text-bin
-     tinyperl-:inc-path-switches
-     tinyperl-:pod-font-lock-keywords
-     tinyperl-:inc-path
-     tinyperl-:inc-module-list
-     tinyperl-:pod-path
-     tinyperl-:pod-list
-     tinyperl-:pod-buffer-name
-     tinyperl-:perldoc-buffer
-     tinyperl-:podchecker-buffer)))
+;;{{{ Macros
 
 ;;;### (autoload 'tinyperl-debug-toggle "tinyperl" t t)
-
 (eval-and-compile (ti::macrof-debug-standard "tinyperl" "-:"))
-
-;;}}}
-;;{{{ Macros
 
 ;;; ----------------------------------------------------------------------
 ;;;
