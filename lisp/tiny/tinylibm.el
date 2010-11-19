@@ -342,6 +342,13 @@ In your programs, like:
 ;;}}}
 ;;{{{ code: small FORMS
 
+;;; ----------------------------------------------------------------------
+;;;
+(defsubst ti::goto-line (line)
+  "Like `goto-line' but for lisp programmers."
+  (goto-char (point-min))
+  (forward-line (1- line)))
+
 ;;; - To see what the'll become use for example:
 ;;;   (macroexpand '(decf x))
 
@@ -3453,7 +3460,8 @@ Input:
         (ti::pop-to-buffer-or-window buffer))
       (select-window (get-buffer-window buffer))
       (if line
-          (goto-line line)))
+	  ;; => goto-line
+	  (goto-char (point-min)) (forward-line (1- line))))
 
     buffer))
 
@@ -3818,8 +3826,8 @@ Return:
      (prog1
 	 (progn
 	   ,@body)
-       (goto-line SLC-sLc-line)
-       (move-to-column  SLC-sLc-col)
+       (ti::goto-line SLC-sLc-line)
+       (move-to-column SLC-sLc-col)
        (cond
 	((not (eq (ti::current-line-number) SLC-sLc-line))
 	 ,fail-form)
