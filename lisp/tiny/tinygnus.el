@@ -363,7 +363,7 @@
 ;;
 ;;          (defun my-tinygnus-summary-mode-hook ()
 ;;            "Define new keybindings."
-;;            (let* ((map tinygnus-:summary-mode-map))
+;;            (let ((map tinygnus-:summary-mode-map))
 ;;              (define-key map [(alt ?<)]
 ;;                'tinygnus-gnus-summary-search-article-forward)
 ;;              (define-key map [(control ?<)]
@@ -460,7 +460,7 @@ tinymail.el: ** No bbdb.el along load-path. Please do not compile this file.
 
   (defun tinygnus-check-gnus-installation-libraries ()
     "Verify that new enough Gnus version is installed to the Emacs."
-    (let* ((i 0))
+    (let ((i 0))
       (flet ((load-it
               (lib)
               (let* ((name   (if (stringp lib)
@@ -521,9 +521,9 @@ tinymail.el: ** No bbdb.el along load-path. Please do not compile this file.
 
   (defun tinygnus-check-gnus-installation ()
     "Verify that new enough Gnus version is installed to the Emacs."
-    (let* ((i (tinygnus-check-gnus-installation-libraries))
-           emacs-gnus
-           error)
+    (let ((i (tinygnus-check-gnus-installation-libraries))
+	  emacs-gnus
+	  error)
       (when (string-match "rest" (ti::function-args-p 'mm-char-int))
         ;; Hm, the function is alias to `ignore', fix it.
         (defalias 'mm-char-int 'identity))
@@ -1059,17 +1059,17 @@ Prefix key to access the minor mode is defined in `tinygnus-:group-mode-prefix-k
 (defun tinygnus-install (&optional uninstall)
   "Install package. Optionally UNINSTALL."
   (interactive "P")
-  (let* ((list  '((gnus-group-mode
-                   gnus-group-mode-hook
-                   (turn-on-tinygnus-group-mode))
-                  (gnus-summary-mode
-                   gnus-summary-mode-hook
-                   (turn-on-tinygnus-summary-mode))
-                  (gnus-article-mode
-                   gnus-article-mode-hook
-                   (tinygnus-article-mode-keys))))
-         hook
-         hook-list)
+  (let ((list  '((gnus-group-mode
+		  gnus-group-mode-hook
+		  (turn-on-tinygnus-group-mode))
+		 (gnus-summary-mode
+		  gnus-summary-mode-hook
+		  (turn-on-tinygnus-summary-mode))
+		 (gnus-article-mode
+		  gnus-article-mode-hook
+		  (tinygnus-article-mode-keys))))
+	hook
+	hook-list)
     (tinygnus-uff-table-install)
     (ti::add-hooks  'tinygnus-:summary-ube-send-to-postmasters-hook
                     'tinygnus-mark-deleted
@@ -1109,8 +1109,8 @@ Prefix key to access the minor mode is defined in `tinygnus-:group-mode-prefix-k
 (defun tinygnus-uff-table-install ()
   "Install `tinygnus-:uff-table'. Previous Gnus user functions will be wiped."
   (interactive)
-  (let* (func
-         gnus-func)
+  (let (func
+	gnus-func)
     (dolist (elt tinygnus-:uff-table)
       (unless (fboundp (setq func  (nth 1 elt)))
         (error "Internal error. tinygnus-:uff-table, No func %s" func))
@@ -1136,9 +1136,9 @@ Prefix key to access the minor mode is defined in `tinygnus-:group-mode-prefix-k
 (defun tinygnus-gnus-compile-1 (char-list)
   "Compile the line formats and their user functions: CHAR-LIST."
   (interactive)
-  (let* ((fmt  "gnus-user-format-function-%s")
-         sym
-         func)
+  (let ((fmt  "gnus-user-format-function-%s")
+	sym
+	func)
     (message "TinyGnus: Compiling relevant parts...")
     (save-window-excursion ;; Gnus and Compile changes the windowcfg
 
@@ -1207,12 +1207,12 @@ Prefix key to access the minor mode is defined in `tinygnus-:group-mode-prefix-k
   "Map through marked mesaes in Summary buffer and execute BODY.
 The variable `nbr' has the current article number. Use command
  (return) to stop the loop."
-  `(let* ((articles (gnus-summary-work-articles nil))
-          gnus-article-display-hook     ;Do not run this
-          gnus-article-prepare-hook
-          gnus-select-article-hook
-          gnus-article-mode-hook
-          gnus-visual-mark-article-hook)
+  `(let ((articles (gnus-summary-work-articles nil))
+	 gnus-article-display-hook     ;Do not run this
+	 gnus-article-prepare-hook
+	 gnus-select-article-hook
+	 gnus-article-mode-hook
+	 gnus-visual-mark-article-hook)
      ;; ByteComp silencer, unused variables
      (if gnus-article-display-hook (setq gnus-article-display-hook t))
      (if gnus-article-prepare-hook (setq gnus-article-prepare-hook t))
@@ -1230,8 +1230,8 @@ The variable `nbr' has the current article number. Use command
   "Run BODY inside articles that are marked.
 Variable `out' contains the output buffer and `buffer' points
 to the article buffer."
-  `(let* ((out   (get-buffer-create tinygnus-:output-buffer))
-          buffer)
+  `(let ((out (get-buffer-create tinygnus-:output-buffer))
+	 buffer)
      (tinygnus-summary-map-articles-macro
       (gnus-summary-select-article 'all nil 'pseudo nbr)
       (setq buffer (get-buffer gnus-original-article-buffer))
@@ -1245,7 +1245,7 @@ to the article buffer."
 (put 'tinygnus-output-buffer-macro 'lisp-indent-function 0)
 (defmacro tinygnus-output-buffer-macro (&rest body)
   "Run BODY if `tinygnus-:output-buffer' exists. Signal error otherwise."
-  `(let* ((buffer (get-buffer tinygnus-:output-buffer)))
+  `(let ((buffer (get-buffer tinygnus-:output-buffer)))
      (if buffer
          (progn ,@body)
        (error "TinyGnus: buffer %s does not exist." tinygnus-:output-buffer))))
@@ -1256,7 +1256,7 @@ to the article buffer."
   "Read all files from DIR and do BODY.
 You can refer to `file' when processing the files. Stop loop with
 command (return)."
-  `(let* ((files (tinygnus-read-files-from-dir ,dir)))
+  `(let ((files (tinygnus-read-files-from-dir ,dir)))
      (when (or (not (interactive-p))
                (and (interactive-p)
                     (y-or-n-p
@@ -1309,7 +1309,7 @@ Returns [N.N.N] for pure ip addresses."
 ;;;
 ;;;(defun tinygnus-address-uniquefy (list)
 ;;;  "Leave only shortest domain name: like DOMAIN.com over some.DOMAIN.com"
-;;;  (let* (array ret domain)
+;;;  (let (array ret domain)
 ;;;    (dolist (elt list)
 ;;;      (setq array  (split-string elt "[.]")
 ;;;         domain (nth 1 (nreverse array))))))
@@ -1345,8 +1345,8 @@ Thank you beforehand for your co-operation to stop UBE in the net.\n"))
   "READ or save `tinygnus-:nslookup-table' to `tinygnus-:nslookup-file'.
 See function `tinygnus-article-ube-send-to-postmasters'."
   (interactive "P")
-  (let* ((fid  "tinygnus-nslookup-save")
-         (file tinygnus-:nslookup-file))
+  (let ((fid  "tinygnus-nslookup-save")
+	(file tinygnus-:nslookup-file))
     (unless fid ;; No-op. XEmacs byte compiler silencer
       (setq fid nil))
     (when (and (stringp file)
@@ -1373,9 +1373,9 @@ See function `tinygnus-article-ube-send-to-postmasters'."
 ;;;
 (defun tinygnus-nslookup-maybe-save ()
   "Save every 5th new nslookup."
-  (let* ((fid   "tinygnus-nslookup-maybe-save")
-         (count (get   'tinygnus-:nslookup-table 'pos))
-         (len   (length tinygnus-:nslookup-table)))
+  (let ((fid   "tinygnus-nslookup-maybe-save")
+	(count (get   'tinygnus-:nslookup-table 'pos))
+	(len   (length tinygnus-:nslookup-table)))
     (unless fid ;; No-op. XEmacs byte compiler silencer
       (setq fid nil))
     (when (or (not (integerp count))
@@ -1447,11 +1447,11 @@ See function `tinygnus-article-ube-send-to-postmasters'."
 (defun tinygnus-summary-toggle-original  ()
   "Toggle showing original article and *Article*."
   (interactive)
-  (let* ((wlist (ti::window-list))
-         buffer
-         disp-win
-         disp-buffer
-         name)
+  (let ((wlist (ti::window-list))
+	buffer
+	disp-win
+	disp-buffer
+	name)
     ;;  Is there any "article" buffer in this
     (dolist (win wlist)
       (setq name  (buffer-name (setq disp-buffer (window-buffer win))))
@@ -1480,9 +1480,9 @@ See function `tinygnus-article-ube-send-to-postmasters'."
 If NO-CONFIRM is non-nil, then the messages are enst directly without
 confirmations."
   (interactive "P")
-  (let* ((fid      "tinygnus-summary-ube-send-to-postmasters")
-         (count    0)
-         kill-flag)
+  (let ((fid   "tinygnus-summary-ube-send-to-postmasters")
+	(count 0)
+	kill-flag)
     (unless fid ;; No-op. XEmacs byte compiler silencer
       (setq fid nil))
     ;; (gnus-summary-save-process-mark)
@@ -1503,7 +1503,7 @@ confirmations."
 ;;;
 (defun tinygnus-domain (address)
   "Change ADDRESS xx.domain.com --> domain.com using `tinygnus-:domain-table'."
-  (let* ((ret address))
+  (let ((ret address))
     (when tinygnus-:domain-table
       (dolist (elt tinygnus-:domain-table)
         (when (string-match (car elt) address)
@@ -1524,7 +1524,7 @@ complaint if the destination address won't handle your notes.
 The upstream provider in yraceroute output is the second/third last rows
 in the listing."
   (interactive)
-  (let* ()
+  (let ()
     ;; #todo:
     nil))
 
@@ -1716,12 +1716,12 @@ Return:
 ;;;
 (defun tinygnus-ube-address-compose (ns-list)
   "Compose UBE return addresses from NS-LIST."
-  (let* ((fid  "tinygnus-ube-address-compose")
-         str
-         done
-         tmp-list
-         addr-list
-         ip)
+  (let ((fid  "tinygnus-ube-address-compose")
+	str
+	done
+	tmp-list
+	addr-list
+	ip)
     (unless fid ;; No-op. XEmacs byte compiler silencer.
       (setq fid nil))
     ;;   ns-list:  '(IP (name . addr))
@@ -1806,21 +1806,21 @@ References:
   `tinygnus-:nslookup-table'
   `tinygnus-:nslookup-file'"
   (interactive "P")
-  (let* ((message-included-forward-headers ".")
-         (fid           'tinygnus-article-ube-send-to-postmasters)
-         ;; Add-on package to message.el that generates keywords.
-         ;; DO NOT be intercative.
-         (message-keyword-interactive  nil)
-         ;; Disable PGP auto signing.
-         tinypgp-mode
-         ;; Make copy, we modify this in correct buffer
-         (mail-send-hook mail-send-hook)
-         ip-list
-         ns-list
-         ns-err-list
-         addr-list
-         subject
-         buffer)
+  (let ((message-included-forward-headers ".")
+	(fid           'tinygnus-article-ube-send-to-postmasters)
+	;; Add-on package to message.el that generates keywords.
+	;; DO NOT be intercative.
+	(message-keyword-interactive  nil)
+	;; Disable PGP auto signing.
+	tinypgp-mode
+	;; Make copy, we modify this in correct buffer
+	(mail-send-hook mail-send-hook)
+	ip-list
+	ns-list
+	ns-err-list
+	addr-list
+	subject
+	buffer)
     (unless fid ;; No-op. XEmacs byte compiler silencer
       (setq fid nil))
     (unless message-included-forward-headers ;; Byte Compiler silencer
@@ -2074,14 +2074,14 @@ References:
   `tinygnus-:additional-group-info' Additional chacters added"
   (if (not (boundp 'gnus-tmp-group))
       ""
-    (let* ((group       (symbol-value 'gnus-tmp-group))
+    (let ((group       (symbol-value 'gnus-tmp-group))
 ;;;        (re          gnus-auto-expirable-newsgroups)
-           (group-char  tinygnus-:expiry-in-group-string)
-           (fmt         "%s")           ; I used to have e:%s
-           (ret         "")
-           arg
-           param func str val
-           stat)
+	  (group-char  tinygnus-:expiry-in-group-string)
+	  (fmt         "%s")           ; I used to have e:%s
+	  (ret         "")
+	  arg
+	  param func str val
+	  stat)
       ;; ................................................... file test ...
       ;; Looking the expiry value makes sense only for groups that
       ;; have associated file. Do not check e.g. nntp
@@ -2280,11 +2280,10 @@ Input:
   VERB  Verbose messages."
   (interactive "P")
   (ti::verb)
-  (let* (subject-field
-;;;      from-field
-         (total 0)
-         count
-         url)
+  (let (subject-field
+	(total 0)
+	count
+	url)
     (tinygnus-summary-map-article-body-macro
      (setq ;;; from-field    (mail-fetch-field "From")
       subject-field (mail-fetch-field "Subject"))
@@ -2323,7 +2322,7 @@ Input:
 (defun tinygnus-summary-gather-clear  ()
   "Clear `tinygnus-:output-buffer'."
   (interactive)
-  (let* ((buffer (get-buffer-create tinygnus-:output-buffer)))
+  (let ((buffer (get-buffer-create tinygnus-:output-buffer)))
     (ti::erase-buffer buffer)
     (if (interactive-p)
         (message "TinyGnus: %s cleared" tinygnus-:output-buffer))))
@@ -2408,10 +2407,10 @@ Input:
 (defun tinygnus-group-params-set (&optional group)
   "Save extra GROUP information to group symbol plist."
   (tinygnus-set-group)
-  (let* ((path      (tinygnus-group-pathname group))
-         (sym       'tinygnus-:gnus-group-info)
-         attr
-         list)
+  (let ((path      (tinygnus-group-pathname group))
+	(sym       'tinygnus-:gnus-group-info)
+	attr
+	list)
     (when (and path
                (file-exists-p path))
       (cond
@@ -2442,12 +2441,13 @@ If this is file group, check if the underlying file has changed and
 read it. Otherwise do nothing. This is like doing 'g' before entering
 the group."
   (tinygnus-set-group)
-  (let* ((sym   'tinygnus-:gnus-group-info)
-         (path (tinygnus-group-pathname))
-         info
-         attr-now attr-was
-         s1
-         s2)
+  (let ((sym   'tinygnus-:gnus-group-info)
+	(path (tinygnus-group-pathname))
+	info
+	attr-now
+	attr-was
+	s1
+	s2)
     ;; Warn about missing .overview file
     (when path
       (setq s1 (ti::file-make-path path ".overview"))
@@ -2514,7 +2514,7 @@ with G p."
   (interactive "P")
   (dolist (group (gnus-group-process-prefix n))
     ;;   (setq group (gnus-group-group-name)))
-    (let* (
+    (let (
 ;;;        (name    (gnus-group-real-name group))
 ;;;        (method  (gnus-find-method-for-group group))
 ;;;        (type    (nth 0 method))     ;; 'nnml
@@ -2522,9 +2522,9 @@ with G p."
 ;;;                     (nth 1 method)))
 ;;;        (dir       (nth 1 (assoc 'nnml-directory method)))
 ;;;        (new-name  (concat server "." name))
-           (to-list   (gnus-group-get-parameter group 'to-list))
-           address
-           list)
+	  (to-list   (gnus-group-get-parameter group 'to-list))
+	  address
+	  list)
       (gnus-group-remove-mark group)
       (if to-list
           (message "TinyGnus: %s `to-list' already set to %s" group to-list)
@@ -2547,7 +2547,7 @@ with G p."
 (defun tinygnus-group-set-current-level-region  (beg end level)
   "Map over region BEG and END and set groups to LEVEL."
   (interactive "r\nnTinyGnus set level to region: ")
-  (let* ((lines (count-lines beg end)))
+  (let ((lines (count-lines beg end)))
     (goto-char (min beg end))
     (gnus-group-set-current-level lines level)))
 
@@ -2555,11 +2555,11 @@ with G p."
 ;;;
 (defun tinygnus-read-files-from-dir (dir)
   "Return files from DIR in sorted order."
-  (let* ((files
-          (ti::directory-files
-           dir "."
-           'absolute
-           '(not (file-directory-p arg)))))
+  (let ((files
+	 (ti::directory-files
+	  dir "."
+	  'absolute
+	  '(not (file-directory-p arg)))))
     (sort files 'string<)))
 
 ;;; ----------------------------------------------------------------------
@@ -2606,9 +2606,9 @@ with G p."
 (defun tinygnus-make-group-nnml-from-dir (dir regexp)
   "Create nnml groups from DIR matching REGEXP."
   (interactive "DTinyGnus Nnml from directory: \nsRegexp: ")
-  (let* ((files (directory-files
-                 (expand-file-name dir )
-                 nil regexp)))
+  (let ((files (directory-files
+		(expand-file-name dir )
+		nil regexp)))
     (dolist (group files)
       (when (file-directory-p (nnheader-concat dir group))
 ;;;     (if (tinygnus-nnml-group-alist-p group)
@@ -2621,7 +2621,7 @@ with G p."
 (defun tinygnus-make-group-nnml (n)
   "Kill marked nnml groups and recreate them."
   (interactive "P")
-  (let* (nnml-list)
+  (let (nnml-list)
     (dolist (group (gnus-group-process-prefix n))
       ;;   (setq group (gnus-group-group-name)))
       (gnus-group-remove-mark group)
@@ -2658,7 +2658,7 @@ with G p."
 (defun tinygnus-make-group-from-file (method)
   "Make nndoc group from FILE with METHOD."
   (interactive
-   (let* (file)
+   (let (file)
      (setq file (read-file-name "Make group from file: " nil nil t))
      (if (or (file-directory-p file)
              (not (file-readable-p file)))
@@ -2709,10 +2709,10 @@ nnml backends with one call."
       (tinygnus-files-from-dir-macro
        (symbol-value 'nnmail-procmail-directory)
        (ignore-errors
-         (let* ((name (replace-regexp-in-string
-                       (symbol-value 'nnmail-procmail-suffix)
-                       ""
-                       (file-name-nondirectory file))))
+         (let ((name (replace-regexp-in-string
+		      (symbol-value 'nnmail-procmail-suffix)
+		      ""
+		      (file-name-nondirectory file))))
            (gnus-group-make-group name (quote (nnml "")))))))))
 
 ;;; ----------------------------------------------------------------------
@@ -2733,7 +2733,7 @@ Contact maintainer."))))
 (defun tinygnus-crash-box-delete ()
   "Delete `nnmail-crash-box'."
   (interactive)
-  (let* ((box (tinygnus-get-crash-box)))
+  (let ((box (tinygnus-get-crash-box)))
     (cond
      ((not (file-exists-p box))
       (message "TinyGnus: File not found: %s" box))
@@ -2750,7 +2750,7 @@ Contact maintainer."))))
 (defun tinygnus-crash-box-find-file ()
   "Find-file Gnus crash-box."
   (interactive)
-  (let* ((box (tinygnus-get-crash-box)))
+  (let ((box (tinygnus-get-crash-box)))
     (cond
      ((not (file-exists-p box))
       (message "TinyGnus: File not found: %s" box))
@@ -2768,15 +2768,16 @@ f ELT is nil then gel news for all groups.
 References:
   `tinygnus-:get-news-symbolic-levels'"
   (interactive
-   (let* ((table tinygnus-:get-news-symbolic-levels)
-          ans)
+   (let ((table tinygnus-:get-news-symbolic-levels)
+	 ans)
      (setq
       ans
       (completing-read
        "Get new nwes [empty=all levels]: "
        tinygnus-:get-news-symbolic-levels nil nil))
      (list (assoc ans table) )))
-  (let* ((cdr-elt   (if elt (cdr elt))))
+  (let ((cdr-elt (if elt
+		     (cdr elt))))
     (if (integerp cdr-elt)              ; 1-- > '(1)
         (setq cdr-elt (ti::list-make cdr-elt)))
     (cond
@@ -3249,159 +3250,159 @@ Possibly REPLCE existing entry."
   ;; (group show-all no-article kill-buffer no-display &optional select-articles)
   ;; Killed foreign groups can't be entered.
   (tinygnus-debug-gnus-macro 'gnus-summary-read-group-1
-                             (pr 'CALL-ARGS
-                                 (list group show-all no-article kill-buffer no-display select-articles))
-                             (when (and (not (gnus-group-native-p group))
-                                        (not (gnus-gethash group gnus-newsrc-hashtb)))
-                               (error "Dead non-native groups can't be entered"))
-                             (gnus-message 5 "Retrieving newsgroup: %s..." group)
-                             (let* ((new-group (gnus-summary-setup-buffer group))
-                                    (quit-config (gnus-group-quit-config group))
-                                    (did-select (and new-group (gnus-select-newsgroup
-                                                                group show-all select-articles))))
-                               (cond
-                                ;; This summary buffer exists already, so we just select it.
-                                ((not new-group)
-                                 (gnus-set-global-variables)
-                                 (when kill-buffer
-                                   (gnus-kill-or-deaden-summary kill-buffer))
-                                 (gnus-configure-windows 'summary 'force)
-                                 (gnus-set-mode-line 'summary)
-                                 (gnus-summary-position-point)
-                                 (message "")
-                                 t)
-                                ;; We couldn't select this group.
-                                ((null did-select)
-                                 (when (and (eq major-mode 'gnus-summary-mode)
-                                            (not (equal (current-buffer) kill-buffer)))
-                                   (kill-buffer (current-buffer))
-                                   (if (not quit-config)
-                                       (progn
-                                         ;; Update the info -- marks might need to be removed,
-                                         ;; for instance.
-                                         (gnus-summary-update-info)
-                                         (set-buffer gnus-group-buffer)
-                                         (gnus-group-jump-to-group group)
-                                         (gnus-group-next-unread-group 1))
-                                     (gnus-handle-ephemeral-exit quit-config)))
-                                 (gnus-message 3 "Can't select group")
-                                 nil)
-                                ;; The user did a `C-g' while prompting for number of articles,
-                                ;; so we exit this group.
-                                ((eq did-select 'quit)
-                                 (and (eq major-mode 'gnus-summary-mode)
-                                      (not (equal (current-buffer) kill-buffer))
-                                      (kill-buffer (current-buffer)))
-                                 (when kill-buffer
-                                   (gnus-kill-or-deaden-summary kill-buffer))
-                                 (if (not quit-config)
-                                     (progn
-                                       (set-buffer gnus-group-buffer)
-                                       (gnus-group-jump-to-group group)
-                                       (gnus-group-next-unread-group 1)
-                                       (gnus-configure-windows 'group 'force))
-                                   (gnus-handle-ephemeral-exit quit-config))
-                                 ;; Finally signal the quit.
-                                 (signal 'quit nil))
-                                ;; The group was successfully selected.
-                                (t
-                                 (gnus-set-global-variables)
-                                 ;; Save the active value in effect when the group was entered.
-                                 (setq gnus-newsgroup-active
-                                       (gnus-copy-sequence
-                                        (gnus-active gnus-newsgroup-name)))
-                                 ;; You can change the summary buffer in some way with this hook.
-                                 (gnus-run-hooks 'gnus-select-group-hook)
-                                 ;; Set any local variables in the group parameters.
-                                 (gnus-summary-set-local-parameters gnus-newsgroup-name)
-                                 (gnus-update-format-specifications
-                                  nil 'summary 'summary-mode 'summary-dummy)
-                                 (gnus-update-summary-mark-positions)
-                                 ;; Do score processing.
-                                 (when gnus-use-scoring
-                                   (gnus-possibly-score-headers))
-                                 ;; Check whether to fill in the gaps in the threads.
-                                 (when gnus-build-sparse-threads
-                                   (gnus-build-sparse-threads))
-                                 ;; Find the initial limit.
-                                 (if gnus-show-threads
-                                     (if show-all
-                                         (let ((gnus-newsgroup-dormant nil))
-                                           (gnus-summary-initial-limit show-all))
-                                       (gnus-summary-initial-limit show-all))
-                                   ;; When untreaded, all articles are always shown.
-                                   (setq gnus-newsgroup-limit
-                                         (mapcar
-                                          (lambda (header) (mail-header-number header))
-                                          gnus-newsgroup-headers)))
-                                 ;; Generate the summary buffer.
-                                 (unless no-display
-                                   (gnus-summary-prepare))
-                                 (when gnus-use-trees
-                                   (gnus-tree-open group)
-                                   (setq gnus-summary-highlight-line-function
-                                         'gnus-tree-highlight-article))
-                                 ;; If the summary buffer is empty, but there are some low-scored
-                                 ;; articles or some excluded dormants, we include these in the
-                                 ;; buffer.
-                                 (when (and (zerop (buffer-size))
-                                            (not no-display))
-                                   (cond (gnus-newsgroup-dormant
-                                          (gnus-summary-limit-include-dormant))
-                                         ((and gnus-newsgroup-scored show-all)
-                                          (gnus-summary-limit-include-expunged t))))
-                                 ;; Function `gnus-apply-kill-file' must be called in this hook.
-                                 (gnus-run-hooks 'gnus-apply-kill-hook)
-                                 (if (and (zerop (buffer-size))
-                                          (not no-display))
-                                     (progn
-                                       ;; This newsgroup is empty.
-                                       (gnus-summary-catchup-and-exit nil t)
-                                       (gnus-message 6 "No unread news")
-                                       (when kill-buffer
-                                         (gnus-kill-or-deaden-summary kill-buffer))
-                                       ;; Return nil from this function.
-                                       nil)
-                                   ;; Hide conversation thread subtrees.  We cannot do this in
-                                   ;; gnus-summary-prepare-hook since kill processing may not
-                                   ;; work with hidden articles.
-                                   (and gnus-show-threads
-                                        gnus-thread-hide-subtree
-                                        (gnus-summary-hide-all-threads))
-                                   (when kill-buffer
-                                     (gnus-kill-or-deaden-summary kill-buffer))
-                                   ;; Show first unread article if requested.
-                                   (if (and (not no-article)
-                                            (not no-display)
-                                            gnus-newsgroup-unreads
-                                            gnus-auto-select-first)
-                                       (progn
-                                         (gnus-configure-windows 'summary)
-                                         (cond
-                                          ((eq gnus-auto-select-first 'best)
-                                           (gnus-summary-best-unread-article))
-                                          ((eq gnus-auto-select-first t)
-                                           (gnus-summary-first-unread-article))
-                                          ((gnus-functionp gnus-auto-select-first)
-                                           (funcall gnus-auto-select-first))))
-                                     ;; Don't select any articles, just move point to the first
-                                     ;; article in the group.
-                                     (goto-char (point-min))
-                                     (gnus-summary-position-point)
-                                     (gnus-configure-windows 'summary 'force)
-                                     (gnus-set-mode-line 'summary))
-                                   (when (get-buffer-window gnus-group-buffer t)
-                                     ;; Gotta use windows, because recenter does weird stuff if
-                                     ;; the current buffer ain't the displayed window.
-                                     (let ((owin (selected-window)))
-                                       (select-window (get-buffer-window gnus-group-buffer t))
-                                       (when (gnus-group-goto-group group)
-                                         (recenter))
-                                       (select-window owin)))
-                                   ;; Mark this buffer as "prepared".
-                                   (setq gnus-newsgroup-prepared t)
-                                   (gnus-run-hooks 'gnus-summary-prepared-hook)
-                                   (setq ad-return-value t)))))))
+    (pr 'CALL-ARGS
+	(list group show-all no-article kill-buffer no-display select-articles))
+    (when (and (not (gnus-group-native-p group))
+	       (not (gnus-gethash group gnus-newsrc-hashtb)))
+      (error "Dead non-native groups can't be entered"))
+    (gnus-message 5 "Retrieving newsgroup: %s..." group)
+    (let* ((new-group (gnus-summary-setup-buffer group))
+	   (quit-config (gnus-group-quit-config group))
+	   (did-select (and new-group (gnus-select-newsgroup
+				       group show-all select-articles))))
+      (cond
+       ;; This summary buffer exists already, so we just select it.
+       ((not new-group)
+	(gnus-set-global-variables)
+	(when kill-buffer
+	  (gnus-kill-or-deaden-summary kill-buffer))
+	(gnus-configure-windows 'summary 'force)
+	(gnus-set-mode-line 'summary)
+	(gnus-summary-position-point)
+	(message "")
+	t)
+       ;; We couldn't select this group.
+       ((null did-select)
+	(when (and (eq major-mode 'gnus-summary-mode)
+		   (not (equal (current-buffer) kill-buffer)))
+	  (kill-buffer (current-buffer))
+	  (if (not quit-config)
+	      (progn
+		;; Update the info -- marks might need to be removed,
+		;; for instance.
+		(gnus-summary-update-info)
+		(set-buffer gnus-group-buffer)
+		(gnus-group-jump-to-group group)
+		(gnus-group-next-unread-group 1))
+	    (gnus-handle-ephemeral-exit quit-config)))
+	(gnus-message 3 "Can't select group")
+	nil)
+       ;; The user did a `C-g' while prompting for number of articles,
+       ;; so we exit this group.
+       ((eq did-select 'quit)
+	(and (eq major-mode 'gnus-summary-mode)
+	     (not (equal (current-buffer) kill-buffer))
+	     (kill-buffer (current-buffer)))
+	(when kill-buffer
+	  (gnus-kill-or-deaden-summary kill-buffer))
+	(if (not quit-config)
+	    (progn
+	      (set-buffer gnus-group-buffer)
+	      (gnus-group-jump-to-group group)
+	      (gnus-group-next-unread-group 1)
+	      (gnus-configure-windows 'group 'force))
+	  (gnus-handle-ephemeral-exit quit-config))
+	;; Finally signal the quit.
+	(signal 'quit nil))
+       ;; The group was successfully selected.
+       (t
+	(gnus-set-global-variables)
+	;; Save the active value in effect when the group was entered.
+	(setq gnus-newsgroup-active
+	      (gnus-copy-sequence
+	       (gnus-active gnus-newsgroup-name)))
+	;; You can change the summary buffer in some way with this hook.
+	(gnus-run-hooks 'gnus-select-group-hook)
+	;; Set any local variables in the group parameters.
+	(gnus-summary-set-local-parameters gnus-newsgroup-name)
+	(gnus-update-format-specifications
+	 nil 'summary 'summary-mode 'summary-dummy)
+	(gnus-update-summary-mark-positions)
+	;; Do score processing.
+	(when gnus-use-scoring
+	  (gnus-possibly-score-headers))
+	;; Check whether to fill in the gaps in the threads.
+	(when gnus-build-sparse-threads
+	  (gnus-build-sparse-threads))
+	;; Find the initial limit.
+	(if gnus-show-threads
+	    (if show-all
+		(let ((gnus-newsgroup-dormant nil))
+		  (gnus-summary-initial-limit show-all))
+	      (gnus-summary-initial-limit show-all))
+	  ;; When untreaded, all articles are always shown.
+	  (setq gnus-newsgroup-limit
+		(mapcar
+		 (lambda (header) (mail-header-number header))
+		 gnus-newsgroup-headers)))
+	;; Generate the summary buffer.
+	(unless no-display
+	  (gnus-summary-prepare))
+	(when gnus-use-trees
+	  (gnus-tree-open group)
+	  (setq gnus-summary-highlight-line-function
+		'gnus-tree-highlight-article))
+	;; If the summary buffer is empty, but there are some low-scored
+	;; articles or some excluded dormants, we include these in the
+	;; buffer.
+	(when (and (zerop (buffer-size))
+		   (not no-display))
+	  (cond (gnus-newsgroup-dormant
+		 (gnus-summary-limit-include-dormant))
+		((and gnus-newsgroup-scored show-all)
+		 (gnus-summary-limit-include-expunged t))))
+	;; Function `gnus-apply-kill-file' must be called in this hook.
+	(gnus-run-hooks 'gnus-apply-kill-hook)
+	(if (and (zerop (buffer-size))
+		 (not no-display))
+	    (progn
+	      ;; This newsgroup is empty.
+	      (gnus-summary-catchup-and-exit nil t)
+	      (gnus-message 6 "No unread news")
+	      (when kill-buffer
+		(gnus-kill-or-deaden-summary kill-buffer))
+	      ;; Return nil from this function.
+	      nil)
+	  ;; Hide conversation thread subtrees.  We cannot do this in
+	  ;; gnus-summary-prepare-hook since kill processing may not
+	  ;; work with hidden articles.
+	  (and gnus-show-threads
+	       gnus-thread-hide-subtree
+	       (gnus-summary-hide-all-threads))
+	  (when kill-buffer
+	    (gnus-kill-or-deaden-summary kill-buffer))
+	  ;; Show first unread article if requested.
+	  (if (and (not no-article)
+		   (not no-display)
+		   gnus-newsgroup-unreads
+		   gnus-auto-select-first)
+	      (progn
+		(gnus-configure-windows 'summary)
+		(cond
+		 ((eq gnus-auto-select-first 'best)
+		  (gnus-summary-best-unread-article))
+		 ((eq gnus-auto-select-first t)
+		  (gnus-summary-first-unread-article))
+		 ((gnus-functionp gnus-auto-select-first)
+		  (funcall gnus-auto-select-first))))
+	    ;; Don't select any articles, just move point to the first
+	    ;; article in the group.
+	    (goto-char (point-min))
+	    (gnus-summary-position-point)
+	    (gnus-configure-windows 'summary 'force)
+	    (gnus-set-mode-line 'summary))
+	  (when (get-buffer-window gnus-group-buffer t)
+	    ;; Gotta use windows, because recenter does weird stuff if
+	    ;; the current buffer ain't the displayed window.
+	    (let ((owin (selected-window)))
+	      (select-window (get-buffer-window gnus-group-buffer t))
+	      (when (gnus-group-goto-group group)
+		(recenter))
+	      (select-window owin)))
+	  ;; Mark this buffer as "prepared".
+	  (setq gnus-newsgroup-prepared t)
+	  (gnus-run-hooks 'gnus-summary-prepared-hook)
+	  (setq ad-return-value t)))))))
 
 ;;; 5.8.2
 (defadvice gnus-activate-group (around tinygnus-debug dis)
@@ -3410,42 +3411,42 @@ Possibly REPLCE existing entry."
   ;; Check whether a group has been activated or not.
   ;; If SCAN, request a scan of that group as well.
   (tinygnus-debug-gnus-macro 'gnus-activate-group
-                             (pr '(CALL-ARGS group &optional scan dont-check method)
-                                 (list group scan dont-check method))
-                             (let ((method (or method (inline (gnus-find-method-for-group group))))
-                                   active)
-                               (pr 'method method)
-                               (setq
-                                ad-return-value
-                                (and (inline (gnus-check-server method))
-                                     ;; We escape all bugs and quit here to make it posxsible to
-                                     ;; continue if a group is so out-there that it reports bugs
-                                     ;; and stuff.
-                                     (progn
-                                       (and scan
-                                            (gnus-check-backend-function 'request-scan (car method))
-                                            (gnus-request-scan group method))
-                                       t)
-                                     (condition-case ()
-                                         (inline (gnus-request-group group dont-check method))
+    (pr '(CALL-ARGS group &optional scan dont-check method)
+	(list group scan dont-check method))
+    (let ((method (or method (inline (gnus-find-method-for-group group))))
+	  active)
+      (pr 'method method)
+      (setq
+       ad-return-value
+       (and (inline (gnus-check-server method))
+	    ;; We escape all bugs and quit here to make it posxsible to
+	    ;; continue if a group is so out-there that it reports bugs
+	    ;; and stuff.
+	    (progn
+	      (and scan
+		   (gnus-check-backend-function 'request-scan (car method))
+		   (gnus-request-scan group method))
+	      t)
+	    (condition-case ()
+		(inline (gnus-request-group group dont-check method))
                                         ;(error nil)
-                                       (quit nil))
-                                     (setq active (gnus-parse-active))
-                                     (unless active
-                                       (pr "(parse-active)NNTP buffer conatins no data"
-                                           nntp-server-buffer)
-                                       (pr 'gnus-parse-active active))
-                                     ;; If there are no articles in the group, the GROUP
-                                     ;; command may have responded with the `(0 . 0)'.  We
-                                     ;; ignore this if we already have an active entry
-                                     ;; for the group.
-                                     (if (and (zerop (car active))
-                                              (zerop (cdr active))
-                                              (gnus-active group))
-                                         (gnus-active group)
-                                       (gnus-set-active group active)
-                                       ;; Return the new active info.
-                                       active))))))
+	      (quit nil))
+	    (setq active (gnus-parse-active))
+	    (unless active
+	      (pr "(parse-active)NNTP buffer conatins no data"
+		  nntp-server-buffer)
+	      (pr 'gnus-parse-active active))
+	    ;; If there are no articles in the group, the GROUP
+	    ;; command may have responded with the `(0 . 0)'.  We
+	    ;; ignore this if we already have an active entry
+	    ;; for the group.
+	    (if (and (zerop (car active))
+		     (zerop (cdr active))
+		     (gnus-active group))
+		(gnus-active group)
+	      (gnus-set-active group active)
+	      ;; Return the new active info.
+	      active))))))
 
 ;;;  --> nnagent-request-scan calls this too
 ;;;
@@ -3454,54 +3455,54 @@ Possibly REPLCE existing entry."
   ;; (group &optional server dont-check)
   "Output trace to tinygnus-:debug-buffer"
   (tinygnus-debug-gnus-macro 'nnml-request-group
-                             (pr '(CALL-ARGS group dont-check gnus-command-method)
-                                 (list group dont-check gnus-command-method))
-                             (setq
-                              ad-return-value
-                              (let ((pathname-coding-system 'binary))
-                                (cond ((not (nnml-possibly-change-directory group server))
-                                       (nnheader-report 'nnml "Invalid group (no such directory)"))
-                                      ((not (file-exists-p nnml-current-directory))
-                                       (nnheader-report 'nnml
-                                                        "Directory %s does not exist"
-                                                        nnml-current-directory))
-                                      ((not (file-directory-p nnml-current-directory))
-                                       (nnheader-report 'nnml
-                                                        "%s is not a directory"
-                                                        nnml-current-directory))
-                                      (dont-check (nnheader-report 'nnml "Group %s selected" group)
-                                                  t)
-                                      (t (nnheader-re-read-dir nnml-current-directory)
-                                         (nnmail-activate 'nnml)
-                                         (let ((active (nth 1 (assoc group nnml-group-alist))))
-                                           (if (not active)
-                                               (nnheader-report 'nnml "No such group: %s" group)
-                                             (nnheader-report 'nnml "Selected group %s" group)
-                                             (nnheader-insert "211 %d %d %d %s
+    (pr '(CALL-ARGS group dont-check gnus-command-method)
+	(list group dont-check gnus-command-method))
+    (setq
+     ad-return-value
+     (let ((pathname-coding-system 'binary))
+       (cond ((not (nnml-possibly-change-directory group server))
+	      (nnheader-report 'nnml "Invalid group (no such directory)"))
+	     ((not (file-exists-p nnml-current-directory))
+	      (nnheader-report 'nnml
+			       "Directory %s does not exist"
+			       nnml-current-directory))
+	     ((not (file-directory-p nnml-current-directory))
+	      (nnheader-report 'nnml
+			       "%s is not a directory"
+			       nnml-current-directory))
+	     (dont-check (nnheader-report 'nnml "Group %s selected" group)
+			 t)
+	     (t (nnheader-re-read-dir nnml-current-directory)
+		(nnmail-activate 'nnml)
+		(let ((active (nth 1 (assoc group nnml-group-alist))))
+		  (if (not active)
+		      (nnheader-report 'nnml "No such group: %s" group)
+		    (nnheader-report 'nnml "Selected group %s" group)
+		    (nnheader-insert "211 %d %d %d %s
 " (max (1+ (- (cdr active) (car active))) 0) (car active) (cdr active) group)))))))))
 
 (defadvice nnml-possibly-change-directory (around tinygnus-debug dis)
   ;; (group &optional server)
   "Output trace to tinygnus-:debug-buffer"
   (tinygnus-debug-gnus-macro 'nnml-possibly-change-directory
-                             (pr '(CALL-ARGS group server) (list group server))
-                             (when (and server
-                                        (not (nnml-server-opened server)))
-                               (nnml-open-server server))
-                             (setq
-                              ad-return-value
-                              (if (not group)
-                                  t
-                                (let ((pathname (nnmail-group-pathname group nnml-directory))
-                                      (pathname-coding-system 'binary))
-                                  (pr 'nnmail-group-pathname pathname)
-                                  (pr 'nnml-current-directory nnml-current-directory)
-                                  (when (not (equal pathname nnml-current-directory))
-                                    (setq nnml-current-directory pathname
-                                          nnml-current-group group
-                                          nnml-article-file-alist nil))
-                                  (file-exists-p nnml-current-directory))))
-                             (pr 'RETURN-VALUE ad-return-value)))
+    (pr '(CALL-ARGS group server) (list group server))
+    (when (and server
+	       (not (nnml-server-opened server)))
+      (nnml-open-server server))
+    (setq
+     ad-return-value
+     (if (not group)
+	 t
+       (let ((pathname (nnmail-group-pathname group nnml-directory))
+	     (pathname-coding-system 'binary))
+	 (pr 'nnmail-group-pathname pathname)
+	 (pr 'nnml-current-directory nnml-current-directory)
+	 (when (not (equal pathname nnml-current-directory))
+	   (setq nnml-current-directory pathname
+		 nnml-current-group group
+		 nnml-article-file-alist nil))
+	 (file-exists-p nnml-current-directory))))
+    (pr 'RETURN-VALUE ad-return-value)))
 
 ;;; 5.8.2
 (defadvice gnus-request-group (around tinygnus-debug dis)
@@ -3510,53 +3511,53 @@ Possibly REPLCE existing entry."
   ;; "Request GROUP.  If DONT-CHECK, no information is required."
   "Output trace to tinygnus-:debug-buffer"
   (tinygnus-debug-gnus-macro 'gnus-request-group
-                             (pr '(CALL-ARGS group &optional dont-check gnus-command-method)
-                                 (list group dont-check gnus-command-method))
-                             (let ((gnus-command-method
-                                    (or gnus-command-method (inline (gnus-find-method-for-group group)))))
-                               (when (stringp gnus-command-method)
-                                 (setq gnus-command-method
-                                       (inline (gnus-server-to-method gnus-command-method)))
-                                 (pr 'gnus-command-method gnus-command-method))
-                               (let* ((function (inline (gnus-get-function gnus-command-method
-                                                                           'request-group)))
-                                      (group    (gnus-group-real-name group))
-                                      (server   (nth 1 gnus-command-method))
-                                      ret
-                                      stat
-                                      dir)
-                                 (pr 'FUNCALL    function)
-                                 (pr 'FUNCALL-SYMBOL-FUNC (symbol-function function))
-                                 (pr 'GROUP      group)
-                                 (pr 'SERVER     server)
-                                 (pr 'DONT-CHECK dont-check)
-                                 (when (string-match "nnml-request-group"
-                                                     (prin1-to-string (symbol-function function)))
-                                   (pr '(nnml-server-opened server) (nnml-server-opened server))
-                                   ;; FIXME: nnml-directory may be in server parameters
-                                   (setq dir (nnmail-group-pathname group nnml-directory))
-                                   (pr '(nnmail-group-pathname group nnml-directory) dir)
-                                   (pr 'nnml-directory nnml-directory)
-                                   (pr 'nnml-current-directory nnml-current-directory)
-                                   (setq stat (assoc group nnml-group-alist))
-                                   (pr  '(assoc group nnml-group-alist) stat)
-                                   (unless stat
-                                     (pr  "ERROR: Gnus doesn't know about ACTIVE file" "")
-                                     (pr  'nnml-group-alist nnml-group-alist)
+    (pr '(CALL-ARGS group &optional dont-check gnus-command-method)
+	(list group dont-check gnus-command-method))
+    (let ((gnus-command-method
+	   (or gnus-command-method (inline (gnus-find-method-for-group group)))))
+      (when (stringp gnus-command-method)
+	(setq gnus-command-method
+	      (inline (gnus-server-to-method gnus-command-method)))
+	(pr 'gnus-command-method gnus-command-method))
+      (let* ((function (inline (gnus-get-function gnus-command-method
+						  'request-group)))
+	     (group    (gnus-group-real-name group))
+	     (server   (nth 1 gnus-command-method))
+	     ret
+	     stat
+	     dir)
+	(pr 'FUNCALL    function)
+	(pr 'FUNCALL-SYMBOL-FUNC (symbol-function function))
+	(pr 'GROUP      group)
+	(pr 'SERVER     server)
+	(pr 'DONT-CHECK dont-check)
+	(when (string-match "nnml-request-group"
+			    (prin1-to-string (symbol-function function)))
+	  (pr '(nnml-server-opened server) (nnml-server-opened server))
+	  ;; FIXME: nnml-directory may be in server parameters
+	  (setq dir (nnmail-group-pathname group nnml-directory))
+	  (pr '(nnmail-group-pathname group nnml-directory) dir)
+	  (pr 'nnml-directory nnml-directory)
+	  (pr 'nnml-current-directory nnml-current-directory)
+	  (setq stat (assoc group nnml-group-alist))
+	  (pr  '(assoc group nnml-group-alist) stat)
+	  (unless stat
+	    (pr  "ERROR: Gnus doesn't know about ACTIVE file" "")
+	    (pr  'nnml-group-alist nnml-group-alist)
 
-                                     (when (and (file-directory-p dir)
-                                                (or (file-exists-p (concat dir "active"))
-                                                    (file-exists-p (concat dir ".agentview")))
-                                                (y-or-n-p "Group not in `nnml-group-alist'. Update? "))
-                                       (tinygnus-gnus-debug-update-nnml-group-alist group dir)))
-                                   (unless (string-match "nnml" group)
-                                     (pr "ERROR: group name doesn not contain NNML?"
-                                         "Gnus can't read group!!!")))
-                                 (setq ret
-                                       (funcall function group server dont-check))
-                                 (pr 'nnml-status-string  nnml-status-string)
-                                 (pr 'RETURN-VALUE ret)
-                                 (setq ad-return-value ret)))))
+	    (when (and (file-directory-p dir)
+		       (or (file-exists-p (concat dir "active"))
+			   (file-exists-p (concat dir ".agentview")))
+		       (y-or-n-p "Group not in `nnml-group-alist'. Update? "))
+	      (tinygnus-gnus-debug-update-nnml-group-alist group dir)))
+	  (unless (string-match "nnml" group)
+	    (pr "ERROR: group name doesn not contain NNML?"
+		"Gnus can't read group!!!")))
+	(setq ret
+	      (funcall function group server dont-check))
+	(pr 'nnml-status-string  nnml-status-string)
+	(pr 'RETURN-VALUE ret)
+	(setq ad-return-value ret)))))
 
 ;;; ----------------------------------------------------------------------
 ;;;
@@ -3644,23 +3645,22 @@ proper files created and Gnus knows about them via `nnml-group-alist'.
 Agent groups are also NNML groups, so this will also step through nntp
 backends when Gnus is unplugged."
   (interactive)
-  (let* ((list (tinygnus-gnus-newsrc-alist
-                (function
-                 (lambda (group)
-                   (or (string-match "nnml" group)
-                       (and (null gnus-plugged)
-                            (eq (car (gnus-find-method-for-group group))
-                                'nntp)))))))
-         method
-         server
-         function
-         open-server
-         status
-         status2
-         real-name
-         dir
-         group)
-
+  (let ((list (tinygnus-gnus-newsrc-alist
+	       (function
+		(lambda (group)
+		  (or (string-match "nnml" group)
+		      (and (null gnus-plugged)
+			   (eq (car (gnus-find-method-for-group group))
+			       'nntp)))))))
+	method
+	server
+	function
+	open-server
+	status
+	status2
+	real-name
+	dir
+	group)
     (message "TinyGnus: NNML-DIRECTORY is %s" nnml-directory)
     (message "TinyGnus: GNUS-AGENT-DIRECTORY is %s" gnus-agent-directory)
     (dolist (elt list)
@@ -3754,12 +3754,12 @@ Make dormants immediately visible in non-nntp groups."
       (cond
        ;;   This part is copied from gnus-sum.el
        ((and (not (string-match "nntp" gnus-newsgroup-name))
-             (let* ((children
-                     (if (cdr (ad-get-arg 0))
-                         (apply '+ (mapcar 'gnus-summary-limit-children
-                                           (cdr (ad-get-arg 0))))
-                       0))
-                    (number (mail-header-number (car (ad-get-arg 0)))))
+             (let ((children
+		    (if (cdr (ad-get-arg 0))
+			(apply '+ (mapcar 'gnus-summary-limit-children
+					  (cdr (ad-get-arg 0))))
+		      0))
+		   (number (mail-header-number (car (ad-get-arg 0)))))
                ;;  In original gnus this test would suppress dormants.
                (when (and (memq number gnus-newsgroup-dormant)
                           (zerop children))
