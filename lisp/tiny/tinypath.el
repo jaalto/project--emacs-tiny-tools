@@ -4264,9 +4264,9 @@ NOERR NOMSG are parameters to `load'."
   "Return location of BINARY. Look from the installation dir.
 Look up `exec-path' and the kit installation directory. See
 Manual \\[tinypath-version] for more."
-  (let ((path  (tinypath-executable-find file))
-	(ret   path)
-	self)
+  (let* ((path  (tinypath-executable-find file))
+	 (ret   path)
+	 self)
     (when (and (null path)
 	       (setq self (tinypath-self-location)))
       ;;  PATH/to/.../lisp/tiny/<tinypath.el>
@@ -5631,9 +5631,9 @@ Return
 		     (not (string-match
 			   tinypath--load-path-ignore-regexp
 			   dir))))
-	(let ((try (if  (string-match "\\.elc?$" package)
-		       (file-name-sans-extension package)
-		     package))
+	(let* ((try (if  (string-match "\\.elc?$" package)
+			(file-name-sans-extension package)
+		      package))
 	       (choices (tinypath-cache-p-1-extensions package))
 	       (files   (directory-files
 			 dir
