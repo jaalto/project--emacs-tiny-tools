@@ -497,7 +497,7 @@ packages are loaded (look into each file for interesting things).
 
     (require 'tinylibm)
 
-    (ti::add-hooks 'tinytf-:mode-define-keys-hook
+    (ti::add-hooks 'tinytf--mode-define-keys-hook
                    '(tinytf-mode-define-keys tinytf-mode-define-f-keys))
 
     (setq tinymy--define-key-force t)
