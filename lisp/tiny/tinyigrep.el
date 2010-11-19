@@ -908,7 +908,7 @@ search database entry.
 In other words: The FUNCTION is used as a placeholder
 and to forward declare a DATABASE which it will define
 at the point of calling."
-  (let* ((member (assoc database tinyigrep-:database)))
+  (let ((member (assoc database tinyigrep-:database)))
     (if member
         (setq tinyigrep-:database (delete member tinyigrep-:database)))
     (push (list database (list function)) tinyigrep-:database)))
@@ -940,7 +940,7 @@ Examples:
         \"d:/bin/server/xitami/*txt\"
         \"d:/bin/server/xitami/*aut\"))))"
   (when (and elt (not (equal "nil" (car-safe elt))))
-    (let* ((member (assoc (car elt) tinyigrep-:database)))
+    (let ((member (assoc (car elt) tinyigrep-:database)))
       (if member
           (setq tinyigrep-:database (delete member tinyigrep-:database)))
       (push elt tinyigrep-:database))))
@@ -992,7 +992,7 @@ Example:
    (nth 1 elt)
    \"egrep\"
    (nth 2 elt) ))"
-  (let* ((path  (locate-library package)))
+  (let ((path (locate-library package)))
     (when path
       (setq path (file-name-directory path))
       (tinyigrep-db-push-elt
@@ -1076,7 +1076,7 @@ Return:
       (setq grep tinyigrep-:grep-program))
   (when (tinyigrep-activate-perl-support)
     (message "TinyIgrep: activating database `perl-pod'")
-    (let* ((path  tinyigrep-:perl-pod-path))
+    (let ((path tinyigrep-:perl-pod-path))
       (when path
         (tinyigrep-db-push-elt
          (list "perl-pod"
@@ -1093,7 +1093,7 @@ Return:
       (setq grep tinyigrep-:grep-program))
   (when (tinyigrep-activate-perl-support)
     (message "TinyIgrep: activating database `perl-modules'")
-    (let* ((path  tinyigrep-:perl-inc-path))
+    (let ((path tinyigrep-:perl-inc-path))
       (tinyigrep-db-push-elt
        (list "perl-modules"
              (list grep
@@ -1109,7 +1109,7 @@ Return:
   "Emacs Lisp *-rc-* file search database."
   (or grep
       (setq grep tinyigrep-:grep-program))
-  (let* (list)
+  (let (list)
     (message "TinyIgrep: activating database `lisp-rc-files'")
     (dolist (path load-path)
       (when (and (stringp path)
@@ -1130,8 +1130,8 @@ Return:
   (or grep
       (setq grep tinyigrep-:grep-program))
   ;;  Find the Emacs lisp root directory dynamically
-  (let* ((path-cl  (locate-library "cl.el"))
-         root)
+  (let ((path-cl (locate-library "cl.el"))
+	root)
     (when path-cl
       (setq path-cl (file-name-directory path-cl)
             root    path-cl)
@@ -1139,14 +1139,12 @@ Return:
       ;;  in emacs-20.6/lisp/emacs-lisp/cl.el, but we want the root
       (when (string-match ".*[0-9]/lisp/" path-cl)
         (setq root (match-string 0 path-cl)))
-
       (tinyigrep-db-push-elt
        (list
         "lisp-emacs-distribution"
         (list grep
               (list (concat root "*el"))
               '(nil))))
-
       (tinyigrep-db-push-elt
        (list
         "lisp-cl"
@@ -1309,9 +1307,8 @@ References:
   "Install default Emacs, Info, Perl: Man entries to `tinyigrep-:database'.
 GREP is program to used for grepping. Default is `egrep'."
   (interactive)
-  (let* ((count 25)
-         (msg "TinyIgrep: Wait, initialising default databases... %d %s"))
-
+  (let ((count 25)
+	(msg "TinyIgrep: Wait, initialising default databases... %d %s"))
     (tinyigrep-install-database-lazy)
     (tinyigrep-install-database-lisp-packages-lazy)
     (tinyigrep-install-database-lisp-flag-files-lazy)
@@ -1372,14 +1369,11 @@ GREP is program to used for grepping. Default is `egrep'."
                                           "~/bin/*.pl"
                                           "~/bin/*.pm")))))
     (tinyigrep-countdown msg count "[home Mail]" )
-
     (when (file-directory-p "~/Mail")
       (tinyigrep-db-push-elt
        (list "home-Mail"
              (list grep (list "~/Mail/" '(nil))))))
-
     (tinyigrep-countdown msg count "[home News]" )
-
     (when (file-directory-p "~/News")
       (tinyigrep-db-push-elt
        (list "home-News"
@@ -1414,7 +1408,7 @@ GREP is program to used for grepping. Default is `egrep'."
     ;;  find directories that contain files starting with .emacs*
     ;;  These are Emacs initialisation or setup files.
     (tinyigrep-countdown msg count "[lisp dot files]")
-    (let* (list)
+    (let (list)
       (dolist (path load-path)
         (when (stringp path)
           (push (concat (file-name-as-directory path)
@@ -1424,7 +1418,7 @@ GREP is program to used for grepping. Default is `egrep'."
        (list "lisp-dot-files" (list grep list))))
     ;; ............................................. &emacs-distribution ...
     (tinyigrep-countdown msg count "[emacs all current]" )
-    (let* ((root (ti::emacs-install-root)))
+    (let ((root (ti::emacs-install-root)))
       (when root
         (tinyigrep-db-push-elt
          (list "ti::emacs-install-root-current"
@@ -1436,8 +1430,8 @@ GREP is program to used for grepping. Default is `egrep'."
         ;; See if thre are more Emacs version installed in the same
         ;; level and add search to install database as well
         (setq root (file-name-as-directory (ti::directory-up root)))
-        (let* ((dirs (ti::directory-subdirs root))
-               name)
+        (let ((dirs (ti::directory-subdirs root))
+	      name)
           (dolist (path dirs)
             (when (string-match
                    "^\\([Xx]?[Ee]macs-\\)[0-9]+\\.[0-9.]+$"
@@ -1474,7 +1468,7 @@ GREP is program to used for grepping. Default is `egrep'."
     (tinyigrep-countdown msg count)
     ;; ................................................. &elisp-packages ...
     (tinyigrep-countdown msg count "[lisp ediff]" )
-    (let* ((path  (locate-library "ediff.el")))
+    (let ((path (locate-library "ediff.el")))
       (when path
         (setq path (file-name-directory path))
         (tinyigrep-db-push-elt
@@ -1494,7 +1488,7 @@ GREP is program to used for grepping. Default is `egrep'."
     ;;     --- semi-1.9.2
     ;; (tinyigrep-countdown msg count "[lisp SEMI]" )
     ;;
-    ;; (let* ((path  (locate-library "semi-def.el")))
+    ;; (let ((path (locate-library "semi-def.el")))
     ;;   (when path
     ;;     (setq path  (if path (ti::directory-up (file-name-directory path))))
     ;;     (tinyigrep-db-push-elt
@@ -1750,7 +1744,6 @@ Fix other things too."
                      'prg      prg
                      'pattern  pattern
                      'files    files)
-
     (ti::expand-file-name-cygwin-macro
      (tinyigrep-cygwin-binary-p prg)
      (ti::with-unix-shell-environment
@@ -1777,9 +1770,7 @@ PATTERN is new search patter and ARG-LIST is original argument list."
           elt)
      (unless fid ;; No-op. XEmacs byte compiler silencer
        (setq fid nil))
-
      (tinyigrep-debug fid "interactive in:" args word)
-
      (if (null args)
          (error
           (concat "TinyIgrep: Sorry, no saved call arguments "
@@ -1806,10 +1797,10 @@ PATTERN is new search patter and ARG-LIST is original argument list."
      (tinyigrep-debug fid "interactive out: " word elt)
      (list word elt)))
   ;; ................................................. interactive-end ...
-  (let* ((default-directory     default-directory)
-         (igrep-program         igrep-program) ;we may change these
-         use-find
-         files)
+  (let ((default-directory     default-directory)
+	(igrep-program         igrep-program) ;we may change these
+	use-find
+	files)
     (tinyigrep-debug fid "in: " pattern arg-list)
     (if (not (ti::listp arg-list))
         (error "Tinyigrep: No previous database call arguments saved."))
@@ -1928,7 +1919,6 @@ References:
          (tinyigrep-debug fid "prog db ans selected:"
                           files prg "use find" use-find)
          ;; progn ret val
-
          t))
      ;; ... ... ... ... ... ... ... ... ... ... ... ... ... ... ask ...
      (progn
@@ -2017,8 +2007,8 @@ Input:
   (tinyigrep-debug "tinyigrep-main in:"  default-directory "-"
                    prg pattern files do-it use-find)
 
-  (let* ((fid                   "tinyigrep-main")
-         (default-directory     default-directory))
+  (let ((fid                   "tinyigrep-main")
+	(default-directory     default-directory))
     (unless fid ;;  XEmacs byte cimpiler silencer
       (setq fid nil))
     (when do-it
@@ -2038,7 +2028,6 @@ Input:
              files
              use-find)
             tinyigrep-:igrep-previous-args)
-
       ;; (save-some-buffers)
       (tinyigrep-igrep-call prg pattern files use-find)
       do-it)))
