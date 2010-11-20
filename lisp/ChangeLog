@@ -83,6 +83,8 @@
 	* tiny/tinylibb.el
 	(top level): Remove w32-* functions. See new "w" library.
 	(radix): Change `mapcar' to `mapc'.
+	(with-buffer-modified): Restore macro back from older revision.
+	Update to use `gensym' and `unwind-protect' for non-local exists.
 
 	* tiny/tinylibw.el: New. Move code from tinylibb.el
 
