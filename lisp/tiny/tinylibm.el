@@ -86,7 +86,7 @@
 
 (require 'tinylibb)                     ;Backward compatible functions
 
-(defconst tinylibm-version-time "2010.1120.1945"
+(defconst tinylibm-version-time "2010.1120.2013"
   "Latest version number.")
 
 ;;{{{ function tests
@@ -2746,8 +2746,8 @@ Tinylibm: Can't write to file. Modified buffer with the same name in Emacs."))))
 (defmacro ti::load-file-with-wrapper (file)
   "Load possibly compressed lisp file. Crypt++ support."
   `(if (not (featurep 'crypt++))
-       (load-file file)                 ;jka-compr handles this.
-     (ti::file-eval file)))
+       (load-file ,file)                 ;jka-compr handles this.
+     (ti::file-eval ,file)))
 
 ;;; ----------------------------------------------------------------------
 ;;;
@@ -3242,16 +3242,12 @@ Input:
   DOC       Group documentation string."
   `(defgroup ,symbol nil
      ,doc
-
      ;; You could also use (url-link "mailto:foo.bar@example.com")
-
      :link '(url-link :tag "Update site"
                       "http://nongnu.org/projects/emacs-tiny-tools/")
      :prefix (symbol-name (quote ,prefix))
      :group  (quote ,group)
-
      ;;  Now define custom contact function when you click link
-
      :link '(link
              :tag "Contact maintainer"
              :func-args (list
@@ -3287,11 +3283,8 @@ which should hold elements
 
 The PACKAGE-PREFIX is in format \"xxx-:\" where a contact function
 name `PACKAGE-PREFIX-submit-bug-report' is derived."
-
   ;; Due to ti::funcall, functions must not be in autoload state.
-
   (require 'wid-edit)
-
   (let* ((args (ti::funcall 'widget-get widget ':func-args)) ;; #TODO
          (arg1 (eval (nth 1 args)))
          (arg2 (nth 2 args))
@@ -3321,32 +3314,34 @@ Following variables are bound during loop (lowercase variable names):
 This means that you can say this in BODY.
 
    (setq absolute (concat grep-dir grep-file))"
-  `(with-current-buffer ,buffer
-     (save-excursion
-       (ti::pmin)
-       (let ((grep-dir (and (looking-at "^cd +\\(.*\\)")
-			    (match-string 1)))
-	     grep-file
-	     grep-line
-	     grep-data)
-	 (while (re-search-forward
-		 "^\\([^:\r\n]+\\):\\([0-9]+\\):\\(.*\\)" nil t)
-	   (setq grep-file (match-string 1)
-		 grep-line (match-string 2)
-		 grep-data (match-string 3))
-
-	   (when grep-line
-	     (setq grep-line (string-to-number grep-line)))
-
-	   (beginning-of-line)
-	   ;;  skip over
-	   ;;
-	   ;;   cd /usr/lib/perl5/5.6.1/pods/
-	   ;;   grep finished (matches found) at Tue Jul 23 17:39:21
-	   ;;
-	   (unless (looking-at "^cd \\|^[^ \t\n\r]+ +finished")
-	     ,@body)
-	   (forward-line 1))))))
+  (let ((grep-dir (gensym "grep-dir-"))
+	(grep-file (gensym "grep-file-"))
+	(grep-line (gensym "grep-line-"))
+	(grep-data (gensym "grep-data-")))
+    `(with-current-buffer ,buffer
+       (save-excursion
+	 (ti::pmin)
+	 (let ((,grep-dir (and (looking-at "^cd +\\(.*\\)")
+			       (match-string 1)))
+	       ,grep-file
+	       ,grep-line
+	       ,grep-data)
+	   (while (re-search-forward
+		   "^\\([^:\r\n]+\\):\\([0-9]+\\):\\(.*\\)" nil t)
+	     (setq ,grep-file (match-string 1)
+		   ,grep-line (match-string 2)
+		   ,grep-data (match-string 3))
+	     (when ,grep-line
+	       (setq ,grep-line (string-to-number ,grep-line)))
+	     (beginning-of-line)
+	     ;;  skip over
+	     ;;
+	     ;;   cd /usr/lib/perl5/5.6.1/pods/
+	     ;;   grep finished (matches found) at Tue Jul 23 17:39:21
+	     ;;
+	     (unless (looking-at "^cd \\|^[^ \t\n\r]+ +finished")
+	       ,@body)
+	     (forward-line 1)))))))
 
 ;;; ----------------------------------------------------------------------
 ;;;
@@ -3451,11 +3446,12 @@ Notes:
 
   Make sure you don't insert to immediate marker position, because
   markers moves along with the text!"
-  `(let ((MarK (point-marker)))
-     (prog1
-         (progn ,@body)
-       (when (marker-position MarK)
-         (goto-char (marker-position MarK))))))
+  (let ((mark (gensym "mark-")))
+    `(let ((,mark (point-marker)))
+       (prog1
+	   (progn ,@body)
+	 (when (marker-position ,mark)
+	   (goto-char (marker-position ,mark)))))))
 
 ;;; ----------------------------------------------------------------------
 ;;;
@@ -3497,18 +3493,20 @@ Example:
 Return:
 
   Last value returned by BODY"
-  `(let ((SLC-sLc-col  (current-column)) ;prevent variable suicide
-	 (SLC-sLc-line (ti::current-line-number)))
-     (prog1
-	 (progn
-	   ,@body)
-       (ti::goto-line SLC-sLc-line)
-       (move-to-column SLC-sLc-col)
-       (cond
-	((not (eq (ti::current-line-number) SLC-sLc-line))
-	 ,fail-form)
-	((not (eq (current-column) SLC-sLc-col))
-	 ,col-form )))))
+  (let ((current-column (gensym "current-column-"))
+	(current-line (gensym "current-line-")))
+    `(let ((,current-column (current-column)) ;prevent variable suicide
+	   (,current-line (ti::current-line-number)))
+       (prog1
+	   (progn
+	     ,@body)
+	 (ti::goto-line ,current-line)
+	 (move-to-column ,current-column)
+	 (cond
+	  ((not (eq (ti::current-line-number) ,current-line))
+	   ,fail-form)
+	  ((not (eq (current-column) ,current-column))
+	   ,col-form))))))
 
 ;;; ----------------------------------------------------------------------
 ;;;
@@ -3523,23 +3521,24 @@ The BODY is not protected against errors or surrounded by `save-excursion'
 Return:
 
   last value of BODY"
-  `(let ((BeG         (point-min-marker))
-	 (EnD         (point-max-marker))
-	 (EnD-max     (point-max))
-	 EnD-wmax
-	 ReT)
-     (unwind-protect
-	 (progn
-	   (widen)
-	   (setq EnD-wmax (point-max))
-	   (setq ReT (progn ,@body)))
-       (with-current-buffer (marker-buffer BeG)
-	 ;; what about after widen ? Were we in narrow mode ?
-	 (if (not (= EnD-wmax EnD-max))
-	     (narrow-to-region BeG EnD))
-	 (if (null ReT)		;no-op, Silence XEmacs 19.14 ByteComp.
-	     (setq ReT nil))
-	 ReT))))
+  (let ((beg		(gensym "beg-"))
+	(end		(gensym "end-"))
+	(end-max	(gensym "end-max-"))
+	(end-wmax	(gensym "end-wmax-"))
+	(ret		(gensym "return-")))
+    `(let ((,beg     (point-min-marker))
+	   (,end     (point-max-marker))
+	   (,end-max (point-max))
+	   ,end-wmax)
+       (unwind-protect
+	   (progn
+	     (widen)
+	     (setq ,end-wmax (point-max))
+	     ,@body)
+	 (with-current-buffer (marker-buffer ,beg)
+	   ;; what about after widen ? Were we in narrow mode ?
+	   (if (not (= ,end-wmax ,end-max))
+	     (narrow-to-region ,beg ,end)))))))
 
 ;;}}}
 ;;{{{ misc
