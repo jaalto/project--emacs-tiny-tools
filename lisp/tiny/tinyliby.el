@@ -9,7 +9,6 @@
 ;; Author:          Jari Aalto
 ;; Maintainer:      Jari Aalto
 ;;
-;; To get information on this program, call M-x tiliby-version.
 ;; Look at the code with folding.el
 
 ;; COPYRIGHT NOTICE
@@ -39,11 +38,11 @@
 ;;     (require 'tinyliby)
 ;;
 ;; But, normally that is not required. All these functions are autoloaded
-;; from the main library, so simple
+;; from the main library, so use:
 ;;
 ;;      (require 'tinylibm)
 ;;
-;; will also cover these functions.
+;; and it will cover everything
 
 ;;}}}
 ;;{{{ Documentation
@@ -56,25 +55,6 @@
 ;;
 ;;      o    This is lisp code library. Package itself does nothing.
 ;;      o    Collection of Emacs s(y)stem related functions.
-;;
-;;  Examples
-;;
-;;      If you're MH, VM user, don't get upset on this example. If you use
-;;      RMAIL, but one day you accidentally start VM ... your whole
-;;      mail system may be broken. To prevent accidents, you could
-;;      wipe all traces of VM and MH with function below. THe function takes a
-;;      while to execute.
-;;
-;;          (defun my-vm-mh-kill ()
-;;            "Removes VM, MH permanently"
-;;            (require 'tinyliby)
-;;            (let (list)
-;;              (setq list (ti::system-get-symbols "^vm-\\|^vm$"))
-;;              (ti::system-unload-symbols list)
-;;              (setq list (ti::system-get-symbols "^mh-\\|^mh$"))
-;;              (ti::system-unload-symbols list)
-;;              (setq list (ti::system-get-symbols "hook"))
-;;              (ti::system-remove-from-hooks list "^vm\\|mh")))
 
 ;;}}}
 
@@ -97,39 +77,17 @@
 
 ;;{{{ setup: -- variables
 
-(defvar ti::system-:describe-symbols-history nil
+(defconst tinyliby-version-time "2010.1120.1908"
+  "Latest version number as last modified time.")
+
+(defvar ti::system--describe-symbols-history nil
   "History of used regular expressions.")
 
-(defvar ti::system-:tmp-buffer "*ti::system-tmp*"
+(defvar ti::system--tmp-buffer "*ti::system-tmp*"
   "*Temporary buffer name.")
 
-(defvar ti::system-:desc-buffer "*desc*"
+(defvar ti::system--desc-buffer "*desc*"
   "*Describe buffer.")
-
-;;}}}
-;;{{{ setup: -- version
-
-(defconst tinyliby-version
-  (substring "$Revision: 2.48 $"11 15)
-  "Latest version number.")
-
-(defconst tinyliby-version-id
-  "$Id: tinyliby.el,v 2.48 2007/05/01 17:20:46 jaalto Exp $"
-  "Latest modification time and version number.")
-
-;;; ----------------------------------------------------------------------
-;;;
-(defun tinyliby-version (&optional arg)
-  "Show version information. ARG will instruct to print message to echo area."
-  (interactive "P")
-  (ti::package-version-info "tinyliby.el" arg))
-
-;;; ----------------------------------------------------------------------
-;;;
-(defun tinyliby-submit-feedback ()
-  "Submit suggestions, error corrections, impressions, anything..."
-  (interactive)
-  (ti::package-submit-feedback "tinyliby.el"))
 
 ;;}}}
 ;;{{{ features, load list
@@ -536,7 +494,7 @@ Write results i temporary buffer or BUFFER."
     (read-string "Regesp: ")))
 
   (or buffer
-      (setq buffer (ti::temp-buffer ti::system-:desc-buffer 'clear)))
+      (setq buffer (ti::temp-buffer ti::system--desc-buffer 'clear)))
 
   (with-current-buffer buffer
     (ti::system-symbol-dolist-macro
@@ -636,7 +594,7 @@ No '%s feature found, are you absolutely sure you have loaded the file? "
                            feature))
          (error "Abort."))
      (list file)))
-  (let* ((tmp-buffer    (ti::temp-buffer ti::system-:tmp-buffer 'clear))
+  (let* ((tmp-buffer    (ti::temp-buffer ti::system--tmp-buffer 'clear))
          (file-buffer   (ti::find-file-literally file))
          (all-re        (concat "^[(]\\([ \t]*"
                                 "defsubst\\|defvar\\|defconst"
@@ -760,7 +718,7 @@ No '%s feature found, are you absolutely sure you have loaded the file? "
      (read-from-minibuffer              ;ARG 1
       prompt nil
       nil nil
-      'ti::system-:describe-symbols-history)
+      'ti::system--describe-symbols-history)
      arg                                ;ARG 2
      ;;  Now handle exclude regexp       ;ARG 3
      (if (ti::nil-p (setq ans (read-from-minibuffer "exclude: ")))
@@ -816,12 +774,12 @@ OUT-BUFFER
 
 References:
 
-  `ti::system-:desc-buffer'"
+  `ti::system--desc-buffer'"
   ;; ^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^ interactive ^^^
   (interactive (ti::system-describe-symbols-i-args current-prefix-arg))
 
   ;; ^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^ interactive end ^^^
-  (let* ((buffer (or out-buffer ti::system-:desc-buffer))
+  (let* ((buffer (or out-buffer ti::system--desc-buffer))
          subrp-test
          MF MFI MFF                     ;mode func
          MV MVO MVV                     ;mode var
@@ -973,7 +931,7 @@ Return:
 
   buffer        where is ready output"
   (interactive "sRe: ")
-  (let* ((out-buffer    (ti::temp-buffer ti::system-:tmp-buffer 'clear))
+  (let* ((out-buffer    (ti::temp-buffer ti::system--tmp-buffer 'clear))
          (verb          (or verb (interactive-p)))
          list
          words
