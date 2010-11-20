@@ -1,5 +1,7 @@
 2010-11-20 Sat  Jari Aalto  <jari.aalto@cante.net>
 
+	* tiny/tinyirc.el (require): Load cl with 'eval-when-compile'.
+
 	Replace all `backward-line' command to `forward-line' equivalent.
 
 	* tiny/tinyperl.el (tinyperl-perldoc-1): Add let* back.
