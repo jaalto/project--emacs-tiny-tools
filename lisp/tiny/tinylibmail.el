@@ -5359,27 +5359,21 @@ Input:
 
 Return:
   '((ABBREV-STRING . EXPANDED-STRING) (A . E) ..)"
-  (let* (
-         (pre-abbrev-expand-hook        nil) ;; prevent recursion
-         (mail-abbrev-aliases-need-to-be-resolved t)
-         table
-         exp-list
-         elt)
-
+  (let ((abbrev-expand-functions nil) ;; prevent recursion
+	(mail-abbrev-aliases-need-to-be-resolved t)
+	table
+	exp-list
+	elt)
     ;; XEmacs 19.14 no-op for ByteCompiler
-
     (unless mail-abbrev-aliases-need-to-be-resolved
       (setq mail-abbrev-aliases-need-to-be-resolved nil))
-
     (setq table (ti::mail-abbrev-table))
-
     (cond
      ((listp table) ;; mail-aliases is already in (A . S) form
       (setq exp-list table))
      (t                                 ;Vector
       ;;  We have to expand abbrevs by hand because XEmacs doesn't
       ;;  parse them like emacs mail-alias
-
       (when table
         (let ((tmp (generate-new-buffer "*ti::mail-abbrev*")))
           (with-current-buffer tmp
@@ -5392,7 +5386,6 @@ Return:
                 (when (not (string= "0" elt)) ;abbrev in this slot?
                   (insert elt)
                   (end-of-line)
-
                   ;;  2000-09-03
                   ;;  BBDB does some voodoo with the abbrevs by
                   ;;  setting the function cell, and sometimes  calling
@@ -5400,7 +5393,6 @@ Return:
                   ;;  --> Don't bother with the error, since the
                   ;;  abbrevs is correctly expanded, but BBDB cries about
                   ;;  "wrong marker" or something.
-
                   (condition-case err
                       (expand-abbrev)
                     (error
