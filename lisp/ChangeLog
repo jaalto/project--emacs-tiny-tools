@@ -1,9 +1,67 @@
+2010-11-20 Sat  Jari Aalto  <jari.aalto@cante.net>
+
+	* tiny/tiny-setup.el: Remove tinylibxe.el
+
+	* unmaintained/tinylibxe.el: New file. Moved form ../tiny directory.
+
+	* tiny/tinylibxe.el
+	(top level): Add note that this library is obsolete and and no longer
+	maintained or developed.
+	(tinyliba-version-time): New.
+	(tinylibxe-version): Remove.
+	(tinylibxe-version-id): Remove.
+	(tinylibxe-version): Remove.
+	(tinylibxe-submit-bug-report): Remove.
+
+	* tiny/tinylib.el (ti::buffer-remove-whitespace-eol): New.
+
+	* tiny/tinylisp.el
+	(top level): Replace all variables from *-:* to *--*.
+	Use let* only where needed.
+	(tinylisp-find-function-list): After output, clear EOL whitespaces.
+	(tinylisp-delete-eol-whitespace): New.
+	(tinylisp-whitespace-cleanup-eol): Remove.
+	(tinylisp-autoload-write-loaddefs-file): Use
+	`ti::buffer-remove-whitespace-eol'.
+
+	* tiny/tinylibb.el: Remove w32-* functions. See new "w" library.
+
+	* tiny/tinylibw.el: New. Move code from tinylibb.el
+
+	* tiny/tinyliba.el: Remove XEmacs support tinylibxe.el.
+	Add tinylibw.el. Handle broken subr.el::dolist and define proper
+	cl-macs.el::dolist. The bug is still present in 23.2.1 after
+	almost 10 years. See http://debbugs.gnu.org/cgi/bugreport.cgi?bug=7408
+	(tinyliba-version-time): New.
+
 2010-11-19 Sat  Jari Aalto  <jari.aalto@cante.net>
 
 	* tiny/tinylibm.el (ti::print-p): Remove
 	`ti::compat-character-define-macro'.
 	(ti::read-char-safe-until): Remove
 	`ti::compat-character-define-macro'.
+	(tinylibm-submit-bug-report): Remove.
+	(tinylibm-version): Remove.
+	(tinylibm-version): Remove.
+	(tinylibm-version-id): Remove.
+	(tinylibm-version-time): New.
+	-- Remove functions below that are already in tinylibb.el
+	(rmac): Remove.
+	(ctime): Remove.
+	(rand0): Remove.
+	(rand1): Remove.
+	(randij): Remove.
+	(int-to-net): Remove.
+	(hex-to-int): Remove.
+	(oct-to-int): Remove.
+	(bin-to-int): Remove.
+	(radix): Remove.
+	(int-to-oct-string): Remove.
+	(int-to-hex-string): Remove.
+	(int-to-bin-string): Remove.
+	(bin-string-to-int): Remove.
+	(logtest): Remove.
+	(int-to-float): Remove.
 
 	* tiny/tinylibb.el
 	(top level): Drop all XEmacs support and backward compatibility functions
