@@ -64,10 +64,8 @@
         (string-match "cmdproxy"
                       (or shell-name "")))))
 
-  ;; defvar silences Byte Compiler
-  (defvar byte-compile-dynamic nil "") ;; Introduced in 19.29
-  (make-local-variable 'byte-compile-dynamic)
-  (setq byte-compile-dynamic t))
+  (set (make-local-variable 'byte-compile-dynamic-docstrings) t)
+  (set (make-local-variable 'byte-compile-dynamic) t))
 
 (provide 'tinylibenv)
 
