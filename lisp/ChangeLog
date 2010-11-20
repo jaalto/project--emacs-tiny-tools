@@ -1,5 +1,33 @@
 2010-11-20 Sat  Jari Aalto  <jari.aalto@cante.net>
 
+	* tiny/tinyperl.el (tinyperl-perldoc-1): Add let* back.
+
+	* tiny/tinypage.el (tinypage-renumber-forward): Add let* back.
+
+	* tiny/tinylpr.el (tinylpr-print-style-completions): Use `dolist'.
+
+	* tiny/tinycygwin.el: Quiet byte compiler CL runtime warnings
+	which are bogus.
+
+	* tiny/tinyliby.el
+        (top level): Replace all variables from *-:* to *--*.
+        Use let* only where needed. Delete obsolete mh-* example from docs.
+        (tinyliby-version-time): New.
+	(tinyliby-version): Remove.
+	(tinyliby-version-id): Remove.
+	(tinyliby-version): Remove.
+	(tinyliby-submit-feedback): Remove.
+	(ti::system-unload-symbols): Rewrite using `dolist'.
+	(ti::system-load-cleanup): Use descriptive variable names.
+	(ti::system-doc-where-is-source): Optimize `concat' with macro.
+	(ti::system-symbol-dolist-macro): Use new macro syntax.
+	(ti::system-remove-from-hooks): Rewrite using `dolist'.
+	(ti::system-describe-symbols): Use `mapc' in place of `mapcar'.
+	(ti::system-unload): Add missing %s to `error'.
+	(ti::system-describe-symbols): Update obsolete `print-help-return-message'
+	to `help-print-return-message'.
+	(ti::system-describe-symbol-summary): Remove `set-buffer'.
+
 	* tiny/tinylibo.el
 	(top level): update function layout; beatify. remove debug.
 	(tinylibo-version): Remove.
@@ -41,7 +69,19 @@
 	alias `cl-clrhash' to `clrhash'.
 	(ti::find-file-literally): Change obsolete `default-major-mode' to
 	`major-mode'
-	(ti::ck-maybe-activate): Remove.
+	(ti::save-excursion-macro): Rewrite using `gensym'.
+	(ti::save-with-marker-macro): Rewrite using `gensym'.
+	(ti::save-line-column-macro):  Rewrite using `gensym'.
+	(ti::widen-safe): Rewrite using `gensym'.
+	(ti::grep-output-parse-macro): Rewrite using `gensym'.
+	(ti::load-file-with-wrapper): Add missing macro expansion to `file'.
+	(ti::with-time-this): Rewrite using `gensym'.
+	(ti::narrow-to-paragraph): Rewrite using `gensym'.
+	(ti::window-pmax-visible-p): Change from `defmacro' to `defsubst'.
+	(ti::assoc-append-inside): Rewrite using `gensym'.
+	(ti::keep-lower-order): Rewrite using `gensym'.
+	(ti::bool-toggle): Rewrite using `gensym'.
+	(ti::dolist-buffer-list): Rewrite using `gensym'.
 
 	* tiny/tinylibck.el
 	(top level): Orphan. Add note that the library is no longer
@@ -55,6 +95,7 @@
 	(ti::ck-version): Remove.
 	(ti::ck-submit-feedback): Remove.
 	(tinylick-version-time): New.
+	(ti::ck-maybe-activate): Remove.
 
 	* tiny/tiny-setup.el: Remove tinylibxe.el
 
