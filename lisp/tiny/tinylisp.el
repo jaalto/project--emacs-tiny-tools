@@ -4214,8 +4214,7 @@ return:
 		  (setq func nil)))
 	    (insert (format "%-12s%s%s %-40s %s\n"
 			    (car var)
-			    ;;  Interactive and defsubst? this is dangerous!
-			    ;;
+			    ;;  Interactive and defsubst? Dangerous combination
 			    (if (and str
 				     (string= "defsubst" (car var)))
 				" !" "")
@@ -4225,6 +4224,10 @@ return:
 			    (or str ""))))
 	  (pop-to-buffer (current-buffer))
 	  (ti::pmin)
+	  ;; Clean EOL whitespace
+	  (save-excursion
+	    (while (re-search-forward "[ \t]+$" nil t)
+	      (replace-match "")))
 	  (run-hooks 'tinylisp-:find-func-list-hook)))
     list))
 
