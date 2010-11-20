@@ -31,6 +31,10 @@
 ;;{{{ Install
 
 ;; ....................................................... &t-install ...
+;;
+;; Note: 2010-11-20  This library is obsolete and no longer maintained.
+;; You're free to take over the maintenance. Use at your own risk.
+;;
 ;;  Put this file on your Emacs-Lisp `load-path', add following into your
 ;;  ~/.emacs startup file. This must be the very first entry before
 ;;  any keybindings take in effect.
@@ -50,10 +54,6 @@
 ;;  Remember that you DON'T LEAVE THIS PACKAGE ON. Make sure the 'disable
 ;;  is the last thing you do. It disables the package and makes sure your
 ;;  other emacs packages work properly
-;;
-;;  If you have any questions, use this function
-;;
-;;       M-x ti::ck-submit-feedback
 
 ;;}}}
 ;;{{{ Documentation
@@ -62,8 +62,7 @@
 
 ;;; Commentary:
 
-;;
-;;  Preface
+;;  Preface 1996
 ;;
 ;;      This file tries to overcome differencies between Emacs and XEmacs
 ;;      keybinding. Package was developed at the time when there was big
@@ -146,10 +145,10 @@
 ;;  About debugging
 ;;
 ;;      If you suspect any weird behavior in your emacs while
-;;      this package is loaded, you should check that the `ti::ck-:debug'
+;;      this package is loaded, you should check that the `ti::ck--debug'
 ;;      is turned on. (`M-x' `ti::ck-debug-toggle')
 ;;
-;;      The buffer `ti::ck-:debug-buffer' constantly records any conversion
+;;      The buffer `ti::ck--debug-buffer' constantly records any conversion
 ;;      actions and you can find the problems quickly. Please send the
 ;;      supicious/false conversion lines to the maintainer of this package
 ;;      and if possible, tell how the conversion should go in your opinion.
@@ -160,7 +159,7 @@
 ;;
 ;;      Important; when you have problems, increase
 ;;
-;;          ti::ck-:debug-buffer-size
+;;          ti::ck--debug-buffer-size
 ;;
 ;;      immediately to some arbitrary big value so that you get all the
 ;;      conversions recorded.
@@ -236,32 +235,34 @@
   (autoload 'ti::package-submit-feedback "tinylib"))
 
 ;;}}}
-
 ;;{{{ setup: -- private variables
 
-(defvar ti::ck-:load-hook '(ti::ck-advice-control)
+(defconst tinylibck-version-time "2010.1120.1620"
+  "Latest version number.")
+
+(defvar ti::ck--load-hook '(ti::ck-advice-control)
   "*Hook run when file has been loaded.")
 
-(defconst ti::ck-:xemacs-flag (string-match "XEmacs" (emacs-version))
+(defconst ti::ck--xemacs-flag (string-match "XEmacs" (emacs-version))
   "Non-nil means XEmacs is detected.")
 
-(defconst ti::ck-:emacs-minor
+(defconst ti::ck--emacs-minor
   (if (boundp 'emacs-minor-version)
       emacs-minor-version 0)
   "Emacs minor version or 0 if cannot detect one.")
 
-(defconst ti::ck-:advice-re "^ti::ck-keybind"
+(defconst ti::ck--advice-re "^ti::ck-keybind"
   "Advice REGEXP.")
 
-(defvar ti::ck-:this-command nil
+(defvar ti::ck--this-command nil
   "Private. Current advice command.")
 
 ;;  To prevent buffer growing too much
 ;;
-(defvar ti::ck-:debug-buffer-size 500
-  "Clear the `ti::ck-:debug-buffer' if line count exceed this value.")
+(defvar ti::ck--debug-buffer-size 500
+  "Clear the `ti::ck--debug-buffer' if line count exceed this value.")
 
-(defvar ti::ck-:debug-buffer "*ti::ck-debug*"
+(defvar ti::ck--debug-buffer "*ti::ck-debug*"
   "Debug buffer for key binding commands.")
 
 ;;}}}
@@ -271,10 +272,10 @@
 ;;; User configurable, but in general you don't need to touch this
 ;;; section.
 
-(defvar ti::ck-:debug nil
+(defvar ti::ck--debug nil
   "*Turn on/off key conversion debugging.")
 
-(defvar ti::ck-:keep-next-symbol-together
+(defvar ti::ck--keep-next-symbol-together
   '("kp")
   "*Keep SYMBOL and next key bind definition together.
 When this string is found from key binding definition, it is
@@ -289,7 +290,7 @@ Format:
    STRING-SYMBOL
    ..)")
 
-(defconst ti::ck-:key-table
+(defconst ti::ck--key-table
   '((A          . alt)
     (C          . control)
     (H          . hyper)
@@ -317,36 +318,13 @@ Format:
   ..)")
 
 ;;}}}
-;;{{{ setup: -- version
-
-;;; ......................................................... &version ...
-
-(defvar ti::ck-:version-id
-  "$Id: tinylibck.el,v 2.39 2007/05/07 10:50:07 jaalto Exp $"
-  "Full program version ID string.")
-
-;;; ----------------------------------------------------------------------
-;;;
-(defun ti::ck-version (&optional arg)
-  "Version information. With ARG, print briefly."
-  (interactive "P")
-  (ti::package-version-info "tinylibck.el" arg))
-
-;;; ----------------------------------------------------------------------
-;;;
-(defun ti::ck-submit-feedback ()
-  "Submit suggestions, error corrections, impressions, anything..."
-  (interactive)
-  (ti::package-submit-feedback "tinylibck.el"))
-
-;;}}}
 ;;{{{ misc, debug
 
 ;;; ----------------------------------------------------------------------
 ;;;
 (defmacro ti::ck-do-p (arg)
   "Check if conversion is needed. ARG is the key definition."
-  (` (not (stringp (, arg)))))          ;pass "" string bindings as is
+  `(not (stringp ,arg)))          ;pass "" string bindings as is
 
 ;;; ----------------------------------------------------------------------
 ;;; - Just for load hook
@@ -360,26 +338,26 @@ Format:
 ;;;
 ;;;###autoload
 (defun ti::ck-debug-toggle (&optional arg)
-  "Turn debug on or off with ARG. See buffer `ti::ck-:debug-buffer'."
+  "Turn debug on or off with ARG. See buffer `ti::ck--debug-buffer'."
   (interactive)
   (cond
    ((eq 1 arg)
-    (setq ti::ck-:debug t))
+    (setq ti::ck--debug t))
    ((memq arg '(0 -1))
-    (setq ti::ck-:debug nil))
+    (setq ti::ck--debug nil))
    (t
-    (setq ti::ck-:debug (not ti::ck-:debug))))
+    (setq ti::ck--debug (not ti::ck--debug))))
   (if (interactive-p)
-      (message (concat "Debug " (if ti::ck-:debug "on" "off")))))
+      (message (concat "Debug " (if ti::ck--debug "on" "off")))))
 
 ;;; ----------------------------------------------------------------------
 ;;;
 (defun ti::ck-debug-write (str)
   "Record STR to debug buffer."
-  (let* ((buffer (get-buffer-create ti::ck-:debug-buffer)))
+  (let* ((buffer (get-buffer-create ti::ck--debug-buffer)))
     (with-current-buffer buffer
       (if (> (count-lines (point-min) (point-max))
-             ti::ck-:debug-buffer-size)
+             ti::ck--debug-buffer-size)
           (erase-buffer))
       (goto-char (point-max))
       (insert str))))
@@ -395,7 +373,7 @@ Format:
   (let* ((funcs '(global-set-key
                   local-set-key
                   define-key))
-         (re   ti::ck-:advice-re)
+         (re   ti::ck--advice-re)
          (verb (or verb (interactive-p)))
          func)
     (while funcs
@@ -416,7 +394,7 @@ Format:
 ;;;
 (defadvice global-set-key (before ti::ck-keybind-converter  dis)
   "XEmacs and Emacs emulation. See function `ti::ck-do' for full story."
-  (setq ti::ck-:this-command 'global-set-key)
+  (setq ti::ck--this-command 'global-set-key)
   (if (ti::ck-do-p (ad-get-arg 0))
       (ad-set-arg 0 (ti::ck-do (ad-get-arg 0)))))
 
@@ -424,7 +402,7 @@ Format:
 ;;;
 (defadvice local-set-key (before ti::ck-keybind-converter  dis)
   "XEmacs and Emacs emulation. See function `ti::ck-do' for full story."
-  (setq ti::ck-:this-command 'local-set-key)
+  (setq ti::ck--this-command 'local-set-key)
   (if (ti::ck-do-p (ad-get-arg 0))
       (ad-set-arg 0 (ti::ck-do (ad-get-arg 0)))))
 
@@ -432,7 +410,7 @@ Format:
 ;;;
 (defadvice define-key (before ti::ck-keybind-converter  dis)
   "XEmacs and Emacs emulation. See function`ti::ck-do' for full story."
-  (setq ti::ck-:this-command 'define-key)
+  (setq ti::ck--this-command 'define-key)
   (let* ((arg (ad-get-arg 1)))
     (when (ti::ck-do-p arg)
       (if (and (vectorp arg)
@@ -453,13 +431,13 @@ Format:
 (defadvice ti::ck-do (around ti::ck-debug act)
   "Debug filter. Record command, input/output values."
   (cond
-   ((eq nil ti::ck-:debug)
+   ((eq nil ti::ck--debug)
     ad-do-it)
    (t
     (ti::ck-debug-write
      (format
       "\n%-15s %-25s >> "
-      (or (prin1-to-string ti::ck-:this-command) "")
+      (or (prin1-to-string ti::ck--this-command) "")
       (or (prin1-to-string (ad-get-args 0))     "")))
 
     ad-do-it
@@ -516,8 +494,7 @@ Format:
         (setq lisp-mode-hook nil))
     (setq simple-key-sequence
           (ti::ck-get-key-code-string simple-key-sequence))
-    (save-excursion
-      (set-buffer buffer)
+    (with-current-buffer buffer
       (erase-buffer)
       ;;  Don't just always execute (lisp-mode), since
       ;;  setting up major mode may be time consuming.
@@ -529,7 +506,7 @@ Format:
       (beginning-of-line)
       (when (looking-at ".*\\[\\([0-9]+\\)")
         (setq ret
-              (string-to-int
+              (string-to-number
                (buffer-substring (match-beginning 1) (match-end 1)))))
 
       ret)))
@@ -544,8 +521,8 @@ Format:
 ;;;
 (defun ti::ck-gnu2xe-vector (vec)
   "Convert Emacs VEC bindings to XEmacs style."
-  (let* ((table     ti::ck-:key-table)
-         (keep-list ti::ck-:keep-next-symbol-together)
+  (let* ((table     ti::ck--key-table)
+         (keep-list ti::ck--keep-next-symbol-together)
          (i     0)
          len
          x
@@ -668,7 +645,7 @@ Format:
 ;;;
 (defun ti::ck-xe2gnu-list (list)
   "Convert XEmacs bind LIST to emacs."
-  (let* ((table ti::ck-:key-table)
+  (let* ((table ti::ck--key-table)
          item
          elt
          str
@@ -726,13 +703,13 @@ penalty.
 Input:
   KEY    key sequence
   XE     flag. If this is nil, then Emacs env. is assumed. However
-         `ti::ck-:xemacs-flag' is obeyed if it is non-nil.
+         `ti::ck--xemacs-flag' is obeyed if it is non-nil.
          If non-nil, then XEmacs env. is assumed and conversion to
          XEmacs like bindings are done."
   (let (
         ;;      For greater speed this is read from variable
         ;;      and not dynamically for every call.
-        (xe     (or xe ti::ck-:xemacs-flag))
+        (xe     (or xe ti::ck--xemacs-flag))
         ret
         vec
         D)                              ;debug
@@ -741,7 +718,7 @@ Input:
            (vectorp key))               ; [C-up]
       (cond
        ((and (listp (elt key 0))
-             (< ti::ck-:emacs-minor 30)) ;19.30 supports [(control up)]
+             (< ti::ck--emacs-minor 30)) ;19.30 supports [(control up)]
         (setq D "1 xe2gnu-vector")
         (setq ret (ti::ck-xe2gnu-vector key)))
        (t
@@ -774,6 +751,6 @@ Input:
 ;;}}}
 
 (provide   'tinylibck)
-(run-hooks 'ti::ck-:load-hook)
+(run-hooks 'ti::ck--load-hook)
 
 ;;; tinylibck.el ends here
