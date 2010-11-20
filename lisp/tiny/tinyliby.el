@@ -77,7 +77,7 @@
 
 ;;{{{ setup: -- variables
 
-(defconst tinyliby-version-time "2010.1120.1912"
+(defconst tinyliby-version-time "2010.1120.1925"
   "Latest version number as last modified time.")
 
 (defvar ti::system--describe-symbols-history nil
@@ -108,14 +108,14 @@ nil parameter is also accepted."
 
 ;;; ----------------------------------------------------------------------
 ;;;
-(defun ti::system-load-cleanup (ELT)
-  "Remove ELT from `after-load-alist' by replacing entry with nil."
+(defun ti::system-load-cleanup (element)
+  "Remove ELEMENT from `after-load-alist' by replacing entry with nil."
   (let (forms)
     (dolist (elt after-load-alist)
       (setq forms (cdr elt))
       (dolist (frm forms)
         ;; change form to nil
-        (if (equal frm ELT)
+        (if (equal frm element)
             (setcar forms nil))))))
 
 ;;; ----------------------------------------------------------------------
@@ -207,11 +207,11 @@ Return:
         (let ((doc (documentation-property
                     sym 'variable-documentation)))
           (when (string-match
-                 (concat
-                  ;; Emacs: run-at-time is an interactive Lisp function in `timer'.
-                  "^.*Lisp[ \t]+function[ \t]+in[ \t'`]+\\([^ \n\r\f\t'`\"]+\\)"
-                  ;; XEmacs:   -- loaded from "e:\usr\local\bin\emacs...
-                  "\\|--[ \t]+loaded from[ \t\"]+\\([^ \n\r\f\t'`\"]+\\)")
+                 `,(concat
+		    ;; Emacs: run-at-time is an interactive Lisp function in `timer'.
+		    "^.*Lisp[ \t]+function[ \t]+in[ \t'`]+\\([^ \n\r\f\t'`\"]+\\)"
+		    ;; XEmacs:   -- loaded from "e:\usr\local\bin\emacs...
+		    "\\|--[ \t]+loaded from[ \t\"]+\\([^ \n\r\f\t'`\"]+\\)")
                  (or doc "")))))))
 
 ;;; ----------------------------------------------------------------------
@@ -233,7 +233,7 @@ Return:
 	provide
 	file)
     (when (setq elt (ti::system-load-history-where-1 sym))
-      (setq file    (car elt)           ;default
+      (setq file (car elt)		;default
             provide (ti::system-load-history-where-exactly sym elt))
       (or (and provide
                (ti::system-package-where-is-source (symbol-name provide)))
@@ -253,13 +253,13 @@ those elements only that actually exist in emacs.
 Return:
 
   ((variable-list ..) (func-list ..))"
-  (let* ((name  (symbol-name sym))
-         (list  (cdr (assoc name load-history)))
+  (let* ((name (symbol-name sym))
+         (list (cdr (assoc name load-history)))
          vl
          fl
          el
          ptr)
-    (if (null list) nil
+    (when list
       ;;  Search the variables' and funtions' start position in list
       (while (and list
                   (listp (car list)))
@@ -267,9 +267,9 @@ Return:
       (setq ptr list)
       (while ptr
         (setq el (car ptr))
-        (if (listp el)
-            nil
+        (unless (listp el)
           (if (boundp el)
+	      ;; FIXME: append is slow, use other
               (setq vl (append vl (list el))))
           (if (fboundp el)
               (setq fl (append fl (list el)))))
@@ -316,7 +316,6 @@ INPUT:
     ;;  Load history , dependencies remove
     (if (assoc name load-history)
         (setq load-history (adelete 'load-history name)))
-
     ;;  Kill the symbol from feature list
     (if (featurep sym)
         (setq features (delete sym features)))))
@@ -353,11 +352,11 @@ References:
 	kill-func)
     (cond
      ((eq 'var mode)
-      (setq  test-func 'boundp
-             kill-func 'makunbound))
-     ((eq  'func mode)
-      (setq  test-func 'fboundp
-             kill-func 'fmakunbound))
+      (setq test-func 'boundp
+            kill-func 'makunbound))
+     ((eq 'func mode)
+      (setq test-func 'fboundp
+            kill-func 'fmakunbound))
      ((eq 'feature mode)
       ;;  - Emacs don't let us remove a feature if it contains some
       ;;    require statement. Be sure to get the information
@@ -399,14 +398,15 @@ Return:
      (completing-read
       "Complete feature to unload: "
       (ti::list-to-assoc-menu (mapcar 'prin1-to-string features))
-      nil 'must-match))))
+      nil
+      'must-match))))
   (let (list)
     (ti::verb)
     (when sym
       (when (setq list  (ti::system-load-history-get sym)) ;get (\var func\) list
         (ti::system-unload 'feature (list sym)) ;feature + load-history clean
-        (ti::system-unload 'var     (nth 0 list) )
-        (ti::system-unload 'func    (nth 1 list) ))
+        (ti::system-unload 'var     (nth 0 list))
+        (ti::system-unload 'func    (nth 1 list)))
       (ti::system-feature-kill sym))
     (if verb
         (message "Feature now completely unloaded."))))
@@ -425,9 +425,8 @@ Input is list of features. Does not check any dependencies between features."
 (defmacro ti::system-symbol-dolist-macro (symlist &rest body)
   "Map throught SYMLIST and execute BODY for each hook function.
 You can refer to variables `hook' and `function' in BODY."
-  (`
-   (let (hook-functions)
-     (dolist (hook (, symlist))
+  `(let (hook-functions)
+     (dolist (hook ,symlist)
        (when (boundp hook)
          (setq hook-functions (symbol-value hook))
          (if (and (not (ti::bool-p hook-functions))
@@ -438,7 +437,7 @@ You can refer to variables `hook' and `function' in BODY."
            (dolist (function hook-functions)
              (when (and (not (eq function 'lambda)) ;skip lambda notation
                         (symbolp function))
-               (,@ body)))))))))
+               ,@body)))))))
 
 ;;; ----------------------------------------------------------------------
 ;;;
@@ -448,31 +447,20 @@ You can refer to variables `hook' and `function' in BODY."
 If hook element is in form of  'lambda' instead of callable function symbol,
 this element is ignored. This function cannot remove lambda functions
 from hook, because match is done against `symbol-name'."
-  (mapcar
-   (function
-    (lambda (hook)                      ;one hook at the time
-      (if (null (boundp hook))          ;is list element variable ?
-          nil                           ;cannot handle it
-        (cond
-
-         ;;  ^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^ add-hook form ^^^
-
-         ((listp (eval hook))           ;is hook in '(...) form ?
-;;;      (ti::d! "list" hook)
-          (mapcar                       ;step functions in list
-           (lambda (el)
-             (if (and (not (eq el 'lambda)) ;skip lambda notation
-                      (symbolp el)
-                      (string-match re (symbol-name el)))
-                 (remove-hook hook el)))
-           (eval hook)))
-
-         ;;  ^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^ setq form ^^^
-
-         ((and (symbolp (eval hook)))
-          (if (string-match re (symbol-name hook))
-              (set hook nil)))))))
-   symlist))
+  (dolist (hook symlist)
+    (when (boundp hook)			;is list element variable ?
+      (cond
+       ;; add-hook form
+       ((listp (eval hook))           ;is hook in '(...) form ?
+	(dolist (elt (eval hook))      ;step functions in list
+	  (if (and (not (eq elt 'lambda)) ;skip lambda notation
+		   (symbolp elt)
+		   (string-match re (symbol-name elt)))
+	      (remove-hook hook elt))))
+       ;; setq form
+       ((and (symbolp (eval hook)))
+	(if (string-match re (symbol-name hook))
+	    (set hook nil)))))))
 
 ;;; ----------------------------------------------------------------------
 ;;;
@@ -482,20 +470,16 @@ Write results i temporary buffer or BUFFER."
   (interactive
    (list
     (read-string "Regesp: ")))
-
   (or buffer
       (setq buffer (ti::temp-buffer ti::system--desc-buffer 'clear)))
-
   (with-current-buffer buffer
     (ti::system-symbol-dolist-macro
      (ti::system-get-symbols "-hook$\\|-functions$")
      (when (string-match regexp (symbol-name function))
        (insert (format "%-34s %s\n" (symbol-name hook)
                        (symbol-name function))))))
-
   (if (interactive-p)
       (pop-to-buffer buffer))
-
   buffer)
 
 ;;}}}
@@ -527,7 +511,7 @@ Eg. test-form = '(or (fboundp sym) (boundp sym))"
 ;;;
 (defun ti::system-autoload-function-list ()
   "Return list of autoload function."
-  (let* (list)
+  (let (list)
     (mapatoms
      (function
       (lambda (sym)
@@ -543,7 +527,9 @@ Eg. test-form = '(or (fboundp sym) (boundp sym))"
 	str)
     (dolist (func function-list)
       (when (setq str (inline (ti::function-autoload-file func)))
-        (pushnew (match-string 1 str) list :test 'string-equal)))
+        (pushnew (match-string 1 str)
+		 list
+		 :test 'string-equal)))
     list))
 
 ;;; ----------------------------------------------------------------------
@@ -708,7 +694,7 @@ No '%s feature found, are you absolutely sure you have loaded the file? "
       nil nil
       'ti::system--describe-symbols-history)
      arg                                ;ARG 2
-     ;;  Now handle exclude regexp       ;ARG 3
+     ;;  Now handle exclude regexp      ;ARG 3
      (if (ti::nil-p (setq ans (read-from-minibuffer "exclude: ")))
          nil
        ans)
@@ -763,10 +749,7 @@ OUT-BUFFER
 References:
 
   `ti::system--desc-buffer'"
-  ;; ^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^ interactive ^^^
   (interactive (ti::system-describe-symbols-i-args current-prefix-arg))
-
-  ;; ^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^ interactive end ^^^
   (let* ((buffer (or out-buffer ti::system--desc-buffer))
          subrp-test
          MF MFI MFF                     ;mode func
@@ -803,8 +786,6 @@ References:
                  DEF
                  (or (and (setq tmp (ti::function-args-p FUNC))
                           (progn
-;;;                    (ti::d! FUNC "ARGS" tmp (symbol-function FUNC))
-
                             ;; in xe, this doesn't print functions arguments,
                             ;; but the pacakge load information
                             ;; '(from "ange-ftp.elc")', but that's good to
@@ -905,7 +886,7 @@ References:
     (if (null sym-list)
         (message "Describe symbols: No matches for given criterias.")
       (with-output-to-temp-buffer buffer
-        (mapcar describe-func (sort sym-list 'string<))
+        (mapc describe-func (sort sym-list 'string<))
         (print-help-return-message)))))
 
 ;;; ----------------------------------------------------------------------
