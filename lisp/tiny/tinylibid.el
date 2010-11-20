@@ -170,7 +170,7 @@
 (eval-when-compile
   (ti::package-use-dynamic-compilation))
 
-(defconst tinylibid-version-time "2010.1120.1646"
+(defconst tinylibid-version-time "2010.1120.1647"
   "Latest version number.")
 
 ;;; setup: hooks
@@ -195,16 +195,16 @@ Because peeking the variable is 40x times faster.")
 ;; - These are heavily used. User may check these too.
 ;; - They are Set after the buffer is studied.
 
-(defconst ti::id--global-buffer-name nil
+(defvar ti::id--global-buffer-name nil
   "Global: set by study func, buffer name")
 
-(defconst ti::id--global-buffer-file-name  nil
+(defvar ti::id--global-buffer-file-name  nil
   "Global: set by study func, buffer file name")
 
-(defconst ti::id--global-buffer-extension nil
+(defvar ti::id--global-buffer-extension nil
   "Global: set by study func, buffer fn ext.")
 
-(defconst ti::id--global-buffer-first-line nil
+(defvar ti::id--global-buffer-first-line nil
   "Global: set by study func, 1st line of buffer")
 
 ;;; setup: public, user configurable
