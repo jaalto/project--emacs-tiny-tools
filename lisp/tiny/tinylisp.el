@@ -2098,16 +2098,6 @@ Following variables are set during BODY:
 
 ;;; ----------------------------------------------------------------------
 ;;;
-(defsubst tinylisp-whitespace-cleanup-eol (&optional point)
-  "Remove all EOL whitespaces from POINT or `current-point'."
-  (save-excursion
-    (if point
-	(goto-char point))
-    (while (re-search-forward "[ \f\v\t]+$" nil t)
-      (replace-match ""))))
-
-;;; ----------------------------------------------------------------------
-;;;
 (defsubst tinylisp-read-word ()
   "Read word under point."
   (let ((str (or (ti::remove-properties
@@ -4223,11 +4213,8 @@ return:
 			    (cdr var)
 			    (or str ""))))
 	  (pop-to-buffer (current-buffer))
+	  (ti::buffer-remove-whitespace-eol
 	  (ti::pmin)
-	  ;; Clean EOL whitespace
-	  (save-excursion
-	    (while (re-search-forward "[ \t]+$" nil t)
-	      (replace-match "")))
 	  (run-hooks 'tinylisp-:find-func-list-hook)))
     list))
 
@@ -5055,8 +5042,8 @@ Input:
             (if verb
                 (message "No autoload definitions in %s" file)))
            (t
-	    ;;  DVCS git does not like ^L at EOL
-	    (tinylisp-whitespace-cleanup-eol (point-min))
+	    ;;  DVCS git does not EOL whitespace
+	    (ti::buffer-remove-whitespace-eol)
             (let ((backup-inhibited t))
               (save-buffer))
             (kill-buffer (current-buffer)))))))))
