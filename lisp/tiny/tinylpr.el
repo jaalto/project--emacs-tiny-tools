@@ -405,15 +405,11 @@ removes line numbers."
 ;;;
 (defun tinylpr-print-style-completions ()
   "Build up the completion array."
-  (let ((list  tinylpr--print-style-list)
-	(i 0)
+  (let ((i 0)
 	completions)
-    (mapcar
-     (function
-      (lambda (x)
-        (setq i (1+ i))
-        (setq completions (cons  (cons (car x) i) completions))))
-     list)
+    (dolist (x tinylpr--print-style-list)
+      (setq i (1+ i))
+      (setq completions (cons  (cons (car x) i) completions)))
     completions))
 
 ;;; ----------------------------------------------------------------------
