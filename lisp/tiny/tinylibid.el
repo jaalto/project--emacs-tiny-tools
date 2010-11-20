@@ -52,11 +52,6 @@
 ;; If you have any questions, always use function
 ;;
 ;;      M-x ti::id-submit-bug-report
-;;
-;; Request:
-;;
-;;      Please send any example file or mode that I'm not aware of,
-;;      I'll try to support any programming mode
 
 ;;}}}
 ;;{{{ Documentation
