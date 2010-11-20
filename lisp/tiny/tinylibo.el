@@ -69,7 +69,7 @@
 
 (require 'tinylibm)
 
-(defconst tinylibo-version-time "2010.1120.1717"
+(defconst tinylibo-version-time "2010.1120.1724"
   "Latest version number as last modified time.")
 
 (eval-when-compile
@@ -190,8 +190,10 @@ Return:
   nil"
   (when ov
     (if no-properties
-        (buffer-substring-no-properties (overlay-start ov) (overlay-end ov))
-      (buffer-substring  (overlay-start ov) (overlay-end ov)))))
+        (buffer-substring-no-properties (overlay-start ov)
+					(overlay-end ov))
+      (buffer-substring  (overlay-start ov)
+			 (overlay-end ov)))))
 
 ;;; ----------------------------------------------------------------------
 ;;;
@@ -248,17 +250,14 @@ Input:
         i)
     (unless (and ovl  prop-list)
       (error "Invalid parameters"))
-
     (while (and ovl                     ;until list end
                 (null ov))              ;until found
-      (setq ovx   (car ovl)
+      (setq ovx (car ovl)
             propl (overlay-properties ovx)
-            i     0)
-
+            i 0)
       (dolist (elt prop-list)           ;check all properties
         (when (memq elt propl)
           (incf  i)))                   ;hit counter
-
       (if (eq i len)
           (setq ov ovx))                ;found all matches
       (setq ovl (cdr ovl)))
@@ -284,36 +283,24 @@ Input:
         propv)
     (when ovl
       (setq len (length prop-list))
-
       (if (or (not (and ovl prop-list))
               (not (= 0 (% len 2))))    ;must go paired
-          (error "Invalid parameters" ovl prop-list)
-
+          (error "Invalid parameters %s %s" ovl prop-list)
         (setq len (/ (length prop-list) 2))
-
         ;; ..................................................... check ...
-
         (while (and (setq ovx (pop ovl)) ;until list end
                     (null ov))           ;until found
-
           (setq ptr   prop-list
                 propl (overlay-properties ovx))
-
           (while ptr
-            (setq prop  (car ptr)   ptr (cdr ptr)
-                  propv (car ptr)   ptr (cdr ptr))
-
-;;;       (ti::d!! '!! prop propv
-;;;            'memq (memq prop propl)
-;;;            'get (overlay-get ovx prop) propv propl "\n")
-
+            (setq prop  (car ptr)
+		  ptr   (cdr ptr)
+                  propv (car ptr)
+		  ptr   (cdr ptr))
             (if (and (memq prop propl)
                      (equal (overlay-get ovx prop) propv))
                 (push ovx ov)))
-
-          (setq ovl (cdr ovl)))) ;; while-if
-
-;;;    (ti::d!! "~out" (prin1-to-string ov))
+          (setq ovl (cdr ovl))))
       ov)))
 
 ;;; ----------------------------------------------------------------------
@@ -371,58 +358,40 @@ Return:
     (unless (and list
                  (listp list)
                  (zerop (% (length list ) 2)))
-      (error "Parameter LIST invalid" re level list))
-
+      (error "Parameter LIST invalid %s %s %s" re level list))
     (save-excursion
       (while (funcall func re max t)
         (setq mb  (match-beginning level))
-
-;;;     (ti::d! level (match-string level) mb)
-
         (when mb                        ;match on this level found
-
           ;; ....................................... find or create ov ...
-
           (setq ovl (overlays-at mb))   ;try finding all overlays
-
           (cond
            ((and ovl
                  (ti::overlay-get-prop-val ovl no-prop-l))
             ;; Do nothing, overlap happened
             nil)
-
            ((or (null reuse)
                 (null ovl))
             (setq ov (ti::overlay-make level))
             (push ov ret-created ))
-
            (t
-;;;         (ti::d! "r" reuse ovl)  (setq OVL ovl RE reuse)
             (if reuse-t                 ;what type the list is ?
                 (if ovl
                     (setq ov (car-safe (ti::overlay-get-prop-val ovl reuse))))
               (if ovl
                   (setq ov (ti::overlay-get-prop ovl reuse))))
-
-;;;         (ti::d! "after" ov)
-
             (if ov
                 (push ov ret-reused)
               (setq ov (ti::overlay-make level)) ;none satisfies us
               (push ov ret-created))))           ;; cond
-
           ;; .................................... add properties to ov ...
           ;; Now we should have overlay in a way or other
-
           (when ov
             (setq ptr list)
-;;;       (ti::d! list)
             (while ptr
               (setq prop (nth 0 ptr)  propv (nth 1 ptr))
               (setq ptr (cdr (cdr ptr))) ;go 2 fwd
-;;;         (ti::d! "put" prop propv ov)
               (overlay-put ov prop propv))))))
-
     (when (or ret-reused ret-created)
       (list ret-reused ret-created))))
 
@@ -454,12 +423,11 @@ Return:
 
   nil   if not moved.
   nbr   overlay end position [matched portion end]"
-  (let* ((max       (or max
-                        (if back (point-min) (point-max))))
-         (level     (or level 0)))      ;default is full string
+  (let* ((max   (or max
+		    (if back (point-min) (point-max))))
+         (level (or level 0)))      ;default is full string
     (unless ov
       (error "invalid overlay, nil"))
-
     (when (and (if back
                    (re-search-backward re max t)
                  (re-search-forward re max t))
@@ -483,12 +451,12 @@ Input:
                 if non-nil                     (PROP VAL PROP VAL ..)
   BEG           region beginning
   END           region end"
-  (let* ((p   (or beg (point)))
-         (max (or end (point-max)))
-         (all (eq t propl))
-         ovl
-         ovx
-         list)
+  (let ((p   (or beg (point)))
+	(max (or end (point-max)))
+	(all (eq t propl))
+	ovl
+	ovx
+	list)
     (save-excursion
       (while (< p max)
         (goto-char p)
@@ -525,11 +493,10 @@ Input:
   (let* (buffer-read-only
          (p     (or beg (point)))
          (max   (or end (point-max)))
-         (propl (if propl
-                    propl
-                  t))                   ;set to t is not given
          (ovl   (ti::overlay-get-within-area propl propl-t p max))
          ovx)
+    (or propl
+	(setq propl t))
     (dolist (overlay ovl)
       (delete-overlay overlay))))
 
