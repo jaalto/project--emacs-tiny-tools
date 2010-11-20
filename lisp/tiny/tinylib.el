@@ -2596,6 +2596,15 @@ Ignores leading and trailing whitespace."
           (setq ret (buffer-substring beg (point))))))
     ret))
 
+
+;;; ----------------------------------------------------------------------
+;;;
+(defun ti::buffer-remove-whitespace-eol ()
+  "Clear end of line whitespaces from whole buffer."
+  (interactive)
+  (whitespace-replace-action
+   'delete-region (point-min) (point-max) whitespace-trailing-regexp 1))
+
 ;;; ----------------------------------------------------------------------
 ;;;
 (defun ti::buffer-read-whitespace (&optional point)
