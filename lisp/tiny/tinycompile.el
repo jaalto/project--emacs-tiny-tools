@@ -86,9 +86,9 @@
 ;;; ......................................................... &require ...
 
 (require 'tinyliba)
-(require 'cl)
 
 (eval-when-compile
+  (require 'cl)
   (defvar mode-line-mode-menu)
   (defvar tinyurl-mode))
 
