@@ -2821,15 +2821,15 @@ Call arguments are in ARG-LIST."
            arg-list))
    (t
     (with-current-buffer buffer
-      (let ((perl-type (tinyperl-perl-type))
-	    (cmd       (if (ti::win32-shell-p)
-			   ;;  Must not contain path name
-			   ;;  I don't know if the exact problem was due to
-			   ;;  SPACES in the path name.
-			   "perldoc"
-			 tinyperl--perldoc-bin))
-	    (call-type (tinyperl-external-command-format cmd))
-	    (args (ti::list-to-string arg-list)))
+      (let* ((perl-type (tinyperl-perl-type))
+	     (cmd       (if (ti::win32-shell-p)
+			    ;;  Must not contain path name
+			    ;;  I don't know if the exact problem was due to
+			    ;;  SPACES in the path name.
+			    "perldoc"
+			  tinyperl--perldoc-bin))
+	     (call-type (tinyperl-external-command-format cmd))
+	     (args (ti::list-to-string arg-list)))
         ;;  Add "perl" to the front of command if it is "perldoc".
         ;;  This will work under Windows/Cygwin and Unix
         (if (listp call-type)
