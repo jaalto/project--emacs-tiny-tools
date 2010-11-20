@@ -70,7 +70,8 @@
 
 (require 'tinylibm)
 
-(ti::package-use-dynamic-compilation)
+(eval-when-compile
+  (ti::package-use-dynamic-compilation))
 
 (eval-and-compile
   (ti::overlay-require-macro
