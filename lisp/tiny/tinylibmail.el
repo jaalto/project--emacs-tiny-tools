@@ -3507,122 +3507,121 @@ See `ti::mail-whois-parse'."
   "Whois: Parse records from buffer. See `ti::mail-whois-parse'.
 Values examined are: expires, created and updated."
   (let* ((date-info
-          (list
-           ;;  10-Aug-1998
-           (list
-            (concat
-             "\\("
-             "\\([0-9][0-9]?\\)"
-             "-\\([A-Z][a-z][a-z]\\)"
-             "-\\([0-9][0-9][0-9][0-9]\\)"
-             "\\)")
-            ;; day month year
-            '(3 4 5))
-           ;;  10-08-1998
-           (list
-            (concat
-             "\\("
-             "\\([0-9][0-9]?\\)"
-             "-\\([0-9][0-9]?\\)"
-             "-\\([0-9][0-9][0-9][0-9]\\)"
-             "\\)")
-            '(3 4 5))
-           ;;  Mon, Aug 10, 1998
-           (list
-            (concat
-             "\\("
-             "[A-Z][a-z][a-z],[ \t]*"
-             "\\([A-Z][a-z][a-z]\\)[ \t]+" ;; Mon
-             "\\([0-9]+\\)[ \t]*,[ \t]*"   ;; day
-             "\\([0-9][0-9][0-9][0-9]\\)"  ;; year
-             "\\)")
-            '(4 3 5))
-           (list
-            (concat
-             ;; 2003-08-25 19:15
-             "\\("
-             "\\([0-9][0-9][0-9][0-9]\\)"
-             "-\\([0-9][0-9]\\)"
-             "-\\([0-9][0-9]\\)"
-             "[ \t]+[0-9][0-9]:[0-9][0-9]"
-             "\\)")
-            '(5 4 3))
-           (list
-            (concat
-             ;; 1998.08.11
-             "\\("
-             "\\([0-9][0-9][0-9][0-9]\\)"
-             "[.]\\([0-9][0-9]\\)"
-             "[.]\\([0-9][0-9]\\)"
-             "\\)")
-            '(5 4 3))
-           (list
-            (concat
-             ;; changed:  20001107 15:03:09
-             ;; changed:     registdom@tin.it 20030403
-             ;;
-             "\\(\\([0-9][0-9][0-9][0-9]\\)"
-             "\\([0-9][0-9]\\)"
-             "\\([0-9][0-9]\\)"
-             "\\)")))
-          '(5 4 3))
-
-         (search (list
-                  (list
-                   'expires
-                   (concat
-                    "\\("
-                    "^[ \t]*Record[ \t]+expires[ \t]+on[ \t]+"
-                    "\\|^[ \t]*Expires[ \t]+on"
-                    "\\|^expire:[^\r\n0-9]+"
-                    "\\|^[ \t]*expiration date:[ \t]+"
-                    "\\)"))
-                  (list
-                   'created
-                   (concat
-                    "\\("
-                    "^[ \t]*Record[ \t]+created[ \t]+on[ \t]+"
-                    "\\|^[ \t]*Created[ \t]+on.*[ \t]+"
-                    "\\|^created:[^\r\n0-9]+"
-                    "\\|^[ \t]*creation date:[ \t]+"
-                    "\\)"))
-                  (list
-                   'updated
-                   (concat
-                    "\\("
-                    "^.*last.*updated?[ \t]+on[ \t]+"
-                    "\\|^[ \t]*updated date:[ \t]+"
-                    "\\|^changed:[^\r\n0-9]+"
-                    "\\)"))))
-         (beg    (point))
-         ret)
+	  (list
+	   ;;  10-Aug-1998
+	   (list
+	    `,(concat
+	       "\\("
+	       "\\([0-9][0-9]?\\)"
+	       "-\\([A-Z][a-z][a-z]\\)"
+	       "-\\([0-9][0-9][0-9][0-9]\\)"
+	       "\\)")
+	    ;; day month year
+	    '(3 4 5))
+	   ;;  10-08-1998
+	   (list
+	    `,(concat
+	       "\\("
+	       "\\([0-9][0-9]?\\)"
+	       "-\\([0-9][0-9]?\\)"
+	       "-\\([0-9][0-9][0-9][0-9]\\)"
+	       "\\)")
+	    '(3 4 5))
+	   ;;  Mon, Aug 10, 1998
+	   (list
+	    `,(concat
+	       "\\("
+	       "[A-Z][a-z][a-z],[ \t]*"
+	       "\\([A-Z][a-z][a-z]\\)[ \t]+" ;; Mon
+	       "\\([0-9]+\\)[ \t]*,[ \t]*"   ;; day
+	       "\\([0-9][0-9][0-9][0-9]\\)"  ;; year
+	       "\\)")
+	    '(4 3 5))
+	   (list
+	    `,(concat
+	       ;; 2003-08-25 19:15
+	       "\\("
+	       "\\([0-9][0-9][0-9][0-9]\\)"
+	       "-\\([0-9][0-9]\\)"
+	       "-\\([0-9][0-9]\\)"
+	       "[ \t]+[0-9][0-9]:[0-9][0-9]"
+	       "\\)")
+	    '(5 4 3))
+	   (list
+	    `,(concat
+	       ;; 1998.08.11
+	       "\\("
+	       "\\([0-9][0-9][0-9][0-9]\\)"
+	       "[.]\\([0-9][0-9]\\)"
+	       "[.]\\([0-9][0-9]\\)"
+	       "\\)")
+	    '(5 4 3))
+	   (list
+	    `,(concat
+	       ;; changed:  20001107 15:03:09
+	       ;; changed:     registdom@tin.it 20030403
+	       ;;
+	       "\\(\\([0-9][0-9][0-9][0-9]\\)"
+	       "\\([0-9][0-9]\\)"
+	       "\\([0-9][0-9]\\)"
+	       "\\)")
+	    '(5 4 3))))
+	 (search (list
+		  (list
+		   'expires
+		   `,(concat
+		      "\\("
+		      "^[ \t]*Record[ \t]+expires[ \t]+on[ \t]+"
+		      "\\|^[ \t]*Expires[ \t]+on"
+		      "\\|^expire:[^\r\n0-9]+"
+		      "\\|^[ \t]*expiration date:[ \t]+"
+		      "\\)"))
+		  (list
+		   'created
+		   `,(concat
+		      "\\("
+		      "^[ \t]*Record[ \t]+created[ \t]+on[ \t]+"
+		      "\\|^[ \t]*Created[ \t]+on.*[ \t]+"
+		      "\\|^created:[^\r\n0-9]+"
+		      "\\|^[ \t]*creation date:[ \t]+"
+		      "\\)"))
+		  (list
+		   'updated
+		   `,(concat
+		      "\\("
+		      "^.*last.*updated?[ \t]+on[ \t]+"
+		      "\\|^[ \t]*updated date:[ \t]+"
+		      "\\|^changed:[^\r\n0-9]+"
+		      "\\)"))))
+	 (beg (point))
+	 ret)
     (dolist (elt search)
       (multiple-value-bind (type line)
-          elt
-        (dolist (date-data date-info)
-          (multiple-value-bind (regexp pos-list)
-              date-data
-            (setq regexp (concat line regexp))
-            ;;  The order of the fields can be anything, start over
-            ;;  every time from the same point
-            (goto-char beg)
-            (when (re-search-forward regexp nil t)
-              (multiple-value-bind (raw day month year)
-                  (list
-                   (match-string 2)
-                   (match-string (nth 0 pos-list))
-                   (match-string (nth 1 pos-list))
-                   (match-string (nth 2 pos-list)))
-                (if (eq 3 (length month))
-                    (setq month (ti::month-to-number
-                                 (capitalize month)
-                                 'zero)))
-                (push (list
-                       type
-                       (list (format "%s-%s-%s" year month day)
-                             raw))
-                      ret))
-              (return))))))
+	  elt
+	(dolist (date-data date-info)
+	  (multiple-value-bind (regexp pos-list)
+	      date-data
+	    (setq regexp (concat line regexp))
+	    ;;  The order of the fields can be anything, start over
+	    ;;  every time from the same point
+	    (goto-char beg)
+	    (when (re-search-forward regexp nil t)
+	      (multiple-value-bind (raw day month year)
+		  (list
+		   (match-string 2)
+		   (match-string (nth 0 pos-list))
+		   (match-string (nth 1 pos-list))
+		   (match-string (nth 2 pos-list)))
+		(if (eq 3 (length month))
+		    (setq month (ti::month-to-number
+				 (capitalize month)
+				 'zero)))
+		(push (list
+		       type
+		       (list (format "%s-%s-%s" year month day)
+			     raw))
+		      ret))
+	      (return))))))
     ret))
 
 ;;; ----------------------------------------------------------------------
