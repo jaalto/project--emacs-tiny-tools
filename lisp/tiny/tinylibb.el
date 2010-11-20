@@ -81,7 +81,7 @@
   (set (make-local-variable 'byte-compile-dynamic-docstrings) t)
   (set (make-local-variable 'byte-compile-dynamic) t))
 
-(defconst tinylibb-version-time "2010.1120.1455"
+(defconst tinylibb-version-time "2010.1120.1852"
   "Latest version number as last modified time.")
 
 ;;; ....................................................... &emulation ...
@@ -315,6 +315,38 @@ Default is to convert all tabs in STRING with spaces."
   (defvar shell-command-output-buffer "*Shell Command Output*"))
 
 ;;; ........................................................... &other ...
+
+(unless (fboundp 'with-buffer-modified)
+  ;;  Appeared in Emacs 21.2
+  (put 'with-buffer-modified 'lisp-indent-function 0)
+  (put 'with-buffer-modified 'edebug-form-spec '(body))
+  (defmacro with-buffer-modified (&rest body)
+    "This FORM saves modified state during execution of body.
+Suppose buffer is _not_ modified when you do something in the BODY,
+e.g. set face properties: changing face also signifies
+to Emacs that buffer has been modified. But the result is that when
+BODY finishes; the original buffer modified state is restored.
+
+This form will also make the buffer writable for the execution of body,
+but at the end of form it will restore the possible read-only state as
+seen my `buffer-read-only'
+
+\(with-buffer-modified
+   (set-text-properties 1 10 '(face highlight)))
+
+"
+    (let ((modified  (gensym "modified-"))
+	  (read-only (gensym "read-only-")))
+      `(unwind-protect
+	   (progn
+	     (setq buffer-read-only nil)
+	     ,@body)
+	 (if ,modified
+	     (set-buffer-modified-p t)
+	   (set-buffer-modified-p nil))
+	 (if ,read-only
+	     (setq buffer-read-only t)
+	   (setq buffer-read-only nil))))))
 
 (defun font-lock-mode-maybe (&optional mode check-global)
   "Pass MODE to function `font-lock-mode' only on color display.
