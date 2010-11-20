@@ -2,8 +2,6 @@
 
 ;; This file is not part of Emacs
 
-;;{{{ Id
-
 ;; Copyright (C) 1995-2010 Jari Aalto
 ;; Keywords:     extensions
 ;; Author:       Jari Aalto
@@ -29,9 +27,6 @@
 ;;
 ;; Visit <http://www.gnu.org/copyleft/gpl.html> for more information
 
-;;}}}
-;;{{{ Install
-
 ;;; Install:
 
 ;; ........................................................ &t-install ...
@@ -52,9 +47,6 @@
 ;; If you have any questions, always use function
 ;;
 ;;      M-x ti::id-submit-bug-report
-
-;;}}}
-;;{{{ Documentation
 
 ;; .................................................... &t-commentary ...
 
@@ -169,27 +161,24 @@
 ;;                      imenu-create-index-function     (nth 1 el))
 ;;                (imenu))))
 
-;;}}}
-
 ;;; Change Log:
 
 ;;; Code:
-
-;;{{{ setup: require
 
 (require 'tinylibm)
 
 (eval-when-compile
   (ti::package-use-dynamic-compilation))
 
-;;}}}
-;;{{{ setup: hooks
+(defconst tinylibid-version-time "2010.1120.1646"
+  "Latest version number.")
+
+;;; setup: hooks
 
 (defvar ti::id--load-hook nil
   "*Hook run when file has been loaded.")
 
-;;}}}
-;;{{{ setup: private
+;;; setup: private
 
 (defvar ti::id--info  nil
   "Buffer local variable.This value is updated every time
@@ -218,11 +207,10 @@ Because peeking the variable is 40x times faster.")
 (defconst ti::id--global-buffer-first-line nil
   "Global: set by study func, 1st line of buffer")
 
-;;}}}
-;;{{{ setup: public, user configurable
+;;; setup: public, user configurable
 
-;;; it is INTENTIONAL that the variables are defconst, change these
-;;; with ti::id--load-hook
+;; it is INTENTIONAL that the variables are defconst, change these
+;; with ti::id--load-hook
 
 (defvar ti::id--file-ext-re "[a-zA-Z0-9]\\(\\.\\)[a-zA-Z0-9]+$"
   "A regexp that says what files can have extension. Everything after the
@@ -507,35 +495,7 @@ returns non-nil. Notice, that this is also the order of evaluation.")
 where RE represent match against string that describes the buffer
 contents. The comment-start and end fields are optional.")
 
-;;}}}
-;;{{{ version
-
-;;; ....................................................... &v-version ...
-
-(eval-and-compile
-  (ti::macrof-version-bug-report
-   "tinylibid.el"
-   "tinylibid"
-   ti::id--version-id
-   "$Id: tinylibid.el,v 2.50 2007/05/01 17:20:45 jaalto Exp $"
-   '(ti::id--load-hook
-     ti::id--function-list
-
-     ti::id--global-buffer-name
-     ti::id--global-buffer-file-name
-     ti::id--global-buffer-extension
-     ti::id--global-buffer-first-line
-
-     ti::id--file-ext-re
-     ti::id--buffer-first-line-regexp-list
-     ti::id--buffer-match-regexp-list
-     ti::id--file-extension-alist
-     ti::id--file-regexp-match-list
-     ti::id--buffer-name-regexp-list
-     ti::id--type2mode)))
-
-;;}}}
-;;{{{ misc
+;;; Misc
 
 ;;; ----------------------------------------------------------------------
 ;;;
@@ -576,8 +536,7 @@ is not needed for mode."
     (if com-s
         (cons com-s com-e))))
 
-;;}}}
-;;{{{ id
+;;; Id
 
 ;;; ----------------------------------------------------------------------
 ;;;
@@ -669,8 +628,7 @@ Start searching from `point-min' or from optional POINT."
             (return)))))
     ret))
 
-;;}}}
-;;{{{ study
+;;; Study
 
 ;;; ----------------------------------------------------------------------
 ;;;
@@ -776,12 +734,7 @@ Return:
   ""
   (ti::id-study-buffer 'buffer-regexp))
 
-;;}}}
-;;{{{ main
-
-;;; ############################################################ &main ###
-
-;;; ----------------------------------------------------------------------
+;;; ------------------------------------------------------------ &Main ---
 ;;;
 ;;;###autoload
 (defun ti::id-info (&optional mode variable-lookup verb)
@@ -867,8 +820,6 @@ References:
       ;; Update the buffer local variable
       (setq ti::id--info ret))
     ret))
-
-;;}}}
 
 (provide   'tinylibid)
 (run-hooks 'ti::id--load-hook)
