@@ -7386,7 +7386,7 @@ TO-FILE is excluded from autoload search."
              ;;
              ;;      (regexp-quote generate-autoload-cookie)
              ;;
-             find-file-hooks
+             find-file-hook
              write-file-hooks
              font-lock-mode
              ;; buffer-auto-save-file-name
@@ -7400,8 +7400,8 @@ TO-FILE is excluded from autoload search."
         ;;  When each file is loaded to emacs, do not turn on lisp-mode
         ;;  or anything else => cleared file hooks. These are byte compiler
         ;;  silencers:
-        (if (null find-file-hooks)
-            (setq find-file-hooks nil))
+        (if (null find-file-hook)
+            (setq find-file-hook nil))
         (if (null write-file-hooks)
             (setq write-file-hooks nil))
         (if (null font-lock-mode)

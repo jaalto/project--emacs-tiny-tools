@@ -971,8 +971,8 @@ previous definitions must be preserved."
 Do nothing if folding is already installed."
   (if (or (fboundp 'folding-install)
           (featurep 'folding))
-      ;;  Remove ourself from the `find-file-hooks'.
-      (remove-hook  'find-file-hooks
+      ;;  Remove ourself from the `find-file-hook'.
+      (remove-hook  'find-file-hook
                     'tiny-setup-folding-autoload-find-file-hook)
     (let* ((start  (concat "\\("
                            (regexp-quote (or comment-start "dummy"))
@@ -987,7 +987,7 @@ Do nothing if folding is already installed."
   (defvar folding-mode nil)
   (tiny-setup-ti::macrov-mode-line-mode-menu
    folding-mode "Outline (Folding)")
-  (add-hook  'find-file-hooks
+  (add-hook  'find-file-hook
              'tiny-setup-folding-autoload-find-file-hook))
 
 (defun tiny-setup-dired-sort-autoload ()
@@ -1369,7 +1369,7 @@ TinySetup: [NOTE] The automatic setup will not make much much good,
 (defun tiny-setup-tinymailbox-find-file-hook (&optional disable)
   "Activate `tinymailbox-mode' on mailbox files."
   (if (memq 'turn-on-tinymailbox-mode-maybe
-            find-file-hooks)
+            find-file-hook)
       ;;  Package has been installed. It handles `find-file-hook'
       ;;  detection better, so remove us.
       (setq disable t)
@@ -1377,12 +1377,12 @@ TinySetup: [NOTE] The automatic setup will not make much much good,
       (turn-on-tinymailbox-mode-maybe)))
   (if disable
       (remove-hook
-       'find-file-hooks
+       'find-file-hook
        'tiny-setup-tinymailbox-find-file-hook)))
 
 (defun tiny-setup-tinymailbox-autoload ()
   "Autoload."
-  (add-hook  'find-file-hooks
+  (add-hook  'find-file-hook
              'tiny-setup-tinymailbox-find-file-hook)
   ;;  Gnus temporary mailbox files have name "Incoming"
   (tiny-setup-aput 'auto-mode-alist
@@ -1692,12 +1692,12 @@ verified."
   "Turn on mode function `tinytf-mode' as needed."
   (let (case-fold-search)
     (cond
-     ((memq 'turn-on-tinytf-mode-maybe find-file-hooks)
+     ((memq 'turn-on-tinytf-mode-maybe find-file-hook)
       ;;  tinytf is already loaded, remove ourself.
-      (remove-hook 'find-file-hooks 'tiny-setup-turn-on-tinytf-mode-maybe))
+      (remove-hook 'find-file-hook 'tiny-setup-turn-on-tinytf-mode-maybe))
      ((tiny-setup-tinytf-buffer-type-p)
       (turn-on-tinytf-mode)
-      (remove-hook 'find-file-hooks 'tiny-setup-turn-on-tinytf-mode-maybe)))
+      (remove-hook 'find-file-hook 'tiny-setup-turn-on-tinytf-mode-maybe)))
     ;;  Hook must return nil
     nil))
 
@@ -1706,7 +1706,7 @@ verified."
   (defvar tinytf-mode nil)
   (tiny-setup-ti::macrov-mode-line-mode-menu
    tinytf-mode "Technical text")
-  (add-hook 'find-file-hooks 'tiny-setup-turn-on-tinytf-mode-maybe))
+  (add-hook 'find-file-hook 'tiny-setup-turn-on-tinytf-mode-maybe))
 
 ;;; ......................................................... &tinyurl ...
 
@@ -1714,7 +1714,7 @@ verified."
   "Turn on `tinyurl-mode' as needed."
   (if (featurep 'tinyurl)
       ;; TinyUrl has already set up the watchdog.
-      (remove-hook 'find-file-hooks 'tiny-setup-tinyurl-mode-maybe)
+      (remove-hook 'find-file-hook 'tiny-setup-tinyurl-mode-maybe)
     ;;  Use simplistic test here. TinyUrl has much better once it's active.
     (if (ti::re-search-check "[fh]t?tp://[a-z]+[a-z.]+")
         (turn-on-tinyurl-mode)))
@@ -1726,7 +1726,7 @@ verified."
   (defvar tinyurl-mode nil)
   (tiny-setup-ti::macrov-mode-line-mode-menu
    tinyurl-mode "Url mode")
-  (add-hook 'find-file-hooks 'tiny-setup-tinyurl-mode-maybe))
+  (add-hook 'find-file-hook 'tiny-setup-tinyurl-mode-maybe))
 
 (defun tiny-setup-tinyurl-bind ()
   "Bind."

@@ -1,5 +1,13 @@
 2010-11-20 Sat  Jari Aalto  <jari.aalto@cante.net>
 
+	* tiny/tinylibm.el (ti::prin1-mapconcat): Change `mapcar' to `dolist'.
+	(cl-clrhash-paranoid): Change alias `cl-maphash' to `maphash' and
+	alias `cl-clrhash' to `clrhash'.
+	(ti::find-file-literally): Change obsolete `default-major-mode' to
+	`major-mode'
+
+	* tiny/tinylibck.el: Add dynamic compilation.
+
 	* tiny/tiny-setup.el: Remove tinylibxe.el
 
 	* unmaintained/tinylibxe.el: New file. Moved form ../tiny directory.
@@ -25,6 +33,7 @@
 	`ti::buffer-remove-whitespace-eol'.
 
 	* tiny/tinylibb.el: Remove w32-* functions. See new "w" library.
+	(radix): Change `mapcar' to `mapc'.
 
 	* tiny/tinylibw.el: New. Move code from tinylibb.el
 

@@ -123,7 +123,7 @@
 
 ;;{{{ setup: libraries
 
-(defconst tinydebian--version-time "2010.1119.2259"
+(defconst tinydebian--version-time "2010.1120.1557"
   "Last edited time.")
 
 (require 'tinylibm)
@@ -1262,7 +1262,7 @@ Buffer should contains a word 'Debian' or 'Emacs'."
 
 ;;; ----------------------------------------------------------------------
 ;;;
-(defun tinydebian-find-file-hooks ()
+(defun tinydebian-find-file-hook ()
   "Run `tinydebian-bts-mode-maybe-turn-on'.
 Install `font-lock-keywords' for log files."
   (tinydebian-bts-mode-maybe-turn-on)
@@ -1338,8 +1338,8 @@ Activate on files whose path matches
                  'turn-on-tinydebian-mail-mode)
     (remove-hook 'mail-mode-hook
                  'turn-on-tinydebian-mail-mode)
-    (remove-hook 'find-file-hooks
-                 'tinydebian-find-file-hooks)
+    (remove-hook 'find-file-hook
+                 'tinydebian-find-file-hook)
     (remove-hook 'gnus-summary-prepare-hook
                  'tinydebian-bts-mode-gnus-summary-maybe-turn-on)
     (remove-hook 'gnus-article-prepare-hook
@@ -1352,8 +1352,8 @@ Activate on files whose path matches
               'turn-on-tinydebian-mail-mode)
     (add-hook 'mail-mode-hook
               'turn-on-tinydebian-mail-mode)
-    (add-hook 'find-file-hooks
-              'tinydebian-find-file-hooks)
+    (add-hook 'find-file-hook
+              'tinydebian-find-file-hook)
     (add-hook 'gnus-summary-prepare-hook
               'tinydebian-bts-mode-gnus-summary-maybe-turn-on)
     (add-hook 'gnus-article-prepare-hook

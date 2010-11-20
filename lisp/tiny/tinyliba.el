@@ -74,12 +74,16 @@
 
 (provide 'tinyliba)
 
-(defconst tinyliba-version-time "2010.1120.1001"
+(defconst tinyliba-version-time "2010.1120.1437"
   "Latest version number as last modified time.")
 
 (autoload 'with-timeout      "timer"        "" nil 'macro)
 (autoload 'easy-menu-define  "easymenu"     "" nil 'macro)
 (autoload 'executable-find   "executable")
+
+(eval-when-compile
+  (set (make-local-variable 'byte-compile-dynamic-docstrings) t)
+  (set (make-local-variable 'byte-compile-dynamic) t))
 
 (eval-and-compile ;; This function must be visible at load time
   (defun ti::tmp-cl-library-check ()
@@ -140,7 +144,6 @@ This function is run only once at tinynyliba.el load."
   ;;  Long story short: At a time Emacs shipped with crippled cl.el
   ;;  library which broke everything. This check was necessary to
   ;;  regain sane environment.
-
   (unless (fboundp 'return)  ;; CL is not loaded yet
     (autoload 'return "cl-macs" nil nil 'macro)
     (when (string< emacs-version "24")
@@ -151,10 +154,7 @@ This function is run only once at tinynyliba.el load."
       ;; See http://debbugs.gnu.org/cgi/bugreport.cgi?bug=7408
       ;; FIXME: Remove (ti::tmp-cl-library-check)
       (fmakunbound 'dolist)
-      (autoload 'dolist "cl-macs" "" nil 'macro)))
-
-  (make-local-variable 'byte-compile-dynamic)
-  (setq byte-compile-dynamic t))
+      (autoload 'dolist "cl-macs" "" nil 'macro))))
 
 ;;}}}
 

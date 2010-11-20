@@ -61,7 +61,7 @@
 ;; Additional hooks to detect and format buffer (optional):
 ;;
 ;;       (add-hook 'write-file-hooks 'tinytf-untabify-buffer)
-;;       (add-hook 'find-file-hooks 'turn-on-tinytf-mode-maybe)
+;;       (add-hook 'find-file-hook 'turn-on-tinytf-mode-maybe)
 ;;
 ;; If you need to redefine some binding to suit your keyboard better,
 ;; add setup like this to your ~/.emacs file:

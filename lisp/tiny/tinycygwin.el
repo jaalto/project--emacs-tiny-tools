@@ -814,7 +814,7 @@ followed by indented two space explanation. An example:
 
 ;;; ----------------------------------------------------------------------
 ;;;
-(defun tinycygwin-find-file-hooks ()
+(defun tinycygwin-find-file-hook ()
   "Install `font-lock-keywords' for log files."
   (tinycygwin-font-lock-keywords))
 
@@ -898,11 +898,11 @@ followed by indented two space explanation. An example:
     (cond
      (uninstall
       (tinycygwin-install-font-lock-keywords 'uninstall)
-      (remove-hook 'find-file-hooks 'tinycygwin-find-file-hooks)
+      (remove-hook 'find-file-hook 'tinycygwin-find-file-hook)
       nil)
      (t
       (tinycygwin-install-font-lock-keywords)
-      (add-hook 'find-file-hooks  'tinycygwin-find-file-hooks)
+      (add-hook 'find-file-hook  'tinycygwin-find-file-hook)
       nil))))
 
 ;;}}}
@@ -1166,7 +1166,7 @@ does not contain space separated Firstname Lastname."
 (defmacro tinycygwin-clean-system-with (&rest body)
   "Disable almost all auto-features and run BODY."
   `(let (auto-mode-alist
-         find-file-hooks
+         find-file-hook
          interpreter-mode-alist)
      ,@body))
 

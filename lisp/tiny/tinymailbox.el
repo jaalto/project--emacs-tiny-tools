@@ -476,7 +476,7 @@ Ignore big mailboxes."
   (ti::assoc-replace-maybe-add 'auto-mode-alist
                                tinymailbox--auto-mode-alist
                                uninstall)
-  (ti::add-hooks 'find-file-hooks
+  (ti::add-hooks 'find-file-hook
                  'turn-on-tinymailbox-mode-maybe
                  uninstall)
   (when (or verb

@@ -1692,10 +1692,10 @@ Return:
   (cond
    (uninstall
     (remove-hook 'write-file-hooks 'tinydesk-auto-save)
-    (remove-hook 'find-file-hooks  'turn-on-tinydesk-mode-maybe))
+    (remove-hook 'find-file-hook  'turn-on-tinydesk-mode-maybe))
    (t
     (add-hook 'write-file-hooks 'tinydesk-auto-save)
-    (add-hook 'find-file-hooks  'turn-on-tinydesk-mode-maybe))))
+    (add-hook 'find-file-hook  'turn-on-tinydesk-mode-maybe))))
 
 (tinydesk-install)
 

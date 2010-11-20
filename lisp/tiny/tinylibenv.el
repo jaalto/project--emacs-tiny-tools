@@ -478,11 +478,11 @@ at is, Linux and Cygwin qualifies."
   "Find 'Version:' tag from lisp FILE. Retun numric version string if any."
   (let* ((lib    (locate-library file))
          (buffer (and lib (find-file-noselect lib)))
-         find-file-hooks
+         find-file-hook
          version)
     (save-excursion
-      (if (null find-file-hooks) ;; No-op, byte compiler silencer
-          (setq find-file-hooks nil))
+      (if (null find-file-hook) ;; No-op, byte compiler silencer
+          (setq find-file-hook nil))
       (set-buffer buffer)
       (goto-char (point-min))
       (if (re-search-forward

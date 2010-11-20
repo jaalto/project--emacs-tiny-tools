@@ -191,7 +191,7 @@ E.g. if you want to calculate days; you'd do
 (put 'tiny-setup-with-file-env-macro 'edebug-form-spec '(body))
 (defmacro tiny-setup-with-file-env-macro (&rest body)
   "Run BODY with all the interfering hooks turned off."
-  `(let* (find-file-hooks
+  `(let* (find-file-hook
           write-file-hooks
           font-lock-mode
           ;; buffer-auto-save-file-name
@@ -205,8 +205,8 @@ E.g. if you want to calculate days; you'd do
      ;;  When each file is loaded to emacs, do not turn on lisp-mode
      ;;  or anything else => cleared file hooks. These are byte compiler
      ;;  silencers:
-     (if (null find-file-hooks)
-         (setq find-file-hooks nil))
+     (if (null find-file-hook)
+         (setq find-file-hook nil))
      (if (null write-file-hooks)
          (setq write-file-hooks nil))
      (if (null font-lock-mode)

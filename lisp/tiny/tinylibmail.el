@@ -66,9 +66,6 @@
 (require 'sendmail) ;; mail-header-separator
 
 (eval-and-compile
-  (defvar mail-abbrevs)                 ;Silence ByteCompiler
-  (defvar mail-aliases)
-  (defvar rmail-current-message nil)
   (cond
    ((ti::xemacs-p)
     (autoload 'build-mail-aliases "mail-abbrevs"))
@@ -81,6 +78,9 @@
   (autoload 'gnus-group-get-parameter           "gnus"))
 
 (eval-when-compile
+  (defvar mail-abbrevs)                 ;Silence ByteCompiler
+  (defvar mail-aliases)
+  (defvar rmail-current-message nil)
   (ti::package-use-dynamic-compilation))
 
 ;;}}}
