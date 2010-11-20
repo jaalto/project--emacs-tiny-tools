@@ -202,12 +202,7 @@
 (require 'tinylibm)                     ;macro package
 
 (eval-when-compile
-  (ti::package-use-dynamic-compilation)
-  (when (and (ti::xemacs-p)
-             (byte-compiling-files-p))
-    (message "\n\
-  ** tinylib.el: [Note] It is safe to ignore Emacs dependant ange-ftp function
-                 compilation errors.")))
+  (ti::package-use-dynamic-compilation))
 
 (eval-and-compile
 
