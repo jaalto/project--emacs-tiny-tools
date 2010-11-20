@@ -5183,7 +5183,7 @@ content-transfer-encoding: quoted-printable"
                  message-send-hook
                  mh-before-send-letter-hook))
     (when (boundp sym)
-      (make-local-hook sym)
+      (add-hook sym 'ignore nil 'local)
       (set sym nil))))
 
 ;;; ----------------------------------------------------------------------
