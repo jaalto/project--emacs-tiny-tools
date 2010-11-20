@@ -379,7 +379,8 @@
 
 ;;; ......................................................... &require ...
 
-(require 'cl)
+(eval-when-compile
+  (require 'cl))
 
 (eval-and-compile
   ;; predeclare - Byte compiler silencer.
