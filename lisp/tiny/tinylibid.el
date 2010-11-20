@@ -114,7 +114,7 @@
 ;;
 ;;          (defun my-imenu (&optional arg)
 ;;            "Sets parameters to imenu."
-;;            (let* (raise)
+;;            (let (raise)
 ;;              (setq imenu-max-items 20
 ;;                 imenu-sort-function nil)
 ;;              (cond
@@ -591,8 +591,8 @@ is not needed for mode."
 
 References:
   See variable `ti::id--file-ext-re' how file extension is determined."
-  (let* ((re ti::id--file-ext-re)
-         point)
+  (let ((re ti::id--file-ext-re)
+	point)
     (when (and file               ;doesn't have filename at all *temp*
                (string-match re file))
       (setq point (match-beginning 1))  ;dot position
@@ -626,9 +626,9 @@ Return:
             Btw, emacs barks you automatically if functions given
             in line doesn't exist when file is loaded.
   nil."
-  (let* (ret
-         mode
-         sym)
+  (let (ret
+	mode
+	sym)
     (cond
      ((setq mode (ti::string-match "-[*]-\\(.*\\)-[*]-" 1 str))
       ;;  let's make symbol out of it
@@ -647,8 +647,8 @@ Return:
 ;;;
 (defun ti::id-match (string list)
   "Match STRING against LIST el 1, return LIST elt 2"
-  (let* (ret
-         regexp)
+  (let (ret
+	regexp)
     (dolist (elt list)
       (setq regexp (nth 0 elt))
       (when (string-match regexp string)
@@ -716,12 +716,12 @@ Return:
   string     type string
   symbol     if real mode found in first line -*- ..-*-
   nil"
-  (let* ( ;; these are already set
-         (id     ti::id--global-buffer-first-line)
-         (ext    ti::id--global-buffer-extension)
-         (bname  ti::id--global-buffer-name)
-         el
-         ret)
+  (let ( ;; these are already set
+	(id     ti::id--global-buffer-first-line)
+	(ext    ti::id--global-buffer-extension)
+	(bname  ti::id--global-buffer-name)
+	el
+	ret)
     (cond
      ((eq type 'extension)
       (if (setq el (assoc ext ti::id--file-extension-alist))
@@ -745,7 +745,7 @@ Return:
 ;;;
 (defun ti::id-test-buffer-content-special ()
   "Check special buffer content."
-  (let* ((text  (memq major-mode '(fundamental-mode text-mode))))
+  (let ((text (memq major-mode '(fundamental-mode text-mode))))
     (cond
      ((and text
            (fboundp 'tinytf-text-format-p)
@@ -833,10 +833,10 @@ References:
   `ti::id--info'            buffer local variable updated during every call."
 
   (interactive)
-  (let* ((funcs ti::id--function-list)
-         ret
-         func
-         doit)
+  (let ((funcs ti::id--function-list)
+	ret
+	func
+	doit)
     (ti::verb)
     ;; .................................................... do lookup? ...
     (setq ret ti::id--info)
