@@ -47,13 +47,15 @@
 ;;{{{ code: Init
 
 (eval-when-compile
-  (require 'backquote)
+  (set (make-local-variable 'byte-compile-dynamic-docstrings) t)
+  (set (make-local-variable 'byte-compile-dynamic) t)
   (autoload 'executable-find "executable")
-  (autoload 'ti::directory-up "tinylib")
+  (autoload 'ti::directory-up "tinylib"))
 
+(eval-and-compile
   (if (not (or (boundp 'xemacs-logo)
                (featurep 'xemacs)))
-      ;; Emacs function, but it's buried and not published.
+      ;; Emacs function, but it is not published.
       (autoload 'w32-system-shell-p "w32-fns")
     (unless (fboundp 'w32-system-shell-p)
       ;;  Emacs function => compatibility for XEmacs
@@ -61,11 +63,7 @@
         "Tinylib: Emacs an XEmacs compatibility."
         ;;  This is simplistic alternative if the original function
         ;;  is not available.
-        (string-match "cmdproxy"
-                      (or shell-name "")))))
-
-  (set (make-local-variable 'byte-compile-dynamic-docstrings) t)
-  (set (make-local-variable 'byte-compile-dynamic) t))
+        (string-match "cmdproxy" (or shell-name ""))))))
 
 (provide 'tinylibenv)
 
