@@ -1116,16 +1116,15 @@ Format:
      (save-excursion
        (save-match-data                 ;Now check if it was really ok
          (message (ti::read-current-line))
-         (backward-line 1)
+         (forward-line -1)
          (or (looking-at re)
              (progn
                ;;  skip empty lines
                (while (and (not (bobp))
                            (not (input-pending-p))
                            (looking-at "^[ \t]*$"))
-                 (backward-line 1))
+                 (forward-line -1))
                (message (ti::read-current-line))
-
                (when (and
                       (not (input-pending-p))
                       ;; Same indentation still

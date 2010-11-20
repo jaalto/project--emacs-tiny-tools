@@ -3185,7 +3185,7 @@ TOPIC-HEADING  does not end to cr/lf
 TEXT-DATA      ends to cr/lf"
   (flet ((context-min (point lines)
                       (goto-char point)
-                      (backward-line lines)
+                      (forward-line (- lines))
                       (point))
          (context-max (point lines)
                       (goto-char point)

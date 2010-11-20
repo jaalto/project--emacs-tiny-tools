@@ -1,5 +1,7 @@
 2010-11-20 Sat  Jari Aalto  <jari.aalto@cante.net>
 
+	Replace all `backward-line' command to `forward-line' equivalent.
+
 	* tiny/tinyperl.el (tinyperl-perldoc-1): Add let* back.
 
 	* tiny/tinypage.el (tinypage-renumber-forward): Add let* back.
@@ -126,6 +128,10 @@
 	(radix): Change `mapcar' to `mapc'.
 	(with-buffer-modified): Restore macro back from older revision.
 	Update to use `gensym' and `unwind-protect' for non-local exists.
+	(turn-on-font-lock-mode): Restore from previous revision.
+	(turn-off-font-lock-mode): Restore from previous revision.
+	(turn-on-auto-fill-mode): Restore from previous revision.
+	(turn-off-auto-fill-mode): New.
 
 	* tiny/tinylibw.el: New. Move code from tinylibb.el
 

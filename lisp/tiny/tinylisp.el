@@ -5994,7 +5994,7 @@ Optionally goes BACK."
       (terpri))
     (tinylisp-with-current-buffer buffer
                                   (save-excursion
-                                    (backward-line 1)
+                                    (forward-line -1)
                                     (message (ti::read-current-line))))))
 
 ;;}}}

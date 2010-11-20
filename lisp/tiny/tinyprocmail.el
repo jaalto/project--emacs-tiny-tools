@@ -456,7 +456,7 @@
 
 (require 'tinylibm)
 
-(defconst tinyprocmail--version-time "2010.1119.2130"
+(defconst tinyprocmail--version-time "2010.1120.2052"
   "*Version of last edit.")
 
 (eval-and-compile
@@ -1331,7 +1331,7 @@ This checks if the actions line is ok."
     ;;  - Eat all newlines and comments backward
     (setq point (point))
     (if (tinyprocmail-recipe-start-p)
-        (backward-line 1))
+        (forward-line -1))
     (when (tinyprocmail-skip-comments-backward)
       (if (tinyprocmail-condition-line-p)
           (forward-line 1))
@@ -1367,7 +1367,7 @@ This checks if the actions line is ok."
                 (looking-at regexp))
       (setq done t)
       (if backward
-          (backward-line 1)
+          (forward-line -1)
         (forward-line 1)))
     (when done
       (if backward
@@ -2134,7 +2134,7 @@ info, ! -oi, may be unnecessary. It's default in New prcomail.")
 ;;;;   (ti::d! (point) brace-p  (ti::read-current-line))
       (cond
        ((tinyprocmail-recipe-start-p)
-        (backward-line 1))
+        (forward-line -1))
        ((null brace-p)
         ;;   | recipe \\
         ;;     continues
