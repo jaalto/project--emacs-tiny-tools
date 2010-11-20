@@ -2511,24 +2511,24 @@ TinyPerl: Pod::Checker.pm is not known to this Perl version. @INC trouble?"))
                       (expand-file-name file))
         (run-hooks 'tinyperl--podchecker-after-hook)))
     (when t
-      (let (compilation-error-regexp-alist
-	    ;;  `shell-quote-argument'  does not work here correctly.
-	    ;;  This tackles bash.exe and  Win32 command-com
-	    (quote (if (and (ti::win32-p)
-			    (string-match "cmd\\|command"
-					  shell-file-name))
-		       "\""
-		     "'"))
-	    (cmd (concat
-		  tinyperl--perl-bin
-		  " -MPod::Checker"
-		  " -e"
-		  " "
-		  quote
-		  "podchecker shift, undef, -warnings , q(on)"
-		  quote
-		  " "
-		  (expand-file-name file))))
+      (let* (compilation-error-regexp-alist
+	     ;;  `shell-quote-argument'  does not work here correctly.
+	     ;;  This tackles bash.exe and  Win32 command-com
+	     (quote (if (and (ti::win32-p)
+			     (string-match "cmd\\|command"
+					   shell-file-name))
+			"\""
+		      "'"))
+	     (cmd (concat
+		   tinyperl--perl-bin
+		   " -MPod::Checker"
+		   " -e"
+		   " "
+		   quote
+		   "podchecker shift, undef, -warnings , q(on)"
+		   quote
+		   " "
+		   (expand-file-name file))))
         ;;  Keep the old values and add this regexp.
         ;;  2 = filename, 1 = line number
         ;; *** WARNING: 2 unescaped <> in paragraph at line 1994 in file xxx
