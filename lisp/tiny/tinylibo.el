@@ -9,7 +9,6 @@
 ;; Author:          Jari Aalto
 ;; Maintainer:      Jari Aalto
 ;;
-;; To get information on this program, call M-x tinylibo-version.
 ;; Look at the code with folding.el
 
 ;; COPYRIGHT NOTICE
@@ -56,7 +55,7 @@
 ;;      to make text colored.
 ;;
 ;;      o   This is LIBRARY module, it does nothing on its own.
-;;      o   Offers functions for overlay handling
+;;      o   Contains functions for overlay handling
 
 ;;}}}
 
@@ -70,13 +69,16 @@
 
 (require 'tinylibm)
 
+(defconst tinylibo-version-time "2010.1120.1717"
+  "Latest version number as last modified time.")
+
 (eval-when-compile
   (ti::package-use-dynamic-compilation))
 
 (eval-and-compile
   (ti::overlay-require-macro
     (message "\n\
-tinylibo: ** XEmacs needs overlay.el package; emulation may not work.")
+tinylibo: ** XEmacs needs overlay.el package; activated emulation may not work.")
 
     ;; Idea in setnu.el, note that XEmacs 19.15+ includes an overlay.el
 
@@ -125,36 +127,6 @@ tinylibo: ** XEmacs needs overlay.el package; emulation may not work.")
         (ti::funcall 'extent-list (current-buffer) point)))))
 
 ;;}}}
-;;{{{ setup: -- vars
-
-;;; ....................................................... &v-version ...
-
-(defconst tinylibo-version
-  (substring "$Revision: 2.39 $" 11 15)
-  "Latest version number.")
-
-(defconst tinylibo-version-id
-  "$Id: tinylibo.el,v 2.39 2007/05/01 17:20:45 jaalto Exp $"
-  "Latest modification time and version number.")
-
-;;; ----------------------------------------------------------------------
-;;;
-(defun  tinylibo-version (&optional arg)
-  "Show version information. ARG will instruct to print message to echo area."
-  (interactive "P")
-  (ti::package-version-info "tinylibo.el" arg))
-
-;;; ----------------------------------------------------------------------
-;;;
-(defun  tinylibo-feedback ()
-  "Submit suggestions, error corrections, impressions, anything..."
-  (interactive)
-  (ti::package-submit-feedback "tinylibo.el"))
-
-;;}}}
-
-;;; ########################################################### &funcs ###
-
 ;;{{{ macros
 
 ;;; .......................................................... &macros ...
@@ -192,9 +164,9 @@ Input:
 
 Return:
   ov        overlay or nil"
-  (let* ((ov   (ti::overlay-makec level))
-         prop
-         propv)
+  (let ((ov (ti::overlay-makec level))
+	prop
+	propv)
     (when ov
       (while plist
         (setq prop (nth 0 plist)  propv (nth 1 plist))
