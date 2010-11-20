@@ -87,7 +87,7 @@
 
 (require 'tinylibb)                     ;Backward compatible functions
 
-(defconst tinylibm-version-time "2010.1120.2037"
+(defconst tinylibm-version-time "2010.1120.2057"
   "Latest version number.")
 
 ;;{{{ function tests
@@ -3316,7 +3316,8 @@ name `PACKAGE-PREFIX-submit-bug-report' is derived."
   "In current buffer, run BODY for every 'grep' line.
 Point is set to point-min. The BODY must not change BUFFER's point.
 
-Following variables are bound during loop (lowercase variable names):
+Following variables in lowercase are bound during loop (lowercase
+variable names):
 
    cd GREP-DIR
    GREP-FILE:GREP-LINE:GREP-DATA
@@ -3324,34 +3325,32 @@ Following variables are bound during loop (lowercase variable names):
 This means that you can say this in BODY.
 
    (setq absolute (concat grep-dir grep-file))"
-  (let ((grep-dir (gensym "grep-dir-"))
-	(grep-file (gensym "grep-file-"))
-	(grep-line (gensym "grep-line-"))
-	(grep-data (gensym "grep-data-")))
-    `(with-current-buffer ,buffer
-       (save-excursion
-	 (ti::pmin)
-	 (let ((,grep-dir (and (looking-at "^cd +\\(.*\\)")
-			       (match-string 1)))
-	       ,grep-file
-	       ,grep-line
-	       ,grep-data)
-	   (while (re-search-forward
-		   "^\\([^:\r\n]+\\):\\([0-9]+\\):\\(.*\\)" nil t)
-	     (setq ,grep-file (match-string 1)
-		   ,grep-line (match-string 2)
-		   ,grep-data (match-string 3))
-	     (when ,grep-line
-	       (setq ,grep-line (string-to-number ,grep-line)))
-	     (beginning-of-line)
-	     ;;  skip over
-	     ;;
-	     ;;   cd /usr/lib/perl5/5.6.1/pods/
-	     ;;   grep finished (matches found) at Tue Jul 23 17:39:21
-	     ;;
-	     (unless (looking-at "^cd \\|^[^ \t\n\r]+ +finished")
-	       ,@body)
-	     (forward-line 1)))))))
+  `(with-current-buffer ,buffer
+     (save-excursion
+       (ti::pmin)
+       (let ((grep-dir (and (looking-at "^cd +\\(.*\\)")
+			    (match-string 1)))
+	     grep-file
+	     grep-line
+	     grep-data)
+	 (while (re-search-forward
+		 "^\\([^:\r\n]+\\):\\([0-9]+\\):\\(.*\\)" nil t)
+	   (setq grep-file (match-string 1)
+		 grep-line (match-string 2)
+		 grep-data (match-string 3))
+
+	   (when grep-line
+	     (setq grep-line (string-to-number grep-line)))
+
+	   (beginning-of-line)
+	   ;;  skip over
+	   ;;
+	   ;;   cd /usr/lib/perl5/5.6.1/pods/
+	   ;;   grep finished (matches found) at Tue Jul 23 17:39:21
+	   ;;
+	   (unless (looking-at "^cd \\|^[^ \t\n\r]+ +finished")
+	     ,@body)
+	   (forward-line 1))))))
 
 ;;; ----------------------------------------------------------------------
 ;;;

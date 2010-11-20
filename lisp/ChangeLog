@@ -75,7 +75,6 @@
 	(ti::save-with-marker-macro): Rewrite using `gensym'.
 	(ti::save-line-column-macro):  Rewrite using `gensym'.
 	(ti::widen-safe): Rewrite using `gensym'.
-	(ti::grep-output-parse-macro): Rewrite using `gensym'.
 	(ti::load-file-with-wrapper): Add missing macro expansion to `file'.
 	(ti::with-time-this): Rewrite using `gensym'.
 	(ti::narrow-to-paragraph): Rewrite using `gensym'.
