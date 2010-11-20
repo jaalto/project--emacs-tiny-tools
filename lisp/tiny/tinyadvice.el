@@ -928,7 +928,7 @@ Read word from the current pointand put it into grep prompt."
   (around  tinyadvice-disable-write-file-hooks dis)
   "Disable `write-file-hooks' so that file can edited and saved in pure manner."
   ad-do-it
-  (make-local-hook 'write-file-hooks)
+  (add-hook 'write-file-hooks 'ignore nil 'local)
   (setq write-file-hooks nil)
   ;; (setq indent-tabs-mode t)
   (message "TinyAdvice: write-file-hooks is now nil in %s" (buffer-name)))
