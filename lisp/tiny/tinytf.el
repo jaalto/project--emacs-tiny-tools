@@ -1291,7 +1291,7 @@ Mode description:
          (setq auto-fill-inhibit-regexp "^[ \t]+#\\|^[ \t]+[0-9]\\.[0-9] [A-Z]")
          (make-local-variable 'tinytf--saved-auto-fill-function)
          (setq tinytf--saved-auto-fill-function auto-fill-function)
-         (turn-on-auto-fill-mode)
+         (auto-fill-mode 1)
          (setq selective-display            t
                selective-display-ellipses   t
                ;; left-margin               8  ;; for return key
