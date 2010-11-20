@@ -75,12 +75,17 @@
 ;; See http://debbugs.gnu.org/cgi/bugreport.cgi?bug=6750
 
 (eval-and-compile
+  (autoload 'gensym "cl-macd")
   (autoload 'union "cl-seq")
   (autoload 'member* "cl-seq"))
 
+(eval-when-compile
+  (set (make-local-variable 'byte-compile-dynamic-docstrings) t)
+  (set (make-local-variable 'byte-compile-dynamic) t))
+
 (require 'tinylibb)                     ;Backward compatible functions
 
-(defconst tinylibm-version-time "2010.1120.1415"
+(defconst tinylibm-version-time "2010.1120.1557"
   "Latest version number.")
 
 ;;{{{ function tests
@@ -608,40 +613,32 @@ Example:
   (let ((ret  ""))
     (or separator
         (setq separator " "))
-
-    (mapcar
-     (function
-      (lambda (x)
-        (setq ret
-              (concat
-               ret
-
-               (cond
-                ((integerp x)
-                 (format
-                  (concat "%d" separator)
-                  x))
-
-                ((stringp x)
-                 (format
-                  (concat "%s" separator)
-                  x))
-
-                ((symbolp x)
-                 (format
-                  (concat "'%s" separator )
-                  x))
-
-                ((and (not (null x))
-                      (listp x))
-                 (prin1-to-string
-                  (eval ;; -expression
-                   (quote x))))
-                (t
-                 (format
-                  (concat "%s" separator)
-                  x)))))))
-     args)
+    (dolist (x args)
+      (setq ret
+	    (concat
+	     ret
+	     (cond
+	      ((integerp x)
+	       (format
+		(concat "%d" separator)
+		x))
+	      ((stringp x)
+	       (format
+		(concat "%s" separator)
+		x))
+	      ((symbolp x)
+	       (format
+		(concat "'%s" separator )
+		x))
+	      ((and (not (null x))
+		    (listp x))
+	       (prin1-to-string
+		(eval ;; -expression
+		 (quote x))))
+	      (t
+	       (format
+		(concat "%s" separator)
+		x))))))
     ret))
 
 ;;; ----------------------------------------------------------------------
@@ -1663,7 +1660,7 @@ Return:
 This macro could be used to set e.g. hook values to temporarily
 nil.
 
-  (defvar my-hook-list '(find-file-hooks write-fil-hooks))
+  (defvar my-hook-list '(find-file-hook write-fil-hooks))
 
   (defun my-test ()
     (ti::let-transform-nil my-hook-list
@@ -1673,7 +1670,7 @@ nil.
 That is efectively save as you would have written:
 
   (defun my-test ()
-    (let (find-file-hooks
+    (let (find-file-hook
           write-fil-hooks)
       ... do something, the hooks are now suppressed.
       ...))"
@@ -2466,7 +2463,7 @@ VAR is set to following values when ARG is:
    ((boundp 'find-file-hook) ;; Emacs
     (intern "find-file-hook"))
    (t
-    (intern "find-file-hooks"))))
+    (intern "find-file-hook"))))
 
 ;;; ----------------------------------------------------------------------
 ;;;
@@ -2678,15 +2675,15 @@ Return:
 ;;;   For top security like passwords; each element must be zeroed.
 ;;;
 (defun-maybe cl-clrhash-paranoid (hash)
-  "Clear HASH by filling every item and then calling `cl-clrhash'.
+  "Clear HASH by filling every item and then calling `clrhash'.
 This should clear memory location contents."
-  (cl-maphash
+  (maphash
    (lambda (k v)
      (fillarray v ?\0)) ;; propably faster
 ;;;     (loop for i from 0 to (1- (length v))
 ;;;           do (aset v i ?\0))
    hash)
-  (cl-clrhash hash))
+  (clrhash hash))
 
 ;;; ----------------------------------------------------------------------
 ;;; File: elisp,  Node: Creating Symbols
@@ -3065,7 +3062,7 @@ Return:
   buffer pointer"
   (interactive "fFind file: ")
   (let ( ;;   This mode does not run any hooks.
-	(default-major-mode 'fundamental-mode)
+	(major-mode 'fundamental-mode)
 	;;   This makes sure we truly load the file.
 	;;   If there were that file in emacs, emacs won't load it.
 	(fn  (file-name-nondirectory file))
@@ -3074,7 +3071,7 @@ Return:
 	enable-local-eval
 	;; jka doen't use this, but crypt++ does. Prevent running mode hooks
 	;; etc.
-	(find-file-hooks (if (featurep 'crypt++)
+	(find-file-hook (if (featurep 'crypt++)
 			     '(crypt-find-file-hook)))
 	tmp)
     (ti::verb)
