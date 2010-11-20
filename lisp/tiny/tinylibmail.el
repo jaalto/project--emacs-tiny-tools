@@ -3078,7 +3078,7 @@ Returns alist;
      date)
     (list
      (match-string 1 date)
-     (format "%02d" (string-to-int (match-string 2 date)))
+     (format "%02d" (string-to-number (match-string 2 date)))
      (match-string 3 date)
      (format "%02d"
              (ti::month-to-number (match-string 3 date)))

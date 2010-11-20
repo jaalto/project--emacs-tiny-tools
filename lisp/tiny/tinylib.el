@@ -786,7 +786,7 @@ Input:
 Return:
   \"st\", \"nd\", \"th\""
   (if (stringp nbr)
-      (setq nbr (string-to-int nbr)))
+      (setq nbr (string-to-number nbr)))
   (cond
    ((eq nbr 1) "st")
    ((eq nbr 2) "nd")
@@ -826,7 +826,7 @@ Return list form: \( dd mm ...\)
     (setq m  (substring time 4 7))
     (setq mm (or (ti::date-month-to-number m) 0))
     ;;    we remove trailing space  "2 " --> 2 --> "2"
-    (setq dd (string-to-int (substring time 8 10)))
+    (setq dd (string-to-number (substring time 8 10)))
     (setq tt (substring time -13 -8))
     (setq yy (substring time -2 nil))
     (setq yyyy (substring time -4 nil))
@@ -1830,7 +1830,7 @@ When MODE is non-nil
       (if (setq el (assoc idx alist))
           (setq ret (cdr el))))
      (t
-      (if (stringp arg) (setq arg (string-to-int arg)))
+      (if (stringp arg) (setq arg (string-to-number arg)))
       (setq idx arg)
       (if (setq el (rassq idx alist))
           (setq ret (car el)))))
@@ -1868,13 +1868,13 @@ In calculation each month is supposed to have 30 days and a year 356 days."
         y2 m2 d2
         ret)
     (string-match re std1)
-    (setq y1 (string-to-int (match-string 1 std1))
-          m1 (string-to-int (match-string 2 std1))
-          d1 (string-to-int (match-string 3 std1)))
+    (setq y1 (string-to-number (match-string 1 std1))
+          m1 (string-to-number (match-string 2 std1))
+          d1 (string-to-number (match-string 3 std1)))
     (string-match re std2)
-    (setq y2 (string-to-int (match-string 1 std2))
-          m2 (string-to-int (match-string 2 std2))
-          d2 (string-to-int (match-string 3 std2)))
+    (setq y2 (string-to-number (match-string 1 std2))
+          m2 (string-to-number (match-string 2 std2))
+          d2 (string-to-number (match-string 3 std2)))
     (if (>= (- d2 d1) 0)                ;day2 is smaller
         (setq ret (- d2 d1))
       (setq ret (- (+ 30 d2) d1))
@@ -1959,7 +1959,7 @@ Return:
     (when m
       (setq mm (format "%02d" (ti::date-month-to-number m))))
     (when dd
-      (setq dd (format "%02d" (string-to-int dd))))
+      (setq dd (format "%02d" (string-to-number dd))))
     (list yyyy mm dd tt wd m tz)))
 
 ;;}}}
@@ -2473,7 +2473,7 @@ Return:
               rest (match-string-no-properties 3))))
       (when line
         (if (string-match "^[0-9]+$" line)
-            (setq line (string-to-int line))
+            (setq line (string-to-number line))
           (setq line nil)))
       (when file
         (list file line rest)))))
@@ -3230,14 +3230,14 @@ Return:
                          (t ;; interactive
                           (if (eq 0 (length line))
                               1
-                            (string-to-int line)))))
+                            (string-to-number line)))))
          (factor        (cond
                          ((integerp grow)
                           grow)
                          (t
                           (if (eq 0 (length grow))
                               1
-                            (string-to-int grow)))))
+                            (string-to-number grow)))))
          (digits        (ti::digit-length count))
          ;;  Select "02d" when numbers < 100
          ;;  Otw, select "digits" len.
@@ -3398,7 +3398,7 @@ Prefix ARG is the increment value. Defaults to 1."
     (beginning-of-line)
     (while (re-search-forward "[0-9]+" (marker-position mark) 1)
       (setq len (length (match-string 0)))
-      (setq num (string-to-int (match-string 0)))
+      (setq num (string-to-number (match-string 0)))
       ;;  E.g. 0001 --> 0002
       (setq out (format (concat "%0" (number-to-string len) "d")
                         (+ increment num)))
@@ -3823,7 +3823,7 @@ Return:
   (let ((msg (count-matches "\\w*" beg end)))
     (when (and msg
                (string-match "\\([0-9]+\\)" msg))
-      (string-to-int msg))))
+      (string-to-number msg))))
 
 ;;; ----------------------------------------------------------------------
 ;;; - This is quite a handy function when you're programming e.g.
@@ -4954,8 +4954,8 @@ Return:
               (numeric
                (setq ret
                      (if reverse
-                         (< (string-to-int elt2)  (string-to-int elt1))
-                       (< (string-to-int elt1)  (string-to-int elt2)))))
+                         (< (string-to-number elt2)  (string-to-number elt1))
+                       (< (string-to-number elt1)  (string-to-number elt2)))))
               (t
                (setq ret
                      (if reverse
@@ -5748,7 +5748,7 @@ if MODE is non-nil, return empty string instead."
   "Return (PATH . LINE-NBR) if path is in format PATH:NBR."
   (let* (line)
     (when (string-match ":\\([0-9]+\\):?[ \t\f]*$" path)
-      (setq line (string-to-int (match-string 1 path)))
+      (setq line (string-to-number (match-string 1 path)))
       (setq path (ti::replace-match 0 "" path))
       (cons path line))))
 
@@ -6199,7 +6199,7 @@ Return:
       (setq host    (match-string 1 command)
             command (match-string 2 command))
       (if (string-match "\\(.*\\):\\([0-9]+\\)" host)
-          (setq port (string-to-int (match-string 2 host))
+          (setq port (string-to-number (match-string 2 host))
                 host (match-string 1 host))))
 ;;;   (ti::d!! "\n" command "HOST" host "PORT" port "TIME" timeout buffer)
     (save-excursion

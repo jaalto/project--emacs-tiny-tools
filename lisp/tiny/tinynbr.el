@@ -184,7 +184,7 @@ Mode description:
                          (setq nbr (match-string 1 nbr)))
                      (if (null reverse)
                          (setq ret (radix nbr ,base))
-                       (setq ret (,sym3 (string-to-int nbr)))))
+                       (setq ret (,sym3 (string-to-number nbr)))))
                    (cond
                     ((null nbr)
                      (message "TinyNbr: Can't find number at current point."))

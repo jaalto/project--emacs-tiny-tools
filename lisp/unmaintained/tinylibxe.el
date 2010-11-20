@@ -33,6 +33,10 @@
 ;;{{{ Install
 
 ;; ........................................................ &t-install ...
+;;
+;; Note: 2010-11-20 This library is obsolete and no longer maintained.
+;; You're free to take over the maintenance. Use at your own risk.
+;;
 ;; Put this file on your Emacs-Lisp `load-path', add following into your
 ;; package that you're currently developing:
 ;;
@@ -46,9 +50,6 @@
 ;;; Commentary:
 
 ;;  Preface 1996
-;;
-;;	Note: 2010-11-20 This library is obsolete and no longer developed.
-;;	You're free to take over the maintenance. Use at your own risk.
 ;;
 ;;      o   This is library, package itself does nothing.
 ;;      o   Compatibility for both Emacsen, XEmacs and Emacs
@@ -90,7 +91,7 @@
 
 (require 'tinylibm)
 
-(defconst tinyliba-version-time "2010.1120.1007"
+(defconst tinyliba-version-time "2010.1120.1617"
   "Latest version number as last modified time.")
 
 ;;{{{ events, window, frames, misc

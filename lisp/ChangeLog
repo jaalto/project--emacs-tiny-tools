@@ -1,12 +1,37 @@
 2010-11-20 Sat  Jari Aalto  <jari.aalto@cante.net>
 
-	* tiny/tinylibm.el (ti::prin1-mapconcat): Change `mapcar' to `dolist'.
+	* tiny/tinylibid.el:
+	(top level): Replace all variables from	*-:* to *--*.
+	Use let* only where needed. Remove folding.el marks. Correct `defconst'
+	to `defvar'.
+	(ti::id-version): Remove.
+	(tinylibid-version-time): New.
+
+	* tiny/tinylibenv.el (ti::executable-find): Change
+	`replace-regexp' to `replace-regexp-in-string'.
+	(w32-system-shell-p): Move inside `eval-and-compile'.
+
+	* tiny/tinylibm.el
+	(top level): Silence byte compiler warnings about CL functions.
+	(ti::prin1-mapconcat): Change `mapcar' to `dolist'.
 	(cl-clrhash-paranoid): Change alias `cl-maphash' to `maphash' and
 	alias `cl-clrhash' to `clrhash'.
 	(ti::find-file-literally): Change obsolete `default-major-mode' to
 	`major-mode'
+	(ti::ck-maybe-activate): Remove.
 
-	* tiny/tinylibck.el: Add dynamic compilation.
+	* tiny/tinylibck.el
+	(top level): Orphan. Add note that the library is no longer
+	maintained. Add dynamic compilation. Replace all variables from
+	*-:* to *--*.
+	(ti::ck-do-p): Convert to new backquote syntax.
+	(ti::ck-get-key-code): Change `set-buffer' to
+	`with-current-buffer'. Change obsolete `string-to-int' to
+	`string-to-number'.
+	(ti::ck-:version-id): Remove.
+	(ti::ck-version): Remove.
+	(ti::ck-submit-feedback): Remove.
+	(tinylick-version-time): New.
 
 	* tiny/tiny-setup.el: Remove tinylibxe.el
 
@@ -32,15 +57,18 @@
 	(tinylisp-autoload-write-loaddefs-file): Use
 	`ti::buffer-remove-whitespace-eol'.
 
-	* tiny/tinylibb.el: Remove w32-* functions. See new "w" library.
+	* tiny/tinylibb.el
+	(top level): Remove w32-* functions. See new "w" library.
 	(radix): Change `mapcar' to `mapc'.
 
 	* tiny/tinylibw.el: New. Move code from tinylibb.el
 
-	* tiny/tinyliba.el: Remove XEmacs support tinylibxe.el.
+	* tiny/tinyliba.el
+	(top level): Remove XEmacs support tinylibxe.el.
 	Add tinylibw.el. Handle broken subr.el::dolist and define proper
 	cl-macs.el::dolist. The bug is still present in 23.2.1 after
-	almost 10 years. See http://debbugs.gnu.org/cgi/bugreport.cgi?bug=7408
+	almost 10 years. See <http://debbugs.gnu.org/cgi/bugreport.cgi?bug=7408>.
+	Remove ti::ck-* autoloads (obsoleted library).
 	(tinyliba-version-time): New.
 
 2010-11-19 Sat  Jari Aalto  <jari.aalto@cante.net>
