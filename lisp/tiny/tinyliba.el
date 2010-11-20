@@ -133,18 +133,23 @@ This function is run only once at tinynyliba.el load."
                 (funcall func 1)))))))
 
 (eval-and-compile
-  (require 'cl)
-
   ;;  TODO: Probably should be gone by now.
   ;;  Long story short: At a time Emacs shipped with crippled cl.el
   ;;  library which broke everything. This check was necessary to
   ;;  regain sane environment.
 
-  (if (string< emacs-version "21")
-      (ti::tmp-cl-library-check))
+  (unless (fboundp 'return)  ;; CL is not loaded yet
+    (autoload 'return "cl-macs" nil nil 'macro)
+    (when (string< emacs-version "24")
+      ;; Broken subr.el::dolist implementation which is not same
+      ;; as cl-macs.el::dolist => Delete sub.el::dolist and arrange
+      ;; Emacs to load it from CL library.
+      ;;
+      ;; See http://debbugs.gnu.org/cgi/bugreport.cgi?bug=7408
+      ;; FIXME: Remove (ti::tmp-cl-library-check)
+      (fmakunbound 'dolist)
+      (autoload 'dolist "cl-macs" "" nil 'macro)))
 
-  ;; defvar silences Byte Compiler
-  (defvar byte-compile-dynamic nil "") ;; Introduced in Emacs 19.29
   (make-local-variable 'byte-compile-dynamic)
   (setq byte-compile-dynamic t))
 
