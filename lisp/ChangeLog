@@ -1,5 +1,28 @@
 2010-11-20 Sat  Jari Aalto  <jari.aalto@cante.net>
 
+	* tiny/tinylibo.el
+	(top level): update function layout; beatify. remove debug.
+	(tinylibo-version): Remove.
+	(tinylibo-version-id): Remove.
+	(tinylibo-version): Remove.
+	(tinylibo-feedback): Remove.
+	(tinylibo-version-time): New.
+	(ti::overlay-get-prop-val): Add 2 missing %s to `error'.
+	(ti::overlay-re-search): Add 3 missing %s to `error'.
+
+	* tiny/tinymail.el (tinymail-make-local-hook-available-p): Remove
+	obsolete function.
+
+	* tiny/tinyadvice.el (find-file-literally): Update `make-local-hook'.
+
+	* tiny/tinylibmail.el (ti::mail-abbrev-get-alist): Change obsolete
+	`pre-abbrev-expand-hook' to `abbrev-expand-functionsa'.
+	(ti::mail-yank): Change `set-buffer' to `with-current-buffer'.
+	(ti::mail-yank): Change `insert-buffer' to `insert-buffer-substring'.
+	(ti::mail-sendmail-reset-send-hooks): Update `make-local-hook'.
+	(ti::mail-whois-parse-records): Optimize strings with macro expansion.
+	Correct let-binding.
+
 	* tiny/tinylibid.el:
 	(top level): Replace all variables from	*-:* to *--*.
 	Use let* only where needed. Remove folding.el marks. Correct `defconst'
