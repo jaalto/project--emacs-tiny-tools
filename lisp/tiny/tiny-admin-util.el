@@ -76,7 +76,6 @@
 ;;          Timing tinylibb,  took     0.011000 secs
 ;;          Timing tinylibm,  took     0.977000 secs
 ;;          Timing tinylib,   took     0.982000 secs
-;;          Timing tinylibxe, took     0.000000 secs
 ;;          Timing tinylibid, took     0.006000 secs
 ;;          Timing tinylibo,  took     0.005000 secs
 ;;          Timing tinylibt,  took     0.011000 secs
@@ -87,7 +86,6 @@
 ;;; Change Log:
 
 ;;; Code:
-
 
 (eval-when-compile
   (load "cl-seq")
