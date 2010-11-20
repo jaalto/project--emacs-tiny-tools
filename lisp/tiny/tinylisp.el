@@ -5557,7 +5557,6 @@ User can't see string echoed otherwise. Optionally RESTORE."
     (ti::bool-toggle tinylisp--syntax-show-mode arg)
     (cond
      (tinylisp--syntax-show-mode
-      ;; (make-local-hook 'post-command-hook)
       (add-hook 'post-command-hook 'tinylisp-syntax-post-command nil 'local)
       (tinylisp-post-command-config))
      (t
@@ -5661,7 +5660,6 @@ VERB                    verbose flag"
          (if (equal arg '(64))
 	     "(RECORDING)"
 	   "")))
-      ;; (make-local-hook 'post-command-hook)
       (add-hook 'post-command-hook
 		'tinylisp-property-post-command
 		nil
