@@ -77,7 +77,7 @@
 
 ;;{{{ setup: -- variables
 
-(defconst tinyliby-version-time "2010.1120.1925"
+(defconst tinyliby-version-time "2010.1120.1927"
   "Latest version number as last modified time.")
 
 (defvar ti::system--describe-symbols-history nil
@@ -366,7 +366,7 @@ References:
       (setq  test-func 'featurep
              kill-func 'unload-feature))
      (t
-      (error "unknown mode" mode)))
+      (error "unknown mode %s" mode)))
     (dolist (var list)
       ;; Test if exist
       (when (funcall test-func var)
