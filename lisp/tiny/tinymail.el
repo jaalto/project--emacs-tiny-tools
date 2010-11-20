@@ -1932,14 +1932,6 @@ If there is 2 or more leading spaces, then the field is considered 'off'."
 
 ;;; ----------------------------------------------------------------------
 ;;;
-(defun tinymail-make-local-hook-available-p ()
-  "Check if `make-local-hook' is really available."
-  (or (ti::xemacs-p)                    ;Always in XEmacs
-      (and (ti::emacs-p)                ;19.30 and up
-           (not (string-match "19.2[0-9]" (emacs-version))))))
-
-;;; ----------------------------------------------------------------------
-;;;
 (defun tinymail-y-or-n-p (message)
   "Ask confirmation for MESSAGE. Accept TAB as yes.
 Setq global variable `tinymail-y-or-n-p' to the result."
