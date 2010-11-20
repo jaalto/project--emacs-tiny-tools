@@ -142,7 +142,7 @@
 
 (require 'tinylibm)
 
-(eval-when-compile (require 'cl))
+;; (eval-when-compile (require 'cl))
 
 (ti::package-defgroup-tiny TinyBuffer tinybuffer-- extensions
   "Changing buffers in current window.
