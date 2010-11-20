@@ -276,9 +276,6 @@ This variable is list of REGEXPS.")
     ("tinylibt"
      "Library for handling text properties."
      ())
-    ("tinylibxe"
-     "Library for Emacs and XEmacs emulation."
-     ())
     ("tinyliby"
      "Library of functions related to Emacs s(y)stem."
      ("defalias"))
