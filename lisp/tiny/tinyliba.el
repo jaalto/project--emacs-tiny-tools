@@ -74,7 +74,7 @@
 
 (provide 'tinyliba)
 
-(defconst tinyliba-version-time "2010.1120.1437"
+(defconst tinyliba-version-time "2010.1120.1622"
   "Latest version number as last modified time.")
 
 (autoload 'with-timeout      "timer"        "" nil 'macro)
@@ -512,7 +512,6 @@ This function is run only once at tinynyliba.el load."
   (autoload 'ti::last-line-p                      "tinylibm" "" nil) ;;defsubst
   (autoload 'ti::buffer-narrowed-p                "tinylibm" "" nil) ;;defsubst
   (autoload 'ti::buffer-empty-p                   "tinylibm" "" nil)
-  (autoload 'ti::ck-maybe-activate                "tinylibm" "" nil)
   (autoload 'ti::register-live-p                  "tinylibm" "" nil) ;;defsubst
   (autoload 'ti::file-dos-p                       "tinylibm" "" nil) ;;defsubst
   (autoload 'ti::space-p                          "tinylibm" "" nil) ;;defsubst
@@ -1230,8 +1229,6 @@ This function is run only once at tinynyliba.el load."
 
   ;;}}}
   ;;{{{ code: Autoload other 'tiny tools'
-
-  (autoload 'ti::ck-advice-control                "tinylibck")
 
   (autoload 'ti::id-info                          "tinylibid")
   (autoload 'ti::id-cnv-txt2comment               "tinylibid")
