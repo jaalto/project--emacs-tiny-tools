@@ -2731,7 +2731,6 @@ returns non-nil."
     (ti::string-syntax-kill-double-quote)
     ;;  Somehow the keywords must be setq after font-lock is turned on
     ;;  to take in effect.
-    ;;
     (turn-on-font-lock-mode)
     (setq font-lock-keywords tinyperl--pod-font-lock-keywords)
     (font-lock-fontify-buffer)
