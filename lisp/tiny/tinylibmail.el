@@ -4127,32 +4127,27 @@ We try to find this string forward and it is not there we add one."
   "Yank message to current point and add optional PREFIX. GNUS/RMAIL."
   (let* (p
          (yb (ti::mail-mail-buffer-name)) ;where is the yank buffer ?
-
          ;;  See this mail is called from GNUS
          ;;
          ;;  - If GNUS isn't loaded, set buf name to nil
-
          (gnus-buf (and (boundp 'gnus-article-buffer)
                         (symbol-value 'gnus-article-buffer)))
-
          ;;  Test if gnus-reply; the buffers are the same
-
          (gnus-r (and gnus-buf
                       (string= gnus-buf yb))))
     (save-excursion
       (setq p (point))
-
       ;;  (mail-yank-original '(4))     ; mimic C-u C-c C-y == no indent
       ;;  - bypass all, see sendmail::mail-yank-original
       ;;    this is more robust, and runs no extra hooks
       ;;  - If in GNUS, the buffer will be *Article*, which is
       ;;    narrowed to headers...widen the buffer before yanking.
-
       (if (null gnus-r)
           (progn                        ; normal mail
             (mail-yank-original '(4)))
-        (save-excursion (set-buffer yb) (widen))
-        (insert-buffer yb))
+        (with-current-buffer yb
+	  (widen))
+        (insert-buffer-substring yb))
       (ti::pmax)
       (delete-blank-lines)
       (if prefix
