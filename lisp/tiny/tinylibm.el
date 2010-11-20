@@ -73,7 +73,7 @@
 
 (require 'tinylibb)                     ;Backward compatible functions
 
-(defconst tinylibm-version-time "2010.1119.2329"
+(defconst tinylibm-version-time "2010.1120.1011"
   "Latest version number.")
 
 ;;{{{ function tests
@@ -350,23 +350,7 @@ b) function's autoload definition matches regular expression RE
 
 In short. Do BODY only if the autoload refer to file
 matching RE. This is useful, if you define your own function that does
-not exist in current Emacs, but may exist in newer releases. Suppose
-following situation.
-
- (if (ti::xemacs-p)
-     ;;  Make a forward declaration. Say it's in library
-     (autoload 'run-at-time \"tinylibxe\"))
-
-in file tinylibxe.el:
-
- (ti::fboundp-check-autoload 'run-at-time \"tinylibxe\"
-
-  ;; XEmacs does not have this, but it somebody made it autoload.
-  ;; The autoload refers to us, so we define the function.
-  ;; If the autoload referred somewhere else, then this form doesn't
-  ;; take in effect. Somebody else has actiated the autoload definition.
-  ;;
-  ...)"
+not exist in current Emacs, but may exist in newer releases."
   `(cond
     ((or (and (fboundp ,function)
                 (ti::autoload-p ,function)
