@@ -573,7 +573,6 @@ buffer are also killed."
        (t
         (error "improper use of tinycache-add-local-hook: no dired/compilation")))
       ;;  force the hook local to buffer
-      ;; (make-local-hook 'kill-buffer-hook)
       (add-hook 'kill-buffer-hook 'tinycache-flush nil 'local)
       ;;  Make sure there are no constants in the hook.
       (setq kill-buffer-hook (delq nil (delq t kill-buffer-hook))))))
