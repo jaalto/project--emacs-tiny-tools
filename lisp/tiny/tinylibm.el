@@ -1498,7 +1498,7 @@ Example:
 	   (push (cons ,key (list ,add)) ,list)
 	 (setq ,list (cdr ,elt))
 	 (push ,add ,list)
-	 (setcdr ,elt ,list))))
+	 (setcdr ,elt ,list)))))
 
 ;;; ----------------------------------------------------------------------
 ;;;
