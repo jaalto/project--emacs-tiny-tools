@@ -226,7 +226,9 @@
 
 (eval-when-compile
   (require 'cl)
-  (require 'advice))
+  (require 'advice)
+  (set (make-local-variable 'byte-compile-dynamic-docstrings) t)
+  (set (make-local-variable 'byte-compile-dynamic) t))
 
 (eval-and-compile
   ;;  Don't require lib package unnecessarily
