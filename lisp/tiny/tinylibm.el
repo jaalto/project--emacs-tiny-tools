@@ -68,12 +68,19 @@
 
 ;;{{{ Load forms
 
-(eval-when-compile
+;; After these autoloads, these following is a bogus warning:
+;;
+;;     Warning: Function `xxxx' from cl package called at runtime
+;;
+;; See http://debbugs.gnu.org/cgi/bugreport.cgi?bug=6750
+
+(eval-and-compile
+  (autoload 'union "cl-seq")
   (autoload 'member* "cl-seq"))
 
 (require 'tinylibb)                     ;Backward compatible functions
 
-(defconst tinylibm-version-time "2010.1120.1011"
+(defconst tinylibm-version-time "2010.1120.1415"
   "Latest version number.")
 
 ;;{{{ function tests
