@@ -205,8 +205,7 @@
         o   Examples: highlighting on/off tabs, Verifying PGP
             fingerprints against trusted list like http://www.uit.no/
         o   UNDO: adjustable stack size. Stack is cleared if
-            stack limit reached (stack 'wraps')
-    ")
+            stack limit reached (stack 'wraps')")
 
 ;;}}}
 ;;{{{ setup: variables
