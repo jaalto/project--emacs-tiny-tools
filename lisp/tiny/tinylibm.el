@@ -75,8 +75,8 @@
   ;;
   ;; See http://debbugs.gnu.org/cgi/bugreport.cgi?bug=6750
   (defvar byte-compile-warnings)
-  (set (make-local-variable 'byte-compile-warnings)
-       '(not cl-functions))
+  (unless (featurep 'xemacs)
+    (set (make-local-variable 'byte-compile-warnings) '(not cl-functions)))
   (set (make-local-variable 'byte-compile-dynamic-docstrings) t)
   (set (make-local-variable 'byte-compile-dynamic) t))
 
@@ -87,7 +87,7 @@
 
 (require 'tinylibb)                     ;Backward compatible functions
 
-(defconst tinylibm-version-time "2010.1120.2057"
+(defconst tinylibm-version-time "2010.1120.2339"
   "Latest version number.")
 
 ;;{{{ function tests
@@ -351,7 +351,7 @@ want to define simple key functions
 
 ;;; ----------------------------------------------------------------------
 ;;;
-(put 'nafboundp 'lisp-indent-function 2)
+(put 'ti::fboundp-check-autoload 'lisp-indent-function 2)
 (defmacro ti::fboundp-check-autoload (function re &rest body)
   "Execute body if certain condition is true.
 
