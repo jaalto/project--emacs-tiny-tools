@@ -68,24 +68,25 @@
 
 ;;{{{ Load forms
 
-;; After these autoloads, these following is a bogus warning:
-;;
-;;     Warning: Function `xxxx' from cl package called at runtime
-;;
-;; See http://debbugs.gnu.org/cgi/bugreport.cgi?bug=6750
-
-(eval-and-compile
-  (autoload 'gensym "cl-macd")
-  (autoload 'union "cl-seq")
-  (autoload 'member* "cl-seq"))
-
 (eval-when-compile
+  ;; 2010-11-20 After these autoloads, these following is a bogus warning:
+  ;;
+  ;;     Warning: Function `xxxx' from cl package called at runtime
+  ;;
+  ;; See http://debbugs.gnu.org/cgi/bugreport.cgi?bug=6750
+  (defvar byte-compile-warnings)
+  (set (make-local-variable 'byte-compile-warnings)
+       '(not cl-functions))
   (set (make-local-variable 'byte-compile-dynamic-docstrings) t)
   (set (make-local-variable 'byte-compile-dynamic) t))
 
+(eval-and-compile
+  (autoload 'gensym  "cl-macs")
+  (autoload 'member* "cl-seq"))
+
 (require 'tinylibb)                     ;Backward compatible functions
 
-(defconst tinylibm-version-time "2010.1120.1557"
+(defconst tinylibm-version-time "2010.1120.1624"
   "Latest version number.")
 
 ;;{{{ function tests
@@ -997,93 +998,6 @@ Return:
       (if (re-search-forward "[^ \n\t]" nil t)
           nil
         'empty))))
-
-;;; ----------------------------------------------------------------------
-;;;
-(defun ti::ck-maybe-activate (&optional type mode message)
-  "Activate keybinding conversion if used Emacs needs it.
-Call `ti::ck-advice-control' with parameter mode if key conversion needed.
-This ensures that binding work in any Emacs (XEmacs and Emacs).
-If you only use STRING bindings only use string notation
-
-    (global-set-key \"\\C-c\\C-f\" ...)
-
-then you don't need this function.
-
-TYPE
-
-    Informs how you have written the keybindings. The 'xemacs binding
-    type is already supported by 19.33+ Emacs releases, but if you want your
-    packages be backward compatible you want to call this functions prior
-    bind definitions. Note: if you call this function with parameter
-    'xemacs and ey definitions being bound are done in Emacs that supports
-    XEmacs style bindings, this function is no-op.
-
-                    # The Control-a binding is stylistically exploded due to
-                    # checkdoc.el
-                    #
-    'emacs          Your bindings are like [?\\C - a] and [f10]
-    'emacs-mouse    You use Emacs specific binding [mouse-1]
-    'xemacs         Your bindings are like [(control ?a)] and [(f10)]
-    'xemacs-mouse   You use XEmacs specific binding [(button1)]
-
-MODE
-
-    nil         You pass this argument bfore you start defining keys
-    'disable    You pass this, when you have finished.
-
-MESSAGE
-
-    Message you want to display if conversion is activated.
-
-Example:
-
-    (ti::ck-maybe-activate 'emacs)        ;; turn conversion on in Xemacs
-    (define-key [f1] 'xxx-function-call)
-    <other key definitions ...>
-    (ti::ck-maybe-activate 'emacs 'disable) ;; conversion off
-
-Recommendation:
-
-    It is recommended that you write using the 'xemacs style, which
-    is also supported in later Emacs releases 19.30+. If you do so,
-    then calling this function is no-op in those Emacsen that support
-    XEmacs style and you save the call to tinyck.el package.
-
-Return:
-
-    t       conversion activated
-    nil"
-  (let* ((emacs-major  (ti::emacs-p))
-         (common   (or (ti::xemacs-p)
-                       (eq 20 emacs-major)
-                       (and
-                        ;; 19.34 Added XEmacs styled binding support
-                        (eq 19 emacs-major)
-                        (> emacs-minor-version 33)))))
-
-    ;;  If there is mouse button bindings, then we have to use the conversion.
-    ;;  Turn off "compatibility" flag between Emacs and XEmacs
-
-    (if (memq type '(xemacs-mouse emacs-mouse))
-        (setq common nil))
-
-;;;    (eval-and-compile (ti::d! type common emacs-major message))
-
-    (unless common
-      (cond
-       ((memq type '(xemacs xemacs-mouse))
-        (when (ti::emacs-p)        ;XEmacs bindings and we're in Emacs
-          (if message (message message))
-          (ti::ck-advice-control mode)
-          t))
-       ((memq type '(emacs emacs-mouse))
-        (when (ti::xemacs-p)       ;Emacs bindings and we're in XEmacs
-          (if message (message message))
-          (ti::ck-advice-control mode)
-          t))
-       (t
-        (error "Unknown type %s %s" type mode))))))
 
 ;;; ----------------------------------------------------------------------
 ;;; See register.el::insert-register
