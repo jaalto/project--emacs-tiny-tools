@@ -137,6 +137,8 @@
 ;;{{{ setup: require
 
 (eval-when-compile
+  (set (make-local-variable 'byte-compile-dynamic-docstrings) t)
+  (set (make-local-variable 'byte-compile-dynamic) t)
   (autoload 'ignore-errors "cl-macs" nil 'macro))
 
 ;;}}}
