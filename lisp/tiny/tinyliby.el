@@ -77,7 +77,7 @@
 
 ;;{{{ setup: -- variables
 
-(defconst tinyliby-version-time "2010.1120.1908"
+(defconst tinyliby-version-time "2010.1120.1912"
   "Latest version number as last modified time.")
 
 (defvar ti::system--describe-symbols-history nil
@@ -110,7 +110,7 @@ nil parameter is also accepted."
 ;;;
 (defun ti::system-load-cleanup (ELT)
   "Remove ELT from `after-load-alist' by replacing entry with nil."
-  (let* (forms)
+  (let (forms)
     (dolist (elt after-load-alist)
       (setq forms (cdr elt))
       (dolist (frm forms)
@@ -122,7 +122,7 @@ nil parameter is also accepted."
 ;;;
 (defun ti::system-load-history-emacs-lisp-files ()
   "Return lisp of known Emacs lisp files in `load-history'."
-  (let* (list)
+  (let (list)
     (dolist (entry load-history)        ;point to functions
       (push (car entry) list))
     list))
@@ -146,11 +146,11 @@ Example of LOAD-HISTORY-ELT:
                   Suppose we search this SYM
   (provide . gnus-undo)  << This package provided the symbols
   ...)"
-  (let* ( ;; require
-         provide
-         item
-         current
-         ret)
+  (let ( ;; require
+	provide
+	item
+	current
+	ret)
     (dolist (elt load-history-elt)
       (cond
        ((ti::listp elt)
@@ -199,7 +199,6 @@ Return:
                       (if (string-match "^[a-z][a-z].*/\\(.*\\)" sfile)
                           (match-string 1)
                         sfile))))
-
     (or (and file
              (or (and (ti::file-name-path-p file)
                       file)
@@ -230,9 +229,9 @@ Note:
 Return:
 
   string     Absolute filename where the symbol was defined."
-  (let* (elt
-         provide
-         file)
+  (let (elt
+	provide
+	file)
     (when (setq elt (ti::system-load-history-where-1 sym))
       (setq file    (car elt)           ;default
             provide (ti::system-load-history-where-exactly sym elt))
@@ -260,7 +259,6 @@ Return:
          fl
          el
          ptr)
-
     (if (null list) nil
       ;;  Search the variables' and funtions' start position in list
       (while (and list
@@ -314,7 +312,7 @@ INPUT:
 ;;;
 (defun ti::system-feature-kill (sym)
   "Kill feature SYM and its `load-history' information permanently."
-  (let* ((name (symbol-name sym)))
+  (let ((name (symbol-name sym)))
     ;;  Load history , dependencies remove
     (if (assoc name load-history)
         (setq load-history (adelete 'load-history name)))
@@ -327,15 +325,12 @@ INPUT:
 ;;;
 (defun ti::system-unload-symbols (list)
   "Unload all variables and functions in LIST of symbols."
-  (mapcar
-   (function
-    (lambda (x)
-      (cond
-       ((fboundp x)
-        (fmakunbound x))
-       ((boundp x)
-        (makunbound x)))))
-   list))
+  (dolist (x list)
+    (cond
+     ((fboundp x)
+      (fmakunbound x))
+     ((boundp x)
+      (makunbound x)))))
 
 ;;; ----------------------------------------------------------------------
 ;;;
@@ -354,8 +349,8 @@ MODE can be
 References:
 
   `ti::system-get-symbols'."
-  (let* (test-func
-         kill-func)
+  (let (test-func
+	kill-func)
     (cond
      ((eq 'var mode)
       (setq  test-func 'boundp
@@ -405,17 +400,14 @@ Return:
       "Complete feature to unload: "
       (ti::list-to-assoc-menu (mapcar 'prin1-to-string features))
       nil 'must-match))))
-
-  (let* (list)
+  (let (list)
     (ti::verb)
-
     (when sym
       (when (setq list  (ti::system-load-history-get sym)) ;get (\var func\) list
         (ti::system-unload 'feature (list sym)) ;feature + load-history clean
         (ti::system-unload 'var     (nth 0 list) )
         (ti::system-unload 'func    (nth 1 list) ))
       (ti::system-feature-kill sym))
-
     (if verb
         (message "Feature now completely unloaded."))))
 
@@ -434,16 +426,14 @@ Input is list of features. Does not check any dependencies between features."
   "Map throught SYMLIST and execute BODY for each hook function.
 You can refer to variables `hook' and `function' in BODY."
   (`
-   (let* (hook-functions)
+   (let (hook-functions)
      (dolist (hook (, symlist))
        (when (boundp hook)
          (setq hook-functions (symbol-value hook))
-
          (if (and (not (ti::bool-p hook-functions))
                   (symbolp hook-functions))
              ;; single function in hook
              (setq hook-functions (list hook-functions)))
-
          (when (listp hook-functions)
            (dolist (function hook-functions)
              (when (and (not (eq function 'lambda)) ;skip lambda notation
@@ -523,7 +513,7 @@ You can supply your own TEST-FORM to cause it drop away certain atoms.
 the current atom is stored in variable 'sym'.
 
 Eg. test-form = '(or (fboundp sym) (boundp sym))"
-  (let* (list)
+  (let (list)
     (mapatoms
      (function
       (lambda (sym)
@@ -549,8 +539,8 @@ Eg. test-form = '(or (fboundp sym) (boundp sym))"
 ;;;
 (defun ti::system-autoload-function-file-list (function-list)
   "Return unique filenames of autoload functions."
-  (let* (list
-         str)
+  (let (list
+	str)
     (dolist (func function-list)
       (when (setq str (inline (ti::function-autoload-file func)))
         (pushnew (match-string 1 str) list :test 'string-equal)))
@@ -576,8 +566,8 @@ Return:
 
   buffer     pointer where documentation is stored."
   (interactive
-   (let* (file
-          feature)
+   (let (file
+	 feature)
      (setq file
            (call-interactively
             (function
@@ -615,17 +605,15 @@ No '%s feature found, are you absolutely sure you have loaded the file? "
         (with-current-buffer file-buffer
           (ti::pmin)
           (while (re-search-forward all-re nil t)
-
             (setq type      (match-string 1)
                   sym-name  (match-string 2)
-
                   ;;  (defvar list)  --> (boundp 'list) = nil !! suprise
                   ;;
                   paren     (and (member type '("defvar" "defconst"))
                                  (looking-at "[ \t]*)"))
                   sym       (intern-soft sym-name)
                   doc       nil)
-            (incf  count)
+            (incf count)
             ;;  print messages for every 10th only, it's too fast to
             ;;  show every symbol...
             (if (and verb
@@ -684,9 +672,9 @@ No '%s feature found, are you absolutely sure you have loaded the file? "
 ;;;
 (defun ti::system-describe-symbols-i-args (&optional arg)
   "Ask interactive arguments for `ti::system-describe-symbols'. ARG is prefix arg."
-  (let* (prompt
-         char
-         ans)
+  (let (prompt
+	char
+	ans)
     ;;  When user calls us without arguments, offer menu to pick
     ;;  search item
     (unless arg
@@ -931,13 +919,14 @@ Return:
 
   buffer        where is ready output"
   (interactive "sRe: ")
-  (let* ((out-buffer    (ti::temp-buffer ti::system--tmp-buffer 'clear))
-         (verb          (or verb (interactive-p)))
+  (let ((out-buffer    (ti::temp-buffer ti::system--tmp-buffer 'clear))
          list
          words
          var
          vlist
          flist)
+  (or verb
+      (setq verb (interactive-p)))
     (setq list
           (ti::buffer-grep-lines
            (concat (or re "")
