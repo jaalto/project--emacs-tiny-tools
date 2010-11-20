@@ -81,7 +81,7 @@
   (set (make-local-variable 'byte-compile-dynamic-docstrings) t)
   (set (make-local-variable 'byte-compile-dynamic) t))
 
-(defconst tinylibb-version-time "2010.1120.1441"
+(defconst tinylibb-version-time "2010.1120.1455"
   "Latest version number as last modified time.")
 
 ;;; ....................................................... &emulation ...
@@ -142,12 +142,12 @@ PAD says to padd hex string with leading zeroes."
         (case-fold-search t)
         (n 0)
         i)
-    (mapcar '(lambda (c)
-               (setq i (string-match (make-string 1 c) chars))
-               (if (>= (or i 65536) base)
-                   (error "%c illegal in base %d" c base))
-               (setq n (+ (* n base) i)))
-            (append str nil))
+    (mapc '(lambda (c)
+	     (setq i (string-match (make-string 1 c) chars))
+	     (if (>= (or i 65536) base)
+		 (error "%c illegal in base %d" c base))
+	     (setq n (+ (* n base) i)))
+	  (append str nil))
     n))
 
 (defun-maybe bin-to-int (str)
