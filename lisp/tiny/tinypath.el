@@ -1297,9 +1297,10 @@
 
 (provide   'tinypath)
 
-(eval-and-compile
+(eval-when-compile
+  (require 'cl))
 
-  (require 'cl)
+(eval-and-compile
 
   (when (string-match "21.3" (emacs-version))
     ;; `dolist' is broken in Emacs 21.3 subr.el. Force loading
