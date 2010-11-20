@@ -682,8 +682,8 @@ References:
 (defun tinypage-renumber-forward (&optional verb)
   "Renumber all found headings forward. VERB."
   (interactive "P")
-  (let ((data   tinypage--renumber-format)
-	(re     (nth 0 data)))
+  (let* ((data tinypage--renumber-format)
+	 (re   (nth 0 data)))
     (ti::verb)
     ;; Well, we do lot of extra work here, because the
     ;; tinypage-renumber-level-forward goes alway to the bottom,
