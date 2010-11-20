@@ -45,9 +45,10 @@
 
 ;;; Code:
 
+(require 'tinyliba)
 (provide 'tinylibw)
 
-(defconst tinylibw-version-time "2010.1120.0802"
+(defconst tinylibw-version-time "2010.1120.0946"
   "Latest version number as last modified time.")
 
 ;;; These functions has been submitted to Emacs 21.2
@@ -84,7 +85,7 @@ For example, you you want to call program ´zgrep' which is not an
       (w32-cygwin-shell-environment
            ...))
 
-Variable `hell-file-name' is locally bound during call."
+Variable `shell-file-name' is locally bound during call."
   `(let ((shell-file-name (format "%s/bin/hash.exe"
                                   (ti::win32-cygwin-p 'use-cache))))
      ,@body))
@@ -92,8 +93,7 @@ Variable `hell-file-name' is locally bound during call."
 ;;; ----------------------------------------------------------------------
 ;;;
 (defun w32-cygwin-mount-table-parse ()
-  ;; "Parse cygwin mount table from current point forward."
-
+  "Parse cygwin mount table from current point forward."
   ;;  Search lines with backslash
   ;;  f:\\u\\bin /usr/bin user binmode
   ;;
@@ -126,7 +126,6 @@ Variable `hell-file-name' is locally bound during call."
             (cygwin (match-string 1)))
         (push (cons dos cygwin)
               list)))
-
     ;;  sort the entries so that the longest mounts come first and
     ;;  last the shortest. This makes a difference when Cygwin paths are
     ;;  converted back to dos:
@@ -134,7 +133,6 @@ Variable `hell-file-name' is locally bound during call."
     ;;    /tmp/other       mapping must be handled before /tmp
     ;;    /tmp
     ;;    ..
-
     (sort list
           (function
            (lambda (a b)
@@ -173,7 +171,7 @@ Return:
 ;;; ----------------------------------------------------------------------
 ;;;
 (defun w32-cygwin-mount-table ()
-  ;; "Return Cygwin mount table '((CYGWIN . DOS) ..) using `mount' command."
+  "Return Cygwin mount table '((CYGWIN . DOS) ..) using `mount' command."
   (when ;; (memq system-type '(ms-dos windows-nt))
       (ti::win32-p)
     ;; specifically request the .exe which must be along PATH
@@ -229,9 +227,9 @@ Return:
 ;;; ----------------------------------------------------------------------
 ;;;
 (defun w32-cygwin-mount-table-set ()
-  ;;   "Run mount.exe and set internal variable `w32-cygwin-mount-table'.
-  ;; You should run this function after you have made a change to
-  ;; cygwin mount points."
+  "Run mount.exe and set internal variable `w32-cygwin-mount-table'.
+You should run this function after you have made a change to
+Cygwin mount points."
   ;;   (interactive)
   (if (ti::win32-p) ;; (memq system-type '(ms-dos windows-nt))
       (setq w32-cygwin-mount-table
@@ -267,7 +265,7 @@ You should not call this function, use `w32-cygwin-path-to-dos'."
 ;;;
 (defun w32-cygwin-path-to-dos (path)
   "Convert cygwin like //c/temp  or /cygdrive/c/temp path to
-  dos notation c:/temp."
+DOS notation c:/temp."
   ;; NOTE for cygwin and bash shell prompt
   ;; We can't require a slash after the drive letter, because
   ;; //c   and  /cygdrive/c   are all top level roots.
@@ -318,13 +316,6 @@ Be sure to call `expand-file-name' before you pass PATH to the function."
    (t
     (error "Cannot convert to cygwin. path is not absolute %s" path))))
 
-;;  Make it defconst, so that rereading tinylibb.el will always update
-;;  the value. If Cygwin is changed, reloading this library.
-
-(setq w32-cygwin-mount-table
-      (if (ti::win32-p) ;; (memq system-type '(ms-dos windows-nt))
-          (w32-cygwin-mount-table)))
-
 (defsubst w32-expand-file-name-for-cygwin (path)
   "Expand PATH to Cygwin notation if Cygwin is present."
   (when (and (string-match "^[A-Za-z]:" path)
@@ -342,5 +333,9 @@ Be sure to call `expand-file-name' before you pass PATH to the function."
          (string-match "^[a-zA-Z]:" path))
     (setq path (w32-cygwin-dos-path-to-cygwin path))))
   path)
+
+(setq w32-cygwin-mount-table
+      (if (memq system-type '(ms-dos windows-nt))
+          (w32-cygwin-mount-table)))
 
 ;; End of file
