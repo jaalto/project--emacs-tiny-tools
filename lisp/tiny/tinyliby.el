@@ -77,7 +77,7 @@
 
 ;;{{{ setup: -- variables
 
-(defconst tinyliby-version-time "2010.1120.1927"
+(defconst tinyliby-version-time "2010.1120.1929"
   "Latest version number as last modified time.")
 
 (defvar ti::system--describe-symbols-history nil
@@ -887,7 +887,7 @@ References:
         (message "Describe symbols: No matches for given criterias.")
       (with-output-to-temp-buffer buffer
         (mapc describe-func (sort sym-list 'string<))
-        (print-help-return-message)))))
+        (help-print-return-message)))))
 
 ;;; ----------------------------------------------------------------------
 ;;;
@@ -912,10 +912,7 @@ Return:
           (ti::buffer-grep-lines
            (concat (or re "")
                    ".*\\(command\\|variable\\|option\\|function\\):")))
-    (save-excursion
-      (set-buffer out-buffer)
-      ;; ... ... ... ... ... ... ... ... ... ... ... ... ... ... ... ...
-
+    (with-current-buffer out-buffer
       (dolist (line list)
         (setq words     (split-string line)
               var       (nth 0 words))
@@ -927,7 +924,6 @@ Return:
          (t
           ;;  problem with line ?
           (insert (concat "#" line "\n")))))
-      ;; ... ... ... ... ... ... ... ... ... ... ... ... ... ... ... ...
       (lisp-mode)
       (insert "(defconst vlist\n  '(\n")
       (setq vlist (nreverse vlist))
