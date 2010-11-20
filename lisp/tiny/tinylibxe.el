@@ -34,8 +34,7 @@
 
 ;; ........................................................ &t-install ...
 ;; Put this file on your Emacs-Lisp `load-path', add following into your
-;; package that you're currently developing. This ensures compatibility
-;; for some extent to XEmacs and Emacs.
+;; package that you're currently developing:
 ;;
 ;;      (require 'tinylibxe)
 
@@ -47,6 +46,9 @@
 ;;; Commentary:
 
 ;;  Preface 1996
+;;
+;;	Note: 2010-11-20 This library is obsolete and no longer developed.
+;;	You're free to take over the maintenance. Use at your own risk.
 ;;
 ;;      o   This is library, package itself does nothing.
 ;;      o   Compatibility for both Emacsen, XEmacs and Emacs
@@ -68,10 +70,10 @@
 ;;
 ;;  What you should know -- keep this in mind
 ;;
-;;      This library's intention is to make it possible to use some package
-;;      that is written only for Emacs. Normally it is not possible to use
-;;      package under another Emacs, because there may be function calls
-;;      that depend on Emacs flavor.
+;;      This library's intention is to make it possible to help using packages
+;;      that are written only for XEmacs. Normally it is not possible to use
+;;      package under another Emacs flavor, because there may be function calls
+;;      differences.
 ;;
 ;;      When this file is loaded, it emulates unknown functions as much as
 ;;      it can. However, it may not be possible to reproduce exactly the
@@ -86,35 +88,11 @@
 
 ;;; Code:
 
-;;{{{ setup: require
-
 (require 'tinylibm)
 
-;;}}}
-;;{{{ setup: -- version
+(defconst tinyliba-version-time "2010.1120.1007"
+  "Latest version number as last modified time.")
 
-(defconst tinylibxe-version
-  "$Revision: 2.49 $"
-  "Latest version number.")
-
-(defconst tinylibxe-version-id
-  "$Id: tinylibxe.el,v 2.49 2007/05/07 10:50:08 jaalto Exp $"
-  "Latest modification time and version number.")
-
-(defun tinylibxe-version (&optional arg)
-  "version information."
-  (interactive "P")
-  (ti::package-version-info "tinylibxe.el" arg))
-
-(defun tinylibxe-submit-bug-report ()
-  "Submit bug report."
-  (interactive)
-  (ti::package-submit-bug-report
-   "tinylibxe.el"
-   tinylibxe-version-id
-   '(tinylibxe-version-id)))
-
-;;}}}
 ;;{{{ events, window, frames, misc
 
 (cond
@@ -133,42 +111,47 @@
 
 ;;; From wid-edit.el
 ;;;
-(ti::fboundp-check-autoload 'button-release-event-p "tinylibxe"
-                            ;; XEmacs function missing from Emacs.
-                            (defun button-release-event-p (event)
-                              "Non-nil if EVENT is a mouse-button-release event object."
-                              (and (eventp event)
-                                   (memq (ti::funcall 'event-basic-type event)
-                                         '(mouse-1 mouse-2 mouse-3))
-                                   (or (memq 'click (event-modifiers event))
-                                       (memq  'drag (event-modifiers event))))))
+(ti::fboundp-check-autoload
+ 'button-release-event-p "tinylibxe"
+ ;; XEmacs function missing from Emacs.
+ (defun button-release-event-p (event)
+   "Non-nil if EVENT is a mouse-button-release event object."
+   (and (eventp event)
+	(memq (ti::funcall 'event-basic-type event)
+	      '(mouse-1 mouse-2 mouse-3))
+	(or (memq 'click (event-modifiers event))
+	    (memq  'drag (event-modifiers event))))))
 
-(ti::fboundp-check-autoload  'event-start "tinylibxe"
-                             (defun event-start (event)
-                               "tinylibxe.el"
-                               ;; In Emacs (WINDOW BUFFER-POSITION (X . Y) TIMESTAMP)
-                               (list
-                                (ti::funcall 'event-window event)
-                                (ti::funcall 'event-point event)
-                                (ti::funcall 'posn-x-y event)
-                                (ti::funcall 'event-timestamp event))))
+(ti::fboundp-check-autoload
+ 'event-start "tinylibxe"
+ (defun event-start (event)
+   "tinylibxe.el"
+   ;; In Emacs (WINDOW BUFFER-POSITION (X . Y) TIMESTAMP)
+   (list
+    (ti::funcall 'event-window event)
+    (ti::funcall 'event-point event)
+    (ti::funcall 'posn-x-y event)
+    (ti::funcall 'event-timestamp event))))
 
-(ti::fboundp-check-autoload  'event-x "tinylibxe"
-                             (defun event-x (event)
-                               "tinylibxe.el"
-                               (let* ((data (ti::funcall 'event-start event)))
-                                 (car data))))
+(ti::fboundp-check-autoload
+ 'event-x "tinylibxe"
+ (defun event-x (event)
+   "tinylibxe.el"
+   (let* ((data (ti::funcall 'event-start event)))
+     (car data))))
 
-(ti::fboundp-check-autoload  'event-y "tinylibxe"
-                             (defun event-y (event)
-                               "tinylibxe.el"
-                               (let* ((data (ti::funcall 'event-start event)))
-                                 (cdr data))))
+(ti::fboundp-check-autoload
+ 'event-y "tinylibxe"
+ (defun event-y (event)
+   "tinylibxe.el"
+   (let* ((data (ti::funcall 'event-start event)))
+     (cdr data))))
 
-(ti::fboundp-check-autoload  'posn-x-y "tinylibxe"
-                             (defun posn-x-y (event)
-                               "tinylibxe.el"
-                               (cons (ti::funcall 'event-x event) (ti::funcall 'event-y event))))
+(ti::fboundp-check-autoload
+ 'posn-x-y "tinylibxe"
+ (defun posn-x-y (event)
+   "tinylibxe.el"
+   (cons (ti::funcall 'event-x event) (ti::funcall 'event-y event))))
 
 (when (and (not (fboundp 'frame-parameters)) ;obsolete in 19.14
            (boundp 'frame-properties))
