@@ -77,7 +77,11 @@
 (eval-and-compile
   (autoload 'ti::replace-match "tinylibm"))
 
-(defconst tinylibb-version-time "2010.1120.0801"
+(eval-when-compile
+  (set (make-local-variable 'byte-compile-dynamic-docstrings) t)
+  (set (make-local-variable 'byte-compile-dynamic) t))
+
+(defconst tinylibb-version-time "2010.1120.1441"
   "Latest version number as last modified time.")
 
 ;;; ....................................................... &emulation ...
