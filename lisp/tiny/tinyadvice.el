@@ -96,7 +96,7 @@
 ;;              ;;  font-lock-mode-hook
 ;;              (with-current-buffer
 ;;               buffer
-;;                (turn-on-font-lock-mode))))
+;;                (font-lock-mode 1))))
 ;;
 ;;  Note: XEmacs
 ;;
