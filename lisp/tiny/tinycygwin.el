@@ -92,7 +92,19 @@
 (require 'message)
 
 (eval-when-compile
+  ;; Quiet bogus CL warnings
+  (defvar byte-compile-warnings)
+  (set (make-local-variable 'byte-compile-warnings)
+       '(not cl-functions))
+  (set (make-local-variable 'byte-compile-dynamic-docstrings) t)
+  (set (make-local-variable 'byte-compile-dynamic) t))
+
+(eval-when-compile
   (require 'cl))
+
+(eval-and-compile
+  (autoload 'delete-if "cl-seq")
+  (autoload 'member*   "cl-seq"))
 
 (eval-and-compile
   ;;  Forward declarations
