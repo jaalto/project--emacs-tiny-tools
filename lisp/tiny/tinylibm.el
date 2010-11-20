@@ -87,7 +87,7 @@
 
 (require 'tinylibb)                     ;Backward compatible functions
 
-(defconst tinylibm-version-time "2010.1120.2032"
+(defconst tinylibm-version-time "2010.1120.2034"
   "Latest version number.")
 
 ;;{{{ function tests
@@ -399,7 +399,7 @@ This FORM preserves restriction and excursion with one command."
 	 (setq ,beg (point))
 	 (when (re-search-forward "^[ \t]*$" nil t)
 	   (ti::narrow-safe ,beg (point)
-	     ,@body)))))
+	     ,@body))))))
 
 ;;; ----------------------------------------------------------------------
 ;;; Note that nconc works only if the initial
