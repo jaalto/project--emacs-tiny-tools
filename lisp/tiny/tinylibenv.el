@@ -522,9 +522,10 @@ Input:
            cygwin-root)
       (dolist (path exec-path)
         (when (not (or (string-match (regexp-quote cygwin-root) path)
-                       (string-match (regexp-quote
-                                      (replace-regexp "/" "\\" cygwin-root))
-                                     path)))
+                       (string-match
+			(regexp-quote
+			 (replace-regexp-in-string "/" "\\" cygwin-root))
+			path)))
           (push path list)))))
     (let ((exec-path (nreverse list))) ;; Reverse preserves the order.
       (executable-find program))))
