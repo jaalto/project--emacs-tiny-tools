@@ -81,7 +81,7 @@
   (set (make-local-variable 'byte-compile-dynamic-docstrings) t)
   (set (make-local-variable 'byte-compile-dynamic) t))
 
-(defconst tinylibb-version-time "2010.1120.1903"
+(defconst tinylibb-version-time "2010.1120.2048"
   "Latest version number as last modified time.")
 
 ;;; ....................................................... &emulation ...
@@ -349,6 +349,23 @@ seen my `buffer-read-only'
 	   (if ,read-only
 	       (setq buffer-read-only t)
 	     (setq buffer-read-only nil)))))))
+
+;; FIXME: Emacs 21.3 includes `turn-on-font-lock' (really?)
+(defun-maybe turn-on-font-lock-mode ()
+  "Turn on Font Lock mode."
+  (font-lock-mode 1))
+
+(defun-maybe turn-off-font-lock-mode ()
+  "Turn off Font Lock mode."
+  (font-lock-mode -1))
+
+(defun-maybe turn-on-auto-fill-mode ()
+  "Turn on Auto Fill mode."
+  (auto-fill-mode 1))
+
+(defun-maybe turn-off-auto-fill-mode ()
+  "Turn off Auto Fill mode."
+  (auto-fill-mode -1))
 
 (defun font-lock-mode-maybe (&optional mode check-global)
   "Pass MODE to function `font-lock-mode' only on color display.
