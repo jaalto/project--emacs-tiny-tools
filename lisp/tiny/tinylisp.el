@@ -4169,8 +4169,8 @@ return:
 
  '((type-string . name) ...)"
   (interactive)
-  (let ((re     tinylisp--regexp-function)
-	(buffer tinylisp--buffer-data)
+  (let ((re     tinylisp-:regexp-function)
+	(buffer tinylisp-:buffer-data)
 	(loop   t)
 	list
 	type
@@ -4205,7 +4205,8 @@ return:
 		  (setq func nil)))
 	    (insert (format "%-12s%s%s %-40s %s\n"
 			    (car var)
-			    ;;  Interactive and defsubst? Dangerous combination
+			    ;;  Interactive and defsubst? this is dangerous!
+			    ;;
 			    (if (and str
 				     (string= "defsubst" (car var)))
 				" !" "")
@@ -4214,9 +4215,8 @@ return:
 			    (cdr var)
 			    (or str ""))))
 	  (pop-to-buffer (current-buffer))
-	  (ti::buffer-remove-whitespace-eol
 	  (ti::pmin)
-	  (run-hooks 'tinylisp--find-func-list-hook)))
+	  (run-hooks 'tinylisp-:find-func-list-hook)))
     list))
 
 ;;; ----------------------------------------------------------------------
