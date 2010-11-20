@@ -81,12 +81,13 @@
   (set (make-local-variable 'byte-compile-dynamic) t))
 
 (eval-and-compile
+  (autoload 'defmacro* "cl-macs" "" nil 'macro)
   (autoload 'gensym  "cl-macs")
   (autoload 'member* "cl-seq"))
 
 (require 'tinylibb)                     ;Backward compatible functions
 
-(defconst tinylibm-version-time "2010.1120.2013"
+(defconst tinylibm-version-time "2010.1120.2032"
   "Latest version number.")
 
 ;;{{{ function tests
@@ -391,13 +392,14 @@ This FORM preserves restriction and excursion with one command."
 (put 'ti::narrow-to-paragraph 'edebug-form-spec '(body))
 (defmacro ti::narrow-to-paragraph (&rest body)
   "Narrow to paragraph. Point must be already inside a paragraph."
-  `(let (beg)
-     (when (re-search-backward "^[ \t]*$" nil t)
-       (forward-line 1)
-       (setq beg (point))
-       (when (re-search-forward "^[ \t]*$" nil t)
-         (ti::narrow-safe beg (point)
-           ,@body)))))
+  (let ((beg (gensym "beg-")))
+    `(let (,beg)
+       (when (re-search-backward "^[ \t]*$" nil t)
+	 (forward-line 1)
+	 (setq ,beg (point))
+	 (when (re-search-forward "^[ \t]*$" nil t)
+	   (ti::narrow-safe ,beg (point)
+	     ,@body)))))
 
 ;;; ----------------------------------------------------------------------
 ;;; Note that nconc works only if the initial
@@ -408,7 +410,7 @@ This FORM preserves restriction and excursion with one command."
   "Add to LIST element X. Like nconc, but can also add to empty list.
 Using `nconc' is faster than `append'"
   `(setq ,list
-           (nconc ,list (list ,x))))
+	 (nconc ,list (list ,x))))
 
 ;;; ----------------------------------------------------------------------
 ;;;
@@ -468,14 +470,17 @@ Float time value in seconds is sent to FUNCTION.
 
   (ti::with-time-this '(lambda (time) (message \"Secs %f\" time))
      (sit-for 4))."
-  `(let ((Time-A (current-time))
-	 Time-B
-	 Time-Diff)
-     (prog1
-         (progn ,@body))
-     (setq Time-B (current-time))
-     (setq Time-Diff (ti::date-time-difference Time-B Time-A 'float))
-     (funcall ,function Time-Diff)))
+  (let ((time-a    (gensym "time-a-"))
+	(time-b    (gensym "time-b-"))
+	(time-diff (gensym "time-diff-")))
+    `(let ((,time-a (current-time))
+	   ,time-b
+	   ,time-diff)
+       (prog1
+	   (progn ,@body))
+       (setq ,time-b (current-time))
+       (setq ,time-diff (ti::date-time-difference ,time-b ,time-a 'float))
+       (funcall ,function ,time-diff))))
 
 ;;; ----------------------------------------------------------------------
 ;;;
@@ -907,7 +912,7 @@ Examples:
       '((1 2)(3 4)))
 
   -->  ((2 1) (4 3))"
-  (let ((spec-name (gensym)))
+  (let ((spec-name (gensym "spec-name-")))
     `(mapcar (lambda (,spec-name)
                  (apply ,function-form ,spec-name))
                ,list-form)))
@@ -1253,7 +1258,7 @@ Example:
 
 ;;; ----------------------------------------------------------------------
 ;;;
-(defmacro ti::window-pmax-visible-p ()
+(defsubst ti::window-pmax-visible-p ()
   "Check if the `point-max' is visible in current window."
   (eq (window-end) (point-max)))
 
@@ -1485,13 +1490,15 @@ Example:
 
   -->
   '( (1 . (a b x)) (2 . (c d))))"
-  `(let (EL-T
-	 LIS-T)
-     (if (not (setq EL-T (funcall ,func ,key ,list)))
-         (push (cons ,key (list ,add)) ,list)
-       (setq LIS-T (cdr EL-T))
-       (push ,add LIS-T)
-       (setcdr EL-T LIS-T))))
+  (let ((elt (gensym "elt-"))
+	(list (gensym "list-")))
+    `(let (,elt
+	   ,list)
+       (if (not (setq ,elt (funcall ,func ,key ,list)))
+	   (push (cons ,key (list ,add)) ,list)
+	 (setq ,list (cdr ,elt))
+	 (push ,add ,list)
+	 (setcdr ,elt ,list))))
 
 ;;; ----------------------------------------------------------------------
 ;;;
@@ -1536,7 +1543,6 @@ Return:
 
     (unless (ti::listp (car list))
       (error "Need LIST '( (STRING . SYM) )"))
-
     (cond
      (remove
       (dolist (elt (symbol-value target-list-sym))
@@ -1901,7 +1907,6 @@ the functions although they may already be byte compiled. This will not
 do much harm."
   `(eval-and-compile
      ;;  If not package compiltion in progress....
-     ;;
      (unless (byte-compiling-files-p)
        (dolist (function ,defun-list)
          (byte-compile function) ))))
@@ -1946,7 +1951,7 @@ Recommended usage: (eval-and-compile (ti::package-require-for-emacs ...))."
            ,@body)
        (unless (featurep ,xemacs)
          (require ,xemacs)
-         ,@body ))))
+         ,@body))))
 
 ;;; ----------------------------------------------------------------------
 ;;;
@@ -2292,10 +2297,12 @@ Default is to convert all tabs in STRING with spaces."
 ;;;
 (defmacro ti::keep-lower-order (var1 var2)
   "Keep VAR1 < VAR2."
-  `(let ((MiN (min ,var1 ,var2))
-	 (MaX (max ,var1 ,var2)))
-     (setq ,var1 MiN)
-     (setq ,var2 MaX)))
+  (let ((min (gensym "min-"))
+	(max (gensym "max-")))
+    `(let ((,min (min ,var1 ,var2))
+	   (,max (max ,var1 ,var2)))
+       (setq ,var1 ,min)
+       (setq ,var2 ,max))))
 
 ;;; ----------------------------------------------------------------------
 ;;;
@@ -2322,20 +2329,21 @@ VAR is set to following values when ARG is:
   ;;  The message from XEmacs 21.5 would say:
   ;;  ** evaluating (< nil 1): (wrong-type-argument number-char-or-marker-p nil)
   ;;
-  `(let ((toggle ,arg))
-     (setq ,var
-           (cond
-            ((and (integerp toggle)
-                  (< toggle 1))         ;Any negative value or 0
-             nil)
-            ((integerp toggle)          ;Any positive value
-             t)
-            ((null toggle)
-             (if (null ,var)
-                 t
-               nil))
-            (t
-             nil)))))
+  (let ((toggle (gensym "toggle-")))
+    `(let ((,toggle ,arg))
+       (setq ,var
+	     (cond
+	      ((and (integerp ,toggle)
+		    (< ,toggle 1))         ;Any negative value or 0
+	       nil)
+	      ((integerp ,toggle)          ;Any positive value
+	       t)
+	      ((null ,toggle)
+	       (if (null ,var)
+		   t
+		 nil))
+	      (t
+	       nil))))))
 
 ;;}}}
 
@@ -2455,24 +2463,26 @@ Examples:
   ;;  Get all buffers in `dired-mode'
   (ti::dolist-buffer-list '(eq major-mode 'dired-mode))
 "
-  `(let (OK
-	 BN
-	 return-list)
-     (dolist (buffer  (buffer-list))
-       (setq BN (buffer-name buffer))
-       (when (stringp BN)               ;it's killed if no name
-         (with-current-buffer buffer
-           (when ,test-form
-             (setq OK t)
-             (when ,exclude-form
-               (setq OK nil))
-             (when OK
-               (if (and (null ,temp-buf)
-                        (string-match "^[* ]" BN))
-                   nil
-                 (push BN return-list)
-                 ,@action-form))))))
-     return-list))
+  (let ((ok (gensym "ok-"))
+	(buffer-name (gensym "buffer-name-"))
+	(return-list (gensym "return-list-")))
+    `(let (,ok
+	   ,buffer-name
+	   ,return-list)
+       (dolist (buffer  (buffer-list))
+	 (setq ,buffer-name (buffer-name buffer))
+	 (when (stringp ,buffer-name)               ;it's killed if no name
+	   (with-current-buffer buffer
+	     (when ,test-form
+	       (setq ,ok t)
+	       (when ,exclude-form
+		 (setq ,ok nil))
+	       (when ,ok
+		 (unless (and (null ,temp-buf)
+			      (string-match "^[* ]" ,buffer-name))
+		   (push ,buffer-name ,return-list)
+		   ,@action-form))))))
+       ,return-list)))
 
 ;;; ----------------------------------------------------------------------
 ;;; Emacs erase-buffer doesn't take arguments
