@@ -81,7 +81,7 @@
   (set (make-local-variable 'byte-compile-dynamic-docstrings) t)
   (set (make-local-variable 'byte-compile-dynamic) t))
 
-(defconst tinylibb-version-time "2010.1120.1852"
+(defconst tinylibb-version-time "2010.1120.1903"
   "Latest version number as last modified time.")
 
 ;;; ....................................................... &emulation ...
@@ -335,18 +335,20 @@ seen my `buffer-read-only'
    (set-text-properties 1 10 '(face highlight)))
 
 "
-    (let ((modified  (gensym "modified-"))
+    (let ((modified (gensym "modified-"))
 	  (read-only (gensym "read-only-")))
-      `(unwind-protect
-	   (progn
-	     (setq buffer-read-only nil)
-	     ,@body)
-	 (if ,modified
-	     (set-buffer-modified-p t)
-	   (set-buffer-modified-p nil))
-	 (if ,read-only
-	     (setq buffer-read-only t)
-	   (setq buffer-read-only nil))))))
+      `(let ((,modified (buffer-modified-p))
+	     (,read-only buffer-read-only))
+	 (unwind-protect
+	     (progn
+	       (setq buffer-read-only nil)
+	       ,@body)
+	   (if ,modified
+	       (set-buffer-modified-p t)
+	     (set-buffer-modified-p nil))
+	   (if ,read-only
+	       (setq buffer-read-only t)
+	     (setq buffer-read-only nil)))))))
 
 (defun font-lock-mode-maybe (&optional mode check-global)
   "Pass MODE to function `font-lock-mode' only on color display.
