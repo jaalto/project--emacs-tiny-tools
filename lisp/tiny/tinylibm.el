@@ -87,7 +87,7 @@
 
 (require 'tinylibb)                     ;Backward compatible functions
 
-(defconst tinylibm-version-time "2010.1120.2034"
+(defconst tinylibm-version-time "2010.1120.2037"
   "Latest version number.")
 
 ;;{{{ function tests
@@ -3431,8 +3431,8 @@ is executed if the original buffer had `window-live-p'. (ie. it was visible)
 Use this if you want to e.g. scroll some buffer."
   (let ((original-buffer (gensym "original-buffer-"))
 	(original-window (gensym "original-window-")))
-    `(let ((,original-buffer (current-buffer))
-	   (,original-window (get-buffer-window ,original-buffer)))
+    `(let* ((,original-buffer (current-buffer))
+	    (,original-window (get-buffer-window ,original-buffer)))
        (prog1
 	   (progn
 	     ,@body)
