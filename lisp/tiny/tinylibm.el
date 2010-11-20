@@ -86,7 +86,7 @@
 
 (require 'tinylibb)                     ;Backward compatible functions
 
-(defconst tinylibm-version-time "2010.1120.1624"
+(defconst tinylibm-version-time "2010.1120.1945"
   "Latest version number.")
 
 ;;{{{ function tests
@@ -3424,16 +3424,18 @@ No other values are preserved. Also the `select-window'
 is executed if the original buffer had `window-live-p'. (ie. it was visible)
 
 Use this if you want to e.g. scroll some buffer."
-  `(let ((oRig-Buf (current-buffer))
-	 (oRig-Win (get-buffer-window oRig-Buf)))
-     (prog1
-         (progn
-           ,@body)
-       (set-buffer oRig-Buf)                    ;restore buffer.
-       (when (and (windowp oRig-Win)            ;no window visible
-                  (window-live-p oRig-Win))
-         ;; and the visible window
-         (select-window oRig-Win)))))
+  (let ((original-buffer (gensym "original-buffer-"))
+	(original-window (gensym "original-window-")))
+    `(let ((,original-buffer (current-buffer))
+	   (,original-window (get-buffer-window ,original-buffer)))
+       (prog1
+	   (progn
+	     ,@body)
+	 (set-buffer ,original-buffer)	;restore buffer.
+	 (when (and (windowp ,original-window)            ;no window visible
+		    (window-live-p ,original-window))
+	   ;; and the visible window
+	   (select-window ,original-window))))))
 
 ;;; ----------------------------------------------------------------------
 ;;;
