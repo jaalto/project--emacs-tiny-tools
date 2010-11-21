@@ -5906,13 +5906,13 @@ Return:
   str           full completion
   list          list of completions if FLIST is set.
   nil           not unique"
-  (let* ((type     (cond
-                    ((and (ti::win32-p)
-                          (ti::emacs-type-win32-p)
-                          (string-match "/cygdrive" file-name))
-                     'cygwin)
-                    (t
-                     'emacs)))
+  (let* (;; (type     (cond
+         ;;            ((and (ti::win32-p)
+         ;;                  (ti::emacs-type-win32-p)
+         ;;                  (string-match "/cygdrive" file-name))
+         ;;             'cygwin)
+         ;;            (t
+         ;;             'emacs)))
          (file         (substitute-in-file-name file-name))
          (uncomplete   (file-name-nondirectory file))
          odir
