@@ -5969,7 +5969,6 @@ NO-MSG  if non-nil, do not flash possible choices at current point
          (enable-recursive-minibuffers t)
          all
          tmp
-         dir
          msg)
     ;;  expand-file-name dies if default-directory is nil
     (or default-directory
