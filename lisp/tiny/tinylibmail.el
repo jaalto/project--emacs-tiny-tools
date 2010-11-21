@@ -73,9 +73,10 @@
     (autoload 'mail-abbrevs-setup "mailabbrev")
     (autoload 'build-mail-aliases "mailalias")
     (autoload 'build-mail-abbrevs "mailabbrev")))
-  (autoload 'rmail-msgbeg                       "rmail")
-  (autoload 'rmail-msgend                       "rmail")
-  (autoload 'gnus-group-get-parameter           "gnus"))
+  (autoload 'mail-fetch-field		"mail-utils")
+  (autoload 'rmail-msgbeg		"rmail")
+  (autoload 'rmail-msgend		"rmail")
+  (autoload 'gnus-group-get-parameter	"gnus"))
 
 (eval-when-compile
   (defvar mail-abbrevs)                 ;Silence ByteCompiler
@@ -650,11 +651,10 @@ You can install this function e.g. into
 (defun ti::mail-mail-simple-p ()
   "Check if buffer contain headers belonging to simple \\[mail].
 You can call this only once, just after the buffer is initially created"
-  (require 'mail-utils)
-  (let* ((sub (mail-fetch-field "Subject"))
-         ;;   mail-fetch-field doesn't return nil if field is empty.
-         (to  (mail-fetch-field "to"))
-         (news (mail-fetch-field "Newsgroups")))
+  (let ((sub (mail-fetch-field "Subject"))
+	;;   mail-fetch-field doesn't return nil if field is empty.
+	(to  (mail-fetch-field "to"))
+	(news (mail-fetch-field "Newsgroups")))
     ;;  When you're replying to message in NEWS, RMAIL, the SUBJ and
     ;;  TO fields are already filled.
     ;;
