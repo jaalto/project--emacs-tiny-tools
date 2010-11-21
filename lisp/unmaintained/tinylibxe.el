@@ -91,7 +91,7 @@
 
 (require 'tinylibm)
 
-(defconst tinyliba-version-time "2010.1120.1617"
+(defconst tinyliba-version-time "2010.1121.0005"
   "Latest version number as last modified time.")
 
 ;;{{{ events, window, frames, misc
@@ -107,7 +107,7 @@
   (defalias 'posn-window        'event-window)
   (defalias 'posn-point         'event-point)
   (defalias 'posn-timestamp     'event-timestamp)
-;;;  (defalias 'posn-col-row    ')
+  ;;  (defalias 'posn-col-row    ')
   (defalias 'window-edges       'window-pixel-edges)))
 
 ;;; From wid-edit.el
@@ -177,25 +177,25 @@
   (set-face-background 'region "black"))
 
 (ti::fboundp-check-autoload 'set-background-color "tinylibxe"
-                            (defun set-background-color (colour)
-                              "Tinylibxe. Emacs emulation"
-                              (ti::funcall 'set-face-background 'default colour)))
+  (defun set-background-color (colour)
+    "Tinylibxe. Emacs emulation"
+    (ti::funcall 'set-face-background 'default colour)))
 
 (ti::fboundp-check-autoload 'set-foreground-color "tinylibxe"
-                            (defun set-foreground-color (colour)
-                              "Tinylibxe. Emacs emulation"
-                              (ti::funcall 'set-face-foreground 'default colour)))
+  (defun set-foreground-color (colour)
+    "Tinylibxe. Emacs emulation"
+    (ti::funcall 'set-face-foreground 'default colour)))
 
 (ti::fboundp-check-autoload 'set-cursor-color "tinylibxe"
-                            (defun set-cursor-color (colour)
-                              "Tinylibxe. Emacs emulation"
-                              (ti::funcall 'set-face-foreground 'text-cursor colour)))
+  (defun set-cursor-color (colour)
+    "Tinylibxe. Emacs emulation"
+    (ti::funcall 'set-face-foreground 'text-cursor colour)))
 
 (ti::fboundp-check-autoload 'transient-mark-mode "tinylibxe"
-                            (defun transient-mark-mode (&optional mode)
-                              "Tinylibxe. Emacs emulation"
-                              (interactive)
-                              (set 'zmacs-regions (ti::bool-toggle mode))))
+  (defun transient-mark-mode (&optional mode)
+    "Tinylibxe. Emacs emulation"
+    (interactive)
+    (set 'zmacs-regions (ti::bool-toggle mode))))
 
 ;;}}}
 ;;{{{ dired
@@ -249,12 +249,12 @@
   "Property name to use to set teh begin glyph of an extent.")
 
 (ti::fboundp-check-autoload  'set-overlay-begin-glyph "tinylibxe"
-                             (defun set-overlay-begin-glyph (e g)
-                               "tinylibxe -- Set glyph G in overlay E."
-                               (ti::funcall 'overlay-put e ti:xe-begin-glyph-property g)))
+  (defun set-overlay-begin-glyph (e g)
+    "tinylibxe -- Set glyph G in overlay E."
+    (ti::funcall 'overlay-put e ti:xe-begin-glyph-property g)))
 
 (ti::fboundp-check-autoload  'make-glyph "tinylibxe"
-                             (defalias 'make-glyph 'identity))
+  (defalias 'make-glyph 'identity))
 
 (cond
  ((ti::emacs-p)
@@ -262,13 +262,25 @@
     (defun set-glyph-face (g face)
       "tinylibxe -- Set glyph G to FACE"
       (put-text-property 0 (length g) 'face face g))))
-
  (t
   ;;(defalias 'set-glyph-face 'ignore)
   nil))
 
 ;;}}}
 ;;{{{ misc
+
+;;  XEmacs : replace-in-string
+;;  Included in Emacs 20.4
+(defun-maybe subst-char-in-string (fromchar tochar string &optional inplace)
+  "Replace FROMCHAR with TOCHAR in STRING each time it occurs.
+INPLACE is ignored."
+  (let ((len   (length string))
+        (ret   (copy-sequence string))) ;because 'aset' is destructive
+    (while (> len 0)
+      (if (char-equal (aref string (1- len)) fromchar)
+          (aset ret (1- len) tochar))
+      (decf len))
+    ret))
 
 (when (and nil                          ;Idea only...
            (not (fboundp 'easy-menu-add-item))
@@ -303,37 +315,46 @@
 
 ;; XEmacs  doesn't have 'timer package; but 'itimer
 (ti::fboundp-check-autoload 'run-at-time "tinylibxe"
-                            (defun run-at-time  (time repeat function &rest args)
-                              "tinylibxe -- XEmacs and Emacs Compatibility."
-                              (require 'itimer)
-                              ;;  start-itimer: (name function value &optional restart)
-                              ;;  start-itimer: (NAME FUNCTION VALUE &optional RESTART IS-IDLE WITH-ARGS
-                              ;;                 &rest FUNCTION-ARGUMENTS)
-                              ;;  We can't use following Emacs arguments: ARGS
-                              ;;  (run-at-time TIME REPEAT FUNCTION &rest ARGS)
-                              (ti::funcall
-                               'start-itimer
-                               (cond    ;ARG1 NAME
-                                ((symbolp function)
-                                 (symbol-name function))
-                                (t
-                                 "itimer-with-no-name"))
-                               function              ;ARG2 FUNCTION
-                               (if (integerp repeat) ;ARG3 VALUE
-                                   repeat 10)
-                               (if (integerp repeat) ;ARG4 &optional RESTART
-                                   repeat 10))))
+  (defun run-at-time  (time repeat function &rest args)
+    "tinylibxe -- XEmacs and Emacs Compatibility."
+    (require 'itimer)
+    ;;  start-itimer: (name function value &optional restart)
+    ;;  start-itimer: (NAME FUNCTION VALUE &optional RESTART IS-IDLE WITH-ARGS
+    ;;                 &rest FUNCTION-ARGUMENTS)
+    ;;  We can't use following Emacs arguments: ARGS
+    ;;  (run-at-time TIME REPEAT FUNCTION &rest ARGS)
+    (ti::funcall
+     'start-itimer
+     (cond    ;ARG1 NAME
+      ((symbolp function)
+       (symbol-name function))
+      (t
+       "itimer-with-no-name"))
+     function              ;ARG2 FUNCTION
+     (if (integerp repeat) ;ARG3 VALUE
+	 repeat 10)
+     (if (integerp repeat) ;ARG4 &optional RESTART
+	 repeat 10))))
 
 (ti::fboundp-check-autoload  'cancel-timer "tinylibxe"
-                             (defun cancel-timer (timer)
-                               "tinylibxe -- XEmacs & Emacs Compatibility."
-                               (ti::funcall 'delete-itimer timer)))
+  (defun cancel-timer (timer)
+    "tinylibxe -- XEmacs & Emacs Compatibility."
+    (ti::funcall 'delete-itimer timer)))
 
 ;;}}}
 ;;{{{ advice: code from XEmacs --> Emacs
 
 (when (ti::xemacs-p)
   (require 'advice)
+
+  (unless (string-match "NOERROR" (documentation 'require))
+    (defadvice require (around tinylibxe (feature &optional filename noerror) act)
+      "tinylibxe -- Add support for 3rd parameter NOERROR."
+      (cond
+       ((null noerror)
+	ad-do-it)
+       (t
+	(ignore-errors ad-do-it)))))
 
   ;;  This is same as 'beep'
   ;;  Emacs, subr.el:(defalias 'beep 'ding) ;preserve lingual purity
@@ -349,6 +370,6 @@ with XEmacs."))
 
 ;;}}}
 
-(provide   'tinylibxe)
+(provide 'tinylibxe)
 
 ;;; tinylibxe.el ends here
