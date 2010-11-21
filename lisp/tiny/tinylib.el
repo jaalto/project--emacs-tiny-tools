@@ -8262,7 +8262,7 @@ Input:
    (list
     'name
     (read-from-minibuffer "frame label name: ")))
-  (let* ((frame (or frame (selected-frame))))
+  (let ((frame (or frame (selected-frame))))
     (cond
      ((and (ti::xemacs-p)
            (fboundp 'set-frame-properties))
@@ -8282,7 +8282,7 @@ Input:
 The implementation works differently in various emacs versions.
 
 If GET is non-nil return frame name."
-  (let* ((symbol 'name))
+  (let ((symbol 'name))
     (when (ti::emacs-p)
       ;; somewhere along the line the symbol was renamed to 'title
       ;; #todo: 19.31 - 33, frame, Would someone confirm this?
