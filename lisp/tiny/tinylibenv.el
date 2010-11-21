@@ -388,7 +388,7 @@ functions `ti::os-check-linux-like-p' or `ti::win32-cygwin-p'."
   "Return path if cygwin1.dll is found from `exec-path'.
  USE-CACHE is non-nil, retrieve cached value which is faster."
   (and (ti::win32-p)
-       (ti::win32-cygwin-p-1)))
+       (ti::win32-cygwin-p-1 use-cache)))
 
 ;;; ----------------------------------------------------------------------
 ;;;
