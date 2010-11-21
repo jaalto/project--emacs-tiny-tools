@@ -69,7 +69,7 @@
 
 (require 'tinylibm)
 
-(defconst tinylibo-version-time "2010.1120.1724"
+(defconst tinylibo-version-time "2010.1121.0050"
   "Latest version number as last modified time.")
 
 (eval-when-compile
@@ -493,8 +493,7 @@ Input:
   (let* (buffer-read-only
          (p     (or beg (point)))
          (max   (or end (point-max)))
-         (ovl   (ti::overlay-get-within-area propl propl-t p max))
-         ovx)
+         (ovl   (ti::overlay-get-within-area propl propl-t p max)))
     (or propl
 	(setq propl t))
     (dolist (overlay ovl)
