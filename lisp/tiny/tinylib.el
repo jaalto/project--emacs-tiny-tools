@@ -2597,6 +2597,8 @@ Ignores leading and trailing whitespace."
 (defun ti::buffer-remove-whitespace-eol ()
   "Clear end of line whitespaces from whole buffer."
   (interactive)
+  (require 'whitespace) ;; Define whitespace-trailing-regexp
+  (defvar whitespace-trailing-regexp)
   (whitespace-replace-action
    'delete-region (point-min) (point-max) whitespace-trailing-regexp 1))
 
@@ -5609,7 +5611,7 @@ Unix path handling:
 ;;;
 (defun ti::directory-subdirs (dir)
   "Return directories under DIR."
-  (let* (list)
+  (let (list)
     (when (file-directory-p dir)
       (dolist (elt (directory-files dir 'full))
         (if (file-directory-p elt)
@@ -7210,7 +7212,6 @@ Input:
          list
          args
          func
-	 match
          type
          str
          iact
@@ -7244,7 +7245,7 @@ Input:
       (while (re-search-forward regexp nil t)
         (setq iact nil                  ;interactive flag
               args nil
-	      match (match-string 0)
+	      ;; match (match-string 0)
               type (match-string 1)
               func (match-string 2))
         (when (and func
@@ -7262,48 +7263,48 @@ Input:
 			 (subst-char-in-string
 			  ;;  Convert multiline args to one line.
 			  ?\n ?\ (buffer-substring point (point)) ))))))
-        (if (or (string-match "define.*mode" type)
-		(re-search-forward
-		 "[ \t\n]+([ \t]*interactive"
-		 (save-excursion (end-of-defun) (point))
-		 t))
-            (setq iact "t"))
-        (cond
-         ((null args)
-          (setq args (format ";; %-36s <args not known>\n" func))
-          ((string= args "")
-           (setq args (format ";; %s\n" func)))
-          ((> (length args) 32)
-           (setq args (format ";; %-15s %s\n" func args)))
-          (t
-           (setq args (format ";; %-36s %s\n" func args)))))
-        (push (list func args) list)
-        ;; (autoload FUNCTION FILE &optional DOCSTRING INTERACTIVE TYPE)
-        (setq str (format "(autoload '%-36s %s \"\" %s%s)%s\n"
-                          func
-                          (format "\"%s\"" fn)
-                          (or iact "nil")
-                          (if (string-match "defmacro" type )
-                              " 'macro" "")
-                          (if (string= type "defsubst")
-                              (format ";;%s" type) "")))
-        (ti::append-to-buffer buffer str)
-        (setq iact "t")))
-    (unless no-desc
-      (with-current-buffer buffer
-        (insert "\n")                   ;list arguments for functions.
-        (dolist (elt list)
-          (multiple-value-bind (func args) elt
-            (if (and (stringp args)
-                     (string-match "[a-z]" args))
-                (insert (format ";; %-35s %s\n" func args))
-              (insert (format ";; %s\n" func)))))))
-    (if tmp                          ;We loaded this to Emacs, remove it
-        (kill-buffer tmp))
-    (unless no-show
-      (pop-to-buffer buffer)
-      (ti::pmin))
-    buffer)))
+	  (if (or (string-match "define.*mode" type)
+		  (re-search-forward
+		   "[ \t\n]+([ \t]*interactive"
+		   (save-excursion (end-of-defun) (point))
+		   t))
+	      (setq iact "t"))
+	  (cond
+	   ((null args)
+	    (setq args (format ";; %-36s <args not known>\n" func)))
+	   ((string= args "")
+	    (setq args (format ";; %s\n" func)))
+	   ((> (length args) 32)
+	    (setq args (format ";; %-15s %s\n" func args)))
+	   (t
+	    (setq args (format ";; %-36s %s\n" func args))))
+	  (push (list func args) list)
+	  ;; (autoload FUNCTION FILE &optional DOCSTRING INTERACTIVE TYPE)
+	  (setq str (format "(autoload '%-36s %s \"\" %s%s)%s\n"
+			    func
+			    (format "\"%s\"" fn)
+			    (or iact "nil")
+			    (if (string-match "defmacro" type )
+				" 'macro" "")
+			    (if (string= type "defsubst")
+				(format ";;%s" type) "")))
+	  (ti::append-to-buffer buffer str)
+	  (setq iact "t")))
+      (unless no-desc
+	(with-current-buffer buffer
+	  (insert "\n")                   ;list arguments for functions.
+	  (dolist (elt list)
+	    (multiple-value-bind (func args) elt
+	      (if (and (stringp args)
+		       (string-match "[a-z]" args))
+		  (insert (format ";; %-35s %s\n" func args))
+		(insert (format ";; %s\n" func)))))))
+      (if tmp                          ;We loaded this to Emacs, remove it
+	  (kill-buffer tmp))
+      (unless no-show
+	(pop-to-buffer buffer)
+	(ti::pmin))
+      buffer)))
 
 ;;; ----------------------------------------------------------------------
 ;;;
