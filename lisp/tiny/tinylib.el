@@ -5622,15 +5622,14 @@ Unix path handling:
 ;;;
 (defun ti::directory-unix-man-path-root ()
   "Determine manual page root path. "
-  (let (root)
-    (dolist (try '("/opt/local/man"     ;HP-UX new
-                   "/usr/share/man"     ;HP old
-                   "/usr/man"))         ;Sun and Linux
-      (if (ti::win32-cygwin-p)
-          (setq try (w32-cygwin-path-to-dos try)))
-      (when (and try
-                 (file-directory-p try))
-        (return try)))))
+  (dolist (try '("/opt/local/man"     ;HP-UX new
+		 "/usr/share/man"     ;HP old
+		 "/usr/man"))         ;Sun and Linux
+    (if (ti::win32-cygwin-p)
+	(setq try (w32-cygwin-path-to-dos try)))
+    (when (and try
+	       (file-directory-p try))
+      (return try))))
 
 ;;; ----------------------------------------------------------------------
 ;;;
