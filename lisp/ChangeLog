@@ -1,3 +1,27 @@
+2010-11-21 Sun  Jari Aalto  <jari.aalto@cante.net>
+
+	* tiny/tinylibenv.el (ti::win32-cygwin-p): Send `use-cache' to
+	`ti::win32-cygwin-p-1'.
+
+	* tiny/tinylibb.el (replace-char-in-string): Restore from previous revision.
+
+	* tiny/tinylib.el (ti::package-autoload-create-on-file): Remove unused
+	variable `match'. Correct `cond'. Comment out unused variable `match'.
+	(ti::file-complete-file-name-word): Remove unused variable `dir'.
+	(ti::file-complete-file-name): Comment out unused variable `type'.
+	(ti::directory-unix-man-path-root): Remove unused variable `root'.
+
+	* unmaintained/tinylibxe.el (require): New. Add support for 3rd parameter
+	NOERROR.
+	(count-matches): New. Add support for parameters 2 and 3.
+	(frame-parameter): New.
+
+2010-11-20 Sun  Jari Aalto  <jari.aalto@cante.net>
+
+	* tiny/tinylibm.el: (byte-compile-warnings): Guard against XEmacs.
+	(ti::widen-safe): Remove unused variable `ret'.
+	(ti::find-file-literally): Silence XEmacs Byte Compiler.
+
 2010-11-20 Sat  Jari Aalto  <jari.aalto@cante.net>
 
 	* tiny/tinyirc.el (require): Load cl with 'eval-when-compile'.
