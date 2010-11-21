@@ -87,7 +87,7 @@
 
 (require 'tinylibb)                     ;Backward compatible functions
 
-(defconst tinylibm-version-time "2010.1120.2339"
+(defconst tinylibm-version-time "2010.1120.2347"
   "Latest version number.")
 
 ;;{{{ function tests
@@ -3001,6 +3001,7 @@ Return:
     (ti::verb)
     (or buffer
         (setq buffer (generate-new-buffer fn)))
+    (setq find-file-hook find-file-hook) ;Silence Byte Compiler
     (if (featurep 'crypt++)
         (progn (with-current-buffer (setq tmp (find-file-noselect file))
                  (copy-to-buffer buffer (point-min) (point-max)))
@@ -3533,8 +3534,7 @@ Return:
   (let ((beg		(gensym "beg-"))
 	(end		(gensym "end-"))
 	(end-max	(gensym "end-max-"))
-	(end-wmax	(gensym "end-wmax-"))
-	(ret		(gensym "return-")))
+	(end-wmax	(gensym "end-wmax-")))
     `(let ((,beg     (point-min-marker))
 	   (,end     (point-max-marker))
 	   (,end-max (point-max))
