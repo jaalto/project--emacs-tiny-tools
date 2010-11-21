@@ -89,9 +89,11 @@
 
 ;;; Code:
 
+;; Note: it is safe to ignore Emacs dependant ange-ftp function warnings.
+
 (require 'tinylibm)
 
-(defconst tinyliba-version-time "2010.1121.0005"
+(defconst tinyliba-version-time "2010.1121.0046"
   "Latest version number as last modified time.")
 
 ;;{{{ events, window, frames, misc
@@ -269,6 +271,11 @@
 ;;}}}
 ;;{{{ misc
 
+(defun-maybe frame-parameter (frame parameter)
+  "Return FRAME's value for parameter PARAMETER.
+If FRAME is nil, describe the currently selected frame."
+  (assq parameter (fram-parameters frame)))
+
 ;;  XEmacs : replace-in-string
 ;;  Included in Emacs 20.4
 (defun-maybe subst-char-in-string (fromchar tochar string &optional inplace)
@@ -355,6 +362,23 @@ INPLACE is ignored."
 	ad-do-it)
        (t
 	(ignore-errors ad-do-it)))))
+
+  (unless (string-match "RSTART" (documentation 'count-matches))
+    (defadvice count-matches
+      (around tinylibxe
+	      (regexp &optional rstart rend interactive) act)
+      "tinylibxe -- Add support for RSTART REND. Ignores arg 4."
+      (cond
+       (rend
+	(save-restriction
+	  (narrow-to-region (point) rend)
+	  ad-do-it))
+       (rstart
+	(save-restriction
+	  (narrow-to-region rstart (point-max))
+	  ad-do-it))
+       (t
+	ad-do-it))))
 
   ;;  This is same as 'beep'
   ;;  Emacs, subr.el:(defalias 'beep 'ding) ;preserve lingual purity
