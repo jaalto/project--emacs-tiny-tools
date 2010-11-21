@@ -5269,10 +5269,8 @@ Note:
   (ti::package-require-mail-abbrevs)
   (cond
    ((ti::emacs-p)
-
     (if mail-abbrevs
         (ti::funcall 'mail-abbrevs-setup))
-
     (or mail-abbrevs
         (progn
           (build-mail-aliases)
@@ -5311,16 +5309,13 @@ reuild from scratch."
      (t                                 ;Too bad, this is much slower
       (unless alias-alist
         (setq alias-alist (ti::mail-abbrev-get-alist)))
-
       (save-restriction
         (narrow-to-region beg end) (ti::pmin)
         (while (re-search-forward
                 "^[ \t]+\\|^[ \t]*[\n,][ \t]*\\|:[ \t]*" nil t)
           (when (setq word (ti::buffer-match"[^ \t,\n]+" 0))
-
             (setq mb (match-beginning 0)
                   me (match-end 0))
-
             ;;  Do not count field names, like  "CC:" words
             (when (and (not (string-match ":$" word))
                        ;;  Is this abbrev ?
@@ -5328,12 +5323,10 @@ reuild from scratch."
               (setq exp (cdr exp))      ; Change alias to expansion
               (delete-region mb me)
               (insert exp)
-
               ;;  This isn't very smart formatting, the layout
               ;;  is so that each expansion is on it's own line,
               ;;  no fancy lining up things -- Mail me back
               ;;  with diff to this code if you code nicer one.
-
               (when (looking-at "[ \t]*,") ;put on separate lines
                 (goto-char (match-end 0))
                 (when (not (looking-at "[ \t]*$"))
