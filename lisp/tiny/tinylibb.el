@@ -81,10 +81,14 @@
   (set (make-local-variable 'byte-compile-dynamic-docstrings) t)
   (set (make-local-variable 'byte-compile-dynamic) t))
 
-(defconst tinylibb-version-time "2010.1120.2048"
+(defconst tinylibb-version-time "2010.1121.0014"
   "Latest version number as last modified time.")
 
 ;;; ....................................................... &emulation ...
+
+(defun-maybe replace-char-in-string (ch1 ch2 string)
+  ;;  "Search CH1, change it with CH2 in STRING."
+  (nsubstitute ch1 ch2 string))
 
 (defun-maybe bin-string-to-int (8bit-string)
   "Convert 8BIT-STRING  string to integer."
