@@ -93,7 +93,7 @@
 
 (require 'tinylibm)
 
-(defconst tinyliba-version-time "2010.1121.0046"
+(defconst tinyliba-version-time "2010.1121.0053"
   "Latest version number as last modified time.")
 
 ;;{{{ events, window, frames, misc
@@ -109,6 +109,7 @@
   (defalias 'posn-window        'event-window)
   (defalias 'posn-point         'event-point)
   (defalias 'posn-timestamp     'event-timestamp)
+  (defalias 'help-print-return-message 'print-help-return-message)
   ;;  (defalias 'posn-col-row    ')
   (defalias 'window-edges       'window-pixel-edges)))
 
