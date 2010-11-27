@@ -1584,7 +1584,9 @@ message buffer.")
 ;;;
 (defun tinypath-byte-compile-running-p ()
   "Return non-nil if byte compiling file."
-  (string= (buffer-name) " *Compiler Input*"))
+  (or (string= (buffer-name) " *Compiler Input*")
+      (string-match "batch-byte-compile"
+		    (prin1-to-string command-line-args))))
 
 ;;; ----------------------------------------------------------------------
 ;;; Only some values are recorded as messages to the *Messages* buffer

@@ -1,5 +1,8 @@
 2010-11-27 Sun  Jari Aalto  <jari.aalto@cante.net>
 
+	* tiny/tinypath.el (tinypath-byte-compile-running-p): Add test
+	for `command-line-args'.
+
 	* tiny/tinylib.el (ti::package-autoload-create-on-file): Generate
 	autoload definitions without *.el file name extension.
 
