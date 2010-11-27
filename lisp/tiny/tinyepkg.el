@@ -28,16 +28,12 @@
 ;;  Put this file on your Emacs-Lisp `load-path', add following into your
 ;;  ~/.emacs startup file.
 ;;
-;;      (require 'epackage)
+;;      (require 'tinyepkg)
 ;;
 ;;  You can also use the preferred way: autoload
 ;;
-;;       (autoload 'epackage-manager "epackage" "" t)
-;;       (global-set-key "\C-cP"     'epackage-manager)
-;;
-;;  If you have any questions, use this function to contact author
-;;
-;;       M-x tinynbr-submit-bug-report
+;;       (autoload 'epackage "tinyepkg" "" t)
+;;       (global-set-key "\C-cP" 'epackage)
 
 ;; ..................................................... &t-commentary ...
 ;;; Commentary:
@@ -45,9 +41,9 @@
 ;;  Preface 2009
 ;;
 ;;      Emacs has been around for decades now. Many new version have
-;;      come and gone (18.59, 19.x, 20.x, 21.x, 22.x), There are many
-;;      packages (*.el) that enhance and add new feature e.g. for new
-;;      programming langauges. The typical procedure to add new
+;;      come and gone (18.59, 19.x, 20.x, 21.x, 22.x, 23.x), There are
+;;      many packages (*.el) that enhance and add new feature e.g. for
+;;      new programming langauges. The typical procedure to add new
 ;;      feature to Emacs is:
 ;;
 ;;      o   Find a package at places like
@@ -59,7 +55,7 @@
 ;;      o   Add Emacs Lisp code to the startup file ~/.emacs
 ;;          to arrange loading the package with personal customizations.
 ;;
-;;      That's quite a bit of work for each package; reaching 10 000
+;;      That's quite a bit of work for each package; reaching 1000's
 ;;      out there. Many Linux distributions offer package managers to
 ;;      download and install programs. Debian has *apt-get*, Redhat
 ;;      uses *rpm*, Suse uses *yum* etc. So why not make one for Emacs
@@ -67,32 +63,33 @@
 ;;
 ;;  Epackage - the DVCS packaging system
 ;;
-;;      This packaging system here is called "epackage", short name for
+;;      This packaging system is called "epackage", short name for
 ;;      "Emacs Lisp packages".
 ;;
-;;      This system uses packages that use are available from
+;;      This system uses packages that available in a form of
 ;;      distributed[1] git[2] version control repositories. The
 ;;      traditional packaging methods have relied on archives like
 ;;      *.tar.gz which hold all the code. While it would be possible
 ;;      to develop packaging system using archives, the DVCS offers
-;;      possiblitied that could previously only be dreamt of: 1)
+;;      possiblities that could previously only be dreamt of: 1)
 ;;      efficient downloads; fast, only deltas are transferred 2)
-;;      local demodifications; branch the git repository for your
-;;      changes 3) Helping package authors; have you fixed an error?
-;;      Generate diff straight from the repository. 4) Select version;
-;;      pick stable or unstable version of the package, or downgrade
-;;      to a older version with ease.
+;;      local modifications; users can creaet their own customizations
+;;      easily 3) Helping package authors made easy; have you fixed an
+;;      error? Generate diff straight from the repository 4) Select
+;;      version; pick stable or unstable version of the package, or
+;;      downgrade to a older version with ease.
 ;;
-;;      Before a piece of Emacs Lisp code can be used for
-;;      installation, it must be converted to a git repository and
-;;      made available online. This job can be made by anyne who sets
-;;      up the reposository. It doesn't need to be done by the original
-;;      developer who may not be familiar with the git(1) program or
-;;      version control in general. For more inforamtion about the packaging
-;;      see 'Epackage git repository layout' below.
+;;      Before existing Emacs Lisp code can be used, it must be first
+;;      converted to a git repository and made available online. This
+;;      job can be made by anyne who sets up the reposository. It
+;;      doesn't need to be done by the original developer who may not
+;;      be familiar with the git(1) program or version control in
+;;      general. For more inforamtion about the packaging see
+;;      'Epackage git repository layout' below.
 ;;
 ;;      [1] DVCS = Distributed Version Control System
 ;;          http://en.wikipedia.org/wiki/Distributed_revision_control
+;;
 ;;      [2] http://git-scm.org
 ;;
 ;;  User commands
@@ -131,14 +128,13 @@
 ;;
 ;;      Building the initial list of available packages take some time
 ;;      and this is done via open internet connection. Any install
-;;      command also require open internet connection. The downloaded
-;;      packages
+;;      command also require open internet connection.
 ;;
 ;;  Epackage git repository layout
 ;;
 ;;      The packages are installed under root `epackage-root-directory',
 ;;      which defaults to ~/.emacs.d and ~/.xemacs.d respectively. The
-;;      root directory is organized:
+;;      root directory is organized as follows:
 ;;
 ;;          ROOT
 ;;          |
@@ -147,10 +143,10 @@
 ;;          |
 ;;          |--disabled/
 ;;          |  files from enabled/ are moved here when user chooses to
-;;          |  'unstall' a package. Any code that is changed here is
-;;          |  simply copied back when package is again 'installed'
+;;          |  uninstall a package. Any code that is changed here is
+;;          |  simply copied back when package is again "installed".
 ;;          |
-;;          +--vc/     Version control files
+;;          +--vc/     Version control repositories
 ;;          |  |
 ;;          |  +--<package-one>/
 ;;          |  +--<package-two>/
@@ -158,11 +154,11 @@
 ;;          |
 ;;          +-- ...
 ;;
-;;  Epackage install directory layout
+;;  Epackage version control layout
 ;;
-;;      The git repository's branches are:
+;;      The Git repository branches used are: FIXME (not decided yet)
 ;;
-;;      o   =upstream=, required. Teh unmodified upstream code.
+;;      o   =upstream=, required. The original unmodified upstream code.
 ;;	    Each commit is tagged with label "upstream/YYYY-MM-DD[--VERSION]".
 ;;	    The YYYY-MM-DD is the date of upstream"s release or best
 ;;	    guess and it is accompanyed with "--VERSION" that the
@@ -170,7 +166,7 @@
 ;;	    release date is immediately available e.g. for post
 ;;	    processing and 2) the tags sort nicely by date. And
 ;;	    example: "upstream/2009-12-31--0.3"
-;;      o   =epackage=, required. Branched off from "upstream". Adds directory
+;;      o   =master=, required. Branched off from "upstream". Adds directory
 ;;	    `epackage/'
 ;;      o   =patches=, optional. Patches to latest "upstream* code.
 ;;      o   =master=, required. Branched off from "upstream". The "ready
@@ -185,7 +181,7 @@
 ;;      packaging files. The directory name "epackage" is not
 ;;      configurable. All the files resides under it:
 ;;
-;;          <some-package>
+;;          <some package>
 ;;          |
 ;;          +-- epackage/
 ;;		info			required: The package control file
@@ -199,7 +195,8 @@
 ;;	possibly defining keybindings etc. to make the features
 ;;	immediately available. The 'install' only provides interactive
 ;;	commands in latent `autoload' form which the user can call via
-;;	`M-x'. The 'install' file never modifies the environment.
+;;	`M-x'. The 'install' file never modifies the environment and
+;;	is safe to load.
 ;;
 ;;  File: info
 ;;
@@ -322,7 +319,7 @@
 
 ;;; Code:
 
-(defconst epackage-version-time "2010.1127.1514"
+(defconst epackage-version-time "2010.1127.1527"
   "*Version of last edit.")
 
 (defcustom epackage--load-hook nil
