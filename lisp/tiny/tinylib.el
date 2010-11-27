@@ -7280,7 +7280,8 @@ Input:
 	  ;; (autoload FUNCTION FILE &optional DOCSTRING INTERACTIVE TYPE)
 	  (setq str (format "(autoload '%-36s %s \"\" %s%s)%s\n"
 			    func
-			    (format "\"%s\"" fn)
+			    (format "\"%s\""
+				    (file-name-sans-extension fn))
 			    (or iact "nil")
 			    (if (string-match "defmacro" type )
 				" 'macro" "")

@@ -1,3 +1,17 @@
+2010-11-27 Sun  Jari Aalto  <jari.aalto@cante.net>
+
+	* tiny/tinylib.el (ti::package-autoload-create-on-file): Generate
+	autoload definitions without *.el file name extension.
+
+2010-11-27 Sat  Jari Aalto  <jari.aalto@cante.net>
+
+	* tiny/tinyepkg.el: Update epackage specification.
+
+2010-11-26 Fri  Jari Aalto  <jari.aalto@cante.net>
+
+	* tiny/tinypath.el (tinypath-byte-compile-running-p): Add check for
+	`command-line-args'.
+
 2010-11-21  Jari Aalto  <jari.aalto@cante.net>
 
 	* tiny/tinydebian.el (tinydebian-bug-browse-url-main-interactive):
