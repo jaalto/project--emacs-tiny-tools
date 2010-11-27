@@ -319,7 +319,7 @@
 
 ;;; Code:
 
-(defconst epackage-version-time "2010.1127.1527"
+(defconst epackage-version-time "2010.1127.1529"
   "*Version of last edit.")
 
 (defcustom epackage--load-hook nil
@@ -336,8 +336,8 @@
 
 (eval-and-compile
   (ti::macrof-minor-mode-wizard
-   "epackage-" " Tnbr" "z" "Nbr" 'Tnbr "epackage--"
-   "Simple number conversion minor mode.
+   "epackage-" " Epkg" "z" "Epkg" 'Epackage "epackage--"
+   "Emacs package manager
 
 Mode description:
 
@@ -348,26 +348,13 @@ Mode description:
    "Number conversion mode"
    (list                                ;arg 10
     epackage--mode-easymenu-name
-    ["int to hex"  epackage-int-to-hex  t]
-    ["int to oct"  epackage-int-to-bin  t]
-    ["int to bin"  epackage-int-to-oct  t]
-    "----"
-    ["hex to int"  epackage-hex-to-int  t]
-    ["oct to int"  epackage-oct-to-int  t]
-    ["bin to int"  epackage-bin-to-int  t]
     "----"
     ["Package version"    epackage-version        t]
     ["Package commentary" epackage-commentary     t]
     ["Mode help"   epackage-mode-help   t]
     ["Mode off"    epackage-mode        t])
    (progn
-     (define-key   map "X" 'epackage-hex-to-int)
-     (define-key   map "B" 'epackage-bin-to-int)
-     (define-key   map "O" 'epackage-oct-to-int)
-     (define-key   map "x" 'epackage-int-to-hex)
-     (define-key   map "b" 'epackage-int-to-bin)
-     (define-key   map "o" 'epackage-int-to-oct)
-     (define-key   map "v" 'epackage-version)
+     (define-key map "v"  'epackage-version)
      (define-key map "?"  'epackage-mode-help)
      (define-key map "Hm" 'epackage-mode-help)
      (define-key map "Hc" 'epackage-commentary)
