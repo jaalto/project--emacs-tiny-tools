@@ -191,19 +191,19 @@
 ;;		info			required: The package control file
 ;;		PACKAGE-install.el	required: Code make package available
 ;;		PACKAGE-activate.el	optional: Code to activate package
-;;		PACKAGE-autoloads.el	optional: 'autoload' statements (raw)
+;;		PACKAGE-autoloads.el	optional: all autoload statements (raw)
 ;;		PACKAGE-loaddefs.el	optional: ###autoload statements
 ;;
 ;;	The difference between 'activate' and 'install' is that
-;;	activate modifies current environmenr by turning on modes or
-;;	defining keybindings etc. to make the features immediately
-;;	available. The 'install' only provides interactive commands in
-;;	latent `autoload' form which the user can call via `M-x'. The
-;;	'install' file never modifies environment.
+;;	activate modifies current environment by turning mode on and
+;;	possibly defining keybindings etc. to make the features
+;;	immediately available. The 'install' only provides interactive
+;;	commands in latent `autoload' form which the user can call via
+;;	`M-x'. The 'install' file never modifies the environment.
 ;;
 ;;  File: info
 ;;
-;;      A RFC 822 formatted file (email), which contains information
+;;      A RFC 2822 formatted file (email), which contains information
 ;;      about the package. The minumum required fields are presented
 ;;      below. The header field names are case insensitive. Continued
 ;;      lines must be intended; suggested indentation is one space
@@ -214,64 +214,53 @@
 ;;          Description: <short description max 65 chars>
 ;;           [<long description>]
 ;;
-;;      The *Package* field is the PACKAGE.el or the canonical known
-;;      name in case of bigger packages like 'gnus'. The *Section*
-;;      field is one of the `finder-list-keywords'. The fist line of
-;;      *Description* field should be consise and fit on 65 characters
-;;      in order to display in combined format "PACKAGE -- SHORT
-;;      DESCRIPTION".
+;;      The *Package* field is the PACKAGE part from file name
+;;      package.el or the canonical known name in case of bigger
+;;      packages like "gnus". The *Section* field is one of the
+;;      `finder-list-keywords'. The first line of the *Description*
+;;      field should be consise and fit on maximum line length of 80
+;;      characters in order to display in combined format "PACKAGE --
+;;      SHORT DESCRIPTION".
 ;;
 ;;	The rest of the fields are optional, but highly recommended:
 ;;
+;;          License: <keywords: 'GPL[-VERSION+?]', 'BSD' ...>
 ;;          Depends: <[x]emacs [(>= VERSION)], package ...>
 ;;	    Conflicts: <like Depends field>
 ;;          Status: <kewords; remarks, see below>
 ;;          Homepage: <URL to upstream project page>
-;;          Documentation: <URL to upstream documentation about package>
-;;          License: <keywords: 'GPL[-VERSION+?]', 'BSD' ...>
+;;          Wiki: <URL to emacswiki.org page>
 ;;
 ;;      The upstream's version control information can be given
 ;;      in optional fields. For 'cvs', the Url is the value of CVSROOT.
+;;	No specific command line options are listed in these fields.
 ;;
-;;          Upstream-Email: First Last <address@example.com>[, ...]
-;;          Upstream-Url: <Address to code download page>
-;;          Upstream-Vcs-Type: <'http', 'git', 'bzr', 'hg', 'svn', 'cvs' ...>
-;;          Upstream-Vcs-Url: <URL>
-;;          Upstream-Vcs-Browser: <URL to browseable repository>
-;;          Upstream-Bugs: <URL: email address, web page; M-x function>
+;;          Email: First Last <address@example.com>[, ...]
+;;          Vcs-Type: <'http', 'git', 'bzr', 'hg', 'svn', 'cvs' ...>
+;;          Vcs-Url: <URL>
+;;          Vcs-Browser: <UR; http address to browseable repository>
+;;          Bugs: <URL: email address(es), web page; 'M-x' FUNCTION>
 ;;
-;;      Any other custom field can be inserted using X-*
-;;      header notation:
+;;      Any other custom field can be inserted using `X-*' header
+;;      notation:
 ;;
 ;;          X-Comment: <comment here>
-;;          X-Emacswiki-Url: <URL; if different from Documentation>
+;;          X-Maintainer-Homepage: <URL>
 ;;
-;;      A typical example of the `info' file:
+;;      A typical example of `info' file:
 ;;
 ;;          Package: foo
 ;;          Section: tools
-;;          Homepage: http://example.com/project/foo
-;;          Documentation: http://www.emacswiki.org/FooMode
 ;;          License: GPL-3+
 ;;          Depends: emacs (>= 21)
-;;          Upstream-Vcs-Type: git
-;;          Upstream-Vcs-Url: git@github.org/project/foo/foo.git
+;;          Vcs-Type: git
+;;          Vcs-Url: git@github.org/project/foo/foo.git
+;;          Homepage: http://example.com/project/foo
+;;          Wiki: http://www.emacswiki.org/FooMode
 ;;          Description: <short description>
 ;;            [<longer description>]
 ;;
 ;;  Details of the info file fields
-;;
-;;	For the *Homepage* field, it is adviseable to use 'big' project
-;;      site addresses that don't move; Freshmeat.net, Sourceforge,
-;;      Launchpad, Github etc. The Freshmeat is especially good
-;;      freshmeat.net, because is provides an easy hub to all other
-;;      Open Source projects. User's can quickly browse related
-;;      software and subscribe to project announcements. Freshmeat is
-;;      also easy for the upstream developer to set up.
-;;
-;;	The *Documentation* fiels points to package's user guide. If
-;;	none is available, consider setting a http://www.emacswiki.org
-;;	page whcih only takes couple of minutes.
 ;;
 ;;      The *Depends* field announces if packaage requires particular
 ;;      Emacs flavor, like 'emacs (>= 22)', or if package depends on
@@ -279,24 +268,61 @@
 ;;      guidelines of
 ;;      <http://www.debian.org/doc/debian-policy/ch-relationships.html>.
 ;;
-;;      The rest of the fields are optional. The *License* is
-;;      automatically assumed 'GPL-2+' if the field is missing. The
-;;      valid License abbreviations are taken from page
-;;      <http://wiki.debian.org/CopyrightFormat>.
+;;      For the *Homepage* field, it is adviseable to use 'big' project
+;;      site addresses that don't move; Freshmeat.net, Sourceforge,
+;;      Launchpad, Github etc. The Freshmeat is especially good
+;;      freshmeat.net, because is provides an easy hub to all other
+;;      Open Source projects. User's can quickly browse related
+;;      software and subscribe to project announcements. Freshmeat is
+;;      also easy for the upstream developer to set up. This should
+;;      not be direct link to a volatile personal homepage if an
+;;      alternative exists.
 ;;
-;;      *Upstream-Vcs-Type* field can hold a spcial value 'http',
-;;      which is not a version control scheme, but direct HTTP
-;;      download. An example of an Emacs package hosted directly at
-;;      web page:
+;;      The *License* field is automatically assumed 'GPL-2+' if the
+;;      field is missing. The valid License abbreviations listed
+;;      should follow list <http://wiki.debian.org/CopyrightFormat>.
 ;;
-;;	    Upstream-Vcs-Type: http
-;;          Upstream-Vcs-Url: http://www.emacswiki.org/emacs/download/vline.el
+;;      *Vcs-Type* field is all lowercase; the name of the program. A
+;;      special value 'http', which is not a version control scheme,
+;;      but direct HTTP download location. An example of an Emacs package
+;;      hosted directly at a web page:
+;;
+;;	    Vcs-Type: http
+;;          Vcs-Url: http://www.emacswiki.org/emacs/download/vline.el
+;;
+;;	The *Status* field lists keywords that have unique mening. If
+;;	Value `core-*' marks that the package has been included (or
+;;	will be) in latest [X]Emacs. The field format is explained
+;;	below. Value `unmaintained' means that the original developer
+;;	has vanished or abandoned the project and is no longer
+;;	available for developing the package. Value `broken' means
+;;	that package is broken and does not work in some Emacs version
+;;	(usually latest). The `note' keyword can be used for any kind
+;;	of information. It is adviced that notes are time stamped
+;;	using ISO 8601 YYYY-MM-DD format. A note ends in character
+;;	`;' and can be of any length.
+;;
+;;	    keyword := 'core-emacs'
+;;		       | 'core-xemacs'
+;;		       | 'unmaintained'
+;;		       | 'broken'
+;;		       | 'note' YYYY-MM-DD [COMMENT] ';'
+;;
+;;	And example:
+;;
+;;	    Status: unmaintained
+;;		broken
+;;		note YYYY-MM-DD Doesn't work in Emacs 23.
+;;		See thread http://example.com ;
+;;
+;;	The *Wiki* field points to package'shttp://www.emacswiki.org
+;;	page. If it does not exists, consider creating one.
 
 ;;; Change Log:
 
 ;;; Code:
 
-(defconst epackage-version-time "2010.1119.1337"
+(defconst epackage-version-time "2010.1127.1514"
   "*Version of last edit.")
 
 (defcustom epackage--load-hook nil
