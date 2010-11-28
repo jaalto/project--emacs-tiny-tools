@@ -132,56 +132,50 @@
 ;;
 ;;  Epackage system layout
 ;;
-;;      The packages are installed under root `epackage-root-directory',
-;;      which defaults to ~/.emacs.d and ~/.xemacs.d respectively. The
+;;      The packages are installed under root `epackage--root-directory',
+;;      which defaults to ~/.emacs.d or ~/elisp respectively. The
 ;;      root directory is organized as follows:
 ;;
-;;          ROOT
+;;          epackage
+;;          | epackage-loader.el  ;; activate + installed as one big file.
 ;;          |
-;;          +--enabled/
-;;          |  <package>-xactivate*.el files
+;;          +--activated/
+;;          |  <package>-activate.el files
 ;;          |
-;;          |--disabled/
-;;          |  files from enabled/ are moved here when user chooses to
-;;          |  uninstall a package. Any code that is changed here is
-;;          |  simply copied back when package is again "installed".
+;;          +--installed/
+;;          |  <package>-install.el files
 ;;          |
-;;          +--vc/     Version control repositories
-;;          |  |
-;;          |  +--<package-one>/
-;;          |  +--<package-two>/
-;;          |  +-- ...
-;;          |
-;;          +-- ...
+;;          +--vc/     Packages. The Version control repositories.
+;;             |
+;;             +--<package name>/
+;;             +--<package name2>/
+;;             +-- ...
 ;;
-;;  Epackage version control layout
+;;  Epackage specification
 ;;
-;;      The Git repository branches used are: FIXME (not decided yet)
+;;      The Git repository branches used are:
 ;;
-;;      o   =upstream=, required. The original unmodified upstream code.
-;;	    Each commit is tagged with label "upstream/YYYY-MM-DD[--VERSION]".
-;;	    The YYYY-MM-DD is the date of upstream"s release or best
-;;	    guess and it is accompanyed with "--VERSION" that the
-;;	    upstream used. The ISO 8601 date is needed so that the 1)
-;;	    release date is immediately available e.g. for post
-;;	    processing and 2) the tags sort nicely by date. And
-;;	    example: "upstream/2009-12-31--0.3"
-;;      o   =master=, required. Branched off from "upstream". Adds directory
-;;	    `epackage/'
-;;      o   =patches=, optional. Patches to latest "upstream* code.
-;;      o   =master=, required. Branched off from "upstream". The "ready
-;;	    to use installation". This branch is never used directly.
-;;	    It is a result of merges with other branches: typically
-;;	    "epackage" and sometimes other branches like "patches".
-;;
-;;  Epackage packaging specification
+;;      o   `master', required. Branched off from `upstream'. Adds directory
+;;	    `epackage/'. This contains verything to use the package.
+;;      o   `patches', optional. Patches to `upstream' code.
+;;      o   `upstream', required. The original unmodified upstream code.
+;;	    Releases are tagged with label
+;;	    "upstream/YYYY-MM-DD[--VERSION]". The YYYY-MM-DD is the
+;;	    date of upstream release or best guess and it is
+;;	    accompanied with optional "--VERSION" of the package. Not
+;;	    all packages include version information. The ISO 8601
+;;	    date is needed so that the 1) release date is immediately
+;;	    available e.g. for post processing and 2) the tags sort
+;;	    nicely by date. An example: "upstream/2009-12-31--0.3"
 ;;
 ;;      The used method borrows concepts from the Debian package build
 ;;      system, where a separate control directory is reserved for
 ;;      packaging files. The directory name "epackage" is not
 ;;      configurable. Files in te epackge/ directory include:
 ;;
-;;          <some package>
+;;          <package name>
+;;          |
+;;          +- .giit/			Version control branches (see above)
 ;;          |
 ;;          +-- epackage/
 ;;		info			required: The package control file
@@ -422,13 +416,40 @@
 
 ;;; Code:
 
-(defconst epackage-version-time "2010.1128.1435"
+(defconst epackage-version-time "2010.1128.1727"
   "*Version of last edit.")
 
 (defcustom epackage--load-hook nil
   "*Hook run when file has been loaded."
   :type  'hook
   :group 'Epackage)
+
+(defcustom epackage--root-directory
+  (let (ret)
+    (dolist (elt (list
+		  (if (feturep 'xemacs)
+		      "~/.xemacs.d"
+		    "~/.emacs.d")
+		  "~/elisp"))
+      (if (and elt
+	       (null ret)
+	       (file-directory-p elt))
+	  (setq ret elt)))
+    (cond
+     (ret
+      ret)
+     (t
+      ;; No known package installation root directory
+      (message
+       (concat "Epackage: [ERROR] Can't determine location of lisp packages."
+	       "Please define `epackage--root-directory'.")))))
+  "*Location of lisp files. Typically ~/.emacs.d or ~/elisp.
+Directory should not contain a trailing slash."
+  :type  'directory
+  :group 'Epackage)
+
+(defvar epackage--directory-name "epackage"
+  "Name of package directory under `epackage--root-directory'.")
 
 ;;;###autoload (autoload 'epackage-mode          "epackage" "" t)
 ;;;###autoload (autoload 'turn-on-epackage-mode  "epackage" "" t)
@@ -463,6 +484,18 @@ Mode description:
      (define-key map "Hc" 'epackage-commentary)
      (define-key map "Hv" 'epackage-version))))
 
+(defsubst epackage-directory-name ()
+  "Return package directory.
+Refences:
+  `epackage--package-root-directory'
+  `epackage--directory-name'."
+  (if (and (stringp epackage--root-directory)
+	   (stringp epackage--directory-name))
+      (format "%s/%s"
+	      epackage--root-directory
+	      epackage--directory-name)
+    (error (concat "Epackge: [FATAL] Invalid epackage--root-directory"
+		    " or epackage--directory-name"))))
 
 (add-hook  'epackage--mode-hook 'epackage-mode-define-keys)
 (provide   'epackage)
