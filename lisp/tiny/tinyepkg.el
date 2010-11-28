@@ -188,7 +188,7 @@
 ;;		PACKAGE-autoloads.el	optional: all autoload statements (raw)
 ;;		PACKAGE-install.el	required: Code to make package available
 ;;		PACKAGE-loaddefs.el	required: ###autoload statements
-;;		PACKAGE-uninstall.el	required: to remove package
+;;		PACKAGE-uninstall.el	optional: to remove package
 ;;		PACKAGE-xactivate.el	optional: Code to activate package
 ;;
 ;;	The nanes of the files have been chosen to sort
@@ -218,8 +218,14 @@
 ;;     The *-uninstall.el
 ;;
 ;;	This file does the opposite of *-install.el and *-activate.el
-;;	Provides commands to remove the package as if it has never been
-;;	loaded.
+;;	Runs commands to remove the package as if it has never been
+;;	loaded. Due to the nature of Emacs, it may not be possible to
+;;	completely uninstall the package. The uninstallation usually
+;;	covers undoing the changes to variables like *-hook,
+;;	*-functions and `auto-mode-alist'. The actual symbols (defined
+;;	functions and variables) are not removed. Usually it is more
+;;	practical to just restart Emacs than completely trying undo
+;;	all the effects of a package.
 ;;
 ;;     The *-xactivate.el
 ;;
@@ -407,7 +413,7 @@
 
 ;;; Code:
 
-(defconst epackage-version-time "2010.1128.1101"
+(defconst epackage-version-time "2010.1128.1421"
   "*Version of last edit.")
 
 (defcustom epackage--load-hook nil
