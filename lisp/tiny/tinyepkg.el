@@ -41,10 +41,10 @@
 ;;  Preface 2009
 ;;
 ;;      Emacs has been around for decades now. Many new version have
-;;      come and gone (18.59, 19.x, 20.x, 21.x, 22.x, 23.x), There are
-;;      many packages (*.el) that enhance and add new feature e.g. for
-;;      new programming langauges. The typical procedure to add new
-;;      feature to Emacs is:
+;;      come and gone (18.59 ... 23.x), There are many packages (*.el)
+;;      that enhance and add new feature e.g. for new programming
+;;      langauges. The typical procedure to add new feature to Emacs
+;;      is:
 ;;
 ;;      o   Find a package at places like
 ;;          http://dir.gmane.org/gmane.emacs.sources or
@@ -55,42 +55,44 @@
 ;;      o   Add Emacs Lisp code to the startup file ~/.emacs
 ;;          to arrange loading the package with personal customizations.
 ;;
-;;      That's quite a bit of work for each package; reaching 1000's
-;;      out there. Many Linux distributions offer package managers to
-;;      download and install programs. Debian has *apt-get*, Redhat
-;;      uses *rpm*, Suse uses *yum* etc. So why not make one for Emacs
-;;      as well.
+;;      That's quite a bit of work for each package; reaching
+;;      thousands out there. Many Linux distributions offer package
+;;      managers to download and install programs. Debian has
+;;      *apt-get*, Redhat uses *rpm*, Suse uses *yum* etc. So why not
+;;      make one for Emacs as well.
 ;;
 ;;  Epackage - the DVCS packaging system
 ;;
 ;;      This packaging system is called "epackage", short name for
 ;;      "Emacs Lisp packages".
 ;;
-;;      This system uses packages that available in a form of
+;;      In this system uses the packages are available in a form of
 ;;      distributed[1] git[2] version control repositories. The
-;;      traditional packaging methods have relied on archives like
-;;      *.tar.gz which hold all the code. While it would be possible
-;;      to develop packaging system using archives, the DVCS offers
-;;      possiblities that could previously only be dreamt of: 1)
-;;      efficient downloads; fast, only deltas are transferred 2)
-;;      local modifications; users can creaet their own customizations
-;;      easily 3) Helping package authors made easy; have you fixed an
-;;      error? Generate diff straight from the repository 4) Select
-;;      version; pick stable or unstable version of the package, or
-;;      downgrade to a older version with ease.
+;;      traditional packaging methods (like ELPA[2]) have relied on
+;;      archives like *.tar.gz to hold all the code. In contrast the
+;;      DVCS offers important features over *.tag.gz approach:
 ;;
-;;      Before existing Emacs Lisp code can be used, it must be first
-;;      converted to a git repository and made available online. This
-;;      job can be made by anyne who sets up the reposository. It
-;;      doesn't need to be done by the original developer who may not
-;;      be familiar with the git(1) program or version control in
-;;      general. For more inforamtion about the packaging see
-;;      'Epackage git repository layout' below.
+;;	o   Efficient downloads; fast, only deltas are transferred
+;;	o Local modifications; users can creaet their own customizations
+;;	    easily
+;;	o   Helping package authors made easy; have you fixed an
+;;	    error? Generate diff straight from the repository
+;;	o   Select any version; pick latest or
+;;	    downgrade to a older version with ease.
+;;
+;;      To use a package in this system, it must be first converted
+;;      into a Git repository and made available online. This job can
+;;      be made by anyone who sets up the reposository. It doesn't
+;;      need to be done by the original developer who may not be
+;;      familiar with the git(1) program. For more inforamtion about
+;;      the packaging see "Epackage specification" below.
 ;;
 ;;      [1] DVCS = Distributed Version Control System
 ;;          http://en.wikipedia.org/wiki/Distributed_revision_control
 ;;
 ;;      [2] http://git-scm.org
+;;
+;;	[3] http://www.emacswiki.org/emacs/ELPA
 ;;
 ;;  User commands
 ;;
@@ -115,20 +117,20 @@
 ;;      In this view, supposing the cursor is at [-!-] or inside the
 ;;      package description, the commands are:
 ;;
-;;      o   d, run `dired' on package installation directory
-;;      o   e, edit package 'info'
-;;      o   g, get updated view, needs internet connection.
-;;      o   i, install package
-;;      o   l, list only installed packages
-;;      o   m, mark package (for command install or remove)
-;;      o   n, list only new packages (not-installed)
-;;      p   p, purge package; delete physically from local disk
-;;      o   r, remove package
-;;      o   q, quit; run `bury-buffer'
+;;      o   d, run `dired' on package installation directory.
+;;      o   e, edit package "info".
+;;      o   g, get. Update view, needs internet connection.
+;;      o   i, install package.
+;;      o   l, list only installed packages.
+;;      o   m, mark package (for command install or remove).
+;;      o   n, list only new packages (not-installed).
+;;      p   p, purge package; delete package physically from local disk.
+;;      o   r, remove package. Synonym for uninstall action.
+;;      o   q, quit. Run `bury-buffer'.
 ;;
 ;;      Building the initial list of available packages take some time
-;;      and this is done via open internet connection. Any install
-;;      command also require open internet connection.
+;;      and this is done via open internet connection. Install command
+;;      also requires an open internet connection.
 ;;
 ;;  Epackage system layout
 ;;
@@ -168,14 +170,14 @@
 ;;	    available e.g. for post processing and 2) the tags sort
 ;;	    nicely by date. An example: "upstream/2009-12-31--0.3"
 ;;
-;;      The used method borrows concepts from the Debian package build
-;;      system, where a separate control directory is reserved for
-;;      packaging files. The directory name "epackage" is not
-;;      configurable. Files in te epackge/ directory include:
+;;      The epackage method borrows concepts from the Debian package
+;;      build system where a separate control directory contains
+;;      the needed information. The directory name "epackage" is not
+;;      configurable. Files in pacakge/ directory include:
 ;;
 ;;          <package name>
 ;;          |
-;;          +- .giit/			Version control branches (see above)
+;;          +- .git/			Version control branches (see above)
 ;;          |
 ;;          +-- epackage/
 ;;		info			required: The package control file
@@ -416,7 +418,7 @@
 
 ;;; Code:
 
-(defconst epackage-version-time "2010.1128.1727"
+(defconst epackage-version-time "2010.1128.1816"
   "*Version of last edit.")
 
 (defcustom epackage--load-hook nil
