@@ -241,23 +241,23 @@
 ;;      A RFC 2822 formatted file (email), which contains information
 ;;      about the package. The minumum required fields are presented
 ;;      below. The header field names are case insensitive. Continued
-;;      lines must be intended; suggested indentation is one space
-;;      for easy formatting with any editor.
+;;      lines must be intended; suggested indentation is one space.
+;;      Required fields aer marked with "*" character.
 ;;
-;;	    Package:
-;;          Section: <data | extensions | files | languages | mail | tools | M-x finder-list-keywords>
+;;	    *Package:
+;;          *Section: <data | extensions | files | languages | mail | tools | M-x finder-list-keywords>
 ;;          License: <GPL-[23]+ | BSD | Apache-2.0>
-;;          Depends: emacs (>= 20)
+;;          *Depends: emacs (>= 20)
 ;;          Status: [ core-emacs | unmaintained | broken |
 ;;            note YYYY-MM-DD the code hasn't been touched since 2006 ; ]
-;;          Email:
+;;          *Email:
 ;;          Bugs:
 ;;          Vcs-Type:
 ;;          Vcs-Url:
 ;;          Vcs-Browser:
 ;;          Homepage:
 ;;          Wiki: http://www.emacswiki.org/emacs/
-;;          Description: <short one line>
+;;          *Description: <short one line>
 ;;           [<Longer description>]
 ;;	     .
 ;;           [<Longer description, next paragraph>]
@@ -265,6 +265,12 @@
 ;;           [<Longer description, next paragraph>]
 ;;
 ;;  Details of the info file fields in alphabetical order
+;;
+;;     Conflicts
+;;
+;;	This field lists packages that must be removed before install
+;;	should be done. This field follow guidelines of
+;;	<http://www.debian.org/doc/debian-policy/ch-relationships.html>.
 ;;
 ;;     Depends (required)
 ;;
@@ -282,12 +288,6 @@
 ;;
 ;;		Depends: emacs (>= 22.2.2) | xemacs (>= 20)
 ;;
-;;     Conflicts
-;;
-;;	This field lists packages that must be removed before install
-;;	should be done. This field follow guidelines of
-;;	<http://www.debian.org/doc/debian-policy/ch-relationships.html>.
-;;
 ;;     Description (required)
 ;;
 ;;	The first line of this field is a consise description that fits on
@@ -296,6 +296,15 @@
 ;;	description is explained in paragraphs that are separated from
 ;;	each orher with a single (.) at its own line. The paragraphs
 ;;	are recommended to be intended by one space.
+;;
+;;     Email
+;;
+;;	Upstream developers email address(es). Multiple developers
+;;	are listed like in email: separated by commas. Teh role can
+;;	be expressed in parenthesis. An example:
+;;
+;;		Email: John doe (Author) <jdoe@example.com>,
+;;		 Joe Average (Co-developer) <jave@example.com>
 ;;
 ;;     Homepage
 ;;
@@ -413,7 +422,7 @@
 
 ;;; Code:
 
-(defconst epackage-version-time "2010.1128.1421"
+(defconst epackage-version-time "2010.1128.1435"
   "*Version of last edit.")
 
 (defcustom epackage--load-hook nil
