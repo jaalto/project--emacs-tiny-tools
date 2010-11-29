@@ -2,8 +2,6 @@
 
 ;; This file is not part of Emacs
 
-;;{{{ Id
-
 ;; Copyright (C)    1996-2010 Jari Aalto
 ;; Keywords:        extensions
 ;; Author:          Jari Aalto
@@ -29,10 +27,8 @@
 ;;
 ;; Visit <http://www.gnu.org/copyleft/gpl.html> for more information
 
-;;}}}
-;;{{{ Install
+;;; Install:
 
-;; ....................................................... &t-install ...
 ;; Put this file on your Emacs-Lisp `load-path', add following into your
 ;; ~/.emacs startup file
 ;;
@@ -54,9 +50,6 @@
 ;;  If you have any questions, use this function to contact author
 ;;
 ;;      M-x ti::menu-submit-bug-report
-
-;;}}}
-;;{{{ docs
 
 ;;; Commentary:
 
@@ -133,16 +126,10 @@
 
 ;;; Code:
 
-;;}}}
-;;{{{ setup: require
-
 (eval-when-compile
   (set (make-local-variable 'byte-compile-dynamic-docstrings) t)
   (set (make-local-variable 'byte-compile-dynamic) t)
   (autoload 'ignore-errors "cl-macs" nil 'macro))
-
-;;}}}
-;;{{{ setup: variables
 
 (defvar ti::menu-:load-hook nil
   "*Hook that is run when package has been loaded.")
@@ -242,12 +229,6 @@ Special keys
 (defvar ti::menu-:menu 'ti::menu-:menu-sample
   "*Variable holding the default root menu.")
 
-;;}}}
-
-;;; ########################################################### &Funcs ###
-
-;;{{{ code: test funcs
-
 (defun ti::menu-test1 (&optional arg1 arg2 arg3)
   "Sample Menu test function with ARG1 ARG2 ARG3."
   (message (format "function 1 called with args: %s %s %s" arg1 arg2 arg3)))
@@ -256,9 +237,6 @@ Special keys
   "Sample Menu test function."
   (message (format "function 2 called"))
   (sleep-for 1))
-
-;;}}}
-;;{{{  menu item add, delete
 
 ;;; ------------------------------------------------------------- &add ---
 ;;;
@@ -310,10 +288,6 @@ Example:
         (error "timu: need string."))
     (setcar menu doc-string)
     (set menu-symbol menu)))
-
-;;}}}
-
-;;{{{ code: menu
 
 ;;; ----------------------------------------------------------------------
 ;;;
@@ -495,8 +469,6 @@ References:
   `ti::menu-:menu-sample'"
   (interactive "P")
   (ti::menu-menu ti::menu-:menu arg))
-
-;;}}}
 
 (provide   'tinylibmenu)
 (run-hooks 'ti::menu-:load-hook)
