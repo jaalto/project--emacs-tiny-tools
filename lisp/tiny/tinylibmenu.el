@@ -209,7 +209,7 @@ Menu structure is as follows
 ;; This is just an example, not a user variable.
 
 (defconst ti::menu-:menu-mode
-  '("Press ?/ cC)++ l)isp tT)ext f)undamental p)icture F0ill O)font"
+  '("Press ?/ cC)++ l)isp tT)ext f)undamental p)icture F0ill O)font for mode"
     ((?c . ( (c-mode)))
      (?C . ( (cc-mode)))
      (?l . ( (lisp-mode)))
