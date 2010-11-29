@@ -317,16 +317,16 @@ Example:
 
 ;;; ----------------------------------------------------------------------
 ;;;
-(defun ti::menu-read-char-exclusive (msg)
-  "Aa `read-char-exclusive', but for Emacs and XEmacs. Display MSG."
+(defun ti::menu-read-char-exclusive (message)
+  "As `read-char-exclusive', but for Emacs and XEmacs. Display MESSAGE."
   (if (fboundp 'read-char-exclusive)
       (cond
        ((featurep 'xemacs)
-        (message msg)
+        (message message)
         (read-char-exclusive))
        (t
-        (read-char-exclusive msg)))
-    (read-char msg)))
+        (read-char-exclusive message)))
+    (read-char message)))
 
 ;;; ----------------------------------------------------------------------
 ;;;
@@ -339,7 +339,6 @@ Example:
       'variable-documentation))))
 
 ;;; ----------------------------------------------------------------------
-;;; - This is only simple help. You can't resize the window etc...
 ;;;
 (defun ti::menu-help (menu-sym)
   "Show menu help of MENU-SYM.
@@ -421,9 +420,9 @@ References:
 
   `ti::menu-:menu-sample'   Show how the menu is constructed.
   `ti::menu-:prefix-arg'    Copy of current prefix arg"
-  (let* ((var           menu-symbol)
-         (m             (eval var))     ;menu content
-         (loop          t)
+  (let* ((var  menu-symbol)
+         (m    (eval var))		;menu content
+         (loop t)
          (current-prefix-arg  pfx-arg)  ;set for menu functions
          prompt flag
          alist
@@ -432,10 +431,10 @@ References:
          eval-form)
     (setq ti::menu-:prefix-arg pfx-arg)
     (while loop
-      (setq prompt      (eval (nth 0 m))
-            prompt      (and prompt
-                             (replace-regexp-in-string "\r" "" prompt))
-            alist       (nth 1 m))
+      (setq prompt (eval (nth 0 m))
+            prompt (and prompt
+			(replace-regexp-in-string "\r" "" prompt))
+            alist  (nth 1 m))
       (when (or (not (stringp prompt))
                 (not (string-match "[^ \t\r\n]" prompt)))
         (error "Menu structure error; no prompt: %s" m))
