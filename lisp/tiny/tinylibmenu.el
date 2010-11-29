@@ -371,7 +371,7 @@ The help commands are:
                 (while (not
                         (member
                          (setq ch (char-to-string
-                                   (ti::menu-read-char-exclusive msg)))
+                                   (read-char-exclusive msg)))
                          '("q" "\e")))
                   (cond
                    ;;  127  = backspace in windowed
@@ -426,7 +426,7 @@ References:
                 (not (string-match "[^ \t\r\n]" prompt)))
         (error "Menu structure error; no prompt: %s" m))
       ;;  moving the mouse and reading with read-char would break. Use above.
-      (setq ch (char-to-string (ti::menu-read-char-exclusive prompt)))
+      (setq ch (char-to-string (read-char-exclusive prompt)))
       (setq eval-form nil)              ;clear this always
       ;; .................................................. what ch ? ...
       (cond
