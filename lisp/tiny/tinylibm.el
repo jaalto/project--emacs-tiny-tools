@@ -87,7 +87,7 @@
 
 (require 'tinylibb)                     ;Backward compatible functions
 
-(defconst tinylibm-version-time "2010.1120.2347"
+(defconst tinylibm-version-time "2010.1129.0711"
   "Latest version number.")
 
 ;;{{{ function tests
@@ -202,96 +202,6 @@ Return:
   (ti::function-car-test symbol 'lambda))
 
 ;;}}}
-
-(defun ti::compatibility-advice-setup ()
-  "Define compatibility advices for function that have changed."
-  ;; Try to avoid loading advice.el.
-  ;; The tests from tinylib-ad.el are duplicated here.
-  (let ((msg ""))
-    (if (and
-         (ti::emacs-p)
-         (not (ti::emacs-p "20.2")))
-        (setq msg
-              (concat
-               msg
-               "Tinylibm.el: tinylib-ad.el load reason: 1\n")))
-    (if (and (fboundp 'define-key-after) ;; Emacs function
-             (not
-              (string-match
-               "optional"
-               (or (ti::function-args-p 'define-key-after) ""))))
-        (setq
-         msg
-         (concat
-          msg
-          "Tinylibm.el: tinylib-ad.el load reason: define-key-after\n")))
-    (if (and
-         (not
-          (string-match "noerr" (or (ti::function-args-p 'require) ""))))
-        (setq msg
-              (concat
-               msg
-               "Tinylibm.el: tinylib-ad.el load reason: require\n")))
-    (if (and
-         (ti::win32-p)
-         ;;  It is unlikely that these are not in path, so this should not
-         ;;  fail.
-         (let ((exec-path exec-path))
-           (push "c:/windows" exec-path)
-           (push "c:/winnt" exec-path)
-           (null (or (executable-find "command")
-                     (executable-find "cmd")))))
-        (setq
-         msg
-         (concat
-          msg
-          "Tinylibm.el: tinylib-ad.el load reason: executable-find\n")))
-    (when (and (fboundp 'read-char-exclusive)
-               (not (string-match
-                     "prompt"
-                     (or (ti::function-args-p 'read-char-exclusive) ""))))
-      (setq
-       msg
-       (concat
-        msg
-        "Tinylibm.el: tinylib-ad.el load reason: read-char-exclusive")))
-    (when (or (assoc "-debug-init" command-switch-alist)
-              (assoc "--debug-init" command-switch-alist))
-      (message msg))
-    (when t ;; Enaled now.
-      ;; 2000-01-05  If compiled this file in Win32 XEmacs 21.2.32
-      ;; All the problems started. Make sure this is NOT compiled.
-      (let ((path (locate-library "tinylib-ad.elc")))
-        (when (and (stringp path)
-                   (string-match "\\.elc$" path))
-          (delete-file path)
-          (message "\
-  ** tinylibm.el: It is not recommend to compile tinylib-ad.el.
-                  compiled file deleted %s" path))))
-
-    ;; Backward compatible functions
-    ;;
-    ;; #todo: EFS does something to `require' function. Should it be loaded
-    ;; first in XEmacs?
-    (if (and (string-match "reason: require" msg)
-             (ti::xemacs-p)
-             (require 'efs))
-
-        (unless (string= "" msg)
-          (require 'tinylib-ad)))))
-
-(ti::compatibility-advice-setup)
-
-(eval-when-compile
-  (when (and (ti::xemacs-p)
-             (or (< emacs-major-version 20)
-                 (and (eq emacs-major-version 20)
-                      (< emacs-minor-version 3))))
-    (message "\
-tinylib.el: ** Ignore 'variable G3000' warnings. Corrected in XEmacs 20.3")))
-
-;;}}}
-
 ;;{{{ variables
 
 (defconst ti:m-debug-buffer "*ti::d!!*"
