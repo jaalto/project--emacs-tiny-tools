@@ -1,5 +1,7 @@
 2010-11-29 Mon  Jari Aalto  <jari.aalto@cante.net>
 
+	* unmaintained/tinylib-ad.el: New. Officially deprecated. Moved from lisp/.
+
 	* tiny/tinylib-ad.el: Deprecate library. No more needed for Emacs 23.x
 	(read-char-exclusive): Remove. Moved to tinylibxe.el
 
