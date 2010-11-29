@@ -2034,7 +2034,6 @@ Following variables are set during BODY:
   `(let (find-file-hook
 	 find-file-not-found-functions
 	 write-file-functions
-	 write-file-functions
 	 font-lock-mode
 	 ;; buffer-auto-save-file-name
 	 auto-save-hook
