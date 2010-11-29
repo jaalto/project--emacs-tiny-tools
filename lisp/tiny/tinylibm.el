@@ -87,7 +87,7 @@
 
 (require 'tinylibb)                     ;Backward compatible functions
 
-(defconst tinylibm-version-time "2010.1129.0711"
+(defconst tinylibm-version-time "2010.1129.0717"
   "Latest version number.")
 
 ;;{{{ function tests
@@ -708,7 +708,7 @@ Input:
 ;;; Neither is this format recommended.
 ;;; (memq (char-int ch) (mapcar 'char-int '(?a ?b ?c ?d ?e ?f)))
 ;;;
-;;; cl's (member* ch '(?a ?b) :test 'char-equal)
+;;; The cl is safe: (member* ch '(?a ?b) :test 'char-equal)
 ;;;
 (defsubst ti::char-in-list-case (char list)
   "If CHAR can be found in LIST, return a pointer to it.
@@ -739,18 +739,16 @@ References:
 Return:
 
   ch        character
-  'ignore   if read failed due to non-char event."
+  'ignore   if read failed due to non-character event."
   (condition-case nil
       (progn
         (message (or prompt ""))        ;prevent echoing keycodes...
         (discard-input)                 ;this is a must before we read
-
         ;; char-int
         ;;   Emacs: this is no-op
         ;;   XEmacs19.14: char-int doesn't exist.
         ;;   XEmacs20:  read-char has changed, it does not return
         ;;          int, but a character type, and we need conversion
-
         (read-char))
     (error
      'ignore)))
@@ -776,7 +774,7 @@ Return:
      ((null list)
       (while (symbolp (setq ch (ti::read-char-safe prompt)))))
      (list
-      ;;  Check args or we're thrown on planetary ride, which never ends
+      ;;  Check args
       (if (or (not (ti::listp list))
               (not (characterp (car list))))
           (error "Invalid list, must contain character in LIST %s" list))
