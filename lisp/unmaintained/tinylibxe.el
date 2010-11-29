@@ -93,7 +93,7 @@
 
 (require 'tinylibm)
 
-(defconst tinyliba-version-time "2010.1121.0053"
+(defconst tinyliba-version-time "2010.1129.0656"
   "Latest version number as last modified time.")
 
 ;;{{{ events, window, frames, misc
@@ -383,10 +383,21 @@ INPLACE is ignored."
 
   ;;  This is same as 'beep'
   ;;  Emacs, subr.el:(defalias 'beep 'ding) ;preserve lingual purity
-  ;;
   (defadvice ding (around tinylibxe (&optional arg &rest args) act)
     "tinylibxe -- Define Xemacs compatible ding comamnd. Ignores arg 2."
     ad-do-it)
+
+  ;; Emacs includes more arguments
+  (when (and (fboundp 'read-char-exclusive)
+	     (not (string-match "prompt"
+				(or (ti::function-args-p 'read-char-exclusive) ""))))
+
+  (defadvice read-char-exclusive (around tinylibxe (message))
+    "Emacs compatibility. Add parameters PROMPT INHERIT-INPUT-METHOD,
+but INHERIT-INPUT-METHOD is not supported."
+    (if (stringp prompt)
+	(message prompt))
+    (setq ad-return-value (read-char-exclusive))))
 
   (defadvice make-sparse-keymap (before tinylibxe (&optional no-op) act)
     "tinylibxe -- This advice does nothing except adding an optional argument
