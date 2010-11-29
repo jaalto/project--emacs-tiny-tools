@@ -7,7 +7,6 @@
 ;; Author:          Jari Aalto
 ;; Maintainer:      Jari Aalto
 ;;
-;; To get information on this program, call M-x ti::menu-version.
 ;; Look at the code with folding.el
 
 ;; COPYRIGHT NOTICE
@@ -46,10 +45,6 @@
 ;;
 ;;  Make sure you have defined the variables `my-menu1' and `my-menu2'
 ;;  which hold the menu information.
-;;
-;;  If you have any questions, use this function to contact author
-;;
-;;      M-x ti::menu-submit-bug-report
 
 ;;; Commentary:
 
@@ -103,14 +98,14 @@
 ;;            '(lambda (x)
 ;;               (let ((key (car x)))
 ;;                 (ti::menu-add
-;;                   'ti::menu-:menu-sample nil 'delete) ;; Remove old
+;;                   'ti::menu--menu-sample nil 'delete) ;; Remove old
 ;;                 ;; Add new
-;;                 (ti::menu-add 'ti::menu-:menu-sample key (cdr x))))
+;;                 (ti::menu-add 'ti::menu--menu-sample key (cdr x))))
 ;;          '((?1 . ( (my-1 1 2 3)))     ;; New menu item replacements
 ;;            (?2 . ( (my-2 1 2 3)))))
 ;;
 ;;          (ti::menu-set-doc-string
-;;            'ti::menu-:menu-sample "?)help, 1)my1 2)my2")
+;;            'ti::menu--menu-sample "?)help, 1)my1 2)my2")
 ;;
 ;;  Having a test run
 ;;
@@ -131,28 +126,31 @@
   (set (make-local-variable 'byte-compile-dynamic) t)
   (autoload 'ignore-errors "cl-macs" nil 'macro))
 
-(defvar ti::menu-:load-hook nil
+(defconst tinylibmenu-version-time "2010.1129.0725"
+  "Latest version number.")
+
+(defvar ti::menu--load-hook nil
   "*Hook that is run when package has been loaded.")
 
-(defvar ti::menu-:prefix-arg  nil
+(defvar ti::menu--prefix-arg  nil
   "Prefix arg when menu is called.")
 
 ;;  This is just an example, not a user variable.
 ;;  This is how you use the package
 ;;  NOTE: put the help into the documentation string. Like
-;;        in variable ti::menu-:menu-mode.
+;;        in variable ti::menu--menu-mode.
 
-(defconst ti::menu-:menu-sample
+(defconst ti::menu--menu-sample
   '("?)help, 1)test1, 2)test2, m)ode, u)ndefined , e)val. q)uit"
     ((?1 . (  (ti::menu-test1 1 2 3)))      ;this does not have FLAG
      (?2 . (t (ti::menu-test2)))            ;FLAG used.
-     (?m . ti::menu-:menu-mode)
-     (?u . ti::menu-:menu-not-exist) ;this variable does not exist :-)
+     (?m . ti::menu--menu-mode)
+     (?u . ti::menu--menu-not-exist) ;this variable does not exist :-)
      (?e . (t (progn
                 (message "menu item evaled. Pfx: '%s' "
-                         (prin1-to-string ti::menu-:prefix-arg))
+                         (prin1-to-string ti::menu--prefix-arg))
                 (sleep-for 1))))))
-  "*This is documentation string of variable `ti::menu-:menu-sample'.
+  "*This is documentation string of variable `ti::menu--menu-sample'.
 The menu help is put here.
 
 Reserved menu keys (characters)
@@ -182,7 +180,7 @@ Menu structure is as follows
 
 ;; This is just an example how you could utilize the prefix arguments.
 ;;
-;;(defconst ti::menu-:menu-mail
+;;(defconst ti::menu--menu-mail
 ;;  '((if current-prefix-arg
 ;;        "View mailbox read-only:  E)macs M)ailbox P)erl   R)ead/write"
 ;;      "View mailbox:  E)macs M)ailbox P)erl   R)ead-only")
@@ -195,7 +193,7 @@ Menu structure is as follows
 
 ;; This is just an example, not a user variable.
 
-(defconst ti::menu-:menu-mode
+(defconst ti::menu--menu-mode
   '("Press ?/ cC)++ l)isp tT)ext f)undamental p)icture F0ill O)font for mode"
     ((?c . ( (c-mode)))
      (?C . ( (cc-mode)))
@@ -206,7 +204,7 @@ Menu structure is as follows
      (?p . ( (picture-mode)))
      (?F . (t (auto-fill-mode)))
      (?O . (t (font-lock-mode)))
-     (?/ . ti::menu-:menu-sample)))     ;back to ROOT menu
+     (?/ . ti::menu--menu-sample)))     ;back to ROOT menu
   "*Menu help.
 Major modes:
 
@@ -226,7 +224,7 @@ Minor modes:
 Special keys
   / = Return to root menu")
 
-(defvar ti::menu-:menu 'ti::menu-:menu-sample
+(defvar ti::menu--menu 'ti::menu--menu-sample
   "*Variable holding the default root menu.")
 
 (defun ti::menu-test1 (&optional arg1 arg2 arg3)
@@ -246,8 +244,8 @@ Special keys
 
 Example:
 
-  (ti::menu-add 'ti::menu-:menu-sample ?2  nil 'delete)
-  (ti::menu-add 'ti::menu-:menu-sample ?t '( (my-test 1 2 3)))
+  (ti::menu-add 'ti::menu--menu-sample ?2  nil 'delete)
+  (ti::menu-add 'ti::menu--menu-sample ?t '( (my-test 1 2 3)))
 
 Return:
 
@@ -280,7 +278,7 @@ Return:
 
 Example:
 
-  (ti::menu-set-doc-string 'ti::menu-:menu-sample \"?=help, 1=test1, t=myTest\")"
+  (ti::menu-set-doc-string 'ti::menu--menu-sample \"?=help, 1=test1, t=myTest\")"
   (let* ((menu (symbol-value menu-symbol)))
     ;;  It's better to check that the arg is right; setcar won't
     ;;  do that
@@ -379,8 +377,8 @@ Input:
 
 References:
 
-  `ti::menu-:menu-sample'   Show how the menu is constructed.
-  `ti::menu-:prefix-arg'    Copy of current prefix arg"
+  `ti::menu--menu-sample'   Show how the menu is constructed.
+  `ti::menu--prefix-arg'    Copy of current prefix arg"
   (let* ((var  menu-symbol)
          (m    (eval var))		;menu content
          (loop t)
@@ -390,7 +388,7 @@ References:
          ch
          elt
          eval-form)
-    (setq ti::menu-:prefix-arg pfx-arg)
+    (setq ti::menu--prefix-arg pfx-arg)
     (while loop
       (setq prompt (eval (nth 0 m))
             prompt (and prompt
@@ -459,18 +457,18 @@ References:
 ;;;
 (defun ti::menu-menu-default (&optional arg)
   "Call echo area menu with prefix ARG.
-Please read the documentation of variable `ti::menu-:menu-sample' to see
+Please read the documentation of variable `ti::menu--menu-sample' to see
 the structure of menu.
 
-Menu pointed by `ti::menu-:menu' is used and PREFIX-ARG is passed to menu engine
-'ti::menu-:menu'.
+Menu pointed by `ti::menu--menu' is used and PREFIX-ARG is passed to menu engine
+'ti::menu--menu'.
 
 References:
-  `ti::menu-:menu-sample'"
+  `ti::menu--menu-sample'"
   (interactive "P")
-  (ti::menu-menu ti::menu-:menu arg))
+  (ti::menu-menu ti::menu--menu arg))
 
 (provide   'tinylibmenu)
-(run-hooks 'ti::menu-:load-hook)
+(run-hooks 'ti::menu--load-hook)
 
 ;;; tinylibmenu.el ends here
