@@ -39,18 +39,18 @@
 ;;  Preface 2009
 ;;
 ;;      Emacs has been around for decades now. Many new version have
-;;      come and gone (18.59 ... 23.x), There are many packages (*.el)
-;;      that enhance and add new feature e.g. for new programming
-;;      langauges. The typical procedure to add new feature to Emacs
-;;      is:
+;;      come and gone (18.59 ... 24.x), Still there wealth of package
+;;      (*.el) that enhance and add new features to Emacs. E.g.
+;;      editing new programming langauges. The typical procedure to
+;;      add new a feature to Emacs is:
 ;;
 ;;      o   Find a package at places like
 ;;          http://dir.gmane.org/gmane.emacs.sources or
 ;;          http://www.emacswiki.org
 ;;      o   Download and save the package along `load-path'
 ;;      o   Read the installation information. Usually embedded in comments
-;;          inside a file.
-;;      o   Add Emacs Lisp code to the startup file ~/.emacs
+;;          at the beginning of *.el files.
+;;      o   Add code to the Emacs startup file ~/.emacs
 ;;          to arrange loading the package with personal customizations.
 ;;
 ;;      That's quite a bit of work for each package; reaching
@@ -58,6 +58,25 @@
 ;;      managers to download and install programs. Debian has
 ;;      *apt-get*, Redhat uses *rpm*, Suse uses *yum* etc. So why not
 ;;      make one for Emacs as well.
+;;
+;;	This utility is built around two concepts: 1) it borrows the
+;;	Debian style of package management and applies it to Emacs
+;;	packages Each new utility mush include epackge/ subdirectory
+;;	than contains details how to enable the and compile the
+;;	package. 2) Packages are efficiently distributed, maintained
+;;	and downloaded (deltas) by using mover Distributed Version
+;;	Control Software; the git(1).
+;;
+;;      If you're an Emacs user, you just downloaded packages that are
+;;	converted in epackage format. No information about the details
+;;	is necessary. If you're a developer who would like to start
+;;	make your packages available in epackage format, that requires
+;;	some preparations.
+;;
+;;	This package manager can co-exist with your standard
+;;	installation as usual. You can even use ELPA at the same time.
+;;	User's standard Emacs startup files, like ~/.emacs are never
+;;	modified.
 ;;
 ;;  Epackage - the DVCS packaging system
 ;;
@@ -71,12 +90,14 @@
 ;;      DVCS offers important features over *.tag.gz approach:
 ;;
 ;;	o   Efficient downloads; fast, only deltas are transferred
-;;	o Local modifications; users can creaet their own customizations
+;;	o   Local modifications; users can creaet their own customizations
 ;;	    easily
 ;;	o   Helping package authors made easy; have you fixed an
 ;;	    error? Generate diff straight from the repository
 ;;	o   Select any version; pick latest or
 ;;	    downgrade to a older version with ease.
+;;	o   Contains history of package in one place. No more scattered
+;;	    pieces around Internet.
 ;;
 ;;      To use a package in this system, it must be first converted
 ;;      into a Git repository and made available online. This job can
@@ -95,41 +116,70 @@
 ;;  User commands
 ;;
 ;;      Command `M-x' `epackage' is alias for function
-;;      `epackage-manager'. It builds outline based buffer where
-;;      packages can be browsed, built and installed. Standard outline
-;;      type of keys can be used to navigate in the buffer. The
-;;      *Local* is "yes" when package has been downloaded to local
-;;      disk. The *Status* indicates if the package activation code is
-;;      found from `ROOT/install' directory (see below). User's
-;;      standard Emacs startup files, like ~/.emacs are never
-;;      modified.
+;;      `epackage-manager'. It builds buffer where packages can be
+;;      browsed, fetched, built and installed. The view contains:
 ;;
-;;          * Section: tools
-;;          ** Package: one; Local: no; Status: not-installed; Ver: 1.5 -!-
-;;          <content of the 'info' file>
-;;          * Section: tools
-;;          ** Package: two; Local: yes; Status: installed; Ver: 1.0
-;;          <content of the 'info' file>
-;;          ...
+;;          name section status v:VERSION package-description
+;;	    1    2       2      4         5
 ;;
-;;      In this view, supposing the cursor is at [-!-] or inside the
-;;      package description, the commands are:
+;;	The fields are:
+;;
+;;	o   1 - Unique package name. No two package scan have the same name.
+;;	o   2 - Package classification. M-x finder-list-keywords
+;;	o   3 - status: (A)activated (E)nabled (I)installed etc.
+;;	o   4 - Version number. Only known once package has been downloaded.
+;;	o   5 - Short package description
+;;
+;;      In this view, some of the commands are (see mode help `C-h' `m'):
 ;;
 ;;      o   d, run `dired' on package installation directory.
 ;;      o   e, edit package "info".
-;;      o   g, get. Update package list. What new is available
+;;	o   E, email upstream, the package author (maintainer). You can
+;;	       as for new wishlist features, report bugs etc.
+;;      o   g, get. Update avaiĺable package list.
 ;;      o   i, install package.
 ;;      o   l, list only installed packages.
 ;;      o   m, mark package (for command install or remove).
+;;	o   M, send mail to person who is the maintainer of epackage
+;;	       for this utility. You can send requests to fix
+;;	       packaging or update contents of the 'info' file if some
+;;	       of the information in no up to date.
 ;;      o   n, list only new packages (not-installed).
-;;      p   p, purge package; delete package physically from local disk.
+;;      o   p, purge package; delete package physically from local disk.
 ;;      o   r, remove package. Synonym for uninstall action.
-;;	o   u, unmark (install, purge, remove)
-;;	o   U, upgrade package to newer version
+;;	o   s<key>, sort command. Change listing by several criterias.
+;;	o   u, unmark (install, purge, remove).
+;;	o   U, upgrade package to newer version.
+;;	o   v<key>, view comand. E.g (a)activation file, (i)info file.
 ;;      o   q, quit. Run `bury-buffer'.
 ;;	o   x, execute (install, purge, remove).
 ;;
-;;      Building the initial list of available packages take some time
+;;	The package state is indicad with following status indiators:
+;;
+;;	o   (A)ctivated. The package has been downloaded and code to
+;;	    immediately activate the package has been taken into use.
+;;	    This setting chnages user's Emacs environment as defined
+;;	    by the packager. The chnages typically include modifying hook
+;;	    to activate the package e.g. by file extension, adding
+;;	    keybindings to activate the package etc. You might want
+;;	    to use (v)iew command to see what exactly happens
+;;	o   (E)enabled. One step down from Activated state. Only interactive
+;;	    functions and variables are provided in latent `autoload'
+;;	    stae for user to call with `M-x' <function name>. User
+;;	    configuration is not modified in any way.If you want full
+;;	    control over package setup, set package to Emabled state
+;;	    and add further code to Emacs startup file "/.emacs to
+;;	    configure it
+;;	o   (I)installed. This is synonym for Downloaded. Package has
+;;	    been fetched to local disk, but that is all. No setup
+;;	    whatsoever.
+;;	o   (u)unmaintained. The package has been flagged as unmaintained.
+;;	o   (b)uggy. The package contains remarks that it might be buggy
+;;	    if installed.
+;;	o   (c)ore. Package in included in latest core Emacs.
+;;	o   (C)ore. Package is included in latest core XEmacs.
+;;
+;;      Building the initial list of available packages takes some time
 ;;      and this is done via open internet connection. Install command
 ;;      also requires an open internet connection.
 ;;
@@ -158,7 +208,7 @@
 ;;      The Git repository branches used are:
 ;;
 ;;      o   `master', required. Branched off from `upstream'. Adds directory
-;;	    `epackage/'. This contains verything to use the package.
+;;	    `epackage/'. This contains everything to use the package.
 ;;      o   `patches', optional. Patches to `upstream' code.
 ;;      o   `upstream', required. The original unmodified upstream code.
 ;;	    Releases are tagged with label
@@ -182,6 +232,7 @@
 ;;          +-- epackage/
 ;;		info			required: The package control file
 ;;		PACKAGE-autoloads.el	optional: all autoload statements (raw)
+;;		PACKAGE-compile.el	optional: Code to byte compile package
 ;;		PACKAGE-install.el	required: Code to make package available
 ;;		PACKAGE-loaddefs.el	required: ###autoload statements
 ;;		PACKAGE-uninstall.el	optional: to remove package
@@ -193,7 +244,7 @@
 ;;	possible (due to sort order) to safely collect all together
 ;;	with:
 ;;
-;;		cat PACKAGE-* | grep -v uninstall > PACKAGE-all-in-one-loader.el
+;;		cat PACKAGE-* | grep -v 'uninst|compile' > PACKAGE-all-in-one-loader.el
 ;;
 ;;     The *-install.el
 ;;
@@ -445,7 +496,7 @@
 
 ;;; Code:
 
-(defconst epackage-version-time "2010.1129.2254"
+(defconst epackage-version-time "2010.1129.2342"
   "*Version of last edit.")
 
 (defcustom epackage--load-hook nil
