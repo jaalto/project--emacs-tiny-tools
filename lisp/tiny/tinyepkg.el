@@ -61,7 +61,7 @@
 ;;
 ;;  Epackage - the DVCS packaging system
 ;;
-;;      This packaging system is called "epackage", short name for
+;;      This packaging system is called epackage, short name for
 ;;      "Emacs Lisp packages".
 ;;
 ;;      In this system uses the packages are available in a form of
@@ -172,7 +172,7 @@
 ;;
 ;;      The epackage method borrows concepts from the Debian package
 ;;      build system where a separate control directory contains
-;;      the needed information. The directory name "epackage" is not
+;;      the needed information. The directory name *epackage* is not
 ;;      configurable. Files in pacakge/ directory include:
 ;;
 ;;          <package name>
@@ -435,7 +435,7 @@
 
 ;;; Code:
 
-(defconst epackage-version-time "2010.1129.1251"
+(defconst epackage-version-time "2010.1129.1643"
   "*Version of last edit.")
 
 (defcustom epackage--load-hook nil
@@ -494,6 +494,19 @@ Use function `epackage-file-name-vcs-compose' for full path name.")
 (defvar epackage--directory-name-install "install"
   "Install directory under `epackage--root-directory'.")
 
+(defconst epackage--directory-exclude-regexp
+  (concat
+   "/\\.\\.?$"
+   "\\|/RCS$"
+   "\\|/rcs$"
+   "\\|/CVS$"
+   "\\|/cvs$"
+   "\\|/\\.\\(svn\\|git\\|bzr\\|hg\\|mtn\\|darcs\\)$"
+   "\\|/"
+   epackage--directory-name
+   "$")
+  "Regexp to exclude dirctory names.")
+
 (defconst epackage--layout-mapping
   '((activate . "xactivate")
     (autoload . "autoloads")
@@ -517,6 +530,10 @@ Used in `epackage-file-name-vcs-directory-control-file'.")
   "Name of yellow pages file that lists available packages.
 See variable `epackage--sources-url'.")
 
+(defvar epackage--loader-file "epackage-loader.el"
+  "file that contains all package enable and activate code.
+See `epackage-loader-file-generate'.")
+
 (defvar epackage--package-control-directory "epackage"
   "Name of directory inside VCS controlled package.")
 
@@ -528,6 +545,11 @@ See variable `epackage--sources-url'.")
   (format "%s/%s"
 	  (epackage-directory)
 	  name))
+
+(defsubst epackage-file-name-loader-file (package)
+  (format "%s/%s%s"
+	  (epackage-directory)
+	  epackage--loader-file))
 
 (defsubst epackage-file-name-vcs-compose (package)
   (format "%s/%s%s"
@@ -752,7 +774,7 @@ If VERBOSE is non-nil, display progress message."
 (defun epackage-disable-package (package)
   "Disable PACKAGE."
   (dolist (file (directory-files
-		 dir
+		 (epackage-file-name-install-directory)
 		 'full-path
 		 (format "^%s-.*\\.el" package)
 		 t))
@@ -770,9 +792,91 @@ ACTION can be:
   ;; FIXME: Not implemented
   )
 
-(defun epackage-generate-loader-file ()
+(defun epackage-directory-list (dir)
+  "Return all directories under DIR."
+  (let (list)
+    (dolist (elt (directory-files dir 'full))
+      (when (and (file-directory-p elt)
+                 (not (string-match
+		       epackage--directory-exclude-regexp
+		       elt)))
+        (setq list (cons elt list))))
+    list))
+
+(defun epackage-directory-recursive-list (dir list)
+  "Return all directories under DIR recursively to LIST.
+Exclude directories than contain file .nosearch
+or whose name match `epackage--directory-name'."
+  (let ((dirs (epackage-directory-list dir)))
+    (dolist (elt dirs)
+      (cond
+       ((file-exists-p (concat elt "/.nosearch")))
+       (t
+	(setq list (cons elt list))
+	(epackage-directory-recursive-list elt list))))
+    list))
+
+(defun epackage-loader-file-insert-header ()
+  "Empty `current-buffer' and write comments."
+  (insert
+   (format
+    "\
+;; Empackge boot file -- automatically generated
+;; Add following to your ~/.emacs to use this file:
+;;   (load-file \"%s\")\n")
+   (epackage-file-name-loader-file)))
+
+(defun epackage-loader-insert-file-path-list-by-path (path)
+  "Insert `load-path' definitions to `current-buffer' from PATH."
+  (let (list)
+    (dolist (dir (epackage-directory-recursive-list path list))
+      (insert (format
+	       "(add-to-list 'load-path \"%s\")\n"
+	       dir)))))
+
+(defun epackage-loader-file-insert-path-list ()
+  "Insert `load-path' commands to `current-buffer'."
+  (let (name
+	package
+	list)
+    (dolist (file (directory-files
+		   (epackage-file-name-install-directory)
+		   'full-path
+		   (format "^\\.el" package)
+		   t))
+      (setq name
+	    (file-name-sans-extension
+	     (file-name-nondirectory file)))
+      ;; package-name-autoloads => package-name
+      (setq package (replace-regexp-in-string  "-[^-]+$" "" name))
+      (unless (member package list)
+	(add-to-list 'list package)
+	(epackage-loader-insert-file-path-list-by-path
+	  (epackage-directory-recursive-list package))))))
+
+(defun epackage-loader-file-collect ()
+  "Collect loader code into `current-buffer'."
+  ;; FIXME: Use only activate, not enable if both exists
+  (dolist (file (directory-files
+		 (epackage-file-name-install-directory)
+		 'full-path
+		 (format "^\\.el" package)
+		 t))
+    (goto-char (point-max))
+    (insert-file-contents-literally file)))
+
+(defsubst epackage-loader-file-insert-main ()
+  "Inser loaded Emacs Lisp command to current point."
+  (epackage-loader-file-insert-header)
+  (epackage-loader-file-insert-path-list)
+  (epackage-loader-file-insert-install-code))
+
+(defun epackage-loader-file-generate ()
   "Generate main loader for all installed or activated packages."
-  (let ((root (epackage-file-name-vcs-directory)))))
+  (let ((file (epackage-file-name-loader-file)))
+    (with-current-buffer (find-file-noselect file)
+      (delete-region (point-min) (point-max))
+      (epackage-loader-file-insert-main))))
 
 (defun epackage-sources-list-info-main (package)
   "Return '(pkg url description) for PACKAGE.
