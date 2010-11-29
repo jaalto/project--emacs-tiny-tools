@@ -115,6 +115,17 @@ This variable is list of REGEXPS.")
 
 ;;; ----------------------------------------------------------------------
 ;;;
+(defun tiny-setup-directory-list (dir)
+  "Return all directories under DIR."
+  (let (list)
+    (dolist (elt (directory-files dir 'full))
+      (when (and (file-directory-p elt)
+                 (not (string-match "[\\/]\\.\\.?$" elt)))
+        (push elt list)))
+    list))
+
+;;; ----------------------------------------------------------------------
+;;;
 (put 'tiny-setup-directory-recursive-macro 'lisp-indent-function 1)
 (put 'tiny-setup-directory-recursive-macro 'edebug-form-spec '(body))
 (defmacro tiny-setup-directory-recursive-macro (directory &rest body)
@@ -134,17 +145,6 @@ Following variables are set during BODY:
                  (unless (string-match tiny-setup-:ignore-dir-regexp elt)
                    (recurse elt)))))))
      (recurse (, directory)))))
-
-;;; ----------------------------------------------------------------------
-;;;
-(defun tiny-setup-directory-list (dir)
-  "Return all directories under DIR."
-  (let (list)
-    (dolist (elt (directory-files dir 'full))
-      (when (and (file-directory-p elt)
-                 (not (string-match "[\\/]\\.\\.?$" elt)))
-        (push elt list)))
-    list))
 
 ;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;
 ;;
