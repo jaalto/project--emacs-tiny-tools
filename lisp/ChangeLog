@@ -1,3 +1,15 @@
+2010-11-29 Mon  Jari Aalto  <jari.aalto@cante.net>
+
+	* tiny/tinylib-ad.el: Deprecate library. No more needed for Emacs 23.x
+	(read-char-exclusive): Remove. Moved to tinylibxe.el
+
+	* unmaintained/tinylibxe.el (read-char-exclusive): New.
+
+	* tiny/tinylibmenu.el (ti::menu-read-char-exclusive): Use readable
+	variable names.
+	(ti::menu-read-char-exclusive): Remove. XEmacs compatibility moved
+	to tinylibxe.el.
+
 2010-11-28 Sun  Jari Aalto  <jari.aalto@cante.net>
 
 	* tiny/tinyepkg.el: Revise epackage specification.

@@ -119,18 +119,37 @@
 ;;
 ;;      o   d, run `dired' on package installation directory.
 ;;      o   e, edit package "info".
-;;      o   g, get. Update view, needs internet connection.
+;;      o   g, get. Update package list. What new is available
 ;;      o   i, install package.
 ;;      o   l, list only installed packages.
 ;;      o   m, mark package (for command install or remove).
 ;;      o   n, list only new packages (not-installed).
 ;;      p   p, purge package; delete package physically from local disk.
 ;;      o   r, remove package. Synonym for uninstall action.
+;;	o   u, unmark (install, purge, remove)
+;;	o   U, upgrade package to newer version
 ;;      o   q, quit. Run `bury-buffer'.
+;;	o   x, execute (install, purge, remove).
 ;;
 ;;      Building the initial list of available packages take some time
 ;;      and this is done via open internet connection. Install command
 ;;      also requires an open internet connection.
+;;
+;;	Development ideas:
+;:
+;;	- Git tags, where is this information kept?
+;;	- How to update package, or all packages?
+;;	  => Running git preocess? When update is avilable how to flag this?
+;;	  => What about conflits?
+;;	- What about 'local', manual branch and updates?
+;;	- Retrieve new yellow pages (available packages)
+;;	- Rescan current information? (what is installed, what is not)
+;;        => Keep cache? Or regenerate, or scan at startup every time?
+;;	- What if user manually deletes directories? Refresh?
+;;	- Package health check, Lint?
+;;	- Edit yellow pages catalog?
+;;	  => Submit/update yellow pages catalog changes?
+;;	  => version controlled, patches? Interface to automatic email?
 ;;
 ;;  Epackage system layout
 ;;
@@ -418,13 +437,27 @@
 
 ;;; Code:
 
-(defconst epackage-version-time "2010.1128.1816"
+(defconst epackage-version-time "2010.1129.0644"
   "*Version of last edit.")
 
 (defcustom epackage--load-hook nil
   "*Hook run when file has been loaded."
   :type  'hook
   :group 'Epackage)
+
+(defcustom epackage--sources-url
+  "http://localhost/"
+  "URL to the location of available package list. The yellow pages.
+This is a text file that contains information about package names and
+their DVCS urls:
+
+  PACKAGE-NAME REPOSITORY-URL
+  PACKAGE-NAME REPOSITORY-URL
+  ...
+
+An example:
+
+  foo git://example.com/repository/foo.git")
 
 (defcustom epackage--root-directory
   (let (ret)
