@@ -416,6 +416,16 @@
 ;;
 ;; TODO
 ;:
+;;	- Move package list into Git repository
+;;	- GUI: drop outline. If user selects DETAIL view, collect
+;;	  information to another buffer dynamically (info, git tags,
+;;	  current git branch)
+;;
+;;	- New file: cache. Build it dynamically from packages and
+;;	  combine with package information (e.g. version).
+;;
+;;	- refetch repository (destroy, re-download).
+;;
 ;;	- Git tags, where is this information kept?
 ;;	- How to update package, or all packages?
 ;;	  => Running git preocess? When update is avilable how to flag this?
@@ -435,7 +445,7 @@
 
 ;;; Code:
 
-(defconst epackage-version-time "2010.1129.1723"
+(defconst epackage-version-time "2010.1129.2254"
   "*Version of last edit.")
 
 (defcustom epackage--load-hook nil
@@ -1023,6 +1033,16 @@ Format is described in variable `epackage--sources-url'."
   "Download package list; the yellow pages of packages."
   (interactive)
   (epackage-url-retrieve-sources-list "Downloading package sources list"))
+
+(defun epackage-cmd-download-package (PACKAGE)
+  "Download PACKAGE, but do not install it."
+  (if (not (epackage-sources-list-p))
+      (message
+       (substitute-command-keys
+	"Epackage: No package list. Run \\[epackage-cmd-download-sources-list]"))
+    (let ()
+      ;; FIXME: Present list of package as completing-read
+      )))
 
 (defun epackage-initialize ()
   "Inialize package."
