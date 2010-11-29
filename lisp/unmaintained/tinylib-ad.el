@@ -1,13 +1,9 @@
 ;;; tinylib-ad.el --- Library of adviced functions. Backward compatibility
 
-;;{{{ Id
-
 ;; Copyright (C)    1999-2010 Jari Aalto
 ;; Keywords:        extensions
 ;; Author:          Jari Aalto
 ;; Maintainer:      Jari Aalto
-;;
-;; To get information on this program, call M-x tinylib-ad-version
 
 ;; COPYRIGHT NOTICE
 ;;
@@ -26,19 +22,12 @@
 ;;
 ;; Visit <http://www.gnu.org/copyleft/gpl.html> for more information
 
-;;}}}
-;;{{{ Install
+;;; Install:
 
-;; ........................................................ &t-install ...
 ;; Put this file on your Emacs-Lisp `load-path', add following into your
 ;; ~/.emacs startup file
 ;;
 ;;      (require 'tinylib-ad)
-
-;;}}}
-;;{{{ Documentation
-
-;; ..................................................... &t-commentary ...
 
 ;;; Commentary:
 
@@ -59,8 +48,6 @@
 ;;  Usage
 ;;
 ;;      This package cannot be autoloaded.
-
-;;}}}
 
 ;;; Change Log:
 
