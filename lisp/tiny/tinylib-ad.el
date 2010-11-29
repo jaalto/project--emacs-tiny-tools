@@ -129,18 +129,6 @@
               (load (or file-name (symbol-name feature)) 'noerr 'nomsg))
         ad-do-it))))
 
-;; Emacs includes more arguments
-
-(when (and (fboundp 'read-char-exclusive)
-           (not (string-match "prompt"
-                              (or (ti::function-args-p 'read-char-exclusive) ""))))
-  (defadvice read-char-exclusive
-    (around tinylib-ad (&optional prompt inherit-input-method) act)
-    "Emacs compatibility. Added parameters PROMPT INHERIT-INPUT-METHOD,
-but INHERIT-INPUT-METHOD is not supported."
-    (message prompt)
-    (setq ad-return-value (read-char-exclusive))))
-
 ;; Older versions of `executable-find' did not search ".exe" or ".com" ...
 ;; extensions. This was true for XEmacs 21.2 also. In Emacs 20.4 it's ok.
 ;;
