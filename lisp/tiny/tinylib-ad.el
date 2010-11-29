@@ -33,7 +33,7 @@
 ;; Put this file on your Emacs-Lisp `load-path', add following into your
 ;; ~/.emacs startup file
 ;;
-;;      (require 'tinylibm)    ;; Yes, there is no mistake. You require the "m"
+;;      (require 'tinylib-ad)
 
 ;;}}}
 ;;{{{ Documentation
@@ -49,23 +49,16 @@
 ;;      to provide backward compatibility for functions that have changed.
 ;;      E.g. Emacs 20.4 introduced new parameter NOERR to `require' command.
 ;;
-;;      There is another way, load this library first and continue using
-;;      your current Emacs version. This package will redefine functions
-;;      only when needed, so it should be quite safe.
+;;      Load this library first and continue using your current Emacs
+;;      version. This package will redefine functions only when
+;;      needed, so it should be quite safe.
+;;
+;;	2010-11-29 Note: These compatibility functions are obsolete, now
+;;	when Emacs is at version 23.x
 ;;
 ;;  Usage
 ;;
-;;      You must not autoload this package; but always include
-;;
-;;          (require 'tinylibm)
-;;
-;;      You don't need any other require commands: all other library
-;;      functions get defined as well by using autoload. Repeat: you don't
-;;      have to put these in your packages:
-;;
-;;          (require 'tinylib)     ;; leave this out
-;;          (require 'tinyliby)    ;; not needed either.
-;;          (require 'tinylib-ad)  ;; not needed either.
+;;      This package cannot be autoloaded.
 
 ;;}}}
 
@@ -76,6 +69,7 @@
 (require 'tinylibb)
 
 (eval-when-compile
+  (require 'cl)
   (require 'advice))
 
 (when (and (ti::emacs-p)
@@ -123,7 +117,7 @@
   (defadvice require
     (around tinylib-ad (feature &optional file-name noerror) act)
     "Emacs compatibility: Added parameter NOERR."
-    (let* ((noerr (ad-get-arg 2)))
+    (let ((noerr (ad-get-arg 2)))
       (if noerr
           (or (featurep feature)
               (load (or file-name (symbol-name feature)) 'noerr 'nomsg))
@@ -152,37 +146,6 @@
             (return ret)))
       (setq ad-return-value ret))))
 
-;;{{{ Version
-
-;;; ......................................................... &version ...
-
-(defconst tinylib-ad-version
-  (substring "$Revision: 2.45 $" 11 15)
-  "Latest version number.")
-
-(defconst tinylib-ad-version-id
-  "$Id: tinylib-ad.el,v 2.45 2007/05/01 17:20:44 jaalto Exp $"
-  "Latest modification time and version number.")
-
-;;; ----------------------------------------------------------------------
-;;;
-(defun tinylib-ad-version (&optional arg)
-  "Show version information. ARG will instruct to print message to echo area."
-  (interactive "P")
-  (ti::package-version-info "tinylib-ad.el" arg))
-
-;;; ----------------------------------------------------------------------
-;;;
-(defun tinylib-ad-submit-bug-report ()
-  "Submit bug report."
-  (interactive)
-  (ti::package-submit-bug-report
-   "tinylib-ad.el"
-   tinylib-ad-version-id
-   '(tinylib-ad-version-id)))
-
-;;}}}
-
-(provide   'tinylib-ad)
+(provide 'tinylib-ad)
 
 ;;; tinylib-ad.el ends here
