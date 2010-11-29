@@ -435,12 +435,17 @@
 
 ;;; Code:
 
-(defconst epackage-version-time "2010.1129.1643"
+(defconst epackage-version-time "2010.1129.1723"
   "*Version of last edit.")
 
 (defcustom epackage--load-hook nil
   "*Hook run when file has been loaded."
   :type  'hook
+  :group 'Epackage)
+
+(defcustom epackage--byte-compile-loader-file nil
+  "*Non-nil measn to byte compile `epackage--loader-file'."
+  :type  'boolean
   :group 'Epackage)
 
 (defcustom epackage--sources-url
@@ -546,12 +551,14 @@ See `epackage-loader-file-generate'.")
 	  (epackage-directory)
 	  name))
 
-(defsubst epackage-file-name-loader-file (package)
-  (format "%s/%s%s"
+(defsubst epackage-file-name-loader-file ()
+  "Return path to boot loader file."
+  (format "%s/%s"
 	  (epackage-directory)
 	  epackage--loader-file))
 
 (defsubst epackage-file-name-vcs-compose (package)
+  "Return VCS directory for PACKAGE."
   (format "%s/%s%s"
 	  (epackage-directory)
 	  epackage--directory-name-vcs
@@ -808,6 +815,7 @@ ACTION can be:
 Exclude directories than contain file .nosearch
 or whose name match `epackage--directory-name'."
   (let ((dirs (epackage-directory-list dir)))
+    (setq list (cons dir list))
     (dolist (elt dirs)
       (cond
        ((file-exists-p (concat elt "/.nosearch")))
@@ -817,14 +825,31 @@ or whose name match `epackage--directory-name'."
     list))
 
 (defun epackage-loader-file-insert-header ()
-  "Empty `current-buffer' and write comments."
+  "Insert header comments."
   (insert
    (format
     "\
-;; Empackge boot file -- automatically generated
+;; Epackge boot file -- automatically generated
+;;
+;; Do not modify. Changes done here will be lost.
 ;; Add following to your ~/.emacs to use this file:
-;;   (load-file \"%s\")\n")
-   (epackage-file-name-loader-file)))
+;;   (load-file \"%s\")
+
+"
+    (file-name-sans-extension
+     (epackage-file-name-loader-file)))))
+
+(defsubst epackage-loader-file-insert-footer ()
+  "Insert Footer."
+  (insert
+   (format "\
+\(provide '%s)
+
+;; End of file
+"
+	   (file-name-sans-extension
+	    (file-name-nondirectory
+	     (epackage-file-name-loader-file))))))
 
 (defun epackage-loader-insert-file-path-list-by-path (path)
   "Insert `load-path' definitions to `current-buffer' from PATH."
@@ -842,7 +867,7 @@ or whose name match `epackage--directory-name'."
     (dolist (file (directory-files
 		   (epackage-file-name-install-directory)
 		   'full-path
-		   (format "^\\.el" package)
+		   "^.*-.*\\.el"
 		   t))
       (setq name
 	    (file-name-sans-extension
@@ -852,31 +877,51 @@ or whose name match `epackage--directory-name'."
       (unless (member package list)
 	(add-to-list 'list package)
 	(epackage-loader-insert-file-path-list-by-path
-	  (epackage-directory-recursive-list package))))))
+	  (epackage-file-name-vcs-compose package))))))
 
-(defun epackage-loader-file-collect ()
-  "Collect loader code into `current-buffer'."
-  ;; FIXME: Use only activate, not enable if both exists
+(defun epackage-loader-file-insert-install-code ()
+  "Insert package installation code into `current-buffer'."
+  ;; FIXME: Should only insert activate, not enable code if both exist
   (dolist (file (directory-files
 		 (epackage-file-name-install-directory)
 		 'full-path
-		 (format "^\\.el" package)
+		 "^.*-.*\\.el"
 		 t))
     (goto-char (point-max))
     (insert-file-contents-literally file)))
 
 (defsubst epackage-loader-file-insert-main ()
-  "Inser loaded Emacs Lisp command to current point."
+  "Insert Epackage loader boot commands to current point."
   (epackage-loader-file-insert-header)
   (epackage-loader-file-insert-path-list)
-  (epackage-loader-file-insert-install-code))
+  (epackage-loader-file-insert-install-code)
+  (epackage-loader-file-insert-footer))
+
+(defun epackage-loader-file-byte-compile ()
+  "Byte compile `epackage-file-name-loader-file'."
+  (interactive)
+  (let ((file (epackage-file-name-loader-file)))
+    (if (file-exists-p file)
+	(byte-compile-file file))))
+
+(defsubst epackage-loader-file-byte-compile-maybe ()
+  "Check `epackage--byte-compile-loader-file' and byte compile."
+  (when epackage--byte-compile-loader-file
+    (epackage-loader-file-byte-compile)))
 
 (defun epackage-loader-file-generate ()
   "Generate main loader for all installed or activated packages."
+  (interactive)
   (let ((file (epackage-file-name-loader-file)))
     (with-current-buffer (find-file-noselect file)
       (delete-region (point-min) (point-max))
-      (epackage-loader-file-insert-main))))
+      (epackage-loader-file-insert-main)
+      (write-region (point-min)
+		    (point-max)
+		    (epackage-file-name-loader-file))
+      (set-buffer-modified-p nil)
+      (kill-buffer (current-buffer))
+      (epackage-loader-file-byte-compile-maybe))))
 
 (defun epackage-sources-list-info-main (package)
   "Return '(pkg url description) for PACKAGE.
@@ -906,7 +951,7 @@ Format is described in variable `epackage--sources-url'."
   (unless (fboundp 'url-retrieve-synchronously)
     (error (concat
 	    "Epackage: this Emacs does not define "
-	    "`url-retrieve-synchronously' which is included in url.el"))))
+	    "`url-retrieve-synchronously' from url.el"))))
 
 (defun epackage-require-git ()
   "Require Git program."
