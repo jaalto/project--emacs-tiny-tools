@@ -2041,6 +2041,7 @@ Following variables are set during BODY:
 	 after-insert-file-functions
 	 (auto-save-interval 0)
 	 (original-backup-inhibited backup-inhibited)
+	 (version-control 'never)
 	 (backup-inhibited t))
      ;; Reset also global
      (setq-default backup-inhibited t)
