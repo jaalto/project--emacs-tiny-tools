@@ -7,7 +7,6 @@
 ;; Author:          Jari Aalto
 ;; Maintainer:      Jari Aalto
 ;;
-;; To get information on this program, call M-x tinylibm-version.
 ;; Look at the code with folding.el
 
 ;; COPYRIGHT NOTICE
@@ -87,7 +86,7 @@
 
 (require 'tinylibb)                     ;Backward compatible functions
 
-(defconst tinylibm-version-time "2010.1129.0717"
+(defconst tinylibm-version-time "2010.1129.0725"
   "Latest version number.")
 
 ;;{{{ function tests
