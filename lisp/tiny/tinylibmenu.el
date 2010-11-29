@@ -317,19 +317,6 @@ Example:
 
 ;;; ----------------------------------------------------------------------
 ;;;
-(defun ti::menu-read-char-exclusive (message)
-  "As `read-char-exclusive', but for Emacs and XEmacs. Display MESSAGE."
-  (if (fboundp 'read-char-exclusive)
-      (cond
-       ((featurep 'xemacs)
-        (message message)
-        (read-char-exclusive))
-       (t
-        (read-char-exclusive message)))
-    (read-char message)))
-
-;;; ----------------------------------------------------------------------
-;;;
 (defun ti::menu-help-output  (variable-symbol)
   "Write doctring, ie Menu help, to the *Help* buffer"
   (with-output-to-temp-buffer "*Help*"
