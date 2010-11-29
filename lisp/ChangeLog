@@ -1,16 +1,39 @@
 2010-11-29 Mon  Jari Aalto  <jari.aalto@cante.net>
 
-	* unmaintained/tinylib-ad.el: New. Officially deprecated. Moved from lisp/.
+	* tiny/tinyepkg.el: Proof of concept implemented. The core
+	functionality is ready. External Emacs Packages can be downloaded,
+	enabled, activated, disabled. Boot loader epackage-loader.el is also
+	functional.
+
+	* tiny/tiny-admin-util.el (tiny-setup-directory-list): Move location.
+
+	* tiny/tinylisp.el (tinylisp-with-file-env-macro): Remove
+	duplicate variable `write-file-functions' from `let'.
+	(tinylisp-with-file-env-macro): Add (version-control 'never).
+	(tinylisp-with-file-env-macro): Add backup-inhibited.
+
+	* tiny/tinylibm.el (ti::compatibility-advice-setup): Remove
+	tinylib-ad.el compatibility need checker.
+	(G3000): Remove compile time note.
+
+	* unmaintained/tinylib-ad.el: New. Officially deprecated. Moved
+	from lisp/. Remove folding marks.
 
 	* tiny/tinylib-ad.el: Deprecate library. No more needed for Emacs 23.x
 	(read-char-exclusive): Remove. Moved to tinylibxe.el
 
 	* unmaintained/tinylibxe.el (read-char-exclusive): New.
 
-	* tiny/tinylibmenu.el (ti::menu-read-char-exclusive): Use readable
+	* tiny/tinylibmenu.el
+	(top level): Remove folding marks. Replace all variables from *-:*
+	to *--*.
+	(ti::menu-read-char-exclusive): Use readable
 	variable names.
 	(ti::menu-read-char-exclusive): Remove. XEmacs compatibility moved
-	to tinylibxe.el.
+	to tinylibxe.el. Convert call from `ti::menu-read-char-exclusive'
+	to `read-char-exclusive'
+	(ti::menu-:menu-mode): Adjust message string.
+	(tinylibmenu-version-time): New.
 
 2010-11-28 Sun  Jari Aalto  <jari.aalto@cante.net>
 
