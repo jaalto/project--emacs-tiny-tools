@@ -22,8 +22,18 @@
 ;;
 ;; Visit <http://www.gnu.org/copyleft/gpl.html> for more information
 
+;; Requirements:
+
+;;      o   Emacs 22.1+ (released 2007). Designed only for Emacs.
+;;          XEmacs has its own packaging system (pui-*).
+;;          http://www.gnu.org/software/emacs
+;;      o   git(1) Distributed Version Control System (DVCS). Any version.
+;;          http://en.wikipedia.org/wiki/Git_(software)
+;;      o   Depends only on standard Emacs. Does not use cl.
+
 ;;; Install:
 
+;;
 ;;  Put this file on your Emacs-Lisp `load-path', add following into your
 ;;  ~/.emacs startup file.
 ;;
@@ -199,7 +209,6 @@
 ;;      root directory is organized as follows:
 ;;
 ;;          epackage
-;;          | epackage.lst              The yellow pages to available packages
 ;;          | epackage-loader.el        activated + installed as one big file
 ;;          |
 ;;          +--install/
@@ -208,8 +217,10 @@
 ;;          |
 ;;          +--vc/     Packages. The Version control repositories.
 ;;             |
-;;             +--<package name>/
-;;             +--<package name2>/
+;;             +-- 00epackage/		Yellow pages: list of available packages
+;;             +-- 00link/		Symbolic links to all *.el *.elc
+;;             +-- package/
+;;             +-- package2/
 ;;             +-- ...
 ;;
 ;;  Epackage specification
@@ -516,7 +527,7 @@
 
 ;;; Code:
 
-(defconst epackage-version-time "2010.1130.0432"
+(defconst epackage-version-time "2010.1130.1008"
   "*Version of last edit.")
 
 (defcustom epackage--load-hook nil
@@ -529,12 +540,15 @@
   :type  'boolean
   :group 'Epackage)
 
-(defcustom epackage--sources-url
-  "http://cante.net/~jaalto/epackage.lst"
+(defcustom epackage--sources-list-url
+  "jaalto@cante.net:srv/git/emacs-lisp-dev--epackage-sources-list"
   "URL to the location of available package list. The yellow pages.
-This is a text file that contains information about package names
-and their DVCS URLs. Empty lines and comment on their own lines
-started with character '#' are ignored:
+This is the Git repository that contains the canonical list of
+available packages.
+
+The included text file contains information about package names
+and their repository download URLs. Empty lines and comment on
+their own lines started with character '#' are ignored:
 
   # Comment
   PACKAGE-NAME REPOSITORY-URL DESCRIPTION
@@ -544,6 +558,9 @@ started with character '#' are ignored:
 An example:
 
   foo git://example.com/repository/foo.git")
+
+(defconst epackage--sources-package-name "00epackage"
+  "The name of local repository of `epackage--sources-list-url'.")
 
 (defcustom epackage--root-directory
   (let (ret)
@@ -614,7 +631,7 @@ Used in `epackage-file-name-vcs-directory-control-file'.")
 
 (defvar epackage--sources-file-name "epackage.lst"
   "Name of yellow pages file that lists available packages.
-See variable `epackage--sources-url'.")
+See variable `epackage--sources-list-url'.")
 
 (defvar epackage--loader-file "epackage-loader.el"
   "file that contains all package enable and activate code.
@@ -679,7 +696,7 @@ documentation of tinyepkg.el."
   (let ((dir (epackage-file-name-vcs-package-control-directory package))
         (file (cdr-safe (assq type epackage--layout-mapping))))
     (if (not file)
-        (error "Epackage: Unknown TYPE argument '%s'" type)
+        (error "Epackage: [ERROR] Unknown TYPE argument '%s'" type)
       (cond
        ((eq type 'info)
          (format "%s/%s" dir file))
@@ -719,14 +736,14 @@ documentation of tinyepkg.el."
 (defun epackage-package-downloaded-p (package)
   "Check if package has been downloaded."
   (unless (stringp package)
-    (error "Epackage: PACKAGE arg is not a string."))
+    (error "Epackage: [ERROR arg 'package' is not a string."))
   (let ((dir (epackage-file-name-vcs-compose package)))
     (file-directory-p dir)))
 
 (defun epackage-package-activated-p (package)
   "Check if package has been activated, return activate file."
   (unless (stringp package)
-    (error "Epackage: PACKAGE arg is not a string."))
+    (error "Epackage: [ERROR] arg 'package' is not a string."))
   (let ((file (epackage-file-name-activated-compose package)))
     (if (file-exists-p file)
         file)))
@@ -734,14 +751,20 @@ documentation of tinyepkg.el."
 (defun epackage-package-enabled-p (package)
   "Check if package has been enabled, return enabled file."
   (unless (stringp package)
-    (error "Epackage: PACKAGE arg is not a string."))
+    (error "Epackage: [ERROR] arg 'package' is not a string."))
   (let ((file (epackage-file-name-install-compose package)))
     (if (file-exists-p file)
         file)))
 
+(defsubst epackage-sources-list-directory ()
+  "Return sources list, the yellow pages, directory."
+  (epackage-file-name-vcs-compose epackage--sources-package-name))
+
 (defsubst epackage-file-name-sources-list ()
   "Return path to `epackage--sources-file-name'."
-  (epackage-file-name-compose epackage--sources-file-name))
+  (format "%s/%s"
+	  (epackage-sources-list-directory)
+	  epackage--sources-file-name))
 
 (defsubst epackage-sources-list-p ()
   "Check existence of `epackage--sources-file-name'."
@@ -759,7 +782,7 @@ documentation of tinyepkg.el."
             (not (file-exists-p epackage--program-git)))
     (error
      (substitute-command-keys
-      (format "Epackage: Invalied variable `epackage--program-git' (%s) "
+      (format "Epackage: [ERROR] Invalid variable `epackage--program-git' (%s) "
               epackage--program-git
               "Run \\[epackage-initialize]")))))
 
@@ -770,7 +793,8 @@ documentation of tinyepkg.el."
            (file-name-as-directory epackage--root-directory))
           (if (stringp epackage--directory-name)
               epackage--directory-name
-            (error "Epackage: epackage--directory-name is not a string"))))
+            (error
+	     "Epackage: [ERROR] epackage--directory-name is not a string"))))
 
 (put  'epackage-with-binary 'lisp-indent-function 0)
 (put  'epackage-with-binary 'edebug-form-spec '(body))
@@ -805,30 +829,77 @@ documentation of tinyepkg.el."
            (not 'display)
            args)))
 
+(defsubst epackage-git-error-handler (&optional command)
+  "On Git error, show proces buffer and signal error."
+  (display-buffer epackage--process-output)
+  (error "Epackage: [ERROR] Git %scommand error"
+	 (if command
+	     (format "'%s' " command)
+	   "")))
+
 (defsubst epackage-git-command-ok-p (status)
   "Return non-nil if command STATUS was ok."
   (zerop status))
 
-(defun epackage-git-command-clone (url dir &optional verbose)
-  "Clone git PACKAGE under `epackage--directory-name'.
+(defun epackage-git-command-pull (dir &optional verbose)
+  "Run git pull in DIR.
 If VERBOSE is non-nil, display progress message."
-  (let ((default-directory (epackage-file-name-vcs-directory)))
+  (let ((default-directory dir))
     (if verbose
         (message "Epackage: Running git clone %s %s ..." url git))
     (prog1
-        (epackage-git-command-ok-p
-         (epackage-git-command-process
-          "clone"
-          url
-          dir))
+        (unless (epackage-git-command-ok-p
+		 (epackage-git-command-process
+		  "pull"))
+	  (epackage-git-error-handler "clone")))
     (if verbose
-        (message "Epackage: Running git clone %s %s ...done" url git)))))
+        (message "Epackage: Running git clone %s %s ...done" url git))))
 
-(defun epackage-download-package (package &optional verbose)
-  "Download PACKAGE to VCS directory."
+(defun epackage-upgrade-package (package &optional verbose)
+  "Upgrade PACKAGE in VCS directory.
+If VERBOSE is non-nil, display progress message."
   (let ((url (epackage-sources-list-info-url package)))
     (unless url
-      (error "Epackage: No Git URL for package '%s'" package))
+      (error "Epackage: [ERROR] No Git URL for package '%s'" package))
+    (let ((dir (epackage-file-name-vcs-compose package)))
+      (epackage-git-command-pull dir))))
+
+(defun epackage-upgrade-sources-list ()
+  "Update list of available packages."
+  (let ((dir (epackage-sources-list-directory)))
+    (unless (file-directory-p dir)
+      (error
+       (substitute-command-keys
+	(format
+	 (concat "Epackage: No such directory '%s'. "
+		 "Run \\[epackage-initialize]")
+	 dir))))
+    (epackage-git-command-pull dir)))
+
+(defun epackage-git-command-clone (url dir &optional verbose)
+  "Run git clone for PACKAGE in DIR.
+If VERBOSE is non-nil, display progress message."
+  (let ((default-directory (epackage-file-name-vcs-directory)))
+    (if (file-directory-p dir)
+	(error "Epackage: [ERROR] directory already exists: %s" dir))
+    (if verbose
+        (message "Epackage: Running git clone %s %s ..." url git))
+    (prog1
+        (unless (epackage-git-command-ok-p
+		 (epackage-git-command-process
+		  "clone"
+		  url
+		  dir))
+	  (epackage-git-error-handler "clone")))
+    (if verbose
+        (message "Epackage: Running git clone %s %s ...done" url git))))
+
+(defun epackage-download-package (package &optional verbose)
+  "Download PACKAGE to VCS directory.
+If VERBOSE is non-nil, display progress message."
+  (let ((url (epackage-sources-list-info-url package)))
+    (unless url
+      (error "Epackage: [ERROR] No Git URL for package '%s'" package))
     (let ((dir (epackage-file-name-vcs-compose package)))
       (epackage-git-command-clone url dir))))
 
@@ -838,7 +909,7 @@ If VERBOSE is non-nil, display progress message."
                package 'enable))
         (to (epackage-file-name-install-compose package)))
     (unless (file-exists-p from)
-      (error "Epackage: file does not exists: %s" from))
+      (error "Epackage: [ERROR] File does not exists: %s" from))
     (copy-file from to 'overwrite 'keep-time)))
 
 (defun epackage-activate-package (package)
@@ -847,7 +918,7 @@ If VERBOSE is non-nil, display progress message."
                package 'activate))
         (to (epackage-file-name-activated-compose package)))
     (unless (file-exists-p from)
-      (error "Epackage: file does not exists: %s" from))
+      (error "Epackage: [ERROR] file does not exists: %s" from))
     (copy-file from to 'overwrite 'keep-time)))
 
 (defun epackage-enable-package (package)
@@ -856,7 +927,7 @@ If VERBOSE is non-nil, display progress message."
                package 'enable))
         (to (epackage-file-name-enabled-compose package)))
     (unless (file-exists-p from)
-      (error "Epackage: file does not exists: %s" from))
+      (error "Epackage: [ERROR] file does not exists: %s" from))
     (copy-file from to 'overwrite 'keep-time)))
 
 (defun epackage-disable-package (package)
@@ -1006,7 +1077,7 @@ or whose name match `epackage--directory-name'."
 
 (defun epackage-sources-list-info-main (package)
   "Return '(pkg url description) for PACKAGE.
-Format is described in variable `epackage--sources-url'."
+Format is described in variable `epackage--sources-list-url'."
   (epackage-with-sources-list
    (goto-char (point-min))
    (let ((re
@@ -1031,7 +1102,7 @@ Format is described in variable `epackage--sources-url'."
   "Require Emacs features."
   (unless (fboundp 'url-retrieve-synchronously)
     (error (concat
-            "Epackage: this Emacs does not define "
+            "Epackage: [ERROR] this Emacs does not define "
             "`url-retrieve-synchronously' from url.el"))))
 
 (defun epackage-require-git ()
@@ -1040,7 +1111,7 @@ Format is described in variable `epackage--sources-url'."
    ((null epackage--program-git)
     (let ((bin (executable-find "git")))
       (unless bin
-        (error "Epackage: program 'git' not found in PATH"))
+        (error "Epackage: [ERROR] program 'git' not found in PATH"))
       (setq epackage--program-git bin)))
    ((and (stringp epackage--program-git)
          (not (file-exists-p epackage--program-git)))
@@ -1073,7 +1144,7 @@ Format is described in variable `epackage--sources-url'."
     (when (or (< status 200)
               (>= status 300))
       (display-buffer (current-buffer))
-      (error "HTTP access error %d%s"
+      (error "[ERROR] HTTP access problem %d%s"
              status
              (if url
                  (concat " " url)
@@ -1083,7 +1154,7 @@ Format is described in variable `epackage--sources-url'."
   "Download URL and save to a FILE."
   (let ((buffer (url-retrieve-synchronously url)))
     (unless buffer
-      (error "Epackage: can't access %s" url))
+      (error "Epackage: [ERROR] can't access url: %s" url))
     (with-current-buffer buffer
       (epackage-url-http-parse-respons-error url)
       (re-search-forward "^$" nil 'move)
@@ -1092,18 +1163,21 @@ Format is described in variable `epackage--sources-url'."
         (write-region (point) (point-max) file)
         (kill-buffer (current-buffer))))))
 
-(defun epackage-url-retrieve-sources-list (&optional message)
-  "Download package list file, the yellow pages."
+(defun epackage-download-sources-list (&optional message)
+  "Download sources list file, the yellow pages."
   (if message
       (message message))
-  (epackage-url-retrieve-main
-   epackage--sources-url
-   (epackage-file-name-sources-list)))
+  (if (epackage-sources-list-p)
+      (error "Epackage: [ERROR] Directory already exists: %s"
+	     (epackage-sources-list-directory)))
+  (epackage-git-command-clone epackage--sources-list-url dir))
 
 (defun epackage-cmd-download-sources-list ()
-  "Download package list; the yellow pages of packages."
+  "Download or upgrade package list; the yellow pages of package repositories."
   (interactive)
-  (epackage-url-retrieve-sources-list "Downloading package sources list"))
+  (if (epackage-sources-list-p)
+      (epackage-retrieve-sources-list "Upgrading available package list")
+    (epackage-download-sources-list "Downloading available package list")))
 
 (defun epackage-cmd-download-package (PACKAGE)
   "Download PACKAGE, but do not install it."
