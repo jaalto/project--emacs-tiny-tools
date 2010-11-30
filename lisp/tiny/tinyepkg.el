@@ -37,12 +37,11 @@
 ;;  Put this file on your Emacs-Lisp `load-path', add following into your
 ;;  ~/.emacs startup file.
 ;;
-;;      (require 'tinyepkg)             ; Requires Emacs 22+
+;;      ;;  M-x epackage to start installing, upgrading. removing
+;;      (autoload 'epackage "tinyepkg" "" t)
 ;;
-;;  You can also use the preferred way: autoload
-;;
-;;       (autoload 'epackage "tinyepkg" "" t)
-;;       (global-set-key "\C-cP" 'epackage)
+;;	;; One big file to boot all packages (auto generated)
+;;	(load "~/.emacs.d/epackage/00link/epackage-loader" 'noerr)
 
 ;;; Commentary:
 
@@ -209,17 +208,19 @@
 ;;      root directory is organized as follows:
 ;;
 ;;          epackage
-;;          | epackage-loader.el        activated + installed as one big file
 ;;          |
-;;          +--install/
-;;          |  <package>-activate.el files
-;;          |  <package>-install.el files
+;;	    +-- 00link/
+;;          |   epackage-loader.el      One big boot file
+;;	    |	*.el *.elc	        Symlinks to ../vc/PACKAGE/*.el
+;;	    |
+;;          +-- install/
+;;          |   <package>-activate.el files
+;;          |   <package>-install.el files
 ;;          |
 ;;          +--vc/     Packages. The Version control repositories.
 ;;             |
 ;;             +-- 00epackage/          Yellow pages: list of available packages
-;;             +-- 00link/              Symbolic links to all *.el *.elc
-;;             +-- package/
+;;	       +-- package/		Downloaded package
 ;;             +-- package2/
 ;;             +-- ...
 ;;
@@ -251,10 +252,10 @@
 ;;          |
 ;;          +-- epackage/
 ;;              info                    required: The package control file
+;;              PACKAGE-0loaddefs.el    optional: ###autoload statements
 ;;              PACKAGE-autoloads.el    optional: all autoload statements (raw)
 ;;              PACKAGE-compile.el      optional: Code to byte compile package
 ;;              PACKAGE-install.el      required: Code to make package available
-;;              PACKAGE-loaddefs.el     required: ###autoload statements
 ;;              PACKAGE-uninstall.el    optional: to remove package
 ;;              PACKAGE-xactivate.el    optional: Code to activate package
 ;;
@@ -266,30 +267,35 @@
 ;;
 ;;              cat PACKAGE-* | grep -v 'uninst|compile' > PACKAGE-all-in-one-loader.el
 ;;
+;;     The *-0loaddefs.el
+;;
+;;      This file contains extracted ##autoload definitions. The file
+;;	is suatomatically generated. The file does not modify user's
+;;	environment. If PACKAGE does not contains any ###autoload
+;;	definitions, the manually crafted *-install.el file works as a
+;;	substitute. The "Zero" at start of the name is due to proper
+;;	sorting ordering of all files.
+;;
 ;;     The *-install.el
 ;;
-;;      This file does not modify user's environment. It publishes
-;;      user variables and interactive `M-x' functions in autoload
-;;      state for the package. This file is usually necessary only if
-;;      PACKAGE does not contain proper ###autoload statements. See
-;;      *-loaddefs alternative in that case.
-;;
-;;     The *-loaddefs.el
-;;
-;;      This file does not modify user's environment. It is
-;;      automatically generated from the PACKAGE by collecting all
-;;      ###autoload definitions. If PACKAGE does not contains any
-;;      ###autoload definitions, then manually crafter *-install.el
-;;      file works as a substitute for file.
+;;      This file is manually written and it publishes user variables
+;;	and interactive `M-x' functions in an autoload state. This
+;;	file does not modify user's environment. This file is
+;;	necessary only if PACKAGE does not contain proper ###autoload
+;;	statements (see *-0loaddefs.el). The "install" in name refers
+;;	to installation or availability of interactive functions, not
+;;	to any modifications to the system. Mnemonic: "if you load
+;;	this file, you have can start using package's features" (see
+;;	*-activate.el).
 ;;
 ;;     The *-uninstall.el
 ;;
 ;;      This file does the opposite of *-install.el and *-activate.el
-;;      Runs commands to remove the package as if it has never been
+;;      It runs commands to remove the package as if it has never been
 ;;      loaded. Due to the nature of Emacs, it may not be possible to
-;;      completely uninstall the package. The uninstallation usually
-;;      covers undoing the changes to variables like *-hook,
-;;      *-functions and `auto-mode-alist'. The actual symbols (defined
+;;      completely uninstall the package. The uninstallation covers
+;;      undoing the changes to *-hook, *-functions and
+;;      `auto-mode-alist' variables. The actual symbols (defined
 ;;      functions and variables) are not removed. Usually it is more
 ;;      practical to just restart Emacs than completely trying undo
 ;;      all the effects of a package.
@@ -297,11 +303,14 @@
 ;;     The *-xactivate.el
 ;;
 ;;      This file makes the PACKAGE immediately active in user's
-;;      environment. It modifies current environment by adding
+;;      environment. It can modify current environment by adding
 ;;      functions to hooks, adding minor or major modes or arranging
-;;      keybindings so that when pressed, the feature is loaded. It is
-;;      adviseable that any custom settings, like variables and prefix
-;;      keys, are defined *before* this file is loaded.
+;;      keybindings so that when pressed, the feature is loaded. It
+;;      may also loop through `buffer-list' to activate features
+;;      immediately in running Emacs. It is adviseable that any custom
+;;      settings, like variables and prefix keys, are defined *before*
+;;      this file is loaded. Mnemonic: "If you load this file, the
+;;      bells and whistles are turned on".
 ;;
 ;;  The info file
 ;;
@@ -540,7 +549,7 @@
 
 ;;; Code:
 
-(defconst epackage-version-time "2010.1130.1221"
+(defconst epackage-version-time "2010.1130.1257"
   "*Version of last edit.")
 
 (defcustom epackage--load-hook nil
@@ -609,6 +618,11 @@ Use function `epackage-file-name-vcs-compose' for full path name.")
 
 (defvar epackage--directory-name-install "install"
   "Install directory under `epackage--root-directory'.")
+
+(defvar epackage--directory-name-link "00link"
+  "Link directory under `epackage--root-directory'.
+This directory contains symlinks to all installed packages and
+their *.el and *.elc files.")
 
 (defconst epackage--directory-exclude-regexp
   (concat
@@ -686,6 +700,12 @@ See `epackage-loader-file-generate'.")
   (format "%s/%s"
           (epackage-directory)
           epackage--directory-name-install))
+
+(defsubst epackage-file-name-link-directory ()
+  "Return link directory"
+  (format "%s/%s"
+          (epackage-directory)
+          epackage--directory-name-link))
 
 (defsubst epackage-file-name-vcs-package-control-directory (package)
   "Return control directory of PACKAGE"
@@ -795,9 +815,11 @@ documentation of tinyepkg.el."
             (not (file-exists-p epackage--program-git)))
     (error
      (substitute-command-keys
-      (format "Epackage: [ERROR] Invalid variable `epackage--program-git' (%s) "
-              epackage--program-git
-              "Run \\[epackage-initialize]")))))
+      (format
+       `,(concat
+	  "Epackage: [ERROR] Invalid value in `epackage--program-git' (%s) "
+	  "Run \\[epackage-initialize]")
+	  epackage--program-git)))))
 
 (defun epackage-directory ()
   "Return root directory."
@@ -1142,7 +1164,8 @@ Format is described in variable `epackage--sources-list-url'."
   (dolist (dir (list
                 (epackage-directory)
                 (epackage-file-name-vcs-directory)
-                (epackage-file-name-install-directory)))
+                (epackage-file-name-install-directory)
+                (epackage-file-name-link-directory)))
     (unless (file-directory-p dir)
       (message "Epackage: Making directory %s ..." dir)
       (make-directory dir))))
