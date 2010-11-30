@@ -313,10 +313,10 @@
 ;;      any leading spaces before the '(' or 'defun', then function won't
 ;;      be found and will not be (un)instrumented.
 ;;
-;;      o   $ e A Restore (a)ll elp'd functions
-;;      o   $ -   Eval buffer containing functions (or eval single function)
+;;      o   $ e A  Restore (a)ll elp'd functions
+;;      o   $ -    Eval buffer containing functions (or eval single function)
 ;;      o   $ e I  Instrument all functions in buffer (or single function)
-;;      o   $ e h     Run the harness test that calls the functions
+;;      o   $ e H  Run the harness test that calls the functions
 ;;
 ;;  Elp: Summary mode's sort capabilities
 ;;
@@ -1573,7 +1573,7 @@ e   r(e)parse instrumentation: forget all instrumented functions,
 
 Misc:
 
-h   Harness test. Eval everything 3 times from current point forward
+H   Harness test. Eval everything 3 times from current point forward
     and record results. See `tinylisp-elp-harness' for full explanation.
     Prefix arg determines harness rounds.
 m   Set master function. When functions below master are called, the timing
@@ -3143,7 +3143,7 @@ Default is call count is 3, but you can supply numeric prefix COUNT. VERB.
    2. Write test functions with t-*
    3. Evaluate buffer (instantiate functions) M-x eval-current-buffer
    4. Instrument test functions: $ e I t- RET
-   5. Run harness: $ e I h
+   5. Run harness: $ e I H
 
    ** Remember, you must have instrumented the functions before
    ** you call this harness function
@@ -3168,7 +3168,7 @@ like *scratch*.
   ;; -!- The cursor is blinking here
 
   (when tinylisp--harness-flag
-    (ti::dotimes count 1 500  ; run 500 times
+    (dotimes (i 500)
       (t-1)
       (t-2)
       (t-3)))
@@ -4377,7 +4377,7 @@ Return:
 	  (setq name unknown))
 	(insert
 	 (format
-	  "%-15s %3d %-35s %s %s\n"
+	  "%-30s %3d %-35s %s %s\n"
 	  (concat
 	   (if (string-match "^/" (or name ""))
 	       "*"
@@ -4400,11 +4400,12 @@ Return:
 	    (format "%s ..." (ti::string-left (prin1-to-string pkg) 80)))))
 	(if verb
 	    (message "TinyLisp: lib info %d/%d %s" i max name))
-	(incf  i)
+	(incf  i)x
 	(setq dep-list  nil
 	      pkg       nil)))
     (tinylisp-with-current-buffer buffer
       (ti::pmin)
+      (ti::buffer-remove-whitespace-eol)
       (sort-lines nil (point-min) (point-max)))
     (when verb
       (pop-to-buffer buffer)
