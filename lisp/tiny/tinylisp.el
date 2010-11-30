@@ -2876,7 +2876,6 @@ TinyLisp: %sinstrumented package '%s'. Count of functions is unknown."
       ;;  This evaluates the function prior elp'ing it.
       (tinylisp-eval-at-point)
       (tinylisp-symbol-do-macro func nil
-	(elp-restore-function func) ;do this first
 	(elp-instrument-function func))
       (message (format "TinyLisp: ELP instrumented [%s]" func)))))
 
