@@ -3109,13 +3109,13 @@ harness run is over."
     (unwind-protect ;; make sure tinylisp--harness-flag is set to nil
         (progn
           (setq tinylisp--harness-flag t)
-          (ti::dotimes iterator 0 count
+          (ti::dotimes iterator 1 count
             (tinylisp-elp-reset-list)   ;wipe timings
             (if verb (message "TinyLisp:  Eval round %d/%d ... "
-                              (1+ iterator) rounds))
+                              iterator rounds))
             (eval-region beg (point-max))
             (tinylisp-elp-results
-             'record (format " -- %d/%d\n" (1+ iterator) rounds)))
+             'record (format " -- %d/%d\n" iterator rounds)))
           (if verb
               (message "TinyLisp: Eval rounds done."))
           (tinylisp-b-record 'pmin))
