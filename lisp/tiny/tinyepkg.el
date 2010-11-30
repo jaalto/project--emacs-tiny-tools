@@ -549,7 +549,7 @@
 
 ;;; Code:
 
-(defconst epackage-version-time "2010.1130.1257"
+(defconst epackage-version-time "2010.1130.1450"
   "*Version of last edit.")
 
 (defcustom epackage--load-hook nil
@@ -669,6 +669,9 @@ See `epackage-loader-file-generate'.")
 
 (defvar epackage--process-output "*Epackage process*"
   "Output of `epackage--program-git'.")
+
+(defvar epackage--debug t
+  "If non-nil, activate debug.")
 
 (defsubst epackage-file-name-compose (name)
   "Return path to NAME in epackage directory."
@@ -831,8 +834,22 @@ documentation of tinyepkg.el."
             (error
              "Epackage: [ERROR] epackage--directory-name is not a string"))))
 
-(put  'epackage-with-binary 'lisp-indent-function 0)
-(put  'epackage-with-binary 'edebug-form-spec '(body))
+(put 'epackage-with-debug 'lisp-indent-function 0)
+(put 'epackage-with-debug 'edebug-form-spec '(body))
+(defmacro epackage-with-debug (&rest body)
+  "Run BODY if variable `epackage--debug' is non-nil."
+  `(when epackage--debug
+     ,@body))
+
+(put 'epackage-with-directory 'lisp-indent-function 1)
+(put 'epackage-with-directory 'edebug-form-spec '(body))
+(defmacro epackage-with-directory (dir &rest body)
+  "Set `default-directory' to DIR while running BODY."
+  `(let ((default-directory (file-name-as-directory ,dir))) ;Must end in slash
+     ,@body))
+
+(put 'epackage-with-binary 'lisp-indent-function 0)
+(put 'epackage-with-binary 'edebug-form-spec '(body))
 (defmacro epackage-with-binary (&rest body)
   "Disable all interfering `write-file' effects and run BODY."
   `(let ((version-control 'never)
@@ -842,8 +859,8 @@ documentation of tinyepkg.el."
          after-save-hook)
      ,@body))
 
-(put  'epackage-with-sources-list 'lisp-indent-function 0)
-(put  'epackage-with-sources-list 'edebug-form-spec '(body))
+(put 'epackage-with-sources-list 'lisp-indent-function 0)
+(put 'epackage-with-sources-list 'edebug-form-spec '(body))
 (defmacro epackage-with-sources-list (&rest body)
   "Run BODY in package list buffer."
   `(progn
@@ -851,20 +868,6 @@ documentation of tinyepkg.el."
      (with-current-buffer
          (find-file-noselect (epackage-file-name-sources-list))
        ,@body)))
-
-(defun epackage-git-command-process (&rest args)
-  "Run git COMMAND with output to `epackage--process-output'."
-  (epackage-program-git-verify)
-  (with-current-buffer (get-buffer-create epackage--process-output)
-    (unless (stringp epackage--program-git)
-      (error "Epackage: [ERROR] Not a string: epackage--program-git"))
-    (goto-char (point-max))
-    (apply 'call-process
-           epackage--program-git
-           (not 'infile)
-           (current-buffer)
-           (not 'display)
-           args)))
 
 (defsubst epackage-git-error-handler (&optional command)
   "On Git error, show proces buffer and signal error."
@@ -878,19 +881,64 @@ documentation of tinyepkg.el."
   "Return non-nil if command STATUS was ok."
   (zerop status))
 
-(defun epackage-git-command-pull (dir &optional verbose)
-  "Run git pull in DIR.
+(defun epackage-git-command-process (&rest args)
+  "Run git COMMAND with output to `epackage--process-output'."
+  (epackage-program-git-verify)
+  (epackage-with-debug
+    (let ((dir default-directory)) ;; buffer local variable
+      (with-current-buffer (get-buffer-create epackage--process-output)
+	(goto-char (point-max))
+	(insert
+	 (format "** debug: [%s] git %s\n"
+		 dir
+		 (prin1-to-string args))))))
+  (with-current-buffer (get-buffer-create epackage--process-output)
+    (goto-char (point-max)))
+  (apply 'call-process
+	 epackage--program-git
+	 (not 'infile)
+	 (get-buffer-create epackage--process-output)
+	 (not 'display)
+	 args))
+
+(put 'epackage-with-git-command 'lisp-indent-function 2)
+(put 'epackage-with-git-command 'edebug-form-spec '(body))
+(defmacro epackage-with-git-command (dir verbose &rest args)
+  "Run git command in DIR with ARGS.
 If VERBOSE is non-nil, display progress message."
-  (let ((default-directory dir))
-    (if verbose
-        (message "Epackage: Running 'git pull' in %s ..." dir))
-    (prog1
-        (unless (epackage-git-command-ok-p
-                 (epackage-git-command-process
-                  "pull"))
-          (epackage-git-error-handler "clone")))
-    (if verbose
-        (message "Epackage: Running 'git pull' in %s ...done" dir))))
+  `(epackage-with-directory ,dir
+     (if verbose
+	 (message "Epackage: Running 'git %s' in %s ..."
+		  (apply 'mapconcat ,args " ")
+		  ,dir))
+     (prog1
+	 (unless (epackage-git-command-ok-p
+		  (epackage-git-command-process
+		   ,@args))
+	   (epackage-git-error-handler "pull")))
+     (if verbose
+	 (message "Epackage: Running 'git %s' in %s ...done"
+		  (apply 'mapconcat ,args " ")
+		  ,dir))))
+
+(defun epackage-git-command-branch (dir &optional verbose)
+  "Run 'git branch' in DIR.
+If VERBOSE is non-nil, display progress message."
+  (epackage-with-git-command dir verbose
+    "branch"))
+
+(defun epackage-git-command-pull (dir &optional verbose)
+  "Run 'git branch' in DIR.
+If VERBOSE is non-nil, display progress message."
+  (epackage-with-git-command dir verbose
+    "pull"))
+
+(defun epackage-git-command-clone (url dir &optional verbose)
+  "Run 'git clone URL DIR' in VCS package directory vault.
+If VERBOSE is non-nil, display progress message."
+  (epackage-with-directory (epackage-file-name-vcs-directory)
+    (epackage-with-git-command dir verbose
+      "clone" url dir)))
 
 (defun epackage-upgrade-package (package &optional verbose)
   "Upgrade PACKAGE in VCS directory.
@@ -912,24 +960,6 @@ If VERBOSE is non-nil, display progress message."
                  "Run \\[epackage-initialize]")
          dir))))
     (epackage-git-command-pull dir)))
-
-(defun epackage-git-command-clone (url dir &optional verbose)
-  "Run git clone for PACKAGE in DIR.
-If VERBOSE is non-nil, display progress message."
-  (let ((default-directory (epackage-file-name-vcs-directory)))
-    (if (file-directory-p dir)
-        (error "Epackage: [ERROR] directory already exists: %s" dir))
-    (if verbose
-        (message "Epackage: Running git clone %s %s ..." url git))
-    (prog1
-        (unless (epackage-git-command-ok-p
-                 (epackage-git-command-process
-                  "clone"
-                  url
-                  dir))
-          (epackage-git-error-handler "clone")))
-    (if verbose
-        (message "Epackage: Running git clone %s %s ...done" url git))))
 
 (defun epackage-download-package (package &optional verbose)
   "Download PACKAGE to VCS directory.
