@@ -134,11 +134,11 @@
 ;;          name section status v:VERSION package-description
 ;;          1    2       3      4         5
 ;;
-;;	Mode indicators are:
+;;      Mode indicators are:
 ;;
 ;;      o   compile - byte compile package on install phase.
-;;	o   activate|enable - Auto-enable or activate on install phase
-;;	    See "status" for more explanation.
+;;      o   activate|enable - Auto-enable or activate on install phase
+;;          See "status" for more explanation.
 ;;
 ;;      The fields are:
 ;;
@@ -151,7 +151,7 @@
 ;;      In this view, some of the commands are (see mode help `C-h' `m'):
 ;;
 ;;      o   d, run `dired' on package installation directory.
-;;      o   e, edit package "info".
+;;      o   e, edit package's *info* file.
 ;;      o   E, email upstream, the package author (maintainer). You can
 ;;             as for new wishlist features, report bugs etc.
 ;;      o   g, get. Update avaiĺable package list.
@@ -217,8 +217,8 @@
 ;;          |
 ;;          +--vc/     Packages. The Version control repositories.
 ;;             |
-;;             +-- 00epackage/		Yellow pages: list of available packages
-;;             +-- 00link/		Symbolic links to all *.el *.elc
+;;             +-- 00epackage/          Yellow pages: list of available packages
+;;             +-- 00link/              Symbolic links to all *.el *.elc
 ;;             +-- package/
 ;;             +-- package2/
 ;;             +-- ...
@@ -319,6 +319,7 @@
 ;;            note YYYY-MM-DD the code hasn't been touched since 2006 ; ]
 ;;          *Email:
 ;;          Bugs:
+;;	    Maintainer:
 ;;          Vcs-Type:
 ;;          Vcs-Url:
 ;;          Vcs-Browser:
@@ -332,6 +333,12 @@
 ;;           [<Longer description, next paragraph>]
 ;;
 ;;  Details of the info file fields in alphabetical order
+;;
+;;     Bugs
+;;
+;;	URL where the bugs should be reported. This can be email address
+;;	or link to a issue tracker of upstream project. Note: send
+;;	problems epackage problems to address mentioned in `Maintainer'.
 ;;
 ;;     Conflicts
 ;;
@@ -392,6 +399,12 @@
 ;;      If misssing, the value is automatically assumed "GPL-2+". The
 ;;      valid License abbreviations should follow list defined at
 ;;      <http://wiki.debian.org/CopyrightFormat>.
+;;
+;;     Maintainer
+;;
+;;      The packaged who maintains the utility in epackage format. If
+;;      this field is missing `Email' is assumed. Best if upstream (Email)
+;;	is also the Maintainer of epackage.
 ;;
 ;;     Package (required)
 ;;
@@ -527,7 +540,7 @@
 
 ;;; Code:
 
-(defconst epackage-version-time "2010.1130.1008"
+(defconst epackage-version-time "2010.1130.1221"
   "*Version of last edit.")
 
 (defcustom epackage--load-hook nil
@@ -763,8 +776,8 @@ documentation of tinyepkg.el."
 (defsubst epackage-file-name-sources-list ()
   "Return path to `epackage--sources-file-name'."
   (format "%s/%s"
-	  (epackage-sources-list-directory)
-	  epackage--sources-file-name))
+          (epackage-sources-list-directory)
+          epackage--sources-file-name))
 
 (defsubst epackage-sources-list-p ()
   "Check existence of `epackage--sources-file-name'."
@@ -794,7 +807,7 @@ documentation of tinyepkg.el."
           (if (stringp epackage--directory-name)
               epackage--directory-name
             (error
-	     "Epackage: [ERROR] epackage--directory-name is not a string"))))
+             "Epackage: [ERROR] epackage--directory-name is not a string"))))
 
 (put  'epackage-with-binary 'lisp-indent-function 0)
 (put  'epackage-with-binary 'edebug-form-spec '(body))
@@ -821,6 +834,8 @@ documentation of tinyepkg.el."
   "Run git COMMAND with output to `epackage--process-output'."
   (epackage-program-git-verify)
   (with-current-buffer (get-buffer-create epackage--process-output)
+    (unless (stringp epackage--program-git)
+      (error "Epackage: [ERROR] Not a string: epackage--program-git"))
     (goto-char (point-max))
     (apply 'call-process
            epackage--program-git
@@ -833,9 +848,9 @@ documentation of tinyepkg.el."
   "On Git error, show proces buffer and signal error."
   (display-buffer epackage--process-output)
   (error "Epackage: [ERROR] Git %scommand error"
-	 (if command
-	     (format "'%s' " command)
-	   "")))
+         (if command
+             (format "'%s' " command)
+           "")))
 
 (defsubst epackage-git-command-ok-p (status)
   "Return non-nil if command STATUS was ok."
@@ -846,14 +861,14 @@ documentation of tinyepkg.el."
 If VERBOSE is non-nil, display progress message."
   (let ((default-directory dir))
     (if verbose
-        (message "Epackage: Running git clone %s %s ..." url git))
+        (message "Epackage: Running 'git pull' in %s ..." dir))
     (prog1
         (unless (epackage-git-command-ok-p
-		 (epackage-git-command-process
-		  "pull"))
-	  (epackage-git-error-handler "clone")))
+                 (epackage-git-command-process
+                  "pull"))
+          (epackage-git-error-handler "clone")))
     (if verbose
-        (message "Epackage: Running git clone %s %s ...done" url git))))
+        (message "Epackage: Running 'git pull' in %s ...done" dir))))
 
 (defun epackage-upgrade-package (package &optional verbose)
   "Upgrade PACKAGE in VCS directory.
@@ -870,10 +885,10 @@ If VERBOSE is non-nil, display progress message."
     (unless (file-directory-p dir)
       (error
        (substitute-command-keys
-	(format
-	 (concat "Epackage: No such directory '%s'. "
-		 "Run \\[epackage-initialize]")
-	 dir))))
+        (format
+         (concat "Epackage: No such directory '%s'. "
+                 "Run \\[epackage-initialize]")
+         dir))))
     (epackage-git-command-pull dir)))
 
 (defun epackage-git-command-clone (url dir &optional verbose)
@@ -881,16 +896,16 @@ If VERBOSE is non-nil, display progress message."
 If VERBOSE is non-nil, display progress message."
   (let ((default-directory (epackage-file-name-vcs-directory)))
     (if (file-directory-p dir)
-	(error "Epackage: [ERROR] directory already exists: %s" dir))
+        (error "Epackage: [ERROR] directory already exists: %s" dir))
     (if verbose
         (message "Epackage: Running git clone %s %s ..." url git))
     (prog1
         (unless (epackage-git-command-ok-p
-		 (epackage-git-command-process
-		  "clone"
-		  url
-		  dir))
-	  (epackage-git-error-handler "clone")))
+                 (epackage-git-command-process
+                  "clone"
+                  url
+                  dir))
+          (epackage-git-error-handler "clone")))
     (if verbose
         (message "Epackage: Running git clone %s %s ...done" url git))))
 
@@ -1169,14 +1184,14 @@ Format is described in variable `epackage--sources-list-url'."
       (message message))
   (if (epackage-sources-list-p)
       (error "Epackage: [ERROR] Directory already exists: %s"
-	     (epackage-sources-list-directory)))
+             (epackage-sources-list-directory)))
   (epackage-git-command-clone epackage--sources-list-url dir))
 
 (defun epackage-cmd-download-sources-list ()
   "Download or upgrade package list; the yellow pages of package repositories."
   (interactive)
   (if (epackage-sources-list-p)
-      (epackage-retrieve-sources-list "Upgrading available package list")
+      (epackage-upgrade-sources-list "Upgrading available package list")
     (epackage-download-sources-list "Downloading available package list")))
 
 (defun epackage-cmd-download-package (PACKAGE)
