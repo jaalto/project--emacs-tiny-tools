@@ -1,3 +1,12 @@
+2010-11-30 Tue  Jari Aalto  <jari.aalto@cante.net>
+
+	* tiny/tinyepkg.el: Untabify (big diff).
+
+	* tiny/tinydebian.el (tinydebian-mail-mode-address-type-add):
+	Use `tinydebian-bts-generic-email-control', not
+	`tinydebian-bts-email-compose'. This adds support for GNU Emacs BTS
+	in mail-mode.
+
 2010-11-29 Mon  Jari Aalto  <jari.aalto@cante.net>
 
 	* tiny/tinyepkg.el: Proof of concept implemented. The core
