@@ -419,7 +419,6 @@
   (autoload 'remprop                        "cl-extra")
   (autoload 'edebug-eval-defun              "edebug" "" t)
   (autoload 'generate-file-autoloads        "autoload")
-
   ;; Silence bytecompiler
   (defvar edebug-all-defs)
   (defvar folding-mode)
@@ -428,119 +427,7 @@
   (defvar checkdoc-spellcheck-documentation-flag)
   (defvar checkdoc-bouncy-flag)
   (defvar checkdoc-bouncy-flag)
-  (defvar checkdoc-autofix-flag)
-
-  ;;   During byte compiling it's best to see from where the
-  ;;   libraries are loaded. You can also check *Messages*
-  (defun tinylisp-locate-library (lib)
-    "Print message if located LIB."
-    (let ((loc (locate-library lib)))
-      (when loc
-        (message "TinyLisp.el: %s" loc)
-        t)))
-
-  (let ((count 0))
-    ;; .. .. .. .. .. .. .. .. .. .. .. .. .. .. .. .. .. .. .. .. eldoc ..
-    (when (and nil ;; 2004-10-10 disabled.
-               (not (tinylisp-locate-library "eldoc")))
-      (incf count)
-      (message "\
-  **  tinylisp.el: Hm, no eldoc.el found.
-                   Emacs function parameter coding help is not available.
-                   This package is included in latest Emacs versions.
-                   You have to upgrade your Emacs."))
-    ;; .. .. .. .. .. .. .. .. .. .. .. .. .. .. .. .. .. .. .. .. . rsz ..
-    (when (and nil ;; 2004-10-10 disabled.
-               ;; XEmacs package is in different name
-               (null (or (tinylisp-locate-library "rsz-minibuf")
-                         (tinylisp-locate-library "rsz-mini"))))
-      (incf count)
-      (message "\
-  ** tinylisp.el: Hm, no rsz-mini.el or rsz-minibuf.el found.
-                  This package is included in latest Emacs versions.
-                  You have to upgrade your Emacs."))
-    ;; .. .. .. .. .. .. .. .. .. .. .. .. .. .. .. .. .. .. . find-func ..
-    (unless (or
-             ;; in XEmacs-20.3(beta) there is no
-             ;; "find-func.el", instead `find-function' is in "help.el" and so
-             ;; in fact dumped with xemacs.
-             (fboundp 'find-function)
-             ;;  In Emacs 20 it is in separate package.
-             (locate-library "find-func"))
-      (incf count)
-      (message "\
-  ** tinylisp.el: Hm, no find-func.el found.
-                  Upgrade tot latest Emacs and XEmacs."))
-    ;; .. .. .. .. .. .. .. .. .. .. .. .. .. .. .. .. .. .. .. .. elint ..
-    (if (and nil ;; 2004-10-10 disabled.
-             (not (tinylisp-locate-library "elint")))
-        (progn
-          (incf count)
-          (message "\
-  ** tinylisp.el: Hm, no elint.el found. No code check features available.
-                  Package is included in latest Emacs."))
-      (autoload 'elint-initialize     "elint")
-      (autoload 'elint-current-buffer "elint" "" t)
-      (autoload 'elint-defun          "elint" "" t))
-    ;; .. .. .. .. .. .. .. .. .. .. .. .. .. .. .. .. .. .. .. checkdoc ..
-    (defvar checkdoc-version)
-    (if (and nil ;; 2004-10-10 disabled.
-             (not (tinylisp-locate-library "checkdoc")))
-        (progn
-          (incf count)
-          (message "\
-  ** tinylisp.el: Hm, no checkdoc.el found.
-                  No lisp package syntax checks available.
-                  Upgrade your Emacs."))
-      (autoload 'checkdoc-interactive                 "checkdoc" "" t)
-      (autoload 'checkdoc-eval-current-buffer         "checkdoc" nil t)
-      (autoload 'checkdoc-current-buffer              "checkdoc" nil t)
-      (autoload 'checkdoc                             "checkdoc" nil t)
-      (autoload 'checkdoc-continue                    "checkdoc" nil t)
-      (autoload 'checkdoc-comments                    "checkdoc" nil t)
-      (autoload 'checkdoc-rogue-spaces                "checkdoc" nil t)
-      (autoload 'checkdoc-eval-defun                  "checkdoc" nil t)
-      (autoload 'checkdoc-defun                       "checkdoc" nil t)
-      (autoload 'checkdoc-minor-mode                  "checkdoc" nil t)
-      (autoload 'checkdoc-find-error-mouse            "checkdoc" nil t)
-      (autoload 'checkdoc-find-error                  "checkdoc" nil t))
-    ;; .. .. .. .. .. .. .. .. .. .. .. .. .. .. .. .. .. .. .. .. . elp ..
-    (if (and nil ;; 2004-10-10 disabled.
-             (not (tinylisp-locate-library "elp")))
-        (progn
-          (incf count)
-          (message "\
-  ** tinylisp.el: Hm, no elp.el found.
-                  Lisp profiling functions are not available.
-                  This package is included in latest Emacs and XEmacs."))
-      ;;  This pretends the functions exist and avoids byte compiler errors.
-      (defvar   elp-all-instrumented-list nil)
-      (defvar   elp-function-list         nil)
-      (defvar   elp-master                        nil)
-      (defvar   elp-results-buffer                "*ELP Profiling Results*")
-      (defvar   elp-reset-after-results   nil)
-      (autoload 'elp-instrument-function              "elp" "" t)
-      (autoload 'elp-restore-function                 "elp" "" t)
-      (autoload 'elp-instrument-list                  "elp" "" t)
-      (autoload 'elp-instrument-package               "elp" "" t)
-      (autoload 'elp-restore-list                     "elp" "" t)
-      (autoload 'elp-restore-all                      "elp" "" t)
-      (autoload 'elp-reset-function                   "elp" "" t)
-      (autoload 'elp-reset-list                       "elp" "" t)
-      (autoload 'elp-reset-all                        "elp" "" t)
-      (autoload 'elp-set-master                       "elp" "" t)
-      (autoload 'elp-unset-master                     "elp" "" )
-      (autoload 'elp-wrapper                          "elp" "" )
-      (autoload 'elp-sort-by-call-count               "elp" "" )
-      (autoload 'elp-sort-by-total-time               "elp" "" )
-      (autoload 'elp-sort-by-average-time             "elp" "" )
-      (autoload 'elp-output-result                    "elp" "" )
-      (autoload 'elp-results                          "elp" "" t)
-      (autoload 'elp-submit-bug-report                "elp" "" t))
-    (unless (zerop count)
-      (message "\
-  ** tinylisp.el: Some files were not found. This is not fatal.
-                  The package will adjust accoding to available features."))))
+  (defvar checkdoc-autofix-flag))
 
 (ti::package-defgroup-tiny TinyLisp tinylisp-- tools
   "Lisp programming help module.
