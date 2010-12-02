@@ -619,7 +619,7 @@
 
 ;;; Code:
 
-(defconst epackage-version-time "2010.1202.1410"
+(defconst epackage-version-time "2010.1202.2218"
   "*Version of last edit.")
 
 (defcustom epackage--load-hook nil
@@ -961,6 +961,14 @@ Used inside `epackage-with-process-output'."
   (re-search-backward "--CMD START--")
   (forward-line 1))
 
+(put 'epackage-with-last-git-output 'lisp-indent-function 0)
+(put 'epackage-with-last-git-output 'edebug-form-spec '(body))
+(defmacro epackage-with-last-git-output (&rest body)
+  "Run BODY at start of last git output."
+  `(epackage-with-process-output
+     (epackage-git-goto-last-output-start)
+     ,@body))
+
 (defsubst epackage-git-command-ok-p (status)
   "Return non-nil if command STATUS was ok."
   (zerop status))
@@ -1006,21 +1014,45 @@ If VERBOSE is non-nil, display progress message."
                   (apply 'mapconcat ,args " ")
                   ,dir))))
 
+(defsubst epackage-git-branch-list-master-p (list)
+  "Return non-nil if current branch LIST indicates master as current branch."
+  (string-match
+   ;; At the beginning, or at end, or in the middle by spaces
+   "\\(?:^\\| \\)\\*master\\(?: \\|$\\)"
+   (mapconcat 'concat list " ")))
+
 (defun epackage-git-command-branch-list (dir &optional verbose)
-  "Run 'git branch' in DIR and return list of branches.
-If VERBOSE is non-nil, display progress message."
+  "Run 'git branch' in DIR.
+If VERBOSE is non-nil, display progress message.
+
+Return:
+    List of branches. The current branch has mark '*' at front."
   (epackage-with-git-command dir verbose
     "branch")
-  (epackage-with-process-output
-   (epackage-git-goto-last-output-start)
-   (let (list)
-     (while (re-search-forward "^\\(\\*?\\) +\\([^ \t\r\n]*\\)" nil t)
-       (setq list (cons
-                   (concat
-                    (match-string-no-properties 1)
-                    (match-string-no-properties 2))
-                   list)))
-     list)))
+  (epackage-with-last-git-output
+    (let (list)
+      (while (re-search-forward "^\\(\\*?\\) +\\([^ \t\r\n]*\\)" nil t)
+	(setq list (cons
+		    (concat
+		     (match-string-no-properties 1)
+		     (match-string-no-properties 2))
+		    list)))
+      list)))
+
+(defun epackage-git-branch-list-current-branch (list)
+  "Return name makred with '*' from branch LIST; without the '*'."
+  (let (ret)
+    (dolist (elt list)
+      (when (and (not  ret)
+		 (string-match "^\\*\\(.+\\)" elt))
+	(setq ret (match-string-no-properties 1 elt))))
+    ret))
+
+(defsubst epackage-git-command-branch-current-name (dir &optional verbose)
+  "Run 'git branch' in DIR and return active branch name.
+If VERBOSE is non-nil, display progress message."
+  (epackage-git-branch-list-current-branch
+   (epackage-git-command-branch-list dir verbose)))
 
 (defun epackage-git-command-pull (dir &optional verbose)
   "Run 'git branch' in DIR.
@@ -1035,6 +1067,13 @@ If VERBOSE is non-nil, display progress message."
     (epackage-with-git-command dir verbose
       "clone" url dir)))
 
+(defun epackage-master-p (package)
+  "Return non-nil if PACKAGE's VCS branch is master."
+  (let ((dir (epackage-file-name-vcs-compose package)))
+    (when (file-directory-p dir)
+      (let ((list (epackage-git-command-branch-list dir)))
+	(epackage-git-branch-list-master-p list)))))
+
 (defun epackage-upgrade-package (package &optional verbose)
   "Upgrade PACKAGE in VCS directory.
 If VERBOSE is non-nil, display progress message."
@@ -1042,10 +1081,21 @@ If VERBOSE is non-nil, display progress message."
     (unless url
       (error "Epackage: [ERROR] No Git URL for package '%s'" package))
     (let ((dir (epackage-file-name-vcs-compose package)))
-      (epackage-git-command-pull dir))))
+      (if verbose
+	  (message "Upgrading package: %s..." package))
+      (unless (epackage-master-p package)
+	(error
+	 `,(concat
+	    "Epackage: [FATAL] Can't upgrade. "
+	    "Branch name is not 'master' in '%'. "
+	    "Possibly changed manually or invalid package.")
+	 dir)
+	(epackage-git-command-pull dir)
+      (if verbose
+	  (message "Upgrading package: %s...done" package))))))
 
 (defun epackage-upgrade-sources-list ()
-  "Update list of available packages."
+  "Update list of available packages; the yellow pages."
   (let ((dir (epackage-sources-list-directory)))
     (unless (file-directory-p dir)
       (error
@@ -1104,6 +1154,7 @@ If VERBOSE is non-nil, display progress message."
 
 (defun epackage-action-package (package action)
   "Perform ACTION on PACKAGE.
+
 ACTION can be:
 
   'enable
