@@ -70,50 +70,57 @@
 ;;
 ;;      This utility is built around two concepts: 1) it borrows the
 ;;      Debian style of package management and applies it to Emacs
-;;      packages Each new utility mush include epackge/ subdirectory
-;;      than contains details how to enable the and compile the
-;;      package. 2) Packages are efficiently distributed, maintained
-;;      and downloaded (deltas) by using mover Distributed Version
-;;      Control Software; the git(1).
+;;      packages. Each new Emacs extension must include an epackge/
+;;      subdirectory where all the details like activation, autoloads
+;;      and installation are. The seond concept 2) is to use modern
+;;      Distributed Version Control Software the git(1) to distribute
+;;      epackages. This way downloads are efficient (only deltas are
+;;      trasferred) and local modifications are possible. In addition
+;;      all the software releases are included in the downloaded DVCS
+;;      repository. This gives some interesting prospects and freedom.
 ;;
-;;      If you're an Emacs user, you just downloaded packages that are
-;;      converted in epackage format. No information about the details
-;;      is necessary. If you're a developer who would like to start
-;;      make your packages available in epackage format, that requires
-;;      some preparations.
+;;      If you're an Emacs user, you only download packages in
+;;      epackage format. No information about the details or working
+;;      or the DVCS is required. If you're a developer who would like
+;;      to start distributing your Emacs extension in the epackage
+;;      format, that will require familiarizing with the git(1).
 ;;
-;;      This package manager can co-exist with your standard
-;;      installation as usual. You can even use ELPA at the same time.
-;;      User's standard Emacs startup files, like ~/.emacs are never
-;;      modified.
+;;      This package manager can co-exist with nay other installation
+;;      as usual. It is possible to use other package managers, like
+;;      ELPA, at the same time. User's standard Emacs startup files,
+;;      like ~/.emacs are never modified.
 ;;
 ;;  Epackage - the DVCS packaging system
 ;;
 ;;      This packaging system is called epackage, short name for
 ;;      "Emacs Lisp packages".
 ;;
-;;      In this system uses the packages are available in a form of
+;;      In this system packages are available in a form of
 ;;      distributed[1] git[2] version control repositories. The
-;;      traditional packaging methods (like ELPA[2]) have relied on
-;;      archives like *.tar.gz to hold all the code. In contrast the
-;;      DVCS offers important features over *.tag.gz approach:
+;;      traditional packaging methods (like ELPA[2]) have previously
+;;      relied on archives like *.tar.gz to hold the code. In contrast
+;;      the DVCS offers important features over monolithic archive
+;;      approach:
 ;;
-;;      o   Efficient downloads; fast, only deltas are transferred
-;;      o   Local modifications; users can creaet their own customizations
-;;          easily
-;;      o   Helping package authors made easy; have you fixed an
-;;          error? Generate diff straight from the repository
+;;      o   Efficient downloads; fast, only deltas are transferred.
+;;      o   Local modifications; users can create their own customizations
+;;          and track them easily,
+;;      o   Helping package authors made easy; have you found an error?
+;;          Have a spare time to fix it? Generate diff straight from the
+;;          version control repository.
 ;;      o   Select any version; pick latest or
 ;;          downgrade to a older version with ease.
 ;;      o   Contains history of package in one place. No more scattered
 ;;          pieces around Internet.
 ;;
-;;      To use a package in this system, it must be first converted
-;;      into a Git repository and made available online. This job can
-;;      be made by anyone who sets up the reposository. It doesn't
-;;      need to be done by the original developer who may not be
-;;      familiar with the git(1) program. For more inforamtion about
-;;      the packaging see "Epackage specification" below.
+;;      The Emacs extensions need to prepared for use with this
+;;      system: imported to git, the repository must be made available
+;;      online and information about the avilability must be submitted
+;;      to epackage sources list, the "yellow pages". This job can be
+;;      done by anyone who wants to set up a reposository. It doesn't
+;;      need to be done by the original Emacs extension author
+;;      (upstream) who may not be familiar with the git(1) program.
+;;      For more inforamtion about the packaging see following topics.
 ;;
 ;;      [1] DVCS = Distributed Version Control System
 ;;          http://en.wikipedia.org/wiki/Distributed_revision_control
@@ -121,68 +128,6 @@
 ;;      [2] http://git-scm.org
 ;;
 ;;      [3] http://www.emacswiki.org/emacs/ELPA
-;;
-;;  The epackage system framework
-;;
-;;      To epxlain how do all the pieces in this system go together,
-;;      lets take a look at the system overview. The system mirrors
-;;      the style of Debian packaging management. There are two
-;;      primary actors: (1) the epackage package maintainer and (2)
-;;      the upstream. These two can be the same person or two separate
-;;      persons.
-;;
-;;      o   A = An Emacs user who wannts to install new software
-;;      o   (Y)ellow pages = The sources list file that contains
-;;          information about available epakages around the globe.
-;;      o   E = The epackage. Maintained by a person who has found an
-;;          interesting utility and wrapped it in epackage format. He
-;;          is the maintainer of epackaged software. He keeps
-;;          track of new releases and makes new epackages periodically
-;;          available. If the initial packager looses interest,
-;;          someone else can continue his work. He supplies the *url*
-;;          to the "Yellow pages" to notify about availability of epackage.
-;;      o   U = Upstream. Person or team who wrote Emacs Lisp extension,
-;;          the code or utility than enhances Emacs.
-;;
-;;      The moving parts communicate like in picture below. In order to
-;;      find package, a "yellow pages" is consulted. It is seeded and
-;;      update by all the epackage maintainer that wish to make epackages
-;;      available. The user A does not need to know any details of this
-;;      process; like in Debian, he justs "apt-get" install an epackage
-;;      that is made newly available or which has been updated and is
-;;      upgradeable.
-;;
-;;      o   The location of "Yellow pages" is fixed (%).
-;;      o   The location of E's and U's can be anywhere (*).
-;;      o   The E and U can be the same person (the upstream).
-;;
-;;                      %               *               *
-;;          A           Y               E               U
-;;          =============================================
-;;          |           |               | keep eye on   |
-;;          |  fetch    |               * ------------> |
-;;          * --------> |               | <-----------  |
-;;          | <-------- |               | epackage new  |
-;;          |  update   | keep epackage | releases      |
-;;          |           | info in sync  |               |
-;;          |           | <------------ *               |
-;;          |           |   (url)       |               |
-;;          |                           |               |
-;;          |    install "X"            |               |
-;;          * ------------------------> |               |
-;;          | <------------------------ |               |
-;;          |   DVCS repo download      |               |
-;;          |                           |               |
-;;          |    upgrade "X" ?          |               |
-;;          * ------------------------> |               |
-;;          | <------------------------ |               |
-;;          |   download DVCS "delta"   |               |
-;;          |                           |               |
-;;          |  report epackage bug      |               |
-;;          * ------------------------> |               |
-;;          |  report program bug       |               |
-;;          * ----------------------------------------> |
-;;          |                           |               |
 ;;
 ;;  User commands
 ;;
@@ -263,7 +208,70 @@
 ;;      and this is done via open internet connection. Install command
 ;;      also requires an open internet connection.
 ;;
-;;  Epackage system layout
+;;  The epackage system framework
+;;
+;;      To epxlain how do all the pieces in this system go together,
+;;      lets take a look at the system overview. The system mirrors
+;;      the style of Debian packaging management. There are two
+;;      primary actors: (1) the epackage package maintainer and (2)
+;;      the upstream. These two can be the same person or two separate
+;;      persons.
+;;
+;;      o   A = An Emacs user who wannts to install new software
+;;      o   (Y)ellow pages = The sources list file that contains
+;;          information about available epakages around the globe.
+;;      o   E = The epackage. Maintained by a person who has found an
+;;          interesting utility and wrapped it in epackage format. He
+;;          is the maintainer of epackaged software. He keeps
+;;          track of new releases and makes new epackages periodically
+;;          available. If the initial packager looses interest,
+;;          someone else can continue his work. He supplies the *url*
+;;          to the "Yellow pages" to notify about availability of epackage.
+;;      o   U = Upstream. Person or team who wrote Emacs Lisp extension,
+;;          the code or utility than enhances Emacs.
+;;
+;;      The moving parts communicate like in picture below. In order to
+;;      find package, a "yellow pages" is consulted. It is seeded and
+;;      update by all the epackage maintainer that wish to make epackages
+;;      available. The user A does not need to know any details of this
+;;      process; like in Debian, he justs "apt-get" install an epackage
+;;      that is made newly available or which has been updated and is
+;;      upgradeable.
+;;
+;;      o   The location of "Yellow pages" is fixed (%).
+;;      o   The location of E's and U's can be anywhere (*).
+;;      o   The E and U can be the same person (the upstream).
+;;
+;;                      %               *               *
+;;          A           Y               E               U
+;;          =============================================
+;;          |           |               | keep eye on   |
+;;          |  fetch    |               * ------------> |
+;;          * --------> |               | <-----------  |
+;;          | <-------- |               | epackage new  |
+;;          |  update   | keep epackage | releases      |
+;;          |           | info in sync  |               |
+;;          |           | <------------ *               |
+;;          |           |   (url)       |               |
+;;          |                           |               |
+;;          |    install "X"            |               |
+;;          * ------------------------> |               |
+;;          | <------------------------ |               |
+;;          |   DVCS repo download      |               |
+;;          |                           |               |
+;;          |    upgrade "X" ?          |               |
+;;          * ------------------------> |               |
+;;          | <------------------------ |               |
+;;          |   download DVCS "delta"   |               |
+;;          |                           |               |
+;;          |  report epackage bug      |               |
+;;          * ------------------------> |               |
+;;          |  report program bug       |               |
+;;          * ----------------------------------------> |
+;;          |                           |               |
+;;
+;;
+;;  User's local epackage system layout
 ;;
 ;;      The packages are installed under root `epackage--root-directory',
 ;;      which defaults to ~/.emacs.d or ~/elisp respectively. The
@@ -611,7 +619,7 @@
 
 ;;; Code:
 
-(defconst epackage-version-time "2010.1202.1353"
+(defconst epackage-version-time "2010.1202.1410"
   "*Version of last edit.")
 
 (defcustom epackage--load-hook nil
