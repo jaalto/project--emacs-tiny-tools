@@ -40,8 +40,8 @@
 ;;      ;;  M-x epackage to start installing, upgrading. removing
 ;;      (autoload 'epackage "tinyepkg" "" t)
 ;;
-;;	;; One big file to boot all packages (auto generated)
-;;	(load "~/.emacs.d/epackage/00link/epackage-loader" 'noerr)
+;;      ;; One big file to boot all packages (auto generated)
+;;      (load "~/.emacs.d/epackage/00link/epackage-loader" 'noerr)
 
 ;;; Commentary:
 
@@ -121,6 +121,68 @@
 ;;      [2] http://git-scm.org
 ;;
 ;;      [3] http://www.emacswiki.org/emacs/ELPA
+;;
+;;  The epackage system framework
+;;
+;;      To epxlain how do all the pieces in this system go together,
+;;      lets take a look at the system overview. The system mirrors
+;;      the style of Debian packaging management. There are two
+;;      primary actors: (1) the epackage package maintainer and (2)
+;;      the upstream. These two can be the same person or two separate
+;;      persons.
+;;
+;;      o   A = An Emacs user who wannts to install new software
+;;      o   (Y)ellow pages = The sources list file that contains
+;;          information about available epakages around the globe.
+;;      o   E = The epackage. Maintained by a person who has found an
+;;          interesting utility and wrapped it in epackage format. He
+;;          is the maintainer of epackaged software. He keeps
+;;          track of new releases and makes new epackages periodically
+;;          available. If the initial packager looses interest,
+;;          someone else can continue his work. He supplies the *url*
+;;          to the "Yellow pages" to notify about availability of epackage.
+;;      o   U = Upstream. Person or team who wrote Emacs Lisp extension,
+;;          the code or utility than enhances Emacs.
+;;
+;;      The moving parts communicate like in picture below. In order to
+;;      find package, a "yellow pages" is consulted. It is seeded and
+;;      update by all the epackage maintainer that wish to make epackages
+;;      available. The user A does not need to know any details of this
+;;      process; like in Debian, he justs "apt-get" install an epackage
+;;      that is made newly available or which has been updated and is
+;;      upgradeable.
+;;
+;;      o   The location of "Yellow pages" is fixed (%).
+;;      o   The location of E's and U's can be anywhere (*).
+;;      o   The E and U can be the same person (the upstream).
+;;
+;;                      %               *               *
+;;          A           Y               E               U
+;;          =============================================
+;;          |           |               | keep eye on   |
+;;          |  fetch    |               * ------------> |
+;;          * --------> |               | <-----------  |
+;;          | <-------- |               | epackage new  |
+;;          |  update   | keep epackage | releases      |
+;;          |           | info in sync  |               |
+;;          |           | <------------ *               |
+;;          |           |   (url)       |               |
+;;          |                           |               |
+;;          |    install "X"            |               |
+;;          * ------------------------> |               |
+;;          | <------------------------ |               |
+;;          |   DVCS repo download      |               |
+;;          |                           |               |
+;;          |    upgrade "X" ?          |               |
+;;          * ------------------------> |               |
+;;          | <------------------------ |               |
+;;          |   download DVCS "delta"   |               |
+;;          |                           |               |
+;;          |  report epackage bug      |               |
+;;          * ------------------------> |               |
+;;          |  report program bug       |               |
+;;          * ----------------------------------------> |
+;;          |                           |               |
 ;;
 ;;  User commands
 ;;
@@ -209,10 +271,10 @@
 ;;
 ;;          epackage
 ;;          |
-;;	    +-- 00link/
+;;          +-- 00link/
 ;;          |   epackage-loader.el      One big boot file
-;;	    |	*.el *.elc	        Symlinks to ../vc/PACKAGE/*.el
-;;	    |
+;;          |   *.el *.elc              Symlinks to ../vc/PACKAGE/*.el
+;;          |
 ;;          +-- install/
 ;;          |   <package>-activate.el files
 ;;          |   <package>-install.el files
@@ -220,7 +282,7 @@
 ;;          +--vc/     Packages. The Version control repositories.
 ;;             |
 ;;             +-- 00epackage/          Yellow pages: list of available packages
-;;	       +-- package/		Downloaded package
+;;             +-- package/             Downloaded package
 ;;             +-- package2/
 ;;             +-- ...
 ;;
@@ -270,23 +332,23 @@
 ;;     The *-0loaddefs.el
 ;;
 ;;      This file contains extracted ##autoload definitions. The file
-;;	is suatomatically generated. The file does not modify user's
-;;	environment. If PACKAGE does not contains any ###autoload
-;;	definitions, the manually crafted *-install.el file works as a
-;;	substitute. The "Zero" at start of the name is due to proper
-;;	sorting ordering of all files.
+;;      is suatomatically generated. The file does not modify user's
+;;      environment. If PACKAGE does not contains any ###autoload
+;;      definitions, the manually crafted *-install.el file works as a
+;;      substitute. The "Zero" at start of the name is due to proper
+;;      sorting ordering of all files.
 ;;
 ;;     The *-install.el
 ;;
 ;;      This file is manually written and it publishes user variables
-;;	and interactive `M-x' functions in an autoload state. This
-;;	file does not modify user's environment. This file is
-;;	necessary only if PACKAGE does not contain proper ###autoload
-;;	statements (see *-0loaddefs.el). The "install" in name refers
-;;	to installation or availability of interactive functions, not
-;;	to any modifications to the system. Mnemonic: "if you load
-;;	this file, you have can start using package's features" (see
-;;	*-activate.el).
+;;      and interactive `M-x' functions in an autoload state. This
+;;      file does not modify user's environment. This file is
+;;      necessary only if PACKAGE does not contain proper ###autoload
+;;      statements (see *-0loaddefs.el). The "install" in name refers
+;;      to installation or availability of interactive functions, not
+;;      to any modifications to the system. Mnemonic: "if you load
+;;      this file, you have can start using package's features" (see
+;;      *-activate.el).
 ;;
 ;;     The *-uninstall.el
 ;;
@@ -328,7 +390,7 @@
 ;;            note YYYY-MM-DD the code hasn't been touched since 2006 ; ]
 ;;          *Email:
 ;;          Bugs:
-;;	    Maintainer:
+;;          Maintainer:
 ;;          Vcs-Type:
 ;;          Vcs-Url:
 ;;          Vcs-Browser:
@@ -345,9 +407,9 @@
 ;;
 ;;     Bugs
 ;;
-;;	URL where the bugs should be reported. This can be email address
-;;	or link to a issue tracker of upstream project. Note: send
-;;	problems epackage problems to address mentioned in `Maintainer'.
+;;      URL where the bugs should be reported. This can be email address
+;;      or link to a issue tracker of upstream project. Note: send
+;;      problems epackage problems to address mentioned in `Maintainer'.
 ;;
 ;;     Conflicts
 ;;
@@ -413,7 +475,7 @@
 ;;
 ;;      The packaged who maintains the utility in epackage format. If
 ;;      this field is missing `Email' is assumed. Best if upstream (Email)
-;;	is also the Maintainer of epackage.
+;;      is also the Maintainer of epackage.
 ;;
 ;;     Package (required)
 ;;
@@ -549,7 +611,7 @@
 
 ;;; Code:
 
-(defconst epackage-version-time "2010.1130.1450"
+(defconst epackage-version-time "2010.1202.1352"
   "*Version of last edit.")
 
 (defcustom epackage--load-hook nil
@@ -820,9 +882,9 @@ documentation of tinyepkg.el."
      (substitute-command-keys
       (format
        `,(concat
-	  "Epackage: [ERROR] Invalid value in `epackage--program-git' (%s) "
-	  "Run \\[epackage-initialize]")
-	  epackage--program-git)))))
+          "Epackage: [ERROR] Invalid value in `epackage--program-git' (%s) "
+          "Run \\[epackage-initialize]")
+          epackage--program-git)))))
 
 (defun epackage-directory ()
   "Return root directory."
@@ -877,6 +939,20 @@ documentation of tinyepkg.el."
              (format "'%s' " command)
            "")))
 
+(put 'epackage-with-process-output 'lisp-indent-function 0)
+(put 'epackage-with-process-output 'edebug-form-spec '(body))
+(defmacro epackage-with-process-output (&rest body)
+  "Run BODY in `epackage--process-output'."
+  `(with-current-buffer (get-buffer-create epackage--process-output)
+     ,@body))
+
+(defsubst epackage-git-goto-last-output-start ()
+  "Move to last marker --CMD START-- and the following line.
+Used inside `epackage-with-process-output'."
+  (goto-char (point-max))
+  (re-search-backward "--CMD START--")
+  (forward-line 1))
+
 (defsubst epackage-git-command-ok-p (status)
   "Return non-nil if command STATUS was ok."
   (zerop status))
@@ -886,20 +962,21 @@ documentation of tinyepkg.el."
   (epackage-program-git-verify)
   (epackage-with-debug
     (let ((dir default-directory)) ;; buffer local variable
-      (with-current-buffer (get-buffer-create epackage--process-output)
-	(goto-char (point-max))
-	(insert
-	 (format "** debug: [%s] git %s\n"
-		 dir
-		 (prin1-to-string args))))))
-  (with-current-buffer (get-buffer-create epackage--process-output)
-    (goto-char (point-max)))
+      (epackage-with-process-output
+        (goto-char (point-max))
+        (insert
+         (format ">> debug: [%s] git %s\n"
+                 dir
+                 (prin1-to-string args))))))
+  (epackage-with-process-output
+    (goto-char (point-max))
+    (insert "--CMD START--\n"))
   (apply 'call-process
-	 epackage--program-git
-	 (not 'infile)
-	 (get-buffer-create epackage--process-output)
-	 (not 'display)
-	 args))
+         epackage--program-git
+         (not 'infile)
+         (get-buffer-create epackage--process-output)
+         (not 'display)
+         args))
 
 (put 'epackage-with-git-command 'lisp-indent-function 2)
 (put 'epackage-with-git-command 'edebug-form-spec '(body))
@@ -908,24 +985,34 @@ documentation of tinyepkg.el."
 If VERBOSE is non-nil, display progress message."
   `(epackage-with-directory ,dir
      (if verbose
-	 (message "Epackage: Running 'git %s' in %s ..."
-		  (apply 'mapconcat ,args " ")
-		  ,dir))
+         (message "Epackage: Running 'git %s' in %s ..."
+                  (apply 'mapconcat ,args " ")
+                  ,dir))
      (prog1
-	 (unless (epackage-git-command-ok-p
-		  (epackage-git-command-process
-		   ,@args))
-	   (epackage-git-error-handler "pull")))
+         (unless (epackage-git-command-ok-p
+                  (epackage-git-command-process
+                   ,@args))
+           (epackage-git-error-handler "pull")))
      (if verbose
-	 (message "Epackage: Running 'git %s' in %s ...done"
-		  (apply 'mapconcat ,args " ")
-		  ,dir))))
+         (message "Epackage: Running 'git %s' in %s ...done"
+                  (apply 'mapconcat ,args " ")
+                  ,dir))))
 
-(defun epackage-git-command-branch (dir &optional verbose)
-  "Run 'git branch' in DIR.
+(defun epackage-git-command-branch-list (dir &optional verbose)
+  "Run 'git branch' in DIR and return list of branches.
 If VERBOSE is non-nil, display progress message."
   (epackage-with-git-command dir verbose
-    "branch"))
+    "branch")
+  (epackage-with-process-output
+   (epackage-git-goto-last-output-start)
+   (let (list)
+     (while (re-search-forward "^\\(\\*?\\) +\\([^ \t\r\n]*\\)" nil t)
+       (setq list (cons
+                   (concat
+                    (match-string-no-properties 1)
+                    (match-string-no-properties 2))
+                   list)))
+     list)))
 
 (defun epackage-git-command-pull (dir &optional verbose)
   "Run 'git branch' in DIR.
