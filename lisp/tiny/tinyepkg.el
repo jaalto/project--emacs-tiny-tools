@@ -611,7 +611,7 @@
 
 ;;; Code:
 
-(defconst epackage-version-time "2010.1202.1352"
+(defconst epackage-version-time "2010.1202.1353"
   "*Version of last edit.")
 
 (defcustom epackage--load-hook nil

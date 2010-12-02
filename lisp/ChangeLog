@@ -1,6 +1,29 @@
+2010-12-02 Thu  Jari Aalto  <jari.aalto@cante.net>
+
+	* tiny/tinyepkg.el: Draw picture about epackage framewrk.
+
 2010-11-30 Tue  Jari Aalto  <jari.aalto@cante.net>
 
-	* tiny/tinyepkg.el: Untabify (big diff).
+	* tiny/tinylisp.el (tinylisp--menu-elp): Correct docstring: (H)arness
+	is invoked with an uppercase H-command.
+	(tinylisp-elp-harness): Update docstring.
+	(tinylisp-library-info-emacs): Adjust formatting spec from %-15s
+	to %-30s.
+	(tinylisp-library-info-emacs): Call
+	`ti::buffer-remove-whitespace-eol'.
+	(eval-when-compile): Remove obsolete package tests: elp.el,
+	checkdoc.el, elint.el, find-func.el, rsz-mini.el, eldoc.el.
+	(tinylisp-elp-instrument-function): Remove `elp-restore-function'
+	because it is run in elp already prior executing
+	`elp-instrument-function'.
+	(tinylisp-elp-harness): Correct loop off by 1 error.
+
+	* tiny/tinyepkg.el:
+	(top level) Untabify (big diff). Revise spec: introduce 00epackage/
+	and 00link/ directories. Add [ERROR] to every error message. Sources
+	list is no longer file retrieved by HTTP, but also a Git repository.
+	(epackage-upgrade-package): New.
+	(epackage-upgrade-sources-list): New.
 
 	* tiny/tinydebian.el (tinydebian-mail-mode-address-type-add):
 	Use `tinydebian-bts-generic-email-control', not
