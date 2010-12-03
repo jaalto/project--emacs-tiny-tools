@@ -249,7 +249,7 @@
 ;;          |  fetch    |               * ------------> |
 ;;          * --------> |               | <-----------  |
 ;;          | <-------- |               | epackage new  |
-;;          |  update   | keep epackage | releases      |
+;;          |  upgrade  | keep epackage | releases      |
 ;;          |           | info in sync  |               |
 ;;          |           | <------------ *               |
 ;;          |           |   (url)       |               |
@@ -259,7 +259,7 @@
 ;;          | <------------------------ |               |
 ;;          |   DVCS repo download      |               |
 ;;          |                           |               |
-;;          |    upgrade "X" ?          |               |
+;;          |    upgrade "X"            |               |
 ;;          * ------------------------> |               |
 ;;          | <------------------------ |               |
 ;;          |   download DVCS "delta"   |               |
@@ -269,6 +269,7 @@
 ;;          |  report program bug       |               |
 ;;          * ----------------------------------------> |
 ;;          |                           |               |
+;;          =============================================
 ;;
 ;;
 ;;  User's local epackage system layout
@@ -294,29 +295,40 @@
 ;;             +-- package2/
 ;;             +-- ...
 ;;
-;;  Epackage specification
+;;  Epackage specification (version 1)
 ;;
 ;;      The Git repository branches used are:
 ;;
 ;;      o   `master', required. Branched off from `upstream'. Adds directory
 ;;          `epackage/'. This contains everything to use the package.
-;;      o   `patches', optional. Patches to `upstream' code.
+;;      o   `patches', optional. Patches to `upstream' code, if any.
+;;          this branch is merged to to `master'.
 ;;      o   `upstream', required. The original unmodified upstream code.
 ;;          Releases are tagged with label
-;;          "upstream/YYYY-MM-DD[--VERSION]". The YYYY-MM-DD is the
-;;          date of upstream release or best guess and it is
-;;          accompanied with optional "--VERSION" of the package. Not
-;;          all packages include version information. The ISO 8601
-;;          date is needed so that the 1) release date is immediately
-;;          available e.g. for post processing and 2) the tags sort
-;;          nicely by date. An example: "upstream/2009-12-31--0.3"
+;;          "upstream/YYYY-MM-DD[--VERSION]". The YYYY-MM-DD is the date of
+;;          upstream release or best guess (if only year is known, use
+;;          YYYY-01-01), and it is accompanied with optional "--VERSION" of
+;;          the package. Not all packages include version information. The
+;;          ISO 8601 date is needed so that the 1) release date is
+;;          immediately available e.g. for post processing and 2) the tags
+;;          sort nicely by date. An example: "upstream/2009-12-31--0.3"
 ;;
-;;      The epackage method borrows concepts from the Debian package
-;;      build system where a separate control directory contains
-;;      the needed information. The directory name *epackage* is not
-;;      configurable. Files in pacakge/ directory include:
+;;      Tha bove in pictures. The `master' and possible `patches' are
+;;      alwasy rebased (R) on current upstream code. This picture
+;;      makes sense only if you're familiar git(1):
 ;;
-;;          <package name>
+;;          upstream    * - o - o - o
+;;                           \ R     \ (Rebase)
+;;          master            \       o -  o - o - o =>
+;;                             \          / (merge)
+;;          patches             o  - o - o
+;;
+;;      The epackaging method borrows concept from the Debian where a
+;;      separate control directory is used for package information.
+;;      The directory name *epackage* is not configurable. The layout
+;;      of epackaged Emacs extension is:
+;;
+;;          <Emacs extension root dir>
 ;;          |
 ;;          +- .git/                    Version control branches (see above)
 ;;          |
@@ -330,12 +342,13 @@
 ;;              PACKAGE-xactivate.el    optional: Code to activate package
 ;;
 ;;      The nanes of the files have been chosen to sort
-;;      alphabetically. From Emacs point of view, loading individual
-;;      files is slower than loading a gigantic setup. It would be
-;;      possible (due to sort order) to safely collect all together
-;;      with:
+;;      alphabetically. All these configuration files are later
+;;      combined in a gigantic loader, as you has chosen, to that
+;;      Emacs will not spend time on loading individual files. Because
+;;      the files list alphabetically, they can be combined safely
+;;      together even on command line:
 ;;
-;;              cat PACKAGE-* | grep -v 'uninst|compile' > PACKAGE-all-in-one-loader.el
+;;              cat PACKAGE-* | egrep -v '00|uninst|compile' > PACKAGE-00.el
 ;;
 ;;     The *-0loaddefs.el
 ;;
@@ -343,19 +356,19 @@
 ;;      is suatomatically generated. The file does not modify user's
 ;;      environment. If PACKAGE does not contains any ###autoload
 ;;      definitions, the manually crafted *-install.el file works as a
-;;      substitute. The "Zero" at start of the name is due to proper
-;;      sorting ordering of all files.
+;;      substitute. The "zero" at the start of the name is to help
+;;      proper sorting ordering of all files.
 ;;
 ;;     The *-install.el
 ;;
 ;;      This file is manually written and it publishes user variables
-;;      and interactive `M-x' functions in an autoload state. This
-;;      file does not modify user's environment. This file is
-;;      necessary only if PACKAGE does not contain proper ###autoload
-;;      statements (see *-0loaddefs.el). The "install" in name refers
-;;      to installation or availability of interactive functions, not
-;;      to any modifications to the system. Mnemonic: "if you load
-;;      this file, you have can start using package's features" (see
+;;      and interactive `M-x' functions in autoload states. The file
+;;      does not modify user's environment. This file is necessary
+;;      only if PACKAGE does not contain proper ###autoload statements
+;;      (see *-0loaddefs.el). The "install" in name refers to
+;;      installation or availability of interactive functions, not to
+;;      any modifications to the system. Mnemonic: "if you load this
+;;      file, you can start using package's features" (see
 ;;      *-activate.el).
 ;;
 ;;     The *-uninstall.el
@@ -365,7 +378,7 @@
 ;;      loaded. Due to the nature of Emacs, it may not be possible to
 ;;      completely uninstall the package. The uninstallation covers
 ;;      undoing the changes to *-hook, *-functions and
-;;      `auto-mode-alist' variables. The actual symbols (defined
+;;      `auto-mode-alist' alike variables. The actual symbols (defined
 ;;      functions and variables) are not removed. Usually it is more
 ;;      practical to just restart Emacs than completely trying undo
 ;;      all the effects of a package.
@@ -375,35 +388,45 @@
 ;;      This file makes the PACKAGE immediately active in user's
 ;;      environment. It can modify current environment by adding
 ;;      functions to hooks, adding minor or major modes or arranging
-;;      keybindings so that when pressed, the feature is loaded. It
-;;      may also loop through `buffer-list' to activate features
-;;      immediately in running Emacs. It is adviseable that any custom
-;;      settings, like variables and prefix keys, are defined *before*
-;;      this file is loaded. Mnemonic: "If you load this file, the
-;;      bells and whistles are turned on".
+;;      keybindings so that when pressed, a feature is loaded and
+;;      activated. It may also loop through `buffer-list' to activate
+;;      features immediately in running Emacs. It is adviseable that
+;;      any custom settings, like variables and prefix keys, are
+;;      defined in `~/.emacs' *before* this file gets loaded.
+;;      Mnemonic: "If you load this file, the bells and whistles are
+;;      turned on". The "x" at the start of the name is to help proper
+;;      sorting ordering of all files.
 ;;
 ;;  The info file
 ;;
-;;      A RFC 2822 formatted file (email), which contains information
-;;      about the package. The minumum required fields are presented
-;;      below. The header field names are case insensitive. Continued
-;;      lines must be intended; suggested indentation is one space.
-;;      Required fields aer marked with "*" character.
+;;      A RFC 2822 formatted file (email), which contains information about
+;;      the package. The minumum required fields are presented below. The
+;;      header field names are case insensitive. Continued lines must be
+;;      indented; suggested indentation is 1 space. Required fields have
+;;      been marked with asterisk (*). In the long description part, new
+;;      paragraphs are separated by a single dot(.) character on their own
+;;      line. The layout of the `info' mirrors concepts of `control' file in
+;;      Debian packaging system (see
+;;      <http://www.debian.org/doc/debian-policy/ch-controlfields.html#s-f-Version>).
 ;;
-;;          *Package:
+;;          *Package: <unique name, all lowercase>
 ;;          *Section: <data | extensions | files | languages | mail | tools | M-x finder-list-keywords>
-;;          License: <GPL-[23]+ | BSD | Apache-2.0>
+;;          License: <GPL-[23]+ | BSD | Apache-2.0 | ... | None>
 ;;          *Depends: emacs (>= 20)
-;;          Status: [ core-emacs | unmaintained | broken |
-;;            note YYYY-MM-DD the code hasn't been touched since 2006 ; ]
-;;          *Email:
-;;          Bugs:
-;;          Maintainer:
+;;          Status: [ <keyword> ...]
+;;          Compat: [ <epackage version> ]
+;;          Maintainer: [ <epackage maintainer email> ]
+;;          *Email: [ First Last <firts.last@example.com ]
+;;          Bugs: [ URL ]
 ;;          Vcs-Type:
 ;;          Vcs-Url:
+;;          Vcs-Args:
 ;;          Vcs-Browser:
+;;          Vcs-User:
+;;          Vcs-Password:
 ;;          Homepage:
-;;          Wiki: http://www.emacswiki.org/emacs/
+;;          Wiki: http://www.emacswiki.org/emacs/<page name>
+;;          X-<Field>-<Name>: [anything]
 ;;          *Description: <short one line>
 ;;           [<Longer description>]
 ;;           .
@@ -411,13 +434,48 @@
 ;;           .
 ;;           [<Longer description, next paragraph>]
 ;;
-;;  Details of the info file fields in alphabetical order
+;;      An example:
+;;
+;;          Package: hide-lines
+;;          Section: tools
+;;          License: None
+;;          Depends: emacs (>= 21)
+;;          Status: unmaintained
+;;          Compat:
+;;          Maintainer:
+;;          Email: Mark Hulme-Jones <ture@plig.net>
+;;          Bugs:
+;;          Vcs-Type: http
+;;          Vcs-Url: http://www.emacswiki.org/emacs/download/hide-lines.el
+;;          Vcs-Browser:
+;;          Vcs-User:
+;;          Vcs-Password:
+;;          Homepage:
+;;          Wiki: http://www.emacswiki.org/emacs/HideLines
+;;          Description: Hide or preserve all matching lines in buffer
+;;           Main command [C-u] M-x hide-lines to hide or show matching lines.
+;;           With prefix argument, the corresponding lines are preserved while
+;;           others are hidden.
+;;           .
+;;           Note 2010-12-03 the code hasn't been touched since 2004.
+;;
+;;  Details of the info file fields
 ;;
 ;;     Bugs
 ;;
 ;;      URL where the bugs should be reported. This can be email address
 ;;      or link to a issue tracker of upstream project. Note: send
 ;;      problems epackage problems to address mentioned in `Maintainer'.
+;;
+;;    Compat
+;;
+;;      The compatibility level this epackage. The Epackage format may
+;;      change in time and this field indicates for which version the
+;;      software was packaged. If the value is missing or is empty, no
+;;      specific compatibility version is required and latest is assumed.
+;;      Usually all epackage maintainers should update their work to the
+;;      latest format to prevent installation problems. See section
+;;      "Epackage Comatibility Levels" for more information.
 ;;
 ;;     Conflicts
 ;;
@@ -461,23 +519,30 @@
 ;;
 ;;     Homepage
 ;;
-;;      URL to the project homepage. For this field it is adviseable
-;;      to use project addresses that don't move; those of
-;;      Freshmeat.net, Sourceforge, Launchpad, Github etc. The
-;;      Freshmeat is especially good because is provides an easy
-;;      on-to-tover-all hub to all other Open Source projects. Through
-;;      Freshmeat users can quickly browse related software and
-;;      subscribe to project announcements. Freshmeat is also easy for
-;;      the upstream developer to set up because it requires no heavy
-;;      project management (it's kind of "yellow pages"). In any case,
-;;      the Homepage link should not directly point to a volatile
-;;      personal homepage if an alternative exists.
+;;      URL to the project homepage. For this field it is adviseable to use
+;;      project a addresses that doesn't move; those of Freshmeat.net,
+;;      Sourceforge, Launchpad, Github etc. The Freshmeat is especially
+;;      good because it provides an easy hub to all other related Open
+;;      Source projects. Through Freshmeat users can quickly browse related
+;;      software and subscribe to project announcements. Freshmeat is also
+;;      easy for the upstream developer to set up because it requires no
+;;      heavy project management (it's kind of "yellow pages").
+;;
+;;      In any case, the Homepage link should not directly point to a
+;;      volatile personal homepage if an alternative exists. Try to
+;;      encourage "Garage" upstream developers to set up their software at
+;;      some project hosting site that would contain an issue tracker.
+;;      Examples: Sourceforge.net, Savannah.gnu.org, Bitbucket.com,
+;;      Github.com, Gitorious.com etc. For more information, see
+;;      <http://en.wikipedia.org/wiki/Comparison_of_open_source_software_hosting_facilities>.
 ;;
 ;;     License
 ;;
-;;      If misssing, the value is automatically assumed "GPL-2+". The
-;;      valid License abbreviations should follow list defined at
-;;      <http://wiki.debian.org/CopyrightFormat>.
+;;      If misssing, the value is automatically assumed "GPL-2+". The valid
+;;      License abbreviations should follow list defined at
+;;      <http://wiki.debian.org/CopyrightFormat>. A special word "None"
+;;      should be used if the software has no license information in any of
+;;      the source files.
 ;;
 ;;     Maintainer
 ;;
@@ -487,13 +552,15 @@
 ;;
 ;;     Package (required)
 ;;
-;;      This field is the PACKAGE part from file name package.el or the
-;;      canonical known name in case of bigger packages like "gnus".
-;;      An example "html-helper-mode.el" => package name is
-;;      "html-helper-mode". It is adviseable to always add *-mode even
-;;      if file does not explicitly say so. An example "python.el" =>
-;;      package name is "python-mode". Duplicate similar names cannot
-;;      exists. Please contact package author in case of name clashes.
+;;      The name of the PACKAGE in all lowercase, satisfying regexp
+;;      "[a-z0-9-]+". Usually basename of the file name like
+;;      package.el or the canonical known name in case of bigger
+;;      packages like "gnus". An example "html-helper-mode.el" =>
+;;      package name is "html-helper-mode". It is adviseable to always
+;;      add *-mode even if file does not explicitly say so. An example
+;;      "python.el" => package name is "python-mode". No two packages
+;;      can have same name. Please contact package author in case of
+;;      name clashes.
 ;;
 ;;     Recommends
 ;;
@@ -514,28 +581,27 @@
 ;;      This field lists information about the package. Each keyword
 ;;      has a unique mening. the allowed list:
 ;;
-;;          keyword := 'core-emacs'
-;;                     | 'core-xemacs'
-;;                     | 'unmaintained'
-;;                     | 'broken'
-;;                     | 'note' YYYY-MM-DD [COMMENT] ';'
+;;          keyword := core-emacs
+;;                     | core-xemacs
+;;                     | unmaintained
+;;                     | broken
+;;                     | unsafe
+;;                     | stable
+;;                     | unstable
+;;                     | experimental
 ;;
-;;      And example:
-;;
-;;          Status: unmaintained
-;;              broken
-;;              note YYYY-MM-DD Doesn't work in Emacs 23.
-;;              See thread http://example.com ;
-;;
-;;      The `core-*' values mark the package being included (or will
-;;      be) in the latest [X]Emacs. Value `unmaintained' means that
-;;      the original developer has vanished or abandoned the project
-;;      and is no longer available for developing the package. Value
-;;      `broken' means that package is broken and does not work in
-;;      some Emacs version (usually latest). The `note' keyword can be
-;;      used for any kind of information. It is adviced that notes are
-;;      time stamped using ISO 8601 YYYY-MM-DD format. A note ends in
-;;      character `;' and can be of any length.
+;;      The `core-*' values mark the package being included (or will be) in
+;;      the latest [X]Emacs. Value `unmaintained' means that the original
+;;      developer has vanished or abandoned the project and is no longer
+;;      available for developing the package. Value `unsafe' means that the
+;;      not all the symmbols are name space clean (prefix-*), so some of
+;;      the commands might clash with existing ones. The current release
+;;      status of package can be indicated with term `stable' (no more
+;;      actively developed, bugs shaken out), `unstable' (package is in
+;;      active development) and `experimental' (no gurantees, not
+;;      necessarily tested but this is the latest code). Value `broken'
+;;      means that package is broken and does not work in some Emacs
+;;      version (usually latest).
 ;;
 ;;     Vcs-Browser
 ;;
@@ -543,26 +609,45 @@
 ;;
 ;;     Vcs-Type
 ;;
-;;      Version Constrol System information. The value is the
-;;      lowercase name of the version control program. A special value
-;;      "http" can be used to signify direct HTTP download. An example
-;;      of an Emacs package hosted directly at a web page:
+;;      Version Control System type information. The value is the
+;;      lowercase name of the version control program; cvs, svn, bzr, hg,
+;;      git etc. A special value "http" can be used to signify direct HTTP
+;;      download. An example of an Emacs package hosted directly at a web
+;;      page:
 ;;
 ;;          Vcs-Type: http
 ;;          Vcs-Url: http://www.emacswiki.org/emacs/download/vline.el
 ;;
 ;;     Vcs-Url
 ;;
-;;      The technical repository URL. For CVS, this is the value of
-;;      CVSROOT which includes also the protocol name:
+;;      The Version Control System repository URL without any options. For
+;;      CVS, this is the value of CVSROOT which includes also the protocol
+;;      name:
 ;;
+;;          Vcs-Type: cvs
 ;;          Vcs-Url: :pserver:anonymous@example.com/reository/foo
+;;
+;;     Vcs-Args
+;;
+;;      Additional arguments passed to VCS program after speficying the *Vcs-Url*
+;;      E.g. CVS directories may need a specific module to check out. A setup like
+;;      below would yield command: "cvs -d <Vcs-Url> co -d <Package> <Vcs-Args>"
+;;
+;;          Vcs-Type: cvs
+;;          Vcs-Url: :pserver:anonymous@example.com/reository/foo
+;;          Vcs-Args: module
 ;;
 ;;     Vcs-User
 ;;
-;;      The login name. In case the repository cannot be accessed
-;;      simply by visiting the `Vcs-Url' (or in the case of CVS:
-;;      pressing RETURN at login prompt), this is the login name.
+;;      The Version Control System repository's login name. In case the
+;;      repository cannot be accessed simply by visiting the `Vcs-Url' (or
+;;      in the case of CVS: pressing RETURN at login prompt), this is the
+;;      login name.
+;;
+;;     Vcs-Password
+;;
+;;      The Version Control System repository's password. In some rara cases
+;;      a generic password, like "anonymous" to access repository is needed.
 ;;
 ;;     Wiki
 ;;
@@ -575,10 +660,29 @@
 ;;      notation:
 ;;
 ;;          X-Comment: <comment here>
-;;          X-Maintainer-Homepage: <URL>
+;;          X-Upstream-Homepage: <URL>
+;;
+;; Epackage Compatibility Levels
+;;
+;;   The latest epackage format is alwyas described in section "Epackage
+;;   specification" above. In here you find list of older format and
+;;   changes since (Currently none). This section interests epackage
+;;   maintainers that update their packaging.
+;;
+;;   o  2010-12-03 Compatibility level 1 specification written.
 ;;
 ;; TODO
 ;:
+;;      - Verify Compatibility Level of downloaded epackage
+;;      - Run health check for downloaded Epackage
+;;
+;;      - Verify sources list file: No duplicate same packages.
+;;
+;;      - What to do if Yellow pages URL (repo) chnages and you have the old one
+;;        installed? How to cope with the change? The Git repository may
+;;        need to be destroyed and downloaded again to be sure (not
+;;        necessarily derived from old one).
+;;
 ;;      - Move package list into Git repository
 ;;      - GUI: drop outline. If user selects DETAIL view, collect
 ;;        information to another buffer dynamically (info, git tags,
@@ -619,7 +723,7 @@
 
 ;;; Code:
 
-(defconst epackage-version-time "2010.1202.2218"
+(defconst epackage-version-time "2010.1203.1854"
   "*Version of last edit.")
 
 (defcustom epackage--load-hook nil
@@ -682,7 +786,7 @@ Directory should not contain a trailing slash."
   "Name of package directory under `epackage--root-directory'.
 Use function `epackage-directory' for full path name.")
 
-(defvar epackage--directory-name-vcs "vc"
+(defvar epackage--directory-name-vcs "packages"
   "VCS directory under `epackage--root-directory'.
 Use function `epackage-file-name-vcs-compose' for full path name.")
 
@@ -1021,7 +1125,7 @@ If VERBOSE is non-nil, display progress message."
    "\\(?:^\\| \\)\\*master\\(?: \\|$\\)"
    (mapconcat 'concat list " ")))
 
-(defun epackage-git-command-branch-list (dir &optional verbose)
+(defun epackage-git-command-tag-list (dir &optional verbose)
   "Run 'git branch' in DIR.
 If VERBOSE is non-nil, display progress message.
 
@@ -1031,12 +1135,28 @@ Return:
     "branch")
   (epackage-with-last-git-output
     (let (list)
+      (while (re-search-forward "^\\([^ \t\r\n]*+\\)" nil t)
+        (setq list (cons
+                    (match-string-no-properties 1)
+                    list)))
+      list)))
+
+(defun epackage-git-command-tag-list (dir &optional verbose)
+  "Run 'git tag -l' in DIR.
+If VERBOSE is non-nil, display progress message.
+
+Return:
+    List of tag names."
+  (epackage-with-git-command dir verbose
+    "tag" "-l")
+  (epackage-with-last-git-output
+    (let (list)
       (while (re-search-forward "^\\(\\*?\\) +\\([^ \t\r\n]*\\)" nil t)
-	(setq list (cons
-		    (concat
-		     (match-string-no-properties 1)
-		     (match-string-no-properties 2))
-		    list)))
+        (setq list (cons
+                    (concat
+                     (match-string-no-properties 1)
+                     (match-string-no-properties 2))
+                    list)))
       list)))
 
 (defun epackage-git-branch-list-current-branch (list)
@@ -1044,8 +1164,8 @@ Return:
   (let (ret)
     (dolist (elt list)
       (when (and (not  ret)
-		 (string-match "^\\*\\(.+\\)" elt))
-	(setq ret (match-string-no-properties 1 elt))))
+                 (string-match "^\\*\\(.+\\)" elt))
+        (setq ret (match-string-no-properties 1 elt))))
     ret))
 
 (defsubst epackage-git-command-branch-current-name (dir &optional verbose)
@@ -1072,7 +1192,7 @@ If VERBOSE is non-nil, display progress message."
   (let ((dir (epackage-file-name-vcs-compose package)))
     (when (file-directory-p dir)
       (let ((list (epackage-git-command-branch-list dir)))
-	(epackage-git-branch-list-master-p list)))))
+        (epackage-git-branch-list-master-p list)))))
 
 (defun epackage-upgrade-package (package &optional verbose)
   "Upgrade PACKAGE in VCS directory.
@@ -1082,17 +1202,17 @@ If VERBOSE is non-nil, display progress message."
       (error "Epackage: [ERROR] No Git URL for package '%s'" package))
     (let ((dir (epackage-file-name-vcs-compose package)))
       (if verbose
-	  (message "Upgrading package: %s..." package))
+          (message "Upgrading package: %s..." package))
       (unless (epackage-master-p package)
-	(error
-	 `,(concat
-	    "Epackage: [FATAL] Can't upgrade. "
-	    "Branch name is not 'master' in '%'. "
-	    "Possibly changed manually or invalid package.")
-	 dir)
-	(epackage-git-command-pull dir)
+        (error
+         `,(concat
+            "Epackage: [FATAL] Can't upgrade. "
+            "Branch name is not 'master' in '%'. "
+            "Possibly changed manually or invalid package.")
+         dir)
+        (epackage-git-command-pull dir)
       (if verbose
-	  (message "Upgrading package: %s...done" package))))))
+          (message "Upgrading package: %s...done" package))))))
 
 (defun epackage-upgrade-sources-list ()
   "Update list of available packages; the yellow pages."
