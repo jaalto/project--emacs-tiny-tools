@@ -3079,11 +3079,9 @@ harness run is over."
   (interactive "P")
   (let (case-fold-search
         beg
-        h-found
-        rounds)
+        h-found)
     (ti::verb)
-    (setq count  (or count 3)
-          rounds count)
+    (setq count (or count 3))
     ;;  See if there this word in the buffer
     (save-excursion
       (ti::pmin)
@@ -3107,15 +3105,15 @@ harness run is over."
              (y-or-n-p "Do you want to clear RECORD buffer first? "))
         (tinylisp-b-record-empty))
     (unwind-protect ;; make sure tinylisp--harness-flag is set to nil
-        (progn
+        (let ((rounds count))
           (setq tinylisp--harness-flag t)
-          (ti::dotimes iterator 1 count
+          (dotimes (iterator count)
             (tinylisp-elp-reset-list)   ;wipe timings
             (if verb (message "TinyLisp:  Eval round %d/%d ... "
-                              iterator rounds))
+                              (1+ iterator) rounds))
             (eval-region beg (point-max))
             (tinylisp-elp-results
-             'record (format " -- %d/%d\n" iterator rounds)))
+             'record (format " -- %d/%d\n" (1+ iterator) rounds)))
           (if verb
               (message "TinyLisp: Eval rounds done."))
           (tinylisp-b-record 'pmin))
