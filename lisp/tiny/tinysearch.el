@@ -503,8 +503,12 @@ NOTE:
 M-Mouse-1   M-s  search forward
 C-M-Mouse-1 M-r  reverse."
   (interactive)
-  (global-set-key "\M-s" 'tinysearch-search-word-forward)
-  (global-set-key "\M-r" 'tinysearch-search-word-backward)
+  (if (lookup-key global-map "\M-s")
+      (message "** Tinysearch: Can't bind. Key M-s already occupied.")
+    (global-set-key "\M-s" 'tinysearch-search-word-forward))
+  (if (lookup-key global-map "\M-s")
+      (message "** Tinysearch: Can't bind. Key M-r already occupied.")
+    (global-set-key "\M-r" 'tinysearch-search-word-backward))
   ;;  For mouse (under windowed system)
   (global-set-key [(meta control mouse-1)]
                   'tinysearch-search-word-forward)
