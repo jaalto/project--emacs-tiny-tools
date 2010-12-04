@@ -672,6 +672,9 @@
 ;;   o  2010-12-03 Compatibility level 1 specification written.
 ;;
 ;; TODO
+;;
+;;	- GUI: After download. Trying to install or arctivate package,
+;;	  check emacs compatibility and refuse to install if not met.
 ;:
 ;;      - Verify Compatibility Level of downloaded epackage
 ;;      - Run health check for downloaded Epackage
@@ -682,6 +685,13 @@
 ;;        installed? How to cope with the change? The Git repository may
 ;;        need to be destroyed and downloaded again to be sure (not
 ;;        necessarily derived from old one).
+;;
+;;      - What if epackage maintainer kills the repo and reinstantiates it
+;;        from fresh? Symptoms: can't pull, because repos have diverged and
+;;        do not have common objects. SOLUTION: offer deleting repo and
+;;        downloading it again. Warn if there are any local modifications,
+;;        the user might want ot have a backup (*.b). Can we do that? What
+;;        if a backup already exists?
 ;;
 ;;      - Move package list into Git repository
 ;;      - GUI: drop outline. If user selects DETAIL view, collect
@@ -723,7 +733,7 @@
 
 ;;; Code:
 
-(defconst epackage-version-time "2010.1203.1854"
+(defconst epackage-version-time "2010.1203.2302"
   "*Version of last edit.")
 
 (defcustom epackage--load-hook nil

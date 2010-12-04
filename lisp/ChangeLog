@@ -1,6 +1,23 @@
+2010-12-03  Jari Aalto  <jari.aalto@cante.net>
+
+	* tiny/tinyepkg.el (epackage--directory-name-vcs):
+	Set value from 'vc' to more descriptive 'packages'.
+
+2010-12-02 Fri  Jari Aalto  <jari.aalto@cante.net>
+
+	* tiny/tinyepkg.el (epackage-git-command-branch-current-name): New.
+	(epackage-git-branch-list-current-branch): New.
+	(epackage-git-command-branch-list): New.
+	(epackage-git-command-tag-list): New.
+
 2010-12-02 Thu  Jari Aalto  <jari.aalto@cante.net>
 
+	* tiny/tinylisp.el (tinylisp-elp-harness): use standard `dotimes'.
+
 	* tiny/tinyepkg.el: Draw picture about epackage framewrk.
+	(epackage-with-last-git-output): New.
+	(epackage-git-branch-list-master-p): New.
+	(epackage-master-p): New.
 
 2010-11-30 Tue  Jari Aalto  <jari.aalto@cante.net>
 
