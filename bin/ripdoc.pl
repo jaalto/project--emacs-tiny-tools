@@ -31,7 +31,7 @@ use Getopt::Long;
 #   The following variable is updated by developer's Emacs whenever
 #   this file is saved
 
-our $VERSION = '2010.0503.0743';
+our $VERSION = '2010.1205.1646';
 
 # ****************************************************************************
 #
@@ -142,12 +142,12 @@ format to the beginning of file:
     #
     # file.extension -- proper first line description
     #
-    #   Preface starts at colum 4
+    #   Preface starts at column 4
     #
     #       txt txt txt at column 8
     #       txt txt txt at column 8
     #
-    #           Furher example code at column 12
+    #           Further example code at column 12
     #           More code examples at column 12
     #
     #   Next heading
@@ -168,14 +168,14 @@ Documentation ends when either of these headers are found:
 
     #   Change Log:     # or "History"
 
-The I<Preface> should explain how the package springed into
-existense and the rest of the documentation follows after that.
+The I<Preface> should explain how the package sprang into
+existence and the rest of the documentation follows after that.
 
 Most important is the first line or near first, if the file is a
 shell script, must be exactly like the following. You _must_ not
 use double dashes in any other heading.This gives the name
 of the file and description string. Use what(1) marker at the
-begining of sentence.
+beginning of sentence.
 
     # file.extension -- proper first line description
 
@@ -185,7 +185,7 @@ Very first line determines what is the comment string that is ripped
 away from the beginning of lines. Remember to start writing of
 headings at column four and write text at standard tab column 8. You
 must not use multiple of comment markers like I<#######> below; it
-will handicap this utiity.
+will handicap this utility.
 
     #!/bin/sh
     #
@@ -219,7 +219,7 @@ Use default seach start: 'Documentation|Commentary'
 
 =item B<-b, --begin-regexp REGEXP>
 
-Search any beginning regexp mathing RE istead of default 'File id|Preface'
+Search any beginning regexp matching RE instead of default 'File id|Preface'
 
 =item B<-d, --doc>
 
@@ -231,7 +231,7 @@ Turn on debug.
 
 =item B<-e, --end-regexp REGEXP>
 
-Search any Ending regexp mathing RE istead of default 'Change Log|History'
+Search any Ending regexp matching RE instead of default 'Change Log|History'
 
 =item B<-h, --help>
 
@@ -254,8 +254,7 @@ Display program version and contact info.
 
 =head1 EXAMPLES
 
-You can combine the procuced clear text output to a text to html
-filter to generate html documentation out of the comments.
+Send output to conversion program to generate HTML documentation:
 
     ripdoc.pl file.sh | t2html.pl > file.sh.html
     ripdoc.pl file.cc | t2html.pl > file.cc.html
@@ -282,7 +281,7 @@ follows the 4 character indentation rule, which is the basis of TF
 (technical text format). The only requirement is that the comment
 markers are single lined. C and Java-styled I<comment-start>
 I<comment-end> combination cannot be handled, because the comment
-marker is determined from the beginning of line.
+marker is determined from the start of file.
 
     /* This comment documentation cannot be handled
      *
@@ -305,6 +304,8 @@ program under the terms of GNU General Public license either version 2
 of the License, or (at your option) any later version.
 
 =cut
+
+#  LocalWords:  ripdoc
 
 sub Help (;$)
 {
@@ -414,7 +415,7 @@ sub Main ()
     my $COMMENT             = "";
     my $PADDING             = "";
 
-    my( $ch1, $rest, $name );
+    my ( $ch1, $rest, $name );
     local $ARG;
 
     while ( <> )
@@ -446,7 +447,7 @@ sub Main ()
 
         if ( $debug and /$BODY_MATCH_REGEXP/o )
         {
-            printf "!!$BODY %d [$1] [$2] $ARG", length($`);
+            printf "!!$BODY %d [$1] [$2] $ARG", length $PREMATCH;
         }
 
         # ..................................... first line documentation ...
@@ -455,14 +456,14 @@ sub Main ()
         if ( not $BODY
              and /$BODY_MATCH_REGEXP/o
              #  the match to the left size must be short
-             and length($PREMATCH) < 20
+             and length $PREMATCH < 20
            )
         {
             $debug and print "BODY: $ARG";
 
             # convert first character to uppercase.
 
-            ($ch1, $rest) = ($1,$2);
+            ($ch1, $rest) = ($1, $2);
 
             if ( $ch1 !~ /[a-zA-Z]/ )
             {
@@ -477,7 +478,6 @@ sub Main ()
             }
 
             $debug  and  print "BODY: $name\n";
-
         }
 
         # ....................................................... bounds ...
