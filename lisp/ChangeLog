@@ -1,3 +1,12 @@
+2010-12-06 Mon  Jari Aalto  <jari.aalto@cante.net>
+
+	* tiny/tinylibw.el (w32-cygwin-convert): Use plain `let'.
+
+2010-12-04  Jari Aalto  <jari.aalto@cante.net>
+
+	* tiny/tinysearch.el: (tinysearch-install-default-keybindings):
+	Check `global-map' before binding keys.
+
 2010-12-03  Jari Aalto  <jari.aalto@cante.net>
 
 	* tiny/tinyepkg.el (epackage--directory-name-vcs):

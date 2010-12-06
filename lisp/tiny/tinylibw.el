@@ -52,7 +52,7 @@
   (set (make-local-variable 'byte-compile-dynamic-docstrings) t)
   (set (make-local-variable 'byte-compile-dynamic) t))
 
-(defconst tinylibw-version-time "2010.1120.1445"
+(defconst tinylibw-version-time "2010.1206.1937"
   "Latest version number as last modified time.")
 
 ;;; These functions has been submitted to Emacs 21.2
@@ -153,9 +153,9 @@ Return:
 
    If `flag' is set, then the conversion is
    DOS => cygwin."
-  (let* ((cmd     (executable-find "cygpath"))
-         (option  "--windows")
-         ret)
+  (let ((cmd     (executable-find "cygpath"))
+	(option  "--windows")
+	ret)
     (when cmd
       (when flag
         (setq option "--unix"))
@@ -186,10 +186,8 @@ Return:
         (with-temp-buffer
           (call-process cmd nil (current-buffer))
           (goto-char (point-min))
-
           ;;  It's a serious error if "mount" does not say where
           ;;  the ROOT "/" is. Should we do something?
-
           (goto-char (point-min))
           (let ((ret (w32-cygwin-mount-table-parse)))
             (unless ret
