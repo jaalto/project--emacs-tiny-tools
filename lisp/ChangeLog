@@ -1,5 +1,9 @@
 2010-12-06 Mon  Jari Aalto  <jari.aalto@cante.net>
 
+	* tiny/tinyepkg.el: Remove. Moved to separate project
+	under name epackage.el. See
+	http://freshmeat.net/projects/emacs-epackage
+
 	* tiny/tinylibw.el (w32-cygwin-convert): Use plain `let'.
 
 2010-12-04  Jari Aalto  <jari.aalto@cante.net>
