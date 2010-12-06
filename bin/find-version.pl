@@ -30,18 +30,17 @@
 #
 #           perl -S find-version.pl *
 
-use autouse 'Pod::Text'     => qw( pod2text );
+use autouse 'Pod::Text' => qw( pod2text );
 
-use 5.004;
 use strict;
-use English;
+use English qw(-no_match_vars);
 use File::Find;
 use Getopt::Long;
 
 #   The following variable is updated by developer's Emacs whenever
 #   this file is saved
 
-our $VERSION = '2010.0503.0724';
+our $VERSION = '2010.1205.2200';
 
 # ****************************************************************************
 #
@@ -78,9 +77,9 @@ sub Initialize ()
     $LIB        = $PROGNAME;
     my $id      = "$LIB.Initialize";
 
-    $CONTACT  = "";
-    $URL      = "";
-    $WIN32    = 1   if  $OSNAME =~ /win32/i;
+    $CONTACT	= "";
+    $URL	= "";
+    $WIN32	= 1   if  $OSNAME =~ /win32/i;
 
     $OUTPUT_AUTOFLUSH = 1;
 }
@@ -267,7 +266,7 @@ sub HandleCommandLineArgs ()
 #
 #   INPUT PARAMETERS
 #
-#
+#	See Find()
 #
 #   RETURN VALUES
 #
@@ -281,9 +280,8 @@ sub wanted (@)
     my (@dir) = @ARG;
 }
 
-
-# ............................................................ &main ...
-
+sub Main ()
+{
     Initialize();
     HandleCommandLineArgs();
 
@@ -301,8 +299,8 @@ sub wanted (@)
         push @files, grep { -f and -r } glob $ARG;
     }
 
-    local ( *FILE, $ARG );
-    my    ( @content, @all, $file);
+    local (*FILE, $ARG);
+    my (@content, @all, $file);
 
 
     for $file ( @files )
@@ -310,52 +308,54 @@ sub wanted (@)
 
         # ..................................................... read ...
 
-        unless ( open FILE, $file )
+        unless ( open FILE, "<", $file )
         {
             print "Cannot open $file\n";
         }
         else
         {
             binmode FILE;
-            @content = <FILE>; close FILE;
+            @content = <FILE>;
+	    close FILE;
         }
 
         # ................................ Find one line description ...
 
-        chomp $content[0];
-        $content[0] =~ s/^.*\(#\)\s*|\n$//g;
+	my $firstline = $content[0];
+        chomp $firstline;
+        $firstline =~ s/^.*\(#\)\s*|\n$//g;
 
-        my $synop = $content[0];
+        my $synopsis = $firstline;
 
-        #       Not in a first line? Next non-blank then
+        #  Not in a first line? Next non-blank then
 
-        if ( $synop !~ /--/ )
+        if ( $synopsis !~ /--/ )
         {
             for ( @content )
             {
                 if ( /--/ )
                 {
                     #   Remove beginning comment "#" and ";"
-                    #   Removed SCCS styled what(1) id  @(#)
+                    #   Removed SCCS styled what(1) id "@(#)"
 
-                    ( $synop = $ARG )  =~ s/^.*\([#;]\)\s*|\n$|\Q@(#)//g;
+                    ( $synopsis = $ARG )  =~ s/^.*\([#;]\)\s*|\n$|\Q@(#)//g;
                     last;
                 }
             }
         }
 
-        $debug and print "$id: synop>> $synop\n";
+        $debug and print "$id: synop>> $synopsis\n";
 
 
 
         my $len = 80;
 
-        if (length $synop > $len )
+        if (length $synopsis > $len )
         {
-            $synop = substr $synop,0, $len ;
+            $synopsis = substr $synopsis,0, $len ;
         }
 
-        my @s = map { s/[\r\n]//; $ARG } split /\s*--+\s*/, $synop;
+        my @s = map { s/[\r\n]//; $ARG } split /\s*--+\s*/, $synopsis;
 
         # ............................................. Grep version ...
 
@@ -396,6 +396,9 @@ sub wanted (@)
     }
 
     print sort @all;
+}
+
+Main();
 
 0;
 __END__
