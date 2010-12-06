@@ -1,3 +1,7 @@
+2010-12-05 Sun  Jari Aalto  <jari.aalto@cante.net>
+
+	* ripdoc.pl: Minor code layout fixes. Fix typos in Help.
+
 2010-05-03 Mon  Jari Aalto  <jari.aalto@cante.net>
 
 	* ripdoc.pl (Initialize): (top level): Correct Copyright, License, Help.
