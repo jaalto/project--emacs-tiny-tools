@@ -8891,10 +8891,9 @@ HOOK BODY"
        ;; if use is viewing or loaded it to emacs before us.
        ;;
        ;; Work around that bug.
-       (let ((buffer (or
-                      (get-buffer (, file2))
-                      (find-buffer-visiting ,file2)
-                      (find-buffer-visiting ,file1))))
+       (let ((buffer (or (get-buffer ,file2)
+			 (find-buffer-visiting ,file2)
+			 (find-buffer-visiting ,file1))))
          (if (not buffer)
              (finder-commentary ,file2)
            ;;  This is only a pale emulation....will do for now.
