@@ -6025,13 +6025,12 @@ Example 2:
     (setq result (call-interactively 'my-example)) \"test\" RET <files> RET
     result
     --> (\"test\" (\"~/\" \"~/bin\" \"~/exe/\"))"
-  (`
-   (let* ((map (copy-keymap minibuffer-local-map)))
+  `(let ((map (copy-keymap minibuffer-local-map)))
      ;;  this event also exists for tab
      (define-key map [kp-tab]   'ti::file-complete-file-name-word)
      (define-key map [tab]      'ti::file-complete-file-name-word)
      (define-key map "\t"       'ti::file-complete-file-name-word)
-     (,@ body))))
+     ,@body))
 
 ;;; ----------------------------------------------------------------------
 ;;;
@@ -6284,7 +6283,7 @@ Return:
   nil       no action [file not exist ...]
   nbr       shell return code"
   (interactive "fTar file: ")
-  (let* ((cmd (or zip-cmd "unzip -v %s")))
+  (let ((cmd (or zip-cmd "unzip -v %s")))
     (ti::verb)
     (if (not (and (stringp file)
                   (file-exists-p file)))
@@ -6318,8 +6317,7 @@ Input:
 
   PERL-TYPE   'perl 'win32-cygwin 'win32-activestate
   BODY        Code to run."
-  (`
-   (let ((process-environment process-environment) ;; Make a local copy
+  `(let ((process-environment process-environment) ;; Make a local copy
          new)
      (dolist (elt process-environment)
        (cond
@@ -6349,7 +6347,7 @@ Input:
         (t
          (push elt new))))
      (setq process-environment new)
-     (,@ body))))
+     ,@body))
 
 ;;; ----------------------------------------------------------------------
 ;;;
@@ -6661,6 +6659,51 @@ lisp-mnt's command `lm-verify'."
       (error (concat "No such file in load path: " lib))))))
 
 ;;; ----------------------------------------------------------------------
+;;;
+;;;
+(defun ti::package-get-header (lib header-list)
+  "Get standard header information: e.g. maintainer, version, author.
+The valid syntax of these headers is defined in lisp-mnt.el.
+Make sure the file being visited can be run with lisp-mnt.el
+command `lm-verify'.
+
+Input:
+
+  LIB           the filename of the package, including \".el\"
+  HEADER-LIST   string or list of strings. E.g. '(\"maintainer\")
+
+Return:
+
+  list          notice that empty hits are stored: '(nil nil ..)
+  nil"
+  (let ((header-list  (ti::list-make header-list))
+        hit elt
+        file
+        buffer
+        ret)
+    (cond
+     ((setq file (locate-library lib))
+      (require 'lisp-mnt)
+      (unwind-protect                   ;make sure file is removed
+          (progn
+            (set-buffer (setq buffer (ti::find-file-literally file)))
+            (mapcar
+             (function
+              (lambda (header)
+                (setq elt (lm-header header))
+                (if elt                         ;did we find any ?
+                    (setq hit t))               ;raise flag
+                (push elt ret)))
+             header-list))
+        ;; Kill the file no matter what happens.
+        (kill-buffer buffer)))
+     (t
+      (error (concat "No such file in load path: " lib))))
+    (if (null hit)                    ;if no hits, clear the ret value
+        (setq ret nil))
+    ret))
+
+;;; ----------------------------------------------------------------------
 ;;; - See package tinydiff.el and function tdi-feedback there if you
 ;;;   are still curious how to use this function
 ;;;
@@ -6780,7 +6823,7 @@ Input:
 ;;; ----------------------------------------------------------------------
 ;;;
 (defun ti::package-version-info (lib &optional arg)
-  "Gets package information and prints it to another buffer.
+  "Gets package information and display it in another buffer.
 The LIB is searched along 'load-path'.
 
 Preconditions:
@@ -6797,7 +6840,7 @@ Input:
   ARG   prefix arg, print the versionin info in mode-line
         instead of creating full version buffer."
   (interactive
-   (let* (file)
+   (let (file)
      (setq
       file
       (ti::file-complete-filename-minibuffer-macro
@@ -6884,51 +6927,6 @@ Input:
         (ti::pmin))))
      (t
       (error (concat "No such file in load path: " lib))))))
-
-;;; ----------------------------------------------------------------------
-;;;
-;;;
-(defun ti::package-get-header (lib header-list)
-  "Get standard header information: e.g. maintainer, version, author.
-The valid syntax of these headers is defined in lisp-mnt.el.
-Make sure the file being visited can be run with  lisp-mnt's
-command `lm-verify'.
-
-Input:
-
-  LIB           the filename of the package, including \".el\"
-  HEADER-LIST   string or list of strings. E.g. '(\"maintainer\")
-
-Return:
-
-  list          notice that empty hits are stored: '(nil nil ..)
-  nil"
-  (let ((header-list  (ti::list-make header-list))
-        hit elt
-        file
-        buffer
-        ret)
-    (cond
-     ((setq file (locate-library lib))
-      (require 'lisp-mnt)
-      (unwind-protect                   ;make sure file is removed
-          (progn
-            (set-buffer (setq buffer (ti::find-file-literally file)))
-            (mapcar
-             (function
-              (lambda (header)
-                (setq elt (lm-header header))
-                (if elt                         ;did we find any ?
-                    (setq hit t))               ;raise flag
-                (push elt ret)))
-             header-list))
-        ;; Kill the file no matter what happens.
-        (kill-buffer buffer)))
-     (t
-      (error (concat "No such file in load path: " lib))))
-    (if (null hit)                    ;if no hits, clear the ret value
-        (setq ret nil))
-    ret))
 
 ;;; ......................................................... &package ...
 ;;; - Here is some special functions. When you insert some example to
@@ -8495,10 +8493,10 @@ if you know the function in timer list."
 ;;;
 (defun ti::compat-set-mode-line-format  (fmt)
   "Set modeline format using FMT."
-  (let* ((sym
-          (if (ti::emacs-p)
-              'mode-line-format
-            'modeline-format)))
+  (let ((sym
+	 (if (ti::emacs-p)
+	     'mode-line-format
+	   'modeline-format)))
     ;; XEmacs 19.14 says:
     ;; ** mode-line-format is an obsolete var; use modeline-format instead.
     (set sym fmt)))
@@ -8571,13 +8569,13 @@ Example, when:
 How to call this function:
 
   (ti::macrov-minor-mode \"xxx\" \" Xmode\" \"C-cx\" \"Xmenubar\" nil)"
-  (` (, (ti::macrov-minor-mode-1
-         pfx
-         mode-Name
-         mode-Name-prefix-key
-         easymenu-Name
-         custom-group
-         style))))
+  `,(ti::macrov-minor-mode-1
+     pfx
+     mode-Name
+     mode-Name-prefix-key
+     easymenu-Name
+     custom-group
+     style))
 
 ;;; ----------------------------------------------------------------------
 ;;;
@@ -8592,9 +8590,9 @@ How to call this function:
   "Use `ti::macrov-minor-mode' and see call arguments there.
 PFX MODE-NAME MODE-NAME-PREFIX-KEY
 EASYMENU-NAME CUSTOM-GROUP PREFIX-STYLE"
-  (let* ((x "-")
-         sym
-         ret)
+  (let ((x "-")
+	sym
+	ret)
     (if prefix-style
         (if (not (stringp prefix-style))
             (error "style must be string")
@@ -8618,64 +8616,63 @@ EASYMENU-NAME CUSTOM-GROUP PREFIX-STYLE"
     ;;   )
     (push 'eval-and-compile ret)
     (setq sym (intern (format "%smode" pfx)))
-    (push (list 'defvar (` (, sym)) nil
+    (push (list 'defvar `, sym nil
                 "mode on off variable.")
           ret)
-    (push (list 'make-variable-buffer-local (` (quote (, sym)))) ret)
-
+    (push (list 'make-variable-buffer-local `(quote ,sym)) ret)
     (setq sym (intern (format "%smode-name" x)))
-    (push (list 'defcustom (` (, sym))
-                (` (, mode-Name))
+    (push (list 'defcustom `,sym
+                `,mode-Name
                 "*Minor mode name."
                 ':type ''string
-                ':group (` (, custom-group)))
+                ':group `,custom-group)
           ret)
     (setq sym (intern (format "%smode-prefix-key" x)))
-    (push (list 'defcustom (` (, sym))
-                (` (, mode-Name-prefix-key))
+    (push (list 'defcustom `,sym
+                `,mode-Name-prefix-key
                 "*Prefix key to access mode."
                 ':type ''(string :tag "Key sequence")
-                ':group (` (, custom-group)))
+                ':group `,custom-group)
           ret)
     (setq sym (intern (format "%smode-map" x)))
     (push (list 'eval-and-compile
                 (list
-                 'defvar (` (, sym))
+                 'defvar `,sym
                  nil
                  "Minor mode map."))
           ret)
     (setq sym (intern (format "%smode-prefix-map" x)))
     (push (list 'eval-and-compile
                 (list
-                 'defvar (` (, sym))
+                 'defvar `,sym
                  nil
                  "Prefix minor mode map."))
           ret)
     (setq sym (intern (format "%smode-easymenu" x)))
-    (push (list 'defvar (` (, sym))
+    (push (list 'defvar `,sym
                 nil
                 "Easymenu variable.")
           ret)
     (setq sym (intern (format "%smode-easymenu-name" x)))
-    (push (list 'defcustom  (` (, sym))
-                (` (, easymenu-Name))
+    (push (list 'defcustom  `,sym
+                `,easymenu-Name
                 "*Easymenu name that appears in menu-bar."
                 ':type ''string
-                ':group (` (, custom-group)))
+                ':group `,custom-group)
           ret)
     (setq sym (intern (format "%smode-define-keys-hook" x)))
-    (push (list 'defcustom (` (, sym))
+    (push (list 'defcustom `,sym
                 nil
                 "*Hook that defines all keys and menus."
                 ':type ''hook
-                ':group (` (, custom-group)))
+                ':group `,custom-group)
           ret)
     (setq sym (intern (format "%smode-hook" x)))
-    (push (list 'defcustom (` (, sym))
+    (push (list 'defcustom `,sym
                 nil
                 "*Hook that runs when mode function is called."
                 ':type ''hook
-                ':group (` (, custom-group)))
+                ':group `,custom-group)
           ret)
     (nreverse ret)))
 
@@ -8764,22 +8761,18 @@ Example how to call created functions:
   (xxx-mode 0)          ;; off, could also be -1
   (turn-on-xxx-mode)    ;; function can be put to hook
   (turn-off-xxx-mode)"
-  (` (,
-      (ti::macrof-minor-mode-1
-       func-min-sym
-       doc-str
-
-       install-func
-       mode-var
-       mode-Name
-       prefix-var
-       menu-var
-
-       no-mode-msg
-       mode-desc
-
-       hook
-       body))))
+  `,(ti::macrof-minor-mode-1
+     func-min-sym
+     doc-str
+     install-func
+     mode-var
+     mode-Name
+     prefix-var
+     menu-var
+     no-mode-msg
+     mode-desc
+     hook
+     body))
 
 ;;; ----------------------------------------------------------------------
 ;;;
@@ -8805,86 +8798,81 @@ HOOK BODY"
 
 ;;;  (ti::d!! "\n\n" body)
   (let* ((sym
-          (intern (symbol-name (` (, func-min-sym)))))
+          (intern (symbol-name `,func-min-sym)))
          (viper-sym
-          (intern (concat (symbol-name (` (, func-min-sym)))
+          (intern (concat (symbol-name `,func-min-sym)
                           "-viper-attach"))))
-    (`
-     (defun (, sym)
+    `(defun ,sym
        (&optional arg verb)
-       (, doc-str)
+       ,doc-str
        (interactive "P")
        (ti::verb)
-       (if (null (assq (quote (, func-min-sym)) minor-mode-alist))
-           ((, install-func)))
+       (if (null (assq (quote ,func-min-sym) minor-mode-alist))
+           ,install-func)
 ;;;       (let* ((val (symbol-value  (, mode-var)))
 ;;;              )
 ;;;         (setq  (, mode-var) (ti::bool-toggle val arg)))
-       (ti::bool-toggle (, mode-var) arg)
+       (ti::bool-toggle ,mode-var arg)
        ;;  XEmacs needs this call, in emacs turning on the minor
        ;;  mode automatically adds the menu too.
        ;;
 ;;;       (if (symbol-value (, mode-var))
 ;;;           (easy-menu-add (symbol-value (, menu-var)))
 ;;;         (easy-menu-remove (symbol-value (, menu-var))))
-       (if (and (, mode-var)
-                (, menu-var))
+       (if (and ,mode-var
+                ,menu-var)
            ;;  easy-menu-add dies if menu-var is nil
-           (easy-menu-add (, menu-var))
-         (easy-menu-remove (, menu-var)))
-       (when (, mode-var)
-         (funcall (quote (, viper-sym))))
-       (,@ body)
+           (easy-menu-add ,menu-var)
+         (easy-menu-remove ,menu-var))
+       (when ,mode-var
+         (funcall (quote ,viper-sym)))
+       ,@body
        (ti::compat-modeline-update)
-       (if (and verb (null (, no-mode-msg)))
+       (if (and verb
+		(null ,no-mode-msg))
            (message
             "%s minor mode is %s %s"
-            (, mode-desc)
-            (if  (, mode-var) "on." "off.")
-            (if  (null (, mode-var))
+            ,mode-desc
+            (if  ,mode-var "on." "off.")
+            (if  (null ,mode-var)
                 ""
               (if (, prefix-var)
-                  (format "Prefix key is %s" (, prefix-var))
+                  (format "Prefix key is %s" ,prefix-var)
                 ""))))
-       (run-hooks (quote (, hook)))
+       (run-hooks (quote ,hook))
        ;;  Return status of minor mode as last value.
-       (, mode-var)))))
+       ,mode-var)))
 
 ;;; ----------------------------------------------------------------------
 ;;;
 (defun ti::macrof-minor-mode-on (mode-func-sym)
   "Create standard function to turn on the minor mode MODE-FUNC-SYM."
-  (let* ((sym
-          (intern (concat "turn-on-" (symbol-name (` (, mode-func-sym)))))))
-    (`
-     (defun (, sym) ()
+  (let ((sym (intern (concat "turn-on-" (symbol-name `,mode-func-sym)))))
+    `(defun ,sym ()
        "Turn minor mode on"
        (interactive)
-       ((, mode-func-sym) 1)))))
+       ,mode-func-sym 1)))
 
 ;;; ----------------------------------------------------------------------
 ;;;
 (defun ti::macrof-minor-mode-off (mode-func-sym)
   "Create standard function to turn off the minor mode MODE-FUNC-SYM."
-  (let* ((sym
-          (intern (concat "turn-off-" (symbol-name (` (, mode-func-sym)))))))
-    (`
-     (defun (, sym) ()
+  (let ((sym (intern (concat "turn-off-" (symbol-name `,mode-func-sym)))))
+    `(defun ,sym ()
        "Turn minor mode off"
        (interactive)
-       ((, mode-func-sym) -1)))))
+       ,mode-func-sym -1)))
 
 ;;; ----------------------------------------------------------------------
 ;;;
 (defun ti::macrof-minor-mode-help (mode-func-sym)
   "Create standard function to print MODE-FUNC-SYM function's destription."
-  (let* ((sym (intern (concat (symbol-name (` (, mode-func-sym))) "-help"))))
-    (`
-     (defun (, sym) ()
+  (let ((sym (intern (concat (symbol-name `,mode-func-sym) "-help"))))
+    `(defun ,sym ()
        "Mode help."
        (interactive)
        (with-output-to-temp-buffer "*help*"
-         (princ (documentation (quote (, mode-func-sym)))))))))
+         (princ (documentation (quote ,mode-func-sym)))))))
 
 ;;; ----------------------------------------------------------------------
 ;;;
@@ -8894,8 +8882,7 @@ HOOK BODY"
          (sym  (intern (concat name "commentary")))
          (file1 (substring pfx 0 (1- (length name))))
          (file2 (concat file1 ".el")))
-    (`
-     (defun (, sym) ()
+    `(defun ,sym ()
        "Display `finder-commentary'."
        (interactive)
        ;; Same as what `finde-commentary' uses
@@ -8906,10 +8893,10 @@ HOOK BODY"
        ;; Work around that bug.
        (let ((buffer (or
                       (get-buffer (, file2))
-                      (find-buffer-visiting (, file2))
-                      (find-buffer-visiting (, file1)))))
+                      (find-buffer-visiting ,file2)
+                      (find-buffer-visiting ,file1))))
          (if (not buffer)
-             (finder-commentary (, file2))
+             (finder-commentary ,file2)
            ;;  This is only a pale emulation....will do for now.
            (let (str)
              (with-current-buffer buffer
@@ -8918,21 +8905,20 @@ HOOK BODY"
                  (insert str)
                  (ti::pmin) (ti::buffer-replace-regexp "^;+" 0 "")
                  (ti::pmin) (ti::buffer-replace-regexp "\r" 0 "")
-                 (display-buffer (current-buffer)))))))))))
+                 (display-buffer (current-buffer))))))))))
 
 ;;; ----------------------------------------------------------------------
 ;;;
 (defun ti::macrof-minor-mode-viper-attach (pfx mode-func-sym)
   "Create standard function PFX MODE-FUNC-SYM to attach mode to viper."
   (let* ((name pfx) ;; (symbol-name (` (, mode-func-sym))))
-         (sym  (intern (concat (symbol-name (` (, mode-func-sym)))
+         (sym  (intern (concat (symbol-name `,mode-func-sym)
                                "-viper-attach")))
          (file1 (substring pfx 0 (1- (length name)))))
-    (`
-     (defun (, sym) ()
+    `(defun ,sym ()
        "Attach minor mode to viper with `viper-harness-minor-mode'."
        (if (featurep 'viper)
-           (ti::funcall 'viper-harness-minor-mode (, file1)))))))
+           (ti::funcall 'viper-harness-minor-mode ,file1)))))
 
 ;;; ----------------------------------------------------------------------
 ;;;
@@ -8989,14 +8975,14 @@ Example how to call created function:
   M -x xxx-install-mode      ;; this calls created function and installs mode
   (xxx-install-mode)         ;; Same
   (xxx-install-mode 'remove) ;; Or prefix ARG, removes the minor mode"
-  (` (, (ti::macrof-minor-mode-install-1
-         func-ins-sym
-         mode-sym
-         map-sym
-         prefix-map-sym
-         mode-name-sym
-         hook-sym
-         body))))
+  `,(ti::macrof-minor-mode-install-1
+     func-ins-sym
+     mode-sym
+     map-sym
+     prefix-map-sym
+     mode-name-sym
+     hook-sym
+     body))
 
 ;;; ----------------------------------------------------------------------
 ;;;
@@ -9011,31 +8997,30 @@ Example how to call created function:
    &rest body)
   "Use macro `ti::macrof-minor-mode-install'. See arguments there.
 FUNC-INS-SYM MODE-SYM MAP-SYM MODE-NAME-SYM HOOK-SYM BODY"
-  (let* ((sym (intern (symbol-name (` (, func-ins-sym))))))
-    (`
-     (defun (, sym) (&optional remove verb)
+  (let ((sym (intern (symbol-name `,func-ins-sym))))
+    `(defun ,sym (&optional remove verb)
        "Install or optionally REMOVE minor mode. Calling this always
 removes old mode and does reintall."
        (interactive "P")
        (ti::verb)
-       (,@ body)
+       ,@body
        (cond
         (remove
-         (ti::keymap-add-minor-mode '(, mode-sym) nil nil 'remove)
+         (ti::keymap-add-minor-mode ',mode-sym nil nil 'remove)
          (if verb
              (message "minor mode removed")))
         (t
-         (setq (,        map-sym)  (make-sparse-keymap)) ;; always refresh
-         (setq (, prefix-map-sym)  (make-sparse-keymap)) ;; always refresh
-         (run-hooks '(, hook-sym))
+         (setq ,map-sym (make-sparse-keymap)) ;; always refresh
+         (setq ,prefix-map-sym  (make-sparse-keymap)) ;; always refresh
+         (run-hooks ',hook-sym)
          ;;  Always do reinstall; because keymaps stored permanently and
          ;;  making a change later is impossible.
-         (ti::keymap-add-minor-mode '(, mode-sym) nil nil 'remove)
-         (ti::keymap-add-minor-mode '(, mode-sym)
-                                    '(, mode-name-sym)
-                                    (, map-sym))
+         (ti::keymap-add-minor-mode ',mode-sym nil nil 'remove)
+         (ti::keymap-add-minor-mode ',mode-sym
+                                    ',mode-name-sym
+                                    ,map-sym)
          (if verb
-             (message "minor mode installed"))))))))
+             (message "minor mode installed")))))))
 
 ;;; ----------------------------------------------------------------------
 ;;;
@@ -9101,29 +9086,29 @@ How to call this function:
 Example how to call created function:
 
   (xxx-mode-define-keys)"
-  (` (, (ti::macrof-define-keys-1
-         minor--mode-name
-         minor--mode-desc
-         func-def-sym
-         keymap-sym
-         prefix-keymap-sym
-         prefix-key-sym
-         easymenu-sym
-         easymenu-Name-sym
-         easymenu-doc-str
-         easy-menu-forms
-         eval-body))))
+  `,(ti::macrof-define-keys-1
+     minor--mode-name
+     minor--mode-desc
+     func-def-sym
+     keymap-sym
+     prefix-keymap-sym
+     prefix-key-sym
+     easymenu-sym
+     easymenu-Name-sym
+     easymenu-doc-str
+     easy-menu-forms
+     eval-body))
 
 ;;; ----------------------------------------------------------------------
 ;;;
 (defmacro ti::macrov-mode-line-mode-menu (mode-symbol text)
   "Add MODE-SYMBOL to minor mode list in Emacs mode line menu."
-  (let ((sym  (vector (intern (symbol-name (` (, mode-symbol)))))))
-    (` (when (boundp 'mode-line-mode-menu) ;; Emacs 21.1
-         (define-key mode-line-mode-menu (, sym)
-           '(menu-item (, text)
-                       (, mode-symbol)
-                       :button (:toggle . (, mode-symbol))))))))
+  (let ((sym  (vector (intern (symbol-name `,mode-symbol)))))
+    `(when (boundp 'mode-line-mode-menu) ;; Emacs 21.1
+       (define-key mode-line-mode-menu ,sym
+	 '(menu-item ,text
+		     ,mode-symbol
+		     :button (:toggle . ,mode-symbol))))))
 
 ;;; ----------------------------------------------------------------------
 ;;;
@@ -9143,50 +9128,48 @@ Example how to call created function:
 MODE-NAME FUNC-DEF-SYM KEYMAP-SYM PREFIX-KEYMAP-SYM PREFIX-KEY-SYM
 EASYMENU-SYM EASYMENU-NAME-SYM EASYMENU-DOC-STR EASY-MENU-FORMS
 BODY"
-  (let* (sym)
-    (setq sym (intern (symbol-name (` (, func-def-sym)))))
-    (`
-     (defun (, sym) ()
-       (let* ((root-map  (, keymap-sym))
-              (map       (, prefix-keymap-sym))
-              (p         (, prefix-key-sym)))
-         (when (stringp (, easymenu-doc-str)) ;This could be nil (no menus)
+  (let ((sym (intern (symbol-name `,func-def-sym))))
+    `(defun ,sym ()
+       (let* ((root-map  ,keymap-sym)
+              (map       ,prefix-keymap-sym)
+              (p         ,prefix-key-sym))
+         (when (stringp ,easymenu-doc-str) ;This could be nil (no menus)
            (if (ti::xemacs-p)
                (easy-menu-define
-                 (, easymenu-sym)
+                 ,easymenu-sym
                  nil
-                 (, easymenu-doc-str)
-                 (, easy-menu-forms))
+                 ,easymenu-doc-str
+                 ,easy-menu-forms)
              (easy-menu-define
-               (, easymenu-sym)
-               (, keymap-sym)
-               (, easymenu-doc-str)
-               (, easy-menu-forms))))
+               ,easymenu-sym
+               ,keymap-sym
+               ,easymenu-doc-str
+               ,easy-menu-forms)))
          ;;  This is no-op, ByteComp silencer.
          ;;  ** variable p bound but not referenced
          (if (null p)        (setq p nil))
          (if (null map)      (setq map nil))
          (if (null root-map) (setq root-map nil))
          (ti::macrov-mode-line-mode-menu
-          (, minor--mode-name) (, minor--mode-desc))
+          ,minor--mode-name ,minor--mode-desc)
          ;; (define-key mode-map mode-prefix-key mode-prefix-map)
-         (when (, prefix-key-sym)
+         (when ,prefix-key-sym
            (define-key
-             (, keymap-sym)
-             (, prefix-key-sym)
-             (, prefix-keymap-sym)))
+             ,keymap-sym
+             ,prefix-key-sym
+             ,prefix-keymap-sym))
          ;;  If you have selected a prefix key that is a natural ABC key;
          ;;  then define "aa" as self insert command for "a" character.
          ;;
          ;;  check also if prefix key defined is like  [(a)]] where "a"
          ;;  if a single character. The [(?\C-a)]] is to be accepted as
          ;;  repeated key: C-aC-a, only "aa"
-         (let* ((char (ti::keymap-single-key-definition-p p)))
+         (let ((char (ti::keymap-single-key-definition-p p)))
            (when (and (characterp char)
 		      (ti::print-p char))
              ;;  The prefix key is single; printable character.
              (define-key map p 'self-insert-command)))
-         (, body))))))
+         ,body))))
 
 ;;; ----------------------------------------------------------------------
 ;;;
@@ -9203,39 +9186,37 @@ BODY"
   "Use macro `ti::macrof-version-bug-report' and see arguments there.
 FILENAME PREFIX VERSION-VARIABLE VERSION-VALUE
 BUG-VAR-LIST BUFFER-LIST BUG-BODY."
-  (let* (sym
-         ret
-         elt)
+  (let (sym
+	ret
+	elt)
     (push 'progn ret)
     (setq elt
           (list
-           'defconst (` (, version-variable))
-           (` (, version-value))
+           'defconst `,version-variable
+           `,version-value
            "Package's version information."))
     (push elt ret)
     (setq sym (intern (format "%s-version" prefix)))
     (setq
      elt
-     (`
-      (defun (, sym) (&optional arg)
+     `(defun ,sym (&optional arg)
         "Version information."
         (interactive "P")
-        (ti::package-version-info (, filename) arg))))
+        (ti::package-version-info ,filename arg)))
     (push elt ret)
     (setq sym (intern (format "%s-submit-bug-report" prefix)))
     (setq
      elt
-     (`
-      (defun (, sym) ()
+     `(defun ,sym ()
         "Send bug report or feedback."
         (interactive)
         (ti::package-submit-bug-report
-         (, filename)
-         (, version-variable)
-         (, bug-var-list)
+         ,filename
+         ,version-variable
+         ,bug-var-list
          'verbose
-         (, buffer-list))
-        (, bug-body))))
+         ,buffer-list)
+        ,bug-body))
     (push elt ret)
     (nreverse ret)))
 
@@ -9280,14 +9261,14 @@ Example how to call created functions:
 
   M - x xxx-submit-bug-report
   M - x xxx-version"
-  (`(, (ti::macrof-version-bug-report-1
-        filename
-        prefix
-        version-variable
-        version-value
-        bug-var-list
-        buffer-list
-        bug-body))))
+  `,(ti::macrof-version-bug-report-1
+     filename
+     prefix
+     version-variable
+     version-value
+     bug-var-list
+     buffer-list
+     bug-body))
 
 ;;; ----------------------------------------------------------------------
 ;;;
@@ -9302,21 +9283,19 @@ Example how to call created functions:
 PREFIX
 DEBUG-FUNCTION DEBUG-TOGGLE-FUNCTION DEBUG-BUFFER-SHOW-FUNCTION
 DEBUG-VARIABLE DEBUG-BUFFER."
-  (let* (str
-         ret
-         elt)
+  (let (str
+	ret
+	elt)
     (push 'progn ret)
-
     (setq elt
           (list
-           'defvar (` (, debug-variable))
+           'defvar `,debug-variable
            nil
            "Debug control: on or off."))
     (push elt ret)
-
     (setq elt
           (list
-           'defvar (` (, debug-buffer))
+           'defvar `,debug-buffer
            (format "*%s-debug*" prefix)
            "Debug output buffer."))
     (push elt ret)
@@ -9326,55 +9305,51 @@ DEBUG-VARIABLE DEBUG-BUFFER."
            "Prefix ARG: nil = toggle, 0 = off, 1 = on."))
     (setq
      elt
-     (`
-      (defun (, debug-toggle-function) (&optional arg)
-        (, str)
+     `(defun ,debug-toggle-function (&optional arg)
+        ,str
         (interactive "P")
-        (let* ((buffer (get-buffer (, debug-buffer))))
-          (ti::bool-toggle (, debug-variable) arg)
-          (when (and (, debug-variable)
+        (let ((buffer (get-buffer ,debug-buffer)))
+          (ti::bool-toggle ,debug-variable arg)
+          (when (and ,debug-variable
                      buffer
                      (y-or-n-p "Clear debug buffer?"))
             (ti::erase-buffer buffer))
           (if (interactive-p)
               (message "Debug is %s"
-                       (if (, debug-variable)
+                       (if ,debug-variable
                            "on"
-                         "off")))))))
+                         "off"))))))
     (push elt ret)
     (when debug-buffer-show-function
       (setq str "Show debug buffer.")
       (setq
        elt
-       (`
-        (defun (, debug-buffer-show-function) (&optional arg)
-          (, str)
+       `(defun ,debug-buffer-show-function (&optional arg)
+          ,str
           (interactive "P")
-          (let* ((buffer (get-buffer (, debug-buffer))))
-            (ti::bool-toggle (, debug-variable) arg)
+          (let ((buffer (get-buffer ,debug-buffer)))
+            (ti::bool-toggle ,debug-variable arg)
             (if (null buffer)
                 (message "There is no debug buffer to show.")
-              (display-buffer buffer))))))
+              (display-buffer buffer)))))
       (push elt ret))
     (setq str
           (concat "Write debug log to " ;; (` (, debug-buffer ))
                   " if "
 ;;;                (symbol-name (quote (` (, debug-variable)) ))
                   "is non-nil."))
-
     ;; We are returning a macro in next elt.
     (setq
      elt
-     (`
-      (defmacro (, debug-function) (&rest args)
+     `(defmacro ,debug-function (&rest args)
 ;;;      (when (, debug-variable)
 ;;;        (let* ((ti:m-debug-buffer (, debug-buffer )))
-        (when (, debug-variable)
-          (with-current-buffer (get-buffer-create (, debug-buffer))
+        (when ,debug-variable
+          (with-current-buffer (get-buffer-create ,debug-buffer)
             (goto-char (point-max))
             (while args
               (insert (format "|%s" (eval (pop args)))))
-            (insert "\n"))))))
+            (insert "\n")))))
     (push elt ret)
     (nreverse ret)))
 
@@ -9414,13 +9389,13 @@ Example how to call created functions:
 
   ;;  To generate debug from inside code, you call:
   (xxx-debug ... anything frame-pointer buffer-pointer ...)"
-  (`(, (ti::macrof-debug-1
-        prefix
-        debug-function
-        debug-toggle-function
-        debug-buffer-show-function
-        debug-variable
-        debug-buffer))))
+  `,(ti::macrof-debug-1
+     prefix
+     debug-function
+     debug-toggle-function
+     debug-buffer-show-function
+     debug-variable
+     debug-buffer))
 
 ;;; ----------------------------------------------------------------------
 ;;;
@@ -9432,13 +9407,13 @@ Example how to call created functions:
          (pfx      (or var-prefix "-"))
          (d-var    (intern (format "%s%sdebug" prefix pfx)))
          (d-buffer (intern (format "%s%sdebug-buffer" prefix pfx))))
-    (`(, (ti::macrof-debug-1
-          prefix
-          d-func
-          dt-func
-          ds-func
-          d-var
-          d-buffer)))))
+    `,(ti::macrof-debug-1
+       prefix
+       d-func
+       dt-func
+       ds-func
+       d-var
+       d-buffer)))
 
 ;;; ----------------------------------------------------------------------
 ;;;
@@ -9446,20 +9421,18 @@ Example how to call created functions:
   (func-ins-sym elisp-file &optional log-buffer)
   "Use macro `ti::macrof-install-pgp-tar' and see arguments there.
 FUNC-INS-SYM ELISP-FILE LOG-BUFFER."
-  (let* (sym)
-    (setq sym (intern (symbol-name (` (, func-ins-sym)))))
-    (`
-     (defun (, sym) (dir)
+  (let ((sym (intern (symbol-name `,func-ins-sym))))
+    `(defun ,sym (dir)
        "Install additional programs from the end of package."
        (interactive "DSave programs to directory: ")
-       (let* ((file    (, elisp-file))
+       (let* ((file    ,elisp-file)
               (source  (or (locate-library file)
                            (error "can't find %s along load-path." file))))
          (ti::package-install-pgp-tar
           dir
-          (or (, log-buffer)
+          (or ,log-buffer
               "*install-log*")
-          source))))))
+          source)))))
 
 ;;; ----------------------------------------------------------------------
 ;;;
@@ -9506,10 +9479,10 @@ How to call this function:
 Example how to call created function:
 
   M - x xxx-install-programs"
-  (` (, (ti::macrof-install-pgp-tar-1
-         func-ins-sym
-         elisp-file
-         log-buffer))))
+  `,(ti::macrof-install-pgp-tar-1
+     func-ins-sym
+     elisp-file
+     log-buffer))
 
 ;;; ----------------------------------------------------------------------
 ;;;
@@ -9600,22 +9573,19 @@ Here is example how you would define the minor mode.
        (define-key map \"-\" 'xxx-eval-current-buffer)
        (define-key map \"=\" 'xxx-calculate))))
 "
-  (` (,
-      (ti::macrof-minor-mode-wizard-1
-       pfx                              ;1
-       mode-Name                        ;
-       mode-Name-prefix-key             ;
-       easymenu-Name                    ;
-       custom-group                     ;
-       variable-style                   ;6
-
-       doc-str                          ;7
-       mode-desc                        ;
-       minor-mode-body                  ;9
-
-       easymenu-doc                     ;10
-       easymenu-body                    ;
-       define-key-body))))              ;12
+  `,(ti::macrof-minor-mode-wizard-1
+     pfx                              ;1
+     mode-Name                        ;
+     mode-Name-prefix-key             ;
+     easymenu-Name                    ;
+     custom-group                     ;
+     variable-style                   ;6
+     doc-str                          ;7
+     mode-desc                        ;
+     minor-mode-body                  ;9
+     easymenu-doc                     ;10
+     easymenu-body                    ;
+     define-key-body))                ;12
 
 ;;; ----------------------------------------------------------------------
 ;;;
@@ -9649,16 +9619,16 @@ Here is example how you would define the minor mode.
    EASYMENU-BODY
    DEFINE-KEY-BODY"
 
-  (let* (sym1
-         sym2
-         sym3
-         sym4
-         sym5
-         sym6
-         sym7
-         ret
-         elt
-         vs)
+  (let (sym1
+	sym2
+	sym3
+	sym4
+	sym5
+	sym6
+	sym7
+	ret
+	elt
+	vs)
     (ti::nconc ret 'eval-and-compile)
     ;; ........................................... create variables ...
     (setq elt
