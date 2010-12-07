@@ -8836,7 +8836,7 @@ HOOK BODY"
             (if  ,mode-var "on." "off.")
             (if  (null ,mode-var)
                 ""
-              (if (, prefix-var)
+              (if ,prefix-var
                   (format "Prefix key is %s" ,prefix-var)
                 ""))))
        (run-hooks (quote ,hook))
