@@ -6574,7 +6574,7 @@ otherwise turn mode off."
 ;; ############################   BEGIN FUNCTION -- advice instantiate
 
 (defun tinypath-advice-instantiate ()
-  "Intantiate all advices."
+  "Instantiate all advices."
   ;;  These are put into function to make them delayed and
   ;;  so that they can be called at apropriate time.
 
