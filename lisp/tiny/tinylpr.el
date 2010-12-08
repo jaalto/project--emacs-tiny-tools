@@ -159,8 +159,6 @@
   (defvar lpr-switches)
   (defvar lpr-command))
 
-(eval-when-compile (ti::package-use-dynamic-compilation))
-
 (ti::package-defgroup-tiny TinyLpr tinylpr-- extensions
   "Easy Emacs lpr command handling, popup, completions
         o   Managing printers or print styles easily

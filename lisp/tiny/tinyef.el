@@ -170,9 +170,6 @@
 
 (require 'tinylibm)
 
-(eval-when-compile
-  (ti::package-use-dynamic-compilation))
-
 (eval-and-compile
   (autoload 'apropos-internal "apropos"))
 

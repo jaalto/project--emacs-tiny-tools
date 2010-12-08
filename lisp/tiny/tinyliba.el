@@ -74,7 +74,7 @@
 
 (provide 'tinyliba)
 
-(defconst tinyliba-version-time "2010.1208.0755"
+(defconst tinyliba-version-time "2010.1208.0809"
   "Latest version number as last modified time.")
 
 (autoload 'with-timeout      "timer"        "" nil 'macro)
@@ -556,7 +556,6 @@ This function is run only once at tinynyliba.el load."
   (autoload 'ti::select-frame-non-dedicated       "tinylibm" "" nil) ;;defsubst
   (autoload 'ti::byte-compile-defun-compiled-p    "tinylibm" "" nil 'macro)
   (autoload 'ti::byte-compile-defun-maybe         "tinylibm" "" nil 'macro)
-  (autoload 'ti::package-use-dynamic-compilation  "tinylibm" "" nil 'macro)
   (autoload 'ti::function-autoload-file           "tinylibm" "" nil)
   (autoload 'ti::package-require-for-emacs        "tinylibm" "" nil 'macro)
   (autoload 'ti::package-require-view             "tinylibm" "" nil 'macro)

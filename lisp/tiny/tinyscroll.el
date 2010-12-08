@@ -139,8 +139,6 @@
 (eval-and-compile
   (ti::package-package-require-timer))
 
-(eval-when-compile (ti::package-use-dynamic-compilation))
-
 (ti::package-defgroup-tiny TinyScroll tinyscroll-- extensions
   "Enable or Disable autos-croll for any buffer.
   Overview of features

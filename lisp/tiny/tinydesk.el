@@ -272,8 +272,6 @@
 
 (require 'tinylibm)
 
-(eval-when-compile (ti::package-use-dynamic-compilation))
-
 (ti::package-defgroup-tiny TinyDesk tinydesk-- extensions
   "Simple desktop: only filenames and directories are read/saved.
 

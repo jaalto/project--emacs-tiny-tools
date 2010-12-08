@@ -373,8 +373,6 @@
 (eval-and-compile
   (autoload 'man "man" "" t))
 
-(eval-when-compile (ti::package-use-dynamic-compilation))
-
 (ti::package-defgroup-tiny TinyTag tinytag-- programming
   "Grep database: example show C++ synatx call while coding.
 Overview of features

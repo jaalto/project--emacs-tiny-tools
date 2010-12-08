@@ -297,7 +297,6 @@
   (autoload 'ediff-files                        "ediff" "" t))
 
 (eval-when-compile
-  (ti::package-use-dynamic-compilation)
   (when (ti::xemacs-p)
     (message "\n\
   ** tinydired.el: This package is for Emacs only.\n\

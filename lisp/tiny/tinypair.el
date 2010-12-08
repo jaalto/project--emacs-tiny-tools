@@ -193,8 +193,6 @@
 
 (require 'tinylibm)
 
-(eval-when-compile (ti::package-use-dynamic-compilation))
-
 (ti::package-defgroup-tiny TinyPair tinypair-- extensions
   "self insert character pairs () \"\" '' <>
   Overview of features

@@ -431,7 +431,6 @@
 (require 'tinylibm)
 
 (eval-and-compile
-  (ti::package-use-dynamic-compilation)
   (ti::package-require-view)
   (defvar diff-command)        ;; Byte compiler silencer
   (defvar ediff-diff-program)  ;; Byte compiler silencer

@@ -106,7 +106,6 @@
 ;;; ......................................................... &require ...
 
 (require 'tinylibm)
-(eval-when-compile (ti::package-use-dynamic-compilation))
 
 (ti::package-defgroup-tiny TinyIndent tinyindent-- tools
   "like `indented-text-mode', but minor-mode.

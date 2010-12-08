@@ -110,7 +110,6 @@
 (require 'tinylibm)
 
 (eval-and-compile
-  (ti::package-use-dynamic-compilation)
   (autoload 'font-lock-mode "font-lock" t t))
 
 (ti::package-defgroup-tiny TinyVc tinyvc-- tools

@@ -231,7 +231,6 @@
 ;;{{{ setup: variables
 
 (require 'tinylibm)
-(eval-when-compile (ti::package-use-dynamic-compilation))
 
 (ti::package-defgroup-tiny TinyEat tinyeat-- extension
   "Eat blocks of text forward, backward.

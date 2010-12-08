@@ -201,9 +201,6 @@
 
 (require 'tinylibm)                     ;macro package
 
-(eval-when-compile
-  (ti::package-use-dynamic-compilation))
-
 (eval-and-compile
 
   (defvar generated-autoload-file) ;; See autoload.el

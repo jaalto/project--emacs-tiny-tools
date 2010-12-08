@@ -70,14 +70,13 @@
   (autoload 'adelete "assoc"))
 
 (eval-when-compile
-  (require 'advice)
-  (ti::package-use-dynamic-compilation))
+  (require 'advice))
 
 ;;}}}
 
 ;;{{{ setup: -- variables
 
-(defconst tinyliby-version-time "2010.1120.1929"
+(defconst tinyliby-version-time "2010.1208.0809"
   "Latest version number as last modified time.")
 
 (defvar ti::system--describe-symbols-history nil

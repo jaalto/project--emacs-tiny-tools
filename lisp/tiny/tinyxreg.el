@@ -105,7 +105,6 @@
 ;;{{{ setup: libraries
 
 (require 'tinylibm)
-(eval-when-compile (ti::package-use-dynamic-compilation))
 
 (ti::package-defgroup-tiny TinyXreg tinyxreg-- tools
   "Restoring points/win cfg stroed in reg. via X-popup

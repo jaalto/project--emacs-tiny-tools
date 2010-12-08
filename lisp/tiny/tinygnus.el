@@ -415,7 +415,6 @@
 (autoload 'nnfolder-group-pathname            "nnfolder")
 
 (eval-when-compile
-  (ti::package-use-dynamic-compilation)
   (require 'advice))
 
 (eval-and-compile

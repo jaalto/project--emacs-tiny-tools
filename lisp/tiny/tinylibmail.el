@@ -81,8 +81,7 @@
 (eval-when-compile
   (defvar mail-abbrevs)                 ;Silence ByteCompiler
   (defvar mail-aliases)
-  (defvar rmail-current-message nil)
-  (ti::package-use-dynamic-compilation))
+  (defvar rmail-current-message nil))
 
 ;;}}}
 ;;{{{ setup: -- private

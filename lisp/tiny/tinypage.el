@@ -215,8 +215,6 @@
 tinypage: ** you need XEmacs overlay.el library.
           ** TinyPage may not work correctly without it."))))
 
-(eval-when-compile (ti::package-use-dynamic-compilation))
-
 (ti::package-defgroup-tiny TinyPage tinypage-- tools
   "Minor mode for Handling ^L delimeted text rerions (pages).
   Overview of features

@@ -312,7 +312,6 @@
   (defvar gnus-summary-buffer))
 
 (eval-when-compile
-  (ti::package-use-dynamic-compilation)
   (require 'advice))
 
 (ti::package-defgroup-tiny TinyMy tinymy-- tools

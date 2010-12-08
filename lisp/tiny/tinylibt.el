@@ -189,7 +189,6 @@
 ;;; ......................................................... &require ...
 
 (require 'tinylibm)
-(eval-when-compile (ti::package-use-dynamic-compilation))
 
 (ti::package-defgroup-tiny TinylibText ti::text-: extensions
   "Mark matched text in buffer with face.

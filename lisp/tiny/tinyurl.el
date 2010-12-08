@@ -531,7 +531,6 @@
 (require 'tinylibm)
 
 (eval-when-compile
-  (ti::package-use-dynamic-compilation)
   (require 'advice))
 
 (eval-and-compile

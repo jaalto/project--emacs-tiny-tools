@@ -414,7 +414,6 @@
   (put 'frame-parameters 'byte-compile nil))
 
 (eval-and-compile
-  (ti::package-use-dynamic-compilation)
   (autoload 'tinypath-cache-match-fullpath  "tinypath")
   (autoload 'remprop                        "cl-extra")
   (autoload 'edebug-eval-defun              "edebug" "" t)

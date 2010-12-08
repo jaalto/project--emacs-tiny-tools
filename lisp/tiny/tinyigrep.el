@@ -339,9 +339,12 @@
 
 (require 'tinylibm)
 
+(eval-and-compile
+  ;; FIXME: Function `union' from cl package called at runtime
+  (autoload 'union "cl-seq"))
+
 (eval-when-compile
-  ;;  This is NOT used unless running native Win32 Emacs + Cygwin
-  (require 'advice))
+  (require 'cl))
 
 ;;  When tinyigrep.el is compiled, this strange error occurs:
 ;;  ** the function `igrep-read-args' is not known to be defined
@@ -404,11 +407,6 @@
   (defvar tinyperl--pod-path)
   (defvar tinyperl--inc-path)
   (autoload 'igrep-read-args "igrep"))
-
-(eval-when-compile
-  (ti::package-use-dynamic-compilation)
-  ;;  Only used under Win32 Emacs/Cygwin
-  (require 'advice))
 
 (ti::package-defgroup-tiny TinyIgrep tinyigrep-- tools
   "Top level interface to igrep.el")
@@ -783,6 +781,8 @@ Input:
 
 (when (and (ti::emacs-type-win32-p)
            (ti::win32-cygwin-p))
+
+  (require 'advice)
 
   (defadvice shell-quote-argument (around tinylib-cygwin-fix dis)
     "Use single quotes under Cygwin, Not win32 double quotes."

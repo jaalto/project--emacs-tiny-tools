@@ -69,11 +69,8 @@
 
 (require 'tinylibm)
 
-(defconst tinylibo-version-time "2010.1121.0050"
+(defconst tinylibo-version-time "2010.1208.0809"
   "Latest version number as last modified time.")
-
-(eval-when-compile
-  (ti::package-use-dynamic-compilation))
 
 (eval-and-compile
   (ti::overlay-require-macro

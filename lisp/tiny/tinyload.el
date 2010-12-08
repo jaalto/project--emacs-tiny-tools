@@ -459,8 +459,6 @@
 (eval-and-compile
   (autoload 'display-time "time"))
 
-(eval-when-compile (ti::package-use-dynamic-compilation))
-
 (ti::package-defgroup-tiny TinyLoad tinyload-- extensions
   "Overview of features
         o  Delayed loading of packages (in some later time)

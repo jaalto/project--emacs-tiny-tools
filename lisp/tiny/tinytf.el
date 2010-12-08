@@ -558,7 +558,6 @@
 (require 'tinylibm)
 
 (eval-when-compile
-  (ti::package-use-dynamic-compilation)
   ;;  Need grep-regexp-alist
   (require 'compile))
 

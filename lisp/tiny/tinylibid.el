@@ -167,10 +167,7 @@
 
 (require 'tinylibm)
 
-(eval-when-compile
-  (ti::package-use-dynamic-compilation))
-
-(defconst tinylibid-version-time "2010.1120.1647"
+(defconst tinylibid-version-time "2010.1208.0809"
   "Latest version number.")
 
 ;;; setup: hooks
