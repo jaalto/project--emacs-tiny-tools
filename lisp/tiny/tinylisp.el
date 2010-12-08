@@ -1373,7 +1373,7 @@ d       Display Lisp file's documentation.
 ;;;
 (defconst tinylisp--menu-compile
   (list
-   '(format "%sByte-Compile: c)ompile t)tree for compile"
+   '(format "%sByte-Compile: c)ompile t)tree"
             (if current-prefix-arg
                 (format "%s "  (prin1-to-string current-prefix-arg))
               ""))
@@ -3691,7 +3691,8 @@ you would catch any errors with undefined variables and functions."
 (defun tinylisp-byte-compile-display-call-tree ()
   "See bytecomp.el `display-call-tree'."
   (interactive)
-  (let ((byte-compile-generate-call-tree  t)
+  (let ((byte-compile-call-tree-sort 'calls+callers)
+	(byte-compile-generate-call-tree  t)
 	(file (buffer-file-name)))
     (if (null file)
         (message (concat "TinyLisp: Buffer %s is not visiting file."
