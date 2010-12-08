@@ -1,3 +1,13 @@
+2010-12-08 Wed  Jari Aalto  <jari.aalto@cante.net>
+
+	* tiny/tinylibm.el (ti::package-use-dynamic-compilation): Remove.
+	Obsolete; the default is t.
+
+	* tiny/tinylisp.el (tinylisp--menu-compile): Update
+	(t)ree description.
+	(tinylisp-byte-compile-display-call-tree): Add sort
+	criteria `byte-compile-call-tree-sort'.
+
 2010-12-07 Tue  Jari Aalto  <jari.aalto@cante.net>
 
         * tiny/tinylib.el

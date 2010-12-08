@@ -121,11 +121,9 @@
 ;;; Code:
 
 (eval-when-compile
-  (set (make-local-variable 'byte-compile-dynamic-docstrings) t)
-  (set (make-local-variable 'byte-compile-dynamic) t)
   (autoload 'ignore-errors "cl-macs" nil 'macro))
 
-(defconst tinylibmenu-version-time "2010.1129.0731"
+(defconst tinylibmenu-version-time "2010.1208.0757"
   "Latest version number.")
 
 (defvar ti::menu--load-hook nil

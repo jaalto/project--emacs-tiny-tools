@@ -74,16 +74,12 @@
 
 (provide 'tinyliba)
 
-(defconst tinyliba-version-time "2010.1120.1622"
+(defconst tinyliba-version-time "2010.1208.0755"
   "Latest version number as last modified time.")
 
 (autoload 'with-timeout      "timer"        "" nil 'macro)
 (autoload 'easy-menu-define  "easymenu"     "" nil 'macro)
 (autoload 'executable-find   "executable")
-
-(eval-when-compile
-  (set (make-local-variable 'byte-compile-dynamic-docstrings) t)
-  (set (make-local-variable 'byte-compile-dynamic) t))
 
 (eval-and-compile ;; This function must be visible at load time
   (defun ti::tmp-cl-library-check ()

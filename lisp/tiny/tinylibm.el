@@ -75,9 +75,7 @@
   ;; See http://debbugs.gnu.org/cgi/bugreport.cgi?bug=6750
   (defvar byte-compile-warnings)
   (unless (featurep 'xemacs)
-    (set (make-local-variable 'byte-compile-warnings) '(not cl-functions)))
-  (set (make-local-variable 'byte-compile-dynamic-docstrings) t)
-  (set (make-local-variable 'byte-compile-dynamic) t))
+    (set (make-local-variable 'byte-compile-warnings) '(not cl-functions))))
 
 (eval-and-compile
   (autoload 'defmacro* "cl-macs" "" nil 'macro)
@@ -86,7 +84,7 @@
 
 (require 'tinylibb)                     ;Backward compatible functions
 
-(defconst tinylibm-version-time "2010.1129.0725"
+(defconst tinylibm-version-time "2010.1208.0756"
   "Latest version number.")
 
 ;;{{{ function tests
@@ -1817,24 +1815,6 @@ do much harm."
      (unless (byte-compiling-files-p)
        (dolist (function ,defun-list)
          (byte-compile function) ))))
-
-;;; ----------------------------------------------------------------------
-;;;
-(defmacro ti::package-use-dynamic-compilation ()
-  "Turn on dynamic compilation in current buffer.
-Add this statement to the beginning of file:
-
-   (eval-when-compile (ti::package-use-dynamic-compilation))"
-  `(progn
-     (when (boundp 'byte-compile-dynamic)
-       (make-local-variable 'byte-compile-dynamic)
-       (defvar byte-compile-dynamic) ;; silence byte compiler
-       (set 'byte-compile-dynamic t))
-     (when (boundp 'byte-compile-dynamic-docstring)
-       ;; In 19.34 this is t by default
-       (make-local-variable 'byte-compile-dynamic-docstring)
-       (defvar byte-compile-dynamic-docstring) ;; silence byte compiler
-       (set 'byte-compile-dynamic-docstring t))))
 
 ;;; ----------------------------------------------------------------------
 ;;;

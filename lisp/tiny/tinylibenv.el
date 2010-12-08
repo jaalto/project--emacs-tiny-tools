@@ -47,8 +47,6 @@
 ;;{{{ code: Init
 
 (eval-when-compile
-  (set (make-local-variable 'byte-compile-dynamic-docstrings) t)
-  (set (make-local-variable 'byte-compile-dynamic) t)
   (autoload 'executable-find "executable")
   (autoload 'ti::directory-up "tinylib"))
 

@@ -95,9 +95,8 @@
   ;; Quiet bogus CL warnings
   (defvar byte-compile-warnings)
   (unless (featurep 'xemacs)
-    (set (make-local-variable 'byte-compile-warnings) '(not cl-functions)))
-  (set (make-local-variable 'byte-compile-dynamic-docstrings) t)
-  (set (make-local-variable 'byte-compile-dynamic) t))
+    (set (make-local-variable 'byte-compile-warnings)
+	 '(not cl-functions))))
 
 (eval-when-compile
   (require 'cl))

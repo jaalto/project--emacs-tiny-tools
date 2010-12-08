@@ -48,11 +48,7 @@
 (require 'tinyliba)
 (provide 'tinylibw)
 
-(eval-when-compile
-  (set (make-local-variable 'byte-compile-dynamic-docstrings) t)
-  (set (make-local-variable 'byte-compile-dynamic) t))
-
-(defconst tinylibw-version-time "2010.1206.1937"
+(defconst tinylibw-version-time "2010.1208.0757"
   "Latest version number as last modified time.")
 
 ;;; These functions has been submitted to Emacs 21.2
