@@ -5873,10 +5873,9 @@ Return:
             (append files (directory-files (car dirs) t re)))
       (setq dirs (cdr dirs)))
     (mapcar
-     (function
-      (lambda (file)
+     (lambda (file)
         (cons (file-name-nondirectory file) file))
-      files))))
+      files)))
 
 ;;; ----------------------------------------------------------------------
 ;;;
