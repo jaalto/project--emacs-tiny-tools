@@ -80,7 +80,7 @@
 ;;          packages have problems and which as suspect for removal
 ;;          (not maintained).
 ;;
-;;      BTS utilities in Gnus (and M-x mail, message-mode)
+;;      BTS utilities in Gnus *Summary* (and M-x mail, message-mode)
 ;;
 ;;      o   The "debbugs" mail based BTS's: full support to manipulatte
 ;;          bug messages for Debian, Emacs and GNU bug tracking
@@ -112,8 +112,8 @@
 ;;  Todo
 ;;
 ;;      Ubuntu Launchpad.net BTS could also be controlled by email and
-;;      it has similarities to the Debian BTS. The Launchpad email
-;;      interface is in planned state.
+;;      it has similarities to the Debian BTS. Support for Launchpad email
+;;      interface may appear in the future.
 
 ;;}}}
 
@@ -123,7 +123,7 @@
 
 ;;{{{ setup: libraries
 
-(defconst tinydebian--version-time "2010.1130.0830"
+(defconst tinydebian--version-time "2010.1212.1146"
   "Last edited time.")
 
 (require 'tinylibm)
