@@ -7590,7 +7590,7 @@ Input:
       (buffer-disable-undo)
       (if source
           (insert-file-contents source)
-        (insert-buffer obuffer))
+        (insert-buffer-substring obuffer))
       (ti::pmax)
       (unless (re-search-backward
                (concat "^;;+[ \t]*\\(" (ti::mail-pgp-msg-end-line) "\\)")
@@ -7610,7 +7610,7 @@ Input:
       (delete-region (point-min) (point))
       (buffer-enable-undo)
       ;; .................................................... call pgp ...
-      (setq cmd (format "CMD: rm %s %s\n"  in-file out-file))
+      (setq cmd (format "CMD: rm %s %s\n" in-file out-file))
       (unless test
         (ti::file-delete-safe (list in-file out-file)))
       (write-region (point-max) (point-min) in-file)
