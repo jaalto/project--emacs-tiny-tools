@@ -6677,16 +6677,12 @@ Return:
      ((setq file (locate-library lib))
       (require 'lisp-mnt)
       (unwind-protect                   ;make sure file is removed
-          (progn
-            (set-buffer (setq buffer (ti::find-file-literally file)))
-            (mapcar
-             (function
-              (lambda (header)
-                (setq elt (lm-header header))
-                (if elt                         ;did we find any ?
-                    (setq hit t))               ;raise flag
-                (push elt ret)))
-             header-list))
+          (with-current-buffer (setq buffer (ti::find-file-literally file))
+	    (dolist (header header-list)
+	       (setq elt (lm-header header))
+	       (if elt                         ;did we find any ?
+		   (setq hit t))               ;raise flag
+	       (push elt ret)))
         ;; Kill the file no matter what happens.
         (kill-buffer buffer)))
      (t
