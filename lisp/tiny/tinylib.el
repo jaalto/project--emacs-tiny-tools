@@ -7578,8 +7578,8 @@ Input:
       (error "TinyLib: Can't find '%s'" source))
      ((not (file-directory-p tmp))
       (error
-       (format "TinyLib: Can't use directory '%s'. "
-	       "Set env variable TEMPDIR." tmp)))
+       (format `,(concat "TinyLib: Can't use directory '%s'. "
+			 "Set env variable TEMPDIR.") tmp)))
      ((not (file-exists-p dir))
       (error "TinyLib: No such directory %s." dir)))
     (setq buffer (ti::temp-buffer
