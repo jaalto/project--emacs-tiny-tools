@@ -1,3 +1,12 @@
+2010-12-12  Jari Aalto  <jari.aalto@cante.net>
+
+	* tiny/tinydesk.el (tinydesk-remove-file-coments): Call
+	`ti::buffer-remove-whitespace-eol'.
+
+	* tiny/tinyeat.el
+	(top level): Update docs.
+	(tinyeat-install-default-bindings): Add C-S-k, C-S-SPC.
+
 2010-12-08 Wed  Jari Aalto  <jari.aalto@cante.net>
 
 	* tiny/tinylibm.el (ti::package-use-dynamic-compilation): Remove.

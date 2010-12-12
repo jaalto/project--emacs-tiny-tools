@@ -1088,6 +1088,8 @@ Example:
   (interactive)
   (ti::save-line-column-macro nil nil
     (ti::pmin)
+    (ti::buffer-remove-whitespace-eol)
+    (ti::pmin)
     (while (re-search-forward (tinydesk-comment) nil t)
       (if (eq (current-column) (+ 2 tinydesk--message-column))
           (delete-region (- (point) 2) (line-end-position))))))
