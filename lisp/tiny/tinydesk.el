@@ -1252,6 +1252,7 @@ Mode description:
 
 ;;; ----------------------------------------------------------------------
 ;;;
+;;;###autoload
 (defun turn-on-tinydesk-mode ()
   "Turn on `tinydesk-mode'."
   (interactive)
@@ -1259,9 +1260,8 @@ Mode description:
 
 ;;; ----------------------------------------------------------------------
 ;;;
-(defun turn-on-tinydesk-mode-maybe ()
-  "Turn on `tinydesk-mode' if `tinydesk--save-title' is found."
-  (interactive)
+(defun tinydesk-file-p ()
+  "Return t if `tinydesk--save-title' at the beginning of buffer."
   (let ((string (substring
 		 (or (eval tinydesk--save-title)
 		     "####No-string-available###")
@@ -1269,11 +1269,23 @@ Mode description:
     (save-excursion
       (ti::pmin)
       (when (re-search-forward
-             (concat "^" (regexp-quote string)) nil 'noerr)
+             (concat "^" (regexp-quote string))
+	     (min 300
+		  (point-max))
+	     'noerr)
         (turn-on-tinydesk-mode)))))
 
 ;;; ----------------------------------------------------------------------
 ;;;
+(defun turn-on-tinydesk-mode-maybe ()
+  "Turn on `tinydesk-mode' if `tinydesk-file-p' returns non-nil."
+  (interactive)
+  (if (tinydesk-file-p)
+      (turn-on-tinydesk-mode)))
+
+;;; ----------------------------------------------------------------------
+;;;
+;;;###autoload
 (defun turn-off-tinydesk-mode ()
   "Turn off `tinydesk-mode'."
   (interactive)
