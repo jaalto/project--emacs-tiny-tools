@@ -7820,11 +7820,12 @@ then FACE is assigned to it (default 'highlight)"
 (defun ti::compat-activate-region  (&optional off)
   "Activate region or turn the region OFF."
   (if (ti::emacs-p)
-      (ti::funcall 'transient-mark-mode (if off 0 1)) ;From Simple.el
+      (transient-mark-mode (if off 0 1)) ;From Simple.el
     (if off
         (ti::funcall 'zmacs-deactivate-region)
-      (set 'zmacs-regions (if off nil t)) ;Avoid bute compile mesage in Emacs
-      (ti::funcall 'activate-region))))
+      (let ((var 'zmacs-regions)) ;Avoid bute compile mesage in Emacs
+	(set var t)
+	(ti::funcall 'activate-region)))))
 
 ;;; ----------------------------------------------------------------------
 ;;;
