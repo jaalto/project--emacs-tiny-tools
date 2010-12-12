@@ -6695,7 +6695,7 @@ Return:
 ;;; - See package tinydiff.el and function tdi-feedback there if you
 ;;;   are still curious how to use this function
 ;;;
-(defun ti::package-submit-bug-report
+(defun ti::package-submit-bug-reportsn
   (lib id var-list &optional verb elts)
   "Submit bug report with reporter.
 
@@ -6797,7 +6797,7 @@ Input:
               (setq len (buffer-size))
               (if str
                   (insert str)
-                (insert-buffer buffer))
+                (insert-buffer-substring buffer))
               ;;  `insert-buffer' does not put point after insert,
               ;;  go there manually
               (when (> (buffer-size) len)
