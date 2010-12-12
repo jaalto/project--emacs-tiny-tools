@@ -60,6 +60,10 @@
 ;;      ;; Generic
 ;;      (global-set-key (kbd "<M-backspace>") 'tinyeat-backward-preserve)
 ;;      (global-set-key (kbd "<S-backspace>") 'tinyeat-delete-whole-word)
+;;
+;;      (unless window-system
+;;        (global-set-key (kbd "M-SPC") 'tinyeat-delete-whole-word))
+;;
 ;;      (global-set-key "\M-d"                'tinyeat-forward-preserve)
 ;;      (global-set-key "\C-\M-d"             'tinyeat-delete-paragraph)
 ;;
@@ -333,6 +337,8 @@ Normally word is terminated by whitespace or newlines."
 
   (global-set-key (kbd "<S-backspace>") 'tinyeat-delete-whole-word)
   (global-set-key (kbd "<S-delete>")    'tinyeat-delete-whole-word)
+  ;; Was just-one-space
+  (global-set-key (kbd "M-SPC")         'tinyeat-delete-whole-word)
 
 ;;;    (when (ti::xemacs-p)
 ;;;      (global-set-key (kbd "M-BS")   'tinyeat-backward-preserve)

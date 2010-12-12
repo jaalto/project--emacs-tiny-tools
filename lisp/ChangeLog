@@ -1,5 +1,15 @@
 2010-12-12 Sun  Jari Aalto  <jari.aalto@cante.net>
 
+	* tiny/tinyeat.el (tinyeat-install-default-bindings): Define
+	M-SPC.
+
+2010-12-12  Jari Aalto  <jari.aalto@cante.net>
+
+	* tiny/tinydesk.el (tinydesk-default-mode-bindings):
+	Arrange key bindings in alphabetical order.
+
+2010-12-12 Sun  Jari Aalto  <jari.aalto@cante.net>
+
 	* tiny/tinylib.el (ti::buffer-parse-grep-line): Fix let*.
 	(ti::file-access-mode-to-string): Adjust doc.
 
