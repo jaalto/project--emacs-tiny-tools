@@ -2818,9 +2818,9 @@ Return:
 
  str
  nil    current point does not contain SYNTAX class char."
-  (let* ((beg  (point))
-         end
-         ret)
+  (let ((beg (point))
+	end
+	ret)
     (save-excursion
       (cond
        ((eq mode 'back)
