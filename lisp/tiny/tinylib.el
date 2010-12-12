@@ -7371,6 +7371,7 @@ TO-FILE is excluded from autoload search."
              ;;
              find-file-hook
              write-file-hooks
+	     write-file-functions
              font-lock-mode
              ;; buffer-auto-save-file-name
              auto-save-hook
@@ -7387,6 +7388,8 @@ TO-FILE is excluded from autoload search."
             (setq find-file-hook nil))
         (if (null write-file-hooks)
             (setq write-file-hooks nil))
+        (if (null write-file-functions)
+            (setq write-file-functions nil))
         (if (null font-lock-mode)
             (setq font-lock-mode nil))
         (if (null auto-save-hook)
