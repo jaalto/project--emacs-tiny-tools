@@ -410,7 +410,7 @@ Same mangling is performed for the same STRING. Mangling can't be reversed."
          (ret "")
          x)
     (dolist (ch ch-list)
-      (setq x (% (char-to-int ch) len))
+      (setq x (% ch len))
       (setq ret (concat ret (substring abc x (1+ x)))))
     ret))
 
