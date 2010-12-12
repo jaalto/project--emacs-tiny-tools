@@ -44,20 +44,19 @@
 ;;          install http://www.cygwin.com/ to your Win32 operating system.
 ;;      o   If you use XEmacs, see `tinypath--core-emacs-load-path-list'
 ;;      o   Make sure all your personal Emacs Lisp files are under any of these
-;;          directories: $HOME/elisp, `~/.emacs.d' (newer Emacs), ~/.xemacs.
+;;          directories: `$HOME/elisp', `~/.emacs.d' (new Emacs), `~/.xemacs'.
 ;;      o   Create directory `$HOME/elisp/config' where cache will be saved.
 ;;      o   Include these lines near top of startup file: `$HOME/.emacs'
 ;;
 ;;          ;; $HOME/.emacs
-;;          (require 'cl)
 ;;
 ;;          ;;  PLEASE COPY VERBATIM. THERE ARE OPTIMIZATIONS
 ;;          ;;  THAT ACTIVATE IF YOU use absolute path
-;;          (pushnew "~/elisp/tiny-tools-NNNN.NNNN/lisp/tiny"
-;;                   load-path :test 'string=)
+;;
+;;          (add-to-list 'load-path "~/elisp/tiny-tools-NNNN.NNNN/lisp/tiny")
 ;;
 ;;          ;; - If you use XEmacs that ships the lisp
-;;          ;;   files in separate kit, tell where the directories are
+;;          ;;   files in separately, tell where the directories are
 ;;          ;; - See http://www.xemacs.org/Develop/cvsaccess.html
 ;;          ;;   for cvs access and easy update (2003-05-20).
 ;;
@@ -75,7 +74,7 @@
 ;;
 ;;      o   After Emacs has been started, call `M-x'
 ;;          `tinypath-cache-problem-report'. In the generated buffer see
-;;          `C-h' 'm' mode help for available commands.
+;;          `C-h' `m' mode help for available commands.
 ;;
 ;;  First user note
 ;;
@@ -91,7 +90,7 @@
 ;;      ********************************************************************
 ;;
 ;;      The perl method guarantees, that anything you put into your
-;;      private ~/elisp will override and precede any other package
+;;      private `~/elisp' will override and precede any other package
 ;;      found elswhere in `load-path' hierarchy.
 ;;
 ;;      At any time you can read the manual with `M-x' `tinypath-version'
