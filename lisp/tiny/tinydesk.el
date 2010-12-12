@@ -553,16 +553,16 @@ path, garbage at line...Hooks may check the contents of this.")
     (define-key tinydesk-mode-map [(control alt button2)]
       'tinydesk-set-face-non-files-buffer))
 
-  ;;  Non-window system
+  ;;  Non-window system. Alphabetical order
   (define-key tinydesk-mode-map "\C-c\C-m" 'tinydesk-load-file)
+  (define-key tinydesk-mode-map "\C-cb" 'tinydesk-find-file-whole-buffer)
+  (define-key tinydesk-mode-map "\C-cB" 'tinydesk-recover-file-whole-buffer)
   (define-key tinydesk-mode-map "\C-cc" 'tinydesk-clear-buffer-properties)
   (define-key tinydesk-mode-map "\C-cl" 'tinydesk-mark-buffer-loadable)
-  (define-key tinydesk-mode-map "\C-cn" 'tinydesk-set-face-non-files-buffer)
   (define-key tinydesk-mode-map "\C-cu" 'tinydesk-unload-current-file)
   (define-key tinydesk-mode-map "\C-cx" 'tinydesk-expunge-unloaded)
   (define-key tinydesk-mode-map "\C-cr" 'tinydesk-remove-file-coments)
-  (define-key tinydesk-mode-map "\C-cb" 'tinydesk-find-file-whole-buffer)
-  (define-key tinydesk-mode-map "\C-cB" 'tinydesk-recover-file-whole-buffer))
+  (define-key tinydesk-mode-map "\C-cn" 'tinydesk-set-face-non-files-buffer))
 
 ;;}}}
 ;;{{{ code: misc
