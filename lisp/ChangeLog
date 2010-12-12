@@ -118,6 +118,24 @@
 	(ti::compat-overlays-at): Change let*.
 	(ti::compat-read-password): Change let*.
 	(ti::compat-mouse-call-original-function): Change let*.
+	(ti::string-nth-from-number): Add %s to `error'.
+	(ti::vc-rcs-guess-buffer-version): Use `with-current-buffer'.
+	(ti::vc-rcs-buffer-version): Use `with-current-buffer'.
+	(ti::buffer-selective-display-copy-to): Change `bp'
+	to `buffer'.
+	(ti::file-ange-status): Use `with-current-buffer'.
+	(ti::file-ange-file-handle): Use `with-current-buffer'.
+	(ti::file-file-list): Fix `mapcar'.
+	(ti::package-get-header): Change `mapcar' to `dolist'.
+	(ti::package-submit-bug-reportsn): Chnage `insert-buffer'
+	tp `insert-buffer-substring'.
+	(ti::package-autoload-loaddefs-build-dir-1): Add
+	`write-file-functions'.
+	(ti::package-install-pgp-tar): Use `insert-buffer-substring'.
+	Fix format.
+	(ti::compat-activate-region): Byte compile hide for
+	`zmacs-regions'.
+	(ti::string-mangle): devel Remove `char-to-int'.
 
 2010-12-12  Jari Aalto  <jari.aalto@cante.net>
 
