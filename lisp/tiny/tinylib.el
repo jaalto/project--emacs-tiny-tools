@@ -1455,9 +1455,8 @@ If they do not exist, then see if VC is loaded and look at the modeline.
 Please use `ti::vc-rcs-guess-buffer-version' and not this function."
   (let (rev
 	tmp)
-    (save-excursion
-      (if buffer
-          (set-buffer buffer))
+    (with-current-buffer (or buffer
+			     (current-buffer))
       (ti::widen-safe
         (ti::pmin)
         (cond
