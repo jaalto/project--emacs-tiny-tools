@@ -42,24 +42,30 @@
 ;;
 ;; Or use autoload and Emacs starts up faster
 ;;
-;;      (autoload 'tinyeat-forward-preserve            "tinyeat" "" t)
-;;      (autoload 'tinyeat-backward-preserve           "tinyeat" "" t)
-;;      (autoload 'tinyeat-delete-paragraph            "tinyeat" "" t)
 ;;      (autoload 'tinyeat-kill-line                   "tinyeat" "" t)
-;;      (autoload 'tinyeat-zap-line                    "tinyeat" "" t)
 ;;      (autoload 'tinyeat-kill-line-backward          "tinyeat" "" t)
 ;;      (autoload 'tinyeat-kill-buffer-lines-point-max "tinyeat" "" t)
 ;;      (autoload 'tinyeat-kill-buffer-lines-point-min "tinyeat" "" t)
+;;      (autoload 'tinyeat-forward-preserve            "tinyeat" "" t)
+;;      (autoload 'tinyeat-backward-preserve           "tinyeat" "" t)
+;;      (autoload 'tinyeat-delete-paragraph            "tinyeat" "" t)
+;;      (autoload 'tinyeat-zap-line                    "tinyeat" "" t)
+;;      (autoload 'tinyeat-join-lines                  "tinyeat" "" t)
 ;;
-;;      (global-set-key "\C-S-y"              'tinyeat-yank-overwrite)
+;;      ;; Lines
 ;;      (global-set-key "\M-k"                'tinyeat-kill-line-backward)
 ;;      (global-set-key "\C-\M-k"             'tinyeat-zap-line)
+;;      (global-set-key (kbd "C-S-k")         'tinyeat-zap-line)
 ;;
+;;      ;; Generic
 ;;      (global-set-key (kbd "<M-backspace>") 'tinyeat-backward-preserve)
-;;
+;;      (global-set-key (kbd "<S-backspace>") 'tinyeat-delete-whole-word)
 ;;      (global-set-key "\M-d"                'tinyeat-forward-preserve)
 ;;      (global-set-key "\C-\M-d"             'tinyeat-delete-paragraph)
-;;      (global-set-key (kbd "<S-backspace>") 'tinyeat-delete-whole-word)
+;;
+;;      ;; Other
+;;      (global-set-key "\C-S-y"              'tinyeat-yank-overwrite)
+;;      (global-set-key (kbd "C-S-SPC)        'tinyeat-join-lines)
 ;;
 ;; Investigate problems with:
 ;;
@@ -103,10 +109,11 @@
 ;;          ---------------------------------------------------------
 ;;          M-d             kill-word       tinyeat-forward-preserve
 ;;          M-k             kill-sentence   tinyeat-kill-line-backward
-;;          S-backspace     <none>          tinyeat-delete-whole-word  (*)
+;;          S-Backspace     <none>          tinyeat-delete-whole-word  (*)
 ;;          C-M-d           down-list       tinyeat-delete-paragraph
 ;;          C-M-k           kill-sexp       tinyeat-zap-line
 ;;          C-S-y           yank-pop        tinyeat-yank-overwrite (*)
+;;          C-S-SPC	    set-mark-command tinyeat-join-lines (*)
 ;;
 ;;  Story behind this package
 ;;
@@ -179,12 +186,12 @@
 ;;      Line delete
 ;;
 ;;          <<           >>           <<>>
-;;          M-k          C-k          C-M-k
-;;                                    zap whole line
+;;          M-k          C-k          C-M-k or C-s-k
+;;                                    To zap whole line
 ;;
 ;;      Chunk delete: words, spaces, symbols ...
 ;;
-;;          <<           >>           <<>>               \//\
+;;          <            >            <>                 \//\
 ;;          M-Backspace  C-backspace  S-Backspace        C-M-d  / C-S-backspace
 ;;                       M-d          Delete whole word  Paragraph delete
 ;;
@@ -193,20 +200,23 @@
 ;;
 ;;         M-x tinyeat-erase-buffer
 ;;         M-x tinyeat-kill-buffer-lines-main
-;;         M-x tinyeat-join-lines
 ;;
 ;;  Known Bugs
 ;;
 ;;      This package heavily relies on various modifiers that can be
-;;      attached to the *BACKSPACE* key and binding it can be a difficult
-;;      subject under Unix. For example the *Alt* key may not exist and to
-;;      make it "seen" under Unix you have to introduce yourself to
-;;      `xmodmap(1)' or `keycaps(1)' and possibly `xev(1)' in order to find
-;;      the key symbols correctly.
+;;      attached to the *BACKSPACE* key. Binding the backspace can be
+;;      a difficult subject under Unix. For example the *Alt* (Meta)
+;;      key may not be recognized under terminala. It may be possible
+;;      to make backspace known by exming the key events with xev(1)
+;;      and makign the needed modification to environment with
+;;      `xmodmap(1)' or `keycaps(1)'. In some terminals that Alt-key
+;;      simply won't be seen and the Meta-key substitute o use ESC
+;;      under Emacs is not really practical in the sense where this
+;;      package was developed: for quick editing.
 ;;
-;;      Worse, in the same environment Emacs and XEmacs may disagree what
-;;      BACKSPACE means. To get some taste, here is what XEmacs 20.4 and
-;;      Emacs 20.3 in Redhat Linux 6.2 return:
+;;      Worse, in the same environment Emacs and XEmacs may disagree
+;;      what BACKSPACE means. An example: here are the results from
+;;      XEmacs 20.4 and Emacs 20.3 under Redhat Linux 6.2:
 ;;
 ;;                              XEmacs          Emacs
 ;;
@@ -214,13 +224,12 @@
 ;;          <shift backspace>   delete          S-delete
 ;;          <alt backspace>     <nothing>       <nothing>
 ;;
-;;      There is nothing this package can do to cope with these changes in
-;;      key symbols or the environemnt you use. If you can, try to get the
-;;      ALT key working and shift-modifier for backspace and everything
-;;      is well. If that is not possible, the power of the predefined
-;;      keybindings are mostly left unused and you have to look at the
-;;      install function and determine how would you use your keyboard best
-;;      with these functions.
+;;      There is nothing this package can do to cope with these
+;;      changes in key symbol or the environment chnages. If you can,
+;;      try to get the ALT and and SHIFT-modifiers working for use
+;;      with backspace and everything is well. If that is not
+;;      possible, the power of the predefined keybindings are mostly
+;;      left unused and you have to find alternative key combinations.
 
 ;;}}}
 
@@ -295,32 +304,48 @@ Normally word is terminated by whitespace or newlines."
 (defun tinyeat-install-default-bindings ()
   "Bind default keys to various 'eat' functions."
   (interactive)
+
   ;; was `kill-sentence'
-  (global-set-key "\M-k"                  'tinyeat-kill-line-backward)
-  ;; was kill-sexp
-  (global-set-key "\C-\M-k"               'tinyeat-zap-line)
-  (global-set-key (kbd "C-S-y")           'tinyeat-yank-overwrite)
+  (global-set-key "\M-k"                'tinyeat-kill-line-backward)
+
+  ;; C-M-k: Works both in Windowed and non-Windowed Emacs. Unfortunately in
+  ;; windowed Linux/Gnome C-M-k runs "Lock Screen", we define C-S-k
+  ;; asbackup.
+
+  (global-set-key "\C-\M-k"             'tinyeat-zap-line) ; kill-sexp
+  (global-set-key (kbd "C-S-k")         'tinyeat-zap-line)
+
+  (global-set-key (kbd "C-S-y")         'tinyeat-yank-overwrite)
+
+  (global-set-key (kbd "C-S-y")         'tinyeat-yank-overwrite)
+  (global-set-key (kbd "C-S-SPC")	'tinyeat-join-lines)
+
   ;;  Alt-backspace
-  (global-set-key (kbd "<M-backspace>")   'tinyeat-backward-preserve)
+  (global-set-key (kbd "<M-backspace>") 'tinyeat-backward-preserve)
+
   ;;  was `kill-word'
-  (global-set-key "\M-d"                  'tinyeat-forward-preserve)
-  (global-set-key (kbd "<C-backspace>")   'tinyeat-forward-preserve)
+  (global-set-key "\M-d"                'tinyeat-forward-preserve)
+  (global-set-key (kbd "<C-backspace>") 'tinyeat-forward-preserve)
   ;; secondary backup
-  (global-set-key (kbd "<C-delete>")      'tinyeat-forward-preserve)
-  (global-set-key (kbd "<C-deletechar>")  'tinyeat-forward-preserve)
-  (global-set-key (kbd "<M-delete>")      'tinyeat-forward-preserve)
-  (global-set-key (kbd "<S-backspace>")   'tinyeat-delete-whole-word)
-  (global-set-key (kbd "<S-delete>")      'tinyeat-delete-whole-word)
+  (global-set-key (kbd "<C-delete>")    'tinyeat-forward-preserve)
+  (global-set-key (kbd "<C-deletechar>")'tinyeat-forward-preserve)
+  (global-set-key (kbd "<M-delete>")    'tinyeat-forward-preserve)
+
+  (global-set-key (kbd "<S-backspace>") 'tinyeat-delete-whole-word)
+  (global-set-key (kbd "<S-delete>")    'tinyeat-delete-whole-word)
+
 ;;;    (when (ti::xemacs-p)
-;;;      (global-set-key (kbd "M-BS")     'tinyeat-backward-preserve)
-;;;      (global-set-key (kbd "C-BS")     'tinyeat-forward-preserve))
+;;;      (global-set-key (kbd "M-BS")   'tinyeat-backward-preserve)
+;;;      (global-set-key (kbd "C-BS")   'tinyeat-forward-preserve))
+
   ;;  Was `down-list'
   (global-set-key "\C-\M-d"               'tinyeat-delete-paragraph)
   (global-set-key (kbd "<C-S-backspace>") 'tinyeat-delete-paragraph)
   (global-set-key (kbd "<C-S-delete>")    'tinyeat-delete-paragraph)
+
   (unless (ti::compat-window-system)
     (tinyeat-install-default-bindings-terminal))
-  (message "TinyEat: ** keys were bound to TinyEat functions."))
+  (message "TinyEat: ** [WARN] some existing keys were bound to TinyEat functions."))
 
 ;;; ----------------------------------------------------------------------
 ;;;
