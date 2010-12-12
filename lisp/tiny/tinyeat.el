@@ -338,7 +338,7 @@ Normally word is terminated by whitespace or newlines."
   (global-set-key (kbd "<S-backspace>") 'tinyeat-delete-whole-word)
   (global-set-key (kbd "<S-delete>")    'tinyeat-delete-whole-word)
   ;; Was just-one-space
-  (global-set-key "\M-\ ")              'tinyeat-delete-whole-word)
+  (global-set-key "\M-\ "               'tinyeat-delete-whole-word)
 
 ;;;    (when (ti::xemacs-p)
 ;;;      (global-set-key (kbd "M-BS")   'tinyeat-backward-preserve)
