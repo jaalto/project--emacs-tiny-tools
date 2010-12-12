@@ -2628,7 +2628,7 @@ Return:
     (beginning-of-line)
     (when (looking-at ".*[^ \t]")
       (backward-paragraph)
-      (let* ((beg (point)))
+      (let ((beg (point)))
         (forward-paragraph)
         (buffer-substring beg (point))))))
 
@@ -2670,8 +2670,8 @@ Optionals:
 Return:
 
   nil or  \(str str str ..\)"
-  (let* ((beg           (or beg (point-min)))   ;point begin
-         (end           (or end (point-max)))   ;point end
+  (let* ((beg (or beg (point-min)))   ;point begin
+         (end (or end (point-max)))   ;point end
          list
          line)
     (save-excursion
