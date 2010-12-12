@@ -911,7 +911,7 @@ one slash actually when assigned to string to form the regexp."
     ret))
 
 ;;; ----------------------------------------------------------------------
-;;; arc.mode.el  -- This is from 19.28 distrib.
+;;; arc-mode.el  -- Copy from Emacs 19.28
 ;;;
 (defun ti::file-access-mode-to-string (mode)
   "Turn an integer MODE, 0700 (i.e., 448) into a mode string like -rwx------."

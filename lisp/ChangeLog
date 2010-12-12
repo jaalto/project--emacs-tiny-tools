@@ -1,6 +1,7 @@
 2010-12-12 Sun  Jari Aalto  <jari.aalto@cante.net>
 
 	* tiny/tinylib.el (ti::buffer-parse-grep-line): Fix let*.
+	(ti::file-access-mode-to-string): Adjust doc.
 
 2010-12-12  Jari Aalto  <jari.aalto@cante.net>
 
