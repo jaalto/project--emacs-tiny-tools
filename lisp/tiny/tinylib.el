@@ -2573,9 +2573,9 @@ Return:
 (defun ti::buffer-read-if-solid ()
   "Read from current point all the non-whitespace characters.
 Ignores leading and trailing whitespace."
-  (let* ((eol (line-end-position))
-         beg
-         ret)
+  (let ((eol (line-end-position))
+	beg
+	ret)
     (save-excursion
       (if (looking-at "[ \t]")
           (skip-syntax-forward " " eol))
@@ -2606,9 +2606,9 @@ Ignores leading and trailing whitespace."
 Return:
   ''     if no whitespace
   str    whitespace string"
-  (let* ((re-w "[ \t]+")                ;whitespace
-         mp                             ;maximum point, end of line
-         op)
+  (let ((re-w "[ \t]+")                ;whitespace
+	mp                             ;maximum point, end of line
+	op)
     (save-excursion
       (if (null point)
           (setq op (point))
