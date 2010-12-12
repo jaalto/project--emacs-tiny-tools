@@ -1,3 +1,99 @@
+2010-12-12 Sun  Jari Aalto  <jari.aalto@cante.net>
+
+	* tiny/tinylib.el (ti::keymap-reinstall-minor-mode): Change let*.
+	(ti::keymap-add-minor-mode): Change let*.
+	(ti::macrof-minor-mode-1): Add function call parens around
+	`install-func' in near if-statement `minor-mode-alist'.
+	(ti::string-verify-ends): Change let*.
+	(ti::string-format-percent): Change let*.
+	(ti::string-url-to-ange-ftp): Change let*.
+	(ti::buffer-upcase-words-to-variable-names): Change let*.
+	(ti::string-char-to-escape-char): Change let*.
+	(ti::string-plain-string-to-regexp): Change let*.
+	(ti::vc-rcs-delta-get-file): Change let*.
+	(ti::vc-dir-p): Add darcs. Update monotone from MT to .mtn
+	(ti::vc-rcs-read-val): Change let*.
+	(ti::vc-rcs-look-id): Change let*.
+	(ti::vc-cvs-to-cvs-dir-p): Change let*.
+	(ti::vc-cvs-to-cvs-file-content): Change let*.
+	(ti::vc-cvs-file-exists-p): Change let*.
+	(ti::vc-cvs-entry-split-info): Change let*.
+	(ti::vc-rcs-guess-buffer-version): Change let*.
+	(ti::vc-rcs-buffer-version): Change let*.
+	(ti::vc-rcs-str-find): Change let*.
+	(ti::string-match-string-subs): Change let*.
+	(ti::string-match-string-list): Change let*.
+	(ti::string-case-replace): Change let*.
+	(ti::string-replace-one-space): Change let*.
+	(ti::buffer-find-ange-to-dired-buffer): Change let*.
+	(ti::buffer-uu-area): Change let*.
+	(ti::buffer-parse-line-main): Change let*.
+	(ti::buffer-grep-lines): Change let*.
+	(ti::buffer-read-word): Change let*.
+	(ti::buffer-read-nth-word): Change let*.
+	(ti::buffer-leave-nth-word): Change let*.
+	(ti::buffer-kill-line): Change let*.
+	(ti::buffer-copy-line-and-inc-numbers): Change let*.
+	(ti::buffer-cnv-empty-lines): Change let*.
+	(ti::buffer-del-dup-lines): Change let*.
+	(ti::buffer-delete-until-non-empty-line): Change let*.
+	(ti::buffer-replace-regexp): Change let*.
+	(ti::buffer-buffer-list-files): Change let*.
+	(ti::buffer-count-chars-in-delimited-area): Change let*.
+	(ti::buffer-word-move): Change let*.
+	(ti::buffer-find-duplicate-same-word): Change let*.
+	(ti::buffer-selective-display-copy-to): Change let*.
+	(ti::buffer-selective-display-print): Change let*.
+	(ti::window-frame-list): Change let*.
+	(ti::window-single-p): Change let*.
+	(ti::window-get-buffer-window-other-frame): Change let*.
+	(ti::window-find-bottom): Change let*.
+	(ti::window-match-buffers): Change let*.
+	(ti::keymap-define-key-backspace): Change let*.
+	(ti::keymap-function-bind-info): Change let*.
+	(ti::keymap-bind-control): Change let*.
+	(ti::keymap-put-abc-map): Change let*.
+	(ti::keymap-put-map): Change let*.
+	(ti::buffer-forward-line): Change let*.
+	(ti::buffer-looking-at-one-space): Change let*.
+	(ti::buffer-find-longer-line): Change let*.
+	(ti::buffer-scramble-region): Change let*.
+	(ti::buffer-add-string-region): Change let*.
+	(ti::buffer-sort-regexp-fields): Change let*.
+	(ti::file-passwd-grep-user-alist): Change let*.
+	(ti::file-passwd-build-alist): Change let*.
+	(ti::buffer-defun-function-name): Change let*. Optimize `concat'.
+	(ti::file-touch): Change let*.
+	(ti::file-ange-status): Change let*.
+	(ti::file-ange-download-file): Change let*.
+	(ti::file-ange-file-handle): Change let*.
+	(ti::file-chmod-w-toggle): Change let*.
+	(ti::directory-subdirectory-list): Change let*.
+	(ti::directory-recursive-do): Change let*.
+	(ti::directory-files): Change let*.
+	(ti::file-files-only): Change let*.
+	(ti::file-get-extension): Change let*.
+	(ti::file-path-and-line-info): Change let*.
+	(ti::file-get-load-path): Change let*.
+	(ti::file-user-home): Change let*.
+	(ti::file-complete-file-name-word): Change let*.
+	(ti::file-read-file-list): Change let*.
+	(ti::process-finger-error): Change let*.
+	(ti::process-uname): Change let*.
+	(ti::process-perl-version): Change let*.
+	(ti::process-java-version): Change let*.
+	(ti::process-tar-view-command): Change let*.
+	(ti::process-tar-read-listing-forward): Change let*.
+	(ti::query-read-input-invisible): Change let*.
+	(ti::package-submit-bug-report): Change let*.
+	(ti::package-install-example): Change let*.
+	(ti::package-rip): Change let*.
+	(ti::package-rip-magic): Change let*.
+	(ti::package-make-mode-magic): Change let*.
+	(ti::package-make-mode): Change let*.
+	(ti::macrof-minor-mode-off): Correct macro definition.
+	(ti::macrof-minor-mode-on): Correct macro definition.
+
 2010-12-12  Jari Aalto  <jari.aalto@cante.net>
 
 	* tiny/tinydesk.el (turn-on-tinydesk-mode): Add
