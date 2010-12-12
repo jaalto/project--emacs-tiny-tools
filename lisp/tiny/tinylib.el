@@ -5376,8 +5376,7 @@ Return:
     ;;  right away. We must wait here until it succeeds and only then
     ;;  send the real put or get request.
     (ange-ftp-cd host user dir)
-    (save-excursion
-      (set-buffer (process-buffer proc))
+    (with-current-buffer (process-buffer proc)
       (setq try 0)
       (while
           (and (progn
@@ -5387,8 +5386,7 @@ Return:
                (< try max-try))
         (incf try)))
     (push mode file-list)               ;command for ange
-    (save-excursion
-      (set-buffer (process-buffer proc))
+    (with-current-buffer (process-buffer proc)
       (ti::pmax)
       ;;  Try sending untill the point moves... => process started
       (setq point (point)   try 0)
@@ -5405,8 +5403,7 @@ Return:
         (incf try)))
     ;;  The status value is valid only when process finishes.
     (if not-bg
-        (save-excursion
-          (set-buffer (process-buffer proc))
+        (with-current-buffer (process-buffer proc)
           (setq ret ange-ftp-process-result)))
     ret))
 
