@@ -780,7 +780,7 @@ Return:
    ((eq nbr 3) "rd")
    ((>  nbr 3) "th")
    (t
-    (error "invalid ARG" nbr))))
+    (error "invalid ARG %s" nbr))))
 
 ;;; ----------------------------------------------------------------------
 ;;; #todo
@@ -1439,8 +1439,7 @@ Return:
       (setq ver (car list)))
      (t
       (setq ver
-            (or (save-excursion
-                  (set-buffer (get-file-buffer file))
+            (or (with-current-buffer (get-file-buffer file)
                   (ti::vc-rcs-buffer-version))
                 (vc-file-getprop file 'vc-workfile-version)
                 nil))))
