@@ -2447,9 +2447,9 @@ Return:
   "Parse grep(1) formatted line. FILE:LINE:<content>.
 Return:
   '(file line content)."
-  (let* (file
-         line
-         rest)
+  (let (file
+	line
+	rest)
     (save-excursion
       (beginning-of-line)
       (cond
