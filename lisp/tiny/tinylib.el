@@ -2781,8 +2781,8 @@ that point. Point is moved to the beginning of word.
 Return:
  str
  nil    empty line"
-  (let* ((bol (line-beginning-position))
-         p)                             ;point
+  (let ((bol (line-beginning-position))
+	p)                             ;point
     (cond
      ((or (bobp)
           (equal (char-syntax  (preceding-char)) ?\  ))
