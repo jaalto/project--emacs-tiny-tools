@@ -4032,9 +4032,9 @@ E.g. folding.el and outline based modes use selective display."
       (region-beginning)
       (region-end)
       (read-from-minibuffer "To buffer: " "*selective display*"))))
-  (let ((bp (get-buffer-create buffer))  ;barfs if invalid...
-	(bp (ti::temp-buffer bp 'clear)) ;ok, use it
+  (let ((buffer (get-buffer-create buffer))  ;barfs if invalid...
 	line)
+    (ti::temp-buffer buffer 'clear)
     (ti::verb)
     (save-excursion
       (save-restriction
@@ -4051,9 +4051,9 @@ E.g. folding.el and outline based modes use selective display."
 
           (setq line (concat line "\n"))
           (forward-line 1)
-          (ti::append-to-buffer bp line))))
+          (ti::append-to-buffer buffer line))))
     (if verb
-        (pop-to-buffer bp))))
+        (pop-to-buffer buffer))))
 
 ;;; ----------------------------------------------------------------------
 ;;; - Print folding.el and outline based buffer with this...
@@ -5247,8 +5247,7 @@ Return:
       ;;  Create a new process if needed
       (setq proc (ange-ftp-get-process host user))
       ;;  The status value is valid only when process finishes.
-      (save-excursion
-        (set-buffer (process-buffer proc))
+      (with-current-buffer (process-buffer proc)
         (ti::pmax)
         (setq ret   ange-ftp-process-result
               line  (ti::read-current-line)
