@@ -2478,8 +2478,8 @@ Return:
     (beginning-of-line)
     (when
         (or (looking-at "^[ \t]*\\([^ \t\n:]+\\)[ \t]+\\([0-9]+\\)[ \t:]+")
-            (looking-at (concat ".*line[ \t,\n]+\\([0-9]+\\)[ \t,\n]+"
-                                "file[ \t,\n]+\\([^ \t\n:)]+\\)")))
+            (looking-at `,(concat ".*line[ \t,\n]+\\([0-9]+\\)[ \t,\n]+"
+				  "file[ \t,\n]+\\([^ \t\n:)]+\\)")))
       (list
        (match-string 1)
        (match-string 2)))))
