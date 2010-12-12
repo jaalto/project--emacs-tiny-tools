@@ -93,6 +93,31 @@
 	(ti::package-make-mode): Change let*.
 	(ti::macrof-minor-mode-off): Correct macro definition.
 	(ti::macrof-minor-mode-on): Correct macro definition.
+	(ti::vc-rcs-delta-get-revisions): Change let*.
+	(fboundp): Change let*.
+	(ti::string-syntax-info): Move `verb'.
+	(ti::string-tabify): Change let*.
+	(ti::buffer-inc-string-nbr): Change let*.
+	(ti::compat-popup): Change let*.
+	(ti::compat-timer-list-control): Change let*.
+	(ti::compat-timer-control): Change let*.
+	(ti::compat-timer-elt): Change let*.
+	(ti::macrof-minor-mode-1): Change let*.
+	(ti::macrof-define-keys-1): Change let*.
+	(ti::vc-version-lessp): Change let*.
+	(ti::buffer-fill-region-spaces): Change let*.
+	(ti::package-make): Change let*.
+	(ti::package-autoload-create-on-file): optimize `concat'.
+	Change let*.
+	(ti::package-autoload-loaddefs-create-maybe): Change let*.
+	(ti::package-autoload-loaddefs-dir-files): Change let*.
+	(ti::package-autoload-loaddefs-build-dir): Change let*.
+	(ti::package-autoload-directories): Change let*.
+	(ti::package-autoload-loaddefs-build-recursive): Change let*.
+	(ti::package-install-pgp-tar): Change let*.
+	(ti::compat-overlays-at): Change let*.
+	(ti::compat-read-password): Change let*.
+	(ti::compat-mouse-call-original-function): Change let*.
 
 2010-12-12  Jari Aalto  <jari.aalto@cante.net>
 

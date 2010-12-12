@@ -383,8 +383,8 @@ Return:
 Optionally adds to the END. COUNT is by default 1
 
 If string length is 0, do nothing."
-  (let* ((count  (or count 1))
-         (padd   (make-string count ?\ )))
+  (let* ((count (or count 1))
+         (padd  (make-string count ?\ )))
     (ti::string-verify-ends str padd padd (not end))))
 
 ;;; ----------------------------------------------------------------------
@@ -986,7 +986,7 @@ Notes:
 
 Return:
   '(version version ..)"
-  (let* (list)
+  (let (list)
     (save-excursion
       (if buffer
           (set-buffer buffer))
@@ -1633,12 +1633,12 @@ Input
                   (if (string-match regexp str)
                       (string-to-number (match-string 1 str))
                     0)))
-    (let* ((a1 (version a "^\\([0-9]+\\)"))
-           (a2 (version a "^[0-9]+\\.\\([0-9]+\\)"))
-           (a3 (version a "^[0-9]+\\.[0-9]+\\.\\([0-9]+\\)"))
-           (b1 (version b "^\\([0-9]+\\)"))
-           (b2 (version b "^[0-9]+\\.\\([0-9]+\\)"))
-           (b3 (version b "^[0-9]+\\.[0-9]+\\.\\([0-9]+\\)")))
+    (let ((a1 (version a "^\\([0-9]+\\)"))
+	  (a2 (version a "^[0-9]+\\.\\([0-9]+\\)"))
+	  (a3 (version a "^[0-9]+\\.[0-9]+\\.\\([0-9]+\\)"))
+	  (b1 (version b "^\\([0-9]+\\)"))
+	  (b2 (version b "^[0-9]+\\.\\([0-9]+\\)"))
+	  (b3 (version b "^[0-9]+\\.[0-9]+\\.\\([0-9]+\\)")))
       (or (and zero-treat
                (and (= a1 0)
                     (> b1 0)))
@@ -1716,13 +1716,13 @@ tag in order:
   mon-date-hh-mm-ss."
   (or time
       (setq time (current-time)))
-  (let* ((mon  (format-time-string "%b" time))
-         (dd   (ti::string-trim-blanks
-                (format-time-string "%e" time)))
-         (hh   (format-time-string "%H" time))
-         (mm   (format-time-string "%M" time))
-         (ss   (format-time-string "%S" time))
-         ret)
+  (let ((mon  (format-time-string "%b" time))
+	(dd   (ti::string-trim-blanks
+	       (format-time-string "%e" time)))
+	(hh   (format-time-string "%H" time))
+	(mm   (format-time-string "%M" time))
+	(ss   (format-time-string "%S" time))
+	ret)
     (cond
      ((not (stringp type))
       nil)
@@ -1768,9 +1768,12 @@ Input:
         if 'minutes, return YYYY-MM-DD HH:MM.
   TIME  User supplied time in format `current-time'."
     (interactive "P")
-    (let* ((list  (ti::date-time-elements nil (current-time-string
-                                               (or time (current-time)))))
-           nbr)
+    (let ((list (ti::date-time-elements
+		 nil
+		 (current-time-string
+		  (or time
+		      (current-time)))))
+	  nbr)
       (cond
        (type
         (setq nbr (cdr (assoc (nth 5 list) (ti::month-mm-alist))))
@@ -1961,11 +1964,10 @@ Return:
 ;;;
 (defun ti::string-repeat (count char-or-string)
   "Repeat COUNT times CHAR-OR-STRING."
-  (let* ((i 0)
-         ret)
+  (let ((i 0)
+	ret)
     (if (characterp char-or-string) ;; XEmacs compatibility needed
         (setq char-or-string (char-to-string char-or-string)))
-
     (if (integerp char-or-string)
         (setq ret (make-string count char-or-string))
       (setq ret "")
@@ -1979,15 +1981,18 @@ Return:
 (defun ti::string-syntax-info (char &optional verb)
   "Return brief syntax definition string for CHAR. VERB."
   (interactive "cShow syntax of char: ")
-  (let* ((syntax (char-syntax char ))
+  (let* ((syntax (char-syntax char))
          (elt    (assq syntax ti::var-syntax-info))
-         (verb   (or verb (interactive-p)))
          ret)
+    (or verb
+	(setq verb (interactive-p)))
     (setq ret
           (concat
            (char-to-string syntax)
            " "
-           (if elt  (nth 1 elt) "")))
+           (if elt
+	       (nth 1 elt)
+	     "")))
     (if verb
         (message ret))
     ret))
@@ -2008,7 +2013,7 @@ Your highlighting will then work as expected after syntaxes are killed."
 ;;;
 (defun ti::string-tabify (string &optional mode)
   "Tabify STRING, or if MODE is non-nil, untabify."
-  (let* ((indent-tabs-mode t))          ;makes sure tabs are used.
+  (let ((indent-tabs-mode t))          ;makes sure tabs are used.
     (with-temp-buffer
       (insert string)
       (if (null mode)
@@ -3211,8 +3216,7 @@ Return:
   ;;  We input number as string so that user may press return
   ;;
   (interactive "*r\nsStart line[1]: \nsInterval[1]: ")
-  (let* (
-         ;;  convert strings to sensible value
+  (let* (;;  convert strings to sensible value
          (count         (cond
                          ((integerp line) ;; calling lisp
                           line)
@@ -3346,11 +3350,11 @@ And now you want to make them unique:
 
 You just give RE \"r\\([0-9]+\\)\" and start value 1, increment 1"
   (interactive "sRE: \nnstart value: \nnIncrement: ")
-  (let* ((level (or level 1))
-         len
-         beg
-         end
-         fmt)
+  (let ((level (or level 1))
+	len
+	beg
+	end
+	fmt)
     (while (re-search-forward re nil t) ;search whole buffer
       (when (match-end level)
         (setq beg (match-beginning level)
@@ -4779,11 +4783,12 @@ Input:
   COLUMN        the fill column. Defaults to 79, because 80 would
                 add annoying \\ marks at the end of line."
   (interactive "*r\nP")
-  (let* ((column   (or column 79))
-         (spaces   (make-string (+ 2 column) ?\ ))
-         line
-         len
-         add)
+  (or column
+      (setq column 79))
+  (let ((spaces (make-string (+ 2 column) ?\ ))
+	line
+	len
+	add)
     (save-restriction
       (narrow-to-region beg end)
       (untabify (point-min) (point-max)) ;very important !!
@@ -5050,9 +5055,9 @@ processes every time function is invoked.
 References:
   `ti::var-passwd-buffer'"
   (let* ( ;;  Permanent buffer, since launching process is expensive
-         (user      (or user (user-login-name)))
-         (re        (concat "^" user ":"))
-         (buffer    (get-buffer-create ti::var-passwd-buffer))
+         (user   (or user (user-login-name)))
+         (re     (concat "^" user ":"))
+         (buffer (get-buffer-create ti::var-passwd-buffer))
          ret)
     (unwind-protect
         (with-current-buffer buffer
@@ -6555,15 +6560,16 @@ Return:
 (defun ti::query-read-input-as-password (&optional prompt max echo-char)
   "Return read password using PROMPT, MAX chacters with ECHO-CHAR.
 If user presses ESC, return nil."
-  (let* ((prompt                 (or prompt ""))
-         (cursor-in-echo-area    nil)
-         (max                    (or max 80)) ;maximum string
+  (let* ((cursor-in-echo-area  nil)
+         (max                  (or max 80)) ;maximum string
          (bar (if echo-char
                   (make-string (+ max 2) echo-char )
                 (make-string (+ max 2) ?* )))
          str
          ch
          len)
+    (or prompt
+	(setq prompt ""))
     (message prompt)
     (while (not (ti::char-in-list-case ch '(?\n ?\C-m ?\e)))
       (cond
@@ -7145,12 +7151,13 @@ Input:
   BEG END       area
   STR           string to be added at front
   CH            additional character for empty lines."
-  (let* ((empty (concat str
-                        (cond
-                         ((integerp ch)
-                          (char-to-string ch))
-                         (
-                          ch)))))
+  (let ((empty (concat
+		str
+		(cond
+		 ((integerp ch)
+		  (char-to-string ch))
+		 (t
+		  ch)))))
     (save-restriction
       (narrow-to-region beg end)
       (goto-char (min beg end))
@@ -7180,34 +7187,34 @@ Input:
   NO-DESC   Do not include function description comments
   NO-PATH   Do not include path location comment."
   (interactive "fConstruct lisp autoloads from file: ")
-  (let* ((fn     (file-name-nondirectory file))
-         (regexp (concat
-                  "^(\\("
-                  "defun[*]?"
-		  "\\|defmacro[*]?"
-		  "\\|defsubst"
-                  "\\|defun-maybe"
-		  "\\|defsubst-maybe"
-		  "\\|defmacro-maybe"
-		  "\\|define-compilation-mode"
-		  "\\|define-derived-mode"
-		  "\\|define-generic-mode"
-		  "\\|define-global-minor-mode"
-		  "\\|define-globalized-minor-mode"
-		  "\\|define-minor-mode"
-		  "\\|easy-mmode-define-global-mode"
-		  "\\|easy-mmode-define-minor-mode"
-                  "\\)"
-                  "[ \t]+\\([^ \t\n(]+\\)[ \t]*"))
-         list
-         args
-         func
-         type
-         str
-         iact
-         point
-         read-buffer
-         tmp)
+  (let ((fn     (file-name-nondirectory file))
+	(regexp `,(concat
+		   "^(\\("
+		   "defun[*]?"
+		   "\\|defmacro[*]?"
+		   "\\|defsubst"
+		   "\\|defun-maybe"
+		   "\\|defsubst-maybe"
+		   "\\|defmacro-maybe"
+		   "\\|define-compilation-mode"
+		   "\\|define-derived-mode"
+		   "\\|define-generic-mode"
+		   "\\|define-global-minor-mode"
+		   "\\|define-globalized-minor-mode"
+		   "\\|define-minor-mode"
+		   "\\|easy-mmode-define-global-mode"
+		   "\\|easy-mmode-define-minor-mode"
+		   "\\)"
+		   "[ \t]+\\([^ \t\n(]+\\)[ \t]*"))
+	list
+	args
+	func
+	type
+	str
+	iact
+	point
+	read-buffer
+	tmp)
     (or buffer
         (setq buffer (get-buffer-create (or buffer  "*Autoloads*"))))
     ;;   We want to say (autoload 'func "pacakge" t t)
@@ -7311,10 +7318,10 @@ Note:
 Input:
 
   See argument description in function `ti::package-autoload-create-on-file'."
-  (let* ((files (directory-files
-                 dir
-                 'full
-                 "\\.el$")))
+  (let ((files (directory-files
+		dir
+		'full
+		"\\.el$")))
     (dolist (file files)
       (ti::package-autoload-create-on-file file buffer no-show no-desc))))
 
@@ -7323,7 +7330,7 @@ Input:
 (defun ti::package-autoload-loaddefs-create-maybe (file)
   "Make sure `generated-autoload-file' exists for FILE."
   (unless (file-exists-p file)
-    (let* ((name1 (file-name-nondirectory file)))
+    (let ((name1 (file-name-nondirectory file)))
       (with-temp-buffer
         (insert
          (format ";;; %s -- " name1)
@@ -7342,7 +7349,7 @@ Input:
 (defun ti::package-autoload-loaddefs-dir-files (dir &optional regexp)
   "Return from DIR .el files that do not matching REGEXP.
 TO-FILE is excluded from autoload search."
-  (let* (ret)
+  (let (ret)
     (dolist (file (directory-files dir 'abs))
       (when (and (not (file-directory-p file))
                  (string-match "\.el$" file)
@@ -7421,10 +7428,10 @@ Input:
   TO-FILE   The autoload file
   REGEXP    Ignore files matching regexp.
   FORCE     If non-nil, delete previous TO-FILE."
-  (let* ((generated-autoload-file to-file) ;; See autoload.el, must be bound
-         (name          (file-name-nondirectory to-file))
-         (buffer        (find-buffer-visiting to-file))
-         load)
+  (let ((generated-autoload-file to-file) ;; See autoload.el, must be bound
+	(name          (file-name-nondirectory to-file))
+	(buffer        (find-buffer-visiting to-file))
+	load)
     (unless generated-autoload-file ;; just byte compiler silencer.
       (setq generated-autoload-file nil))
     ;;  Exclude to-file from search.
@@ -7453,7 +7460,7 @@ Input:
 ;;;
 (defun ti::package-autoload-directories (list)
   "Return only directories from LIST, excluding version control directories."
-  (let* (ret)
+  (let (ret)
     (dolist (elt list)
       (when (and (file-directory-p elt)
                  ;;  Drop . ..
@@ -7479,13 +7486,13 @@ Input:
   (interactive "DEmacs autoload build root:\nfTo file: ")
   (unless dir
     (error "need DIR"))
-  (let* ((dirs (ti::package-autoload-directories
-                (directory-files
-                 (expand-file-name dir)
-                 'abs)))
-         (to-file (or (and function
-                           (funcall function dir))
-                      "loaddefs.el")))
+  (let ((dirs (ti::package-autoload-directories
+	       (directory-files
+		(expand-file-name dir)
+		'abs)))
+	(to-file (or (and function
+			  (funcall function dir))
+		     "loaddefs.el")))
     (cond
      (dirs
       (ti::package-autoload-loaddefs-build-dir dir to-file regexp force)
@@ -7677,7 +7684,7 @@ Input:
                          out-file))
       (insert "CMD: "cmd "\n")
       (unless test
-        (let* ((default-directory (expand-file-name dir)))
+        (let ((default-directory (expand-file-name dir)))
           (call-process tar nil buffer nil
                         tar-opt-x
                         (expand-file-name out-file))))
@@ -7700,9 +7707,9 @@ Input:
   "Return XEmacs installation root directory without trailing slash.
 If this is queried unde Emacs, `exec-path' must contain XEmacs binary,
 otherwise `load-path' is conculted."
-  (let* ((xemacs   (ti::xemacs-p))
-         (ver      (if xemacs
-                       (ti::emacs-version-number-as-string))) ;eg "19.14"
+  (let* ((xemacs (ti::xemacs-p))
+         (ver    (if xemacs
+		     (ti::emacs-version-number-as-string))) ;eg "19.14"
          match
          ret)
     (dolist (path (if xemacs
@@ -7765,7 +7772,7 @@ Return:
    ((ti::overlay-supported-p)
     (ti::funcall 'overlays-at point))
    ((ti::xemacs-p)
-    (let* (list)
+    (let (list)
       (ti::funcall
        'map-extents
        (function (lambda (ov maparg) (push ov list)))
@@ -7831,12 +7838,12 @@ then FACE is assigned to it (default 'highlight)"
 ;;;
 (defun ti::compat-read-password  (&optional prompt)
   "Read password with PROMPT which defaults to 'Password: '."
-  (let* ((var-bind  (boundp 'record-keystrokes))
-         ;; If a GC occurred during that timing window, and a core dump was
-         ;; forced later, the core might contain the string.
-         ;;  --> use most-positive-fixnum
-         (gc-cons-threshold (* 1024 1024))
-         record-keystrokes)             ;XEmacs 20.4
+  (let ((var-bind  (boundp 'record-keystrokes))
+	;; If a GC occurred during that timing window, and a core dump was
+	;; forced later, the core might contain the string.
+	;;  --> use most-positive-fixnum
+	(gc-cons-threshold (* 1024 1024))
+	record-keystrokes)             ;XEmacs 20.4
     (setq prompt (or prompt "Password: "))
     (prog1
         (cond
@@ -7891,9 +7898,12 @@ then FACE is assigned to it (default 'highlight)"
 (defun ti::compat-key-call-original (minor-mode-symbol key-binding)
   "Turn of MINOR-MODE-SYMBOL and execute original KEY-BINDING.
 This won't work on mouse commands that examine the mouse `event'"
-  (let* ((map           (or (current-local-map) global-map))
+  (let* ((map           (or (current-local-map)
+			    global-map))
          (function      (lookup-key map key-binding))
-         (this-command  (if function function this-command)))
+         (this-command  (if function
+			    function
+			  this-command)))
     (when (and (not (ti::bool-p function))
                (symbolp function)
                (fboundp function))
@@ -7959,8 +7969,8 @@ If mouse is not supported, return nil."
 (defun ti::compat-mouse-call-original-function (minor-mode-symbol &optional event)
   "Return original function behind MINOR-MODE-SYMBOL with mouse EVENT.
 See. `ti::-xe-mouse-call-original'."
-  (let* (ret
-         flyspell-p)
+  (let (ret
+	flyspell-p)
     (or event
         (setq event last-input-event))
     (when (or (null minor-mode-symbol)
@@ -8073,16 +8083,17 @@ Return:
   selection     member or nbr
   nil           nothing selected"
   (interactive "e")
-  (let* ((title  (or title ""))
-         (count  0)
-         ;;  Allow calling from key press also.
-         (event  (or event
-                     (ti::compat-make-x-popup-event
-                      ti::var-x-coord  ti::var-y-coord)))
-         menu
-         item-list
-         alist
-         ret)
+  (let ((count  0)
+	;;  Allow calling from key press also.
+	(event  (or event
+		    (ti::compat-make-x-popup-event
+		     ti::var-x-coord ti::var-y-coord)))
+	menu
+	item-list
+	alist
+	ret)
+    (or title
+	(setq title ""))
     (when (ti::listp string-list)
       (setq alist  (ti::list-to-assoc-menu string-list))
       (cond
@@ -8332,11 +8343,11 @@ Example:
 
   (ti::compat-timer-list-control 'restore)"
 
-  (let* ((sym
-          (cond
-           ((boundp 'timer-alist)  'timer-alist)
-           ((boundp 'timer-list)   'timer-list)
-           ((boundp 'itimer-list)  'itimer-list))))
+  (let ((sym
+	 (cond
+	  ((boundp 'timer-alist)  'timer-alist)
+	  ((boundp 'timer-list)   'timer-list)
+	  ((boundp 'itimer-list)  'itimer-list))))
     ;;  We store/restore the list into the timer variable symbol
     ;;  properties.
     (cond
@@ -8353,7 +8364,7 @@ Example:
 (defun ti::compat-timer-control
   (&optional time repeat function delete verb)
   "With `run-at-time' TIME REPEAT FUNCTION keep or remove timer. VERB."
-  (let* (timer)
+  (let (timer)
     (ti::verb)
     (ti::compat-timer-cancel-function function)
     (cond
@@ -8387,10 +8398,10 @@ The timer lists are searched in following order:
 Return:
 
   '(timer-elt timer-variable)"
-  (let* (pos
-         list
-         item
-         ret)
+  (let (pos
+	list
+	item
+	ret)
     (flet ((get-elt (elt place)
                     (if (vectorp elt)
                         (aref elt place)
@@ -8791,11 +8802,11 @@ MODE-NAME PREFIX-VAR MENU-VAR NO-MODE-MSG MODE-DESC
 HOOK BODY"
 
 ;;;  (ti::d!! "\n\n" body)
-  (let* ((sym
-          (intern (symbol-name `,func-min-sym)))
-         (viper-sym
-          (intern (concat (symbol-name `,func-min-sym)
-                          "-viper-attach"))))
+  (let ((sym
+	 (intern (symbol-name `,func-min-sym)))
+	(viper-sym
+	 (intern (concat (symbol-name `,func-min-sym)
+			 "-viper-attach"))))
     `(defun ,sym
        (&optional arg verb)
        ,doc-str
@@ -8803,8 +8814,7 @@ HOOK BODY"
        (ti::verb)
        (if (null (assq (quote ,func-min-sym) minor-mode-alist))
            (,install-func))
-;;;       (let* ((val (symbol-value  (, mode-var)))
-;;;              )
+;;;       (let ((val (symbol-value  (, mode-var))))
 ;;;         (setq  (, mode-var) (ti::bool-toggle val arg)))
        (ti::bool-toggle ,mode-var arg)
        ;;  XEmacs needs this call, in emacs turning on the minor
@@ -9123,9 +9133,9 @@ EASYMENU-SYM EASYMENU-NAME-SYM EASYMENU-DOC-STR EASY-MENU-FORMS
 BODY"
   (let ((sym (intern (symbol-name `,func-def-sym))))
     `(defun ,sym ()
-       (let* ((root-map  ,keymap-sym)
-              (map       ,prefix-keymap-sym)
-              (p         ,prefix-key-sym))
+       (let ((root-map  ,keymap-sym)
+	     (map       ,prefix-keymap-sym)
+	     (p         ,prefix-key-sym))
          (when (stringp ,easymenu-doc-str) ;This could be nil (no menus)
            (if (ti::xemacs-p)
                (easy-menu-define
@@ -9336,7 +9346,7 @@ DEBUG-VARIABLE DEBUG-BUFFER."
      elt
      `(defmacro ,debug-function (&rest args)
 ;;;      (when (, debug-variable)
-;;;        (let* ((ti:m-debug-buffer (, debug-buffer )))
+;;;        (let ((ti:m-debug-buffer (, debug-buffer )))
         (when ,debug-variable
           (with-current-buffer (get-buffer-create ,debug-buffer)
             (goto-char (point-max))
