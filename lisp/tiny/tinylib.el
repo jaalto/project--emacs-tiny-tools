@@ -2730,8 +2730,7 @@ Return:
          (read (if (or (< dest beg) (> dest end))
                    nil
                  t)))
-    (if (null read)
-        nil                             ;allowed to read ?
+    (if read
       (char-after dest))))
 
 ;;; ----------------------------------------------------------------------
