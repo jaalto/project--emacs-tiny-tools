@@ -869,7 +869,7 @@ The default command is `macroexpand'."
   '((add-hook       . remove-hook)
     (remove-hook    . add-hook))
   "*Table of reverse commands. Format '((ORIG-FSYM . REVERSE-FSYM) ..)."
-  :type  'list
+  :type  'sexp
   :group 'TinyLisp)
 
 (defcustom tinylisp--table-snoop-variables
