@@ -2225,19 +2225,9 @@ Same as `tinylisp-defun-macro' But define `name' and `sym' for function name."
     (ti::add-hooks 'tinylisp--elp-summary-mode-define-keys-hook
                    'tinylisp-elp-summary-mode-define-keys
                    uninstall)
-    (cond
-     ((boundp 'debugger-mode-hook)
-      (ti::add-hooks '(tinylisp-debugger-setup turn-on-tinylisp-mode)
-                     'debugger-mode-hook
-                     uninstall))
-     (uninstall
-      (ti::advice-control 'debugger-mode "^tinylisp" 'disable))
-     (t
-      ;;  19.x-20.2 doesn't have the debugger hook
-      (defadvice debugger-mode  (after tinylisp act)
-        "Run `tinylisp-debugger-setup'."
-        (tinylisp-debugger-setup)
-        (turn-on-tinylisp-mode))))))
+    (ti::add-hooks '(tinylisp-debugger-setup turn-on-tinylisp-mode)
+		   'debugger-mode-hook
+		   uninstall)))
 
 ;;; ----------------------------------------------------------------------
 ;;;
@@ -2259,18 +2249,16 @@ To turn on mode on by buffer basis, call `tinylisp-mode'."
 ;;{{{ advice
 
 ;;; ----------------------------------------------------------------------
-;;;
+;;; byte-compile-file (filename &optional load)
 (defadvice byte-compile-file (around tinylisp act)
-  "Change interactive prompt and offer current buffer for compiling(.el)."
-  ;;
-  ;; byte-compile-file (filename &optional load)
+  "Change interactive prompt and offer current buffer for compiling(.el).
+With prefix arg, byte compile and load file."
   (interactive
    (list
     (read-file-name
      (if current-prefix-arg
          "TinyLisp: Byte compile and load file: "
        "TinyLisp: byte compile file: ")
-
      (if (and buffer-file-name
               (string-match "\\.el$" buffer-file-name))
          buffer-file-name
@@ -2282,7 +2270,7 @@ To turn on mode on by buffer basis, call `tinylisp-mode'."
 ;;; ----------------------------------------------------------------------
 ;;;
 (defadvice defconst (around tinylisp (sym val &optional doc &rest args) dis)
-  "This advice is only used in TinyLisp and elsewhere inactivated.
+  "This advice is only used during TinyLisp runs its own functions.
 It ignores any extra arguments passed to defconst. In order to
 evaluate following statement
 
