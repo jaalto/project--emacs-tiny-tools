@@ -1,3 +1,8 @@
+2010-12-14 Tue  Jari Aalto  <jari.aalto@cante.net>
+
+	* tiny/tinydebian.el (tinydebian-github-bug-type-p): New.
+	(tinydebian-bug-bts-type-determine): Add Github support.
+
 2010-12-12 Sun  Jari Aalto  <jari.aalto@cante.net>
 
 	* tiny/tinylib.el (ti::keymap-reinstall-minor-mode): Change let*.

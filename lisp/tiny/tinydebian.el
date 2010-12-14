@@ -51,7 +51,7 @@
 
 ;;  Overview of features
 ;;
-;;      Summary: Few Debian spefific utlitities and a Generic interface
+;;      Summary: Few Debian specific utilities and a Generic interface
 ;;      to many BTS's.
 ;;
 ;;      http://www.emacswiki.org/emacs/TinyDebian
@@ -86,9 +86,9 @@
 ;;          bug messages for Debian, Emacs and GNU bug tracking
 ;;          systems.
 ;;      o   Other BTS: limited support for visting bugs at Sourceforge,
-;;          Launchpad, Freshmeat, Kde, Gnome, MySQL, Perl CPAN, Redhat
-;;          Sourcewre, Mercurial version control, Trac. You can
-;;          manipulate those bugs via their Web interface
+;;          Launchpad, Freshmeat, KDE, Gnome, MySQL, Perl CPAN, Redhat
+;;          Sourcewre, Mercurial version control, Trac, Github. You can
+;;          manipulate these bugs via their Web interface
 ;;      o   In Gnus *Summary* buffer, there is new menu "Tdeb" to
 ;;          administrate "debbugs" bug reports. Useful for Debian, GNU
 ;;          and Emacs developers.
@@ -123,7 +123,7 @@
 
 ;;{{{ setup: libraries
 
-(defconst tinydebian--version-time "2010.1212.1146"
+(defconst tinydebian--version-time "2010.1214.0750"
   "Last edited time.")
 
 (require 'tinylibm)
@@ -2551,7 +2551,7 @@ Return:
       (match-string-no-properties 1))
      (t
       (goto-char (point-min))
-      (if (re-search-forward "https?://.*sourceware.org[^<> \t\r\n]+" nil t)
+      (if (re-search-forward "https?://.*sourceware.org/[^<> \t\r\n]+" nil t)
           (match-string-no-properties 0))))))
 
 ;;; ----------------------------------------------------------------------
@@ -2563,6 +2563,18 @@ Return:
     (goto-char (point-min))
     (if (re-search-forward
          "X-Trac-Ticket-URL: *\\(http[^<> \t\r\n]+\\)" nil t)
+        (match-string-no-properties 1))))
+
+;;; ----------------------------------------------------------------------
+;;;
+(defsubst tinydebian-github-bug-type-p ()
+  "Check if bug context is Github issue tracker."
+  ;;  Can't detect, too generic: [PROJECT] #3124: ...
+  (let ((str (tinydebian-current-line-string)))
+    (goto-char (point-min))
+    (if (re-search-forward
+	 ;;  View Issue:  <URL>
+         "*\\(https?://.*github.com/[^<> \t\r\n]+\\)" nil t)
         (match-string-no-properties 1))))
 
 ;;; ----------------------------------------------------------------------
@@ -2694,6 +2706,8 @@ Return: '(BTS-TYPE-STRING [BUG NUMBER | URL])."
         (list "mercurial" data))
        ((setq data (tinydebian-trac-bug-type-p))
         (list "trac" data))
+       ((setq data (tinydebian-github-bug-type-p))
+        (list "github" data))
        ((setq data (tinydebian-launchpad-bug-type-p))
         (list "launchpad" data))
        ((setq data (tinydebian-debian-bug-bts-type-p))
