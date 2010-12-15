@@ -123,7 +123,7 @@
 
 ;;{{{ setup: libraries
 
-(defconst tinydebian--version-time "2010.1215.1400"
+(defconst tinydebian--version-time "2010.1215.1550"
   "Last edited time.")
 
 (require 'tinylibm)
@@ -4399,7 +4399,8 @@ Input:
 ;;;
 (put 'tinydebian-bts-mail-ctrl-command-add-macro 'edebug-form-spec '(body))
 (put 'tinydebian-bts-mail-ctrl-command-add-macro 'lisp-indent-function 0)
-(defmacro tinydebian-bts-mail-ctrl-command-add-macro (cmd bug &optional string at-beg)
+(defmacro tinydebian-bts-mail-ctrl-command-add-macro
+  (cmd bug &optional string at-beg)
   "Compose Control command.
 
 Input:
