@@ -123,7 +123,7 @@
 
 ;;{{{ setup: libraries
 
-(defconst tinydebian--version-time "2010.1214.0750"
+(defconst tinydebian--version-time "2010.1215.1400"
   "Last edited time.")
 
 (require 'tinylibm)
@@ -2538,7 +2538,8 @@ Return:
       str)
      (t
       (goto-char (point-min))
-      (if (re-search-forward "https?://forge.mysql.com[^<> \t\r\n]+" nil t)
+      (if (re-search-forward
+	   "https?://\\(?:forge\\|bugs\\).mysql.com[^<> \t\r\n]+" nil t)
           (match-string-no-properties 0))))))
 
 ;;; ----------------------------------------------------------------------

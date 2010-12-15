@@ -1,4 +1,14 @@
+2010-12-15 Wed  Jari Aalto  <jari.aalto@cante.net>
+
+	* tiny/tinydebian.el (tinydebian-mysql-bug-type-p): Improve
+	regexp.
+
 2010-12-14 Tue  Jari Aalto  <jari.aalto@cante.net>
+
+	* tiny/tinylisp.el (tinylisp--table-reverse-eval-alist):
+	Change defcustom:typo from 'list to 'sexp.
+	(tinylisp-install-hooks): Remove obsolete defadvice from
+	`debugger-mode'.
 
 	* tiny/tinydebian.el (tinydebian-github-bug-type-p): New.
 	(tinydebian-bug-bts-type-determine): Add Github support.
