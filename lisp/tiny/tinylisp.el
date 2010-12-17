@@ -967,11 +967,22 @@ element from the list is removed.")
   (concat
    "^(\\("
    ;;  cl DEFINES defun* macro
-   "defun\\*?\\|defsubst\\|defmacro\\|defalias"
-   ;; See SEMI poe.el
-   "\\|defun-maybe\\|defmacro-maybe\\|defalias-maybe"
-   ;; see Gnus nntp.el for deffoo
-   "\\|deffoo\\|defadv"
+   (regexp-opt
+    '("defun"
+      "defun*"
+      "defsubst"
+      "defmacro"
+      "defalias"
+      "defadvice"
+      "defalias"
+      "define-derived-mode"
+      "define-minor-mode"
+      ;; See SEMI poe.el
+      "defun-maybe"
+      "defmacro-maybe"
+      "defalias-maybe"
+      ;; see Gnus nntp.el for deffoo
+      "deffoo"))
    "\\)[ \t]+\\([^ \t\n]+\\)")
   "Regexp to match functions.
 This must have SUBMATCH1 and SUBMATCH2 which represent function
@@ -980,10 +991,13 @@ type and name.")
 (defconst tinylisp--regexp-variable
   (concat
    "^(\\("
-   ;;  Normal lisp variables
-   "defvar\\|defconst\\|defvaralias"
-   ;; Custom.el defined variables in 19.35
-   "\\|defgroup\\|defcustom"
+   (regexp-opt
+    '("defvar"
+      "defconst"
+      "defvaralias"
+      ;; Custom.el defined variables in 19.35
+      "defgroup"
+      "defcustom"))
    "\\)[ \t]+\\([^ \t\n]+\\)")
   "Regexp to match variables.
 This must have SUBMATCH1 and SUBMATCH2 which represent
