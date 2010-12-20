@@ -1,3 +1,8 @@
+2010-12-20  Jari Aalto  <jari.aalto@cante.net>
+
+	* tiny/tinydebian.el (tinydebian-bug-url-forward): Tighten
+	regexps.
+
 2010-12-17 Fri  Jari Aalto  <jari.aalto@cante.net>
 
 	* tiny/tinylisp.el (tinylisp--regexp-function): Use `regexp-opt'.

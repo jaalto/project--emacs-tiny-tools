@@ -2893,13 +2893,13 @@ In Gnus summary buffer, look inside original article."
          ((re-search-forward
            `,(concat "https?://[^ \t\r\n]*"
                      "\\(bugzilla[^ \t\r\n]+[0-9]"
-                     "\\|launchpad[^ \t\r\n]+[0-9]"
-                     "\\|savannah[^ \t\r\n]+[0-9]"
+                     "\\|launchpad\\.[^ \t\r\n]+[0-9]"
+                     "\\|\\(?:savannah\\|sv\\)\\.[^ \t\r\n]+[0-9]"
                      "\\|issue[^ \t\r\n]+[0-9]"
-                     "\\|gnu.org[^ \t\r\n]+[0-9]"
+                     "\\|gnu\\.org[^ \t\r\n]+[0-9]"
                      "\\|forge[^ \t\r\n]+[0-9]"
-                     "\\|rt.cpan.org[^ \t\r\n]+[0-9]"
-                     "\\|freshmeat.net[^ \t\r\n]+[0-9][0-9][0-9]"
+                     "\\|rt\\.cpan\+.org[^ \t\r\n]+[0-9]"
+                     "\\|freshmeat\\.net[^ \t\r\n]+[0-9][0-9][0-9]"
                      "\\)")
            nil t)
           (let ((str (thing-at-point 'url)))
