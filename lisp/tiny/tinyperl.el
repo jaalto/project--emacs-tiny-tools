@@ -421,7 +421,7 @@
 ;;      If the VERSION variable uses number format NNNN.NNNN, then it
 ;;      is assumed to contain ISO 8601 date YYYY.MMDD and this package
 ;;      will update the `$VERSION' variable's date every time file is
-;;      saved (see `write-file-hooks' and `tinyperl-version-stamp').
+;;      saved (see `write-file-functions' and `tinyperl-version-stamp').
 ;;
 ;;  Submitting your perl script to CPAN
 ;;
@@ -1369,7 +1369,7 @@ When LOAD: If `(tinyperl-cache-file-name)' does not exist. return nil."
   (ti::add-hooks 'tinyperl--pod-write-mode-define-keys-hook
                  'tinyperl-pod-write-mode-define-keys
                  remove)
-  (ti::add-hooks 'write-file-hooks
+  (ti::add-hooks 'write-file-functions
                  'tinyperl-version-stamp
                  remove)
   (when verb
