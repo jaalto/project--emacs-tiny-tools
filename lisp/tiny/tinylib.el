@@ -7370,7 +7370,6 @@ TO-FILE is excluded from autoload search."
              ;;      (regexp-quote generate-autoload-cookie)
              ;;
              find-file-hook
-             write-file-hooks
 	     write-file-functions
              font-lock-mode
              ;; buffer-auto-save-file-name
@@ -7386,8 +7385,6 @@ TO-FILE is excluded from autoload search."
         ;;  silencers:
         (if (null find-file-hook)
             (setq find-file-hook nil))
-        (if (null write-file-hooks)
-            (setq write-file-hooks nil))
         (if (null write-file-functions)
             (setq write-file-functions nil))
         (if (null font-lock-mode)
