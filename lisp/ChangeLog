@@ -1,3 +1,24 @@
+2010-12-22 Wed  Jari Aalto  <jari.aalto@cante.net>
+
+	* tiny/tinytf.el: (top level): Update documentation to
+	use `write-file-functions'.
+
+	* tiny/tinyperl.el (tinyperl-install-hooks): Update to
+	`write-file-functions' from `write-file-hooks'.
+
+	* tiny/tinymail.el (tinymail-install-hooks): Update to
+	`write-file-functions' from `write-file-hooks'.
+
+	* tiny/tinylib.el (ti::package-autoload-loaddefs-build-dir-1):
+	Remove `write-file-hooks'.
+
+	* tiny/tinydesk.el: Update to `write-file-functions' from
+	`write-file-hooks'.
+
+	* tiny/tinydebian.el (tinydebian-install): Adjust comments.
+
+	* tiny/tinyadvice.el (after-find-file): Remove.
+
 2010-12-20  Jari Aalto  <jari.aalto@cante.net>
 
 	* tiny/tinydebian.el (tinydebian-bug-url-forward): Tighten
