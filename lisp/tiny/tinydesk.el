@@ -252,7 +252,7 @@
 ;;      Has it ever happened to you that Emacs crashed mystically when you
 ;;      were in the middle of your daily routines. You had several C++
 ;;      files open, perl code, text files, RMAIL, ... This package installs
-;;      `tinydesk-auto-save' function to `write-file-hooks' and in regular
+;;      `tinydesk-auto-save' function to `write-file-functions' and in regular
 ;;      intervals all your Emacs session files are stored into the state
 ;;      file. After a crash you can easily recover your session by reading
 ;;      the saved state file information with `tinydesk-recover-state'
@@ -756,7 +756,7 @@ References:
 ;;; ----------------------------------------------------------------------
 ;;;
 (defun tinydesk-auto-save (&optional force)
-  "This function is installed in `write-file-hooks'. Periodic auto save.
+  "This function is installed in `write-file-functions'. Periodic auto save.
 
 Input:
 
@@ -1703,11 +1703,11 @@ Return:
     (run-hooks 'tinydesk--mode-define-keys-hook))
   (cond
    (uninstall
-    (remove-hook 'write-file-hooks 'tinydesk-auto-save)
-    (remove-hook 'find-file-hook  'turn-on-tinydesk-mode-maybe))
+    (remove-hook 'write-file-functions 'tinydesk-auto-save)
+    (remove-hook 'find-file-hook 'turn-on-tinydesk-mode-maybe))
    (t
-    (add-hook 'write-file-hooks 'tinydesk-auto-save)
-    (add-hook 'find-file-hook  'turn-on-tinydesk-mode-maybe))))
+    (add-hook 'write-file-functions 'tinydesk-auto-save)
+    (add-hook 'find-file-hook 'turn-on-tinydesk-mode-maybe))))
 
 (tinydesk-install)
 
