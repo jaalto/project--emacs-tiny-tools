@@ -1757,7 +1757,7 @@ This function should be bound to SPACE key."
     ;;  List of hooks where to install us
     (ti::add-hooks tinymail--enter-mail-hook-list
                    'turn-on-tinymail-mode  remove)
-    (ti::add-hooks 'write-file-hooks
+    (ti::add-hooks 'write-file-functions
                    'tinymail-write-file-hook remove)
     (ti::add-hooks 'tinymail--mode-define-keys-hook
                    'tinymail-mode-define-keys remove)
