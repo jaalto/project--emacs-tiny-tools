@@ -123,7 +123,7 @@
 
 ;;{{{ setup: libraries
 
-(defconst tinydebian--version-time "2010.1215.1550"
+(defconst tinydebian--version-time "2010.1222.1723"
   "Last edited time.")
 
 (require 'tinylibm)
@@ -1323,16 +1323,16 @@ Activate on files whose path matches
 (defun tinydebian-install (&optional uninstall)
   "Install or UNINSTALL package."
   (interactive "P")
-  ;;  This just hides from byte compiler function definition
-  ;;  so that it does not remember how amny arguments it takes
+  ;;  This just hides from byte compiler function definition so that
+  ;;  it does not remember how amny arguments it takes
   ;;
-  ;;  function tinydebian-bug-report-debian-bts-mail used to take 0+ arguments,
-  ;;  now takes 1 function tinydebian-bug-report-debian-bts-mail defined multiple
-  ;;  times in this file
+  ;;  function tinydebian-bug-report-debian-bts-mail used to take 0+
+  ;;  arguments, now takes 1 function
+  ;;  tinydebian-bug-report-debian-bts-mail defined multiple times in
+  ;;  this file
   ;;
   (cond
    (uninstall
-    ;; (remove-hook 'write-file-hooks 'tinydebian-auto-save)
     (tinydebian-install-font-lock-keywords 'uninstall)
     (remove-hook 'message-mode-hook
                  'turn-on-tinydebian-mail-mode)
@@ -1346,7 +1346,6 @@ Activate on files whose path matches
                  'tinydebian-bts-mode-maybe-turn-on)
     (tinydebian-install-in-buffers 'uninstall))
    (t
-    ;; (add-hook 'write-file-hooks 'tinydebian-auto-save)
     (tinydebian-install-font-lock-keywords)
     (add-hook 'message-mode-hook
               'turn-on-tinydebian-mail-mode)
