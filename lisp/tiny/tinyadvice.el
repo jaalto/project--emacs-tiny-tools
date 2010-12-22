@@ -907,29 +907,13 @@ Read word from the current pointand put it into grep prompt."
 ;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;
 
 ;;; ----------------------------------------------------------------------
-;;; ANGE things...
-;;; - Ange ftp gets "listing" when it tries to guess if the file
-;;;   exists or if it's new file. The listing is produced with the call
-;;;   `insert-file-contents'
-;;;
-;;; find-file-noselect (filename &optional nowarn)
-;;;  ...
-;;;  ange-ftp-insert-file-contents
-;;;    ..file-exists-p
-;;;
-(defadvice after-find-file (around tinyadvice-file dis)
-  "Suppress call if no `buffer-file-name'. This may happen with ange-ftp."
-  (if buffer-file-name
-      ad-do-it))
-
-;;; ----------------------------------------------------------------------
 ;;;
 (defadvice find-file-literally
-  (around  tinyadvice-disable-write-file-hooks dis)
-  "Disable `write-file-hooks' so that file can edited and saved in pure manner."
+  (around  tinyadvice-disable-write-file-functions dis)
+  "Disable `write-file-functions' so that file can edited and saved in pure manner."
   ad-do-it
-  (add-hook 'write-file-hooks 'ignore nil 'local)
-  (setq write-file-hooks nil)
+  (add-hook 'write-file-functions 'ignore nil 'local)
+  (setq write-file-functions nil)
   ;; (setq indent-tabs-mode t)
   (message "TinyAdvice: write-file-hooks is now nil in %s" (buffer-name)))
 
