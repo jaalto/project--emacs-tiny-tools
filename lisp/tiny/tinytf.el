@@ -60,7 +60,7 @@
 ;;
 ;; Additional hooks to detect and format buffer (optional):
 ;;
-;;       (add-hook 'write-file-hooks 'tinytf-untabify-buffer)
+;;       (add-hook 'write-file-functions 'tinytf-untabify-buffer)
 ;;       (add-hook 'find-file-hook 'turn-on-tinytf-mode-maybe)
 ;;
 ;; If you need to redefine some binding to suit your keyboard better,
