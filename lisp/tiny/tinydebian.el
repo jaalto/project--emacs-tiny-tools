@@ -123,7 +123,7 @@
 
 ;;{{{ setup: libraries
 
-(defconst tinydebian--version-time "2010.1222.1723"
+(defconst tinydebian--version-time "2010.1227.1230"
   "Last edited time.")
 
 (require 'tinylibm)
@@ -774,7 +774,7 @@ See <http://debbugs.gnu.org>.")
   "HTTP address of an individual bug in Emacs Bug Tracking System.
 The %s is placeholder for a bug number.")
 
-(defvar tinydebian--emacs-bts-email-address "emacsbugs.donarmstrong.com"
+(defvar tinydebian--emacs-bts-email-address "debbugs.gnu.org"
   "Email address for Emacs Bug Tracking System.")
 
 (defvar tinydebian--emacs-bts-url-http-bugs
@@ -1403,10 +1403,11 @@ Activate on files whose path matches
 (defsubst tinydebian-bug-nbr-any-in-string (string)
   "Read bug number NNNNNN from STRING."
   (when (stringp string)
-    (if (string-match
-         "\\([^0-9]\\|^\\)\\([0-9][0-9][0-9][0-9][0-9][0-9]\\)$"
-         string)
-        (match-string 2 string))))
+    (if (or (string-match
+	     "\\(?:[^0-9]+\\|^\\)\\([0-9][0-9][0-9][0-9][0-9]\\)$"
+	     string)
+	    (string-match "#\\([0-9][0-9]+\\)" string))
+        (match-string 1 string))))
 
 ;;; ----------------------------------------------------------------------
 ;;;
@@ -1451,7 +1452,7 @@ Activate on files whose path matches
 ;;;
 (defsubst tinydebian-bug-nbr-forward (&optional regexp)
   "Read bug#NNNN from current point forward.
-If optional REGEXP is sebt, it must take number in submatch 1."
+If optional REGEXP is set, it must take number in submatch 1."
   (tinydebian-buffer-match-string (or regexp "[Bb]ug#\\([0-9]+\\)")))
 
 ;;; ----------------------------------------------------------------------
@@ -2303,7 +2304,8 @@ This function needs network connection."
   "Search from current point for `tinydebian--emacs-bts-email-address'.
 Return:
   '(bug-number email)"
-  (let ((email (regexp-quote tinydebian--emacs-bts-email-address)))
+  (let ((email (regexp-quote tinydebian--emacs-bts-email-address))
+	bug)
     (cond
      ((re-search-forward (format
                           "\\(\\([0-9]+\\)@%s\\>\\)"
@@ -2319,6 +2321,15 @@ Return:
       ;; to report a problem with the Bug-tracking system.
       (list (match-string-no-properties 2)
             (match-string-no-properties 1)))
+     ((and (re-search-forward (format
+			       "control@%s"
+			       email)
+			      nil t)
+	   ;; To: control@debbugs.gnu.org
+	   ;; Subject: Bug#7665 retitle
+	   (setq bug (tinydebian-bug-nbr-any)))
+      (list bug
+	    (tinydebian-emacs-bts-email-compose bug)))
      ((save-excursion
         (re-search-forward (concat
                             email
@@ -2912,6 +2923,14 @@ In Gnus summary buffer, look inside original article."
 
 ;;; ----------------------------------------------------------------------
 ;;;
+(defun tinydebian-bug-nbr-article-buffer ()
+  "Return bug number from article buffer."
+  (tinydebian-with-gnus-article-buffer nil
+    (let ((str (mail-fetch-field "Subject")))
+      (tinydebian-bug-nbr-any-in-string str))))
+
+;;; ----------------------------------------------------------------------
+;;;
 (defun tinydebian-bug-nbr-any (&rest args)
   "Try various methods to find bug tracking number. Ignore ARGS.
 At current point, current line, headers of the mail message
@@ -2922,7 +2941,8 @@ At current point, current line, headers of the mail message
         (tinydebian-bug-nbr-current-line)
         ;; !A [  40: Foo Bar ] <subject content>
         (tinydebian-bug-nbr-any-in-string
-         (tinydebian-gnus-summary-mode-summary-line))))
+         (tinydebian-gnus-summary-mode-summary-line))
+	(tinydebian-bug-nbr-article-buffer)))
    (t
     (or (tinydebian-bug-nbr-at-current-point)
         (tinydebian-bug-nbr-current-line)
@@ -4757,7 +4777,9 @@ Mode description:
 
     "----"
 
-    ["Goto URL by bug number"        tinydebian-bug-browse-url-by-bug          t]
+;;    ["Goto URL by bug number"        tinydebian-bug-browse-url-by-bug          t]
+    ["Goto URL by bug number"        tinydebian-bug-browse-url-main            t]
+
     ["Goto URL by package bugs"      tinydebian-bug-browse-url-by-package-bugs t]
     ["Goto URL by package name"      tinydebian-bug-browse-url-by-package-name t]
 

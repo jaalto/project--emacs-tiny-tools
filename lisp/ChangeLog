@@ -1,3 +1,21 @@
+2010-12-27 Mon  Jari Aalto  <jari.aalto@cante.net>
+
+	* tiny/tinydebian.el (tinydebian-mail-mode): Remove
+	`tinydebian-bug-browse-url-by-bug' and use generic
+	`tinydebian-bug-browse-url-main'.
+	(tinydebian--emacs-bts-email-address): Change emacsbugs.donarmstrong.com
+	to debbugs.gnu.org.
+	(tinydebian-bug-gnu-emacs-bts-re-search-email): Check control@ address.
+	(tinydebian--emacs-bts-url-http-bugs): Chnage emacsbugs.donarmstrong.com
+	to debbugs.gnu.org.
+
+2010-12-26 Sun  Jari Aalto  <jari.aalto@cante.net>
+
+	* tiny/tinydebian.el (tinydebian-bug-nbr-any-in-string): Adjust
+	submatch.
+	(tinydebian-bug-nbr-any-in-string): Add another regecp.
+	(tinydebian-bug-nbr-article-buffer): New. Look at Subject.
+
 2010-12-22 Wed  Jari Aalto  <jari.aalto@cante.net>
 
 	* tiny/tinytf.el: (top level): Update documentation to
