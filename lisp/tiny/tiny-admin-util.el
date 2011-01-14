@@ -320,7 +320,7 @@ Store the autoloads to tiny-DIR-autoload.el"
                 (directory-files
                  (expand-file-name dir)
                  'abs)))
-         (regexp "tinylib\\|autoload"))
+         (regexp "tinylib\\|autoload\\loaddefs"))
     (cond
      (dirs
       (tiny-setup-autoload-build-functions dir regexp)
