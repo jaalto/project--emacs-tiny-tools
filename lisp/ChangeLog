@@ -1,3 +1,22 @@
+2011-01-24 Mon  Jari Aalto  <jari.aalto@cante.net>
+
+	* tiny/tinydebian.el (tinydebian-bts-mail-ctrl-command-clone-in-mail):
+	New.
+	(tinydebian-bts-mail-ctrl-command-clone): Rewrite.
+	(tinydebian-bts-mail-ctrl-clone-new-mail): Rename. Was
+	`tinydebian-bts-mail-ctrl-command-clone'.
+
+2011-01-14 Fri  Jari Aalto  <jari.aalto@cante.net>
+
+	* tiny/tiny-admin-util.el (tiny-setup-autoload-build-functions-all):
+	Exclude loaddefs file.
+
+2011-01-06  Jari Aalto  <jari.aalto@cante.net>
+
+	* tiny/tinylisp.el (tinylisp-with-file-env-macro):
+	remove unused let variable `original-backup-inhibited'.
+
+
 2010-12-27 Mon  Jari Aalto  <jari.aalto@cante.net>
 
 	* tiny/tinydebian.el (tinydebian-mail-mode): Remove

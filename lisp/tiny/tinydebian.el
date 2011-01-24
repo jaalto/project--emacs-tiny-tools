@@ -123,7 +123,7 @@
 
 ;;{{{ setup: libraries
 
-(defconst tinydebian--version-time "2010.1227.1230"
+(defconst tinydebian--version-time "2011.0124.1600"
   "Last edited time.")
 
 (require 'tinylibm)
@@ -778,7 +778,7 @@ The %s is placeholder for a bug number.")
   "Email address for Emacs Bug Tracking System.")
 
 (defvar tinydebian--emacs-bts-url-http-bugs
-  "http://emacsbugs.donarmstrong.com/%s"
+  "http://debbugs.gnu.org/%s"
   "HTTP address of an individual bug in Emacs Bug Tracking System.
 The %s is placeholder for a bug number.")
 
@@ -4451,6 +4451,27 @@ If LIST if nil, position point at pseudo header."
 
 ;;; ----------------------------------------------------------------------
 ;;;
+(defun tinydebian-bts-mail-ctrl-command-clone-in-mail (bug)
+  "Mark BUG notforwarded."
+  (interactive
+   (list
+    ;; tinydebian-bts-mail-ask-bug-number
+    (tinydebian-mail-mode-debian-address-ask-bug)))
+  (tinydebian-bts-mail-ctrl-command-add-macro "clone" bug)
+  (insert " -1\nretitle -1 "))
+
+;;; ----------------------------------------------------------------------
+;;;
+(defun tinydebian-bts-mail-ctrl-command-clone (bug)
+  "Select correct clone command for BUG.
+If in mail buffer, run
+otgerwise run `tinydebian-bts-mail-ctrl-clone-new-mail'."
+  (if (memq major-mode '(message-mode mail-mode))
+      (tinydebian-bts-mail-ctrl-command-clone-in-mail bug)
+    (tinydebian-bts-mail-ctrl-clone-new-mail bug)))
+
+;;; ----------------------------------------------------------------------
+;;;
 (defun tinydebian-bts-mail-ctrl-command-fixed (bug version)
   "Mark BUG fixed in VERSION."
   (interactive
@@ -4793,6 +4814,7 @@ Mode description:
 
     ["Add BTS Ctrl CC"         tinydebian-bts-mail-ctrl-command-cc       t]
 ;;;    ["Send BTS Ctrl close"      tinydebian-bts-mail-ctrl-command-close    t] ;; FIXME
+    ["Add BTS Ctrl clone"      tinydebian-bts-mail-ctrl-clone    t]
     ["Add BTS Ctrl fixed"      tinydebian-bts-mail-ctrl-command-fixed t]
     ["Add BTS Ctrl notfixed"   tinydebian-bts-mail-ctrl-command-notfixed    t]
     ["Add BTS Ctrl forward"    tinydebian-bts-mail-ctrl-command-forwarded  t]
@@ -4834,6 +4856,7 @@ Mode description:
      ;;  (C)ontrol commands
 ;;      (define-key map  "cf"  'tinydebian-bts-mail-ctrl-command-forward)  ;; FIXME
      (define-key map  "cc"  'tinydebian-bts-mail-ctrl-command-cc)
+     (define-key map  "cC"  'tinydebian-bts-mail-ctrl-clone)
      (define-key map  "cfn" 'tinydebian-bts-mail-ctrl-command-notforwarded)
      (define-key map  "cF"  'tinydebian-bts-mail-ctrl-command-forwarded)
      (define-key map  "cm"  'tinydebian-bts-mail-ctrl-command-merge)
@@ -5363,6 +5386,7 @@ thanks
   (let ((subject (my-tinydebian-subject-any))
         tinydebian--bts-compose-type)
     (unless (and (stringp bug)
+		 (stringp subject)
                  (string-match bug subject))
       ;; User gave different bug number than where the currenly line is.
       ;; Can't use that subject as is.
@@ -6051,8 +6075,8 @@ Default owner is the value of 'From:', that is `user-mail-address'."
 
 ;;; ----------------------------------------------------------------------
 ;;;
-(defun tinydebian-bts-mail-ctrl-clone (bug)
-  "Compose BTS control message a BUG for cloning."
+(defun tinydebian-bts-mail-ctrl-clone-new-mail (bug)
+  "Compose BTS control message against BUG for cloning."
   (interactive
    (list (tinydebian-bts-mail-ask-bug-number)))
   (tinydebian-bts-mail-type-macro
