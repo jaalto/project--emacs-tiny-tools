@@ -2,8 +2,6 @@
 
 ;; This file is not part of Emacs
 
-;;{{{ Id
-
 ;; Copyright (C)    1995-2010 Jari Aalto
 ;; Keywords:        extensions
 ;; Author:          Jari Aalto
@@ -28,10 +26,8 @@
 ;;
 ;; Visit <http://www.gnu.org/copyleft/gpl.html> for more information
 
-;;}}}
-;;{{{ Install
+;;; Install:
 
-;; ........................................................ &t-install ...
 ;;   Put this file on your Emacs-Lisp `load-path', add following into your
 ;;   $HOME/.emacs startup file
 ;;
@@ -59,14 +55,9 @@
 ;;      (define-key ctl-x-4-map "E" 'tinydesk-edit-state-file)
 ;;      (define-key ctl-x-4-map "U" 'tinydesk-unload)
 
-;;}}}
-;;{{{ Documentation
-
-;; ..................................................... &t-commentary ...
-
 ;;; Commentary:
 
-;;  Preface, feb 1995
+;;  Preface, Feb 1995
 ;;
 ;;      At work working with windowed system, Emacs stays open from day to
 ;;      day. In fact people seldom even logout, so Emacs and the files
@@ -264,8 +255,6 @@
 ;;      There is no plan to duplicate *desktop.el* functionality to save points
 ;;      and modes and so on. This is for simple file/directory restoring only.
 
-;;}}}
-
 ;;; Change Log:
 
 ;;; Code:
@@ -284,8 +273,6 @@
 
             Files that have been modified are not unloaded.
     ")
-
-;;{{{ setup: hooks
 
 ;;; ......................................................... &v-hooks ...
 
@@ -326,9 +313,6 @@ The files are there, possibly in sorted order, and the title is there."
   "*Hook run after recover file is _parsed_ AND no errors during load."
   :type  'hook
   :group 'TinyDesk)
-
-;;}}}
-;;{{{ setup: user config
 
 ;;; ................................................... &v-user-config ...
 
@@ -465,9 +449,6 @@ The default value is
            (symbol :tag "Face")))
   :group 'TinyDesk)
 
-;;}}}
-;;{{{ setup: -- private
-
 ;;; ....................................................... &v-private ...
 
 (defvar tinydesk-mode-map nil
@@ -505,9 +486,6 @@ path, garbage at line...Hooks may check the contents of this.")
 
 (defvar tinydesk--last-state-file  nil
   "Last state file loaded is stored here.")
-
-;;}}}
-;;{{{ Install: bindings
 
 ;;; ----------------------------------------------------------------------
 ;;;
@@ -563,9 +541,6 @@ path, garbage at line...Hooks may check the contents of this.")
   (define-key tinydesk-mode-map "\C-cx" 'tinydesk-expunge-unloaded)
   (define-key tinydesk-mode-map "\C-cr" 'tinydesk-remove-file-coments)
   (define-key tinydesk-mode-map "\C-cn" 'tinydesk-set-face-non-files-buffer))
-
-;;}}}
-;;{{{ code: misc
 
 ;;; ----------------------------------------------------------------------
 ;;;
@@ -729,9 +704,6 @@ References:
              list))))
     list))
 
-;;}}}
-;;{{{ code: auto save
-
 ;;; ----------------------------------------------------------------------
 ;;;
 (defun tinydesk-auto-save-file-name ()
@@ -819,10 +791,6 @@ TinyDesk: Can't do state autosave: [%s] is not writable." save-to))
             (tinydesk-save-state save-to)))))
       ;; `write-file-hook' function must return nil
       nil)))
-
-;;}}}
-
-;;{{{ Code: faces
 
 ;;; ----------------------------------------------------------------------
 ;;;
@@ -1068,9 +1036,6 @@ Example:
       (and verb                         ;this make take a while...
            (message "TinyDesk: Marking files...ok")))))
 
-;;}}}
-;;{{{ code: mouse
-
 ;;; ........................................................... &mouse ...
 
 ;;; ----------------------------------------------------------------------
@@ -1146,8 +1111,6 @@ Example:
         (concat
          "TinyDesk: Can't find mouse face...   Mark buffer first with "
          "\\[tinydesk-mark-buffer-loadable]")))))))
-;;}}}
-;;{{{ code: edit, unload
 
 ;;; ----------------------------------------------------------------------
 ;;;
@@ -1315,9 +1278,6 @@ Following commands are available in `tinydesk-mode'.
   (pop-to-buffer (find-file-noselect file))
   (tinydesk-mode nil t))
 
-;;}}}
-;;{{{ code: save
-
 ;;; ............................................................ &save ...
 
 ;;; ----------------------------------------------------------------------
@@ -1421,9 +1381,6 @@ TinyDesk: State saving aborted. Please save to new file or kill buffer: %s" file
       ;; ^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^ catch ^^^
       nil)
     (tinydesk-trash)))
-
-;;}}}
-;;{{{ code: recover
 
 ;;; ----------------------------------------------------------------------
 ;;;
@@ -1584,14 +1541,6 @@ References:
 
 ;;; ----------------------------------------------------------------------
 ;;;
-(defun tinydesk-recover-file-whole-buffer (&optional verb)
-  "Call `tinydesk-find-file' with argument `recover'. VERB."
-  (interactive)
-  (save-excursion
-    (tinydesk-find-file-whole-buffer 'recover (ti::verb))))
-
-;;; ----------------------------------------------------------------------
-;;;
 (defun tinydesk-find-file-whole-buffer (&optional recover verb)
   "Load all files listed in buffer. Point is not preserved.
 
@@ -1631,8 +1580,8 @@ Return:
 	err                            ;per file basis
 	ERR)                           ;return status
     (ti::verb)
-    (setq   tinydesk--loaded-file-list   nil ;<< reset GLOBALS
-            tinydesk--rejected-file-list        nil)
+    (setq tinydesk--loaded-file-list   nil ;<< reset GLOBALS
+          tinydesk--rejected-file-list nil)
     (run-hooks 'tinydesk--recover-before-hook)
     (ti::pmin)                          ;there is *no* save excursion
     (while (not (eobp))
@@ -1691,7 +1640,13 @@ Return:
         (message "TinyDesk: %s...done" msg-str))
     (list count ERR not-loaded first-entry)))
 
-;;}}}
+;;; ----------------------------------------------------------------------
+;;;
+(defun tinydesk-recover-file-whole-buffer (&optional verb)
+  "Call `tinydesk-find-file' with argument `recover'. VERB."
+  (interactive)
+  (save-excursion
+    (tinydesk-find-file-whole-buffer 'recover (ti::verb))))
 
 ;;; ----------------------------------------------------------------------
 ;;;
