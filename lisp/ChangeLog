@@ -1,3 +1,14 @@
+2011-01-26 Wed  Jari Aalto  <jari.aalto@cante.net>
+
+	* tiny/tinydesk.el (top level): remove folding marks.
+	(tinydesk-recover-file-whole-buffer):Move location.
+	(tinydesk-save-state): Change `not-modified' to
+	`set-buffer-modified-p'.
+	(tinydesk-mark-buffer-loadable): Move location.
+	(tinydesk-comment-re): Optimize. Add macro expansion.
+	(tinydesk-mark-region): Rewrite. Much simpler now. Fix handling
+	of files and directory names with spaces. Savannah Bug#32253.
+
 2011-01-24 Mon  Jari Aalto  <jari.aalto@cante.net>
 
 	* tiny/tinydebian.el (tinydebian-bts-mail-ctrl-command-clone-in-mail):

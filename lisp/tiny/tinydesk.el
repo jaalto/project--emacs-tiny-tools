@@ -555,11 +555,11 @@ path, garbage at line...Hooks may check the contents of this.")
 ;;;
 (defsubst tinydesk-comment-re ()
   "Return comment regexp."
-  (concat "[^\n"
-          tinydesk--comment-characters
-          "]*\\(["
-          tinydesk--comment-characters
-          "].*\\)"))
+  `,(concat "[^\n"
+	    tinydesk--comment-characters
+	    "]*\\(["
+	    tinydesk--comment-characters
+	    "].*\\)"))
 
 ;;; ----------------------------------------------------------------------
 ;;;
@@ -882,21 +882,6 @@ TinyDesk: Can't do state autosave: [%s] is not writable." save-to))
 
 ;;; ----------------------------------------------------------------------
 ;;;
-(defun tinydesk-mark-buffer-loadable (&optional verb)
-  "Parse whole buffer and make first _word_ loadable with mouse. VERB.
-Marking is only done if word is valid filename."
-  (interactive)
-  (save-excursion
-    (tinydesk-mark-region
-     (point-min)
-     (point-max)
-     (tinydesk-comment-re)
-     tinydesk--comment-start-level
-     (or (interactive-p)
-         verb))))
-
-;;; ----------------------------------------------------------------------
-;;;
 (defun tinydesk-set-face-non-files-region (beg end)
   "In region BEG END set 'error face to invalid files (first word).
 Also add textual comment to the end of line if needed."
@@ -960,7 +945,7 @@ Input:
 
   COM-RE    the file can have comments, but comments can be only
             _single span type_, that is, only shell like #, or C++
-            like //. Everything after and included  COM-RE is discarded
+            like //. Everything after and included COM-RE is discarded
             from SUB-LEVEL.
 
   SUB-LEVEL subexpression match; default is 0.
@@ -978,9 +963,7 @@ Example:
 	(sub-level     (or sub-level 0))
 	(c-chars       tinydesk--comment-characters)
 	(comment       (tinydesk-comment))
-	bp ep                          ;beg, end points
-	elp                            ;end line point
-	maxlp                          ;max line point
+	bp ep				;points
 	file)
     (and verb                           ;this make take a while...
          (message "TinyDesk: Marking files..."))
@@ -988,53 +971,52 @@ Example:
       (narrow-to-region beg end)
       (goto-char (point-min))
       (while (not (eobp))
-        (if (looking-at  "^[ \t]*$\\|$")
-            nil                         ;ignore empty lines
-          (setq elp (line-end-position))
-          (setq maxlp elp)
-          ;;  Does there exist comment on the line ?
-          (save-excursion
-            (when (and (stringp com-re)
-                       (looking-at com-re))
-              (setq maxlp (1- (match-beginning sub-level)))))
-          (if (< maxlp (1+ (point)))    ;beg of line COMMENT exist
-              (progn
-                nil)
-            (skip-syntax-forward " " maxlp) ;ignore whitespace
-            (setq bp (point))
-
-            (skip-chars-forward "^ \t"  maxlp) ;first space
-            (if (eq bp ep)             ;not moved, maybe "one-word$" ?
-                (goto-char maxlp))
-            (setq ep (point))
-            (if (eq bp ep)
-                nil                     ;still not moved ?
-              ;;  Mark the word only if the WORD is valid file
-              ;;  - If the filename has ange-ftp @ char, then mark
-              ;;    automatically. Calling file-exists-p for ange
-              ;;    file would start ange-ftp... and we don't
-              ;;    want that here.
-              (setq file (buffer-substring bp ep))
-              (setq file (tinydesk-file-name-absolute file))
-              (goto-char ep)
-              (if (looking-at "[ \t;]")
-                  (delete-region (point) elp)) ;delete other marks
-              (cond
-               ((get-file-buffer file)  ;already in Emacs ?
-                (move-to-column err-col t)
-                (if (not (looking-at (concat "$\\|[ \t" c-chars "]")))
-                    (end-of-line)) ;no other choices, place is cccupied
-                (tinydesk-add-space-if-non-space)
-                (insert (concat comment " loaded")))
-               (t
-                ;; ............................... not loaded in Emacs ...
-                (if (or (string-match "@" file)
-                        (file-exists-p file))
-                    (put-text-property bp ep 'mouse-face file-face)))))))
-        (forward-line 1))
+	(cond
+	 ((looking-at
+	   (concat "[ \t]*\\(.+[^ \t\r\n]\\)\\([ \t]*"
+		   "[" tinydesk--comment-characters "]"
+		   ".*\\)"))
+	   (setq file (match-string-no-properties 1)
+		 bp (match-beginning 1)
+		 ep (match-end 1))
+	   (delete-region (match-beginning 2)
+			  (line-end-position)))
+	  ((looking-at "[ \t]*\\(.*[^ \t\r\n]\\)")
+	   (setq file (match-string-no-properties 1)
+		 bp (match-beginning 1)
+		 ep (match-end 1)))
+	 (when file
+	   (cond
+	    ((get-file-buffer file)  ;already in Emacs ?
+	     (move-to-column err-col t)
+	     (if (not (looking-at (concat "$\\|[ \t" c-chars "]")))
+		 (end-of-line)) ;no other choices, place is cccupied
+	     (tinydesk-add-space-if-non-space)
+	     (insert (concat comment " loaded")))
+	    (t
+	     ;; ............................... not loaded in Emacs ...
+	     (if (or (string-match "@" file)
+		     (file-exists-p file))
+		 (put-text-property bp ep 'mouse-face file-face)))))
+	(forward-line 1))
       (set-buffer-modified-p nil)
       (and verb                         ;this make take a while...
            (message "TinyDesk: Marking files...ok")))))
+
+;;; ----------------------------------------------------------------------
+;;;
+(defun tinydesk-mark-buffer-loadable (&optional verb)
+  "Parse whole buffer and make first _word_ loadable with mouse. VERB.
+Marking is only done if word is valid filename."
+  (interactive)
+  (save-excursion
+    (tinydesk-mark-region
+     (point-min)
+     (point-max)
+     (tinydesk-comment-re)
+     tinydesk--comment-start-level
+     (or (interactive-p)
+         verb))))
 
 ;;; ........................................................... &mouse ...
 
@@ -1341,7 +1323,7 @@ TinyDesk: State saving aborted. Please save to new file or kill buffer: %s" file
                          (funcall save-func mode))))
     (if (null files)
         (if verb                        ;no files
-            (message "TinyDesk: no files to save"))
+            (message "TinyDesk: no items to save"))
       ;; ... ... ... ... ... ... ... ... ... ... ... ... ... . do save . .
       (if (or  (null file)
                (and (file-exists-p file)
@@ -1349,6 +1331,7 @@ TinyDesk: State saving aborted. Please save to new file or kill buffer: %s" file
           (error (format  "TinyDesk: access problem with: '%s'" file)))
       ;;  We kill this buffer later, so we don't need save-excursion
       (set-buffer tmp-buffer)
+      (display-buffer tmp-buffer)
       ;; ... ... ... ... ... ... ... ... ... ... ... ...  insert files . .
       (dolist (elt files)
         ;;  Remove some files...
@@ -1374,7 +1357,7 @@ TinyDesk: State saving aborted. Please save to new file or kill buffer: %s" file
         (insert (eval title)))
       (run-hooks 'tinydesk--save-after-hook)
       (write-region (point-min) (point-max) file)
-      (not-modified) (message "")
+      (set-buffer-modified-p nil)
       (kill-buffer tmp-buffer)
       (if (interactive-p)
           (message (concat "TinyDesk: State saved to file " file)))
