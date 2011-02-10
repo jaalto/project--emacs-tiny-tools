@@ -317,7 +317,7 @@ Format:
 
 (defconst tinycygwin--sysinfo-environment-list
   '("CYGWIN")
-  "List of environment variables to include to bug report.")
+  "List of environment variables to include in bug report.")
 
 (defvar tinycygwin--package-maintainer-email-include nil
   "Should the Cygwin Net package maintainer's email addres be offered.

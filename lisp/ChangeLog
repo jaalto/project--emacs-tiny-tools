@@ -5,6 +5,7 @@
 	(tinycygwin--os-type): Add system-type `cygwin'.
 	(tinycygwin-bug-report-mail-insert-environment): Do not
 	print --Envvironment tag if there is nothing to report.
+	(tinycygwin--sysinfo-environment-list): Fix typo.
 
 2011-01-26 Wed  Jari Aalto  <jari.aalto@cante.net>
 
