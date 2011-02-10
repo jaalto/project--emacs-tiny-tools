@@ -207,7 +207,7 @@ All fancy features or Emacs settings are also disabled."
 (defvar tinycygwin--os-type
   (cond
    ;;  Win32 and Cygwin are considered equal here
-   ((or (memq system-type '(ms-dos windows-nt))
+   ((or (memq system-type '(cygwin ms-dos windows-nt))
         (file-directory-p "c:/"))
     'cygwin)
    ((or (memq system-type '(gnu/linux))
@@ -2036,10 +2036,11 @@ References:
         list
         ret)
     (dolist (path exec-path)
-      (setq list (directory-files path 'full regexp))
-      (when (and list (eq 1 (length list)))
-        (setq ret (car list))
-        (return)))
+      (when (file-directory-p path)
+	(setq list (directory-files path 'full regexp))
+	(when (and list (eq 1 (length list)))
+	  (setq ret (car list))
+	  (return))))
     ret))
 
 ;;; ----------------------------------------------------------------------
@@ -2979,10 +2980,10 @@ Optional TYPE
   (let (done
         info)
     (dolist (var tinycygwin--sysinfo-environment-list)
-      (unless done
-        (insert "\n-- Environment information\n")
-        (setq done t))
       (when (setq info (getenv var))
+	(unless done
+	  (insert "\n-- Environment information\n")
+	  (setq done t))
         (insert (format "%s: %s\n" var info))))))
 
 ;;; ----------------------------------------------------------------------

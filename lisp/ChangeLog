@@ -1,3 +1,11 @@
+2011-02-10 Thu  Jari Aalto  <jari.aalto@cante.net>
+
+	* tiny/tinycygwin.el (tinycygwin-executable-find): Add
+	`file-directory-p' check.
+	(tinycygwin--os-type): Add system-type `cygwin'.
+	(tinycygwin-bug-report-mail-insert-environment): Do not
+	print --Envvironment tag if there is nothing to report.
+
 2011-01-26 Wed  Jari Aalto  <jari.aalto@cante.net>
 
 	* tiny/tinydesk.el (top level): remove folding marks.
