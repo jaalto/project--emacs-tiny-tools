@@ -123,7 +123,7 @@
 
 ;;{{{ setup: libraries
 
-(defconst tinydebian--version-time "2011.0124.1600"
+(defconst tinydebian--version-time "2011.0305.1123"
   "Last edited time.")
 
 (require 'tinylibm)
@@ -5544,10 +5544,11 @@ Severity: wishlist
 
 ;;; ----------------------------------------------------------------------
 ;;;
-(defun tinydebian-bts-mail-type-rfp (package license homepage desc &optional itp)
+(defun tinydebian-bts-mail-type-rfp
+  (package license homepage desc &optional itp)
   "Send an RFP request.
-If optional `current-prefix-arg' ITP is set, then use ITP instead
-of RFP in header to directly send pacging notice."
+If optional `current-prefix-arg' is set, label post as an ITP.
+The default is to use RFP in Subject header."
   (interactive
    (let* ((name    (read-string
                     (format
@@ -5582,23 +5583,23 @@ of RFP in header to directly send pacging notice."
                           (replace-match str 'literal nil nil 1))))))
     (let ((arg-pkg package)) ;; Due to macro which reserves var `package'.
       (tinydebian-bts-mail-type-macro "ITP"
-                                      arg-pkg (tinydebian-bts-email-submit) nil
-                                      (insert tinydebian--rfp-template)
-                                      (replace "\\(<package>.*\\)"    package nil 'all)
-                                      (replace "\\(<homepage:.*\\)"   homepage)
-                                      (replace "\\(<license:.*\\)"    license)
-                                      (replace "\\(<short desc>.*\\)" desc)
-                                      (mail-position-on-field "Subject")
-                                      (beginning-of-line)
-                                      (replace ": \\(.*\\)"
-                                               (format "%s: %s -- %s"
-                                                       (if itp
-                                                           "ITP"
-                                                         "RFP")
-                                                       package desc)
-                                               (point))
-                                      (goto-char (point-max))
-                                      (run-hooks 'tinydebian--rfp-hook)))))
+	  arg-pkg (tinydebian-bts-email-submit) nil
+	(insert tinydebian--rfp-template)
+	(replace "\\(<package>.*\\)"    package nil 'all)
+	(replace "\\(<homepage:.*\\)"   homepage)
+	(replace "\\(<license:.*\\)"    license)
+	(replace "\\(<short desc>.*\\)" desc)
+	(mail-position-on-field "Subject")
+	(beginning-of-line)
+	(replace ": \\(.*\\)"
+		 (format "%s: %s -- %s"
+			 (if itp
+			     "ITP"
+			   "RFP")
+			 package desc)
+		 (point))
+	(goto-char (point-max))
+	(run-hooks 'tinydebian--rfp-hook)))))
 
 ;;; ----------------------------------------------------------------------
 ;;;

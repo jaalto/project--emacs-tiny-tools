@@ -1,3 +1,8 @@
+2011-03-05 Sat  Jari Aalto  <jari.aalto@cante.net>
+
+	* tiny/tinydebian.el (tinydebian-bts-mail-type-rfp): Fix
+	indentation. Clarify docstring.
+
 2011-01-26 Wed  Jari Aalto  <jari.aalto@cante.net>
 
 	* tiny/tinydesk.el (top level): remove folding marks.
