@@ -532,12 +532,14 @@ fixed
     "buggy"
     "dead upstream"                     ; No upstream at all an more
     "FTBFS"                             ; Fails to build from source
+    "non-free"				; License problem (DFSG)
     "old"
     "orphaned (no maintainer)"
     "other alternatives"
     "rc-buggy"
     "rquested by upstream"              ; Upstream has requested removal
     "transitional pkg"
+    "unredistributable"			; Incompatible Licenses (SSL + GPL...)
     "unmaintained"
     )
   "*List of PAckage removal keywords.

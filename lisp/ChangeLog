@@ -1,3 +1,8 @@
+2011-03-18 Fri  Jari Aalto  <jari.aalto@cante.net>
+
+	* tiny/tinydebian.el (tinydebian--removal-keyword-list):
+	Add 'non-free', 'unredistributable'.
+
 2011-03-05 Sat  Jari Aalto  <jari.aalto@cante.net>
 
 	* tiny/tinydebian.el (tinydebian-bts-mail-type-rfp): Fix
