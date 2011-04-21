@@ -1,3 +1,10 @@
+2011-04-21  Jari Aalto  <jari.aalto@cante.net>
+
+	* tiny/tinydebian.el (tinydebian-mail-mode-debian-address-bug-p):
+	New.
+	(tinydebian-mail-mode-debian-address-bug-toggle): Improve interactive
+	use. Use bug number found from current line.
+
 2011-03-18 Fri  Jari Aalto  <jari.aalto@cante.net>
 
 	* tiny/tinydebian.el (tinydebian--removal-keyword-list):

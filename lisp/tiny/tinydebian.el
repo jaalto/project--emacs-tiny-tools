@@ -4234,12 +4234,32 @@ In interactive call, toggle conrol address on and off."
 
 ;;; ----------------------------------------------------------------------
 ;;;
+(defun tinydebian-mail-mode-debian-address-bug-p (bug)
+  "Return field name if BUG address exists."
+  (let ((to  (mail-fetch-field "To"))
+	(cc  (mail-fetch-field "Cc"))
+	(bcc (mail-fetch-field "Bcc"))
+	(re  (format "%s@\\|%s-\\(close\\|quiet\\)@" bug bug))
+    (cond
+     ((string-match  re to)
+      "To")
+     ((string-match  re cc)
+      "Cc")
+     ((string-match  re bcc)
+      "Bcc"))))
+
+;;; ----------------------------------------------------------------------
+;;;
 (defun tinydebian-mail-mode-debian-address-bug-toggle (bug &optional remove)
   "Add BUG address or optionally REMOVE."
   (interactive
-   (list
-    (tinydebian-mail-mode-debian-address-ask-bug)
-    current-prefix-arg))
+   (let ((now (or (tinydebian-bug-nbr-at-current-point)
+		  (tinydebian-bug-nbr-current-line)))
+	 bug)
+     (list
+      (or now
+	  (tinydebian-mail-mode-debian-address-ask-bug))
+      current-prefix-arg)))
   (let ((re (format "%s@\\|%s-\\(close\\|quiet\\)@" bug bug)))
     (when (interactive-p)
       (when (and (null remove)
