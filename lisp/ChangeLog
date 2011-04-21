@@ -1,4 +1,4 @@
-2011-04-21  Jari Aalto  <jari.aalto@cante.net>
+2011-04-21 Thu  Jari Aalto  <jari.aalto@cante.net>
 
 	* tiny/tinydebian.el (tinydebian-mail-mode-debian-address-bug-p):
 	New.
@@ -14,6 +14,15 @@
 
 	* tiny/tinydebian.el (tinydebian-bts-mail-type-rfp): Fix
 	indentation. Clarify docstring.
+
+2011-02-10 Thu  Jari Aalto  <jari.aalto@cante.net>
+
+	* tiny/tinycygwin.el (tinycygwin-executable-find): Add
+	`file-directory-p' check.
+	(tinycygwin--os-type): Add system-type `cygwin'.
+	(tinycygwin-bug-report-mail-insert-environment): Do not
+	print --Envvironment tag if there is nothing to report.
+	(tinycygwin--sysinfo-environment-list): Fix typo.
 
 2011-01-26 Wed  Jari Aalto  <jari.aalto@cante.net>
 
