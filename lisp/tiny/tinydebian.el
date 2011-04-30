@@ -4246,7 +4246,7 @@ In interactive call, toggle conrol address on and off."
      ((string-match  re cc)
       "Cc")
      ((string-match  re bcc)
-      "Bcc"))))
+      "Bcc")))))
 
 ;;; ----------------------------------------------------------------------
 ;;;
