@@ -2,6 +2,22 @@
 
 	* tiny/tinydebian.el (tinydebian-mail-mode-debian-address-bug-p):
 	Add missing paren.
+	(tinydebian-bts-generic-bug-subject): New. Support Emacs BTS.
+	(tinydebian-bts-mail-type-reply): Use `tinydebian-bts-generic-bug-subject'.
+	(tinydebian-debian-url-bug-initialize-p): Add BTS parameter.
+	(tinydebian-debian-url-bug-info): Add BTS parameter.
+	(tinydebian-debian-url-bug-initialize): Add BTS parameter. Add Emacs BTS
+	support.
+	(tinydebian-debian-bug-info-message-all-macro): Add BTS parameter.
+	(tinydebian-debian-bug-info-macro): Add BTS parameter.
+	(tinydebian-debian-bug-info-all-insert): Add BTS parameter.
+	(tinydebian-bts-mail-ctrl-retitle): Add BTS parameter.
+	(tinydebian-bts-mail-type-reply): Add BTS parameter.
+	(tinydebian-bts-mail-type-it-nmu): Add BTS parameter.
+	(tinydebian-bts-mail-type-ita): Add BTS parameter.
+	(tinydebian-debian-bug-info-subject-message): Add BTS parameter.
+	(tinydebian-debian-bug-info-subject-insert): Add BTS parameter.
+	(tinydebian-bts-mail-type-reply): Always consult URL for the subject.
 
 2011-04-21 Thu  Jari Aalto  <jari.aalto@cante.net>
 
@@ -260,7 +276,7 @@
 	Fix format.
 	(ti::compat-activate-region): Byte compile hide for
 	`zmacs-regions'.
-	(ti::string-mangle): devel Remove `char-to-int'.
+	(ti::string-mangle): Remove `char-to-int'.
 
 2010-12-12  Jari Aalto  <jari.aalto@cante.net>
 

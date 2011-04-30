@@ -822,7 +822,7 @@ E.g. in `gnus-summary-mode':
 ;; FIXME: Not yet used
 (defvar tinydebian--bts-compose-type
   "Dynamically bound variable which is set during BTS Control actions.
-Values: nil (Debian), 'emacs', 'launchpad'.")
+Values: nil ('debian'), 'emacs', 'launchpad'.")
 
 (defconst tinydebian--debian-url-page-alist
   (list
@@ -1828,6 +1828,7 @@ Judging from optional BUFFER."
                    "emacs")))
       (tinydebian-bts-email-compose
        type bug bts))))
+
 
 ;; FIXME Move elsewhere
 ;;; ----------------------------------------------------------------------
@@ -3504,8 +3505,9 @@ Were:
 
 ;;; ----------------------------------------------------------------------
 ;;;
-(defun tinydebian-debian-url-bug-initialize-p (bug)
-  "Check if bug is on `tinydebian--buffer-http-get'."
+(defun tinydebian-debian-url-bug-initialize-p (bug &optional bts)
+  "Check if bug is on `tinydebian--buffer-http-get'.
+Optionally from debbugs BTS which defaults to \"debian\"."
   (tinydebian-debian-url-with
     (goto-char (point-min))
     (cond
@@ -3519,25 +3521,32 @@ Were:
 
 ;;; ----------------------------------------------------------------------
 ;;;
-(defun tinydebian-debian-url-bug-initialize (bug)
+(defun tinydebian-debian-url-bug-initialize (bug &optional bts)
   "HTTP GET Debian BUG to buffer `tinydebian--buffer-http-get'.
-After that various tinydebian-debian-parse-bts-bug-* functions can be called."
+After that various tinydebian-debian-parse-bts-bug-* functions can be called.
+Optionally from debbugs BTS which defaults to \"debian\"."
   (tinydebian-debian-url-with
     (erase-buffer)
-    (insert (tinydebian-browse-url-http-get
-             (tinydebian-debian-bts-url-compose
-              (if (numberp bug)
-                  (number-to-string bug)
-                bug))))
+    (insert
+     (tinydebian-browse-url-http-get
+      (cond
+       ((or (null bts)
+	    (string= "debian" bts))
+	(tinydebian-debian-bts-url-compose bug))
+       ((string= "emacs" bts)
+	(tinydebian-gnu-bts-bug-url-compose bug))
+       (t
+	(error "Unknown debuuges BTS for http call '%s'" bts)))))
     (if (eq (point-min) (point-max))
         (error "TinyDebian: Failed to fetch Bug %s" bug))))
 
 ;;; ----------------------------------------------------------------------
 ;;;
-(defun tinydebian-debian-url-bug-info (bug)
-  "Fetch BUG and return `tinydebian-debian-parse-bts-bug-info-raw'."
-  (unless (tinydebian-debian-url-bug-initialize-p bug)
-    (tinydebian-debian-url-bug-initialize bug))
+(defun tinydebian-debian-url-bug-info (bug &optional bts)
+  "Fetch BUG and return `tinydebian-debian-parse-bts-bug-info-raw'.
+Optionally from debbugs BTS which defaults to \"debian\"."
+  (unless (tinydebian-debian-url-bug-initialize-p bug bts)
+    (tinydebian-debian-url-bug-initialize bug bts))
   (tinydebian-debian-url-with
     (tinydebian-debian-parse-bts-bug-info-raw)))
 
@@ -4688,15 +4697,16 @@ changes, the bug must be unarchived first."
 ;;; ----------------------------------------------------------------------
 ;;;
 (put 'tinydebian-debian-bug-info-macro 'edebug-form-spec '(body))
-(put 'tinydebian-debian-bug-info-macro 'lisp-indent-function 1)
-(defmacro tinydebian-debian-bug-info-macro (bug &rest body)
+(put 'tinydebian-debian-bug-info-macro 'lisp-indent-function 2)
+(defmacro tinydebian-debian-bug-info-macro (bug bts &rest body)
   "Get BUG to variable `info', define function `field', and run BODY.
-See `tinydebian-debian-parse-bts-bug-info-raw' for INFO structure."
+See `tinydebian-debian-parse-bts-bug-info-raw' for INFO structure.
+Optionally from debbugs BTS which defaults to \"debian\"."
   `(progn
      (if (or (not (stringp ,bug))
              (not (string-match "^[0-9][0-9]+$" ,bug)))
          (error "Invalid bug number: %s" ,bug))
-     (let ((info (tinydebian-debian-url-bug-info ,bug)))
+     (let ((info (tinydebian-debian-url-bug-info ,bug ,bts)))
        (flet ((field (x)
                      (cdr-safe
                       (assoc x info))))
@@ -4715,10 +4725,11 @@ See `tinydebian-debian-parse-bts-bug-info-raw' for INFO structure."
 ;;; ----------------------------------------------------------------------
 ;;;
 (put 'tinydebian-debian-bug-info-message-all-macro 'edebug-form-spec '(body))
-(put 'tinydebian-debian-bug-info-message-all-macro 'lisp-indent-function 1)
-(defmacro tinydebian-debian-bug-info-message-all-macro (bug &rest body)
-  "Set `str' tor BUG information string and run BODY."
-  `(tinydebian-debian-bug-info-macro ,bug
+(put 'tinydebian-debian-bug-info-message-all-macro 'lisp-indent-function 2)
+(defmacro tinydebian-debian-bug-info-message-all-macro (bug bts &rest body)
+  "Set `str' tor BUG information string and run BODY.
+Optionally from debbugs BTS which defaults to \"debian\"."
+  `(tinydebian-debian-bug-info-macro ,bug ,bts
      (let (str)
        (setq str
              (format
@@ -4735,11 +4746,42 @@ See `tinydebian-debian-parse-bts-bug-info-raw' for INFO structure."
 
 ;;; ----------------------------------------------------------------------
 ;;;
-(defun tinydebian-debian-bug-info-all-insert (bug)
+(defun tinydebian-bts-generic-bug-subject (bug &optional bts buffer)
+  "Return BUG subject for optional BTS.
+If BTS is nil, the consult BUFFER or `current-buffer' for BTS type."
+  (with-current-buffer (or buffer (current-buffer))
+    ;; FIXME launchpad
+    (let (subject)
+      (cond
+       ((or (not (stringp bts))
+	    (string= "debian" bts)
+	    (string= "emacs" bts))
+	(tinydebian-debian-bug-info-macro bug bts
+	  (let ((fsub (field "subject"))
+		(fpkg (field "package"))
+		(pkg ""))
+	    ;; Check '<package>: <message>' -- the standard bug report format
+	    ;; Add one if it's not in bug report by default.
+	    (unless (string-match fpkg fsub)
+	      (setq pkg (format "%s: " fpkg)))
+	    (setq subject
+		  (format "Re: Bug#%s: %s%s"
+			  bug
+			  pkg
+			  fsub)))))
+       (t
+	;; FIXME: add support for more BTS
+	))
+      subject)))
+
+;;; ----------------------------------------------------------------------
+;;;
+(defun tinydebian-debian-bug-info-all-insert (bug &optional bts)
   "Insert BUG information at point (after word).
-If `inteactive-p' and `buffer-read-only', display infromation only."
+If `inteactive-p' and `buffer-read-only', display infromation only.
+Optionally from debbugs BTS which defaults to \"debian\"."
   (interactive (list (tinydebian-bts-mail-ask-bug-number)))
-  (tinydebian-debian-bug-info-message-all-macro bug
+  (tinydebian-debian-bug-info-message-all-macro bug bts
     (if (and (interactive-p)
              buffer-read-only)
         (message str)
@@ -4756,11 +4798,12 @@ If `inteactive-p' and `buffer-read-only', display infromation only."
 
 ;;; ----------------------------------------------------------------------
 ;;;
-(defun tinydebian-debian-bug-info-subject-insert (bug)
+(defun tinydebian-debian-bug-info-subject-insert (bug &optional bts)
   "Insert bug subject at point (after word).
-If `inteactive-p' and `buffer-read-only', display infromation only."
+If `inteactive-p' and `buffer-read-only', display infromation only.
+Optionally from BTS which defaults to \"debian\"."
   (interactive (list (tinydebian-bts-mail-ask-bug-number)))
-  (tinydebian-debian-bug-info-macro bug
+  (tinydebian-debian-bug-info-macro bug bts
     (let ((subject (field "subject")))
       (if (and (interactive-p)
                buffer-read-only)
@@ -4770,10 +4813,11 @@ If `inteactive-p' and `buffer-read-only', display infromation only."
 
 ;;; ----------------------------------------------------------------------
 ;;;
-(defun tinydebian-debian-bug-info-subject-message (bug)
-  "Display BUG title (subject)."
+(defun tinydebian-debian-bug-info-subject-message (bug &optional bts)
+  "Display BUG title (subject).
+Optionally from BTS which defaults to \"debian\"."
   (interactive (list (tinydebian-bts-mail-ask-bug-number)))
-  (tinydebian-debian-bug-info-macro bug
+  (tinydebian-debian-bug-info-macro bug bts
     (message (field "subject"))))
 
 ;;; ----------------------------------------------------------------------
@@ -5304,7 +5348,8 @@ Variables bound during macro (can all be nil):
 ;;; ----------------------------------------------------------------------
 ;;;
 (defun tinydebian-bts-mail-type-ita (bug)
-  "Send an ITA request."
+  "Send an ITA request.
+Optionally from BTS which defaults to \"debian\"."
   (interactive (list (tinydebian-bts-mail-ask-bug-number "ITA")))
   (tinydebian-bts-mail-type-macro
       "ITA"
@@ -5321,10 +5366,10 @@ thanks
         (let (fsub
               fpkg)
           (unless package
-            (tinydebian-debian-bug-info-macro bug
+            (tinydebian-debian-bug-info-macro bug bts
               (setq package (field "package"))))
           (unless description
-            (tinydebian-debian-bug-info-macro bug
+            (tinydebian-debian-bug-info-macro bug bts
               (let ((str (field "subject")))
                 (setq description
                       (replace-regexp-in-string
@@ -5350,6 +5395,8 @@ thanks
 ;;;
 (defun tinydebian-bts-mail-type-it-nmu (bug)
   "Send an ITN (Intent to NMU) request.
+Optionally from BTS which defaults to \"debian\".
+
 In order to do a 'Non Maintainer Upload', it is polite to announce
 the intent to the BTS and wait a while to see if the maintainer is
 reponsive or working on the package.
@@ -5359,7 +5406,7 @@ See documents:
   http://www.debian.org/doc/developers-reference/pkgs.html#nmu (Official)
   http://wiki.debian.org/NmuDep (Complementary)"
   (interactive (list (tinydebian-bts-mail-ask-bug-number "ITN")))
-  (tinydebian-debian-bug-info-macro bug
+  (tinydebian-debian-bug-info-macro bug bts
     (let ((str (field "subject")))
       ;;  package: <message string>
       (if (string-match "^[a-z][^:]+: *\\(.+\\)" str)
@@ -5402,35 +5449,30 @@ thanks
 
 ;;; ----------------------------------------------------------------------
 ;;;
-(defun tinydebian-bts-mail-type-reply (bug)
-  "Reply to bug found at current point or line"
+(defun tinydebian-bts-mail-type-reply (bug &optional bts)
+  "Reply to bug found at current point or line
+Optionally from BTS which defaults to \"debian\"."
   (interactive (list (tinydebian-bts-mail-ask-bug-number "Reply to bug")))
-  (let ((subject (my-tinydebian-subject-any))
-        tinydebian--bts-compose-type)
-    (unless (and (stringp bug)
-		 (stringp subject)
-                 (string-match bug subject))
-      ;; User gave different bug number than where the currenly line is.
-      ;; Can't use that subject as is.
-      (tinydebian-debian-bug-info-macro bug
-        (let ((fsub (field "subject"))
-              (fpkg (field "package"))
-              (pkg ""))
-          ;; Check '<package>: <message>' standard bug report format
-          ;; Add one if it's not in bug report by default.
-          (unless (string-match fpkg fsub)
-            (setq pkg (format "%s: " fpkg)))
-          (setq subject
-                (format "Re: Bug#%s: %s%s"
-                        bug
-                        pkg
-                        fsub)))))
+  (let ((subject) ;; (my-tinydebian-subject-any))
+        tinydebian--bts-compose-type  ;; FIXME: should be use this instead of 'bts'
+	bts)
+    (if (tinydebian-emacs-bug-type-p)
+	(setq bts "emacs"))
+
+    ;; (unless (and (stringp bug)
+    ;; 		 (stringp subject)
+    ;;              (string-match (regexp-quote bug) subject))
+    ;;   ;; User gave different bug number. Read subject from BTS.
+    ;;   (setq subject
+    ;; 	    (tinydebian-bts-generic-bug-subject bug bts)))
+    (setq subject
+	  (tinydebian-bts-generic-bug-subject bug bts))
     (tinydebian-bts-mail-compose-macro
      bug
      "reply"
      "bug"
      subject
-     (tinydebian-bts-email-compose bug)
+     (tinydebian-bts-email-compose bug nil bts)
      (mail-position-on-field "CC")
      (insert (tinydebian-bts-email-compose (format "%s-submitter" bug)))
      (goto-char (point-max))
@@ -5935,13 +5977,14 @@ See http://wiki.debian.org/ftpmaster_Removals"
 
 ;;; ----------------------------------------------------------------------
 ;;;
-(defun tinydebian-bts-mail-ctrl-retitle (bug title)
-  "Compose BTS control message to a BUG and change TITLE."
+(defun tinydebian-bts-mail-ctrl-retitle (bug title &optional bts)
+  "Compose BTS control message to a BUG and change TITLE.
+Optionally from BTS which defaults to \"debian\"."
   (interactive
    (let ((title (tinydebian-bts-mail-title-read))
          (bug   (tinydebian-bts-mail-ask-bug-number)))
      (unless (string-match bug title)
-       (tinydebian-debian-bug-info-macro bug
+       (tinydebian-debian-bug-info-macro bug bts
          (setq title (field "subject"))))
      (list
       bug
