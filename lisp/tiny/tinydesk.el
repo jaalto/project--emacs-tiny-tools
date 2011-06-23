@@ -1001,7 +1001,7 @@ Example:
 	(forward-line 1))
       (set-buffer-modified-p nil)
       (and verb                         ;this make take a while...
-           (message "TinyDesk: Marking files...ok")))))
+           (message "TinyDesk: Marking files...ok"))))))
 
 ;;; ----------------------------------------------------------------------
 ;;;

@@ -1,3 +1,7 @@
+2011-06-23 Thu  Jari Aalto  <jari.aalto@cante.net>
+
+	* tiny/tinydesk.el (tinydesk-mark-region): Add missing paren.
+
 2011-04-30 Sat  Jari Aalto  <jari.aalto@cante.net>
 
 	* tiny/tinydebian.el (tinydebian-mail-mode-debian-address-bug-p):
