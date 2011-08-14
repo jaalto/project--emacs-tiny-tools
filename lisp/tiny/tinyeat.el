@@ -4,7 +4,7 @@
 
 ;;{{{ Documentation
 
-;; Copyright (C)    1995-2010 Jari Aalto
+;; Copyright (C)    1995-2011 Jari Aalto
 ;; Keywords:        extensions
 ;; Author:          Jari Aalto
 ;; Maintainer:      Jari Aalto
@@ -91,7 +91,7 @@
 ;;          `Meta' `C-y'. (Std Emacs in `overwrite-mode' doesn't allow you to
 ;;          yank and overwrite at the same time.)
 ;;
-;;  Today's suggestion
+;;  Hint for the Minibuffer
 ;;
 ;;      If using Windowed Emacs and the prompt is at minibuffer and
 ;;      you would like to clean the whole prompt, hit key
@@ -185,22 +185,28 @@
 ;;      retired (vanished, vaporized) from the buffer, remember, there
 ;;      is no need to panic. Emacs has friendly `undo' (C-_ or C-x u).
 ;;
-;;  Default keybindings
+;;  Some of the Default keybindings
 ;;
 ;;      Line delete
 ;;
 ;;          <<           >>           <<>>
-;;          M-k          C-k          C-M-k or C-s-k
+;;          M-k          C-k          C-M-k or C-S-k
 ;;                                    To zap whole line
 ;;
 ;;      Chunk delete: words, spaces, symbols ...
 ;;
-;;          <            >            <>                 \//\
+;;          <            >            <>                 \/ /\
 ;;          M-Backspace  C-backspace  S-Backspace        C-M-d  / C-S-backspace
 ;;                       M-d          Delete whole word  Paragraph delete
 ;;
+;;      Other
+;;
+;;          C-S-y        tinyeat-yank-overwrite
+;;          C-S-SPC      tinyeat-join-lines
+;;          M-SPC        tinyeat-delete-whole-word
+;;
 ;;      These function have no defult binding in `tinyeat-install', but
-;;      you might find suitable keys for them:
+;;      you might consider finding a suitable key bindings for them:
 ;;
 ;;         M-x tinyeat-erase-buffer
 ;;         M-x tinyeat-kill-buffer-lines-main
@@ -314,12 +320,10 @@ Normally word is terminated by whitespace or newlines."
 
   ;; C-M-k: Works both in Windowed and non-Windowed Emacs. Unfortunately in
   ;; windowed Linux/Gnome C-M-k runs "Lock Screen", we define C-S-k
-  ;; asbackup.
+  ;; as a backup.
 
   (global-set-key "\C-\M-k"             'tinyeat-zap-line) ; kill-sexp
   (global-set-key (kbd "C-S-k")         'tinyeat-zap-line)
-
-  (global-set-key (kbd "C-S-y")         'tinyeat-yank-overwrite)
 
   (global-set-key (kbd "C-S-y")         'tinyeat-yank-overwrite)
   (global-set-key (kbd "C-S-SPC")	'tinyeat-join-lines)
@@ -351,7 +355,7 @@ Normally word is terminated by whitespace or newlines."
 
   (unless (ti::compat-window-system)
     (tinyeat-install-default-bindings-terminal))
-  (message "TinyEat: ** [WARN] some existing keys were bound to TinyEat functions."))
+  (message "TinyEat: [INSTALL] some existing keys were bound to TinyEat functions."))
 
 ;;; ----------------------------------------------------------------------
 ;;;
