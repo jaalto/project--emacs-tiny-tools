@@ -1,3 +1,9 @@
+2011-09-20 Tue  Jari Aalto  <jari.aalto@cante.net>
+
+	* tiny/tinydebian.el (tinydebian-bug-nbr-string):
+	Add Debian bug URL detection. Tighten plain number regexp not
+	to match YYYY-MM-DD
+
 2011-06-23 Thu  Jari Aalto  <jari.aalto@cante.net>
 
 	* tiny/tinydesk.el (tinydesk-mark-region): Add missing paren.

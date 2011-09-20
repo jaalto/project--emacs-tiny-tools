@@ -2797,6 +2797,9 @@ Bug#NNNN: O: package -- description."
   (when (stringp str)
     (or (and (string-match "#\\([0-9]+\\)" str) ;; Bug#NNNN Debian
              (match-string 1 str))
+	;; http://.../bugreport.cgi?bug=521846
+        (and (string-match "[?]bug=\\([0-9]+\\)" str)
+             (match-string 1 str))
         ;; [Bug 192841] Ubuntu
         (and (string-match "[[]Bug \\([0-9]+\\)[]]" str)
              (match-string 1 str))
@@ -2822,8 +2825,8 @@ Bug#NNNN: O: package -- description."
                                    "\\([0-9][0-9][0-9][0-9][0-9][0-9]\\)\\>")
                            str)
              (match-string 1 str))
-        (and (string-match          ;; Plain NUMBER
-              "^[ \t\r\n]*\\([0-9]+\\)" str)
+        (and (string-match          ;; long NUMBER
+              "^[ \t\r\n]*#?\\([0-9][0-9][0-9][0-9]+\\)\\(?:[ \t\r\n]\\|$\\)" str)
              (match-string 1 str)))))
 
 ;;; ----------------------------------------------------------------------
