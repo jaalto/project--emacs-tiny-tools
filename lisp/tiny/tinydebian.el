@@ -2800,6 +2800,9 @@ Bug#NNNN: O: package -- description."
 	;; http://.../bugreport.cgi?bug=521846
         (and (string-match "[?]bug=\\([0-9]+\\)" str)
              (match-string 1 str))
+	;; http://bugzilla.abisource.com/show_bug.cgi?id=12984
+        ;; (and (string-match "http://.*bugzilla.*=\\([0-9]+\\)" str)
+        ;;    (match-string 1 str))
         ;; [Bug 192841] Ubuntu
         (and (string-match "[[]Bug \\([0-9]+\\)[]]" str)
              (match-string 1 str))
@@ -4226,7 +4229,9 @@ Optionally REMOVE. In interactive call, toggle TYPE of address on and off."
                (tinydebian-mail-address-match-type-p type))
       (setq remove t)))
   (save-excursion
-    (let ((email (tinydebian-bts-generic-email-control)))
+    (let ((email (if (and type bug)
+		     (tinydebian-bts-email-compose type bug)
+		   (tinydebian-bts-generic-email-control))))r
       (cond
        (remove
         (tinydebian-mail-mode-debian-address-email-remove email))

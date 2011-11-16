@@ -1,3 +1,14 @@
+2011-11-16 Wed  Jari Aalto  <jari.aalto@cante.net>
+
+	* tiny/tinymailbox.el (tinymailbox--header-begin-regexp):
+	Rename from `tinymailbox:-header-begin-regexp'.
+
+	* tiny/tinypath.el (tinypath-cache-display): Correct docstring
+	variable name `tinypath--cache'.
+
+	* tiny/tinyurl.el (tinyurl-dispatcher-1): correct message to
+	announce `tinyurl--validate-hook"'.
+
 2011-09-20 Tue  Jari Aalto  <jari.aalto@cante.net>
 
 	* tiny/tinydebian.el (tinydebian-bug-nbr-string):

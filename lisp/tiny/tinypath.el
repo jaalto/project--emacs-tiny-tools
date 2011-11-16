@@ -5064,7 +5064,7 @@ References:
 ;;; ----------------------------------------------------------------------
 ;;;
 (defun tinypath-cache-display (&optional insert)
-  "Display `tinypath:-cache' and `tinypath--cache-level-two'.
+  "Display `tinypath--cache' and `tinypath--cache-level-two'.
 Optionally INSERT."
   (interactive "P")
   (if tinypath--cache-level-two

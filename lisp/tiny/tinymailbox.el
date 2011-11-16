@@ -196,7 +196,7 @@ The point is at the beginning of message."
 (defvar tinymailbox--last-file nil
   "Last file used by `tinymailbox-message-to-folder'.")
 
-(defvar tinymailbox:-header-begin-regexp
+(defvar tinymailbox--header-begin-regexp
   "\n\n[A-Z][a-z]: +\\|^From "
   "Regexp of beginning of message headers")
 
@@ -533,7 +533,7 @@ Ignore big mailboxes."
 ;;;
 (defsubst tinymailbox-message-move-beginning ()
   "Move to message beginning."
-  (re-search-backward tinymailbox:-header-begin-regexp  nil t))
+  (re-search-backward tinymailbox--header-begin-regexp  nil t))
 
 ;;; ----------------------------------------------------------------------
 ;;;
@@ -820,7 +820,7 @@ Created function arguments: (&optional arg)"
 (defun tinymailbox-begin (&optional backward)
   "Move to next message begin. Optionally BACKWARD."
   (interactive "P")
-  (let ((re tinymailbox:-header-begin-regexp)
+  (let ((re tinymailbox--header-begin-regexp)
 	case-fold-search)
     (cond
      (backward

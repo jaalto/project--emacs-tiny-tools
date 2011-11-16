@@ -1776,7 +1776,7 @@ References:
            (not (eq t (setq ret (run-hook-with-args-until-success
                                  'tinyurl--validate-hook url)))))
       (if (not (stringp ret))
-          (message "TinyUrl: url ignored. See tinyurl:-url-validate-hook")
+          (message "TinyUrl: url ignored. See tinyurl--validate-hook")
         (message ret)))
      (t ;; it's ok
       (when current-prefix-arg
