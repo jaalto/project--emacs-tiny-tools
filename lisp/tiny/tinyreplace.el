@@ -40,7 +40,8 @@
 ;;      (autoload 'tinyreplace-replace-forward          "tinyreplace" "" t)
 ;;      (autoload 'tinyreplace-replace-region           "tinyreplace" "" t)
 ;;      (autoload 'tinyreplace-replace-over-files       "tinyreplace" "" t)
-;;      (autoload 'tinyreplace-define-keys-compile-map  "tinyreplace" "" t)
+;;      (autoload 'tinyreplace-define-keys-local-map    "tinyreplace" "" t)
+;;      ;; In new Emacs, this is in fact *grep* buffer
 ;;      (autoload 'tinyreplace-replace-over-files-compile-buffer "tinyreplace" "" t)
 ;;
 ;; Or you can load this file directly:
@@ -467,18 +468,18 @@ Special commands:
       (let (buffer (get-buffer "*compilation*"))
 	(when buffer
 	  (with-current-buffer buffer
-	    (tinyreplace-define-keys-compile-map)))))
+	    (tinyreplace-define-keys-local-map)))))
     (when (featurep 'grep)
       (let (buffer (get-buffer "*grep*"))
 	(when buffer
 	  (with-current-buffer buffer
-	    (tinyreplace-define-keys-compile-map)))))
+	    (tinyreplace-define-keys-local-map)))))
     (global-set-key "\M-&" 'tinyreplace-menu)))
 
 ;;; ----------------------------------------------------------------------
 ;;;
 ;;;###autoload
-(defun tinyreplace-define-keys-compile-map ()
+(defun tinyreplace-define-keys-local-map ()
   "Define key binding M-& in local map. For compilation like modes."
   (interactive)
   (local-set-key "\M-&" 'tinyreplace-replace-over-files-compile-buffer))
@@ -487,7 +488,7 @@ Special commands:
 ;;;
 ;;;###autoload
 (defun tinyreplace-install-hooks (&optional uninstall)
-  "Install or UNINSTALL `tinyreplace-define-keys-compile-map' into hooks.
+  "Install or UNINSTALL `tinyreplace-define-keys-local-map' into hooks.
 See:
   compilation-mode-hook
   compilation-minor-mode-hook
@@ -495,13 +496,13 @@ See:
   (interactive "P")
   (cond
    (uninstall
-    (add-hook 'compilation-mode-hook 'tinyreplace-define-keys-compile-map)
-    (add-hook 'compilation-minor-mode-hook 'tinyreplace-define-keys-compile-map)
-    (add-hook 'grep-mode-hook 'tinyreplace-define-keys-compile-map))
+    (add-hook 'compilation-mode-hook 'tinyreplace-define-keys-local-map)
+    (add-hook 'compilation-minor-mode-hook 'tinyreplace-define-keys-local-map)
+    (add-hook 'grep-mode-hook 'tinyreplace-define-keys-local-map))
    (t
-    (remove-hook 'compilation-mode-hook 'tinyreplace-define-keys-compile-map)
-    (remove-hook 'compilation-minor-mode-hook 'tinyreplace-define-keys-compile-map)
-    (remove-hook 'grep-mode-hook 'tinyreplace-define-keys-compile-map))))
+    (remove-hook 'compilation-mode-hook 'tinyreplace-define-keys-local-map)
+    (remove-hook 'compilation-minor-mode-hook 'tinyreplace-define-keys-local-map)
+    (remove-hook 'grep-mode-hook 'tinyreplace-define-keys-local-map))))
 
 ;;; ----------------------------------------------------------------------
 ;;;###autoload
