@@ -1,15 +1,14 @@
-;;; tinymy.el --- Collection of simple solutions.
+;;; tinymy.el --- Collection of simple utilities
 
 ;; This file is not part of Emacs
 
 ;;{{{ Id
 
-;; Copyright (C)    1995-2007 Jari Aalto
+;; Copyright (C)    1995-2010 Jari Aalto
 ;; Keywords:        tools
 ;; Author:          Jari Aalto
 ;; Maintainer:      Jari Aalto
 ;;
-;; To get information on this program, call M-x tinymy-version.
 ;; Look at the code with folding.el
 
 ;; COPYRIGHT NOTICE
@@ -25,9 +24,7 @@
 ;; for more details.
 ;;
 ;; You should have received a copy of the GNU General Public License
-;; along with program. If not, write to the
-;; Free Software Foundation, Inc., 51 Franklin Street, Fifth Floor,
-;; Boston, MA 02110-1301, USA.
+;; along with this program. If not, see <http://www.gnu.org/licenses/>.
 ;;
 ;; Visit <http://www.gnu.org/copyleft/gpl.html> for more information
 
@@ -37,17 +34,17 @@
 ;;; Install:
 
 ;; ....................................................... &t-install ...
-;; Put this file on your Emacs-Lisp load path, add following into your
+;; Put this file on your Emacs-Lisp `load-path', add following into your
 ;; ~/.emacs startup file.
 ;;
 ;;      (require 'tinymy)
 ;;      (tinymy-compile-run-command-advice)  ;; Activate smart M-x compile
 ;;
 ;; If you get key binding conflict when you load this package, either
-;; relocate keys, modify `tinymy-:define-key-table' or use forced bindings
+;; relocate keys, modify `tinymy--define-key-table' or use forced bindings
 ;; by adding this statement prior `require' command.
 ;;
-;;      (setq tinymy-:define-key-force t)
+;;      (setq tinymy--define-key-force t)
 ;;
 ;; AUTOLOAD SETUP INSTRUCTIONS
 ;;
@@ -86,20 +83,19 @@
 ;; _source_ code of `tinymy-define-keys' which is run when package loads.
 ;; Function overrides some default Emacs key bindings.
 ;;
-;;      tinymy-:define-key-table
+;;      tinymy--define-key-table
 ;;
 ;;      ;;  Redefine hook so that it doesn't
 ;;      ;;  override Emacs keys.  Define them somewhere else.
 ;;
-;;      (add-hook 'tinymy-:load-hook 'tinymy-install)
-;;      (add-hook 'tinymy-:load-hook 'tinymy-alias)
+;;      (add-hook 'tinymy--load-hook 'tinymy-install)
+;;      (add-hook 'tinymy--load-hook 'tinymy-alias)
 ;;
 ;;   If you have any questions, use 'submit' function. In case of error
 ;;   or misbehavior, turn on the debug too and send the debug result and
 ;;   describe what you did and where went wrong.
 ;;
 ;;      M-x tinymy-debug-toggle
-;;      M-x tinymy-submit-bug-report
 
 ;;}}}
 ;;{{{ Documentation
@@ -149,7 +145,7 @@
 ;;      o   Rename any buffer with one key `C-z' `n' to be able to launch
 ;;          e.g. new *shell* or *mail* buffer.
 ;;      o   Scroll command goes to window end/beginning and does not scroll
-;;          immediately. See variable `tinymy-:scroll-mode' for more.
+;;          immediately. See variable `tinymy--scroll-mode' for more.
 ;;      o   Trim trailing whites paces from the buffer when file
 ;;          is saved. This featue is automatically disabled if
 ;;          whitespace.el is noticed.
@@ -159,8 +155,8 @@
 ;;      Compile
 ;;
 ;;      o   Guess compile command by looking at the buffer content
-;;          Configure variable `tinymy-:compile-table' and
-;;          `tinymy-:compile-command-c-code'. The compile command you
+;;          Configure variable `tinymy--compile-table' and
+;;          `tinymy--compile-command-c-code'. The compile command you
 ;;          chose is buffer local and lasts until you change it.
 ;;          This is different than hitting M-x compile, because compile
 ;;          Does not "remember" each buffer's correct compile command.
@@ -217,7 +213,7 @@
 ;;      Shell
 ;;
 ;;      o   Easy shar/tar/UU commands. configure variables
-;;          `tinymy-:shar-command' and `tinymy-:tar-command'
+;;          `tinymy--shar-command' and `tinymy--tar-command'
 ;;
 ;;      vc
 ;;
@@ -239,17 +235,17 @@
 ;;
 ;;  Features immediately activated when package loads
 ;;
-;;          Configure variable `tinymy-:save-buffer-modes' and
-;;          `tinymy-:save-buffer-regexp'
+;;          Configure variable `tinymy--save-buffer-modes' and
+;;          `tinymy--save-buffer-regexp'
 ;;      o   You mailbox lock is kept on eye on, if the lock remains,
 ;;          you won't be able to receive mail. (safety measure).
 ;;      o   If you use procmail you want to configure
-;;          `tinymy-:mail-check-inbox-file-permissions'
+;;          `tinymy--mail-check-inbox-file-permissions'
 ;;          otherwise, your mailbox's mode permissions are kept eye on:
 ;;          "Permission error: -rw-------" warning will be show if the
 ;;          mailbox doesn't have right modes.
 ;;      o   Automatic window selection when you point it with mouse cursor.
-;;          See `tinymy-:install-select-window-auto'.
+;;          See `tinymy--install-select-window-auto'.
 ;;      o   When buffer that has `#!' to indicate shell
 ;;          script, is save, the +x flag is set on for the file.
 ;;
@@ -275,16 +271,16 @@
 ;;      When you load this package, you can also install global
 ;;      key-bindings that if you set the load hook:
 ;;
-;;          (add-hook 'tinymy-:load-hook 'tinymy-install)
-;;          (add-hook 'tinymy-:load-hook 'tinymy-define-keys)
-;;          (add-hook 'tinymy-:load-hook 'tinymy-define-key-extra)
-;;          (add-hook 'tinymy-:load-hook 'tinymy-alias)
+;;          (add-hook 'tinymy--load-hook 'tinymy-install)
+;;          (add-hook 'tinymy--load-hook 'tinymy-define-keys)
+;;          (add-hook 'tinymy--load-hook 'tinymy-define-key-extra)
+;;          (add-hook 'tinymy--load-hook 'tinymy-alias)
 ;;
 ;;      If you want to use your own bindings, use it like this:
 ;;
-;;          (add-hook 'tinymy-:load-hook 'tinymy-install
-;;          (add-hook 'tinymy-:load-hook 'tinymy-alias)
-;;          (add-hook 'tinymy-:load-hook 'my-tinymy-keys)
+;;          (add-hook 'tinymy--load-hook 'tinymy-install
+;;          (add-hook 'tinymy--load-hook 'tinymy-alias)
+;;          (add-hook 'tinymy--load-hook 'my-tinymy-keys)
 ;;
 ;;          (defun my-tinymy-keys ()
 ;;            <define my own global key mappings>)
@@ -292,7 +288,7 @@
 ;;      There is table of global bindings which you can modify if the
 ;;      bindings clash: the auto install will warn you about this
 ;;      automatically and your own bindings are not replaced by default.
-;;      See variable: `tinymy-:define-key-table'
+;;      See variable: `tinymy--define-key-table'
 
 ;;}}}
 
@@ -316,10 +312,9 @@
   (defvar gnus-summary-buffer))
 
 (eval-when-compile
-  (ti::package-use-dynamic-compilation)
   (require 'advice))
 
-(ti::package-defgroup-tiny TinyMy tinymy-: tools
+(ti::package-defgroup-tiny TinyMy tinymy-- tools
   "Collection of small so called 'my' utility functions.
 The full feature list is in the source code documentation, read it well.")
 
@@ -330,12 +325,12 @@ The full feature list is in the source code documentation, read it well.")
 ;;; Change this table if you have conflicting bindings.
 ;;;
 
-(defcustom tinymy-:define-key-force nil
+(defcustom tinymy--define-key-force nil
   "*If non-nil; assign keys without any check."
   :type 'boolean
   :group 'TinyMy)
 
-(defcustom tinymy-:define-key-table
+(defcustom tinymy--define-key-table
   '(
     ;; .. .. .. .. .. .. .. .. .. .. .. .. .. .. .. .. .. .. .. .. C-x . .
     ;;  The 'rectangle' map. This sould be free
@@ -372,7 +367,7 @@ The full feature list is in the source code documentation, read it well.")
     ("\C-zxst"  . tinymy-tar))
   "*Define command to `global-map' keys.
 See also source code for `tinymy-define-keys' which will overwrite
-default Emacs keybindings if installed in `tinymy-:load-hook'.
+default Emacs keybindings if installed in `tinymy--load-hook'.
 
 Format:
 
@@ -387,13 +382,13 @@ Format:
 
 ;;; ......................................................... &v-hooks ...
 
-(defcustom tinymy-:load-hook '(tinymy-install)
+(defcustom tinymy--load-hook '(tinymy-install)
   "*Hook that is run when package is loaded.
 The default value is '(tinymy-install)"
   :type  'hook
   :group 'TinyMy)
 
-(defcustom tinymy-:mail-buffer-hook nil
+(defcustom tinymy--mail-buffer-hook nil
   "*This hook run last in `tinymy-mail-buffer' function."
   :type  'hook
   :group 'TinyMy)
@@ -401,7 +396,7 @@ The default value is '(tinymy-install)"
 ;;; ....................................................... &vu-config ...
 ;;; all "vu" -- "variable user" sections are meant for user configurable
 
-(defcustom tinymy-:install-select-window-auto 'no
+(defcustom tinymy--install-select-window-auto 'no
   "*Variable is used only in window system.
 The automatic window selection function selects window by pointing
 at it with mouse . No clicking is needed. However if you use menu bar, it is
@@ -423,13 +418,13 @@ Values in this variable:
           (const ask))
   :group 'TinyMy)
 
-(defcustom tinymy-:register ?r
+(defcustom tinymy--register ?r
   "*An Emacs register where to put results of commands.
 User can then afterwards yank the result into desired buffer."
   :type  'character
   :group 'TinyMy)
 
-(defcustom tinymy-:scroll-mode 'window
+(defcustom tinymy--scroll-mode 'window
   "*If non-nil, then `tinymy-scroll-down' does not immediately scroll.
 The following happen if variable is non-nil.
 o  up: if the cursor is not at the window's start line, go there
@@ -438,7 +433,7 @@ o  down: --''-- behaves same as up"
   :type  'boolean
   :group 'TinyMy)
 
-(defcustom tinymy-:copy-file-suffix ".original"
+(defcustom tinymy--copy-file-suffix ".original"
   "Suffix to add when making copy of file with `tinymy-copy-file'.
 This variable is only used in interactive call. Default extension
 is \".original\", same as used by Unix 'patch' program to save original
@@ -451,7 +446,7 @@ of this suffix."
 
 ;;; ...................................................... &v-matching ...
 
-(defcustom tinymy-:vi-type-paren-match-special-list '( ?\" ?\' ?\$ )
+(defcustom tinymy--vi-type-paren-match-special-list '( ?\" ?\' ?\$ )
   "*List of special character to matched in \\[tinymy-vi-type-paren-match].
 If the sentence delimited by these chars spread multiple lines,
 the missing part is searched backward.
@@ -468,7 +463,7 @@ the search is forced FORWARD."
 ;;  This is not configurable variable right now, because the match
 ;;  function uses hard coded regexps.
 
-(defconst tinymy-:vi-type-paren-match-list
+(defconst tinymy--vi-type-paren-match-list
   '( ( "(" . ")" )
      ;; NOPE, DO NOT add these. It won't work - the reason is currently unknown.
      ;;
@@ -491,18 +486,18 @@ Example:
 
 ;;; ......................................................... &vu-word ...
 
-(defcustom tinymy-:move-word-set "-[]_$%@#&*\":;,.{}()<>/\\ \t\n"
+(defcustom tinymy--move-word-set "-[]_$%@#&*\":;,.{}()<>/\\ \t\n"
   "*How to move forward/backward word. This is character set."
   :type  '(string :tag "Charset")
   :group 'TinyMy)
 
-(defcustom tinymy-:move-word-case-set "-[]_$%@#&*\":{}()<>/\\ \t\na-z"
+(defcustom tinymy--move-word-case-set "-[]_$%@#&*\":{}()<>/\\ \t\na-z"
   "*How to move forward/backward word. This is character set.
 used only over mixed case words."
   :type  '(string :tag "Charset")
   :group 'TinyMy)
 
-(defcustom tinymy-:move-word-case-modes
+(defcustom tinymy--move-word-case-modes
   '(c-mode
     c++-mode
     cc-mode
@@ -518,18 +513,18 @@ used only over mixed case words."
     php-mode
     jsp-mode
     text-mode)
-  "*Modes where `tinymy-:move-word-case-set' is used."
+  "*Modes where `tinymy--move-word-case-set' is used."
   :type '(repeat function)
   :group 'TinyMy)
 
 ;;; ........................................................ &vu-shell ...
 
-(defcustom tinymy-:tar-command "tar -cf"
+(defcustom tinymy--tar-command "tar -cf"
   "*Tar create command, e.g. used in `tinymy-tar'."
   :type  '(string :tag "Shell command")
   :group 'TinyMy)
 
-(defcustom tinymy-:shar-command "shar -a -c -C -e -t -u"
+(defcustom tinymy--shar-command "shar -a -c -C -e -t -u"
   "*Shar command used by `tinymy-shar'.
 In HP-UX:
 
@@ -544,7 +539,7 @@ In HP-UX:
 
 ;;; ...................................................... &vu-compile ...
 
-(defcustom tinymy-:compile-table
+(defcustom tinymy--compile-table
   (list
    '("perl"              . "perl -w %s")
    '("code-shell-sh"     . "sh -x %s")
@@ -610,7 +605,7 @@ Example:
     (autoload 'aput \"assoc\")
 
     (defun my-tinymy-compile-customisations ()
-      (aput 'tinymy-:compile-table
+      (aput 'tinymy--compile-table
             \"perl\"
             '(if (string-match \"project\" buffer-file-name)
                (concat (or (ti::buffer-shebang) \"perl\") \" -w  %s\")
@@ -623,63 +618,25 @@ Example:
    (autoload 'aput \"assoc\")
 
     (defun my-tinymy-compile-customisations ()
-      (aput 'tinymy-:compile-table
+      (aput 'tinymy--compile-table
             \"perl\"
             '(concat (or (ti::buffer-shebang) \"perl\") \" -w %s\")))
 
   After this package has been loaded. (Place customizations like this
-  to `tinymy-:load-hook'."
+  to `tinymy--load-hook'."
   :type '(retpeat
           (string :tag "Regexp")
           (string :tag "Shell command"))
   :group 'TinyMy)
 
-;;}}}
-;;{{{ setup: other, version
-
-(defvar tinymy-:buffer-info-cache nil
+(defvar tinymy--buffer-info-cache nil
   "Cached buffer data values in function `tinymy-buffer-info'.
 Format:
   '((buffer-pointer size message-string)
     ...)")
 
-;;;###autoload (autoload 'tinymy-version "tinymy" "Display commentary." t)
-
-(eval-and-compile
-  (ti::macrof-version-bug-report
-   "tinymy.el"
-   "tinymy"
-   tinymy-:version-id
-   "$Id: tinymy.el,v 2.86 2007/05/07 10:50:08 jaalto Exp $"
-   '(tinymy-:version-id
-     tinymy-:debug
-     tinymy-:vi-type-paren-match-list
-     tinymy-:define-key-force
-     tinymy-:define-key-table
-     tinymy-:load-hook
-     tinymy-:mail-buffer-hook
-     tinymy-:install-select-window-auto
-     tinymy-:register
-     tinymy-:scroll-mode
-     tinymy-:copy-file-suffix
-     tinymy-:vi-type-paren-match-special-list
-     tinymy-:move-word-set
-     tinymy-:move-word-case-set
-     tinymy-:move-word-case-modes
-     tinymy-:tar-command
-     tinymy-:shar-command
-     tinymy-:compile-table
-     tinymy-:save-buffer-modes
-     tinymy-:save-buffer-regexp
-     tinymy-:force-revert
-     tinymy-:revert-in-progress
-     tinymy-:revert-buffer-info-list
-     tinymy-:window-previous)
-   '(tinymy-:debug-buffer)))
-
 ;;;### (autoload 'tinymy-debug-toggle "tinymy" t t)
-
-(eval-and-compile (ti::macrof-debug-standard "tinymy" "-:"))
+(eval-and-compile (ti::macrof-debug-standard "tinymy" "--"))
 
 ;;}}}
 ;;{{{ install: main
@@ -690,62 +647,45 @@ Format:
 (defun tinymy-define-keys ()
   "Install keys."
   (interactive)
-
   (when (boundp 'shared-lisp-mode-map)
     (defvar shared-lisp-mode-map nil) ;; Byte compiler silencer
     (define-key shared-lisp-mode-map    "%" 'tinymy-vi-type-paren-match))
-
   (define-key emacs-lisp-mode-map       "%" 'tinymy-vi-type-paren-match)
   (define-key lisp-mode-map             "%" 'tinymy-vi-type-paren-match)
-
   ;;  was C-xq was kbd-macro-query
-
   (global-set-key "\C-xq"    'tinymy-buffer-file-chmod)
-
   ;;  Redefine scroll keys, we don't confirm these...
-
   (global-set-key [(prior)]             'tinymy-scroll-up)
   (global-set-key [(next)]              'tinymy-scroll-down)
-
   ;;  In XEmacs these already have default bindings, but we override them.
-
   (global-set-key [(control right)]     'tinymy-word-forward)
   (global-set-key [(control left)]      'tinymy-word-backward)
   (global-set-key [(control up)]        'tinymy-beginning-of-defun)
   (global-set-key [(control down)]      'tinymy-end-of-defun)
-
   (unless (ti::compat-window-system)
     (global-set-key [(meta f)] 'tinymy-word-forward)
     (global-set-key [(meta b)] 'tinymy-word-backward))
-
   ;; Use C-z prefix because it is most user friendly to pinky
   ;; Pretty useless in X-windowed Emacs, and in windowed
   ;; Emacs you seldom use suspend-emacs because emacs has M-x shell
-
   (ti::use-prefix-key global-map "\C-z")
-
   ;;  Set global keys, confirm these
+  (dolist (x tinymy--define-key-table)
+    (if tinymy--define-key-force
+	(define-key global-map (car x) (cdr x))
+      (ti::define-key-if-free global-map
+			      (car x)
+			      (cdr x)
+			      'tinymy-define-key-error)))
+  (add-hook 'makefile-mode-hook 'tinymy-makefile-mode-hook))
 
-  (mapcar
-   (function
-    (lambda (x)
-      (if tinymy-:define-key-force
-          (define-key global-map (car x) (cdr x))
-        (ti::define-key-if-free global-map
-                                (car x)
-                                (cdr x)
-                                'tinymy-define-key-error))))
-   tinymy-:define-key-table)
-
-  ;; .................................................... &emacs-modes ...
-
-  (add-hook 'makefile-mode-hook 'tinymy-makefile-mode-hook)
-
-  (defun tinymy-makefile-mode-hook ()
-    "Define key C-c/ to adjust \\ continuing lines."
-    (define-key
-      (symbol-value 'makefile-mode-map) "\C-c\\"
-      'ti::buffer-backslash-fix-paragraph)))
+;;; ----------------------------------------------------------------------
+;;;
+(defun tinymy-makefile-mode-hook ()
+  "Define key C-c/ to adjust \\ continuing lines."
+  (define-key
+    (symbol-value 'makefile-mode-map) "\C-c\\"
+    'ti::buffer-backslash-fix-paragraph))
 
 ;;; ----------------------------------------------------------------------
 ;;;
@@ -761,14 +701,13 @@ Format:
 (defun tinymy-install-mouse-movement-handler (&optional uninstall)
   "Install or UNINSTALL `tinymy-mouse-movement-handler'
 References:
-  `tinymy-:install-select-window-auto'."
-
+  `tinymy--install-select-window-auto'."
   (when (and (not uninstall)
              (ti::compat-window-system))
     (let ((ok
-           (or (eq tinymy-:install-select-window-auto 'yes)
+           (or (eq tinymy--install-select-window-auto 'yes)
                (and
-                (eq tinymy-:install-select-window-auto 'ask)
+                (eq tinymy--install-select-window-auto 'ask)
                 (null
                  (y-or-n-p
                   (concat
@@ -882,8 +821,8 @@ has changed in Emacs 21.x. Unable to install handler."))
   "Toggle current buffer's Read-Write permission permanently on disk. VERB.
 Does nothing if buffer is not visiting a file or file is not owned by us."
   (interactive)
-  (let* ((file  (buffer-file-name))
-         stat)
+  (let ((file (buffer-file-name))
+	stat)
     (ti::verb)
     (when (and file (file-modes file))  ;File modes is nil in Ange-ftp
       (setq stat (ti::file-chmod-w-toggle file))
@@ -908,7 +847,7 @@ Does nothing if buffer is not visiting a file or file is not owned by us."
   "Compress or uncompress current file buffer with gzip."
   (interactive)
   (save-buffer)
-  (let* ((gzip "gzip"))
+  (let ((gzip "gzip"))
     (cond
      ((or (not (stringp buffer-file-name))
           (null (file-modes buffer-file-name))) ;Ange ftp
@@ -944,14 +883,14 @@ Important, If file is vc controlled:
     read-only, but sometimes it is convenient to put buffer to read-only
     state to prevent changing anything in there for a while."
   (interactive)
-  (let* ((fid      "tinymy-buffer-read-only")
-         (key-func (if (or (featurep 'vc)
-                           (featurep 'vc-hooks))
-                       'vc-toggle-read-only
-                     'toggle-read-only))
-         state
-         call
-         turn-mode)
+  (let ((fid      "tinymy-buffer-read-only")
+	(key-func (if (or (featurep 'vc)
+			  (featurep 'vc-hooks))
+		      'vc-toggle-read-only
+		    'toggle-read-only))
+	state
+	call
+	turn-mode)
     (unless fid ;; No-op. XEmacs byte compiler silencer
       (setq fid nil))
     (tinymy-debug fid
@@ -1038,8 +977,8 @@ Important, If file is vc controlled:
 ;;; ----------------------------------------------------------------------
 ;;;
 (defsubst tinymy-buffer-info-cache-string (buffer)
-  "If same size, return cached string from  `tinymy-:buffer-info-cache'."
-  (when (and (setq buffer (assq buffer tinymy-:buffer-info-cache))
+  "If same size, return cached string from  `tinymy--buffer-info-cache'."
+  (when (and (setq buffer (assq buffer tinymy--buffer-info-cache))
              (or (eq (nth 1 buffer) (buffer-size))
                  ;; It it's modified, it hasn't been written to disk yet,
                  (buffer-modified-p)))
@@ -1053,10 +992,10 @@ If buffer is associated to file:  -rwx-rw-r-- 20k /absolute/path/file.txt
 If no file: SIZEk SIZE-IN-BYTES"
   (interactive)
   (let* ((file  buffer-file-name)
-         (ssize (buffer-size))
-         (size  (/ ssize 1000)) ;; well, it's 1024 to exact but this suffices
-         (modes "")
-         lines)
+	 (ssize (buffer-size))
+	 (size  (/ ssize 1000)) ;; well, it's 1024 to exact but this suffices
+	 (modes "")
+	 lines)
     ;;  E.g. Gnus defines `buffer-file-name' for Draft messages,
     ;;  but the file is not actually written, so we test for existense
     ;;  to prevent suprises from happening.
@@ -1084,13 +1023,13 @@ If no file: SIZEk SIZE-IN-BYTES"
     (if old-message
         (message old-message)
       (setq old-message (tinymy-buffer-info-1))
-      (setq tinymy-:buffer-info-cache
-            (delq (current-buffer) tinymy-:buffer-info-cache))
+      (setq tinymy--buffer-info-cache
+            (delq (current-buffer) tinymy--buffer-info-cache))
       (push (list
              (current-buffer)
              (buffer-size)
              old-message)
-            tinymy-:buffer-info-cache))))
+            tinymy--buffer-info-cache))))
 
 ;;; ----------------------------------------------------------------------
 ;;; >How can I get the selected window to change as I move the mouse cursor
@@ -1105,7 +1044,7 @@ If no file: SIZEk SIZE-IN-BYTES"
 ;;; ===========================  ==========  ============  ============
 ;;; tinymy-mouse-movement-handler  29        0.0571780000  0.0019716551
 
-(defvar tinymy-:window-previous nil
+(defvar tinymy--window-previous nil
   "Used in `tinymy-mouse-movement-handler'.")
 
 (defun tinymy-mouse-movement-handler (event)
@@ -1126,13 +1065,13 @@ Show information on echo-area:
     TinyMy: -rw-r--r-- 108k /users/jaalto/elisp/tinymy.el"
 
   (interactive "e")
-  (let* ((case-fold-search  t)
-         frame
-         win
-         mini
-         bottom
-         point
-         p)
+  (let ((case-fold-search  t)
+	frame
+	win
+	mini
+	bottom
+	point
+	p)
     (cond
      ((and (fboundp 'event-window)
            (eventp  event))
@@ -1161,8 +1100,8 @@ Contact maintaner with M-x tinymy-submit-bug-report.")))
      ((and (windowp win)
            (window-live-p win)
            ;;  Motion in same window as prereviously?
-           (not (eq tinymy-:window-previous win)))
-      (setq tinymy-:window-previous win
+           (not (eq tinymy--window-previous win)))
+      (setq tinymy--window-previous win
             mini                    (window-minibuffer-p win))
       ;;    1. Select window if it's not minibuffer
       ;;    2. if it's minibuffer, select it _only_ if it's active
@@ -1206,16 +1145,16 @@ Contact maintaner with M-x tinymy-submit-bug-report.")))
   "See `tinymy-package-save-to-file'. Find out package file name.
 Return '(file-name  point)."
   (let* ((fid "tinymy-package-save-get-file-name:")
-         ;;  - the file start and it's name
-         ;;  - The regexp will jump until there is a-zA-Z0-9
-         (com "^\\(#\\|;;+\\)")
-         (re1 (concat com "[ \t]+\\([^ \t]+\\.el\\)[ \t]+[-][-]+"))
-         (re2 (concat com "[ \t]+\\([^ \t]+\\)[ \t]+[-][-]+[ \t]"))
-         (re3 (concat com "[ \t]+\\(.*\\)[ \t]+[-][-]+"))
-         (re4 (concat com "[ \t]+\\(.*\\)[ \t]+[-]+"))
-         (re5 "^\\(;;;*\\)[ \t]+\\([^ \t\n]+\\.el\\)[ \t]+")
-         file
-         point)
+	 ;;  - the file start and it's name
+	 ;;  - The regexp will jump until there is a-zA-Z0-9
+	 (com "^\\(#\\|;;+\\)")
+	 (re1 (concat com "[ \t]+\\([^ \t]+\\.el\\)[ \t]+[-][-]+"))
+	 (re2 (concat com "[ \t]+\\([^ \t]+\\)[ \t]+[-][-]+[ \t]"))
+	 (re3 (concat com "[ \t]+\\(.*\\)[ \t]+[-][-]+"))
+	 (re4 (concat com "[ \t]+\\(.*\\)[ \t]+[-]+"))
+	 (re5 "^\\(;;;*\\)[ \t]+\\([^ \t\n]+\\.el\\)[ \t]+")
+	 file
+	 point)
     (unless fid ;; No-op. XEmacs byte compiler silencer
       (setq fid nil))
     (save-excursion
@@ -1387,13 +1326,13 @@ before writing."
                           (file-name-nondirectory file))
           buffer
           point)))))
-  (let* ((fid           "tinymy-package-save-to-file:")
-         (orig-point    (point))
-         p1
-         p2
-         ans
-         str
-         point)
+  (let ((fid        "tinymy-package-save-to-file:")
+	(orig-point (point))
+	p1
+	p2
+	ans
+	str
+	point)
     (unless fid ;; No-op. XEmacs byte compiler silencer
       (setq fid nil))
     (or code-buffer
@@ -1513,7 +1452,7 @@ If you supply PREFIX ARG, then
         If you had made a safe copy previously, this restores
         the safe copy to original file."
   (interactive
-   (let* ((suf   tinymy-:copy-file-suffix)
+   (let* ((suf   tinymy--copy-file-suffix)
           (ver   (or (ti::vc-rcs-buffer-version)
                      ;;  No rcs string found, then try Regular lisp package
                      ;;  syntax.
@@ -1561,7 +1500,8 @@ If you supply PREFIX ARG, then
         (message "TinyMy: There is no safe copy for %s" file1))
        ((eq 1 (length file-list))
         (when (y-or-n-p
-               (message "TinyMy: Found safe copy %s; copy it over original? "))
+               (message "TinyMy: Found safe copy %s; copy it over original? "
+			file1))
           (delete-file file1)           ;copy-file barfs otherwise
           (copy-file (car file-list) file1)
           (message "TinyMy: Safe copy restored.")))
@@ -1589,21 +1529,21 @@ If you supply PREFIX ARG, then
 ;;;
 (defun tinymy-vi-type-paren-match (&optional arg)
   "Match engine: find {[( or )]} pairs. ARG is character repeat count.
-See also 'tinymy-:vi-type-paren-match-special-list
+See also 'tinymy--vi-type-paren-match-special-list
 
 References:
-  `tinymy-:vi-type-paren-match-list'
-  `tinymy-:vi-type-paren-match-special-list'"
+  `tinymy--vi-type-paren-match-list'
+  `tinymy--vi-type-paren-match-special-list'"
   (interactive "P")
   (let* ((p         (point))
          (ptable    (syntax-table))     ;previous, the original
          (ch        (following-char))
          (ch-next   (ti::buffer-read-char nil 1))
          (ch-prev   (preceding-char))
-         (pairs     tinymy-:vi-type-paren-match-list)
+         (pairs     tinymy--vi-type-paren-match-list)
          (left      (car-safe (assoc  (char-to-string ch) pairs)))
          (right     (car-safe (rassoc (char-to-string ch) pairs)))
-         (m-list    tinymy-:vi-type-paren-match-special-list) ;match list
+         (m-list    tinymy--vi-type-paren-match-special-list) ;match list
          (spread-limit   (* 10 60))     ;approx 10 lines of code.
          table
          s-func add-func max-func bigger-func
@@ -1627,17 +1567,14 @@ References:
         (self-insert-command (or arg 1))
         (throw 'terminate t))
       ;;  already calculated ? No ?
-      (unless (setq table (get 'tinymy-:vi-type-paren-match-list 'syntax-table))
+      (unless (setq table (get 'tinymy--vi-type-paren-match-list 'syntax-table))
         (setq table (make-syntax-table))
         ;;   We want everything to look like word
         (ti::dotimes counter 0 255 (modify-syntax-entry counter "w" table))
-        (mapcar
-         (function
-          (lambda (x)
-            (modify-syntax-entry (string-to-char (car x)) "(" table)
-            (modify-syntax-entry (string-to-char (cdr x)) ")" table)))
-         pairs)
-        (put 'tinymy-:vi-type-paren-match-list 'syntax-table table))
+        (dolist (x pairs)
+	  (modify-syntax-entry (string-to-char (car x)) "(" table)
+	  (modify-syntax-entry (string-to-char (cdr x)) ")" table))
+        (put 'tinymy--vi-type-paren-match-list 'syntax-table table))
       ;;  In lisp; only () are matched.
       (when (not (string-match "lisp" (symbol-name major-mode)))
         (set-syntax-table table))
@@ -1724,13 +1661,13 @@ Regular buffer:
 buffer with no filename:
 
    nil"
-  (let* ((rcs-re    "retrieving revision +\\(.*\\)")
-         (v1        "")
-         (v2        "")
-         type
-         ver
-         file
-         msg)
+  (let ((rcs-re    "retrieving revision +\\(.*\\)")
+	(v1        "")
+	(v2        "")
+	type
+	ver
+	file
+	msg)
     (save-excursion
       (ti::pmin)
       (cond
@@ -1780,22 +1717,23 @@ The subject line is constructed by looking at the buffer content:
 eg if buffer contains rcsdiff of diff,
 The subject line will tell the versions."
   (interactive)
-  (let* ((data-buffer   (current-buffer))
-         subj)
+  (let ((data-buffer (current-buffer))
+	subj)
     (setq subj (tinymy-mail-subject-get))
     (compose-mail)
     ;;  This package gives nice alias expansion
     (ti::package-require-mail-abbrevs)
     (ti::mail-text-start 'move)
     (insert "\n\n\n\n")
-    (save-excursion (insert-buffer data-buffer))
+    (save-excursion
+      (insert-buffer-substring data-buffer))
     ;; Make sure the outlline/folding is opened first
     (ti::buffer-outline-widen)
     (if subj
         (ti::mail-kill-field "Subject:" subj))
     (ti::pmin)
     (end-of-line)                       ;"TO:" field
-    (run-hooks 'tinymy-:mail-buffer-hook)))
+    (run-hooks 'tinymy--mail-buffer-hook)))
 
 ;;}}}
 ;;{{{ Programming: function bounds, debug
@@ -1817,13 +1755,13 @@ Supported modes:
   perl
   awk
   lisp"
-  (let* ((mode                (or (ti::id-info) (symbol-name major-mode)))
-         (max-lines           1500)   ;rows, function cannot be bigger
-         (skip-lines          1300)     ;maximum skip lines backward
-         (start               (point))
-         beg end
-         range point
-         fwd-flag)
+  (let ((mode                (or (ti::id-info) (symbol-name major-mode)))
+	(max-lines           1500)   ;rows, function cannot be bigger
+	(skip-lines          1300)     ;maximum skip lines backward
+	(start               (point))
+	beg end
+	range point
+	fwd-flag)
     (cond
      ((string-match "lisp" mode)
       ;;  Only lisp has decent find functions
@@ -1905,10 +1843,10 @@ Supported modes:
 (defun tinymy-beginning-of-defun (&optional end-of-fun)
   "See `tinymy-function-bounds'. END-OF-FUN must be nil or t."
   (interactive)
-  (let* ((bounds (tinymy-function-bounds  end-of-fun))
-         (beg    (car-safe bounds))
-         (end    (cdr-safe bounds))
-         (point  (if end-of-fun end beg)))
+  (let* ((bounds (tinymy-function-bounds end-of-fun))
+	 (beg    (car-safe bounds))
+	 (end    (cdr-safe bounds))
+	 (point  (if end-of-fun end beg)))
     (if (null bounds)
         (message "TinyMy: Sorry, can't find function.")
       (goto-char point))))
@@ -1929,7 +1867,6 @@ Supported modes:
   "Add or Multiply columns in rectangle in START END.
 With optional arg INSERT, insert the sum and product to
 the current point."
-
   (interactive "r\nP")
   (require 'rect)
   (let ((sum        0)
@@ -2024,8 +1961,8 @@ Note:
   ;;    command in normal lisp code.
 
   (interactive "P")
-  (let* ((mode   tinymy-:scroll-mode)
-         lines)
+  (let ((mode tinymy--scroll-mode)
+	lines)
     (cond
      ((ti::line-wrap-p)
       ;; ............................................. wrapping line ...
@@ -2086,7 +2023,7 @@ Note:
                   ;;  - If the lines are longer than window-width; then this
                   ;;    whole next-line call may end anywhere...can't help
                   ;;    that
-                  ;;  - The safe do is here in case this calls error,
+                  ;;  - The ignore-errors is here in case this calls error,
                   ;;    which it does if the buffer size has changes, like
                   ;;    in live *Messages* buffer
                   (ignore-errors (next-line (- lines 1))))
@@ -2100,9 +2037,9 @@ Note:
 (defun tinymy-shar (single-or-list)
   "Generate SHAR file using SINGLE-OR-LIST.
 List of  files can include shell regexps. The result is put into
-`tinymy-:register'."
+`tinymy--register'."
   (interactive
-   (let* (arg1)
+   (let (arg1)
      (setq arg1
            (ti::file-complete-filename-minibuffer-macro
              (read-from-minibuffer
@@ -2110,8 +2047,8 @@ List of  files can include shell regexps. The result is put into
               nil
               map)))
      (list arg1)))
-  (let* ((cmd         (concat tinymy-:shar-command " "))
-         (register    tinymy-:register)
+  (let* ((cmd         (concat tinymy--shar-command " "))
+         (register    tinymy--register)
          (verb        (interactive-p))
          out)
     (if (ti::nil-p single-or-list)
@@ -2165,7 +2102,7 @@ Return:
   (if (or (ti::nil-p tar-file)
           (ti::nil-p file-list))
       (error "Missing args"))
-  (let* ((tar-cmd       (concat tinymy-:tar-command " "))
+  (let* ((tar-cmd       (concat tinymy--tar-command " "))
          (edir          (file-name-directory
                          (expand-file-name tar-file)))
          (cmd           (concat "cd " edir "; "
@@ -2195,8 +2132,8 @@ Return:
 ;;;  have .mak files
 ;;;
 (defun tinymy-compile-command-search (type)
-  "Search match car of `tinymy-:compile-table' against TYPE and return cdr."
-  (dolist (elt tinymy-:compile-table)
+  "Search match car of `tinymy--compile-table' against TYPE and return cdr."
+  (dolist (elt tinymy--compile-table)
     (when (string-match (car elt) type)
       (return (cdr elt)))))
 
@@ -2311,17 +2248,17 @@ Any other value is equal to 'put with BUFFER and VALUE.
 
 References:
 
-  `tinymy-:compile-table'  Values are stored to property list
+  `tinymy--compile-table'  Values are stored to property list
                            '(<buffer> compile-command ..)"
   (or buffer
       (setq buffer (current-buffer)))
   (cond
    ((eq mode 'get)
-    (get 'tinymy-:compile-table buffer))
+    (get 'tinymy--compile-table buffer))
    ((eq mode 'clear)
-    (put 'tinymy-:compile-table buffer nil))
+    (put 'tinymy--compile-table buffer nil))
    (t
-    (put 'tinymy-:compile-table buffer value))))
+    (put 'tinymy--compile-table buffer value))))
 
 ;;; ----------------------------------------------------------------------
 ;;;
@@ -2339,7 +2276,7 @@ and offers it next time you call it.
 Parameter CLEAR instructs to \"forget\" any previously
 acched command try the search again from fresh. You can
 supply the \\[universal-argument\\] if you have made changes
-to `tinymy-:compile-table'.
+to `tinymy--compile-table'.
 
 If mode 'text' or 'fundamental'
 
@@ -2356,8 +2293,8 @@ If mode is not 'text' or 'fundamental'
 
 References:
 
-  `tinymy-:compile-table'
-  `tinymy-:compile-command-c-code'"
+  `tinymy--compile-table'
+  `tinymy--compile-command-c-code'"
   (interactive "P")
   (if clear
       (tinymy-compile-command-for-buffer-clear))
@@ -2365,10 +2302,8 @@ References:
          (fid       "tinymy-compile-run-command")
          (file      (buffer-file-name))
          (mname     (symbol-name major-mode))
-
          (type      (or (ti::id-info)
                         mname))
-
          (buffer    (current-buffer))
          elt
          run-it
@@ -2420,9 +2355,9 @@ References:
 (defun tinymy-compile-run-command (&optional clear)
   "See `tinymy-compile-run-command-ask'."
   (interactive "P")
-  (let* ((cmd (tinymy-compile-run-command-ask clear)))
+  (let ((cmd (tinymy-compile-run-command-ask clear)))
     (when (not (ti::nil-p cmd))
-      (compile-internal cmd "No more errors.")
+      (compilation-start cmd)
       (pop-to-buffer "*compilation*"))))
 
 ;;; ----------------------------------------------------------------------
@@ -2460,7 +2395,7 @@ See `tinymy-compile-run-command-ask' for more."
 ;;;
 (defun tinymy-word-move-1 (&optional back)
   "Low level word movement control. Optionally move BACK."
-  (let* ((up-case (memq major-mode tinymy-:move-word-case-modes))
+  (let* ((up-case (memq major-mode tinymy--move-word-case-modes))
          (regexp "[a-z0-9]*[A-Z]+[a-z0-9]+[A-Z]+")
          (case-fold-search (not up-case))
          (charset
@@ -2486,9 +2421,9 @@ See `tinymy-compile-run-command-ask' for more."
                                '("w" "."))))))
             ;;  This Upcase charset is only used if the cursor is
             ;;  within AnUpCaseWord.
-            tinymy-:move-word-case-set)
+            tinymy--move-word-case-set)
            (t
-            tinymy-:move-word-set))))
+            tinymy--move-word-set))))
     (cond
      ;;  Skip to the end of word if at EOL
      ;;  (this-he-is-word sse-it-now?)
@@ -2522,14 +2457,14 @@ Otherwise call `tinymy-word-move-1'."
 ;;; ----------------------------------------------------------------------
 ;;;
 (defun tinymy-word-backward ()
-  "Word backward See `tinymy-:move-word-case-set'."
+  "Word backward See `tinymy--move-word-case-set'."
   (interactive)
   (tinymy-word-move-2 'back))
 
 ;;; ----------------------------------------------------------------------
 ;;;
 (defun tinymy-word-forward ()
-  "Word forward. See `tinymy-:move-word-case-set'."
+  "Word forward. See `tinymy--move-word-case-set'."
   (interactive)
   (tinymy-word-move-2))
 
@@ -2540,13 +2475,13 @@ Otherwise call `tinymy-word-move-1'."
 ;;;### (autoload 'turn-on-tinymy-sort-mode  "tinymy" "" t)
 ;;;### (autoload 'tinymy-sort-mode          "tinymy" "" t)
 
-(add-hook 'tinymy-sort-:mode-define-keys-hook ;To be sure
+(add-hook 'tinymy-sort--mode-define-keys-hook ;To be sure
           'tinymy-sort-mode-define-keys)
 
 (eval-and-compile
 
   (ti::macrof-minor-mode-wizard
-   "tinymy-sort-" " S" "\C-cS" "Tsort" 'TinySort "tinymy-sort-:" ;1-6
+   "tinymy-sort-" " S" "\C-cS" "Tsort" 'TinySort "tinymy-sort--" ;1-6
 
    "Minor mode for sorting lines (by columns) in the buffer easily.
 Remember to select region to sort.
@@ -2560,7 +2495,7 @@ not possible. Also, There must be no empty lines inside sorted area.
     123 123 123
 
 Mode description:
-\\{tinymy-sort-:mode-map}"
+\\{tinymy-sort--mode-map}"
 
    "TinySort"
 
@@ -2569,7 +2504,7 @@ Mode description:
    "Column sort minor mode"
 
    (list
-    tinymy-sort-:mode-easymenu-name
+    tinymy-sort--mode-easymenu-name
     ["By column 1"                 tinymy-sort-column-1  t]
     ["By column 2"                 tinymy-sort-column-2  t]
     ["By column 3"                 tinymy-sort-column-3  t]
@@ -2595,24 +2530,21 @@ Mode description:
 ;;
 ;; (defun tinymy-sort-column-0 (beg end)
 ;;    (interactive "*r") (tinymy-sort-column beg end 0))
-(mapcar
- (function
-  (lambda (x)
-    (let ((sym (intern (format "tinymy-sort-mode-column-%d" x)))
-          def)
-      (setq def
-            (` (defun (, sym) (beg end)
-                 (interactive "*r")
-                 (tinymy-sort-column beg end (, x) ))))
-      (eval def))))
- '(1 2 3 4 5 6 7 8 9))
+(dolist (x '(1 2 3 4 5 6 7 8 9))
+  (let ((sym (intern (format "tinymy-sort-mode-column-%d" x)))
+	def)
+    (setq def
+	  `(defun ,sym (beg end)
+	     (interactive "*r")
+	     (tinymy-sort-column beg end ,x )))
+    (eval def)))
 
 ;;; ----------------------------------------------------------------------
 ;;;
 (defun tinymy-sort-column (beg end nbr)
   "Sort region BEG END according to column NBR."
   (interactive "r\np")
-  (let* ((opoint (point)))
+  (let ((opoint (point)))
     (untabify beg end)
     (goto-char (min beg end))           ;Sort breaks otherwise
     (sort-fields nbr beg end)
@@ -2635,7 +2567,8 @@ Mode description:
              (not (file-writable-p
                    (file-name-directory buffer-file-name))))
     (auto-save-mode nil)
-    (set (make-variable-buffer-local 'auto-save-interval) 0)))
+    ;;    (set (make-variable-buffer-local 'auto-save-interval) 0)))
+    (set (make-local-variable 'auto-save-interval) 0)))
 
 ;;; ----------------------------------------------------------------------
 ;;;
@@ -2648,6 +2581,6 @@ Mode description:
 ;;}}}
 
 (provide   'tinymy)
-(run-hooks 'tinymy-:load-hook)
+(run-hooks 'tinymy--load-hook)
 
 ;;; tinymy.el ends here

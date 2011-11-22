@@ -4,7 +4,7 @@
 
 ;;{{{ Id
 
-;; Copyright (C)    1995-2007 Jari Aalto
+;; Copyright (C)    1995-2010 Jari Aalto
 ;; Keywords:        extensions
 ;; Author:          Jari Aalto
 ;; Maintainer:      Jari Aalto
@@ -25,9 +25,7 @@
 ;; for more details.
 ;;
 ;; You should have received a copy of the GNU General Public License
-;; along with program. If not, write to the
-;; Free Software Foundation, Inc., 51 Franklin Street, Fifth Floor,
-;; Boston, MA 02110-1301, USA.
+;; along with this program. If not, see <http://www.gnu.org/licenses/>.
 ;;
 ;; Visit <http://www.gnu.org/copyleft/gpl.html> for more information
 
@@ -37,7 +35,7 @@
 ;;; Install:
 
 ;; ........................................................ &t-install ...
-;; Put this file on your Emacs-Lisp load path, add following into your
+;; Put this file on your Emacs-Lisp `load-path', add following into your
 ;; ~/.emacs startup file
 ;;
 ;;     (require 'tinylibm)
@@ -68,9 +66,6 @@
 (require 'sendmail) ;; mail-header-separator
 
 (eval-and-compile
-  (defvar mail-abbrevs)                 ;Silence ByteCompiler
-  (defvar mail-aliases)
-  (defvar rmail-current-message nil)
   (cond
    ((ti::xemacs-p)
     (autoload 'build-mail-aliases "mail-abbrevs"))
@@ -78,12 +73,15 @@
     (autoload 'mail-abbrevs-setup "mailabbrev")
     (autoload 'build-mail-aliases "mailalias")
     (autoload 'build-mail-abbrevs "mailabbrev")))
-  (autoload 'rmail-msgbeg                       "rmail")
-  (autoload 'rmail-msgend                       "rmail")
-  (autoload 'gnus-group-get-parameter           "gnus"))
+  (autoload 'mail-fetch-field		"mail-utils")
+  (autoload 'rmail-msgbeg		"rmail")
+  (autoload 'rmail-msgend		"rmail")
+  (autoload 'gnus-group-get-parameter	"gnus"))
 
 (eval-when-compile
-  (ti::package-use-dynamic-compilation))
+  (defvar mail-abbrevs)                 ;Silence ByteCompiler
+  (defvar mail-aliases)
+  (defvar rmail-current-message nil))
 
 ;;}}}
 ;;{{{ setup: -- private
@@ -248,11 +246,12 @@ Make sure symbol names are all in lowercase.")
 
 (defvar ti:mail-parse-name-not-accept
   (concat
-   "[A-Z][/][A-Z]"                      ;company division PMR/TMS ?
+   "[A-Z][/][A-Z]"                      ;company division ABC/TMS
    "\\|^[A-Z]+\\'"                      ;all in capitals
    "\\|^[-]$"                           ;single '-' word
-   "\\|[.0-9]"                          ;maybe phone number ?
-   "\\|com\\|org\\|edu")
+   "\\|[.0-9]"                          ;maybe phone number
+   "\\|com\\|org\\|edu"
+   "\\|Dr")				;Titles
   "*Regexp to exclude non-valid people names.
 We can't be sure that the names are really good names when we parse the
 senders From field. Let's see an example
@@ -331,12 +330,11 @@ This function accepts trailing spaces or just n\\--\\n"
 (put 'ti::mail-set-region 'edebug-form-spec '(body))
 (defmacro  ti::mail-set-region (beg end)
   "Set BEG END to whole buffer if they don't have value."
-  (`
-   (progn
-     (or (, beg)
-         (setq (, beg) (ti::mail-text-start)))
-     (or (, end)
-         (setq (, end) (point-max))))))
+  `(progn
+     (or ,beg
+         (setq ,beg (ti::mail-text-start)))
+     (or ,end
+         (setq , end (point-max)))))
 
 ;;; ----------------------------------------------------------------------
 ;;;
@@ -344,9 +342,8 @@ This function accepts trailing spaces or just n\\--\\n"
 (put 'ti::mail-point-in-header-macro 'edebug-form-spec '(body))
 (defmacro ti::mail-point-in-header-macro (&rest body)
   "Run BODY only if point is inside mail header area."
-  (`
-   (when (< (point) (ti::mail-text-start))
-     (,@ body))))
+  `(when (< (point) (ti::mail-text-start))
+     ,@body))
 
 ;;; ----------------------------------------------------------------------
 ;;;
@@ -411,10 +408,11 @@ Exceptions:
           (- (point) beg)))))))
 
 ;;; ----------------------------------------------------------------------
-;;; #todo: this is old function and should be removed.
+;;;FIXME: this is old function and should be removed.
 ;;;
 (defun ti::mail-get-2re (re str)
-  "Use RE and match STR. Return list ('' '') if not matched."
+  "Use RE and return submatches 1 and 2 from STR.
+Return list of empty strings if no matches."
   (let ((m1 "")
         (m2 ""))
     (if (eq nil (string-match re str))
@@ -631,9 +629,7 @@ You can install this function e.g. into
        ((setq str (ti::string-match "\\([^@<]+\\)" 1 to)))
        (t
         (setq str to)))
-
       (setq str (replace-regexp-in-string "['\"]" "" str)) ;remove extra cruft
-
       (setq str
             (concat
              (if (ti::mail-news-buffer-p)
@@ -654,18 +650,16 @@ You can install this function e.g. into
 (defun ti::mail-mail-simple-p ()
   "Check if buffer contain headers belonging to simple \\[mail].
 You can call this only once, just after the buffer is initially created"
-  (require 'mail-utils)
-  (let* ((sub (mail-fetch-field "Subject"))
-         ;;   mail-fetch-field doesn't return nil if field is empty.
-         (to  (mail-fetch-field "to"))
-         (news (mail-fetch-field "Newsgroups")))
+  (let ((sub (mail-fetch-field "Subject"))
+	;;   mail-fetch-field doesn't return nil if field is empty.
+	(to  (mail-fetch-field "to"))
+	(news (mail-fetch-field "Newsgroups")))
     ;;  When you're replying to message in NEWS, RMAIL, the SUBJ and
     ;;  TO fields are already filled.
     ;;
     ;;  That's why you can only call this function once.
     ;;  When you use C-x m, and fill the fields, there is no way
     ;;  to detect afterwards if the mail buffer was simple mail or not
-
     (cond
      ((or (string-match "news" (symbol-name 'major-mode))
           news)
@@ -686,157 +680,6 @@ to mailing list or otherwise Group is not considered mailing list."
         (gnus-group-get-parameter group 'to-list) ))))
 
 ;;}}}
-;;{{{ macros: VM, RMAIL, GNUS
-
-;;; ----------------------------------------------------------------------
-;;;
-(put 'ti::mail-vm-macro 'lisp-indent-function 0)
-(put 'ti::mail-vm-macro 'edebug-form-spec '(body))
-(defmacro ti::mail-vm-macro (&rest body)
-  "Do BODY in VM's active buffer.
-The `save-excursion' -- set buffer form is executed."
-  (`
-   (let* ((BuffeR-S  (when (boundp 'vm-mail-buffer)
-                       (symbol-value 'vm-mail-buffer))))
-     (if (or (null BuffeR-S)
-             (not (buffer-live-p (get-buffer BuffeR-S))))
-         (error "vm-mail-buffer invalid")
-       (with-current-buffer BuffeR-S
-         (,@ body))))))
-
-;;; ----------------------------------------------------------------------
-;;;
-(put 'ti::mail-mh-macro 'lisp-indent-function 0)
-(put 'ti::mail-mh-macro 'edebug-form-spec '(body))
-(defmacro ti::mail-mh-macro (&rest body)
-  "Do BODY in MH's active buffer.
-The `save-excursion' -- set buffer form is executed."
-  (`
-   (let* ((BuffeR-S  (when (boundp 'mh-show-buffer)
-                       (symbol-value 'mh-show-buffer))))
-     (if (or (null BuffeR-S)
-             (not (buffer-live-p (get-buffer BuffeR-S))))
-         (error "mh-show-buffer invalid")
-       (with-current-buffer BuffeR-S
-         (,@ body))))))
-
-;;; ----------------------------------------------------------------------
-;;;
-(put 'ti::mail-gnus-macro 'lisp-indent-function 0)
-(put 'ti::mail-gnus-macro 'edebug-form-spec '(body))
-(defmacro ti::mail-gnus-macro (&rest body)
-  "Do BODY in Gnus `gnus-article-buffer' if it exists.
-The `save-excursion' -- set buffer form is executed."
-  (`
-   (let* ((BuffeR-S  (when (boundp 'gnus-article-buffer)
-                       (symbol-value 'gnus-article-buffer))))
-     (if (or (null BuffeR-S)
-             (not (buffer-live-p (get-buffer BuffeR-S))))
-         (error "gnus-article-buffer invalid")
-       (with-current-buffer BuffeR-S
-         (,@ body))))))
-
-;;; ----------------------------------------------------------------------
-;;;
-(put 'ti::mail-rmail-macro 'lisp-indent-function 0)
-(put 'ti::mail-rmail-macro 'edebug-form-spec '(body))
-(defmacro ti::mail-rmail-macro (&rest body)
-  "Do BODY in RMAIL's active buffer. You have be in RMAIL summary."
-  (`
-   (let* ((BuffeR-R
-           ;;  This variable is available in Rmail-summary
-           ;;
-           (or (if (boundp 'rmail-buffer) (symbol-value 'rmail-buffer))
-               (get-buffer "RMAIL"))))
-     (if (or (null BuffeR-R)
-             (not (buffer-live-p (get-buffer BuffeR-R))))
-         (error "rmail-buffer buffer invalid")
-       (with-current-buffer BuffeR-R
-         (,@ body))))))
-
-;;; ----------------------------------------------------------------------
-;;;
-(put 'ti::mail-rmail-do-message-macro 'lisp-indent-function 2)
-(put 'ti::mail-rmail-do-message-macro 'edebug-form-spec '(body))
-(defmacro ti::mail-rmail-do-message-macro (nbr mode &rest body)
-  "Go to message without showing it and execute body.
-Must be in RMAIL buffer already.
-
-Input:
- NBR    message number, like `rmail-current-message'
- MODE   if non-nil then the area narrows to full stored message
-        with original headers. If nil, then area narrows to displayed
-        message.
- BODY   forms to execute in are narrowed to message."
-  (`
-   (let ((beg (rmail-msgbeg (, nbr)))
-         (end (rmail-msgend (, nbr))))
-     (save-window-excursion
-       (ti::widen-safe
-         (goto-char beg)
-         (forward-line 1)
-         (if (null (, mode))
-             (search-forward "\n*** EOOH ***\n" end t))
-         (narrow-to-region (point) end)
-         (goto-char (point-min))
-         (,@ body))))))
-
-;;; ----------------------------------------------------------------------
-;;;
-(defun ti::mail-rmail-copy-message (&optional nbr separate)
-  "Copy message NBR with header. Defaults to `rmail-current-message'.
-Current buffer must me in RMAIL already.
-
-Input:
-
-  NBR       message number
-  SEPARATE  if non-nil, then the headers and message body are returned
-            separately in format (hdr-string . body-string)
-
-Return:
-
- string
- list       see mode."
-  (interactive)
-  (let* (beg
-         end
-         hdr
-         ret)
-    (setq nbr  (or nbr rmail-current-message)
-          beg  (rmail-msgbeg nbr)
-          end  (rmail-msgend nbr))
-
-    (or (integerp nbr)
-        (error "NBR %s" nbr))
-    ;; The BEG isn't exactly the message beginning, skip 3 lines,
-    ;; also don't copy the original heades only.
-    ;;
-    ;; 
-    ;; 1, answered,,
-    ;; Summary-line: 23-Mar #Please Help Yourself, Help Ot...
-    ;; <ORIGINAL HEADERS>
-    ;;
-    ;; *** EOOH ***
-    ;; <HEADERS SHOWN IN RMAIL>
-    ;;
-    ;; <MESSAGE BODY>
-    (ti::widen-safe
-      (goto-char beg) (forward-line 3)
-      (setq beg (point))
-      (re-search-forward "^[ \t]*$")
-      (setq hdr (buffer-substring beg (point)))
-      ;;  Already sitting at empty line, move away.
-      (forward-line 1)
-      (re-search-forward "^[ \t]*$")
-      (setq beg (point))
-      ;;  Now make HDR + BODY of message
-      (if separate
-          (setq ret (cons hdr (buffer-substring beg end)))
-        (setq ret (concat hdr (buffer-substring beg end)))))
-    ret))
-
-;;}}}
-
 ;;{{{ PGP general, tests
 
 ;;; ----------------------------------------------------------------------
@@ -1029,7 +872,7 @@ Searches string 'X-Pgp-Signed:' and return end of match or nil."
 ;;;
 (defun ti::mail-pgp-re (str)
   "Add possible beginning anchor if STR doesn't have one."
-  (if (not (char= (aref str 0) ?^))
+  (if (not (char-equal (aref str 0) ?^))
       (concat "^" str)))
 
 ;;; ----------------------------------------------------------------------
@@ -1208,7 +1051,7 @@ Return:
     (save-excursion
       (when (and (re-search-forward re nil t)
                  (re-search-forward "^$" nil t))
-        ;;  #todo: Check first character. Actually we should check bit mask...
+        ;; FIXME: Check first character. Actually we should check bit mask...
         ;;
         ;;  -----BEGIN PGP MESSAGE-----
         ;;  Version: 2.6.2
@@ -1218,9 +1061,9 @@ Return:
         (forward-line 1)
         (setq char (following-char))
         (cond
-         ((char= char ?p) 'conventional)
-         ((char= char ?h) 'pgp)
-         ((char= char ?o) 'base64))))))
+         ((char-equal char ?p) 'conventional)
+         ((char-equal char ?h) 'pgp)
+         ((char-equal char ?o) 'base64))))))
 
 ;;; ----------------------------------------------------------------------
 ;;;
@@ -1459,14 +1302,13 @@ Return
 (defmacro ti::mail-pgp-stream-study-1-key-id (stream result)
   "Read MSB and LSB key-id from STREAM to RESULT.
 STREAM will be advanced during read."
-  (`
-   (let* ((i 0))
+  `(let* ((i 0))
      (while (< i 4)
-       (setq (, result) (concat (or (, result)  "")
-                                (format "%02x" (car (, stream))))
-             (, stream) (cdr (, stream))
+       (setq ,result (concat (or ,result  "")
+                                (format "%02x" (car ,stream)))
+             ,stream (cdr ,stream)
              i          (1+ i)))
-     (setq (, result) (upcase (, result))))))
+     (setq ,result (upcase ,result))))
 
 ;;; ----------------------------------------------------------------------
 ;;;
@@ -2029,8 +1871,7 @@ In the macro you can use following variables:
   `area-and'
 
 This macro does nothing if there is no normal PGP signature."
-  (`
-   (let (limits
+  `(let (limits
          area-beg
          area-end)
      (setq limits (ti::mail-pgp-block-area 'sig))
@@ -2041,7 +1882,7 @@ This macro does nothing if there is no normal PGP signature."
        ;;  If these are no used in BODY: no-op Quiet XE ByteCompiler
        (if (null area-beg)  (setq area-beg nil))
        (if (null area-end)  (setq area-end nil))
-       (,@ body)))))
+       ,@body)))
 
 ;;; ----------------------------------------------------------------------
 ;;;
@@ -2056,11 +1897,10 @@ This macro does nothing if there is no normal PGP signature."
 (put 'ti::mail-with-article-buffer 'edebug-form-spec '(body))
 (defmacro ti::mail-with-article-buffer (&rest body)
   "Run BODY in *Article* buffer if it exists."
-  (`
-   (let* ((buffer  (ti::mail-get-article-buffer)))
+  `(let* ((buffer  (ti::mail-get-article-buffer)))
      (when (buffer-live-p buffer)
        (with-current-buffer buffer
-         (,@ body))))))
+         ,@body))))
 
 ;;; ----------------------------------------------------------------------
 ;;;
@@ -2690,7 +2530,8 @@ that the old functionality is preserved in spite of changes."
         stat
         ptr)
     (setq list
-          '("<jdoe@examole.com> (Finland, pgp id 512/47141D35)"
+          '("Dr. Foo Bar <foo@bar.com>"
+	    "<jdoe@examole.com> (Finland, pgp id 512/47141D35)"
             "(Rune Juntti[FRONTEC Pajala]) <jdoe@example.se>"
             "shahramn@wv.mentorg.com (jdoe@example.com)"
             "(jdoe@example.com)"
@@ -2722,8 +2563,7 @@ that the old functionality is preserved in spite of changes."
       (read-from-minibuffer (concat "TEST>>" e1 "," e2 "<")))))
 
 ;;; ----------------------------------------------------------------------
-;;; (ti::mail-t-parse-name)
-;;;
+;;; ( ti::mail-parse-name "\"Dr. Volker Zell\" <dr.volker.zell-QHcLZuEGTsvQT0dZR+AlfA@public.gmane.org>")
 (defun ti::mail-parse-name (line)
   "Try to parse various formats of 'From:' fields.
 Supposes that the 'From:' keyword is removed from the LINE.
@@ -2731,11 +2571,13 @@ Supposes that the 'From:' keyword is removed from the LINE.
 Return:
   list          '(firstname surname)
   nil           if cannot parse both"
-  (let* ((re-A          "[-a-zA-Z0-9.{|]")
+  (let* ((re-ignore "\\(?:Dr. +\\|Mr. +\\)?")
+
+	 (re-A          "[-a-zA-Z0-9.{|]")
          (re-AG         (concat "\\("  re-A "+\\)"))
 
          ;;  'From: Mr-CEO John Doe <jdoe@example.com'
-         (fs-re2  (concat re-AG " +" re-AG))
+         (fs-re2  (concat re-ignore re-AG " +" re-AG))
 
          ;;  'USER <\"CLUSTER::VAX\@site.cm\"'
          (fs-vax  (concat "^" re-AG "[ \t<\"]+[A-Z]+::" re-AG))
@@ -3235,7 +3077,7 @@ Returns alist;
      date)
     (list
      (match-string 1 date)
-     (format "%02d" (string-to-int (match-string 2 date)))
+     (format "%02d" (string-to-number (match-string 2 date)))
      (match-string 3 date)
      (format "%02d"
              (ti::month-to-number (match-string 3 date)))
@@ -3454,7 +3296,7 @@ References:
 (defun ti::mail-whois-parse-paragraph (regexp &optional end-regexp)
   "Whois: Parse pragraph for the first REGEXP to END-REGEXP.
 See `ti::mail-whois-parse'."
-  (when (re-search-forward regexp nil 'noerr)
+  (when (re-search-forward regexp nil t)
     (let ((beg (match-beginning 0)))
       (if (null end-regexp)
           (forward-paragraph)
@@ -3634,7 +3476,7 @@ See `ti::mail-whois-parse'."
          (ti::mail-whois-parse-paragraph-end-condition))
         (cond
          ((and (goto-char point)
-               (re-search-forward ":\\(.*tech.*@.*\\)" nil 'noerr))
+               (re-search-forward ":\\(.*tech.*@.*\\)" nil t))
           (ti::mail-whois-parse-cleanup
            (match-string 1)))))))
 
@@ -3648,7 +3490,7 @@ See `ti::mail-whois-parse'."
          (ti::mail-whois-parse-paragraph-end-condition))
         (cond
          ((and (goto-char point)
-               (re-search-forward ":\\(.*zone.*@.*\\)" nil 'noerr))
+               (re-search-forward ":\\(.*zone.*@.*\\)" nil t))
           (ti::mail-whois-parse-cleanup
            (match-string 1)))))))
 
@@ -3664,122 +3506,121 @@ See `ti::mail-whois-parse'."
   "Whois: Parse records from buffer. See `ti::mail-whois-parse'.
 Values examined are: expires, created and updated."
   (let* ((date-info
-          (list
-           ;;  10-Aug-1998
-           (list
-            (concat
-             "\\("
-             "\\([0-9][0-9]?\\)"
-             "-\\([A-Z][a-z][a-z]\\)"
-             "-\\([0-9][0-9][0-9][0-9]\\)"
-             "\\)")
-            ;; day month year
-            '(3 4 5))
-           ;;  10-08-1998
-           (list
-            (concat
-             "\\("
-             "\\([0-9][0-9]?\\)"
-             "-\\([0-9][0-9]?\\)"
-             "-\\([0-9][0-9][0-9][0-9]\\)"
-             "\\)")
-            '(3 4 5))
-           ;;  Mon, Aug 10, 1998
-           (list
-            (concat
-             "\\("
-             "[A-Z][a-z][a-z],[ \t]*"
-             "\\([A-Z][a-z][a-z]\\)[ \t]+" ;; Mon
-             "\\([0-9]+\\)[ \t]*,[ \t]*"   ;; day
-             "\\([0-9][0-9][0-9][0-9]\\)"  ;; year
-             "\\)")
-            '(4 3 5))
-           (list
-            (concat
-             ;; 2003-08-25 19:15
-             "\\("
-             "\\([0-9][0-9][0-9][0-9]\\)"
-             "-\\([0-9][0-9]\\)"
-             "-\\([0-9][0-9]\\)"
-             "[ \t]+[0-9][0-9]:[0-9][0-9]"
-             "\\)")
-            '(5 4 3))
-           (list
-            (concat
-             ;; 1998.08.11
-             "\\("
-             "\\([0-9][0-9][0-9][0-9]\\)"
-             "[.]\\([0-9][0-9]\\)"
-             "[.]\\([0-9][0-9]\\)"
-             "\\)")
-            '(5 4 3))
-           (list
-            (concat
-             ;; changed:  20001107 15:03:09
-             ;; changed:     registdom@tin.it 20030403
-             ;;
-             "\\(\\([0-9][0-9][0-9][0-9]\\)"
-             "\\([0-9][0-9]\\)"
-             "\\([0-9][0-9]\\)"
-             "\\)")))
-          '(5 4 3))
-
-         (search (list
-                  (list
-                   'expires
-                   (concat
-                    "\\("
-                    "^[ \t]*Record[ \t]+expires[ \t]+on[ \t]+"
-                    "\\|^[ \t]*Expires[ \t]+on"
-                    "\\|^expire:[^\r\n0-9]+"
-                    "\\|^[ \t]*expiration date:[ \t]+"
-                    "\\)"))
-                  (list
-                   'created
-                   (concat
-                    "\\("
-                    "^[ \t]*Record[ \t]+created[ \t]+on[ \t]+"
-                    "\\|^[ \t]*Created[ \t]+on.*[ \t]+"
-                    "\\|^created:[^\r\n0-9]+"
-                    "\\|^[ \t]*creation date:[ \t]+"
-                    "\\)"))
-                  (list
-                   'updated
-                   (concat
-                    "\\("
-                    "^.*last.*updated?[ \t]+on[ \t]+"
-                    "\\|^[ \t]*updated date:[ \t]+"
-                    "\\|^changed:[^\r\n0-9]+"
-                    "\\)"))))
-         (beg    (point))
-         ret)
+	  (list
+	   ;;  10-Aug-1998
+	   (list
+	    `,(concat
+	       "\\("
+	       "\\([0-9][0-9]?\\)"
+	       "-\\([A-Z][a-z][a-z]\\)"
+	       "-\\([0-9][0-9][0-9][0-9]\\)"
+	       "\\)")
+	    ;; day month year
+	    '(3 4 5))
+	   ;;  10-08-1998
+	   (list
+	    `,(concat
+	       "\\("
+	       "\\([0-9][0-9]?\\)"
+	       "-\\([0-9][0-9]?\\)"
+	       "-\\([0-9][0-9][0-9][0-9]\\)"
+	       "\\)")
+	    '(3 4 5))
+	   ;;  Mon, Aug 10, 1998
+	   (list
+	    `,(concat
+	       "\\("
+	       "[A-Z][a-z][a-z],[ \t]*"
+	       "\\([A-Z][a-z][a-z]\\)[ \t]+" ;; Mon
+	       "\\([0-9]+\\)[ \t]*,[ \t]*"   ;; day
+	       "\\([0-9][0-9][0-9][0-9]\\)"  ;; year
+	       "\\)")
+	    '(4 3 5))
+	   (list
+	    `,(concat
+	       ;; 2003-08-25 19:15
+	       "\\("
+	       "\\([0-9][0-9][0-9][0-9]\\)"
+	       "-\\([0-9][0-9]\\)"
+	       "-\\([0-9][0-9]\\)"
+	       "[ \t]+[0-9][0-9]:[0-9][0-9]"
+	       "\\)")
+	    '(5 4 3))
+	   (list
+	    `,(concat
+	       ;; 1998.08.11
+	       "\\("
+	       "\\([0-9][0-9][0-9][0-9]\\)"
+	       "[.]\\([0-9][0-9]\\)"
+	       "[.]\\([0-9][0-9]\\)"
+	       "\\)")
+	    '(5 4 3))
+	   (list
+	    `,(concat
+	       ;; changed:  20001107 15:03:09
+	       ;; changed:     registdom@tin.it 20030403
+	       ;;
+	       "\\(\\([0-9][0-9][0-9][0-9]\\)"
+	       "\\([0-9][0-9]\\)"
+	       "\\([0-9][0-9]\\)"
+	       "\\)")
+	    '(5 4 3))))
+	 (search (list
+		  (list
+		   'expires
+		   `,(concat
+		      "\\("
+		      "^[ \t]*Record[ \t]+expires[ \t]+on[ \t]+"
+		      "\\|^[ \t]*Expires[ \t]+on"
+		      "\\|^expire:[^\r\n0-9]+"
+		      "\\|^[ \t]*expiration date:[ \t]+"
+		      "\\)"))
+		  (list
+		   'created
+		   `,(concat
+		      "\\("
+		      "^[ \t]*Record[ \t]+created[ \t]+on[ \t]+"
+		      "\\|^[ \t]*Created[ \t]+on.*[ \t]+"
+		      "\\|^created:[^\r\n0-9]+"
+		      "\\|^[ \t]*creation date:[ \t]+"
+		      "\\)"))
+		  (list
+		   'updated
+		   `,(concat
+		      "\\("
+		      "^.*last.*updated?[ \t]+on[ \t]+"
+		      "\\|^[ \t]*updated date:[ \t]+"
+		      "\\|^changed:[^\r\n0-9]+"
+		      "\\)"))))
+	 (beg (point))
+	 ret)
     (dolist (elt search)
       (multiple-value-bind (type line)
-          elt
-        (dolist (date-data date-info)
-          (multiple-value-bind (regexp pos-list)
-              date-data
-            (setq regexp (concat line regexp))
-            ;;  The order of the fields can be anything, start over
-            ;;  every time from the same point
-            (goto-char beg)
-            (when (re-search-forward regexp nil 'noerr)
-              (multiple-value-bind (raw day month year)
-                  (list
-                   (match-string 2)
-                   (match-string (nth 0 pos-list))
-                   (match-string (nth 1 pos-list))
-                   (match-string (nth 2 pos-list)))
-                (if (eq 3 (length month))
-                    (setq month (ti::month-to-number
-                                 (capitalize month)
-                                 'zero)))
-                (push (list
-                       type
-                       (list (format "%s-%s-%s" year month day)
-                             raw))
-                      ret))
-              (return))))))
+	  elt
+	(dolist (date-data date-info)
+	  (multiple-value-bind (regexp pos-list)
+	      date-data
+	    (setq regexp (concat line regexp))
+	    ;;  The order of the fields can be anything, start over
+	    ;;  every time from the same point
+	    (goto-char beg)
+	    (when (re-search-forward regexp nil t)
+	      (multiple-value-bind (raw day month year)
+		  (list
+		   (match-string 2)
+		   (match-string (nth 0 pos-list))
+		   (match-string (nth 1 pos-list))
+		   (match-string (nth 2 pos-list)))
+		(if (eq 3 (length month))
+		    (setq month (ti::month-to-number
+				 (capitalize month)
+				 'zero)))
+		(push (list
+		       type
+		       (list (format "%s-%s-%s" year month day)
+			     raw))
+		      ret))
+	      (return))))))
     ret))
 
 ;;; ----------------------------------------------------------------------
@@ -3834,16 +3675,16 @@ See `ti::mail-whois-parse'."
   (let ((point (point)))
     (cond
      ((and (goto-char point)
-           (re-search-forward "^[ \t]*Administrative Contact:" nil 'noerr))
+           (re-search-forward "^[ \t]*Administrative Contact:" nil t))
       (forward-line 1)
       (let ((beg (point)))
         ;;  Search "Technical Contact:"
-        (when (re-search-forward "^[ \t]*.+:[ \t]*$" nil 'noerr)
+        (when (re-search-forward "^[ \t]*.+:[ \t]*$" nil t)
           (ti::mail-whois-parse-cleanup
            (buffer-substring
             beg (1- (line-beginning-position)))))))
      ((and (goto-char point)
-           (re-search-forward ":\\(.*admin.*@.*\\)" nil 'noerr))
+           (re-search-forward ":\\(.*admin.*@.*\\)" nil t))
       (ti::mail-whois-parse-cleanup
        (match-string 1))))))
 
@@ -4284,32 +4125,27 @@ We try to find this string forward and it is not there we add one."
   "Yank message to current point and add optional PREFIX. GNUS/RMAIL."
   (let* (p
          (yb (ti::mail-mail-buffer-name)) ;where is the yank buffer ?
-
          ;;  See this mail is called from GNUS
          ;;
          ;;  - If GNUS isn't loaded, set buf name to nil
-
          (gnus-buf (and (boundp 'gnus-article-buffer)
                         (symbol-value 'gnus-article-buffer)))
-
          ;;  Test if gnus-reply; the buffers are the same
-
          (gnus-r (and gnus-buf
                       (string= gnus-buf yb))))
     (save-excursion
       (setq p (point))
-
       ;;  (mail-yank-original '(4))     ; mimic C-u C-c C-y == no indent
       ;;  - bypass all, see sendmail::mail-yank-original
       ;;    this is more robust, and runs no extra hooks
       ;;  - If in GNUS, the buffer will be *Article*, which is
       ;;    narrowed to headers...widen the buffer before yanking.
-
       (if (null gnus-r)
           (progn                        ; normal mail
             (mail-yank-original '(4)))
-        (save-excursion (set-buffer yb) (widen))
-        (insert-buffer yb))
+        (with-current-buffer yb
+	  (widen))
+        (insert-buffer-substring yb))
       (ti::pmax)
       (delete-blank-lines)
       (if prefix
@@ -4350,7 +4186,7 @@ Return:
       ;;  require final newline every time: "123\n", the trim
       ;;  command will remove any exeessive newlines.
       (ti::pmax)
-      (if (not (char= (preceding-char) ?\n))
+      (if (not (char-equal (preceding-char) ?\n))
           (insert "\n")))
     ret))
 
@@ -4501,7 +4337,7 @@ Subexpression 1 contains field name and 2 contains rest."
   (string-match "^\\([A-Z][^:]+\\):\\(.*\\)" string))
 
 ;;; ----------------------------------------------------------------------
-;;; #todo:
+;;;FIXME:
 (defun ti::mail-field-line-p ()
   "Return `field' name if the bginning of line contains 'NNNN:'."
   (let ((str (buffer-substring
@@ -4542,7 +4378,7 @@ If WRAP is non-nil, call `ti::mail-field-string-wrap'."
     (ti::mail-field-read-line-at-point wrap)))
 
 ;;; ----------------------------------------------------------------------
-;;; #todo:
+;;;FIXME:
 (defun ti::mail-current-field-name  ()
   "Return name of field at current point or nil."
   (save-excursion
@@ -5110,9 +4946,8 @@ If NA-MODE is non-nil:
 (put 'ti::mail-mime-tm-edit-mode-macro 'edebug-form-spec '(body))
 (defmacro ti::mail-mime-tm-edit-mode-macro  (&rest body)
   "TM. Run body If mime edit mode is active in current buffer."
-  (`
-   (when (and (ti::mail-mime-tm-featurep-p) (ti::mail-mime-tm-edit-p))
-     (,@ body))))
+  `(when (and (ti::mail-mime-tm-featurep-p) (ti::mail-mime-tm-edit-p))
+     ,@body))
 
 ;;; ----------------------------------------------------------------------
 ;;;
@@ -5120,9 +4955,8 @@ If NA-MODE is non-nil:
 (put 'ti::mail-mime-semi-edit-mode-macro 'edebug-form-spec '(body))
 (defmacro ti::mail-mime-semi-edit-mode-macro  (&rest body)
   "SEMI. Run body If mime edit mode is active in current buffer."
-  (`
-   (when (and (ti::mail-mime-semi-featurep-p) (ti::mail-mime-semi-edit-p))
-     (,@ body))))
+  `(when (and (ti::mail-mime-semi-featurep-p) (ti::mail-mime-semi-edit-p))
+     ,@body))
 
 ;;; ----------------------------------------------------------------------
 ;;;
@@ -5130,13 +4964,12 @@ If NA-MODE is non-nil:
 (put 'ti::mail-mime-funcall-0-macro 'edebug-form-spec '(body))
 (defmacro ti::mail-mime-funcall-0-macro (func-tm func-semi)
   "Call function  FUNC-TM or FUNC-SEMI with no arguments."
-  (`
-   (cond
+  `(cond
     ((and (ti::mail-mime-tm-featurep-p) (ti::mail-mime-tm-edit-p))
-     (ti::funcall (, func-tm))
+     (ti::funcall ,func-tm)
      t)
     ((and (ti::mail-mime-semi-featurep-p) (ti::mail-mime-semi-edit-p))
-     (ti::funcall (, func-semi))))))
+     (ti::funcall ,func-semi))))
 
 ;;; ----------------------------------------------------------------------
 ;;;
@@ -5144,14 +4977,13 @@ If NA-MODE is non-nil:
 (put 'ti::mail-mime-funcall-2-macro 'edebug-form-spec '(body))
 (defmacro ti::mail-mime-funcall-2-macro (func-tm func-semi arg1 arg2)
   "Call function  FUNC-TM or FUNC-SEMI with ARG1 ARG2."
-  (`
-   (cond
+  `(cond
     ((and (ti::mail-mime-tm-featurep-p) (ti::mail-mime-tm-edit-p))
-     (ti::funcall (, func-tm) (, arg1) (, arg2))
+     (ti::funcall ,func-tm ,arg1 ,arg2)
      t)
     ((and (ti::mail-mime-semi-featurep-p) (ti::mail-mime-semi-edit-p))
-     (ti::funcall (, func-semi) (, arg1) (, arg2))
-     t))))
+     (ti::funcall ,func-semi ,arg1 ,arg2)
+     t)))
 
 ;;; ----------------------------------------------------------------------
 ;;;
@@ -5234,15 +5066,14 @@ nil  if mime is not available.
 (defmacro ti::mail-mime-tm-split-macro (&rest body)
   "TM. Define  variables `split'  `max' `parts' and run BODY if TM active.
 You have to use variables `max' and `parts' otherwise you don't need this macro."
-  (`
-   (when (boundp 'mime-editor/split-message)
+  `(when (boundp 'mime-editor/split-message)
      (let* ((split (symbol-value 'mime-editor/split-message))
             (max   (symbol-value 'mime-editor/message-default-max-lines))
             (lines (count-lines (point-min) (point-max)))
             (parts (1+ (/ lines max))))
        (if (null split)
            (setq split nil))            ; No-op Bytecomp silencer
-       (,@ body)))))
+       ,@body)))
 
 ;;; ----------------------------------------------------------------------
 ;;;
@@ -5289,14 +5120,14 @@ satisfied."
         (re-search-forward re nil t)))))
 
 ;;; ----------------------------------------------------------------------
-;;; #todo: not tested
+;;;FIXME: not tested
 ;;;
 (defun ti::mail-mime-qp-decode(from to)
   "Mime. Decode quoted-printable from region between FROM and TO."
   (save-excursion
     (goto-char from)
     (while (search-forward "=" to t)
-      (cond ((char= (following-char) ?\n)
+      (cond ((char-equal (following-char) ?\n)
              (delete-char -1)
              (delete-char 1))
             ((looking-at "[0-9A-F][0-9A-F]")
@@ -5350,7 +5181,7 @@ content-transfer-encoding: quoted-printable"
                  message-send-hook
                  mh-before-send-letter-hook))
     (when (boundp sym)
-      (make-local-hook sym)
+      (add-hook sym 'ignore nil 'local)
       (set sym nil))))
 
 ;;; ----------------------------------------------------------------------
@@ -5359,8 +5190,7 @@ content-transfer-encoding: quoted-printable"
 (put 'ti::mail-sendmail-pure-env-macro 'edebug-form-spec '(body))
 (defmacro ti::mail-sendmail-pure-env-macro (&rest body)
   "Reset all mail/message hooks/vars locally to nil and run BODY."
-  (`
-   (let* (message-setup-hook
+  `(let* (message-setup-hook
           message-mode-hook
           mail-mode-hook
           mail-setup-hook
@@ -5373,7 +5203,7 @@ content-transfer-encoding: quoted-printable"
      (if mail-archive-file-name (setq mail-archive-file-name    nil))
      (if mail-default-headers   (setq mail-default-headers      nil))
      (if mail-default-reply-to  (setq mail-default-reply-to     nil))
-     (,@ body))))
+     ,@body))
 
 ;;; ----------------------------------------------------------------------
 ;;;
@@ -5381,20 +5211,19 @@ content-transfer-encoding: quoted-printable"
 (put 'ti::mail-sendmail-macro-1 'edebug-form-spec '(body))
 (defmacro ti::mail-sendmail-macro-1 (to subject send &rest body)
   "See `ti::mail-sendmail-macro' instead. This is low level function."
-  (`
-   (progn
+  `(progn
      (ti::mail-sendmail-pure-env-macro
       ;;   to subject in-reply-to cc replybuffer actions
       ;;
-      (mail-setup (, to) (, subject) nil nil nil nil)
+      (mail-setup ,to ,subject nil nil nil nil)
       (mail-mode)
       (ti::mail-kill-field "^fcc")
       (ti::mail-text-start 'move)
-      (,@ body)
+      ,@body
       (ti::pmin)
       (ti::kill-buffer-safe " sendmail temp") ;See sendmail-send-it
-      (when (, send)
-        (mail-send-and-exit nil))))))
+      (when ,send
+        (mail-send-and-exit nil)))))
 
 ;;; ----------------------------------------------------------------------
 ;;;
@@ -5417,15 +5246,14 @@ Note:
 
     The hooks are set to nil so that mail buffer is created fast and
     that nothing causes trouble when mail buffer is ready."
-  (`
-   (let* ((BuffeR (ti::temp-buffer ti:mail-mail-buffer 'clear)))
+  `(let* ((BuffeR (ti::temp-buffer ti:mail-mail-buffer 'clear)))
      (save-window-excursion
        (with-current-buffer BuffeR
          (ti::mail-sendmail-macro-1
-          (, to)
-          (, subject)
-          (, send)
-          (,@ body)))))))
+          ,to
+          ,subject
+          ,send
+          ,@body)))))
 
 ;;}}}
 
@@ -5440,10 +5268,8 @@ Note:
   (ti::package-require-mail-abbrevs)
   (cond
    ((ti::emacs-p)
-
     (if mail-abbrevs
         (ti::funcall 'mail-abbrevs-setup))
-
     (or mail-abbrevs
         (progn
           (build-mail-aliases)
@@ -5482,16 +5308,13 @@ reuild from scratch."
      (t                                 ;Too bad, this is much slower
       (unless alias-alist
         (setq alias-alist (ti::mail-abbrev-get-alist)))
-
       (save-restriction
         (narrow-to-region beg end) (ti::pmin)
         (while (re-search-forward
                 "^[ \t]+\\|^[ \t]*[\n,][ \t]*\\|:[ \t]*" nil t)
           (when (setq word (ti::buffer-match"[^ \t,\n]+" 0))
-
             (setq mb (match-beginning 0)
                   me (match-end 0))
-
             ;;  Do not count field names, like  "CC:" words
             (when (and (not (string-match ":$" word))
                        ;;  Is this abbrev ?
@@ -5499,12 +5322,10 @@ reuild from scratch."
               (setq exp (cdr exp))      ; Change alias to expansion
               (delete-region mb me)
               (insert exp)
-
               ;;  This isn't very smart formatting, the layout
               ;;  is so that each expansion is on it's own line,
               ;;  no fancy lining up things -- Mail me back
               ;;  with diff to this code if you code nicer one.
-
               (when (looking-at "[ \t]*,") ;put on separate lines
                 (goto-char (match-end 0))
                 (when (not (looking-at "[ \t]*$"))
@@ -5524,27 +5345,21 @@ Input:
 
 Return:
   '((ABBREV-STRING . EXPANDED-STRING) (A . E) ..)"
-  (let* (
-         (pre-abbrev-expand-hook        nil) ;; prevent recursion
-         (mail-abbrev-aliases-need-to-be-resolved t)
-         table
-         exp-list
-         elt)
-
+  (let ((abbrev-expand-functions nil) ;; prevent recursion
+	(mail-abbrev-aliases-need-to-be-resolved t)
+	table
+	exp-list
+	elt)
     ;; XEmacs 19.14 no-op for ByteCompiler
-
     (unless mail-abbrev-aliases-need-to-be-resolved
       (setq mail-abbrev-aliases-need-to-be-resolved nil))
-
     (setq table (ti::mail-abbrev-table))
-
     (cond
      ((listp table) ;; mail-aliases is already in (A . S) form
       (setq exp-list table))
      (t                                 ;Vector
       ;;  We have to expand abbrevs by hand because XEmacs doesn't
       ;;  parse them like emacs mail-alias
-
       (when table
         (let ((tmp (generate-new-buffer "*ti::mail-abbrev*")))
           (with-current-buffer tmp
@@ -5557,7 +5372,6 @@ Return:
                 (when (not (string= "0" elt)) ;abbrev in this slot?
                   (insert elt)
                   (end-of-line)
-
                   ;;  2000-09-03
                   ;;  BBDB does some voodoo with the abbrevs by
                   ;;  setting the function cell, and sometimes  calling
@@ -5565,7 +5379,6 @@ Return:
                   ;;  --> Don't bother with the error, since the
                   ;;  abbrevs is correctly expanded, but BBDB cries about
                   ;;  "wrong marker" or something.
-
                   (condition-case err
                       (expand-abbrev)
                     (error

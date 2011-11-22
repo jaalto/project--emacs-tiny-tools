@@ -1,0 +1,3298 @@
+Table of contents
+
+       1.0 General info about fontifying with font-lock and lazy-lock
+           1.1 Lazy Lock mode
+           1.2 Font-lock, lazy-lock, defer-lock, fast-lock -- say what ?
+
+       2.0 Lazy fontification for fast Font Lock mode
+           2.1 Announcement of lazy-lock.el v2.04
+           2.2 Font-lock-extra.el
+
+       3.0 Font-lock and lazy-lock: questions and answers
+           3.1 Fast fontification
+           3.2 Font-lock is pain slow with big files.. -- use lazy-lock
+           3.3 Font-lock in non windowed Emacs
+           3.4 Ascii terminal highlighting
+           3.5 Lazy lock doesn't work for small buffers ?
+           3.6 Postscript printing
+           3.7 Internal-facep error
+           3.8 GNUS article highlighting
+           3.9 I'd like to be able to change the colours for the comments
+           3.10 Font-lock colours - how to change defaults?
+           3.11 Customizing faces
+           3.12 Different face setup
+           3.13 Highlight specific words
+
+       4.0 Some more answers
+           4.1 The Ulrik Dickow way
+           4.2 Font-mode colours - how to change defaults?
+           4.3 Font-lock for different modes ?
+           4.4 Font-lock won't fontify multi-line c-style comments?
+           4.5 Colours for monochrome monitor while emacs thinks it is colour ?
+           4.6 Enable font-lock-mode for a whole list of modes ?
+           4.7 Locking Regions of Text (Answer + Summary)
+
+       5.0 Font-lock keywords
+           5.1 Dired
+           5.2 GNUS
+           5.3 Java
+           5.4 LaTeX
+           5.5 Motorola 56000 DSP assembly language
+           5.6 Procmail
+           5.7 Rmail headers
+           5.8 Example for C++
+           5.9 C++ and new data types
+           5.10 Objective-c
+           5.11 Outline
+           5.12 Sqlmode
+           5.13 SQL
+           5.14 TCL
+           5.15 VHDL (an Ada-like) language
+           5.16 Another set of VHDL keywords
+              5.16.1 2 'font-lock-keyword-face)
+              5.16.2 2 'font-lock-type-face)
+              5.16.3 2 'font-lock-type-face)
+              5.16.4 1 'font-lock-variable-name-face)
+              5.16.5 2 'font-lock-variable-name-face)
+
+       6.0 Emacs HTML writing tools and font lock
+           6.1 Html-helper-mode
+           6.2 Html-mode
+
+       7.0 Font lock and hilit19
+           7.1 Hilit19 description (old)
+           7.2 Don't use hilit19 any more
+           7.3 Font-lock and hilit19 co-operation
+
+       8.0 X resource settings
+           8.1 Menu bar font in .xinitrc
+           8.2 Emacs colour resources
+           8.3 No fonts matching patters are same size as comment
+
+       9.0 Why all the fonts are not available in emacs ?
+           9.1 Code xf.el
+
+       10.0 Code: linemenu.el, Highlighting current line
+
+       11.0 MS-DOS Emacs 19 port
+           11.1 Setting background colour
+           11.2 Code: pc-win.el
+
+       12.0 Xt/Motif programming and font-lock
+           12.1 Code: xt-font-lock.el
+
+1.0 General info about fontifying with font-lock and lazy-lock
+
+        #T2HTML-TITLE Emacs highlighting and fonts
+        #T2HTML-METAKEYWORDS Emacs, Emacs Lisp, color, Resource page
+        #T2HTML-OPTION --css-code-bg
+        #T2HTML-OPTION --html-frame
+
+        Copyright (C) 1995-2010 Jari Aalto
+
+        License: This material may be distributed only subject to
+        the terms and conditions set forth in GNU General Public
+        License v2 or later; or, at your option, distributed under the
+        terms of GNU Free Documentation License version 1.2 or later
+        (GNU FDL).
+
+        This document is compiled from Usenet postings that concern Emacs's
+        coloring support, often referred as fontification. The document is
+        constantly kept up to date whenever interesting articles appear in
+        the user group gnu.emacs.help. (2002-08-08: This document may
+        contains very old information))
+
+    1.1 Lazy Lock mode
+
+        Highlighting is done (1) on a demand-driven basis, and (2) when
+        Emacs is idle. Demand-driven means that fontification occurs in
+        only the visible part of the buffer (the window), and only when and
+        where necessary. Lazy Lock can also fontify the invisible parts of
+        the buffer after a certain amount of time of idleness (when there
+        is no input).
+
+            ftp://archive.cis.ohio-state.edu:pub/gnu/emacs/elisp-archive/
+            ;; LCD Archive Entry:
+            ;; lazy-lock|Simon Marshall|simon@gnu.ai.mit.edu|
+            ;; Lazy Font Lock mode (for fast demand-driven fontification).|
+            ;; 25-Jan-95|1.10|~/modes/lazy-lock.el.Z|
+
+    1.2 Font-lock, lazy-lock, defer-lock, fast-lock -- say what ?
+
+          How do font-lock with lazy-lock, defer-lock and fast-lock work
+          together and which combination is the best respectively ?
+
+        Simon Marshall <Simon.Marshall@esrin.esa.it>
+
+        The difference is that fast-lock.el caches fontification in files.
+        Thus visiting a file is very quick. It does not affect anything
+        else. However, lazy-lock.el version 2 (for Emacs 19.30 and up) does
+        various different things. It delays fontification both when you
+        visit a file and (optionally) when you type. The result is that
+        things like scrolling are a little slower, but typing is faster,
+        with lazy-lock.el (compared to font-lock.el or font-lock.el with
+        fast-lock.el).
+
+        So, if having lots of cache files bothers you, use lazy-lock.el.
+        If you find that font-lock.el is too slow when typing, use
+        lazy-lock.el. If you find that lazy-lock.el is too slow when
+        scrolling, use fast-lock.el. Try them out; the choice is yours. I
+        think lazy-lock.el is probably used more than fast-lock.el.
+
+2.0 Lazy fontification for fast Font Lock mode
+
+    2.1 Announcement of lazy-lock.el v2.04
+
+        Hi folks, <Simon.Marshall@esrin.esa.it>
+
+        Here is version 2.04 of lazy-lock.el. This version works with Emacs
+        19.30 and later. (Currently XEmacs does not have the features to
+        support lazy-lock.el.) See also fast-lock.el, now distributed with
+        both Emacs and XEmacs, but use one or the other!
+
+        Lazy Lock mode speeds up Font Lock mode in a number of ways:
+
+        o   Buffer fontification can be demand-driven. This means that
+            initial fontification of the buffer does not occur if the
+            buffer is larger than a certain size (default 25K
+            bytes). Instead, fontification occurs when necessary, such as
+            when scrolling through the buffer would otherwise reveal
+            unfontified areas. This is useful if buffer fontification is
+            too slow for large buffers.
+        o   On-the-fly fontification can be deferred. This means that
+            on-the-fly fontification does not occur as you type. Instead,
+            fontification is deferred until Emacs has been idle for a
+            certain amount of time (default 0.25 seconds). This is useful
+            if on-the-fly fontification is too slow to keep up with your
+            typing.
+        o   Buffer fontification can be stealthy. This means that remaining
+            unfontified areas of buffers are fontified if Emacs has been
+            idle for a certain amount of time (default 30 seconds). This is
+            useful if any buffer has demand-driven fontification.
+
+        Changes since the previous version:
+
+        o   Deferral can be specified on a mode-by-mode basis. This means
+            that you can specify that deferral is used in only modes where
+            you find on-the-fly fontification is too slow to keep up with
+            your typing.
+        o   Emacs 19.31 idle timers are used to implement deferral and
+            stealth. This means that problems or oddities experienced when
+            using Transient Mark mode and Shell mode (and other modes based
+            on Comint mode) have gone away.
+        o   Fixed bug whereby changing the window buffer before deferral
+            occurred would result in the newly visible buffer being
+            unconditionally fontified.
+        o   Fixed bug whereby scrolling after inserting a large amount of
+            text into a small buffer would result in the new text being
+            seen unfontified.
+        o   Fixed feature whereby stealth fontification would not be
+            interruptible when searching for, but failing to find, a buffer
+            that required fontification.
+
+        Version 2 of lazy-lock.el is a drop-in replacement for lazy-lock.el
+        version 1 and defer-lock.el, only it is much better than both of
+        them put together. Actually, if you use *either* of these packages
+        with Emacs 19.30 and later you should change to version 2 of
+        lazy-lock.el.
+
+        Note that this version will not be placed on the Emacs Lisp
+        Archive, because I want to leave version 1 there for pre-Emacs
+        19.30 users. Eventually, version 2 of lazy-lock.el will be
+        distributed with some future version of Emacs.
+
+        See the comment header for more information and installation
+        instructions, and the comment header and command 'lazy-lock-mode'
+        for usage instructions.
+
+        Please report problems, etc., via M-x lazy-lock-submit-bug-report
+        RET. Enjoy, Simon.
+
+    2.2 Font-lock-extra.el
+
+        .Ilya Zakharevich (ilya@math.ohio-state.edu)
+        .ftp://ftp.math.ohio-state.edu/pub/users/ilya/emacs
+
+        It is designed for mostly package writers. It is documented that the
+        only benefits you get without tuning your .emacs are in CPerl-mode.
+        You can also use -3 and -4 keywords for C and C++ (for -4 you would
+        better get ctypedefs too. And if you want to tune-up faces,
+        you will appreciate this package.
+
+3.0 Font-lock and lazy-lock: questions and answers
+
+    3.1 Fast fontification
+
+        If you want fast fontification don't use the function
+        'font-lock-mode' your small redraw function can simply be
+        `font-lock-fontify-buffer' (but if you bind it to [return] then you
+        should use lazy-lock too)
+
+    3.2 Font-lock is pain slow with big files.. -- use lazy-lock
+
+        The lazy-lock.el it's a "must" for font-lock
+
+        .(setq font-lock-verbose nil)         ; to avoid the annoying messages
+        .(setq lazy-lock-continuity-time 0.3) ; refontify after 0.3 inactivity
+
+    3.3 Font-lock in non windowed Emacs
+
+          I have added customizations to emacs to start on the Font Lock
+          mode and also colors for the hook "window-setup-hook". It works fine
+          when I start emacs in the usual way (emacs). However when I start in
+          the No Window mode by using "emacs -nw" I get the following error:
+          "Symbol's function definition is void: set-face-foreground"
+
+        <bouzas@physics.ucla.edu> (Antonio Bouzas)
+
+        I have the following code in my .emacs, to avoid that problem,
+
+            (cond
+             (window-system
+              (set-default-font
+               "-ncd-terminal-medium-r-normal-*-23-180-*-*-*-*-*-*")
+              ))
+
+    3.4 Ascii terminal highlighting
+
+          Please, does anyone have any ideas about how or if I can persuade
+          emacs to fontify?
+
+       <hchau@landau.ucdavis.edu>
+
+        Not that I know of. I heard that XEmacs does some basic
+        fontification. But if you really want syntax coloring over
+        the serial line, use Jed. It available at
+
+            ftp://space.mit.edu/pub/davis/jed/
+
+        It is an emacs clone so you would have no problem if you know
+        emacs. Then if you want a newsreader that also does coloring pick
+        up slrn too. This is what I use when I am over the serial
+        line. Emacs and vim at work and Jed and vim at home.
+
+      Steven L. Baur <Asteve@diana.miranova.com>
+
+        Font-lock-mode in XEmacs 19.14 is supposed to have full colour ANSI
+        terminal support. 19.13 has terminal font-lock in only black &
+        white at present.If you're running on limited memory for Linux,
+        your best bet is XEmacs with the relocating allocation option
+        turned on, it grows a lot slower then GNU Emacs does.
+
+        19.13 can't do colors, but it can do the attributes highlight
+        (bold), dim, and underline (if your tty can)
+
+
+        .Vladimir Alexiev <vladimir@cs.ualberta.ca>
+        .ftp://ftp.iesd.auc.dk/pub/emacs-lisp/
+        .emacs-19.25.90-termcap_faces.tar.gz
+
+        This includes patches for 11 of the emacs source (.c) files, so
+        perhaps you'll need root privileges to use it.
+
+        Font-lock-mode in XEmacs 19.14 (still beta as of 25 Apr 1995) has
+        full color ANSI terminal support. 19.13 has terminal font-lock in
+        only black & white (highlight, dim and underline).
+
+        XEmacs can emit the following TTY attributes: blinking dim
+        highlight reverse underline. You set these with
+        set-face-***-p. Also, make-face-bold and make-face-italic map to
+        highlight and underline respectively.
+
+        You'll also need to see what colours/attributes your terminal
+        emulator can display, and choose how to map the above to them. I
+        have a mono CGA that basically can display three "colours": normal,
+        bold and dim; and can also do reverse and blink. Otherwise you can
+        map attributes to colours (e.g., underline to blue, etc). However,
+        depending on your mapping, not all attributes will combine nicely,
+        because XEmacs does not emit first the colour attributes and then
+        the others. E.g., if your normal colour is black-on-white, underline
+        is mapped to blue, and xemacs emits reverse before underline, an
+        underline-reverse text will come out blue-on-black which is not
+        what you want. Of course, dim and highlight are mutually exclusive
+        by definition.
+
+        You do the mapping by tweaking termcap. The ANSI tty command "set
+        attributes" is of the form \E[*m where * is a string of attribute
+        numbers n1;..;nk. num tc face
+
+
+            --- -- ------------------------------
+            0  me default (does NOT reset colour.
+               In kermit say "SET TERMINAL COLOUR 20" to have it reset it.)
+            1  md highlight=bold
+            2  mh dim
+            3  so reverse ("standout")
+            4  us underline=italic
+            5  mb blinking
+            7  mr --not used--
+            2* turn * off (I know the tc for only 23=se and 24=ue)
+            3* set foreground (1=red + 2=green + 4=blue)
+            4* set background (1=red + 2=green + 4=blue)
+
+        E.g., I use this for my mono CGA:
+
+            mh=\E[1;30m:so=\E[7m:se=\E[m:us=\E[1;30m:ue=\E[m
+
+        mh=dim and us=underline are gray-on-black, `so' is mapped to
+        \E[7m because kermit does not understand \E[3m. Find the
+        termcap for your tty and append that line. In "screen", use
+        the command
+
+            termcap vt100 LP:mh=\E[1;30m:so=\E[7m:se=\E[m:us=\E[1;30m:ue=\E[m
+
+        A patch is available from <vladimir@cs.ualberta.ca> that makes
+        edit-faces.el more useful for ttys.
+
+      Alex Ott <ottalex@narod.ru>
+
+        GNU Emacs since version 21 provides support for font-lock on
+        text terminals with color support (like xterm or linux console
+        terminal).  For comfortable job with font-lock, user may
+        define two set of font-lock colors attribute configurations
+        for window system use and terminal use.
+
+    3.5 Lazy lock doesn't work for small buffers ?
+
+        (setq lazy-lock-minimum-size nil) for small buffers Otherwise it's
+        never refontified in small buffers
+
+    3.6 Postscript printing
+
+          I've been using font-lock modes for editing C, C++, and Tcl
+          sources and I like it so much that I would like to produce
+          PostScript listings of those programs with the same nice
+          font-locked format. Has anyone done this before? A:
+          jcolman@lehman.com (Jake Colman)
+
+        Try `ps-print.el' available from the ohio-state archives in the
+        packages subdirectory. It purports to print a file the same way it
+        looks with font-lock.
+
+    3.7 Internal-facep error
+
+          When I bring up a file (say .emacs) up in emacs, I get an error
+          message: "Error in init file:Wrong type argument:internal-facep,
+          font-lock-comment-face"
+
+          My font settings are:
+
+            (setq font-lock-use-fonts t)
+            (setq font-lock-use-colours nil)
+            (setq font-lock-use-maximal-decoration t)
+            ;; After font-lock is loaded, you can set the colours and still use
+            ;; italic & bold fonts as chosen.
+            (set-face-foreground 'font-lock-comment-face       "Violet")
+            (set-face-foreground 'font-lock-keyword-face       "White")
+
+        <Simon.Marshall@esrin.esa.it>
+
+        The first two are specific to XEmacs; you don't need them in Emacs
+        as it works out whether your display is colour or not. The last two
+        are failing because at that time your ~/.emacs is loaded, the faces
+        have not been created. The way to change the attributes are as
+        follows:
+
+        . Modify the variable font-lock-face-attributes in your ~/.emacs.
+        . Use X resources (see the doc-string of font-lock-face-attributes).
+        . Call font-lock-make-faces in your .emacs and then do the
+            above code.
+
+        Don't use (3); in fact you don't need to preload font-lock at all.
+        Remove your require from your ~/.emacs and just do things like:
+
+            (add-hook 'foo-mode-hook 'turn-on-font-lock)
+            (setq font-lock-face-attributes '((font-lock-comment-face ..) ..))
+
+        though it's probably cleaner to do (2) than to do (1).
+
+    3.8 GNUS article highlighting
+
+          Nowhere in the font-lock-keywords list for gnus-article-mode it says
+          to highlight strings but they highlit anyway. How do I turn this
+          off?
+
+        <Simon.Marshall@esrin.esa.it> Make sure that the value of
+        `font-lock-no-comments' is t in the buffer.
+
+    3.9 I'd like to be able to change the colours for the comments
+
+        Alf-Ivar Holm <alfh@gyda.ifi.uio.no>
+
+            (setq font-lock-face-attributes
+             '((font-lock-comment-face "DarkGoldenrod" nil nil t)
+             (font-lock-string-face "red")))
+
+        Look at the documentation of font-lock-face-attributes (C-h v) for
+        more info.
+
+    3.10 Font-lock colours - how to change defaults?
+
+        Kai Grossjohann <grossjoh@ls6.informatik.uni-dortmund.de>
+
+        With Emacs 19.30 and up you can set font-lock-face-attributes which is
+        rather simple to understand, I think.
+
+            (setq font-lock-face-attributes
+                '(
+                  ;; FACE              FORE    BACK BOLD? IT? UNDERLINE?
+                  (font-lock-type-face "green" nil  nil   t   nil)
+                  ;; ...more lines like this...))
+
+    3.11 Customizing faces
+
+          I'm unable to correctly customize font-lock to display certain faces
+          in bold and/or italic.
+
+        Ulrik Dickow <dickow@nbi.dk> Don't use a hook. Just do for example
+        something like this in your .emacs:
+
+            (copy-face 'italic  'font-lock-comment-face)
+            (set-face-foreground 'font-lock-comment-face "FireBrick")
+            (setq font-lock-comment-face 'font-lock-comment-face)
+
+        This works whether font-lock.el has been loaded already or not.
+        It doesn't even require that `window-system' is non-nil.
+        See also http://www.nbi.dk/~dickow/emacs/ for working examples.
+
+    3.12 Different face setup
+
+          How do I set up different colours for the different faces in my
+          .emacs file. For instance I want to change the colour of
+          font-lock-comment-face at start up.
+
+        Kai Grossjohann <grossjoh@ls6.informatik.uni-dortmund.de>
+
+            ;; create a new face
+            (make-face 'sg-comment-face)
+            ;; set its foreground and background colour
+            (set-face-foreground 'sg-comment-face "blue")
+            (set-face-background 'sg-comment-face "green")
+            ;; let the new face be the font-lock-comment-face
+            (setq font-lock-comment-face 'sg-comment-face)
+
+        If there is an existing face you like (try =M-x=
+        =list-faces-display= for a list), you can just use the setq
+        line with that face instead of sg-comment-face.
+
+    3.13 Highlight specific words
+
+          In a specific mode I want to highlight some specified words,
+          but not strings. I do I accomplish this?
+
+      Alf-Ivar Holm <alfh@gyda.ifi.uio.no>
+
+      [latest font-lock only] There is a variable called
+      font-lock-keywords-only (C-h v) that you can set directly, or
+      indirectly with font-lock-defaults like:
+
+            (add-hook
+             'modename-mode-hook
+             '(lambda ()
+                (make-local-variable 'font-lock-defaults)
+                 (setq font-lock-defaults
+                       '(modename-font-lock-keywords t nil))))
+
+4.0 Some more answers
+
+    4.1 The Ulrik Dickow way
+
+            ;;  For fine tuning freaks...
+            ;;
+            (defun my-small-font-lock-after-change-function (beg end old-len)
+              "Just removes the properties that will be
+               updated by lazy-lock later"
+              (set-text-properties beg (min (+ end 1) (point-max)) nil))
+
+            (add-hook 'font-lock-mode-hook 'my-font-lock-mode-hook)
+
+            (defun my-font-lock-mode-hook ()
+              "Setting up font lock with."
+              (remove-hook 'after-change-functions
+                           'font-lock-after-change-function)
+              (add-hook 'after-change-functions
+                        ' my-small-font-lock-after-change-function))
+
+            (add-hook 'post-command-hook
+                      'lazy-lock-post-command-fontify-windows)
+            (add-hook 'post-command-hook
+                      'lazy-lock-post-command-fontify-stealthily)
+
+    4.2 Font-mode colours - how to change defaults?
+
+        Mosur K. Mohan <mmohan@dtthp144.intel.com>
+
+        Here's a snippet of my startup file which resets my colours (works for
+        19.28 and 19.29, don't know about other versions):
+
+            ;; Customization for the font-lock package
+            (if (> emacs-minor-version 28)
+              (setq
+                font-lock-face-attributes
+                '((font-lock-comment-face "Firebrick" nil nil t nil)
+                   (font-lock-string-face "Black" nil nil t nil)
+                   (font-lock-keyword-face "Blue")
+                   (font-lock-function-name-face "yellow")
+                   (font-lock-variable-name-face "Black")
+                   (font-lock-type-face "RoyalBlue")
+                   (font-lock-reference-face "Firebrick" nil nil t nil))
+                ;; font-lock-maximum-decoration t)
+              (let (new-face)
+                (setq new-face (copy-face 'italic 'firebrick-italic))
+                (set-face-foreground new-face "firebrick")
+                (setq new-face (copy-face 'bold 'blue))
+                (set-face-foreground new-face "blue")
+                (setq new-face (copy-face 'bold 'royalblue))
+                (set-face-foreground new-face "royalblue")
+                (setq new-face (copy-face 'bold 'yellow))
+                (set-face-foreground new-face "yellow")
+                (setq new-face (copy-face 'bold 'firebrick))
+                (set-face-foreground new-face "firebrick")
+                (setq
+                  font-lock-comment-face 'firebrick-italic
+                  font-lock-string-face 'italic
+                  font-lock-keyword-face 'blue
+                  font-lock-function-name-face 'yellow
+                  font-lock-variable-name-face 'black
+                  font-lock-type-face 'royalblue
+                  font-lock-reference-face 'firebrick)))
+
+    4.3 Font-lock for different modes ?
+
+          Is it possible to have different fonts in different modes? for
+          example, I'd like to use one font as default, and another when i call
+          cc-mode.
+
+        Joe Jackson <jackson@shoeless.lanl.gov>
+
+        Try a construct like the following;
+
+            (add-hook 'lisp-mode-hook 'my-font-lock-for-lisp)
+
+            (defun my-font-lock-common ()
+              "Common settings for all modes."
+              (setq-default
+               font-lock-auto-fontify            t
+               font-lock-use-fonts               nil
+               font-lock-use-maximal-decoration  t
+               font-lock-use-colours              t
+               font-lock-mode-enable-list        nil
+               font-lock-mode-disable-list       nil)
+              (set-face-foreground 'font-lock-comment-face       "red")
+              (set-face-foreground 'font-lock-string-face        "blue")
+              (set-face-foreground 'font-lock-function-name-face "darkgreen")
+              (set-face-foreground 'font-lock-keyword-face       "magenta")
+              (set-face-foreground 'font-lock-type-face          "Coral")
+              (set-face-foreground 'font-lock-reference-face     "Black")
+              (set-face-background 'font-lock-reference-face     "LightBlue"))
+
+            (defun my-font-lock-for-lisp ()
+              "My font settings."
+              (my-font-lock-common)
+              (font-lock-mode 0)
+              (set-face-font        'italic      "8x13")
+              (set-face-foreground  'italic      "black")
+              (set-face-background  'italic      "lightgrey")
+              (set-face-font        'bold-italic "8x13bold")
+              (set-face-foreground  'bold-italic "black")
+              (set-face-font        'bold        "8x13")
+              (set-face-foreground  'bold        "blue")
+              (set-face-foreground  'underline   "maroon")
+              (set-face-underline-p 'underline   nil)
+              (set-face-background  'region      "powder blue"))
+
+        Every mode has a mode-hook so you can set the fonts for each mode
+        separately and achieve the look you desire. This is also a good way
+        to customize other emacs behaviors such as auto-fill-mode and
+        fill-column.
+
+    4.4 Font-lock won't fontify multi-line c-style comments?
+
+        Paul D. Smith <psmith@baynetworks.com> answers:
+
+        You don't specify what version of Emacs you're using, so I'll
+        assume Emacs 19.30. Look at the elisp file defining the major
+        mode. See if it installs its own syntax table; it should. It'll
+        probably be called sql-mode-syntax-table, for a mode called
+        sql-mode.
+
+        So, you'll see a syntax table definition, something like this:
+
+            ;; Set up our syntax table
+            ;;
+            (defvar sql-mode-syntax-table nil
+              "Syntax table in use in sql-mode buffers.")
+
+            (if sql-mode-syntax-table
+                ()
+              (setq sql-mode-syntax-table (make-syntax-table))
+              (modify-syntax-entry ?\\  "\\"   sql-mode-syntax-table)
+                ...)
+
+        You want to add the following lines to the list of modifications to the
+        syntax table:
+
+            (modify-syntax-entry ?/ ". 14" sql-mode-syntax-table)
+            (modify-syntax-entry ?* ". 23" sql-mode-syntax-table)
+
+        Remove any other settings of ?/ or ?* you see there. Make sure the
+        darn thing gets installed! Look in the function sql-mode and make
+        sure something like this is in there:
+
+            (set-syntax-table sql-mode-syntax-table)
+
+        And make sure font-lock is on. Voila! Fontification of comments
+        should work just fine. If you want to do it in a mode hook rather
+        than change the source for the mode, add this (assuming the hook is
+        sql-mode-hook, of course :)
+
+            (add-hook 'sql-mode-hook
+              '(lambda ()
+                 (modify-syntax-entry ?/ ". 14")
+                 (modify-syntax-entry ?* ". 23")))
+
+    4.5 Colours for monochrome monitor while emacs thinks it is colour ?
+
+        <Mohsin-Ahmed> mosh@ramanujan.cs.albany.edu
+
+            (defun my-set-mono-colours ()
+              "Set-up grey colours for grey monitor
+            Check with list-faces-display.
+            "
+              (interactive)
+              (set-face-foreground 'default  "grey99")  ; White.
+              (set-face-background 'default  "grey1")   ; Black.
+
+              (set-face-foreground 'bold     "grey10")
+              (set-face-background 'bold     "grey60")
+
+              (set-face-foreground 'italic   "grey99")  ; For Comments.
+              (set-face-background 'italic   "grey29")
+
+              (set-face-foreground 'bold-italic "grey85") ; For keywords?
+              (set-face-background 'bold-italic "grey35")
+
+              (set-face-foreground 'region   "grey90")   ; For Searching words.
+              (set-face-background 'region   "grey50")
+
+              (set-face-foreground 'underline "grey10")
+              (set-face-background 'underline "grey55")
+              )
+
+    4.6 Enable font-lock-mode for a whole list of modes ?
+
+        Ulrik Dickow <dickow@nbi.dk>
+
+        Please take a look at my home page for more font goodies
+
+            http://www.nbi.dk/~dickow
+
+        I use the following piece of elisp to automatically enable
+        font-lock-mode for a whole list of modes, unless the file is larger
+        than a given limit:
+
+            ;; (excerpt from nbi-faces.el 19-Jan-1995 U.Dickow)
+
+            (defvar font-lock-maybe-enable-list nil
+                "List of modes for which to automatically turn on font
+                 lock mode, when buffer size is less than the variable
+                 `font-lock-max-enable' (see that).
+                 The list is read during only the loading of nbi-faces.el,
+                 so modify `font-lock-max-enable' instead if you want
+                 to separate modes afterwards.
+                 See also `hilit-mode-enable-list'.")
+
+              (defvar font-lock-max-enable 100000
+                "*Files containing more than this number of bytes will
+                  not have Font Lock mode turned on automatically
+                  (by `font-lock-maybe-enable').
+                  Use \\[font-lock-mode] or \\[font-lock-fontify-buffer]
+                 to do it manually. Changes of this variable (before loading
+                 a new file) will be honored.
+                 See also `font-lock-maybe-enable-list'.")
+
+              (defun font-lock-maybe-enable ()
+                "Enable font-lock-mode if current saved buffer size
+              is less than `font-lock-max-enable'."
+                (if (< buffer-saved-size font-lock-max-enable)
+                    (font-lock-mode 1)
+                  (message
+                   (concat
+                   "Won't auto-fontify such a large buffer"
+                   "(see var `font-lock-max-enable')"))))
+
+              (setq font-lock-maybe-enable-list
+                    '(tex-mode
+                      c-mode emacs-lisp-mode perl-mode fortran-mode
+                      kumac-mode rmail-mode rmail-summary-mode
+                      dired-mode shell-mode
+                      html-helper-mode)
+
+              ;; Add hooks to enable font lock mode in various major modes
+              (mapcar '(lambda (x)
+                         (add-hook (intern (concat (symbol-name x) "-hook"))
+                                   (function font-lock-maybe-enable)))
+                      font-lock-maybe-enable-list)
+
+    4.7 Locking Regions of Text (Answer + Summary)
+
+        <aep@world.std.com> (Andrew E Page):
+
+        In summary, regions of read-only text can be accomplished with
+        emacs scripts that use the text properties functions available in
+        the language. Basically most of the information necessary can be
+        found in "The GNU Emacs Lisp Reference Manual" Sec 29.17(Text
+        Properties).
+
+        The text affected is either a buffer or a string that you specify
+        in the <object> argument (See below). If no <object> is specified
+        then the it works on the current buffer.
+
+        The pertinent command is:
+
+            add-text-properties <start> <end> <props> &optional <object>
+
+        o   <start> Absolute character position of the start of the text
+            that you wish to add the property to.
+        o   <end> Absolute character position of the end of the text
+            that you wish to add the property to.
+        o   <props> Property/value pairs that you wish to add to the text.
+            Examples:
+
+            '(read-only t)   Makes the text read-only
+            '(read-only nil) Reverses the above
+            '(face bold)     Makes the text appear emboldened
+            '(face italic)   Set the text to italic
+            '(face default)  Sets the text back to the default face
+            '(intangible t)  Sets the text so that the insert point
+                             cannot be set between <start> and <end>
+
+        *Cautionary* *notes:*
+
+        Apparently this does not work for all version of Emacs. In My case
+        I'm using 19.27. Setting the text proper 'intangible' makes the
+        text invisible to searches. So if you are searching for text with
+        'search-forward' or search-backward, text that has been made
+        intangible will be ignored by the search.
+
+        When specifying several properties at once to be added to text that
+        includes 'read-only t' make sure that 'read-only' is the LAST
+        property to be added, otherwise the rest will fail:
+
+            ;; this will FAIL since the text becomes read-only first
+            ;;
+            '(read-only t face bold)
+
+            ;; this will succeed since the face is set then the t
+            ;; ext is made read-only
+            ;;
+            '(face bold read-only t)
+
+        If you specify a face that is not available for the font that has
+        been loaded the command will fail. So if 'bold' or 'italic' text is
+        not available for the font that is being used. the command will
+        fail. I found this out when the line in my
+        X11/lib/app-defaults/Emacs file for font was as follows:
+
+            Emacs*font:6x13
+
+        Setting the text to bold or italic will cause the script to fail
+        since neither mode is available for this font. I got better results
+        with the following:
+
+            Emacs*font:-adobe-courier-medium-r-*-*-16-*-*-*-*-*-*-*
+
+        which allowed me to set both bold and italic text. Example: Here's
+        some code that sets a C comment to be read-only and intangible:
+
+            ;; 1. goto the the top of the file
+            ;; 2. get the start of the comment
+            ;; 3. get the end of the comment
+            ;;
+            (goto-char (point-min))
+            (setq ro-text-start (- (search-forward "/*") 2))
+            (setq ro-text-end (search-forward "*/")) ;
+            (add-text-properties ro-text-start ro-text-end
+              '(intangible t read-only t))
+
+5.0 Font-lock keywords
+
+    5.1 Dired
+
+        Mosur K. Mohan <mmohan@dtthp144.intel.com>
+
+            (setq dired-font-lock-keywords
+              '(
+                 ;; Directory headers are defun's
+                 ("^  \\(/.+\\)" 1 font-lock-function-name-face)
+                 ;; Symlinks are references
+                 ("\\([^ ]+\\) -> [^ ]+$" . font-lock-reference-face)
+                 ;; Marks are keywords
+                 ("^[^ ]" . font-lock-keyword-face)
+                 ;; Subdirectories are defun's
+                 ("^..d.* \\([^ ]+\\)$" 1 font-lock-function-name-face)))
+
+    5.2 GNUS
+
+        Terry T Tateyama <ttateyam@defmacro.cs.utah.edu>
+
+        Please note that new Gnus ding 5.x has native font lock support
+        already. Ding will be available in FSF emacs 19.30+
+
+            (setq gnus-article-font-lock-keywords
+             '(
+                ("^:\\(.*\\)"
+                 1 font-lock-type-face t) ; non-supercite type
+                ("^[ \t]*[]|>]+\\(.*\\)"
+                 1 font-lock-type-face t) ; non-supercite type
+                ("^[ \t]*\\([a-zA-Z_0-9][a-zA-Z_0-9]\\)+>+\\(.*\\)"
+                 2 font-lock-comment-face t)    ; even sc-attribute names
+                ("^[ \t]*\\([a-zA-Z_0-9][a-zA-Z_0-9]\\)*[a-zA-Z_0-9]>+\\(.*\\)"
+                 2 font-lock-doc-string-face t) ; odd sc-attribute names
+                 ;;  (";.*" . font-lock-comment-face)))
+
+            (add-hook
+             'gnus-article-prepare-hook
+             '(lambda ()
+                (if window-system
+                    (progn
+                      (setq font-lock-keywords gnus-article-font-lock-keywords)
+                      (font-lock-mode 1)
+                      (font-lock-fontify-buffer)))))
+
+    5.3 Java
+
+        ftp://ftp.std.com/pub/fwhite/java-flock.el.
+
+        <joeyGibson@mindspring.com> (Joey Gibson), 06 Apr 1997
+        gnu.emacs.help ...A couple of weeks ago I posted an ELISP file that
+        added font-lock info for colourizing JAVA code. Do a deja-news
+        search for my name under gnu.emacs.help and you should find it. It
+        was a .zip file.
+
+        http://www.csd.uu.se/~andersl/emacs.shtml
+
+    5.4 LaTeX
+
+        Jaap Henk Hoepman <jhh@cwi.nl>
+
+        As I'm not sure whether the default installation of Emacs gives any
+        useful font-locking for TeX or LaTeX files, I'll tell how I
+        installed it for Emacs 19.27. You will have to put the following
+        lines into your .emacs file:
+
+            ;; ~~~~~~~~~~~~ This is in your .emacs ~~~~~~~~~~~~~~~~~~~
+            (font-lock-mode 0) ;; force loading of the font-lock package
+
+            ;; specify the colours and underlining of the different standard
+            ;; type-faces (In used colours because I really like the 9x15
+            ;; fixed font which doesn't have sensible bold or italics)
+
+            (set-face-foreground  'bold             "firebrick3")
+            (set-face-foreground  'italic           "turquoise4")
+            (set-face-foreground  'bold-italic      "blue")
+            (set-face-underline-p 'underline        nil)
+            (set-face-foreground  'underline        "blueviolet")
+
+            ;; bind the standard type-faces to the font-lock faces, some
+            ;; already have a sensible default
+
+            (setq font-lock-type-face 'bold)
+
+
+            ;; the following list specifies that strings matching one of the
+            ;; regular expressions should be rendered using the
+            ;; font-lock-...-face that follows it
+
+            (setq
+             tex-font-lock-keywords
+             '(
+               ("\\(\\\\\\(begin\\|end\\){[a-zA-Z0-9\\*]+}\\)"
+                1 font-lock-function-name-face nil)
+
+               ("\\(\\\\\\(.\\|[a-zA-Z@]+\\)\\)"
+                1 font-lock-keyword-face nil)
+
+               ("\\\\def[\\\\@]\\([a-zA-Z@]+\\)"
+                1 font-lock-function-name-face t)
+
+               ("\\([^\\\\]\\|^\\)\\$\\([^$]*\\)\\$"
+                2 font-lock-string-face t)
+
+               ("\\\\\\[\\(\\([^]]\\|^\\)*\\)\\\\\\]"
+                1 font-lock-string-face t)))
+
+    5.5 Motorola 56000 DSP assembly language
+
+        Luis Fernandes <elf@ee.ryerson.ca> recalled:
+
+            ;; Version: asm56k-f-lck.el       1.0 20 Sep 1995
+            ;; Font Lock Keywords for Motorola 56000 DSP assembly language
+            ;;
+            ;; Author: Mitch Chapman
+
+    5.6 Procmail
+
+        Andrew Cosgriff <ajc@unico.com.au>
+
+        here's all you need to do to highlight your .procmailrc - (i put
+        a -*- procmail -*- at the top of my .procmailrc to activate this
+        "mode". If anybody has a real indenting mode for procmailrc's,
+        i'd love to see it.). Works for me under XEmacs 19.14.
+
+            (defun procmail-mode ()
+              "Mode for highlighting procmailrc files"
+              (interactive)
+              (setq mode-name "Procmail"
+                    major-mode 'procmail))
+
+            (setq procmail-font-lock-keywords
+                  (list '("#.*"
+                          . font-lock-comment-face)
+                        '("^[\t ]*:.*"
+                          . font-lock-type-face)
+                        '("[A-Za-z_]+=.*"
+                          . font-lock-keyword-face)
+                        '("^[\t ]*\\*.*"
+                          . font-lock-doc-string-face)
+                        '("\$[A-Za-z0-9_]+"
+                          . font-lock-function-name-face)))
+
+        note that you just have to setq MODE-font-lock-keywords, and
+        font-lock will automatically trigger for that mode.
+
+    5.7 Rmail headers
+
+          I am using emacs 19.33.1 and font-lock/lazy-lock which came
+          along. The typical problem for me is: if I want to highlight headers
+          in an RMAIL-buffer (like "^From:", "^Date:", ...) and I want to
+          highlight those headers ONLY from the beginning of the buffer and
+          before "^--text follows this line--", I don't know how to do it.
+
+        Simon Marshall <Simon.Marshall@esrin.esa.it>
+
+        What you want to do is write a special rmail-fontify-region
+        function that uses two different regexps vars, something like:
+
+            (defvar rmail-font-lock-header-keywords
+              '(("^\\(From\\|Sender\\):"
+                    . font-lock-function-name-face)
+                ("^Reply-To:.*$"
+                    . font-lock-function-name-face)
+                ("^Subject:"
+                    . font-lock-comment-face)
+                ("^\\(To\\|Apparently-To\\|Cc\\):"
+                    . font-lock-keyword-face)))
+
+            (defvar rmail-font-lock-message-keywords
+              '(("^[        ]*\\([A-Za-z]+[A-Za-z0-9_.@-]*\\)?[>|}].*"
+               . font-lock-reference-face)))
+
+        or somesuch. But it only uses the former for the region containing
+        the header, and the latter for the region containing the message.
+        You would then make the value of font-lock-fontify-region-function
+        be the symbol rmail-fontify-region in Rmail mode. You would do
+        something similar for =mail-mode=.
+
+    5.8 Example for C++
+
+            (setq c++-mode-hook  'my-c++-mode-hook)
+
+            (defun my-c++-settings ()
+              "C++ for my style."
+              (require 'font-lock)
+
+              ;;  Also see c-font-lock-keywords-1 or c++-font-lock-keywords
+              (setq c-font-lock-keywords    c-font-lock-keywords-2)
+              (setq lisp-font-lock-keywords lisp-font-lock-keywords-2)
+              (font-lock-mode 'run-it-for-me-Simon!)
+              (font-lock-fontify-buffer))
+
+    5.9 C++ and new data types
+
+          I would like to add some new datatypes (toto, tutu for instance)
+          in c-mode to have them highlighted in the same way that the
+          classical ones (float, double, ...). What should I do?
+
+        Ullrich Hafner <hafner@informatik.uni-wuerzburg.de>
+
+            (make-local-variable 'font-lock-defaults)
+
+            (setq my-c-type-types                 ; fill in new types
+                  (concat "auto\\|c\\(har\\|onst\\)\\|"
+                          "double\\|e\\(num\\|xtern\\)\\|"
+                          "float\\|int\\|long\\|register\\|"
+                          "s\\(hort\\|igned\\|t\\(atic\\|ruct\\)\\)\\|"
+                          "typedef\\|un\\(ion\\|signed\\)\\|"
+                          "vo\\(id\\|latile\\)\\|"
+                          "FILE\\|\\sw+_t\\|\\sw+_e"))
+
+            ;; small modification of c-font-lock-keywords-3
+            (setq
+             my-c-font-lock-keywords
+             (append (list
+                      (cons (concat "\\<\\(" my-c-type-types "\\)\\>")
+                            'font-lock-type-face)
+                      (list
+                       (concat "\\<\\(" my-c-type-types "\\)\\>"
+                               "\\([ \t*&]+\\sw+\\>\\)*")
+                       ;; Fontify each declaration item.
+                       '(font-lock-match-c++-style-declaration-item-and-skip-to-next
+                         ;; Start with point after all type specifiers.
+                         (goto-char (or (match-beginning 8) (match-end 1)))
+                         ;; Finish with point after first type specifier.
+                         (goto-char (match-end 1))
+                         ;; Fontify as a variable or function name.
+                         (1 (if (match-beginning 4)
+                                font-lock-function-name-face
+                              font-lock-variable-name-face))))
+                      ;;
+                      ;; Fontify structures, or typedef names, plus their items.
+                      '("\\(}\\)[ \t*]*\\sw"
+                        (font-lock-match-c++-style-declaration-item-and-skip-to-next
+                         (goto-char (match-end 1)) nil
+                         (1 (if (match-beginning 4)
+                                font-lock-function-name-face
+                              font-lock-variable-name-face)))))
+                     c-font-lock-keywords-2))
+
+            (setq font-lock-defaults '(my-c-font-lock-keywords nil))
+
+    5.10 Objective-c
+
+        Stephen Peters <speters%samsun@us.oracle.com>
+
+        At the end of this message is a hack I threw together for simple
+        Objective-C font-locking, although I'll confess I haven't cleaned
+        it up nor looked at it in far too long a time. It's mostly based on
+        an old copy of C-mode's highlighting, but it should probably be
+        changed to augment the c-font-lock-keywords instead of rewriting
+        everything, and I should be using the newer format for
+        font-lock-defaults-alist. One of these days I'll have to do that.
+
+            ;; add keywords to font-lock-defaults-alist
+            (setq
+             font-lock-defaults-alist
+             (append font-lock-defaults-alist
+                     (list
+                      '(objc-mode .
+                        (objc-font-lock-keywords nil nil ((?_ . "w")))))))
+
+            (defconst objc-font-lock-keywords-1 nil
+             "For consideration as a value of `objc-font-lock-keywords'.
+            This does fairly subdued highlighting.")
+
+            (defconst objc-font-lock-keywords-2 nil
+             "For consideration as a value of `objc-font-lock-keywords'.
+            This does a lot more highlighting.")
+
+            (let ((storage "auto\\|extern\\|register\\|static\\|volatile")
+                  (prefixes "unsigned\\|short\\|long")
+                  (types (concat "int\\|char\\|float\\|double"
+                                 "\\|void\\|struct"
+                                 "\\|union\\|enum\\|typedef"))
+                  (ctoken "[a-zA-Z0-9_:~*]+"))
+              (setq
+               objc-font-lock-keywords-1
+               (list
+                ;; fontify preprocessor directives as definitions.
+                '("^#[ \t]*[a-z]+" . font-lock-variable-name-face)
+                '("^\\(#[ \t]*\\(include\\|import\\)\\)"
+                    1 font-lock-reference-face t)
+                ;; fontify C++-style comments as comments.
+                '("//.*" . font-lock-comment-face)
+                ;; fontify names being defined.
+                '("^#[ \t]*\\(define\\|undef\\)[ \t]+\\(\\(\\sw\\|\\s_\\)+\\)" 2
+                  font-lock-function-name-face)
+                ;; fontify other preprocessor lines.
+                '("^#[ \t]*\\(if\\|ifn?def\\)[ \t]+\\([^\n]+\\)"
+                  2 font-lock-function-name-face t)
+                ;; fontify the filename in #include <...>
+                ;; don't need to do this for #include "..." because those were
+                ;; already fontified as strings by the syntactic pass.
+                '("^#[ \t]*\\(include\\|import\\)[ \t]+\\(<[^>\"\n]+>\\)"
+                  2 font-lock-string-face)
+                ;; fontify the names of functions being defined.
+                (list (concat
+                       "^\\(" ctoken "[ \t]+\\)?" ; type specs; there can be no
+                       "\\(" ctoken "[ \t]+\\)?"  ; more than 3 tokens, right?
+                       "\\(" ctoken "[ \t]+\\)?"
+                       "\\([*&]+[ \t]*\\)?"         ; pointer
+                       "\\(" ctoken "\\)[ \t]*(")           ; name
+                      5 'font-lock-function-name-face)
+                ;; fontify the (first word of) names of methods being defined.
+                (list (concat
+                       "^[+-][ \t]+"
+                       "\\(("   ;; type casts are inside parens
+                       "\\(" ctoken "[ \t]+\\)?" ;; as above, <= 3, right?
+                       "\\(" ctoken "[ \t]+\\)?"
+                       "\\(" ctoken "[ \t]*\\)?"
+                       "\\(\*+[ \t]*\\)?"              ;; pointer
+                       ")[ \t]*\\)?"                   ;; end of type cast
+                       "\\(" ctoken "\\):?[ \t]*")
+                      6 'font-lock-function-name-face)
+                ;; fontify succeeding words of method names, provided they
+                ;; are written in the pattern
+                ;;    - firstWord: param
+                ;;      word: param
+                ;;      ...
+                ;;
+                ;; This looks bad when message expressions are formatted in the
+                ;; same way, e.g.,
+                ;;    [receiver firstWord: param
+                ;;              word: param
+                ;;     ...]
+                (list (concat
+                       "^[ \t]+\\(" ctoken ":[ \t]*\\)")
+                      1 'font-lock-function-name-face)
+                ;; Fontify structure names (in structure definition form).
+                (list (concat "^\\(typedef[ \t]+struct"
+                              "\\|struct\\|static[ \t]+struct\\)"
+                              "[ \t]+\\(" ctoken "\\)[ \t]*\\(\{\\|$\\)")
+                      2 'font-lock-function-name-face)
+                ;; Fontify case clauses. This is fast because its
+                ;; anchored on the left.
+                ;;
+                '("case[ \t]+\\(\\(\\sw\\|\\s_\\)+\\):". 1)
+                '("\\<\\(default\\):". 1)
+                ))
+              (setq
+               objc-font-lock-keywords-2
+               (append
+                objc-font-lock-keywords-1
+                (list
+                 ;;
+                 ;; fontify all storage classes and type specifiers
+                 (cons (concat "\\<\\(" storage "\\)\\>") 'font-lock-type-face)
+                 (cons (concat "\\<\\(" types "\\)\\>") 'font-lock-type-face)
+                 (cons (concat "\\<\\(" prefixes "[ \t]+" types "\\)\\>")
+                       'font-lock-type-face)
+                 ;;
+                 ;; fontify all compiler directives
+                 (cons (concat
+                        "^\\("
+                        (mapconcat
+                          'identity
+                           '(
+                             "@interface" "@implementation" "@protocol" "@end"
+                             "@private" "@protected" "@public"
+                             "@class" "@selector" "@encode" "@defs"
+                             )
+                             "\\|")
+                        "\\)[ \t\n(){}              ;,]")
+                       1)
+                 ;; fontify all builtin tokens
+                 (cons (concat
+                        "[ \t]\\("
+                        (mapconcat 'identity
+                                   '("for" "while" "do" "return" "goto"
+                                     "case" "break" "switch" "if" "then"
+                                     "else if" "else" "return" "default"
+                                     "continue" "default"
+                                     "@interface" "@implementation"
+                                     "@protocol" "@end" "@private"
+                                     "@protected" "@public" "@class"
+                                     "@selector" "@encode" "@defs"
+                                     )
+                                   "\\|")
+                        "\\)[ \t\n(){};,]")
+                       1)
+                 ;; Fontify variables declared with structures, or
+                 ;; typedef names.
+                 ;;
+                 '("}[ \t*]*\\(\\(\\sw\\|\\s_\\)+\\)[ \t]*[,;]"
+                   1 font-lock-function-name-face)))))
+
+            ; default to the simpler variety:
+            (defvar objc-font-lock-keywords (if font-lock-maximum-decoration
+                                                objc-font-lock-keywords-2
+                                              objc-font-lock-keywords-1)
+              "Additional expressions to highlight in Objective-C mode.")
+
+    5.11 Outline
+
+        David Fox <fox@graphics.cs.nyu.edu>
+
+            ;; Its nice to hilight the number differently than the header:
+            (defvar outline-font-lock-keywords
+              '(;; Highlight headings according to the level.
+                ("^\\([*%]+\\)\\([ ]*[0-9]*[ \t]*\\)\\([^\n\r]+\\)?[ \t]*[\n\r]"
+                 (1 font-lock-string-face)
+                 (2 font-lock-string-face)
+                 (3 (let ((len (- (match-end 1) (match-beginning 1))))
+                        (or (cdr (assq
+                                    len
+                                    '((1 . font-lock-function-name-face)
+                                      (2 . font-lock-keyword-face)
+                                      (3 . font-lock-comment-face)
+                                      (4 . font-lock-variable-name-face)
+                                      (5 . font-lock-function-name-face)
+                                      (6 . font-lock-keyword-face)
+                                      (7 . font-lock-comment-face))))
+                            font-lock-variable-name-face))
+                      nil t))
+                ;; Highlight citations of the form [1] and [Mar94].
+                ;("\\[\\([A-Z][A-Za-z]+\\)*[0-9]+\\]" . font-lock-type-face)
+                ("\\(<<[^\n\r]*>>=\\)[\n\r]" . font-lock-type-face)
+                ("\\(<<[^\n\r]*>>\\)" . font-lock-reference-face))
+              "Additional expressions to highlight in Outline mode.")
+
+    5.12 Sqlmode
+
+        David Worenklein <dcw@gcm.com> There's an sql package that does
+        just about anything you could want, including font-locking. It's
+        maintained by <sql-mode-help@atlantic2.sbi.com>. Peter Breton
+        <pbreton@pbreton.highway1.com> also suggests looking at following
+
+            ftp://ftp.xemacs.org/pub/contrib/sql-mode.tar.gz
+
+    5.13 SQL
+
+        David S. Masterson <davidm@prism.kla.com>
+
+        I use the SQL mode I pulled off the Ohio State archives and then
+        added the following to teach it about highlights:
+
+ ;;  Call function when mode is turned on.
+ (add-hook 'sql-mode-hook 'my-site-sql-mode-hook)
+
+ (defun my-site-sql-mode-hook ()
+   "Turns OFF auto-submission. makes _ a word char"
+   (interactive)
+
+   (modify-syntax-entry ?\_ "w")         ; make _ a regular "in-word" char
+
+   (local-set-key "\C-cc" 'comment-region)
+   (setq comment-start "REM ")
+
+   (site/define-sql-abbrevs)             ; sql-mode Abbreviations
+
+   (if (device-type)                     ; window only type stuff
+       (progn
+         (site/set-sql-menu)
+
+         (if (not (boundp 'my-site-sql-font-lock-keywords))
+             (progn
+               (setq my-site-sql-font-lock-keywords
+                     (purecopy
+                      (list
+                       '("/\\*.*\\*/" . font-lock-comment-face)
+                       '("\"[^\"]*\"" . font-lock-string-face)
+                       '("\'[^\']*\'" . font-lock-string-face)
+                       '("--.*$" . font-lock-comment-face)
+                       '("\\<varchar\\>" . font-lock-function-name-face)
+                       '("\\<binary\\>" . font-lock-function-name-face)
+                       '("\\<bit\\>" . font-lock-function-name-face)
+                       '("\\<char\\>" . font-lock-function-name-face)
+                       '("\\<datetime\\>" . font-lock-function-name-face)
+                       '("\\<float\\>" . font-lock-function-name-face)
+                       '("\\<int\\>" . font-lock-function-name-face)
+                       '("\\<money\\>" . font-lock-function-name-face)
+                       '("\\<smallint\\>" . font-lock-function-name-face)
+                       '("\\<tinyint\\>" . font-lock-function-name-face)
+                       '("\\<varbinary\\>" . font-lock-function-name-face)
+                       '("\\<AND\\>" . font-lock-keyword-face)
+                       '("\\<ALTER\\>" . font-lock-keyword-face)
+                       '("\\<AS\\>" . font-lock-keyword-face)
+                       '("\\<ASC\\>" . font-lock-keyword-face)
+                       '("\\<ASCENDING\\>" . font-lock-keyword-face)
+                       '("\\<AVG\\>" . font-lock-keyword-face)
+                       '("\\<BEGIN\\>" . font-lock-keyword-face)
+                       '("\\<BY\\>" . font-lock-keyword-face)
+                       '("\\<CHARINDEX\\>" . font-lock-keyword-face)
+                       '("\\<CLUSTERED\\>" . font-lock-keyword-face)
+                       '("\\<CHECKPOINT\\>" . font-lock-keyword-face)
+                       '("\\<COMMIT\\>" . font-lock-keyword-face)
+                       '("\\<COMPUTE\\>" . font-lock-keyword-face)
+                       '("\\<CONVERT\\>" . font-lock-keyword-face)
+                       '("\\<COUNT\\>" . font-lock-keyword-face)
+                       '("\\<CREATE\\>" . font-lock-keyword-face)
+                       '("\\<DATABASE\\>" . font-lock-keyword-face)
+                       '("\\<DATEADD\\>" . font-lock-keyword-face)
+                       '("\\<DATEDIFF\\>" . font-lock-keyword-face)
+                       '("\\<DATENAME\\>" . font-lock-keyword-face)
+                       '("\\<DATEPART\\>" . font-lock-keyword-face)
+                       '("\\<DECLARE\\>" . font-lock-keyword-face)
+                       '("\\<DESC\\>" . font-lock-keyword-face)
+                       '("\\<DESCENDING\\>" . font-lock-keyword-face)
+                       '("\\<DEFAULT\\>" . font-lock-keyword-face)
+                       '("\\<DELETE\\>" . font-lock-keyword-face)
+                       '("\\<DISTINCT\\>" . font-lock-keyword-face)
+                       '("\\<DROP\\>" . font-lock-keyword-face)
+                       '("\\<DUMP\\>" . font-lock-keyword-face)
+                       '("\\<ELSE\\>" . font-lock-keyword-face)
+                       '("\\<END\\>" . font-lock-keyword-face)
+                       '("\\<EXISTS\\>" . font-lock-keyword-face)
+                       '("\\<EXEC\\>" . font-lock-keyword-face)
+                       '("\\<FOR\\>" . font-lock-keyword-face)
+                       '("\\<FROM\\>" . font-lock-keyword-face)
+                       '("\\<GETDATE\\>" . font-lock-keyword-face)
+                       '("\\<GO\\>" . font-lock-keyword-face)
+                       '("\\<GROUP\\>" . font-lock-keyword-face)
+                       '("\\<HAVING\\>" . font-lock-keyword-face)
+                       '("\\<IF\\>" . font-lock-keyword-face)
+                       '("\\<IN\\>" . font-lock-keyword-face)
+                       '("\\<INDEX\\>" . font-lock-keyword-face)
+                       '("\\<INSERT\\>" . font-lock-keyword-face)
+                       '("\\<INTO\\>" . font-lock-keyword-face)
+                       '("\\<IS\\>" . font-lock-keyword-face)
+                       '("\\<ISNULL\\>" . font-lock-keyword-face)
+                       '("\\<LIKE\\>" . font-lock-keyword-face)
+                       '("\\<LOAD\\>" . font-lock-keyword-face)
+                       '("\\<MAX\\>" . font-lock-keyword-face)
+                       '("\\<MIN\\>" . font-lock-keyword-face)
+                       '("\\<NONCLUSTERED\\>" . font-lock-keyword-face)
+                       '("\\<NOT\\>" . font-lock-keyword-face)
+                       '("\\<NULL\\>" . font-lock-keyword-face)
+                       '("\\<ON\\>" . font-lock-keyword-face)
+                       '("\\<ORDER\\>" . font-lock-keyword-face)
+                       '("\\<OR\\>" . font-lock-keyword-face)
+                       '("\\<PRINT\\>" . font-lock-keyword-face)
+                       '("\\<PROC\\>" . font-lock-keyword-face)
+                       '("\\<RAISERROR\\>" . font-lock-keyword-face)
+                       '("\\<RETURN\\>" . font-lock-keyword-face)
+                       '("\\<RULE\\>" . font-lock-keyword-face)
+                       '("\\<SAVE\\>" . font-lock-keyword-face)
+                       '("\\<SELECT\\>" . font-lock-keyword-face)
+                       '("\\<SET\\>" . font-lock-keyword-face)
+                       '("\\<STATISTICS\\>" . font-lock-keyword-face)
+                       '("\\<SUBSTRING\\>" . font-lock-keyword-face)
+                       '("\\<SUM\\>" . font-lock-keyword-face)
+                       '("\\<TABLE\\>" . font-lock-keyword-face)
+                       '("\\<TRAN\\>" . font-lock-keyword-face)
+                       '("\\<TRANSACTION\\>" . font-lock-keyword-face)
+                       '("\\<TRIGGER\\>" . font-lock-keyword-face)
+                       '("\\<TRUNCATE\\>" . font-lock-keyword-face)
+                       '("\\<UNIQUE\\>" . font-lock-keyword-face)
+                       '("\\<UPDATE\\>" . font-lock-keyword-face)
+                       '("\\<USE\\>" . font-lock-keyword-face)
+                       '("\\<VALUES\\>" . font-lock-keyword-face)
+                       '("\\<VIEW\\>" . font-lock-keyword-face)
+                       '("\\<WHERE\\>" . font-lock-keyword-face)
+                       '("\\<WHILE\\>" . font-lock-keyword-face)
+                       '("\\<and\\>" . font-lock-keyword-face)
+                       '("\\<alter\\>" . font-lock-keyword-face)
+                       '("\\<as\\>" . font-lock-keyword-face)
+                       '("\\<asc\\>" . font-lock-keyword-face)
+                       '("\\<ascending\\>" . font-lock-keyword-face)
+                       '("\\<avg\\>" . font-lock-keyword-face)
+                       '("\\<begin\\>" . font-lock-keyword-face)
+                       '("\\<by\\>" . font-lock-keyword-face)
+                       '("\\<charindex\\>" . font-lock-keyword-face)
+                       '("\\<clustered\\>" . font-lock-keyword-face)
+                       '("\\<checkpoint\\>" . font-lock-keyword-face)
+                       '("\\<commit\\>" . font-lock-keyword-face)
+                       '("\\<compute\\>" . font-lock-keyword-face)
+                       '("\\<convert\\>" . font-lock-keyword-face)
+                       '("\\<count\\>" . font-lock-keyword-face)
+                       '("\\<create\\>" . font-lock-keyword-face)
+                       '("\\<database\\>" . font-lock-keyword-face)
+                       '("\\<dateadd\\>" . font-lock-keyword-face)
+                       '("\\<datediff\\>" . font-lock-keyword-face)
+                       '("\\<datename\\>" . font-lock-keyword-face)
+                       '("\\<datepart\\>" . font-lock-keyword-face)
+                       '("\\<declare\\>" . font-lock-keyword-face)
+                       '("\\<desc\\>" . font-lock-keyword-face)
+                       '("\\<descending\\>" . font-lock-keyword-face)
+                       '("\\<default\\>" . font-lock-keyword-face)
+                       '("\\<delete\\>" . font-lock-keyword-face)
+                       '("\\<distinct\\>" . font-lock-keyword-face)
+                       '("\\<drop\\>" . font-lock-keyword-face)
+                       '("\\<dump\\>" . font-lock-keyword-face)
+                       '("\\<else\\>" . font-lock-keyword-face)
+                       '("\\<end\\>" . font-lock-keyword-face)
+                       '("\\<exists\\>" . font-lock-keyword-face)
+                       '("\\<exec\\>" . font-lock-keyword-face)
+                       '("\\<for\\>" . font-lock-keyword-face)
+                       '("\\<from\\>" . font-lock-keyword-face)
+                       '("\\<getdate\\>" . font-lock-keyword-face)
+                       '("\\<go\\>" . font-lock-keyword-face)
+                       '("\\<group\\>" . font-lock-keyword-face)
+                       '("\\<having\\>" . font-lock-keyword-face)
+                       '("\\<if\\>" . font-lock-keyword-face)
+                       '("\\<in\\>" . font-lock-keyword-face)
+                       '("\\<index\\>" . font-lock-keyword-face)
+                       '("\\<insert\\>" . font-lock-keyword-face)
+                       '("\\<into\\>" . font-lock-keyword-face)
+                       '("\\<is\\>" . font-lock-keyword-face)
+                       '("\\<isnull\\>" . font-lock-keyword-face)
+                       '("\\<like\\>" . font-lock-keyword-face)
+                       '("\\<load\\>" . font-lock-keyword-face)
+                       '("\\<max\\>" . font-lock-keyword-face)
+                       '("\\<min\\>" . font-lock-keyword-face)
+                       '("\\<nonclustered\\>" . font-lock-keyword-face)
+                       '("\\<not\\>" . font-lock-keyword-face)
+                       '("\\<null\\>" . font-lock-keyword-face)
+                       '("\\<on\\>" . font-lock-keyword-face)
+                       '("\\<order\\>" . font-lock-keyword-face)
+                       '("\\<or\\>" . font-lock-keyword-face)
+                       '("\\<print\\>" . font-lock-keyword-face)
+                       '("\\<proc\\>" . font-lock-keyword-face)
+                       '("\\<raiserror\\>" . font-lock-keyword-face)
+                       '("\\<return\\>" . font-lock-keyword-face)
+                       '("\\<rule\\>" . font-lock-keyword-face)
+                       '("\\<save\\>" . font-lock-keyword-face)
+                       '("\\<select\\>" . font-lock-keyword-face)
+                       '("\\<set\\>" . font-lock-keyword-face)
+                       '("\\<statistics\\>" . font-lock-keyword-face)
+                       '("\\<substring\\>" . font-lock-keyword-face)
+                       '("\\<sum\\>" . font-lock-keyword-face)
+                       '("\\<table\\>" . font-lock-keyword-face)
+                       '("\\<tran\\>" . font-lock-keyword-face)
+                       '("\\<transaction\\>" . font-lock-keyword-face)
+                       '("\\<trigger\\>" . font-lock-keyword-face)
+                       '("\\<truncate\\>" . font-lock-keyword-face)
+                       '("\\<unique\\>" . font-lock-keyword-face)
+                       '("\\<update\\>" . font-lock-keyword-face)
+                       '("\\<use\\>" . font-lock-keyword-face)
+                       '("\\<values\\>" . font-lock-keyword-face)
+                       '("\\<view\\>" . font-lock-keyword-face)
+                       '("\\<where\\>" . font-lock-keyword-face)
+                       '("\\<while\\>" . font-lock-keyword-face)
+                       )))
+                (setq sql-mode-font-lock-keywords
+                      my-site-sql-font-lock-keywords)))
+                (site/turn-on-font-lock))))
+
+ ;; End
+
+    5.14 TCL
+
+        Stephen Peters <speters@samsun.us.oracle.com>
+
+            (defvar tcl-font-lock-keywords
+             (list
+              (list
+               ;; the full list of tcl 7.3 keywords
+               (concat
+                "\\(\\(^\\|[[{]\\)[ \t]*\\)\\(after\\|append\\|"
+                "array\\|bind\\|break\\|"
+                "button\\|canvas\\|"
+                "case\\|catch\\|cd\\|checkbutton\\|close\\|"
+                "concat\\|continue\\|"
+                "destroy\\|tk_dialog\\|entry\\|eof\\|error\\|"
+                "eval\\|exec\\|exit\\|"
+                "expr\\|file\\|flush\\|focus\\|for\\|"
+                "foreach\\|format\\|frame\\|"
+                "gets\\|glob\\|global\\|grab\\|history\\|if\\|"
+                "incr\\|info\\|join\\|"
+                "label\\|lappend\\|tk_listboxSingleSelect\\|"
+                "auto_execok\\|auto_load\\|"
+                "auto_mkindex\\|auto_reset\\|parray\\|unknown\\|"
+                "lindex\\|linsert\\|"
+                "list\\|listbox\\|llength\\|lower\\|lrange\\|"
+                "lreplace\\|lsearch\\|"
+                "lsort\\|menu\\|tk_menubar\\|"
+                "tk_bindForTraversal\\|menubutton\\|"
+                "message\\|open\\|option\\|pack\\|pid\\|place\\|"
+                "proc\\|puts\\|pwd\\|"
+                "radiobutton\\|raise\\|read\\|regexp\\|regsub\\|"
+                "rename\\|return\\|"
+                "scale\\|scan\\|scrollbar\\|seek\\|selection\\|"
+                "end\\|set\\|source\\|"
+                "split\\|string\\|switch\\|tell\\|"
+                "text\\|time\\|tk\\|tkerror\\|"
+                "tkwait\\|toplevel\\|trace\\|unclutter\\|unset\\|"
+                "update\\|uplevel\\|"
+                "upvar\\|while\\|winfo\\|wm\\)[ \t]")
+               3 'font-lock-keyword-face)
+              '("proc[ \t]*\\([a-zA-Z0-9_]+\\)"
+                 1 font-lock-function-name-face))
+             "Additional expressions to highlight in Tcl mode.")
+            ;; End
+
+    5.15 VHDL (an Ada-like) language
+
+        Terry T Tateyama <ttateyam@defmacro.cs.utah.edu>
+
+ (if (and (string-match "Emacs 19" (emacs-version))
+          (eq window-system 'x))
+     (progn
+       (require 'font-lock)
+       ;;
+       (setq vhdl-font-lock-keywords
+             (list
+              ;;
+              ;; standard VHDL
+              ;;
+              (list
+               (concat
+                "\\<\\(ENTITY\\|ARCHITECTURE\\|COMPONENT"
+                "\\|PACKAGE\\|PACKAGE[ \t]+BODY"
+                "\\|CONFIGURATION\\)[ \t]+"
+                "\\([a-zA-Z0-9_]+\\)[ \t]+\\(OF\\|IS\\)"
+                )
+                2 font-lock-function-name-face
+                )
+              ;;
+              '("\\(FUNCTION\\|PROCEDURE\\)[ \t]+\\([a-zA-Z0-9_]+\\)"
+                2 font-lock-function-name-face)
+              ;;
+              '("\\(SIGNAL\\|CONSTANT\\)[ \t]+\\([a-zA-Z0-9_, \t]+\\)[ \t]*:"
+                2 font-lock-function-name-face t)
+              ;;
+              '("\\([a-zA-Z0-9_, \t]+\\)[ \t]*:[^=]"
+                1 font-lock-function-name-face t) ; labels & port entities
+              ;;
+              '("[0-9]+#[0-9a-fA-F_]+#"  . font-lock-string-face)
+              '("'[^']'"                 . font-lock-string-face)
+              ;;
+              (cons
+               (concat "\\<\\("
+                       (mapconcat 'identity
+                                  '("BIT"                "BIT_VECTOR"
+                                    "BOOLEAN"            "CHARACTER"
+                                    "INTEGER"            "NATURAL"
+                                    "POSITIVE"           "REAL"
+                                    "STRING"             "TIME")
+                                  "\\|")
+                       "\\)\\>")
+               'font-lock-type-face)
+              ;;
+              (concat "\\<\\("
+                      (mapconcat 'identity
+                                 '("PACKAGE BODY"
+                                   "END IF"
+                                   "END PROCESS"
+                                   "END RECORD"
+                                   "END LOOP"
+                                   "END CASE"
+                                   "AND NOT"
+                                   "OR NOT"
+                                   "IS ARRAY"
+                                   "IS RECORD"
+                                   "WAIT UNTIL"
+                                   "WAIT ON"
+                                   "WAIT FOR")
+                                 "\\|")
+                      "\\)\\>")          ; font-lock-isms
+              ;;
+              (list
+               (concat "\\<\\("
+                       (mapconcat 'identity
+                                  '("ABS"                "ACCESS"
+                                    "AFTER"              "ALIAS"
+                                    "ALL"                "AND"
+                                    "ARCHITECTURE"       "ARRAY"
+                                    "ASSERT"             "ATTRIBUTE"
+                                    "BEGIN"              "BLOCK"
+                                    "BODY"               "BUFFER"
+                                    "BUS"                "CASE"
+                                    "COMPONENT"          "CONFIGURATION"
+                                    "CONSTANT"           "DISCONNECT"
+                                    "DOWNTO"             "ELSE"
+                                    "ELSIF"              "END"
+                                    "ENTITY"             "EXIT"
+                                    "FILE"               "FOR"
+                                    "FUNCTION"           "GENERATE"
+                                    "GENERIC"            "GUARDED"
+                                    "IF"                 "INOUT"
+                                    "IN"                 "IS"
+                                    "LABEL"              "LIBRARY"
+                                    "LINKAGE"            "LOOP"
+                                    "MAP"                "MOD"
+                                    "NAND"               "NEW"
+                                    "NEXT"               "NOR"
+                                    "NOT"                "NULL"
+                                    "OF"                 "ON"
+                                    "OPEN"               "OR"
+                                    "OTHERS"             "OUT"
+                                    "PACKAGE"            "PORT"
+                                    "PROCEDURE"          "PROCESS"
+                                    "RANGE"              "RECORD"
+                                    "REGISTER"           "REM"
+                                    "REPORT"             "RETURN"
+                                    "SELECT"             "SEVERITY"
+                                    "SEVERITY_LEVEL"     "SIGNAL"
+                                    "SUBTYPE"            "THEN"
+                                    "TO"                 "TRANSPOSE"
+                                    "TYPE"               "UNITS"
+                                    "UNTIL"              "USE"
+                                    "VARIABLE"           "WAIT"
+                                    "WHEN"               "WHILE"
+                                    "WITH"               "XOR")
+                                  "\\|")
+                       "\\)\\(\\>\\|$\\)")
+               1 'font-lock-keyword-face t)
+              ;;
+              ;;
+              ;; VIEWlogic-isms
+              ;;
+              (cons
+               (concat "\\<\\("
+                       (mapconcat 'identity
+                                  '("VLBIT"              "VLBIT_VECTOR"
+                                    "VLBIT_1D"           "VLBIT_2D"
+                                    "BOOLEAN_1D"         "BOOLEAN_2D"
+                                    "INTEGER_1D"         "INTEGER_2D"
+                                    "CHARACTER_1D"       "CHARACTER_2D"
+                                    "TIME_1D"            "TIME_2D"
+                                    "TEXT")
+                                  "\\|")
+                       "\\)\\>")
+               'font-lock-type-face)
+              ;;
+              "\\<\\(NOTE\\|WARNING\\|ERROR\\|FAILURE\\)\\([ \n\t(]\\|$\\)"
+              "\\<\\(FALSE\\|TRUE\\)[^a-zA-Z0-9_]"
+              "\\<\\(ENDFILE\\|ENDLINE\\|READLINE\\|READ"
+              "\\|WRITELINE\\|WRITE\\)\\([ \n\t(]\\|$\\)"))
+       ;;
+       (add-hook 'vhdl-mode-hook
+                 '(lambda ()
+                    (setq font-lock-keywords vhdl-font-lock-keywords)
+                    (make-local-variable 'font-lock-keywords-case-fold-search)
+                    (setq font-lock-keywords-case-fold-search t)))
+       ))
+       ;;
+       (add-hook 'vhdl-mode-hook
+           '(lambda ()
+              (progn
+                    (local-set-key "\C-m" 'newline-and-indent)
+                    (local-set-key "\C-i" 'tab-to-tab-stop)
+                    (make-local-variable 'tab-stop-list)
+                    (setq tab-stop-list
+                      '(4 8 12 16 20 24 28 32 36 40 44
+                        48 52 56 60 64 68 72 76 80 84 88 92 96 100))
+                    (modify-syntax-entry ?_ "w"
+                         vhdl-mode-syntax-table))))
+ ;; End
+
+    5.16 Another set of VHDL keywords
+
+        Terry T Tateyama <ttateyam@defmacro.cs.utah.edu>
+
+ ;; Here's what I did to get it to work with FSF GNU Emacs 19.29:
+ (defun ttt-vhdl-font-lock-setups ()
+   (interactive)
+   (progn
+     (make-local-variable        'font-lock-keywords-case-fold-search)
+     (setq       font-lock-keywords-case-fold-search     t)
+     (setq       font-lock-keywords vhdl-font-lock-keywords)
+     (turn-on-font-lock)))
+ ;;
+ (and window-system
+      (string-match "Emacs 19" (emacs-version))
+      (add-hook 'vhdl-mode-hook 'ttt-vhdl-font-lock-setups))
+ ;;
+
+ (setq vhdl-font-lock-keywords-1
+   (purecopy
+    (list
+     ;; Highlight names of common constructs
+     (list
+      (concat
+       "^[ \t]*\\(entity\\|architecture\\|configuration\\|function\\|"
+       "procedure\\|component\\|package[ \t]+body\\|package\\|end[ \t]+"
+       "\\(block\\|process\\|case\\|generate\\|loop\\|configuration\\|"
+       "architecture\\|entity\\|component\\|package\\|function\\)\\)[ \t]+"
+       "\\(\\(\\w\\|\\s_\\)+\\)")
+      3 'font-lock-function-name-face)
+     ;;
+     ;; Highlight labels of common constructs
+     ;;
+     (list
+      (concat
+       "^[ \t]*\\(\\(\\w\\|\\s_\\)+\\)[ \t]*:[ \t\n]*"
+       "\\(block\\|process\\|if\\|for\\|case\\|exit\\|loop\\|next\\|"
+       "null\\|with\\|\\(\\w\\|\\s_\\)+[ \t\n]+port[ \t]+map\\)"
+       "\\>[^_]")
+      1 'font-lock-function-name-face)
+     ;;
+     ;; Highlight of labels
+     ;;
+     (list
+      (concat
+       "^[ \t]*\\(configuration\\|architecture\\|attribute\\)[ \t]+"
+       "\\(\\(\\w\\|\\s_\\)+\\)[ \t]+of[ \t]+\\(\\(\\w\\|\\s_\\)+\\)")
+      4 'font-lock-function-name-face)
+     ;;
+     ;; Fontify library usage clauses.
+     ;;
+     (list
+      (concat
+       "\\(^\\|[^\\s_]\\)"
+       "\\<\\(library\\|use\\)[ \t\n]+"
+       "\\(entity[ \t\n]+\\)?"
+       "\\(\\(\\w\\|\\s_\\|[\.()]\\)+\\)")
+      4 'font-lock-function-name-face)
+     )))
+ ;;
+ (setq vhdl-font-lock-keywords-2
+   (purecopy
+    (append
+     (list
+      (list
+       (concat
+        "\\(^\\|[^\\s_]\\)\\<\\("
+        (mapconcat
+         'identity
+         '(
+           ;; temp pairs to address current font-lock limitations (19.29)
+           "end if" "end case" "end loop" "end for"
+           "end process" "end entity" "end architecture" "end configuration"
+           "end function" "end component" "end package" "end record"
+           "is array" "is record"
+           "use entity" "use configuration"
+           "port map" "generic map"
+           "wait for" "wait on" "wait until"
+           ;;
+           ;; the following is a list of all reserved words known in VHDL'93
+           ;;
+           "abs" "access" "after" "alias" "all" "and" "assert"
+           "architecture" "array" "attribute"
+           "begin" "block" "body" "buffer" "bus"
+           "case" "component" "configuration" "constant"
+           "disconnect" "downto"
+           "else" "elsif" "end" "entity" "exit"
+           "file" "for" "function"
+           "generate" "generic" "group" "guarded"
+           "if" "impure" "in" "inertial" "inout" "is"
+           "label" "library" "linkage" "literal" "loop"
+           "map" "mod"
+           "nand" "new" "next" "nor" "not" "null"
+           "of" "on" "open" "or" "others" "out"
+           "package" "port" "postponed" "procedure" "process" "pure"
+           "range" "record" "register" "reject" "rem" "report" "return"
+           "rol" "ror"
+           "select" "severity" "signal" "shared" "sla" "sll" "sra" "srl"
+           "subtype"
+           "then" "to" "transport" "type"
+           "unaffected" "units" "until" "use"
+           "variable" "wait" "when" "while" "with"
+           "xnor" "xor"
+           "note" "warning" "error" "failure"
+           ;;
+           ;; the following list contains predefined attributes
+           ;;
+           "base" "left" "right" "high" "low" "pos" "val" "succ"
+           "pred" "leftof" "rightof" "range" "reverse_range"
+           "length" "delayed" "stable" "quiet" "transaction"
+           "event" "active" "last_event" "last_active" "last_value"
+           "driving" "driving_value" "ascending" "value" "image"
+           "simple_name" "instance_name" "path_name" "foreign"
+           )
+         "\\|")
+        "\\)\\>[^\\s_]")
+       5.16.1 2 'font-lock-keyword-face)
+ ;;
+      (list
+       (concat
+        "\\(^\\|[^\\s_]\\)\\<\\("
+        (mapconcat
+         'identity
+         '(;; the following list contains standardized types
+           "boolean" "bit" "bit_vector" "character" "severity_level" "integer"
+           "real" "time" "natural" "positive" "string" "text" "line"
+           "unsigned" "signed"
+           "std_logic" "std_logic_vector"
+           "std_ulogic" "std_ulogic_vector"
+           )
+         "\\|")
+        "\\)\\>[^\\s_]")
+       5.16.2 2 'font-lock-type-face)
+      ;;
+      ;; Highlight type definitions
+      ;;
+      (list
+       (concat
+        "^[ \t]*\\(type\\|subtype\\)[ \t]+"
+        "\\(\\(\\w\\|\\s_\\)+\\)[ \t]+is"
+        "\\>[^_]")
+       5.16.3 2 'font-lock-type-face)
+      ;;
+      ;; Highlight labels of port signals
+      ;;
+      (list
+       (concat
+        "\\(\\(\\w\\|\\s_\\|,\\)+\\)[ \t]*:[ \t\n]*"
+        "\\(IN\\|OUT\\|INOUT\\|BUFFER\\|"
+        "\\(\\w\\|\\s_\\)+[ \t\n]+port[ \t]+map\\)"
+        "\\>[^_]")
+       5.16.4 1 'font-lock-variable-name-face)
+      ;;
+      ;; Highlight labels variables and constants
+      ;;
+      (list
+       (concat
+        "\\(signal\\|variable\\|constant\\)[ \t]+"
+        "\\(\\(\\w\\|\\s_\\|[, \t\n]\\)+\\)[ \t]*:")
+       5.16.5 2 'font-lock-variable-name-face)
+      ))))
+ ;;
+ ;;
+ (setq vhdl-font-lock-keywords vhdl-font-lock-keywords-2)
+ ;; End
+
+6.0 Emacs HTML writing tools and font lock
+
+    6.1 Html-helper-mode
+
+          ...In article <ytg2h70x8l.fsf@Marvin.fkphy.uni-duesseldorf.de>
+
+            (eval-after-load "html-helper-mode" '(load "html-font"))
+
+          to your .emacs. Works fine for me with 19.28 but produces an
+          error File mode specification error: (void-variable
+          font-lock-doc-string-face) with 19.29. This is not really a
+          problem, highlighting still works.
+
+        This has been fixed. If you want to stay with the old 1994 non-beta
+        html-helper-mode.el (without menus), you should get the latest
+        version of `html-font.el' (4.01 19-Sep-1995) from
+
+            http://www.nbi.dk/TOOLS/emacs/lisp/html-font.el
+
+        Otherwise upgrade to the latest beta of html-helper-mode.el (2.16
+        21-Sep-1995)
+
+            http://www.santafe.edu/~nelson/hhm-beta/html-helper-mode.el
+
+        which has all of html-font built-in (and a bit more). You can then
+        delete html-font.el. I recommend this latter solution.
+
+          ..I am running 19.27 and it does not work. It flashed an error
+          message but it was to fast for me to read. Still no colours.
+
+        First upgrade your html-font _or_ html-helper-mode as explained
+        above. For Emacsen older than 19.29 you need a bit more to get
+        colours with font-lock in general. The easiest way to obtain that is
+        to get Simon Marshall's face-lock.el from the Emacs Lisp Archive,
+        e.g.,
+
+ ftp://archive.cis.ohio-state.edu/pub/gnu/emacs/elisp-archive/misc/face-lock.el.Z
+
+        and then add something like this to your ~/.emacs:
+
+            (cond
+             (window-system
+              ;;  don't do this for 19.29+
+              ;;
+              (if (string-lessp emacs-version "19.28.90")
+                  (require 'face-lock)) ; or e.g., `(load "face-lock" t)'
+                (add-hook 'html-helper-mode-hook
+                           (lambda () (font-lock-mode 1)))))
+
+        and finally I recommend (for Emacs <19.29) adding a line like this
+        to your X resources (perhaps ~/.Xdefaults or ~/.Xresources):
+
+            Emacs.font-lock-doc-string-face.attributeForeground:    DarkOrange3
+
+        since face-lock.el unfortunately by default gives this face the
+        same colour as `font-lock-string-face'.
+
+    6.2 Html-mode
+
+          ...Anybody know of a html-mode.el that would work with hilite.
+          There is a html-mode but it doesn't work with hilite and that
+          is actually the > only thing that I would need, that way you
+          could read the text a lot > easier than what is the case now.
+
+        I have been using the from
+
+            ftp://sunsite.unc.edu/pub/Linux/apps/editors/emacs
+
+        in the archive /hm--html-menus-4.0.tar.gz Its not too recent but it
+        hasn't had any problems with maintaining any of the HTML documents
+        I've written. It will re-configure the menu with HTML and that drop
+        down menu can be used to set the font (colour) for highlighting HTML
+        specific text. I wouldn't advise overwriting previous versions of
+        *.el as the documentation advises but the there was one change I
+        had to make for face-lock to work properly. Sorry, I just can't
+        remember what I had to do. The error message pointed to the
+        location though so it shouldn't be to hard to find it. (version
+        19.30)
+
+7.0 Font lock and hilit19
+
+    7.1 Hilit19 description (old)
+
+          ...I've tried font-lock, because I heard it highlights as you
+          type. This is very nice, but it supports relatively few modes
+          out of the box, and is relatively hard, or rather, time
+          consuming to extend to new modes.
+
+        Henrique Martins <martins@hpl.hp.com>
+
+        Deja vu! I went through the same steps, and gave up for the same
+        reason, i.e., not all modes out of the box, and also different
+        colours from what I got used to in hilit19. I'm still hoping for
+        someone to post a conversion kit from hilit19 to font-lock.
+
+          I've also heard of a hilit319.el or somesuch, but I haven't been
+          able to find it. What improvements does it make over hilit19, and
+          where can I find it?
+
+        It is called hl319.el, and it should be available as:
+
+            ftp://netcom.com/pub/stig/src/  {Beta,Release}/hl319.el.gz
+
+        Among its new features are user-customizable colours, via the variable
+        hilit-user-face-table, e.g.,
+
+            (setq hilit-user-face-table
+              '((comment firebrick-italic moccasin  italic)
+                (string  grey40           orange    underline)
+                (decl    RoyalBlue        cyan      bold)
+                (type    nil              yellow    nil)
+                (label   cyan-bold        cyan-bold underline)
+                (keyword RoyalBlue        cyan      bold-italic)))
+
+        and better on the fly re-highlighting via:
+
+            (add-hook 'find-file-hooks
+              '(lambda () (hilit-install-line-hooks)))
+
+    7.2 Don't use hilit19 any more
+
+          I've been recently convinced it would be good to use one of those
+          packages, so I'm trying to figure out why there are two packages
+          dedicated to hiliting and what are their pros and cons. I've
+          seen a few differences (see below), but I'd like to know why you
+          like hilit19 or why you prefer font-lock.
+
+        Ulrik Dickow  <dickow@nbi.dk>
+
+        I prefer font-lock. Reasons follow.
+
+            > differences I could see:
+            >
+            > 1 - font-lock fontifies immediately and is hence slower.
+            > 2 - hilit19 fontifies also info/gnus/vm/rmail/etc.. buffers
+            > 3 - font-lock is a minor-mode which seems to make sense.
+            >     Hilit19's impact is more global and hidden (although you
+            >     can tune it easily from variables)
+            > 4 - hilit19's way to deal with faces is a bit unusual
+            >     (why does it have
+            >     to provide its own face-handling functions on top
+            >     of emacs19's ?)
+            >
+            > I don't really care about the second point (hiliting info is not
+            > too important to me
+
+        Info is already bold/italic without hilit19/font-lock.
+
+            > and I don't read my mail nor my news from emacs (of course, this
+            > might change))
+
+        I do both.
+
+        Rmail-buffers (rmail-mode & rmail-summary-mode) _are_ known to
+        font-lock.el. The next version of the news reader ((ding) gnus)
+        has extremely fancy highlighting built-in (I'm using an alpha
+        version).
+
+            > The first point on another hand seems important at first. But
+            > hilit19 has extensions to make it highlight immediately and
+            > font-lock can be sped up by removing the after-change-function
+            > and replace it by a small redraw function called by ^L or <ret>.
+
+        font-lock can do it easier than that, when you don't want on-the-fly:
+
+        o   don't use the function `font-lock-mode'
+        o   your small redraw function can simply be `font-lock-fontify-buffer'
+            (but if you bind it to [return] then you should use lazy-lock too)
+
+        However, I don't feel font-lock to be slow in general; on the
+        contrary. Here's my summary of "font-lock v.s. hilit19" as I
+        happened to post it privately a few weeks ago --- note that I don't
+        claim to be strictly objective and that I *do* use lazy-lock by now
+        (with tuned defaults):
+
+            > So which is better, font-lock.el or hilit19.el (both in 19.28
+            > distribution)?
+
+        It's largely a matter of taste, currently. I'll try to summarize
+        the diffs as of 19.28 (h.l.=highlight, N/A=not available), as *I*
+        see them:
+
+                                      font-lock         hilit19
+
+            highlight-as-you-type:        Yes (opt)     N/A     1)
+            Partial h.l. of big files:    No      2)    Yes
+            # of supported modes:         ~10     3)    ~20-25
+            Speed:                        ...better     Sometimes *slow*
+            Infinite loops seen by me:    No :-)  4)    Yes :-( 5)
+            Easily customized:            No      6)    Yes!!   7)
+            Being improved on:            Yes           ?
+
+        Notes:
+
+        .   Is in "hl319", a beta release of new hilit19. But I think
+            development on hilit has stopped.
+        .   Possible with lazy-lock add-on (see LCD). Some users are very
+            happy about this and say it's a "must" for font-lock. I don't
+            edit big files much --- and/or the computers I use are
+            blindingly fast :-). I've made my own simple approach to this:
+            no automatic fontification for files bigger than given limit;
+            i.e., "nothing or everything". The latter approach will be
+            included in 19.29.
+        .   User contributions for many more modes exist. E.g., mine for HTML
+            and Fortran. In 19.29, more modes will be supported by default,
+            I think.
+        .   Well, there's something weird when fortran-auto-fill-mode is
+            used with my Fortran font-lock. The loop is far from infinite
+            though, and I think it's more a problem with
+            fortran-auto-fill-mode than with font-lock as such.
+        .   In the early days, when I used hilit19, this really annoyed me.
+            Seemed to be rooted in hilit19's rather complex way of
+            *un*highlighting a buffer before it re-highlights it. Never got
+            anything reproducible, though. Seemed like "when switching from
+            a GNUS buffer to a Elisp buffer or somesuch..."
+        .   font-lock will become easier to customize in 19.29 (will
+            incorporate good parts of Simon Marshall's face-lock code, for
+            example).
+        .   Very good user interface, easy for new users.
+
+    7.3 Font-lock and hilit19 co-operation
+
+          ...It seems, that 'font-lock'+'defer-lock'+'lazy-lock' are better
+          then 'hilit19'. could anybody help me, how should i change my
+          '.emacs' to use the 'font-lock' method instead of 'hilit19', and
+          tell me, what to do besides this ?
+
+        L.G. "Ted" Stern <stern@amath.washington.edu>
+
+        I have found that some packages do better with font-lock and some
+        still "prefer" hiliting. I also found that the default setting for
+        hilit19 is to "take over" some keys, so I have turned that
+        off. Here is what I do to have font-lock in some modes and hilit19
+        in others. Note that I have lazy-lock enabled but not defer-lock. I
+        hadn't heard about that until I saw your post!
+
+
+            ;; To make font-lock and hilit19 coexist comfortably, I make
+            ;; sure that hilit19 does not rebind keys. To re-highlight the
+            ;; buffer you can still do S-C-l (Shift-Control-l). I then
+            ;; define a new function (which is basically copied verbatim
+            ;; from hilit19.el with some simple substitutions) to fontify
+            ;; various types of regions, and locally bind it to S-C-l in
+            ;; fontified modes for parallel functionality.
+
+            (defvar font-lock-auto-fontify t
+              "* If this is non-nil, then font-lock-fontify-command will
+              fontify part or all of the current buffer. T will fontify the
+              whole buffer, a NUMBER will fontify that many lines
+              before and after the cursor, and the symbol 'visible'
+              will fontify only the visible portion of the current buffer.
+              This variable is buffer-local.")
+
+            (make-variable-buffer-local 'font-lock-auto-fontify)
+
+            (defun font-lock-fontify-command (arg)
+             "Fontifies according to the value of font-lock-auto-fontify,
+              or the prefix argument if that is specified.
+              \t\\[font-lock-fontify-command]\t\tfontify according
+                 to font-lock-auto-fontify
+              \t^U \\[font-lock-fontify-command]\tfontify entire buffer
+              \t^U - \\[font-lock-fontify-command]\tfontify
+                visible portion of buffer
+              \t^U n \\[font-lock-fontify-command]\tfontify
+                n lines to either side of point"
+             (interactive "P")
+             (let (st en quietly)
+               (or arg (setq arg font-lock-auto-fontify))
+               (cond ((or (eq  arg 'visible) (eq arg '-))
+                      (setq st (window-start) en (window-end) quietly t))
+                     ((numberp arg)
+                      (setq st (save-excursion (forward-line (- arg)) (point))
+                            en (save-excursion (forward-line arg) (point))))
+                     (arg
+                      (font-lock-fontify-buffer)))
+               (if st
+                     (font-lock-fontify-region st en quietly))))
+
+            (defun my-turn-on-font-lock ()
+              "Locally rebind C-S-l to font-lock-fontify-command then
+            turn on font-lock"
+              (interactive)
+              ;; locally override the hilit setting of S-C-l
+              (local-set-key [?\C-\S-l] 'font-lock-fontify-command)
+              (turn-on-font-lock)
+              )
+
+
+            ;; Font-lock is incredibly slow on large buffers with
+            ;; a lot of decoration, so
+            ;; let's use the lazy-lock package:
+            ;;
+            (autoload 'turn-on-lazy-lock "lazy-lock"
+              "Unconditionally turn on Lazy Lock mode.")
+
+            (add-hook 'font-lock-mode-hook 'turn-on-lazy-lock)
+
+
+            ;; Now set up some modes for font-lock and others for hilit19:
+            ;;
+            (cond
+             (window-system
+               (setq font-lock-maximum-decoration 3)
+               ;;
+               ;; Turn on font-lock in some modes here
+               (add-hook 'c-mode-hook 'my-turn-on-font-lock)
+               (add-hook 'c++-mode-hook 'my-turn-on-font-lock)
+               (add-hook 'f90-mode-hook 'my-turn-on-font-lock)
+               (add-hook 'fortran-mode-hook 'my-turn-on-font-lock)
+               (add-hook 'ksh-mode-hook 'my-turn-on-font-lock)
+               ;;
+               ;; Turn off hilit19 in some modes here
+               (setq   hilit-mode-enable-list
+                       '(not text-mode c-mode c++-mode
+                         f90-mode fortran-mode ksh-mode))
+               (setq   hilit-background-mode   'dark) ; comment these lines for
+                                                      ; 'light backgrounds
+               (setq   hilit-inhibit-hooks     nil)
+               (setq   hilit-inhibit-rebinding t) ; DON'T rebind keys to hilit
+                                                  ; functions
+               (setq   hilit-face-check        nil) ; to speed up hiliting
+               (require 'hilit19)
+               ;;
+               ;; Reset hilit comment face to include italics
+               ;;
+               (setcdr (assq 'comment hilit-face-translation-table)
+                       'bisque-italic)
+               ;; ^^^^^^^                                ^^^^^^^^^^^^^^^
+               ;; type of syntax                     colour and/or attribute
+               ;;
+               ))
+
+8.0 X resource settings
+
+    8.1 Menu bar font in .xinitrc
+
+ Emacs.pane.menubar.font: -*-courier-bold-r-normal-*-12-*-*-*-*-*-iso8859-1
+
+    8.2 Emacs colour resources
+
+        James Sterbenz <jpgs@roger.gte.com> this works at least for hilit19
+        You can't configure it through your .emacs. But you can with X
+        (file .Xdefaults or .Xresources). Valid colours are those from
+        /usr/lib/X11/rgb.txt
+
+
+               emacs*foreground:                       #90e0ff
+               emacs*background:                       #003040
+               emacs*pointerColour:                     #ffffff
+               emacs*cursorColour:                      #ffffff
+               emacs.region.attributeForeground:       #ffffff
+               emacs.region.attributeBackground:       #002838
+               emacs.modeline.attributeForeground:     #ffffff
+               emacs.modeline.attributeBackground:     #0080ff
+               emacs.bold.attributeForeground:         #00ffff
+               emacs.highlight.attributeForeground:    #ff0000
+               emacs.secondary-selection:              #ffff00
+
+        Philippe Troin <ptroin@lugny.sophia.compass-da.com> gives:
+
+               !
+               ! Emacs Colours and backgrounds.
+               !
+               Emacs*Foreground:                    Black
+               Emacs*Background:                    WhiteSmoke
+               Emacs*cursorColour:                   Red3
+               Emacs*pointerColour:                  Black
+               Emacs*menubar*Foreground:            Gray30
+               Emacs*menubar*Background:            Gray75
+               Emacs*menubar*buttonForeground :     Gray30
+               Emacs*popup*foreground:              Gray30
+               Emacs*popup*buttonForeground :       red
+               Emacs*popup*Foreground:              Black
+               Emacs*popup*Background:              Gray75
+               Emacs*dialog*Foreground:             Black
+               Emacs*dialog*Background:             Gray75
+               Emacs*menubar*Font:-*-helvetica-bold-r-*-*-*-120-*-*-*-*-iso8859-*
+               Emacs*popup*Font:-*-helvetica-bold-r-*-*-*-120-*-*-*-*-iso8859-*
+               Emacs*modeline.attributeForeground:  Black
+               Emacs*modeline.attributeBackground:  Gray80
+               Emacs*font:                          screen
+
+    8.3 No fonts matching patters are same size as comment
+
+          Why doesn't the following give error: (set-face-font
+          'comment "italic")
+
+        Marc Girod <girod@dshp01.trs.ntc.nokia.com>
+
+        It is a restriction of emacs that all fonts used in a frame must be
+        the same size. In addition, they must be fixed spaced. Your
+        make-face created a face named comment, and assigned to it you
+        default font. I assume that "italic" is an alias in your system for
+        a font of a size different from this of your default font.
+
+        You have to select a default font for which exist on your system
+        variants for bold, italic, and optionally bold-italic in the same
+        size, and in fixed spaced fonts.
+
+        Then your code will work. I suggest however that you specify all
+        your fonts through X resources. I guess that the solution Kai
+        suggests in an other posting will work, if there is on your system
+        an italic fixed font the same size as your default. Even so, I
+        don't know whether emacs necessarily knows what to modify to get
+        it. On my system, it could be hard for it... without help. My
+        default and italic fonts are respectively (there are aliases to
+        make it shorter):
+
+  -b&h-lucidatypewriter-medium-r-normal-sans-12-120-75-75-m-70-iso8859-1
+  -adobe-courier-medium-o-normal--12-120-75-75-m-70-iso8859-1
+
+        The point is that no trivial change in the pattern would switch the
+        one from the other:
+
+            "*-i-*"
+
+        ...or something like that, even correct (I didn't check that this
+        could work). In this italic font, the italic property is encoded in
+        the 'o' (for oblique I guess). In other fonts, it is with an 'i',
+        as in:
+
+            -adobe-times-medium-i-normal-*-17-*-*-*-*-*-iso8859-1
+
+        (unfortunately proportional!) Ok. Now, my settings (working for me,
+        if anything)
+
+ Emacs*default.attributeFont:            lutrs12
+ Emacs*default.attributeBackground:      DeepSkyBlue4
+ Emacs*default.attributeForeground:      white
+ !
+ Emacs*bold.attributeFont:               lutbs12
+ Emacs*italic.attributeFont:             -*-*-medium-o-*--12-120-75-75-m-*-*-1
+ Emacs*bold-italic.attributeFont:        -*-*-bold-o-*--12-120-75-75-m-*-*-1
+
+ ! Fonts for font-lock
+ Emacs*font-lock-string-face.attributeForeground:        AntiqueWhite2
+ Emacs*font-lock-comment-face.attributeForeground:       CadetBlue2
+ Emacs*font-lock-type-face.attributeForeground:          DarkOliveGreen2
+ Emacs*font-lock-keyword-face.attributeForeground:       DarkSeaGreen1
+
+ ;; menu-bar-font/face/colour
+ Emacs.pane.menubar.background:  SlateGray4
+ Emacs.pane.menubar.foreground:  Lavender
+
+
+        and to use these from font-lock, this's what I use, although there
+        may be more elegant ways:
+
+            (setq font-lock-string-face 'font-lock-string-face)
+            (make-face font-lock-string-face)
+
+            (setq font-lock-comment-face 'font-lock-comment-face)
+            (make-face font-lock-comment-face)
+
+            (setq font-lock-type-face 'font-lock-type-face)
+            (make-face font-lock-type-face)
+
+            (setq font-lock-keyword-face 'font-lock-keyword-face)
+            (make-face font-lock-keyword-face)
+
+9.0 Why all the fonts are not available in emacs ?
+
+          Where is all the font I have many fonts which are accessible
+          (/usr/lib/X11/fonts/*) which don't pop up in the pop-up menu
+          (C-mouse 3 on my platform).I was unable to find info in the FAQ's
+          and online info. Can anyone tell me a font-path to change, or
+          another fix?
+
+        .Piotr Filip Sawicki <pfs@mimuw.edu.pl>
+        .Subject: xf.el - create mouse font menu (C-m-3) on-line (UPDATED)
+        .Date:    Mon, 31 Oct 1994
+
+        (Updated version: smaller code and more instructions how to use it)
+
+        Hey!
+
+        Writing ISO Latin 2 support for Emacs (now gone to testing, will be
+        out in two weeks or so) I found myself in the dire need for
+        checking the existence of Latin 2 fonts on the server... and then
+        for adding these fonts to x-fixed-font-alist (mouse font menu, that
+        is).
+
+        Also, being fed up with enhancing manually x-fixed-font-alist of
+        every single emacs version released, I decided to write a general
+        function to do this for me. Here is the result, after 3 days of
+        work.
+
+        Upon loading this code just queries the server; to update list, you
+        have to call xf-load-fonts function yourself. See comments for more
+        information.
+
+        *WARNING:*
+
+        Querying server takes enormous time... To save time when you run
+        emacs on one type of x-server only, e.g., your workstation, either
+        ask your administrator for help, or help yourself in the way
+        described in the file header.
+
+        What else? Regular expressions used for font parsing are more
+        general than those used in faces.el. Whether I can cope with
+        strange fonts, is quite a different matter, though.
+
+        P.S.: If emacs authors already created that kind of code and do not
+        release it for some reason, I hope Gods will forgive them.
+
+    9.1 Code xf.el
+
+ ;;; xf.el --- dynamically create x-fixed-font-alist of ISO Latin fonts
+
+ ;;; Copyright (C) 1994 Piotr Filip Sawicki
+
+ ;;; Author: Piotr Filip Sawicki (pfs@mimuw.edu.pl)
+ ;;; Organization: Institute of Informatics at University of Warsaw, Poland
+ ;;; Maintainer: PFS
+ ;;; Keywords: none
+
+ ;;; This file is NOT a part of GNU Emacs.
+
+ ;;; This package is free software; you can redistribute it and/or
+ ;;; modify it under the terms of the GNU General Public License as
+ ;;; published by the Free Software Foundation; either version 2, or
+ ;;; (at your option) any later version.
+
+ ;;; The package is distributed in the hope that it will be useful,
+ ;;; but WITHOUT ANY WARRANTY; without even the implied warranty of
+ ;;; MERCHANTABILITY or FITNESS FOR A PARTICULAR PURPOSE. See the
+ ;;; GNU General Public License for more details.
+
+ ;; This code creates dynamically x-fixed-font-alist of all ISO Latin fonts.
+
+ ;; This package may require X11R4 or higher.
+
+ ;; Upon loading the package queries the server (this operation takes
+ ;; enormously long time) two times for mono-spaced "m" and "c"
+ ;; (cell-based?) fonts, and records the list in the variable
+ ;; xf-latin-fonts. Then the function xf-load-fonts creates sorted
+ ;; lists of all fonts, divided by encoding type and family. Surplus
+ ;; fonts that differ by only resolution and average char width (I had
+ ;; no choice, there are too many fonts to accept all) are removed.
+
+ ;; Since some fonts of strange size will never be used anyway, you can
+ ;; remove too big or too small fonts. By default, all fonts smaller
+ ;; than 10 or bigger than 24 points are removed (see variables below).
+
+ ;; You should call xf-load-fonts by yourself; it can be used only
+ ;; once, as the code at the end sets xf-latin-fonts to nil.
+
+ ;; Previously this code created a three-level font list, on the top
+ ;; level split according to encoding, but that kind of structure could
+ ;; not be handled by x-popup-menu. The drawback of current approach is
+ ;; that you can find yourself with the long list of entries starting
+ ;; with useless in this case "Latin1" prefix. If you dislike that,
+ ;; edit the file.
+
+ ;; To maintain backward compatibility, the very first font on the very
+ ;; first sublist is the default font (surprisingly).
+
+ ;; To make use of this code, put in your .emacs the following two lines:
+ ;;      (load-file "<the full path to this file on your system>")
+ ;;      (xf-load-fonts)
+
+ ;; IMPORTANT:
+
+ ;; To avoid endlessly waiting on every emacs load, do the following:
+ ;; 1. Save this file somewhere.
+ ;; 2. Start emacs in the following way:
+ ;;      > emacs -l path_to_this_file
+ ;; 3. After a long time, this will put you into *scratch* buffer. Now type:
+ ;;      (xf-load-fonts)
+ ;;    and then LFD or ^J and the end of line. This will run the function.
+ ;; 4. You will find yourself at the end of the very long single line. Type
+ ;;    ^P or up-arrow to go up, then _insert_ at the beginning of the line:
+ ;;      (setq x-fixed-font-alist '
+ ;;    Remember to put a space between "x-fixed-font-alist" and "'(".
+ ;; 5. Jump to the end of line and insert ")". Minibuffer will read:
+ ;;      Matches (setq ...
+ ;; 6. And now append this _one_ line to your .emacs ... and your done!
+
+ ;;; Code:
+
+ (defvar xf-latin-fonts
+   (and (eq window-system-version 11)
+        (append (x-list-fonts "*-m-*-iso8859-*")
+                (x-list-fonts "*-c-*-iso8859-*")))
+   "List of all appropriate Latin fonts.")
+
+ (defvar xf-x-font-family "^-[^-]*-\\([^-]*\\)-")
+ (defvar xf-x-font-weight "^-[^-]*-[^-]*-\\([^-]*\\)-")
+ (defvar xf-x-font-encoding "-iso8859-\\(.*\\)$")
+ (defvar xf-x-font-other
+   "^-[^-]*-[^-]*-[^-]*-[^-]*-\\([^-]*\\)-\\([^-]*\\)-\\([0-9]+\\)-")
+
+ (defvar xf-font-too-big "25"
+   "Remove all fonts bigger than or equal to this size.")
+ (defvar xf-font-too-small "10"
+   "Remove all fonts smaller than this size.
+ If the size is one digit long, prepend a space.")
+
+
+ (defun xf-substr (str reg &optional num)
+   "Cut the match out of string."
+   (if (not num) (setq num 1))
+   (if (not (string-match reg str)) nil
+     (substring str (match-beginning num) (match-end num))))
+ ;;
+
+ (defun xf-strip-list (font-list)
+   "Removes from the list all fonts that have the same or too big/small size.
+ Also adds dividing lines between fonts of the different size."
+   (let ((font-new '())
+         (last-font "")
+         (last-size "")
+         this-font this-size)
+     (while font-list
+       (setq this-font (car (car font-list)))
+       (and (not (string= last-font this-font))
+            (string< xf-font-too-small this-font)
+            (string< this-font xf-font-too-big)
+            (setq this-size (xf-substr (car (cdr (car font-list)))
+                                      xf-x-font-other 3)
+                  font-new (cons (car font-list)
+                                 (cond
+                                  ((string= this-size last-size) font-new)
+                                  ((string= last-size "") font-new)
+                                  (t (cons '("") font-new))))
+                  last-font this-font
+                  last-size this-size))
+       (setq font-list (cdr font-list)))
+     font-new))
+ ;;
+
+ (defun xf-comp-font-list (l r)
+   "Used for font sorting: compare by encoding and family (reversed order)."
+   (let* ((l-f (car (cdr l))) (r-f (car (cdr r)))
+          (l-latin (xf-substr l-f xf-x-font-encoding))
+          (r-latin (xf-substr r-f xf-x-font-encoding)))
+     (cond
+      ((string< l-latin r-latin) nil)
+      ((string< r-latin l-latin) t)
+      ((string< (xf-substr r-f xf-x-font-family)
+                (xf-substr l-f xf-x-font-family))))))
+ ;;
+ ;; call this function yourself
+ ;;
+ (defun xf-load-fonts ()
+   (interactive)
+   (if xf-latin-fonts
+       (let ((font-list xf-latin-fonts)
+             (font-sub '())
+             font-found font-enc font-fam font-new font-size)
+         ; first construct linear list, then sort, divide, and sub-sort again
+         ; also, downcase all font names, to avoid troubles later
+         (while font-list
+           (setq font-found (downcase (car font-list))
+                 font-sub
+                 (cons
+                  (list (progn
+                          (string-match xf-x-font-other font-found)
+                          (setq font-size (substring font-found
+                                                      (match-beginning 3)
+                                                      (match-end 3)))
+                          (if (< (string-to-number font-size) 9)
+                              (setq font-size (concat " " font-size)))
+                          (concat
+                           font-size
+                           (if (= (match-beginning 2) (match-end 2))
+ ;:
+                               ""
+                             (concat " "
+                                     (substring font-found
+                                                (match-beginning 2)
+                                                (match-end 2))))
+                           (if (string= (substring font-found
+                                                   (match-beginning 1)
+                                                   (match-end 1))
+                                        "normal")
+                               ""
+                             (concat " "
+                                     (substring font-found
+                                                (match-beginning 1)
+                                                (match-end 1))))
+                           (if (string-match "-medium-" font-found)
+                               ""
+                             (string-match xf-x-font-weight font-found)
+                             (concat
+                              " "
+                              (substring font-found
+                                         (match-beginning 1)
+                                         (match-end 1))))
+                           (if (string-match "-[oi]-" font-found) " slant" "")))
+                        font-found)
+                  font-sub)
+                 font-list (cdr font-list)))
+         (setq font-list (sort font-sub 'xf-comp-font-list)
+               font-found (car (cdr (car font-list)))
+               font-enc (xf-substr font-found xf-x-font-encoding)
+               font-fam (xf-substr font-found xf-x-font-family)
+               font-sub '()
+               font-new '())
+         (while font-list ; not always advances ...
+           (cond
+            ((eq font-list 0) (setq font-list nil font-found nil))
+            (t (setq font-found (car (cdr (car font-list))))))
+           (if (and font-found
+                    (string= font-enc (xf-substr font-found xf-x-font-encoding))
+                    (string= font-fam (xf-substr font-found xf-x-font-family)))
+               (setq font-sub (cons (car font-list) font-sub)
+                     font-list (cond ((cdr font-list)) (t 0)))
+             (setq font-new (cons
+                             (cons
+                              (concat
+                               "Latin" font-enc
+                               " "
+                               (capitalize font-fam))
+                              (xf-strip-list
+                               (sort font-sub (lambda (l r) ; reversed order
+                                                (string< (car r) (car l))))))
+                             font-new)
+                   font-sub '()
+                   font-enc (if (not font-found) font-enc
+                              (xf-substr font-found xf-x-font-encoding))
+                   font-fam (if (not font-found) font-fam
+                              (xf-substr font-found xf-x-font-family)))))
+           (setq xf-latin-fonts nil
+               x-fixed-font-alist
+               (cons
+                (car x-fixed-font-alist)
+                (cons
+                 (cons
+                  (car (car (cdr x-fixed-font-alist)))
+                  (list (car (cdr (car (cdr x-fixed-font-alist))))))
+                 font-new))))))
+          ;; End
+ ;;; The end
+
+10.0 Code: linemenu.el, Highlighting current line
+
+ ;;; linemenu.el - Hook function to highlight current line in buffer
+
+ ;; Author:   Bill Brodie <wbrodie@panix.com>
+ ;; Version:  $Revision: 2.5 $
+ ;; Date:     $Date: 2004/01/26 02:08:08 $
+ ;;
+ ;; To try it out, put this in your .emacs file:
+ ;;  Turn on highlighting for Dired (C-x d) and list-buffers (C-x C-b)
+ ;;  (require 'linemenu)
+ ;;  (defadvice list-buffers (after highlight-line activate)
+ ;;    (save-excursion
+ ;;      (set-buffer "*Buffer List*")
+ ;;      (linemenu-initialize)))
+ ;;  (add-hook 'dired-after-readin-hook 'linemenu-initialize)
+
+ (defun linemenu-initialize ()
+   "Turn on highlighting of the current line in this buffer."
+   (make-local-variable 'post-command-hook)
+   (add-hook 'post-command-hook 'linemenu-highlight-current-line)
+   (linemenu-highlight-current-line))
+ ;;
+
+ (defvar linemenu-overlay nil "Highlight for current line")
+ (make-variable-buffer-local 'linemenu-overlay)
+
+ (defun linemenu-init-overlay ()
+   ;; Create a highlighting overlay for the current line
+   (setq linemenu-overlay (make-overlay 1 1))   ; Hide it for now
+   (overlay-put linemenu-overlay 'hilit t)
+   (overlay-put linemenu-overlay 'face 'region)
+   (overlay-put linemenu-overlay 'priority 20))
+ ;;
+
+ (defun linemenu-highlight-current-line ()
+   ;; Move highlight to the current line
+   (or linemenu-overlay (linemenu-init-overlay))
+   (let ((start (save-excursion (beginning-of-line) (point)))
+         (end (save-excursion (forward-line 1) (point))))
+     (delete-overlay linemenu-overlay)
+     (move-overlay linemenu-overlay start end)
+     (overlay-put linemenu-overlay 'hilit t)))
+ ;;
+
+ (provide 'linemenu)
+
+ ;;; End of linemenu.el
+
+11.0 MS-DOS Emacs 19 port
+
+    11.1 Setting background colour
+
+        <rollintumb@aol.com> RollinTumb:
+
+        Put into your startup file (I call mine emacs.ini):
+        In DOS, you have only 16 colours to choose from.
+
+            (set-face-foreground 'default  "white")
+            (set-face-background 'default "blue")
+
+            You can also set colours for other objects/modes:
+            (set-face-foreground 'modeline "green")
+            (set-face-background 'modeline "black")
+            (set-face-foreground 'secondary-selection "white")
+            (set-face-background 'secondary-selection "blue")
+            (set-face-foreground 'msdos-menu-active-face "blue")
+            (set-face-background 'msdos-menu-active-face "cyan")
+            (set-face-foreground 'msdos-menu-passive-face "lightgray")
+            (set-face-background 'msdos-menu-passive-face "cyan")
+            (set-face-foreground 'msdos-menu-select-face "cyan")
+            (set-face-background 'msdos-menu-select-face "black")
+            (set-face-foreground 'region "cyan")
+            (set-face-background 'region "black")
+
+    11.2 Code: pc-win.el
+
+        Eli Zaretskii <eliz@is.elta.co.il>
+
+        Attached please find a replacement for lisp/term/pc-win.el and a
+        few lines to put into your _emacs file. Don't forget to
+        byte-compile pc-win.el once you install it. The defaults as they
+        are set on my system make font-lock the default colouring method,
+        but hilit19 will also work once you install these. Enriched Text
+        mode should work also. Drop me a note if you have any problems.
+        pc-win.el
+
+
+ ;; pc-win.el -- setup support for `PC windows' (whatever that is).
+
+ ;; Copyright (C) 1994 Free Software Foundation, Inc.
+
+ ;; Author: Morten Welinder <terra@diku.dk>
+ ;; Version: 1,00
+
+ ;; This file is part of GNU Emacs.
+
+ ;; GNU Emacs is free software; you can redistribute it and/or modify
+ ;; it under the terms of the GNU General Public License as published by
+ ;; the Free Software Foundation; either version 2, or (at your option)
+ ;; any later version.
+
+ ;; GNU Emacs is distributed in the hope that it will be useful,
+ ;; but WITHOUT ANY WARRANTY; without even the implied warranty of
+ ;; MERCHANTABILITY or FITNESS FOR A PARTICULAR PURPOSE. See the
+ ;; GNU General Public License for more details.
+
+ (load "term/internal" nil t)
+
+ ;; Colour translation -- doesn't really need to be fast
+
+ (defvar msdos-colour-aliases
+   '(("purple"         . "magenta")
+     ("firebrick"      . "red")          ; ?
+     ("pink"           . "lightred")
+     ("royalblue"      . "blue")
+     ("cadetblue"      . "blue")
+     ("forestgreen"    . "green")
+     ("darkolivegreen" . "green")
+     ("darkgoldenrod"  . "brown")
+     ("goldenrod"      . "yellow")
+     ("grey40"         . "darkgray")
+     ("rosybrown"      . "brown")
+     ("blue"           . "lightblue")  ;; from here: for Enriched Text
+     ("darkslategray"  . "darkgray")
+     ("orange"         . "brown")
+     ("light blue"     . "lightblue")
+     ("violet"         . "magenta"))
+   "List of alternate names for colours.")
+ ;;
+
+ (defun msdos-colour-translate (name)
+   (setq name (downcase name))
+   (let* ((len (length name))
+          (val (cdr (assoc name
+                          '(("black" . 0)
+                            ("blue" . 1)
+                            ("green" . 2)
+                            ("cyan" . 3)
+                            ("red" . 4)
+                            ("magenta" . 5)
+                            ("brown" . 6)
+                            ("lightgray" . 7) ("light gray" . 7)
+                            ("darkgray" . 8) ("dark gray" . 8)
+                            ("lightblue" . 9)
+                            ("lightgreen" . 10)
+                            ("lightcyan" . 11)
+                            ("lightred" . 12)
+                            ("lightmagenta" . 13)
+                            ("yellow" . 14)
+                            ("white" . 15)))))
+          (try))
+     (or val
+         (and (setq try (cdr (assoc name msdos-colour-aliases)))
+              (msdos-colour-translate try))
+         (and (> len 5)
+              (string= "light" (substring name 0 4))
+              (setq try (msdos-colour-translate (substring name 5)))
+              (logior try 8))
+         (and (> len 6)
+              (string= "light " (substring name 0 5))
+              (setq try (msdos-colour-translate (substring name 6)))
+              (logior try 8))
+         (and (> len 4)
+              (string= "dark" (substring name 0 3))
+              (msdos-colour-translate (substring name 4)))
+         (and (> len 5)
+              (string= "dark " (substring name 0 4))
+              (msdos-colour-translate (substring name 5))))))
+ ;;
+ ;; --------------------
+ ;; We want to delay setting frame parameters until the faces are setup
+ (defvar default-frame-alist nil)
+
+ (defun msdos-face-setup ()
+   (modify-frame-parameters (selected-frame) default-frame-alist)
+ ;  (set-face-foreground 'bold "white")
+   (set-face-foreground 'bold "yellow")
+   (set-face-foreground 'italic "red")
+ ;  (set-face-foreground 'bold-italic "yellow")
+   (set-face-foreground 'bold-italic "lightred")
+ ;  (set-face-foreground 'underline "blue")
+   (set-face-foreground 'underline "white")
+   (set-face-background 'region "green")
+   ;;
+   (make-face 'msdos-menu-active-face)
+   (make-face 'msdos-menu-passive-face)
+   (make-face 'msdos-menu-select-face)
+   (set-face-foreground 'msdos-menu-active-face "white")
+   (set-face-foreground 'msdos-menu-passive-face "lightgray")
+   (set-face-background 'msdos-menu-active-face "blue")
+   (set-face-background 'msdos-menu-passive-face "blue")
+   (set-face-background 'msdos-menu-select-face "red"))
+ ;;
+ ;; We have only one font, so...
+ ;;
+ (add-hook 'before-init-hook 'msdos-face-setup)
+
+ ;; ---------------
+ ;; More or less useful imitations of certain X-functions. A lot of the
+ ;; values returned are questionable, but usually only the form of the
+ ;; returned value matters. Also, by the way, recall that `ignore' is
+ ;; a useful function for returning 'nil regardless of argument.
+
+ ;; From src/xfns.c
+ (defun x-display-colour-p () 't)
+ (fset 'focus-frame 'ignore)
+ (fset 'unfocus-frame 'ignore)
+ (defun x-list-fonts (pattern &optional face frame) (list "default"))
+ (defun x-colour-defined-p (colour) (numberp (msdos-colour-translate colour)))
+ (defun x-display-pixel-width (&optional frame) (* 8 (frame-width frame)))
+ (defun x-display-pixel-height (&optional frame) (* 8 (frame-height frame)))
+ (defun x-display-planes (&optional frame) 4) ; 3 for background, actually
+ (defun x-display-colour-cells (&optional frame) 16) ; ???
+ (defun x-server-max-request-size (&optional frame) 1000000) ; ???
+ (defun x-server-vendor (&optional frame) t "GNU")
+ (defun x-server-version (&optional frame) '(1 0 0))
+ (defun x-display-screens (&optional frame) 1)
+ (defun x-display-mm-height (&optional frame) 200) ; Guess the size of my
+ (defun x-display-mm-width (&optional frame) 253)  ; monitor, MW...
+ (defun x-display-backing-store (&optional frame) 'not-useful)
+ (defun x-display-visual-class (&optional frame) 'static-colour)
+ (fset 'x-display-save-under 'ignore)
+ (fset 'x-get-resource 'ignore)
+
+ ;; From lisp/term/x-win.el
+ (setq x-display-name "pc")
+ (setq split-window-keep-point t)
+
+ ;; From lisp/select.el
+ (defun x-get-selection (&rest rest) "")
+ (fset 'x-set-selection 'ignore)
+
+ ;; From lisp/faces.el: we have only one font, so always return
+ ;; it, no matter which variety they've asked for.
+ (defun x-frob-font-slant (font which)    font)
+
+ ;; From lisp/frame.el
+ (fset 'set-default-font 'ignore)
+ (fset 'set-mouse-colour 'ignore)         ; We cannot, I think.
+ (fset 'set-cursor-colour 'ignore)        ; Hardware determined by char under.
+ (fset 'set-border-colour 'ignore)        ; Not useful.
+ (fset 'auto-raise-mode 'ignore)
+ (fset 'auto-lower-mode 'ignore)
+ (defun set-background-colour (colour-name)
+   "Set the background colour of the selected frame to COLOUR.
+ When called interactively, prompt for the name of the colour to use."
+   (interactive "sColour: ")
+   (modify-frame-parameters (selected-frame)
+                            (list (cons 'background-colour colour-name))))
+ (defun set-foreground-colour (colour-name)
+   "Set the foreground colour of the selected frame to COLOUR.
+ When called interactively, prompt for the name of the colour to use."
+   (interactive "sColour: ")
+   (modify-frame-parameters (selected-frame)
+                            (list (cons 'foreground-colour colour-name))))
+ ;;
+
+ ;; ------------------
+ ;; Handle the X-like command line parameters "-fg" and "-bg"
+ (defun msdos-handle-args (args)
+   (let ((rest nil))
+     (while args
+       (let ((this (car args)))
+         (setq args (cdr args))
+         (cond ((or (string= this "-fg") (string= this "-foreground"))
+                (if args
+                    (setq default-frame-alist
+                          (cons (cons 'foreground-colour (car args))
+                                default-frame-alist)
+                          args (cdr args))))
+               ((or (string= this "-bg") (string= this "-background"))
+                (if args
+                    (setq default-frame-alist
+                          (cons (cons 'background-colour (car args))
+                                default-frame-alist)
+                          args (cdr args))))
+               (t (setq rest (cons this rest))))))
+     (nreverse rest)))
+ ;;
+
+ (setq command-line-args (msdos-handle-args command-line-args))
+
+
+ ;; ---------
+ (require 'faces)
+ (if (msdos-mouse-p)
+     (progn
+       (require 'menu-bar)
+       (menu-bar-mode t)))
+ ;;
+
+ ;;; ------ put the following into _emacs ---------------
+ ;;;
+ ;;; Hairy set-up for highlighting buffers. Most of the face
+ ;;; definition stuff below is required to have reasonable
+ ;;; operation on a PC.
+ ;;
+ ;;; This installs the hilit package and enables it, but for modes
+ ;;; only where we don't use font-lock mode.
+ (cond (window-system
+        (setq hilit-mode-enable-list
+              '(not c-mode c++-mode objc-mode emacs-lisp-mode)
+              hilit-background-mode    'light
+              hilit-inhibit-hooks      nil
+              hilit-inhibit-rebinding  nil
+              hilit-auto-highlight     t
+              hilit-face-check         nil
+              hilit-auto-rehighlight-fallback '(25000 . 60))
+
+        (require 'hilit19)
+        ))
+ ;;
+ ;;; Faces for auto-highlighting in C and Lisp buffers
+
+ (make-face 'blue-bold)
+ (set-face-foreground 'blue-bold "lightblue")
+ (hilit-translate type 'blue-bold)
+ (make-face 'ForestGreen-bold)
+ (set-face-foreground 'ForestGreen-bold "brown")
+ (make-face 'red-underline)
+ (set-face-foreground 'red-underline "white")
+ (hilit-translate label 'red-underline)
+ (make-face 'RoyalBlue)
+ (set-face-foreground 'RoyalBlue "lightred")
+ (make-face 'yellow)
+ (set-face-foreground 'yellow "yellow")
+ (hilit-translate keyword 'yellow)
+ ;
+ ;;; Faces for highlighting in compilation buffers
+ (make-face 'blue-italic)
+ (set-face-foreground 'blue-italic "lightred")
+ (hilit-translate warning 'blue-italic)
+ (make-face 'default/pink-bold)
+ (set-face-foreground 'default/pink-bold "yellow")
+ (hilit-translate active-error 'default/pink-bold)
+ ;
+ ;;; Faces for highlighting in Dired buffers
+ (make-face 'ForestGreen)
+ (set-face-foreground 'ForestGreen "darkgray")
+ (hilit-translate dired-ignored 'ForestGreen)
+ ;
+ ;;; Faces for Enriched Text Mode.
+ (make-face 'bg:DarkSlateGray)
+ (set-face-foreground 'bg:DarkSlateGray "lightgray")
+ (make-face 'excerpt)
+ (set-face-foreground 'excerpt "magenta")
+ ;
+ ;;; This variable sets the max size of the buffer where auto-highlight will
+ ;;; work. More than 15000 is painfully slow for me.
+ (setq-default hilit-auto-highlight-maxout 15000)
+ ;
+ ;;; Font-locking faces set-up
+
+ ;;; Each element of the list should be of the form
+
+ ;;;    (FACE FOREGROUND BACKGROUND BOLD-P ITALIC-P UNDERLINE-P)
+
+ ;;; where FACE should be one of the face symbols, and the subsequent element
+ ;;; items should be the attributes for the corresponding Font Lock mode
+ ;;; faces. Attributes FOREGROUND and BACKGROUND should be strings (default
+ ;;; if nil), while BOLD-P, ITALIC-P, and UNDERLINE-P should specify the
+ ;;; corresponding face attributes (yes if non-nil).
+ ;;;
+ (setq font-lock-face-attributes
+       '((font-lock-comment-face "red" "lightgray" nil nil nil)
+         (font-lock-string-face "brown" "lightgray" nil nil nil)
+         (font-lock-keyword-face "magenta" "lightgray" nil nil nil)
+         (font-lock-type-face "darkgray" "lightgray" nil nil nil)
+         (font-lock-function-name-face "yellow" "lightgray" nil nil nil)
+         (font-lock-variable-name-face "blue" "lightgray" nil nil nil)
+         (font-lock-reference-face "lightblue" "lightgray" nil nil nil)))
+ ;;
+ (setq font-lock-background-mode 'light)
+ (setq font-lock-maximum-decoration t)
+ (setq font-lock-maximum-size
+       (if font-lock-maximum-decoration (* 70 1024) (* 150 1024)))
+ (add-hook 'c-mode-common-hook 'turn-on-font-lock)
+ (add-hook 'emacs-lisp-mode-hook 'turn-on-font-lock)
+
+ ;; pc-win.el ends here.
+
+12.0 Xt/Motif programming and font-lock
+
+        .M. Melgazzi <marco@vcldec1.polito.it>
+
+        I like quite a lot font-lock and, for my thesis work, I use mainly
+        c and Xt/Motif. Unluckily, in this package there is no support for
+        X keywords so I had to add it myself :)
+
+        This uuencoded file is a snipped down version of my .emacs that
+        made me achieve exactly what I wanted: colour syntax highlighting of
+        the majority of X types and costants.
+
+        To use it you'll have to edit a little your emacs file: it
+        shouldn't be too difficult anyway ( I'm a newbie so don't flame me
+        for my efforts :). I had to gzip+uuencode the code because there
+        are quite some extra long regexps ( I get a strange warning if I
+        compile them on the fly, see the code for info ).
+
+        Of course, if you don't have a very fast machine, I strongly recommend
+        fast-lock: especially if you plan to use this file :)
+
+        Happy X Programming
+        -- Marco
+
+    12.1 Code: xt-font-lock.el
+
+ ;;;   @(#) xt-font-lock.el -- Xt/Motif font lock aid
+ ;;;   25 Sep 1996, <marco@vcldec1.polito.it> (M. Melgazzi)
+ ;;;
+ ;;;   With these snippets you can achieve the results described in ;;; the
+ ;;;   article Of course all this is under GPL, I decline ;;;
+ ;;;   responsibilities for anything bad happening to your C code ;;; ;-)
+
+ (require 'cc-mode)
+ (require 'font-lock)
+ (require 'fast-lock)
+
+
+ (autoload 'make-regexp "make-regexp"
+  "Return a regexp to match a string item in STRINGS.")
+ ;;
+
+ ;;;   Colour values for font-lock (BEFORE font-latex.el if you use ;;; it)
+ ;;;   YMMV this is how I set everything up, change as needed ;;; (BTW the
+ ;;;   default fg/bg are azure3/SkyBlue4)
+
+ (set-face-font
+  'bold
+  "-b&h-lucidatypewriter-bold-r-normal-sans-12-120-75-75-m-70-iso8859-1" )
+ ;;
+
+ (set-face-font
+  'bold-italic
+  "-adobe-courier-bold-o-normal--12-120-75-75-m-70-iso8859-1" )
+ ;;
+
+ (set-face-font
+  'italic
+  "-adobe-courier-medium-o-normal--12-120-75-75-m-70-iso8859-1" )
+ ;;
+ (set-face-foreground 'region  "MediumAquamarine" )
+ (set-face-background 'region  "DarkSlateGrey" )
+ (set-face-foreground 'secondary-selection "white")
+ (set-face-background 'secondary-selection "DarkSlateGrey")
+ (set-face-foreground 'highlight "white")
+ (set-face-background 'highlight "MediumAquamarine")
+ (set-face-foreground 'holiday-face "white")
+ (set-face-background 'holiday-face "Grey63")
+
+ (setq font-lock-face-attributes
+  '((font-lock-comment-face "grey63")
+    (font-lock-string-face "PowderBlue")
+    (font-lock-keyword-face "white")
+    (font-lock-function-name-face "MediumAquamarine")
+    (font-lock-variable-name-face "PeachPuff")
+    (font-lock-type-face "plum")
+    (font-lock-reference-face "CadetBlue")
+    ))
+ ;;
+
+ ;;;   I like font-lock & fast-lock. I don't like to have the font-cache
+ ;;;   files in the same directory as the files so ;;; I make it look in
+ ;;;   ~/.emacs-flc first, feel free to change this behaviour anyway.
+
+
+ (setq font-lock-support-mode 'fast-lock-mode)
+ (global-font-lock-mode t)
+ (setq font-lock-maximum-decoration
+       '((c-mode . t)
+         (c++-mode . t)
+         (latex-mode . t)
+         (python-mode . t )
+         (t . 1)
+         ))
+ (setq fast-lock-cache-directories '("~/.emacs-flc" "."))
+
+
+
+ ;;;;; ..... snip snip ...
+
+
+
+ ;;; C development
+
+ ;;;     Custom font lock highlighting I like to have a face only for
+ ;;;     constants...
+
+ (make-face 'my-new-font-lock-constants-face)
+ (copy-face 'default 'my-new-font-lock-constants-face)
+
+ ;;;     Change this to suit your needs
+ ;;;
+ (set-face-foreground 'my-new-font-lock-constants-face "thistle1")
+
+ (defvar my-new-font-lock-constants-face
+     'my-new-font-lock-constants-face
+     "Face to use for constant names.")
+ ;;
+
+ ;;;     Nearly all the useful X data types plus all the
+ ;;;     [A-Z]*STRUCT(|POINTER) that I usually use in my code. If you
+ ;;;     byte-compile the file there are no performance hits ( see
+ ;;;     make-regexp.el for the explanation of the eval-when-compile trick.
+
+ ;;;     If I use the (neater) eval-when-compile stuff I get a warning about
+ ;;;     exceeding max-specpdl-size (it's 600 ) so I have to use the
+ ;;;     alredy evaluated versions. Anybody can explain me what that means ?
+
+ ;;;   (defvar my-new-X-and-normal-c-type-types
+ ;;;     (eval-when-compile
+ ;;;       (make-regexp '(
+ ;;;                                      ;; Normal C types
+ ;;;                                      "auto" "extern" "register" "static" "typedef" "struct" "union" "enum"
+ ;;;                                      "signed" "unsigned" "short" "long" "int" "char" "float" "double"
+ ;;;                                      "void" "volatile" "const"
+ ;;;
+ ;;;                                      ;; Some other standard C type
+ ;;;                                      "FILE"
+ ;;;
+ ;;;                                      ;; (Some)X/(The majority of)Xt/(Should be all of them)Xm standard types
+ ;;;                                      ;; (R5/Motif1.2 may need small additions for R6/Motif2.0)
+ ;;;                                      "Arg" "ArgList" "Atom" "Bool" "Boolean" "Cardinal" "Colourmap" "Cursor" "Depth" "Dimension" "Display"
+ ;;;                                      "Drawable" "EventMask" "File" "Font" "GC" "GContext"
+ ;;;                                      "KeyCode" "KeySym" "Modifiers" "MrmCode" "MrmCount" "MrmHierarchy" "MrmOsOpenPar"
+ ;;;                                      "MrmRegisterArg" "MrmRegisterArgList" "MrmType" "Pixel" "Pixmap" "Position" "Region" "Screen" "Status" "String"
+ ;;;                                      "StringTable" "Time" "Vertex" "Visual" "VisualID" "Widget" "WidgetClass" "WidgetList" "Window"
+ ;;;                                      "XColour" "XContext" "XEvent" "XFontSet" "XFontStruct"
+ ;;;                                      "XImage" "XRectangle" "XGCValues" "XImage" "XmButtonType" "XmButtonTypeList" "XmClipboardPendingList"
+ ;;;                                      "XmColourProc" "XmCutPasteProc" "XmDropTransferEntryRec" "XmDropTransferEntry" "XmFontContext" "XmFontList"
+ ;;;                                      "XmFontListEntry" "XmFontType" "XmHighlightMode" "XmKeySymTable" "XmNavigationType" "XmOffset" "XmOffsetPtr"
+ ;;;                                      "XmQualifyProc" "XmRepTypeEntry" "XmRepTypeId" "XmRepTypeList" "XmSearchProc" "XmSecondaryResourceData"
+ ;;;                                      "XmString" "XmStringCharSet" "XmStringCharSetTable" "XmStringComponentType" "XmStringContext" "XmStringDirection"
+ ;;;                                      "XmStringTable" "XmTextBlockRec" "XmTextBlockRecWcs" "XmTextDirection" "XmTextPosition" "XmTextSource"
+ ;;;                                      "XmTraversalDirection" "XmVisibility" "XrmQuark" "XrmValue" "XrmValuePtr"
+ ;;;                                      "XrmDatabase" "XrmOptionDescList" "XrmOptionDescRec" "XtAccelerators" "XtActionList"
+ ;;;                                      "XtActionProc" "XtAppContext" "XtCallbackList" "XtCallbackProc" "XtConvertSelectionIncProc" "XtCreatePopupChildProc"
+ ;;;                                      "XtDestructor" "XtErrorMsgHandler" "XtEventHandler" "XtGrabKind"
+ ;;;                                      "XtOrderProc" "XtKeyProc" "XtPointer" "XtPointer" "XtSelectionCallbackProc" "XtTranslations"
+ ;;;                                      "XtWorkProc" "XtWorkProcId"
+ ;;;
+ ;;;                                      ;; All the various callback structs (any volunteer wants to type all of them above ? :)
+ ;;;                                      "Xm[A-Za-z]*CallbackStruct"
+ ;;;
+ ;;;                                      ;; Typedef'd structs I use in my programs ( I -always- call them SOMETHINGSTRUCT and SOMETHINGSTRUCTPOINTER)
+ ;;;                      ;; YMMV so probably you'll change/delete this line
+ ;;;                                      "[A-Z]*STRUCT\\(\\|POINTER\\)"
+ ;;;                                      ) t)))
+
+ (defvar my-new-X-and-normal-c-type-types "\\(A\\(rg\\(\\|List\\)\\|tom\\)\\|Bool\\(\\|ean\\)\\|C\\(ardinal\\|olormap\\|ursor\\)\\|D\\(epth\\|i\\(mension\\|splay\\)\\|rawable\\)\\|EventMask\\|F\\(ILE\\|ile\\|ont\\)\\|GC\\(\\|ontext\\)\\|Key\\(Code\\|Sym\\)\\|M\\(odifiers\\|rm\\(Co\\(de\\|unt\\)\\|Hierarchy\\|OsOpenPar\\|RegisterArg\\(\\|List\\)\\|Type\\)\\)\\|P\\(ix\\(el\\|map\\)\\|osition\\)\\|Region\\|S\\(creen\\|t\\(atus\\|ring\\(\\|Table\\)\\)\\)\\|Time\\|V\\(ertex\\|isual\\(\\|ID\\)\\)\\|Wi\\(dget\\(\\|Class\\|List\\)\\|ndow\\)\\|X\\(Co\\(lor\\|ntext\\)\\|Event\\|FontS\\(et\\|truct\\)\\|GCValues\\|Image\\|Rectangle\\|m\\(ButtonType\\(\\|List\\)\\|C\\(lipboardPendingList\\|olorProc\\|utPasteProc\\)\\|DropTransferEntry\\(\\|Rec\\)\\|Font\\(Context\\|List\\(\\|Entry\\)\\|Type\\)\\|HighlightMode\\|KeySymTable\\|NavigationType\\|Offset\\(\\|Ptr\\)\\|QualifyProc\\|RepType\\(Entry\\|Id\\|List\\)\\|S\\(e\\(archProc\\|condaryResourceData\\)\\|tring\\(\\|C\\(harSet\\(\\|Table\\)\\|o\\(mponentType\\|ntext\\)\\)\\|Direction\\|Table\\)\\)\\|T\\(ext\\(BlockRec\\(\\|Wcs\\)\\|Direction\\|Position\\|Source\\)\\|raversalDirection\\)\\|Visibility\\|[A-Za-z]*CallbackStruct\\)\\|rm\\(Database\\|OptionDesc\\(List\\|Rec\\)\\|Quark\\|Value\\(\\|Ptr\\)\\)\\|t\\(A\\(c\\(celerators\\|tion\\(List\\|Proc\\)\\)\\|ppContext\\)\\|C\\(allback\\(List\\|Proc\\)\\|onvertSelectionIncProc\\|reatePopupChildProc\\)\\|Destructor\\|E\\(rrorMsgHandler\\|ventHandler\\)\\|GrabKind\\|KeyProc\\|OrderProc\\|Pointer\\|SelectionCallbackProc\\|Translations\\|WorkProc\\(\\|Id\\)\\)\\)\\|[A-Z]*STRUCT\\(\\|POINTER\\)\\|auto\\|c\\(har\\|onst\\)\\|double\\|e\\(num\\|xtern\\)\\|float\\|int\\|long\\|register\\|s\\(hort\\|igned\\|t\\(atic\\|ruct\\)\\)\\|typedef\\|un\\(ion\\|signed\\)\\|vo\\(id\\|latile\\)\\)")
+
+ ;;; (defvar my-new-X-and-normal-c-const-names
+ ;;;   (eval-when-compile
+ ;;;     (make-regexp '(
+ ;;;                                ;; Some C constants
+ ;;;                                "NULL"
+ ;;;
+ ;;;                                ;; All the XmSOMETHING_SOMETHING_ELSE costants
+ ;;;                                ;; If somebody has time to spare he could type all the other X/Xt constants...
+ ;;;                                "Xm[A-Z_]*"
+ ;;;
+ ;;;                                ;; Custom constants
+ ;;;                                ) t)))
+
+ (defvar my-new-X-and-normal-c-const-names "\\(NULL\\|Xm[A-Z_]*\\)")
+
+ ;;;   (defvar my-new-X-and-normal-c-function-names
+ ;;;     (eval-when-compile
+ ;;;       (make-regexp '(
+ ;;;                                      ;; Some C library functions
+ ;;;                                      "assert" "free" "malloc" "fprintf" "fscanf" "printf" "scanf" "sprintf" "sscanf"
+ ;;;
+ ;;;                                      ;; All the X-Xt-Xm functions (all the function are of the type XSomething,XtSomething, XmSomething or XrmSomething)
+ ;;;                                      ;; Beware of XtN... and XmN... they are argument names, not structs!
+ ;;;                      ;; In case of ambiguities, types have precedence over these.
+ ;;;                                      "X\\([A-Z][a-z]\\|\\(\\(m\\|t\\)[A-MO-Z]\\|rm[A-Z]\\)[a-z]\\)[A-Za-z]*"
+ ;;;                                      ) t)))
+
+ (defvar my-new-X-and-normal-c-function-names "\\(X\\([A-Z][a-z]\\|\\(\\(m\\|t\\)[A-MO-Z]\\|rm[A-Z]\\)[a-z]\\)[A-Za-z]*\\|assert\\|f\\(printf\\|ree\\|scanf\\)\\|malloc\\|printf\\|s\\(canf\\|printf\\|scanf\\)\\)")
+
+ ;;;     Code taken from font-lock.el (and somewhat modified): without copying
+ ;;;     this verbatim I didn't manage to get correct highlighting on my new
+ ;;;     types ( it has something to do with the numbers in match-beginning
+ ;;;     (see comment below) ): the types were highlighted as variables and
+ ;;;     their variables were not highlighted :). Then I decided to
+ ;;;     introduce constants highlighting and I don't think it was possible
+ ;;;     in any other way...
+
+ (defun mine-refresh-custom-c-keywords ()
+   "Set the font-lock C keywords with the current my-new-X-... values"
+   (let ((c-keywords
+                                                                                 ;      I added "sizeof"
+                                                                                 ;      ("break" "continue" "do" "else" "for" "if" "return" "switch" "while")
+                  "break\\|continue\\|do\\|else\\|for\\|if\\|return\\|s\\(izeof\\|witch\\)\\|while")
+                 (c-type-types
+                                                                                 ;      ("auto" "extern" "register" "static" "typedef" "struct" "union" "enum"
+                                                                                 ;       "signed" "unsigned" "short" "long" "int" "char" "float" "double"
+                                                                                 ;       "void" "volatile" "const")
+                  (concat "auto\\|c\\(har\\|onst\\)\\|double\\|e\\(num\\|xtern\\)\\|"
+                                  "float\\|int\\|long\\|register\\|"
+                                  "s\\(hort\\|igned\\|t\\(atic\\|ruct\\)\\)\\|typedef\\|"
+                                  "un\\(ion\\|signed\\)\\|vo\\(id\\|latile\\)")) ; 6 ()s deep.
+                 )
+         (setq c-font-lock-keywords-1
+                   (list
+                    ;;
+                    ;; These are all anchored at the beginning of line for speed.
+                    ;;
+                    ;; Fontify function name definitions (GNU style; without type on line).
+                    (list (concat "^\\(\\sw+\\)[ \t]*(") 1 'font-lock-function-name-face)
+                    ;;
+                    ;; Fontify filenames in #include <...> preprocessor directives as strings.
+                    '("^#[ \t]*include[ \t]+\\(<[^>\"\n]+>\\)" 1 font-lock-string-face)
+                    ;;
+                    ;; Fontify function macro names.
+                    '("^#[ \t]*define[ \t]+\\(\\sw+\\)(" 1 font-lock-function-name-face)
+                    ;;
+                    ;; Fontify symbol names in #elif or #if ... defined preprocessor directives.
+                    ;; (changed to use the new constants face)
+                    '("^#[ \t]*\\(elif\\|if\\)\\>"
+                          ("\\<\\(defined\\)\\>[ \t]*(?\\(\\sw+\\)?" nil nil
+                           (1 font-lock-reference-face) (2 my-new-font-lock-constants-face nil t)))
+                    ;;
+                    ;; Fontify otherwise as symbol names, and the preprocessor directive names.
+                    ;; (changed to use the new constants face)
+                    '("^#[ \t]*\\(\\sw+\\)\\>[ \t]*\\(\\sw+\\)?"
+                          (1 font-lock-reference-face) (2 my-new-font-lock-constants-face nil t))
+                    ))
+ ;;
+         (setq c-font-lock-keywords-2
+                   (append c-font-lock-keywords-1
+                                   (list
+                                    ;;
+                                    ;; Simple regexps for speed.
+                                    ;;
+                                    ;; Fontify all type specifiers.
+                                    (cons (concat "\\<\\(" my-new-X-and-normal-c-type-types "\\)\\>") 'font-lock-type-face)
+                                    ;;
+                                    ;; Fontify all builtin C keywords (except case, default and goto; see below).
+                                    (cons (concat "\\<\\(" c-keywords "\\)\\>") 'font-lock-keyword-face)
+                                    ;;
+                                    ;; Fontify the constants
+                                    (cons (concat "\\<" my-new-X-and-normal-c-const-names "\\>") 'my-new-font-lock-constants-face)
+                                    ;;
+                                    ;; Fontify case/goto keywords and targets, and case default/goto tags.
+                                    '("\\<\\(case\\|goto\\)\\>[ \t]*\\(\\sw+\\)?"
+                                          (1 font-lock-keyword-face) (2 font-lock-reference-face nil t))
+                                    '("^[ \t]*\\(\\sw+\\)[ \t]*:" 1 font-lock-reference-face)
+                                    )))
+ ;;
+         (setq c-font-lock-keywords-3
+                   (append c-font-lock-keywords-2
+                                   ;;
+                                   ;; More complicated regexps for more complete highlighting for types.
+                                   ;; We still have to fontify type specifiers individually, as C is so hairy.
+                                   (list
+                                    ;;
+                                    ;; These should not come last because even some types start with Xt/Xm
+                                    (cons (concat "\\<" my-new-X-and-normal-c-function-names "\\>") 'font-lock-keyword-face)
+
+                                    ;; Fontify all storage classes and type specifiers, plus their items.
+                                    (list (concat "\\<" my-new-X-and-normal-c-type-types "\\>"
+                                                                  "\\([ \t*&]+\\sw+\\>\\)*")
+                                                  ;; Fontify each declaration item.
+                                                  '(font-lock-match-c++-style-declaration-item-and-skip-to-next
+                                                    ;; Start with point after all type specifiers.
+                                                    ;; This is the number that creates problems if I do this in the 'normal' way ( that
+                                                    ;; is with add-list...
+                                                    (goto-char (or (match-beginning 8) (match-end 1)))
+                                                    ;; Finish with point after first type specifier.
+                                                    (goto-char (match-end 1))
+                                                    ;; Fontify as a variable or function name.
+                                                    (1 (if (match-beginning 4)
+                                                                   font-lock-function-name-face
+                                                                 font-lock-variable-name-face))))
+                                    ;;
+                                    ;; Fontify structures, or typedef names, plus their items.
+                                    '("\\(}\\)[ \t*]*\\sw"
+                                          (font-lock-match-c++-style-declaration-item-and-skip-to-next
+                                           (goto-char (match-end 1)) nil
+                                           (1 (if (match-beginning 4)
+                                                          font-lock-function-name-face
+                                                    font-lock-variable-name-face))))
+                                    ;;
+                                    ;; Fontify anything at beginning of line as a declaration or definition.
+                                    '("^\\(\\sw+\\)\\>\\([ \t*]+\\sw+\\>\\)*"
+                                          (1 font-lock-type-face)
+                                          (font-lock-match-c++-style-declaration-item-and-skip-to-next
+                                           (goto-char (or (match-beginning 2) (match-end 1))) nil
+                                           (1 (if (match-beginning 4)
+                                                          font-lock-function-name-face
+                                                    font-lock-variable-name-face))))
+                                    )))))
+
+ ;;;     This is the call that sets everything up
+ ;;;
+ (mine-refresh-custom-c-keywords)
+
+
+ ;;;     I often use lines like this in my X programs
+ ;;;
+ ;;;     XtSetArg(al[ac], XmN..., ...); ac++;
+ ;;;
+ ;;;     c-mode, instead, would like to insert a newline after the first
+ ;;;     semicolon, with this ugly (first elisp thing I've written :)
+ ;;;     function, the default behaviour is changed.
+
+ (defun my-xtsetarg-semi&comma-criteria ()
+   (save-excursion
+     (if (search-backward "XtSetArg" (c-point 'bol) t)
+        ;; Now we are at the start of the line
+        ;; so we have to search forward
+        (if (search-forward "++" (c-point 'eol) t)
+                                 t
+                                 'stop))))
+ ;;
+ (defconst my-c-style
+   ;;; Custom semi&comma behaviour
+   (c-hanging-semi&comma-criteria
+    )
+   "My C Programming Style")
+ ;;
+ ;;;     Customizations for all of c-mode, c++-mode, and objc-mode
+ ;;;
+ (defun my-c-mode-common-hook ()
+   ;; add my personal style and set it for the current buffer
+   (c-add-style "PERSONAL" my-c-style t)
+   )
+
+ ;;; Hooks
+
+ (add-hook 'c-mode-common-hook 'my-c-mode-common-hook)
+
+
+ ;; xt-font-lock.el ends here.
+
+14.0 End of document

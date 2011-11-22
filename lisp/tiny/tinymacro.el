@@ -4,12 +4,11 @@
 
 ;;{{{ Id
 
-;; Copyright (C) 1995-2007 Jari Aalto
+;; Copyright (C) 1995-2010 Jari Aalto
 ;; Keywords:     extensions
 ;; Author:       Jari Aalto
 ;; Maintainer:   Jari Aalto
 ;;
-;; To get information on this program, call M-x tinymacro-version.
 ;; Look at the code with folding.el
 
 ;; COPYRIGHT NOTICE
@@ -25,9 +24,7 @@
 ;; for more details.
 ;;
 ;; You should have received a copy of the GNU General Public License
-;; along with program. If not, write to the
-;; Free Software Foundation, Inc., 51 Franklin Street, Fifth Floor,
-;; Boston, MA 02110-1301, USA.
+;; along with this program. If not, see <http://www.gnu.org/licenses/>.
 ;;
 ;; Visit <http://www.gnu.org/copyleft/gpl.html> for more information
 
@@ -37,21 +34,17 @@
 ;;; Intall:
 
 ;; ........................................................ &t-install ...
-;;   Put this file on your Emacs-Lisp load path, add following into your
-;;   ~/.emacs startup file. Rip code with tinylib.el/ti::package-rip-magic
+;;   Put this file on your Emacs-Lisp `load-path', add following into your
+;;   ~/.emacs startup file:
 ;;
-;;       ;;  To use default keybinding "C-x("  and "C-x)", add this:
-;;      (add-hook 'tinymacro-:load-hook 'tinymacro-install-default-keybindings)
+;;      ;;  To use default keybinding "C-x("  and "C-x)", add this:
+;;      (add-hook 'tinymacro--load-hook 'tinymacro-install-default-keybindings)
 ;;      (require 'tinymacro)
 ;;
 ;;   or use autoload and your $HOME/.emacs starts faster
 ;;
-;;      (global-set-key "\C-x)" 'tinymacro-end-kbd-macro-and-assign)
 ;;      (autoload 'tinymacro-end-kbd-macro-and-assign  "tinymacro" "" t)
-;;
-;;   If you have any questions, feedback, use this function
-;;
-;;      M-x tinymacro-submit-bug-report
+;;      (global-set-key "\C-x)" 'tinymacro-end-kbd-macro-and-assign)
 
 ;;}}}
 ;;{{{ Documentation
@@ -67,15 +60,14 @@
 ;;      gnu.emacs.help post asked for easy way to assign newly created
 ;;      macro to some key. In reponse the author sent a simple function to do
 ;;      it, but he informaed that one macro, which was recycled every time,
-;;      was too little. Author started modifying code more, and that was
-;;      the birth of this package.
+;;      was too little. That little function was start of this package.
 ;;
 ;; Description
 ;;
 ;;      o   Two keystrokes to make a macro: one to record, one to
 ;;          assign it to key.
 ;;      o   To see the macro assignments to keys, just call `tinymacro-macro-info'
-;;      o   Default macro count is 10, increase with `tinymacro-:stack-max'
+;;      o   Default macro count is 10, increase with `tinymacro--stack-max'
 
 ;;}}}
 
@@ -87,9 +79,7 @@
 
 (require 'tinylibm)
 
-(eval-when-compile (ti::package-use-dynamic-compilation))
-
-(ti::package-defgroup-tiny TinyMacro tinymacro-: extensions
+(ti::package-defgroup-tiny TinyMacro tinymacro-- extensions
   "Fast way to assign newly created macro to key
   Overview of features.
 
@@ -100,13 +90,13 @@
 ;;}}}
 ;;{{{ setup: hooks, private
 
-(defcustom tinymacro-:macro-assigned-hook nil
+(defcustom tinymacro--macro-assigned-hook nil
   "*If new macro were asiigned, this hook will be run. The function
-SYMBOL that was used is in variable tinymacro-:last-macro-func"
+SYMBOL that was used is in variable tinymacro--last-macro-func"
   :type  'hook
   :group 'TinyMacro)
 
-(defcustom tinymacro-:load-hook nil
+(defcustom tinymacro--load-hook nil
   "*Hook run when file has been loaded."
   :type  'hook
   :group 'TinyMacro)
@@ -114,23 +104,23 @@ SYMBOL that was used is in variable tinymacro-:last-macro-func"
 ;;}}}
 ;;{{{ setup: public, user configurable
 
-(defcustom tinymacro-:macro-function-name-prefix "tinymacro--macro"
+(defcustom tinymacro--macro-function-name-prefix "tinymacro--macro"
   "*The function name prefix to use, when assigning name to last kbd macro"
   :type  'string
   :group 'TinyMacro)
 
-(defcustom tinymacro-:ask-when-stack-wrap-flag nil
+(defcustom tinymacro--ask-when-stack-wrap-flag nil
   "*Non-nil means ask user if used function stack wraps."
   :type  'boolean
   :group 'TinyMacro)
 
-(defcustom tinymacro-:stack-max 10
+(defcustom tinymacro--stack-max 10
   "*Maximum stack depth of unique macronames.
  The name run from 0..max, and wraps to 0 after max."
   :type  'integer
   :group 'TinyMacro)
 
-(defcustom tinymacro-:tmp-buffer "*temp*"
+(defcustom tinymacro--tmp-buffer "*temp*"
   "*Temporary buffer. Eg. displaying the macro bindings to keys."
   :type  'string
   :group 'TinyMacro)
@@ -138,40 +128,18 @@ SYMBOL that was used is in variable tinymacro-:last-macro-func"
 ;;}}}
 ;;{{{ setup: private variables
 
-(defvar tinymacro-:stack-ptr 0
+(defvar tinymacro--stack-ptr 0
   "Keep record of available stack space.")
 
-(defvar tinymacro-:last-macro-func nil
+(defvar tinymacro--last-macro-func nil
   "Hold last function SYMBOL that were used in assignment.")
 
-(defvar tinymacro-:last-macro-key nil
+(defvar tinymacro--last-macro-key nil
   "Hold last key STRING or VECTOR that were used in assignment.")
 
-(defvar tinymacro-:function-list nil
+(defvar tinymacro--function-list nil
   "List of original KEY -- FUNCTION pairs, whic are currently occupied
 by macros")
-
-;;}}}
-;;{{{ setup: version
-
-;;;###autoload (autoload 'tinymacro-version "tinymacro" "Display commentary." t)
-(eval-and-compile
-  (ti::macrof-version-bug-report
-   "tinymacro.el"
-   "tinymacro"
-   tinymacro-:version-id
-   "$Id: tinymacro.el,v 2.43 2007/05/01 17:20:50 jaalto Exp $"
-   '(tinymacro-:version-id
-     tinymacro-:stack-ptr
-     tinymacro-:last-macro-func
-     tinymacro-:last-macro-key
-     tinymacro-:function-list
-     tinymacro-:macro-assigned-hook
-     tinymacro-:load-hook
-     tinymacro-:macro-function-name-prefix
-     tinymacro-:ask-when-stack-wrap-flag
-     tinymacro-:stack-max
-     tinymacro-:tmp-buffer)))
 
 ;;}}}
 ;;{{{ code: misc
@@ -179,77 +147,77 @@ by macros")
 ;;; ----------------------------------------------------------------------
 ;;;
 (defun tinymacro-restore ()
-  "Restores all macro bindings, so that keys that occupy macros
+  "Restore all macro bindings, so that keys that occupy macros
 are restored to original functions.
 
 References:
-  tinymacro-:function-list     list is cleared too."
+  tinymacro--function-list     list is cleared too."
   (interactive)
-  (let* ((list  tinymacro-:function-list))
+  (let ((list tinymacro--function-list))
     (if (null list)
         (if (interactive-p)
             (message "TinyMacro: No macros active."))
       (dolist (elt  list)
         (global-set-key (nth 0 elt) (nth 1 elt)))
-      (setq  tinymacro-:function-list nil))))
+      (setq  tinymacro--function-list nil))))
 
 ;;}}}
 ;;{{{ code: symbol
 
 ;;; ----------------------------------------------------------------------
 ;;;
-(defun tinymacro-create-symbol()
+(defun tinymacro-create-symbol ()
   "Creates macro variable. Returns NEW or EXISTING SYMBOL."
-  (let* ((max   tinymacro-:stack-max)
-         (sp    tinymacro-:stack-ptr)
-         (q     tinymacro-:ask-when-stack-wrap-flag)
-         (name  tinymacro-:macro-function-name-prefix)
-         sym2
-         new
-         ret)
+  (let ((max   tinymacro--stack-max)
+	(q     tinymacro--ask-when-stack-wrap-flag)
+	(name  tinymacro--macro-function-name-prefix)
+	(stack-pointer tinymacro--stack-ptr)
+	new
+	ret)
     (if (or (null q)
-            (< sp max))                 ; yes, go ahead with new
+            (< stack-pointer max))                 ; yes, go ahead with new
         (setq new (format "%s%d"
                           name
-                          (if (< sp max) ; 0..max
-                              (setq sp (1+ sp))
-                            (setq sp 0))))
+                          (if (< stack-pointer max) ; 0..max
+                              (setq stack-pointer (1+ stack-pointer))
+                            (setq stack-pointer 0))))
       (if (y-or-n-p "Macro stack full, wrap? ")
           (setq new
-                (if (< sp max)          ; 0..max
-                    (setq sp (1+ sp))
-                  (setq sp 0)))))
-
-    (when new                           ;  Must update stack
-      (setq tinymacro-:stack-ptr sp
-            ret (intern-soft new))      ; return symbol
-      (if ret nil                       ; Already exist
+                (if (< stack-pointer max)          ; 0..max
+                    (setq stack-pointer (1+ stack-pointer))
+                  (setq stack-pointer 0)))))
+    (when new                                      ;  Must update stack
+      (setq tinymacro--stack-ptr stack-pointer
+            ret (intern-soft new))                 ; return symbol
+      (if ret
+	  nil                                      ; Already exists
         ;;   a) make it b)s et to nil c) put into ret val
-        (setq sym2 (intern new))
-        (set sym2 nil)
-        (setq ret sym2)))
+        (let ((sym (intern new)))
+	  (set sym nil)
+	  (setq ret sym))))
     ret))
 
 ;;; ----------------------------------------------------------------------
 ;;;
 (defun tinymacro-create-name ()
   "Creates macro name."
-  (let* ((max   tinymacro-:stack-max)
-         (sp    tinymacro-:stack-ptr)
-         (q     tinymacro-:ask-when-stack-wrap-flag)
-         (n     tinymacro-:macro-function-name-prefix)
-         new)
-    (if (or q (< sp max))               ; yes, go ahead with new
+  (let ((max		tinymacro--stack-max)
+	(stack-pointer	tinymacro--stack-ptr)
+	(name-prefix	tinymacro--macro-function-name-prefix)
+	(q		tinymacro--ask-when-stack-wrap-flag)
+	new)
+    (if (or q (< stack-pointer max))                  ; yes, go ahead with new
         (setq new
-              (concat n (if (< sp max)  ; 0..max
-                            (setq sp (1+ sp))
-                          (setq sp 0))))
+              (concat new (if (< stack-pointer max)     ; 0..max
+			      (setq stack-pointer (1+ stack-pointer))
+			    (setq stack-pointer 0))))
       (if (y-or-n-p "Macro stack full, wrap? ")
-          (setq new (concat n (if (< sp max) ; 0..max
-                                  (setq sp (1+ sp))
-                                (setq sp 0))))))
-    (if new                             ; Must update stack
-        (setq tinymacro-:stack-ptr sp))
+          (setq new (concat name-prefix
+			    (if (< stack-pointer max) ; 0..max
+				(setq stack-pointer (1+ stack-pointer))
+			      (setq stack-pointer 0))))))
+    (if new                                           ; Must update stack
+        (setq tinymacro--stack-ptr stack-pointer))
     new))
 
 ;;}}}
@@ -260,22 +228,24 @@ References:
 (defun tinymacro-macro-info ()
   "Show which macros are assigned to which keys."
   (interactive)
-  (let* ((sp    tinymacro-:stack-ptr)
-         (max   tinymacro-:stack-max)
-         (buf   tinymacro-:tmp-buffer)
-         (base  tinymacro-:macro-function-name-prefix)
-         (i     0)
-         (round 0)
-         bp                             ;buffer pointer
-         name
-         key)
+  (let ((stack-pointer tinymacro--stack-ptr)
+	(max    tinymacro--stack-max)
+	(buffer tinymacro--tmp-buffer)
+	(base   tinymacro--macro-function-name-prefix)
+	(i      0)
+	(round  0)
+	buffer-pointer
+	name
+	key)
     (while (< i (1+ max))
-      (setq name (concat base i)   i (1+ i)   key "")
+      (setq name (concat base i)
+	    i    (1+ i)
+	    key  "")
       (if (null (intern-soft name)) nil ;not use yet
         (if (> round 0) nil             ;do only once
-          (setq bp (get-buffer-create buf))
-          (set-buffer bp) (erase-buffer)
-          (insert (format "Stack pointer : %d\n" sp )))
+          (setq buffer-pointer (get-buffer-create buffer))
+          (set-buffer buffer-pointer) (erase-buffer)
+          (insert (format "Stack pointer : %d\n" stack-pointer)))
         (if (null (setq key (ti::keymap-function-bind-info (intern name))))
             (setq key "[??]"))          ;should never happen
         (insert (format "%-10s %s\n" key name))
@@ -283,7 +253,7 @@ References:
     (if (and (interactive-p)
              (eq 0 round))
         (message "TinyMacro: No macros bound or set."))
-    (switch-to-buffer-other-window bp)))
+    (switch-to-buffer-other-window buffer-pointer)))
 
 ;;; ----------------------------------------------------------------------
 ;;;
@@ -311,7 +281,7 @@ References:
 ;;;###autoload
 (defun tinymacro-assign (&optional key verb)
   "Name last macro and assigns it to user defined KEY.
-Runs tinymacro-:macro-assigned-hook if key macro gets installed.
+Runs tinymacro--macro-assigned-hook if key macro gets installed.
 The query options should be turned off if you call this within
 function, since it always return nil if the options are on.
 
@@ -325,21 +295,11 @@ Return:
   t    is assigned
   nil  not assigned `keyboard-quit'"
   (interactive)
-
-  (let* ((f-name    "")                 ;func name
-         do-it
-         macro-name                     ;our new macro !
-         lookup                         ;what was found
-
-         ;; --- 1 ---
-         ;; The bullet proof way to find key bind for abort
-         ;; (ti::keymap-function-bind-info 'keyboard-quit global-map)
-
-         ;; --- 2 --
-         ;; - Or we just say where it is... Nobody relocates it anyway
-         ;; - We use this because function2key does not work in XEmacs
-
-         (abort-ch (char-to-string ?\007)))
+  (let ((funcname "")
+	(abort-ch (char-to-string ?\007)) ; C-g
+	do-it
+	macro-name                     ;newly created macro
+	lookup)                        ;what was found
     (ti::verb)
     (if (null key)
         (setq key
@@ -354,21 +314,21 @@ Return:
             (or (and (current-local-map) ;in fundamental-mode this is nil.
                      (lookup-key (current-local-map) key))
                 (lookup-key global-map key) key))
-      ;; ................................................... occupied? ...
+      ;;  occupied?
       (when lookup
         (if (and (symbolp lookup)
                  (fboundp lookup))      ;just plain function
-            (setq f-name (symbol-name lookup))
-          (setq f-name  (prin1-to-string lookup))))
-      ;; ............................................. ask permission? ...
+            (setq funcname (symbol-name lookup))
+          (setq funcname  (prin1-to-string lookup))))
+      ;;  ask permission
       (when
           (and verb
                (not (null lookup)))
         (setq do-it
               (y-or-n-p
                (format
-                "Key already occupied by %s; continue? " f-name))))
-      ;; ................................................ assign macro ...
+                "Key already occupied by %s; continue? " funcname))))
+      ;;  assign macro
       (cond
        ((and verb (null do-it))
         (message
@@ -380,21 +340,21 @@ Return:
         ;;  save previous
         (when (and (symbolp lookup)
                    (fboundp lookup)
-                   (not (string-match "^tim" f-name))
-                   (not (assoc key tinymacro-:function-list)))
-          (push (list key lookup) tinymacro-:function-list))
+                   (not (string-match "^tinymacro" funcname))
+                   (not (assoc key tinymacro--function-list)))
+          (push (list key lookup) tinymacro--function-list))
         (global-set-key key macro-name)
-        (setq tinymacro-:last-macro-func  macro-name ;set >> GLOBALS <<
-              tinymacro-:last-macro-key   key)
+        (setq tinymacro--last-macro-func macro-name ;set GLOBALS
+              tinymacro--last-macro-key  key)
         (if verb
             (message
              "TinyMacro: Created function: %s" (symbol-name macro-name)))
-        (run-hooks 'tinymacro-:macro-assigned-hook)
+        (run-hooks 'tinymacro--macro-assigned-hook)
         t)))))
 
 ;;}}}
 
 (provide   'tinymacro)
-(run-hooks 'tinymacro-:load-hook)
+(run-hooks 'tinymacro--load-hook)
 
 ;;; tinymacro.el ends here

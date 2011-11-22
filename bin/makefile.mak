@@ -5,7 +5,7 @@
 #
 #   File id
 #
-#	Copyright (C) 1997-2007 Jari Aalto
+#	Copyright (C) 1997-2010 Jari Aalto
 #
 #	This program is free software; you can redistribute it and/or
 #	modify it under the terms of the GNU General Public License as
@@ -17,37 +17,20 @@
 #	MERCHANTABILITY or FITNESS FOR A PARTICULAR PURPOSE.  See the GNU
 #	General Public License for more details.
 #
-#	You should have received a copy of the GNU General Public
-#	License along with program. If not,
-#	write to the Free Software Foundation, Inc., 51 Franklin
-#	Street, Fifth Floor, Boston, MA 02110-1301, USA.
+#	You should have received a copy of the GNU General Public License
+#	along with this program. If not, see <http://www.gnu.org/licenses/>.
 #
 #	Visit <http://www.gnu.org/copyleft/gpl.html> for more information
 #
 #   Description
 #
-#	************************************************************************
+#	*******************************************************************
 #
-#	2000-05-24 This Unix makefile format is no longer supported, because
-#	it does not work in variety of platforms (win32). If you find an error,
-#	please send me a diff(1) generated with option -c or -u and a little bit
-#	of explanation of your changes and I will patch the original. Other than
-#	that, no changes are planned.
+#	2000-05-24 This Unix makefile format is no longer used. All
+#	the documentaion below is outdated and invalid. This file is
+#	preserved solely for educational purposes
 #
-#	Prefer using the perl based makefile.pl which is more reliable.
-#
-#	    % perl  bin/makefile.pl --binary emacs all
-#
-#	************************************************************************
-#
-#   Right into business
-#
-#	The distribution's makefiles have extensions *.mak and there is rule
-#	"makefile" to draw a symlink from *.mak --> Makefile so that you
-#	don't have to use -f option.
-#
-#	% make -f *.mak makefile config help
-#	% make all
+#	*******************************************************************
 #
 #   Foreword to PC and Unix
 #
@@ -434,7 +417,6 @@ DIR_EMACS_RC=	../lisp/rc
 #   `env INSTALL_DIR=xxx make -f *.mak install-cp'
 #
 
-
 INSTALL_DIR	    = /usr/local/share/emacs/site-lisp/tiny/
 INSTALL_DIR_LINK    = ../tiny	# See rule `install-ln'
 INSTALL_DIR_HTML    = $(INSTALL_DIR)
@@ -482,7 +464,6 @@ LIST_MISC   = `ls  |							    \
 		 egrep -v '\.ini|\.el|\.pl|\.tar|\.gz|:$'		    \
 		 | sort -u						    \
 		`
-
 # ########################################################### &flags ###
 
 FLAG_IGERR  =	1  # If 0, then stop on error
@@ -603,7 +584,7 @@ TT_EL_RC	=			\
 #   Text files
 
 TT_TEXT	=				\
-	$(DIR_DOC)/GNU-licence.txt	\
+	$(DIR_DOC)/GNU-license.txt	\
 	$(DIR_DOC)/OLD.txt		\
 	$(DIR_DOC)/ema-expect.txt	\
 	$(DIR_DOC)/bookmark.txt		\

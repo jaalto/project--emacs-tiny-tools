@@ -2,9 +2,7 @@
 
 ;; This file is not part of Emacs
 
-;;{{{ Id
-
-;; Copyright (C) 1995-2007 Jari Aalto
+;; Copyright (C) 1995-2010 Jari Aalto
 ;; Keywords:     extensions
 ;; Author:       Jari Aalto
 ;; Maintainer:   Jari Aalto
@@ -25,19 +23,14 @@
 ;; for more details.
 ;;
 ;; You should have received a copy of the GNU General Public License
-;; along with program. If not, write to the
-;; Free Software Foundation, Inc., 51 Franklin Street, Fifth Floor,
-;; Boston, MA 02110-1301, USA.
+;; along with this program. If not, see <http://www.gnu.org/licenses/>.
 ;;
 ;; Visit <http://www.gnu.org/copyleft/gpl.html> for more information
-
-;;}}}
-;;{{{ Install
 
 ;;; Install:
 
 ;; ........................................................ &t-install ...
-;; Put this file on your Emacs-Lisp load path, add following into your
+;; Put this file on your Emacs-Lisp `load-path', add following into your
 ;; ~/.emacs startup file
 ;;
 ;;      (require 'tinylibid)
@@ -54,14 +47,6 @@
 ;; If you have any questions, always use function
 ;;
 ;;      M-x ti::id-submit-bug-report
-;;
-;; Request:
-;;
-;;      Please send any example file or mode that I'm not aware of,
-;;      I'll try to support any programming mode
-
-;;}}}
-;;{{{ Documentation
 
 ;; .................................................... &t-commentary ...
 
@@ -116,7 +101,7 @@
 ;;
 ;;          (defun my-imenu (&optional arg)
 ;;            "Sets parameters to imenu."
-;;            (let* (raise)
+;;            (let (raise)
 ;;              (setq imenu-max-items 20
 ;;                 imenu-sort-function nil)
 ;;              (cond
@@ -176,29 +161,23 @@
 ;;                      imenu-create-index-function     (nth 1 el))
 ;;                (imenu))))
 
-;;}}}
-
 ;;; Change Log:
 
 ;;; Code:
 
-;;{{{ setup: require
-
 (require 'tinylibm)
 
-(eval-when-compile
-  (ti::package-use-dynamic-compilation))
+(defconst tinylibid-version-time "2010.1208.0809"
+  "Latest version number.")
 
-;;}}}
-;;{{{ setup: hooks
+;;; setup: hooks
 
-(defvar ti::id-:load-hook nil
+(defvar ti::id--load-hook nil
   "*Hook run when file has been loaded.")
 
-;;}}}
-;;{{{ setup: private
+;;; setup: private
 
-(defvar ti::id-:info  nil
+(defvar ti::id--info  nil
   "Buffer local variable.This value is updated every time
 function ti::id-info called. For faster responses, you may wan to write your
 code like this:
@@ -207,31 +186,30 @@ code like this:
 
 Because peeking the variable is 40x times faster.")
 
-(make-variable-buffer-local 'ti::id-:info)
+(make-variable-buffer-local 'ti::id--info)
 
 ;; Global variables set by functions.
 ;; - These are heavily used. User may check these too.
 ;; - They are Set after the buffer is studied.
 
-(defconst ti::id-:global-buffer-name nil
+(defvar ti::id--global-buffer-name nil
   "Global: set by study func, buffer name")
 
-(defconst ti::id-:global-buffer-file-name  nil
+(defvar ti::id--global-buffer-file-name  nil
   "Global: set by study func, buffer file name")
 
-(defconst ti::id-:global-buffer-extension nil
+(defvar ti::id--global-buffer-extension nil
   "Global: set by study func, buffer fn ext.")
 
-(defconst ti::id-:global-buffer-first-line nil
+(defvar ti::id--global-buffer-first-line nil
   "Global: set by study func, 1st line of buffer")
 
-;;}}}
-;;{{{ setup: public, user configurable
+;;; setup: public, user configurable
 
-;;; it is INTENTIONAL that the variables are defconst, change these
-;;; with ti::id-:load-hook
+;; it is INTENTIONAL that the variables are defconst, change these
+;; with ti::id--load-hook
 
-(defvar ti::id-:file-ext-re "[a-zA-Z0-9]\\(\\.\\)[a-zA-Z0-9]+$"
+(defvar ti::id--file-ext-re "[a-zA-Z0-9]\\(\\.\\)[a-zA-Z0-9]+$"
   "A regexp that says what files can have extension. Everything after the
 DOT is considered to form extension. Files like ~/.cshrc are not
 considered to have an extension.
@@ -242,7 +220,7 @@ References:
 
   See function `ti::id-file-extension'.")
 
-(defconst ti::id-:buffer-first-line-regexp-list
+(defconst ti::id--buffer-first-line-regexp-list
   '(("^#.*perl"          "code-perl")
     ("^#.*python"        "code-python")
     ("^#.*scm"           "code-scheme")
@@ -279,7 +257,7 @@ a bang-slash or emacs --** notation")
 ;;  - There is no need to add regexp here if buffer can be identified by other
 ;;    means easily ie. all WWW files have universal .html extension.
 
-(defconst ti::id-:buffer-match-regexp-list
+(defconst ti::id--buffer-match-regexp-list
   (list
    (list
     (concat
@@ -373,7 +351,7 @@ a bang-slash or emacs --** notation")
 First one matched is used to determine file type, so put most restrictive
 REs first.")
 
-(defconst ti::id-:file-extension-alist
+(defconst ti::id--file-extension-alist
   '((".a"     . "code-ada")             ;Ada 83/87
     (".ada"   . "code-ada")             ;Ada 83/87
     (".ads"   . "code-ada")             ;ada 95
@@ -435,7 +413,7 @@ buffer-file-name's extension.")
 
 ;;  If the file cannot be identified by extension...
 
-(defconst ti::id-:file-regexp-match-list
+(defconst ti::id--file-regexp-match-list
   '(("\\.ema"        "code-lisp")       ;.emacs , .emacs.dired
     ("\/\\.[Xx]"     "resource-x")      ;.Xdefauls, .xinirc
     ("\/\\.kshrc"    "resource-code-shell-ksh")
@@ -448,7 +426,7 @@ buffer-file-name's extension.")
 ;; - Buffers that do not have buffer-file-name property at all.
 ;; - Only put 'trusted' buffer names that are known to all here.
 
-(defconst ti::id-:buffer-name-regexp-list
+(defconst ti::id--buffer-name-regexp-list
   '(("[*]info"       "text-manual-info")
     ("[*]man"        "text-manual-shell")
     ("[*]shell"      "process-shell")
@@ -457,7 +435,7 @@ buffer-file-name's extension.")
     ("[*]Summary"    "text-news"))
   "*List of (REGEXP STR) where RE is tried upon buffer-name")
 
-(defconst ti::id-:function-list
+(defconst ti::id--function-list
   '( ;; This first line -*- test should represent exact mode, we trust
     ;;  to it blindly. If the content is not what this mode says, it's
     ;;  user's own mistake.
@@ -472,7 +450,7 @@ buffer-file-name's extension.")
 The calling of functions stops immediately when some function
 returns non-nil. Notice, that this is also the order of evaluation.")
 
-(defconst ti::id-:type2mode
+(defconst ti::id--type2mode
   '(("ada"                 ada-mode     "--")
     ("awk"                 awk-mode     "#")
     ("code-c$"             c-mode       "/*" "*/")
@@ -514,35 +492,7 @@ returns non-nil. Notice, that this is also the order of evaluation.")
 where RE represent match against string that describes the buffer
 contents. The comment-start and end fields are optional.")
 
-;;}}}
-;;{{{ version
-
-;;; ....................................................... &v-version ...
-
-(eval-and-compile
-  (ti::macrof-version-bug-report
-   "tinylibid.el"
-   "tinylibid"
-   ti::id-:version-id
-   "$Id: tinylibid.el,v 2.50 2007/05/01 17:20:45 jaalto Exp $"
-   '(ti::id-:load-hook
-     ti::id-:function-list
-
-     ti::id-:global-buffer-name
-     ti::id-:global-buffer-file-name
-     ti::id-:global-buffer-extension
-     ti::id-:global-buffer-first-line
-
-     ti::id-:file-ext-re
-     ti::id-:buffer-first-line-regexp-list
-     ti::id-:buffer-match-regexp-list
-     ti::id-:file-extension-alist
-     ti::id-:file-regexp-match-list
-     ti::id-:buffer-name-regexp-list
-     ti::id-:type2mode)))
-
-;;}}}
-;;{{{ misc
+;;; Misc
 
 ;;; ----------------------------------------------------------------------
 ;;;
@@ -556,7 +506,7 @@ NOTE:
  Symbol returned does not necessary representy any mode you can turn on.
  Use 'fboundp' test to be sure the symbol is callable function."
   (let (ret)
-    (dolist (elt ti::id-:type2mode)
+    (dolist (elt ti::id--type2mode)
       (when (string-match (nth 0 elt) txt)
         (setq ret (nth 1 elt))          ;Mode name
         (return)))
@@ -571,7 +521,7 @@ is not needed for mode."
   (let (com-s
         com-e
         re)
-    (dolist (elt ti::id-:type2mode)
+    (dolist (elt ti::id--type2mode)
       (setq re (nth 0 elt))
       (if (> (length elt) 2)
           (setq com-s (nth 2 elt)))
@@ -583,8 +533,7 @@ is not needed for mode."
     (if com-s
         (cons com-s com-e))))
 
-;;}}}
-;;{{{ id
+;;; Id
 
 ;;; ----------------------------------------------------------------------
 ;;;
@@ -592,9 +541,9 @@ is not needed for mode."
   "Return file extension.
 
 References:
-  See variable `ti::id-:file-ext-re' how file extension is determined."
-  (let* ((re ti::id-:file-ext-re)
-         point)
+  See variable `ti::id--file-ext-re' how file extension is determined."
+  (let ((re ti::id--file-ext-re)
+	point)
     (when (and file               ;doesn't have filename at all *temp*
                (string-match re file))
       (setq point (match-beginning 1))  ;dot position
@@ -628,9 +577,9 @@ Return:
             Btw, emacs barks you automatically if functions given
             in line doesn't exist when file is loaded.
   nil."
-  (let* (ret
-         mode
-         sym)
+  (let (ret
+	mode
+	sym)
     (cond
      ((setq mode (ti::string-match "-[*]-\\(.*\\)-[*]-" 1 str))
       ;;  let's make symbol out of it
@@ -649,8 +598,8 @@ Return:
 ;;;
 (defun ti::id-match (string list)
   "Match STRING against LIST el 1, return LIST elt 2"
-  (let* (ret
-         regexp)
+  (let (ret
+	regexp)
     (dolist (elt list)
       (setq regexp (nth 0 elt))
       (when (string-match regexp string)
@@ -661,9 +610,9 @@ Return:
 ;;; ----------------------------------------------------------------------
 ;;;
 (defun ti::id-buffer-re-search (&optional point)
-  "Search `ti::id-:buffer-match-regexp-list' from buffer.
+  "Search `ti::id--buffer-match-regexp-list' from buffer.
 Start searching from `point-min' or from optional POINT."
-  (let ((list   ti::id-:buffer-match-regexp-list)
+  (let ((list   ti::id--buffer-match-regexp-list)
         ret)
     (or point
         (setq point (point-min)))
@@ -676,16 +625,15 @@ Start searching from `point-min' or from optional POINT."
             (return)))))
     ret))
 
-;;}}}
-;;{{{ study
+;;; Study
 
 ;;; ----------------------------------------------------------------------
 ;;;
 (defun ti::id-global-variable-reset ()
   "Reset some globals."
-  (setq ti::id-:global-buffer-file-name  nil
-        ti::id-:global-buffer-extension  nil
-        ti::id-:global-buffer-first-line  nil))
+  (setq ti::id--global-buffer-file-name  nil
+        ti::id--global-buffer-extension  nil
+        ti::id--global-buffer-first-line  nil))
 
 ;;; ----------------------------------------------------------------------
 ;;;
@@ -698,10 +646,10 @@ This reduces overhead of getting these variables multiple times."
          (ext (ti::id-file-extension bn))
          (id  (ti::id-read-first-line)))
     (ti::id-global-variable-reset)
-    (setq ti::id-:global-buffer-file-name   bfn
-          ti::id-:global-buffer-extension  ext
-          ti::id-:global-buffer-first-line   id
-          ti::id-:global-buffer-name    bn)
+    (setq ti::id--global-buffer-file-name   bfn
+          ti::id--global-buffer-extension  ext
+          ti::id--global-buffer-first-line   id
+          ti::id--global-buffer-name    bn)
     ;; so that can be hook
     nil))
 
@@ -718,27 +666,27 @@ Return:
   string     type string
   symbol     if real mode found in first line -*- ..-*-
   nil"
-  (let* ( ;; these are already set
-         (id     ti::id-:global-buffer-first-line)
-         (ext    ti::id-:global-buffer-extension)
-         (bname  ti::id-:global-buffer-name)
-         el
-         ret)
+  (let ( ;; these are already set
+	(id     ti::id--global-buffer-first-line)
+	(ext    ti::id--global-buffer-extension)
+	(bname  ti::id--global-buffer-name)
+	el
+	ret)
     (cond
      ((eq type 'extension)
-      (if (setq el (assoc ext ti::id-:file-extension-alist))
+      (if (setq el (assoc ext ti::id--file-extension-alist))
           (setq ret (cdr el))))
      ((eq type 'buffer-file-name)       ;buffer name test
       ;;  whole file match
-      (setq ret (ti::id-match bname ti::id-:file-regexp-match-list)))
+      (setq ret (ti::id-match bname ti::id--file-regexp-match-list)))
      ((eq type 'buffer-name)            ;buffer name test
-      (setq ret (ti::id-match bname ti::id-:buffer-name-regexp-list)))
+      (setq ret (ti::id-match bname ti::id--buffer-name-regexp-list)))
      ((and (eq type '1st-emacs)         ;special -*-Emacs-Lisp-*-
            (stringp id))
       (setq ret (ti::id-read-first-line-emacs-mode id)))
      ((and (eq type '1st-regexp)
            (stringp id))
-      (setq ret (ti::id-match id ti::id-:buffer-first-line-regexp-list)))
+      (setq ret (ti::id-match id ti::id--buffer-first-line-regexp-list)))
      ((eq type 'buffer-regexp)          ;whole buffer is searched
       (setq ret (ti::id-buffer-re-search))))
     ret))
@@ -747,7 +695,7 @@ Return:
 ;;;
 (defun ti::id-test-buffer-content-special ()
   "Check special buffer content."
-  (let* ((text  (memq major-mode '(fundamental-mode text-mode))))
+  (let ((text (memq major-mode '(fundamental-mode text-mode))))
     (cond
      ((and text
            (fboundp 'tinytf-text-format-p)
@@ -783,12 +731,7 @@ Return:
   ""
   (ti::id-study-buffer 'buffer-regexp))
 
-;;}}}
-;;{{{ main
-
-;;; ############################################################ &main ###
-
-;;; ----------------------------------------------------------------------
+;;; ------------------------------------------------------------ &Main ---
 ;;;
 ;;;###autoload
 (defun ti::id-info (&optional mode variable-lookup verb)
@@ -825,35 +768,35 @@ Return values:
   when optional MODE = non-nil
   Return possible mode name as _symbol_
 
-  when VARIABLE is non-nil, the variable `ti::id-:info' is read instead.
+  when VARIABLE is non-nil, the variable `ti::id--info' is read instead.
   If it has non-nil value, the value is returned, otherwise full buffer
   is parsed again and variable's value is updated.
 
 References:
 
   `ti::id-func-alist'  order of evaluation.
-  `ti::id-:info'            buffer local variable updated during every call."
+  `ti::id--info'            buffer local variable updated during every call."
 
   (interactive)
-  (let* ((funcs ti::id-:function-list)
-         ret
-         func
-         doit)
+  (let ((funcs ti::id--function-list)
+	ret
+	func
+	doit)
     (ti::verb)
     ;; .................................................... do lookup? ...
-    (setq ret ti::id-:info)
+    (setq ret ti::id--info)
     (cond
      ((null variable-lookup)
       (setq doit t))
-     ((and variable-lookup (null ti::id-:info)) ;no value stored
+     ((and variable-lookup (null ti::id--info)) ;no value stored
       (setq doit t))
      ((and variable-lookup              ;must same type
            (null mode)                  ;string request
-           (not (stringp ti::id-:info)))
+           (not (stringp ti::id--info)))
       (setq doit t))
      ((and variable-lookup              ;must same type
            mode                         ;symbol request
-           (not (symbolp ti::id-:info)))
+           (not (symbolp ti::id--info)))
       (setq doit t)))
     ;; .................................................... do the job ...
     (when doit
@@ -872,12 +815,10 @@ References:
         (if verb
             (message (prin1-to-string ret))))
       ;; Update the buffer local variable
-      (setq ti::id-:info ret))
+      (setq ti::id--info ret))
     ret))
 
-;;}}}
-
 (provide   'tinylibid)
-(run-hooks 'ti::id-:load-hook)
+(run-hooks 'ti::id--load-hook)
 
 ;;; tinylibid.el ends here

@@ -4,12 +4,11 @@
 
 ;;{{{ Id
 
-;; Copyright (C)    1998-2007 Jari Aalto
+;; Copyright (C)    1998-2010 Jari Aalto
 ;; Keywords:        extensions
 ;; Author:          Jari Aalto
 ;; Maintainer:      Jari Aalto
 ;;
-;; To get information on this program, call M-x tinyliba-version.
 ;; Look at the code with folding.el
 
 ;; COPYRIGHT NOTICE
@@ -25,9 +24,7 @@
 ;; for more details.
 ;;
 ;; You should have received a copy of the GNU General Public License
-;; along with program. If not, write to the
-;; Free Software Foundation, Inc., 51 Franklin Street, Fifth Floor,
-;; Boston, MA 02110-1301, USA.
+;; along with this program. If not, see <http://www.gnu.org/licenses/>.
 ;;
 ;; Visit <http://www.gnu.org/copyleft/gpl.html> for more information
 
@@ -39,8 +36,6 @@
 ;; file and backward compatible library "b"
 ;;
 ;;      (require 'tinylibm)
-;;
-;; See also Sourceforge project `apel'
 
 ;;}}}
 ;;{{{ Documentation
@@ -60,14 +55,14 @@
 ;;      do it like this:
 ;;
 ;;      o   Generate autoloads to separate buffer with
-;;          command
-;;;         C-u M-x tinylisp-autoload-generate-library RET file.el RET
+;;          commands:
+;;          M-x load-library RET tinylisp RET
+;;          C-u M-x tinylisp-autoload-generate-library RET file.el RET
 ;;      o   At the end of buffer *tinylisp-autoloads* cut'n paste
 ;;          the definititions to this file.
 ;;
-;;      NOTE: If function already exists in Emacs/XEmacs, an autoload
-;;      definition here does nothing. Like `describe-symbol-find-file',
-;;      which is already defined in XEmacs.
+;;      NOTE: If function already exists, an autoload definition here
+;;      does nothing.
 
 ;;}}}
 
@@ -79,25 +74,22 @@
 
 (provide 'tinyliba)
 
-;; Older byte compiler doesn't allow putting these inside
-;; `eval-and-compile'. The message was:
-;;
-;;   ** The compiler ignores `autoload' except at top level.  You should
-;;      probably put the autoload of the macro `with-timeout' at top-level.
+(defconst tinyliba-version-time "2010.1208.0809"
+  "Latest version number as last modified time.")
 
 (autoload 'with-timeout      "timer"        "" nil 'macro)
 (autoload 'easy-menu-define  "easymenu"     "" nil 'macro)
 (autoload 'executable-find   "executable")
 
-(eval-and-compile ;; function must be visible at load time
+(eval-and-compile ;; This function must be visible at load time
   (defun ti::tmp-cl-library-check ()
     "Check that cl.el library is correct and force loading if not.
 This function is run only once at tinynyliba.el load."
-    (let* ((pkg   (featurep 'tinypath))
-           (mode  (if (and pkg
-                           (boundp 'tinypath-:cache-mode))
-                      ;; Quiet Byte Compiler
-                      (symbol-value 'tinypath-:cache-mode))))
+    (let* ((pkg  (featurep 'tinypath))
+           (mode (if (and pkg
+			  (boundp 'tinypath--cache-mode))
+		     ;; Quiet Byte Compiler
+		     (symbol-value 'tinypath--cache-mode))))
       ;; Turn off advices and cache only IF the package is active
       (if (and pkg mode)
           (let ((func 'tinypath-cache-mode))
@@ -112,7 +104,7 @@ This function is run only once at tinynyliba.el load."
 ** tinyliba.el: Core library `cl' [%s] is dysfunctional.
                 (require 'cl) dind't provide standard CL statement
                 `return'. This may be a problem in `load-path' order.
-                Do you need to re-arrange it? The package `cl' is in [%s]"
+                Do you need to re-arrange it?"
                  location)))
       ;;  But, even if there is `return', the `dolist' macro may be broken.
       ;;  In Emacs 21.3 the dolist was moved to subr.el but with a
@@ -122,7 +114,7 @@ This function is run only once at tinynyliba.el load."
             (return elt))
         (error
          (message "\
-** tinyliba.el [ERROR] Broken `dolist' implementation!
+** tinyliba.el [ERROR] Broken `dolist' implementation.
                 A simple `dolist' call with `return' statement failed
                 with error [%s]. Trying to fix this by loading
                 `cl-macs.el' explicitly." err)
@@ -144,27 +136,27 @@ This function is run only once at tinynyliba.el load."
                 (funcall func 1)))))))
 
 (eval-and-compile
-  (require 'cl)
-  (ti::tmp-cl-library-check)
-  ;; defvar silences Byte Compiler
-  (defvar byte-compile-dynamic nil "") ;; Introduced in Emacs 19.29
-  (make-local-variable 'byte-compile-dynamic)
-  (setq byte-compile-dynamic t))
+  ;;  TODO: Probably should be gone by now.
+  ;;  Long story short: At a time Emacs shipped with crippled cl.el
+  ;;  library which broke everything. This check was necessary to
+  ;;  regain sane environment.
+  (unless (fboundp 'return)  ;; CL is not loaded yet
+    (autoload 'return "cl-macs" nil nil 'macro)
+    (when (string< emacs-version "24")
+      ;; Broken subr.el::dolist implementation which is not same
+      ;; as cl-macs.el::dolist => Delete sub.el::dolist and arrange
+      ;; Emacs to load it from CL library.
+      ;;
+      ;; See http://debbugs.gnu.org/cgi/bugreport.cgi?bug=7408
+      ;; FIXME: Remove (ti::tmp-cl-library-check)
+      (fmakunbound 'dolist)
+      (autoload 'dolist "cl-macs" "" nil 'macro))))
 
 ;;}}}
 
 (eval-and-compile
 
-  ;; XEmacs and Emacs differ here
-
-  ;; (if (locate-library "rsz-mini")
-  ;;     (autoload 'resize-minibuffer-mode "rsz-mini")
-  ;;   (autoload 'resize-minibuffer-mode "rsz-minibuf"))
-  ;;
-
   ;;{{{ code: Autoload easymenu.el
-
-  ;;  These are from XEmacs 19.14, they should suffice
 
   (autoload 'easy-menu-do-define                  "easymenu" "" nil)
   (autoload 'easy-menu-add                        "easymenu" "" nil)
@@ -297,7 +289,7 @@ This function is run only once at tinynyliba.el load."
   ;; Hm. Sometimemes you find this message:
   ;;    "Tried to load `cl-seq' before `cl'!"
   ;;
-  ;; These are commented for now
+  ;; These are commented out for now
 
   (when nil
 
@@ -399,15 +391,6 @@ This function is run only once at tinynyliba.el load."
   ;;}}}
   ;;{{{ Backward compatible lib: tinylibb.el
 
-  (autoload 'shell-command-to-string              "tinylibm" "" nil)
-  (autoload 'describe-symbol-find-file            "tinylibb" "" nil)
-  (autoload 'subst-char-with-string               "tinylibb" "" nil)
-  (autoload 'subst-char-in-string                 "tinylibb" "" nil)
-  (autoload 'font-lock-mode-maybe                 "tinylibb" "" nil)
-  (autoload 'turn-on-font-lock-mode               "tinylibb" "" nil)
-  (autoload 'turn-on-font-lock-mode-maybe         "tinylibb" "" nil)
-  (autoload 'int-to-float                         "tinylibb" "" nil)
-  (autoload 'logtest                              "tinylibb" "" nil)
   (autoload 'bin-string-to-int                    "tinylibb" "" nil)
   (autoload 'int-to-bin-string                    "tinylibb" "" nil)
   (autoload 'int-to-hex-string                    "tinylibb" "" nil)
@@ -417,12 +400,21 @@ This function is run only once at tinynyliba.el load."
   (autoload 'oct-to-int                           "tinylibb" "" nil)
   (autoload 'hex-to-int                           "tinylibb" "" nil)
   (autoload 'int-to-net                           "tinylibb" "" nil)
-  (autoload 'rmac                                 "tinylibb" "" nil)
-  (autoload 'ctime                                "tinylibb" "" nil)
-  (autoload 'rand0                                "tinylibb" "" nil) ;;defsubst
+  (autoload 'rand0                                "tinylibb" "" nil);;defsubst
   (autoload 'rand1                                "tinylibb" "" nil)
   (autoload 'randij                               "tinylibb" "" nil)
-  (autoload 'byte-compiling-files-p               "tinylibb" "" nil 'macro)
+  (autoload 'byte-compiling-files-p               "tinylibb" "" nil)
+  (autoload 'with-output-to-file                  "tinylibb" "" nil 'macro)
+  (autoload 'file-to-string                       "tinylibb" "" nil)
+  (autoload 'executable-find-in-system            "tinylibb" "" nil)
+  (autoload 'count-char-in-string                 "tinylibb" "" nil)
+  (autoload 'count-char-in-region                 "tinylibb" "" t)
+  (autoload 'char-assq                            "tinylibb" "" nil)
+  (autoload 'subst-char-with-string               "tinylibb" "" nil)
+  (autoload 'font-lock-mode-maybe                 "tinylibb" "" nil)
+  (autoload 'turn-on-font-lock-mode-maybe         "tinylibb" "" nil)
+  (autoload 'region-active-p                      "tinylibb" "" nil)
+  (autoload 'ti::function-args-p                  "tinylibb" "" t)
 
   ;;}}}
   ;;{{{ code: Autoload 'env' lib -- Emacs and XEmacs environment checks
@@ -461,6 +453,7 @@ This function is run only once at tinynyliba.el load."
 
   ;;{{{ code: Autoload
 
+  (autoload 'ti::goto-line                        "tinylibm" "" nil) ;;defsubst
   (autoload 'ti::function-car-test                "tinylibm" "" nil)
   (autoload 'ti::defalias-p                       "tinylibm" "" nil)
   (autoload 'ti::subrp-p                          "tinylibm" "" nil)
@@ -515,7 +508,6 @@ This function is run only once at tinynyliba.el load."
   (autoload 'ti::last-line-p                      "tinylibm" "" nil) ;;defsubst
   (autoload 'ti::buffer-narrowed-p                "tinylibm" "" nil) ;;defsubst
   (autoload 'ti::buffer-empty-p                   "tinylibm" "" nil)
-  (autoload 'ti::ck-maybe-activate                "tinylibm" "" nil)
   (autoload 'ti::register-live-p                  "tinylibm" "" nil) ;;defsubst
   (autoload 'ti::file-dos-p                       "tinylibm" "" nil) ;;defsubst
   (autoload 'ti::space-p                          "tinylibm" "" nil) ;;defsubst
@@ -564,7 +556,6 @@ This function is run only once at tinynyliba.el load."
   (autoload 'ti::select-frame-non-dedicated       "tinylibm" "" nil) ;;defsubst
   (autoload 'ti::byte-compile-defun-compiled-p    "tinylibm" "" nil 'macro)
   (autoload 'ti::byte-compile-defun-maybe         "tinylibm" "" nil 'macro)
-  (autoload 'ti::package-use-dynamic-compilation  "tinylibm" "" nil 'macro)
   (autoload 'ti::function-autoload-file           "tinylibm" "" nil)
   (autoload 'ti::package-require-for-emacs        "tinylibm" "" nil 'macro)
   (autoload 'ti::package-require-view             "tinylibm" "" nil 'macro)
@@ -582,7 +573,6 @@ This function is run only once at tinynyliba.el load."
   (autoload 'ti::copy-key-definition              "tinylibm" "" nil 'macro)
   (autoload 'ti::beginning-of-defun-point         "tinylibm" "" nil) ;;defsubst
   (autoload 'ti::digit-length                     "tinylibm" "" nil) ;;defsubst
-  (autoload 'ti::add-hook-fix                     "tinylibm" "" nil)
   (autoload 'ti::add-hooks                        "tinylibm" "" nil)
   (autoload 'ti::prefix-arg-to-text               "tinylibm" "" nil)
   (autoload 'ti::keep-lower-order                 "tinylibm" "" nil 'macro)
@@ -590,6 +580,7 @@ This function is run only once at tinynyliba.el load."
   (autoload 'ti::compat-load-user-init-file       "tinylibm" "" nil 'macro)
   (autoload 'ti::compat-Info-directory-list-symbol "tinylibm" "" nil) ;; defsubst
   (autoload 'ti::compat-Info-directory-list       "tinylibm" "" nil) ;; defsubst
+  (autoload 'ti::compat-find-file-hook            "tinylibm" "" nil) ;; defsubst
   (autoload 'ti::buffer-pointer-of-info           "tinylibm" "" nil)
   (autoload 'ti::buffer-pointer-of-messages       "tinylibm" "" nil)
   (autoload 'ti::last-message-line                "tinylibm" "" nil)
@@ -735,9 +726,11 @@ This function is run only once at tinynyliba.el load."
   (autoload 'ti::buffer-area-bounds               "tinylib" "" nil)
   (autoload 'ti::buffer-parse-grep-line           "tinylib" "" nil)
   (autoload 'ti::buffer-parse-grep-line2          "tinylib" "" nil)
+  (autoload 'ti::buffer-parse-line-col		  "tinylib" "" nil)
   (autoload 'ti::buffer-parse-line-main           "tinylib" "" nil)
   (autoload 'ti::buffer-join-region               "tinylib" "" t)
   (autoload 'ti::buffer-read-if-solid             "tinylib" "" nil)
+  (autoload 'ti::buffer-remove-whitespace-eol     "tinylib" "" t)
   (autoload 'ti::buffer-read-whitespace           "tinylib" "" nil)
   (autoload 'ti::buffer-read-line                 "tinylib" "" nil)
   (autoload 'ti::buffer-grep-lines                "tinylib" "" nil)
@@ -974,11 +967,6 @@ This function is run only once at tinynyliba.el load."
   (autoload 'ti::mail-generate-buffer-name        "tinylibmail" "" t)
   (autoload 'ti::mail-mail-simple-p               "tinylibmail" "" nil)
   (autoload 'ti::mail-to-list-p                   "tinylibmail" "" nil)
-  (autoload 'ti::mail-vm-macro                    "tinylibmail" "" nil 'macro)
-  (autoload 'ti::mail-mh-macro                    "tinylibmail" "" nil 'macro)
-  (autoload 'ti::mail-gnus-macro                  "tinylibmail" "" nil 'macro)
-  (autoload 'ti::mail-rmail-macro                 "tinylibmail" "" nil 'macro)
-  (autoload 'ti::mail-rmail-do-message-macro      "tinylibmail" "" nil 'macro)
   (autoload 'ti::mail-rmail-copy-message          "tinylibmail" "" t)
   (autoload 'ti::mail-pgp-v3xx-p                  "tinylibmail" "" nil)
   (autoload 'ti::mail-pgp-p                       "tinylibmail" "" nil)
@@ -1219,10 +1207,23 @@ This function is run only once at tinynyliba.el load."
   (autoload 'ti::text-mark-region                    "tinylibt" "" t)
 
   ;;}}}
+  ;;{{{ code: Autoload Windows OS support library
 
+  (autoload 'w32-cygwin-mount-table-dolist        "tinylibw" "" nil 'macro)
+  (autoload 'w32-cygwin-shell-environment         "tinylibw" "" nil 'macro)
+  (autoload 'w32-cygwin-mount-table-parse         "tinylibw" "" nil)
+  (autoload 'w32-cygwin-convert                   "tinylibw" "" nil)
+  (autoload 'w32-cygwin-mount-table               "tinylibw" "" nil)
+  (autoload 'w32-cygwin-mount-point-to-dos        "tinylibw" "" nil)
+  (autoload 'w32-cygwin-mount-table-set           "tinylibw" "" t)
+  (autoload 'w32-cygwin-mount-table-path-to-dos   "tinylibw" "" nil)
+  (autoload 'w32-cygwin-path-to-dos               "tinylibw" "" nil)
+  (autoload 'w32-cygwin-dos-path-to-cygwin        "tinylibw" "" nil)
+  (autoload 'w32-expand-file-name-for-cygwin      "tinylibw" "" nil);;defsubst
+  (autoload 'w32-expand-file-name-for-emacs       "tinylibw" "" nil);;defsubst
+
+  ;;}}}
   ;;{{{ code: Autoload other 'tiny tools'
-
-  (autoload 'ti::ck-advice-control                "tinylibck")
 
   (autoload 'ti::id-info                          "tinylibid")
   (autoload 'ti::id-cnv-txt2comment               "tinylibid")
@@ -1457,10 +1458,11 @@ This function is run only once at tinynyliba.el load."
   (autoload 'reporter-bug-hook                    "reporter" "" nil)
   (autoload 'define-mail-user-agent               "reporter" "" nil)
 
-  ;; vc-hooks.el
-  ;; /usr/share/emacs/21.2/lisp/vc-hooks.el
+  ;; vc-hooks.el.gz
+  ;; /usr/share/emacs/22.2/lisp/vc-hooks.el.gz
 
   (autoload 'vc-mistrust-permissions              "vc-hooks" "" nil)
+  (autoload 'vc-stay-local-p                      "vc-hooks" "" nil)
   (autoload 'vc-mode                              "vc-hooks" "" nil)
   (autoload 'vc-error-occurred                    "vc-hooks" "" nil 'macro)
   (autoload 'vc-file-setprop                      "vc-hooks" "" nil)
@@ -1470,8 +1472,9 @@ This function is run only once at tinynyliba.el load."
   (autoload 'vc-find-backend-function             "vc-hooks" "" nil)
   (autoload 'vc-call-backend                      "vc-hooks" "" nil)
   (autoload 'vc-call                              "vc-hooks" "" nil 'macro)
-  (autoload 'vc-parse-buffer                      "vc-hooks" "" nil) ;;defsubst
+  (autoload 'vc-parse-buffer                      "vc-hooks" "" nil);;defsubst
   (autoload 'vc-insert-file                       "vc-hooks" "" nil)
+  (autoload 'vc-find-root                         "vc-hooks" "" nil)
   (autoload 'vc-registered                        "vc-hooks" "" nil)
   (autoload 'vc-backend                           "vc-hooks" "" nil)
   (autoload 'vc-backend-subdirectory-name         "vc-hooks" "" nil)
@@ -1479,8 +1482,11 @@ This function is run only once at tinynyliba.el load."
   (autoload 'vc-checkout-model                    "vc-hooks" "" nil)
   (autoload 'vc-user-login-name                   "vc-hooks" "" nil)
   (autoload 'vc-state                             "vc-hooks" "" nil)
-  (autoload 'vc-up-to-date-p                      "vc-hooks" "" nil) ;;defsubst
+  (autoload 'vc-recompute-state                   "vc-hooks" "" nil)
+  (autoload 'vc-up-to-date-p                      "vc-hooks" "" nil);;defsubst
   (autoload 'vc-default-state-heuristic           "vc-hooks" "" nil)
+  (autoload 'vc-workfile-unchanged-p              "vc-hooks" "" nil)
+  (autoload 'vc-default-workfile-unchanged-p      "vc-hooks" "" nil)
   (autoload 'vc-workfile-version                  "vc-hooks" "" nil)
   (autoload 'vc-default-registered                "vc-hooks" "" nil)
   (autoload 'vc-possible-master                   "vc-hooks" "" nil)
@@ -1495,9 +1501,13 @@ This function is run only once at tinynyliba.el load."
   (autoload 'vc-mode-line                         "vc-hooks" "" t)
   (autoload 'vc-default-mode-line-string          "vc-hooks" "" nil)
   (autoload 'vc-follow-link                       "vc-hooks" "" nil)
+  (autoload 'vc-default-find-file-hook            "vc-hooks" "" nil)
   (autoload 'vc-find-file-hook                    "vc-hooks" "" nil)
   (autoload 'vc-file-not-found-hook               "vc-hooks" "" nil)
+  (autoload 'vc-default-find-file-not-found-hook  "vc-hooks" "" nil)
   (autoload 'vc-kill-buffer-hook                  "vc-hooks" "" nil)
+  (autoload 'vc-menu-map-filter                   "vc-hooks" "" nil)
+  (autoload 'vc-default-extra-menu                "vc-hooks" "" nil)
 
   ;; font-lock from Emacs 20.6
 
@@ -1581,6 +1591,53 @@ This function is run only once at tinynyliba.el load."
     (autoload 'imenu-default-goto-function          "imenu" "" nil)
     (autoload 'imenu                                "imenu" "" t))
 
+    ;; whitespace.el 23.2
+
+    (autoload 'whitespace-mode                      "whitespace" "" t)
+    (autoload 'whitespace-newline-mode              "whitespace" "" t)
+    (autoload 'global-whitespace-mode               "whitespace" "" t)
+    (autoload 'whitespace-turn-on-if-enabled        "whitespace" "" nil)
+    (autoload 'global-whitespace-newline-mode       "whitespace" "" t)
+    (autoload 'whitespace-toggle-options            "whitespace" "" t)
+    (autoload 'global-whitespace-toggle-options     "whitespace" "" t)
+    (autoload 'whitespace-cleanup                   "whitespace" "" t)
+    (autoload 'whitespace-cleanup-region            "whitespace" "" t)
+    (autoload 'whitespace-replace-action            "whitespace" "" nil)
+    (autoload 'whitespace-regexp                    "whitespace" "" nil)
+    (autoload 'whitespace-indentation-regexp        "whitespace" "" nil)
+    (autoload 'whitespace-space-after-tab-regexp    "whitespace" "" nil)
+    (autoload 'whitespace-report                    "whitespace" "" t)
+    (autoload 'whitespace-report-region             "whitespace" "" t)
+    (autoload 'whitespace-insert-value              "whitespace" "" nil)
+    (autoload 'whitespace-mark-x                    "whitespace" "" nil)
+    (autoload 'whitespace-insert-option-mark        "whitespace" "" nil)
+    (autoload 'whitespace-help-on                   "whitespace" "" nil)
+    (autoload 'whitespace-display-window            "whitespace" "" nil)
+    (autoload 'whitespace-kill-buffer               "whitespace" "" nil)
+    (autoload 'whitespace-help-off                  "whitespace" "" nil)
+    (autoload 'whitespace-interactive-char          "whitespace" "" nil)
+    (autoload 'whitespace-toggle-list               "whitespace" "" nil)
+    (autoload 'whitespace-turn-on                   "whitespace" "" nil)
+    (autoload 'whitespace-turn-off                  "whitespace" "" nil)
+    (autoload 'whitespace-style-face-p              "whitespace" "" nil)
+    (autoload 'whitespace-color-on                  "whitespace" "" nil)
+    (autoload 'whitespace-color-off                 "whitespace" "" nil)
+    (autoload 'whitespace-trailing-regexp           "whitespace" "" nil)
+    (autoload 'whitespace-empty-at-bob-regexp       "whitespace" "" nil)
+    (autoload 'whitespace-empty-at-eob-regexp       "whitespace" "" nil)
+    (autoload 'whitespace-space-regexp              "whitespace" "" nil)
+    (autoload 'whitespace-tab-regexp                "whitespace" "" nil)
+    (autoload 'whitespace-post-command-hook         "whitespace" "" nil)
+    (autoload 'whitespace-style-mark-p              "whitespace" "" nil)
+    (autoload 'whitespace-char-valid-p              "whitespace" "" nil)
+    (autoload 'whitespace-display-vector-p          "whitespace" "" nil)
+    (autoload 'whitespace-display-char-on           "whitespace" "" nil)
+    (autoload 'whitespace-display-char-off          "whitespace" "" nil)
+    (autoload 'whitespace-action-when-on            "whitespace" "" nil)
+    (autoload 'whitespace-write-file-hook           "whitespace" "" nil)
+    (autoload 'whitespace-warn-read-only            "whitespace" "" nil)
+    (autoload 'whitespace-unload-function           "whitespace" "" nil)
+
   ;;}}}
 
   ;;{{{ code: XEmacs emulation.
@@ -1608,54 +1665,8 @@ This function is run only once at tinynyliba.el load."
     (autoload 'with-timeout-handler                 "timer" "" nil)
     (autoload 'y-or-n-p-with-timeout                "timer" "" nil))
 
-  (when (featurep 'xemacs)
-
-    (autoload 'set-cursor-color                   "tinylibxe" "" t)
-    (autoload 'set-foreground-color               "tinylibxe" "" t)
-    (autoload 'set-background-color               "tinylibxe" "" t)
-    (autoload 'transient-mark-mode                "tinylibxe" "" t)
-
-    (unless (fboundp 'run-at-time)
-      (autoload 'run-at-time                      "tinylibxe"))
-
-    (unless (fboundp 'cancel-timer)
-      (autoload 'cancel-timer                     "tinylibxe"))
-
-    (autoload 'posn-window                        "tinylibxe")
-    (autoload 'posn-point                         "tinylibxe")
-    (autoload 'posn-timestamp                     "tinylibxe")
-    (autoload 'window-edges                       "tinylibxe")
-
-    (autoload 'event-start                        "tinylibxe")
-    (autoload 'event-x                            "tinylibxe")
-    (autoload 'event-y                            "tinylibxe")
-    (autoload 'posn-x-y                           "tinylibxe")
-
-    (autoload 'frame-parameters                   "tinylibxe")
-
-    (eval-when-compile
-      ;;  emulation in xe library
-      (put 'frame-parameters 'byte-obsolete-variable nil))
-
-    (autoload 'dired-unmark                       "tinylibxe")
-    (autoload 'dired-mark                         "tinylibxe")
-    (autoload 'dired-get-marked-files             "tinylibxe")
-    (autoload 'dired-map-over-marks               "tinylibxe"))
-
   ;;}}}
   ;;{{{ code: XEmacs and Emacs autoloads
-
-  (defvar view-mode nil)
-
-  (cond
-   ;; XEmacs 21.x changed package name
-   ((and (featurep 'xemacs)
-         (locate-library "view-less"))
-    (autoload 'view-exit  "view-less" "" t)
-    (autoload 'view-mode  "view-less" "" t))
-   (t
-    (autoload 'view-exit "view" "" t)
-    (autoload 'view-mode "view" "" t)))
 
   (when t ;; (locate-library "overlay")   ;; XEmacs includes emulation lib
     ;; overlay.el

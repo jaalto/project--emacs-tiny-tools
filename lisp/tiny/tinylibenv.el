@@ -4,7 +4,7 @@
 
 ;;{{{ Id
 
-;; Copyright (C)    2003-2007 Jari Aalto
+;; Copyright (C)    2003-2010 Jari Aalto
 ;; Keywords:        extensions
 ;; Author:          Jari Aalto
 ;; Maintainer:      Jari Aalto
@@ -25,9 +25,7 @@
 ;; for more details.
 ;;
 ;; You should have received a copy of the GNU General Public License
-;; along with program. If not, write to the
-;; Free Software Foundation, Inc., 51 Franklin Street, Fifth Floor,
-;; Boston, MA 02110-1301, USA.
+;; along with this program. If not, see <http://www.gnu.org/licenses/>.
 ;;
 ;; Visit <http://www.gnu.org/copyleft/gpl.html> for more information
 
@@ -49,13 +47,13 @@
 ;;{{{ code: Init
 
 (eval-when-compile
-  (require 'backquote)
   (autoload 'executable-find "executable")
-  (autoload 'ti::directory-up "tinylib")
+  (autoload 'ti::directory-up "tinylib"))
 
+(eval-and-compile
   (if (not (or (boundp 'xemacs-logo)
                (featurep 'xemacs)))
-      ;; Emacs function, but it's buried and not published.
+      ;; Emacs function, but it is not published.
       (autoload 'w32-system-shell-p "w32-fns")
     (unless (fboundp 'w32-system-shell-p)
       ;;  Emacs function => compatibility for XEmacs
@@ -63,13 +61,7 @@
         "Tinylib: Emacs an XEmacs compatibility."
         ;;  This is simplistic alternative if the original function
         ;;  is not available.
-        (string-match "cmdproxy"
-                      (or shell-name "")))))
-
-  ;; defvar silences Byte Compiler
-  (defvar byte-compile-dynamic nil "") ;; Introduced in 19.29
-  (make-local-variable 'byte-compile-dynamic)
-  (setq byte-compile-dynamic t))
+        (string-match "cmdproxy" (or shell-name ""))))))
 
 (provide 'tinylibenv)
 
@@ -88,9 +80,9 @@
                   "autoload"
                   (prin1-to-string
                    (symbol-function name)))))
-    (` (progn
-         (defun (, name) (,@ everything-else))
-         (put (quote (, name)) 'defun-maybe t)))))
+    `(progn
+       (defun ,name ,@everything-else)
+       (put (quote ,name) 'defun-maybe t))))
 
 ;;; ----------------------------------------------------------------------
 ;;;
@@ -102,9 +94,9 @@
                   "autoload"
                   (prin1-to-string
                    (symbol-function name)))))
-    (` (progn
-         (defsubst (, name) (,@ everything-else))
-         (put (quote (, name)) 'defsubst-maybe t)))))
+    `(progn
+       (defsubst ,name ,@everything-else)
+       (put (quote ,name) 'defsubst-maybe t))))
 
 ;;; ----------------------------------------------------------------------
 ;;;
@@ -116,28 +108,27 @@
                   "autoload"
                   (prin1-to-string
                    (symbol-function name)))))
-    (` (progn
-         (defmacro (, name) (,@ everything-else))
-         (put (quote (, name)) 'defmacro-maybe t)))))
+    `(progn
+       (defmacro ,name ,@everything-else)
+       (put (quote ,name) 'defmacro-maybe t))))
 
 ;;; ----------------------------------------------------------------------
 ;;;
 (defmacro defalias-maybe (sym newdef)
   "Make defalias SYM if it does not exist and NEWDEF exists."
-  (`
-   (when (and (not (fboundp (, sym)))
-              (fboundp (, newdef)))
-     (defalias (, sym) (, newdef)))))
+  `(when (and (not (fboundp ,sym))
+              (fboundp ,newdef))
+     (defalias ,sym ,newdef)))
 
 ;;; ----------------------------------------------------------------------
 ;;;
 (defmacro defconst-maybe (name &rest everything-else)
   (or (and (boundp name)
            (not (get name 'defconst-maybe)))
-      (` (or (boundp (quote (, name)))
-             (progn
-               (defconst (, name) (,@ everything-else))
-               (put (quote (, name)) 'defconst-maybe t))))))
+      `(or (boundp (quote ,name))
+	   (progn
+	     (defconst ,name ,@everything-else)
+	     (put (quote ,name) 'defconst-maybe t)))))
 
 ;;}}}
 ;;{{{ Environment checks
@@ -395,7 +386,7 @@ functions `ti::os-check-linux-like-p' or `ti::win32-cygwin-p'."
   "Return path if cygwin1.dll is found from `exec-path'.
  USE-CACHE is non-nil, retrieve cached value which is faster."
   (and (ti::win32-p)
-       (ti::win32-cygwin-p-1)))
+       (ti::win32-cygwin-p-1 use-cache)))
 
 ;;; ----------------------------------------------------------------------
 ;;;
@@ -483,11 +474,11 @@ at is, Linux and Cygwin qualifies."
   "Find 'Version:' tag from lisp FILE. Retun numric version string if any."
   (let* ((lib    (locate-library file))
          (buffer (and lib (find-file-noselect lib)))
-         find-file-hooks
+         find-file-hook
          version)
     (save-excursion
-      (if (null find-file-hooks) ;; No-op, byte compiler silencer
-          (setq find-file-hooks nil))
+      (if (null find-file-hook) ;; No-op, byte compiler silencer
+          (setq find-file-hook nil))
       (set-buffer buffer)
       (goto-char (point-min))
       (if (re-search-forward
@@ -527,9 +518,10 @@ Input:
            cygwin-root)
       (dolist (path exec-path)
         (when (not (or (string-match (regexp-quote cygwin-root) path)
-                       (string-match (regexp-quote
-                                      (replace-regexp "/" "\\" cygwin-root))
-                                     path)))
+                       (string-match
+			(regexp-quote
+			 (replace-regexp-in-string "/" "\\" cygwin-root))
+			path)))
           (push path list)))))
     (let ((exec-path (nreverse list))) ;; Reverse preserves the order.
       (executable-find program))))

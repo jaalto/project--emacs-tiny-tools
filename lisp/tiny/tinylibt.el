@@ -4,7 +4,7 @@
 
 ;;{{{ Id
 
-;; Copyright (C)   1995-2007 Jari Aalto
+;; Copyright (C)   1995-2010 Jari Aalto
 ;; Keywords:       extensions
 ;; Author:         Jari Aalto
 ;; Maintainer:     Jari Aalto
@@ -25,9 +25,7 @@
 ;; for more details.
 ;;
 ;; You should have received a copy of the GNU General Public License
-;; along with program. If not, write to the
-;; Free Software Foundation, Inc., 51 Franklin Street, Fifth Floor,
-;; Boston, MA 02110-1301, USA.
+;; along with this program. If not, see <http://www.gnu.org/licenses/>.
 ;;
 ;; Visit <http://www.gnu.org/copyleft/gpl.html> for more information
 
@@ -35,7 +33,7 @@
 ;;{{{ Install
 
 ;; ....................................................... &t-install ...
-;; Put this file on your Emacs-Lisp load path, add following into
+;; Put this file on your Emacs-Lisp `load-path', add following into
 ;; ~/.emacs startup file.
 ;;
 ;;  (require 'tinylibt)
@@ -191,7 +189,6 @@
 ;;; ......................................................... &require ...
 
 (require 'tinylibm)
-(eval-when-compile (ti::package-use-dynamic-compilation))
 
 (ti::package-defgroup-tiny TinylibText ti::text-: extensions
   "Mark matched text in buffer with face.
@@ -207,8 +204,7 @@
         o   Examples: highlighting on/off tabs, Verifying PGP
             fingerprints against trusted list like http://www.uit.no/
         o   UNDO: adjustable stack size. Stack is cleared if
-            stack limit reached (stack 'wraps')
-    ")
+            stack limit reached (stack 'wraps')")
 
 ;;}}}
 ;;{{{ setup: variables

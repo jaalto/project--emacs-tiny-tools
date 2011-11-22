@@ -4,12 +4,11 @@
 
 ;;{{{ Id
 
-;; Copyright (C) 1996-2007 Jari Aalto
+;; Copyright (C) 1996-2010 Jari Aalto
 ;; Keywords:     extensions
 ;; Author:       Jari Aalto
 ;; Maintainer:   Jari Aalto
 ;;
-;; To get information on this program, call M-x tinyscroll-version.
 ;; Look at the code with folding.el.
 
 ;; COPYRIGHT NOTICE
@@ -25,9 +24,7 @@
 ;; for more details.
 ;;
 ;; You should have received a copy of the GNU General Public License
-;; along with program. If not, write to the
-;; Free Software Foundation, Inc., 51 Franklin Street, Fifth Floor,
-;; Boston, MA 02110-1301, USA.
+;; along with this program. If not, see <http://www.gnu.org/licenses/>.
 ;;
 ;; Visit <http://www.gnu.org/copyleft/gpl.html> for more information
 
@@ -35,7 +32,7 @@
 ;;{{{ Install
 
 ;; ....................................................... &t-install ...
-;; Put this file on your Emacs-Lisp load path, add following into your
+;; Put this file on your Emacs-Lisp `load-path', add following into your
 ;; ~/.emacs startup file.
 ;;
 ;;    (require 'tinyscroll)
@@ -58,12 +55,11 @@
 ;;
 ;; To set default buffers to scroll, change this variable
 ;;
-;;      tinyscroll-:list
+;;      tinyscroll--list
 ;;
-;; If you have any questions, use these functions
+;; To investigate problems:
 ;;
 ;;      M-x tinyscroll-debug-toggle             to toggle the package debug.
-;;      M-x tinyscroll-submit-bug-report      to send bug report
 
 ;;}}}
 
@@ -143,9 +139,7 @@
 (eval-and-compile
   (ti::package-package-require-timer))
 
-(eval-when-compile (ti::package-use-dynamic-compilation))
-
-(ti::package-defgroup-tiny TinyScroll tinyscroll-: extensions
+(ti::package-defgroup-tiny TinyScroll tinyscroll-- extensions
   "Enable or Disable autos-croll for any buffer.
   Overview of features
 
@@ -162,20 +156,20 @@
 ;;}}}
 ;;{{{ setuo: public, user configurable
 
-(defcustom tinyscroll-:load-hook nil
+(defcustom tinyscroll--load-hook nil
   "*Hook that is run when package is loaded."
   :type  'boolean
   :group 'TinyScroll)
 
-(defcustom tinyscroll-:interval 3
+(defcustom tinyscroll--interval 3
   "*Interval in seconds when scrolling process activates.
 Must be bigger that 1."
   :type  'integer
   :group 'TinyScroll)
 
-;; Initalize this in tinyscroll-:load-hook if you want to have some
+;; Initalize this in tinyscroll--load-hook if you want to have some
 ;; other default buffers at startup.
-(defcustom tinyscroll-:list
+(defcustom tinyscroll--list
   '(
     ("*compilation*" . 1)               ;set this to auto scroll
     ("*grep*"        . 1)
@@ -191,55 +185,36 @@ Format: '((buffer-name-string . max-point) (BN . POINT) ..)"
 ;;}}}
 ;;{{{ setup: private
 
-(defvar tinyscroll-:tmp-buffer "*auto-scroll*"
+(defvar tinyscroll--tmp-buffer "*auto-scroll*"
   "Temporary buffer to display the active auto-scroll buffers.")
 
-(defvar tinyscroll-:timer-elt nil
+(defvar tinyscroll--timer-elt nil
   "Timer process.")
-
-;;}}}
-;;{{{ version
-
-;;;###autoload (autoload 'tinyscroll-version "tinyscroll" "Commentary." t)
-(eval-and-compile
-  (ti::macrof-version-bug-report
-   "tinyscroll.el"
-   "tinyscroll"
-   tinyscroll-:version-id
-   "$Id: tinyscroll.el,v 2.41 2007/05/01 17:21:00 jaalto Exp $"
-   '(tinyscroll-:version-id
-     tinyscroll-:debug
-     tinyscroll-:load-hook
-     tinyscroll-:interval
-     tinyscroll-:list
-     tinyscroll-:tmp-buffer
-     tinyscroll-:timer-elt)
-   '(tinyscroll-:debug-buffer)))
 
 ;;}}}
 ;;{{{ code: misc
 
 ;;;### (autoload 'tinyscroll-debug-toggle "tinyscroll" "" t)
 
-(eval-and-compile (ti::macrof-debug-standard "tinyscroll" "-:"))
+(eval-and-compile (ti::macrof-debug-standard "tinyscroll" "--"))
 
 ;;; ----------------------------------------------------------------------
 ;;;
 (defsubst tinyscroll-active-buffer-p (buffer-name)
-  "Check is BUFFER-NAME name is in `tinyscroll-:list'."
-  (assoc buffer-name tinyscroll-:list))
+  "Check is BUFFER-NAME name is in `tinyscroll--list'."
+  (assoc buffer-name tinyscroll--list))
 
 ;;; ----------------------------------------------------------------------
 ;;;
 (defsubst tinyscroll-add-1 (buffer-name position)
   "Add BUFFER-NAME and last POSITION to scroll list."
-  (push (cons buffer-name position) tinyscroll-:list ))
+  (push (cons buffer-name position) tinyscroll--list ))
 
 ;;; ----------------------------------------------------------------------
 ;;;
 (defsubst tinyscroll-remove-1 (buffer-name)
   "Remove BUFFER-NAME from scroll list."
-  (setq tinyscroll-:list (adelete 'tinyscroll-:list buffer-name)))
+  (setq tinyscroll--list (adelete 'tinyscroll--list buffer-name)))
 
 ;;; ----------------------------------------------------------------------
 ;;;
@@ -247,7 +222,7 @@ Format: '((buffer-name-string . max-point) (BN . POINT) ..)"
   "Find BUFFER-NAME; return t if MAX is not stored `point-max' for BUFFER-NAME.
 Also updates new `point-max' if MAX is different.
 If buffer does not exist, do nothing and return nil."
-  (let* ((elt (tinyscroll-active-buffer-p buffer-name)))
+  (let ((elt (tinyscroll-active-buffer-p buffer-name)))
     (tinyscroll-debug "Max-p check" elt buffer-name max "\n")
     (when (and elt (not (eq (cdr elt) max)))
       (setcdr elt max)
@@ -257,19 +232,19 @@ If buffer does not exist, do nothing and return nil."
 ;;;
 (defsubst tinyscroll-buffers ()
   "Return list of buffer that have auto scroll on."
-  (mapcar 'car tinyscroll-:list))
+  (mapcar 'car tinyscroll--list))
 
 ;;; ----------------------------------------------------------------------
 ;;;
 (defsubst tinyscroll-ti::temp-buffer ()
   "Set up temporary buffer and displays it."
-  (ti::temp-buffer tinyscroll-:tmp-buffer 'clear)
-  (pop-to-buffer  tinyscroll-:tmp-buffer) )
+  (ti::temp-buffer tinyscroll--tmp-buffer 'clear)
+  (pop-to-buffer  tinyscroll--tmp-buffer) )
 
 ;;; ----------------------------------------------------------------------
 ;;; if easier to trap "t" error condition.
 ;;;
-(defun tinyscroll-:list-add (buffer-name position &optional remove)
+(defun tinyscroll--list-add (buffer-name position &optional remove)
   "Check is BUFFER-NAME name is in 'tisc:-list'.
 
 Input:
@@ -282,8 +257,8 @@ Return:
 
   nil           Yes, buffer is in list
   t             action not done"
-  (let* ((exist (tinyscroll-active-buffer-p buffer-name))
-         ret)
+  (let ((exist (tinyscroll-active-buffer-p buffer-name))
+	ret)
     (cond
      ((or (and remove           (null exist))
           (and (null remove)    exist))
@@ -300,8 +275,8 @@ Return:
   "Return windows that have auto scroll enabled.
 Return:
    window list or nil"
-  (let* (win
-         win-list)
+  (let (win
+	win-list)
     (dolist (frame (frame-list))
       (dolist (buffer (tinyscroll-buffers))
         (if (setq win (get-buffer-window buffer frame))
@@ -311,7 +286,7 @@ Return:
 ;;; ----------------------------------------------------------------------
 ;;;
 (defun tinyscroll-process ()
-  "Scroll all window buffers in `tinyscroll-:list'.
+  "Scroll all window buffers in `tinyscroll--list'.
 Activate This process activates itself only when the window, which
 should be scrolled, is visible"
   (let ((list   (tinyscroll-window-list))
@@ -341,9 +316,9 @@ should be scrolled, is visible"
   "Keep the auto scroll process and timer process alive.
 Optionally DELETE auto scroll process. VERB."
   (interactive "P")
-  (setq tinyscroll-:timer-elt
+  (setq tinyscroll--timer-elt
         (ti::compat-timer-control "1 sec"
-                                  tinyscroll-:interval
+                                  tinyscroll--interval
                                   'tinyscroll-process
                                   delete
                                   verb)))
@@ -363,11 +338,11 @@ Return:
  t      report generated to temporary buffer
  nil    no report"
   (interactive)
-  (let* ((str   (ti::list-to-string (mapcar 'car tinyscroll-:list)))
-         (verb  (interactive-p))
-         ret)
+  (let ((str   (ti::list-to-string (mapcar 'car tinyscroll--list)))
+	(verb  (interactive-p))
+	ret)
     (if (and (string= str "")  verb)
-        (message "TinyScroll: no entries in `tinyscroll-:list'.")
+        (message "TinyScroll: no entries in `tinyscroll--list'.")
       (setq ret t)
       (cond
        ((and (null print)
@@ -375,7 +350,7 @@ Return:
         (message str))
        (t
         (tinyscroll-ti::temp-buffer)
-        (insert (ti::list-to-string tinyscroll-:list "\n"))
+        (insert (ti::list-to-string tinyscroll--list "\n"))
         (setq buffer-read-only t)
         (shrink-window-if-larger-than-buffer))))
     ret))
@@ -394,7 +369,7 @@ Return:
 ;;;###autoload
 (defun tinyscroll-control (buffer-or-pointer &optional off verb)
   "Turn on auto scroll on/off for current buffer.
-If this command is called from `tinyscroll-:tmp-buffer' then the current
+If this command is called from `tinyscroll--tmp-buffer' then the current
 word in the line is read and offered for default buffer name.
 
 Input:
@@ -411,15 +386,15 @@ Input:
      nil
      nil
      ;; Default buffer ...
-     (if (string= (buffer-name) tinyscroll-:tmp-buffer)
+     (if (string= (buffer-name) tinyscroll--tmp-buffer)
          (ti::read-current-line)
        (buffer-name))) ;; completing-read
     current-prefix-arg))
-  (let* ((bufferp       (if (bufferp buffer-or-pointer)
-                            buffer-or-pointer
-                          (get-buffer buffer-or-pointer)))
-         buffern
-         msg)
+  (let ((bufferp       (if (bufferp buffer-or-pointer)
+			   buffer-or-pointer
+			 (get-buffer buffer-or-pointer)))
+	buffern
+	msg)
     (ti::verb)
     ;;  Check non-interactive errors
     (if (or (null bufferp)
@@ -427,14 +402,13 @@ Input:
         (error "Invalid arg, buffer %s" bufferp))
     (setq buffern (buffer-name bufferp))
     (if off
-        (if (tinyscroll-:list-add buffern 0 'remove)
+        (if (tinyscroll--list-add buffern 0 'remove)
             (setq msg "TinyScroll: buffer already removed."))
       ;;  Keep the process alive all the time
       (tinyscroll-timer-process-control)
-      (save-excursion
+      (with-current-buffer buffern
         ;;  We have to record the point-max
-        (set-buffer buffern)
-        (if (tinyscroll-:list-add buffern (point-max))
+        (if (tinyscroll--list-add buffern (point-max))
             (setq msg "TinyScroll: Already in list.")) ))
     (if verb
         (message msg))))
@@ -443,6 +417,6 @@ Input:
 
 (tinyscroll-timer-process-control) ;; wake it up !
 (provide   'tinyscroll)
-(run-hooks 'tinyscroll-:load-hook)
+(run-hooks 'tinyscroll--load-hook)
 
 ;;; tinyscroll.el ends here

@@ -4,12 +4,11 @@
 
 ;;{{{ Id
 
-;; Copyright (C)    1996-2007 Jari Aalto
+;; Copyright (C)    1996-2010 Jari Aalto
 ;; Keywords:        extensions
 ;; Author:          Jari Aalto
 ;; Maintainer:      Jari Aalto
 ;;
-;; To get information on this program, call M-x tinycompile-version
 ;; Look at the code with folding.el
 
 ;; COPYRIGHT NOTICE
@@ -25,9 +24,7 @@
 ;; for more details.
 ;;
 ;; You should have received a copy of the GNU General Public License
-;; along with program. If not, write to the
-;; Free Software Foundation, Inc., 51 Franklin Street, Fifth Floor,
-;; Boston, MA 02110-1301, USA.
+;; along with this program. If not, see <http://www.gnu.org/licenses/>.
 ;;
 ;; Visit <http://www.gnu.org/copyleft/gpl.html> for more information
 
@@ -35,11 +32,11 @@
 ;;{{{ Install
 
 ;; ....................................................... &t-install ...
-;;  Put this file on your Emacs-Lisp load path, add following into your
+;;  Put this file on your Emacs-Lisp `load-path', add following into your
 ;;  ~/.emacs startup file.
 ;;
 ;;      ;; You could also call M-x tinycompile-install / tinycompile-uninstall
-;;      (add-hook tinycompile-:load-hook 'tinycompile-install)
+;;      (add-hook tinycompile--load-hook 'tinycompile-install)
 ;;      (require 'tinycompile)
 ;;
 ;;  or use this autoload; your ~/.emacs loads quicker
@@ -88,14 +85,14 @@
 
 ;;; ......................................................... &require ...
 
-(require 'tinylibm)
+(require 'tinyliba)
 
 (eval-when-compile
+  (require 'cl)
   (defvar mode-line-mode-menu)
-  (defvar tinyurl-mode)
-  (ti::package-use-dynamic-compilation))
+  (defvar tinyurl-mode))
 
-(ti::package-defgroup-tiny TinyCompile tinycompile-: tools
+(ti::package-defgroup-tiny TinyCompile tinycompile-- tools
   "Compile buffers additions.
   Overview of features
 
@@ -105,12 +102,12 @@
 
 ;;; .......................................................... &v-menu ...
 
-(defcustom tinycompile-:menu-use-flag t
+(defcustom tinycompile--menu-use-flag t
   "*Non-nil means to use echo-area menu."
   :type  'boolean
   :group 'TinyCompile)
 
-(defvar tinycompile-:menu-main
+(defvar tinycompile--menu-main
   (list
    '(format
      "%sTinyCompile: k)ill files s)horten SPC)hide rRU)egexp RET)parse x)mode off"
@@ -124,7 +121,7 @@
      (?r    . ( (call-interactively 'tinycompile-hide-by-regexp-whole-line)))
      (?R    . ( (call-interactively 'tinycompile-hide-by-regexp)))
      (?U    . ( (call-interactively 'tinycompile-unhide)))
-     (?\C-m . ( (tinycompile-parse-line-goto)))
+     (?\C-m . ( (tinycompile-parse-line-goto-main)))
      (?x    . ( (turn-off-tinycompile-mode)))))
   "*TinyCompile echo menu.
 
@@ -139,24 +136,10 @@ x    Turn mode off.")
 
 ;;; ............................................................ &mode ...
 
-;;;###autoload (autoload 'tinycompile-version "tinycompile" "Display commentary." t)
-(ti::macrof-version-bug-report
- "tinycompile.el"
- "tinycompile"
- tinycompile-:version-id
- "$Id: tinycompile.el,v 2.52 2007/08/04 10:09:46 jaalto Exp $"
- '(tinycompile-:version-id
-   tinycompile-:debug
-   tinycompile-:menu-use-flag
-   tinycompile-:menu-main
-   tinycompile-:load-hook
-   tinycompile-:table-hide)
- '(tinycompile-:debug-buffer))
-
 ;;;### (autoload 'tinycompile-debug-toggle "tinycompile" "" t)
 ;;;### (autoload 'tinycompile-debug-show   "tinycompile" "" t)
 
-(eval-and-compile (ti::macrof-debug-standard "tinycompile" "-:"))
+(eval-and-compile (ti::macrof-debug-standard "tinycompile" "--"))
 
 ;;;###autoload (autoload 'turn-on-tinycompile-mode      "tinycompile" "" t)
 ;;;###autoload (autoload 'turn-off-tinycompile-mode     "tinycompile" "" t)
@@ -165,7 +148,7 @@ x    Turn mode off.")
 
 (eval-and-compile
   (ti::macrof-minor-mode-wizard
-   "tinycompile-" " Tco" "\C-c:" "Tco" 'TinyCompile "tinycompile-:" ;1-6
+   "tinycompile-" " Tco" "\C-c:" "Tco" 'TinyCompile "tinycompile--" ;1-6
 
    "Additional commands to Compile buffer. You can kill lines or
 shorten the file names and hide comments.
@@ -173,10 +156,10 @@ shorten the file names and hide comments.
 Defined keys:
 
 Prefix key to access the minor mode is defined in
-`tinycompile-:mode-prefix-key'
+`tinycompile--mode-prefix-key'
 
-\\{tinycompile-:mode-map}
-\\{tinycompile-:mode-prefix-map}"
+\\{tinycompile--mode-map}
+\\{tinycompile--mode-prefix-map}"
 
    "TinyCompile"
    (progn
@@ -185,10 +168,10 @@ Prefix key to access the minor mode is defined in
          (message "TinyCompile: Are you sure this is compile buffer?")))
    "Compile buffer extras."
    (list
-    tinycompile-:mode-easymenu-name
+    tinycompile--mode-easymenu-name
     ["Kill all matching file lines at point"  tinycompile-kill-all-file-lines t]
     ["Shorten directory names"            tinycompile-shorten-lines           t]
-    ["Goto file at point"                 tinycompile-parse-line-goto         t]
+    ["Goto file at point"                 tinycompile-parse-line-goto-main    t]
     "----"
     ["Show or hide comments (toggle)"     tinycompile-show-hide-toggle        t]
     ["Hide by regexp - partial"           tinycompile-hide-by-regexp          t]
@@ -203,10 +186,10 @@ Prefix key to access the minor mode is defined in
 
    (progn
      (if (ti::xemacs-p)
-         (define-key root-map [(button2)] 'tinycompile-parse-line-goto)
-       (define-key root-map [mouse-2]     'tinycompile-parse-line-goto))
+         (define-key root-map [(button2)] 'tinycompile-parse-line-goto-main)
+       (define-key root-map [mouse-2]     'tinycompile-parse-line-goto-main))
      (cond
-      (tinycompile-:menu-use-flag
+      (tinycompile--menu-use-flag
        ;;  Using menu to remeber commands is easier if you don't use
        ;;  menu bar at all.
        (define-key root-map p 'tinycompile-menu-main))
@@ -223,18 +206,18 @@ Prefix key to access the minor mode is defined in
        (define-key map  "Hc"     'tinycompile-commentary)
        (define-key map  "Hv"     'tinycompile-version)
        ;;  Overwrite {compilation-minor-mode|grep-mode} definition
-       (define-key root-map "\C-m" 'tinycompile-parse-line-goto))))))
+       (define-key root-map "\C-m" 'tinycompile-parse-line-goto-main))))))
 
 ;;; ----------------------------------------------------------------------
 ;;;
 (defun tinycompile-menu-main (&optional arg)
   "Show echo area menu and pass ARG to `ti::menu-menu'."
   (interactive "P")
-  (ti::menu-menu 'tinycompile-:menu-main arg))
+  (ti::menu-menu 'tinycompile--menu-main arg))
 
 ;;; ......................................................... &v-hooks ...
 
-(defcustom tinycompile-:load-hook nil
+(defcustom tinycompile--load-hook nil
   "*Hook that is run when package is loaded."
   :type 'hook
   :group 'TinyCompile)
@@ -245,7 +228,7 @@ Prefix key to access the minor mode is defined in
 ;;; ........................................................ &v-public ...
 ;;; User configurable
 
-(defcustom tinycompile-:table-hide
+(defcustom tinycompile--table-hide
   '(("^.*\\.el:"                        ;lisp
      "^.*:[ \t]*[;\"'].*")
     ("^.*\\.\\([cC][cC]?\\|[hH][hH]?\\):" ;C/C++
@@ -264,7 +247,6 @@ Format:
   :group 'TinyCompile)
 
 ;;}}}
-
 ;;{{{ code: macros
 
 ;;; ----------------------------------------------------------------------
@@ -343,7 +325,7 @@ Line format must be
           (setq count (/ (* 100 (point)) (point-max)))
           (message "Tinycompile: Wait, processing %d %%" count))
         ;; ./pie-mail/hypb.el --> {cd}/pie-mail/hypb.el
-        (if (char= (aref path 0) ?.)
+        (if (char-equal (aref path 0) ?.)
             (setq path (concat cd (substring path 2))))
         (when path
           (setq file (file-name-nondirectory path))
@@ -365,14 +347,44 @@ Line format must be
 
 ;;; ----------------------------------------------------------------------
 ;;;
-(defun tinycompile-parse-line-goto ()
+(defvar tinycompile--buffer-name nil
+  "Buffer name is asked from user.
+Varaible is made buffer local.
+See `tinycompile-parse-line-goto-guess'.")
+
+(defun tinycompile-parse-line-goto-guess ()
+  "Go to line under cursor by guessing context."
+  (interactive)
+  (let* ((elt  (ti::buffer-parse-line-col))
+	 (line (and elt (string-to-number (car elt))))
+	 (col  (and elt (string-to-number (nth 1 elt)))))
+    (when elt
+      (let ((buffer
+	     (or tinycompile--buffer-name
+		 (completing-read
+		  "TinyCompile, buffer to associate: "
+		  (ti::list-to-assoc-menu
+		   (mapcar 'buffer-name (buffer-list)))
+		  nil
+		  t))))
+	(make-local-variable 'tinycompile--buffer-name)
+	(setq tinycompile--buffer-name buffer)
+	(pop-to-buffer tinycompile--buffer-name)
+	(ti::goto-line line)
+	(unless (zerop col)
+	  (setq col (1- col))		;Emacs columns are zero based
+	(move-to-column col))))))
+
+;;; ----------------------------------------------------------------------
+;;;
+(defun tinycompile-parse-line-goto-basic ()
   "Go to line under cursor.
-The found file is loaded to emacs and cursor put to line. This works
-like `compile-goto-error'.
+The found file is loaded to Emacs and cursor put on the line.
+This works like `compile-goto-error'.
 
 Note:
 
-  If TinyUrl package is present and current point holds TinyUrl overlay,
+  If `tinyurl' package is present and current point holds an overlay,
   then it is called to handle the line."
   (interactive)
   ;;    If TinyUrl is present, try it to resolve the line.
@@ -426,18 +438,28 @@ Note:
                  (find-file-noselect file)
                (error "TinyCompile: file not found `%s'" file))))))
         (when line
-          (goto-line line))))
-     (t
-      (message "TinyCompile: Can't read file/line information.")
-      ;;  We don't know how to handle this line, Let the mode
-      ;;  below us handle it
-      (let (tinycompile-mode
-            func)
-        (setq func (lookup-key (current-local-map) "\C-m"))
-        (message "TinyCompile: Passing control to underlying \C-m key: %s"
-                 (symbol-name func))
-        (when (fboundp func)
-          (funcall func)))))))
+	  (ti::goto-line line)))))))
+
+;;; ----------------------------------------------------------------------
+;;;
+(defun tinycompile-parse-line-goto-pass ()
+  "Let the mode handle the line."
+  (message "TinyCompile: Can't read file/line information.")
+  (let (tinycompile-mode
+	func)
+    (when (current-local-map)
+      (setq func (lookup-key (current-local-map) "\C-m"))
+      (when (fboundp func)
+	(funcall func)))))
+
+;;; ----------------------------------------------------------------------
+;;;
+(defun tinycompile-parse-line-goto-main ()
+  "Main controller for goto."
+  (interactive)
+  (or (tinycompile-parse-line-goto-basic)
+      (tinycompile-parse-line-goto-guess)
+      (tinycompile-parse-line-goto-pass)))
 
 ;;; ----------------------------------------------------------------------
 ;;;
@@ -453,9 +475,10 @@ Return:
 
  '((\"filename\" . NBR) ...)
  or whatever format LIST-FUNC says."
-  (let* ((max-point   (or max-point (point-max)))
-         table
-         elt)
+  (let ((max-point (or max-point
+		       (point-max)))
+	table
+	elt)
     (save-excursion
       (while (and (re-search-forward "^\\([^:]+\\):[0-9]+:" nil t)
                   (< (point) max-point))
@@ -471,16 +494,16 @@ Return:
 (defun tinycompile-kill-all-file-lines ()
   "Kill all lines associated with the file on the current line."
   (interactive)
-  (let* ((fid  'tinycompile-kill-all-file-lines)
-         (elt  (ti::buffer-parse-line-main))
-         (cd   (save-excursion
-                 (goto-char (point-min))
-                 (when (looking-at "^cd \\(.+\\)")
-                   (match-string 1))))
-         file
-         file2
-         re
-         point)
+  (let ((fid  'tinycompile-kill-all-file-lines)
+	(elt  (ti::buffer-parse-line-main))
+	(cd   (save-excursion
+		(goto-char (point-min))
+		(when (looking-at "^cd \\(.+\\)")
+		  (match-string-no-properties 1))))
+	file
+	file2
+	re
+	point)
     (unless fid ;; XEmacs byte compiler silencer
       (setq fid nil))
     (if (null elt)
@@ -506,7 +529,8 @@ Return:
       (setq point (point))
       (buffer-enable-undo)
       (ti::pmin)
-      (delete-matching-lines re)
+      (with-buffer-modified
+	(delete-matching-lines re))
       (if (< point (point-max))
           (goto-char point)))))
 
@@ -515,11 +539,11 @@ Return:
 (defun tinycompile-show-hide-toggle (&optional regexp)
   "Hide or show comment lines matching REGEXP.
 References:
- `tinycompile-:table-hide'"
+ `tinycompile--table-hide'"
   (interactive)
-  (let* ((list tinycompile-:table-hide)
-         search
-         show)
+  (let ((list tinycompile--table-hide)
+	search
+	show)
     (save-excursion
       (unless regexp                    ;Find right value
         (setq show (y-or-n-p "Y = show, N = hide "))
@@ -537,7 +561,7 @@ References:
        (t
         (if (null regexp)
             (message
-             "TinyCompile: No matching regexp in tinycompile-:table-hide")
+             "TinyCompile: No matching regexp in tinycompile--table-hide")
           (ti::text-re-search
            regexp nil nil nil
            (if show
@@ -576,9 +600,9 @@ See `tinycompile-hide-by-regexp' and `tinycompile-hide-by-regexp-whole-line'."
 (if (default-value 'tinycompile-mode)
     (setq-default tinycompile-mode nil))
 
-(add-hook 'tinycompile-:mode-define-keys-hook  'tinycompile-mode-define-keys)
+(add-hook 'tinycompile--mode-define-keys-hook  'tinycompile-mode-define-keys)
 
 (provide   'tinycompile)
-(run-hooks 'tinycompile-:load-hook)
+(run-hooks 'tinycompile--load-hook)
 
 ;;; tinycompile.el ends here

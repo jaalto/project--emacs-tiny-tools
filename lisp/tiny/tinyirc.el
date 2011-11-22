@@ -4,7 +4,7 @@
 
 ;;{{{ Id
 
-;; Copyright (C)    2003-2007 Jari Aalto
+;; Copyright (C)    2003-2010 Jari Aalto
 ;; Keywords:        tools
 ;; Author:          Jari Aalto
 ;; Maintainer:      Jari Aalto
@@ -22,9 +22,7 @@
 ;; for more details.
 ;;
 ;; You should have received a copy of the GNU General Public License
-;; along with program. If not, write to the
-;; Free Software Foundation, Inc., 51 Franklin Street, Fifth Floor,
-;; Boston, MA 02110-1301, USA.
+;; along with this program. If not, see <http://www.gnu.org/licenses/>.
 ;;
 ;; Visit <http://www.gnu.org/copyleft/gpl.html> for more information
 
@@ -37,14 +35,12 @@
 ;;
 ;; Requirements:
 ;;
-;; o    Only paste services that use de facto
-;;      <http://sourceforge.net/projects/pastebot> servers
-;;      are supported.
+;; o    Only supports <freshmeat.net/projects/pastebot> services.
 ;; o    Perl must have been installed
 ;; o    External program pbotutil.pl must have been installed
-;;      See `tinyirc-:pastebot-program-url'.
+;;      See `tinyirc--pastebot-program-url'.
 ;;
-;; Put this file on your Emacs-Lisp load path, add following into
+;; Put this file on your Emacs-Lisp `load-path', add following into
 ;; ~/.emacs startup file.
 ;;
 ;;      (require 'tinyirc)
@@ -62,8 +58,7 @@
 ;;      (global-set-key "\C-cps" 'tinyirc-pastebot-send-region)
 ;;      (global-set-key "\C-cpr" 'tinyirc-pastebot-receive-url)
 ;;
-;; Then you can try callling the initial setup. Thi needs to be done
-;; only once to verify your setup.
+;; Following commads install default setup and the needed Perl program
 ;;
 ;;      M-x load-library RET tinyirc.el RET
 ;;      M-x tinyirc-pastebot-install-perl-util-pastebot RET
@@ -167,8 +162,8 @@
 ;;                           The service (channel) where message was sent
 ;;
 ;;      For adavanced users: few variables are available in case you make
-;;      changes to the perl script. See `tinyirc-:pastebot-program' and
-;;      `tinyirc-:pastebot-config-directory'.
+;;      changes to the perl script. See `tinyirc--pastebot-program' and
+;;      `tinyirc--pastebot-config-directory'.
 ;;
 ;;  Sending to channels that are not supported
 ;;
@@ -218,10 +213,10 @@
 ;;
 ;;      The buffers *pastebot* *received* and *pastebot*
 ;;      *sent* are put into `tinyirc-pastebot-mode', whose mode name is
-;;      derived from variable `tinyirc-:mode-name'. Within these buffer it
+;;      derived from variable `tinyirc--mode-name'. Within these buffer it
 ;;      is possible to receive or view the received messages easily.
 ;;      Following default key bindings are set, when
-;;      `tinyirc-:pastebot-mode-define-keys-hook' is run if
+;;      `tinyirc--pastebot-mode-define-keys-hook' is run if
 ;;      `tinyirc-pastebot-mode-map' is nil when mode is turned on for the
 ;;      first time:
 ;;
@@ -235,7 +230,7 @@
 ;;
 ;;      The line number toggle function is handy when checking at references
 ;;      "see line NN", or "Try what variable that code prints at line NN".
-;;      The mode calls hook `tinyirc-:pastebot-mode-hook' where user
+;;      The mode calls hook `tinyirc--pastebot-mode-hook' where user
 ;;      can add more customizations.
 ;;
 ;;  Pastebot preliminary settings
@@ -244,7 +239,7 @@
 ;;      pages. There should be a form to where to submit a message.
 ;;      Couple of services at the time of writing existed:
 ;;
-;;          http://dragon.cbi.tamucc.edu:8080
+;;          http://www.pastebot.net/
 ;;          http://sial.org/pbot/
 ;;          http://pastebin.ca/
 ;;          http://paste.lisp.org/
@@ -255,7 +250,7 @@
 ;;      channels support pastebot announcements. In order to use the
 ;;      service from Emacs, you need a command line program that
 ;;      handles the send request. The Perl client `pbotutil' can be
-;;      found from address `tinyirc-:pastebot-program-url'. A
+;;      found from address `tinyirc--pastebot-program-url'. A
 ;;      configuration file must include the details about available
 ;;      pastebot servers and their supported channels. _Note:_ There
 ;;      is command `M-x' `tinyirc-pastebot-install-example-servers'
@@ -279,7 +274,7 @@
 ;;     Making your PasteBot send log available
 ;;
 ;;      If you can run a web server and want to publish your posts, you
-;;      could configure it to show ´tinyirc-:pastebot-buffer-file-name' all
+;;      could configure it to show ´tinyirc--pastebot-buffer-file-name' all
 ;;      the time (it's nil by default). For Apache the needed line in
 ;;      /etc/apache/httpd.conf would look something line:
 ;;
@@ -288,7 +283,7 @@
 ;;      and Emacs setting:
 ;;
 ;;          ;;  Browsers can view ".txt" files directly.
-;;          (setq tinyirc-:pastebot-buffer-file-name-sent
+;;          (setq tinyirc--pastebot-buffer-file-name-sent
 ;;                "~/tmp/pastebot/pastebot.txt")
 ;;
 ;;      After these (and `apachectl' `restart') all your posts could be
@@ -384,10 +379,8 @@
 
 ;;; ......................................................... &require ...
 
-(require 'cl)
-
 (eval-when-compile
-  (setq byte-compile-dynamic t))
+  (require 'cl))
 
 (eval-and-compile
   ;; predeclare - Byte compiler silencer.
@@ -398,32 +391,32 @@
 
 ;;; ..................................................... &v-variables ...
 
-(defcustom tinyirc-:load-hook nil
+(defcustom tinyirc--load-hook nil
   "*Hook that is run when package is loaded."
   :type  'hook
   :group 'TinyIrc)
 
-(defcustom tinyirc-:pastebot-hook-sent
+(defcustom tinyirc--pastebot-hook-sent
   '(tinyirc-pastebot-font-lock-mode-sent)
   "*Hook that is run at the end of `tinyirc-pastebot-message-record'"
   :type  'hook
   :group 'TinyIrc)
 
-(defcustom tinyirc-:pastebot-hook-received
+(defcustom tinyirc--pastebot-hook-received
   '(tinyirc-pastebot-font-lock-mode-received)
   "*Hook that is run at the end of `tinyirc-pastebot-receive-message'."
   :type  'hook
   :group 'TinyIrc)
 
-(defcustom tinyirc-:pastebot-mode-hook nil
+(defcustom tinyirc--pastebot-mode-hook nil
   "*Hook run after the `tinydesk-receive-mode' is turned on.
 This happend when message log is written either to buffer
-`tinyirc-:pastebot-buffer-name-received' or
-`tinyirc-:pastebot-buffer-name-sent'."
+`tinyirc--pastebot-buffer-name-received' or
+`tinyirc--pastebot-buffer-name-sent'."
   :type  'hook
   :group 'TinyIrc)
 
-(defcustom tinyirc-:pastebot-mode-define-keys-hook
+(defcustom tinyirc--pastebot-mode-define-keys-hook
   '(tinyirc-pastebot-default-mode-bindings)
   "*Hook run only if `tinyirc-pastebot-mode-map' is nil. This is checked at
 package load and when `tinyirc-pastebot-mode' is called."
@@ -433,14 +426,14 @@ package load and when `tinyirc-pastebot-mode' is called."
 ;;}}}
 ;;{{{ setup: User variables
 
-(defcustom tinyirc-:pastebot-program nil
+(defcustom tinyirc--pastebot-program nil
   "*Perl program to send messages to PasteBot servers."
   :type  'filename
   :group 'TinyIrc)
 
 ;; Try to configure the variable
-(unless tinyirc-:pastebot-program
-  (setq tinyirc-:pastebot-program
+(unless tinyirc--pastebot-program
+  (setq tinyirc--pastebot-program
         (let* ((name "pbotutil.pl")
                (bin  (executable-find name)))
           (if bin
@@ -448,11 +441,11 @@ package load and when `tinyirc-pastebot-mode' is called."
             (message
              (concat
               "TinyIrc: [ERROR] Please configure "
-              "`tinyirc-:pastebot-program '. Not in PATH `%s'")
+              "`tinyirc--pastebot-program '. Not in PATH `%s'")
              name)
             nil))))
 
-(defcustom tinyirc-:pastebot-send-file
+(defcustom tinyirc--pastebot-send-file
   (let ((file "pastebot-submit.txt")
         dir)
     (dolist (d '("~/tmp/"
@@ -463,35 +456,35 @@ package load and when `tinyirc-pastebot-mode' is called."
         (return)))
     (unless dir
       (error (concat "TinyIrc: Can't find suitable directory. "
-                     "Set `tinyirc-:pastebot-send-file'.")))
+                     "Set `tinyirc--pastebot-send-file'.")))
     (format "%s%s" dir file))
   "*Perl program to send messages to PasteBot servers."
   :type  'filename
   :group 'TinyIrc)
 
-(defcustom tinyirc-:pastebot-config-directory
-  (let* ((dir "~/.pbotutil"))
+(defcustom tinyirc--pastebot-config-directory
+  (let ((dir "~/.pbotutil"))
     (unless (file-directory-p dir)
       (message
        (concat
         "TinyIrc: [ERROR] Please configure "
-        "`tinyirc-:pastebot-config-directory'. No directory `%s'")
+        "`tinyirc--pastebot-config-directory'. No directory `%s'")
        dir))
     dir)
-  "*Configuration directory of `tinyirc-:pastebot-program'. If you change
+  "*Configuration directory of `tinyirc--pastebot-program'. If you change
 this variable, you need to change the Perl program itseld too."
   :type  'directory
   :group 'TinyIrc)
 
 ;; "~/tmp/pastebot.txt"
-(defcustom tinyirc-:pastebot-buffer-file-name-sent nil
+(defcustom tinyirc--pastebot-buffer-file-name-sent nil
   "Name of file buffer where the results are saved after each send. If nil,
 no file is saved. Refer to manual \\[finder-commentary] `tinyirc' for more
 information"
   :type  'filename
   :group 'TinyIrc)
 
-(defcustom tinyirc-:pastebot-font-lock-keywords-sent
+(defcustom tinyirc--pastebot-font-lock-keywords-sent
   (list
    ;; Service name used to send the message
    (list
@@ -505,7 +498,7 @@ information"
   :type   'sexp
   :group  'TinyIrc)
 
-(defcustom tinyirc-:pastebot-font-lock-keywords-received
+(defcustom tinyirc--pastebot-font-lock-keywords-received
   (list
    ;; The id line (receive time)
    (list
@@ -519,7 +512,7 @@ information"
   :type   'sexp
   :group  'TinyIrc)
 
-(defcustom tinyirc-:mode-name "PBot"
+(defcustom tinyirc--mode-name "PBot"
   "*Name of major mode `tinyirc-pastebot-mode'."
   :type  'string
   :group 'TinyIrc)
@@ -530,115 +523,113 @@ information"
 ;;; ....................................................... &v-private ...
 ;;; Private variables
 
-(defvar tinyirc-:pastebot-program-url
+(defvar tinyirc--pastebot-program-url
   "http://sial.org/code/perl/scripts/pbotutil.pl"
   "Download location of the pastebot perl interface.
 See also manual <http://sial.org/code/perl/scripts/pbotutil.pl.html>.")
 
-(defvar tinyirc-:pastebot-message-format-function
+(defvar tinyirc--pastebot-message-format-function
   'tinyirc-pastebot-message-format
   "Function to format the message arguments: SERVICE USER MSG and URL.")
 
-(defvar tinyirc-:pastebot-buffer-name-sent "*pastebot sent*"
+(defvar tinyirc--pastebot-buffer-name-sent "*pastebot sent*"
   "Log buffer of sent pastebot messages. If nil, no log is recorded.")
 
-(defvar tinyirc-:pastebot-buffer-name-received "*pastebot received*"
+(defvar tinyirc--pastebot-buffer-name-received "*pastebot received*"
   "log buffer of received pastebot messages.")
 
-(defvar tinyirc-:pastebot-history-user nil
+(defvar tinyirc--pastebot-history-user nil
   "History of used pastebot user names.")
 
-(defvar tinyirc-:pastebot-history-services nil
+(defvar tinyirc--pastebot-history-services nil
   "History of used pastebot services.")
 
-(defvar tinyirc-:pastebot-service-list nil
+(defvar tinyirc--pastebot-service-list nil
   "List of available services according to `servers' file.
 If this variable is not set, it is populated from
-`tinyirc-:pastebot-config-directory' and file `servers'.
+`tinyirc--pastebot-config-directory' and file `servers'.
 
 The content of the `servers' file is read only once, so if it
 modified, function `tinyirc-pastebot-service-list-set'.")
 
-(defvar tinyirc-:pastebot-service-list-time-stamp nil
-  "Time of reading from `tinyirc-:pastebot-config-directory'.")
+(defvar tinyirc--pastebot-service-list-time-stamp nil
+  "Time of reading from `tinyirc--pastebot-config-directory'.")
 
 (defvar tinyirc-pastebot-mode-map nil
   "Local keymap for STATE files loaded by edit.")
 
-(defvar tinyirc-:error-buffer "*TinyIrc error*"
+(defvar tinyirc--error-buffer "*TinyIrc error*"
   "Error buffer.")
 
-(defvar tinyirc-:http-buffer "*TinyIrc http*"
+(defvar tinyirc--http-buffer "*TinyIrc http*"
   "Error buffer.")
 
-(defvar tinyirc-:pastebot-config-default-content
+(defvar tinyirc--pastebot-config-default-content
   (format "\
 # %s configuration file for SERVERS
 # for program %s
 
 # irc.freenode.net
 name debian
-url http://channels.debian.net/paste/
+url http://oaste.debian.net/
 channel #debian
 
 # irc.freenode.net
 name flood
-url http://channels.debian.net/paste/
+url http://oaste.debian.net/
 channel #flood
 
 # irc.freenode.net
 name perl
-url http://dragon.cbi.tamucc.edu:8080/
+url http://nopaste.snit.ch/
 channel #perl
 
 # irc.freenode.net (backup)
 name perl2
-url http://sial.org/pbot
+url http://nopaste.snit.ch/
 channel #perl
 
-# Perl channel backup
-name perl2
-url http://nopaste.snit.ch:8000/
-channel #perl-help
-
-# Use 'test' or 'none' service for channels that do not have
-# particular support for PasteBot. Simply announce
-# the url in the #channel with command:
+# Services for channels that do not have particular support for
+# PasteBot. Simply announce the url in the #channel with command:
 #
 #    /me [pastebot] <URL>
 
 name none
-url http://sial.org/pbot
+url http://nopaste.snit.ch/
 channel #none
 
-name nopaste
-url http://rafb.net/paste/
-channel #none
+# FIXME; Interface problems?
+# name pastebot
+# url http://www.pastebot.net/
+# channel #none
 
-name test
-url http://dragon.cbi.tamucc.edu:8080/
-channel ''
-
-name test2
-url http://sial.org:8888/
-channel ''
-
-name pastebin
-url http://pastebin.ca/
-channel ''
+# FIXME; Not a pastebot server
+# name pastebin-ca
+# url http://pastebin.ca/
+# channel ''
 
 # End of file
 "
-        tinyirc-:pastebot-config-directory
-        tinyirc-:pastebot-program)
+        tinyirc--pastebot-config-directory
+        (or tinyirc--pastebot-program
+	    "pbotutil.pl"))
   "Default content for `tinyirc-pastebot-install-example-servers'.
-See also `tinyirc-:pastebot-config-directory'.")
+See also `tinyirc--pastebot-config-directory'.")
 
 ;;}}}
 
 ;;; ########################################################### &Funcs ###
 
 ;;{{{ General functions
+
+;;; ----------------------------------------------------------------------
+;;;
+(defsubst tinyirc-pastebot-program-name ()
+  "Verify that `tinyirc--pastebot-program' is string."
+  (if (stringp tinyirc--pastebot-program)
+      tinyirc--pastebot-program
+    (error
+     "TinyIrc: [ERROR] `tinyirc--pastebot-program' not defined.")))
 
 ;;; ----------------------------------------------------------------------
 ;;;
@@ -684,7 +675,7 @@ Match 1 contains line numer, 2 contains rest of the line."
 ;;;
 (defun tinyird-line-number-add-region (beg end)
   "Add line numbers to region BEG END. Point is moved."
-  (let* ((i 1))
+  (let ((i 1))
     (goto-char beg)
     (beginning-of-line)
     (catch 'stop
@@ -731,8 +722,8 @@ Match 1 contains line numer, 2 contains rest of the line."
 (defun tinyirc-pastebot-font-lock-mode-select (mode &optional off)
   "MODE is 'sent or 'received. Turn on or OFF font lock."
   (let ((kwds (if (eq mode 'sent)
-                  tinyirc-:pastebot-font-lock-keywords-sent
-                tinyirc-:pastebot-font-lock-keywords-received)))
+                  tinyirc--pastebot-font-lock-keywords-sent
+                tinyirc--pastebot-font-lock-keywords-received)))
     (cond
      (off
       (setq font-lock-keywords nil)
@@ -756,13 +747,13 @@ Match 1 contains line numer, 2 contains rest of the line."
 ;;; ----------------------------------------------------------------------
 ;;;
 (defun tinyirc-pastebot-message-record (msg)
-  "Record sent MSG to `tinyirc-:pastebot-buffer-name-sent'.
-Buffer is saved if `tinyirc-:pastebot-buffer-file-name' is set.
+  "Record sent MSG to `tinyirc--pastebot-buffer-name-sent'.
+Buffer is saved if `tinyirc--pastebot-buffer-file-name' is set.
 
 References:
-  `tinyirc-:pastebot-hook-sent'."
-  (let* ((buffer    tinyirc-:pastebot-buffer-name-sent)
-         (save-file tinyirc-:pastebot-buffer-file-name-sent)
+  `tinyirc--pastebot-hook-sent'."
+  (let* ((buffer    tinyirc--pastebot-buffer-name-sent)
+         (save-file tinyirc--pastebot-buffer-file-name-sent)
          (save-dir  (and save-file
                          (file-name-directory save-file))))
     (when buffer
@@ -775,7 +766,7 @@ References:
               (setq buffer-file-name save-file)
             (message
              (concat "TinyIrc: [ERROR] "
-                     "tinyirc-:pastebot-buffer-file-name-sent' "
+                     "tinyirc--pastebot-buffer-file-name-sent' "
                      "no such dir ``%s'")
              save-file)))
         ;;  Make room for new message if point is ar wrong place.
@@ -784,40 +775,37 @@ References:
 ;;;      (get-buffer-window buffer))
         (when buffer-file-name
           (save-buffer))
-        (run-hooks 'tinyirc-:pastebot-hook-sent)))))
+        (run-hooks 'tinyirc--pastebot-hook-sent)))))
 
 ;;; ----------------------------------------------------------------------
 ;;;
 (defun tinyirc-pastebot-message-format (service user msg url)
   "Format message using SERVICE USER MSG URL with timestamp."
-  (let* ((time      (tinyirc-time-string))
-         (eol       (if (string-match "\n$" msg)
-                        ""
-                      "\n")))
+  (let ((time (tinyirc-time-string))
+	(eol  (if (string-match "\n$" msg)
+		  ""
+		"\n")))
     (format "%s %s %s %s %s%s" time service user url msg eol)))
 
 ;;; ----------------------------------------------------------------------
 ;;;
 (defun tinyirc-pastebot-program-1 ()
-  "Return location of `tinyirc-:pastebot-program'."
-  (let*  ((prg       (if (stringp tinyirc-:pastebot-program)
-                         tinyirc-:pastebot-program
-                       (error
-                        "TinyIrc: `tinyirc-:pastebot-program' not defined.")))
+  "Return location of `tinyirc--pastebot-program'."
+  (let*  ((prg        (tinyirc-pastebot-program-name))
           (saved-abs  (get 'tinyirc-pastebot-program 'absolute))
           (saved-orig (get 'tinyirc-pastebot-program 'original))
-          (path      (cond
-                      ((and saved-abs
-                            (file-exists-p saved-abs)
-                            ;;  Program has not changed since
-                            (string= prg saved-orig))
-                       ;;  `executable-find' is heavy; use cached file.
-                       saved-abs)
-                      ((and prg
-                            (file-exists-p prg))
-                       (expand-file-name prg))
-                      (t
-                       (executable-find prg)))))
+          (path       (cond
+		       ((and saved-abs
+			     (file-exists-p saved-abs)
+			     ;;  Program has not changed since
+			     (string= prg saved-orig))
+			;;  `executable-find' is heavy; use cached file.
+			saved-abs)
+		       ((and prg
+			     (file-exists-p prg))
+			(expand-file-name prg))
+		       (t
+			(executable-find prg)))))
     (put 'tinyirc-pastebot-program 'original prg)
     (put 'tinyirc-pastebot-program 'absolute path)
     path))
@@ -825,37 +813,37 @@ References:
 ;;; ----------------------------------------------------------------------
 ;;;
 (defun tinyirc-pastebot-program ()
-  "Return location of `tinyirc-:pastebot-program'. Die on error."
+  "Return location of `tinyirc--pastebot-program' or signal an error."
   (let ((path (tinyirc-pastebot-program-1)))
     (unless path
       (error
        (format
-        (concat "TinyIrc: `tinyirc-:pastebot-program' %s not found in PATH. "
+        (concat "TinyIrc: `tinyirc--pastebot-program' %s not found in PATH. "
                 "Download it at %s")
-        tinyirc-:pastebot-program
-        tinyirc-:pastebot-program-url)))
+        tinyirc--pastebot-program
+        tinyirc--pastebot-program-url)))
     (unless (file-exists-p path)
-      (error "TinyIrc: `tinyirc-:pastebot-program' %s does not exist."
-             tinyirc-:pastebot-program))
+      (error "TinyIrc: `tinyirc--pastebot-program' %s does not exist."
+             tinyirc--pastebot-program))
     path))
 
 ;;; ----------------------------------------------------------------------
 ;;;
 (defun tinyirc-pastebot-service-file-name ()
   "Return configuration filename."
-  (let* ((dir  tinyirc-:pastebot-config-directory)
+  (let* ((dir  tinyirc--pastebot-config-directory)
          (file  (concat (file-name-as-directory dir)
                         "servers")))
     (unless (file-directory-p dir)
-      (error "Cannot read `tinyirc-:pastebot-config-directory' %s"
-             tinyirc-:pastebot-config-directory))
+      (error "Cannot read `tinyirc--pastebot-config-directory' %s"
+             tinyirc--pastebot-config-directory))
     file))
 
 ;;; ----------------------------------------------------------------------
 ;;;
 (defun tinyirc-pastebot-service-file-name-changed-p ()
   "Check if configuration file has chnages since last reading."
-  (let ((time tinyirc-:pastebot-service-list-time-stamp))
+  (let ((time tinyirc--pastebot-service-list-time-stamp))
     (when time
       (let* ((file    (tinyirc-pastebot-service-file-name))
              (modtime (format-time-string
@@ -866,9 +854,9 @@ References:
 ;;; ----------------------------------------------------------------------
 ;;;
 (defun tinyirc-pastebot-service-list-from-file ()
-  "Read `tinyirc-:pastebot-config-directory' and parse `servers' file."
-  (let* ((file (tinyirc-pastebot-service-file-name))
-         list)
+  "Read `tinyirc--pastebot-config-directory' and parse `servers' file."
+  (let ((file (tinyirc-pastebot-service-file-name))
+	list)
     (with-temp-buffer
       (insert-file-contents-literally file)
       (goto-char (point-min))
@@ -881,22 +869,22 @@ References:
 ;;; ----------------------------------------------------------------------
 ;;;
 (defun tinyirc-pastebot-service-list-set ()
-  "Set `tinyirc-:pastebot-service-list' from file.
-See `tinyirc-:pastebot-config-directory'."
-  (setq tinyirc-:pastebot-service-list-time-stamp
+  "Set `tinyirc--pastebot-service-list' from file.
+See `tinyirc--pastebot-config-directory'."
+  (setq tinyirc--pastebot-service-list-time-stamp
         (format-time-string "%Y-%m-%d %H:%M")
-        tinyirc-:pastebot-service-list
+        tinyirc--pastebot-service-list
         (tinyirc-pastebot-service-list-from-file)))
 
 ;;; ----------------------------------------------------------------------
 ;;;
 (defun tinyirc-pastebot-service-list ()
-  "Return `tinyirc-:pastebot-service-list' or read configuration."
+  "Return `tinyirc--pastebot-service-list' or read configuration."
   (if (tinyirc-pastebot-service-file-name-changed-p)
       ;;  Need update. User has chnages it on disk while we had read
       ;;  and cached it earlier.
       (tinyirc-pastebot-service-list-set)
-    (or tinyirc-:pastebot-service-list
+    (or tinyirc--pastebot-service-list
         (tinyirc-pastebot-service-list-set))))
 
 ;;; ----------------------------------------------------------------------
@@ -904,10 +892,10 @@ See `tinyirc-:pastebot-config-directory'."
 (defun tinyirc-pastebot-receive-call-process-id (service id)
   "Receive message from pastebot SERVICE by ID number. Return content.
 Valid SERVICE is one that is defined in dire$ctory
-`tinyirc-:pastebot-config-directory' and file `servers'."
+`tinyirc--pastebot-config-directory' and file `servers'."
   (let ((prg (tinyirc-pastebot-program)))
     (if (integerp id)
-        (setq id (int-to-string id)))
+        (setq id (number-to-string id)))
     (with-temp-buffer
       (message "TinyIrc: pastebot receiving ID %s from %s ..." id service)
       (call-process "perl"
@@ -944,7 +932,7 @@ Valid SERVICE is one that is defined in dire$ctory
 ;;; ----------------------------------------------------------------------
 ;;;
 (defun tinyirc-pastebot-send-call-process (file service user msg)
-  "Call `tinyirc-:pastebot-program' with perl and send argumens.
+  "Call `tinyirc--pastebot-program' with perl and send argumens.
 See program for definition of FILE SERVICE USER MSG.
 
 Return program's message without trailing newline. If command succeed,
@@ -979,8 +967,8 @@ return value is program's error message."
   "Send FILE to SERVICE using optional MSG and USER.
 USER defaults to variable `user-login-name', environment variable USER
 or string `anon'."
-  (let* ((function tinyirc-:pastebot-message-format-function)
-         url)
+  (let ((function tinyirc--pastebot-message-format-function)
+	url)
     (or user
         (setq user (or (and (boundp 'user-login-name) ;; Emacs only variable
                             (symbol-value 'user-login-name))
@@ -999,10 +987,10 @@ or string `anon'."
 ;;; ----------------------------------------------------------------------
 ;;;
 (defun tinyirc-pastebot-receive-message (url msg)
-  "Write URL's MSG to `tinyirc-:pastebot-buffer-name-received'."
-  (let* ((time   (tinyirc-time-string))
-         (buffer (get-buffer-create
-                  tinyirc-:pastebot-buffer-name-received)))
+  "Write URL's MSG to `tinyirc--pastebot-buffer-name-received'."
+  (let ((time   (tinyirc-time-string))
+	(buffer (get-buffer-create
+		 tinyirc--pastebot-buffer-name-received)))
     ;;  Make sure there is final newline
     (unless (string-match "\n$" msg)
       (setq msg (concat msg "\n")))
@@ -1010,7 +998,7 @@ or string `anon'."
     (with-current-buffer buffer
       (tinyirc-append-to-buffer
        (format "%s %s\n%s" time url msg))
-      (run-hooks 'tinyirc-:pastebot-hook-received))))
+      (run-hooks 'tinyirc--pastebot-hook-received))))
 
 ;;}}}
 ;;{{{ Pastebot: Mode
@@ -1062,7 +1050,7 @@ Point is at the beginning of line."
 ;;;
 (defun tinyirc-pastebot-url-at-point ()
   "Return HTTP url at point if any."
-  (let* ((word (tinyirc-word-at-point)))
+  (let ((word (tinyirc-word-at-point)))
     (when (and word
                (string-match "http://" word))
       word)))
@@ -1129,17 +1117,17 @@ or `eobp'."
 ;;;
 (defun tinyirc-pastebot-mode-command-receive (url &optional arg)
   "Receive messages.
-In buffer tinyirc-:pastebot-buffer-name-sent', receive
+In buffer tinyirc--pastebot-buffer-name-sent', receive
 message using current line's URL. With Prefix argument, receive
 arbitrary user supplied URL.
 
-In buffer `tinyirc-:pastebot-buffer-name-received' this function
+In buffer `tinyirc--pastebot-buffer-name-received' this function
 automatically asks what URL to receive."
   (interactive
-   (let* (url)
+   (let (url)
      (cond
       ((string= (buffer-name)
-                tinyirc-:pastebot-buffer-name-sent)
+                tinyirc--pastebot-buffer-name-sent)
        (cond
         (current-prefix-arg
          (setq url
@@ -1156,7 +1144,7 @@ automatically asks what URL to receive."
                                url))))
                (setq url nil)))))))
       ((string= (buffer-name)
-                tinyirc-:pastebot-buffer-name-received)
+                tinyirc--pastebot-buffer-name-received)
        (setq url
              (read-string "Pastebot receive URL: "
                           (tinyirc-pastebot-url-at-point)))))
@@ -1176,9 +1164,9 @@ automatically asks what URL to receive."
         (tinyirc-pastebot-message-region)
       (if (not (and beg end))
           (message "TinyIrc:  Cannot find message's region.")
-        (let* ((number-p (save-excursion
-                           (goto-char beg)
-                           (tinyirc-line-number-p))))
+        (let ((number-p (save-excursion
+			  (goto-char beg)
+			  (tinyirc-line-number-p))))
           (save-excursion
             (if number-p
                 (tinyird-line-number-delete-region beg end)
@@ -1225,11 +1213,11 @@ automatically asks what URL to receive."
 ;;; ----------------------------------------------------------------------
 ;;;
 (defsubst tinyirc-mode-map-define-keys ()
-  "Run `tinyirc-:pastebot-mode-define-keys-hook'.
+  "Run `tinyirc--pastebot-mode-define-keys-hook'.
 But only if `tinyirc-pastebot-mode-map' is nil."
   (unless tinyirc-pastebot-mode-map
     (setq tinyirc-pastebot-mode-map (make-sparse-keymap))
-    (run-hooks 'tinyirc-:pastebot-mode-define-keys-hook)))
+    (run-hooks 'tinyirc--pastebot-mode-define-keys-hook)))
 
 ;;; ----------------------------------------------------------------------
 ;;;
@@ -1245,7 +1233,7 @@ Mode description:
   (interactive)
   (tinyirc-mode-map-define-keys)
   (tinyirc-mode-map-activate)           ;turn on the map
-  (setq  mode-name   tinyirc-:mode-name)
+  (setq  mode-name   tinyirc--mode-name)
   (setq  major-mode 'tinyirc-pastebot-mode) ;; for C-h m
   (when (interactive-p)
     (message
@@ -1254,7 +1242,7 @@ Mode description:
        "Receive URL at line \\[tinyirc-pastebot-mode-command-receive] "
        "Line num \\[tinyirc-pastebot-mode-command-line-numbers-toggle] ")))
     (sleep-for 1))
-  (run-hooks 'tinyirc-:pastebot-mode-hook))
+  (run-hooks 'tinyirc--pastebot-mode-hook))
 
 ;;}}}
 ;;{{{ Pastebot: User functions
@@ -1311,14 +1299,14 @@ Mode description:
 ;;;
 ;;;###autoload
 (defun tinyirc-pastebot-install-perl-util-pastebot ()
-  "Install `tinyirc-:pastebot-program-url'."
+  "Install `tinyirc--pastebot-program-url'."
   (interactive)
   (let ((perl        (executable-find "perl"))
-        (http-buffer tinyirc-:http-buffer)
-        (name        tinyirc-:error-buffer)
-        (url         tinyirc-:pastebot-program-url)
-        (filename    (file-name-nondirectory tinyirc-:pastebot-program-url))
-        (program     tinyirc-:pastebot-program)
+        (http-buffer tinyirc--http-buffer)
+        (name        tinyirc--error-buffer)
+        (url         tinyirc--pastebot-program-url)
+        (filename    (file-name-nondirectory tinyirc--pastebot-program-url))
+        (program     tinyirc--pastebot-program)
         buffer)
     (unless perl
       (with-current-buffer (or buffer
@@ -1326,10 +1314,10 @@ Mode description:
         (insert (format "\
 INSTALL PROBLEM: Perl
 
-  The `tinyirc-:pastebot-program' [%s] need Perl command interpreter to run.
+  The `tinyirc--pastebot-program' [%s] need Perl command interpreter to run.
   Perl doesn't seem to be installed. Please update environment variable
   PATH if you do have Perl, but it's merely missing from there."
-                        tinyirc-:pastebot-program))
+                        tinyirc--pastebot-program))
         (if (file-directory-p "c:/")
             (insert "\
 
@@ -1345,13 +1333,14 @@ INSTALL PROBLEM: Perl
                      'verbose)))
         (with-current-buffer buffer
           (goto-char (point-min))
-          (replace-regexp "\r" "" nil (point-min) (point-max))
+	  (while (re-search-forward "\r" nil t)
+	    (replace-match "" nil nil))
           (re-search-forward "^\n")
           (let (dir
                 saveto)
             (setq dir (completing-read
                        (format
-                        "Save %s to dir (must be along PATH): " filename)
+                        "Save %s to dir (press TAB; along PATH): " filename)
                        (mapcar (function
                                 (lambda (x)
                                   (cons x 1)))
@@ -1362,6 +1351,13 @@ INSTALL PROBLEM: Perl
                   (expand-file-name
                    (concat (file-name-as-directory dir) filename)))
             (write-region (point) (point-max) saveto)
+	    ;;  Make it executable
+	    (let* ((x-bits 73)  ;; Oct 111
+		   (r-bits 292) ;; Oct 444
+		   (mode   (file-modes saveto))
+		   (run-mode  (logior (logior mode x-bits)
+				      r-bits)))
+	      (set-file-modes saveto run-mode))
             (message "TinyIrc: saved %s" saveto)))))))
 
 ;;; ----------------------------------------------------------------------
@@ -1374,14 +1370,14 @@ PasteBot interface working. Once the installation look valid, this function
 should report an success status.
 
 References:
-  `tinyirc-:pastebot-config-default-content'
-  `tinyirc-:pastebot-program'
-  `tinyirc-:pastebot-program-url'"
+  `tinyirc--pastebot-config-default-content'
+  `tinyirc--pastebot-program'
+  `tinyirc--pastebot-program-url'"
   (interactive)
-  (let* ((config-default-content tinyirc-:pastebot-config-default-content))
+  (let ((config-default-content tinyirc--pastebot-config-default-content))
     (let* ( ;; (win32  (file-directory-p "c:/"))
            ;;  (cygwin (string-match "cygwin" "emacs-version"))
-           (dir    (tinyirc-path tinyirc-:pastebot-config-directory))
+           (dir    (tinyirc-path tinyirc--pastebot-config-directory))
            ;;  Watch out for Cygwin made symlink under Native
            ;;  Win32 NTEmacs. We must not
            (link   (concat dir ".lnk"))
@@ -1416,14 +1412,14 @@ and create real directory instead."
           (error (concat
                   "TinyIrc: [install] FATAL you do not have program %s, "
                   "visit %s and install it along PATH")
-                 tinyirc-:pastebot-program
-                 tinyirc-:pastebot-program-url)))
+                 tinyirc--pastebot-program
+                 tinyirc--pastebot-program-url)))
       (message
        (concat
         "TinyIrc: [install] Check passed. "
         "Your PasteBot interface should be functonal provided that "
         "configuration file %s 1) contains needed entries and "
-        "2) it has no syntax errors."
+        "2) it has no syntax errors. "
         "This function did not check its content. ")
        config))))
 
@@ -1455,14 +1451,14 @@ You also have to define databases for SERVICE selections, see script's
 manual page for details.
 
 References:
-  `tinyirc-:pastebot-send-file'."
+  `tinyirc--pastebot-send-file'."
   (interactive
-   (let* ( ;;  Make assoc list
-          (list (mapcar (function
-                         (lambda (x)
-                           (cons x 1)))
-                        (tinyirc-pastebot-service-list)))
-          (file tinyirc-:pastebot-send-file))
+   (let ((list (mapcar (function ;;  Make assoc list
+			(lambda (x)
+			  (cons x 1)))
+		       (tinyirc-pastebot-service-list)))
+	 (file tinyirc--pastebot-send-file))
+     (tinyirc-pastebot-program-name)	;signal error if no program
      (unless list
        (error (concat "Tinyirc: Cannot get completions."
                       "Check pastebot `servers' file.")))
@@ -1473,20 +1469,20 @@ References:
                        ;;  Because user may have updated the
                        ;;  configuration file and we don't know about it
                        (not 'requir-match)
-                       (if tinyirc-:pastebot-history-services
-                           (car tinyirc-:pastebot-history-services))
-                       'tinyirc-:pastebot-history-services)
+                       (if tinyirc--pastebot-history-services
+                           (car tinyirc--pastebot-history-services))
+                       'tinyirc--pastebot-history-services)
       (read-string "Pastebot user: "
-                   (if tinyirc-:pastebot-history-user
-                       (car tinyirc-:pastebot-history-user)
+                   (if tinyirc--pastebot-history-user
+                       (car tinyirc--pastebot-history-user)
                      (or user-login-name
                          (getenv "USER")))
-                   'tinyirc-:pastebot-history-user)
+                   'tinyirc--pastebot-history-user)
       (read-string "Pastebot message: ")
       (region-beginning)
       (region-end))))
-  (let ((file (or tinyirc-:pastebot-send-file
-                  (error "TinyIrc: `tinyirc-:pastebot-send-file' not set."))))
+  (let ((file (or tinyirc--pastebot-send-file
+                  (error "TinyIrc: `tinyirc--pastebot-send-file' not set."))))
     (unless (and beg end)
       (error "Pastebot: region not defined"))
     (write-region beg end file)
@@ -1503,6 +1499,6 @@ References:
 
 (tinyirc-install)
 (provide 'tinyirc)
-(run-hooks 'tinyirc-:load-hook)
+(run-hooks 'tinyirc--load-hook)
 
 ;;; End of tinyirc.el

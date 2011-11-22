@@ -4,12 +4,11 @@
 
 ;;{{{ Id
 
-;; Copyright (C)    1995-2007 Jari Aalto
+;; Copyright (C)    1995-2010 Jari Aalto
 ;; Keywords:        extensions
 ;; Author:          Jari Aalto
 ;; Maintainer:      Jari Aalto
 ;;
-;; To get information on this program call M-x tinyef-version.
 ;; Look at the code with folding.el
 
 ;; COPYRIGHT NOTICE
@@ -25,9 +24,7 @@
 ;; for more details.
 ;;
 ;; You should have received a copy of the GNU General Public License
-;; along with program. If not, write to the
-;; Free Software Foundation, Inc., 51 Franklin Street, Fifth Floor,
-;; Boston, MA 02110-1301, USA.
+;; along with this program. If not, see <http://www.gnu.org/licenses/>.
 ;;
 ;; Visit <http://www.gnu.org/copyleft/gpl.html> for more information
 
@@ -47,10 +44,6 @@
 ;;      (add-hook 'tinyef-load-hook 'tinyef-minibuffer-define-key-extras)
 ;;      (autoload 'turn-on-tinyef-mode "tinyef" "" t)
 ;;      (add-hook 'minibuffer-setup-hook 'turn-on-tinyef-mode)
-;;
-;; If you have any questions, use this function to contact maintainer
-;;
-;;      M-x tinyef-submit-bug-report
 
 ;;}}}
 
@@ -73,7 +66,7 @@
 ;;      o   Easy filename editing. Deletes directories at time, delete line
 ;;          backward, electric tilde, electric slash, electric colon etc.
 ;;      o   Useful to go along with `C-x' `C-f' command prompt.
-;;      o   Mouse-3 in minibuffers clears the input.
+;;      o   Mouse-3 in minibuffer clears the input.
 ;;
 ;;  Description
 ;;
@@ -166,9 +159,6 @@
 ;;
 ;;      o   Mouse-3 = BIG erase backward from point
 ;;      o   C-mouse-1 = Small delete backward
-;;
-;;      This should give your free hands to cut, paste and Delete, without
-;;      lifting your hand off the mouse.
 
 ;;}}}
 
@@ -180,13 +170,10 @@
 
 (require 'tinylibm)
 
-(eval-when-compile
-  (ti::package-use-dynamic-compilation))
-
 (eval-and-compile
   (autoload 'apropos-internal "apropos"))
 
-(ti::package-defgroup-tiny TinyEf tinyef-: extensions
+(ti::package-defgroup-tiny TinyEf tinyef-- extensions
   "Electric file minor mode. Designed for minibuffer file prompt editing.
   Overview of features
 
@@ -198,17 +185,17 @@
 ;;}}}
 ;;{{{ setup: variables
 
-(defcustom tinyef-:load-hook nil
+(defcustom tinyef--load-hook nil
   "*Hook that is run when package is loaded."
   :type  'hook
   :group 'TinyEf)
 
-(defcustom tinyef-:mode-key "\C-c/"
+(defcustom tinyef--mode-key "\C-c/"
   "*Key to toggle function `tinyef-mode' on/off in minibuffer map."
   :type  '(string :tag "Key sequence")
   :group 'TinyEf)
 
-(defcustom tinyef-:mode-key-table
+(defcustom tinyef--mode-key-table
   '((?\<   . step-delete-back)
     (?\>   . step-delete-fwd)
     (?\|   . chunk-delete)
@@ -236,13 +223,13 @@ If you change this; you must call function \\[tinyef-mode-map-define-keys]."
             (const undo))))
   :group 'TinyEf)
 
-(defcustom tinyef-:step-delete-chars "-./@:"
+(defcustom tinyef--step-delete-chars "-./@:"
   "*When using step-delete action, kill until these chars. This is charset.
 The \"-\" character must be first in the string."
   :type '(string "Charset")
   :group 'TinyEf)
 
-(defcustom tinyef-:mode-defined-maps ;== if you need to change this; report
+(defcustom tinyef--mode-defined-maps ;== if you need to change this; report
   (delq nil                             ;== change to maintainer
         (list
          'global-map
@@ -255,27 +242,9 @@ The \"-\" character must be first in the string."
          (if (boundp 'minibuffer-local-ns-map)
              'minibuffer-local-ns-map)))
   "*Keymap list where to install Electric file minor mode hotkey-
-See `tinyef-:mode-key'."
+See `tinyef--mode-key'."
   :type  '(symbol :tag "Keymap")
   :group 'TinyEf)
-
-;;}}}
-;;{{{ version
-
-(eval-and-compile
-  (ti::macrof-version-bug-report
-   "tinyef.el"
-   "tinyef"
-   tinyef-:version-id
-   "$Id: tinyef.el,v 2.42 2007/05/01 17:20:43 jaalto Exp $"
-   '(tinyef-:version-id
-     tinyef-:load-hook
-     tinyef-:mode-hook
-     tinyef-mode
-     tinyef-:mode-map
-     tinyef-:mode-defined-maps
-     tinyef-:mode-name
-     tinyef-:mode-key-table)))
 
 ;;}}}
 ;;{{{ code: misc, keys, install
@@ -289,7 +258,7 @@ See `tinyef-:mode-key'."
 (eval-and-compile
 
   (ti::macrof-minor-mode-wizard
-   "tinyef-" " Tef" nil "Tef" 'TinyEf "tinyef-:" ;1-6
+   "tinyef-" " Tef" nil "Tef" 'TinyEf "tinyef--" ;1-6
 
    "Electric file name mode.
 This mode helps you composing filename more easily. Some keys
@@ -298,11 +267,11 @@ character \"~/$\" are electric. Some other keys have special meaning and you
 cannot insert them into buffer unless you press C-q before the key-.
 These special keys do are mapped to movement keys and delete keys.
 
-See variable `tinyef-:mode-key-table' which specifies actions
-for each electric character. Consult also `tinyef-:step-delete-chars'.
+See variable `tinyef--mode-key-table' which specifies actions
+for each electric character. Consult also `tinyef--step-delete-chars'.
 The default action table is as follows:
 
-    (setq tinyef-:mode-key-table
+    (setq tinyef--mode-key-table
       '((?\<   . step-delete-back)              ;KEY -- action symbol
         (?\>   . step-delete-fwd)
         (?|    . chunk-delete)
@@ -349,7 +318,7 @@ o   []  means which action the character triggered
 
 Defined keys:
 
-\\{tinyef-:mode-map}"
+\\{tinyef--mode-map}"
 
    "Tief"
    nil
@@ -361,11 +330,10 @@ Defined keys:
 ;;;
 (defmacro tinyef-function-macro (action)
   "Define interactive command ACTION."
-  (let* ((sym (intern (format "tinyef-%s" (symbol-name (` (, action)))))))
-    (`
-     (defun (, sym) ()
+  (let ((sym (intern (format "tinyef-%s" (symbol-name `,action)))))
+    `(defun ,sym ()
        (interactive)
-       (tinyef-char nil (quote (, action)))))))
+       (tinyef-char nil (quote ,action)))))
 
 (tinyef-function-macro chunk-delete)
 (tinyef-function-macro step-delete-back)
@@ -380,7 +348,7 @@ Defined keys:
 ;;;
 (defsubst tinyef-action (char)
   "Return action for CHAR."
-  (cdr-safe (char-assq char tinyef-:mode-key-table)))
+  (cdr-safe (char-assq char tinyef--mode-key-table)))
 
 ;;; ----------------------------------------------------------------------
 ;;;
@@ -388,11 +356,11 @@ Defined keys:
   "Define Electric file mode's hot key. Optionally REMOVE.
 The install is done only once, but you can FORCE reinstall.
 
-See `tinyef-:mode-defined-maps'."
-  (let* ((key   tinyef-:mode-key)
-         (fun   'tinyef-mode)
-         map)
-    (dolist (x tinyef-:mode-defined-maps)
+See `tinyef--mode-defined-maps'."
+  (let ((key   tinyef--mode-key)
+	(fun   'tinyef-mode)
+	map)
+    (dolist (x tinyef--mode-defined-maps)
       (setq map (eval x))
       (if remove
           ;; eval or symbol-value function
@@ -401,7 +369,7 @@ See `tinyef-:mode-defined-maps'."
         (unless (get 'tinyef-install-maps 'installed)
           (if (lookup-key map key)
               (progn
-                ;;(message "TinyMy: tinyef-:mode-key already taken in %s"
+                ;;(message "TinyMy: tinyef--mode-key already taken in %s"
                 ;;  (symbol-name x))
                 nil)
             (define-key (eval x) key fun)))))
@@ -411,18 +379,18 @@ See `tinyef-:mode-defined-maps'."
 ;;; ----------------------------------------------------------------------
 ;;;
 (defun tinyef-mode-map-define-keys ()
-  "Define `tinyef-:mode-map' keys.
+  "Define `tinyef--mode-map' keys.
 Always clears the keymap first and reinstalls the minor mode."
   (interactive)
-  (setq tinyef-:mode-map  (make-sparse-keymap)) ;always refresh
+  (setq tinyef--mode-map  (make-sparse-keymap)) ;always refresh
   ;;  Minor modes have copy of the keymap. Get rid of it and
   ;;  replace it with new one.
   (ti::keymap-add-minor-mode    'tinyef-mode nil nil    'remove)
-  (dolist (elt tinyef-:mode-key-table)
-    (define-key tinyef-:mode-map (char-to-string (car elt)) 'tinyef-char))
+  (dolist (elt tinyef--mode-key-table)
+    (define-key tinyef--mode-map (char-to-string (car elt)) 'tinyef-char))
   (ti::keymap-add-minor-mode 'tinyef-mode
-                             'tinyef-:mode-name
-                             tinyef-:mode-map))
+                             'tinyef--mode-name
+                             tinyef--mode-map))
 
 ;;; ----------------------------------------------------------------------
 ;;;
@@ -434,7 +402,6 @@ Always clears the keymap first and reinstalls the minor mode."
    (arg
     (remove-hook        'minibuffer-setup-hook  'tinyef-minibuffer-setup)
     (remove-hook        'minibuffer-exit-hook   'turn-off-tinyef-mode)
-
     (ti::keymap-add-minor-mode 'tinyef-mode nil nil     'remove)
     (tinyef-install-maps  'remove))
    (t
@@ -463,7 +430,6 @@ Always clears the keymap first and reinstalls the minor mode."
       (define-key map [(button3)]         'tinyef-chunk-delete)))))
 
 ;;}}}
-
 ;;{{{ code: extra minibuffer commands
 
 ;;; ----------------------------------------------------------------------
@@ -489,8 +455,8 @@ If current buffer is the *mini-buffer* return name of previous-window."
 (defun tinyef-insert-buffer-dir-name ()
   "Insert dir name of most recent buffer."
   (interactive)
-  (let* ((bfn (buffer-file-name
-               (get-buffer (tinyef-buffer-name-not-minibuffer)))))
+  (let ((bfn (buffer-file-name
+	      (get-buffer (tinyef-buffer-name-not-minibuffer)))))
     (if bfn
         (insert (file-name-directory bfn)))))
 
@@ -499,8 +465,8 @@ If current buffer is the *mini-buffer* return name of previous-window."
 (defun tinyef-insert-buffer-file-name ()
   "Insert file name of most recent buffer."
   (interactive)
-  (let* ((bfn (buffer-file-name
-               (get-buffer (tinyef-buffer-name-not-minibuffer)))))
+  (let ((bfn (buffer-file-name
+	      (get-buffer (tinyef-buffer-name-not-minibuffer)))))
     (if bfn
         (insert bfn))))
 
@@ -511,9 +477,8 @@ If current buffer is the *mini-buffer* return name of previous-window."
   (interactive)
   (with-output-to-temp-buffer "*Completions*"
     (display-completion-list (symbol-value minibuffer-history-variable))
-    (save-excursion
-      (set-buffer standard-output)
-      (setq completion-base-size 0))))
+    (with-current-buffer standard-output
+      (setq completion-base-position 0))))
 
 ;;; ----------------------------------------------------------------------
 ;;;
@@ -561,11 +526,13 @@ If current buffer is the *mini-buffer* return name of previous-window."
 ;;;
 (defun tinyef-step (&optional back)
   "Position cursor, optionally BACK."
-  (let* ((set    tinyef-:step-delete-chars)
-         (rset   (concat "^" set))      ;reverse set
-         (func   (if back 'skip-chars-backward 'skip-chars-forward))
-         (point  (point))
-         limit)
+  (let* ((set    tinyef--step-delete-chars)
+	 (rset   (concat "^" set))      ;reverse set
+	 (func   (if back
+		     'skip-chars-backward
+		   'skip-chars-forward))
+	 (point  (point))
+	 limit)
     (if back
         (setq limit (line-beginning-position))
       (setq limit (line-end-position)))
@@ -589,24 +556,26 @@ turn off function `tinyef-mode' and insert character as is.
 Input:
 
   CHARACTER  The character is read from input argument or it it is nil, then
-             `last-command-char' is used.
-  ACTION     If nil `tinyef-:mode-key-table' is consulted for character.
+             `last-command-event' is used.
+  ACTION     If nil `tinyef--mode-key-table' is consulted for character.
              If non-nil, then should ve valid action symbol.
 
 Current keymap:
 
-\\{tinyef-:mode-map}"
+\\{tinyef--mode-map}"
   (interactive)
-  (let* ((char          (or character last-command-char)) ;char pressed
-         (act           (or action (tinyef-action char)))
-         (re            '(".*@"  ".*:"))
-         (e-list        '(?/  ?@ ?\" ?\'))
-         (pnow          (point))
-         (point         (point))
-         str
-         eolp
-         bolp
-         hits)
+  (let* ((char          (or character
+			    last-command-event)) ;char pressed
+	 (act           (or action
+			    (tinyef-action char)))
+	 (re            '(".*@"  ".*:"))
+	 (e-list        '(?/  ?@ ?\" ?\'))
+	 (pnow          (point))
+	 (point         (point))
+	 str
+	 eolp
+	 bolp
+	 hits)
     (if (or (null act)                  ;no action recognized
             (and (interactive-p)
                  (not (eq (selected-window) (minibuffer-window)))
@@ -637,7 +606,6 @@ Current keymap:
        ((eq act 'undo)
         (undo))
        ;; ... ... ... ... ... ... ... ... ... ... ... ... ... .. chunk ..
-
        ((eq act 'chunk-delete)
         (delete-region point (point))) ;; The kill point is already set
        ;; ... ... ... ... ... ... ... ... ... ... ... ... ... ... step ..
@@ -657,16 +625,16 @@ Current keymap:
              ;; permit `//hostname/path/to/file'
              (not (eq (point) (1+ (point-min))))
              ;; permit `http://url/goes/here'
-             (not (char= ?: (char-after (- (point) 2)))))
+             (not (char-equal ?: (char-after (- (point) 2)))))
         (delete-region point (point))
         (insert char))
 
        ((memq act '(e-tilde))
         (cond
-         ((char= (preceding-char) ?~)
+         ((char-equal (preceding-char) ?~)
           ;;  /ftp@some:~  pressing "~" now deletes full line
           (delete-region bolp (point)))
-         ((and (not (ti::win32-p)) (char= (preceding-char) ?:))
+         ((and (not (ti::win32-p)) (char-equal (preceding-char) ?:))
           ;;  In NT, it's best to delete immediately, because you have
           ;;  those MS-DOS filename C:/ ...
           ;;
@@ -698,6 +666,6 @@ Current keymap:
 (tinyef-install)
 (provide 'tinyef)
 
-(run-hooks 'tinyef-:load-hook)
+(run-hooks 'tinyef--load-hook)
 
 ;;; tinyef.el ends here

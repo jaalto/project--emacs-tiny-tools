@@ -4,12 +4,11 @@
 
 ;;{{{ Id
 
-;; Copyright (C)    1995-2007 Jari Aalto
+;; Copyright (C)    1995-2010 Jari Aalto
 ;; Keywords:        extensions
 ;; Author:          Jari Aalto
 ;; Maintainer:      Jari Aalto
 ;;
-;; To get information on this program, call M-x tiliby-version.
 ;; Look at the code with folding.el
 
 ;; COPYRIGHT NOTICE
@@ -25,9 +24,7 @@
 ;; for more details.
 ;;
 ;; You should have received a copy of the GNU General Public License
-;; along with program. If not, write to the
-;; Free Software Foundation, Inc., 51 Franklin Street, Fifth Floor,
-;; Boston, MA 02110-1301, USA.
+;; along with this program. If not, see <http://www.gnu.org/licenses/>.
 ;;
 ;; Visit <http://www.gnu.org/copyleft/gpl.html> for more information
 
@@ -35,17 +32,17 @@
 ;;{{{ Install
 
 ;; ........................................................ &t-install ...
-;; You put this file on your Emacs-Lisp load path, add following into your
+;; You put this file on your Emacs-Lisp `load-path', add following into your
 ;; .emacs startup file
 ;;
 ;;     (require 'tinyliby)
 ;;
 ;; But, normally that is not required. All these functions are autoloaded
-;; from the main library, so simple
+;; from the main library, so use:
 ;;
 ;;      (require 'tinylibm)
 ;;
-;; will also cover these functions.
+;; and it will cover everything
 
 ;;}}}
 ;;{{{ Documentation
@@ -58,25 +55,6 @@
 ;;
 ;;      o    This is lisp code library. Package itself does nothing.
 ;;      o    Collection of Emacs s(y)stem related functions.
-;;
-;;  Examples
-;;
-;;      If you're MH, VM user, don't get upset on this example. If you use
-;;      RMAIL, but one day you accidentally start VM ... your whole
-;;      mail system may be broken. To prevent accidents, you could
-;;      wipe all traces of VM and MH with function below. THe function takes a
-;;      while to execute.
-;;
-;;          (defun my-vm-mh-kill ()
-;;            "Removes VM, MH permanently"
-;;            (require 'tinyliby)
-;;            (let (list)
-;;              (setq list (ti::system-get-symbols "^vm-\\|^vm$"))
-;;              (ti::system-unload-symbols list)
-;;              (setq list (ti::system-get-symbols "^mh-\\|^mh$"))
-;;              (ti::system-unload-symbols list)
-;;              (setq list (ti::system-get-symbols "hook"))
-;;              (ti::system-remove-from-hooks list "^vm\\|mh")))
 
 ;;}}}
 
@@ -92,46 +70,23 @@
   (autoload 'adelete "assoc"))
 
 (eval-when-compile
-  (require 'advice)
-  (ti::package-use-dynamic-compilation))
+  (require 'advice))
 
 ;;}}}
 
 ;;{{{ setup: -- variables
 
-(defvar ti::system-:describe-symbols-history nil
+(defconst tinyliby-version-time "2010.1208.0809"
+  "Latest version number as last modified time.")
+
+(defvar ti::system--describe-symbols-history nil
   "History of used regular expressions.")
 
-(defvar ti::system-:tmp-buffer "*ti::system-tmp*"
+(defvar ti::system--tmp-buffer "*ti::system-tmp*"
   "*Temporary buffer name.")
 
-(defvar ti::system-:desc-buffer "*desc*"
+(defvar ti::system--desc-buffer "*desc*"
   "*Describe buffer.")
-
-;;}}}
-;;{{{ setup: -- version
-
-(defconst tinyliby-version
-  (substring "$Revision: 2.48 $"11 15)
-  "Latest version number.")
-
-(defconst tinyliby-version-id
-  "$Id: tinyliby.el,v 2.48 2007/05/01 17:20:46 jaalto Exp $"
-  "Latest modification time and version number.")
-
-;;; ----------------------------------------------------------------------
-;;;
-(defun tinyliby-version (&optional arg)
-  "Show version information. ARG will instruct to print message to echo area."
-  (interactive "P")
-  (ti::package-version-info "tinyliby.el" arg))
-
-;;; ----------------------------------------------------------------------
-;;;
-(defun tinyliby-submit-feedback ()
-  "Submit suggestions, error corrections, impressions, anything..."
-  (interactive)
-  (ti::package-submit-feedback "tinyliby.el"))
 
 ;;}}}
 ;;{{{ features, load list
@@ -152,21 +107,21 @@ nil parameter is also accepted."
 
 ;;; ----------------------------------------------------------------------
 ;;;
-(defun ti::system-load-cleanup (ELT)
-  "Remove ELT from `after-load-alist' by replacing entry with nil."
-  (let* (forms)
+(defun ti::system-load-cleanup (element)
+  "Remove ELEMENT from `after-load-alist' by replacing entry with nil."
+  (let (forms)
     (dolist (elt after-load-alist)
       (setq forms (cdr elt))
       (dolist (frm forms)
         ;; change form to nil
-        (if (equal frm ELT)
+        (if (equal frm element)
             (setcar forms nil))))))
 
 ;;; ----------------------------------------------------------------------
 ;;;
 (defun ti::system-load-history-emacs-lisp-files ()
   "Return lisp of known Emacs lisp files in `load-history'."
-  (let* (list)
+  (let (list)
     (dolist (entry load-history)        ;point to functions
       (push (car entry) list))
     list))
@@ -190,11 +145,11 @@ Example of LOAD-HISTORY-ELT:
                   Suppose we search this SYM
   (provide . gnus-undo)  << This package provided the symbols
   ...)"
-  (let* ( ;; require
-         provide
-         item
-         current
-         ret)
+  (let ( ;; require
+	provide
+	item
+	current
+	ret)
     (dolist (elt load-history-elt)
       (cond
        ((ti::listp elt)
@@ -243,7 +198,6 @@ Return:
                       (if (string-match "^[a-z][a-z].*/\\(.*\\)" sfile)
                           (match-string 1)
                         sfile))))
-
     (or (and file
              (or (and (ti::file-name-path-p file)
                       file)
@@ -252,11 +206,11 @@ Return:
         (let ((doc (documentation-property
                     sym 'variable-documentation)))
           (when (string-match
-                 (concat
-                  ;; Emacs: run-at-time is an interactive Lisp function in `timer'.
-                  "^.*Lisp[ \t]+function[ \t]+in[ \t'`]+\\([^ \n\r\f\t'`\"]+\\)"
-                  ;; XEmacs:   -- loaded from "e:\usr\local\bin\emacs...
-                  "\\|--[ \t]+loaded from[ \t\"]+\\([^ \n\r\f\t'`\"]+\\)")
+                 `,(concat
+		    ;; Emacs: run-at-time is an interactive Lisp function in `timer'.
+		    "^.*Lisp[ \t]+function[ \t]+in[ \t'`]+\\([^ \n\r\f\t'`\"]+\\)"
+		    ;; XEmacs:   -- loaded from "e:\usr\local\bin\emacs...
+		    "\\|--[ \t]+loaded from[ \t\"]+\\([^ \n\r\f\t'`\"]+\\)")
                  (or doc "")))))))
 
 ;;; ----------------------------------------------------------------------
@@ -274,11 +228,11 @@ Note:
 Return:
 
   string     Absolute filename where the symbol was defined."
-  (let* (elt
-         provide
-         file)
+  (let (elt
+	provide
+	file)
     (when (setq elt (ti::system-load-history-where-1 sym))
-      (setq file    (car elt)           ;default
+      (setq file (car elt)		;default
             provide (ti::system-load-history-where-exactly sym elt))
       (or (and provide
                (ti::system-package-where-is-source (symbol-name provide)))
@@ -298,14 +252,13 @@ those elements only that actually exist in emacs.
 Return:
 
   ((variable-list ..) (func-list ..))"
-  (let* ((name  (symbol-name sym))
-         (list  (cdr (assoc name load-history)))
+  (let* ((name (symbol-name sym))
+         (list (cdr (assoc name load-history)))
          vl
          fl
          el
          ptr)
-
-    (if (null list) nil
+    (when list
       ;;  Search the variables' and funtions' start position in list
       (while (and list
                   (listp (car list)))
@@ -313,9 +266,9 @@ Return:
       (setq ptr list)
       (while ptr
         (setq el (car ptr))
-        (if (listp el)
-            nil
+        (unless (listp el)
           (if (boundp el)
+	      ;; FIXME: append is slow, use other
               (setq vl (append vl (list el))))
           (if (fboundp el)
               (setq fl (append fl (list el)))))
@@ -358,11 +311,10 @@ INPUT:
 ;;;
 (defun ti::system-feature-kill (sym)
   "Kill feature SYM and its `load-history' information permanently."
-  (let* ((name (symbol-name sym)))
+  (let ((name (symbol-name sym)))
     ;;  Load history , dependencies remove
     (if (assoc name load-history)
         (setq load-history (adelete 'load-history name)))
-
     ;;  Kill the symbol from feature list
     (if (featurep sym)
         (setq features (delete sym features)))))
@@ -371,15 +323,12 @@ INPUT:
 ;;;
 (defun ti::system-unload-symbols (list)
   "Unload all variables and functions in LIST of symbols."
-  (mapcar
-   (function
-    (lambda (x)
-      (cond
-       ((fboundp x)
-        (fmakunbound x))
-       ((boundp x)
-        (makunbound x)))))
-   list))
+  (dolist (x list)
+    (cond
+     ((fboundp x)
+      (fmakunbound x))
+     ((boundp x)
+      (makunbound x)))))
 
 ;;; ----------------------------------------------------------------------
 ;;;
@@ -398,15 +347,15 @@ MODE can be
 References:
 
   `ti::system-get-symbols'."
-  (let* (test-func
-         kill-func)
+  (let (test-func
+	kill-func)
     (cond
      ((eq 'var mode)
-      (setq  test-func 'boundp
-             kill-func 'makunbound))
-     ((eq  'func mode)
-      (setq  test-func 'fboundp
-             kill-func 'fmakunbound))
+      (setq test-func 'boundp
+            kill-func 'makunbound))
+     ((eq 'func mode)
+      (setq test-func 'fboundp
+            kill-func 'fmakunbound))
      ((eq 'feature mode)
       ;;  - Emacs don't let us remove a feature if it contains some
       ;;    require statement. Be sure to get the information
@@ -416,7 +365,7 @@ References:
       (setq  test-func 'featurep
              kill-func 'unload-feature))
      (t
-      (error "unknown mode" mode)))
+      (error "unknown mode %s" mode)))
     (dolist (var list)
       ;; Test if exist
       (when (funcall test-func var)
@@ -448,18 +397,16 @@ Return:
      (completing-read
       "Complete feature to unload: "
       (ti::list-to-assoc-menu (mapcar 'prin1-to-string features))
-      nil 'must-match))))
-
-  (let* (list)
+      nil
+      'must-match))))
+  (let (list)
     (ti::verb)
-
     (when sym
       (when (setq list  (ti::system-load-history-get sym)) ;get (\var func\) list
         (ti::system-unload 'feature (list sym)) ;feature + load-history clean
-        (ti::system-unload 'var     (nth 0 list) )
-        (ti::system-unload 'func    (nth 1 list) ))
+        (ti::system-unload 'var     (nth 0 list))
+        (ti::system-unload 'func    (nth 1 list)))
       (ti::system-feature-kill sym))
-
     (if verb
         (message "Feature now completely unloaded."))))
 
@@ -477,22 +424,19 @@ Input is list of features. Does not check any dependencies between features."
 (defmacro ti::system-symbol-dolist-macro (symlist &rest body)
   "Map throught SYMLIST and execute BODY for each hook function.
 You can refer to variables `hook' and `function' in BODY."
-  (`
-   (let* (hook-functions)
-     (dolist (hook (, symlist))
+  `(let (hook-functions)
+     (dolist (hook ,symlist)
        (when (boundp hook)
          (setq hook-functions (symbol-value hook))
-
          (if (and (not (ti::bool-p hook-functions))
                   (symbolp hook-functions))
              ;; single function in hook
              (setq hook-functions (list hook-functions)))
-
          (when (listp hook-functions)
            (dolist (function hook-functions)
              (when (and (not (eq function 'lambda)) ;skip lambda notation
                         (symbolp function))
-               (,@ body)))))))))
+               ,@body)))))))
 
 ;;; ----------------------------------------------------------------------
 ;;;
@@ -502,31 +446,20 @@ You can refer to variables `hook' and `function' in BODY."
 If hook element is in form of  'lambda' instead of callable function symbol,
 this element is ignored. This function cannot remove lambda functions
 from hook, because match is done against `symbol-name'."
-  (mapcar
-   (function
-    (lambda (hook)                      ;one hook at the time
-      (if (null (boundp hook))          ;is list element variable ?
-          nil                           ;cannot handle it
-        (cond
-
-         ;;  ^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^ add-hook form ^^^
-
-         ((listp (eval hook))           ;is hook in '(...) form ?
-;;;      (ti::d! "list" hook)
-          (mapcar                       ;step functions in list
-           (lambda (el)
-             (if (and (not (eq el 'lambda)) ;skip lambda notation
-                      (symbolp el)
-                      (string-match re (symbol-name el)))
-                 (remove-hook hook el)))
-           (eval hook)))
-
-         ;;  ^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^ setq form ^^^
-
-         ((and (symbolp (eval hook)))
-          (if (string-match re (symbol-name hook))
-              (set hook nil)))))))
-   symlist))
+  (dolist (hook symlist)
+    (when (boundp hook)			;is list element variable ?
+      (cond
+       ;; add-hook form
+       ((listp (eval hook))           ;is hook in '(...) form ?
+	(dolist (elt (eval hook))      ;step functions in list
+	  (if (and (not (eq elt 'lambda)) ;skip lambda notation
+		   (symbolp elt)
+		   (string-match re (symbol-name elt)))
+	      (remove-hook hook elt))))
+       ;; setq form
+       ((and (symbolp (eval hook)))
+	(if (string-match re (symbol-name hook))
+	    (set hook nil)))))))
 
 ;;; ----------------------------------------------------------------------
 ;;;
@@ -536,20 +469,16 @@ Write results i temporary buffer or BUFFER."
   (interactive
    (list
     (read-string "Regesp: ")))
-
   (or buffer
-      (setq buffer (ti::temp-buffer ti::system-:desc-buffer 'clear)))
-
+      (setq buffer (ti::temp-buffer ti::system--desc-buffer 'clear)))
   (with-current-buffer buffer
     (ti::system-symbol-dolist-macro
      (ti::system-get-symbols "-hook$\\|-functions$")
      (when (string-match regexp (symbol-name function))
        (insert (format "%-34s %s\n" (symbol-name hook)
                        (symbol-name function))))))
-
   (if (interactive-p)
       (pop-to-buffer buffer))
-
   buffer)
 
 ;;}}}
@@ -567,7 +496,7 @@ You can supply your own TEST-FORM to cause it drop away certain atoms.
 the current atom is stored in variable 'sym'.
 
 Eg. test-form = '(or (fboundp sym) (boundp sym))"
-  (let* (list)
+  (let (list)
     (mapatoms
      (function
       (lambda (sym)
@@ -581,7 +510,7 @@ Eg. test-form = '(or (fboundp sym) (boundp sym))"
 ;;;
 (defun ti::system-autoload-function-list ()
   "Return list of autoload function."
-  (let* (list)
+  (let (list)
     (mapatoms
      (function
       (lambda (sym)
@@ -593,11 +522,13 @@ Eg. test-form = '(or (fboundp sym) (boundp sym))"
 ;;;
 (defun ti::system-autoload-function-file-list (function-list)
   "Return unique filenames of autoload functions."
-  (let* (list
-         str)
+  (let (list
+	str)
     (dolist (func function-list)
       (when (setq str (inline (ti::function-autoload-file func)))
-        (pushnew (match-string 1 str) list :test 'string-equal)))
+        (pushnew (match-string 1 str)
+		 list
+		 :test 'string-equal)))
     list))
 
 ;;; ----------------------------------------------------------------------
@@ -620,8 +551,8 @@ Return:
 
   buffer     pointer where documentation is stored."
   (interactive
-   (let* (file
-          feature)
+   (let (file
+	 feature)
      (setq file
            (call-interactively
             (function
@@ -638,7 +569,7 @@ No '%s feature found, are you absolutely sure you have loaded the file? "
                            feature))
          (error "Abort."))
      (list file)))
-  (let* ((tmp-buffer    (ti::temp-buffer ti::system-:tmp-buffer 'clear))
+  (let* ((tmp-buffer    (ti::temp-buffer ti::system--tmp-buffer 'clear))
          (file-buffer   (ti::find-file-literally file))
          (all-re        (concat "^[(]\\([ \t]*"
                                 "defsubst\\|defvar\\|defconst"
@@ -659,22 +590,20 @@ No '%s feature found, are you absolutely sure you have loaded the file? "
         (with-current-buffer file-buffer
           (ti::pmin)
           (while (re-search-forward all-re nil t)
-
             (setq type      (match-string 1)
                   sym-name  (match-string 2)
-
                   ;;  (defvar list)  --> (boundp 'list) = nil !! suprise
                   ;;
                   paren     (and (member type '("defvar" "defconst"))
                                  (looking-at "[ \t]*)"))
                   sym       (intern-soft sym-name)
                   doc       nil)
-            (incf  count)
+            (incf count)
             ;;  print messages for every 10th only, it's too fast to
             ;;  show every symbol...
             (if (and verb
                      (= 0 (% count 10)))
-                (message (concat (int-to-string count) ": " sym-name)))
+                (message (concat (number-to-string count) ": " sym-name)))
             ;; ... ... ... ... ... ... ... ... ... ... ... ... .. func ...
             (cond
              ((and (string-match "defadvice" type)
@@ -728,20 +657,20 @@ No '%s feature found, are you absolutely sure you have loaded the file? "
 ;;;
 (defun ti::system-describe-symbols-i-args (&optional arg)
   "Ask interactive arguments for `ti::system-describe-symbols'. ARG is prefix arg."
-  (let* (prompt
-         char
-         ans)
+  (let (prompt
+	char
+	ans)
     ;;  When user calls us without arguments, offer menu to pick
     ;;  search item
     (unless arg
       (setq char (ti::read-char-safe "\
  v)ars o)options non-(O)options i)nteractive funcs f)uncs all RET)all"))
       (cond
-       ((char= char ?v) (setq arg '(4)))
-       ((char= char ?o) (setq arg '(16)))
-       ((char= char ?O) (setq arg '64))
-       ((char= char ?i) (setq arg 0))
-       ((char= char ?f) (setq arg 9))))
+       ((char-equal char ?v) (setq arg '(4)))
+       ((char-equal char ?o) (setq arg '(16)))
+       ((char-equal char ?O) (setq arg '64))
+       ((char-equal char ?i) (setq arg 0))
+       ((char-equal char ?f) (setq arg 9))))
     (setq prompt
           (cond
            ((equal arg '(4))
@@ -762,9 +691,9 @@ No '%s feature found, are you absolutely sure you have loaded the file? "
      (read-from-minibuffer              ;ARG 1
       prompt nil
       nil nil
-      'ti::system-:describe-symbols-history)
+      'ti::system--describe-symbols-history)
      arg                                ;ARG 2
-     ;;  Now handle exclude regexp       ;ARG 3
+     ;;  Now handle exclude regexp      ;ARG 3
      (if (ti::nil-p (setq ans (read-from-minibuffer "exclude: ")))
          nil
        ans)
@@ -818,12 +747,9 @@ OUT-BUFFER
 
 References:
 
-  `ti::system-:desc-buffer'"
-  ;; ^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^ interactive ^^^
+  `ti::system--desc-buffer'"
   (interactive (ti::system-describe-symbols-i-args current-prefix-arg))
-
-  ;; ^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^ interactive end ^^^
-  (let* ((buffer (or out-buffer ti::system-:desc-buffer))
+  (let* ((buffer (or out-buffer ti::system--desc-buffer))
          subrp-test
          MF MFI MFF                     ;mode func
          MV MVO MVV                     ;mode var
@@ -859,8 +785,6 @@ References:
                  DEF
                  (or (and (setq tmp (ti::function-args-p FUNC))
                           (progn
-;;;                    (ti::d! FUNC "ARGS" tmp (symbol-function FUNC))
-
                             ;; in xe, this doesn't print functions arguments,
                             ;; but the pacakge load information
                             ;; '(from "ange-ftp.elc")', but that's good to
@@ -961,8 +885,8 @@ References:
     (if (null sym-list)
         (message "Describe symbols: No matches for given criterias.")
       (with-output-to-temp-buffer buffer
-        (mapcar describe-func (sort sym-list 'string<))
-        (print-help-return-message)))))
+        (mapc describe-func (sort sym-list 'string<))
+        (help-print-return-message)))))
 
 ;;; ----------------------------------------------------------------------
 ;;;
@@ -975,21 +899,19 @@ Return:
 
   buffer        where is ready output"
   (interactive "sRe: ")
-  (let* ((out-buffer    (ti::temp-buffer ti::system-:tmp-buffer 'clear))
-         (verb          (or verb (interactive-p)))
+  (let ((out-buffer    (ti::temp-buffer ti::system--tmp-buffer 'clear))
          list
          words
          var
          vlist
          flist)
+  (or verb
+      (setq verb (interactive-p)))
     (setq list
           (ti::buffer-grep-lines
            (concat (or re "")
                    ".*\\(command\\|variable\\|option\\|function\\):")))
-    (save-excursion
-      (set-buffer out-buffer)
-      ;; ... ... ... ... ... ... ... ... ... ... ... ... ... ... ... ...
-
+    (with-current-buffer out-buffer
       (dolist (line list)
         (setq words     (split-string line)
               var       (nth 0 words))
@@ -1001,7 +923,6 @@ Return:
          (t
           ;;  problem with line ?
           (insert (concat "#" line "\n")))))
-      ;; ... ... ... ... ... ... ... ... ... ... ... ... ... ... ... ...
       (lisp-mode)
       (insert "(defconst vlist\n  '(\n")
       (setq vlist (nreverse vlist))

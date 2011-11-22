@@ -1,0 +1,186 @@
+Table of Contents
+
+       1.0 Emacs Tiny Tools Project
+           1.1 Audience
+           1.2 Releases
+           1.3 Savannah Web page management:
+           1.4 Project documentation
+
+       2.0 Development environment setup information
+           2.1 Setting up OpenSSH
+           2.2 Making Debian packages
+
+1.0 Emacs Tiny Tools Project
+
+        #T2HTML-TITLE Emacs Tiny Tools information for developers
+        #T2HTML-METAKEYWORDS Emacs, Emacs Lisp, Tiny Tools Documentation
+        #T2HTML-OPTION --css-code-bg
+        #T2HTML-OPTION --css-code-note
+        #T2HTML-OPTION Note:
+
+        Copyright 1995-2009 Jari Aalto
+
+        Emacs Tiny Tools is a collection of packages (extensions) and
+        libraries designed to be OS and X/Emacs platform independent.
+        They include tools to configure load-path automatically, jump
+        to URLs, easy text delete, mail completion, and many more
+        utilities.
+
+        License: This material may be distributed only subject to the
+        terms and conditions set forth in GNU General Public License
+        v2 or later; or, at your option, distributed under the terms
+        of GNU Free Documentation License version 1.2 or later (GNU
+        FDL).
+
+    1.1 Audience
+
+        This paper documents the usage of development repository to a
+        to a new project member who wishes to participate in
+        development.
+
+    1.2 Releases
+
+        Latest snapshot is available at:
+        http://git.savannah.gnu.org/cgit/emacs-tiny-tools.git/snapshot/emacs-tiny-tools-devel.tar.gz
+
+        To make a new file releases, follow these steps. We suppose
+        that the the complete release is named as
+        `tiny-tools-YYYY.MMDD.zip' (ISO 8601); the niversal de facto
+        packaging standard PACKAGENAME-VERSION.VERSION[.VERSION]*
+
+        #TODO: OUTDATED change to Savannah instructions
+
+        o   Upload the file to project page.
+            PLEASE DO THIS FIRST - YOU WILL PICK FILE LATER.
+        o   Login in to your account
+        o   Go to project page
+        o   Select page "Admin" => "File Releases" from the menus at top
+        o   Scroll to the end where you see "File Release Packages"
+        o   Select "Add Release" button.
+            Fill in "Create new release" with the timestamp YYYY.MMDD.
+            Select "Create this release".
+
+        New page opens:
+
+        o   Step 1: Fill in the description to "Release notes"
+            Click the button "submit/refresh"
+        o   Step 2: Select tiny-tools-YYYY.MMDD.zip
+            Click button "add Files and/or Refresh View"
+        o   Step 3:
+            Processor => Platform independent
+            file Type => Source .gz
+            Click button "update/refresh"
+        o   Step 4: Send message to people monitoring the package.
+
+        RETURN by pressing button "Summary" at the beginning of page.
+
+    1.3 Savannah Web page management:
+
+        https://savannah.gnu.org/maintenance/HomepageUpload
+
+        Initial: ownloading the CVS structure
+
+        cd doc/
+        cvs -f -z3 -d:ext:$USER@cvs.sv.gnu.org:/web/emacs-tiny-tools co emacs-tiny-tools
+        mv emacs-tiny-tools www
+
+        After that, just copy *.html files to www
+
+        cd doc/
+        tar -cf - $(find src/ -type f -name "*.html") | tar -C www -xf -
+
+    1.4 Project documentation
+
+        Visit the project main page and select menu: Administer: Edit
+        Public Info"
+
+2.0 Development environment setup information
+
+    2.1 Setting up OpenSSH
+
+          For Unix, get SSH from <http://www.openssh.org/>. OpenSSH is
+          already include in the Win32/Cygwin.
+
+        Using SSH is not the most straight forward thing, especially with
+        all the protocol version numbers involved. You can easily go wrong or
+        wonder why things are not working. Here are some basic instructions
+        for OpenSSH, which is different form all other ssh version out
+        there. Cygwin includes OpenSSH.
+
+            $ ssh -V        # display ssh version
+
+        Generate two keys, the SSH1 key first:
+
+            $ ssh-keygen    # Proceed as the command suggests
+
+        Then the SSH2 key:
+
+            $ ssh-keygen -f ~/.ssh/id_dsa -t dsa
+
+        Configure SSH by editing ~/.ssh/config, the protocol line is
+        very important.
+
+            Host *
+                Protocol                    1,2
+                UsePrivilegedPort           no
+                Compression                 yes
+                CompressionLevel            9
+                KeepAlive                   yes
+                RhostsAuthentication        yes
+                RSAAuthentication           yes
+                PubkeyAuthentication        yes
+                PasswordAuthentication      yes
+                FallBackToRsh               yes
+                ForwardX11                  yes
+                ForwardAgent                yes
+
+        For Windows, you're set. But if this is Unix, you need to set
+        file and directory permission to correct values as well. SSH
+        is very picky and won't work correctly if it thinks that the
+        permissions are too loose.
+
+            $ chmod 700 ~/.ssh
+            $ chmod 600 ~/.ssh/identity* ~/.ssh/config ~/.ssh/id_dsa*
+
+        Final thing, to connect a remote site, you have to CARRY the key
+        there. The keys that you will copy to remote site are the SSH1 and
+        SSH2 keys you just generated. The files are:
+
+            From (A) site               Copy to (B) site
+            ~/.ssh/identity.pub         ~/.ssh/known_hosts
+            ~/.ssh/id_dsa.pub           ~/.ssh/id_dsa_A_site.pub
+
+        Again, remember to set chmod 600 permission in remote (B) site.
+        Now you should be all set to be ready to connect to remote site.
+        One final thing, always run all programs under agent, which
+        remembers and passes forward your keys (ssh1 and aah2):
+
+            $ ssh-add ~/.ssh/identity ~/.ssh/id_dsa
+
+        After that you can connect to remote site without password, because
+        agent makes the hand shake for your with your keys. Run *verbose*
+        mode on to pinpoint any troubles with the connection:
+
+            $ ssh -l LOGIN shell.<project site>
+
+        If that works, you can expect that the CVS works without
+        password under ssh-agent for your project (REMEMBER: you have
+        to send the ~/.ssh/identity.pub through WWW-user-admin page,
+        described earlier in this document for CVS to work)
+
+    2.2 Making Debian packages
+
+        #TODO: Fix this.
+
+        First, become a debian developer by reading this document
+        http://www.debian.org/doc/developers-reference/index.en.html
+
+        The initial debian package skeleton was generated with following manner
+
+            <download the latest release>
+            $ mv tiny-NNNN.NNNN emacs-tiny-tools-NNNN.NNNN
+            $ cd emacs-tiny-tools-NNNN.NNNN
+            $ export DEBFULLNAME="Firstname Surname"
+            $ dh_make --single --email EMAIL --copyright gpl
+
+End

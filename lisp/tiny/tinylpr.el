@@ -4,12 +4,11 @@
 
 ;;{{{ Id
 
-;; Copyright (C) 1996-2007 Jari Aalto
+;; Copyright (C) 1996-2010 Jari Aalto
 ;; Keywords:     extensions
 ;; Author:       Jari Aalto
 ;; Maintainer:   Jari Aalto
 ;;
-;; To get information on this program, call M-x tinylpr-version.
 ;; Look at the code with folding.el
 
 ;; COPYRIGHT NOTICE
@@ -25,9 +24,7 @@
 ;; for more details.
 ;;
 ;; You should have received a copy of the GNU General Public License
-;; along with program. If not, write to the
-;; Free Software Foundation, Inc., 51 Franklin Street, Fifth Floor,
-;; Boston, MA 02110-1301, USA.
+;; along with this program. If not, see <http://www.gnu.org/licenses/>.
 ;;
 ;; Visit <http://www.gnu.org/copyleft/gpl.html> for more information
 
@@ -37,7 +34,7 @@
 ;;; Install:
 
 ;; ....................................................... &t-install ...
-;;   Put this file on your Emacs-Lisp load path, add following into your
+;;   Put this file on your Emacs-Lisp `load-path', add following into your
 ;;   ~/.emacs startup file
 ;;
 ;;      (require 'tinylpr)
@@ -46,7 +43,7 @@
 ;;  you can bind each command individually too. The echo menu:
 ;;
 ;;      (ti::use-prefix-key "\C-z")          ;; Free C-z for us.
-;;      (global-set-key "\C-zp" (ti::definteractive (ti::menu-menu 'tinylpr-:menu)))
+;;      (global-set-key "\C-zp" (ti::definteractive (ti::menu-menu 'tinylpr--menu)))
 ;;
 ;;   Notice, that loading this file changes your `lpr-command' immediately
 ;;   to "sh". This is essential and if you want to use this package,
@@ -57,10 +54,6 @@
 ;;
 ;;   You must copy the user variables and put your own definitions
 ;;   there. The ones that ship with this module are only examples
-;;
-;;   If you have any questions, use this function
-;;
-;;      M-x tinylpr-submit-feedback
 
 ;;}}}
 ;;{{{ Documentation
@@ -166,9 +159,7 @@
   (defvar lpr-switches)
   (defvar lpr-command))
 
-(eval-when-compile (ti::package-use-dynamic-compilation))
-
-(ti::package-defgroup-tiny TinyLpr tinylpr-: extensions
+(ti::package-defgroup-tiny TinyLpr tinylpr-- extensions
   "Easy Emacs lpr command handling, popup, completions
         o   Managing printers or print styles easily
         o   Queue information
@@ -179,7 +170,7 @@
 
 ;;; ......................................................... &v-hooks ...
 
-(defcustom tinylpr-:load-hook nil
+(defcustom tinylpr--load-hook nil
   "Hook run when file is loaded."
   :type  'hook
   :group 'TinyLpr)
@@ -192,25 +183,25 @@
 ;;;
 ;;;
 
-(defcustom tinylpr-:set-ps-lpr-switches  t
+(defcustom tinylpr--set-ps-lpr-switches  t
   "If non-nil, set also ps-lpr-switches from ps-print.el when
 changing printer."
   :type  'boolean
   :group 'TinyLpr)
 
-(defcustom tinylpr-:queue-cmd
+(defcustom tinylpr--queue-cmd
   (or (executable-find "lpstat")
       (let ((function (if (ti::win32-p)
                           'message
                         'error)))
         (funcall function
-                 "TinyLpr: can't use default [lpstat] for tinylpr-:queue-cmd")))
+                 "TinyLpr: can't use default [lpstat] for tinylpr--queue-cmd")))
   "*Shell Command to return queue status"
   :type  '(string :tag "Shell Command")
   :group 'TinyLpr)
 
 (eval-and-compile
-  (defcustom tinylpr-:printer-list
+  (defcustom tinylpr--printer-list
     (delq nil
           (list
            (getenv "PRINTER")
@@ -220,14 +211,14 @@ changing printer."
     :type  '(repeat (string :tag "printer"))
     :group 'TinyLpr)
 
-  (defcustom tinylpr-:print-style-list
-    (let* ((mp   (executable-find "mpage")) ;HP-UX multipage
-           (lp   (executable-find "lp"))
-           (lpr  (executable-find "lpr"))
-           (nl   (executable-find "nl"))
-           (ens  (executable-find "enscript"))
-           (gs   (executable-find "gs"))
-           (gs32 (executable-find "gs386"))) ;; Ghostscript in Win32
+  (defcustom tinylpr--print-style-list
+    (let ((mp   (executable-find "mpage")) ;HP-UX multipage
+	  (lp   (executable-find "lp"))
+	  (lpr  (executable-find "lpr"))
+	  (nl   (executable-find "nl"))
+	  (ens  (executable-find "enscript"))
+	  (gs   (executable-find "gs"))
+	  (gs32 (executable-find "gs386"))) ;; Ghostscript in Win32
       (delq
        nil                              ;Remove empty entries
        (list
@@ -289,54 +280,35 @@ Example
 
 ;;; ....................................................... &v-private ...
 
-(defvar tinylpr-:current-printer (car-safe tinylpr-:printer-list)
+(defvar tinylpr--current-printer (car-safe tinylpr--printer-list)
   "Private. Current printer.")
 
-(defvar tinylpr-:current-print-style (car-safe (car-safe tinylpr-:print-style-list))
+(defvar tinylpr--current-print-style (car-safe (car-safe tinylpr--print-style-list))
   "Private. Current print style.")
 
-(defvar tinylpr-:printer-list-history nil
-  "Private. History list for `tinylpr-:printer-list'.")
+(defvar tinylpr--printer-list-history nil
+  "Private. History list for `tinylpr--printer-list'.")
 
-(defvar tinylpr-:print-style-history nil
+(defvar tinylpr--print-style-history nil
   "Private. History list for tinylpr-print-style-completions.")
 
-;;; ....................................................... &v-version ...
-
-(eval-and-compile
-  (ti::macrof-version-bug-report
-   "tinylpr.el"
-   "tinylpr"
-   tinylpr-:version-id
-   "$Id: tinylpr.el,v 2.42 2007/05/01 17:20:49 jaalto Exp $"
-   '(tinylpr-:version-id
-     tinylpr-:load-hook
-     tinylpr-:set-ps-lpr-switches
-     tinylpr-:queue-cmd
-     tinylpr-:printer-list
-     tinylpr-:print-style-list
-     tinylpr-:current-printer
-     tinylpr-:current-print-style
-     tinylpr-:printer-list-history
-     tinylpr-:print-style-history)))
-
-(defvar tinylpr-:menu
+(defvar tinylpr--menu
   '((format
      "TinyLpr: %s r)egion b)uffer l)ine numbers d)printer Q)ueue s)tyle >P"
-     tinylpr-:current-printer)
+     tinylpr--current-printer)
     ((?d  . (t (call-interactively 'tinylpr-select-printer)))
      (?Q  . (  (call-interactively 'tinylpr-queue)))
      (?s  . (t (call-interactively 'tinylpr-print-style-select)))
      (?r  . (  (call-interactively 'print-region)))
      (?b  . (  (call-interactively 'print-buffer)))
      (?l  . (  (call-interactively 'tinylpr-print-with-line-numbers)))
-     (?P  . tinylpr-:ps-print-menu)))
+     (?P  . tinylpr--ps-print-menu)))
   "*Echo menu to access printer commands. Select `P' for ps-print.el commands.")
 
-(defvar tinylpr-:ps-print-menu
+(defvar tinylpr--ps-print-menu
   '((format "\
 TinyLpr: %s(ps) rR)egion bB)uffer sS)Spool d)espool "
-            tinylpr-:current-printer)
+            tinylpr--current-printer)
     ((?r  . (  (call-interactively 'ps-print-region)))
      (?R  . (  (call-interactively 'ps-print-region-with-faces)))
      (?b  . (  (call-interactively 'ps-print-buffer)))
@@ -371,7 +343,7 @@ TinyLpr: %s(ps) rR)egion bB)uffer sS)Spool d)espool "
 (defun tinylpr-install-lpr-command ()
   "Set correct shell for `lpr-command'."
   (interactive)
-  (let* (sh)
+  (let (sh)
     (unless (string-match "sh\\|bash\\|cmd.exe\\|command.exe"
                           (or lpr-command ""))
       ;; NT Cygnus users get served too by putting sh,bash test first.
@@ -409,9 +381,9 @@ TinyLpr: sh, bash or cmd.exe not available. Can't set lpr-command." ))))))
   "Adds line numbers to buffer and prints it. After printing,
 removes line numbers."
   (interactive)
-  (let* (buffer-read-only
-         fmt
-         len)
+  (let (buffer-read-only
+	fmt
+	len)
     (with-buffer-modified
       (save-excursion
         (ti::pmax)
@@ -431,15 +403,11 @@ removes line numbers."
 ;;;
 (defun tinylpr-print-style-completions ()
   "Build up the completion array."
-  (let* ((list  tinylpr-:print-style-list)
-         (i 0)
-         completions)
-    (mapcar
-     (function
-      (lambda (x)
-        (setq i (1+ i))
-        (setq completions (cons  (cons (car x) i) completions))))
-     list)
+  (let ((i 0)
+	completions)
+    (dolist (x tinylpr--print-style-list)
+      (setq i (1+ i))
+      (setq completions (cons  (cons (car x) i) completions)))
     completions))
 
 ;;; ----------------------------------------------------------------------
@@ -447,7 +415,7 @@ removes line numbers."
 (defun tinylpr-setting-status ()
   "Return current settings."
   (interactive)
-  (let* ((stat  (nth 1 lpr-switches)))
+  (let ((stat (nth 1 lpr-switches)))
     (if (interactive-p)
         (message stat))
     stat))
@@ -457,8 +425,8 @@ removes line numbers."
 (defun tinylpr-queue ()
   "Return queue status."
   (interactive)
-  (let* ((cmd       tinylpr-:queue-cmd)
-         (buffer    (ti::temp-buffer "*tmp*" 'clear)))
+  (let ((cmd       tinylpr--queue-cmd)
+	(buffer    (ti::temp-buffer "*tmp*" 'clear)))
     (display-buffer buffer)
     (shell-command cmd buffer)))
 
@@ -469,16 +437,16 @@ removes line numbers."
   (interactive
    (list
     (completing-read
-     (concat "Printer [" tinylpr-:current-printer "]: ")
-     (ti::list-to-assoc-menu tinylpr-:printer-list)
+     (concat "Printer [" tinylpr--current-printer "]: ")
+     (ti::list-to-assoc-menu tinylpr--printer-list)
      nil t
      nil
-     'tinylpr-:printer-list-history)))
+     'tinylpr--printer-list-history)))
   (when (not (ti::nil-p printer))
-    (setq tinylpr-:current-printer printer)
-    (if tinylpr-:set-ps-lpr-switches
+    (setq tinylpr--current-printer printer)
+    (if tinylpr--set-ps-lpr-switches
         (setq ps-lpr-switches (list (concat "-P" printer))))
-    (tinylpr-print-style-select tinylpr-:current-print-style)))
+    (tinylpr-print-style-select tinylpr--current-print-style)))
 
 ;;; ----------------------------------------------------------------------
 ;;;
@@ -488,20 +456,20 @@ removes line numbers."
    (list
     (completing-read
      (format "Print style [%s: %s ]: "
-             (or tinylpr-:current-print-style "<style unknown>")
+             (or tinylpr--current-print-style "<style unknown>")
              (tinylpr-setting-status))
      (tinylpr-print-style-completions)
      nil
      t)))
 
-  (let* ((printer (or tinylpr-:current-printer ""))
-         elt
-         args)
+  (let ((printer (or tinylpr--current-printer ""))
+	elt
+	args)
     ;;  Try to find the style in assoc array
-    (if (not (and arg (setq elt (assoc arg tinylpr-:print-style-list))))
+    (if (not (and arg (setq elt (assoc arg tinylpr--print-style-list))))
         (message "No such style")
       ;;  replace # with printer name
-      (setq tinylpr-:current-print-style arg)
+      (setq tinylpr--current-print-style arg)
       (setq args (nth 1 elt))
       (tinylpr-set-command args printer)
       (message "Print <%s> on %s" arg (tinylpr-setting-status)))))
@@ -515,16 +483,16 @@ removes line numbers."
 
 (tinylpr-install-lpr-command)
 
-(let* ((template (nth 1 (car  tinylpr-:print-style-list))))
-  (if (and template tinylpr-:current-printer)
-      (tinylpr-set-command template tinylpr-:current-printer)
+(let* ((template (nth 1 (car  tinylpr--print-style-list))))
+  (if (and template tinylpr--current-printer)
+      (tinylpr-set-command template tinylpr--current-printer)
     (message "\
-TinyLpr: ** Auto setup failure, please define tinylpr-:print-style-list and
-TinyLpr: ** tinylpr-:current-printer")))
+TinyLpr: ** Auto setup failure, please define tinylpr--print-style-list and
+TinyLpr: ** tinylpr--current-printer")))
 
 ;;}}}
 
 (provide 'tinylpr)
-(run-hooks 'tinylpr-:load-hook)
+(run-hooks 'tinylpr--load-hook)
 
 ;;; tinylpr.el ends here

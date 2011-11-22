@@ -1,0 +1,3021 @@
+Table of contents
+
+        1.0 Document id
+            1.1 Description of this document
+            1.2 Getting automatic manual update notification
+            1.3 Latest news
+            1.4 Just added features
+            1.5 Overview of general features
+            1.6 Overview of advanced features
+            1.7 Supported packages
+            1.8 Support for anonymous accounts
+            1.9 Preface
+
+        2.0 Installation
+            2.1 Download
+            2.2 Before you install anything
+            2.3 How to debug and send good bug reports
+            2.4 Install: to emacs
+            2.5 Install: PGP binaries for DOS
+            2.6 Install: WindowsNT 4.0+ Emacs 19.34.6
+            2.7 Install: PGP 5.x
+            2.8 Install: GNUS
+            2.9 Install: VM
+            2.10 Install: remailers
+            2.11 Using custom.el
+            2.12 Using customization file for package setup
+            2.13 Express customization
+            2.14 Co-operating with TM, Mime handling
+            2.15 Co-operating with SEMI, Mime handling
+            2.16 Co-operating with BBDB
+
+        3.0 About security
+            3.1 Pass phrases
+            3.2 Locking your Emacs
+            3.3 Special password protection
+            3.4 Temporary files used
+
+        4.0 Feature description: PGP
+            4.1 Modeline indicators
+            4.2 Label indicators
+            4.3 Automating message signing and encrypting
+            4.4 Automating bulk message encrypting
+            4.5 Signing: headers
+            4.6 Signing: What headers to sign.
+            4.7 Signing: header signing control
+            4.8 About passing prefix argument to commands
+            4.9 Decrypting and prefix arg
+            4.10 Decrypting and active user
+            4.11 Hiding the regular pgp signature automatically
+            4.12 Keyserver: various ways to get PGP public keys
+            4.13 Keyserver: uploading your key or send key revoke certificate
+            4.14 Pubring and User control
+            4.15 Pubring management
+            4.16 Mode: encrypted secring
+            4.17 Mode: auto signing
+            4.18 Mode: auto signing, more finer control
+            4.19 Mode: email substitution
+            4.20 Mode: selected headers are signed
+            4.21 Anonymizing message headers
+
+        5.0 Feature description: remailers
+            5.1 Enabling remailer support
+            5.2 Before you use remailer interface
+            5.3 Reply block: do you need it?
+            5.4 Reply block: basics
+            5.5 About properties: cpunk ek pgp
+            5.6 Remailer list: levien list
+            5.7 Reply block: creating
+            5.8 Reply block: testing
+            5.9 Sending as anonymous: remailer, usenet, or private mail
+            5.10 Chaining
+
+        6.0 Newnym type account handling
+            6.1 Enabling newnym support
+            6.2 Newnym addresses
+            6.3 Newnym echo menu
+            6.4 Ordering newnym help file
+            6.5 Ordering newnym server's public key
+            6.6 Asking used newnym account names
+            6.7 Opening newnym account
+            6.8 Newnym Account management; *nym* mode
+            6.9 Newnym auto action
+            6.10 Sending mail from your newnym account
+            6.11 Sending email to usenet from your newnym account
+            6.12 Newnym request commands
+            6.13 Newnym account expirarion status
+            6.14 Newnym multiple account management
+
+        7.0 Nymserver type account handling
+            7.1 Nymserver address
+            7.2 Opening nymserver account
+            7.3 Checking your account status; finger
+            7.4 Sending nymserver commands in encrypted format
+            7.5 Using PGP with the account
+            7.6 Nymserver and auto action
+            7.7 Uploading PGP key to your account
+            7.8 Sending as anonymous: nymserver, usenet, or private mail
+            7.9 Sending as anonymous: from different accounts
+            7.10 Sending as anonymous: usenet problems
+            7.11 Special: cc'ing to multiple recipients
+
+        8.0 Other accounts
+            8.1 Other account addresses
+
+        9.0 General PGP guidelines
+            9.1 About including the public key in the mail message
+
+        10.0 Development notes
+            10.1 More about Installation
+            10.2 Development note: Using comint to talk to PGP interacively
+            10.3 About error "We need to generate XXX random bits."
+            10.4 About Platforms
+
+        11.0 Notes, problems and solutions, FAQ
+            11.1 Why are the nymserv menu choices disabled?
+            11.2 GNUS 4/5: I can't see TinyPgp turned on for article buffer?
+            11.3 RMAIL: error happens while you encrypt message
+            11.4 VM6: application/pgp-encrypted support
+            11.5 You have several user id's. Which to use?
+            11.6 Someone else has several user IDs. Which to use?
+            11.7 Someone's email address is not listed in his key-id?
+            11.8 Key add error:  bad ascii armor character
+            11.9 Too cryptic verify message: Good sig from 0x00fffff
+            11.10 How do I copy key to some other keyring?
+            11.11 Advanced: you want to do something before encrypting
+
+        12.0 About implementation
+            12.1 Encrypted secring
+
+        13.0 Thank you
+            13.1 Program beta testers and manual fixes
+            13.2 PGP packet format experts
+            13.3 Others
+
+        14.0 Articles and notes on PGP data format and keyrings
+            14.1 Multiple keyrings -- it breaks web of trust
+            14.2 Keyring bottlenecks
+
+        15.0 PGP's Ascii Armor
+            15.1 RFC1991 -- PGP Message Exchange Formats
+
+1.0 Document id
+
+    1.1 Description of this document
+
+        #T2HTML-TITLE Emacs TinyPGP manual
+        #T2HTML-METAKEYWORDS Emacs, Emacs Lisp, Pgp,
+        #T2HTML-OPTION --css-code-bg
+        #T2HTML-OPTION --html-frame
+
+        Copyright (C) 1995-2010 Jari Aalto
+
+        License: This material may be distributed only subject to
+        the terms and conditions set forth in GNU General Public
+        License v2 or later; or, at your option, distributed under the
+        terms of GNU Free Documentation License version 1.2 or later
+        (GNU FDL).
+
+        This document is the manual for PGP handling package
+        TinyPgp.el, software that runs in Unix Emacs 19.30+/20+;
+        XEmacs 19.15+/20+ and WinNT EMacs 20.3+
+
+        Emacs version 20+ or XEmacs 20+ is required
+        for PGP 5.0 support. This is due to additional package
+        expect.el by Lars Magne Ingebrigtsen (Author of Gnus), which
+        uses new backquote syntax. The package does not work in older
+        Emacs.
+
+        For PGP 2.6.x any decent 19.x or higher Emacs version will do.
+
+        The mail agents supported are MH, VM, RMAIL and GNUS. In
+        addition, there is direct interface to Emacs mime packages
+        TM, SEMI and to BBDB email database package.
+
+        TinyPgp is intended to be a 2nd generation Emacs PGP interface and
+        it supports all major pgp commands from inside emacs. Remailing
+        and anonymous account handling in different servers are included.
+
+        From this document you'll find the basic instructions and some
+        common asnwers to the spcific problems. You still have to read the
+        full source code if you want to modify package to your special
+        needs. This document doesn't explain *all* variables used in the
+        package one by one, but only discusses the major topics: how you
+        use configure package for every day use.
+
+    1.2 Latest news
+
+          _TinyPgp_ project is currently under low priority due to high
+          load in my current everyday work projects. There won't be active
+          development on-going until the end of 1999. Especially the
+          _TM_ and _SEMI_ PGP/MIME interfaces won't work preperly in the
+          current version. (they used to, but SEMI, GNUS etc phased so
+          fast forward that I haven't have time to keep up with them)
+
+        Releases up to *1.307* were pgp 2.6.2 only and releass on 2.x tree
+        take steps towards PGP 5 and NT Emacs.
+
+        Some seldom used functions don't work yet: like pubring generate,
+        key generate and some functions are planned, like keys' *trust*
+        parameter handling and complete key handling mode. These are of low
+        priority in my list, because I'm first concentrating on a) basic
+        PGP b) the remailing and everything else comes after that.
+
+    1.3 Just added features
+
+        o   v1.130 Full anon.nymserver.com account support
+        o   v1.140 XEmacs20 and 19.15 compatibility
+        o   v1.160 Added RMAIL/VM/GNUS sumamaries pgp minor mode.
+        o   v1.180 Added custom.el support and started adding MH.
+        o   v1.200 Started adding newnym type remailer support.
+        o   v1.220 VM interface starts maturing
+        o   v1.230 much better newnym account support (weasel; efga; nym)
+        o   v1.236 Remailing and Remailer chains are now fully supported.
+        o   v1.245 Multiple newnym account handling added.
+        o   v1.250 Secring can be kept in encrypted format (new mode)
+        o   v1.255 Better TM and GNUS support (gnus auto install)
+        o   v1.270 Prepared pgp5 support
+        o   v1.290 Internal changes. Speedup 1.5 - 2x
+        o   v1.306 TM (mime) auto-install added. Last Beta release
+        o   v2.7   BBDB `pgp-mail' field support.
+        o   v2.14  Added "encrypt with additional keys" feature.
+        o   v2.20  NT support added: First beta for Emacs 19.34.6 in WindowNT
+        o   v2.21  SEMI 1.0.1+ support added
+        o   v2.33  PGP 5.x support added: basic commands work in NT.
+                   Requires Emacs 19.34 or XEmacs 20.x which supports
+                   new backquote syntax.
+        o   v2.47  PGP 5.x code now somewhat works in Unix.
+                   Direct PGP/MIME commands for sign/encrypt added.
+        o   v2.93  Big PGP 5.x problems remain unresolved. SEMI/TM
+                   installation made better, but then SEMI releases
+                   introduced problems.
+
+    1.4 Overview of general features
+
+        o   Interface to the usual PGP functions, including encryption,
+            decryption, signature creation, signature verification, key
+            addition, and key extraction
+        o   Passphrase cache with configurable timeout
+        o   An automagic interface to the PGP public key servers
+            through http, ftp or email.
+
+    1.5 Overview of advanced features
+
+        o   Extra password protection, PGP 2.6.x doesn't use -z option in Unix
+        o   PGP signature showing/hiding in mail/newspost
+        o   Multiple user identities handling (you can change to user XXX)
+        o   Multiple pubring management
+        o   Conventional crypt supported (pgp -c)
+        o   Signing: base64, Regular.
+        o   'One pass' encrypt and sign command
+
+        o   File insert: as base64 signed. You can send and
+            receive binary files (tar) as pgp signed.
+        o   Individual auto-action: TinyPgp automatically encrypts/signs
+            mail to persons that you have defined in auto action list. You
+            can define the action directly with lisp variable or by using
+            BBDB entry
+        o   Multiple recipient auto-action: encrypts to CC list automatically.
+            Soon you don't even realize that you use PGP regularly.
+
+        o   Minor mode interface for any buffer: allows doing pgp on
+            arbitrary regions
+
+    1.6 Supported packages
+
+        o   VM/MH/RMAIL/GNUS summary minor mode: in summary buffers the
+            pgp commands looks for active message buffer. There is
+            also *label* support in VM/RMAIL.
+        o   TM 7.106+ MIME package compatible.
+        o   SEMI 1.0.1+ MIME package compatible.
+        o   BBDB support: automatic sign/encrypt/1pass/mime-pgp.
+            Define field "pgp-mail".
+        o   You can customize all user variables with custom.el
+            M-x customize-group RET TinyPgp RET
+
+        o   Auto install feature: for known Mail agent and mime packages
+            TinyPgp knows how to configure itself to them without your
+            intervention.
+
+    1.7 Support for anonymous accounts
+
+        o   Direct *Nymserver* type account support: successor of
+            famous anon.penet.fi.
+            http://www.nymserver.com/                -- service page
+        o   Direct *Nym* type account support: nym.alias.net
+            and anon.efga.org
+            http://www.owl.de/
+            http://www.efga.org/
+
+    1.8 Preface
+
+        TinyPgp offers you an easy PGP handling and supports PGP/MIME
+        if Emacs packages SEMI or TM is available.
+
+        TinyPgp's approach is to build as easy an interface as possible
+        to the PGP world, including remailing and easy anonymous account
+        handling. Ideally everything should run almost unnoticed to you.
+
+        The emphasised areas are also on easy key management and complex
+        pubring handling: that is a way you can prevent your keyring from
+        blowing up. It also means that you can control how you want to
+        classify your keys (different keyrings for different mailing
+        lists). The big pubrings are rumored to be supported by some later
+        pgp release, but if you use big pubrings now, pgp gets a tad slow.
+        That's why there is currently an emphasis on smaller pubrings. (PGP
+        2.6.x mostly, I don't know how PGP 5 performs).
+
+2.0 Installation
+
+    2.1 Download
+
+        TinyPgp is included in the standard Tiny Tools release under
+        emacs-lisp/ directory If there are several in the N.NNN tar
+        files in the directory, download only the latest. The TinyPgp
+        kit contains all you need for BBDB/TM/SEMI. Just plug it and
+        don't worry about the installation.
+
+          TinyPgp should work right out of the box and automatically
+          configure itself to our mail agent you use: RMAIL; VM or GNUS. If
+          there is an error when you do `M-x' `load-library' `tinypgp.el'
+          for the first time, the message should be clear enough to
+          instruct what variables you have to touch. Please check the
+          *Messages* buffer in Emacs and " *Message-Log*" buffer in XEmacs
+          for any notes TinyPgp may have printed to echo area.
+
+    2.2 Before you install anything
+
+        In order to catch up with bugs fast and reliably, please follow
+        these instaructions. Install also two additional packages and read the
+        documentation carefully. Detailed instructions are in the start of
+        each file.
+
+        o   *tinymail.el* : See to the end of file and copy the example
+            setup where the additional X-info field is automatically sent
+            to me. I need your tiny tools configuration whenever you speak
+            with me. Test that the X-info appears when you write mail to my
+            address and you know you have got the packae configured right.
+            This saves lot of time and I don't have to guess your setup if
+            you're sending a bug report.
+        o   *tinydiff.el* : You will be receiving corrections in patch
+            format if you report any problem and I correct them. This
+            package needs no special installation, you just bind function
+            `tdi-patch' to some convenient key. When you receive patch, you
+            just call this function and the fix is put in place, you don't
+            even have to specify path or patch options, it all happens
+            automatically. Alternatively you can use Standard emacs package
+            *ediff.el*.
+        o   *tinylisp.el* : This will help you to debug all the lisp
+            problems with convenient echo-area interface. You will be
+            able to debug lisp fucntions with *edebug.el* with few commands.
+
+        If you can't get *tinymail.el* running and sending me your library
+        installation info, please don't install TinyPgp yet. We have to
+        solve your problems with that package first.
+
+    2.3 How to debug and send good bug reports
+
+        Always keep emacs debug active:
+
+            (setq debug-on-error t)
+            (setq debug-ignored-errors nil)
+
+        When you see weird behavior, immediately do the following.
+
+        o   Make sure you're running uncompiled versions. Do
+            `M-x' `load-library' `tinypgp.el' `tinylib.el' if needed
+            The compiled libraries' error messages are no use for the
+            maintainer, because you can't see the clear call-chain
+            and the parameters passed very well from that listing.
+        o   Clear debug the situation; C-c / x d c or `M-x'
+            `tinypgp-debug-buffer-clear'. Next repeat the task
+            you tried to do. If the last command terminates to lisp
+            error, you will see *Backtrace* buffer to appear. It will
+            contains lisp function call chain. If there is or is not
+            *Backtrace* buffer but the results are not what you expected,
+            stop there and see next bullet.
+        o   Call the contact function C-c / x d s or `M-x'
+            `tinypgp-submit-bug-report' which will copy all relevant
+            buffers and data areas that are needed when investiagting
+            the problem.
+        o   Possibly include your mail message or any other buffer's
+            content where the command failed.
+
+        Please try to describe step by step what you did and how the error
+        happened. Explain also what you think happened and what should have
+        happened instead (you can take a guess).
+
+        If you have also used some customizations that may affect the
+        program flow (like added functions and changed hooks), please also
+        send the customization file.
+
+    2.4 Install: to emacs
+
+        Uncompress and untar the files along you Emacs `load-path'. Put
+        following into your ~/.emacs startup file (as instructed in the
+        source file)
+
+            (autoload 'tinypgp-mode           "tinypgp" t t)
+            (autoload 'tinypgp-install        "tinypgp" t t)
+            (autoload 'turn-on-tinypgp-mode   "tinypgp" t t)
+            (autoload 'turn-off-tinypgp-mode  "tinypgp" t t)
+
+            (add-hook 'message-mode-hook        'my-tinypgp-mode-on)
+            (add-hook 'mail-mode-hook           'my-tinypgp-mode-on)
+            (add-hook 'rmail-mode-hook          'my-tinypgp-mode-on)
+            (add-hook 'vm-mode-hook             'my-tinypgp-mode-on)
+            (add-hook 'gnus-startup-hook        'my-tinypgp-install)
+            (add-hook 'gnus-article-edit-mode   'my-tinypgp-mode-on)
+
+            (defun my-tinypgp-mode-on ()
+              (require 'tinypgp) (require 'tinylibmenu) (turn-on-tinypgp-mode))
+
+            (defun my-tinypgp-install ()
+              (require 'tinypgp) (require 'tinylibmenu) (tinypgp-install))
+
+        Put your customizations to separate file and let TinyPgp
+        load it automatically.
+        (#REF #using_customization_file_for_package;Note: custom setup;)
+
+            (setq tinypgp-:load-hook
+                '(lambda () (require 'rc-tipgp  "~/.emacs.tipgp")))
+
+        Suggested mode binding, "m" prefix for all minor modes. This
+        keybinding may already be occupied if you have put something in
+        there. In that case, please choose some other free binding.
+
+            ;;  Use C-h k to see if you have bound these already
+
+            (global-set-key "\C-cm/"        'tinypgp-mode)
+
+            ;;  Actually, you can forget this, because this mode is not
+            ;;  functional yet.
+
+            (global-set-key "\C-cm'"        'tinypgp-key-mode)
+
+    2.5 Install: PGP win32 binaries download
+
+        DOS pgp _MS-DOS_ binaries are available at following site. Get
+        2.6.3i and 5.0i
+
+            http://www.pgpi.com/download/
+
+    2.6 Install: PGP win32 settings
+
+       2.6.1 Environment variables
+
+        o   *PATH* In order o use PGP in Windows NT, you have to install
+            PGP 2.6.x binary and make it available along the PATH.
+        o   *PGPPATH* Must point to your keyring location and where the
+            config.txt is. The directory must not begin with dot (
+            like in Unix ~/.pgp } or you won't be able to to generate keys
+            from dos prompt.
+
+       2.6.2 Config.txt
+
+        Default cmdproxy.exe has restrictions in command line parameter
+        passing, therefore no parameters are passed like in Unix. This
+        means that you have set following to PGP's *config.txt*
+
+            armorline=0
+            verbose=1
+            language=en
+            armorlines=0
+            charset=noconv
+
+       2.6.3 PGP settings
+
+        Make sure there is randseed.bin file at `PGPPATH' or otherwise you
+        Emacs locks up completely when you try to encrypt file for the first
+        time. In Unix TinyPgp can detect missing randseed.bin, but in NT
+        this condition can't be trapped.
+
+        You create the *randseed.bin* for the first time by encrypting
+        anything inside Dos Command window.
+
+       2.6.4 Emacs variables
+
+        Currently `tinypgp-:shell-file-name' must be *cmdproxy.exe* because I
+        don't have Cygwin bash or possibility to test it. The cygwin may
+        be supported later.
+
+    2.7 Install: PGP 5.x
+
+        Pgp 5.x is expected to be installed as separate binaries: *pgps*
+        *pgpe* *pgpv* *pgpk*
+
+        TinyPgp will automatically find at startup your pgp 2.6.x and
+        5.x binaries, so need not to tell what backend you use. The 2.6.x
+        interface is selected (because it's more widely supported) if
+        both backends are detected at startup.
+
+        To change the active backend; use:
+
+            C-c / 5     tinypgp-backend-select5
+            C-c / 2     tinypgp-backend-select2
+
+        To make the 5.x permanent, add this command to the custom
+        setup file that's beeing loaded via `tinypgp-:load-hook'
+
+            (tinypgp-backend-select5)
+
+        Note: that PGP 5.x is not fully supported yet: only 2.6.x supports
+        all commands in TinyPgp currently.
+
+          The PGP 5.x+ support is developed on NT platform. Expect that
+          it may not work reliably in Unix.
+
+
+    2.8 Install: Gnu Privacy Guard GPG
+
+        #todo:
+
+    2.9 Install: GNUS
+
+        You shouldn't need anything, the auto installation function takes
+        care of updating variables. You're notified if problems arise
+        during automatic installation.
+
+    2.10 Install: VM
+
+        You shouldn't need anything, the auto installation function takes
+        care of updating variables. You're notified if problems arise
+        during automatic installation.
+
+    2.11 Install: remailers
+
+        Before you can use the remailer support, you have to configure
+        package to your envinronment. First of all you have to learn what
+        the remailers are and how they are used. Don't even think using the
+        remailer functions if you haven't read some remailer's instruction
+        manual.
+
+        Remailer are, hm, very tricky. And sometimes you can get frustrated
+        when you send message and you can't see it apper in the newsgroup.
+        Don't blame me! Maybe the remailer was down or you didn't construct
+        the message right: that's where you need the remailer understanding
+        in order to investigate your problems.
+
+        Do this when you are ready to try remailing:
+
+        o   Configure the basic variables. (See the source code for
+            description details)
+
+            ;;  The "efga" remailer's help file is similar to to any
+            ;;  other remailer's help file.
+
+            (setq tinypgp-:r-newnym-help-file "~/txt/pgp-remail-efga.txt")
+            (setq tinypgp-:r-list-file        "~/txt/remailer-list.txt")
+            (setq tinypgp-:r-user-mail-address "Mr.Foo@xxx.com")
+            (setq tinypgp-:r-post-host        "replay")
+
+        o   Get new remailer list to `tinypgp-:r-list-file'. Keep it up to date.
+
+                C-c / . u   tinypgp-r-update-remailer-list
+
+        o   Test that TinyPgp is now configured for remailers. You normally
+            need this command only when you update your remailer list, but
+            other times it is called internally: We use it here for testing
+            purposes.
+
+                C-c / . i    tinypgp-r-init
+
+        You should see a confirmation message that you're ready to use
+        remailing commands.
+        (#REF #feature_description:_remailers; Note: remailer interface ; )
+
+    2.12 Using custom.el
+
+        New emacs releases 19.35+ and 20.2+ have brand new custom.el
+        package which you can use to change variables in TinyPgp. You now
+        have two choices a) traditionally set variables by hand as
+        instructed in the rest of the document or b) running command
+
+            M-x load-library      RET tinypgp RET
+            M-x customize-package RET TinyPgp RET
+
+    2.13 Using customization file for package setup
+
+        There is always my latest setup file included in the distribution.
+        Modify it to your needs. It gives you the whole insight what you
+        need to tweak to get TinyPgp running smoothly.
+
+            ema-tipgp.ini       ;; remaed, true name is .emacs.tipgp.el
+
+        You can keep your .emacs very clean by adding there only the most
+        necessary autoload and load calls to get TinyPgp enabled upon some
+        event. When you want to customize the settings, please put the
+        variable definitions in separate file and let package load the
+        customized settings from that rc file. If you later change the
+        settings, you can reload the configuration file only and not your
+        whole .emacs startup file.
+
+        Add this to your .emacs and the configuration file is loaded, when
+        package is called.
+
+            (setq tinypgp-:load-hook
+              '(lambda () (require 'rc-tipgp "~/.emacs.tipgp")))
+
+        Your ~/.emacs.tipgp.el will look something like this You can even
+        byte compile this file to improve loading speed.
+
+            ;; ~/.emacs.tinypgp.el -- TinyPgp.el package customizations
+            ;;
+            ;;  Description
+            ;;
+            ;;      This file is loaded when the TinyPgp.el loads.
+            ;;      Your ~/.emacs startup file must contain following statement
+            ;;
+            ;;          (setq tinypgp-:load-hook
+            ;;           '(lambda () (require 'rc-tipgp  "~/.emacs.tipgp")))
+            ;;
+            ;;      The Code layout is managed by
+            ;;
+            ;;          tinybm.el
+            ;;          folding.el ftp://ftp.csd.uu.se/pub/users/andersl/beta/
+
+            ;;{{{ private variables
+
+            ;;}}}
+            ;;{{{ remailer variables
+
+            ;;}}}
+
+            (provide 'rc-tipgp)
+
+            ;; End of file
+
+    2.14 Express customization
+
+        This manual won't mention and explain all user variables in the
+        package; you should read the source code and see what other
+        customizations you might want to do. Variables that are not
+        mentioned here are only for real Lisp hackers who want to control
+        everytyhing in sight. Eg. the the default function handlers are
+        behind `defvar' in case someone feels like coding their own
+        implementation.
+
+        I should mention about one general function from the `y' library
+        which helps you to extract documentation from any lisp package.
+        Load any lisp package with `M-x' `load-file' and call following
+        function and print the output to printer. Read the generated
+        documentation in peace at home with nice cup of coffee near you...
+
+            tinyliby.el / ti::y-get-file-documentation
+
+        After that, you know absolutely everything about TinyPgp's
+        variables and functions.
+
+        If you feel that some function's description is not clear, please
+        drop me a mail. There are no plans for separate info files; that's
+        why I try to keep the function descriptions as good as possible.
+
+    2.15 Co-operating with BBDB
+
+        Installation to bbdb happens automatically when bbdb is detected in
+        Emacs. You can define these BBDB fields that are used by TinyPgp:
+
+        o   *pgp-mail*, which takes values: _sign_ _encrypt_ _mime_ and
+            _1pass_. They tell that each mail to this recipient must be
+            send as PGP mail. See section "Automating message signing and
+            encrypting".
+            #REF #automating_message_signing_and_encrypting;(Note: signing);
+        o   *pgp-id*, which takes any ID that is recognised by PGP as
+            uwsers identification. It is common that people have many email
+            addresses and that pgp key does not cotain all the email
+            addresses. Thus you usually define this field for persons whose
+            email address does not show up in PGP KEY. Set it to email
+            address found from PGP KEY or to Hex id 0xHHHHHHHH. See section
+            "Someone's email address is not listed in his key-id?"
+            #REF #someones_email_address_is_not;(Note: substitution);
+
+3.0 About security
+
+    3.1 Pass phrases
+
+        First of all, don't leave your emacs while you're running any Pgp
+        software. The pass phrases are usually cached and any decent lisp
+        expert can dig them within less than 1 minute. The caching is used
+        by Mailcrypt and Tinygp to make life easier.
+
+        You can adjust the forget time so that it is comfortable to you:
+        the time is a balance between how often you care to type pass
+        phrases (convenience) and how strict security you want (pass phrase
+        protection)
+
+        Set this variable to the number of seconds the pass phrases are kept
+        in cache before they are expired. This also deletes all files that
+        were used when when communicating with Pgp. (Well, after every
+        successful)
+
+            tinypgp-:password-remember-time
+
+        If you have to leave your emacs for a while, please call this
+        function to wipe all pass phrase information immediately. This a
+        bit different from the automatic expiration that you set above:
+        This command will alse kill the secring crypt password, which
+        isn't reset by the automatic expiration.
+        #REF #mode:_encrypted_secring; (Note: secring encrypt mode);
+
+            tinypgp-password-expire-now     [bound to C-c / x x ]
+
+        After calling the command no-one can access find your pass phrase
+        information from cache. (Well, we don't dwell into memory snooping
+        and Emacs garbage collection that still may have copy of your pass
+        phrase.)
+
+    3.2 Locking your Emacs
+
+        In the Tiny Tools distribution you'll find package *tinylock.el*
+        which prevents accessing your emacs and protects your pgp identity.
+
+        o   It has auto lock feature: Emacs is locked if there is no activity
+            for some adjustable time. This is handy if you have to leave
+            somewhere quickly and forget to leave your emacs open.
+        o   If you know you are leaving now, like finishing your daily
+            work, call `M-x' `til-lock' to lock your emacs. You can resume
+            when you return next morning.
+
+        When emacs is locked, there is no way to unlock it without the right
+        password. If you forget the password, you have to kill
+        emacs. (Fortunately all files are automatically saved before
+        locking is engaged, so you don't lose anything)
+
+    3.3 Special password protection
+
+        Some PGP front-ends may have serious security leak in multiuser
+        (Unix) environments, if they call Pgp with option -z which passes
+        the pass phrase to it.
+
+            %  cat file | pgp -satf -z 'test me' -u test
+
+        To grab this pass phrase, 'test me', can be done by anyone who know
+        how to write C-program to access all command line options found
+        from ps(1) listing. All they have to do is to find "-z" somewhere
+        in the started process environment cmd flags that's it: you're
+        busted and your security is gone.
+
+        TinyPgp does not have this security leak because it doesn't use
+        the -z option by default. The alternative way is presented in
+        pgp.faq where Patrick J. LoPresti advises to use "...funky shell
+        redirection to make PGP pgp get the pass phrase from an
+        arbitrary file. ". The suggested PGPPASSFD is used here so that
+        you get maximum security when communicating with Pgp.
+
+        Repeat: no one can see the pass phrase by looking ps(1) listing if
+        you use TinyPgp in Unix with following variable set to non-nil
+
+            tinypgp-:password-protection
+
+        If your operating system doesn't support PGPPASSFD file descriptor
+        (maybe DOS or windows), then you must set this variable to nil and
+        hope that no one catches the PGP command line. Using nil return
+        TinyPgp to normal "-z" option usage.
+
+    3.4 Temporary files used
+
+        TinyPgp communicates with Pgp over several files. This is a design
+        decision and it can't be changed. Some Pgp implementations try to
+        use pipes as much as possible, but because current Pgp is not
+        designed to work like Unix pipes, I chose the file approach. There
+        are some benefits of this:
+
+        o   files are easily managed
+        o   files are easily debugged, when TinyPgp fails to work correctly
+
+        But it also means that the files can be snooped by super
+        user. Normally you should be safe because the file permissions used
+        by TinyPgp are very strict and files used are immediately removed
+        when they are no longer needed, Monitoring your files is a bit
+        difficult. Bear in mind that your secring.pgp can also read by
+        super user (disks are also backup'd regularly to tapes for a ong
+        time)
+
+4.0 Feature description: PGP
+
+    4.1 Modeline indicators
+
+        Most of the actions are displayed in the modeline so that you keep
+        up with the current state of the package. The modeline is updated
+        dynamically by a separate modeline process and the modeline format
+        is following. `MODE-NAME' is `pgp' or `pgp5' depending which
+        backend is in use.
+
+            MODE-NAME + pubring + modifiers
+
+        pubring is a string you define as 3rd parameter in
+        `tinypgp-:pubring-table'. Recommend values are:
+
+        o   "-" Default pubring in use
+        o   "=" Secondary pubring
+        o   "*" Special, whole keyserver pubring.
+        o   "#" Temporary, scratch keyring
+        o   ":" mailing list, or subject area A, keyring
+
+        modifiers can be:
+
+        o   _c_ secring (c)rypt mode is on
+                (#REF #mode:_encrypted_secrin; Note: secring crypt mode;)
+        o   _r_ Remailer action in progress
+        o   _e_ email substitution function is active.
+                *E* will be displayed if it is certain that To field's
+                content will be converted.
+                (#REF #mode:_email_substitution; Note: email substitution;)
+        o   _h_ Selected (h)eaders are included in signing.
+                (#REF #signing:_headers; Note: signing headers;)
+        o   _A_ auto signing mode is active and auto sign _will_ happen
+                If you see little *a* then auto sign mode is active,
+                but auto sign will not happen.
+                (#REF #mode:_auto_signing,_more_finer; Note: Sign Control;)
+        o   _N_ Default (N)ewnym server/account is active. Notice that this
+                character may be anything that user has defined.
+                (#REF #newnym_default_server_and_account;Note: default newnym;)
+        o   _!_ auto action is about to take effect when you send this mail
+                if this reads *!-* then user has manually cancelled the auto
+                action for current message.
+                (#REF #automating_message_signing; Note: auto action;)
+        o   _$_ auto encrypt action for multiple recipients. This is
+                anolog to *!* indidicator.
+        o   _k_ key for this user is previously used and it is in the cache.
+                This telqls that you can decrypt to person without problems.
+
+    4.2 Label indicators
+
+        In addition to modeline (minor mode description string explained
+        above), TinyPgp also uses labelling features of your mail agent.
+        Currently the supported mail agents are VM and RMAIL. The labeling
+        works this way: when you call pgp command over message, the correct
+        label is attached to it. Eg. if you received PGP signed message
+        and you hit C-c / v to verify it, the label added would be
+
+            pgp,v+      Verify ok
+            pgp,v-      Verify failed
+
+        Another example: if you receive 'One pass encrypted and signed'
+        message, that differs from separtely encrypted and signed message.
+        You see the diffence from the label order.
+
+            pgp,d,v+    was: 'One pass' encrypted and signed
+            pgp,v+,d    was: encrypted message that was separately signed.
+
+        Respectively there are labels for signing, encrypting. The
+        predefined labels are in the following variable, which you can
+        modify if you want to use some other labels than the defaults.
+
+            tinypgp-:label-table
+
+    4.3 Automating message signing and encrypting
+
+          Note: If you use BBDB, I recommend using the bbdb auto action,
+          because it's much more simpler for regular user. The advantage
+          of `tinypgp-:auto-action-table' is that you can use arbitrary lisp
+          expression for `eval-or-regexp'.
+
+        It's quite handy to have all kinds of pgp commands, but you soon
+        get tired of typing "sign this, sign that, oh well I forgot that
+        you preferred encrypted mail...". TinyPgp can automatically do the
+        signing and encrypting for you if you just give it command table
+        that is explained in full in the variable description.
+
+            ;; EVAL-OR-REGEXP  SIGN-FLAG [ENCRYPT] [MIME] [XPGP] [KEYRING])
+            tinypgp-:auto-action-table
+
+        The function that parses the table, `tinypgp-auto-action', is installed
+        to the mail send hook and watches the TO field's email address;
+        it signs and decrypts the outgoing mail whenever needed. (This
+        feature is very powerful, see the variable documentation for more
+        finer details)
+
+        You can also send PGP/MIME messages if you define `MIME' flag.
+
+        The automatic pgp is only active if you haven't done any "manual"
+        pgp in the sending buffer. Ie. if you want ot compose manual pgp
+        message to person foo@site.com, which normally would trigger auto
+        action entry, you can do that. The added pgp in the buffers
+        bypasses the defined action.
+
+        The mode line indicator "!" tells you if this buffer is going to
+        trigger an auto action. You can manually defeat the action by
+        calling
+
+            C-c / m !   tinypgp-auto-action-toggle
+
+          _Note:_ Do not use `tinypgp-:auto-action-table' for auto signing
+          for every mail. The following entry is not recommended. You can
+          have more finer autosigning control with variables presented in
+          next section.
+
+            ;;  This will match any mail and sign it. DO NOT DO THIS
+            (setq tinypgp-:auto-action-table
+              '(("." nil t)))
+
+       4.3.1 BBDB support for auto action
+
+        BBDB is a Big brother database where you can store information
+        about sender of the message. To use auto action, you add
+        following field to the bbdb record of the user:
+
+            pgp-mail:
+
+        The values that you can add there are explained in the C-h v
+        `tinypgp-:bbdb-field'. Below you see some examples.
+
+          _Note_: The lisp way `tinypgp-:auto-action-table' overrides any
+          definition in bbdb record.
+
+            pgp-mail: sign                ;; Sign by pgp user
+            pgp-mail: sign mime           ;; PGP/MIME sign
+            pgp-mail: encrypt
+            pgp-mail: encypt-replay       ;; Encrypt by using "replay" key
+            pgp-mail: 1pass               ;; 1pass encrypt and sign
+
+        The *1pass* Encrypt and sign feature is the one you should prefer
+        to added security. It means that when message is encrypted with
+        user's key, it is signed with your key simultaneously. That way
+        user can varify the origonal sender of the message reliably.
+
+        _Note_: To use 1pass method, *both* you key and recipients keys
+        must be stored to the *same* keyring. The keyring used for this
+        purpose is the first one accuring in the backend's keyring
+        stored to `tinypgp-:pubring-table'.
+
+       4.3.2 Encrypting to self
+
+        If you send encrypted messages and you want Bcc copy of the message
+        to yourself you must encrypt the message with your key too to
+        be able to read it later. To add more encrypt keys, you would
+        use following setup
+
+            (setq tinypgp-:encrypt-with-function  'my-tinypgp-encrypt-with)
+            (defun my-tinypgp-encrypt-with ()  (list tinypgp-:user-primary))
+
+        The function will return an additional key, `tinypgp-:user-primary',
+        which shuld be pointing to your primary PGP key-id, which is used
+        along with keys fround from the To and CC fields.
+
+    4.4 Automating bulk message encrypting
+
+        If you send message to several people and you know that each one
+        have Pgp, then you can use this variable to control automatic
+        message encyption when sending CC'd mail.
+
+            ;;  I want auto action to encypt mail when I CC to these people
+            ;;  Define my variable
+
+            (setq my-:tinypgp-all-re
+                (concat
+                 "foo@\\|bar@\\|Mr.Doodle@"
+                 ...
+                 )
+
+            ;;  Now turn on encryption when CC'ing these people
+
+            (setq tinypgp-:auto-action-encrypt-regexp my-:tinypgp-all-re)
+
+        The catch is that the regexp must match _every_ people in the To
+        and CC list in order to encryption to take place. If there is
+        address that is not included in this regexp, the encryption is not
+        engaged. You must know addresses of people that do use Pgp and whom
+        are capable of receiving pgp encrypted messages.
+
+        Once more, you know that Foo and Bar have Pgp: the following
+        message will be encrypted. The modeline will show indicator *$*
+
+            (setq tinypgp-:auto-action-encrypt-regexp "Foo@\\|Bar@")
+
+            To: Foo@site.com
+            CC: Bar@site.com
+            --text follows this line--
+            MESSAGE-BODY
+
+        This time you're CC'ing to three people; where Quux doesn't have
+        Pgp. Since Quux is not included in the variable, this message will
+        not be encrypted.
+
+            (setq tinypgp-:auto-action-encrypt-regexp "Foo@\\|Bar@")
+
+            To: Foo@site.com
+            CC: Bar@site.com, quux@site.com
+            --text follows this line--
+            MESSAGE-BODY
+
+    4.5 Signing: headers
+
+        Merely signing your message body is not usually enough, because
+        someone may go and change the *Subject*. And you can't do anything
+        to prevent someone from changing your other headers as well, like
+        substituting a false *Reply-To* address, so that the attacker would
+        get the reply. In regular pgp signing the header must be physically
+        inserted into the body.
+
+            Subject: Tiger crawls
+            Date: Sun, 3 Nov 1996 17:50:22 +0200
+            Reply-To: foo@site.com
+            --text follows this line--
+            -----BEGIN PGP SIGNED MESSAGE-----
+
+            ##
+            Reply-To: foo@site.com
+            Subject: Tiger crawls
+
+            BODY-OF-MESSAGE-IN-SMF
+
+            -----BEGIN PGP SIGNATURE-----
+            Version: 2.6.3ia
+            Charset: noconv
+
+            iQBVAwUBMbW4lMC67dVHFB01AQHB6wH9EV5vJ/hBCUqBGJc5470cu6
+            QinJdFrRtd/Mm1hkGqqU8FIgQPK/trviQyti2UQCrnUosYSJdRaCFw==
+            =/Deu
+            -----END PGP SIGNATURE-----
+
+    4.6 Signing: What headers to sign.
+
+        It is very important that you carefully choose what headers are
+        signed. Do not just add bunch of headers, because you must consider
+        if the receiving end gets the same headers *unmodified*. If the
+        heders' values have been changed during the transit in network, the
+        receiving end can't verify the message, because those headers don't
+        have the original text any more.
+
+        The thumb rule: Sign as few headers as possibly, so that the
+        signing count keeps small and the chance of modified headers is
+        minimal. The purpose of signing headers is that it protects the key
+        headers from tampering; those which are crucial to your message.
+
+        You can sign any headers as you like, but please consider these
+        recommendations carefully.
+
+       4.6.1 Do not sign:
+
+        o   _From_. This field's email address will most likely
+            be modified.
+        o   CC, BCC, FCC. The CC email addresses may be changed and
+            the BCC/FCC fields are not distributed.
+        o   _To_. When receiving ends sees the message, there is no
+            *To* field. It is usually seen as *From* field, but that's
+            not necessarily so. Do not ever sign *To* field.
+
+       4.6.2 You can sign these:
+
+        o   _Reply-to_. This is your assurance that person can safely send
+            message back to the right address. Experiment with this header
+            and see if you can sign it. It is known that CompuServe, AOL,
+            X.500, FidoNet, and NetWare changes this field and invalidates
+            ,you signature if you sign it.
+
+            If you have subsribed to some mailing lists, then pay
+            close attention to your sent/appeared mail messages in the
+            list. It is very common that the listserver changes the
+            this field.
+
+        o   _Message-Id_. If you cvreate your own message id's with address
+            and time information, this could be among the signed headers.
+
+        o   _Subject_. You don't want your message's topic changed.
+            *Note*: some list softwares touch the subject and add a list
+            identification, so it is not always goo to sign Subject.
+
+       4.6.3 Optionally sign these:
+
+        o   _Date_. The time of your message isn't really that important:
+            whether the time refers to 1992 or 2000.  The text what you
+            ,_said_ is important, not when you said it.
+
+            Furthermore (a) PGP time stamps it's signatures "signature
+            made 37 March 551 B.C." and (b) you really can't prove time
+            stamps anyway -- you can set the system clock forward or
+            backward before generating a time stamped signature or signing
+            a time stamp.
+
+        o   _Newsgroups_. Signing newsgroup names says, that you
+            had sent at least to these newsgroups, but it doesn't
+            prove that you haven't sent to other newsgroups too.
+
+       4.6.4 Related varibales
+
+        TinyPgp has the following variable where you can add those headers
+        names that you wish to sign. The default recommended value signs
+        headers {reply-to,subject}. Remember, that the goal is to sign as
+        few headers as possible. Choose only headers that truly need
+        signing and don't just add items that are not important in the
+        message point of view.
+
+             tinypgp-:header-sign-table
+
+    4.7 Signing: header signing control
+
+        While signing headers is a good idea, you should be very careful
+        that your message's headers aren't modified. There is a known
+        problem in the mailing lists which often rewrite, replace or even
+        remove headers you may have added to the message.
+
+        There is variables in the package, that control these special
+        cases. They all rely on the regexp matching the *To* address. You
+        can select criteria what headers are signed by modifying this
+        variable.
+
+            (setq tinypgp-:header-sign-table
+              '(("@" ("subject" "reply-to" ))
+                ))
+
+        The default entry in this variable says that we sign 2 headers for
+        every To address that has @ character. This is the basic case. If
+        you know that some other address for example modifies Reply-To,
+        then you should add another entry
+
+            (setq tinypgp-:header-sign-table
+              '(
+                ("some-mailing-list@" ("subject"))
+                ("@"                  ("subject" "reply-to" ))
+                ))
+
+        Remember that you put the restrictive regexps first in the list.
+        The first one that matches is selected when comparing with *To*
+        address.
+
+    4.8 About passing prefix argument to commands
+
+        You give prefix argument to commands by pressing `C-u' or `M-x' `0'
+        before you call the actual command hot key. The prefix argument
+        usually means "do not replace content with pgp output, instead
+        store the output to register." For example, to decrypt the current
+        buffer so that the buffer content is not replaced, you would use:
+
+            C-u C-c / d
+
+        The results are stored to `tinypgp-:register' (use C-c / R to display
+        it) and the buffer content is not changed. The decrypt command also
+        asks if you'd like to see content right away in temporary
+        buffer. This is desirable in mail buffers, where you want to keep
+        the incoming mail in encrypted format, but you just want to read
+        the content of the message.
+
+        When you are finished viewing, kill the buffer so that no traces
+        are left in your emacs about the opened message.
+
+    4.9 Decrypting and prefix arg
+
+        The decrypting of message has a feature where you can reverse the
+        meaning of the usual prefix arg. Normally when you do
+
+            C-c / d
+
+        that would replace encypted content with clear text, but it gets
+        tedious if you always have to hit `C-u'
+
+            C-u C-c / d
+
+        to see the incoming encrypted mail in separate preview buffer. If
+        you prefer having all decryption viewed in separate buffer, you set
+        following variable to `non-nil'
+
+            (setq tinypgp-:decrypt-arg-interpretation 'preview)
+
+        Note: this affects only read-only buffer, so if you're in normal
+        buffer, the prefix arg works as usual and the
+        `tinypgp-:decrypt-arg-interpretation' is ignored. Suppose the
+        variable is now `non-nil', look what happens.
+
+            read-only buffer:  C-c / d  --> preview
+            writable  buffer:  C-c / d  --> replace buffer content
+
+    4.10 Decrypting and active user
+
+        When you decrypt a message, your active user setting determines who
+        you're when PGP is called. If you only have one PGP key, then you
+        set your identity once and use that for all decrypting.
+        (#REF #pubring_and_user_control;Note: User control;) But if you have
+        distributed several PGP keys; then you have to change to the owner
+        of that PGP key before you can decrypt a message.
+
+        Normally you *don't* distribute many keys publically: you
+        announce *one* key which your friends use and with what
+        they encrypt messages to you. The other keys you may generate
+        are normally distributed to hosts that send mail back to you
+        in ecrypted format. Eg. if you have ordered account from Nymserver
+        (#REF #nymserver_type_account;Note: Nymserver account;) or
+        from *Newnym* type server
+        (#REF #newnym_type_account_handling;Newnym account;)
+
+        o   you have create new PGP key for Nymserver or Newnym and sent it
+            there.
+        o   Server forwards mail addressed to your anon account, to your
+            real address: encrypted with this key.
+
+        Now, when you receive mail, you have to be user *XXX* before
+        you encrypt the message.
+
+        It is possible to have this user change automatic, based on the
+        key-id(hex) that can be found from the encrypted PGP ascii armor.
+        Since you know you what keys you have and their key-ids(hex), you
+        simply have to be user XXX to when encrypting mail that was
+        encrypted by XXX key-id.
+
+        There is variable
+
+            ;; Format:  '((KEY-HEX-ID KEY-ID) (K-H-I K-I) ...)
+            tinypgp-:user-identity-table
+
+        Which is consulted every time you call
+
+            C-c / d     tinypgp-decrypt-mail
+
+        If the found key-id(from ascii armor) is found from table's *K-H-I*
+        slot, then the program swithes to user given in *K-I*.  The *K-I*
+        is usually some more representative string key-id which is more
+        human understandable that the raw hex id. It is used when you're
+        prompted to give pass phrase. Here is example how you would set the
+        table.
+
+            (setq tinypgp-:user-identity-table
+              '(
+                ;;  My known public keyid firsname.surname@site.com
+                ("12345670"  "firsname.surname")
+
+                ;;  If I receive pgp message from nymserver, then use my
+                ;;  nymserver user id
+
+                ("12345678"  "an12345@anon.nymserver")
+                ))
+
+        Now, every time you receive encrypted mail, the program knows
+        automatically which active user it should choose when you decrypt
+        message with C-c / d.
+
+    4.11 Hiding the regular pgp signature automatically
+
+        From TinyPgp, whenever you now look at email messages, the possible
+        pgp signature is automatically hidden. If you use some other Emacs
+        mail reader/news reader, you can add `tinypgp-hide' function to to
+        the appropriate hooks. Currently following hooks are used.
+
+            rmail-show-message-hook
+            vm-display-buffer-hook
+            gnus-article-mode-hook
+
+        Verifying works normally although the signature is hidden. To
+        manually show si(g)nature, call this function
+
+            C-c / g tinypgp-hide-show-toggle
+
+    4.12 Keyserver: various ways to get PGP public keys
+
+        There are several methods in the program how you can request a
+        public key if you don't have it already. The design guideline of
+        the program was that no keys are fetched without person first
+        asking for it. So, if you want to send someone encrypted mail (you
+        should if they use pgp), then there are three basic ways to get the
+        public key.
+
+            C-c / F    tinypgp-key-find-by-finger
+            C-c / K    tinypgp-key-find-by-http-keyserver
+            C-c / E    tinypgp-key-find-by-email
+
+            This is a bit special, it checks Cache, then Keyrings and
+            finger, and finally http:
+
+            C-c / G    tinypgp-find-by-guess
+
+        The key servers are the most reliable way to find a key, but they
+        may be so loaded that getting a key may takes several minutes. I
+        usually start by finger a person and only if it fails, I call the
+        key server. If the person doesn't have key in his ~/.plan file, I
+        usually mention about that in the message to him.
+
+        The email interface is almost the same as key server fetching, but
+        as the name says, the key is requested via email and is only
+        available to you when you get mail back.
+
+    4.13 Keyserver: uploading your key or send key revoke certificate
+
+        When you have finally created your public key and you want to put
+        it publically available, you send it to keyserver. You are also
+        recommended to put it into your ~/.plan file which is read by
+        'finger' process.
+        (#REF #general_pgp_guidelines; Note: key guidelines ;)
+
+        Sending your key to _one_ server is enough. After it processes your
+        key, it will forward your add request to other servers
+        automagically. If you later edit your key to add new email
+        addresses, you send the same key again to keyserver.
+
+        From a buffer containing your public pgp key, call the following
+        command and select choice *add*. The other choices probably arent't
+        interesting to regular user.
+
+            C-c / x k   tinypgp-keysrv-send-email-command
+
+        The list of other choices is the same as explained int pgp's
+        documentation file keyserv.doc. Here is brief summary.
+
+            Command
+                Message body contains
+            -------------------------------------------------
+
+            ADD
+                Your PGP public key (key to add is body of msg)
+            *INDEX
+                List all PGP keys the server knows about (-kv)
+            INDEX userid
+                List all PGP keys that match the userid (-kv)
+            *VERBOSE INDEX
+                List all PGP keys, verbose format (-kvv)
+            *VERBOSE INDEX userid
+                List all PGP keys, that match the userid, verbose (-kvv)
+            *GET
+                Get the whole public key ring (split)
+            GET userid
+                Get just that one key
+            *MGET regexp
+                Get all keys which match /regexp/
+                regexp must be at least two characters long
+            LAST days
+                Get the keys updated in the last `days' days
+
+            * Commands preceeded by asterisks are not implemented
+            on all keyservers. In particular the Marc Horowitz "C"
+            based keyservers do not implement these commands. This
+            includes pgp-public-keys@pgp.mit.edu where you received
+            this file from.
+
+        If for some reason your key gets compromized, you 1) revoke your
+        key and send the revoked key (actually a certificate) to the
+        keyserver with the same manned. See pgp documentation for more
+        about invalidating and preventing to use your compromized key.
+
+    4.14 Pubring and User control
+
+          In current release you seldom need these commands, because
+          program automatically handles user and pubring changes if you
+          have set the appropriate variables.
+
+        To use different pubrings with pgp, there are two commands that
+        show and change the active pubring. You need pubring control,
+        because you should keep "primary" ring as small as possible due to
+        speed. If pubring is big, calling Pgp is slow.
+
+        The *primary* pubring is the one that contains you closest friends
+        whom you talk with pgp often. The occasional friends that you meet
+        in the internet should be left in the *secondary* pubrings.
+
+            Commands:  "xps", "xp\t" and "xpd"
+
+        You may also have several identities, known as "user" to pgp. The
+        active user is normally your login name, but you can switch to any
+        user that is known to PGP.
+
+            Commands:  "xus" and "xud"
+
+        The user completion is based on your ~/.mailrc file; if you make
+        any changes to it, TinyPgp will update its alias database.
+
+    4.15 Pubring management
+
+        Package's basic design thrives to multiple pubrings. I normally
+        talk to different people and I miss the feature from Pgp to attach
+        'label' to fetched key. Storing keys to keyrings that have been
+        named according to subject areas, I can remember who the person
+        was. I have selected prefix *pr-* for all my other pubrings.
+
+                ~/.pgp/pubring.pgp      my very closest friends. 10-20
+                ~/.pgp/pr-pgp.pgp       pgp newsgroup people keys
+                ~/.pgp/pr-elisp.pgp     Emacs lisp people
+                ~/.pgp/pr-tmp.pgp       My test bed, scratch pubring
+                ~/.pgp/pr-junk.pgp      Keys that can be deleted any time
+                ~/.pgp/pr-big.pgp       Merged pubrings. All keys.
+
+        When I mail someone, who uses pgp, and I don't have his pgp public
+        key, the first thing I do, is to decide where I store this person's
+        pgp key. If I respond to someone whom i probably never meet again
+        (casual newsgroup message), I fetch the key and store it to pubring
+        *junk*. I mail the message, encrypt it with the key and forget that
+        user never existed.
+
+        This way I don't keep stacking pile of unneeded keys into my other
+        vital keyrings. Also, using multiple keyrings let you categorise
+        people with whom you talk to. If all the keys were in one pubring,
+        how should I know where Mr. xxx xx@doodle.com's key come from? When
+        it is in pubring *elisp* I know "Aha, he's Emacs lisp package
+        developer."  Using multiple pubring acts like *labelling* the keys.
+
+        There is one problem: if you want to send mail to several people
+        and encrypt the message, all the keys must be in the same
+        pubring. For those purposes you probably want to merge all pubrings
+        together to create *big* pubring which you can use when sending
+        encrypted mail to several people.
+
+        See this variable how you should control the several pubrings. The
+        primary pubring must be put first in the list and the big, merged,
+        pubring must be last in the list. Variable's documentation string
+        will explain the usage in full.
+
+            tinypgp-:pubring-table
+
+    4.16 Mode: encrypted secring
+
+        If you want to have maximum security, you should keep your
+        secring.pgp in encrypted format. If you're in multi-user envronment
+        like Unix, be aware that the sysadms make backups of the disks in
+        regular intervals and your secring.pgp gets stored somewhere in
+        their tapes. Anyone that can access those tapes can read your
+        secring contents. And even if you're in single user environment,
+        somebody may sit down your console while you're away and copy the
+        secring.pgp. Also imagine what happens if the whole computer gets
+        stolen (typically a PC)
+
+        secring.pgp contains your secret keys and key-id's that you
+        have created for your private use. Why should you encrypt your
+        secret keyring? The snooper cannot use those keys because he doesn't
+        have the pass phrases, right? Yes, the keys cannot be used, but
+        he can look what keys you have generated and reveal you *newnym*
+        or other anonymous account identities.
+
+        Here is brief hypothetical excerpt from secring.pgp
+
+            % pgp -kvv secring.pgp  [person Mr. Foo Bar's secring]
+
+            Key ring: 'secring.pgp'
+            Type Bits/KeyID    Date       User ID
+            sec   512/00000001 1997/08/12 nym2@nym.alias.net
+            sec   512/00000002 1997/08/11 nym2@anon.efga.org
+            sec   512/00000003 1997/06/05 nym3@efga.owl.de
+            sec   512/00000004 1997/02/17 nym4@anon.nymserver.com
+            sec   512/AAAAAAAA 1996/12/03 my-email@my-address.com
+
+        If somebody can get this listing, you can say goodbye to your
+        anonymous identities! The imposter can read that Mr. Foo has
+        *newnym* type anonymous accounts in nym,efga and efga and one
+        *nymserver* account. He can now go and write 10 lines of perl code
+        that fetches articles from the nearest newsgroup server and find
+        any articles that has those email addresses. Boom, you're
+        busted. He knows what anonymous names you use in usenet articles
+        and he can spread the word...
+
+        You don't want that to happen. You want to keep hush hush with your
+        anonymous accounts instead. The solution is to keep your secret
+        keyring in encrypted format so that nobody can examine it.
+
+
+
+       4.16.1 Make backup
+
+        But before you start using the secring crypt mode, be sure to make
+        to back your secring first. It won't do much good if you just copy
+        the original secring.pgp to somewhere else, because the copy is as
+        readable as the original secring. You should in addition encrypt
+        the backup. This command that does this all is:
+
+            C-c / x c   tinypgp-secring-backup
+
+        It copies the secring.pgp and encrypts the backup conventionally
+        with given password. Now you have backup and you should put it into
+        removable media away from disk crash. You can start using the
+        secring crypt mode by calling following function:
+
+            C-c / m c   tinypgp-secring-crypt-mode-toggle
+
+        If the mode was _off_ initially
+        #REF #modeline_indicators;(Note: modeline);
+        program will create conventionally encrypted secring with shell
+        command `pgp' #REF #encrypted_secring; (Note: implementation);
+        and delete the unencrypted secring.pgp.
+
+          _NOTE_: Naturally you cannot execute `sign' or `decrypt' commands
+          from shell prompt when there is no secring.pgp. In addition, all
+          key commands that need secring are out of use. (Eg. You cannot
+          make new keys with pgp -kg)
+
+        If you turn _off_ the mode, then reverse happens: the encrypted
+        secring is opened and moved to secring.pgp. There is no more
+        encrypted secring and things are as they are in normal PGP.
+
+        If you leave the mode _on_ when you exit Emacs, don't worry. When
+        TinyPgp starts next time it detects automatically in which state
+        your secring is and chooses the right initial mode.
+
+        All commands that you do from inside TinyPgp will work
+        transparently and you should not even notice that you're using
+        encrypted keyring.
+
+       4.16.2 Changing secring password
+
+        When you turn secring crypt mode on, the following happens
+
+            secring.pgp --> secring.enc     password "qwer"
+
+        Once the password is set it lasts untill you kill Emacs. If you
+        want to change the password, you must first return to non-crypt
+        secring mode.
+
+            ;;  Mode off
+            secring.pgp <-- secring.enc     password "qwer"
+
+        Because the password is already known and stored into memory, you
+        must instruct TinyPgp to forget it with following command. This
+        password won't expire automatically as the normal PGP passwords.
+        (Why? If it would expire along with the pgp pass phrases, you would
+        have to retype _2_ password objects when using the pgp command next
+        time)
+
+            C-c / x X   tinypgp-secring-crypt-expire-password
+
+        Now, if you turn on the mode again, a new password is asked.
+
+            ;;  When you turn mode on
+            secring.pgp --> secring.enc     password "qq1"
+
+    4.17 Mode: auto signing
+
+        In addition to auto action list which is consulted when you send
+        message with C-c C-c, there is also mode which you can turn on:
+
+            C-c / m s   tinypgp-sign-mail-auto-mode-toggle
+
+        And the modeline will then have letter *A* indicating that every
+        mail you send then on, will be (A)uto signed. You can also turn the auto
+        signing mode on when the package loads by putting the following
+        into your .emacs.tipgp.el startup file
+
+            ;;  Regular Emacs C-x m mail mode
+            (add-hook 'mail-send-hook 'tinypgp-sign-mail-auto-mode-toggle-on)
+
+            ;;  Gnus message mode
+            (add-hook 'message-send-hook 'tinypgp-sign-mail-auto-mode-toggle-on)
+
+    4.18 Mode: auto signing, more finer control
+
+        When you have auto signing mode on, it affects all your outgoing
+        mail. Well, almost. There is also more finer control for this
+        feature: lisp programmers can add a function to the variable
+
+            tinypgp-:sign-mail-p-function
+
+        If this function return to `non-nil', then the current message will
+        be signed. Perhaps you do not want to sign mail messges when you're
+        sending mail to your fellow workers, because the extra "pgp noise"
+        isn't really necessary when talking to your colleagues.
+        Here is one such example:
+
+            ;;  Sign only messages that are not sent to my fellow
+            ;;  workers at domain 'foo'. Ie. sign messages to the outside
+            ;;  world.
+
+            (setq tinypgp-:sign-mail-p-function
+              '(lambda ()
+                (not (string-match "foo" (or (ti::mt-get-field-1 "to") "")))))
+
+        In the above function, if the message is sent to your colleagues,
+        it return nil. This has also the effect on the modeline. Instead of
+        seeing _A_, you will see _a_ referring to some kind of restriction
+        that currently prohibits auto signing to take in effect.
+
+          Note: Auto signig is suppressed automatically in certain
+          situations, like if _remailer_ action is in progress.
+
+    4.19 Mode: email substitution
+
+        This command you probably need very rarely. It is used to turn off
+        possible email substitution functions so that the email addresses
+        read from the buffer are passed "as is" to the PGP eg. when you
+        encrypt. To toggle this mode, use
+
+            C-c / m e   tinypgp-email-substitution-toggle
+
+        The email substitution is needed in certain situations, where you
+        want to tell exactly what is the correct 0x pgp key for some email
+        address. (see later in this document). Suppose you have added entry
+        for the *Nymserver* account, to treat every encryption so that
+        Server's PGP is used, you cannot send encrypted mail to individual
+        account users. But if you turn off the substitution for a moment,
+        then you can encrypt to the individual Anon account user.
+
+        Still confused? Or maybe I didn't expain it well enough. Here is is
+        the same with some pictures.
+
+        substitution active:
+
+            To: anXXX@anon.nymserver.com
+
+            When you encrypt this message; the encryption is done with
+            the Server's anon.nymserver.com key due to email substitution
+            which converts every *anXXX* to be treated as server message.
+
+        substitution inactive:
+
+            To: anXXX@anon.nymserver.com
+
+            This time encryption uses *anXXX@anon.nymserver.com* as a key
+            when it does the encryption. If you don't have that key in you
+            keyrings your encryption fails.
+
+    4.20 Mode: selected headers are signed
+
+        You can use variable `tinypgp-:header-sign-table' to list the headers
+        you want to include in signing to protect some important headers
+        from modifications. However, there may be times that you want to
+        use normal message signing only (eg. if you send plain text
+        document).  This toggle swithes `tinypgp-:header-sign-table' on and
+        off according to your needs.
+
+            C-c / m H       tinypgp-header-sign-mode-toggle
+
+    4.21 Anonymizing message headers
+
+        Normally when you send encrypted mail to someone, the message body
+        is in encrypted format. However, you other headers are visible and
+        some snooper may determine your post content by looking at the
+        Subject and other header.
+
+        So, when you have replied to a message and you're about to send it,
+        you can call command
+
+            C-c / a     tinypgp-header-move-to-body
+
+        Which moves the Subject and some other fields inside body of
+        message and scrambles the other visible headers with dummy values
+        and deletes headers that are not needed. Only after this you should
+        encrypt the mail to get maximum security over the message. Here is
+        initial message
+
+            To: close.friend@br.com
+            Subject: Stock A of company XXX will be rising -- buy it!
+            FCC: ~/.RMAIL.out
+            --text follows this line--
+            Hi I just heard rumor from very reliable source that...
+
+        And after you anonymize this
+
+            To: close.friend@br.com
+            Subject:message
+            FCC: ~/.RMAIL.out
+            --text follows this line--
+            ##
+            Subject:  Stock A of company XXX will be rising -- buy it!
+
+            Hi I just heard rumor from very reliable source that...
+
+        And when you finally encrypt the message, it is impossible for
+        third party to tell what the message contains. The "##" is a hash
+        mark and belongs to the remailer instructions for adding additional
+        headers if you wonder the convention used.
+
+            To: close.friend@br.com
+            Subject:message
+            --text follows this line--
+            ::
+            Encrypted: PGP
+
+            -----BEGIN PGP MESSAGE-----
+            Version: 2.6.3ia
+            Comment: Processed by Emacs TinyPgp.el 1.96
+
+            hEwDwLrt1UcUHTUBAgCjd11ocnVaYiO6bwMV6RND/O64dfh4T9UP12l6nv1ZDSmb
+            nDKfLbECmJHH/YRGHjUEty7CjoW0uitCYm38SDlapgAAAIjP/8E/7qELvVua/D8x
+            3vPqRtrhtuXqPqF8z28qLIJJSbgZdyiADAJsaWTDYVgwID1LYFzXffIcnMmX0hgt
+            Je5UZYtpjeWOB+jYKNfNYjxoSSqTnXqh+wMmkt4kMttaGoe5D1rttwPjvaXec4e7
+            WqW7uQz14eiRmjSMvjML1XqaGWRMkvDxmNkO
+            =ZW+L
+            -----END PGP MESSAGE-----
+
+5.0 Feature description: remailers
+
+    5.1 Enabling remailer support
+
+          IN ORDER TO USE REMAILERS OR NEWNYM ACCOUNT COMMANDS YOU HAVE TO
+          GET AND INSTALL _Levien_ _list_ described later.
+
+    5.2 Before you use remailer interface
+
+        You should get on hand the remailer faqs and the help files, so
+        that you understand what's happening when you start using the
+        remailer functions. I have tried my best to make all this as
+        transparent as possible, but unless you have a clue how remailer
+        messages are constructed, please don't try to use the remailer
+        interface at all. It is also essential that you realize not to use
+        remailing to harrash people. If you do so, you will be sure that
+        any decent remailer admin tries his best to track you down, in
+        spite of your anonymity, and draw your account.
+
+        The remailers are good thing, as pgp itself, but if you misuse them
+        they may eventually vanish due to abuse. For this reason you are
+        not allowed to remail to multiple recipients. TinyPgp will not
+        support bulk anonymous messages.
+
+    5.3 Reply block: do you need it?
+
+        To be honest, you don't necessary need a reply block if you want to
+        use the remail/anonymizing interface to *send* messages. The reply
+        block is needed for couple of reasons:
+
+        o   You use reply block to test your remailer chain. The
+            block should return back if the chain is alive. If you
+            don't get the reply block back, then you shouldn't use
+            that remailer chain (the chain may be only one remailer)
+        o   If you send anonymous message to someone and you include
+            your reply block(that's encrypted), the person is able to
+            answer to you. He simply send the message back to the remailer
+            whose reply block that is and you'll get his answer.
+            Naturally anonymized by the remailer.
+        o   You have to submit reply block to *Newnym* type accounts.
+
+    5.4 Reply block: basics
+
+        To test remailers, you usually need to construct *reply* *block*.
+        The block is smallest piece of encrypted text that tells to send
+        the message back to you.
+
+                    encrypted
+            you --> reply-block --> remailer
+                                    decrypts it, sees where
+                                    Request-Remailing-To: header
+                                    tells to forward the message.
+                                    Property 'ek' encrypts the mail
+                <--             <--
+                    conventionally
+                    encrypted message
+
+        You should customise for each remailer you use a reply-block that
+        takes advantage of the special reply block characteristics: see `q'
+        and `p' properties in the remailer documentation.
+
+    5.5 About properties: cpunk ek pgp
+
+          Sorry, I consider remailer that _doesn't_ support pgp, pretty
+          useless
+
+        These are the minimum properties that are required from a remailer
+        before you can use it with TinyPgp. All other remailers listed in
+        levien list are discarded. the *latent* property is also very
+        desirable, but it is ignored if the remailer does not support it.
+
+        In order to post to the newsgroup, the remailer must support
+        property *post*. Another possibility is to send your message
+        through remailer to some *mail2news* gateway. For newsgroups posts
+        the remailer must support also property *hash* which allows
+        including custom headers.
+
+    5.6 Remailer list: levien list
+
+        Raph Levien, yes that's Raph and not Ralph, maintains list of
+        known remailers, their properties and history of response
+        times. You should be up to date all the time with the list because
+        remailer raise and disappears all the time and you should not use
+        one that no longer exist. You can get the list within TinyPgp or
+        from Unix shell prompt by finger.
+
+            %  finger remailer-list@kiwi.cs.berkeley.edu
+            C / . r u   tinypgp-r-update-remailer-list
+
+        Be sure that you have set the location of the Levien list. Adjust
+        this variable if needed.
+
+            tinypgp-:r-list-file      Default is  ~/.remailer.lst
+
+    5.7 Reply block: creating
+
+          If you want to contruct very complex reply block, then you do
+          it all manually: write the reply block headers and ancrypt it
+          by hand. This chapter only explains the very simple reply
+          block creation.
+
+        To start creating a basic reply block, you must be on empty [mail]
+        buffer. If you're not, then program asks permission to empty current
+        buffer first. Call this command to start creating the reply block
+        and answer to questions
+
+            C-c / . r b   tinypgp-r-reply-block-basic   (b for basic)
+
+        Let's suppose you select remailer *replay*, then the following
+        questions are displayed
+
+            Select remailer: replay [or complete with tab]
+            Use encrypt key: mykey  [when you receive message, you need this]
+            Latent time eg. +0:00r [empty = no latent]: 0:02r
+
+        The last two questions depend on the remailer you select and are
+        only asked if the remailer supports such properties. The encrypt
+        key is important, because the final mail delivered to you is
+        conventionally crypted with this key. Remember it well and
+        use some (similar) memorable key for each remmailer's reply block!
+        Next, you should save the message body to some file and update
+        following variable so that TinyPgp knows about the just created
+        reply block.
+
+            '((REMAILER-ALIAS FILE)  ..) like '(("replay" "~/Mail/.r-replay"))
+            tinypgp-:r-reply-block-table
+
+        Repeat the task for each remailer you're going to use. Follow the
+        Usenet newsgroup *alt.privacy.anon-server* often and very carefully
+        so that you don't use remailer that does not exist any more or that
+        has proven unreliable (some of them filter messages)
+
+    5.8 Reply block: testing
+
+        When you have reply blocks ready, you should also test that you
+        have constructed them right: that they do work. To test all defined
+        reply blocks, call function
+
+            C / . r t       tinypgp-r-reply-block-test
+
+        Which sends each reply block to remailer. Then you just sit back and
+        wait for the answers. If you don't get all reply blocks back,
+        investigate the problematic remailers and if you still can't get
+        the remailer responding, don't use the remailer at all. You have
+        plenty of other remailers to choose from.
+
+    5.9 Sending as anonymous: remailer, usenet, or private mail
+
+        Sometimes you want to send some message anonymously. You compose
+        the message as usual and when you have finished, you convert the
+        message to anonymous remailer format with command
+
+            C-c / . r p   tinypgp-r-post
+
+        This command can tell from the buffer if the current message should
+        be posted anonymously to usenet newsgroup or if it is a regular
+        mail message. You can't use CC or BCC in the headers, because
+        program prohibits sending bulk anonymouys email. If you must send
+        some anonymous message to several people, just copy the mail buffer
+        with normal Emacs commands ( `C-x' `h' to mark buffer, `C-x' `x'
+        `r,' to copy region to register) and send it again with modified
+        recipient.
+
+        For usenet posts, crossposts are handled, so that you can reply to
+        someone's message that has been crosposted.
+
+        When comand has finished, your message body is formatted for
+        mail2news remailer you have set in `tinypgp-:r-mail2news-remailer'.
+        In order to send the message, it must be encrypted too (you can
+        automate this to adding entry to auto action table)
+
+    5.10 Chaining
+
+        Chaining means, that you want to send the message through sevaral
+        remailers. If you use 3 hops (more is definitely overkill and error
+        prone if some remailer is down), you will be pretty sure that no
+        one can trace you without putting much effert into it. To start
+        chaining, you issue following command after you have ready remailer
+        post in mail buffer (you did it with C-c / . r p and C-c / e)
+
+            C-c / . r C       tinypgp-r-chain-1
+
+        You can repeat this as many times as you want. When you're ready,
+        just send the message and it will travel through all remailer you
+        added to chain. (Watch you auto-action; you may want to defeat it
+        when you are about to press `C-c' `C-c' to send this chained
+        message)
+
+        Well, usually you don't use that command, because doing chaining
+        manually is very tedious for every post. Let's start defining
+        predefined chains instead. Set this variable:
+
+            tinypgp-:r-chain
+
+        Example:
+
+            (defconst tinypgp-:r-chain
+              '(("1-way"    [("replay" "+0:05r" "zyrix")])
+                ;;   shuffle-vector seelcts random path each time
+                ("hide"     (progn (shuffle-vector [("replay") ("dustbin")])))
+                ;;  let them eat this!
+                ("milkyway" [("replay") ("replay") ("replay")])
+                ))
+
+        The `tinypgp-:r-chain' usage and different parametrs in the vector are
+        best described in the variable documentation, `C-h' `v'
+        `tinypgp-:r-chain', and I won't go into details here. When you have
+        set this chain table, you can select the left hand names when you
+        call
+
+            C-c / . r c   tinypgp-r-chain
+
+        and it will encrypt the underneath message as many times as your
+        chain lenght is.
+
+6.0 Newnym type account handling
+
+    6.1 Enabling newnym support
+
+          IN ORDER TO USE NEWNYM ACCOUNT COMMANDS YOU HAVE TO GET AND
+          INSTALL _Levien_ _list_ described previously.
+
+    6.2 Newnym addresses
+
+        .anon.efga.org from Electronic Frontiers Georgia. http://anon.efga.org/
+        .nym.alias.net
+
+    6.3 Newnym echo menu
+
+        Because there are so many keybindings in the TinyPgp, it is almost
+        impossible to remember each one. In the program there is
+        possible to use guided echo area menu instead for *newnym* commands.
+        You enable the menu with
+
+             (setq tinypgp-:newnym-echo-menu-use-p t)
+
+        which is also the default setting. When you hit the
+        `tinypgp-:mode-prefix-key-newnym', by default C-c / . n , all the
+        available newnym commands are presented in the echo menu as follows
+
+             p)ost c)fg t)oggle   req: (a)ck e)nab f)fing s)sig si(z)e [hCDK]
+
+        You can quit the menu with *q* and ask help with *?* so see what the
+        commands mean.
+
+         NOTE:
+
+        When you enable the echo guided menu, you won't see bindings listed
+        in the X-popup menu that is displayed when you draw down menubar's
+        *TPgp->NewNymService*. Neither does the command bindings get listed
+        with
+
+            C-c /. n  C-h    try also  C-h k   C-c /. n
+
+        That's because the commands are controlled by one single function
+        and not bunch of functions that are bound key by key. This also
+        eans that if you want to add *new* binding to the
+
+            C-c / . n
+
+        Group, by using
+
+            (define-key
+                tinypgp-:mode-map
+                (concat tinypgp-:mode-prefix-key "x")
+                'my-tinypgp-newnym-command
+                )
+            ;; End
+
+
+        It is not recognized in the echo menu. Yes; the command goes to the
+        right (newnym prefix) map, but the menu doesn't know about it,
+        because you didn't define entry into this table as well:
+
+            tinypgp-:newnym-echo-menu
+
+        Please see how you manipulate echo menu variables like this
+        from *tinymenu.el*.
+
+    6.4 Ordering newnym help file
+
+        Opening *nym* account is not easy task at all and there is high
+        probability that something goes wrong or you get bounched mail
+        because the account open request wasn't in proper format. I would
+        recommend that you first order the latest help file and read it
+        carefully and only then call the account open command.
+
+        o   Order help file with command C-u C-c / . n ? or
+            `C-u' `M-x' `tinypgp-newnym-help'. The additional prefix arg
+            forces sending the request to get the help file. You should
+            ask new updates of that file from time to time.
+
+        You have to wait a while and when you receive the help file, please
+        save it and update variable above. Every time you call C-u C-c /
+        . n ? the file will be opened for you.
+
+            tinypgp-:r-newnym-help-file
+
+    6.5 Ordering newnym server's public key
+
+        The *nym* type accounts require that you send all messages to them
+        in encrypted format and that's why need to insert their public keys
+        to your pubring. The key usually is included in the help file that
+        you ordered above; but you can also send the key request get
+        command with following. Normally you need this command only once in
+        the lifetime of your nym account.
+
+            C-c / . n K     tinypgp-newnym-get-pgp-key
+
+    6.6 Asking used newnym account names
+
+        Don't go and order account name blindfolded, but send a request
+        to nym account and ask for list of used nyms. Then you can choose
+        some acocunt name that is not already reserved.
+
+            C-c . / n u     tinypgp-newnym-get-used-list
+
+    6.7 Opening newnym account
+
+        Before you do anything else:
+
+        .   You have to have nym server's PGP key in you pubring.
+        .   You have created new pgp key that you will be using in
+            conjunction with your account. Make the pgp key as
+            instructed in the newnym help file. You cannot proceed
+            before that.
+        .   You have to have created ready reply block that you will
+            be submitting to nym account. See remailer instruction how
+            to create reply block and how to update
+            `tinypgp-:r-reply-block-table'
+
+        If these conditions are in order; you can actually start composing
+        the create account request. Here is step by step instructions
+        what happens next.
+
+            C-c / . n C     tinypgp-newnym-create
+            "Do you have created the necessary PGP keys..." [Press ok]
+            Newnym account domain:                          [Select with TAB]
+            "You should check free login names.."           [Ignore this]
+            Nym account login name: [you login name, see used nym list]
+            Describe nym login name: [Like: Mr fooBar Beeblebrox]
+            Newnym PGP key matchig string:  [Give created nym PGP key-id]
+            Select reply block of remailer:                 [TAB to complete]
+
+            .. final instructions .. [Press any key]
+
+        You should see very complex looking mail buffer that holds all
+        all the necessary things that you need in sending the create
+        request. At this point you're free to modify the buffers and
+        change any settings. (Refer to nym help file). Few words of caution
+        if you change anything
+
+        o   The first line _must_ _contain_ `Config:'
+        o   The header fields must end to ": ", so "From:MyNym" is invalid
+            and "From: MyNym" is valid. Also do not use domain addresses
+            @newnym.site.com. There must only be the _loginName_ and no
+            no absolute email address.
+            addresses.
+        o   There can be multiple `Nym-Commands:' lines
+        o   Field `Reply-Block:' must end to `**' if there is encrypted
+            reply block in the message.
+
+        When you're satisfield with the settings, you do *onePass* encrypt
+        and sign: encypted with Nym server's pgp key, signed with your nym
+        login's PGP key. The *onePass* encrypted message you send to newnym
+        server.
+
+            C-c / u tab     Change to Nym user (your new nym login key-id)
+            C-c / . t       *OnePass* Encrypt and Sign
+            C-c C-c         Send the message
+
+        You will receive confirmation message that tells you if the request
+        was received and understood. Pay attention to possible error
+        messages that you receive, correct things that went wrong and send
+        new request if needed.
+
+    6.8 Newnym Account management; *nym* mode
+
+        You manage your *newnym* type account differently than the
+        *nymserver* account (explained later). All the messages must
+        include `Config:' header at the beginning of text body and rest of
+        the options are added after that. To open account configuration
+        request, you call command
+
+            C-c / . n c tinypgp-newnym-config-sendmail-template
+
+        You have now mail buffer in front of you for editing. In the
+        modeline you will see that `tinypgp-newnym-mode' (user callable minor
+        mode) is active and modeline shows `tinypgp-:newnym-mode-name' which
+        is by default *Nym*. The mode's defualt prefix is `C-\' and the
+        commands are:
+
+
+            C-\ ?       describe mode
+            C-\ tab     go to Nym-Commands field or create one.
+            C-\ p       insert or replace public key block
+            C-\ P       ...delete public key block
+            C-\ r       insert or replace reply block
+            C-\ R       ...delete reply block
+
+        The tab key is electric, meaning, that it behaves like the original
+        tab key if the *Nym* *minor* *mode* were off, if cursor is anywhere
+        else than over line `Nym-Commands:'. In that line it behaves this
+        way to help you to compose commands:
+
+            Nym-Commands: create +acksend +fin  +
+            |             |     |             |  |
+            |             |     |             |  complete all commands
+            |             |     |             complete command "fin"
+            |             |     Show default setting or example (prev word)
+            |             |     *
+            |             Show command help and advance to '*'.
+            If the cursor is over word Nym-Commands:, then advance
+            forward to first command word.
+
+    6.9 Newnym auto action
+
+        To make life more easier with newnym account, you can define auto
+        action that automatically performs the right encryption and signing
+        when you hit C-c C-c key to send the request. The key here is that
+
+        .   The message must be encrypted with *Nym* server's pgp key
+        .   But message must also be signed with *your* nym pgp key.
+        .   This all must happen in 'One pass' (using pgp's -eatfs option)
+
+        Here is example how you set up the auto action for *Nym* account.
+
+
+            ;;  When I hit C-c C-c to send mail, trigger
+            ;;  'one pass' auto encrypt and sign
+
+            (let* ((list '((nym-name-for-weasel@weasel
+                            . "\\(send\\|config\\)@weasel")
+                           (nym-name-for-efga@anon.efga.org
+                            . "\\(send\\|config\\)@anon.efga.org")
+                           ))
+                   sym re
+                   )
+              (dolist (elt list)
+                (setq sym (car elt)
+                      re  (cdr elt)
+                      elt (assoc re tinypgp-:auto-action-table))
+                (if elt                             ;Remove old eltry
+                    (setq tinypgp-:auto-action-table
+                          (delete elt tinypgp-:auto-action-table)))
+                ;;
+                ;; EVAL-OR-REGEXP  [SIGN-KEY-ID] [ENCRYPT] [XPGP] [KEYRING])
+                ;;
+                (push (list re sym t) tinypgp-:auto-action-table)
+                ))
+
+        Looks cryptic? Not really; It defines two newnym accounts: for
+        *weasel* and for *efga*. The list is looped with `dolist' and
+        `assoc' just check if there already is nym entry and won't go
+        adding multiple same auto-actions. The push command add *ELT* at a
+        time to auto-action table. What you should observe here is that the
+        second argument, the signing user, is a _symbol_.
+
+            (list re sym  t)
+                     ^^^  Encrypt flag
+
+        Because encrypt flag is *t* and sign user is symbol, that causes
+        doing *one* *pass* encrypt and sign. If the sign user were just a
+        string, the message would have been first encrypted and then
+        signed. That is very different matter.
+
+          _NOTE:_ If you have several accounts, _yournym1_ _yournym2_ in
+          the same nym _SERVER_, remember that the auto-action doesn't know
+          about them. It blindly checks if To destination contains *re* and
+          automatically uses _nym_ that you have defined. If you want to
+          post by different _yournym2_, you have to a) defeat the
+          auto-action C-c / m ! b) change user to _yournym2_ C-c / u tab c)
+          manually do `OnePass' encrypt and sign with C-c / t
+
+    6.10 Sending mail from your newnym account
+
+        Compose the message as usual and convert it into newnym post
+        and do *one* *pass* encrypt and sign while the active pgp
+        user is your *nym*.
+
+            C-c / u tab     change user to *nym*
+            C-c / . n p     tinypgp-newnym-post
+            C-c / t         One pass encrypt and sign
+            C-c C-c         to send the message.
+
+        Or if you have defined auto action for newnym server, you only
+        need to call
+
+            C-c / . n p     tinypgp-newnym-post
+            C-c C-c         to send the message.
+
+    6.11 Sending email to usenet from your newnym account
+
+        This is identical to 'Sending mail from your nym' above; the only
+        difference is that the post must travel through mail2news gateway.
+        You can select your favorite gateway by settings following
+        variable.
+
+            ;;  Default is mail2news@anon.lcs.mit.edu
+            tinypgp-:r-newnym-mail2news-address
+
+    6.12 Newnym request commands
+
+        All the newnym requsts can be sent individually too from single
+        keystrokes if you don't want to dwell into details and hack in the
+        nym configure request buffer. Here is list of supported request
+        commands. The prefix arg `C-u' tells to send the *plus(+)* request
+        instead.
+
+            C-c / . n a     -ascksend
+            C-c / . n r     -cryptrecv
+            C-c / . n e     -disable  (in fact the minus re-enables)
+            C-c / . n f     -fingerkey
+            C-c / . n F     -fixedsize
+            C-c / . n s     -sigsend
+
+    6.13 Newnym account expirarion status
+
+        Your Newnym account won't last foreever onece you have opened it.
+        If you don't use it for approx 120 days, he account will be deleted
+        from the newnym server. Check the exact expiration conditions from
+        the Newnym server's help file. In TinyPgp, the account expiration
+        count is kept in so called *stamp* *files*. Once you have defined
+        `tinypgp-:r-newnym-default-account-table' a files pointed by
+        `tinypgp-:r-newnym-stamp-file-prefix' are created for each *nym*
+        you defined there. Suppose you have two nyms:
+
+            (defconst tinypgp-:r-newnym-default-account-table
+              '(("efga"     "redneck"   "nym-account"  "E1")
+                ("efga2"    "redneck"   "nym-account"  "E2")
+                ))
+
+        Then at startup you will notice following zero length files to appear.
+        If you delete them accidentally, then they are recreated and the
+        counting of xpiry days starts from zero, which is not true any
+        more.
+
+            ~/.pgp/.emacs.tinypgp-stamp.duihnfhuhurodj
+            ~/.pgp/.emacs.tinypgp-stamp.duihnfhqghu
+
+        The names of these files are partly mangled to protect from
+        occasional user from reading your newnym server information. These
+        names are easily decodable, but you should put them in directory
+        where noone else has read or listing permissions.
+
+        The *stamp* *files* are examined every time on startup and the
+        dates since they were used are calculated. You will message
+
+            (Newnym expiry) nym-name1: 100 nym-name2: 30
+
+        At startup whic tells you that it has been 100 and 30 days
+        for these accounts since you've last used them. You can also
+        print this information with command
+
+            C-c / . n x     tinypgp-newnym-account-expiry-warnings
+
+        The files are stamped whenever you send any nym *request* command
+        to your active nym. Be sure to use the *request* commands
+        periodically: toggling the *ack* on and/off will renew your account.
+
+    6.14 Newnym multiple account management
+
+        Normally all commands ask server and account name before you can
+        use nym commands. But really, this get's tedious soon and it would
+        be nice it you wouldn't have confirm the server and account name
+        each time. No worries, just define following variable like this.
+
+            ;;  I have two newnym accounts; in different servers
+            (defconst tinypgp-:r-newnym-default-account-table
+              '(("efga"     "efga"      "me-efga-login"   "E")
+                ("weasel"   "weasel"    "my-weasel-login" "W")
+                ))
+
+        To select either efga or weasel as default setting, call command
+
+            C-c / . n tab   tinypgp-newnym-default-set
+
+        After that you're no more asked what server and what account name
+        you use when you call newnym service commands. When the default
+        values are used, the modeline has indication "E" when the default
+        Efga setting is active.
+
+        If you want to take full control for a while, you can use following
+        command, which will temporarily disable the default nym settings:
+        it sets server and account to nil. Calling it again, will restore
+        the Efga settings.
+
+            C-c / . n t     tinypgp-newnym-default-toggle
+
+7.0 Nymserver type account handling
+
+    7.1 Nymserver address
+
+        .http://www.nymserver.com Administred by Andrew N. Edmond
+        .#URL-SITE/nymserv.html Nymserver documentation in html format
+
+    7.2 Opening nymserver account
+
+          You have to order paid account (cheap, $20 a year) before
+          you can use Nymserver. The free accounts were closed due to
+          SPAM abuse. Sorry, what a fine and easy server and some
+          idiots forced server to change its policy.
+
+        When you get your help file for the account, it will contain full
+        explanation how the account is managed. There are equivalent
+        command in this package to control all listed features. Your first
+        thing to do is to order account for you by sending mail directly to
+        help address. You do this with command
+
+          Before you do this, make sure you're sending mail from a host/site
+          that is your primary account. You can get only *_one_* anon account
+          from the Nymserver and it allocates a return address to the site
+          you're mailing from.
+
+            C-c / . y c
+
+        Shortly you will receive instructions how to use this account. After
+        you have received the mail; immediately define some variables
+        to make the account active in the program
+
+            (defconst tinypgp-:nymserver-account-table
+              '(("nymserver" "anXXXX@anon.nymserver.com" "qF8ASDeds"
+                 "Mr. Anonymous."
+                 "~/txt/nymserver.hlp"
+                 )
+                ))
+
+        Remember to save the received help file and put the filename to the
+        variable's entry list, so that you can use following command to
+        recall the help file at any time.
+
+            C-c / . y ? tinypgp-nymserver-help
+
+        Now you have account active and you can start using other
+        commands to manage your account.
+
+    7.3 Checking your account status; finger
+
+        Call finger command to check your account status. The receved mail
+        from the command
+
+            C-c / . y f tinypgp-nymserver-finger
+
+        will show something like this; where all your characteristics and
+        enabled options are listed. Here is typical configuration of newly
+        created account; notice that you have to pay little for level 2
+        access and features that come with it.
+
+            NYMSERVER ACCOUNT CONFIGURATION
+
+            Account: an12345@anon.nymserver.com
+                          No nickname assigned.
+            Mail transferred today: 4959 bytes
+            Mail transferred ever: 2827 bytes
+            Vacation status: vacation feature turned off.
+            Watchdog setting: paranoid watchdog OFF.
+            Anonymous method: bi-directional ANONymous.
+            Remailing method: sending directly to real email mail address.
+            PGP Encrypting is set on: not encrypting.
+            PGP Signing is set on: not signing.
+
+            This anonymous account's PGP key is:
+
+                no PGP key.
+
+            This anonymous account's plan is:
+
+                no plan.
+
+            This anonymous account's signature is:
+
+                no signature.
+
+            Account level:
+
+                this account is level-2 (paid).
+
+            Nymserver Finger Daemon
+            http://www.nymserver.com/
+
+    7.4 Sending nymserver commands in encrypted format
+
+          You should activate encryption as soon as possible to
+          prevent anyone from snooping your Anon commands and passwords.
+
+        TinyPgp can encrypt every command you send to the *nymserver*. This
+        protects your X-Anon-Password from snooping by some other 3rd
+        party. However in order to use this feature; you must
+
+        o   add the *nymserver* PGP key to your keyring.
+        o   Instruct TinyPgp to use that key (see nect section)
+        o   variable `tinypgp-:nymserver-request-encrypt' must be non-nil
+
+        The eancryption is *off* by default, so that you can experiment
+        with the account command without worrying about the encryption.
+        After you have got experience and installed the PGP key, you should
+        turn the `tinypgp-:nymserver-request-encrypt' variable to `non-nil'.
+
+    7.5 Using PGP with the account
+
+        The PGP key for the *nymserver* comes in the help file. You should
+        feed it to your keyring immediately. Just open the help file and
+        add the key that is included there.
+
+            C-c / . y ?     tinypgp-nymserver-help
+            C-c / k a       tinypgp-key-add-region-batch
+
+        When you have inserted the PGP key to your keyring, enable command
+        encryption by putting this in your ~/.emacs
+
+            (setq tinypgp-:nymserver-request-encrypt t)
+
+    7.6 Nymserver and auto action
+
+        To automatically send messages in encrypted format to nymserver,
+        you should add auto action entry like this. Now every time you
+        press C-c C-c; the mail is protected with pgp.
+
+            (setq tinypgp-:auto-action-table
+             (list
+              (list "anon@anon.nymserver.com"  nil t)
+              ;; other entries ...
+              ))
+
+        You useally want to do this so that your boss can't snoop the
+        content of your anonymous messages to newsgroups or to other
+        people. (#REF #mode:_email_substitution; Note: email substitution;)
+
+    7.7 Uploading PGP key to your account
+
+        Normally the mail you receive from the *nymserver* is in plain text
+        format, but you really like to receive encrypted messages, so that
+        the mail content stays secure. In order to receive such mail; you
+        have to a) upload new PGP key that has your nymserver's account
+        addess in the key-id [See 5.3.1 in the help file] and b) upload
+        that key to the *nymserver*. When you have the PGP key ready in
+        some of your keyrings, call command
+
+            C-c / . y u     tinypgp-nymserver-pgp-upload
+
+        Remember also to enable the PGP encryption for the account with
+        command
+
+            C-c / . y e
+
+    7.8 Sending as anonymous: nymserver, usenet, or private mail
+
+        Now when you have the account activated, you can start sending
+        anonymous messages in the same way as you did with the remailers.
+
+        o   You compose the message as usual; write new one or reply to some.
+        o   Call C-c . e p to (p)ost the message in anonymous format.
+        o   Additionally you can forward the message through remailer
+            with C-c . p before it reaches the anon account. This
+            keeps away prying eyes of your local admin. The message is
+            also protected with PGP encryption and readable only after
+            remailer.
+
+    7.9 Sending as anonymous: from different accounts
+
+        As mentioned earlier, when you open account in nymserver, your
+        site's address is the only place where you can send anonymous
+        mail. Let's see situation below.
+
+            aa@a.com  --> you ordered anon account from here.
+            bb@b.com  you have another normal account here
+            cc@c.com  you have yet another normal account here
+
+        Suppose you want to post from account bb@b.com as anon. Can't do
+        that because nymserver expects you to be only in aa@a.com, in the
+        site where you initially ordered the anon account.
+
+        But, TinyPgp offers adding From field to the nymserver message, so
+        that Nymserver thinks we're posting from aa@a.com. You must add
+        entry FROM-ADDRESS, aa@a.com, to the list
+
+            tinypgp-:nymserver-account-table
+
+        After that the From-field is inserted into every nymserver message
+        and it thinks the message is coming from aa@a.com while you may be
+        currently posting from a different site. Remember, that this
+        applies to posting only; replies addresses to your anon account
+        nymserser sends to your real aa@a.com address. [To change account
+        anon address permanently, see *newaddress* request]
+
+    7.10 Sending as anonymous: usenet problems
+
+        When you send anonymous message through remailer to usenet
+        newsgroup, prepare yourself to wait 1-3 days before the message is
+        seen in the newsgroup. If you're accustomed to seeing yuor normal
+        newsgroup posts withing 1-3 hours in the gnus newsreader, remember
+        that the article just appeared in your nearest news server.
+
+            Your normal article --> server1 --> server2 ...
+            Your anon article   --> remailer --> serverX --> .. --> server1
+
+        As you can see, you anon mail travels different route to your
+        server1 when yuou send it first to remailer.
+
+    7.11 Special: cc'ing to multiple recipients
+
+        Nymserver's manual page states that you can only send mail to one
+        person at a time or to 3 newsgroups.
+
+            X-Anon-To: newsgroup | email address
+
+            This X-Directive tells the Nymserver where you are sending mail
+            to, which is only applicable when sending mail to
+            anon@anon.nymserver.com This can be ONE (1) email address or (3)
+            newsgroups that are comma delimited.
+
+        There is good reason for this, but sometimes it would be nice to
+        add couple of CC people in the list. With TinyPgp you can add CC
+        field as usual to regular email messages. The number of CC'd
+        addresses is not limited. When you hit C-c C-c to send message, the
+        CC field is checked and if it exists, the copy of the body will be
+        sent individually to each CC address through nymserver.
+
+        If you have enabled Nymserver's message encryption(see previously),
+        each message is encrypted with the Nymserver's public key before it
+        is sent out from your site.
+
+        Remember, that there is a limit in nymserver, how much mail you can
+        send per day. If you're going to harrash many people with this CC
+        utility, your nymserver account will be closed immediately and your
+        ISP provider will be contacted and asked to shut down your active
+        Internet link/account. In addition, you'll be included in many
+        Internet black list very fast.
+
+        Don't use this feature for spamming, but for good purpose.
+
+8.0 General PGP guidelines
+
+    8.1 About including the public key in the mail message
+
+        Do not distribute your public key by mail or Usenet post, because
+        there are more proper ways. People generally do not want that 'you'
+        send the key to them, instead they want to get it by thenself from
+        some trusted channel: finger or key server. The reason for this
+        should be obvious: email is not a secure channel, anyone can
+        replace the contents of your mail with something other.
+
+        Use some/all of the ways here to make your public key available:
+
+        o   Put it in your ~/.plan file, so people can simply finger
+            you for it. Open the ~/.plan file and just insert key there.
+            This doesn't work if your site does not allow fingering.
+
+            % finger foo@site.com
+
+        o   Post it to a public-key server which in turn automatically
+            distributes your key to all the other keyservers.  This is the
+            most preferred way, be sure to make copy of your pubring to a
+            removable media, so that you don't loose you generated key!
+
+        o   Put it on your WebPage and add let some X-header to tell
+            ,in the email where your web page is.
+
+            ,X-my-url: http://foo.site.com/
+
+            This way anybody who visits your page can also get your
+            public key if he's interested.
+
+9.0 Development notes
+
+    9.1 More about Installation
+
+        Have a look at the *example* setup that is also available. You can
+        copy the file as it, but is does no good for you, because the setup
+        is my current configuration. You have comment out some things and
+        change the variables if you want use the setup.
+
+            #URL-SITE/emacs-rc-tinypgp.ini
+
+    9.2 Development note: Using comint to talk to PGP interacively
+
+        Some PGP commands can't be run in batch mode, so we need a live
+        shell process inside emacs and through which we talk to PGP. The
+        comint code used may cause troubles, because there is no good
+        watchdog in the code to determine when PGP has finished outputting
+        text and stopped asking for some new input. For now, the comint
+        code is mainly experimental and I haven't decided if I continue
+        developing it.
+
+        One command that uses comint is 'Conventional crypting'.  This
+        feature may be handy if you send some big file (tar, binary): you
+        can use the conventional crypting solely for UU. Use some common
+        keyword like *test* and tell in the mail message:
+
+            This file has been crypted with kwd 'test to make it UU'
+
+        PGP's own UUencode method *base64* is not necessarily the best,
+        because it splits the big file into small UU chunks...with crypt
+        you can UU the whole file to one chunk
+
+        To decypt this conventionally crypted ascii armor is no different
+        than normal decrypting. Use M-x tinypgp-decrypt-region.
+
+    9.3 About error "We need to generate XXX random bits."
+
+        This means that PGP needs to regenerate file ~/.pgp/randseed.bin or
+        some similar file. To do so, you'd encrypt some dummy file to get
+        the PGP to generate the randseed.bin file again. Please switch to
+        command line and run some similar command;
+
+            % echo YourUserID > list.lst
+            % echo 1 | pgp -eatf -@list.lst
+
+        Alternatively you can call this command, which does exactly the
+        same as above. You may not need to call this command ever, because
+        this package makes best to detect if new randseed file is needed
+        and then it generates one for you.
+
+            M-x tinypgp-do-comint-randseed
+
+    9.4 About Platforms
+
+        My primary development platform is Unix/Emacs 19.28+ and this code
+        is based on it and I don't expect any problems in newer Emacs
+        versions, because no version dependent code is used.
+
+        XEmacs support is only secondary, but I don't expect many problems
+        when I start looking more into it, because I use compatibility
+        functions from my libs that take care of XEmacs specific things.
+
+        Windows95 support is not considered, mostly because it doesn't
+        allow multiple comint processes that are needed here in some
+        circumstances. If I have time, maybe, I can see if I can disable
+        the parts of the code that uses interactive comint buffer when the
+        environment is PC-based.
+
+10.0 Notes, problems and solutions, FAQ
+
+    10.1 Why are the nymserv menu choices disabled?
+
+        The nymserver is not free service and you can't use the
+        commands until you have ordered one. When you have created
+        the Nymserver profile, then the commands are automatically
+        enabled again.
+
+    10.2 GNUS 4/5: I can't see TinyPgp turned on for article buffer?
+
+        Were you already running gnus when you loaded TinyPgp? The package
+        hooks itself to all relevent places during the load time. And for
+        gnus the installation is done only when you call `M-x' `gnus'. Hm,
+        but that's not the full story, you see, gnus creates buffers only
+        one once, including article buffer. There is hook
+
+            gnus-article-mode-hook
+
+        where TinyPgp is installed, but that hook was run only when the
+        article buffer was created. If you select new article it is not
+        called.
+
+        And this is probably the problem. You have to kill the article
+        buffer and the select some new article. This forces running the
+        hook for fresh article and TinyPgp should now activate too.
+
+    10.3 RMAIL: error happens while you encrypt message
+
+        When you decrypt a message in RMAIL buffer, the read-only property
+        must be turned off by entering *rmail-edit-mode* before the
+        encryption takes place. But if error happens and command can't
+        complete its task, the buffer is left in `rmail-edit-mode'.
+
+        Be sure to press `C-c' `C-c' to end the `rmail-edit-mode' before
+        you continue using the RMAIL or you may accidentally modify the
+        message's content.
+
+        In normal situation the rmail-edit mode is temporarily turned on,
+        encryption done, and edit mode closed, so you normally see only
+        read only RMAIL buffer if all goes well.
+
+    10.4 VM6: application/pgp-encrypted support
+
+        [Dan Rich <drich@cisco.com>] I decided I wanted to be brave this
+        afternoon and add support to VM for application/pgp-encrypted to
+        VM6 using tinypgp. Here is my setup.
+
+            (defun vm-mime-display-internal-application/pgp-encrypted (layout)
+              (let ((start (point))
+                    buffer-read-only
+                    end
+                    )
+                (vm-mime-insert-mime-body layout)
+                (setq end (point-marker))
+                (vm-mime-transfer-decode-region layout start end)
+                (tinypgp-decrypt-region
+                  start end
+                  (tinypgp-i-args-pass-phrase-decrypt)
+                  )
+                t))
+
+        The "setq" is used to add this to VM's internal content-type table,
+        and the function should TinyPgp to decrypt the region when I ask VM
+        to process the MIME.
+
+    10.5 You have several user id's. Which to use?
+
+        When we call PGP to sign a mail message, it usually passes the user
+        name in the command line like this:
+
+            ... -u foo
+
+        The string "foo" is your active user from variable
+        `tinypgp-:user-now'.  Make sure that this variable holds sufficent
+        user name, which matches only one user in the keyrings. If you have
+        multiple IDs, then to prevent you from getting message
+
+            "Wrong pass phrase..."
+
+        set the variable to absolute key-id hex *number*. Say the output of
+        you secring.pgp looks like this
+
+            % pgp -kv secring.pgp
+            sec   512/EF977A25 1996/11/14 test
+            sec   512/50B18BAD 1996/11/14 foo
+            sec   512/B210A4B9 1996/11/14 foo1
+            sec   512/CBACBA15 1996/11/12 me
+            sec   512/BBF0E225 1996/11/11 me-again
+
+        Then if you wanted to use "foo" for your actions, use this
+
+            (setq tinypgp-:user-now "0x50B18BAD")
+
+        and pgp would not confuse the "foo" to refer to anything else that
+        might have "foo" string in the name.
+
+    10.6 Someone else has several user IDs. Which to use?
+
+        See next section
+
+    10.7 Someone's email address is not listed in his key-id?
+
+        This occasion happens quite often, because user may be mailing from
+        an address that is not included in his key. Say someone's key has
+        email addresses:
+
+            % pgp -fkxa foo
+
+            Key for user ID: Foo Bar -<Foo.Bar@example.com>
+            512-bit key, key ID 47141D39, created 1996/06/03
+            Also known as: Foo Bar, Italy -<Foo.Bar@ccr.it>
+            Also known as: Foo Bar, Italy -<Quux@domain.com>
+            Also known as: Foo Bar, Italy -<fb@workplace.some.edu>
+
+        Now suppose you get mail from him from email address that is not
+        listed in this key. If you try to send encrypted mail to him to,
+        the email address is used to signify his user id:
+
+            -u fb@new.address.it
+
+        The encrypting of mail fails, because there is no entry matching
+        "fb@new.address.it" in your pubring. In this case you must instruct
+        TinyPgp to substitutes every such address with something else:
+        key-id that can be found from the keyring.
+
+        Table `my-:tinypgp-email-substitution-table' format is
+
+             '((REGEXP . SUBST)
+               (REGEXP . SUBST)
+               ..
+               )
+
+        Here are some basic lisp command explanation first, so that you
+        understand the exqample later.
+
+            (list x x) will simply create list (x x)
+            (cons x x) will simply create cons-cell (x . x)
+
+        and when put like this
+
+            (list
+              (cons x x)
+              (cons x x)
+              )
+
+        it really translates to following. The more you add cons commands,
+        the more the (x .x) cells are added to the list.
+
+            ( (x . x) (x . x) )
+
+        You need the `list' call so that the possible variables like
+        `my-:tinypgp-jack' are expanded and not inserted as literals. Here
+        is full example, hope you understand it and can add similar one to
+        your needs.
+
+            ;; define my own general regexps
+
+            (setq my-:tinypgp-jack
+                 "jack@delta.com\\|jarkr@doodle\\|jack.Donner@xx.com")
+
+            ;;  List of email addresses that are not in the person's
+            ;;  pgp-key id Use the right Haand key when left hand matches.
+
+            (defconst my-:tinypgp-email-substitution-table
+            (list
+             (cons "edmond@.*lycaeum" "zzz@lycaeum.org")
+             (cons my-:tinypgp-jack     "yyyy@informix.com")
+             (cons my-:tinypgp-peter    "xxx@petium.rhein.de")
+             (cons "lutz.*jena.de"    "Dieter.DonnerWetter@Jena.Thur.De")
+             (cons "raph@"            "raph@cs.Berkeley.EDU")
+             (cons "rich.pieri@"      "Rats@ccs.neu.edu")
+
+             ;; This one has multiple keys and we want to use one particular.
+             ;; The 0xFFFF is unique way to tell which key to use
+
+             (cons "valkyr"           "0xA73B5E6D")
+             )
+            "*My email substitutions that will be added to
+            tinypgp-:email-substitution-table")
+
+            ;;  Now add my substitutions
+
+            (tinypgp-email-substitution-add my-:tinypgp-email-substitution-table)
+
+       10.7.1 BBDB support for email substitution
+
+        BBDB is a Big brother database where you can store information
+        about sender of the message. To use auto action, you add
+        following field to the bbdb record of the user:
+
+            pgp-id:
+
+        This behaves exactly the same way as substitution table below, but
+        you set the vbalue directly to users pgp key id, like:
+
+            pgp-id: 0xA73B5E6D
+
+        Or you can use email address that appears in person's pgp key:
+
+            pgp-id: Quux@domain.com
+
+          _Note_: The lisp way `tinypgp-:email-substitution-table' overrides
+          any definition in bbdb record.
+
+    10.8 Key add error:  bad ascii armor character
+
+        If you have tried to insert key from a buffer with command C-c / k
+        a, `tinypgp-key-add-region-batch', and the command terminates with
+        the following error
+
+            ERROR: Bad ASCII armor character, line 11.
+            ERROR: Bad ASCII armor checksum
+            Keyring add error.
+            For a usage summary, type:  pgp -h
+
+        This means that the pgp key you received is invalid. Please email
+        the holder of the key back and ask him to resend it. The one you
+        get is corrupted and cannot e inserted to keyring.
+
+    10.9 Too cryptic verify message: Good sig from 0x00fffff
+
+        Sometimes PGP just doesn't tell for whom the verified message
+        belongs or for some reason when the person made the key he didn't
+        put good first line in his key-id field. Examine following.
+
+            % pgp -kvc
+
+            pub   768/F72ED579 1996/06/21 0f00bc097
+                  Key fingerprint = 95 BF 27 8D D8 ...
+                                    Foo Bar <mr.Foo@bix.com>
+
+        Notice that the first line has some cryptic message "0f00bc097",
+        which is also used when the Pgp displays the verify message
+
+            Good signature from user "0f00bc097"
+
+        There may be perfectly valid reason to add this kind of string to
+        the key-id field when person made the key, but you as a verifier,
+        probably want to get message
+
+            Good signature from user Foo Bar
+
+        You can change the message displayed from verify function by
+        letting packagae to use your custom function. See variable's
+        documentation which will have ready example for cases like this.
+
+            tinypgp-:verify-message-function
+
+    10.10 How do I copy key to some other keyring?
+
+        Hopefully There will soon be key management minor mode but until
+        then, do this
+
+            C-c / p tab     set destination (active) pubring
+            C-c / k x       extract key you want to copy to buffer
+                            (repeat this as many times as you want)
+            C-c / k a       Add the keys in buffer
+
+        The deletion is similar: after copy; select one key at
+        a time and delete it from keyring (not the one that you copied to)
+
+    10.11 Advanced: you want to do something before encrypting
+
+        Say you want to run ispell on mail before the message is sent in
+        possible encrypt format (see auto action). Here is piece of code to
+        do that. In the function the ispell is not run if the message has
+        already been encrypted.
+
+            (add-hook 'mail-send-hook                 'my-ispell-mail)
+            (add-hook 'tinypgp-:cmd-macro-before-hook   'my-ispell-mail)
+
+            (defvar my-:mail-ispell-done nil "Buffer local flag.")
+            (make-variable-buffer-local 'my-:mail-ispell-done)
+
+            (defun my-ispell-mail (&optional cmd &rest args)
+              ;; *) We define variable my-:mail-ispell-done here
+              ;;    to inform us (if we're run many times) that ispell
+              ;;    has already checked the message.
+              ;; *) Check that message is in clear text format
+              ;; *) Check that this is mail buffer. We could be
+              ;;    encrypting in regular buffer too, but we want to
+              ;;    run ispell on mail buffers only
+              ;; *) act only if PGP command is encrypt: run ispell
+              ;;    before text gets encrypted.
+              ;;    Cmd is NULL if mail-send-hook calls us.
+              ;;
+              (cond
+               ((and (null my-:mail-ispell-done)
+                     (null (ti::mt-pgp-encrypted-p 'double-check))
+                     (ti::mt-mail-p)
+                     (or (null cmd)
+                         (eq cmd 'encrypt))
+                     )
+                 (ispell-message)
+                 (setq my-:mail-ispell-done t)
+                 ))
+               nil                ;; clean return value
+               )
+            ;; End
+
+11.0 About implementation
+
+    11.1 Encrypted secring
+
+        The secring encrypting with `crypt' works like this.And the basic
+        idea is the same if you use `pgp' choice instead; command if a bit
+        more complex and more slower.
+
+            % crypt PASSWORD < IN-FILE > OUT-FILE
+
+        When the secring is encrypted it is stored to file pointed by
+        `tinypgp-:file-secring-encrypted' which is `secring.enc' by default.
+
+            secring.pgp --> password --> secring.enc
+
+        When you use the encrypted secring feature, program will read the
+        encrypted secring to the memory so that the time spend in
+        decrypting does not affect performance when you use other commands.
+
+        o   open the secring.pgp to temporary file
+        o   read it into temporary buffer
+        o   put contents into variable `tinypgp-:pgp-exe' and property
+            'secring
+
+        The secring is stored into property and not retained as an Emacs
+        buffer, because there is a chance that user may enter the buffer
+        and mistakenly type something in there and ruin the binary
+        file. Even if the file were *hidden* buffer; you could still enter
+        there by accident. When the secring is stored out of emacs buffers;
+        it is less likely to be modified.
+
+        When the secring is needed for operations like decrypt and sign it
+        is written to the disk from the 'secring property.
+
+12.0 Thank you
+
+    12.1 Program beta testers and manual fixes
+
+        Henk SPG <tank@xs4all.nl> who had courage to take early v1.6x
+        version and assist me with beta testing this package in XEmacs
+        environment. I got very good feedback and good bug tracing
+        assistance from him.
+
+        Dan Rich <drich@cisco.com> who assisted me with solving the XEmacs
+        20.x incomaptibility problems. The correction cycle rolled out
+        changes that caused rewiting my other packages too. In addition he
+        suggested many other new features I didn't think of before. He
+        cleared many problems by talking to XEmacs 20.x maintainers and if
+        that's not all, he also made sure the package worked in VM. I'm
+        very happy that Dan came into picture.
+
+        Rick Flower <flower@ms31.sp.trw.com> introduced me to MH-E and
+        helped to track down difficulties in MH-E mail agent.
+
+        Peter Simons <simons@petium.rhein.de> also suggested some
+        improvements.
+
+        Andrew Donkin <ard@scms.waikato.ac.nz> sent patch to fix some
+        spelling mistakes in the 2.21 manual. Thank you.
+
+        <hubert.fauque@wanadoo.fr> Helped in testing the Pgp 5.x interface
+        in Unix platform. The Pgp 5.x interface was developed in NT and
+        I had no working Unix binary available for HP-UX.
+
+    12.2 PGP packet format experts
+
+        When I needed help in understanding the PGP packet format and ascii
+        armor these people were giving me a hand. My wholehearted thanks to
+        these kind souls, without them I couldn't have enhanced TinyPgp's
+        features.
+
+        Steve Gilham <steveg@uk.gdscorp.com> who explained the whole
+        ascii armor and pgp data packet format with handfull of clear
+        examples and providing C code.
+
+        Jill <jbaker@madge.com> who had done C program to decode pgp data
+        structure and showed it to me so that I could see how the decoding
+        is done.
+
+        <Ian.Brown@newcastle.ac.uk> and Assar Westerlund <assar@sics.se>
+        also helped me to start understanding the the pgpformat.doc
+
+    12.3 Others
+
+        Thanks for Andrew N. Edmond <an1@anon.nymserver.com>, the Nymserver
+        Administrator, for providing very easy and intuitive `nymserver'
+        account and assiting me to get the nymserver support running
+        smoothly. He patiently answered to my many inquiries and explained
+        what error I had made if something failed. Andrew is very busy at
+        managing his server software, so I greatly appreciate that he found
+        so much time for me.
+
+13.0 Articles and notes on PGP data format and keyrings
+
+    13.1 Multiple keyrings -- it breaks web of trust
+
+          Pat McCotter <patm@connix.com> in private mail
+
+        ...I thought about multiple keyrings but this breaks down the
+        web-of-trust. The only way I see this working is if the keyring
+        contains only keys that are within the user's web-of-trust.
+
+    13.2 Keyring bottlenecks
+
+          Pat McCotter <patm@connix.com> in private mail
+
+        ...The problem I have had with keyring indexing is that everything
+        in PGP is so interlocked. I have to use the crypto side of PGP to
+        sign/revoke/generate a key. When this is done I have to reindex. I
+        can work with the addition/removal of keys from within an external
+        program, but the crypto stuff that happens cannot happen through
+        external means.
+
+        This still begs the question of utilizing a key from a very large
+        keyring to encrypt a file. PGP still has to go through this large
+        keyring to find it and then utilize it. This is why I am looking at
+        integrating the indexing somehow so that PGP just has to call the
+        index procedure to get the file pointer. This is where the
+        bottleneck exists in PGP.
+
+14.0 PGP's Ascii Armor
+
+    14.1 RFC1991 -- PGP Message Exchange Formats
+
+        ...This memo provides information for the Internet community. This
+        memo does not specify an Internet standard of any kind.
+        Distribution of this memo is unlimited.
+
+17.0 End of document

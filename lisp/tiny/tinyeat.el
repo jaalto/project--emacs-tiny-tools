@@ -4,13 +4,12 @@
 
 ;;{{{ Documentation
 
-;; Copyright (C)    1995-2007 Jari Aalto
+;; Copyright (C)    1995-2011 Jari Aalto
 ;; Keywords:        extensions
 ;; Author:          Jari Aalto
 ;; Maintainer:      Jari Aalto
 ;;
-;; To get information on this program  call C-u M-x
-;; tinyeat-version. Look at the code with folding.el
+;; Look at the code with folding.el
 
 ;; COPYRIGHT NOTICE
 ;;
@@ -25,9 +24,7 @@
 ;; for more details.
 ;;
 ;; You should have received a copy of the GNU General Public License
-;; along with program. If not, write to the
-;; Free Software Foundation, Inc., 51 Franklin Street, Fifth Floor,
-;; Boston, MA 02110-1301, USA.
+;; along with this program. If not, see <http://www.gnu.org/licenses/>.
 ;;
 ;; Visit <http://www.gnu.org/copyleft/gpl.html> for more information
 
@@ -35,42 +32,49 @@
 ;;{{{ Install
 
 ;; ....................................................... &t-install ...
-;; Put this file on your Emacs-Lisp load path, add following into your
+;; Put this file on your Emacs-Lisp `load-path', add following into your
 ;; emacs startup file.
 ;;
 ;;      ;; Rebind BACKSPACE and DEL-related keys
-;;      (setq tinyeat-:load-hook '(tinyeat-install))
+;;      (setq tinyeat--load-hook '(tinyeat-install))
 ;;      (require 'tinyeat)
 ;;      (global-set-key "\M-z"   'tinyeat-kill-buffer-lines-main)
 ;;
 ;; Or use autoload and Emacs starts up faster
 ;;
-;;      (autoload 'tinyeat-forward-preserve            "tinyeat" "" t)
-;;      (autoload 'tinyeat-backward-preserve           "tinyeat" "" t)
-;;      (autoload 'tinyeat-delete-paragraph            "tinyeat" "" t)
 ;;      (autoload 'tinyeat-kill-line                   "tinyeat" "" t)
-;;      (autoload 'tinyeat-zap-line                    "tinyeat" "" t)
 ;;      (autoload 'tinyeat-kill-line-backward          "tinyeat" "" t)
 ;;      (autoload 'tinyeat-kill-buffer-lines-point-max "tinyeat" "" t)
 ;;      (autoload 'tinyeat-kill-buffer-lines-point-min "tinyeat" "" t)
+;;      (autoload 'tinyeat-forward-preserve            "tinyeat" "" t)
+;;      (autoload 'tinyeat-backward-preserve           "tinyeat" "" t)
+;;      (autoload 'tinyeat-delete-paragraph            "tinyeat" "" t)
+;;      (autoload 'tinyeat-zap-line                    "tinyeat" "" t)
+;;      (autoload 'tinyeat-join-lines                  "tinyeat" "" t)
 ;;
-;;      (global-set-key (kbd "ESC C-k")       'tinyeat-kill-line-backward)
-;;      (global-set-key (kbd "ESC d")         'tinyeat-forward-preserve)
-;;      (global-set-key (kbd "ESC z")         'tinyeat-kill-buffer-lines-main)
-;;      (global-set-key (kbd "ESC C-k")       'tinyeat-zap-line)
+;;      ;; Lines
+;;      (global-set-key "\M-k"                'tinyeat-kill-line-backward)
+;;      (global-set-key "\C-\M-k"             'tinyeat-zap-line)
+;;      (global-set-key (kbd "C-S-k")         'tinyeat-zap-line)
 ;;
-;;      (global-set-key (kbd "M-DEL")         'tinyeat-forward-preserve)
-;;      (global-set-key (kbd "<C-delete>")    'tinyeat-backward-preserve)
+;;      ;; Generic
+;;      (global-set-key (kbd "<M-backspace>") 'tinyeat-backward-preserve)
 ;;      (global-set-key (kbd "<S-backspace>") 'tinyeat-delete-whole-word)
+;;
+;;      (unless window-system
+;;        (global-set-key (kbd "M-SPC") 'tinyeat-delete-whole-word))
+;;
+;;      (global-set-key "\M-d"                'tinyeat-forward-preserve)
+;;      (global-set-key "\C-\M-d"             'tinyeat-delete-paragraph)
+;;
+;;      ;; Other
+;;      (global-set-key "\C-S-y"              'tinyeat-yank-overwrite)
+;;      (global-set-key (kbd "C-S-SPC)        'tinyeat-join-lines)
 ;;
 ;; Investigate problems with:
 ;;
 ;;      M-x tinyeat-debug-toggle
 ;;      M-x tinyeat-debug-show
-;;
-;; If you have any questions, use this function to contact maintainer
-;;
-;;      M-x tinyeat-submit-bug-report
 
 ;;}}}
 ;;{{{ Documentation
@@ -87,7 +91,7 @@
 ;;          `Meta' `C-y'. (Std Emacs in `overwrite-mode' doesn't allow you to
 ;;          yank and overwrite at the same time.)
 ;;
-;;  Today's suggestion
+;;  Hint for the Minibuffer
 ;;
 ;;      If using Windowed Emacs and the prompt is at minibuffer and
 ;;      you would like to clean the whole prompt, hit key
@@ -97,26 +101,23 @@
 ;;
 ;;  Non-windowed and Windowed Emacs
 ;;
-;;      This package works _best_ in windowed Emacs, because in windowed
-;;      environment you can use the modifiers *Control*, *Alt* and *Meta*
-;;      freely with other keys. The idea of this package is to overload
-;;      your single key, `backspace', as much as possible with various
-;;      delete functionalities.
-;;
-;;      In non-windowed Emacs there is no key named `backspace', so
-;;      standard Emacs bindings are bound instead. Many of this
-;;      package's features are left unused because there are no
-;;      suitable keys to bind the commands to. In non-windowed Emacs the
-;;      command marked with (*) are not available. Emacs bindings
-;;      that are redefined when you call `tinyeat-activate' are:
+;;      This package works _best_ in windowed Emacs, because in
+;;      windowed environment you can use the modifiers *Control*,
+;;      *Alt* and *Meta* freely with the backspace key. The idea of
+;;      this package is to overload your single key, `backspace', as
+;;      much as possible with various delete functionalities.
+;;      The differences to non-windowed environment are as follows.
+;;      Key marked with (*) is not available under non-window system.
 ;;
 ;;                          was             now
 ;;          ---------------------------------------------------------
 ;;          M-d             kill-word       tinyeat-forward-preserve
-;;          S-backspace     <none>          tinyeat-delete-whole-word  (*)
 ;;          M-k             kill-sentence   tinyeat-kill-line-backward
-;;          M-C-d           down-list       tinyeat-delete-paragraph
-;;          M-C-y           <none>          tinyeat-yank-overwrite
+;;          S-Backspace     <none>          tinyeat-delete-whole-word  (*)
+;;          C-M-d           down-list       tinyeat-delete-paragraph
+;;          C-M-k           kill-sexp       tinyeat-zap-line
+;;          C-S-y           yank-pop        tinyeat-yank-overwrite (*)
+;;          C-S-SPC	    set-mark-command tinyeat-join-lines (*)
 ;;
 ;;  Story behind this package
 ;;
@@ -184,38 +185,48 @@
 ;;      retired (vanished, vaporized) from the buffer, remember, there
 ;;      is no need to panic. Emacs has friendly `undo' (C-_ or C-x u).
 ;;
-;;  Default keybindings
+;;  Some of the Default keybindings
 ;;
 ;;      Line delete
 ;;
 ;;          <<           >>           <<>>
-;;          M-k          C-k          M-C-k
-;;                                    zap whole line
+;;          M-k          C-k          C-M-k or C-S-k
+;;                                    To zap whole line
 ;;
 ;;      Chunk delete: words, spaces, symbols ...
 ;;
-;;          <<           >>           <<>>               \//\
+;;          <            >            <>                 \/ /\
 ;;          M-Backspace  C-backspace  S-Backspace        C-M-d  / C-S-backspace
-;;                                    Delete whole word  Paragraph delete
+;;                       M-d          Delete whole word  Paragraph delete
 ;;
-;;      Other functions that you might want to bind to keys:
+;;      Other
+;;
+;;          C-S-y        tinyeat-yank-overwrite
+;;          C-S-SPC      tinyeat-join-lines
+;;          M-SPC        tinyeat-delete-whole-word
+;;
+;;      These function have no defult binding in `tinyeat-install', but
+;;      you might consider finding a suitable key bindings for them:
 ;;
 ;;         M-x tinyeat-erase-buffer
 ;;         M-x tinyeat-kill-buffer-lines-main
-;;         M-x tinyeat-join-lines
 ;;
 ;;  Known Bugs
 ;;
 ;;      This package heavily relies on various modifiers that can be
-;;      attached to the *BACKSPACE* key and binding it can be a difficult
-;;      subject under Unix. For example the *Alt* key may not exist and to
-;;      make it "seen" under Unix you have to introduce yourself to
-;;      `xmodmap(1)' or `keycaps(1)' and possibly `xev(1)' in order to find
-;;      the key symbols correctly.
+;;      attached to the *BACKSPACE* key. Binding the backspace can be
+;;      a difficult subject under Unix. For example the *Alt* (Meta)
+;;      key may not be recognized under terminala. It may be possible
+;;      to make backspace known by exming the key events with xev(1)
+;;      and makign the needed modification to environment with
+;;      `xmodmap(1)' or `keycaps(1)'. In some terminals that Alt-key
+;;      simply won't be seen and the Meta-key substitute o use ESC
+;;      under Emacs is not really practical in the sense where this
+;;      package was developed: for quick editing.
 ;;
-;;      Worse, in the same environment Emacs and XEmacs may disagree what
-;;      BACKSPACE means. To get some taste, here is what XEmacs 20.4 and
-;;      Emacs 20.3 in Redhat Linux 6.2 return:
+;;      Worse, in the same environment Emacs and XEmacs may disagree
+;;      what BACKSPACE means. An example: here are the results from
+;;      XEmacs 20.4 and Emacs 20.3 under Redhat Linux 6.2:
 ;;
 ;;                              XEmacs          Emacs
 ;;
@@ -223,13 +234,12 @@
 ;;          <shift backspace>   delete          S-delete
 ;;          <alt backspace>     <nothing>       <nothing>
 ;;
-;;      There is nothing this package can do to cope with these changes in
-;;      key symbols or the environemnt you use. If you can, try to get the
-;;      ALT key working and shift-modifier for backspace and everything
-;;      is well. If that is not possible, the power of the predefined
-;;      keybindings are mostly left unused and you have to look at the
-;;      install function and determine how would you use your keyboard best
-;;      with these functions.
+;;      There is nothing this package can do to cope with these
+;;      changes in key symbol or the environment chnages. If you can,
+;;      try to get the ALT and and SHIFT-modifiers working for use
+;;      with backspace and everything is well. If that is not
+;;      possible, the power of the predefined keybindings are mostly
+;;      left unused and you have to find alternative key combinations.
 
 ;;}}}
 
@@ -240,9 +250,8 @@
 ;;{{{ setup: variables
 
 (require 'tinylibm)
-(eval-when-compile (ti::package-use-dynamic-compilation))
 
-(ti::package-defgroup-tiny TinyEat tinyeat-: extension
+(ti::package-defgroup-tiny TinyEat tinyeat-- extension
   "Eat blocks of text forward, backward.
 Overview of features
 
@@ -251,17 +260,17 @@ Overview of features
             next statement , next comment ... whatever is appropriate
         o   Can also eat only 'inside' words: WordsThatAreLikeThis")
 
-(defcustom tinyeat-:load-hook nil
+(defcustom tinyeat--load-hook nil
   "*Hook that is run when package is loaded."
   :type  'hook
   :group 'TinyEat)
 
-(defcustom tinyeat-:verbose-flag t
+(defcustom tinyeat--verbose-flag t
   "*Non-nil means allow informational messages to be displayed."
   :type  'boolean
   :group 'TinyEat)
 
-(defcustom tinyeat-:non-word-chars
+(defcustom tinyeat--non-word-chars
   "][=_~+!@#$%&*:;'\"`,.<>(){}$<>?/|\\\\\n \t-"
   "*Characters that _stop_ eating word.
 Character ][ be in this order and in the beginning of variable,
@@ -269,29 +278,11 @@ because this string is converted into regexp later."
   :type  '(string :tag "Charset")
   :group 'TinyEat)
 
-(defcustom tinyeat-:eat-full-word-charset  "^][ \t\n(){};'\","
+(defcustom tinyeat--eat-full-word-charset  "^][ \t\n(){};'\","
   "*Character set to use when determining word boundary.
 Normally word is terminated by whitespace or newlines."
   :type  '(string :tag "Charset")
   :group 'TinyEat)
-
-;;}}}
-;;{{{ version
-
-;;;###autoload (autoload 'tinyeat-version "tinyeat" "Display commentary." t)
-(eval-and-compile
-  (ti::macrof-version-bug-report
-   "tinyeat.el"
-   "tinyeat"
-   tinyeat-:version-id
-   "$Id: tinyeat.el,v 2.62 2007/05/01 17:20:43 jaalto Exp $"
-   '(tinyeat-:version-id
-     tinyeat-:debug
-     tinyeat-:load-hook
-     tinyeat-:verbose-flag
-     tinyeat-:non-word-chars
-     tinyeat-:eat-full-word-charset)
-   '(tinyeat-:debug-buffer)))
 
 ;;}}}
 ;;{{{ install
@@ -299,7 +290,7 @@ Normally word is terminated by whitespace or newlines."
 ;;;###autoload (autoload 'tinyeat-debug-toggle "tinyeat" "" t)
 ;;;###autoload (autoload 'tinyeat-debug-show   "tinyeat" "" t)
 
-(eval-and-compile (ti::macrof-debug-standard "tinyeat" "-:"))
+(eval-and-compile (ti::macrof-debug-standard "tinyeat" "--"))
 
 ;;; ----------------------------------------------------------------------
 ;;;
@@ -321,41 +312,50 @@ Normally word is terminated by whitespace or newlines."
 ;;;
 ;;;###autoload
 (defun tinyeat-install-default-bindings ()
-  "Add default bindings to the backspace key with modifiers."
+  "Bind default keys to various 'eat' functions."
   (interactive)
-  (global-set-key (kbd "ESC C-y")         'tinyeat-yank-overwrite)
 
   ;; was `kill-sentence'
-  (global-set-key (kbd "ESC C-k")         'tinyeat-kill-line-backward)
+  (global-set-key "\M-k"                'tinyeat-kill-line-backward)
 
-  ;;  was `kill-word'
-  (global-set-key (kbd "ESC d")           'tinyeat-forward-preserve)
-  (global-set-key (kbd "<C-delete>")      'tinyeat-forward-preserve)
-  (global-set-key (kbd "<C-backspace>")   'tinyeat-forward-preserve)
+  ;; C-M-k: Works both in Windowed and non-Windowed Emacs. Unfortunately in
+  ;; windowed Linux/Gnome C-M-k runs "Lock Screen", we define C-S-k
+  ;; as a backup.
+
+  (global-set-key "\C-\M-k"             'tinyeat-zap-line) ; kill-sexp
+  (global-set-key (kbd "C-S-k")         'tinyeat-zap-line)
+
+  (global-set-key (kbd "C-S-y")         'tinyeat-yank-overwrite)
+  (global-set-key (kbd "C-S-SPC")	'tinyeat-join-lines)
 
   ;;  Alt-backspace
-  (global-set-key (kbd "ESC DEL")         'tinyeat-backward-preserve)
-  (global-set-key (kbd "M-DEL")           'tinyeat-backward-preserve)
+  (global-set-key (kbd "<M-backspace>") 'tinyeat-backward-preserve)
 
-  (global-set-key (kbd "<S-backspace>")   'tinyeat-delete-whole-word)
-  (global-set-key (kbd "<S-delete>")      'tinyeat-delete-whole-word)
+  ;;  was `kill-word'
+  (global-set-key "\M-d"                'tinyeat-forward-preserve)
+  (global-set-key (kbd "<C-backspace>") 'tinyeat-forward-preserve)
+  ;; secondary backup
+  (global-set-key (kbd "<C-delete>")    'tinyeat-forward-preserve)
+  (global-set-key (kbd "<C-deletechar>")'tinyeat-forward-preserve)
+  (global-set-key (kbd "<M-delete>")    'tinyeat-forward-preserve)
+
+  (global-set-key (kbd "<S-backspace>") 'tinyeat-delete-whole-word)
+  (global-set-key (kbd "<S-delete>")    'tinyeat-delete-whole-word)
+  ;; Was just-one-space
+  (global-set-key "\M-\ "               'tinyeat-delete-whole-word)
 
 ;;;    (when (ti::xemacs-p)
-;;;      (global-set-key (kbd "M-BS")            'tinyeat-backward-preserve)
-;;;      (global-set-key (kbd "C-BS")            'tinyeat-forward-preserve))
+;;;      (global-set-key (kbd "M-BS")   'tinyeat-backward-preserve)
+;;;      (global-set-key (kbd "C-BS")   'tinyeat-forward-preserve))
 
   ;;  Was `down-list'
-  (global-set-key (kbd "ESC C-d")         'tinyeat-delete-paragraph)
+  (global-set-key "\C-\M-d"               'tinyeat-delete-paragraph)
   (global-set-key (kbd "<C-S-backspace>") 'tinyeat-delete-paragraph)
   (global-set-key (kbd "<C-S-delete>")    'tinyeat-delete-paragraph)
 
-  (global-set-key (kbd "ESC C-k")   'tinyeat-zap-line)
-
   (unless (ti::compat-window-system)
     (tinyeat-install-default-bindings-terminal))
-
-  (message "\
-TinyEat: ** keys were bound to TinyEat functions."))
+  (message "TinyEat: [INSTALL] some existing keys were bound to TinyEat functions."))
 
 ;;; ----------------------------------------------------------------------
 ;;;
@@ -373,21 +373,20 @@ TinyEat: ** keys were bound to TinyEat functions."))
 (put 'tinyeat-repeat-macro 'lisp-indent-function 1)
 (defmacro tinyeat-repeat-macro (end &rest body)
   "Loop using VAR from BEG to END and do BODY."
-  (` (loop for var from 1 to (, end)
-           do
-           (progn
-             (,@ body)))))
+  `(loop for var from 1 to ,end
+	 do
+	 (progn
+	   ,@body)))
 
 ;;; ----------------------------------------------------------------------
 ;;;
 (put 'tinyeat-verbose-macro 'lisp-indent-function 0)
 (defmacro tinyeat-verbose-macro (&rest body)
-  "Run BODY if tinyeat-:verbose-flag' is set.
+  "Run BODY if tinyeat--verbose-flag' is set.
 Minibuffer is excluded."
-  (`
-   (when (and (not (ti::buffer-minibuffer-p))
-              tinyeat-:verbose-flag)
-     (,@ body))))
+  `(when (and (not (ti::buffer-minibuffer-p))
+              tinyeat--verbose-flag)
+     ,@body))
 
 ;;; ----------------------------------------------------------------------
 ;;;
@@ -468,8 +467,8 @@ Minibuffer is excluded."
 ;;;
 (defun tinyeat-delete-whole-word-1-charset (charset)
   "Delete word based on CHARSET. See `skip-chars-backward' and *-forward."
-  (let* (beg
-         end)
+  (let (beg
+	end)
     (skip-chars-backward charset)
     (setq beg (point))
     (skip-chars-forward  charset)
@@ -481,10 +480,10 @@ Minibuffer is excluded."
 (defun tinyeat-delete-whole-word-1-main  (&optional charset)
   "Delete one word at point. Optional CHARSET is for `skip-chars-backward'.
 References:
-  `tinyeat-:eat-full-word-charset'"
+  `tinyeat--eat-full-word-charset'"
   (interactive)
   (or charset
-      (setq charset tinyeat-:eat-full-word-charset))
+      (setq charset tinyeat--eat-full-word-charset))
   (cond
    ((or (looking-at "[ \t\r\n][ \t\r\n]")
         (and (not (bolp))
@@ -510,7 +509,7 @@ References:
 - If on top of word, delete whole word.
 
 References:
-  `tinyeat-:eat-full-word-charset'"
+  `tinyeat--eat-full-word-charset'"
   (interactive "p")
   (tinyeat-repeat-macro (or count 1)
                         (tinyeat-delete-whole-word-1-main)))
@@ -581,9 +580,9 @@ This way you can retain mouse selection in cut buffer."
 (defun  tinyeat-delete-paragraph ()
   "Delete current paragraph, separated by empty lines."
   (interactive "*")
-  (let* ((re "^[ \t]*$")
-         beg
-         end)
+  (let ((re "^[ \t]*$")
+	beg
+	end)
     (cond
      ((save-excursion                   ;sitting on empty line
         (beginning-of-line)         ;kill empty lines around the point
@@ -622,22 +621,22 @@ This way you can retain mouse selection in cut buffer."
   "Delete whitespace at point. Optionally BACK.
 If optional PRESERVE is given, then deletes towards the BACK only.
 if BACK is non-nil the deletion is headed backward."
-  (let* ( ;; character function selection
-         (charf   (if back 'skip-chars-backward 'skip-chars-forward))
-         (p       (point))
-         (ch      (ti::buffer-read-char back 0)) ;sitting on it if looking fwd
-         (ch-p    (ti::buffer-read-char back -1))
-         (ch-n    (ti::buffer-read-char back 1)))
+  (let ( ;; character function selection
+	(charf   (if back 'skip-chars-backward 'skip-chars-forward))
+	(p       (point))
+	(ch      (ti::buffer-read-char back 0)) ;sitting on it if looking fwd
+	(ch-p    (ti::buffer-read-char back -1))
+	(ch-n    (ti::buffer-read-char back 1)))
     (cond
      ((and back
            (ti::space-p (or ch-p ?\ ))
-           (char= ch ?\n))
+           (char-equal ch ?\n))
       (delete-horizontal-space)
       (if (null back)
           (tinyeat-verbose-macro
-           (message "TinyEat: line cleared")))
+	    (message "TinyEat: line cleared")))
       t)
-     ((char= ch ?\n)                    ;no spaces before, do nothing
+     ((char-equal ch ?\n)                    ;no spaces before, do nothing
       nil)
      ((or (and ch ch-n
                (ti::space-p ch)
@@ -659,7 +658,7 @@ if BACK is non-nil the deletion is headed backward."
 (defun tinyeat-word-move-point (&optional back)
   "Move to suitable word kill point. Mixed case words are special.
 Optionally BACK.
-See variable `tinyeat-:non-word-chars' how to delimit word parts.
+See variable `tinyeat--non-word-chars' how to delimit word parts.
 
 * = cursor position
 
@@ -668,8 +667,10 @@ ThisIsMixedWord --> ThisIsMixedWord
 THISmixedWord   --> THISmixedWord
 *                       *"
   (let* ((fid         "tinyeat-word-move-point")
-         (charf       (if back 'skip-chars-backward 'skip-chars-forward))
-         (non-word    tinyeat-:non-word-chars)
+         (charf       (if back
+			  'skip-chars-backward
+			'skip-chars-forward))
+         (non-word    tinyeat--non-word-chars)
          (nonw-re     (concat "[" non-word "]+"))
          (ch          (ti::buffer-read-char back))
          p
@@ -763,9 +764,9 @@ THISmixedWord   --> THISmixedWord
 (defun tinyeat-yank-overwrite ()
   "Yank text by overwriting previous content."
   (interactive)
-  (let* ((p  (point))                   ;insertion point
-         len
-         end)
+  (let ((p (point))			;insertion point
+	len
+	end)
     (with-temp-buffer
       (yank)
       (setq len (1- (point-max))))      ;how many chars in there ?
@@ -807,7 +808,7 @@ C.  when it is NON-NIL and BACK t
 
 References:
 
-  `tinyeat-:non-word-chars'"
+  `tinyeat--non-word-chars'"
   (let ((fid        "tinyeat-eat ")
         (p          (point))
         (syntaxf    (if back 'skip-syntax-backward 'skip-syntax-forward))
@@ -832,7 +833,7 @@ References:
       (tinyeat-debug fid "CHARCTER is nil, maybe bop or eob")
       (tinyeat-verbose-macro
        (message
-        "TinyEat: "
+        "TinyEat: %s"
         (concat
          (if (bobp)
              "Beginning"
@@ -849,9 +850,9 @@ References:
            (message "TinyEat: line cleared."))))
      ;; --``-- --``-- --``-- --``-- --``-- --``-- --``-- --``-- --``-- --``--
      ;; - Multiple  newlines, squeeze to one only
-     ((and (char= ch ?\n)
+     ((and (char-equal ch ?\n)
            ch-n
-           (char= ch-n ?\n))
+           (char-equal ch-n ?\n))
       (funcall charf "\n")
       (if (null back)
           (backward-char 1)        ;do not join, leave 1 EMPTY newline
@@ -860,7 +861,7 @@ References:
       (delete-region p (point)))
      ;; --``-- --``-- --``-- --``-- --``-- --``-- --``-- --``-- --``-- --``--
      ;; - at the end of line I suppose add previous line to it.
-     ((char= ch ?\n)
+     ((char-equal ch ?\n)
       (tinyeat-debug
        fid "NEWLINE" 'back back 'ti::space-preserve ti::space-preserve)
       (unless (tinyeat-space-delete-at-point back ti::space-preserve)
@@ -907,6 +908,6 @@ References:
 ;;}}}
 
 (provide   'tinyeat)
-(run-hooks 'tinyeat-:load-hook)
+(run-hooks 'tinyeat--load-hook)
 
 ;;; tinyeat.el ends here

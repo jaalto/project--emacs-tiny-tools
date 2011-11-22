@@ -4,13 +4,12 @@
 
 ;;{{{ Id
 
-;; Copyright (C)    1997-2007 Jari Aalto
+;; Copyright (C)    1997-2010 Jari Aalto
 ;; Author:          Jari Aalto
 ;; Maintainer:      Jari Aalto
 ;; Created:         1997-09
 ;; Keywords:        extensions
 ;;
-;; To get information on this program, call M-x tinyprocmail-version.
 ;; Look at the code with folding.el.
 
 ;; This program is free software; you can redistribute it and/or modify it
@@ -24,9 +23,7 @@
 ;; for more details.
 ;;
 ;; You should have received a copy of the GNU General Public License
-;; along with program. If not, write to the
-;; Free Software Foundation, Inc., 51 Franklin Street, Fifth Floor,
-;; Boston, MA 02110-1301, USA.
+;; along with this program. If not, see <http://www.gnu.org/licenses/>.
 ;;
 ;; Visit <http://www.gnu.org/copyleft/gpl.html> for more information
 
@@ -36,16 +33,16 @@
 ;;; Install:
 
 ;; ....................................................... &t-install ...
-;;  Put this file on your Emacs-Lisp load path, add following into your
+;;  Put this file on your Emacs-Lisp `load-path', add following into your
 ;;  $HOME/.emacs startup file. This must be the very first entry before
 ;;  any keybindings take in effect.
 ;;
 ;;      ;;  - Tell which procmail version you're using, see procmail -v
-;;      ;;  - Uf you do not set this, tinyprocmail.el will call shell
+;;      ;;  - If you do not set this, tinyprocmail.el will call shell
 ;;      ;;    to find out the procmail version. (slower)
 ;;
-;;      (setq tinyprocmail-:procmail-version "v3.11pre7")
-;;      (add-hook 'tinyprocmail-:load-hook 'tinyprocmail-install)
+;;      (setq tinyprocmail--procmail-version "v3.11pre7")
+;;      (add-hook 'tinyprocmail--load-hook 'tinyprocmail-install)
 ;;      (require 'tinyprocmail)
 ;;
 ;; You can also use the preferred way: autoload
@@ -53,26 +50,22 @@
 ;;      (autoload 'turn-on-tinyprocmail-mode  "tinyprocmail" "" t)
 ;;      (autoload 'turn-off-tinyprocmail-mode "tinyprocmail" "" t)
 ;;      (autoload 'tinyprocmail-mode          "tinyprocmail" "" t)
-;;      (add-hook 'tinyprocmail-:load-hook 'tinyprocmail-install)
+;;      (add-hook 'tinyprocmail--load-hook 'tinyprocmail-install)
 ;;
-;;      ;;  Procmail files usually end to suffix "*.rc", like file-name.rc
+;;      ;;  Procmail files usually end to suffix "*.rc", like pm-file.rc
 ;;      ;;  Some older procmail files start with "rc.*", like rc.file-name
 ;;
 ;;      (autoload 'aput "assoc")
 ;;      (aput 'auto-mode-alist
-;;            "\\.\\(procmail\\)?rc$"
+;;            "\\.procmailrc\\|pm-.*\\.rc$\\|\\<rc\\.[a-z]"
 ;;            'turn-on-tinyprocmail-mode)
 ;;
 ;;  This source file includes sample procmail test file for Lint. You
-;;  can unpack it if you have `pgp' and `tar' commands in your system.
+;;  can unpack it if you have `gpg' and `tar' commands in your system.
 ;;  When the file has been unpacked, load pm-lint.rc file into buffer,
 ;;  and follow instructions in the file.
 ;;
 ;;      M-x tinyprocmail-install-files
-;;
-;;  If you have any questions, use this function to contact author
-;;
-;;       M-x tinyprocmail-submit-bug-report
 
 ;;}}}
 ;;{{{ Documentation
@@ -240,7 +233,7 @@
 ;;      more, you can use following statement. This 'flag-together (or not)
 ;;      format is automatically retained when everytime you call lint.
 ;;
-;;          (setq tinyprocmail-:flag-and-recipe-start-style 'flags-together)
+;;          (setq tinyprocmail--flag-and-recipe-start-style 'flags-together)
 ;;
 ;;       [lockfile]
 ;;
@@ -419,7 +412,7 @@
 ;;
 ;;      Change the filename "~/pm/pm-test.rc" to targetted for
 ;;      linting.  The Lint results will appear in file
-;;      `tinyprocmail-:lint-output-file' which is ~/pm-lint.out by
+;;      `tinyprocmail--lint-output-file' which is ~/pm-lint.out by
 ;;      default. Below you see a shell script to run the above command
 ;;      more easily. Rip code with `ti::package-rip-magic'
 ;;
@@ -463,7 +456,8 @@
 
 (require 'tinylibm)
 
-(eval-when-compile (ti::package-use-dynamic-compilation))
+(defconst tinyprocmail--version-time "2010.1120.2052"
+  "*Version of last edit.")
 
 (eval-and-compile
   (defvar tinytab-mode nil)
@@ -475,7 +469,7 @@
     (message "\
   ** tinyprocmail.el: overlay-* functions missing from this Emacs.")))
 
-(ti::package-defgroup-tiny TinyProcmail tinyprocmail-: extensions
+(ti::package-defgroup-tiny TinyProcmail tinyprocmail-- extensions
   "Procmail log minor mode
   Overview of features
 
@@ -495,17 +489,17 @@ o   files that have extension .rc or name .procmailrc trigger
 
 ;;; ......................................................... &v-hooks ...
 
-(defcustom tinyprocmail-:load-hook nil
+(defcustom tinyprocmail--load-hook nil
   "*Hook run when file has been loaded."
   :type  'hook
   :group 'TinyProcmail)
 
-(defcustom tinyprocmail-:lint-before-hook nil
+(defcustom tinyprocmail--lint-before-hook nil
   "*Hook run before `tinyprocmail-lint-forward'."
   :type  'hook
   :group 'TinyProcmail)
 
-(defcustom tinyprocmail-:lint-do-hook
+(defcustom tinyprocmail--lint-do-hook
   '(tinyprocmail-lint-recipe-start
     tinyprocmail-lint-condition-lines)
   "List of lint functions to check the recipe at point.
@@ -515,30 +509,30 @@ Call arguments:
  FLAGS          Read flags
  STD-FLAGS      Standardized flag sequence.
 
-Function should offer fixing recipe if `tinyprocmail-:lint-fix-mode' is activated
-and it should write log if `tinyprocmail-:lint' is nil."
+Function should offer fixing recipe if `tinyprocmail--lint-fix-mode' is activated
+and it should write log if `tinyprocmail--lint' is nil."
   :type  '(repeat function)
   :group 'TinyProcmail)
 
-(defcustom tinyprocmail-:lint-after-hook nil
+(defcustom tinyprocmail--lint-after-hook nil
   "*Hook run after `tinyprocmail-lint-forward'."
   :type  'hook
   :group 'TinyProcmail)
 
-(defcustom tinyprocmail-:lint-after-hook nil
+(defcustom tinyprocmail--lint-after-hook nil
   "Hook run when `tinyprocmail-lint-forward' is about to finish."
   :type  'hook
   :group 'TinyProcmail)
 
 ;;; ..................................................... &v-functions ...
 
-(defcustom tinyprocmail-:flag-format-function
+(defcustom tinyprocmail--flag-format-function
   'tinyprocmail-flag-format-default
   "Function to format given flags.
 This function standardizes the flag order by calling
 `tinyprocmail-flag-standardize'.
 
-It must also respect the value of `tinyprocmail-:flag-and-recipe-start-style':
+It must also respect the value of `tinyprocmail--flag-and-recipe-start-style':
 e.g. if given 'Afbwic' the standard function adds one
 leading space so that the recipe looks like  ':0 Afbwic'"
   :type  'function
@@ -546,7 +540,7 @@ leading space so that the recipe looks like  ':0 Afbwic'"
 
 ;;; .......................................................... &public ...
 
-(defcustom tinyprocmail-:pipe-w-warning-ignore-regexp
+(defcustom tinyprocmail--pipe-w-warning-ignore-regexp
   ".*|[ \t]*\\(echo\\|.*vacation\\)"
   "When checking pipe recipe and missing w flags, ignore matching regexp.
 Say you have the following recipe:
@@ -560,7 +554,7 @@ if you set this regexp, so that you don't miss important `w' warnings."
   :type  'string
   :group 'TinyProcmail)
 
-(defcustom tinyprocmail-:flag-and-recipe-start-style  nil
+(defcustom tinyprocmail--flag-and-recipe-start-style  nil
   "What is the receipe start style used.
 If 'flags-together, then the receipe start llike looks like
 
@@ -580,19 +574,19 @@ If any other value, then receipe start looks like
 procmail v3.22 2001/09/10
 procmail v3.11pre7 1997/04/28 written and created by Stephen R. van den Berg
 procmail v3.11pre4 1995/10/29 written and created by Stephen R. van den Berg"
-    (let* ((prg (executable-find "procmail")))
+    (let ((prg (executable-find "procmail")))
       (if (null prg)
           (message "\
-  ** tinyprocmail.el: Warning, couldn't auto-set `tinyprocmail-:procmail-version'.")
+  ** tinyprocmail.el: Warning, couldn't auto-set `tinyprocmail--procmail-version'.")
         (ti::string-match "^procmail[ \t]+v?\\([0-9]+[^ \t\n]+\\)"
                           1 (shell-command-to-string "procmail -v"))))))
 
-(defcustom tinyprocmail-:procmail-version (tinyprocmail-procmail-version)
+(defcustom tinyprocmail--procmail-version (tinyprocmail-procmail-version)
   "The version number returned by `procmail -v'."
   :type  'string
   :group 'TinyProcmail)
 
-(defcustom tinyprocmail-:font-lock-keywords
+(defcustom tinyprocmail--font-lock-keywords
   (list
    ;;   Seeing embedded tabs in procmail is crucial because
    ;;   procmail doesn't know [ \t]. This regexp highlights bracketed
@@ -601,7 +595,6 @@ procmail v3.11pre4 1995/10/29 written and created by Stephen R. van den Berg"
    ;;   [   \n]
    ;;   ^   ^^^highlighted.
    '("\\[[^]\n]*\t[^]\n]*\\]"       . font-lock-keyword-face)
-
    '("#.*"                          . font-lock-comment-face)
    ;;   Recipe start :0
    ;;   The regexp says: Start with `:0' or `:' followed by spaces
@@ -683,7 +676,7 @@ procmail v3.11pre4 1995/10/29 written and created by Stephen R. van den Berg"
   :type  'sexp
   :group 'TinyProcmail)
 
-(defcustom tinyprocmail-:lint-font-lock-keywords
+(defcustom tinyprocmail--lint-font-lock-keywords
   (list
    '("`\\([^' \t\n]+\\)'" 1 font-lock-reference-face)
    '("Error,"            0 font-lock-keyword-face)
@@ -700,7 +693,7 @@ procmail v3.11pre4 1995/10/29 written and created by Stephen R. van den Berg"
   :type 'sexp
   :group 'TinyProcmail)
 
-(defcustom tinyprocmail-:auto-mode-alist
+(defcustom tinyprocmail--auto-mode-alist
   '(("\\.rc\\'\\|^rc\\.\\|procmailrc"   . turn-on-tinyprocmail-mode))
   "Items to add to `auto-mode-alist' to call `turn-on-tinyprocmail-mode'."
   :type '(repeat
@@ -709,7 +702,7 @@ procmail v3.11pre4 1995/10/29 written and created by Stephen R. van den Berg"
            (const 'tinyprocmail-mode)))
   :group  'TinyMbx)
 
-(defcustom tinyprocmail-:lint-fix-mode 'semi
+(defcustom tinyprocmail--lint-fix-mode 'semi
   "*The mode of fixing code.
 'auto   Automatic fixing.
 'semi   Ask permission to fix.
@@ -720,7 +713,7 @@ nil     no fixing."
           (const semi))
   :group 'TinyProcmail)
 
-(defcustom tinyprocmail-:lint-log-verbose 'pedantic
+(defcustom tinyprocmail--lint-log-verbose 'pedantic
   "If nil, then do not log new features available only in latest procmail.
 If 'pedantic, warn about all possible things that may not work in older
 procmail releases."
@@ -729,8 +722,8 @@ procmail releases."
           (const pedantic))
   :group  'TinyProcmail)
 
-(defcustom tinyprocmail-:lint-log nil
-  "*If non-nil receord lint check to `tinyprocmail-:lint-output-buffer'."
+(defcustom tinyprocmail--lint-log nil
+  "*If non-nil receord lint check to `tinyprocmail--lint-output-buffer'."
   :type 'boolean
   :group 'TinyProcmail)
 
@@ -739,36 +732,25 @@ procmail releases."
 
 ;;; ......................................................... &private ...
 
-(defvar tinyprocmail-:overlay nil
+(defvar tinyprocmail--overlay nil
   "Overlay used.")
 
-(defvar tinyprocmail-:overlay-second nil
+(defvar tinyprocmail--overlay-second nil
   "Overlay used.")
 
-(defvar tinyprocmail-:lint-output-buffer "*Procmail Lint*"
+(defvar tinyprocmail--lint-output-buffer "*Procmail Lint*"
   "Log buffer for Lint.")
 
-(defvar tinyprocmail-:lint-output-file "~/pm-lint.out"
+(defvar tinyprocmail--lint-output-file "~/pm-lint.out"
   "Where `tinyprocmail-lint-buffer-batch' should save the results.")
 
-(defvar tinyprocmail-:mode-output-map nil
-  "Map useed in `tinyprocmail-:lint-output-buffer'.")
+(defvar tinyprocmail--mode-output-map nil
+  "Map useed in `tinyprocmail--lint-output-buffer'.")
 
-(defvar tinyprocmail-:mode-output-easymenu  nil
+(defvar tinyprocmail--mode-output-easymenu  nil
   "Ooutput mode menu.")
 
-(eval-and-compile
-  (ti::macrof-version-bug-report
-   "tinyprocmail.el"
-   "tiprocmail"
-   tinyprocmail-:version-id
-   "$Id: tinyprocmail.el,v 2.51 2007/05/01 17:20:53 jaalto Exp $"
-   '(tinyprocmail-:version-id)))
-
 ;;}}}
-
-;;; ############################################################ &mode ###
-
 ;;{{{ mode
 
 ;;;###autoload (autoload 'tinyprocmail-mode             "tinyprocmail" "" t)
@@ -780,16 +762,14 @@ procmail releases."
 (eval-and-compile
 
   (ti::macrof-minor-mode-wizard
-   "tinyprocmail-" " PM" "\C-c'"  "PM" 'TinyProcmail "tinyprocmail-:"
+   "tinyprocmail-" " PM" "\C-c'"  "PM" 'TinyProcmail "tinyprocmail--"
    "Procmail coding minor mode.
 
 Code writing: `tinytab-mode' on \\[tinytab-mode]
 
 Mode description (main mode)
-\\{tinyprocmail-:mode-prefix-map}"
-
+\\{tinyprocmail--mode-prefix-map}"
    "Procmail recipe coding"
-
    (progn                              ;Some mode specific things? No?
      (cond
       (tinyprocmail-mode
@@ -804,20 +784,19 @@ Mode description (main mode)
        ;;   `font-lock-keywords'
        (font-lock-mode-maybe 1)
        (tinyprocmail-font-lock-keywords
-        tinyprocmail-:font-lock-keywords 'mode-font-lock)
+        tinyprocmail--font-lock-keywords 'mode-font-lock)
        (put 'tinyprocmail-mode 'tit tinytab-mode) ;Save previous
        (unless tinytab-mode
          (turn-on-tinytab-mode)))
       (t
        (tinyprocmail-font-lock-keywords
-        tinyprocmail-:font-lock-keywords 'mode-font-lock 'restore)
+        tinyprocmail--font-lock-keywords 'mode-font-lock 'restore)
        (if (and tinytab-mode (get 'tinyprocmail-mode 'tit))
            (turn-off-tinytab-mode))
        (tinyprocmail-overlay-hide))))
-
    "Procmail mode"
    (list                                ;arg 10
-    tinyprocmail-:mode-easymenu-name
+    tinyprocmail--mode-easymenu-name
     ["Forward"                   tinyprocmail-forward                    t]
     ["Backward"                  tinyprocmail-backward                   t]
     ["Forward strict"            tinyprocmail-forward-strict             t]
@@ -880,13 +859,13 @@ Mode description (main mode)
 
   (ti::macrof-minor-mode-wizard
    "tinyprocmail-output-" " PM-Lint" "\C-c'"  "PM-Lint"
-   'TinyProcmail "tinyprocmail-output-:"
+   'TinyProcmail "tinyprocmail-output--"
 
    "Browsing Procmail lint output. See \\[tinyprocmail-lint]
 
 Mode description
 
-\\{tinyprocmail-output-:mode-prefix-map}"
+\\{tinyprocmail-output--mode-prefix-map}"
    "tinyprocmail"
    (progn
      (when (and (interactive-p)        ;On when user calls us directly
@@ -898,10 +877,10 @@ Mode description
        (setq tinyprocmail-output-mode nil)
        (error "Aborted."))
      (tinyprocmail-font-lock-keywords
-      tinyprocmail-:lint-font-lock-keywords 'lint-font-lock))
+      tinyprocmail--lint-font-lock-keywords 'lint-font-lock))
    "Procmail Lint output mode"
    (list                                ;arg 10
-    tinyprocmail-output-:mode-easymenu-name
+    tinyprocmail-output--mode-easymenu-name
     ["Find error"                tinycompile-parse-line-goto         t]
     ["Beginning of output"       tinyprocmail-output-start           t]
     ["End of output"             tinyprocmail-output-end             t]
@@ -935,7 +914,7 @@ Mode description
 ;;; ----------------------------------------------------------------------
 ;;;
 ;;;###autoload (autoload 'tinyprocmail-install-files "tinyprocmail" t t)
-(ti::macrof-install-pgp-tar tinyprocmail-install-files  "tinyprocmail.el")
+(ti::macrof-install-pgp-tar tinyprocmail-install-files "tinyprocmail.el")
 
 ;;; ----------------------------------------------------------------------
 ;;;
@@ -977,12 +956,12 @@ must match `^:0'."
    (uninstall
     (ti::assoc-replace-maybe-add
      'auto-mode-alist
-     tinyprocmail-:auto-mode-alist
+     tinyprocmail--auto-mode-alist
      'remove))
    (t
     (ti::assoc-replace-maybe-add
      'auto-mode-alist
-     tinyprocmail-:auto-mode-alist)
+     tinyprocmail--auto-mode-alist)
     (if (interactive-p)
         (message "TinyProcmail: uninstalled")))))
 
@@ -995,11 +974,11 @@ must match `^:0'."
   ;;  It is crucial that these two hooks are in this order
   ;;  First runs `tinyprocmail-lint-malformed-start-recipe' and only after
   ;;  that the receipes can be found.
-  (ti::add-hooks 'tinyprocmail-:lint-before-hook
+  (ti::add-hooks 'tinyprocmail--lint-before-hook
                  '(tinyprocmail-standardize-recipe-start
                    tinyprocmail-lint-malformed-start-recipe)
                  uninstall)
-  (ti::add-hooks 'tinyprocmail-:lint-after-hook
+  (ti::add-hooks 'tinyprocmail--lint-after-hook
                  '(tinyprocmail-lint-malformed-var-defs
                    tinyprocmail-lint-malformed-misc
                    tinyprocmail-lint-malformed-brace
@@ -1019,59 +998,52 @@ must match `^:0'."
     (tinyprocmail-mode 1)))
 
 ;;}}}
-
-;;; ########################################################### &macro ###
-
 ;;{{{ macro
 
 ;;; ----------------------------------------------------------------------
 ;;;
 (defmacro tinyprocmail-o (&rest body)
   "Move overlay to point and protect BODY. Overlay is hiddedn after body."
-  (`
-   (unwind-protect
+  `(unwind-protect
        (progn
          (tinyprocmail-overlay (point))
-         (,@ body))
-     (tinyprocmail-overlay-hide))))
+         ,@body)
+     (tinyprocmail-overlay-hide)))
 
 ;;; ----------------------------------------------------------------------
 ;;;
 (defmacro tinyprocmail-output-macro (&rest body)
-  "Go to `tinyprocmail-:lint-output-buffer' and do BODY.
+  "Go to `tinyprocmail--lint-output-buffer' and do BODY.
 If buffer does not exist, do nothing."
-  (`
-   (let ((buffer (get-buffer tinyprocmail-:lint-output-buffer)))
+  `(let ((buffer (get-buffer tinyprocmail--lint-output-buffer)))
      (when buffer
        (with-current-buffer buffer
-         (,@ body))))))
+         ,@body))))
 
 ;;; ----------------------------------------------------------------------
 ;;;
 (put 'tinyprocmail-fix-macro 'lisp-indent-function 1)
 (defmacro tinyprocmail-fix-macro (message &rest body)
   "Fix. Display MESSAGE and do BODY."
-  (`
-   (when (or (eq tinyprocmail-:lint-fix-mode 'auto)
-             (and (eq tinyprocmail-:lint-fix-mode 'semi)
-                  (tinyprocmail-o (y-or-n-p (, message)))))
-     (,@ body))))
+  `(when (or (eq tinyprocmail--lint-fix-mode 'auto)
+             (and (eq tinyprocmail--lint-fix-mode 'semi)
+                  (tinyprocmail-o (y-or-n-p ,message))))
+     ,@body))
 
 ;;; ----------------------------------------------------------------------
 ;; fmacro = function create macro
 ;;;
 (defmacro tinyprocmail-fmacro-move (back method)
   "Make move function using BACK and METHOD."
-  (let* ((sym (intern
-               (format "tinyprocmail-%s-%s"
-                       (if back
-                           "backward"
-                         "forward")
-                       (symbol-name   (` (, method)))))))
-    (`
-     (defun (, sym) ()
+  (let ((sym (intern
+	      (format "tinyprocmail-%s-%s"
+		      (if back
+			  "backward"
+			"forward")
+		      (symbol-name   `,method)))))
+    `(defun ,sym ()
        (interactive)
-       (tinyprocmail-forward (quote (, back)) (quote (, method)))))))
+       (tinyprocmail-forward (quote ,back) (quote ,method)))))
 
 ;;}}}
 ;;{{{ misc
@@ -1108,8 +1080,8 @@ Input:
 ;;; ----------------------------------------------------------------------
 ;;;
 (defun tinyprocmail-supported-p (feature)
-  "Check if FEATURE is supported by `tinyprocmail-:procmail-version'."
-  (let* ((v (or tinyprocmail-:procmail-version "")))
+  "Check if FEATURE is supported by `tinyprocmail--procmail-version'."
+  (let ((v (or tinyprocmail--procmail-version "")))
     (cond
      ((eq feature 'condition-middle-comment)
       (string-match "3.11pre7" v))
@@ -1149,27 +1121,27 @@ Return:
   (when (and (fboundp 'make-overlay)
              (fboundp 'move-overlay)
              (fboundp 'overlay-put))
-    (or tinyprocmail-:overlay
-        (setq tinyprocmail-:overlay (make-overlay 1 1)))
-    (or tinyprocmail-:overlay-second
-        (setq tinyprocmail-:overlay-second (make-overlay 1 1)))
+    (or tinyprocmail--overlay
+        (setq tinyprocmail--overlay (make-overlay 1 1)))
+    (or tinyprocmail--overlay-second
+        (setq tinyprocmail--overlay-second (make-overlay 1 1)))
     (dolist (elt '((owner tipm)
                    (priority       1)
                    (face           highlight)
                    (before-string  ">")))
       (multiple-value-bind (property value) elt
-        (overlay-put tinyprocmail-:overlay property value)
+        (overlay-put tinyprocmail--overlay property value)
         (if (eq property 'before-string)
-            (overlay-put tinyprocmail-:overlay-second
+            (overlay-put tinyprocmail--overlay-second
                          'after-string " <<"))))
     (save-excursion
       (goto-char point)
-      (move-overlay tinyprocmail-:overlay
+      (move-overlay tinyprocmail--overlay
                     (line-beginning-position)
                     (line-end-position)
                     (current-buffer))
       (goto-char (line-end-position))
-      (move-overlay tinyprocmail-:overlay
+      (move-overlay tinyprocmail--overlay
                     (line-beginning-position)
                     (line-end-position)
                     (current-buffer)))))
@@ -1180,7 +1152,7 @@ Return:
   "Move overlay out of sight."
   (interactive)
   (when (fboundp 'move-overlay)
-    (dolist (ov '(tinyprocmail-:overlay tinyprocmail-:overlay-second))
+    (dolist (ov '(tinyprocmail--overlay tinyprocmail--overlay-second))
       (when (and (boundp ov)
                  (setq ov (symbol-value ov)))
         (move-overlay ov 1 1)
@@ -1201,7 +1173,7 @@ Return:
 ;;; ----------------------------------------------------------------------
 ;;;
 (defun tinyprocmail-log (point string &optional point-min)
-  "Log POINT and STRING to lint buffer if `tinyprocmail-:lint' is non-nil.
+  "Log POINT and STRING to lint buffer if `tinyprocmail--lint' is non-nil.
 
 Input:
 
@@ -1210,13 +1182,13 @@ Input:
                 the line numbers. Defualts to (point-min) but in case
                 you're using narrow, this should be `point-min' before
                 narrowing to check the recipe condition."
-  (when tinyprocmail-:lint-log
+  (when tinyprocmail--lint-log
     ;;  Some safety measures
     (when (and point (not (integerp point)))
       (error "arg POINT is not integer"))
     (when (and string (not (stringp string)))
       (error "arg STRING is not stringp"))
-    (let* ((buffer (get-buffer-create tinyprocmail-:lint-output-buffer))
+    (let* ((buffer (get-buffer-create tinyprocmail--lint-output-buffer))
            (name   (buffer-name))
            (LINE   (if point
                        (save-excursion
@@ -1250,9 +1222,8 @@ Input:
      "*** %s (%s) %s tinyprocmail.el %s\n%s")
     (ti::date-standard-date 'minutes)
     (buffer-name)
-    (or tinyprocmail-:procmail-version "")
-    (ti::string-match "[0-9][0-9.]+" 0 tinyprocmail-:version-id)
-
+    (or tinyprocmail--procmail-version "")
+    tinyprocmail--version-time
     (if (buffer-file-name)
         (concat "cd " (file-name-directory (buffer-file-name)) "\n")
       ""))))
@@ -1307,9 +1278,9 @@ Input:
 
 ;;; ----------------------------------------------------------------------
 ;;;
-(defmacro tinyprocmail-flag-string ()
+(defsubst tinyprocmail-flag-string ()
   "Return base flag string."
-  (` "aAeEHBDfhbwWirc:"))
+  "aAeEHBDfhbwWirc:")
 
 ;;; ----------------------------------------------------------------------
 ;;;
@@ -1338,8 +1309,8 @@ Input:
        ((looking-at "[ \t]*}")
         'beg))))
    (t
-    (or (if (char= (following-char) ?{) 'beg)
-        (if (char= (following-char) ?}) 'end)))))
+    (or (if (char-equal (following-char) ?{) 'beg)
+        (if (char-equal (following-char) ?}) 'end)))))
 
 ;;; ----------------------------------------------------------------------
 ;;;
@@ -1348,7 +1319,7 @@ Input:
 This checks if the actions line is ok."
   (interactive)
   (let* ((opoint (point))
-         (point  opoint))
+	 (point  opoint))
     ;;  Suppose there is no action line at all
     ;;
     ;;  :0
@@ -1360,7 +1331,7 @@ This checks if the actions line is ok."
     ;;  - Eat all newlines and comments backward
     (setq point (point))
     (if (tinyprocmail-recipe-start-p)
-        (backward-line 1))
+        (forward-line -1))
     (when (tinyprocmail-skip-comments-backward)
       (if (tinyprocmail-condition-line-p)
           (forward-line 1))
@@ -1381,9 +1352,9 @@ This checks if the actions line is ok."
 ;;;
 (defun tinyprocmail-next-empty-line ()
   "Return point of next empty code line."
-  (let* ((list (ti::re-search-point-list
-                '("^[ \t]*$" "^[ \t]*#")
-                'beginning-of-line)))
+  (let ((list (ti::re-search-point-list
+	       '("^[ \t]*$" "^[ \t]*#")
+	       'beginning-of-line)))
     (if list
         (apply 'min list))))
 
@@ -1391,12 +1362,12 @@ This checks if the actions line is ok."
 ;;;
 (defun tinyprocmail-skip-regexp (regexp &optional backward)
   "Skip all lines that match `looking-at' REGEXP. Optionally BACKWARD."
-  (let* (done)
+  (let (done)
     (while (and (not (eobp))
                 (looking-at regexp))
       (setq done t)
       (if backward
-          (backward-line 1)
+          (forward-line -1)
         (forward-line 1)))
     (when done
       (if backward
@@ -1435,7 +1406,7 @@ This checks if the actions line is ok."
 Return:
   t      Sitting on condition line after move.
   nil    Not a condition line after move"
-  (let* ((cont-p (looking-at ".*[\\][ \t]*$")))
+  (let ((cont-p (looking-at ".*[\\][ \t]*$")))
     (if (or (looking-at ":0")
             (save-excursion
               (beginning-of-line)
@@ -1460,7 +1431,7 @@ Return:
 ;;;
 (defun tinyprocmail-move-to-condition-end ()
   "Go to condition end. Point must inside condition or recipe start."
-  (let* ()
+  (let ()  ;; FIXME: reserved for variables
     (cond
      ((tinyprocmail-brace-p)
       nil)
@@ -1488,7 +1459,6 @@ Return:
                       ;;
                       ;;  *condition
                       ;;  mbox
-
                       (and (looking-at "^[ \t]*$")
                            (save-excursion
                              (forward-line 1)
@@ -1503,18 +1473,17 @@ Return:
 Input:
   NO-ADJUST     If non-nil, when goind to ending brace, do not
                 put cursor on brace, but to next line."
-  (unless (get 'tinyprocmail-:mode-name 'syntax-table)
+  (unless (get 'tinyprocmail--mode-name 'syntax-table)
     (let* ((otable      (syntax-table))
            (table       otable))
       (modify-syntax-entry ?{ "(" table)
       (modify-syntax-entry ?} ")" table)
-      (put 'tinyprocmail-:mode-name 'syntax-table table)))
-
-  (let* ((otable (syntax-table)))
-    (set-syntax-table (get 'tinyprocmail-:mode-name 'syntax-table))
+      (put 'tinyprocmail--mode-name 'syntax-table table)))
+  (let ((otable (syntax-table)))
+    (set-syntax-table (get 'tinyprocmail--mode-name 'syntax-table))
     (prog1
         (cond
-         ((char= (following-char) ?{)
+         ((char-equal (following-char) ?{)
           (forward-list 1)
           (if no-adjust
               (forward-line 1)
@@ -1528,7 +1497,7 @@ Input:
 ;;;
 (defun tinyprocmail-move-to-recipe-end ()
   "Go to recipe block end. Return recipe bound: (beg . end) ."
-  (let* (beg)
+  (let (beg)
     (if (not (tinyprocmail-recipe-start-p))
         (tinyprocmail-backward-strict))
     (setq beg (point))
@@ -1580,14 +1549,14 @@ Return:
 
    nil or non-nil if moved."
   (interactive)
-  (let* ((opoint (point))
-         (re  (cond
-               ((eq method 'strict)
-                "^:")
-               ((eq method 'any)
-                "^[# \t]*\\(:\\)")
-               (t
-                "^[ \t]*\\(:\\)"))))
+  (let ((opoint (point))
+	(re  (cond
+	      ((eq method 'strict)
+	       "^:")
+	      ((eq method 'any)
+	       "^[# \t]*\\(:\\)")
+	      (t
+	       "^[ \t]*\\(:\\)"))))
     (ti::verb)
     (cond
      (back
@@ -1638,7 +1607,7 @@ Return:
 (defun tinyprocmail-hide-comment-text-recipe (&optional show)
   "Hide or SHOW comment text in current recipe. point must be in recipe."
   (interactive "P")
-  (let* ((region (save-excursion (tinyprocmail-move-to-recipe-end))))
+  (let ((region (save-excursion (tinyprocmail-move-to-recipe-end))))
     (tinyprocmail-hide-comment-text-region
      (car region) (cdr region) show)))
 
@@ -1686,7 +1655,7 @@ Return:
 (defun tinyprocmail-output-region ()
   "Return output region block '(beg . end)."
   (save-excursion
-    (let* ((beg (tinyprocmail-output-line-start)))
+    (let ((beg (tinyprocmail-output-line-start)))
       (tinyprocmail-output-end)
       (cons beg (point)))))
 
@@ -1695,7 +1664,7 @@ Return:
 (defun tinyprocmail-output-sort-by-error (&optional reverse)
   "Sort block by error. Optionally REVERSE."
   (interactive "P")
-  (let* ((region (tinyprocmail-output-region)))
+  (let ((region (tinyprocmail-output-region)))
     (ti::save-line-column-macro nil nil
       (sort-regexp-fields
        (if reverse -1)
@@ -1708,42 +1677,42 @@ Return:
 (defun tinyprocmail-output-sort-by-line (&optional reverse)
   "Sort block by line number. Optionally REVERSE."
   (interactive "P")
-  (let* ((region (tinyprocmail-output-region)))
+  (let ((region (tinyprocmail-output-region)))
     (ti::save-line-column-macro nil nil
       (sort-lines reverse (car region) (cdr region)))))
 
 ;;; ----------------------------------------------------------------------
 ;;;
 (defun tinyprocmail-output-file-save (&optional file)
-  "Write `tinyprocmail-:lint-output-buffer' to `tinyprocmail-:lint-file' using FILE."
+  "Write `tinyprocmail--lint-output-buffer' to `tinyprocmail--lint-file' using FILE."
   (interactive)
   (save-excursion
-    (if (null (ti::set-buffer-safe tinyprocmail-:lint-output-buffer))
-        (error "No `%s' buffer found." tinyprocmail-:lint-output-buffer)
+    (if (null (ti::set-buffer-safe tinyprocmail--lint-output-buffer))
+        (error "No `%s' buffer found." tinyprocmail--lint-output-buffer)
       (write-region (point-min) (point-max)
-                    (or file tinyprocmail-:lint-output-file)))))
+                    (or file tinyprocmail--lint-output-file)))))
 
 ;;; ----------------------------------------------------------------------
 ;;;
 (defun tinyprocmail-output-file-kill ()
-  "Kill `tinyprocmail-:lint-file' if it exists."
+  "Kill `tinyprocmail--lint-file' if it exists."
   (interactive)
-  (if (file-exists-p tinyprocmail-:lint-output-file)
-      (delete-file tinyprocmail-:lint-output-file)))
+  (if (file-exists-p tinyprocmail--lint-output-file)
+      (delete-file tinyprocmail--lint-output-file)))
 
 ;;; ----------------------------------------------------------------------
 ;;;
 (defun tinyprocmail-output-clear  (&optional verb)
-  "Clear `tinyprocmail-:lint-output-buffer' buffer if it exists. VERB."
+  "Clear `tinyprocmail--lint-output-buffer' buffer if it exists. VERB."
   (interactive)
   (ti::verb)
   (save-excursion
     (cond
-     ((ti::set-buffer-safe tinyprocmail-:lint-output-buffer)
+     ((ti::set-buffer-safe tinyprocmail--lint-output-buffer)
       (erase-buffer)
       (if verb
           (message "TinyProcmail: %s cleared"
-                   tinyprocmail-:lint-output-buffer))))))
+                   tinyprocmail--lint-output-buffer))))))
 
 ;;}}}
 
@@ -1833,12 +1802,12 @@ Return:
 ;;;
 (defun tinyprocmail-flag-format-default (flags)
   "Default FLAGS format: ' STANDARDIZED-ORDER'. FLAGS must not have spaces."
-  (let* (new)
+  (let (new)
     (setq new (tinyprocmail-flag-standardize flags))
     (if (or (stringp new)
             (and (symbolp new)
                  (setq new (symbol-name new))))
-        (if (not (eq tinyprocmail-:flag-and-recipe-start-style
+        (if (not (eq tinyprocmail--flag-and-recipe-start-style
                      'flags-together))
             (concat " " new)
           new)
@@ -1848,12 +1817,12 @@ Return:
 ;;;
 (defun tinyprocmail-flag-kill (&optional replace)
   "Kill flags in the line and optionally REPLACE and STANDARDIZE with SPACE."
-  (let* ((eol   (line-end-position))
-         beg
-         end
-         list)
-    (when (and replace tinyprocmail-:flag-format-function)
-      (setq replace (funcall tinyprocmail-:flag-format-function replace)))
+  (let ((eol (line-end-position))
+	beg
+	end
+	list)
+    (when (and replace tinyprocmail--flag-format-function)
+      (setq replace (funcall tinyprocmail--flag-format-function replace)))
     (beginning-of-line)
     (when (re-search-forward ":0" eol t)
       (setq beg (point))
@@ -1868,11 +1837,11 @@ Return:
 ;;;
 (defun tinyprocmail-flag-order-lint ()
   "Lint flag order at point.  Return (FLAGS . STD-FLAGS) or nil."
-  (let* ((line      (ti::remove-properties (ti::read-current-line)))
-         (pedantic  (eq tinyprocmail-:lint-log-verbose 'pedantic))
-         flags1
-         flags2
-         str)
+  (let ((line      (ti::remove-properties (ti::read-current-line)))
+	(pedantic  (eq tinyprocmail--lint-log-verbose 'pedantic))
+	flags1
+	flags2
+	str)
     (when (prog1 (setq flags1 (tinyprocmail-flag-read line))
             (unless flags1              ;No flags in this recipe
               (setq flags1 "" flags2 "")))
@@ -1923,8 +1892,8 @@ Return:
 ;;;
 (defun tinyprocmail-conition-comment-move-up ()
   "Move comment upward and kill it."
-  (let* (str
-         col)
+  (let (str
+	col)
     (save-excursion
       (beginning-of-line)
       (cond
@@ -1951,11 +1920,11 @@ Return:
 (defun tinyprocmail-condition-comment-embedded (&optional point point-min)
   "Handle embedded comment inside condition line. Point must be on comment.
 POINT is used for lint log. POINT-MIN is (point-min) by default."
-  (let* ((supp    (tinyprocmail-supported-p 'condition-middle-comment))
-         (col     (current-column))
-         (opoint  (point))
-         (tab     "    ")
-         no-move)
+  (let ((supp    (tinyprocmail-supported-p 'condition-middle-comment))
+	(col     (current-column))
+	(opoint  (point))
+	(tab     "    ")
+	no-move)
     (or point (setq point opoint))
     (or point-min (setq point-min (point-min)))
     (cond
@@ -2038,8 +2007,8 @@ Return:
 (defun tinyprocmail-lint-recipe-start (flags std-flags)
   "Lint recipe start: flags and lockfile. Use FLAGS and STD-FLAGS."
   (let* ((lock-p    (string-match ":" (or flags "")))
-         (pedantic  (eq tinyprocmail-:lint-log-verbose 'pedantic))
-         (pipe-w-re tinyprocmail-:pipe-w-warning-ignore-regexp)
+         (pedantic  (eq tinyprocmail--lint-log-verbose 'pedantic))
+         (pipe-w-re tinyprocmail--pipe-w-warning-ignore-regexp)
          (opoint    (point))
          (point-min (point-min))
          (bol       (line-beginning-position))
@@ -2135,10 +2104,11 @@ Return:
       (when fwd-invalid-p
         (setq str "Error, invalid forward line. Maybe extra colons.")
         (tinyprocmail-log fwd-invalid-p str)
-        (tinyprocmail-fix-macro (concat str " Remove ")
-                                (beginning-of-line)
-                                (while (re-search-forward "," (line-end-position) t)
-                                  (ti::replace-match 0))))
+        (tinyprocmail-fix-macro
+	    (concat str " Remove ")
+	  (beginning-of-line)
+	  (while (re-search-forward "," (line-end-position) t)
+	    (ti::replace-match 0))))
       (when forward-p
         (save-excursion
           (goto-char forward-p)
@@ -2164,7 +2134,7 @@ info, ! -oi, may be unnecessary. It's default in New prcomail.")
 ;;;;   (ti::d! (point) brace-p  (ti::read-current-line))
       (cond
        ((tinyprocmail-recipe-start-p)
-        (backward-line 1))
+        (forward-line -1))
        ((null brace-p)
         ;;   | recipe \\
         ;;     continues
@@ -2286,19 +2256,21 @@ info, ! -oi, may be unnecessary. It's default in New prcomail.")
           (tinyprocmail-fix-macro (concat "[cannot-fix]" str))))
       ;; ...................................................... size[<>] ...
       (when size-test-p
-        (let* (case-fold-search)
+        (let (case-fold-search)
           (when (string-match "H" flags)
             (setq str "Error, size test doesn't use `H' flag. (use H ?? <)")
             (tinyprocmail-log size-test-p str)
-            (tinyprocmail-fix-macro (concat str " Remove ")
-                                    (setq fix-line  t
-                                          flags     (replace-regexp-in-string "H" "" flags))))
+            (tinyprocmail-fix-macro
+		(concat str " Remove ")
+	      (setq fix-line  t
+		    flags     (replace-regexp-in-string "H" "" flags))))
           (when (string-match "B" flags)
             (setq str "Error, size test doesn't use `B' flag. (use B ?? <)")
             (tinyprocmail-log size-test-p str)
-            (tinyprocmail-fix-macro (concat str " Remove ")
-                                    (setq fix-line t
-                                          flags (replace-regexp-in-string "B" "" flags))))))
+            (tinyprocmail-fix-macro
+		(concat str " Remove ")
+	      (setq fix-line t
+		    flags (replace-regexp-in-string "B" "" flags))))))
       ;; .................................................... assignment ...
       ;; VAR=| cat something
       (when assignment-p
@@ -2306,22 +2278,25 @@ info, ! -oi, may be unnecessary. It's default in New prcomail.")
                    (null dc))
           (setq str "Warning, flag `c' is useless in assignment =|")
           (tinyprocmail-log opoint str)
-          (tinyprocmail-fix-macro (concat str " Remove ")
-                                  (setq fix-line t
-                                        flags (replace-regexp-in-string "c" "" flags))))
+          (tinyprocmail-fix-macro
+	      (concat str " Remove ")
+	    (setq fix-line t
+		  flags (replace-regexp-in-string "c" "" flags))))
         (when (and (string-match "i" flags)
                    (null di))
           (setq str "Warning, flag `i' is not recommended in assignment =|")
           (tinyprocmail-log opoint str)
-          (tinyprocmail-fix-macro (concat str " Remove ")
-                                  (setq fix-line t
-                                        flags (replace-regexp-in-string "i" "" flags))))
+          (tinyprocmail-fix-macro
+	      (concat str " Remove ")
+	    (setq fix-line t
+		  flags (replace-regexp-in-string "i" "" flags))))
         (when lock-p
           (setq str "Warning, lockfile \":\" is useless in assignment =|")
           (tinyprocmail-log opoint str)
-          (tinyprocmail-fix-macro (concat str " Remove ")
-                                  (setq fix-line t
-                                        flags (replace-regexp-in-string ":" "" flags))))
+          (tinyprocmail-fix-macro
+	      (concat str " Remove ")
+	    (setq fix-line t
+		  flags (replace-regexp-in-string ":" "" flags))))
         (save-excursion
           (goto-char assignment-p)
           (when (looking-at ".*`")
@@ -2336,28 +2311,33 @@ info, ! -oi, may be unnecessary. It's default in New prcomail.")
         (when (string-match "f" flags)
           (tinyprocmail-log
            opoint "Error, formail -D used. Flag `f' is a mistake.")
-          (tinyprocmail-fix-macro "Formail -D used, remove `f' flag? "
-                                  (setq fix-line t
-                                        flags (replace-regexp-in-string "f" "" flags))))
+          (tinyprocmail-fix-macro
+	      "Formail -D used, remove `f' flag? "
+	    (setq fix-line t
+		  flags (replace-regexp-in-string "f" "" flags))))
         (when (not (string-match "W" flags))
           (tinyprocmail-log
            opoint "Warning, formail -D used but no `W' flag found.")
-          (tinyprocmail-fix-macro "Formail -D found, add `W' flag? "
-                                  (setq fix-line t   flags (concat "W" flags))))
+          (tinyprocmail-fix-macro
+	      "Formail -D found, add `W' flag? "
+	    (setq fix-line t   flags (concat "W" flags))))
         (when (not (ti::string-match-case "h" flags))
           (tinyprocmail-log opoint "Error, formail -D used. No flag `h' found.")
-          (tinyprocmail-fix-macro "Formail -D found, Add `h' flag? "
-                                  (setq fix-line t  flags (concat "h" flags))))
+          (tinyprocmail-fix-macro
+	      "Formail -D found, Add `h' flag? "
+	    (setq fix-line t  flags (concat "h" flags))))
         (when (ti::string-match-case "b" flags)
           (tinyprocmail-log
            opoint "Error, formail -D used. SHould not have `b'.")
-          (tinyprocmail-fix-macro "Formail -D found, remove `b' flag? "
-                                  (setq fix-line t  flags (ti::string-regexp-delete "b" flags))))
+          (tinyprocmail-fix-macro
+	      "Formail -D found, remove `b' flag? "
+	    (setq fix-line t  flags (ti::string-regexp-delete "b" flags))))
         (when  (not lock-p)
           (setq str "Warning, formail -D used but no lockfile.")
           (tinyprocmail-log opoint str)
-          (tinyprocmail-fix-macro (concat str " Add. ")
-                                  (setq fix-line t  flags (concat ":" flags)))))
+          (tinyprocmail-fix-macro
+	      (concat str " Add. ")
+	    (setq fix-line t  flags (concat ":" flags)))))
       ;; ............................................ Check f and h or b ...
       (setq fix nil)
       (when (and (ti::string-match-case "f" flags)
@@ -2366,7 +2346,7 @@ info, ! -oi, may be unnecessary. It's default in New prcomail.")
         (tinyprocmail-log
          (point)
          "Warning, `f', but no h;b;hb found. What's up here? (readability) ")
-        (when (eq tinyprocmail-:lint-fix-mode 'semi)
+        (when (eq tinyprocmail--lint-fix-mode 'semi)
           (if (tinyprocmail-o
                (y-or-n-p "Flag `f' requires `h' or `b' (yes=h, no=b) "))
               (setq flags (concat "h" flags))
@@ -2377,9 +2357,10 @@ info, ! -oi, may be unnecessary. It's default in New prcomail.")
                  (ti::string-match-case "c" flags))
         (setq str "info, Redundant `c' in `f' recipe.")
         (tinyprocmail-log (point) str)
-        (tinyprocmail-fix-macro (concat str " Correct ")
-                                (setq fix t)
-                                (setq flags (replace-regexp-in-string "c" "" flags))))
+        (tinyprocmail-fix-macro
+	    (concat str " Correct ")
+	  (setq fix t)
+	  (setq flags (replace-regexp-in-string "c" "" flags))))
       (when fix (tinyprocmail-flag-kill flags))
       ;; ..................................................... "|" and w ...
       ;;  Every "|" action should have "w" flag
@@ -2412,8 +2393,9 @@ Warning, recipe with \"|\" may need `w' flag. (recommended) ")
                  (not (string-match "f" flags)))
         (setq str "Warning, Formail used but no `f' flag found.")
         (tinyprocmail-log opoint str)
-        (tinyprocmail-fix-macro (concat str " Add ")
-                                (setq fix-line t   flags (concat "f" flags))))
+        (tinyprocmail-fix-macro
+	    (concat str " Add ")
+	  (setq fix-line t   flags (concat "f" flags))))
       ;; .............................................. f and no-formail ...
       ;;  If there was MH "rcvstore" Then "i" should not be there.
       (when (and (null redirection-p)
@@ -2436,9 +2418,10 @@ Warning, recipe with \"|\" may need `w' flag. (recommended) ")
                  (null di))
         (setq str "info, flag `i' is meaningless on top of nested block.")
         (tinyprocmail-log opoint str)
-        (tinyprocmail-fix-macro (concat str " Remove ")
-                                (setq fix-line t
-                                      flags (replace-regexp-in-string "i" "" flags))))
+        (tinyprocmail-fix-macro
+	    (concat str " Remove ")
+	  (setq fix-line t
+		flags (replace-regexp-in-string "i" "" flags))))
       (when (and (null redirection-p)
                  pipe-p
                  (not (ti::string-match-case "f" flags))
@@ -2449,8 +2432,9 @@ Warning, recipe with \"|\" may need `w' flag. (recommended) ")
               "\
 Warning, no \">\" in \"|\" recipe 'i' kills message. May need `c'.")
         (tinyprocmail-log opoint str)
-        (tinyprocmail-fix-macro (concat str " Add ")
-                                (setq fix-line t   flags (concat "c" flags))))
+        (tinyprocmail-fix-macro
+	    (concat str " Add ")
+	  (setq fix-line t   flags (concat "c" flags))))
       (goto-char opoint)
       ;; ............................................. check H without B ...
       (let (case-fold-search)
@@ -2458,9 +2442,10 @@ Warning, no \">\" in \"|\" recipe 'i' kills message. May need `c'.")
                    (null (ti::string-match-case "B" flags)))
           (setq str "info, flag `H' is useless, because it is default.")
           (tinyprocmail-log opoint str)
-          (tinyprocmail-fix-macro (concat str " Remove ")
-                                  (setq fix-line t
-                                        flags (replace-regexp-in-string "H" "" flags)))))
+          (tinyprocmail-fix-macro
+	      (concat str " Remove ")
+	    (setq fix-line t
+		  flags (replace-regexp-in-string "H" "" flags)))))
       ;; ....................................................... check W ...
       ;;  :0 c: somefile is same as :0 Wc: somefile but ONLY on nesting
       ;;  block
@@ -2471,9 +2456,10 @@ Warning, no \">\" in \"|\" recipe 'i' kills message. May need `c'.")
         (setq str
               "info, redundant `Wc:', `c:' already implies W in {} block.")
         (tinyprocmail-log opoint str)
-        (tinyprocmail-fix-macro (concat str " Correct")
-                                (setq fix-line t
-                                      flags (replace-regexp-in-string "W" "" flags))))
+        (tinyprocmail-fix-macro
+	    (concat str " Correct")
+	  (setq fix-line t
+		flags (replace-regexp-in-string "W" "" flags))))
       ;; ................................................. need lockfile ...
       (when (and redirection-p
                  (not brace-p)
@@ -2482,9 +2468,10 @@ Warning, no \">\" in \"|\" recipe 'i' kills message. May need `c'.")
                  (not lock-p))
         (setq str "Warning, recipe seems to store to folder, may need lock.")
         (tinyprocmail-log opoint str)
-        (tinyprocmail-fix-macro (concat str " Add ")
-                                (setq fix-line  t
-                                      flags    (concat flags ":"))))
+        (tinyprocmail-fix-macro
+	    (concat str " Add ")
+	  (setq fix-line  t
+		flags    (concat flags ":"))))
       ;;  Missing lockfile, but not if /dev/null
       ;;  :0      :0
       ;;  mbox    /dev/null
@@ -2499,9 +2486,10 @@ Warning, no \">\" in \"|\" recipe 'i' kills message. May need `c'.")
         (tinyprocmail-log mbox-p str)
         (save-excursion
           (goto-char mbox-p)
-          (tinyprocmail-fix-macro (concat str " Add ")
-                                  (setq fix-line t
-                                        flags    (concat flags ":")))))
+          (tinyprocmail-fix-macro
+	      (concat str " Add ")
+	    (setq fix-line t
+		  flags    (concat flags ":")))))
       ;; .......................................................... MBOX ...
       (when mbox-p
         ;; ... ... ... ... ... ... ... ... ... ... ... ... ...  dev/null . .
@@ -2511,9 +2499,10 @@ Warning, no \">\" in \"|\" recipe 'i' kills message. May need `c'.")
             (tinyprocmail-log mbox-p str)
             (save-excursion
               (goto-char mbox-p)
-              (tinyprocmail-fix-macro (concat str " Remove ")
-                                      (setq fix-line t
-                                            flags (replace-regexp-in-string ":" "" flags)))))
+              (tinyprocmail-fix-macro
+		  (concat str " Remove ")
+		(setq fix-line t
+		      flags (replace-regexp-in-string ":" "" flags)))))
           (unless (ti::string-match-case "h" flags)
             (setq str "Info, /dev/null may be more efficient with `h' flag")
             (tinyprocmail-log mbox-p str)
@@ -2534,16 +2523,18 @@ Warning, no \">\" in \"|\" recipe 'i' kills message. May need `c'.")
         (when (and flags (string-match "i" flags))
           (setq str "Warning, flag `i' is dangerous when dropping to folder.")
           (tinyprocmail-log opoint str)
-          (tinyprocmail-fix-macro (concat str " Remove ")
-                                  (setq fix-line t
-                                        flags (replace-regexp-in-string "i" "" flags))))
+          (tinyprocmail-fix-macro
+	      (concat str " Remove ")
+	    (setq fix-line t
+		  flags (replace-regexp-in-string "i" "" flags))))
         (when (and flags (ti::string-match-case "hb\\|bh" flags))
           (setq str "\
 Warning, flag combo `hb' is useless when dropping to folder.")
           (tinyprocmail-log opoint str)
-          (tinyprocmail-fix-macro (concat str " Remove ")
-                                  (setq fix-line t
-                                        flags (replace-regexp-in-string "hb\\|bh" "" flags)))))
+          (tinyprocmail-fix-macro
+	      (concat str " Remove ")
+	    (setq fix-line t
+		  flags (replace-regexp-in-string "hb\\|bh" "" flags)))))
       ;; .................................................... check lock ...
       (goto-char opoint)
       (beginning-of-line)
@@ -2599,9 +2590,10 @@ Warning, flag combo `hb' is useless when dropping to folder.")
                  (not (string-match "[$]LOCKEXT" lock-file))))
           (setq str (format "no $LOCKEXT extension in lockfile `%s'" lock-file))
           (tinyprocmail-log (point) str)
-          (tinyprocmail-fix-macro (concat str " Add ")
-                                  (goto-char (match-end 0))
-                                  (insert "$LOCKEXT")))
+          (tinyprocmail-fix-macro
+	      (concat str " Add ")
+	    (goto-char (match-end 0))
+	    (insert "$LOCKEXT")))
          ((save-match-data
             (and
              (when (string-match "\\(.*\\)\\." lock-file)
@@ -2628,7 +2620,7 @@ Warning, flag combo `hb' is useless when dropping to folder.")
 (defun tinyprocmail-lint-malformed-brace ()
   "Check braces."
   (while (re-search-forward "^[ \t]*{" nil t)
-    (when (and (char= ?\{ (preceding-char)) ; {}  or {var
+    (when (and (char-equal ?\{ (preceding-char)) ; {}  or {var
                (not (looking-at "[ \t\n]")))
       (tinyprocmail-log (point) "Error, no space after  `{' .")
       (tinyprocmail-fix-macro "No space after {  Add one?"
@@ -2645,10 +2637,10 @@ Warning, flag combo `hb' is useless when dropping to folder.")
 ;;;
 (defun tinyprocmail-lint-malformed-misc  ()
   "Check varaious other things."
-  (let* (;;; (pedantic (eq tinyprocmail-:lint-log-verbose 'pedantic))
-         (opoint  (point))
-         (re "echo\\|cat\\|tail\\|head\\|sed\\|perl\\|awk\\|perl\\|[-]")
-         str)
+  (let (;;; (pedantic (eq tinyprocmail--lint-log-verbose 'pedantic))
+	(opoint  (point))
+	(re "echo\\|cat\\|tail\\|head\\|sed\\|perl\\|awk\\|perl\\|[-]")
+	str)
     ;;  Detect "dummy `echo`", missing "=" or ";"
     ;;
     ;;  But following is valid.
@@ -2676,13 +2668,13 @@ Warning, flag combo `hb' is useless when dropping to folder.")
 ;;;
 (defun tinyprocmail-lint-malformed-var-defs ()
   "Check variable definitions and assignments."
-  (let* (
-;;;      (pedantic (eq tinyprocmail-:lint-log-verbose 'pedantic))
+  (let (
+;;;      (pedantic (eq tinyprocmail--lint-log-verbose 'pedantic))
 ;;;      cont-p
-         var1
-         var2
-         str
-         op)
+	var1
+	var2
+	str
+	op)
     (while (re-search-forward "^[ \t]*[^#\n].*=" nil t)
       (beginning-of-line)
       (unless (tinyprocmail-comment-line-pp)
@@ -2749,8 +2741,9 @@ Warning, flag combo `hb' is useless when dropping to folder.")
           (tinyprocmail-fix-macro str))
         ;; ... ... ... ... ... ... ... ... ... ... ... ... ...  tilde(~) . .
         (when (looking-at "^.*=.*\\(~\\)/")
-          (tinyprocmail-log (point)
-                            "Error, csh's tilde(~) is not supported, Use $HOME.")
+          (tinyprocmail-log
+	   (point)
+	   "Error, csh's tilde(~) is not supported, Use $HOME.")
           (tinyprocmail-fix-macro "Non-supported: Substitute ~ with $HOME "
                                   (ti::replace-match 1 "$HOME")))
         ;; ... ... ... ... ... ... ... ... ... ... ...  mismatch(` -- ') . .
@@ -2821,8 +2814,9 @@ Warning, flag combo `hb' is useless when dropping to folder.")
                 "Pedantic, `` is not a recommended initialize "
                 "practise (uses shell)."))))
           (when (save-match-data (not (string= var1 var2)))
-            (tinyprocmail-log (point)
-                              "Warning, variables don't match in init sequence.")
+            (tinyprocmail-log
+	     (point)
+	     "Warning, variables don't match in init sequence.")
             (tinyprocmail-fix-macro
              "[cannot-fix] Left var1 and right var2 don't match."))
           (when (save-match-data (not (string-match "[-+]" op)))
@@ -2838,11 +2832,11 @@ Warning, flag combo `hb' is useless when dropping to folder.")
 ;;;
 (defun tinyprocmail-lint-malformed-start-recipe ()
   "Check ': ' or '0:' recipes."
-  (let* ((space  (if (eq 'flags-together
-                         tinyprocmail-:flag-and-recipe-start-style)
-                     "" " "))
-         list
-         str)
+  (let ((space  (if (eq 'flags-together
+			tinyprocmail--flag-and-recipe-start-style)
+		    "" " "))
+	list
+	str)
     (while (setq list (ti::re-search-point-list '("^[ \t]*0:" "^[ \t]*:[^0]")
                                                 'beginning-of-line))
       (goto-char (apply 'min list))
@@ -2877,13 +2871,13 @@ Warning, flag combo `hb' is useless when dropping to folder.")
 ;;;
 (defun tinyprocmail-lint-condition-line-1 ()
   "Check one condition line. Point must be over start(*)."
-  (let* ((point         (point))
-         (var-test-p    (looking-at ".*[?][?]"))
-         (shell-test-p  (looking-at "\\*[! \t]+[?]"))
-         tmp
-         str
-         match-p
-         end)
+  (let ((point         (point))
+	(var-test-p    (looking-at ".*[?][?]"))
+	(shell-test-p  (looking-at "\\*[! \t]+[?]"))
+	tmp
+	str
+	match-p
+	end)
     (catch 'done
       ;; ....................................................... empty ...
       (when (looking-at "\\*[ \t]*$")
@@ -3102,11 +3096,11 @@ Warning, flag combo `hb' is useless when dropping to folder.")
 (defun tinyprocmail-standardize-recipe-start ()
   "Check whole buffer and change recipe start to ':0 FLAGS'.
 Refrences:
- `tinyprocmail-:flag-and-recipe-start-style'"
+ `tinyprocmail--flag-and-recipe-start-style'"
   (interactive)
-  (let* ((style tinyprocmail-:flag-and-recipe-start-style)
-         (i     0)
-         (found 0))
+  (let ((style tinyprocmail--flag-and-recipe-start-style)
+	(i     0)
+	(found 0))
     (save-excursion
       (ti::pmin)
       (while (tinyprocmail-forward)
@@ -3139,12 +3133,12 @@ Refrences:
 ;;;
 (defun tinyprocmail-lint-list-lint-directives  ()
   "Find all recipes that have Lint directives.
-This function puts the results to `tinyprocmail-:lint-output-buffer'.
-Function activates only of `tinyprocmail-:lint-log-verbose' is 'pedantic."
-  (let* (options
-         flags
-         point)
-    (when (eq tinyprocmail-:lint-log-verbose 'pedantic)
+This function puts the results to `tinyprocmail--lint-output-buffer'.
+Function activates only of `tinyprocmail--lint-log-verbose' is 'pedantic."
+  (let (options
+	flags
+	point)
+    (when (eq tinyprocmail--lint-log-verbose 'pedantic)
       (while (re-search-forward "^[ \t]*#[ \t]*Lint:[ \t]*\\(.*\\)" nil t)
         (setq options (match-string 1)  point (match-beginning 1))
         (forward-line 1)
@@ -3158,8 +3152,8 @@ Function activates only of `tinyprocmail-:lint-log-verbose' is 'pedantic."
 ;;;
 (defun tinyprocmail-lint-find-wrong-escape-codes ()
   "Find misused \\t and \\n characters."
-  (let* (str
-         val)
+  (let (str
+	val)
     ;; (re-search-forward "\\[[^]\n\\]+\\([\\]t\\)" nil t)
     (while (re-search-forward "\\([\\][tn]\\)" nil t)
       (unless (save-match-data (tinyprocmail-comment-line-p))
@@ -3179,11 +3173,11 @@ Function activates only of `tinyprocmail-:lint-log-verbose' is 'pedantic."
 ;;;
 (defun tinyprocmail-lint-find-2spaces ()
   "Find misused [  ] contructs. User meant space and TAB."
-  (let* (str
-         set
-         done
-         not-comment
-         not-backtics)
+  (let (str
+	set
+	done
+	not-comment
+	not-backtics)
     (while (re-search-forward "\\[\\([^]\n]+\\)\\]" nil t)
       (setq set          (match-string 1)
             not-comment  (save-match-data
@@ -3217,15 +3211,15 @@ Function activates only of `tinyprocmail-:lint-log-verbose' is 'pedantic."
 ;;; ----------------------------------------------------------------------
 ;;;
 (defun tinyprocmail-output-display ()
-  "Show `tinyprocmail-:lint-output-buffer' buffer."
+  "Show `tinyprocmail--lint-output-buffer' buffer."
   (interactive)
   (cond
-   ((null (get-buffer tinyprocmail-:lint-output-buffer))
-    (error "No `tinyprocmail-:lint-output-buffer'"))
+   ((null (get-buffer tinyprocmail--lint-output-buffer))
+    (error "No `tinyprocmail--lint-output-buffer'"))
    (t
     (ti::save-excursion-macro
-      (display-buffer tinyprocmail-:lint-output-buffer)
-      (select-window (get-buffer-window tinyprocmail-:lint-output-buffer))
+      (display-buffer tinyprocmail--lint-output-buffer)
+      (select-window (get-buffer-window tinyprocmail--lint-output-buffer))
       (ti::pmax)
       (re-search-backward "^\\*\\*" nil t) ;; start of lint section
       (unless (eq major-mode 'tinyprocmail-output-mode)
@@ -3243,26 +3237,26 @@ Input:
         If 2 x \\[universal-argument] then Write log without pedantic.
   VERB  Verbose messages."
   (interactive "P")
-  (let* ((check-list            tinyprocmail-:lint-do-hook)
-         (tinyprocmail-:lint-fix-mode   tinyprocmail-:lint-fix-mode)
-         (tinyprocmail-:lint-log        tinyprocmail-:lint-log)
-         (tinyprocmail-:lint-log-verbose tinyprocmail-:lint-log-verbose)
-         (opoint                (point))
-         (time                  (current-time))
-         (count                 0)
+  (let* ((check-list			tinyprocmail--lint-do-hook)
+         (tinyprocmail--lint-fix-mode   tinyprocmail--lint-fix-mode)
+         (tinyprocmail--lint-log        tinyprocmail--lint-log)
+         (tinyprocmail--lint-log-verbose tinyprocmail--lint-log-verbose)
+         (opoint (point))
+         (time   (current-time))
+         (count  0)
          point
          secs
          ret)
     (ti::verb)
     (when mode
-      (setq tinyprocmail-:lint-fix-mode nil)
+      (setq tinyprocmail--lint-fix-mode nil)
       (if (equal mode '(16))
           ;; suppess 'pedantic
-          (setq tinyprocmail-:lint-log-verbose nil)))
-    (setq tinyprocmail-:lint-log (if mode t nil))
+          (setq tinyprocmail--lint-log-verbose nil)))
+    (setq tinyprocmail--lint-log (if mode t nil))
     (tinyprocmail-log-start)
     (beginning-of-line)
-    (run-hooks 'tinyprocmail-:lint-before-hook)
+    (run-hooks 'tinyprocmail--lint-before-hook)
     (goto-char opoint)
     (while (tinyprocmail-forward)
       (setq point (point))
@@ -3279,13 +3273,13 @@ Input:
           (funcall func (car ret) (cdr ret) )))
       (goto-char point)
       (forward-line 1))
-    (dolist (func tinyprocmail-:lint-after-hook)
+    (dolist (func tinyprocmail--lint-after-hook)
       (goto-char opoint)
       (funcall func))
     (tinyprocmail-overlay-hide)
     ;;  Sort the output buffer. The results are in random order, because
     ;;  many different list function have been run one after another.
-    (when tinyprocmail-:lint-log
+    (when tinyprocmail--lint-log
       (tinyprocmail-output-macro (tinyprocmail-output-sort-by-line)))
     (setq secs (ti::date-time-difference (current-time) time)
           time (/ secs 60))
@@ -3307,7 +3301,7 @@ Input:
 ;;; ----------------------------------------------------------------------
 ;;;
 (defun tinyprocmail-lint-buffer-batch (&optional clear file)
-  "Batch Lint buffer and write results to `tinyprocmail-:lint-output-file'.
+  "Batch Lint buffer and write results to `tinyprocmail--lint-output-file'.
 Input:
 
   CLEAR  If non-nil, clear output buffer
@@ -3448,13 +3442,13 @@ Input:
 
 ;;}}}
 
-(add-hook 'tinyprocmail-:mode-define-keys-hook
+(add-hook 'tinyprocmail--mode-define-keys-hook
           'tinyprocmail-mode-define-keys)
 
-(add-hook 'tinyprocmail-output-:mode-define-keys-hook
+(add-hook 'tinyprocmail-output--mode-define-keys-hook
           'tinyprocmail-output-mode-define-keys)
 
 (provide 'tinyprocmail)
-(run-hooks 'tinyprocmail-:load-hook)
+(run-hooks 'tinyprocmail--load-hook)
 
 ;;; tinyprocmail.el ends here

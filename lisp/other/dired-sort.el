@@ -30,7 +30,7 @@
 
 ;;; Install:
 
-;;  Put this file on your Emacs-Lisp load path, add following into your
+;;  Put this file on your Emacs-Lisp `load-path', add following into your
 ;;  ~/.emacs startup file.
 ;;
 ;;      (add-hook 'dired-mode-hook '(lambda () (require 'dired-sort)))
@@ -68,7 +68,7 @@
 ;;      When you load this file, function `dired-sort-default-keys' is called.
 ;;      The following bindings to dired mode are defined.
 ;;
-;;          S" "    dired-sort-resort    (that's an "s" + SPACE)
+;;          S" "    dired-sort-resort    (that's an "S" + SPACE)
 ;;          Ss      dired-sort-by-size
 ;;          Sd      dired-sort-by-date
 ;;          Sf      dired-sort-by-field
@@ -81,7 +81,7 @@
 
 ;;; Code:
 
-(require 'date-parse)
+;;(require 'date-parse)
 
 (eval-and-compile
   ;;  Silence Byte compiler
@@ -93,7 +93,9 @@
   (autoload 'dired-revert             "dired")
   (autoload 'dired-get-filename       "dired")
   (autoload 'dired-move-to-filename   "dired")
-  (autoload 'sort-skip-fields         "sort"))
+  (autoload 'sort-skip-fields         "sort")
+  (autoload 'parse-date               "date-parse")
+  (autoload 'date-compare-key         "date-parse"))
 
 ;;; ....................................................... &variables ...
 

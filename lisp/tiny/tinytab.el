@@ -4,12 +4,11 @@
 
 ;;{{{ Id
 
-;; Copyright (C)    1995-2007 Jari Aalto
+;; Copyright (C)    1995-2010 Jari Aalto
 ;; Keywords:        tools
 ;; Author:          Jari Aalto
 ;; Maintainer:      Jari Aalto
 ;;
-;; To get information on this program, call M-x tinytab-version.
 ;; Look at the code with folding.el.
 
 ;; COPYIGHT NOTICE
@@ -25,9 +24,7 @@
 ;; for more details.
 ;;
 ;; You should have received a copy of the GNU General Public License
-;; along with program. If not, write to the
-;; Free Software Foundation, Inc., 51 Franklin Street, Fifth Floor,
-;; Boston, MA 02110-1301, USA.
+;; along with this program. If not, see <http://www.gnu.org/licenses/>.
 ;;
 ;; Visit <http://www.gnu.org/copyleft/gpl.html> for more information
 
@@ -35,7 +32,7 @@
 ;;{{{ Install
 
 ;; ....................................................... &t-install ...
-;;   Put this file on your Emacs-Lisp load path, add following into your
+;;   Put this file on your Emacs-Lisp `load-path', add following into your
 ;;   ~/.emacs startup file.
 ;;
 ;;     (require 'tinytab)
@@ -114,11 +111,11 @@
 ;;      movement, whereas you would have to put many values inside
 ;;      `tab-stop-list'. The variable to control tab widths is:
 ;;
-;;          tinytab-:width-table
+;;          tinytab--width-table
 ;;
 ;;      When the mode is off, the tab key behaves as the mode thinks
 ;;      it should behave. The tab step forward and backward keys
-;;      respect `tinytab-:width'. Normally the current position
+;;      respect `tinytab--width'. Normally the current position
 ;;      in the line is advanced, but if you select a region, all the
 ;;      lines are indented:
 ;;
@@ -148,7 +145,7 @@
 ;;
 ;;      To change permanently current tab division, use function
 ;;      `tinytab-change-tab-width' which steps through list
-;;      `tinytab-:width-table'; tab factors 2, 4, and 8.
+;;      `tinytab--width-table'; tab factors 2, 4, and 8.
 ;;
 ;;  Major modes and this minor mode
 ;;
@@ -158,10 +155,10 @@
 ;;      indenting, because turning on minor mode overrides the underlying
 ;;      major mode bindings. However this package co-operates with
 ;;      major modes so that it preserves the original indenting style in some
-;;      extent. In variable `tinytab-:tab-insert-hook' there is function
+;;      extent. In variable `tinytab--tab-insert-hook' there is function
 ;;      `tinytab-tab-mode-control' which looks at variable
 ;;
-;;          tinytab-:mode-table
+;;          tinytab--mode-table
 ;;
 ;;      If the mode is listed in the table _and_ current point is at the
 ;;      *beginning* of line, then the line is handled by original major mode
@@ -180,7 +177,7 @@
 ;;      If you don't want any support to major modes, put following
 ;;      into your $HOME/.emacs
 ;;
-;;          (setq tinytab-:mode-table nil)
+;;          (setq tinytab--mode-table nil)
 ;;
 ;;  Return key addition
 ;;
@@ -198,7 +195,7 @@
 ;;
 ;;      See variable
 ;;
-;;          tinytab-:auto-indent-regexp
+;;          tinytab--auto-indent-regexp
 ;;
 ;;      what line prefixes are "copied" along with the indented spaces.
 
@@ -208,26 +205,16 @@
 
 ;;; Code:
 
-;;{{{ setup: require
-
-;; (require 'tinylibm)
-
-;;}}}
-;;{{{ version
-
-(defvar tinytab-:version-id
-  "$Id: tinytab.el,v 2.61 2007/05/06 23:15:20 jaalto Exp $")
-
-;;}}}
 ;;{{{ setup: mode
 
 ;;;###autoload (autoload 'tinytab-mode                  "tinytab" "" t)
 ;;;###autoload (autoload 'turn-on-tinytab-mode          "tinytab" "" t)
 ;;;###autoload (autoload 'turn-off-tinytab-mode         "tinytab" "" t)
 ;;;###autoload (autoload 'tinytab-commentary            "tinytab" "" t)
-;;;###autoload (autoload 'tinytab-version               "tinytab" "" t)
 
 (eval-and-compile
+
+  (autoload 'ti::macrof-minor-mode-wizard "tinylib" "" 'macro)
 
   (ti::macrof-minor-mode-wizard
    "tinytab-"
@@ -235,7 +222,7 @@
    nil
    "Tab"
    'TinyTab
-   "tinytab-:"                          ;parameters 1-6
+   "tinytab--"                          ;parameters 1-6
 
    "Tab movement minor mode. Adjustable movement step.
 If you're running non/windowed version, Try to figure out which key
@@ -246,11 +233,11 @@ applied to whole region.
 
 References:
 
-  tinytab-:width
+  tinytab--width
 
 Mode description:
 
-\\{tinytab-:mode-map}
+\\{tinytab--mode-map}
 
 "
    "Tab indent mode"
@@ -259,7 +246,7 @@ Mode description:
          (tinytab-set-mode-name)))
    "Tab indent mode"
    (list                                ;arg 10
-    tinytab-:mode-easymenu-name
+    tinytab--mode-easymenu-name
     ["Insert"                        tinytab-tab-key                     t]
     ["Delete"                        tinytab-tab-del-key                 t]
     ["Indent region forward"         tinytab-indent-by-tab-width         t]
@@ -270,8 +257,6 @@ Mode description:
     ["Change step factor"            tinytab-change-tab-width            t]
     ["Return-key indent mode"        tinytab-return-key-mode             t]
     "----"
-    ["Package version"               tinytab-version                     t]
-    ["Package commentary"            tinytab-commentary                  t]
     ["Mode help"                     tinytab-mode-help                   t]
     ["Mode off"                      turn-off-tinytab-mode               t])
    (progn
@@ -283,6 +268,9 @@ Mode description:
      ;; ........................................................ X-keys ...
      ;;  Standard key
      (define-key root-map (kbd "<S-tab>")        'tinytab-tab-del-key)
+     ;; Non-windowed environment
+     (unless window-system
+       (define-key root-map [(backtab)]          'tinytab-tab-del-key))
      ;;  Other keyboards
      (define-key root-map [(shift backtab)]      'tinytab-tab-del-key)
      (define-key root-map [(shift hpBackTab)]    'tinytab-tab-del-key) ;; XEmacs
@@ -292,14 +280,14 @@ Mode description:
 ;;}}}
 ;;{{{ setup: hooks
 
-(defcustom tinytab-:load-hook nil
+(defcustom tinytab--load-hook nil
   "*Hook that is run when package is loaded."
   :type  'hook
   :group 'TinyTab)
 
-(add-hook 'tinytab-:load-hook 'tinytab-install-mode)
+(add-hook 'tinytab--load-hook 'tinytab-install-mode)
 
-(defcustom tinytab-:tab-insert-hook
+(defcustom tinytab--tab-insert-hook
   '(tinytab-tab-mode-control
     tinytab-tab-brace-control
     tinytab-tab-forward-insert
@@ -310,7 +298,7 @@ that the tab key was handled."
   :type  'hook
   :group 'TinyTab)
 
-(defcustom tinytab-:tab-delete-hook
+(defcustom tinytab--tab-delete-hook
   '(tinytab-tab-backward-del
     tinytab-bol-forward-del)
   "*List of functions to delete a logical TAB backward.
@@ -324,7 +312,7 @@ that the tab handling was performed."
 
 ;;   Simple name is enough. Think this as "Tab +" or "extended tab" -mode
 ;;
-(defcustom tinytab-:mode-name-base " +"
+(defcustom tinytab--mode-name-base " +"
   "*Minor mode's base name. Default value is ` +'."
   :type  'string
   :group 'TinyTab)
@@ -332,18 +320,18 @@ that the tab handling was performed."
 ;;  If I accidentally press key I didn't meant to, I want to know
 ;;  about it. Like in empty line, where is no visual aids
 ;;
-(defcustom tinytab-:verbose nil
+(defcustom tinytab--verbose nil
   "*Enable verbose messages."
   :type  'boolean
   :group 'TinyTab)
 
-(defcustom tinytab-:width-table '(2 4 8)
+(defcustom tinytab--width-table '(2 4 8)
   "*After call to \\[tinytab-change-tab-width], cycle through list of tab positions.
 Default values are '(2 4 8)"
   :type  '(repeat integer)
   :group 'TinyTab)
 
-(defcustom tinytab-:mode-table
+(defcustom tinytab--mode-table
   '(c++-mode cc-mode c-mode perl-mode cperl-mode java-mode)
   "*List of mode name symbols where the TAB key calls mode's TAB function.
 But, only if the point is at the beginning of line."
@@ -351,14 +339,14 @@ But, only if the point is at the beginning of line."
                   :tag "Mode name symbols"))
   :group 'TinyTab)
 
-(defcustom tinytab-:indent-region-key-message
+(defcustom tinytab--indent-region-key-message
   "Dynamic Indent <>: [qw]=1 [as]=2 [zx]=4 [Esc]=exit"
   "*Message displayed while in dynamic indent mode.
-If you change this, see also `tinytab-:indent-region-key-list'."
+If you change this, see also `tinytab--indent-region-key-list'."
   :type  'string
   :group 'TinyTab)
 
-(defcustom tinytab-:indent-region-key-list
+(defcustom tinytab--indent-region-key-list
   '(?q ?w
        ?a ?s
        ?z ?x
@@ -372,7 +360,7 @@ elt 4 5       left and right by 4
 elt 6         exit key
 
 If you chnage this variable, change also
-`tinytab-:indent-region-key-message'."
+`tinytab--indent-region-key-message'."
   :type '(list
           character character
           character character
@@ -380,7 +368,7 @@ If you chnage this variable, change also
           character)
   :group 'TinyTab)
 
-(defcustom tinytab-:auto-indent-regexp "[#!;*/]\\|REM\\|//"
+(defcustom tinytab--auto-indent-regexp "[#!;*/]\\|REM\\|//"
   "*If previous line match this regexp, it is copied when you hit RET.
 This allows e.g. continuing C++'s // comments.
 See function `tinytab-return-key-mode' to turn on this auto-indent feature."
@@ -390,7 +378,7 @@ See function `tinytab-return-key-mode' to turn on this auto-indent feature."
 ;;}}}
 ;;{{{ setup: private
 
-(defvar tinytab-:width 4
+(defvar tinytab--width 4
   "Current tab division.")
 
 ;;}}}
@@ -405,10 +393,9 @@ See function `tinytab-return-key-mode' to turn on this auto-indent feature."
 ;;; ----------------------------------------------------------------------
 ;;;
 (defmacro tinytab-message (&rest body)
-  "Run BODY if `tinytab-:verbose' is non nil."
-  (`
-   (when tinytab-:verbose
-     (message (,@ body)))))
+  "Run BODY if `tinytab--verbose' is non nil."
+  `(when tinytab--verbose
+     (message ,@body)))
 
 ;;; ----------------------------------------------------------------------
 ;;;
@@ -431,9 +418,9 @@ Otherwise use current line's end points."
 ;;;
 (defsubst tinytab-width ()
   "Return TAB advance."
-  (if (not (integerp tinytab-:width))
-      (setq tinytab-:width 4))
-  tinytab-:width)
+  (if (not (integerp tinytab--width))
+      (setq tinytab--width 4))
+  tinytab--width)
 
 ;;; ----------------------------------------------------------------------
 ;;;
@@ -469,7 +456,7 @@ If region is active, use that. (interactive + region selected)."
 ;;; ----------------------------------------------------------------------
 ;;;
 (defun tinytab-bol-forward-del ()
-  "If at beginning of line, delete `tinytab-:width' spaces to the right."
+  "If at beginning of line, delete `tinytab--width' spaces to the right."
   (interactive)
   (when (bolp)
     ;;  They may be \t, so convert all to spaces first and
@@ -496,23 +483,23 @@ If region is active, use that. (interactive + region selected)."
         (delete-region (point) (line-end-position))
         (save-excursion
           (insert str)))
-       (tinytab-:verbose
+       (tinytab--verbose
         (message "TinyTab: Cannot delete %d spaces" width))))))
 
 ;;; ----------------------------------------------------------------------
 ;;;
 (defun tinytab-tab-mode-control ()
-  "If `mode-name' in in the list `tinytab-:mode-table', call mode's tab key.
+  "If `mode-name' in in the list `tinytab--mode-table', call mode's tab key.
 But only if
 o  point is at the beginning of line.
 o  the line is empty
 
 This way you can partly mix e.g. C++ mode and this minor mode."
   (interactive)
-  (let* ((sym  (intern (format "%s-map" (symbol-name major-mode))))
-         (point (point))
-         map
-         func)
+  (let ((sym  (intern (format "%s-map" (symbol-name major-mode))))
+	(point (point))
+	map
+	func)
     ;;  If we're at the beginnning of line, see if there is keymap for
     ;;  this current mode. Then try to find function for "\t" key
     ;;  and call it
@@ -521,7 +508,7 @@ This way you can partly mix e.g. C++ mode and this minor mode."
                    (save-excursion
                      (beginning-of-line)
                      (looking-at "^[ \t]+$")))
-               (memq major-mode tinytab-:mode-table)
+               (memq major-mode tinytab--mode-table)
                (boundp sym)
                (keymapp (setq map (eval sym)))
                (setq func (lookup-key map "\t")))
@@ -549,14 +536,14 @@ Return:
   t             ,if TAB handled in this function.
   nil           ,nothing done."
   (interactive)
-  (let* (line
-         rest
-         indent
-         pindent                        ;previous
-         col
-         ret                            ;flag
-         handle
-         equal)
+  (let (line
+	rest
+	indent
+	pindent                        ;previous
+	col
+	ret                            ;flag
+	handle
+	equal)
     ;; ... ... ... ... ... ... ... ... ... ... ... ... ... check brace ...
     (save-excursion
       (beginning-of-line)
@@ -633,7 +620,7 @@ If optional ARG is given, behave exactly like 'newline' function."
   ;;  //    =  C++ comments
   ;;  REM   = oracle SQL comments
   ;;
-  (let ((re  (concat "^[ \t]*\\(" tinytab-:auto-indent-regexp "\\)*[ \t]*"))
+  (let ((re  (concat "^[ \t]*\\(" tinytab--auto-indent-regexp "\\)*[ \t]*"))
         str)
     (cond
      (arg ;;  We do not do anything special if user has given arg.
@@ -675,21 +662,21 @@ If optional ARG is given, behave exactly like 'newline' function."
 (defun tinytab-set-mode-name ()
   "Set mode name according to tab count in effect."
   (interactive)
-  (let* ((base  tinytab-:mode-name-base)
-         (val   (tinytab-width)))
-    (setq tinytab-:mode-name (format "%s%d" (or base "") val))
+  (let ((base  tinytab--mode-name-base)
+	(val   (tinytab-width)))
+    (setq tinytab--mode-name (format "%s%d" (or base "") val))
     (if (fboundp 'force-mode-line-update)
         (force-mode-line-update))))
 
 ;;; ----------------------------------------------------------------------
 ;;;
 (defun tinytab-change-tab-width ()
-  "Toggle tab width according to `tinytab-:width-table'."
+  "Toggle tab width according to `tinytab--width-table'."
   (interactive)
-  (let* ((verb  (interactive-p))
-         (val   (tinytab-width))
-         (table tinytab-:width-table)
-         elt)
+  (let ((verb  (interactive-p))
+	(val   (tinytab-width))
+	(table tinytab--width-table)
+	elt)
     (cond
      ((not (integerp val))
       (setq val (car table)))           ;default value
@@ -700,7 +687,7 @@ If optional ARG is given, behave exactly like 'newline' function."
 
      (t                                 ;can't find value from table ?
       (setq val (car table))))          ;get first then.
-    (setq tinytab-:width val)           ;update
+    (setq tinytab--width val)           ;update
     (tinytab-set-mode-name)
     (if verb                            ;this does no harm....
         (message "TinyTab: Tab factor is now %d" val))))
@@ -724,8 +711,8 @@ In this case, calling the function is no-op.
 
 References:
 
-  `tinytab-:tab-delete-hook'
-  `tinytab-:width'"
+  `tinytab--tab-delete-hook'
+  `tinytab--width'"
   (interactive "*")
   (let* ((div   (tinytab-width))
          (col   (current-column))
@@ -800,7 +787,7 @@ References:
 
 References:
 
-  `tinytab-:width'"
+  `tinytab--width'"
   (interactive "*")
   (let* ((col   (current-column))
          (div   (tinytab-width))
@@ -858,14 +845,14 @@ Tabs are converted to spaces when needed; because you can't step inside
 ;;; ----------------------------------------------------------------------
 ;;;
 (defun tinytab-tab-key-insert ()
-  "Run all functions in `tinytab-:tab-insert-hook' until success."
+  "Run all functions in `tinytab--tab-insert-hook' until success."
   ;;  We could use this instead:
   ;;
-  ;;  (run-hook-with-args-until-success 'tinytab-:tab-insert-hook)
+  ;;  (run-hook-with-args-until-success 'tinytab--tab-insert-hook)
   ;;
   ;;  But then it would not be possible to debug which function gets
   ;;  called.
-  (dolist (function tinytab-:tab-insert-hook)
+  (dolist (function tinytab--tab-insert-hook)
     (when (funcall function)
       (tinytab-message "TinyTab: %s" (symbol-name function))
       (return))))
@@ -874,7 +861,7 @@ Tabs are converted to spaces when needed; because you can't step inside
 ;;;
 ;;;###autoload
 (defun tinytab-tab-key (&optional beg end)
-  "Run list of function to handle TAB key. See variable `tinytab-:tab-insert-hook'.
+  "Run list of function to handle TAB key. See variable `tinytab--tab-insert-hook'.
 If region is active and BEG and END are nil, then call function
 `tinytab-indent-by-tab-width'."
   (interactive)
@@ -884,24 +871,24 @@ If region is active and BEG and END are nil, then call function
     (tinytab-indent-by-tab-width))
    (t
     ;;  Integrate this function with tinymail.el tab-key.
-    (let* ((sym   'tinymail-:complete-key-hook)
-           (tinymail-:complete-key-hook (if (boundp sym)
+    (let* ((sym   'tinymail--complete-key-hook)
+           (tinymail--complete-key-hook (if (boundp sym)
                                             (symbol-value sym))))
       ;; No-op: byte compiler silencer
-      (if (null tinymail-:complete-key-hook)
-          (setq tinymail-:complete-key-hook nil))
+      (if (null tinymail--complete-key-hook)
+          (setq tinymail--complete-key-hook nil))
       (remove-hook sym 'tinymail-complete-guest-packages)
       ;; keep this at the end
-      (when (memq 'tab-to-tab-stop tinytab-:tab-insert-hook)
-        (remove-hook 'tinytab-:tab-insert-hook 'tab-to-tab-stop)
-        (add-hook    'tinytab-:tab-insert-hook 'tab-to-tab-stop 'append))
+      (when (memq 'tab-to-tab-stop tinytab--tab-insert-hook)
+        (remove-hook 'tinytab--tab-insert-hook 'tab-to-tab-stop)
+        (add-hook    'tinytab--tab-insert-hook 'tab-to-tab-stop 'append))
       (tinytab-tab-key-insert)))))
 
 ;;; ----------------------------------------------------------------------
 ;;;
 ;;;###autoload
 (defun tinytab-tab-del-key (&optional beg end)
-  "Remove indentation. See variable `tinytab-:tab-delete-hook'.
+  "Remove indentation. See variable `tinytab--tab-delete-hook'.
 If region is active, indent all lines backward."
   (interactive)
   (cond
@@ -910,7 +897,7 @@ If region is active, indent all lines backward."
     (tinytab-indent-by-tab-width-back)
     (tinytab-activate-region beg end))
    (t
-    (run-hook-with-args-until-success 'tinytab-:tab-delete-hook))))
+    (run-hook-with-args-until-success 'tinytab--tab-delete-hook))))
 
 ;;; ----------------------------------------------------------------------
 ;;;
@@ -932,24 +919,24 @@ If region is active, indent all lines backward."
 (defun tinytab-return-key-mode (&optional mode verb)
   "Toggle auto indent MODE / regular newline mode. VERB."
   (interactive)
-  (let* ((func  'tinytab-auto-indent)
-         (now
-          (or (and
-               ;;  e.g. in fundamental-map this value is nil and
-               ;;  nil cannot be used as an keymap for lookup-key
-               ;;
-               (current-local-map)
-               (lookup-key  (current-local-map) "\C-m"))
-              (lookup-key  (current-global-map) "\C-m")))
-         to)
+  (let ((func 'tinytab-auto-indent)
+	(now
+	 (or (and
+	      ;;  e.g. in fundamental-map this value is nil and
+	      ;;  nil cannot be used as an keymap for lookup-key
+	      ;;
+	      (current-local-map)
+	      (lookup-key  (current-local-map) "\C-m"))
+	     (lookup-key  (current-global-map) "\C-m")))
+	to)
     ;;  If we redefine return key here, user will nver get out.
     ;;  C-m is exit-minibuffer.
-
     (if (string-match "minibuf" (buffer-name))
-        (error "TinyTab: Return key-mode not allowed in minibuffer."))
+        (error "TinyTab: tinytab-return-key-mode not allowed in minibuffer."))
     (setq verb (interactive-p))
     (cond
-     ((or (null mode) (not (integerp mode)))
+     ((or (null mode)
+          (not (integerp mode)))
       (setq to (if (eq now 'tinytab-auto-indent)
                    'newline
                  func)))
@@ -969,46 +956,46 @@ If region is active, indent all lines backward."
 ;;;
 (defun tinytab-indent-region-dynamically (beg end)
   "Move region BEG END until exit key is pressed.
-For ey setup, see `tinytab-:indent-region-key-list'. The default keys  are:
+For ey setup, see `tinytab--indent-region-key-list'. The default keys  are:
 
 LEFT   RIGHT
    q   w      by 1
    a   s      by 2
    z   x      by 4"
   (interactive "*r")
-  (let* ((i     1)
-         (k     tinytab-:indent-region-key-list)
-         (msg   tinytab-:indent-region-key-message)
-         ch
-         EXIT)
-    (if (not (eq (length k) 7))
-        (error "Not enough members in tinytab-:indent-region-key-list."))
-    (setq EXIT (nth 6 k))
+  (let ((count 1)
+	(list    tinytab--indent-region-key-list)
+	(message tinytab--indent-region-key-message)
+	ch
+	EXIT)
+    (if (not (eq (length list) 7))
+        (error "Not enough members in tinytab--indent-region-key-list."))
+    (setq EXIT (nth 6 list))
     (while (not (eq EXIT (setq ch
                                (downcase
-                                (read-char-exclusive msg)))))
-      (setq i nil)
+                                (read-char-exclusive message)))))
+      (setq count nil)
       (cond
-       ((eq ch (nth 0 k))
-        (setq i -1))
-       ((eq ch (nth 1 k))
-        (setq i 1))
-       ((eq ch (nth 2 k))
-        (setq i -2))
-       ((eq ch (nth 3 k))
-        (setq i 2))
-       ((eq ch (nth 4 k))
-        (setq i -4))
-       ((eq ch (nth 5 k))
-        (setq i 4)))
-      (if i
-          (indent-rigidly (region-beginning) (region-end) i)))))
+       ((eq ch (nth 0 list))
+        (setq count -1))
+       ((eq ch (nth 1 list))
+        (setq count 1))
+       ((eq ch (nth 2 list))
+        (setq count -2))
+       ((eq ch (nth 3 list))
+        (setq count 2))
+       ((eq ch (nth 4 list))
+        (setq count -4))
+       ((eq ch (nth 5 list))
+        (setq count 4)))
+      (if count
+          (indent-rigidly (region-beginning) (region-end) count)))))
 
 ;;}}}
 
-(add-hook 'tinytab-:mode-define-keys-hook 'tinytab-mode-define-keys)
+(add-hook 'tinytab--mode-define-keys-hook 'tinytab-mode-define-keys)
 
 (provide   'tinytab)
-(run-hooks 'tinytab-:load-hook)
+(run-hooks 'tinytab--load-hook)
 
 ;;; tinytab.el ends here

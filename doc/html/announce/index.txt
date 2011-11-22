@@ -1,0 +1,522 @@
+        #T2HTML-TITLE Emacs Tiny Tools announce history
+        #T2HTML-METAKEYWORDS Emacs, Emacs Lisp, Emacs Tiny Tools
+        #T2HTML-OPTION --css-code-bg
+        #T2HTML-OPTION --css-code-note
+        #T2HTML-OPTION Note:
+        #T2HTML-OPTION --html-frame
+
+        Copyright (C) 2000-2010 Jari Aalto
+
+        License: This material may be distributed only subject to
+        the terms and conditions set forth in GNU General Public
+        License v2 or later; or, at your option, distributed under the
+        terms of GNU Free Documentation License version 1.2 or later
+        (GNU FDL).
+
+2003-08-07 Announcement as posted to gnu.emacs.sources
+
+        Subject: [ANNOUNCE] tinyirc.el - Emacs utilities for IRC (PasteBot)
+
+        ANNOUNCEMENT: Snapshot of the Emacs interface to IRC PasteBot
+        services is available at
+        <http://tierra.dyndns.org:81/emacs/pastebot>. This is initial
+        release, please send bug reports to the maintainer. Package
+        offers a "send" and "receive" commands to handle the pastebot
+        messages:
+
+             IRC is very popular method of getting to getter with all sorts
+             of activities. For programmers alike, IRC is like 'all united'
+             where you get invaluable help from people that happen to be
+             online. No need to scratch your head alone; let's scratch
+             together in a friendly programming channel.
+
+             Most of the channels do not permit flooding - which means
+             copy/pasting many lines (of code) at once. If you do that, the
+             bot watching the activities of the channel will kick that
+             person out faster than he can blink his eye. So don't do that.
+             Read the channel's message what is the etiquette to show your
+             code snippet. Previous times it has been a custom to use
+             separate #flood channel (which you must join) /join #flood
+
+             And then tell people "Hey, I'm posting the code to #flood, go and
+             check". But someone may not be watching the channel's messages at
+             the time of announcement and when he finally joins the #flood, he's
+             too late. He cannot see the code. The catch is that every
+             interested person has be be on channel #flood first before anyone
+             pastes a message there. Use cannot see old messages, onle lines
+             after his joining the channel.
+
+        Sending Pastebot messages
+
+                There is simple interface: draw region and call `M-x'
+                `tinyirc-pastebot-send-region', which you can assign to a
+                key. But you can't use that quite yet. Read the preliminary
+                settings and test your interface before using this Emacs
+                key.
+
+                    ;; Select "C-c p" prefix for pastebot commands
+                    (global-set-key "\C-cps" 'tinyirc-pastebot-send-region)
+
+                There are few variables that you might want to set. See
+                `tinyirc-:pastebot-program' and
+                `tinyirc-:pastebot-config-directory' in case you keep
+                configuration files in different directory.
+
+        Receiving pastebot messages
+
+                 Receiving messages announced in the IRC channel is even
+                 easier. Call `M-x' `tinyirc-pastebot-receive-url' and
+                 offer the URL announced in the channel. A possible key
+                 binding for this could be:
+
+                    (global-set-key "\C-cpr" 'tinyirc-pastebot-receive-url)
+
+        For further information refer to manual page available at
+        <http://tierra.dyndns.org:81/emacs/pastebot/tinyirc.html>
+
+        The stable version of this utility in the next release of the Emacs
+        Tiny Tools available at http://tiny-tools.sourceforge.net/
+
+2002-02-04 Announcement as posted to gnu.emacs.sources
+
+    2002-02-04 Distribution kit
+
+        Subject: ANNOUNCE: Emacs Tiny Tools release 2002-02-04 available.
+        http://tiny-tools.sourceforge.net/
+
+    2002-02-04 Description
+
+        Emacs Tiny Tools is a collection of libraries and packages, which
+        are designed to be OS (Win32/Unix) and Emacs/XEmacs
+        independent. The tools include many package (50+) of which
+        one of the most useful is tinypath.el, which can configure
+        your whole site-wide and personal Emacs load-path and info file
+        locations. You do not need to manually configure Emacs after
+        you updatem upgrade or make modification along load-path.
+
+        All the programs and documentation in Tiny Tools kit is released
+        under GPL, see http://www.gnu.org/copyleft/gpl.html
+
+    2002-02-04 building /usr/share/emacs/site-lisp/net
+
+        You may also be interested in peeking another project
+        http://perl-webget.sourceforge.net/ which is able to automatically
+        generate to crete `/usr/share/emacs/site-lisp/net' hierarchy
+        directly from Emacs Lisp developers' home pages.
+
+2002-01-04 Announcement as posted to gnu.emacs.sources
+
+    2002-01-04 Distribution kit
+
+        Subject: ANNOUNCE: Emacs Tiny Tools release 2001-12-31 available.
+
+        http://tiny-tools.sourceforge.net/
+        http://sourceforge.net/projects/tiny-tools/
+
+    2002-01-04 Short description
+
+        Emacs Tiny Tools is a collection of libraries and packages, which
+        are designed to be OS (Win32/Unix) and Emacs/XEmacs
+        independent. The tools include many package (50+) of which
+        one of the most useful is tinypath.el, which can configure
+        your whole site-wide and personal Emacs load-path and info file
+        locations. You do not need to manually configure Emacs after
+        you updatem upgrade or make modification along load-path.
+
+        All the programs and documentation in Tiny Tools kit is released
+        under GPL, see http://www.gnu.org/copyleft/gpl.html
+
+        Mailing list
+
+        There is mailing list for the project, where you can send questions
+        and bug reports. The list name is *emacs-tt-users* and the traffic
+        in the list is very occasional:
+
+        http://lists.sourceforge.net/lists/listinfo/tiny-tools-users
+
+        Another related project, which was previously part of Tiny Tools,
+        has newly opened at sourceforge. Please take a peek how
+        to crete /usr/share/site-lisp/net hierarchy
+        directly from Emacs Lisp developer's home pages. Visit
+        http://perl-webget.sourceforge.net/
+
+2000-10-07 Announcement about sourceforge CVS
+
+        [2000-10-07] The sourceforge development hasn't matured yet,
+        so this release build is a local copy of current state of the
+        project. Many bugs corrected regearding the tinydesk.el and a
+        new experimental mail completion features added to
+        tinymail.el. - 2000-10-07
+
+        [2000-09-09] This is a transition release that has NOT BEEN
+        built from sourceforge CVSTREE. It has been put available so
+        that the latest development changes could be tested and used
+        by the Emacs audience and avoid the (perhaps) long delay it
+        takes to get sourceforge development and builds going. This is
+        a complete release including the bin/ doc/ and lip/
+        directories. Start at doc/REAME.txt, which unfortunately
+        refers to old develoment site and it's practises. Just ignore
+        those comments for now. - 2000-09-09
+
+        For bash:
+
+            $ export CVSROOT=:pserver:anonymous@cvs.tiny-tools.sourceforge.net:/cvsroot/tiny-tools
+
+        For csh and tcsh:
+
+            % setenv CVSROOT :pserver:anonymous@cvs.tiny-tools.sourceforge.net:/cvsroot/tiny-tools
+
+            cvs login
+            password [RET]
+            cvs -z6 co tiny-tools
+
+2000-09-09 Announcement as posted to gnu.emacs.sources
+
+    2000-09-09 Distribution kit
+
+        Subject: ANNOUNCE: Emacs Tiny Tools release 2000-09-09 and
+        move to Sourceforge
+
+        Project_id=11049
+        http://sourceforge.net/projects/tiny-tools/
+
+    2000-09-09 Home page
+
+        http://tiny-tools.sourceforge.net/  [no web page yet, in future]
+
+    2000-09-09 Short description
+
+        Emacs Tiny Tools is a collection of libraries and packages, which
+        are designed to be OS (Win32/Unix) and X/Emacs platform
+        independent. E.g. configure load-path automatically, URL handler,
+        easy-delete, mail complete and many more.
+
+        All the programs and documentation in Tiny Tools kit is released under
+        GPL http://www.gnu.org/copyleft/gpl.html
+
+        Mailing list
+
+        There is mailing list for the project, where you can send questions
+        and bug reports. The list name is *emacs-tt-users* and the traffic
+        in the list is very occasional:
+
+        http://www.egroups.com/group/emacs-tt-users (See at left "subscribe")
+
+    2000-09-09 The Sourceforge
+
+        The transition
+
+        A work is in progress to move all the development to the well
+        known Open Source development server at
+        http://www.sourceforge.net/ but the transition will take time
+        before a CVS access and package build methods are
+        ready. Currently the account is active and the latest releases
+        can be found found solely from there.
+
+        The first phase goal: To get the CVS going
+
+        The seconds phase: To get build methods automatic and
+        platform independent, anyone with CVS access can start maintain
+        the code if the unfortunate case happens that the original
+        author resigns (I have no such plans at this time).
+
+        The third phase: Write or move the existing web pages and
+        maintain them at sourceforge (requires learning PHP, which2
+        I do not master currently) A volunteer or help is welcomed.
+
+    Current project and home page location
+
+        The version numbers in the files are not a continuum of what
+        was initially releases in 1994. There has been since several
+        moves from RCS to CVS and CVS-servers, Unix to Win32 and
+        vice versa and the revisions numbers have been reseted or
+        started again. Sometimes there has been a disk crashes which
+        has been wiped histories as well.
+
+        So if you see version 1.8, it would be 1.511 or something today.
+
+    2000-09-09 Emacs compatibility
+
+        The minimum criterias are:
+
+            Emacs 20.1+  XEmacs: 20.4+ ( 21.1+ preferred )
+
+        The release MAY WORK FINE with older Emacs releases and if you
+        submit bug report, a support for older Emacs versions is considered
+        unless there is too much work. The current development platform, where
+        the utilities are written and tested is:
+
+            NT Emacs 20.7, and NT XEmacs 21.2.20+
+
+    2000-09-09 Recommended top 10 or so
+
+        Here is selection of the most useful files in the kit. Take a look
+        at these first. You are instructed to start with the tinypath.el
+        which will solve all Emacs package installation problems system
+        wide by finding out the load-path and INFO files automatically. (No
+        need to manually edit load-path any more)
+
+        o   tinypath.el - Automatic load-path setup, no matter how deep.
+        o   tinyload.el - Lazy load Emacs packages and startup files at
+            background
+        o   tinyurl.el - Top level umbrella for all URL browsing
+        o   tinyigrep.el - Top level umbrella to igrep.el. Grep files easily.
+        o   tinymail - Very feature rich TAB completion of any field in mail
+        o   tinymy.el - Grab bag of utilities. Watch your mouse when you
+            point at the end of window in file buffer.
+        o   tinysearch - one key/mouse-click search forward / backward
+        o   tinytf - A document writing minor mode. (Technical Format)
+
+        The complete list of lisp tools has been attached below and
+        generated with the included script 'perl -S find-version.pl *.el'
+
+            load-path.el    1.4   2000-08-24 Used for compiling Emacs lisp files
+            tinyad.el       1.8   2000-09-05 Colletion of (ad)viced functions
+            tinyappend.el   1.4   2000-08-24 A simple text gathering to buffer utility.
+            tinybm.el       1.4   2000-08-24 (B)ook(m)ark package, keep your file in organized sections
+            tinycache.el    1.4   2000-08-24 Maintain a cache of visited files [compile,dired]
+            tinycb.el       1.5   2000-08-24 (C)hange (b)uffers in current window.
+            tinychist.el    1.6   2000-08-24 (c)ommand (h)istory save/restore utility
+            tinycom.el      1.4   2000-08-24 Smart comment setting utility
+            tinycompile.el  1.7   2000-08-24 Compile buffer additions. Minor mode.
+            tinydesk.el     1.12  2000-09-09 Saves/restores files in Emacs between sessions
+            tinydiff.el     1.12  2000-08-24 Diff output minor mode. Browsing, patching.
+            tinydired.el    1.9   2000-08-24 Dired enchancements. Backgroud Ange ftp support
+            tinyeat.el      1.5   2000-08-24 Eating blocks of text forward, backward
+            tinyef.el       1.8   2000-08-24 (E)lectric (f)ile minor mode. Easy filename composing
+            tinyezip.el     1.7   2000-08-24 'load' support for compressed elisp files.
+            tinygnus.el     1.12  2000-09-09 Gnus Plug-in. Additional functions. UBE fight etc.
+            tinyhotlist.el  1.7   2000-09-09 Hotlist of important buffers, files(ange-ftp), dired
+            tinyigrep.el    1.12  2000-08-24 Top level interface to igrep.el
+            tinyindent.el   1.4   2000-08-24 like indented-text-mode, but minor-mode, smart indent
+            tinylib-ad.el   1.2   2000-08-24 Library of adviced functions. Backward compatibility
+            tinylib.el      1.17  2000-09-05 Library of general functions
+            tinyliba.el     1.12  2000-08-24 Library for (a)utoload definitions
+            tinylibb.el     1.9   2000-08-24 Library of (b)ackward compatible functions.
+            tinylibck.el    1.6   2000-09-09 Library to (c)onvert (k)eybindings for XEmacs or Emacs
+            tinylibid.el    1.4   2000-08-24 Library for (Id)entifying buffer, regardless of mode
+            tinylibm.el     1.13  2000-09-03 Library of s(m)all macros or functions
+            tinylibmenu.el  1.7   2000-08-24 Library for echo-area menu
+            tinylibmt.el    1.10  2000-09-03 Library of (m)ail and news (t)ool functions
+            tinylibo.el     1.4   2000-08-24 Library for handling (o)verlays
+            tinylibt.el     1.5   2000-09-09 Text property handling library
+            tinylibxe.el    1.4   2000-08-24 Emulation library for Emacs and XEmacs
+            tinyliby.el     1.10  2000-08-24 Library of functions related to Emacs s(y)stem
+            tinylisp.el     1.14  2000-09-09 Emacs lisp programming help grabbag
+            tinyload.el     1.6   2000-08-24 Load set of packages when Emacs is idle (lazy load)
+            tinylock.el     1.6   2000-08-24 Simple emacs locking utility
+            tinylpr.el      1.6   2000-08-24 Easy Emacs lpr command handling, popup, completions
+            tinymacro.el    1.4   2000-08-24 Fast way to assign newly created macro to key
+            tinymail.el     1.16  2000-09-03 Some mail add-ons. Report incoming mail, TAB complete
+            tinymbx.el      1.4   2000-08-24 Berkley style aka std. mailbox browsing minor mode
+            tinymy.el       1.13  2000-08-24 Collection user ('my') functions. Simple solutions.
+            tinynbr.el      1.4   2000-08-24 Number conversion minor mode oct/bin/hex
+            tinypad.el      1.5   2000-08-24 Emulate Windows notepad with extra menu
+            tinypage.el     1.4   2000-08-24 Handling ^L pages, select, cut, copy, head renumber...
+            tinypair.el     1.10  2000-08-24 Self insert character (pa)irs () "" '' <>
+            tinypath.el     1.16  2000-09-05 Manage your Emacs load-path dynamically
+            tinyperl.el     1.14  2000-08-31 Grabbag of Perl related utilities. Pod documentation
+            tinypgp.el      1.11  2000-08-24 PGP minor mode, remailing, keyring management
+            tinypm.el       1.7   2000-09-09 Emacs (p)roc(m)ail minor mode
+            tinyreplace.el  1.6   2000-08-24 Handy query-replace, area, case preserve, words
+            tinyrlog.el     1.7   2000-09-09 CVS and RCS rlog minor mode. ChecOut, CheckIn...
+            tinyrmail.el    1.6   2000-09-09 RMAIL additions, pgp, mime labels
+            tinyscroll.el   1.7   2000-08-24 Enable or Disable autoscroll for any buffer.
+            tinysearch.el   1.5   2000-09-09 Grab and search word under cursor
+            tinytab.el      1.5   2000-08-24 Programmers TAB minor mode. Very flexible.
+            tinytag.el      1.9   2000-09-09 Grep tags db: example show C++ syntax call while coding
+            tinytf.el       1.10  2000-09-06 Document layout tool for '(T)echnical text (F)ormat
+            tinyurl.el      1.16  2000-09-09 Marks and jump to urls on current line
+            tinyxreg.el     1.7   2000-08-24 Restoring points/win cfg stored in reg. via X-popup
+
+
+2000-06-05 Announcement as posted to gnu.emacs.sources
+
+        DO NOT BOOKMARK absolute site address, because it may move
+        without notice. DO NOT DOWNLOAD old kit
+        emacs-tiny-tools.tar.gz. It is kept in place, because it was
+        the last kit where development was donw in Unix. The old kit
+        will be removed when the Beta has been proven stable.
+
+    Mailing list
+
+        There is mailing list for the project, where you can send questions
+        and bug reports. The list name is *emacs-tt-users* and the traffic
+        in the lists is very occasional:
+
+            http://www.egroups.com/group/emacs-tt-users (See at left "subscribe")
+
+    History
+
+        All the programs and documentation in Tiny Tools kit is
+        released under GPL http://www.gnu.org/copyleft/gpl.html
+
+        Tiny Tools is my on-going "hobby", that started with one Emacs
+        package, then next .. in 1994 to help me use Emacs more
+        conveniently in my daily work.
+
+        Prevous kit was released at the beginning of 1999. The
+        development was done in Unix using Emacs 19.28 and 20.1, with
+        very little NT Emacs support and ever more little XEmacs
+        support (19.14). There has been period of inactivity, due to
+        more busy days with my regular work, nice long vacation in
+        Spain and moving the development environment from unix to PC.
+        The move to PC was more painful than I ever though because all
+        the building tools had to be made from scratch. (All my nice
+        automatic unix scripts were useless)
+
+    Current release
+
+        W32 users will be more than delighted to hear, that current
+        releases are BETA series of Cross platform Emacs / XEmacs /
+        W32 / Unix tools.
+
+        XEmacs support is now going strong finally too, even the W32
+        XEmacs support.
+
+        Latest Emacs releases are now supported much better, because
+        of the availability of precompiled binaries for w32.
+
+    Backward compatibility
+
+        The previous release supported Emacs versions way back to
+        19.27 and XEmacs 19.14, but I can't promise such a long
+        release backing any more. The minimum criterias for support
+        are:
+
+            Emacs 19.34+    ( 20.1+ preferred )
+            XEmacs: 20.4+   ( 21.1+ preferred )
+
+        The release MAY WORK FINE with older Emacs releases and if you
+        submit bug reports a support for older versions is considered
+        unless there are too much work. however, the current
+        development is being done in W32 with
+
+            W32 Emacs 20.4, 20.5
+            W32 XEmacs 21.1.6, 21.2.20
+
+        W32 Emacs is the current primary development environment.
+
+    Recommended top 10 or so
+
+        Here is my selection of the most useful files in the kit. Take
+        a look at these first:
+
+        o   tinypath.el - Automatic load-path setup, no matter how
+            deep.
+        o   tinyload.el - Lazy load Emacs packages and startup files
+            at background
+        o   tinyurl.el - Top level umbrella for all URL browsing
+        o   tinyigrep.el - Top level umbrella toigrep.el. Grep files
+            easily.
+        o   tinymail - Very feature rich TAB completion of any field
+            in mail
+        o   tinymy.el - Grabbag of utilities. Watch your mouse when
+            you point modeline
+        o   tinysearch - one key/mouse-click search forward / backward
+        o   tinytf - A document writing minor mode. (Techical Format)
+
+        The complete list has been attached separatedly.
+
+        Happy experimenting, Jari
+
+2000-02-17 ANNOUNCE: instant Java language call syntax help (tinytag.el)
+
+        Hi, [2000-02-17]
+
+        I decided to update one of my packages to support Java call syntax
+        in echo-area while you you program. Years ago I had coded the
+        support mainly for C/C++, but now I currently code with Java and
+        thought it was time to wipe dust off from the old engine.
+
+        What is tinytag.el ? The name "tag" comes from analogy to
+        the emacs TAGS packages that cache various language syntax information
+
+        Suppose we have code:
+
+            Runtime rt = Runtime.getRuntime();
+            long total = rt.totalMemory();
+                            *
+                            Your cursor is over this function
+
+        After few seconds the modeline will inform you:
+
+            1: java.lang.Runtime  long totalMemory() throws IOException
+
+        What you need:
+
+            1. http://tiny-tools.soourceforge.net/
+            2. Perl
+
+        What do you do to get instant help working? Generate Java database:
+
+            You must generate the Java function call database. In Tiny Tools
+            kit you find java-function-list.pl which extracts the functions
+            out of the standard JDK javadoc pages. This is the database that you
+            will be using.
+
+                perl java-function-list.pl --recurse java/sun/jdk1.2.2/docs \
+                  > ~/elisp/config/emacs-config-tinytag-jdk1.2.2
+
+            And it generates database in following format. You can edit
+            the lines as you wish to supply additional information. There
+            is no required line format:
+
+                java.lang.StringBuffer  StringBuffer insert(int offset, Object obj)
+                java.lang.StringBuffer  StringBuffer insert(int offset, String str)
+                ...
+                java.lang.String  String substring(int beginIndex, int endIndex) throws UnsupportedEncodingException
+                ...
+
+                NOTICE: The System.out.print* functions are not generated (Java
+                does not have page for them because they are inherited functions)
+                See comments in Perl script's --help and copy the defaults form
+                there to the end of generated database.
+
+        Let tinytag.el know that you now have java database available
+
+              ;;  Define two of your own variables
+
+              ;;  The emacs-config-tinytag-jdk1.2.2 file must be located
+              ;;  under tinytag-:database-dir which is by default
+              ;;  ~/elisp/config or ~/ if config dir did not exist.
+
+              (defconst my-tinytag-:db-map-java
+                '((func       "emacs-config-tinytag-jdk1.2.2"))
+                "Java database.")
+
+              (defconst my-tinytag-:db-re-java
+                '(("."        (func)))
+                "Java database.")
+
+              ;;  Now glue your variables to tinytag.el
+
+
+              (defconst tinytag-:database-setup-table
+                (list
+
+                 '("code-java\\|java"
+                   (my-tinytag-:db-map-java my-tinytag-:db-re-java))
+
+                  ;; ...other supported languages))
+
+        If everything went ok, you're ready to code with java and "instant help".
+        Loading the tinytag.el and configuring the `tinytag-:database-setup-table'
+        is enough to activate the package. You can also keep following window
+        visible if the echo-area display is not enough:
+
+            *tinytag-output*
+
+        In case of error or nothing happens, please turn on debug:
+
+            M-x tinytag-debug-toggle
+
+        And observe the printed messages in buffer
+
+            *tinytag-debug*
+
+        Please try and give feedback, this is first java support implementation.
+
+        Jari
+
+End

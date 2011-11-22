@@ -1,0 +1,2941 @@
+Table of contents
+
+       1.0 Document id
+           1.1 Description
+           1.2 Required pre-knowledge
+           1.3 Credits
+
+       2.0 Various binding methods
+           2.1 Foreword to different emacs platforms
+           2.2 Emacs versions and key binding syntax compatibility table:
+           2.3 Ethics -- what is the correct way?
+              2.3.1 Binding syntax recommendations
+
+       3.0 Finding the key syntax
+           3.1 Know your environment first
+           3.2 The M-x view-lossage command helps you
+           3.3 Using read-kbd-macro
+           3.4 Very easy way: just go and use M-x global-set-key
+           3.5 Using key-description by Kevin Rodgers
+
+       4.0 How do I give argument to command when I bind it to key?
+           4.1 Printing a string by pressing a key
+           4.2 Running macro by pressing a key
+           4.3 Running existing user functions
+           4.4 Running your own lisp function
+           4.5 Running function by mouse click
+           4.6 Calling function with different default argument
+           4.7 Using complex lambda function in key binding
+
+       5.0 About key maps
+           5.1 Before defining the key, you should know about key maps
+           5.2 Default emacs key maps and packages' key maps
+           5.3 Prefix keymaps in new emacs versions.
+           5.4 Prefix key maps in old emacs versions.
+           5.5 Function-key-map -- where do I need it?
+           5.6 How to generate C-A-S-H-M modifiers from keyboard keys
+           5.7 Local-set-key and global-set-key note
+
+       6.0 Ascii and non-ascii keys
+           6.1 Emacs info, Character Type
+           6.2 General description
+           6.3 Emacs info, Named ascii characters
+           6.4 Case study: Why can't I assign key <ESC C-'> ?
+           6.5 Case study: How to bind a function to Ctrl-?
+           6.6 Portable keybindings -- command 'emacs -nw' is your friend
+
+       7.0 Emacs backspace binding problem
+           7.1 Recent news and related packages
+           7.2 Foreword -- background
+           7.3 Windowed Emacs mapping
+           7.4 Non-windowed Emacs mapping
+           7.5 Mapping backspace with 'delete' symbol
+
+       8.0 Some article snippets, Q/A
+           8.1 I can't use C-s and C-q in emacs due to control flow.
+           8.2 Disable C-s/C-q for flow control?
+           8.3 Defining keys to isearch map?
+           8.4 I'm in emacs that doesn't recognize my function keys?
+           8.5 I don't seem to see the Control-Space sequence
+           8.6 To get Xterm work with mouse
+           8.7 Does these vector, notations work only under X ?
+           8.8 I have troubles running 'screen' (SUN-OS virtual term) and emacs
+           8.9 Modifying keyboard keys in X
+           8.10 Swap the control and cap keys on Sun sparc 20 machine?
+           8.11 Xterm -- AIX: Meta key missing in emacs -nw
+           8.12 HP: meta key missing on 715 and 712?
+           8.13 HP: there's no Meta key?
+           8.14 HP: xmodmap settings in PC XCeed
+           8.15 Could anyone tell me how I could change the meta-key ?
+           8.16 How can I set Meta key to Alt?
+           8.17 How can I make the alt key work as the meta key?
+           8.18 On X window C-SPC says Args out of range #^[nil nil nil
+           8.19 Carpal tunnel syndrome: Any way to reduce left wrist pain?
+           8.20 Telnet connection -- backspace ?
+           8.21 Latin Charset handling ?
+           8.22 Linux: I can't rebind C-up in terminal window?
+           8.23 Linux: cursor keys problem
+
+       9.0 Xmodmap introduction -- Changing your X environment
+           9.1 How X key bindings work
+           9.2 Xmodmap and keysyms -- as explained in the 'xkeycaps'
+           9.3 Example -- xmodmap for select and kp-f1
+           9.4 Example -- sun keyboard xmodamp
+           9.5 Example -- remap the control key
+              9.5.1 Martin Steppler <steppler@comnets.rwth-aachen.de>
+
+       10.0 Code
+           10.1 Perl code to remap Meta-Modeswitch
+
+       11.0 CASE STUDY -- Connection to remote emacs through Xterm
+           11.1 Foreword
+           11.2 The connection does not know my keyboard
+           11.3 How do I know what a key produces (ascii sequences?)
+           11.4 Short xmodmap(1) glimpse
+           11.5 Xev -- Spot your X-events(keys) easily
+           11.6 Xterm's -xrm switch for key settings, where are the key names?
+           11.7 Custom xterm -- making xterm to translate character for connection
+           11.8 Remote emacs setup
+           11.9 Testing the special Xterm and remote emacs co-operation
+           11.10 Complete, live, setup -- Modify to personal needs
+
+1.0 Document id
+
+    1.1 Description
+
+        #T2HTML-TITLE Emacs keybinfing help
+        #T2HTML-METAKEYWORDS Emacs, Emacs Lisp, Resource page
+        #T2HTML-OPTION --css-code-bg
+        #T2HTML-OPTION --html-frame
+
+        Copyright (C) 1995-2010 Jari Aalto
+
+        License: This material may be distributed only subject to
+        the terms and conditions set forth in GNU General Public
+        License v2 or later; or, at your option, distributed under the
+        terms of GNU Free Documentation License version 1.2 or later
+        (GNU FDL).
+
+        This document explains how do you deal with Emacs key bindings. In
+        addition, you will find step by step how you use your X window's
+        `xmodmap' program to start using emacs better in X. Document also
+        explains how to set up special xterm for telnet connections --
+        running remote emacs with transparent key binding. Finally includes
+        many ready examples and questions and answers compiled from Usenet
+        emacs newsgroups.
+
+    1.2 Required pre-knowledge
+
+        You have to know enough about basic emacs commands; E.g. what is
+        `local-set-key' `global-set-key' and what's that `M-x'. Refer to
+        Emacs info pages (C-h i) for these matters. For the case study: I
+        expect you to know enough elisp and enough about Unix programming
+        to read presented code fluently.
+
+    1.3 Credits
+
+        Many thanks to a fellow worker Uwe Geuder, who explained me how
+        to deal with keys in X-environment. Without him I would be still
+        using remote, but crippled emacs interface and you wouldn't be
+        reading the case study results or the xmodmap explanation.
+
+2.0 Various binding methods
+
+    2.1 Foreword to different emacs platforms
+
+        The old Emacs C-A-S-H-M modifiers map to new syntax like this:
+
+            old Emacs       Emacs 19.30+ and XEmacs19.14+
+            [C-tab]         [(control tab)]
+            [A-1]           [(alt ?1)]
+            [S-up]          [(shift up)]
+            [H-prior]       [(hyper prior)]   ;; in HP prior = PgUp
+            [M-f1]          [(meta f1)]
+
+        The [()] syntax works fine between the Emacs and XEmacs, but
+        symbol names for mouse differ:
+
+            [(control shift mouse-1)]       ;; Emacs name:  mouse-1
+            [(control shift button1)]       ;; XEmacs name: button1
+
+    2.2 Emacs versions and key binding syntax compatibility table:
+
+            m-1     : recognizes Emacs  styled mouse binding, mouse-1
+            b1      : recognizes XEmacs styled mouse binding, button1
+            r-k-m   : `read-kbd-macro'
+            kdb     : New function `kbd' substitutes `read-kbd-macro'
+            _yes    : works 95% , but there are known bugs.
+
+            ------------------------------------------------------
+            style:              []    [()]  m-1   b1    r-k-m  kbd
+            ------------------------------------------------------
+            Emacs   19.28-30    yes   no    yes   no    no     no
+            Emacs   19.31-33    yes   yes   yes   no    bugs   no
+            Emacs   19.34       yes   yes   yes   no    _yes   no
+            Emacs   20.1-3      yes   yes   yes   ?     yes    yes
+            ------------------------------------------------------
+            XEmacs  19.13-14    no    yes   no    yes   no     no
+            XEmacs  19.15-16    no    yes   _yes  yes   yes    no
+            XEmacs  20.2-5      no    yes   yes   yes   yes    yes
+            ------------------------------------------------------
+
+        [SL Baur <steve@xemacs.org>] There is no XEmacs 20.1. There are two
+        flavors of XEmacs 20.0 floating around. They are not compatible.
+        One is more like XEmacs 19.14 (the one on the Sun CD), the other
+        (the 'net released one) is more like XEmacs 19.15/16. Note that the
+        form `[C-A-S-H-M]' will never be supported by XEmacs.
+
+    2.3 Ethics -- what is the correct way?
+
+          I'm totally confused. What binding method should I use?
+
+        Please don't fell into despair. Things are not black or white and
+        people have different habits and not everyone are interested in
+        XEmacs and Emacs compatibility issues. Spend a while examining
+        these bindings.
+
+            (global-set-key         "\C-xm"         'ignore)
+            (define-key global-map  "\C-xm"         'ignore)
+            (define-key global-map  (kbd "C-x m")   'ignore)
+            (define-key ctl-x-map   "m"             'ignore)
+
+        I have purposively listed them in the order of my own preference. I
+        usually choose the one that looks simplest, but that doesn't imply
+        that it is the best or the right one. All the above examples work
+        fine with variety of Emacs platforms.
+
+       2.3.1 Binding syntax recommendations
+
+        The most portable way is natural string syntax, just as you saw
+        above. This will work in every possible Emacs: new or old,
+        WindowsNT, Unix etc.
+
+            (define-key some-map "keybindings" 'ignore)
+
+        Next best is new bracket style binding:
+
+            (define-key some-map [(keybindings)] 'ignore)
+
+        But remember that mouse bindings are not shared between XEmacs and
+        emacs version. If you intend to have same bindings, it would be
+        best to write separate code for Emacs and XEmacs:
+
+            (cond
+             ((or (boundp 'xemacs-logo)  ;; This is XEmacs
+                  (featurep 'xemacs))    ;; New XEmacs releases define this
+              (define-key some-map [(control shift button1)] 'ignore))
+             (t
+              (define-key some-map [(control shift mouse-1)] 'ignore)))
+
+        Third best might be new `read-kdb-macro' or `kbd' way. I say third
+        best, because it only works in latest Emacs and XEmacs versions.
+        The `kbd' was slightly buggy in WinNT 19.34. Expect this syntax to
+        be reliable in Emacs 20.x and up.
+
+3.0 Finding the key syntax
+
+    3.1 Know your environment first
+
+        Running Emacs in window system is different from running Emacs in
+        console mode: meaning that Emacs has been started either with `-nw'
+        or from telnet over vt100 like terminal (No X or other window
+        system). Be prepared that the console Emacs can't use all the same
+        bindings as your windowed Emacs. An example from Emacs:
+
+            Pressed key     C-h l [-nw] C-h l [windowed]
+            ---------------------------------------------------
+            Control-right   ESC O C     C-right
+            Control-left    ESC O D     C-left
+            Control-up      ESC O A     C-up
+            Control-down    ESC O B     C-down
+            Control-RET     RET         C-return        <<
+            Shift-RET       RET         S-return        <<
+
+        Notice how different the recognized keys are in these environments.
+        Look closely last rows: in non-window environment the shift/control
+        state is not passed at all when you press `return'.
+
+    3.2 The M-x view-lossage command helps you
+
+        Just press a <key or sequence> and immediately execute `C-h' `l',
+        or `M-x' `view-lossage' Then you can look at the key definition it
+        produced. E.g. For `C-c' `C-S-f1' lossage buffer may show:
+
+            backspace S - F 1 SPC i t SPC s h o w s : return return
+            C-c C-S-f1 C-h l
+            ^^^^^^^^^^
+
+        That is the exact form you can use:
+
+            (global-set-key [(control c) (control shift f1)] 'ignore)
+
+    3.3 Using read-kbd-macro
+
+        Anonymous mentioned in gnu.emacs.help 1998-04-05
+        in Message-ID: <6g7obg$207@basement.replay.com> that you can find
+        the `read-kbd-macro' syntax with following command:
+
+            (format-kbd-macro (read-key-sequence "Key? " nil t))C-uC-xC-e
+
+        [Hrvoje Niksic <hniksic@srce.hr>] ...the best and most reliable way
+        to bind keys is using the function `read-kbd-macro'. Preferred form
+        as you needn't know the internal representation. A shortened form
+        of `read-kbd-macro' is called `kbd' in XEmacs 20.2 and Emacs 19.34.
+        It will also evaluate at compile-time.
+
+            (read-kbd-macro "<S-up>")
+            (read-kbd-macro "<M-f1>")
+            (read-kbd-macro "A-1")
+
+        The `read-kbd-macro' function returns the internal Emacs
+        representation of a human-readable string which is its argument.
+        So:
+
+            (read-kbd-macro "C-c C-a")
+              => ""
+              => [(control ?c) (control ?a)]          ; XEmacs
+
+            (read-kbd-macro "C-c C-. <up>")
+              => [3 67108910 up]
+              => [(control ?c) (control ?.) up]       ; XEmacs
+
+        The function is convenient to use in your keyboard definitions, for
+        example:
+
+            (global-set-key (read-kbd-macro "C-.") 'undo)  ; or whatever
+
+        The exact "human-readable" syntax is defined in the docstring of
+        `edmacro-mode'. I'll repeat it here, for completeness. Format of
+        keyboard macros during editing:
+
+          Format of keyboard macros during editing:
+
+          Text is divided into "words" separated by whitespace. Except for
+          the words described below, the characters of each word go directly
+          as characters of the macro. The whitespace that separates words
+          is ignored. Whitespace in the macro must be written explicitly,
+          as in "foo SPC bar RET".
+
+             * The special words RET, SPC, TAB, DEL, LFD, ESC, and NUL
+               represent special control characters. The words must be
+               written in uppercase.
+
+             * A word in angle brackets, e.g., <return>, <down>, or <f1>,
+               represents a function key.  (Note that in the standard
+               configuration, the function key <return> and the control key
+               RET are synonymous.)  You can use angle brackets on the
+               words RET, SPC, etc., but they are not required there.
+
+             * Keys can be written by their ASCII code, using a backslash
+               followed by up to six octal digits. This is the only way to
+               represent keys with codes above \377.
+
+             * One or more prefixes M- (meta), C- (control), S- (shift), A-
+               (alt), H- (hyper), and s- (super) may precede a character or
+               key notation. For function keys, the prefixes may go inside
+               or outside of the brackets: C-<down> = <C-down>.  The
+               prefixes may be written in any order: M-C-x = C-M-x.
+
+               Prefixes are not allowed on multi-key words, e.g., C-abc,
+               except that the Meta prefix is allowed on a sequence of
+               digits and optional minus sign: M--123 = M-- M-1 M-2 M-3.
+
+             * The `^' notation for control characters also works:  ^M = C-m.
+
+             * Double angle brackets enclose command names: <<next-line>>
+               is shorthand for M-x next-line RET.
+
+             * Finally, REM or ;; causes the rest of the line to be ignored
+               as a comment.
+
+            Any word may be prefixed by a multiplier in the form of a decimal
+            number and `*':  3*<right> = <right> <right> <right>, and
+
+            Any word may be prefixed by a multiplier in the form of a decimal
+            number and `*':  3*<right> = <right> <right> <right>, and
+            10*foo = foofoofoofoofoofoofoofoofoofoo.
+
+            Multiple text keys can normally be strung together to form a word,
+            but you may need to add whitespace if the word would look like one
+            of the above notations:  `; ; ;' is a keyboard macro with three
+            semicolons, but `;;;' is a comment. Likewise, `\ 1 2 3' is four
+            keys but `\123' is a single key written in octal, and `< right >'
+            is seven keys but `<right>' is a single function key. When in
+            doubt, use whitespace.
+
+        Other traditional Emacs binding examples, like binding f1 with
+        various modifiers. Note that all the modifiers are not
+        automatically available. It depends if the terminal can send
+        appropriate key codes to emacs. E.g. for shifted function keys, X
+        sends them while vt100 doesn't.
+
+            (global-set-key [C-f1]          'ignore) ;control-f1
+            (global-set-key [M-f1]          'ignore) ;meta-f1
+            (global-set-key [C-S-f1]        'ignore) ;control-shift-f1
+            (global-set-key [C-S-M-f1]      'ignore) ;control-shift-meta-f1
+
+        And the same with the syntax that works in Emacs and XEmacs:
+
+            (global-set-key (kbd "<C-f1>")      'ignore)
+            (global-set-key (kbd "<M-f1>")      'ignore)
+            (global-set-key (kbd "<C-S-f1>")    'ignore)
+            (global-set-key (kbd "<C-S-M-f1>")  'ignore)
+
+        Newer Emacs releases have shortened the command `read-kbd-macro' to
+        `kbd'.
+
+    3.4 Very easy way: just go and use M-x global-set-key
+
+        ...and hit the keys you want. Then go back and recall that previous
+        command with `C-x' `ESC' `ESC' and copy the output you see, and
+        there is the full lisp command which does the binding.
+
+        This will show you [C-c C-S-f1] when you bind the key.but when you
+        recall the command it may shrink to [3 C-S-f1], so this method is
+        not completely perfect.
+
+    3.5 Using key-description by Kevin Rodgers
+
+        One more way to find out some cryptic emacs key bindings is to use
+        function `key-description'. See how following binding can be
+        converted into human readable format
+
+            ;;  This cryptic number may not be reliable from platform
+            ;;  to platform
+            ;;
+            (global-set-key  [4194336] 'set-mark-command)
+
+            ;;  Make it more readable...The result depends on your Emacs
+            ;;
+            ;;  This gives in HP-UX     "C-SPC"
+            ;;  And in NT Emacs         "A-SPC"
+            ;;
+            (key-description [4194336])
+
+            ;; And C-SPC is represented with code...
+            ;;
+            (global-set-key [(control ?\  )] 'set-mark-command)
+
+4.0 How do I give argument to command when I bind it to key?
+
+    4.1 Printing a string by pressing a key
+
+        You can make a key print arbitrary strings, like this
+
+            (global-set-key [(control right)] "Hello there")
+                                              ^^         ^^
+
+        Notice the surrounding quotes. There is nothing magic in this,
+        emacs just sees the first quote and decides, that it constitutes
+        `self-insert-command' and echoes all characters when you press the
+        key.
+
+    4.2 Running macro by pressing a key
+
+        You can also put macro into a key, but I'm not going to teach
+        macros here. Macros are fine for ad-hoc tasks, but if you need
+        something complex and which can be handed to someone else, please
+        try to learn equivalent lisp commands write functions. This
+        is how you use macros in vanilla Emacs:
+
+        o  `C-x' `(', to start recording macro
+        o  `C-x' `)', to end recording
+        o  `M-x' `name-last-kbd-macro', to give it a name, say `my-macro-foo'
+        o  `M-x' `call-last-kbd-macro', to run it or if you named the macro,
+           call it with M-x my-foo-macro.
+
+         Tip for windowed emacs
+
+        To use _one_ macro, and replace it every time, here are some handy
+        bindings. The default C-x ( and C-x ) bindings are a bit
+        uncomfortable.
+
+            ;;  Note, these are for HP keyboard, the idea is that you
+            ;;  find 4 close keys, which you bind to these commands to
+            ;;  access them fast.
+            ;;
+            ;;  In my kbd the keys are like this in upper row
+            ;;  ... ( ) + =  backspace       shifted layout
+            ;;
+            ;; See also attached code to execute macro on region
+
+            (global-set-key [(control ?\()] 'start-kbd-macro)
+            (global-set-key [(control ?\))] 'end-kbd-macro)
+
+            (global-set-key [(control ?\+)] 'my-call-last-kbd-macro-region)
+            (global-set-key [(control ?\=)] 'call-last-kbd-macro)
+
+            (defun my-call-last-kbd-macro-region (beg end)
+              "Calls last kbd macro for given region."
+              (interactive "r")
+              (goto-char (min beg end))
+              (call-last-kbd-macro (count-lines beg end)))
+            ;; End
+
+    4.3 Running existing user functions
+
+        Your key can run only _one_ command, and the attribute you give in
+        key-binding must constitute of function symbol, self-insert command
+        or vector macro. You denote symbols with prefixing name with a
+        tick(').
+
+            (global-set-key [(control right)] 'forward-word)
+                                              ^
+                                              denotes symbol
+
+        This is exactly the same as above, but help byte compiler more. For
+        your own key bindings you don't need this, but if you make packages,
+        then you may consider using this. New emacs releases have lisp
+        reader syntax #'forward-word to do the same as (function
+        forward-word).
+
+            (global-set-key [(control right)] (function forward-word))
+
+        How do you know the function name to run? Use the `M-x'
+        `apropos-command' to find all function like "forward" and select
+        one from the displayed list.
+
+    4.4 Running your own lisp function
+
+        When you may want to do more than call one function you have to
+        start writing lisp. Because this paper is not about lisp, I'll just
+        show simple example and how the command is attached to key.
+
+            (global-set-key [(f1)] 'my-command)
+
+            (defun my-command ()
+              "Does something."     ;; << the doc string: C-h f my-command
+              (interactive)         ;; << marks this function user callable
+              (message "I'm here")
+              ...rest of the lisp commands)
+
+        The method is no different than explained in the `forward-word' case.
+        This time just your function is called. Some important points:
+
+        o   Start your functions always with word "my-". Do not put
+            your initials in front of function names, because if you
+            later post the solution, people do not like seeing 'joe-func,
+            bill-func ...
+        o   Remember to put (interactive) command in your function: all
+            keyboard commands are "interactive". The following error
+            normally signifies if you forgot the interactive command:
+
+            (wrong-type-argument commandp  my-command)
+
+    4.5 Running function by mouse click
+
+        For mouse commands, you need "e" flag; memorize it from (e)vent.
+        Substitute mouse-3 with button3 in XEmacs.
+
+            (global-set-key [(control shift mouse-3)] 'my-mouse-command)
+
+            (defun my-mouse-command (event)         ;; << notice `event'
+              "Does something."
+              (interactive "e")                     ;; << notice `e'
+              ;; In Emacs you could also try
+              ;; (message "I'm here, point: %s" (cdr (mouse-position)))
+              (message "I'm here")
+              ...rest of the lisp commands)
+
+        See more about the interactive command in the Emacs elisp info pages.
+
+        Remember to include documentation string in functions too (real, or
+        lambda ones). It helps you to keep track of key bindings. If you
+        don't supply doc strings, the C-h b listing will show "??" for
+        those keys which call functions that do not have documentation
+        strings.
+
+    4.6 Calling function with different default argument
+
+        Say you want different scroll command: you want to pass argument 1.
+        In this simple case, when you aren't needing any additional
+        commands, we use short lambda notation. Now I hear "What on earth
+        is lambda?". Well, The elisp pages will explain it better, let's
+        just say, that it is anonymous function, i.e. it has no name to call
+        at: you can think that the "defun anonymous" is replaced with a word
+        "lambda", otherwise writing the function is no different.
+
+            ;;  In my kbd the pgUp key is named PRIOR
+            (global-set-key [(prior)]
+              '(lambda () "Previous" (interactive) (scroll-down 1)))
+
+            ;; Compare to this "real function" alternative
+
+            (global-set-key [(prior)] 'my-scroll-down)
+
+            (defun my-scroll-down ()
+               "Previous"
+                (interactive)
+                (scroll-down 1)))
+
+        Notice the leading single quote, emacs needs an symbol. If we want
+        to be strict, the format
+
+            '(lambda
+
+        isn't exactly the right one, but we'll decide that it suffices for
+        our keybindings. Lisp programmers know that in packages the correct
+        way is:
+
+            (function (lambda       or  just
+            (lambda                 in newer emacsen
+
+        Passing one argument to external function required quite a lot lisp
+        compared to this direct call with no arguments:
+
+            (global-set-key [(prior)] 'scroll-down)
+
+    4.7 Using complex lambda function in key binding
+
+        See the following example, which is more complicated.
+
+            (global-set-key [(f1)]
+               '(lambda ()                          ;; anonymous function
+                  "Displays simple message..."      ;; don't forget doc string
+                  (interactive)
+                  (message "I'm here")
+                  ;;  rest of the lisp commands
+                  ..))
+
+        For simple solutions, lambdas are fine, but for most cases I prefer
+        "real" functions. YMMV. Previous example was complex enough, so I
+        reserve lambda for simple tasks only. Erm, what do I mean by "real"
+        function then? It goes like this:
+
+            (global-set-key [(f1)] 'my-function)
+
+            (defun 'my-function ()
+              "Displays simple message..."
+              (interactive)
+              (message "I'm here")
+              ;;  rest of the lisp commands
+              ;;  ..
+              ))
+
+5.0 About key maps
+
+    5.1 Before defining the key, you should know about key maps
+
+        .File: emacs, Node: Keymaps, Node: Prefix Keymaps,
+        .File: emacs, Node: Minibuffer Maps
+
+        You can't put the key into map if it doesn't exist, quite obvious?
+        So you can't do this in your .emacs:
+
+            (define-key c++-mode-map "\C-c1" 'my-command)
+                        ^^^^^^^^^^^^
+
+        Because there is no such mode loaded into emacs (by default) which
+        would initialize and define `c++-mode-map'. An attempt will cause an
+        error when emacs starts up. You can use following to check if map
+        is around:
+
+            (and (boundp 'c++-mode-map)
+                 (keymapp c++-mode-map))
+
+        It returns t or nil if the variable exists AND is a key map.
+        Generally the `keymapp' test isn't needed, since we know when the
+        variable is a key map or not. See next chapter how we define the
+        key into specific key map _after_ the the key map has been defined.
+
+    5.2 Default emacs key maps and packages' key maps
+
+        These are predefined keypmaps which are always present
+
+            global-map
+            (current-local-map)
+            esc-map
+            ..
+
+        Which gives you the ability to use commands like:
+
+            (global-set-key ...)
+            (local-set-key ...)
+            (define-key esc-map ...)
+
+        More about default key maps in emacs info pages. If the key map
+        belongs to particular package (mode), then you should define keys
+        *after* the package gets loaded. This usually happens when the mode
+        is turned on for the first time, and the autoload statements
+        trigger the loading phase..(see 'autoload' info page)
+
+        Next you have find out if the mode has a hook, which runs when the
+        mode is turned on (just look at the sources, the .el files), the
+        hooks are usually named according to mode, like:
+
+            MODE-NAME-hook
+
+        E.g. for `text-mode', the hook name is `text-mode-hook'. The maps for
+        modes are also named similarly:
+
+            MODE-NAME-map
+
+        So you actually want to do this, when you define something for
+        `c++-mode':
+
+            ;; Install my own function into the hook. When mode is turned on
+            ;; all the functions installed in this hook are run.
+
+            (add-hook 'c++-mode-hook 'my-c++-mode-hook)
+
+            (defun my-c++-mode-hook ()
+              "My C++ setting."
+              ;;
+              ;; This is for advanced lip user:
+              ;; - You know that `my-c++ -mode-hook' function runs after
+              ;;   C++ mode which has already defined the key map.
+              ;; - But the byte compiler does not know that. If you compile
+              ;;   this file and don't say (require 'cc-mode), then it doesn't
+              ;;   know that the key map exists and you get warning.
+              ;; - We don't need (require 'cc-mode), so we just fool
+              ;;   Byte Compiler to believe that the map is properly defined
+              ;;   and get rid of the unnecessary warning.
+              ;; - If you don't plan to byte compile your key binding
+              ;;   settings or if the byte compiler warnings don't bother
+              ;;   you (they are harmless), you can leave out this statement.
+              ;;
+              (defvar c++-mode-map nil)  ;; No-op actually
+              ;;
+              ;;  Now the mode is already "defined" (because we're mode hook),
+              ;;  so the c++-mode-map is certainly available.
+              ;;
+              (define-key c++-mode-map "\C-c1" 'my-command)
+              ;;
+              ...other settings...)
+
+    5.3 Prefix keymaps in new emacs versions.
+
+        In Emacs, I consider key `C-z' pretty useless. In X it runs command
+        `iconify-or-deiconify-frame' which I never use. The C-z key is near
+        the Shift modifier, so it's a perfect candidate for user's own
+        prefix key. It's much more comfortable for pinky than the usual
+        C-c; you avoid developing carpar tunnel syndrome to your wrist if
+        you use the closest key possible.
+
+        In new emacs, defining a prefix key is pretty simple:
+
+            ;;  If we try to set "C-za"  directly, ie. to use the
+            ;;  C-z as prefix when it's not that yet, error is
+            ;;  triggered --> Unset key first
+            ;;
+            ;;  "Key sequence C-z a uses invalid prefix characters"
+
+            (global-set-key "\C-z" nil)
+
+            ;;  Now we can assign any keys to it, E.g. this command
+            ;;  from tinyreplace.el, which performs replacing text more
+            ;;  comfortable than query-replace :-)
+
+            (global-set-key "\C-z%"  'my-replace-forward)
+
+            ;;  It also makes sense to group common functions under
+            ;;  same key, E.g. I have all _minor_ modes bound to map
+            ;;  "m" under C-z map (or C-c, it depends).
+
+            (global-set-key "\C-zmE" 'eldoc-mode)    ;; eldoc.el
+            (global-set-key "\C-zmf" 'folding-mode)  ;; folding.el
+            (global-set-key "\C-zmo" 'font-lock-mode);; font-lock.el
+            ...
+
+    5.4 Prefix key maps in old emacs versions.
+
+        In older emacs versions you cannot define key maps so easily, like
+        just giving keys after another in string notation: "KeyKeyKey". You
+        have to create a key map and put your keys there.
+
+            (require 'cl)
+
+            ;;   We want to use use this key as prefix
+            (defconst my-key-prefix    "\C-x\C-z"
+               "My prefix map keys")
+
+            ;;   What is the status of this key?
+            (defvar my-map (lookup-key global-map my-key-prefix))
+            (unless (keymapp my-map)    ;not yet defined
+              (setq my-map (make-sparse-keymap)))
+
+            ;;  Okay, hook my map to this key
+            (define-key global-map my-key-prefix my-map)
+
+            ;;  Now put keys into private map.
+            (define-key my-map "\C-a" 'my-function1)
+            (define-key my-map "a"    'my-function2)
+            (define-key my-map "b"    'my-toggle-buffer-name)
+
+        This old way is more complicated, but offers, in some extent,
+        flexibility: If you decide to move the map somewhere else, you only
+        have to change the prefix to relocate the map:
+
+            (defconst my-key-prefix ...)
+
+        In the other hand, you rarely change the key. If you can, use the
+        newer method if it is available to you. Your .emacs stays much
+        cleaner when there isn't extra key map definitions.
+
+    5.5 Function-key-map -- where do I need it?
+
+        When making bindings in `function-key-map', other bindings that
+        affect a key will be bound automatically. `keyboard-translate-table'
+        also _remaps_ similarly. See following, where we make f10 key to
+        work like C-x
+
+            (lookup-key global-map "\C-x") --> Control-X-prefix
+            (define-key global-map [(f10)] 'Control-X-prefix)
+
+        or use the following, which work only in X winsowed Emacs
+
+            (define-key global-map [(f10)] nil)
+            (define-key function-key-map [(f10)] [?\C-x])
+
+    5.6 How to generate C-A-S-H-M modifiers from keyboard keys
+
+        [Mohsin Ahmed <mosh@sasi.com>] You can generate the modifiers
+        if your emacs doesn't generate them by default:
+
+            ;;  Now hyper-super-alt are missing on NT GNuEMacs,
+            ;;  but see simple.el:3042
+
+            (define-key function-key-map [(f5)] 'event-apply-super-modifier)
+            (define-key function-key-map [(f6)] 'event-apply-alt-modifier)
+            (define-key function-key-map [(f7)] 'event-apply-hyper-modifier)
+            (define-key function-key-map [(f8)] 'event-apply-control-modifier)
+
+    5.7 Local-set-key and global-set-key note
+
+        "File: elisp, Node: Key Binding Commands" Because you can run into
+        deep troubles when trying to set some key-bindings, it's always
+        good to try them out first; choose a mode that you don't use
+        normally, like `pascal-mode' and and use command:
+
+            local-set-key
+
+        If you happend to mix up emacs somehow, don't panic, you only
+        altered keys in the `pascal-mode-map'.
+
+6.0 Ascii and non-ascii keys
+
+    6.1 Emacs info, Character Type
+
+        File: elisp, Node: Character Type
+
+        For historical reasons, Emacs treats the DEL character as the
+        control equivalent of `?':
+
+            ?\^? => 127     ?\C-? => 127
+
+        As a result, it is currently not possible to represent the
+        character `Control-?', which is a meaningful input character under
+        X. It is not easy to change this as various Lisp files refer to DEL
+        in this way.
+
+    6.2 General description
+
+        Your keyboard normally has qwerty keys, that has known ascii
+        codes. You can use shift-key to double the keys, but they are still
+        known ascii codes. But if you use any other modifier, the program
+        behind it, must do some more snooping to determine what keys you
+        pressed. In X it's possible to call Xlib functions (they return
+        xevents), which tell the program that "Flag xx is up, meaning that
+        user pressed Control key."
+
+        In Emacs, the string notation "" is reliable for ascii codes
+        only. But any suspicious keys would be good to put into vector
+        notation. If we try to determine the code for "C-.", say using the
+        (read-event) or calling global-set-key, and then recalling what was
+        the lisp command, we would see some strange code for it:
+
+            [4194350]             in my HP-UX Emacs
+
+        That's how the hardware represents the key. But instead of putting
+        magical codes to define-key or global-set-key commands, you can use
+        more portable alternative:
+
+            (read-kbd-macro "<C-.>")
+
+        There is a catch. With control keys, this vector notation works
+        quite well, _but_ _for_ _alt_ _keys_ , the matter is totally
+        different. See section about this later on, which proposes not to
+        use alt keys if you want to have portable keys. (Alt may give you
+        `Meta' or `Alt' depending on your keyboard setting)
+
+    6.3 Emacs info, Named ascii characters
+
+        File: emacs, Node: Named ASCII Chars
+
+        For example, I had to use my emacs in non-windowed environment and
+        I had written all my bindings using the vector notation:
+
+            (global-set-key [?\e tab]       'hippie-expand)
+
+        This works perfectly as long as emacs thinks the environment is
+        *windowed*. Now, I started the emacs like this in Xterm:
+
+            % emacs -nw
+
+        And I was totally lost. My fine key bindings were wreckage and
+        useless. The solution is to prefer equivalent "character" based key
+        bindings
+
+            ;;  Works everywhere
+            ;;
+            (global-set-key "\e\t"          'hippie-expand)
+
+            ;;  Nope, this won't work in non-Windowed emacs, it's like
+            ;;  the  [?\e tab].
+            ;;
+            (global-set-key (read-kbd-macro "<M-tab>") 'hippie-expand)
+
+          So prefer strings over the vectors if you can obtain the same
+          results. And remember that `read-kbd-macro' won't help you in
+          non-windowed Emacs.
+
+    6.4 Case study: Why can't I assign key <ESC C-'> ?
+
+          ...I tried all these choices. What I'm doing wrong?
+          None of these work..
+
+            (global-set-key [?\M-C-\'] 'myfunc)
+            (global-set-key [?\C-M-\'] 'myfunc)
+            (global-set-key [?\C-M-']  'myfunc)
+            (global-set-key [?\M-C-']  'myfunc)
+            (global-set-key [C-M-\']   'myfunc)
+            (global-set-key [C-M-']    'myfunc)
+            (global-set-key [\M-C-\']  'myfunc)
+
+        Answer: If the Meta is your escape key, then you can use \e instead
+        of M anywhere. The solution is first to look at what C-h l gives:
+
+            escape C-'
+
+        So, let's turn it into key.
+
+            ;;  Works in XEmacs 19.15+ and Emacs 19.34+
+            (global-set-key [(control meta ?\')]        'myfunc)
+
+            ;;  Alternatively way
+            ;;  (WinNT Emacs 14.34 has bug here, doesn't work)
+            (global-set-key (read-kbd-macro "<C-M-'>")  'myfunc)
+
+            ;;  Emacs specific 1:
+            (global-set-key  [?\e ?\C-'] 'myfunc)
+
+            ;;  Emacs specific 2:
+            ;;  Notice, that there is no questinon mark before the M,
+            ;;  this is because the whole line means ONE char only,
+            ;;  not multiple ones.
+            (global-set-key [?\C-\M-']  'myfunc)    ;; works
+            (global-set-key "\e\C-'"     'myfunc)    ;; won't
+
+        The last case doesn't work, instead it returns error, because the
+        Ctrl-' isn't valid ascii code.
+
+                "Invalid modifier in string."
+
+    6.5 Case study: How to bind a function to Ctrl-?
+
+        Hrvoje Niksic <hniksic@srce.hr> In new emacs where you can use the
+        XEmacs style binding, this is easy
+
+            (global-set-key [(control ??)] 'foo)
+
+        It has been reported that this was a bug in emacs up till 19.34,
+        where the following Emacs binding, while valid, does not work
+
+            (global-set-key [?\C-\?] 'foo)
+
+    6.6 Portable keybindings -- command 'emacs -nw' is your friend
+
+        To have portable bindings, the key settings should work in any
+        environment, no matter how you start your emacs. But if you're used
+        to X environment, you probably haven't paid much attention in
+        having a habit to use "good" keys. Not all keys are available in
+        non-Windowed emacs, e.g. there is no equivalent for this:
+
+            (global-set-key [(control return)] 'complete)
+
+        You can't turn it into following, while it may seem quite
+        obvious:
+
+            (global-set-key "\C-\C-m" 'complete)
+
+        because the only key, that non-window Emacs recognizes, is pure
+        return, with no modifiers, no Alt, Shift, Control. While you may
+        not be interested in relocating your dear keys, at least you know
+        what you may face when you haven't checked if the key combination
+        is portable. It may be a good idea to group your key settings so,
+        that there are sections like:
+
+            ;; ... ... ... ... ... ... ... ... windowed-only-bindings ..
+            (global-set-key [(control return)] 'my-func1)
+            (global-set-key [(shift   return)] 'my-func2)
+
+            ;; ... ... ... ... ... ... ... ... ... .portable-bindings ..
+            (global-set-key "\e\t"   'complete)
+            (global-set-key "\e\C-m" 'hippie-expand)
+
+        Later on, you can easily check which keys will not work in
+        non-windowed environment. If you want to detect the case, when some
+        keys are not available, you can use this lisp statement in your
+        ~/.emacs
+
+            (cond
+             (window-system
+              ;;
+              ;;  X-event key bindings work here
+              (global-set-key [(control return)] 'my-func1)
+              (global-set-key [(shift   return)] 'my-func2))
+             (t
+              ;;  Okay, user has non-windowed system, or has started
+              ;;  emacs with % emacs -nw
+              ;;  The string notation works only in this emacs.
+              ;;  We may wish to relocate some X-event keys....
+              ;;
+              (global-set-key "C-cM" 'my-func1)
+              (global-set-key "C-cS" 'my-func2)))
+
+        But in most cases you only want to set the non-windowed case,
+        because the window bindings do nothing if they are not available in
+        non-windowed emacs. This example is identical to above one.
+
+            (require 'cl) ;; for `unless'
+
+            ;;  These are no-op in non-windowed env.
+            (global-set-key [(control return)] 'my-func1)
+            (global-set-key [(shift   return)] 'my-func2)
+
+            (unless window-system
+              ;; non-windowed detected, should we relocate some  vector
+              ;; keys to somewhere behind the prefix keys?
+              ...)
+
+7.0 Emacs backspace binding problem
+
+    7.1 Recent news and related packages
+
+        In XEmacs 20.3 you can just set
+
+            (setq delete-key-deletes-forward t)
+
+        See also orwell.el, Exchange C-h & DEL without affecting prefix
+        mappings. Tip by Will Mengarini <seldon@eskimo.com>
+
+    7.2 Foreword -- background
+
+            (load-library "delbackspace.el")
+
+        [<kgallagh@spd.dsccc.com> Kevin Gallagher) in gnu.emacs.help]
+        Unfortunately delbackspace.el is not part of the standard GNU Emacs
+        distribution. The origin of your delete vs backspace problems under
+        X Windows is found in ../lisp/term/x-win.el. Here are the
+        particular lines and the associated comments:
+
+            ;; Map certain keypad keys into ASCII characters
+            ;; that people usually expect.
+            ;; Keys are defined in lisp/term/x-win.el
+            ;;
+            (define-key function-key-map [backspace] [127])
+            (define-key function-key-map [delete] [127])
+                    .
+                    .
+            ;; These tell read-char how to convert
+            ;; these special chars to ASCII.
+            ;;
+            (put 'backspace 'ascii-character 127)
+            (put 'delete    'ascii-character 127)
+
+        They are seen both as a same character code. We have change the
+        definition:
+
+            (define-key function-key-map [delete] "\C-d")
+            (put 'delete    'ascii-character 8)
+
+        There is a lot of history behind the decision to configure Emacs
+        this way. Here's the history, the fix comes later.
+
+          Emacs was first developed on a DEC PDP-11 (or similar vintage
+          DEC computer) using DEC ascii terminals. On such terminals, the
+          Del (aka Delete) key is part of the main keyboard located in the
+          upper right portion and is used as a rubout key, i.e., it erases
+          the character in front of the cursor and also moves the cursor
+          back one space on the screen, taking the position of the erased
+          character. On a DEC ascii terminal (such as the VT-100), the
+          Del key generates a DEL character, octal 127. The VT-100 also
+          has a BS (aka BackSpace) key and it generates the BS character,
+          octal 010 (i.e., C-h). It's use varies with applications. The
+          design of Emacs was tightly linked to the DEL character
+          indicating rubout. C-h was chosen to invoke help so the BS key
+          could be used as a help key on DEC terminals.
+
+        On a Sun keyboard, the standard convention is for the BackSpace
+        key to be used as a rubout key and the Del key be used to erase
+        the character UNDER the cursor, not before it.
+
+        So you can see that a lack of standards in keyboard design
+        across computer vendors has created a support problem.
+
+        Under X Windows, the BackSpace and Delete keys do not generate
+        ascii characters, instead they present X Windows key codes to
+        the applications. To make life a little easier, Emacs maps
+        these key codes to names like "delete" and "backspace". But so
+        much of Emacs lisp code, especially major modes, expects to see
+        a DEL character when rubout is intended, a fairly painless way
+        to add X Windows support in the affected lisp code was to have
+        Emacs map the X Windows key-code for the rubout key to a DEL
+        character.
+
+        In short, some keyboards use BackSpace as the rubout key and
+        some use Delete. To ensure that users of both kind of keyboards
+        always have a rubout key, x-win.el maps both BackSpace and
+        Delete to the DEL character.
+
+        Now for the fix. On a Sun keyboard, the BackSpace key serves as
+        the rubout key and the Del key is designed to provide the
+        feature which deletes the character under the cursor. This is
+        broken under X with the default configuration in x-win.el.
+
+        The BEST way to fix this is to map the Delete key to the Emacs
+        function delete-char. Add the following to your .emacs file:
+
+            (add-hook 'term-setup-hook 'my-term-setup)
+
+            (defun my-term-setup ()
+              (define-key global-map [delete] 'delete-char))
+
+        Using term-setup-hook minimizes the chance that something else
+        might override your key definition during initialization.
+
+    7.3 Windowed Emacs mapping
+
+       "Jari Aalto"
+        First we detect if emacs can differentiate them. Do following:
+
+            press backspace , press delete
+            then hit C-h l to view the lossage buffer.
+
+        If you see something like
+
+            backspace deletechar
+
+        near the end of buffer then you know the emacs can separate them.
+        the 'deletechar' may be 'del', 'delete' or something else in your
+        system. Now you just set these keys where you want them. This is my
+        emacs setup:
+
+            (global-set-key [backspace]  'delete-backward-char)
+            (global-set-key [deletechar] 'delete-char)
+
+       "Nico Francois" <Nico.Francois@scala.nl> also reported in the
+        gnu.emacs.help, that the following works in Windows 95.
+
+            ;; Redefine backspace to really mean backspace (and not delete)
+            ;; and make delete do what we expect it to do.
+            ;;
+            (define-key function-key-map [backspace] [8])
+            (global-set-key [backspace] 'delete-backward-char)
+            (global-set-key [delete] 'delete-char)
+
+       "Kai Grossjohann" <grossjoh@ls6.informatik.uni-dortmund.de>
+        wrote immediately to comment the previous settings:
+
+        A piece of advice from me: Do not redefine *both* the backspace
+        *and* the delete key. This is because one of them gets mapped to
+        DEL which is a special key that often changes its meaning in other
+        modes, too (dired, view, ...). The above lines remove the mapping
+        to DEL from both the backspace and the delete keys.
+
+        I have just the following in my .emacs file which works fine for
+        me under SunOS/X11R6:
+
+            (global-set-key [delete] 'delete-char)
+
+        This replaces all of the above lines by Nico.
+
+       "by Chuck Taylor" <chuck@statsci.com> Yet another way to make the
+        backspace to work
+
+                (global-set-key "\^?"  'delete-char)
+
+    7.4 Non-windowed Emacs mapping
+
+        This is my favorite, If you use both X and non-X, it'll detect the
+        non-X, where the troubles usually start. After this code; the
+        `delete' key is out and produces the `C-h' code. That's not a loss
+        for me because I never use the `delete' key, only the big fat
+        `backspace' key.
+
+            (require 'cl)
+
+            ;; Define backspace key for Non-X Emacs
+            (when (not window-system)
+              (setq key-translation-map (make-sparse-keymap))
+              (define-key key-translation-map "\177" "\C-h")
+              (define-key key-translation-map "\C-h" "\177")
+              (defvar BACKSPACE "\177")
+              (defvar DELETE    "\C-h")
+              (global-set-key BACKSPACE 'backward-delete-char))
+
+    7.5 Mapping backspace with 'delete' symbol
+
+          <marc@watson.ibm.com> (Marc Auslander),  04 Jan 1996
+
+        The following works. I'll say more below.
+
+            ;;  by Marc
+            ;;  undo mapping of delete to DEL in x-win.el
+            ;;  Then remap the key.
+            ;;
+            (define-key function-key-map [delete] nil)
+            (global-set-key              [delete] 'delete-char)
+
+            ;; by <schwab@lamothe.informatik.uni-dortmund.de> (Andreas Schwab)
+            ;; and Marc Auslander <marc@marc.watson.ibm.com>:
+            (add-hook 'term-setup-hook 'my-term-setup-hook)
+
+            (defun 'my-term-setup-hook ()
+             ;;  undo mapping of delete to DEL in x-win.el
+             (define-key function-key-map [delete] nil)
+             (global-set-key              [delete] 'delete-char))
+
+        Now for the details. For historical reasons, you really want the
+        key which you think of as backspace-and-delete to map to DEL, which
+        is the character value 127. This is because lots of modes mess with
+        the key map entry for DEL. So you DO NOT want to redefine the event
+        associated with the key you use for backspace-and-delete.
+
+        On the modern keyboards I use, I think the right key is the
+        Backspace key, but apparently some people prefer the Delete key.
+        In term/x-win.el both [backspace] and [delete] are mapped DEL using
+        the function key map.
+
+        The code above undoes that, and then lets you map [delete] as you
+        please. Of course, you could modify it to use [delete] as DEL and
+        [backspace] as something else if you prefer.
+
+8.0 Some article snippets, Q/A
+
+    8.1 I can't use C-s and C-q in emacs due to control flow.
+
+        You have to call `M-x' `enable-flow-control'. When handling is
+        enabled, user can type C-s as C-\, and C-q as C-^. With arg, enable
+        flow control mode if arg is positive, otherwise disable.
+
+    8.2 Disable C-s/C-q for flow control?
+
+          Yes, I've read the FAQ but it just doesn't work. It would still
+          freeze the screen after I typed either "stty -ixon" or "stty
+          start u stop u". I use dial-up from a home PC (Telix) to a Sun
+          workstation (using vt120 emulation).
+
+        [Richard Pieri <ratinox@unilab.dfci.harvard.edu>] Turn off software
+        flow control at your modem and communication software, and turn on
+        hardware (CTS/RTS) flow control.
+
+    8.3 Defining keys to isearch map?
+
+        I am trying to get a function key `kp-f3' to act just like
+        C-s does...
+
+            ;; Answer by <ilia@gate.ispras.ru> (Elijah Perminov)
+            ;;
+            (define-key isearch-mode-map [kp-f3]
+                (cons isearch-mode-map ?\C-S))
+
+            (define-key isearch-mode-map [S-kp-f3]
+                (cons isearch-mode-map ?\C-R))
+
+    8.4 I'm in emacs that doesn't recognize my function keys?
+
+        Suppose you have heavily programmed your function keys (or any
+        vector notation keys) and now you're in environment where these
+        keys are not recognized. You don't want to remap your function
+        keys, instead you have an idea of aliasing them to another keys.
+        Say if you press "ascii" keys, then it would run your other keys.
+
+        This can be done. Let's say we want C-c 1..9 to refer to f-keys, so
+        that when pressing "C-c1" it would run function key f1. Here is the
+        command that does it:
+
+            (global-set-key "\C-c1" [f1])
+                                    ^^^^
+
+        Emacs sees the [f1] as an macro, and the macro is key press f1.  If
+        we want to have one key to run multiple keys we'd do it like this:
+
+            (global-set-key "\C-c1" [f1 f5 f7])
+
+        This would run keys f1, f5 and f7 one after another.
+
+        Small note: you probably wonder why there is no tick(') before the
+        vector, as we had in the function binding cases? Well, you could
+        put the tick there like this:
+
+            (global-set-key "\C-c1" '[f1 f5 f7])
+                                    ^^
+
+        But it is unnecessary, because the vector is "self quoting",
+        meaning that it does not need to be prefixed with the tick char.
+        other self quoting types are:
+
+            t       true symbol
+            nil     null symbol (or more traditionally: false symbol)
+
+    8.5 I don't seem to see the Control-Space sequence
+
+          <hunger@hitech.com> (Henry Unger)
+
+        Assume you are running non-X-windowed, you are probably using some
+        type of terminal emulation. Terminal emulators send ASCII
+        characters. There is no ASCII character C-Space, however, there is
+        C-@ which produces an ASCII NUL character which is what set-mark is
+        bound to (sort of). Some terminals (mistakenly) generate a C-@ when
+        you press C-Space, hence the confusion. Try also following
+        if the problem is in your Xterm.
+
+            #  .Xdefaults
+            #
+            XTerm*VT100*translations: #override Ctrl <Key>space: string(0x00)
+
+    8.6 To get Xterm work with mouse
+
+        [Olaf Rogalsky <rogalsky@theorie1.physik.uni-erlangen.de>] After
+        sending the escape sequence "ESC [ 1000 h" to a xterm, the xterm
+        responds with an appropriate escape sequence to every mouse
+        press/release, telling on wich character cell this has happened.
+
+    8.7 Does these vector notations work only under X ?
+
+          <abraham@ssv4.dina.kvl.dk> (Per Abrahamsen)
+
+        No, the vector notation works fine outside X11.
+
+        If you look in the lisp/term/*.el you will see how Emacs maps from
+        terminal dependent escape sequences into terminal independent
+        symbols. Normally, Emacs will load the right one for you, but if
+        not you can load it yourself with e.g.
+
+                (load "term/vt100")
+
+        in your .emacs file.
+
+        `M-[' was an Emacs 18 binding which was moved to `M-{' in Emacs 19,
+        precisely because it conflicted with the escape sequences produced
+        by some common keyboards. If one is using Emacs 19, he could try
+
+                (global-unset-key "\M-[")
+
+        to undo the damage done by the other persons customization.
+
+    8.8 I have troubles running 'screen' (SUN-OS virtual term) and emacs
+
+          Kai Grossjohann <grossjoh@ls6.informatik.uni-dortmund.de>
+
+          .Ilya> While running a program called "screen" and emacs, I
+          .Ilya> noticed that the two programs interfere with each
+          .Ilya> other. One specific error in example that you can
+          .Ilya> duplicate yourself is hitting C-a in emacs. It will not
+          .Ilya> take you to the begining of line as it should if screen
+          .Ilya> is running. [...]
+
+        Screen has what is called a hot key. It intercepts all keyboard
+        input and if it's the hot key it interprets this as a command to
+        itself. If not, the key press is passed on to the underlying
+        program. C-a is the default hot key in screen. I think you can hit
+        the hot key twice to pass it to the underlying program.
+
+        I've found backtick (`) to be a convenient hot key for screen, for
+        about 5 minutes I've used it.
+
+    8.9 Modifying keyboard keys in X
+
+          <psmith@lemming.wellfleet.com> (Paul D. Smith)
+
+        Modify your keysymbols to your heart's content with a simple
+        graphical representation of your keyboard--I did the above by
+        copying the definition of one key to the other (actually I didn't
+        swap them: who the heck needs a caps lock key? I just made two
+        control keys :)
+
+        Then tell the program to write out xmodmap codes to implement your
+        changes, save 'em to a file, and tell xmodmap to run them each time
+        you start X (in your ~/.xinitrc or wherever).
+
+            ftp://ftp.x.org/contrib/applications/  xkeycaps-2.29.tar.Z
+
+    8.10 Swap the control and cap keys on Sun sparc 20 machine?
+
+          <richter@taylor.math.nwu.edu> (Bill Richter)
+
+        I don't know anything about sparc 20 keyboards. Here's a
+        related Sun kbd stunt to get 2 more Meta keys & 1 more Control
+
+            #   make the Alt key (between Caps Lock and Left-Meta) act as
+            #   a Meta key similarly make the Compose key (right of
+            #   Right-Meta) be Meta key
+
+            xmodmap -e 'clear mod1'
+            xmodmap -e 'keysym Alt_L = Meta_L'
+            xmodmap -e 'keysym Multi_key = Meta_R'
+            xmodmap -e 'add mod1 = Meta_L'
+            xmodmap -e 'add mod1 = Meta_R'
+
+            # make the Insert key (above Del) act as a control key
+            xmodmap -e   "keycode 51 = Control_L"
+            xmodmap -e 'add control = Control_L'
+
+    8.11 Xterm -- AIX: Meta key missing in emacs -nw
+
+          Okay, here's a weird one. If I run an xterm on my local AIX 4.1.4
+          machine and do an xemacs -nw in it, it doesn't recognize the meta
+          key (meta-b just inserts a b), even though the tcsh running in
+          that window recognized it just fine. However, if I rlogin or
+          telnet to another machine, or EVEN TO THE SAME MACHINE, the meta
+          key starts working.
+
+        <kyle_jones@wonderworks.com> (Kyle Jones)
+
+        Your input character size is set to 7 bits. On ttys, the meta key
+        sets the eighth bit on characters, but with 7-bit input enabled the
+        high bit is either reset or used for parity. rlogin and telnet set
+        the character size to 8 bits and leave it that way, and this is
+        what is making the meta key work thereafter.
+
+            stty cs8
+
+        should do the trick on POSIX-ish systems.
+
+    8.12 HP: meta key missing on 715 and 712?
+
+          <jquinn@nortel.ca> (Jerry Quinn)
+
+        The meta key problem on HP's can be fixed by using xmodmap. Do:
+
+            xmodmap -e "remove mod1 = Mode_switch"
+
+        This makes Alt work fine for emacs. God knows why HP's stock setup
+        is broken for emacs. Surely people inside HP use emacs, too.
+
+    8.13 HP: there's no Meta key?
+
+        I'm using Hp console with its original Keyboard And As you know
+        there's no Meta key and I'm using ESC key instead But it's really
+        inconvenient... So i want to remap some key like caps lock or other
+        some to Meta character. How can I do that? A:
+
+          <Jan.Braun@tu-bs.de> (Jan Braun)
+
+        For the left Alt-key on my german HP-Keyboard. I put it into my
+        ~/.xsession (~/.startxrc), so that it is automatically performed.
+
+            xmodmap -e "clear mod1" -e "add mod1 = Meta_L" -e\
+                "keycode 0x0a = Mode_switch" -e\
+                "add Mod2 = Mode_switch"
+            echo "Left ALTERNATE now META! Be carefull!"
+
+          <marc@mpi.nl> (Marc Fleischeuers)
+
+        I've stolen this from the net and stored it in a safe place. The
+        repreat calls of `/../xmodmap -e' is merely paranoia, you can get
+        by with placing eveything between "" in a file and run xmodmap on
+        that.
+
+            /usr/bin/X11/xmodmap -e "clear control"
+            /usr/bin/X11/xmodmap -e "add control = Control_L"
+            /usr/bin/X11/xmodmap -e "clear mod1"
+            /usr/bin/X11/xmodmap -e "add mod1 = Meta_L"
+            /usr/bin/X11/xmodmap -e "add mod1 = Meta_R"
+
+    8.14 HP: xmodmap settings in PC XCeed
+
+        I used to have HP console in front of me, but then we changed to
+        Windows Nt machines running commercial X emulator XCeed, which has
+        very nice keyboard layout configuration tools. However, if you're
+        interested how I defined my keyboard for Emacs and for the rest of
+        the X programs, here is the layout:
+
+            Left            Right
+
+            Ctrl Alt        AltGr Ctrl      Physical keyboard keys
+            |    |          |     |
+            Ctrl Alt        Meta  Modifier  How they are seen by X server
+
+        The left side gives me regular keys as I expect them, e.g. the
+        Alt keys really used to give me Meta, which wan't good at all
+        The right hand side gioves me the other combos that I may need
+        with other programs. The AltGr mapping(meta) is not necessarily
+        that comfortable with Emacs; because Emacs has lot of Meta
+        bindings. But I have got used to having meta to the right already.
+        Below you see my `xmodmap' settings and edited `xev' results.
+
+            % xmodmap -pm
+
+            shift       Shift_L (0x31),  Shift_R (0x3d)
+            lock        Caps_Lock (0x41)
+            control     Control_L (0x24)
+            mod1        Alt_L (0x3f)
+            mod2        Meta_R (0x5b)
+            mod3        Mode_switch (0x5c)
+            mod4
+            mod5
+
+            [Left Ctrl key]
+            KeyRelease event, serial 17, synthetic NO, window 0x1400001,
+                state 0x4, keycode 36 (keysym 0xffe3, Control_L)
+                XLookupString gives 0 characters:  ""
+
+            [Lef Alt key]
+            KeyRelease event, serial 17, synthetic NO, window 0x1400001,
+                state 0x8, keycode 63 (keysym 0xffe9, Alt_L)
+                XLookupString gives 0 characters:  ""
+
+            [Right Alt (AltGr in pc) key]
+            KeyRelease event, serial 17, synthetic NO, window 0x1400001,
+                state 0x10, keycode 91 (keysym 0xffe8, Meta_R)
+                XLookupString gives 0 characters:  ""
+
+            [Right Ctrl key]
+            KeyRelease event, serial 17, synthetic NO, window 0x1400001,
+                state 0x20, keycode 92 (keysym 0xff7e, Mode_switch)
+                XLookupString gives 0 characters:  ""
+
+    8.15 Could anyone tell me how I could change the meta-key ?
+
+          <sasdjb@unx.sas.com> (David Biesack)
+
+        In HP system, you can rebind it:
+
+            xmodmap - <<META
+            ! Fix Extend Char keys to work as true Meta keys in GNU Emacs
+            clear Mod1
+            add Mod1 = Meta_L
+            add Mod2 = Meta_R
+            META
+
+    8.16 How can I set Meta key to Alt?
+
+          <kwak@gloria.postech.ac.kr> (Kwak Jong-Geun)
+
+        Try to put something like this in your ~/.Xmodmap file, and invoke
+        your xsession to read it using xmodmap promgram.
+
+            % cat ~/.Xmodmap
+
+            !Right Alt key is used to Meta key
+            keysym Mode_switch = Escape
+            keysym Meta_R = Escape
+
+        check your Alt key symbol name using xev, and put correct symbol.
+
+    8.17 How can I make the alt key work as the meta key?
+
+          <kwak@gloria.postech.ac.kr> (Kwak Jong-Geun):
+
+        put next line in your ~/.Xmodmap, and check your startx session
+        invoke the file using xmodmap program.
+
+            keysym Mode_switch = Escape
+
+        It work for X window system, FreeBSD, emacs19.28.
+
+    8.18 On X window C-SPC says Args out of range #^[nil nil nil
+
+        We just install the emacs 19.30 on Dec Alpha running DUnix 3.2C.
+        When we use the emacs on X window, the C-SPC does not work by
+        saying: Args out of range: #^[nil nil nil nil nil nil nil nil nil
+        nil , But if we use emacs -nw, then C-SPC works fine.
+
+          Weiwen Liu <liu@yalph2.physics.yale.edu> later posted:
+
+        If I remove (enable-flow-control-on "vt100" "vt300" "xterms"
+        "xterm") then C-SPC works fine!
+
+    8.19 Carpal tunnel syndrome: Any way to reduce left wrist pain?
+
+          Bill Richter <richter@conley.math.nwu.edu>
+
+        I've bound (on X Windows Emacs) the 4 "island" arrow keys on a Sun
+        ELC kbd to Control, and three common prefixes, `C-x', `C-c' and
+        `C-h'. In my .xinitrc:
+
+            xmodmap -e "keycode 27 = Control_L"       # Up
+            xmodmap -e "keycode 31 = Select"          # Left
+            xmodmap -e "keycode 34 = KP_2"            # Down
+            xmodmap -e "keycode 35 = KP_F4"           # Right
+
+            xmodmap -e 'add control = Control_L'
+
+        and in my .emacs
+
+            (global-set-key [(f16)] 'execute-extended-command)   ;Copy = M-x
+
+            (define-key global-map [(select)] nil)
+            (define-key function-key-map [(select]) [?\C-x])
+
+            (define-key global-map [(kp-2] nil)
+            (define-key function-key-map [(kp-2)] [?\C-c])
+
+            (define-key global-map [(kp-f4)] nil)
+            (define-key function-key-map [kp-f4] [?\C-h])
+
+            (define-key global-map [(insert)] nil)
+            (define-key function-key-map [(insert)] [?\C-s])
+
+
+        I don't need these arrow keys because there's another set on the
+        numeric keypad. I chose the keysyms `Select', `KP_2', `KP_F4'
+        because they were vacant and because xterm accepts them over a
+        modem, although I have not really learned how to bind them (in
+        emacs -nw).
+
+        I also bound `C-s' to the next key over, the `0=Ins' numeric
+        keypad, which is bound by default with no xmodmap monkey business
+        to `overwrite-mode' (horrible binding for novices!!!).  Continuing
+        the ergo story, I re-xmodmapped most of the keypad because the
+        default Sun keysyms are dead keys over the modem:
+
+            xmodmap -e "keycode 119 = KP_1"
+            xmodmap -e "keycode 121 = KP_3"
+            xmodmap -e "keycode 99 = KP_5"
+            xmodmap -e "keycode 75 = KP_7"
+            xmodmap -e "keycode 77 = KP_9"
+
+            (global-set-key [(kp-7)] 'beginning-of-buffer)
+            (global-set-key [(kp-9)] 'scroll-down)
+            (global-set-key [(kp-5)] 'recenter)
+            (global-set-key [(kp-1)] 'end-of-buffer)
+            (global-set-key [(kp-3)] 'scroll-up)
+
+        Before I'd bound these commands to the top row of function keys
+        over a modem. I'm sure the top row are the least ergonomically
+        sound keys, I have to lunge for them, the numeric keypad is much
+        nicer.
+
+        The list of keysyms comes from the Emacs manual node "Function
+        Keys."
+
+    8.20 Telnet connection -- backspace ?
+
+        I have an xterm which I telnet from to get access to the internet
+        service provider from work. I would like to map the keys in the
+        xterm like they are mapped in X or in Presentation manager. I want
+        the "Alt" key mapped to the "Meta" key and I want the backspace key
+        to give me backspace and the control-h key to give me help.
+
+          mlehmann@prismnet.com (Mark Lehmann):
+
+        I created a solution that works. Where would be a good place to
+        distribute this. I think that it would be handy for many
+        people.
+
+        This is a list of the .Xdefaults settings. I have tried to minimize
+        the number of translations. The "xterm" termcap entry already
+        defines the function keys and the Insert, Delete, Page Up, Page
+        Down keys so I did not redefine these. Make sure to have the
+        following to shell settings when you use the xterm (not aixterm):
+
+            export TERM=xterm
+            # Force off Flow-Control so you can use Ctrl-S and Ctrl-Q
+            stty -ixon
+
+            xterm*Translations: #override\
+               <Key>BackSpace: string) \n\
+               Mod1<Key>a: string(0x1b) string("a") \n\
+               Mod1<Key>b: string(0x1b) string("b") \n\
+               Mod1<Key>c: string(0x1b) string("c") \n\
+               Mod1<Key>d: string(0x1b) string("d") \n\
+               Mod1<Key>e: string(0x1b) string("e") \n\
+               Mod1<Key>f: string(0x1b) string("f") \n\
+               Mod1<Key>g: string(0x1b) string("g") \n\
+               Mod1<Key>h: string(0x1b) string("h") \n\
+               Mod1<Key>i: string(0x1b) string("i") \n\
+               Mod1<Key>j: string(0x1b) string("j") \n\
+               Mod1<Key>k: string(0x1b) string("k") \n\
+               Mod1<Key>l: string(0x1b) string("l") \n\
+               Mod1<Key>m: string(0x1b) string("m") \n\
+               Mod1<Key>n: string(0x1b) string("n") \n\
+               Mod1<Key>o: string(0x1b) string("o") \n\
+               Mod1<Key>p: string(0x1b) string("p") \n\
+               Mod1<Key>q: string(0x1b) string("q") \n\
+               Mod1<Key>r: string(0x1b) string("r") \n\
+               Mod1<Key>s: string(0x1b) string("s") \n\
+               Mod1<Key>t: string(0x1b) string("t") \n\
+               Mod1<Key>u: string(0x1b) string("u") \n\
+               Mod1<Key>v: string(0x1b) string("v") \n\
+               Mod1<Key>w: string(0x1b) string("w") \n\
+               Mod1<Key>x: string(0x1b) string("x") \n\
+               Mod1<Key>y: string(0x1b) string("y") \n\
+               Mod1<Key>z: string(0x1b) string("z")
+
+    8.21 Latin Charset handling ?
+
+          Qing Long:
+
+            ;; The next 3 lines just enable ISO latin 1 charset handling
+            (set-input-mode 't 'nil '8 )
+            (require 'disp-table)
+            (standard-display-8bit 128 255)
+
+    8.22 Linux: I can't rebind C-up in terminal window?
+
+          Kai Grossjohann <grossjoh@ls6.informatik.uni-dortmund.de>
+
+        You want to change the Linux keymap. See usr/lib/kbd/keytables,
+        there is a README there, I think, and there are files emacs.map and
+        emacs2.map (to be loaded with loadkey or something). Also see the
+        command showkey which helps you to modify a map by showing you the
+        keycode of any key you type. It's not all that difficult. The
+        easiest would be to just load emacs2.map and see what happens.
+
+    8.23 Linux: cursor keys problem
+
+          Emilio Lopes <ecl@fnpc21.if.usp.br>
+
+        I have discovered ebuff-menu.el, which uses electric.el removes all
+        keymaps, including the prefix keymaps and because my cursor keys
+        produce prefix "\M-[", this is a great problem.
+
+        To make cursor keys available again you have to do this:
+
+            ;;  In linux the prefix seems to be M-[
+            ;;  vt100 seems to produce          ^[O
+            ;;
+            (defconst my-arrow-prefix "\M-["
+              "*This depends on your terminal. See C-q <cursor-up>")
+
+            (defun my-keep-cursor-available ()
+              "Keeps the cursor key prefix available.
+               See var my-arrow-prefix"
+               (if (not (null (lookup-key (current-local-map)
+                                my-arrow-prefix)))
+                   ;; make prefix available again, so that cursor
+                   ;; keys work.
+                   (local-set-key my-arrow-prefix nil)))
+
+            (add-hook 'electric-buffer-menu-mode-hook
+                      'my-keep-cursor-available)
+
+9.0 Xmodmap introduction -- Changing your X environment
+
+    9.1 How X key bindings work
+
+        This may not be very through explanation, but it intends to give
+        you basic understanding. Let's start our journey as explained
+        by fellow worker Uwe Geuder.
+
+          REMEMBER
+
+          If you ever use xmodmap, it affects all your programs immediately
+          since the change is done in X server itself. Before doing
+          anything, run
+
+                xmodmap -pm
+
+          and save the default to somewhere safe. You can't do xmodmap
+          locally, for one program, like emacs...
+
+        First thing to know is, that every program that you use in X must
+        communicate with your X server. If you press some key, the programs
+        gets its response from X-server.
+
+                    keypress
+            PROGRMAM    -->     X SERVER
+                                - Does lookup, how the key is set in xmodmap
+                        <--     - returns "translated" response
+
+        Your keyboard has physical keys, that can be examined with the
+        "xev" program. See "xev -- Spot your X-events(keys) easily" later
+        in this document. In my HP it tells for right alt key:
+
+            Physical (Keycode 10) --> is mapped to X symbol (keysym Meta_R)
+
+        Now the xmodmap program can change the translation, so that you can
+        move right alt to mean something else:
+
+            [if we'd do xmodmap -e "keycode 10 = Alt_R" ]
+            Physical (Keycode 10) --> is mapped to X symbol (Alt_R)
+
+        Now lets' take a look at the output of command xmodmap -pm in my
+        console
+
+            -->   shift       Shift_R (0xc),  Shift_L (0xd)
+            -->   lock        Caps_Lock (0x37)
+                  control     Control_R (0x8),  Control_L (0xe)
+                  mod1        Meta_R (0xa),  Meta_L (0xb), Mode_switch (0x36)
+                  mod2
+                  mod3
+                  mod4
+                  mod5
+
+        The indicated row *names*: shift, lock, control, mod1-5 mean, that
+        whenever you press Shift_R (a X symbol, remember?) it produces X
+        state "shift". Accordingly Shift_L produces also state "shift"
+
+        The mode_switch is a bit special, because if it's in the same row
+        with Meta_R and Meta_L. This indicates, that when you press These
+        meta keys (that are my alt keys), they produce special *mode*
+        key-codes which you can see form the xmodmap -pk listing
+
+                       char1      char2              char3            char4
+            105 0x004f (O)  0x0000 (NoSymbol)  0x00f8 (oslash)  0x00d8 (Ooblique)
+            |   |      |    |                  |                |
+            |   |      |    |                  |                with "shift"
+            |   |      |    |                  |                and  "mode_switch"
+            |   |      |    |                  with "mode_switch"
+            |   |      |    with "shift" state
+            |   |      ordinary char "as is"
+            |   In hex
+            raw keycode
+
+        If we want to use Meta_R (that was physical key "alt right"), for
+        other purposes, we have to change the physical mapping of it and
+        put it into another "state row".
+
+        The following example shell script demonstrates how I moved my HP's
+        right Alt and Control keys to mean A- and H- modifiers in emacs.
+
+            #!/bin/sh
+            #
+            # program : xmodmap-my.sh
+            #
+            # @(#)  KEYS    Redefines X-server keymap
+            #
+            # DESCRIPTION
+            #
+            #       This makes some new keys available in the HP console
+            #       Mainly for emacs, so that it gives more modifiers to map
+            #       keys to.
+            #
+            #       1. Defines Right Alt  --> A-
+            #       2. Define  Right Ctrl --> H-
+            #
+            #
+            # THE XMODMAP BEFORE
+            #
+            #       Use command "xmodmap -pm"
+            #
+            #       The default keysettings as logged in my HP console
+            #       (localhost aapo)
+            #
+            #       shift       Shift_R (0xc),  Shift_L (0xd)
+            #       lock        Caps_Lock (0x37)
+            #       control     Control_R (0x8),  Control_L (0xe)
+            #       mod1        Meta_R (0xa),  Meta_L (0xb),  Mode_switch (0x36)
+            #       mod2
+            #       mod3
+            #       mod4
+            #       mod5
+            #
+            #
+            # HOW TO CHANGE THE XMODMAP
+            #
+            #       1a. As you can see in the table, we must first take
+            #           out the mode_switch. Using mode_switch in
+            #           the same line says to emacs that it should
+            #           produce "Mode keysym" when pressing Alt.
+            #           --> You see that C-h c [Alt-a] produces some
+            #               strange M-<CHAR>, where <CHAR> is some
+            #               cryptic character.
+            #           --> my kbd does not have physical "mode" key,
+            #               so I just remove that mapping.
+            #       1b. Remove left alt key (Meta_R) and Control_R.
+            #           These will have special meaning later.
+            #
+            #       2a. Map the physical key (10, Alt right) to new
+            #           X keysymbol ALT
+            #       2b. Map key (8 Control right) to new X
+            #           keysymbol HYPER
+            #
+            #       3a. Now Tell X that there is new modifier, HYPER
+            #       3b. Now Tell X that there is new modifier, ALT
+            #
+            # THE XMODMAP AFTER THE CHANGES
+            #
+            #           Notice that there is two "," marks t the
+            #           beginning of lines. This may some message from
+            #           xmodmap...but I can't tell what.
+            #
+            #       shift       Shift_R (0xc),  Shift_L (0xd)
+            #       lock        Caps_Lock (0x37)
+            #       control   ,  Control_L (0xe)
+            #       mod1      ,  Meta_L (0xb)
+            #       mod2        Hyper_R (0xa)
+            #       mod3        Alt_R (0x8)
+            #       mod4
+            #       mod5
+            #
+
+
+            xmodmap \
+             -e 'remove mod1 = Mode_switch' \
+             -e 'remove mod1 = Meta_R'      \
+             -e 'remove mod1 = Control_R'   \
+            \
+             -e 'keycode  8  = Hyper_R'     \
+             -e 'keycode  10 = Alt_R'       \
+            \
+             -e 'add mod2 = Hyper_R'        \
+             -e 'add mod3 = Alt_R'          \
+             ;
+
+            # xmodmap-my.sh ends here
+
+    9.2 Xmodmap and keysyms -- as explained in the 'xkeycaps'
+
+        An exellent english explanation (but hard for non-English people)
+        about the Mode_switch and and other modifiers can be found from
+        xkeycaps(1) program's man page.
+
+            Jamie Zawinski <jwz@netscape.com>
+            http://www.jwz.org/xkeycaps/
+
+        Use archie to find the program: It allows mapping keys very
+        conveniently provided that your keyboard happens to be
+        supported. (HP keyboards aren't). The following is an excerpt from
+        it.
+
+         KEYSYMS AND KEYCODES
+
+         The following description is from the X Protocol document, and is
+         reprinted here for your convenience:
+
+          A list of KeySyms is associated with each KeyCode. If that list
+          (ignoring trailing NoSymbol entries) is a single KeySym ``K'',
+          then the list is treated as if it were the list ``K NoSymbol K
+          NoSymbol''. If the list (ignoring trailing NoSymbol entries) is a
+          pair of KeySyms ``K1 K2'', then the list is treated as if it were
+          the list ``K1 K2 K1 K2''. If the list (ignoring trailing NoSymbol
+          entries) is a triple of KeySyms ``K1 K2 K3'', then the list is
+          treated as if it were the list ``K1 K2 K3 NoSymbol''.
+
+          The first four elements of the list are split into two groups of
+          KeySyms. Group 1 contains the first and second KeySyms, Group 2
+          contains third and fourth KeySyms. Within each group, if the
+          second element of the group is NoSymbol, then the group should be
+          treated as if the second element were the same as the first
+          element, except when the first element is an alphabetic KeySym
+          ``K'' for which both lowercase and uppercase forms are defined.
+          In that case, the group should be treated as if the first element
+          were the lowercase form of ``K'' and the second element were the
+          uppercase form of ``K''.
+
+          The standard rules for obtaining a KeySym from a KeyPress event
+          make use of only the Group 1 and Group 2 KeySyms; no
+          interpretation of other KeySyms in the list is given here. (That
+          is, the last four KeySyms are unused.)
+
+          Which group to use is determined by modifier state. Switching
+          between groups is controlled by the KeySym named Mode_switch.
+
+          By attaching that KeySym to some KeyCode and attaching that
+          KeyCode to any one of the modifiers Mod1 through Mod5. This
+          modifier is called the ``group modifier''. For any KeyCode, Group
+          1 is used when the group modifier is off, and Group 2 is used when
+          the group modifier is on.
+
+          Within a group, which KeySym to use is also determined by modifier
+          state. The first KeySym is used when the Shift and Lock modifiers
+          are off. The second KeySym is used when the Shift modifier is on,
+          or when the Lock modifier is on and the second KeySym is uppercase
+          alphabetic, or when the Lock modifier is on and is interpreted as
+          ShiftLock. Otherwise, when the Lock modifier is on and is
+          interpreted as CapsLock, the state of the Shift modifier is
+          applied first to select a KeySym, but if that KeySym is lowercase
+          alphabetic, then the corresponding uppercase KeySym is used
+          instead.
+
+         THE MODIFIER MAPPING
+
+         The following description is from the InterClient Communications
+         .Conventions Manual:
+
+          X11 supports 8 modifier bits, of which 3 are pre-assigned to
+          Shift, Lock and Control. Each modifier bit is controlled by the
+          state of a set of keys, and these sets are specified in a table
+          accessed by GetModifierMapping() and SetModifierMapping().
+
+          A client needing to use one of the pre-assigned modifiers should
+          assume that the modifier table has been set up correctly to
+          control these modifiers. The Lock modifier should be interpreted
+          as Caps Lock or Shift Lock according as the keycodes in its
+          controlling set include XK_Caps_Lock or XK_Shift_Lock.
+
+          Clients should determine the meaning of a modifier bit from the
+          keysyms being used to control it.
+
+          A client needing to use an extra modifier, for example Meta,
+          should:
+
+            Scan the existing modifier mappings. If it finds a modifier
+            that contains a keycode whose set of keysyms includes XK_Meta_L
+            or XK_Meta_R, it should use that modifier bit.
+
+            If there is no existing modifier controlled by XK_Meta_L or
+            XK_Meta_R, it should select an unused modifier bit (one with an
+            empty controlling set) and:
+
+              If there is a keycode with XL_Meta_L in its set of keysyms,
+              add that keycode to the set for the chosen modifier, then
+
+              if there is a keycode with XL_Meta_R in its set of keysyms,
+              add that keycode to the set for the chosen modifier, then
+
+              if the controlling set is still empty, interact with the user
+              to select one or more keys to be Meta.
+
+            If there are no unused modifier bits, ask the user to take
+            corrective action.
+
+          This means that the Mod1 modifier does not necessarily mean
+          Meta, although some applications (such as twm and emacs 18)
+          assume that. Any of the five unassigned modifier bits could
+          mean Meta; what matters is that a modifier bit is generated by
+          a keycode which is bound to the keysym Meta_L or Meta_R.
+
+          Therefore, if you want to make a ``meta'' key, the right way is
+          to make the keycode in question generate both a Meta keysym,
+          and some previously-unassigned modifier bit.
+
+    9.3 Example -- xmodmap for select and kp-f1
+
+          By Yigal Hochberg <hochberg@cisco.com>
+
+        In my emacs the `select' and `kp-f1' produced same keycode symbol
+        when investigated with C-h l lossage buffer. But here is a trick
+        how you can get emacs to see them as separate keys.
+
+            % xmodmap -e 'keycode 51 = Select  '
+            % xmodmap -e 'keycode 73 = Execute '
+            % xmodmap -e 'keycode 125 = KP_F1  '
+
+
+        And in my emacs I can now do:
+
+            ;; Insert (6 block)
+            ;; Help (upper left corner)
+            ;;
+            (global-set-key [(select)] 'other-window)
+            (global-set-key [(kp-f1)] 'help-for-help)
+
+    9.4 Example -- sun keyboard xmodamp
+
+          <pogrell@informatik.hu-berlin.de> (Lutz Pogrell),
+
+        This discussion really belongs to comp.windows.x, but...  read the
+        ICCCM, the Inter Client Communication Conventions Manual. There,
+        the propper way of interpreting modifiers is explained. emacs now
+        follows those rules(I think). The example given before isn't verry
+        helpful. I will explain my xmodmap setting for a sun keyboard (a
+        few hex key codes are used, which are system specific):
+
+            !-----------------------------------------
+            ! First section:
+            !
+            ! Let Compose be another Control Key
+            ! this is practical for touch typists
+            keysym 0xff20 = Control_R
+            !
+            ! Swap Caps_Lock and Control_L
+            !
+            remove Lock = Caps_Lock
+            remove Control = Control_L
+            keysym Control_L = Caps_Lock
+            keysym Caps_Lock = Control_L
+            add Lock = Caps_Lock
+            add Control = Control_L Control_R
+            !
+            ! now the keys labeled ``Caps Lock'' and ``Compose'' mean Control
+            ! and ``Control'' is Caps Lock
+            !
+            ! Second section:
+            !
+            ! set up for umlauts
+            ! the key labeled ``Alt Graph'' activates the 3th and 4th
+            ! level of keys
+            ! You may use any four different symbols on any key
+            !
+            keycode 20 = Mode_switch
+            add mod5 = Mode_switch
+            keysym a = a A adiaeresis Adiaeresis
+            keysym o = o O odiaeresis Odiaeresis
+            keysym u = u U udiaeresis Udiaeresis
+            keysym s = s S ssharp
+            !
+            ! Third section:
+            !
+            ! make ALT and META modifier independent
+            !
+            remove mod1 = Meta_L
+            remove mod1 = Meta_R
+            add mod1 = Alt_L
+            add mod2 = Meta_L
+            add mod2 = Meta_R
+            !
+            ! now the key labeled ``Alt'' is the Alt modifier and
+            ! the keys labeled by a diamond are Meta modifiers
+            ! this is especially useful if You use mwm and emacs together---You
+            ! may cycle through the windows by <Alt-TAB> and still
+            ! use <Meta-TAB> for emacs completion
+            -------------------------------------------
+
+        The advantage of using xmodmap for setting 8 bit charecter input
+        over emacs' iso-accents-mode is that this is the same for all
+        clients (or should be the same ...)
+
+        The disadvantage is that I don't know an intuitive way of using 3
+        different accents with the same letter as in french. Note that
+        there are input methods for exactly this reason in X11R6---but I
+        don't know what emacs thinks about this concept.
+
+        So my modifiers look like this:
+
+            bruno% xmodmap -pm
+            xmodmap:  up to 2 keys per modifier, (keycodes in parentheses):
+
+            shift       Shift_L (0x6a),  Shift_R (0x75)
+            lock        Caps_Lock (0x53)
+            control     Control_L (0x7e),  Control_R (0x4a)
+            mod1        Alt_L (0x1a)
+            mod2        Meta_L (0x7f),  Meta_R (0x81)
+            mod3
+            mod4
+            mod5        Mode_switch (0x14)
+
+        As You can see I use 6 (six) different modifiers.
+
+        Was it in the emacs FAQ or in the jargon file where such keyboards
+        where called space cadet keyboards?
+
+    9.5 Example -- remap the control key
+
+          how to remap the control key to live above the shift key and
+          either get rid of caps lock entirely or move it below the shift
+          key.
+
+       9.5.1 Martin Steppler <steppler@comnets.rwth-aachen.de>
+
+        man xmodmap says:
+
+          One of the more irritating differences between keyboards is
+          the location of the Control and Shift Lock keys. A common use
+          of xmodmap is to swap these two keys as fol- lows:
+
+            !
+            ! Swap Caps_Lock and Control_L
+            !
+            remove Lock = Caps_Lock
+            remove Control = Control_L
+            keysym Control_L = Caps_Lock
+            keysym Caps_Lock = Control_L
+            add Lock = Caps_Lock
+            add Control = Control_L
+
+10.0 Code
+
+    10.1 Perl code to remap Meta-Modeswitch
+
+        This code is from  Steffen Risser <c0033016@rzsrv2.rz.tu-bs.de>
+        1 Dec 1997 where he used it to map several people's HP-UX
+        to the "standard" key configuration.
+
+            #!/usr/bin/perl
+            # Searches xmodmap for keysyms Alt_l, Alt_r or Meta_l, Meta_r
+            # and exchanges them to Alt_l Meta_l ( mod1 ), Modeswitch ( mod2 ).
+            # s.risser@tu-bs.de
+            # Version 0.1a
+
+            # the xmodmap binary
+            #
+            $XMODMAP    = "xmodmap";
+
+            # set the verbose level ( 1=verbose, 0=nothing )
+            #
+            $verbose    =1;
+
+            #----------------------------------
+            $ALTL   ="$XMODMAP -pke | grep Alt_L";
+            $ALTR   ="$XMODMAP -pke | grep Alt_R";
+            $METAR  ="$XMODMAP -pke | grep Meta_R";
+            $METAL  ="$XMODMAP -pke | grep Meta_L";
+
+            sub set_mod
+            {
+                local($mod,$keysym) = @_;
+                local($execstr)     = 0;
+
+                $execstr            = "$XMODMAP -e 'clear $mod'";
+                if($verbose) { print "$execstr\n"; }
+                system $execstr;
+
+                $execstr            = "$XMODMAP -e 'add $mod = $keysym'";
+                if($verbose) { print "$execstr\n"; }
+                system $execstr;
+            }
+
+            sub set_keycode
+            {
+                local($keycode,$keysym) = @_;
+                local($execstr)         = "$XMODMAP -e '$keycode = $keysym'";
+                 if($verbose) { print "$execstr\n"; }
+                system $execstr;
+            }
+
+            if($verbose) { print "looking for Alt_L,Alt_R"; };
+
+            ($keycode_l,$keysym_l) = split('=',`$ALTL`);
+            ($keycode_r,$keysym_r) = split('=',`$ALTR`);
+
+            chop $keysym_r; chop $keysym_l;
+
+            if ( ! ($keycode_l && $keycode_r) )
+            {
+                if($verbose) { print " no\nlooking for Meta_L,Meta_R"; };
+
+                ($keycode_l,$keysym_l) = split('=',`$METAL`);
+                ($keycode_r,$keysym_r) = split('=',`$METAR`);
+
+                chop $keysym_r; chop $keysym_l;
+            }
+
+            if($keycode_l && $keycode_r )
+            {
+                print " yes\n";
+                &set_keycode($keycode_l,"Alt_L Meta_L");
+                &set_keycode($keycode_r,"Mode_switch");
+                &set_mod("Mod1","Alt_L");
+                &set_mod("Mod2","Mode_switch");
+            }
+            else
+            {
+                print " no\n";
+            }
+
+11.0 CASE STUDY -- Connection to remote emacs through Xterm
+
+    11.1 Foreword
+
+        I was accessing my university's machine from my work machine. I was
+        sitting next to my X-tube and making telnet connection through
+        normal xterm. The window was identified as "vt100" in remote site,
+        but since it was actually running xterm to me, I gave following
+        command to make it recognize right width and hight of the window.
+
+            % eval `resize`
+
+        I couldn't open emacs as "windowed" to my work's X-tube, because
+        the access rights didn't permit taking any connection *from*
+        outside world. I could only "talk" outwards from my work machine,
+        not towards it. The setenv DISPLAY my.host.com:0.0 trick was
+        therefore useless.
+
+    11.2 The connection does not know my keyboard
+
+        When I opened my emacs, it started fine in a xterm box, but when I
+        tried to use my favorite key bindings I quickly noticed, that the
+        X- environment extensions that allowed interpreting Ctrl-Fkey
+        etc. combinations, were gone. Neither did Alt-shift-keys work any
+        longer.
+
+        I felt that I was crippled, because Ctrl and Alt keys were out of
+        use in this session. So many handy key combinations had vanished.
+        The problem was, that through telnet connection, it is not possible
+        to send Ctrl-F2 information, because such key does not exist in
+        regular [78]bit ascii charts. The motif (X in general) use extra
+        events that tell "user pressed Ctrl + some other normal chars". The
+        connection can only base ascii chart characters.
+
+        One solution to this problem is that we do a little translation
+        while we're talking to remote host:
+
+            Ctrl-F2  | translate in xterm --> send sequence --> remote host
+
+        This says that "when user presses Ctrl-F2, the xterm translates the
+        sequence into some other key combinations that can be sent over the
+        connection. The remote host then sees these sent characters and
+        executes them as usual."
+
+    11.3 How do I know what a key produces (ascii sequences?)
+
+        The od(1) has ability to record keys and print their _true_
+        nature. Let's find out what the F2 and C-F2 keys produces in our
+        environment. ('-t' for keys and 'a' for char output )
+
+            % od -ta
+
+        Now od(1) is waiting for input: press keys below. The 'x' is
+        used to separate the keys.
+
+            "x" "F2" "x" "Ctrl-F2" "x"
+
+        Now press Ctrl-d twice, which terminates the od(1) and it spits
+        out the codes:
+
+            0000000    x esc   [   1   3   ~   x esc   [   1   3   ~   x
+                         ^^^^^^^^^^^^^^^^^^      ^^^^^^^^^^^^^^^^^^^^
+                         F2                      ctrl-F2
+
+        It's quite obvious to see, that the Ctrl key can't be
+        distinguished. Anyway, now you know how the F2 is intepreted by
+        normal terminals and what codes are sent in telnet connections.
+
+        _Note_: The emacs view-lossage function C-h l, can also produce
+        similar results, but do not use it in X-window (-nw is fine I
+        guess).
+
+        The reason is that emacs gets events directly from X-library funcs,
+        and when it prints the results, you may assume that the keycode
+        exists. When you use od(1) instead, you're guaranteed to have
+        *plain* keyboard read out without any X-events. If Emacs says "yes"
+        for the key, and od(1) produces nothing, you should assume that
+        emacs got the event through X-libs.
+
+        For example If I press Alt-backspace in od(1)
+
+            % od -ta
+            0000000
+
+        Nothing happens, I can press Alt-basckpace untill I'm tired and
+        still, the od is waiting for input. I have to terminate it with
+        C-d. If I do same in the emacs: press the Alt-Backspace and
+        immediately look at the lossage C-h l, it tells me:
+
+            M-backspace
+
+        Why my Alt-key is seen as "Meta" is due to xmodmap(1). Let's jump
+        to it in next sections for a while.
+
+    11.4 Short xmodmap(1) glimpse
+
+        The xmodmap(1) tells you how programs see your hardware keys, the
+        definition of the entries are quite simple. e.g. My map shows:
+
+            shift       Shift_R (0xc),  Shift_L (0xd)
+            lock        Caps_Lock (0x37)
+            control     Control_R (0x8),  Control_L (0xe)
+            mod1        Meta_R (0xa),  Meta_L (0xb),  Mode_switch (0x36)
+            mod2
+            mod3
+            mod4
+            mod5
+
+        Look at row 3: it says that whenever I press Right control key or
+        Left control key, it produces only "control" to the existing
+        programs. (unless they use X-events directly of course)
+
+        Generally it's not the best idea to change your xmodmap, just
+        because you want remap some key in emacs. The reason is quite
+        obvious, when you change the xmodmap, it affects everything. All
+        other programs you're running too. If you only redefine some unused
+        keys that you plan to use only in emacs, then you can play with
+        xmodmap safely. Next we peek X events little more closely.
+
+    11.5 Xev -- Spot your X-events(keys) easily
+
+        This 'xev' program is Distributed with X11R5 (or any X-dist.). When
+        you run it, it'll open a window which starts reading any events you
+        generate: moving mouse, clicking, pressing shift,
+        alt... E.g. pressing Alt gives:
+
+            [when pressed]
+            KeyPress event, serial 18, synthetic NO, window 0x6000001,
+                root 0x23, subw 0x0, time 1671998966, (85,130), root:(580,559),
+                state 0x0, keycode 11 (keysym 0xffe7, Meta_L), same_screen YES,
+                XLookupString gives 0 characters:  ""
+
+            keycode 11        == Physical keyboad key
+            keysym Meta_L     == physical key to "logical" X-key.
+
+
+            [when released]
+            KeyRelease event, serial 20, synthetic NO, window 0x6000001,
+                root 0x23, subw 0x0, time 1672001116, (85,130), root:(580,559),
+                state 0x8, keycode 11 (keysym 0xffe7, Meta_L), same_screen YES,
+                XLookupString gives 0 characters:  ""
+
+        So use this if you want to find out how the event is "seen" by
+        motif windowing system.
+
+    11.6 Xterm's -xrm switch for key settings, where are the key names?
+
+        We're going to program Xterm soon, so you you must learn to find
+        your symbolic key names: they are located along the Xlib path,
+        similar to mine:
+
+            /usr/include/X11R5/X11/keysymdef.h
+
+        Drop the "XK_" prefixes when using the names in Xterm's -xrm
+        switch. A excerpt of the keysymdef.h file:
+
+            /* Cursor control & motion */
+
+            #define XK_Home   0xFF50
+            #define XK_Left   0xFF51  /* Move left, left arrow */
+            #define XK_Up     0xFF52  /* Move up, up arrow */
+            #define XK_Right  0xFF53  /* Move right, right arrow */
+            #define XK_Down   0xFF54  /* Move down, down arrow */
+            #define XK_Prior  0xFF55  /* Prior, previous */
+            #define XK_Next   0xFF56  /* Next */
+            #define XK_End    0xFF57  /* EOL */
+            #define XK_Begin  0xFF58  /* BOL */
+
+    11.7 Custom xterm -- making xterm to translate character for connection
+
+        Xterm can accept regular motif commands, so let's use its -xrm
+        switch to "program" it. This little shell file launches up
+        specially configured xterm session: it converts pressed keys to
+        another key sequences.
+
+            #!/bin/sh
+            # @(#) file:  xtu --  (Xt)erm to (U)niversity
+            # @(#) desc:  Special key config for remote emacs through telnet
+            #
+            exec xterm -xrm 'XTerm.VT100.translations: #override \
+              Ctrl ~Meta ~Shift <Key> F2: string(0x14) string("Cf2") \n\
+                    '\
+                    $*
+
+            0x14  = Control-t code, see ascii chart
+            Cf2   = string of single keystrokes
+
+        It says that "When user presses C-F2 in this Xterm, turn it into
+        key sequence 'C-t Cf2' "
+
+    11.8 Remote emacs setup
+
+        Now I can pass the C-F2 to my university's machine by using special
+        xterm. Now I have to set up target emacs so, that it can understand
+        these new key sequences. The "C-t" was just an example of a
+        possible prefix-key, you can select any other prefix key. I use
+        same ~/.emacs.keys file for both machines, but the lisp code can
+        snoop if the current emacs is *X-telnetting* and not run from
+        regular term. See the lisp code later.
+
+        First, we add this into ~/.cshrc. It defines environment variable
+        *LOGIN_SITE* when we log to account from outside the University
+        site. My account in University is 'ssjaaa': (S)ociology (S)tudies
+        (Ja)ri (Aa)lto.
+
+            # ........................... setting right terminal ...
+            #   NOTE: This is SunOS machine's .cshrc and the output of who(1)
+            #         etc. commands may vary in another systems.
+            #
+            #   tty gives us "/dev/pts/17", drop that "/dev/" away....
+            set data = `tty`; set tty = "pts/$data:t"
+
+            #   now, where are we logged from  ?
+            #   "ssjaaa - pts/17 Sep 29 18:58 . 18523 (aapo.tele.nokia.fi)"
+            #
+            set who  = (`who -a | grep $USER| grep $tty`)
+
+            # get last element "(aapo.tele.nokia.fi)"
+            #
+            set site = $who[$#who]
+
+            # Underscore for my private vars.
+            #
+            setenv _LOGIN_SITE $site
+
+            #
+            #  End file
+
+
+        In Emacs; you can now check the environment variable
+
+            (getenv "_LOGIN_SITE")
+
+        Which should reveal if you're connected from some remote host.
+        You can then determine if you're running Xterm+telnet+Emacs.
+
+        We also redefine key bindings in emacs to accept "C-t Cf2" as C-F2
+        The F2 is seen direcly: try it and you'll see something like
+        following in remote emacs's lossage buffer, `M-x' `view-lossage'
+
+            esc [ 1 3 ~
+
+    11.9 Testing the special Xterm and remote emacs co-operation
+
+        Before we do telnet, we can test the configuration in X Start xtu
+        shell script. If you made mistakes in in -xrm commands, it says:
+
+            Warning: translation table syntax error: Unknown keysym name: f2
+            Warning: ... found while parsing 'Ctrl ~Meta ~Shift <Key> f2:
+                     string(0x14) string("Cf2")      '
+
+        You have to write symbolic key names with proper case, here the
+        mistake is 'f2' when it should have been 'F2'. Use xev or refer to
+        keysymdef.h for proper names. Start od(1) in the Xterm just
+        appeared to check that the C-F2 is translated correctly.
+
+            % od -ta
+            Cf2      << should appear if you press C-F2
+
+        If od(1) test succeeds, start emacs for final test
+
+            % emacs -nw -debug-init << in X, force it to window.
+
+        If the lisp code added doesn't signal any errors, then you can try
+        out the key F2. Press it and following text should appear in
+        buffer:
+
+            "hello"
+
+        If all went ok, your modified Xterm works correcly. You can use the
+        same keys as you used in X, althought the remote emacs does not
+        know anything about X. That's what I call transparency. Remember to
+        modify your ~/.cshrc and add the lisp code to the remote
+        ~/.emacs. There is shadow.el in 19.28 std distrib, that can mirror
+        your files easily to other sites, like your shared ~/.emacs and
+        ~/.cshrc in this case.
+
+        Now you know all you need and you can start defining more keys that
+        can't be sent directly via wire. My complete setup is attached
+        below.
+
+    11.10 Complete, live, setup -- Modify to personal needs
+
+        Offered "as is", no code will be explained via email. Peter von der
+        Ahe <pahe@daimi.aau.dk> kindly sent more Bindings to "xte" script.
+        All the string(0x1b) codes that enable M-> and M-< are from him.
+        Please note that the code below may not display correctly in html
+        layout. Read the code from the text version of this document.
+
+  ;;; --++-- --++-- --++-- --++-- --++-- --++-- --++-- --++- .emacs.keys.el --
+
+  (require 'cl)
+  (require 'tinylib)  ;; function ti::define-in-function-keymap
+
+  ;; Define backspace key for non-window Emacs.
+  (when (and (boundp 'window-system)
+             (null window-system))
+    (setq key-translation-map (make-sparse-keymap))
+    (define-key key-translation-map "\177" "\C-h")
+    (define-key key-translation-map "\C-h" "\177")
+    (defvar BACKSPACE "\177")
+    (defvar DELETE    "\C-h")
+    (global-set-key BACKSPACE 'backward-delete-char))
+
+  (ti::define-in-function-keymap
+   '(([?\e ?O ?I]  [tab])   ;; This is KP_Tab X key symbol
+     ([kp_tab] [tab])
+     ;;  Those horrible terminals that send pure terminal escapes...
+     ;;  Usually when I'm running non-windowed through xterm and telnet
+     ([?\e ?O ?A]         [up])
+     ([?\e ?O ?B]         [down])
+     ([?\e ?O ?C]         [right])
+     ([?\e ?O ?D]         [left])
+     ([?\e ?O ?D]         [left])
+     ([?\e ?\[ ?2 ?~]     [insert])
+     ([?\e ?\[ ?5 ?~]     [next])
+     ([?\e ?\[ ?6 ?~]     [prior])
+     ([?\e ?O ?\C-@]      [end])
+     ([?\e ?\[ ?1 ?1 ?~]  [f1])
+     ([?\e ?\[ ?1 ?2 ?~]  [f2])
+     ([?\e ?\[ ?1 ?3 ?~]  [f3])
+     ([?\e ?\[ ?1 ?4 ?~]  [f4])
+     ([?\e ?\[ ?1 ?5 ?~]  [f5])
+     ([?\e ?\[ ?1 ?6 ?~]  [f6])
+     ([?\e ?\[ ?1 ?7 ?~]  [f7])
+     ([?\e ?\[ ?1 ?8 ?~]  [f8])
+     ([?\e ?\[ ?1 ?9 ?~]  [f9])))
+
+  (defun my-special-xterm ()
+    "Accept special keysequences sent by Xterm. Prefix map C-t used.
+  You must run 'xte' shell script that sets up Xterm to send these
+  keycodes."
+    (interactive)
+    ;; Make this key available to us. Was transpose-chars
+    (global-unset-key "\C-t")
+
+ ;; We translate the special key sequences back to key events.
+ ;; Modifiers C = Ctrl, A = Alt, S = Shift
+ ;; ............................................................ #tab ...
+ ;;
+ (ti::define-in-function-keymap
+  '(([?\C-t ?C ?k ?t]    [C-tab])
+    ([?\C-t ?S ?k ?t]    [S-tab])
+    ([?\C-t ?A ?k ?t]    [A-tab])
+    ([?\C-t ?C ?S ?k ?t] [C-S-tab])
+    ([?\C-t ?A ?S ?k ?t] [A-S-tab])
+    ([?\C-t ?A ?C ?k ?t] [A-C-tab])
+    ([?\C-t ?A ?C ?S ?k ?t] [A-C-S-tab])))
+
+ ;; ......................................................... #return ...
+ ;;
+ (ti::define-in-function-keymap)
+ '(([?\C-t ?C ?k ?r]    [C-return])
+   ([?\C-t ?S ?k ?r]    [S-return])
+   ([?\C-t ?A ?k ?r]    [A-return])
+   ([?\C-t ?C ?S ?k ?r] [C-S-return])
+   ([?\C-t ?A ?S ?k ?r] [A-S-return])
+   ([?\C-t ?A ?C ?k ?r] [A-C-return])
+   ([?\C-t ?A ?C ?S ?k ?r] [A-C-S-return])))
+
+ ;; ...................................................... #backspace ...
+ ;;
+ (ti::define-in-function-keymap)
+ '(([?\C-t ?C ?k ?b]    [C-backspace])
+   ([?\C-t ?S ?k ?b]    [S-backspace])
+   ([?\C-t ?A ?k ?b]    [A-backspace])
+   ([?\C-t ?C ?S ?k ?b] [C-S-backspace])
+   ([?\C-t ?A ?S ?k ?b] [A-S-backspace])
+   ([?\C-t ?A ?C ?k ?b] [A-C-backspace])
+   ([?\C-t ?C ?A ?S ?k ?b] [A-C-S-backspace])))
+
+ ;; ........................................................... #page ...
+ ;; ?P = page group keys
+ ;;  u = pgup, d = pgdown, e = end, h = home, i=insert, d=delete
+ ;;
+ (ti::define-in-function-keymap
+ '(([?\C-t ?C ?P ?g ?d]    [C-next])
+   ([?\C-t ?S ?P ?g ?d]    [S-next])
+   ([?\C-t ?A ?P ?g ?d]    [A-next])
+   ([?\C-t ?C ?S ?P ?g ?d] [C-S-next])
+   ([?\C-t ?A ?S ?P ?g ?d] [A-S-next])
+   ([?\C-t ?A ?C ?P ?g ?d] [A-C-next])
+   ([?\C-t ?C ?A ?S ?P ?g ?d] [A-C-S-next])
+   ;;
+   ([?\C-t ?C ?P ?g ?u] [C-prior])
+   ([?\C-t ?S ?P ?g ?u] [S-prior])
+   ([?\C-t ?A ?P ?g ?u] [A-prior])
+   ;;
+   ([?\C-t ?C ?S ?P ?g ?u] [C-S-prior])
+   ([?\C-t ?A ?S ?P ?g ?u] [A-S-prior])
+   ([?\C-t ?A ?C ?P ?g ?u] [A-C-prior])
+   ;;
+   ([?\C-t ?C ?A ?S ?P ?g ?u] [A-C-S-prior])
+   ;;
+   ([?\C-t ?C ?P ?h] [C-home])
+   ([?\C-t ?S ?P ?h] [S-home])
+   ([?\C-t ?A ?P ?h] [A-home])
+   ;;
+   ([?\C-t ?C ?S ?P ?h] [C-S-home])
+   ([?\C-t ?A ?S ?P ?h] [A-S-home])
+   ([?\C-t ?A ?C ?P ?h] [A-C-home])
+   ;;
+   ([?\C-t ?C ?A ?S ?P ?h] [A-C-S-home])
+   ;;
+   ([?\C-t ?C ?P ?e] [C-select])
+   ([?\C-t ?S ?P ?e] [S-select])
+   ([?\C-t ?A ?P ?e] [A-select])
+   ;;
+   ([?\C-t ?C ?S ?P ?e] [C-S-select])
+   ([?\C-t ?A ?S ?P ?e] [A-S-select])
+   ([?\C-t ?A ?C ?P ?e] [A-C-select])
+   ;;
+   ([?\C-t ?C ?A ?S ?P ?e] [A-C-S-select])
+   ;;
+   ([?\C-t ?C ?P ?i] [C-insert])
+   ([?\C-t ?S ?P ?i] [S-insert])
+   ([?\C-t ?A ?P ?i] [A-insert])
+   ;;
+   ([?\C-t ?C ?S ?P ?i] [C-S-insert])
+   ([?\C-t ?A ?S ?P ?i] [A-S-insert])
+   ([?\C-t ?A ?C ?P ?i] [A-C-insert])
+   ;;
+   ([?\C-t ?C ?A ?S ?P ?i] [A-C-S-insert])
+   ;;
+   ([?\C-t ?C ?P ?d] [C-delete])
+   ([?\C-t ?S ?P ?d] [S-delete])
+   ([?\C-t ?A ?P ?d] [A-delete])
+   ;;
+   ([?\C-t ?C ?S ?P ?d] [C-S-delete])
+   ([?\C-t ?A ?S ?P ?d] [A-S-delete])
+   ([?\C-t ?A ?C ?P ?d] [A-C-delete])
+   ;;
+   ([?\C-t ?C ?A ?S ?P ?d] [A-C-S-delete])))
+
+
+ ;; ....................................................... #movement ...
+ ;; ?m = movement map,
+ ;;  r = right, l = left, u= up, d = down
+ ;;
+ (ti::define-in-function-keymap
+ '(([?\C-t ?C ?m ?u] [C-up])
+   ([?\C-t ?S ?m ?u] [S-up])
+   ([?\C-t ?A ?m ?u] [A-up])
+   ;;
+   ([?\C-t ?C ?S ?m ?u] [C-S-up])
+   ([?\C-t ?A ?S ?m ?u] [A-S-up])
+   ([?\C-t ?A ?C ?m ?u] [A-C-up])
+   ;;
+   ([?\C-t ?C ?A ?S ?m ?u] [A-C-S-up])
+   ;;
+   ([?\C-t ?C ?m ?d] [C-down])
+   ([?\C-t ?S ?m ?d] [S-down])
+   ([?\C-t ?A ?m ?d] [A-down])
+   ;;
+   ([?\C-t ?C ?S ?m ?d] [C-S-down])
+   ([?\C-t ?A ?S ?m ?d] [A-S-down])
+   ([?\C-t ?A ?C ?m ?d] [A-C-down])
+   ;;
+   ([?\C-t ?C ?A ?S ?m ?d] [A-C-S-down])
+   ;;
+   ([?\C-t ?C ?m ?l] [C-left])
+   ([?\C-t ?S ?m ?l] [S-left])
+   ([?\C-t ?A ?m ?l] [A-left])
+   ;;
+   ([?\C-t ?C ?S ?m ?l] [C-S-left])
+   ([?\C-t ?A ?S ?m ?l] [A-S-left])
+   ([?\C-t ?A ?C ?m ?l] [A-C-left])
+   ;;
+   ([?\C-t ?C ?A ?S ?m ?l] [A-C-S-left])
+   ;;
+   ([?\C-t ?C ?m ?r] [C-right])
+   ([?\C-t ?S ?m ?r] [S-right])
+   ([?\C-t ?A ?m ?r] [A-right])
+   ;;
+   ([?\C-t ?C ?S ?m ?r] [C-S-right])
+   ([?\C-t ?A ?S ?m ?r] [A-S-right])
+   ([?\C-t ?A ?C ?m ?r] [A-C-right])
+   ;;
+   ([?\C-t ?C ?A ?S ?m ?r] [A-C-S-right])))
+
+ ;; ....................................................... #function ...
+ ;;
+ (ti::define-in-function-keymap
+ '(([?\C-t ?S ?f ?1] [S-f1])
+   ([?\C-t ?S ?f ?2] [S-f2])
+   ([?\C-t ?S ?f ?3] [S-f3])
+   ([?\C-t ?S ?f ?4] [S-f4])
+   ([?\C-t ?S ?f ?5] [S-f5])
+   ([?\C-t ?S ?f ?6] [S-f6])
+   ([?\C-t ?S ?f ?7] [S-f7])
+   ([?\C-t ?S ?f ?8] [S-f8])
+   ([?\C-t ?S ?f ?9] [S-f9])
+   ([?\C-t ?S ?f ?- ?0] [S-f10])
+   ([?\C-t ?S ?f ?- ?1] [S-f11])
+   ([?\C-t ?S ?f ?- ?2] [S-f12])
+
+   ([?\C-t ?C ?f ?1] [C-f1])
+   ([?\C-t ?C ?f ?2] [C-f2])
+   ([?\C-t ?C ?f ?3] [C-f3])
+   ([?\C-t ?C ?f ?4] [C-f4])
+   ([?\C-t ?C ?f ?5] [C-f5])
+   ([?\C-t ?C ?f ?6] [C-f6])
+   ([?\C-t ?C ?f ?7] [C-f7])
+   ([?\C-t ?C ?f ?8] [C-f8])
+   ([?\C-t ?C ?f ?9] [C-f9])
+   ([?\C-t ?C ?f ?- ?0] [C-f10])
+   ([?\C-t ?C ?f ?- ?1] [C-f11])
+   ([?\C-t ?C ?f ?- ?2] [C-f12])))
+
+ )
+
+  (my-special-xterm)
+
+  ;;; --++-- --++-- --++-- --++-- --++-- --++-- --++-- --++-- --++-- xte --
+
+  #! /bin/sh
+  #
+  # file:  xte --  (Xt)erm for telnet and remote (E)macs
+  # desc:  Special key configuration for remote emacs through telnet
+
+  #  Special Xterm, which translates HP-UX keys which are seen in
+  #  X-env to some prefix keys over the telnet connection to
+  #  remote Emacs
+  #
+  #  See
+  #    % od -ta
+  #
+  #  The X-keys are defined in
+  #
+  #     /usr/include/X11R5/X11/keysymdef.h
+  #
+  #  Just leave the "XK_" away from the name definition. E.g.
+  #
+  #    #define XK_BackSpace            0xFF08
+  #
+  #  ?\C-t = 20dec, 14h, Ctrl-t
+  #
+  #  Use 'xev' to read the X-events
+  #
+  #  Use 'xmodmap -pm' to see what keys are translated to which
+  #       LEFT     translations
+  #       ^^^      ^^^^
+  #       seen as  real xevents
+  #
+  # ~ refers to not()  operator
+  #
+  # Not accessible
+  #
+  #   Alt(meta){tab} is never produced, although it's presented here
+  #   Alt{up,down}   is never produced ..
+  #
+  # Not X11 keysymdef.h, examined with xev
+  #
+  #   HpInsertChar, HpDeleteChar, ccedilla, aring, cent
+  #   --> unforunately direct Alt keys cannot be mapped
+  #
+  # F-keys
+  #
+  #   F1 .. F12 can be sent directly, but Shift, Ctrl, Alt don't
+  #
+  # Title
+  #
+  #   XT.E  = Xterm for remote Emacs
+  #
+
+ exec xterm -T "XT.E" -xrm 'XTerm.VT100.translations: #override \
+ \
+ ~Ctrl ~Meta ~Shift <Key> KP_Tab:     string(0x9)                     \n\
+  Ctrl ~Meta ~Shift <Key> Tab:        string(0x14) string("Ckt")      \n\
+ ~Ctrl ~Meta  Shift <Key> Tab:        string(0x14) string("Skt")      \n\
+  Ctrl ~Meta  Shift <Key> Tab:        string(0x14) string("ASkt")     \n\
+ \
+  Ctrl ~Meta ~Shift <Key> Return:     string(0x14) string("Ckr")      \n\
+ ~Ctrl ~Meta  Shift <Key> Return:     string(0x14) string("Skr")      \n\
+ ~Ctrl  Meta ~Shift <Key> Return:     string(0x14) string("Akr")      \n\
+  Ctrl ~Meta  Shift <Key> Return:     string(0x14) string("CSkr")     \n\
+ ~Ctrl  Meta  Shift <Key> Return:     string(0x14) string("ASkr")     \n\
+  Ctrl  Meta ~Shift <Key> Return:     string(0x14) string("ACkr")     \n\
+  Ctrl  Meta  Shift <Key> Return:     string(0x14) string("ACSkr")    \n\
+\
+  Ctrl ~Meta ~Shift <Key> BackSpace:  string(0x14) string("Ckb")      \n\
+ ~Ctrl ~Meta  Shift <Key> BackSpace:  string(0x14) string("Skb")      \n\
+ ~Ctrl  Meta ~Shift <Key> BackSpace:  string(0x14) string("Akb")      \n\
+  Ctrl ~Meta  Shift <Key> BackSpace:  string(0x14) string("CSkb")     \n\
+ ~Ctrl  Meta  Shift <Key> BackSpace:  string(0x14) string("ASkb")     \n\
+  Ctrl  Meta ~Shift <Key> BackSpace:  string(0x14) string("ACkb")     \n\
+  Ctrl  Meta  Shift <Key> BackSpace:  string(0x14) string("ACSkb")    \n\
+\
+  Ctrl ~Meta ~Shift <Key> Prior:      string(0x14) string("CPgu")     \n\
+ ~Ctrl ~Meta  Shift <Key> Prior:      string(0x14) string("SPgu")     \n\
+ ~Ctrl  Meta ~Shift <Key> Prior:      string(0x14) string("APgu")     \n\
+  Ctrl ~Meta  Shift <Key> Prior:      string(0x14) string("CSPgu")    \n\
+ ~Ctrl  Meta  Shift <Key> Prior:      string(0x14) string("ASPgu")    \n\
+  Ctrl  Meta ~Shift <Key> Prior:      string(0x14) string("ACPgu")    \n\
+  Ctrl  Meta  Shift <Key> Prior:      string(0x14) string("ACSPgu")   \n\
+\
+  Ctrl ~Meta ~Shift <Key> Next:       string(0x14) string("CPgd")     \n\
+ ~Ctrl ~Meta  Shift <Key> Next:       string(0x14) string("SPgd")     \n\
+ ~Ctrl        Meta ~Shift <Key> Next: string(0x14) string("APgd")     \n\
+  Ctrl ~Meta  Shift <Key> Next:       string(0x14) string("CSPgd")    \n\
+ ~Ctrl        Meta  Shift <Key> Next: string(0x14) string("ASPgd")    \n\
+  Ctrl        Meta ~Shift <Key> Next: string(0x14) string("ACPgd")    \n\
+  Ctrl        Meta  Shift <Key> Next: string(0x14) string("ACSPgd")   \n\
+\
+  Ctrl ~Meta ~Shift <Key> Home:       string(0x14) string("CPh")      \n\
+ ~Ctrl ~Meta  Shift <Key> Home:       string(0x14) string("SPh")      \n\
+ ~Ctrl  Meta ~Shift <Key> Home:       string(0x14) string("APh")      \n\
+  Ctrl ~Meta  Shift <Key> Home:       string(0x14) string("CSPh")     \n\
+ ~Ctrl  Meta  Shift <Key> Home:       string(0x14) string("ASPh")     \n\
+  Ctrl  Meta ~Shift <Key> Home:       string(0x14) string("ACPh")     \n\
+  Ctrl  Meta  Shift <Key> Home:       string(0x14) string("ACSPh")    \n\
+\
+  Ctrl ~Meta ~Shift <Key> Select:     string(0x14) string("CPe")      \n\
+ ~Ctrl ~Meta  Shift <Key> Select:     string(0x14) string("SPe")      \n\
+ ~Ctrl  Meta ~Shift <Key> Select:     string(0x14) string("APe")      \n\
+  Ctrl ~Meta  Shift <Key> Select:     string(0x14) string("CSPe")     \n\
+ ~Ctrl  Meta  Shift <Key> Select:     string(0x14) string("ASPe")     \n\
+  Ctrl  Meta ~Shift <Key> Select:     string(0x14) string("ACPe")     \n\
+  Ctrl  Meta  Shift <Key> Select:     string(0x14) string("ACSPe")    \n\
+\
+  Ctrl ~Meta ~Shift <Key> hpInsertChar: string(0x14) string("CPi")    \n\
+ ~Ctrl ~Meta  Shift <Key> hpInsertChar: string(0x14) string("SPi")    \n\
+ ~Ctrl  Meta ~Shift <Key> hpInsertChar: string(0x14) string("APi")    \n\
+  Ctrl ~Meta  Shift <Key> hpInsertChar: string(0x14) string("CSPi")   \n\
+ ~Ctrl  Meta  Shift <Key> hpInsertChar: string(0x14) string("ASPi")   \n\
+  Ctrl  Meta ~Shift <Key> hpInsertChar: string(0x14) string("ACPi")   \n\
+  Ctrl  Meta  Shift <Key> hpInsertChar: string(0x14) string("ACSPi")  \n\
+\
+ ~Ctrl ~Meta ~Shift <Key> hpDeleteChar: string(0x14) string("Pd")     \n\
+  Ctrl ~Meta ~Shift <Key> hpDeleteChar: string(0x14) string("CPd")    \n\
+ ~Ctrl ~Meta  Shift <Key> hpDeleteChar: string(0x14) string("SPd")    \n\
+ ~Ctrl  Meta ~Shift <Key> hpDeleteChar: string(0x14) string("APd")      \n\
+  Ctrl ~Meta  Shift <Key> hpDeleteChar: string(0x14) string("CSPd")   \n\
+ ~Ctrl  Meta  Shift <Key> hpDeleteChar: string(0x14) string("ASPd")     \n\
+  Ctrl  Meta ~Shift <Key> hpDeleteChar: string(0x14) string("ACPd")     \n\
+  Ctrl  Meta  Shift <Key> hpDeleteChar: string(0x14) string("ACSPd")    \n\
+\
+  Ctrl ~Meta ~Shift <Key> Up:         string(0x14) string("Cmu")      \n\
+ ~Ctrl ~Meta  Shift <Key> Up:         string(0x14) string("Smu")      \n\
+ ~Ctrl  Meta ~Shift <Key> Up:         string(0x14) string("Amu")      \n\
+  Ctrl ~Meta  Shift <Key> Up:         string(0x14) string("CSmu")     \n\
+ ~Ctrl  Meta  Shift <Key> Up:         string(0x14) string("ASmu")     \n\
+  Ctrl  Meta ~Shift <Key> Up:         string(0x14) string("ACmu")     \n\
+  Ctrl  Meta  Shift <Key> Up:         string(0x14) string("ACSmu")    \n\
+\
+  Ctrl ~Meta ~Shift <Key> Down:       string(0x14) string("Cmd")      \n\
+ ~Ctrl ~Meta  Shift <Key> Down:       string(0x14) string("Smd")      \n\
+ ~Ctrl  Meta ~Shift <Key> Down:       string(0x14) string("Amd")      \n\
+  Ctrl ~Meta  Shift <Key> Down:       string(0x14) string("CSmd")     \n\
+ ~Ctrl  Meta  Shift <Key> Down:       string(0x14) string("ASmd")     \n\
+  Ctrl  Meta ~Shift <Key> Down:       string(0x14) string("ACmd")     \n\
+  Ctrl  Meta  Shift <Key> Down:       string(0x14) string("ACSmd")    \n\
+\
+  Ctrl ~Meta ~Shift <Key> Left:       string(0x14) string("Cml")      \n\
+ ~Ctrl ~Meta  Shift <Key> Left:       string(0x14) string("Sml")      \n\
+ ~Ctrl  Meta ~Shift <Key> Left:       string(0x14) string("Aml")      \n\
+  Ctrl ~Meta  Shift <Key> Left:       string(0x14) string("CSml")     \n\
+ ~Ctrl  Meta  Shift <Key> Left:       string(0x14) string("ASml")     \n\
+  Ctrl  Meta ~Shift <Key> Left:       string(0x14) string("ACml")     \n\
+  Ctrl  Meta  Shift <Key> Left:       string(0x14) string("ACSml")    \n\
+\
+  Ctrl ~Meta ~Shift <Key> Right:      string(0x14) string("Cmr")      \n\
+ ~Ctrl ~Meta  Shift <Key> Right:      string(0x14) string("Smr")      \n\
+ ~Ctrl  Meta ~Shift <Key> Right:      string(0x14) string("Amr")      \n\
+  Ctrl ~Meta  Shift <Key> Right:      string(0x14) string("CSmr")     \n\
+ ~Ctrl  Meta  Shift <Key> Right:      string(0x14) string("ASmr")     \n\
+  Ctrl  Meta ~Shift <Key> Right:      string(0x14) string("ACmr")     \n\
+  Ctrl  Meta  Shift <Key> Right:      string(0x14) string("ACSmr")    \n\
+\
+ ~Ctrl ~Meta  Shift <Key> F1:         string(0x14) string("Sf1")      \n\
+ ~Ctrl ~Meta  Shift <Key> F2:         string(0x14) string("Sf2")      \n\
+ ~Ctrl ~Meta  Shift <Key> F3:         string(0x14) string("Sf3")      \n\
+ ~Ctrl ~Meta  Shift <Key> F4:         string(0x14) string("Sf4")      \n\
+ ~Ctrl ~Meta  Shift <Key> F5:         string(0x14) string("Sf5")      \n\
+ ~Ctrl ~Meta  Shift <Key> F6:         string(0x14) string("Sf6")      \n\
+ ~Ctrl ~Meta  Shift <Key> F7:         string(0x14) string("Sf7")      \n\
+ ~Ctrl ~Meta  Shift <Key> F8:         string(0x14) string("Sf8")      \n\
+ ~Ctrl ~Meta  Shift <Key> F9:         string(0x14) string("Df9")      \n\
+ ~Ctrl ~Meta  Shift <Key> F10:        string(0x14) string("Sf-0")     \n\
+ ~Ctrl ~Meta  Shift <Key> F11:        string(0x14) string("Sf-1")     \n\
+ ~Ctrl ~Meta  Shift <Key> F12:        string(0x14) string("Sf-2")     \n\
+\
+  Ctrl ~Meta ~Shift <Key> F1:         string(0x14) string("Cf1")      \n\
+  Ctrl ~Meta ~Shift <Key> F2:         string(0x14) string("Cf2")      \n\
+  Ctrl ~Meta ~Shift <Key> F3:         string(0x14) string("Cf3")      \n\
+  Ctrl ~Meta ~Shift <Key> F4:         string(0x14) string("Cf4")      \n\
+  Ctrl ~Meta ~Shift <Key> F5:         string(0x14) string("Cf5")      \n\
+  Ctrl ~Meta ~Shift <Key> F6:         string(0x14) string("Cf6")      \n\
+  Ctrl ~Meta ~Shift <Key> F7:         string(0x14) string("Cf7")      \n\
+  Ctrl ~Meta ~Shift <Key> F8:         string(0x14) string("Cf8")      \n\
+  Ctrl ~Meta ~Shift <Key> F9:         string(0x14) string("Cf9")      \n\
+  Ctrl ~Meta ~Shift <Key> F10:        string(0x14) string("Cf-0")     \n\
+  Ctrl ~Meta ~Shift <Key> F11:        string(0x14) string("Cf-1")     \n\
+  Ctrl ~Meta ~Shift <Key> F12:        string(0x14) string("Cf-2")     \n\
+\
+  ~Ctrl  Meta  Shift <Key> .:            string(0x1b) string(">")        \n\
+  ~Ctrl  Meta  Shift <Key> comma:        string(0x1b) string("<")        \n\
+  ~Ctrl  Meta ~Shift <Key> space:        string(0x1b) string(" ")        \n\
+  ~Ctrl  Meta ~Shift <Key> backslash:    string(0x1b) string("\\")       \n\
+  ~Ctrl  Meta ~Shift <Key> a:            string(0x1b) string("a")        \n\
+  ~Ctrl  Meta ~Shift <Key> b:            string(0x1b) string("b")        \n\
+  ~Ctrl  Meta ~Shift <Key> c:            string(0x1b) string("c")        \n\
+  ~Ctrl  Meta ~Shift <Key> d:            string(0x1b) string("d")        \n\
+  ~Ctrl  Meta ~Shift <Key> e:            string(0x1b) string("e")        \n\
+  ~Ctrl  Meta ~Shift <Key> f:            string(0x1b) string("f")        \n\
+  ~Ctrl  Meta ~Shift <Key> g:            string(0x1b) string("g")        \n\
+  ~Ctrl  Meta ~Shift <Key> h:            string(0x1b) string("h")        \n\
+  ~Ctrl  Meta ~Shift <Key> i:            string(0x1b) string("i")        \n\
+  ~Ctrl  Meta ~Shift <Key> j:            string(0x1b) string("j")        \n\
+  ~Ctrl  Meta ~Shift <Key> k:            string(0x1b) string("k")        \n\
+  ~Ctrl  Meta ~Shift <Key> l:            string(0x1b) string("l")        \n\
+  ~Ctrl  Meta ~Shift <Key> m:            string(0x1b) string("m")        \n\
+  ~Ctrl  Meta ~Shift <Key> n:            string(0x1b) string("n")        \n\
+  ~Ctrl  Meta ~Shift <Key> o:            string(0x1b) string("o")        \n\
+  ~Ctrl  Meta ~Shift <Key> p:            string(0x1b) string("p")        \n\
+  ~Ctrl  Meta ~Shift <Key> q:            string(0x1b) string("q")        \n\
+  ~Ctrl  Meta ~Shift <Key> r:            string(0x1b) string("r")        \n\
+  ~Ctrl  Meta ~Shift <Key> s:            string(0x1b) string("s")        \n\
+  ~Ctrl  Meta ~Shift <Key> t:            string(0x1b) string("t")        \n\
+  ~Ctrl  Meta ~Shift <Key> u:            string(0x1b) string("u")        \n\
+  ~Ctrl  Meta ~Shift <Key> v:            string(0x1b) string("v")        \n\
+  ~Ctrl  Meta ~Shift <Key> w:            string(0x1b) string("w")        \n\
+  ~Ctrl  Meta ~Shift <Key> x:            string(0x1b) string("x")        \n\
+  ~Ctrl  Meta ~Shift <Key> y:            string(0x1b) string("y")        \n\
+  ~Ctrl  Meta ~Shift <Key> z:            string(0x1b) string("z")        \n\
+ ' \
+ $*
+
+# ............................................................... &eof ...
+
+12.0 End of document

@@ -1,0 +1,55 @@
+Licensing information
+
+        Copyright (C) 1995-2009 Jari Aalto
+
+        This program (referring to all files, including documentation,
+        distributed in project "Emacs Tiny Tools") is free software;
+        you can redistribute it and/or modify it under the terms of
+        the GNU General Public License as published by the Free
+        Software Foundation; either version 2 of the License, or (at
+        your option) any later version.
+
+        This program is distributed in the hope that it will be useful, but
+        WITHOUT ANY WARRANTY; without even the implied warranty of
+        MERCHANTABILITY or FITNESS FOR A PARTICULAR PURPOSE. See the GNU
+        General Public License for more details.
+
+        You should have received a copy of the GNU General Public License
+        along with program. If not, write to the
+        Free Software Foundation, Inc., 51 Franklin Street, Fifth Floor,
+        Boston, MA 02110-1301, USA.
+
+        Visit <http://www.gnu.org/copyleft/gpl.html> for more information
+
+        This program runs solely with Free Software. It does not rely
+        on any component of non-Free Software.
+
+    Exception for the documentation
+
+        The documentation of project "Emacs Tiny Tools" (*.txt and
+        *.html files) is DUAL LICENseD and may be distributed under
+        the terms of GNU General Public License (GNU GPL) --see
+        above--; *or*, at your option, distributed under the terms of
+        GNU Free Documentation License (GNU FDL).
+
+        The end user can continue to distribute the documentation in
+        this dual license form *or* select the other license (GNU GPL,
+        GNU FDL) and remove the unwanted one. In case of removal, a
+        notice "License <license name> removed <date ISO 8601> by
+        <Firstname Lastname>" is best to be mentioned somewhere in the
+        distributed files; that notice can also be outside of the
+        original files.
+
+            Copyright (C) 1995-2009 Jari Aalto
+
+            Permission is granted to copy, distribute and/or modify
+            this document under the terms of the GNU Free
+            Documentation License, Version 1.2 or any later version
+            published by the Free Software Foundation; with no
+            Invariant Sections, no Front-Cover Texts, and no
+            Back-Cover Texts. A copy of the license is included in the
+            section entitled "GNU Free Documentation License".
+
+            Visit <http://www.gnu.org/licenses/fdl.html> for more information.
+
+End

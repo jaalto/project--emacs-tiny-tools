@@ -4,12 +4,11 @@
 
 ;;{{{ Id
 
-;; Copyright (C)    1996-2007 Jari Aalto
+;; Copyright (C)    1996-2010 Jari Aalto
 ;; Keywords:        tools
 ;; Author:          Jari Aalto
 ;; Maintainer:      Jari Aalto
 ;;
-;; To get information on this program, call M-x tinytag-version.
 ;; Look at the code with folding.el.
 
 ;; This program is free software; you can redistribute it and/or modify it
@@ -23,9 +22,7 @@
 ;; for more details.
 ;;
 ;; You should have received a copy of the GNU General Public License
-;; along with program. If not, write to the
-;; Free Software Foundation, Inc., 51 Franklin Street, Fifth Floor,
-;; Boston, MA 02110-1301, USA.
+;; along with this program. If not, see <http://www.gnu.org/licenses/>.
 ;;
 ;; Visit <http://www.gnu.org/copyleft/gpl.html> for more information
 
@@ -33,10 +30,10 @@
 ;;{{{ Install
 
 ;; ....................................................... &t-install ...
-;;  Put this file on your Emacs-Lisp load path, add following into your
+;;  Put this file on your Emacs-Lisp `load-path', add following into your
 ;;  ~/.emacs startup file. Rip code with with tinylib.el/ti::package-rip-magic
 ;;
-;;      (setq tinytag-:database-dir "~/elisp/config")
+;;      (setq tinytag--database-dir "~/elisp/config")
 ;;      (require 'tinytag)
 ;;
 ;;  You can also use the autoload feature, which speeds up loading
@@ -57,7 +54,7 @@
 ;;
 ;;   ********************************************************************
 ;;
-;;          YOU MAY NEED TO CHANGE VARIABLE tinytag-:database-setup-table
+;;          YOU MAY NEED TO CHANGE VARIABLE tinytag--database-setup-table
 ;;          BEFORE YOU USE THIS PACKAGE.
 ;;
 ;;          It gives the instructions where are the databases located
@@ -85,9 +82,8 @@
 ;;
 ;;      M-x tinytag-submit-bug-report
 ;;
-;;  Pleace, send any other programming language database that you may use,
-;;  even an different C prototypes in different platform. Let's share the
-;;  information with others!
+;;  You can send any other programming language database that you may
+;;  use, even an different C prototypes in different platform.
 ;;
 ;;  C/C++ database help
 ;;
@@ -193,7 +189,7 @@
 ;;      actions, but want to use the tinytag-main[-mouse] functions
 ;;      directly. Call them only when you need them.
 ;;
-;;      o   before any load command say: (setq tinytag-:load-hook nil)
+;;      o   before any load command say: (setq tinytag--load-hook nil)
 ;;      o   If package is already loaded, say: C-u M-x tinytag-install.
 ;;
 ;;      If your databases are big, or if you're afraid of the overall emacs
@@ -228,7 +224,7 @@
 ;;  Installing support for your programming languages
 ;;
 ;;      While you may have installed the default database for C/C++, you
-;;      have to configure the variable `tinytag-:database-setup-table' to
+;;      have to configure the variable `tinytag--database-setup-table' to
 ;;      include all languages where you have databases available. It is
 ;;      recommended that you keep all emacs related configuration,
 ;;      including databases, in one place, e.g.
@@ -241,22 +237,22 @@
 ;;      database is to tell where it can be found. E.g for php you would
 ;;      add couple of you own variables:
 ;;
-;;          (defconst my-tinytag-:db-map-php
+;;          (defconst my-tinytag--db-map-php
 ;;               '((func       "emacs-config-tinytag-php.txt"))
 ;;               "Java database.")
 ;;
-;;          (defconst my-tinytag-:db-re-php
+;;          (defconst my-tinytag--db-re-php
 ;;               '(("."        (func)))  ;; See name FUNC in prev. variable
 ;;               "PHP database.")
 ;;
 ;;      And tell tinytag.el that the Java is now known:
 ;;
-;;          (defconst tinytag-:database-setup-table
+;;          (defconst tinytag--database-setup-table
 ;;            (list
 ;;             (list
 ;;              "code-php\\|php"
-;;              '(my-tinytag-:db-map-php
-;;                my-tinytag-:db-re-php))
+;;              '(my-tinytag--db-map-php
+;;                my-tinytag--db-re-php))
 ;;            (list
 ;;              "c-mode....."
 ;;              '(..
@@ -319,7 +315,7 @@
 ;;
 ;;          java.lang.System.out  void print([Object obj])
 ;;
-;;      Alternatively, you can keep the buffer `tinytag-:output-buffer'
+;;      Alternatively, you can keep the buffer `tinytag--output-buffer'
 ;;      visible e.g in separate frame, so that all the matched items are
 ;;      visible to you in case the one displayed in echo-are is not correct.
 ;;
@@ -377,9 +373,7 @@
 (eval-and-compile
   (autoload 'man "man" "" t))
 
-(eval-when-compile (ti::package-use-dynamic-compilation))
-
-(ti::package-defgroup-tiny TinyTag tinytag-: programming
+(ti::package-defgroup-tiny TinyTag tinytag-- programming
   "Grep database: example show C++ synatx call while coding.
 Overview of features
       o   simple database searching, some analogue to emacs TAGS package.
@@ -390,12 +384,12 @@ Overview of features
 ;;}}}
 ;;{{{ setup: -- variables
 
-(defcustom tinytag-:load-hook nil
+(defcustom tinytag--load-hook nil
   "*Hook run when file has been loaded."
   :type  'hook
   :group 'TinyTag)
 
-(defcustom tinytag-:post-command-try-hook
+(defcustom tinytag--post-command-try-hook
   '(tinytag-try-function-show-cached-word
     tinytag-try-function-search-db)
   "*Try displaying the information.
@@ -404,7 +398,7 @@ Put here only functions that does not need any user interaction."
   :type  'hook
   :group 'TinyTag)
 
-(defcustom tinytag-:try-hook
+(defcustom tinytag--try-hook
   '(tinytag-try-function-show-cached-word
     tinytag-try-function-search-db
     tinytag-try-function-man)
@@ -415,14 +409,14 @@ command."
   :type  'hook
   :group 'TinyTag)
 
-(defcustom tinytag-:set-database-hook
+(defcustom tinytag--set-database-hook
   '(tinytag-set-database)
   "*Function to set the correct database for buffer.
 Run these functions, until someone return non-nil."
   :type  'hook
   :group 'TinyTag)
 
-(defcustom tinytag-:word-filter-hook
+(defcustom tinytag--word-filter-hook
   '(tinytag-filter-default-function)
   "*Run hook until some function return non-nil.
 Every function in this hook is called with
@@ -435,7 +429,7 @@ C/C++ code common words like 'char' 'double' 'int' can be ignored."
   :type  'hook
   :group 'TinyTag)
 
-(defcustom tinytag-:word-modify-hook  'tinytag-word-default-adjust
+(defcustom tinytag--word-modify-hook  'tinytag-word-default-adjust
   "*This function formats the searched word to correct search regexp.
 Regexp should match only desired hits.
 
@@ -447,28 +441,28 @@ Function must return always:
   :type  'hook
   :group 'TinyTag)
 
-(defcustom tinytag-:database-ok-hook nil
+(defcustom tinytag--database-ok-hook nil
   "*Run hook database was set according to current buffer.
 Called from `tinytag-set-database'.
 
-The variables `tinytag-:database-map' and `tinytag-:regexp-to-databases'
+The variables `tinytag--database-map' and `tinytag--regexp-to-databases'
 have valid values when the hook is called."
   :type  'hook
   :group 'TinyTag)
 
 ;;; ....................................................... &v-private ...
 
-(defvar tinytag-:last-word-lookup  nil
+(defvar tinytag--last-word-lookup  nil
   "Last lookup,  '(WORD . (DB-STRING DB-STRING)).")
-(make-variable-buffer-local 'tinytag-:last-word-lookup)
+(make-variable-buffer-local 'tinytag--last-word-lookup)
 
-(defvar tinytag-:noerror  nil
+(defvar tinytag--noerror  nil
   "If non-nil, no error command is called.")
 
-(defvar tinytag-:post-command-hook-counter  nil
+(defvar tinytag--post-command-hook-counter  nil
   "Counter.")
 
-(defvar tinytag-:post-command-hook-wakeup
+(defvar tinytag--post-command-hook-wakeup
   ;;  There is no delay in 19.30+, but for <19.30 the must be
   ;;
   (if (boundp 'post-command-idle-hook)
@@ -478,15 +472,15 @@ The more lower value, the more often post command hook is called
 and your Emacs probably slows down. The values must be 0 in 19.30+,
 because `post-command-hook' is not used there.")
 
-(defvar tinytag-:database-map nil
+(defvar tinytag--database-map nil
   "Databases available, format '((NAME-SYMBOL FILENAME) .. )
-Do not put directory name here, use `tinytag-:database-dir' instead.")
+Do not put directory name here, use `tinytag--database-dir' instead.")
 
-(defvar tinytag-:regexp-to-databases nil
+(defvar tinytag--regexp-to-databases nil
   "Which REGEXP on word should initiate database search?.
 Format: '((REGEXP '(database1 database2 ..)) (RE  (d1 d1 ..))  ..)")
 
-(defvar tinytag-:idle-timer-elt  nil
+(defvar tinytag--idle-timer-elt  nil
   "If idle timer is used, this variable has the timer elt.")
 
 ;;; .................................................. &private-sample ...
@@ -495,30 +489,30 @@ Format: '((REGEXP '(database1 database2 ..)) (RE  (d1 d1 ..))  ..)")
 ;;;   package (user variables). You should program your own
 ;;;   tinytag-set-database function to deal with different buffers.
 
-(defconst tinytag-:example-db-map-c++
+(defconst tinytag--example-db-map-c++
   '((func       "emacs-config-tinytag-c++-functions.txt")
     (struct     "emacs-config-tinytag-c++-structs.txt")
     (types      "emacs-config-tinytag-c++-types.txt"))
   "Sample. C++ databases.")
 
-(defconst tinytag-:example-db-re-c++
+(defconst tinytag--example-db-re-c++
   '(("_t"       (types structs))
     ("_s"       (struct types))
     ("."        (func)))
   "Sample. C++ word-to-database mappings.")
 
-(defconst tinytag-:example-db-map-java
+(defconst tinytag--example-db-map-java
   '((func       "emacs-config-tinytag-java-functions.txt"))
   "Sample. Java databases.")
 
-(defconst tinytag-:example-db-re-java
+(defconst tinytag--example-db-re-java
   '(("."        (func))) ;; All words are looked from `func' database
   "Sample. Map found word to correct Java database.")
 
 ;;;  You propably should program your own filter function for variaous
 ;;;  modes. This variable belongs to default filter only.
 ;;;
-(defcustom tinytag-:filter-default-c++-words
+(defcustom tinytag--filter-default-c++-words
   (concat
    "^char\\|^double\\|^int$\\|^float\\|^void\\|static"
    "\\|endif\\|define\\|ifndef\\|ifdef\\|include"
@@ -531,24 +525,26 @@ This variable is used in `tinytag-filter-default-function'."
 ;;; ........................................................ &v-public ...
 ;;; user configurable
 
-(defcustom tinytag-:output-buffer "*tinytag-output*"
+(defcustom tinytag--output-buffer "*tinytag-output*"
   "*Buffer where to display all database matches for word at point.
 Many times the word picked at point matches several functions and you
 can keep this buffer in separate frame in Window environment to see what
 is the correct match.
-If this variable is nil, no buffer is created.")
+If this variable is nil, no buffer is created."
+  :type  'string
+  :group 'TinyTag)
 
-(defcustom tinytag-:database-dir
+(defcustom tinytag--database-dir
   (or
    (file-name-as-directory
     (file-name-directory (ti::package-config-file-prefix "tinytag.el")))
-   (error "TinyTag: Can't set default value for `tinytag-:database-dir'.
-Please define the directory of database directory to `tinytag-:database-dir'."))
+   (error "TinyTag: Can't set default value for `tinytag--database-dir'.
+Please define the directory of database directory to `tinytag--database-dir'."))
   "*Directory of database files."
   :type  'directory
   :group 'TinyTag)
 
-(defcustom tinytag-:filter-word-table
+(defcustom tinytag--filter-word-table
   (list
    (list
     (concat
@@ -556,7 +552,7 @@ Please define the directory of database directory to `tinytag-:database-dir'."))
      ;;See tinylibid.el
      "\\|code-c\\|code-c[+]+")
     '(or (< (length string) 4)          ;too short word ?
-         (string-match tinytag-:filter-default-c++-words string))))
+         (string-match tinytag--filter-default-c++-words string))))
   "*Format is:
 
 '((BUFFER-TYPE-REGEXP EVAL-STATEMENT-TO-REJECT) (B E) ..)
@@ -570,22 +566,22 @@ case sensitive."
           (sexp :tag "Form"))
   :group 'TinyTag)
 
-(defcustom tinytag-:database-setup-table
+(defcustom tinytag--database-setup-table
   (list
    (list
     (concat
      ;;  See tinylibid.el to detect buffer type
      "c-mode\\|cc-mode\\|c[+]+-mode"
      "\\|code-c\\|code-c[+]+")
-    '(tinytag-:example-db-map-c++
-      tinytag-:example-db-re-c++))
+    '(tinytag--example-db-map-c++
+      tinytag--example-db-re-c++))
    (list
     "java"
-    '(tinytag-:example-db-map-java
-      tinytag-:example-db-re-java)))
+    '(tinytag--example-db-map-java
+      tinytag--example-db-re-java)))
   "*If buffer type/mode match REGEXP then set database variables.
-Cariables `tinytag-:database-map' and
-`tinytag-:regexp-to-databases' are used.
+Cariables `tinytag--database-map' and
+`tinytag--regexp-to-databases' are used.
 
 The BUFFER-TYPE-REGEXP corresponds the value returned by ti::id-info
 for current buffer. The function detects various progrmaming.
@@ -602,57 +598,28 @@ Format:
             (symbol :tag "db regexp sym"))))
   :group 'TinyTag)
 
-(defcustom tinytag-:display-function  'tinytag-display-function
+(defcustom tinytag--display-function  'tinytag-display-function
   "*Function to display search results.
 Should accept one ARG, which is list of matched lines from databases."
   :type  'function
   :group 'TinyTag)
 
 ;;}}}
-;;{{{ version
+;;{{{ code: install
 
 ;;;### (autoload 'tinytab-debug-toggle "tinytag"  t t)
-
-(eval-and-compile (ti::macrof-debug-standard "tinytag" "-:"))
-
-(eval-and-compile
-  (ti::macrof-version-bug-report
-   "tinytag.el"
-   "tinytag"
-   tinytag-:version-id
-   "$Id: tinytag.el,v 2.53 2007/05/01 17:21:00 jaalto Exp $"
-   '(tinytag-:version-id
-     tinytag-:debug
-     tinytag-:load-hook
-     tinytag-:try-hook
-     tinytag-:set-database-hook
-     tinytag-:last-word-lookup
-     tinytag-:noerror
-     tinytag-:post-command-hook-counter
-     tinytag-:post-command-hook-wakeup
-     tinytag-:example-db-map-c++
-     tinytag-:example-db-re-c++
-     tinytag-:database-dir
-     tinytag-:database-map
-     tinytag-:regexp-to-databases
-     tinytag-:display-function
-     post-command-idle-hook
-     post-command-hook)
-   '(tinytag-:debug-buffer)))
-
-;;}}}
-;;{{{ code: install
+(eval-and-compile (ti::macrof-debug-standard "tinytag" "--"))
 
 ;;; ----------------------------------------------------------------------
 ;;;
 (defun tinytag-initialize  ()
   "Start package and verify that some variables exist."
   (interactive)
-  (let* ()
-    (if (or (not (stringp tinytag-:database-dir))
-            (not (file-exists-p tinytag-:database-dir)))
+  (let ()
+    (if (or (not (stringp tinytag--database-dir))
+            (not (file-exists-p tinytag--database-dir)))
         (error "\
-TinyTag: `tinytag-:database-dir' is not a directory. Please configure"))))
+TinyTag: `tinytag--database-dir' is not a directory. Please configure"))))
 
 ;;; ----------------------------------------------------------------------
 ;;;
@@ -660,19 +627,19 @@ TinyTag: `tinytag-:database-dir' is not a directory. Please configure"))))
 (defun tinytag-install (&optional uninstall)
   "Install package. Optionally UNINSTALL."
   (interactive "P")
-  (let* ((hook  (if (boundp 'post-command-idle-hook)
-                    ;; post-command-idle-hook became obsolete in 19.34
-                    'post-command-idle-hook
-                  'post-command-hook))
-         (cmd   (if uninstall
-                    'remove-hook
-                  'add-hook)))
+  (let ((hook  (if (boundp 'post-command-idle-hook)
+		   ;; post-command-idle-hook became obsolete in 19.34
+		   'post-command-idle-hook
+		 'post-command-hook))
+	(cmd   (if uninstall
+		   'remove-hook
+		 'add-hook)))
     (cond
      ((ti::idle-timer-supported-p)
       (ti::compat-timer-cancel-function 'tinytag-post-command)
       (unless uninstall
         (setq
-         tinytag-:idle-timer-elt
+         tinytag--idle-timer-elt
          (ti::funcall
           'run-with-idle-timer
           2
@@ -757,11 +724,11 @@ The output is written to FILE."
   "Install Java database from Sub JDK documentation."
   (interactive)
   (tinytag-initialize)
-  (let* ((java-info  (progn
-                       (message "TinyTag: Wait, checking java...")
-                       (prog1 (ti::process-java-version)
-                         (message "TinyTag: Wait, checking java...done."))))
-         (case-fold-search t))
+  (let ((java-info  (progn
+		      (message "TinyTag: Wait, checking java...")
+		      (prog1 (ti::process-java-version)
+			(message "TinyTag: Wait, checking java...done."))))
+	(case-fold-search t))
     (cond
      ((not java-info)
       (message
@@ -780,10 +747,10 @@ The output is written to FILE."
              (root (and dir (ti::directory-up dir)))
              (doc-dir (and root (concat (file-name-as-directory root)
                                         "docs")))
-             (out-dir (file-name-as-directory tinytag-:database-dir))
+             (out-dir (file-name-as-directory tinytag--database-dir))
              (db      (concat
                        out-dir
-                       (nth 1 (assq 'func tinytag-:example-db-map-java)))))
+                       (nth 1 (assq 'func tinytag--example-db-map-java)))))
         (cond
          ((and (stringp doc-dir)
                (file-directory-p doc-dir))
@@ -806,10 +773,10 @@ The output is written to FILE."
   (tinytag-initialize)
   (let* ((case-fold-search t)
          (file   (locate-library "tinytag.el"))
-         (dir    (file-name-as-directory tinytag-:database-dir))
+         (dir    (file-name-as-directory tinytag--database-dir))
          (db     (concat
                   dir
-                  (nth 1 (assq 'func  tinytag-:example-db-map-c++))))
+                  (nth 1 (assq 'func  tinytag--example-db-map-c++))))
          buffer)
     (unless (stringp file)
       (error "Tinytag: [install] cannot find tinytag.el along load-path."))
@@ -872,15 +839,15 @@ property 'done to non-nil value, when called."
 ;;;
 (defsubst tinytag-display (list)
   "Call display function with LIST."
-  (funcall tinytag-:display-function list))
+  (funcall tinytag--display-function list))
 
 ;;; ----------------------------------------------------------------------
 ;;;
 (defun tinytag-display-function  (list)
   "Display car of LIST and count of LIST.
-Output matched to tinytag-:output-buffer too."
-  (when (stringp tinytag-:output-buffer)
-    (with-current-buffer (get-buffer-create tinytag-:output-buffer)
+Output matched to tinytag--output-buffer too."
+  (when (stringp tinytag--output-buffer)
+    (with-current-buffer (get-buffer-create tinytag--output-buffer)
       (erase-buffer)
       (dolist (line list)
         (insert line "\n"))))
@@ -892,13 +859,13 @@ Output matched to tinytag-:output-buffer too."
 ;;;
 (defun tinytag-filter-default-function  (string)
   "Default filter function. Reject STRING."
-  (let* ((fid       "tinytag-filter-default-function: ")
-         (id        (or (ti::id-info nil 'variable-lookup)
-                        (symbol-name major-mode)))
-         (table     tinytag-:filter-word-table)
-         (accept    t)
-         (case-fold-search nil)         ;Case is important here
-         elt)
+  (let ((fid       "tinytag-filter-default-function: ")
+	(id        (or (ti::id-info nil 'variable-lookup)
+		       (symbol-name major-mode)))
+	(table     tinytag--filter-word-table)
+	(accept    t)
+	(case-fold-search nil)         ;Case is important here
+	elt)
     (when (and (setq elt (ti::list-find table id))
                (eval (nth 1 elt)))
       (setq accept nil))
@@ -975,23 +942,23 @@ Currently supports only C/C++ and Java."
 
 References:
 
-  `tinytag-:database-map'
-  `tinytag-:database-dir'
-  `tinytag-:noerror'
-  `tinytag-:word-modify-hook'
+  `tinytag--database-map'
+  `tinytag--database-dir'
+  `tinytag--noerror'
+  `tinytag--word-modify-hook'
 
 Return:
 
   list  '(line line ..)  matched lines or nil."
   (tinytag-initialize)
-  (let* ((fid       "tinytag-search-db: ")
-         (table     tinytag-:database-map)
-         (noerr     tinytag-:noerror)
-         (dir       (file-name-as-directory tinytag-:database-dir))
-         (list      (ti::list-make single-or-list))
-         buffer
-         file
-         ret)
+  (let ((fid       "tinytag-search-db: ")
+	(table     tinytag--database-map)
+	(noerr     tinytag--noerror)
+	(dir       (file-name-as-directory tinytag--database-dir))
+	(list      (ti::list-make single-or-list))
+	buffer
+	file
+	ret)
     (tinytag-debug fid " input" re single-or-list "\n")
     (dolist (elt list)
       (when (setq elt (assq elt table))
@@ -1007,7 +974,7 @@ Return:
          ((and
            buffer
            (setq re (run-hook-with-args-until-success
-                     'tinytag-:word-modify-hook re)))
+                     'tinytag--word-modify-hook re)))
           (tinytag-debug fid " regexp" re "\n")
           (with-current-buffer buffer
             (ti::pmin)
@@ -1023,19 +990,19 @@ Return:
   "Search those databases which match predefined regexp against STRING.
 
 References:
-  `tinytag-:regexp-to-databases'
+  `tinytag--regexp-to-databases'
 
 Return:
   list   '(db-matched-line ..)  or nil"
-  (let* ((fid   "tinytag-do-search: ")
-         (table tinytag-:regexp-to-databases)
-         e
-         db
-         re
-         ret)
+  (let ((fid   "tinytag-do-search: ")
+	(table tinytag--regexp-to-databases)
+	e
+	db
+	re
+	ret)
     (tinytag-debug fid "string" string "\n")
     (when (run-hook-with-args-until-success
-           'tinytag-:word-filter-hook string)
+           'tinytag--word-filter-hook string)
       (dolist (elt table)
         (setq re (car elt)
               db (nth 1 elt))
@@ -1054,11 +1021,11 @@ Return:
   "Pick word at point and show info if word was same as previously looked.
 NOERR ignores errors."
   (interactive)
-  (let* ((word          (tinytag-word-at-point))
-         (prev-word     (car-safe tinytag-:last-word-lookup))
-         (prev-info     (cdr-safe tinytag-:last-word-lookup))
-         (err           (or noerr tinytag-:noerror))
-         (fid           "tinytag-try-function-show-cached-word: "))
+  (let ((word          (tinytag-word-at-point))
+	(prev-word     (car-safe tinytag--last-word-lookup))
+	(prev-info     (cdr-safe tinytag--last-word-lookup))
+	(err           (or noerr tinytag--noerror))
+	(fid           "tinytag-try-function-show-cached-word: "))
     (catch 'quit
       (tinytag-debug fid
                      "word"          word
@@ -1083,14 +1050,14 @@ NOERR ignores errors."
   "Do lookup, pick word at point and search databases.
 Show the matched word from database."
   (interactive)
-  (let* ((fid    "tinytag-try-function-search-db: ")
-         (word   (tinytag-word-at-point))
-         info)
+  (let ((fid    "tinytag-try-function-search-db: ")
+	(word   (tinytag-word-at-point))
+	info)
     (tinytag-debug fid "word" word "\n")
     (when (and (stringp word)
-               (run-hook-with-args-until-success 'tinytag-:set-database-hook)
+               (run-hook-with-args-until-success 'tinytag--set-database-hook)
                (setq info (tinytag-do-search word)))
-      (setq tinytag-:last-word-lookup (cons word info))
+      (setq tinytag--last-word-lookup (cons word info))
       (tinytag-display info)
       t)))
 
@@ -1099,11 +1066,11 @@ Show the matched word from database."
 (defun tinytag-try-function-man ()
   "Suggest man page search for current word."
   (interactive)
-  (let* ((word          (ti::buffer-read-word))
-         ;; only in 19.30
+  (let ((word (ti::buffer-read-word))
+	;; only in 19.30
 ;;;      (syntax-elt    (fexec 'c-guess-basic-syntax))
 ;;;      (syntax        (car-safe syntax-elt))
-         ans)
+	ans)
     (when
         (and word ;; (memq syntax '(statement nil))
              (y-or-n-p (concat "Run man on " word))
@@ -1120,9 +1087,9 @@ Show the matched word from database."
 ;;;
 ;;;###autoload
 (defun tinytag-main ()
-  "Run `tinytag-:try-hook' until some of the functions return non-nil."
+  "Run `tinytag--try-hook' until some of the functions return non-nil."
   (interactive)
-  (run-hook-with-args-until-success 'tinytag-:try-hook))
+  (run-hook-with-args-until-success 'tinytag--try-hook))
 
 ;;; ----------------------------------------------------------------------
 ;;;
@@ -1142,8 +1109,8 @@ Show the matched word from database."
   ;; ... ... ... ... ... ... ... ... ... ... ... ... ... do action . .
   ;;
   (when (and
-         (run-hook-with-args-until-success 'tinytag-:set-database-hook)
-         (run-hook-with-args-until-success 'tinytag-:post-command-try-hook))
+         (run-hook-with-args-until-success 'tinytag--set-database-hook)
+         (run-hook-with-args-until-success 'tinytag--post-command-try-hook))
     ;;  This is needed in 19.30<, so that the
     ;;  message doesn't get wiped away.
     ;;
@@ -1158,16 +1125,16 @@ Show the matched word from database."
 ;;;
 ;;;###autoload
 (defun tinytag-post-command ()
-  "Activates only if `tinytag-:set-database-hook' wakes up.
+  "Activates only if `tinytag--set-database-hook' wakes up.
 Show the database definition for the current word under point.
 
 References:
 
-  `tinytag-:noerror'
-  `tinytag-:post-command-hook-wakeup'
-  `tinytag-:set-database-hook'"
-  (let* ((tinytag-:noerror  t)
-         it-is-time)
+  `tinytag--noerror'
+  `tinytag--post-command-hook-wakeup'
+  `tinytag--set-database-hook'"
+  (let ((tinytag--noerror  t)
+	it-is-time)
     (when (and (not (ti::compat-executing-macro))
                ;; Having this mode operate in the minibuffer
                ;; makes it impossible to
@@ -1177,7 +1144,7 @@ References:
                (sit-for 0.50)
                ;;  Is this programming language supported?
                (run-hook-with-args-until-success
-                'tinytag-:set-database-hook))
+                'tinytag--set-database-hook))
       ;; ... ... ... ... ... ... ... ... ... ... ... ...  wakeup time? . .
       ;;  This is not used if we're in 19.34
       ;;
@@ -1185,19 +1152,19 @@ References:
        ((fboundp 'run-with-idle-timer)
         (setq it-is-time t))
        (t
-        (if (null tinytag-:post-command-hook-counter)
-            (setq tinytag-:post-command-hook-counter 0))
+        (if (null tinytag--post-command-hook-counter)
+            (setq tinytag--post-command-hook-counter 0))
         ;;  Don't wake up all the time.. saves Emacs processing time.
         ;;
         (setq
          it-is-time
-         (or (eq 0 tinytag-:post-command-hook-wakeup)
-             (and (not (eq 0  tinytag-:post-command-hook-counter))
-                  (eq 0 (% tinytag-:post-command-hook-counter
-                           tinytag-:post-command-hook-wakeup)))))
-        (incf tinytag-:post-command-hook-counter)
+         (or (eq 0 tinytag--post-command-hook-wakeup)
+             (and (not (eq 0  tinytag--post-command-hook-counter))
+                  (eq 0 (% tinytag--post-command-hook-counter
+                           tinytag--post-command-hook-wakeup)))))
+        (incf tinytag--post-command-hook-counter)
         (if it-is-time                  ;do reset
-            (setq tinytag-:post-command-hook-counter 0))))
+            (setq tinytag--post-command-hook-counter 0))))
       ;; ... ... ... ... ... ... ... ... ... ... ... ... ... do action . .
       ;;
       (if it-is-time
@@ -1210,27 +1177,27 @@ References:
   "Set correct database values according to buffer content.
 Return:
   non-nil or nil  was the database set according to buffer?"
-  (let* ((id    (or (ti::id-info nil 'variable-lookup)
-                    (symbol-name major-mode)))
-         ;;    read last word, delete rest
-         ;;
-         (table tinytag-:database-setup-table)
-         elt
-         did-it)
+  (let ((id (or (ti::id-info nil 'variable-lookup)
+		(symbol-name major-mode)))
+	;;    read last word, delete rest
+	;;
+	(table tinytag--database-setup-table)
+	elt
+	did-it)
     (cond
      ((and (setq elt (ti::list-find table id))
            (setq elt (nth 1 elt)))      ;Get second list
-      (setq tinytag-:database-map        (eval (nth 0 elt))
-            tinytag-:regexp-to-databases (eval (nth 1 elt))
+      (setq tinytag--database-map        (eval (nth 0 elt))
+            tinytag--regexp-to-databases (eval (nth 1 elt))
             did-it                       (nth 0 elt)))
      (t
       ;;  Disable search. We don't know database for this buffer
       ;;
-      (setq tinytag-:database-map         nil
-            tinytag-:regexp-to-databases  nil)))
+      (setq tinytag--database-map         nil
+            tinytag--regexp-to-databases  nil)))
 
     (if did-it
-        (run-hooks 'tinytag-:database-ok-hook))
+        (run-hooks 'tinytag--database-ok-hook))
     did-it))
 
 ;;}}}
@@ -2272,6 +2239,6 @@ Return:
 (tinytag-install)
 
 (provide   'tinytag)
-(run-hooks 'tinytag-:load-hook)
+(run-hooks 'tinytag--load-hook)
 
 ;;; tinytag.el ends here

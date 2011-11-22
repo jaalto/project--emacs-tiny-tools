@@ -4,7 +4,7 @@
 
 ;;{{{ Id
 
-;; Copyright (C)    1997-2007 Jari Aalto
+;; Copyright (C)    1997-2010 Jari Aalto
 ;; Keywords:        wp
 ;; Author:          Jari Aalto
 ;; Maintainer:      Jari Aalto
@@ -25,9 +25,7 @@
 ;; for more details.
 ;;
 ;; You should have received a copy of the GNU General Public License
-;; along with program. If not, write to the
-;; Free Software Foundation, Inc., 51 Franklin Street, Fifth Floor,
-;; Boston, MA 02110-1301, USA.
+;; along with this program. If not, see <http://www.gnu.org/licenses/>.
 ;;
 ;; Visit <http://www.gnu.org/copyleft/gpl.html> for more information
 
@@ -35,55 +33,60 @@
 ;;{{{ Install
 
 ;; ....................................................... &t-install ...
-;; Put this file on your Emacs-Lisp load path, add following into your
+;; Put this file on your Emacs-Lisp `load-path', add following into your
 ;; ~/.emacs startup file.
 ;;
-;;      (add-hook 'tinytf-:load-hook 'turn-on-tinytf-mode-all-buffers)
-;;      (setq tinytf-:mode-prefix-key "z")   ;; faster than default C-c C-z
+;;      ;; OPTIONAL: If you want fast minor mode key binding
+;;      (setq tinytf--mode-prefix-key "z")   ;; faster than default C-c C-z
+;;
+;;      (add-hook 'tinytf--load-hook 'turn-on-tinytf-mode-all-buffers)
 ;;      (require 'tinytf)
 ;;
 ;; or autoload and your Emacs starts faster, preferred method:
 ;;
-;;      (setq tinytf-:mode-prefix-key "z")
-;;      (autoload 'tinytf-mode                 "tinytf" "" t)
-;;      (autoload 'turn-on-tinytf-mode-maybe   "tinytf" "" t)
+;;      (setq tinytf--mode-prefix-key "z")  ; OPTIONAL
 ;;
-;; To use additional function keys, add this line:
+;;      (autoload 'tinytf-mode			"tinytf" "" t)
+;;      (autoload 'turn-on-tinytf-mode-maybe	"tinytf" "" t)
+;;      (autoload 'tinytf-untabify-buffer	"tinytf" "" t)
+;;      (autoload 'turn-on-tinytf-mode-maybe	"tinytf" "" t)
 ;;
-;;      (setq tinytf-:mode-define-keys-hook
-;;        '(tinytf-mode-define-keys tinytf-mode-define-f-keys)))
+;; To use additional function keys, add these lines:
+;;
+;;      ;; Required
+;;      (add-hook 'tinytf--mode-define-keys-hook 'tinytf-mode-define-keys)
+;;      ;; OPTIONAL
+;;      (add-hook 'tinytf--mode-define-keys-hook 'tinytf-mode-define-f-keys)
 ;;
 ;; Additional hooks to detect and format buffer (optional):
 ;;
-;;       (add-hook 'write-file-hooks 'tinytf-untabify-buffer)
-;;       (add-hook 'find-file-hooks 'turn-on-tinytf-mode-maybe)
+;;       (add-hook 'write-file-functions 'tinytf-untabify-buffer)
+;;       (add-hook 'find-file-hook 'turn-on-tinytf-mode-maybe)
 ;;
-;; If you feel that you have to redefine some binding to suit your
-;; keyboard better, please do add similar setup to your emacs
+;; If you need to redefine some binding to suit your keyboard better,
+;; add setup like this to your ~/.emacs file:
 ;;
-;;      (add-hook 'tinytf-:mode-define-keys-hook 'my-tinytf-mode-define-keys)
+;;      (setq tinytf--mode-define-keys-hook 'my-tinytf-mode-define-keys)
 ;;
 ;;      (defun my-tinytf-mode-define-keys ()
-;;        (let ((map tinytf-:mode-prefix-map))
-;;          (tinytf-mode-define-keys)   ;;  Default keys.
-;;          (tinytf-mode-define-f-keys)
+;;        (let ((map tinytf--mode-prefix-map))
+;;          (tinytf-mode-define-keys)   ;; Default keys.
+;;          (tinytf-mode-define-f-keys) ;; Additional F-keys
 ;;          (define-key map "]"  'tinytf-mark-word-sample)
 ;;          (define-key map "["  'ignore)
 ;;          (define-key map "{"  'tinytf-mark-word-emp)
 ;;          (define-key map "}"  'tinytf-mark-word-strong)))
 ;;
-;; To make HTML, you need conversion Perl script *t2html.pl* available at
-;; http://perl-text2html.sourceforge.net/
-;;
 ;; It is possible to write documentation into other files as well
-;; using TF format. There is another perl program that can extract the
+;; using TF format. There is a perl program that can extract
 ;; documentation into text/plain by omitting comments:
 ;;
 ;;      http://cpan.perl.org/modules/by-authors/id/J/JA/JARIAALTO/
 ;;      ripdoc.pl
 ;;
 ;; For example this lisp file's documentation can be converted into HTML
-;; with following command sequence:
+;; with following command sequence. t2html is available at
+;; <http://freshmeat.net/projects/perl-text2html>.
 ;;
 ;;      % ripdoc.pl tinytf.el | t2html.pl > tinytf.html
 ;;
@@ -101,18 +104,21 @@
 ;;  Preface, Jan 1997
 ;;
 ;;      Late in the 1996 there was a need for a better text file
-;;      handling than just plan `text-mode'. I was looking for a simple
-;;      tool to generate HTML pages out of text-based documents. After some
-;;      researching on the web, I still couldn't find anything that would
-;;      have been strictly a text-based solution. There were many "languages"
-;;      from which the HTML could be generated, but really, I didn't want
-;;      to learn any new language just for that. I can understand people
-;;      that write their documents still using LaTeX, but Win32 Word
-;;      is much suitable and more known than any of those exotic formats.
-;;      The project started by creating the tool that converted text into
-;;      HTML (Perl *t2html.pl* script) and then writing a Emacs package to
-;;      help writing the text files. It has been proven to be really nice
-;;      combination where flexibility meets cross-platform demands.
+;;      handling than just plan `text-mode'. I was looking for a
+;;      simple tool to generate HTML pages out of text-based
+;;      documents. After some researching on the web, I still couldn't
+;;      find anything that would have been strictly a text-based
+;;      solution. There were many "languages" from which the HTML
+;;      could be generated, but really, I didn't want to learn any new
+;;      language just for that. I can understand people that write
+;;      their documents still using LaTeX, but Win32 Word is much
+;;      suitable and more known than any of those exotic formats. The
+;;      project started by creating the tool that converted text into
+;;      HTML (Perl *t2html.pl*
+;;      <http://freshmeat.net/projects/perl-text2html>) and then
+;;      writing a Emacs package to help writing the text files. It has
+;;      been proven to be really nice combination where flexibility
+;;      meets cross-platform demands.
 ;;
 ;;  Overview of features
 ;;
@@ -156,24 +162,25 @@
 ;;  What is Technical Format?
 ;;
 ;;      In short: it is list of text placement and formatting rules.
-;;      And you're looking at it right now in this document.
+;;      And you're looking at it right now in this document. This
+;;      package offers minor mode for text files to adjusting the
+;;      correct layout.
 ;;
-;;      This package offers minor mode for text files and helps you to
-;;      maintain correct layout. You can even convert file into HTML very
-;;      easily with the perl script which is usually distributed in the
-;;      complete Tiny Tools Kit or available separately from the CPAN
-;;      under developer account JARIAALTO. You do not need to know a shred
-;;      about the HTML language itself. And it is much easier to update
-;;      text files, than deal with HTML itself. When you have text ready,
-;;      you just feed it to the t2html.pl perl script and it gives you
-;;      nicely formatted HTML page. Writing HTML *home* pages is different
-;;      story, because you usually want to include some graphics,
-;;      JavaScript, PHP or JSP in the page. But putting some text document
-;;      available in HTML format is easily made possible with this package.
+;;	You can convert text file into HTML very easily with the perl
+;;      script which is availale separately at
+;;      <http://freshmeat.net/projects/perl-text2html>. You do not
+;;      need to know a thing about the HTML language itself. It is
+;;      much easier to update text files, than deal with HTML itself.
+;;      When you have text ready, you just feed it to the `t2html.pl'
+;;      perl script and it gives you nicely formatted HTML page.
+;;      Writing HTML home pages is different story, because you
+;;      usually want to include some graphics, JavaScript, PHP or JSP
+;;      in the page. But aputting some text document available in HTML
+;;      format is easily made possible with this package.
 ;;
-;;      In the other hand, while you may not be interested in HTML, you
+;;      On the other hand, while you may not be interested in HTML, you
 ;;      could still consider writing your documents in 'Technical format'
-;;      -- with word *technical* I refer to the layout of the text, which
+;;      -- with word technical I refer to the layout of the text, which
 ;;      is very _rigid_. In order to use facilities in this package,
 ;;      e.g. heading hiding/showing, the headings must be placed in
 ;;      columns 0 and 4 and the first word must be in *uppercase*.  The
@@ -184,7 +191,7 @@
 ;;      the same format.
 ;;
 ;;      All in all, this package was primarily designed to help writing
-;;      text documents for t2html.pl and viewing document in *outline*
+;;      text documents for `t2html.pl' and viewing document in *outline*
 ;;      styled selective display. Please refer to mode description for
 ;;      full details of the text layout format.
 ;;
@@ -192,9 +199,7 @@
 ;;
 ;;      Please note, that this section may be slightly out of date.
 ;;      You should read up to date information from the conversion
-;;      program using command `t2html.pl' `--help' available at
-;;      http://perl-text2html.sourceforge.net/ and nearest Perl CPAN
-;;      http://cpan.perl.org/modules/by-authors/id/J/JA/JARIAALTO/
+;;      program using command `t2html.pl' `--help'.
 ;;
 ;;      --//-- TF description start
 ;;
@@ -298,9 +303,9 @@
 ;;      treated in HTML output, call following function. If you have 19.30+
 ;;      this is not necessary, see note about post command above.
 ;;
-;;        Do you wonder why 'z' prefix is default? Well, I wanted a fast
-;;        key that was mostly unused. You can change that if you prefer
-;;        some other key. See variable `tinytf-:mode-prefix-key'
+;;        The examples here use customized 'z' keybinging for fast
+;;        access. You can change that if you prefer some other key.
+;;        See variable `tinytf--mode-prefix-key'
 ;;
 ;;          z RET   tinytf-column-info-display
 ;;
@@ -509,31 +514,16 @@
 ;;
 ;;  Technical note: about the default prefix key z
 ;;
-;;      The prefix key can be defined by setting `tinytf-:mode-prefix-key'
+;;      The prefix key can be defined by setting `tinytf--mode-prefix-key'
 ;;      The default binding is `C-c` `C-z', but if you want more comfortable
 ;;      editing, you can set it to "z". When the key is a single character,
 ;;      the key "doubles"; i.e. pressing "zz" will generate the plain "z"
 ;;      character.
 ;;
-;;  Technical note: post command
-;;
-;;      This note is valid only for old Emacs releases, prior 20.x.
-;;
-;;      While you type text in the buffer, the post command activates at
-;;      regular intervals to untabify the buffer. The untabify is done
-;;      because it makes formatting text easier and when you print the text
-;;      file, you can be sure that the output is the same regardless of
-;;      the tabs.
-;;
-;;      If you have Emacs 19.30+ there is additional help feature available
-;;      to you. When you sit still in some column position for few seconds,
-;;      the column description will be shown automatically. That should
-;;      help keeping you informed of the text layout.
-;;
 ;;  Technical note: HTML utilities
 ;;
 ;;      Two external utilities are searched for HTML generation:
-;;      t2html.pl and htmlize.el. If these utilities are found,
+;;      `t2html.pl' and `htmlize.el'. If these utilities are found,
 ;;      their locations are stored to plist of variable `tinytf-menu'.
 ;;      See source code of function `tinytf-utility-programs-check'
 ;;      for more.
@@ -544,6 +534,18 @@
 ;;      for certain sections. This gets almost always garbled with
 ;;      the first pull-down. Selecting the menu second time shows
 ;;      correct section names with bold letters.
+;;
+;;      [This note is valid only for old Emacs releases, prior 20.x]
+;;      While you type text in the buffer, the post command activates at
+;;      regular intervals to untabify the buffer. The untabify is done
+;;      because it makes formatting text easier and when you print the text
+;;      file, you can be sure that the output is the same regardless of
+;;      the tabs.
+;;
+;;      If you have Emacs 19.30+ there is additional help feature available
+;;      to you. When you sit still in some column position for few seconds,
+;;      the column description will be shown automatically. That should
+;;      help keeping you informed of the text layout.
 
 ;;}}}
 
@@ -556,13 +558,12 @@
 (require 'tinylibm)
 
 (eval-when-compile
-  (ti::package-use-dynamic-compilation)
   ;;  Need grep-regexp-alist
   (require 'compile))
 
 (eval-and-compile
   (defvar tinytab-mode            nil)
-  (defvar tinytab-:div-factor     nil)
+  (defvar tinytab--div-factor     nil)
   ;;  Just forward declarations to shut up byte compiler.
   (defvar font-lock-keywords)
   (defvar font-lock-mode)
@@ -577,7 +578,7 @@
   ** tinytf.el: Hm, no htmlize.el found. [you can still use this package]
                 2001-10-10 it was at http://fly.srk.fer.hr/~hniksic/emacs/htmlize.el")))
 
-(ti::package-defgroup-tiny TinyTf tinytf-: wp
+(ti::package-defgroup-tiny TinyTf tinytf-- wp
   "Minor mode for writing text in 'Technical text format'.
 
       o   You write text in rigid format called 'Technical'
@@ -592,40 +593,40 @@
 ;;}}}
 ;;{{{ setup: hooks
 
-(defcustom tinytf-:load-hook nil
+(defcustom tinytf--load-hook nil
   "*Hook that is run when package is loaded."
   :type  'hook
   :group 'TinyTf)
 
-(defcustom tinytf-:process-compile-hook
+(defcustom tinytf--process-compile-hook
   '(tinytf-compile-mode-settings)
   "*Hook that is run when compile is called (See link check)."
   :type  'hook
   :group 'TinyTf)
 
-(defcustom tinytf-:move-paragraph-hook nil
+(defcustom tinytf--move-paragraph-hook nil
   "*Hook run with arguments BEG END of region that was moved."
   :type  'hook
   :group 'TinyTf)
 
-(defcustom tinytf-:fix-all-hook nil
+(defcustom tinytf--fix-all-hook nil
   "*Hook run when function `tinytf-fix-all' is called."
   :type  'hook
   :group 'TinyTf)
 
-(defcustom tinytf-:tinytf-mode-p-function 'tinytf-text-format-file-p
+(defcustom tinytf--tinytf-mode-p-function 'tinytf-text-format-file-p
   "*Function to check if buffer is in Techical Format.
 Function must return t or nil."
   :type  'function
   :group 'TinyTf)
 
-(defcustom tinytf-:t2html-link-cache-file
+(defcustom tinytf--t2html-link-cache-file
   (ti::package-config-file-prefix "tinytf-link-cache.txt")
   "*File to contains cached OK links for the link check feature."
   :type  'filename
   :group 'TinyTf)
 
-(defcustom tinytf-:buffer-file-name-html-source-function
+(defcustom tinytf--buffer-file-name-html-source-function
   'tinytf-convert-buffer-file-name-html-source
   "*Return filename from where to read plain text.
 For files this should be `buffer-file-name', but for buffer
@@ -637,7 +638,7 @@ Function arguments:
   :type  'function
   :group 'TinyTf)
 
-(defcustom tinytf-:buffer-file-name-html-destination-function
+(defcustom tinytf--buffer-file-name-html-destination-function
   'tinytf-convert-buffer-file-name-html-destination
   "*Return filename where the HTML is stored.
 
@@ -647,7 +648,7 @@ Function arguments:
   :type  'function
   :group 'TinyTf)
 
-(defcustom tinytf-:binary-t2html
+(defcustom tinytf--binary-t2html
   (let ((path (ti::file-path-to-unix
                (ti::file-get-load-path "t2html.pl" exec-path))))
     (if path
@@ -664,7 +665,7 @@ Function arguments:
 ;;}}}
 ;;{{{ setup: user config
 
-(defcustom tinytf-:heading-regexp "[A-Z0-9!]"
+(defcustom tinytf--heading-regexp "[A-Z0-9!]"
   "*Heading character set regexp. This charset is case sensitive.
 If there is these characters immediately after indentation, then line
 is a heading.
@@ -677,18 +678,18 @@ that there should be <hr> code before heading. Like the following.
   :type  '(string :tag "Charset regexp")
   :group 'TinyTf)
 
-(defcustom tinytf-:heading-regexp-no-numbering "[!]"
+(defcustom tinytf--heading-regexp-no-numbering "[!]"
   "*When numbering headings, ignore headings matching this regexp.
 at the beginning of first word."
   :type  'string
   :group 'TinyTf)
 
-(defcustom tinytf-:sentence-end "[.?!][]\"')}]*[ \r\n]+"
+(defcustom tinytf--sentence-end "[.?!][]\"')}]*[ \r\n]+"
   "*Like `sentence-end'. Used only in movement commands."
   :type 'string
   :group 'TinyTf)
 
-(defcustom tinytf-:paragraph-start "^[ \t]*$"
+(defcustom tinytf--paragraph-start "^[ \t]*$"
   "*Like `paragraph-start'. Used only in movement commands."
   :type 'string
   :group 'TinyTf)
@@ -746,7 +747,7 @@ at the beginning of first word."
 ;; want to change the colors. substitute `defcustom' with `setq'
 ;; and delete the variable comments at the end.
 
-(defcustom tinytf-:font-lock-keywords ;; &font
+(defcustom tinytf--font-lock-keywords ;; &font
   (list
 
    ;; Bullet
@@ -864,7 +865,7 @@ at the beginning of first word."
    ;;       [1998-08 Phil carmody pc@foo.com in vegetarian-L]
 
    (list
-    (let* ((re "\\(\\[[^][\r\n]+ [^][\r\n]+\\]\\)"))
+    (let ((re "\\(\\[[^][\r\n]+ [^][\r\n]+\\]\\)"))
       (concat
        "^"
        ;; At column 8
@@ -967,29 +968,29 @@ at the beginning of first word."
 ;;}}}
 ;;{{{ suetup: private variables
 
-(defvar tinytf-:process-compile-html "tinytf-compile-html"
+(defvar tinytf--process-compile-html "tinytf-compile-html"
   "Name of the buffer/mode used for HTML compiling.")
 
-(defvar tinytf-:process-compile-link "tinytf-compile-link"
+(defvar tinytf--process-compile-link "tinytf-compile-link"
   "Name of the buffer/mode used for HTML link check.")
 
-(defvar tinytf-:file-last-html-generated nil
+(defvar tinytf--file-last-html-generated nil
   "Filename of the last HTML generation.")
 
-(defconst tinytf-:factor 4
+(defconst tinytf--factor 4
   "The indent factor. DO NOT CHANGE THIS. It is hard coded to 4.")
 
-(defconst tinytf-:heading-number-level 2
+(defconst tinytf--heading-number-level 2
   "*Number of levels. Zero based. Allow values 0,1,2.")
 
-(defvar tinytf-:counter nil
+(defvar tinytf--counter nil
   "Post command counter.")
-(make-variable-buffer-local 'tinytf-:counter)
+(make-variable-buffer-local 'tinytf--counter)
 
-(defvar tinytf-:buffer-heading "*tinytf-headings*"
+(defvar tinytf--buffer-heading "*tinytf-headings*"
   "List of gatehered Headings from buffer.")
 
-(defvar tinytf-:buffer-html-process "*tinytf-t2html*"
+(defvar tinytf--buffer-html-process "*tinytf-t2html*"
   "Output of t2html.pl run.")
 
 (eval-and-compile
@@ -1000,9 +1001,9 @@ at the beginning of first word."
      ((eq level 2)
       (make-string (+ (* 4 1) 3) ?\  ))
      (t
-      (make-string (* tinytf-:factor (or level 0)) ?\ )))))
+      (make-string (* tinytf--factor (or level 0)) ?\ )))))
 
-(defvar tinytf-:add-log-current-defun-header-regexp
+(defvar tinytf--add-log-current-defun-header-regexp
   (concat
    ;; [text]    Detect heading Levels 1 and 2 with possible numbering
    ;;
@@ -1019,7 +1020,7 @@ at the beginning of first word."
 This variable's locally set to `add-log-current-defun-header-regexp'
 when `tinytf-mode' is turned on.")
 
-(defvar tinytf-:heading-ignore-regexp-form
+(defvar tinytf--heading-ignore-regexp-form
   '(concat
     "Table [Oo]f [Cc]ontents"
     ;;  This is special <HR> mark, see t2html.pls
@@ -1029,12 +1030,12 @@ when `tinytf-mode' is turned on.")
     "\\|"
     (concat "^" ;; \\(" (tinytf-indent 0) "\\|"
             "\\("  (tinytf-indent 1) "\\)?"
-            tinytf-:heading-regexp-no-numbering))
+            tinytf--heading-regexp-no-numbering))
   "When making Table Of Contents, ignore these headings.
 This variable contains Lisp form that is evaled to get the string.
 If nil, then include all headings, dropping none.")
 
-(defconst tinytf-:column-table
+(defconst tinytf--column-table
   '(
     ;;  First the most common positions.
     (0   ((nil "Heading 0")))
@@ -1073,28 +1074,28 @@ Format:
          ..))
    (COL ((RE EXPL) (RE EXPL) ..)))")
 
-(defvar tinytf-:saved-indent-tabs-mode
+(defvar tinytf--saved-indent-tabs-mode
   "Buffer local variable. Holds copy of original value before `tinytf-mode'.")
 
-(defvar tinytf-:saved-left-margin
+(defvar tinytf--saved-left-margin
   "Buffer local variable. Holds copy of original value before `tinytf-mode'.")
 
-(defvar tinytf-:saved-tinytab-mode
+(defvar tinytf--saved-tinytab-mode
   "Buffer local variable. Holds copy of original value before `tinytf-mode'.")
 
-(defvar tinytf-:saved-font-lock-keywords
+(defvar tinytf--saved-font-lock-keywords
   "Buffer local variable. Holds copy of original value before `tinytf-mode'.")
 
-(defvar tinytf-:saved-auto-fill-function
+(defvar tinytf--saved-auto-fill-function
   "Buffer local variable. Holds copy of original value before `tinytf-mode'.")
 
-(defvar tinytf-:saved-auto-fill-inhibit-regexp
+(defvar tinytf--saved-auto-fill-inhibit-regexp
   "Buffer local variable. Holds copy of original value before `tinytf-mode'.")
 
-(defvar tinytf-:saved-comment-start
+(defvar tinytf--saved-comment-start
   "Buffer local variable. Holds copy of original value before `tinytf-mode'.")
 
-(defvar tinytf-:saved-comment-end
+(defvar tinytf--saved-comment-end
   "Buffer local variable. Holds copy of original value before `tinytf-mode'.")
 
 ;;}}}
@@ -1104,7 +1105,7 @@ Format:
 ;;; #todo: experimental
 (defun tinytf-code-p (&optional limit)
   "Determine if current text is code. LIMIT parameter is passed by font-lock."
-  (let* ((re  (eval-and-compile (concat "^" (make-string 12 ?\ )))))
+  (let ((re `,(concat "^" (make-string 12 ?\ ))))
     (and
      (save-excursion
        (beginning-of-line)
@@ -1114,16 +1115,15 @@ Format:
      (save-excursion
        (save-match-data                 ;Now check if it was really ok
          (message (ti::read-current-line))
-         (backward-line 1)
+         (forward-line -1)
          (or (looking-at re)
              (progn
                ;;  skip empty lines
                (while (and (not (bobp))
                            (not (input-pending-p))
                            (looking-at "^[ \t]*$"))
-                 (backward-line 1))
+                 (forward-line -1))
                (message (ti::read-current-line))
-
                (when (and
                       (not (input-pending-p))
                       ;; Same indentation still
@@ -1136,28 +1136,28 @@ Format:
 ;;;
 (defun tinytf-tmp-swallow-empty-backwards ()
   (interactive)
-  (previous-line 1)
+  (forward-line 1)
   (while
       (and
        (not (bobp))
        (looking-at "^$"))
-    (previous-line 1)))
+    (forward-line 1)))
 
 ;;; ----------------------------------------------------------------------
 ;;; #todo:
 ;;;
 (defun tinytf-tmp-swallow-code-backwards ()
   (interactive)
-  (let* ((re         (eval-and-compile (concat "^" (make-string 12 ?\ ))))
-         (b-cont-re  (eval-and-compile (concat "^" (make-string 12 ?\ ) ",")))
-         (empty      (eval-and-compile (concat "^$"))))
+  (let ((re         `,(concat "^" (make-string 12 ?\ )))
+	(b-cont-re  `,(concat "^" (make-string 12 ?\ ) ","))
+	(empty      `,(concat "^$")))
     ;;(message "gulp")
     (beginning-of-line)
     (while
         (and
          (not (bobp))
          (looking-at re))
-      (previous-line 1))
+      (forward-line 1))
     (if (and
          (not (bobp))
          (looking-at empty))
@@ -1173,12 +1173,10 @@ Format:
 ;;;
 (defun tinytf-tmp-dxc-code-p (&optional limit)
   (interactive)
-  (let* ((bullet (eval-and-compile
-                   (concat (concat "^" (make-string 8 ?\ ) "[o.] "))))
-         (re (eval-and-compile (concat "^" (make-string 12 ?\ ))))
-         (b-cont-re (eval-and-compile (concat "^" (make-string 12 ?\ ) ",")))
-         (empty (eval-and-compile (concat "^$"))))
-
+  (let ((bullet    `,(concat (concat "^" (make-string 8 ?\ ) "[o.] ")))
+	(re        `,(concat "^" (make-string 12 ?\ )))
+	(b-cont-re `,(concat "^" (make-string 12 ?\ ) ","))
+	(empty     `,(concat "^$")))
     (and
      (save-excursion
        (beginning-of-line)
@@ -1204,34 +1202,10 @@ Format:
 
 (defun tinytf-tmp-dxc-2-code-p (&optional limit)
   (interactive)
-  (let* ((re (eval-and-compile (concat "^" (make-string 12 ?\ )))))
+  (let ((re `,(concat "^" (make-string 12 ?\ ))))
     (save-excursion
       (beginning-of-line)
       (looking-at re))))
-
-;;}}}
-;;{{{ version
-
-;;;###autoload (autoload 'tinytf-version "tinytf" "Display commentary." t)
-
-(eval-and-compile
-  (ti::macrof-version-bug-report
-   "tinytf.el"
-   "tinytf"
-   tinytf-:version-id
-   "$Id: tinytf.el,v 2.93 2007/05/07 10:50:14 jaalto Exp $"
-   '(tinytf-:version-id
-     tinytf-:load-hook
-     tinytf-:mode-define-keys-hook
-     tinytf-:mode-hook
-     tinytf-mode
-     tinytf-:mode-map
-     tinytf-:counter
-     tinytf-:mode-name
-     tinytf-:mode-prefix-key
-     tinytf-:heading-regexp
-     tinytf-:factor
-     tinytf-:column-table)))
 
 ;;}}}
 ;;{{{ Minor Mode definition
@@ -1245,7 +1219,7 @@ Format:
 
 (eval-and-compile
   (ti::macrof-minor-mode-wizard
-   "tinytf-" " Tf" "\C-c\C-z" "Tf" 'TinyTf "tinytf-:" ;1-6
+   "tinytf-" " Tf" "\C-c\C-z" "Tf" 'TinyTf "tinytf--" ;1-6
 
    "Minor mode for writing and editing text in technical format (TF).
 The text layout presented in this minor mode is ment to be
@@ -1263,7 +1237,7 @@ up to date description.
 
 Mode description:
 
-\\{tinytf-:mode-prefix-map}
+\\{tinytf--mode-prefix-map}
 "
 
    "Technical text format"
@@ -1280,14 +1254,14 @@ Mode description:
        (tinytf-utility-programs-check)
        (with-buffer-modified
          (tinytf-install-mode)
-         (make-local-variable 'tinytf-:saved-indent-tabs-mode)
-         (make-local-variable 'tinytf-:saved-left-margin)
-         (make-local-variable 'tinytf-:saved-tinytab-mode)
-         (make-local-variable 'tinytf-:saved-font-lock-keywords)
-         (make-local-variable 'tinytf-:saved-comment-start)
-         (setq tinytf-:saved-indent-tabs-mode  indent-tabs-mode)
-         (setq tinytf-:saved-left-margin       left-margin)
-         (setq tinytf-:saved-tinytab-mode      tinytab-mode)
+         (make-local-variable 'tinytf--saved-indent-tabs-mode)
+         (make-local-variable 'tinytf--saved-left-margin)
+         (make-local-variable 'tinytf--saved-tinytab-mode)
+         (make-local-variable 'tinytf--saved-font-lock-keywords)
+         (make-local-variable 'tinytf--saved-comment-start)
+         (setq tinytf--saved-indent-tabs-mode  indent-tabs-mode)
+         (setq tinytf--saved-left-margin       left-margin)
+         (setq tinytf--saved-tinytab-mode      tinytab-mode)
          ;;  Emacs 21.2 newcomment.el breaks if these are not set
          ;;  properly. When auto-fill-mode is on, the call chain is:
          ;;
@@ -1296,8 +1270,8 @@ Mode description:
          ;;       do-auto-fill
          ;;         comment-indent-new-line  (newcomment.el)
          ;;           comment-normalize-vars
-         (setq tinytf-:saved-comment-start     comment-start)
-         (setq tinytf-:saved-comment-end       comment-end)
+         (setq tinytf--saved-comment-start     comment-start)
+         (setq tinytf--saved-comment-end       comment-end)
          (setq comment-start "")
          (setq comment-end "")
          ;;  When auto fill is used, do not indent lines that
@@ -1311,19 +1285,19 @@ Mode description:
          ;;
          ;;      2.2 This long chapter ....
          (make-local-variable 'auto-fill-inhibit-regexp)
-         (setq tinytf-:saved-auto-fill-inhibit-regexp auto-fill-inhibit-regexp)
+         (setq tinytf--saved-auto-fill-inhibit-regexp auto-fill-inhibit-regexp)
          (setq auto-fill-inhibit-regexp "^[ \t]+#\\|^[ \t]+[0-9]\\.[0-9] [A-Z]")
-         (make-local-variable 'tinytf-:saved-auto-fill-function)
-         (setq tinytf-:saved-auto-fill-function auto-fill-function)
-         (turn-on-auto-fill-mode)
+         (make-local-variable 'tinytf--saved-auto-fill-function)
+         (setq tinytf--saved-auto-fill-function auto-fill-function)
+         (auto-fill-mode 1)
          (setq selective-display            t
                selective-display-ellipses   t
                ;; left-margin               8  ;; for return key
                indent-tabs-mode             nil)
          (unless tinytab-mode ;;Turn on this mode
-           (setq tinytf-:saved-tinytab-mode nil)
+           (setq tinytf--saved-tinytab-mode nil)
            (turn-on-tinytab-mode))
-         (setq tinytab-:div-factor 4) ;; advance by four spaces
+         (setq tinytab--div-factor 4) ;; advance by four spaces
          ;;  Make sure RETURN key continues indent.
          (turn-on-tinytab-return-key-mode)
          ;;  Single space ends sentence. The Emacs default is some
@@ -1334,24 +1308,24 @@ Mode description:
          ;; (setq sentence-end "[.?!][]\"')}]*\\($\\|[ \t]\\)[ \t\r\n]*"
          ;;  Use our font lock keywords this time and save original
          (when (boundp 'font-lock-keywords)
-           (setq tinytf-:saved-font-lock-keywords font-lock-keywords)
+           (setq tinytf--saved-font-lock-keywords font-lock-keywords)
            (tinytf-font-lock-mode))))
       (t
        (with-buffer-modified
          ;; Restore values
-         (setq indent-tabs-mode         tinytf-:saved-indent-tabs-mode)
-         (setq auto-fill-function       tinytf-:saved-auto-fill-function)
-         (setq auto-fill-inhibit-regexp tinytf-:saved-auto-fill-inhibit-regexp)
-         (setq comment-start            tinytf-:saved-comment-start)
-         (when (integerp tinytf-:saved-left-margin)
-           (setq left-margin tinytf-:saved-left-margin))
-         (if tinytf-:saved-tinytab-mode
+         (setq indent-tabs-mode         tinytf--saved-indent-tabs-mode)
+         (setq auto-fill-function       tinytf--saved-auto-fill-function)
+         (setq auto-fill-inhibit-regexp tinytf--saved-auto-fill-inhibit-regexp)
+         (setq comment-start            tinytf--saved-comment-start)
+         (when (integerp tinytf--saved-left-margin)
+           (setq left-margin tinytf--saved-left-margin))
+         (if tinytf--saved-tinytab-mode
              (turn-on-tinytab-mode)
            (turn-off-tinytab-mode))
          (setq selective-display nil)
          (tinytf-show-buffer)
          (when (boundp 'font-lock-keywords)
-           (setq font-lock-keywords tinytf-:saved-font-lock-keywords)
+           (setq font-lock-keywords tinytf--saved-font-lock-keywords)
            (when (ti::colors-supported-p)
              (save-excursion
                ;;  force font lock to rework everything
@@ -1362,7 +1336,7 @@ Mode description:
    "Technical text writing menu."
 
    (list
-    tinytf-:mode-easymenu-name
+    tinytf--mode-easymenu-name
     "Markup"
     ["Mark word strong"       tinytf-mark-word-strong       t]
     ["Mark word sample"       tinytf-mark-word-sample       t]
@@ -1460,7 +1434,7 @@ Mode description:
     ["Mode exit and cleanup"  tinytf-exit                     t]
     ["Mode exit"              turn-off-tinytf-mode            t])
    (progn
-     (let* ()
+     (let ()
        (define-key map  "?"  'tinytf-mode-help)
        (define-key map  "H"   nil)
        (define-key map  "Hm" 'tinytf-mode-help)
@@ -1572,9 +1546,9 @@ Mode description:
 ;;;
 ;;;###autoload
 (defun tinytf-mode-define-f-keys ()
-  "Define default function key to `tinytf-:mode-map'."
+  "Define default function key to `tinytf--mode-map'."
   (interactive)
-  (let* ((map tinytf-:mode-map))
+  (let ((map tinytf--mode-map))
     ;;  more faster keys than the "w" word markup map.
     (define-key map [(f5)]  'tinytf-mark-word-emp)
     (define-key map [(f7)]  'tinytf-mark-word-strong)
@@ -1614,7 +1588,7 @@ Calling this function re-eaxamines available utilities."
                  (and (boundp 'global-font-lock-mode)
                       global-font-lock-mode)))
     (when (font-lock-mode-maybe 1)
-      (setq font-lock-keywords tinytf-:font-lock-keywords)
+      (setq font-lock-keywords tinytf--font-lock-keywords)
       ;;  if lazy-lock is in effect, it may not fontify the current window
       ;;  Do it now.
       (tinytf-fontify-current-buffer-window))))
@@ -1623,7 +1597,7 @@ Calling this function re-eaxamines available utilities."
 ;;;
 (defun tinytf-install-eval-after-load (&optional uninstall)
   "Intall or UNINSTALL `eval-after-load' for add-log.el."
-  (let* ((form '(tinytf-install-add-log-all-buffers)))
+  (let ((form '(tinytf-install-add-log-all-buffers)))
     (cond
      (uninstall
       (dolist (elt after-load-alist)
@@ -1647,14 +1621,14 @@ the ChangeLog entry is put in parentheses:
 
 References:
 
-  `tinytf-:add-log-current-defun-header-regexp'."
+  `tinytf--add-log-current-defun-header-regexp'."
   (let ((sym 'add-log-current-defun-header-regexp))
     (when (boundp sym)
       ;;  See `add-log-current-defun'
       (if uninstall
           (kill-local-variable sym)
         (make-local-variable sym)
-        (set sym tinytf-:add-log-current-defun-header-regexp)))))
+        (set sym tinytf--add-log-current-defun-header-regexp)))))
 
 ;;; ----------------------------------------------------------------------
 ;;;
@@ -1752,8 +1726,8 @@ This is low level check. Use `tinytf-text-format-ok-p' instead."
 (defun tinytf-text-format-ok-p ()
   "Check if buffer content looks like technical format."
   (interactive)
-  (let* (case-fold-search
-         ret)
+  (let (case-fold-search
+	ret)
     ;; Exclude mail messages from any checks.
     (unless (ti::mail-mail-p)
       (setq ret
@@ -1788,9 +1762,9 @@ This is low level check. Use `tinytf-text-format-ok-p' instead."
 (defun turn-on-tinytf-mode-maybe ()
   "If buffer looks like technical format, turn on `tinytf-mode'.
 References:
-  `tinytf-:tinytf-mode-p-function'."
-  (when (and tinytf-:tinytf-mode-p-function
-             (funcall tinytf-:tinytf-mode-p-function))
+  `tinytf--tinytf-mode-p-function'."
+  (when (and tinytf--tinytf-mode-p-function
+             (funcall tinytf--tinytf-mode-p-function))
     (turn-on-tinytf-mode)
     ;;  Hook must return nil
     nil))
@@ -1800,13 +1774,13 @@ References:
 (defun turn-on-tinytf-mode-all-buffers ()
   "Call`tinytf-mode' on in all technical format buffers. Optionally OFF.
 The buffer is detected by using function strored in variable
-`tinytf-:tinytf-mode-p-function'"
+`tinytf--tinytf-mode-p-function'"
   (interactive)
-  (when tinytf-:tinytf-mode-p-function
+  (when tinytf--tinytf-mode-p-function
     (ti::dolist-buffer-list
      (and (null tinytf-mode)
           (string-match "text" (downcase (symbol-name major-mode)))
-          (funcall tinytf-:tinytf-mode-p-function))
+          (funcall tinytf--tinytf-mode-p-function))
      nil
      nil
      (turn-on-tinytf-mode))))
@@ -1824,46 +1798,46 @@ The buffer is detected by using function strored in variable
 
 (eval-and-compile
 
+;; #todo FIXME `,func
 ;;; ----------------------------------------------------------------------
 ;;;
   (defun tinytf-fmacro-indent-region-1 (func doc col msg &rest body)
     "Use `tinytf-fmacro-indent-region' with FUNC DOC COL MSG BODY."
-    (let* ((sym (intern (symbol-name (` (, func))))))
-      (`
-       (defun (, sym)  (beg end &optional verb)
-         (, doc)
+    (let ((sym (intern (symbol-name `,func))))
+      `(defun ,sym  (beg end &optional verb)
+         ,doc
          (interactive "*r")
          (ti::verb)
-         (let* ((reg
-                 (tinytf-move-paragraph-to-column
-                  beg end (, col)
-                  (if verb
-                      (, msg)))))
-           (,@ body))))))
+         (let ((reg
+		(tinytf-move-paragraph-to-column
+		 beg end ,col
+		 (if verb
+		     ,msg))))
+           ,@body))))
 
+;; #todo FIME: `,func
 ;;; ----------------------------------------------------------------------
 ;;;
   (defun tinytf-fmacro-mark-word-1 (func doc char1 &optional char2)
     "Use `tinytf-fmacro-mark-word' with FUNC DOC CHAR1 CHAR2."
-    (let* ((sym (intern (symbol-name (` (, func))))))
-      (`
-       (defun (, sym) ()
-         (, doc)
+    (let ((sym (intern (symbol-name `,func))))
+      `(defun ,sym ()
+         ,doc
          (interactive "*")
          (unless (ti::space-p (preceding-char))
            (skip-chars-backward "^ ,\t\f\r\n"))
-         (insert (char-to-string (, char1)))
+         (insert (char-to-string ,char1))
          (skip-chars-forward "^ ,\t\f\r\n")
-         (insert (char-to-string (or (, char2) (, char1))))
-         (skip-chars-forward " ,\t\f\r\n")))))
+         (insert (char-to-string (or ,char2 ,char1)))
+         (skip-chars-forward " ,\t\f\r\n"))))
 
 ;;; ----------------------------------------------------------------------
 ;;;
   (defun tinytf-paragraph-bounds ()
     "Return (beg . end) points of paragraph."
-    (let* ((empty-line (ti::nil-p (ti::read-current-line)))
-           beg
-           end)
+    (let ((empty-line (ti::nil-p (ti::read-current-line)))
+	  beg
+	  end)
       (save-excursion
         (save-excursion
           (if (not empty-line)
@@ -1877,14 +1851,14 @@ The buffer is detected by using function strored in variable
       (if (and beg end)
           (cons beg end))))
 
+;; #todo FIXME `,func
 ;;; ----------------------------------------------------------------------
 ;;;
   (defun tinytf-fmacro-indent-paragraph-1 (func doc col msg &rest body)
     "Use `tinytf-fmacro-indent-paragraph'."
-    (let* ((sym (intern (symbol-name (` (, func))))))
-      (`
-       (defun (, sym)  (&optional verb)
-         (, doc)
+    (let ((sym (intern (symbol-name `,func))))
+      `(defun ,sym  (&optional verb)
+         ,doc
          (interactive "*")
          (let* ((region (tinytf-paragraph-bounds))
                 (beg    (car-safe region))
@@ -1892,38 +1866,47 @@ The buffer is detected by using function strored in variable
            (ti::verb)
            (if (null region)
                (if verb (message "%s: Cannot find paragraph bounds."
-                                 tinytf-:mode-name))
+                                 tinytf--mode-name))
              (tinytf-move-paragraph-to-column
               beg
               end
-              (, col)
+              ,col
               (if verb
-                  (, msg))
+                  ,msg)
               'noask)
-             (,@ body)))))))
+             ,@body)))))
 
 ;;; --++-- --++-- --++-- --++-- --++-- --++-- --++-- --++-- - eval end --
   ) ;; eval-end
 
 ;;; ----------------------------------------------------------------------
 ;;;
+(put 'tinytf-compile 'lisp-indent-function 3)
+(defmacro tinytf-compile (cmd mode &optional regexp)
+  "Run compile command based on Emacs version."
+  (if (fboundp 'compilation-start) ;; Emacs
+      `(compilation-start ,cmd ,mode (not 'name-function) ,regexp)
+    `(compile-internal ,cmd "No more lines." ,mode (not 'parser) ,regexp)))
+
+;;; ----------------------------------------------------------------------
+;;;
 (defmacro tinytf-fmacro-indent-region (func doc col msg &optional body)
   "Create indent function FUNC with DOC COL MSG BODY.
 Created function arguments: (beg end &optional verb)"
-  (` (, (tinytf-fmacro-indent-region-1
-         func
-         doc
-         col
-         msg
-         body))))
+  `,(tinytf-fmacro-indent-region-1
+     func
+     doc
+     col
+     msg
+     body))
 
 ;;; ----------------------------------------------------------------------
 ;;;
 (defmacro tinytf-fmacro-mark-word (func doc char1 &optional char2)
   "Create word marking function FUNC with DOC and CHAR.
 Created function arguments: ()"
-  (` (, (tinytf-fmacro-mark-word-1
-         func doc char1 char2))))
+  `,(tinytf-fmacro-mark-word-1
+     func doc char1 char2))
 
 ;;; ----------------------------------------------------------------------
 ;;;
@@ -1931,8 +1914,8 @@ Created function arguments: ()"
 (defmacro tinytf-fmacro-indent-paragraph (func doc col msg &optional body)
   "Create word marking function FUNC with DOC and COL, MSG and BODY.
 Created function arguments: ()"
-  (` (, (tinytf-fmacro-indent-paragraph-1
-         func doc col msg body))))
+  `,(tinytf-fmacro-indent-paragraph-1
+     func doc col msg body))
 
 ;;; These are conventional macros
 
@@ -1942,11 +1925,10 @@ Created function arguments: ()"
 (put 'tinytf-paragraph-macro 'edebug-form-spec '(body))
 (defmacro tinytf-paragraph-macro (&rest body)
   "Set paragraph values locally while executing BODY."
-  (`
-   (let* ((sentence-end         tinytf-:sentence-end)
-          (paragraph-start      tinytf-:paragraph-start)
-          (paragraph-separate   paragraph-start))
-     (,@ body))))
+  `(let ((sentence-end         tinytf--sentence-end)
+	 (paragraph-start      tinytf--paragraph-start)
+	 (paragraph-separate   paragraph-start))
+     ,@body))
 
 ;;; ----------------------------------------------------------------------
 ;;;
@@ -1955,20 +1937,19 @@ Created function arguments: ()"
 (defmacro tinytf-heading-macro (&rest body)
   "Map over every heading. The point sits at the beginning of heading text.
 The BODY must move the point so that next heading can be found."
-  (`
-   (let* ((RE-search  (concat
-                       (tinytf-regexp)
-                       (if (> tinytf-:heading-number-level 0)
-                           (concat "\\|" (tinytf-regexp 1)))
-                       (if (> tinytf-:heading-number-level 1)
-                           (concat "\\|" (tinytf-regexp 2)))))
-          (RE-no      (or (eval tinytf-:heading-ignore-regexp-form)
-                          "NothingMatchesLikeThis")))
+  `(let ((RE-search  (concat
+		      (tinytf-regexp)
+		      (if (> tinytf--heading-number-level 0)
+			  (concat "\\|" (tinytf-regexp 1)))
+		      (if (> tinytf--heading-number-level 1)
+			  (concat "\\|" (tinytf-regexp 2)))))
+	 (RE-no      (or (eval tinytf--heading-ignore-regexp-form)
+			 "NothingMatchesLikeThis")))
      (save-excursion
        (tinytf-heading-start)
        (while (re-search-forward RE-search nil t)
          (unless (string-match RE-no (ti::read-current-line))
-           (,@ body)))))))
+           ,@body)))))
 
 ;;; ----------------------------------------------------------------------
 ;;;
@@ -1978,10 +1959,9 @@ The BODY must move the point so that next heading can be found."
   "Search begin point of current heading level or signal error.
 You can refer to variable 'level' and 'beg' and 'end' in the BODY.
 The point is at start of level."
-  (`
-   (let* ((level  (tinytf-level-number))
-          beg
-          end)
+  `(let ((level (tinytf-level-number))
+	 beg
+	 end)
      (unless level
        (if (tinytf-heading-backward-any)
            (setq level (tinytf-level-number))
@@ -1989,20 +1969,20 @@ The point is at start of level."
      (setq beg (point)
            end (tinytf-block-end))
      (goto-char beg)
-     (,@ body))))
+     ,@body))
 
 ;;; ----------------------------------------------------------------------
 ;;;
 (defsubst tinytf-regexp (&optional level)
   "Return indent regexp string at LEVEL."
   ;;  control character are not counted, like ^L page mark
-  (concat "^" (tinytf-indent level) tinytf-:heading-regexp))
+  (concat "^" (tinytf-indent level) tinytf--heading-regexp))
 
 ;;; ----------------------------------------------------------------------
 ;;;
 (defsubst tinytf-level-p (&optional level)
   "Check if line is LEVEL."
-  (let* (case-fold-search)              ;case sensitive match
+  (let (case-fold-search)              ;case sensitive match
     (save-excursion
       (beginning-of-line)
       (looking-at (tinytf-regexp level)))))
@@ -2102,14 +2082,13 @@ name."
 (put 'tinytf-convert-view-macro 'lisp-indent-function 0)
 (put 'tinytf-convert-view-macro 'edebug-form-spec '(body))
 (defmacro tinytf-convert-view-macro (&rest body)
-  "Check file `tinytf-:file-last-html-generated' and run BODY."
-  (`
-   (let* ((file tinytf-:file-last-html-generated))
+  "Check file `tinytf--file-last-html-generated' and run BODY."
+  `(let ((file tinytf--file-last-html-generated))
      (when (or (not file)
                (not (file-exists-p file)))
        (error "TinyTf: Can't view HTML, file not available [%s]"
               (prin1-to-string file)))
-     (,@ body))))
+     ,@body))
 
 ;;; ----------------------------------------------------------------------
 ;;;
@@ -2148,9 +2127,9 @@ generated using `ti::temp-file'."
 ;;;
 (defun tinytf-convert-html-source (&optional buffer)
   "Return BUFFER's source file name. Default is `current-buffer'.
-See `tinytf-:buffer-file-name-html-source-function'"
+See `tinytf--buffer-file-name-html-source-function'"
   (or (funcall
-       tinytf-:buffer-file-name-html-source-function
+       tinytf--buffer-file-name-html-source-function
        (or buffer
            (current-buffer)))
       (error "TinyTf: HTML source function failed.")))
@@ -2159,16 +2138,16 @@ See `tinytf-:buffer-file-name-html-source-function'"
 ;;;
 (defun tinytf-convert-html-destinaton (&optional buffer)
   "Return BUFFER's destination file name. Default is `current-buffer'.
-See `tinytf-:buffer-file-name-html-destination-function'"
-  (let* ((file (funcall
-                tinytf-:buffer-file-name-html-destination-function
-                (or buffer
-                    (current-buffer)))))
+See `tinytf--buffer-file-name-html-destination-function'"
+  (let ((file (funcall
+	       tinytf--buffer-file-name-html-destination-function
+	       (or buffer
+		   (current-buffer)))))
     (unless file
       (error "TinyTf: HTML destination function failed %s."
              (prin1-to-string
-              tinytf-:buffer-file-name-html-destination-function)))
-    (setq tinytf-:file-last-html-generated file)))
+              tinytf--buffer-file-name-html-destination-function)))
+    (setq tinytf--file-last-html-generated file)))
 
 ;;; ----------------------------------------------------------------------
 ;;;
@@ -2211,16 +2190,15 @@ Input:
 
   TEMP       if non-nil, write temporary buffers to disk
   BODY       rest of the lisp forms."
-  (`
-   (let* ((file-name (buffer-file-name))
-          (file      (tinytf-convert-html-source)))
-     (when (and (, temp)
+  `(let ((file-name (buffer-file-name))
+	 (file      (tinytf-convert-html-source)))
+     (when (and ,temp
                 (null file-name))
-       (let* ((buffer (current-buffer)))
+       (let ((buffer (current-buffer)))
          (with-temp-buffer
-           (insert-buffer buffer)
+           (insert-buffer-substring buffer)
            (write-region (point-min) (point-max) file))))
-     (,@ body))))
+     ,@body))
 
 ;;; ----------------------------------------------------------------------
 ;;;
@@ -2254,70 +2232,69 @@ Return:
                               Status may also be compile buffer process."
   (interactive)
   (setq options (delq nil options))
-  (tinytf-convert-wrapper-macro 'temp-write
-                                (message "TinyTf: Generating HTML... (t2html) %s" file-name)
-                                ;;  This may take a while
-                                ;;  We feed the script to Perl and that works in every
-                                ;;  platform.
-                                (let* ((log    (get-buffer-create tinytf-:buffer-html-process))
-                                       (target (tinytf-convert-html-destinaton))
-                                       (dir    (file-name-directory target))
-                                       (opt    (append options
-                                                       (list
-                                                        "--Out-dir"
-                                                        dir
-                                                        "--Out"
-                                                        file)))
-                                       status)
-                                  (with-current-buffer log
-                                    (insert (format "\nTinyTf: t2html.pl run %s\n"
-                                                    (ti::date-standard-date 'minutes)))
+  (tinytf-convert-wrapper-macro
+      'temp-write
+    (message "TinyTf: Generating HTML... (t2html) %s" file-name)
+    ;;  This may take a while
+    ;;  We feed the script to Perl and that works in every
+    ;;  platform.
+    (let* ((log    (get-buffer-create tinytf--buffer-html-process))
+	   (target (tinytf-convert-html-destinaton))
+	   (dir    (file-name-directory target))
+	   (opt    (append options
+			   (list
+			    "--Out-dir"
+			    dir
+			    "--Out"
+			    file)))
+	   status)
+      (with-current-buffer log
+	(insert (format "\nTinyTf: t2html.pl run %s\n"
+			(ti::date-standard-date 'minutes)))
 
-                                    (insert (format "Source: %s\n" file)
-                                            (format "Target: %s\n" target))
-                                    (cond
-                                     ((eq process 'call-process)
-                                      (with-temp-buffer
-                                        (apply 'call-process "perl"
-                                               nil
-                                               (current-buffer)
-                                               nil
-                                               (tinyperl-convert-binary-t2html)
-                                               opt)
-                                        (message "TinyTf: Generating HTML...done. %s" target)
-                                        (cond
-                                         ((or (eq mode 'display)
-                                              (and (null mode)
-                                                   (not (ti::buffer-empty-p))))
-                                          (setq status 'error)
-                                          (append-to-buffer log (point-min) (point-max))
-                                          (display-buffer log))
-                                         ((eq mode 'noerr)
-                                          nil))))
-                                     (t
-                                      (let* ((command (concat
-                                                       "perl "
-                                                       (tinyperl-convert-binary-t2html)
-                                                       " "
-                                                       " --print-url "
-                                                       (ti::list-to-string opt))))
-                                        (compile-internal command
-                                                          "No more lines."
-                                                          tinytf-:process-compile-html
-                                                          nil nil)
-                                        ;;  Turn on URL recognizer so that lines can be clicked
-                                        (with-current-buffer
-                                            (get-buffer
-                                             (format "*%s*"
-                                                     tinytf-:process-compile-html))
-                                          (run-hooks 'tinytf-:process-compile-hook))
-                                        (message "TinyTf: Generating HTML... compile. %s"
-                                                 target))))
-                                    (ti::append-to-buffer
-                                     log
-                                     (format "\nEnd: %s\n"
-                                             (ti::date-standard-date 'minutes)))
-                                    (list target status)))))
+	(insert (format "Source: %s\n" file)
+		(format "Target: %s\n" target))
+	(cond
+	 ((eq process 'call-process)
+	  (with-temp-buffer
+	    (apply 'call-process "perl"
+		   nil
+		   (current-buffer)
+		   nil
+		   (tinyperl-convert-binary-t2html)
+		   opt)
+	    (message "TinyTf: Generating HTML...done. %s" target)
+	    (cond
+	     ((or (eq mode 'display)
+		  (and (null mode)
+		       (not (ti::buffer-empty-p))))
+	      (setq status 'error)
+	      (append-to-buffer log (point-min) (point-max))
+	      (display-buffer log))
+	     ((eq mode 'noerr)
+	      nil))))
+	 (t
+	  (let ((command (concat
+			  "perl "
+			  (tinyperl-convert-binary-t2html)
+			  " "
+			  " --print-url "
+			  (ti::list-to-string opt))))
+	    (tinytf-compile command
+		tinytf--process-compile-html)
+	    ;;  Turn on URL recognizer so that lines can be clicked
+	    (with-current-buffer
+		(get-buffer
+		 (format "*%s*"
+			 tinytf--process-compile-html))
+	      (run-hooks 'tinytf--process-compile-hook))
+	    (message "TinyTf: Generating HTML... compile. %s"
+		     target))))
+	(ti::append-to-buffer
+	 log
+	 (format "\nEnd: %s\n"
+		 (ti::date-standard-date 'minutes)))
+	(list target status)))))
 
 ;;; ----------------------------------------------------------------------
 ;;;
@@ -2357,49 +2334,48 @@ Return:
   "Call t2html.pl to check links with OPTIONS."
   (interactive)
   (tinytf-convert-wrapper-macro 'temp-write
-                                (let* ((command-args
-                                        (concat "perl "
-                                                (tinyperl-convert-binary-t2html)
-                                                " "
-                                                (or options
-                                                    "--link-check --quiet")
-                                                " "
-                                                file)))
-                                  ;;  compile-internal:
-                                  ;;    command
-                                  ;;    error-message
-                                  ;;    &optional
-                                  ;;    name-of-mode
-                                  ;;    parser
-                                  ;;    error-regexp-alist
-                                  ;;    name-function
-                                  ;;    enter-regexp-alist
-                                  ;;    leave-regexp-alist
-                                  ;;    file-regexp-alist
-                                  ;;    nomessage-regexp-alist
-                                  (compile-internal command-args
-                                                    "No more lines."
-                                                    tinytf-:process-compile-html
-                                                    nil
-                                                    grep-regexp-alist))))
+    (let ((command-args
+	   (concat "perl "
+		   (tinyperl-convert-binary-t2html)
+		   " "
+		   (or options
+		       "--link-check --quiet")
+		   " "
+		   file)))
+      ;;  compile-internal:
+      ;;    command
+      ;;    error-message
+      ;;    &optional
+      ;;    name-of-mode
+      ;;    parser
+      ;;    error-regexp-alist
+      ;;    name-function
+      ;;    enter-regexp-alist
+      ;;    leave-regexp-alist
+      ;;    file-regexp-alist
+      ;;    nomessage-regexp-alist
+      (tinytf-compile
+	  command-args
+	  tinytf--process-compile-html
+	  grep-regexp-alist))))
 
 ;;; ----------------------------------------------------------------------
 ;;;
 (defun tinytf-convert-t2html-link-check-cached ()
-  "Call t2html.pl to check links by using `tinytf-:t2html-link-cache-file'."
+  "Call t2html.pl to check links by using `tinytf--t2html-link-cache-file'."
   (interactive)
-  (unless (stringp tinytf-:t2html-link-cache-file)
-    (error "Tinytf: `tinytf-:t2html-link-cache-file' must contain filename."))
+  (unless (stringp tinytf--t2html-link-cache-file)
+    (error "Tinytf: `tinytf--t2html-link-cache-file' must contain filename."))
   (tinytf-convert-t2html-link-check
    (format "--link-check --quiet --Link-cache %s"
-           tinytf-:t2html-link-cache-file)))
+           tinytf--t2html-link-cache-file)))
 
 ;;; ----------------------------------------------------------------------
 ;;;
 (defun tinytf-compile-mode-settings ()
   "Install font lock and additional keybindings for Link check."
-  (let* ()))
-             ;; #todo: font-lock
+  ;; #todo: font-lock
+  (let ()))
 
 ;;; ----------------------------------------------------------------------
 ;;;
@@ -2414,22 +2390,21 @@ Return:
     (unless (file-exists-p elc)
       (message "TinyTf: (performance) Please compile %s" path)
       (sit-for 0.5)))
-  (let* ((html-buffer "*html*") ;; Thisis in htmlize.el, but hard coded
-         (buffer      (current-buffer)))
+  (let ((html-buffer "*html*") ;; Thisis in htmlize.el, but hard coded
+	(buffer      (current-buffer)))
     ;; Prevent multple *html* buffers.
     (if (get-buffer html-buffer)
         (kill-buffer (get-buffer html-buffer)))
-
     (tinytf-convert-wrapper-macro nil
-                                  (message "TinyTf: Generating HTML... (htmlize) %s" file-name)
-                                  (ti::funcall 'htmlize-buffer)
-                                  (with-current-buffer html-buffer
-                                    (write-region
-                                     (point-min)
-                                     (point-max)
-                                     (tinytf-convert-html-destinaton buffer)))
-                                  (message "TinyTf: Generating HTML...done. %s"
-                                           (tinytf-convert-file-name-html file)))))
+      (message "TinyTf: Generating HTML... (htmlize) %s" file-name)
+      (ti::funcall 'htmlize-buffer)
+      (with-current-buffer html-buffer
+	(write-region
+	 (point-min)
+	 (point-max)
+	 (tinytf-convert-html-destinaton buffer)))
+      (message "TinyTf: Generating HTML...done. %s"
+	       (tinytf-convert-file-name-html file)))))
 
 ;;}}}
 ;;{{{ misc:
@@ -2446,9 +2421,9 @@ Reference:
 
   See (symbol-plist 'tinytf-mode)."
   (interactive (list t t))
-  (let* ((sym 'tinytf-mode)
-         ;; Affects expand-file-name to use only / in XEmacs
-         (path-separator ?/))
+  (let ((sym 'tinytf-mode)
+	;; Affects expand-file-name to use only / in XEmacs
+	(path-separator ?/))
     (when (or force
               (null (get sym 't2html-checked)))
       (let* ((path  (progn
@@ -2461,7 +2436,7 @@ Reference:
                         (when verb
                           (message "Tinytf: searching t2html.pl... Done.")))))
              ;;  convert to use only forward slashes.
-             (path2 (or tinytf-:binary-t2html path))
+             (path2 (or tinytf--binary-t2html path))
              (bin   (and path2
                          (file-exists-p path2)
                          (expand-file-name path2))))
@@ -2473,7 +2448,7 @@ Reference:
           (message "Tinytf: Cannot find t2html.pl along `exec-path'.")))))
     (when (or force
               (null (get sym 'htmlize-checked)))
-      (let* ((path (locate-library "htmlize.el")))
+      (let ((path (locate-library "htmlize.el")))
         (cond
          (path
           (put sym 'htmlize-checked t)
@@ -2502,7 +2477,7 @@ This function calls `tinytf-utility-programs-check' with 'force."
 (defun tinytf-fontify-current-buffer-window ()
   "Fontify current buffer's window."
   (let* ((buffer (current-buffer))
-         (win    (get-buffer-window buffer)))
+	 (win    (get-buffer-window buffer)))
     (when (and win
                (window-live-p win)
                (or font-lock-mode
@@ -2525,7 +2500,7 @@ This function calls `tinytf-utility-programs-check' with 'force."
   "Return column intepretation."
   (interactive)
   (let* ((col (current-column))
-         (elt (assq col tinytf-:column-table))
+         (elt (assq col tinytf--column-table))
          list
          re
          ret)
@@ -2585,9 +2560,9 @@ Return:
  '(pos pos ..)
  '((heading pos) (heading pos) ..) If AND-HEADING-NAMES is non-nil
  nil"
-  (let* (point
-         heading
-         list)
+  (let (point
+	heading
+	list)
     (save-excursion
       (tinytf-heading-macro
        (setq point (line-beginning-position))
@@ -2640,11 +2615,11 @@ Caller must ensure that current line is heading. Point is moved."
       (re-search-forward "[0-9. \t]+" (line-end-position)) )
 
   (or (and (looking-at "[a-z]")         ;It alphabet
-           (let* (case-fold-search)     ;is it uppercase?
+           (let (case-fold-search)     ;is it uppercase?
              (not (looking-at "[A-Z]"))))
       (save-excursion           ;Howabout rest of the line; lowercase?
         (forward-char 1)
-        (let* (case-fold-search)
+        (let (case-fold-search)
           (looking-at ".*[A-Z]")))))
 
 ;;; ----------------------------------------------------------------------
@@ -2658,8 +2633,8 @@ Return:
   t         if modified current and moved to next heading.
   nil"
   (interactive "*")
-  (let* ((re  (concat (tinytf-regexp) "\\|" (tinytf-regexp 1)))
-         ret)
+  (let ((re  (concat (tinytf-regexp) "\\|" (tinytf-regexp 1)))
+	ret)
     (when (save-excursion
             (beginning-of-line)
             (looking-at re))
@@ -2734,15 +2709,15 @@ Return:
 This function will only chnage the first word in the heading, no
 other case conversions are done."
   (interactive "*P")
-  (let* ((re  (concat                   ;Search lower letters only
-               "^" (tinytf-heading-number-regexp) "?"
-               "[a-z]"
+  (let ((re  (concat                   ;Search lower letters only
+	      "^" (tinytf-heading-number-regexp) "?"
+	      "[a-z]"
 
-               "\\|^" (tinytf-indent 1)
-               (tinytf-heading-number-regexp) "?"
-               "[a-z]"))
-         (count  0)
-         case-fold-search)
+	      "\\|^" (tinytf-indent 1)
+	      (tinytf-heading-number-regexp) "?"
+	      "[a-z]"))
+	(count  0)
+	case-fold-search)
     (ti::verb)
     (save-excursion
       (ti::pmin)
@@ -2751,7 +2726,7 @@ other case conversions are done."
         (capitalize-word 1)
         (incf  count)))
     (if verb
-        (message "%s: Fixed %d headings" tinytf-:mode-name count))))
+        (message "%s: Fixed %d headings" tinytf--mode-name count))))
 
 ;;; ----------------------------------------------------------------------
 ;;;
@@ -2759,15 +2734,15 @@ other case conversions are done."
   "Number heading levels. Old numbering is replaced.
 Optionally REMOVE numbering. VERB."
   (interactive "*P")
-  (let* ((re-no-nbr2 (if (> tinytf-:heading-number-level 0)
+  (let* ((re-no-nbr2 (if (> tinytf--heading-number-level 0)
                          (tinytf-regexp 1)))
-         (re-no-nbr3 (if (> tinytf-:heading-number-level 1)
+         (re-no-nbr3 (if (> tinytf--heading-number-level 1)
                          (tinytf-regexp 2)))
          (re-nbr    (tinytf-heading-number-regexp))
          (re1       (concat "^" (tinytf-indent 0) re-nbr))
-         (re2       (if (> tinytf-:heading-number-level 0)
+         (re2       (if (> tinytf--heading-number-level 0)
                         (concat "^" (tinytf-indent 1) re-nbr)))
-         (re3       (if (> tinytf-:heading-number-level 1)
+         (re3       (if (> tinytf--heading-number-level 1)
                         (concat "^" (tinytf-indent 2) re-nbr)))
          (c1        0)                  ;counters
          (c2        0)
@@ -2828,7 +2803,7 @@ Optionally REMOVE numbering. VERB."
      (end-of-line))
     (when verb
       (message "%s: %d/%d headings numbered."
-               tinytf-:mode-name fix count))))
+               tinytf--mode-name fix count))))
 
 ;;; ----------------------------------------------------------------------
 ;;;
@@ -2848,7 +2823,7 @@ Note:
 
 References:
 
-  `tinytf-:fix-all-hook'   Well, you can do the misisng things here."
+  `tinytf--fix-all-hook'   Well, you can do the misisng things here."
   (interactive "*")
   (ti::verb)
   ;;  when you fill paragraphs, the default Emacs has nasty habits to
@@ -2877,7 +2852,7 @@ References:
     (tinytf-heading-numbering))
   (if verb
       (message "TinyTf: Running user fix hooks..."))
-  (run-hooks 'tinytf-:fix-all-hook)
+  (run-hooks 'tinytf--fix-all-hook)
   (if verb
       (message "TinyTf: Fixing done.")))
 
@@ -2909,9 +2884,9 @@ point must be inside paragraph before calling function."
   "If region BEG END is big, ask confirmation for COL move with MSG NOASK.
 Return
   (beg . end)    Region bounds now."
-  (let* ((lines (+ (count-char-in-region beg end ?\r)
-                   (count-char-in-region beg end ?\n)))
-         (max   40))
+  (let ((lines (+ (count-char-in-region beg end ?\r)
+		  (count-char-in-region beg end ?\n)))
+	(max   40))
     ;;  We use markers, because the points have moved after the
     ;;  call to ti::buffer-move-paragraph-to-column. We must pass moved BEG end
     ;;  to hook functions.
@@ -2926,7 +2901,7 @@ Return
               (and
                (> lines max)
                (y-or-n-p (format "%s: really move %d lines? "
-                                 tinytf-:mode-name lines))))
+                                 tinytf--mode-name lines))))
       (ti::buffer-move-paragraph-to-column
        (marker-position beg) (marker-position end)
        col)
@@ -2937,7 +2912,7 @@ Return
       (if msg
           (message "TinyTf:%s" msg))
 
-      (run-hook-with-args 'tinytf-:move-paragraph-hook
+      (run-hook-with-args 'tinytf--move-paragraph-hook
                           (marker-position beg) (marker-position end))
       (cons beg end))))
 
@@ -3016,10 +2991,10 @@ Return
  tinytf-indent-paragraph-text-and-fill
  "Move paragraph to text position and fill."
  8 (format "TinyTf: text, column 8")
- (let* ((fill-prefix
-         (or (ti::string-match "^[ \t]+" 0 (ti::read-current-line))
-             ""))
-        (left-margin 0))
+ (let ((fill-prefix
+	(or (ti::string-match "^[ \t]+" 0 (ti::read-current-line))
+	    ""))
+       (left-margin 0))
    (fill-paragraph nil)
    (tinytf-paragraph-first-line-indent-fix 8)
    (tinytf-forward-paragraph)))
@@ -3033,12 +3008,12 @@ Return
  tinytf-indent-paragraph-quote-and-fill
  "Move paragraph to Quotation position and fill."
  10 (format "TinyTf: Quotation, column 10")
- (let* ((fill-prefix (or (ti::string-match
-                          "^[ \t]+"
-                          0
-                          (ti::read-current-line))
-                         ""))
-        (left-margin 0))
+ (let ((fill-prefix (or (ti::string-match
+			 "^[ \t]+"
+			 0
+			 (ti::read-current-line))
+			""))
+       (left-margin 0))
    (fill-paragraph nil)
    (tinytf-paragraph-first-line-indent-fix 10)
    (tinytf-forward-paragraph)))
@@ -3077,9 +3052,9 @@ Return
 (defun tinytf-unmark-word ()
   "Remove 'STRONG' and 'EMP' mark from word and move forward."
   (interactive "*")
-  (let* ((word-skip "^ ,.;\n\r\t\f")
-         beg
-         end)
+  (let ((word-skip "^ ,.;\n\r\t\f")
+	beg
+	end)
     (flet ((marker   (beg skip)
                      (save-excursion
                        (skip-chars-forward skip)
@@ -3113,8 +3088,8 @@ Return
 (defun tinytf-mark-br-line (&optional unmark &optional verb)
   "Mark current line with symbolic <BR>. Optionally UNMARK. VERB."
   (interactive "*P")
-  (let* (point
-         ch)
+  (let (point
+	ch)
     (ti::verb)
     (save-excursion
       (beginning-of-line)
@@ -3126,9 +3101,9 @@ Return
       (goto-char (1- point))
       (setq ch (following-char))
       (if unmark
-          (if (char= ch ?.)
+          (if (char-equal ch ?.)
               (delete-char 1))
-        (if (char= ch ?.)
+        (if (char-equal ch ?.)
             (if verb
                 (message "TinyTf: Already marked as <BR>"))
           (insert "."))))
@@ -3140,8 +3115,8 @@ Return
 (defun tinytf-mark-br-paragraph (&optional unmark)
   "Mark current paragraph with symbolic <BR> codes. Optionally UNMARK."
   (interactive "*P")
-  (let* (beg
-         end-mark)
+  (let (beg
+	end-mark)
     (tinytf-backward-paragraph)
     (setq beg (point))
     (tinytf-forward-paragraph)
@@ -3257,11 +3232,11 @@ Return:
 
  nbr    point if moved
  nil"
-  (let* ((re (if any
-                 (concat (tinytf-regexp) "\\|" (tinytf-regexp 1))
-               (tinytf-regexp level)))
-         case-fold-search               ;case sensitive
-         point)
+  (let ((re (if any
+		(concat (tinytf-regexp) "\\|" (tinytf-regexp 1))
+	      (tinytf-regexp level)))
+	case-fold-search               ;case sensitive
+	point)
     (if back
         (when (re-search-backward re nil t)
           (skip-chars-forward " \t") (point))
@@ -3371,7 +3346,7 @@ In other places call original function."
 (defun tinytf-show-toggle ()
   "Open/close level 1. Does't touch level 0."
   (interactive)
-  (let* ((point  (point)))
+  (let ((point (point)))
     (if (looking-at ".*\r")
         (tinytf-show)            ;level is already collapsed, open it.
       (tinytf-hide))
@@ -3390,8 +3365,8 @@ In other places call original function."
 (defun tinytf-hide (&optional show)
   "Hide current level. Optionally SHOW."
   (interactive "P")
-  (let* ((ok    t)
-         (point (point)))
+  (let ((ok    t)
+	(point (point)))
     (tinytf-level-macro
      (cond
       ((eq 1 level)
@@ -3426,13 +3401,13 @@ Return:
   (beg . end)    begin toc body, end of toc body
   nil"
 
-  (let* ((re  (concat                   ;May be Heading 1 or 2
-               "^\\("
-               (tinytf-indent 1)
-               "\\)?Table [Oo]f [Cc]ontents[ \t]*$"))
-         case-fold-search               ;is sensitive
-         beg
-         end)
+  (let ((re  (concat                   ;May be Heading 1 or 2
+	      "^\\("
+	      (tinytf-indent 1)
+	      "\\)?Table [Oo]f [Cc]ontents[ \t]*$"))
+	case-fold-search               ;is sensitive
+	beg
+	end)
     (save-excursion
       (ti::pmin)
       (when (re-search-forward re nil t)
@@ -3468,6 +3443,18 @@ Return:
 
 ;;; ----------------------------------------------------------------------
 ;;;
+(defun tinytf-toc-insert-list (list)
+  "Insert list of Table of Contents strings in LIST."
+  (dolist (elt list)
+    (setq elt (car elt))
+    (if (string-match "^[ \t]+" elt)
+	(insert elt "\n")       ;sub heading...
+      (insert "\n" elt "\n")))
+  ;; Final newline
+  (insert "\n"))
+
+;;; ----------------------------------------------------------------------
+;;;
 (defun tinytf-toc (&optional arg verb)
   "Create table of contents.
 If there is heading level 1 whose name is \"Table of Contents\",
@@ -3482,10 +3469,10 @@ Input ARG can be:
 
 VERB enables verbose messages."
   (interactive "P")
-  (let* ((hlist     (tinytf-heading-positions 'strings))
-         (toc       (tinytf-toc-p))
-         (buffer    tinytf-:buffer-heading)
-         elt)
+  (let ((hlist     (tinytf-heading-positions 'strings))
+	(toc       (tinytf-toc-p))
+	(buffer    tinytf--buffer-heading)
+	elt)
     (ti::verb)
     (if (null hlist)
         (if verb
@@ -3495,16 +3482,10 @@ VERB enables verbose messages."
        ((null arg)
         (setq buffer (ti::temp-buffer buffer 'clear))
         (with-current-buffer buffer
-          (dolist (elt hlist)
-            (setq elt (car elt))
-            (if (string-match "^[ \t]+" elt)
-                (insert elt "\n")       ;sub heading...
-              (insert "\n" elt "\n")))
-          (insert "\n") ;; Final newline
+	  (tinytf-toc-insert-list hlist)
           (ti::pmin)
-          (ti::buffer-trim-blanks (point-min) (point-max))
-          (if (stringp tinytf-:heading-ignore-regexp-form)
-              (flush-lines tinytf-:heading-ignore-regexp-form))
+          (if (stringp tinytf--heading-ignore-regexp-form)
+              (flush-lines tinytf--heading-ignore-regexp-form))
           ;; Make sure there are two newlines at the end so that
           ;; inserted TOC is positioned nicely
           ;; (ti::pmax)
@@ -3523,7 +3504,10 @@ VERB enables verbose messages."
           ;;
           (when (and toc nil)
             ;;  Convert heading 2 level to heading  1
-            (ti::pmin) (replace-string (tinytf-indent 1) ""))
+            (ti::pmin)
+	    (let ((str (tinytf-indent 1)))
+	      (while (search-forward str nil 'noerr)
+		(replace-match "" nil t))))
           (ti::pmin)
           (delete-region
            (point)
@@ -3536,7 +3520,8 @@ VERB enables verbose messages."
             (string-rectangle
              (point-min)
              (point-max)
-             (tinytf-indent 2)))) ;; with-current
+             (tinytf-indent 2))) ;; with-current
+	  (ti::buffer-trim-blanks (point-min) (point-max)))
         (cond
          (toc                           ;Update existing toc
           (barf-if-buffer-read-only)
@@ -3544,7 +3529,7 @@ VERB enables verbose messages."
           (ti::save-with-marker-macro
             ;;  Leave one empty line
             (goto-char (car toc))
-            (insert-buffer buffer)))
+            (insert-buffer-substring buffer)))
          (t                             ;No previous toc
           (when verb
             (pop-to-buffer buffer)
@@ -3593,9 +3578,9 @@ VERB enables verbose messages."
 
 ;;}}}
 
-(unless tinytf-:mode-define-keys-hook ;; Set default setup
+(unless tinytf--mode-define-keys-hook ;; Set default setup
   (ti::add-hooks
-   'tinytf-:mode-define-keys-hook
+   'tinytf--mode-define-keys-hook
    '(tinytf-mode-define-keys tinytf-mode-define-f-keys)))
 
 ;; It's important that this is as fast as possible
@@ -3605,6 +3590,6 @@ VERB enables verbose messages."
 (tinytf-install)
 
 (provide   'tinytf)
-(run-hooks 'tinytf-:load-hook)
+(run-hooks 'tinytf--load-hook)
 
 ;;; tinytf.el ends here

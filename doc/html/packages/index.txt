@@ -1,0 +1,596 @@
+Table of contents
+
+       1.0 Document id
+
+       2.0 Checklist items
+           2.1 Select unique prefix for all functions and all variables
+           2.2 Always include correct first line:
+           2.3 Check the code layout with lisp-mnt.el
+           2.4 Check the documentation strings which checkdoc.el
+           2.5 Check the code with Elint.el
+           2.6 Always include GNU copyright.
+           2.7 Always include installation instructions.
+           2.8 Always use RCS or other version tool to manage your files.
+           2.9 Always check your file with byte compiler
+           2.10 More details -- don't just 'require' other packages
+           2.11 Use dynamic byte compilation
+           2.12 How to deal with variables from other packages
+           2.13 Arrange the installation so that it can be autoloaded
+           2.14 Do not change any emacs bindings directly
+           2.15 Don't forget to add ###autoload statements
+           2.16 Document all your variables and functions well
+           2.17 Clean up all whitespaces from the end of lines.
+           2.18 Documentation of you package
+           2.19 Here is sample skeleton for a package. Fill it in.
+
+1.0 Document id
+
+        #T2HTML-TITLE Emacs Lisp coding checklist
+        #T2HTML-METAKEYWORDS Emacs, Emacs Lisp, Programming
+        #T2HTML-OPTION --css-code-bg
+        #T2HTML-OPTION --html-frame
+
+        Copyright (C) 1995-2010 Jari Aalto
+
+        License: This material may be distributed only subject to
+        the terms and conditions set forth in GNU General Public
+        License v2 or later; or, at your option, distributed under the
+        terms of GNU Free Documentation License version 1.2 or later
+        (GNU FDL).
+
+        This document explains how you construct a good Emacs Lisp package.
+        Document serves as a checklist where you can refer back after you
+        have made your first lisp package. Check that are pieces are in
+        their places. When the packages have more or less standard layout,
+        other tools can be used to lint (verify the the structure) and find
+        information from them. If package looks messy or feels like chaos,
+        many people may skip over it.
+
+        The order of importance
+
+        .   Variable and function naming -- without this your package is messy.
+        .   Correct first line      -- it helps getting right summaries
+        .   'provide' command       -- don't ever leave it out
+        .   Check code with Byte Compiler -- Nobody wants leaking code.
+        .   Offer autoload choice   -- nobody wants to load all when
+            emacs starts
+        .   Use dynamic compilation -- reduces memory in 19.29+
+        .   Version number          -- preferrably accessible from variable
+        .   Correct keywords tag    -- See finder.el in Emacs distribution
+
+2.0 Checklist items
+
+    2.1 Select unique prefix for all functions and all variables
+
+        Say, you have created package XXX.el, then all in it should
+        be inform
+
+            XXX-function1
+            XXX-function2
+
+            XXX-variable1
+            XXX-variable2
+
+        Some prefer naming the variables differently, like adding
+        double dash or colon.
+
+            XXX--variable1
+            XXX--variable2
+
+            XXX-:variable1
+            XXX-:variable2
+
+        This allows searching/replacing/grepping variables more
+        easily. Whatever you choose, stick to it.
+
+    2.2 Always include correct first line:
+
+            ;;; file.el --- One line description string
+            ^^^     ^^^
+            |
+            First line should use three comment marks, the rest
+            of the documentation use only two.
+
+    3.3 Put 'provide' command at the end of file
+
+        If you want be backward compatible, do it like that. Up till 19.28
+        there was a bug which didn't undo the definitions if error happened
+        during the loading. --> the feature was "provided", when it really
+        should had been wiped out due to errors. 19.29+ corrects the
+        situation. In those, you can put provide at the beginning of your
+        code. In some rare cases, you have to put provide to the beginning
+        of file, so that the feature is "seen" to other packages that you
+        load. This is needed if some package require "yours" too. Byte
+        Compiler will tell you if there is such conflict in putting the
+        require to the end.
+
+    2.3 Check the code layout with lisp-mnt.el
+
+        Use function `lm-verify'. It tells you if you have proper tags in
+        your package. Pay attention to the count of comment markers with
+        these lines:
+
+            ;;; XXX.el --- proper first line
+
+            ;; Author:
+            ;; Maintainer:
+            ;; Created:
+            ;; Keywords:
+            ;; X-YourField:
+
+            ;;; Install:
+
+            ;;; Commentary:
+
+            ;;; Change Log:
+
+            ;;; Code:
+
+            ;;; XXX.el ends here
+
+    2.4 Check the documentation strings which checkdoc.el
+
+        In addition to `lm-verify', the checkdoc will parse all your
+        variable and function documentation and show you the points
+        where the documentation does not follow the conventions
+        mentioned in the Emacs info page. There is also *checkdoc.el*
+        which is distributed latest Emacs
+
+            File: elisp, Node: Documentation Tips
+
+    2.5 Check the code with Elint.el
+
+        A lisp syntax checker is also your friend. Run it through your code
+        and check code for unused variables and that functions are called
+        with right arguments. You find this package also in latest Emacs
+        distribution. If you don't have it, there may be small chance that
+        you can get it from author Peter Liljenberg.
+
+    2.6 Always include GNU copyright.
+
+        See your emacs distribution and copy one from there
+        and mention link http://www.gnu.org/copyleft/gpl.html Here is
+        the *de* *facto* standard for Emacs Lisp files:
+
+            ;; COPYRIGHT NOTICE
+            ;;
+            ;; This program is free software; you can redistribute it and/or modify it
+            ;; under the terms of the GNU General Public License as published by the Free
+            ;; Software Foundation; either version 2 of the License, or (at your option)
+            ;; any later version.
+            ;;
+            ;; This program is distributed in the hope that it will be useful, but
+            ;; WITHOUT ANY WARRANTY; without even the implied warranty of MERCHANTABILITY
+            ;; or FITNESS FOR A PARTICULAR PURPOSE. See the GNU General Public License
+            ;; for more details. http://www.gnu.org/copyleft/gpl.html
+
+    2.7 Always include installation instructions.
+
+        If file installs itself, it should tell how it behaves after the
+        installation (when the commands take in effect, in what modes
+        etc.). In addition to installation, include examples how to use the
+        package, if it offers some handy functions.
+
+            ;;; Install:
+
+            ;; Put this file on your Emacs-Lisp load path, add following
+            ;; into your $HOME/.emacs startup file.
+            ;;
+            ;;     (require 'package)
+            ;;
+            ;; or use autoload and your Emacs starts faster, preferred method:
+            ;;
+            ;;      (autoload 'package-mode           "package" "" t)
+            ;;      (autoload 'turn-on-package-mode   "package" "" t)
+
+    2.8 Always use version control software to manage your files
+
+        Be sure to include some version string in your package:
+
+            (defvar XXX-version (substring "$Revision: 2.11 $" 11 15)
+             "Version number")
+
+    2.9 Always check your file with byte compiler
+
+        Don't leave leaks in your code. Use Byte compiler to catch any
+        variable leaks or missing functions that you should load with
+        (require 'xxx) in the beginning of your file. If possible prefer
+        _XEmacs_ _Byte_ _Compiler_, which reports error much better. In
+        compatibility point of view it is good to check with both XEmacs
+        and Emacs byte compiler.
+
+            emacs -q -no-site-file          ;; In clean emacs
+            M-x byte-compile-file XXX.el
+
+    2.10 More details -- don't just 'require' other packages
+
+        When you include packages with `require' command, don't
+        do it like this:
+
+            (require 'dired-aux)
+
+        If it only uses 2-5 functions from package. (you can tell what
+        functions it uses by running the Byte Compiler on your file while
+        you had commented all `require' lines away). The following will
+        reduce memory if package *dired-aux* supports dynamic byte
+        compilation. In addition, your package compiles faster, because the
+        other packages need not to be required beforehand.
+
+            (eval-and-compile
+              (autoload 'dired-bunch-files          "dired-aux")
+              (autoload 'dired-run-shell-command    "dired-aux"))
+
+    2.11 Use dynamic byte compilation
+
+        Newer Emacs versions can load only the functions to memory that are
+        really and not just slurp the whole file. Put this in your
+        packages, near the first require command in your package.
+
+            (eval-when-compile (setq byte-compile-dynamic t))
+
+        There is also alternative way to set up byte compilation, but it
+        requires crowding your first line, which you prefer to use for
+        package description. This is _not_  _recommended_. See INFO page
+        "File: elisp, Node: Dynamic Loading".
+
+            -*-byte-compile-dynamic: t;-*-
+
+    2.12 How to deal with variables from other packages
+
+        Let's say you use `ediff-number-of-differences' variable in function
+        `xxx-my-ediff-call'. This is the only place where ediff is used and
+        for that reason you haven't used
+
+            (require 'ediff)
+
+        but used the more lighter version
+
+            (eval-and-compile
+              (autoload 'ediff-get-difference "ediff"))
+
+        But the byte compiler tells you that `ediff-number-of-differences'
+        is unknown variable. Ok, let's tell byte compiler about it with:
+
+            (eval-and-compile
+              (defvar ediff-get-difference)
+              (autoload 'ediff-get-difference "ediff"))
+
+        Note that `defvar' only contains variable name and _no_ _value_. It
+        really doesn't define the variable, but makes byte compiler to take
+        a note. If you do this test, you see that the variable is not
+        bound.
+
+            (progn
+              (defvar 'xxx)
+              (boundp 'xxx))
+            --> nil
+
+        It depends if you can do this kind of optimizations or not. If
+        the value *must* *be* present, do not use this autoload
+        optimization, but use the traditional `require'. If you only
+        *check* the variable in our code like below, then the autoload is
+        okay:
+
+            (when (boundp 'ediff-get-difference)
+              ..ok, we're set to do the things...)
+
+    2.13 Arrange the installation so that it can be autoloaded
+
+        Try to avoid this form of loading if you can. Do not say that
+        this is the only way to use the package:
+
+            To use this package, put following into your emacs:
+            (require 'XXX)
+
+        That's bad, because if user never happens to use any of these
+        functions, they still are in Emacs and consume resources. Instead
+        try to offer another way to use your package by using autoload.
+        This has two effects:
+
+        o   Autoload statements in one's `$HOME/.emacs' are fast!
+            Emacs starts up instantly without loading the package.
+        o   The package is only loaded when user calls
+            some of your functions. Someday he may be using
+            them all the time, other times he works differently
+            and doesn't use the functions. Don't assume that
+            the package is always *on*.
+
+        If the package installs key bindings, then you should show where to
+        hook the package to get things going. See For example
+        *tinydired.el*, which uses sophisticated booting. When dired
+        loads, "package" installs everything at the same time
+        and only these lines are needed in for user setup:
+
+            (add-hook 'dired-mode-hook '(lambda () (require 'package) nil))
+
+        Other times, you can just instruct for interactive functions
+
+                (autoload 'XXX-func1            "XXX" "" t)
+                (autoload 'XXX-func2            "XXX" "" t)
+
+        If your functions are accessed by keyboard command, then you have
+        to mention couple of keybindings:
+
+                (autoload 'XXX-func1            "XXX" "" t)
+                (autoload 'XXX-func2            "XXX" "" t)
+                (global-set-key [(control f1)]  'XXX-func1)
+
+        Now pressing the key `C-f1' autolaods function. Do not ask to put
+        all key definitions to his $`$HOME/.emacs'. Add those keys that you
+        think user may hit most likely to utilize your package for the
+        first calls.
+
+    2.14 Do not change any emacs bindings directly
+
+        Put bindings behind a function, and allow user to customize them.
+        Like this:
+
+            (defun XXX-install-default-bindings ()
+             "docs here..."
+             (global-set-key "X" 'XXX-func1)
+             (global-set-key "Y" 'XXX-func2)
+             (global-set-key "Z" 'XXX-func3)
+             ...)
+
+        Next, you can instruct in installation, that user can add following
+        statement if he wants to use the default bindings.
+
+            (add-hook 'XXX-load-hook 'XXX-install-default-bindings)
+
+        When file is loaded the bindings take in effect. You could also put
+        it this way:
+
+            (defvar XXX-load-hook '(XXX-default-bindings)
+              "*Hook run when package is loaded.")
+
+        and then say, that "if you DO NOT WANT the default bindings, put
+        statement into your .emacs".
+
+            (setq XXX-load-hook nil)
+
+        The first method is better if you really change direct Emacs
+        bindings. And the latter, if you just _add_ some bindings
+        somewhere which is free slot.
+
+    2.15 Don't forget to add ###autoload statements
+
+        Someday, perhaps your package may be included into emacs
+        distribution, or some system administrator may want to include your
+        package to `site-init.el'.
+
+            ;;;###autoload
+            (defun XX () ..)
+
+        Where should you put the statements? Thumb rule: all interactive
+        functions should have it. See emacs info pages for more.
+
+            File: elisp, Node: Autoload
+
+    2.16 Document all your variables and functions well
+
+        They should be as clear as crystal, so that they contain
+        descriptive *documentation* string. Use "*" for user variables
+        (File: elisp, Node: Defining Variables). The more documentation the
+        better, because user wants to do
+
+            C-h v VARIABLE
+            C-h f FUNCTION
+
+        and see all we wants to know, without looking at the source file
+        itself. Don't mind the documentation string space, new 19.29+ Emacs
+        Byte Compiler is capable of reducing the documentation string
+        memory consumption. Refer to (NEWS file of 19.29, section 'changes
+        in compilation:')
+
+          ...Functions and variables loaded from a
+          byte-compiled file now refer to the file for their doc
+          strings.
+
+        Don't write like this as it was used to be old convention to leave
+        out internal function description:
+
+            (defun XXX-internal-function ()
+              ;; Don't hide docs below a function.
+              ;; This emans that everyone must open the source file in
+              ;; order to find out how the function is documented.
+              ...)
+
+        That's bad, because then you can't just sit on Emacs buffer and
+        hit M-x appropos RET XXX-internal-function RET. I'd like to
+        see the function documentation shown, don't you?
+
+    2.18 Provide a xxx-load-hook at the end of file
+
+        If you think that user may want to change some default settings add
+        the last hook. The load hook runs *after* provide. Like this.
+        Include ending line as a last line
+
+            (provide   'XXX)
+            (run-hooks 'XXX-load-hook)
+                                     << at least one space here!
+            ;; XXX.el ends here
+                                     << max 1 line here only.
+
+        There is also `eval-after-load' that is supported by new emacs
+        releases. If you wan't to be portable, then you should know that
+        XEmacs 19.14 doesn't even have such hook, not to mention old emacs
+        releases. In addition, managing the structures put via
+        ``eval-after-load' to `after-load-alist' is not s nice as
+        manipulating the items with `add-hook' and `remove-hook'.
+
+    2.17 Clean up all whitespaces from the end of lines
+
+        This is important, because if someone sends you patches, the diff
+        command would count the whitespace differences too. Well, there
+        is options to bypass that, but removing extra whitespace is good
+        idea anyway.
+
+            (add-hook 'write-file-hooks 'my-trim-blanks)
+
+            (defun my-trim-blanks (beg end)
+              "Delete trailing blanks in region"
+              (interactive "*r")
+              (save-restriction
+                (save-excursion
+                  (narrow-to-region beg end)
+                  ;;  _much slower would be:
+                  ;;  (replace-regexp "[ \t]+$" "")
+                  (goto-char (point-min))
+                  (while (not (eobp))
+                    (end-of-line)
+                    (delete-horizontal-space)
+                    (forward-line 1))))
+              ;;  To be sure, clean hook returns nil
+              nil))
+
+    2.18 Documentation of you package
+
+        Just for the curious reader, if you have www page where you can
+        describe your emacs packages, you could format your documentation
+        so that it can be easily ripped out and turned into HTML page. For
+        more about this, see Perl files at
+        http://cpan.perl.org/modules/by-authors/id/J/JA/JARIAALTO/ The basic
+        layout for lisp is this, tab indents 4 spaces at a time. All text
+        between `Preface' and 'Change Log' is considered as documentation
+        that can be turned into HTML with
+
+            % ripdoc.pl package.el | t2html.pl > package.html
+
+            0123456789 123456789        Columns
+
+            ;;; Documentation:
+
+            ;;  Preface
+            ;;
+            ;;      Description at column 8
+            ;;      More desc text text text text
+            ;;      text text text
+            ;;
+            ;;          ;;  Code examples at column 12
+            ;;          (define-key ...)
+            ;;
+            ;;  Heading 2
+            ;;
+            ;;      Description at column 8
+            ;;      More desc text text text text
+            ;;      text text text
+
+            ;;; Change Log:
+
+    2.19 Here is sample skeleton for a package. Fill it in
+
+        If you wonder why there is *&v-keyword* like dot lines: they are
+        called book marks and handled by *tinybm.el*
+
+            ;;; XXX.el --- one line description string for the package
+
+            ;; This file is not part of Emacs
+
+            ;; Emacs Lisp Archive Entry
+            ;; Copyright (C) 1998-2010 Foo BarMan
+            ;; Filename: hello.el
+            ;; Version: 1.1   (or RCS/CVS *Revision*)
+            ;; Keywords: hello, greeting (see finder.el)
+            ;; Author: Jane Smith <jane@example.com>
+            ;; Maintainer: Jane Smith <jane@example.com>
+            ;; Created: YYYY-MM-DD
+            ;; Description: cause a greeting message to appear on the user's screen
+            ;; URL: http://www.example.com/~jane/emacs.html
+            ;; Compatibility: Emacs19, Emacs20, XEmacs21
+
+
+            ;; COPYRIGHT NOTICE
+            ;;
+            ;; This program is free software; you can redistribute it and/or modify it
+            ;; under the terms of the GNU General Public License as published by the Free
+            ;; Software Foundation; either version 2 of the License, or (at your option)
+            ;; any later version.
+            ;;
+            ;; This program is distributed in the hope that it will be useful, but
+            ;; WITHOUT ANY WARRANTY; without even the implied warranty of MERCHANTABILITY
+            ;; or FITNESS FOR A PARTICULAR PURPOSE. See the GNU General Public License
+            ;; for more details.
+            ;;
+
+            ;;; Install:
+
+            ;; Put this file on your Emacs-Lisp load path, add following into your
+            ;; ~/.emacs startup file
+            ;;
+            ;;     (require 'XXX)
+            ;;
+            ;; Or use the autoload choice
+            ;;
+            ;;     (add-hook 'dired-mode-hook 'XXX-function-1)
+            ;;     (autoload 'XXX-function-1 "XXX")
+            ;;     (autoload 'XXX-function-2 "XXX")
+            ;;
+
+            ;;; Commentary:
+
+            ;;  Preface, 1998
+            ;;
+            ;;     Hi,
+            ;;
+            ;;     Here is small utility that provodes...
+            ;;
+            ;;  Overwiev of features
+            ;;
+            ;;     o   Simple indexing of file ...
+            ;;     o   Automatic recovery ...
+            ;;
+            ;;  Development note
+            ;;
+            ;;     I know that there are couple of points that should propably
+            ;;     be corrected...
+
+            ;;; Change Log:
+
+            ;;; Code:
+
+            ;;; .......................................................... require ...
+
+            (eval-when-compile
+              (set (make-local-variable 'byte-compile-dynamic) t))
+
+            (require 'assoc)   ;; or, what packges are needed
+
+            ;; from these packages we only use some functions...
+            (eval-and-compile
+              ;; We really don't need to load full packages, so use these..
+              ;;
+              (autoload 'vc-dired-mode              "vc")
+              (autoload 'vc-finish-logentry         "vc"))
+
+            ;;; ............................................................ hooks ...
+
+            (defcustom XXX-load-hook nil
+              "*Hook run when package has been loaded."
+               :type 'hook
+               :group 'XXX)
+
+            ;;; ........................................................... public ...
+            ;;; User configurable variables
+
+            ;;; .......................................................... version ...
+
+            (defconst XXX-version-id
+              "$Id: emacs-package-make.txt,v 2.11 2007/05/01 17:20:34 jaalto Exp $"
+              "Latest modification time and version number.")
+
+
+            ;;; .......................................................... private ...
+            ;;; Private, package's internal variables.
+
+
+            ;;; .......................................................... &Macros ...
+
+            ;;; ........................................................... &Funcs ...
+
+
+            (provide   'XXX)
+            (run-hooks 'XXX-load-hook)
+
+            ;;; XXX.el ends here
+
+4.0 End of document

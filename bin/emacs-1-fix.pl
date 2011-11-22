@@ -1,29 +1,29 @@
 #!/usr/bin/perl
 #
-# emacs-1-fix.pl -- Fix Emacs Lisp package first line to standard format
+#  File id
 #
-#   File id
+#	 emacs-1-fix.pl -- Fix Emacs Lisp package first line to standard format
 #
-#       Copyright (C) 2000-2007 Jari Aalto
+#   Copyright
 #
-#       This program is free software; you can redistribute it and/or
-#       modify it under the terms of the GNU General Public License as
-#       published by the Free Software Foundation; either version 2 of
-#       the License, or (at your option) any later version.
+#       Copyright (C) 2000-2010 Jari Aalto
 #
-#       This program is distributed in the hope that it will be useful, but
-#       WITHOUT ANY WARRANTY; without even the implied warranty of
-#       MERCHANTABILITY or FITNESS FOR A PARTICULAR PURPOSE.  See the GNU
-#       General Public License for more details.
+#   License
 #
-#	You should have received a copy of the GNU General Public License
-#	along with program. If not, write to the
-#	Free Software Foundation, Inc., 51 Franklin Street, Fifth Floor,
-#	Boston, MA 02110-1301, USA.
+#       This program is free software; you can redistribute it and/or modify
+#       it under the terms of the GNU General Public License as published by
+#       the Free Software Foundation; either version 2 of the License, or
+#       (at your option) any later version.
 #
-#	Visit <http://www.gnu.org/copyleft/gpl.html> for more information
+#       This program is distributed in the hope that it will be useful,
+#       but WITHOUT ANY WARRANTY; without even the implied warranty of
+#       MERCHANTABILITY or FITNESS FOR A PARTICULAR PURPOSE. See the
+#       GNU General Public License for more details.
 #
-#   Documentation
+#       You should have received a copy of the GNU General Public License
+#       along with this program. If not, see <http://www.gnu.org/licenses/>.
+#
+#   Description
 #
 #       Fix first line string in Emacs files to following format:
 #
@@ -31,10 +31,7 @@
 #
 #       The motivation of this would be that there are means
 #       of indexing all of the packages that are supplied with Emacs.
-#
-#   End
 
-use 5.004;
 use strict;
 use English;
 
@@ -43,7 +40,7 @@ sub Main ()
     my $id = "$PROGRAM_NAME.Main";
     my @files;
 
-    for (@ARGV)
+    for ( @ARGV )
     {
         #       Win32 can't expand "*". We must do it here.
         #       Grep only FILES, not directories.
@@ -55,7 +52,6 @@ sub Main ()
 
     for my $file ( @files )
     {
-
         # ..................................................... read ...
 
         unless ( open FILE, $file )
@@ -69,7 +65,6 @@ sub Main ()
         close FILE;
 
         # ...................................................... fix ...
-        # fix first two lines.
 
         my $count;
 
@@ -92,7 +87,8 @@ sub Main ()
         }
 
         binmode FILE;
-        print FILE @content; close FILE;
+        print FILE @content;
+	close FILE;
     }
 }
 

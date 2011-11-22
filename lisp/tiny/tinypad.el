@@ -4,12 +4,11 @@
 
 ;;{{{ Id
 
-;; Copyright (C) 1997-2007 Jari Aalto
+;; Copyright (C) 1997-2010 Jari Aalto
 ;; Keywords:     emulations
 ;; Author:       Jari Aalto
 ;; Maintainer:   Jari Aalto
 ;;
-;; To get information on this program, call M-x tinypad-version.
 ;; Look at the code with folding.el.
 
 ;; This program is free software; you can redistribute it and/or modify it
@@ -23,9 +22,7 @@
 ;; for more details.
 ;;
 ;; You should have received a copy of the GNU General Public License
-;; along with program. If not, write to the
-;; Free Software Foundation, Inc., 51 Franklin Street, Fifth Floor,
-;; Boston, MA 02110-1301, USA.
+;; along with this program. If not, see <http://www.gnu.org/licenses/>.
 ;;
 ;; Visit <http://www.gnu.org/copyleft/gpl.html> for more information
 
@@ -33,7 +30,7 @@
 ;;{{{ Install
 
 ;; ....................................................... &t-install ...
-;;  Put this file on your Emacs-Lisp load path, add following into your
+;;  Put this file on your Emacs-Lisp `load-path', add following into your
 ;;  ~/.emacs startup file. This must be the very first entry before
 ;;  any keybindings take in effect.
 ;;
@@ -46,10 +43,6 @@
 ;;      ;;  n)otepad emulation mode
 ;;      ;;
 ;;      (global-set-key "\C-cmn"  'tinypad-mode)
-;;
-;;  If you have any questions, use this function to contact author
-;;
-;;       M-x tinypad-submit-bug-report
 
 ;;}}}
 ;;{{{ Documentation
@@ -116,20 +109,10 @@
 
 (eval-when-compile (require 'advice))
 
-(ti::package-defgroup-tiny TinyPad tinypad-: tools
+(ti::package-defgroup-tiny TinyPad tinypad-- tools
   "Emulate Windows notepad with extra menu")
 
-;;;###autoload (autoload 'tinypad-version "tinypad" "Display commentary." t)
-
-(eval-and-compile
-  (ti::macrof-version-bug-report
-   "tinypad.el"
-   "tipad"
-   tinypad-:version-id
-   "$Id: tinypad.el,v 2.39 2007/05/07 10:50:08 jaalto Exp $"
-   '(tinypad-:version-id tinypad-:load-hook)))
-
-(defcustom tinypad-:load-hook nil
+(defcustom tinypad--load-hook nil
   "*Hook run when file has been loaded."
   :type  'hook
   :group 'TinyPad)
@@ -143,7 +126,7 @@
 
 (eval-and-compile
   (ti::macrof-minor-mode-wizard
-   "tinypad-" " TinyPad" nil  "TinyPad" 'TinyPad "tinypad-:"
+   "tinypad-" " TinyPad" nil  "TinyPad" 'TinyPad "tinypad--"
    "Emulate Windows Notepad (tm).
 This mode is global to all buffers; allthough it is a minor mode.
 
@@ -155,7 +138,7 @@ how you can make your Alt key produce Meta, so that the keybindings work
 like in Windows.
 
 Mode description:
-\\{tinypad-:mode-prefix-map}"
+\\{tinypad--mode-prefix-map}"
 
    "Notepad emulation menu"
 
@@ -163,17 +146,15 @@ Mode description:
      (cond
       (tinypad-mode
        (put 'tinypad-mode 'global t)
-       (unless (memq 'tinypad-find-file-hook find-file-hooks)
-         (add-hook 'find-file-hooks 'tinypad-find-file-hook )))
+       (add-hook (ti::compat-find-file-hook) 'tinypad-find-file-hook ))
       (t
        (put 'tinypad-mode 'global nil)
-       (when (memq 'tinypad-find-file-hook find-file-hooks)
-         (remove-hook 'find-file-hooks 'tinypad-find-file-hook ))))
+       (remove-hook (ti::compat-find-file-hook) 'tinypad-find-file-hook )))
      (when (null (get 'tinypad-mode 'self-call))
        (tinypad-mode-action)))
    "Tiny Notepad mode"
    (list                                ;arg 10
-    tinypad-:mode-easymenu-name
+    tinypad--mode-easymenu-name
     (list
      "F)ile"
      ["N)ew"                 erase-buffer                t]
@@ -210,7 +191,7 @@ Mode description:
      ["A)bout Tinypad"       tinypad-version             t]
      ["V)ersion, mode desc." tinypad-mode-help           t]))
    (progn
-;;;    (set map (setq tinypad-:mode-map (make-keymap)))
+;;;    (set map (setq tinypad--mode-map (make-keymap)))
      (define-key   root-map [(meta f) (n)]  'tinypad-erase-buffer)
      (define-key   root-map [(meta f) (o)]  'find-file)
      (define-key   root-map [(meta f) (s)]  'save-buffer)
@@ -282,7 +263,7 @@ Mode description:
 ;;; ----------------------------------------------------------------------
 ;;;
 (defun tinypad-find-file-hook  ()
-  "Turn on tipad mode if `tinypad-:mode-global' is non-nil."
+  "Turn on tipad mode if `tinypad--mode-global' is non-nil."
   (when (and (get 'tinypad-mode 'global)
              (null tinypad-mode))
     (setq tinypad-mode 1)))
@@ -292,9 +273,9 @@ Mode description:
 (defun tinypad-mode-action ()
   "Activate `tinypad-mode' on or off everywhere, depending on var `tinypad-mode'."
   (unless (get 'tinypad-mode 'self-call)
-    (run-hooks 'tinypad-:mode-define-keys-hook))
-  (let* ((i 0)
-         tinypad-:mode-define-keys-hook)
+    (run-hooks 'tinypad--mode-define-keys-hook))
+  (let ((i 0)
+	tinypad--mode-define-keys-hook)
     (unwind-protect
         (progn
           ;;  Raise the flag to prevent calling us
@@ -314,9 +295,9 @@ Mode description:
 
 ;;}}}
 
-(add-hook 'tinypad-:mode-define-keys-hook 'tinypad-mode-define-keys)
+(add-hook 'tinypad--mode-define-keys-hook 'tinypad-mode-define-keys)
 
 (provide   'tinypad)
-(run-hooks 'tinypad-:load-hook)
+(run-hooks 'tinypad--load-hook)
 
 ;;; tinypad.el ends here

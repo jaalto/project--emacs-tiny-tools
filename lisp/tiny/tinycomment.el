@@ -4,13 +4,12 @@
 
 ;;{{{ Id
 
-;; Copyright (C) 1994-2007 Jari Aalto
+;; Copyright (C) 1994-2010 Jari Aalto
 ;; Keywords:     extensions
 ;; Author:       Jari Aalto
 ;; Maintainer:   Jari Aalto
 ;;
-;; To get information on this program use ident(1) or call M-x
-;; tinycomment-version Look at the code with folding.el
+;; Look at the code with folding.el
 
 ;; COPYRIGHT NOTICE
 ;;
@@ -25,9 +24,7 @@
 ;; for more details.
 ;;
 ;; You should have received a copy of the GNU General Public License
-;; along with program. If not, write to the
-;; Free Software Foundation, Inc., 51 Franklin Street, Fifth Floor,
-;; Boston, MA 02110-1301, USA.
+;; along with this program. If not, see <http://www.gnu.org/licenses/>.
 ;;
 ;; Visit <http://www.gnu.org/copyleft/gpl.html> for more information
 
@@ -35,7 +32,7 @@
 ;;{{{ Installation
 
 ;; ........................................................ &t-install ...
-;; - Put this file on your Emacs-Lisp load path, add following into your
+;; - Put this file on your Emacs-Lisp `load-path', add following into your
 ;;   ~/.emacs startup file
 ;;
 ;;      (require            'tinycomment)
@@ -46,10 +43,6 @@
 ;;
 ;;      (global-set-key  "\M-;" 'tinycomment-indent-for-comment)
 ;;      (autoload 'tinycomment-indent-for-comment "tinycomment" "" t)
-;;
-;;   If you have any questions, use this function to contact author
-;;
-;;          M-x tinycomment-submit-bug-report
 
 ;;}}}
 ;;{{{ Commentary
@@ -126,10 +119,7 @@
 
 (require 'tinylibm)
 
-(eval-when-compile
-  (ti::package-use-dynamic-compilation))
-
-(ti::package-defgroup-tiny TinyComment tinycomment-: extensions
+(ti::package-defgroup-tiny TinyComment tinycomment-- extensions
   "Smart comment setting utility
   Overview of features:
 
@@ -152,7 +142,7 @@
 
 ;;; ......................................................... &v-hooks ...
 
-(defcustom tinycomment-:load-hook nil
+(defcustom tinycomment--load-hook nil
   "*Hook run when package has been loaded."
   :type 'hook
   :group 'TinyComment)
@@ -160,7 +150,7 @@
 ;;; ........................................................ &v-public ...
 ;;; User configurable
 
-(defcustom tinycomment-:not-comment-re ".*[$]\\(#\\)[a-zA-Z]"
+(defcustom tinycomment--not-comment-re ".*[$]\\(#\\)[a-zA-Z]"
   "*Reject comment position according to subexpression 1.
 When searching for comment position, the position found will be
 rejected, if comment subexpression 1 match's position is the same as
@@ -169,9 +159,11 @@ the beginnning of line.
 
       $#variable_in_csh
 0123456789 123456789 12345       ;columns
-       *                         ;found comment pos, reject it.")
+       *                         ;found comment pos, reject it."
+  :type 'regexp
+  :group 'TinyComment)
 
-(defcustom tinycomment-:tab-call-no-alist
+(defcustom tinycomment--tab-call-no-alist
   '(fundamental-mode
     text-mode)
   "*List of modes which enable using TIC's own indent-for-code algorithm.
@@ -183,7 +175,7 @@ tab key."
   :type '(repeat (function :tag "Mode function"))
   :group 'TinyComment)
 
-(defcustom tinycomment-:adj-no-alist
+(defcustom tinycomment--adj-no-alist
   '(lisp-interaction-mode
     lisp-mode
     emacs-lisp-mode
@@ -203,7 +195,7 @@ and the normal `indent-for-comment' is used."
   :type '(repeat (function :tag "Mode function"))
   :group 'TinyComment)
 
-(defcustom tinycomment-:comment-notify nil
+(defcustom tinycomment--comment-notify nil
   "*If non-nil allow printing notify messages.
 When the comment syntax wasn't found according to file name.
 The message is _not_ displayed when `buffer-name' contains '*'.
@@ -214,7 +206,7 @@ you can turn off the warning."
   :type 'boolean
   :group 'TinyComment)
 
-(defcustom tinycomment-:def-com-pos 'code
+(defcustom tinycomment--def-com-pos 'code
   "*Default comment position for empty lines.
 Possible choices are:
 
@@ -229,18 +221,18 @@ well _inside_ functions"
            (const cpos))
   :group 'TinyComment)
 
-(defcustom tinycomment-:comment-extra-arg 1
-  "*See documentation of `tinycomment-:comment-extra'."
+(defcustom tinycomment--comment-extra-arg 1
+  "*See documentation of `tinycomment--comment-extra'."
   :type 'integer
   :group 'TinyComment)
 
-(defcustom tinycomment-:comment-extra-stop 63 ;TAB position 64
-  "*See documentation of `tinycomment-:comment-extra'.
+(defcustom tinycomment--comment-extra-stop 63 ;TAB position 64
+  "*See documentation of `tinycomment--comment-extra'.
 The comment movement is not done if `current-column' > this variable."
   :type 'integer
   :group 'TinyComment)
 
-(defcustom tinycomment-:comment-extra 'tab
+(defcustom tinycomment--comment-extra 'tab
   "*This affects function `tinycomment-set-com'. Let's see an example:
 
     abcd abcd abcd abcd abcd abcd[x] abcd abcd # COMMENT
@@ -253,10 +245,10 @@ Current choices are:
     'tab      Insert tab between code and comment, so that they get
               separated. Any previous whitespace is deleted.
     'spc      Same, but insert space instead. The number or spaces inserted
-              is told in variable  `tinycomment-:comment-extra-arg'
+              is told in variable  `tinycomment--comment-extra-arg'
 
 None of these actions are carried out if the comment was placed in
-column `tinycomment-:comment-extra-stop' +1 or further. Such comment is
+column `tinycomment--comment-extra-stop' +1 or further. Such comment is
 left untouched, because adjusting may push it out of the window edge."
   :type  '(choice
            (const tab)
@@ -264,54 +256,29 @@ left untouched, because adjusting may push it out of the window edge."
   :group 'TinyComment)
 
 ;;}}}
-;;{{{ setup: -- version notice
-
-;;; ....................................................... &v-version ...
-
-;;;###autoload (autoload 'tinycomment-version "tinycomment" "Display commentary." t)
-(eval-and-compile
-  (ti::macrof-version-bug-report
-   "tinycomment.el"
-   "tinycomment"
-   tinycomment-:version-id
-   "$Id: tinycomment.el,v 2.38 2007/05/01 17:20:42 jaalto Exp $"
-   '(tinycomment-:version-id
-     tinycomment-:not-comment-re
-     tinycomment-:tab-call-no-alist
-     tinycomment-:adj-no-alist
-     tinycomment-:comment-notify
-     tinycomment-:def-com-pos
-     tinycomment-:comment-extra-arg
-     tinycomment-:comment-extra-stop
-     tinycomment-:comment-extra)))
-
-;;}}}
-
-;;; ########################################################### &Funcs ###
-
 ;;{{{ code: misc
 
 ;;; ----------------------------------------------------------------------
 ;;;
-(defun tinycomment-find-prev-com-col (com-start &optional not-this-col CF)
+(defun tinycomment-find-prev-com-col (com-start &optional not-this-col column-further)
   "Look upward to find previous comment column.
 
 Input:
 
-  COM-START     comment start string.
-  NOT-THIS-COL  if given,  scan backward until different column
-                is found.
-  CF            tell that comment searched must reside further in
-                in the line than this column.
+  COM-START      comment start string.
+  NOT-THIS-COL   if given,  scan backward until different column
+                 is found.
+  COLUMN-FURTHER If number, comment searched must reside further
+                 in in the line than this column.
 
 Return:
 
   nil   unable to find previous comment
   col"
-  (let* ((re        com-start)
-         (loop      t)
-         ret
-         found)
+  (let ((loop t)
+	(re   com-start)
+	ret
+	found)
     (save-excursion
       (while loop
         (beginning-of-line)
@@ -323,13 +290,12 @@ Return:
                 (null not-this-col))
             nil
           (if (not (= ret not-this-col))
-              (setq loop nil)                   ;this will do !
-            (setq loop t found nil)))           ;keep searching
-
+              (setq loop nil)		;this will do !
+            (setq loop t found nil)))	;keep searching
         (if (or (null found)
-                (null CF))
+                (null column-further))
             nil
-          (if (> ret CF)                ;this IS suitable !
+          (if (> ret column-further)	;this IS suitable !
               (setq loop nil)
             (setq loop t found nil))))) ;keep going
     ret))
@@ -343,7 +309,7 @@ Return:
 
    nil
    nbr  column."
-  (let ((no-com   (or tinycomment-:not-comment-re   "dummy"))
+  (let ((no-com   (or tinycomment--not-comment-re   "dummy"))
         (max      (save-excursion (end-of-line) (point)))
         (clen     (length comment-start))
         (re       comment-start)
@@ -379,15 +345,14 @@ Return:
 Return:
 
   Depends heavily on the MODE"
-  (let* (ret
-         re
-         re2
-         bp
-         p
-         p2)
+  (let (ret
+	re
+	re2
+	bp
+	p
+	p2)
     (if (null (symbolp mode)) nil       ;handle literals
       (cond
-
        ;;  ... ... ... ... ... ... ... ... ... ... ... ... ... ... ... ...
        ((and (eq 'code-last-col mode) comment-start)
         (setq re comment-start)
@@ -400,7 +365,6 @@ Return:
             (goto-char (match-beginning 0)))
           (skip-syntax-backward " " bp)
           (setq ret (current-column))))
-
        ;;  ... ... ... ... ... ... ... ... ... ... ... ... ... ... ... ...
        ;;   find *last* comment start pos
        ;;   like '// i = 1000;   // temporarily commented out'
@@ -414,23 +378,18 @@ Return:
               nil
             (goto-char (match-beginning 1))
             (setq ret (current-column)))))
-
        ;;  ... ... ... ... ... ... ... ... ... ... ... ... ... ... ... ...
        ;;  whole line is 'alone' comment, so that there is no
        ;;  double comments, return it's starting position
        ;;  Double comment is like the previous cond-case
-
        ((and (eq 'com-alone-col mode) comment-start)
         (setq re (concat "[ \t]*\\(" comment-start  "\\)"  ))
-
         ;;  notice COM + SPC in re2
         ;;  - user may write '// this is separator /////////////////////'
         ;;    But that's one comment
         ;;  - '// i = MaxPos; // commented'. There is SPC in second
         ;;    comment, so it has to be Double Commented line.
-
         (setq re2 (concat ".*\\(" comment-start  " \\)"  ))
-
         (save-excursion
           (beginning-of-line)
           (if (not (looking-at re))
@@ -445,15 +404,12 @@ Return:
                   nil
                 (goto-char p)           ;same comment hit twice
                 (setq ret (current-column)))))))
-
        ;;  ... ... ... ... ... ... ... ... ... ... ... ... ... ... ... ...
        ((eq 'eolpos mode)
         (save-excursion (end-of-line) (setq ret (point))))
-
        ;;  ... ... ... ... ... ... ... ... ... ... ... ... ... ... ... ...
        ((eq 'bolpos mode)
         (save-excursion (beginning-of-line) (setq ret (point))))
-
        ;;  ... ... ... ... ... ... ... ... ... ... ... ... ... ... ... ...
        ((eq 'emptyEol mode)
         ;; If the rest of line empty ?
@@ -491,24 +447,24 @@ Return:
 
   nbr           found code, proposed column returned.
   nil           unable to find proper code indent"
-  (let* ((re-com  (concat
-                   "^[ \t]*" (regexp-quote com-start)
-                   "\\|^[ \t]*$"))      ;skip empty lines.
-         (move t)
-         p                              ;point mark
-         ret)
+  (let ((re-com  (concat
+		  "^[ \t]*" (regexp-quote com-start)
+		  "\\|^[ \t]*$"))	;skip empty lines.
+	(move t)
+	point				;point mark
+	ret)
     (save-excursion
-      (while (and move (eq ret nil))    ;while RET is not set
+      (while (and move
+		  (eq ret nil))		;while RET is not set
         (re-search-backward "[^ \t]+" nil t)
         (if (save-excursion
               (beginning-of-line)
               (looking-at re-com))      ;ignore full comment lines.
-            (if (eq (point) p)          ;have we moved since?
-                (setq move nil))        ;we're stucked .. :-C
+            (if (eq (point) point)	;have we moved since?
+                (setq move nil))
           ;; Maybe this real code line?
-
           (setq ret (1+ (current-column)))) ;1+ due to re-search
-        (setq p (point))))
+        (setq point (point))))
     ret))
 
 ;;}}}
@@ -537,23 +493,28 @@ Features:
    optional artgument NEW is given. In that case, nothing is considered
    as old comments.
 -  If line is too long for comment column it inserts additional SPC or TAB
-   between the code and comment. See variable `tinycomment-:comment-extra'
+   between the code and comment. See variable `tinycomment--comment-extra'
 
 Return:
 
   t             position changed OR new comment added
   nil           position not allowed"
-  (let* (
-         (xtra     tinycomment-:comment-extra)
-         (x-spc    (make-string tinycomment-:comment-extra-arg ?\ ))
-         (x-spc    (if (eq 'tab xtra) "\t" x-spc)) ; what's the insert type ?
-         (stop-col tinycomment-:comment-extra-stop)
-         (ep       (save-excursion (end-of-line) (point)))
-         (skip     (or comment-start-skip  comment-start))
-
+  (let* ((xtra     tinycomment--comment-extra)
+         (x-spc    (make-string tinycomment--comment-extra-arg ?\ ))
+         (x-spc    (if (eq 'tab xtra)
+		       "\t"
+		     x-spc)) ; what's the insert type ?
+         (stop-col tinycomment--comment-extra-stop)
+         (ep       (save-excursion
+		     (end-of-line)
+		     (point)))
+         (skip     (or comment-start-skip
+		       comment-start))
          found
          bp                             ;BEG of line point
-         com-c code-c com-p
+         com-c
+	 code-c
+	 com-p
          ret)
     (beginning-of-line)
     (setq bp (point))
@@ -561,48 +522,36 @@ Return:
     (if (null new)                      ;did user say new vomment ?
         (while (re-search-forward skip ep t) ;last comment
           (setq found t)))
-
-;;;    (d! skip new found (match-beginning 0))
     (if (null found)
         (progn
           (end-of-line)
           (indent-to comment-column)
           (insert comment-start)
           (setq ret t))
-
       ;;  first set comment position
       (goto-char (match-beginning 0))
       (setq com-p (point))
       (setq com-c (current-column))     ;comment column
-
       ;; Now where is the code position
       ;; Give argument "nil" (no limit) for skip syntax function is line
       ;; is first line in buffer.
-      ;;
       (backward-char 1)
       (skip-syntax-backward " " (if (eq 1 bp)
                                     nil
                                   (1- bp)))
       (setq code-c (current-column))
-
       (goto-char com-p)
-;;;      (d! "#set" (current-column) comment-column com-c)
-
       (if (= comment-column com-c)
           nil                           ;nothing to do
         (setq ret t)
         (if (< code-c comment-column)
             (progn                      ;we can indent ok
               (delete-horizontal-space)
-;;;           (d! "deleted")
               (indent-to comment-column))
           ;;  line is too long to get position to comment-col
-;;;       (d! "Too long line..." (point)  com-c stop-col)
           (if (> com-c stop-col) nil    ;do not touch this
             (delete-horizontal-space)
-;;;         (d! "del ok" )
             (insert x-spc)))))
-;;;    (d! "#set end" ret (current-column))
     ret))
 
 ;;}}}
@@ -648,19 +597,19 @@ Code note:
 -  Considered adding 4th choice: indent like previous comment,
    but I decided 4th choice or 4 taps was too much...3 seemed ideal,
    so I left it out from 'full comment line'."
-  (let* (
-         (def-place tinycomment-:def-com-pos)
-         (tab-alist tinycomment-:tab-call-no-alist)
+  (let* ((def-place tinycomment--def-com-pos)
+         (tab-alist tinycomment--tab-call-no-alist)
          (ci        (current-indentation))
          (cc        (current-column))
          (com       comment-start)
          (col       comment-column)
          (clen      (length comment-start))
-
          ;;    handle ONLY lines that have only comment, no code.
-         (re-com    (concat "^[ \t]*\\(" (regexp-quote com) "+\\)"))
-         (re-com2   (concat ".*" (regexp-quote com)))
-
+         (re-com    (concat "^[ \t]*\\("
+			    (regexp-quote com)
+			    "+\\)"))
+         (re-com2   (concat ".*"
+			    (regexp-quote com)))
          cur-code-c
          prev-cc cur-cc                 ;various com-col points
          code-col
@@ -668,26 +617,21 @@ Code note:
          prev-code-ind
          cont
          tmp)
-
     (catch 'done
       (if (or (not (integerp col)) (not (stringp com)))
           (error "comment-[column/start] not set"))
-
       (when (string-match "^[ \t]*$" com) ;empty comment?
         (if (tinycomment-check-line 'emptyEol)
             (indent-to col)
           (message "tinycomment-adj: no comment-start defined.")
           (throw 'done t)))
-
       (setq cur-code-c (tinycomment-check-line 'code-last-col))
-      (setq prev-cc (tinycomment-find-prev-com-col com col cur-code-c)) ;previous c col
+      (setq prev-cc (tinycomment-find-prev-com-col com col cur-code-c))
       (setq cur-cc (tinycomment-find-com-col)) ;current comment column
-
       ;;  - If we do NOT already have a comment, indent for a new one.
       (beginning-of-line)
 
       (unless (looking-at re-com)       ;comment on it's own line ?
-;;;     (d! (looking-at re-com2) re-com2)
         ;; .............................................................
         (cond
          ;;  no comment at all or not suitable comment ?
@@ -696,123 +640,84 @@ Code note:
                    (null (tinycomment-find-com-col)))) ;it isn't suitable
           (if (not (looking-at "[ \t]*$"))             ; CODE + no COM
               (progn
-;;;             (d! "new")
                 (tinycomment-set-com 'new) ;Normal column, but it'll be changed
                 (setq cur-cc (tinycomment-find-com-col))
                 (setq class 3))         ;indent like prev line by DEF
             ;;  empty line
             (insert com)                ;see cont, it passes thru
-;;;         (d! "Insert 1")
-
             ;;  User propably want CODE level indent on empty line by DEF
             (if (eq def-place 'code )
                 (setq cont t))))
-
          ;;   There is existing comment
          ((and cur-cc (= cur-cc col))   ;change class if possible
           (setq class 3))
-
          ((and cur-cc prev-cc           ;make sure these are set
                (or (null prev-cc) (= cur-cc prev-cc)))
           ;;   possibly change class to standard column
-;;;       (d! "set com")
           (tinycomment-set-com)) ; no prev comment or position was same
-
          (t
           ;;  add New comment
-;;;       (d! "new--")
           (tinycomment-set-com)))
-
-;;;     (d! "CLASS " class cur-cc col)
         ;;   Determine how CODE + COM line is handled
         (when (eq class 3)
-
           (save-excursion
             (forward-line -1) (end-of-line)
             (setq prev-code-ind (tinycomment-find-comment-col com)))
-
-;;;       (d! "#1 prev" (point) "col" cur-code-c col
-;;;           "cc" prev-cc  cur-cc  "ind" prev-code-ind )
-
           (if (or (null prev-code-ind)  ;No code found
                   (>= cur-code-c col)   ;cannot put to comment-col
                   (null prev-cc)   ;cannot convert to class, isn't set
                   (>= cur-code-c prev-cc) ;cannot use prev com class
                   (not (= cur-cc col)))   ;convert to com-col CLASS
               (progn
-;;;             (d! "#1.1 com-col" col)
                 (tinycomment-set-com))
-
             ;;   Convert to previous comment column class then
-;;;         (d! "#2 prev" prev-cc "cur" cur-cc "code" code-c)
             (setq comment-column prev-cc) ; change temporarily
             (tinycomment-set-com)
             ;; restore value
             (setq comment-column col)))
-
-;;;     (d! "cont" cont)
         (if cont
             nil                         ;do we continue forward ?
           (if (not (eolp))
               (forward-char (length comment-start)))
-
           (throw 'done t)))
-
-;;;      (d! "Comment ok")
-
       ;; --``-- --``-- --``-- --``-- --``-- --``-- --``-- --``-- --``--
       ;;  There is a comment, convert it between classes.
       ;;  Also correct the search position due to S-FWD command
-
       (beginning-of-line)
       (if (re-search-forward comment-start (tinycomment-check-line 'eolpos))
           (goto-char (match-beginning 0)))
-
       (setq cc (current-column))        ;at front of comment
       (setq code-col (tinycomment-find-code-col com))
-
       ;;   First select where to convert?
       (cond
        ((= cc 0)                        ;BEG of line ?
         (setq class 1))
-
        ((or (eq code-col cc)
             (eq cc col))                ; in Comment column ?
         (setq class 0))
-
        ((and (not (eq ci 0))            ; prallel to code ?
              (not (eq cc col)))         ; this is rough guess...
         (setq class 2)))
-
-;;;      (d! "cc" cc ci col class)
-
       ;; --``-- --``-- --``-- --``-- --``-- --``-- --``-- --``-- --``--
-;;;   (d! "TIC-ADJ" (point) (bolp) cc col class)
-
       (cond                             ;Now the converting procedure
        ((eq class 0)                    ;BEG of line
         (delete-horizontal-space))
-
        ((eq class 1)                    ;code level
         (beginning-of-line) (delete-horizontal-space)
-
         ;; Are we allowed to indent this by ourself ?
         (if (null (memq major-mode tab-alist))
             (indent-according-to-mode)  ;let mode place the statement
-
           (if (null code-col)           ;no code
               (indent-to comment-column)
             (if (and (= cc 0) (= col 0)) ;if suggested POS is same
                 (indent-relative))
             (indent-to col))))
-
        ((eq class 2)                    ;column level
         (indent-to col)))
       (forward-char clen))              ;after class change
-
     ;;  do we need to restore the point ? [experimental]
     ;;    (if save-excur (goto-char op))
-    nil))                               ;
+    nil))
 
 ;;}}}
 ;;{{{ code: main
@@ -851,12 +756,12 @@ that has no file name cannot be identified by this function, so
 it passes control directly to mode. There is a chance you might not
 even notice that this function is working on the background.
 
-Verbose warnings are enabled by `tinycomment-:comment-notify'
-Special cases are handled by tinycomment-:comment-extra* variables
+Verbose warnings are enabled by `tinycomment--comment-notify'
+Special cases are handled by tinycomment--comment-extra* variables
 Version info is on \\[tinycomment-version]."
   (interactive)
-  (let* ((warn          tinycomment-:comment-notify) ;; shorter name
-         (no-list       tinycomment-:adj-no-alist)
+  (let* ((warn          tinycomment--comment-notify) ;; shorter name
+         (no-list       tinycomment--adj-no-alist)
          (com-col       48)         ;default comment column if not set
          elt
          (mode-desc     (or (ti::id-info nil 'variable-lookup)
@@ -864,16 +769,12 @@ Version info is on \\[tinycomment-version]."
                              "code-"
                              (replace-regexp-in-string
                               "-mode" "" (symbol-name major-mode))))))
-
     (if mode-desc
         (setq elt (ti::id-cnv-txt2comment mode-desc)))
-
     (if warn
         (setq warn warn))               ;XE 19.14 ByteComp silencer
-
     (tinycomment-set-c-vars-maybe
      comment-start comment-end comment-column comment-start-skip)
-
     (cond
      ;; ........................................ mode's own commenting ...
      ((or (memq major-mode no-list)
@@ -881,29 +782,21 @@ Version info is on \\[tinycomment-version]."
       ;;   let mode handle comment classes, only IF NOT SET
       ;;   but let's correct some user mistakes first...
       (indent-for-comment))             ;mode call...)
-
      (t
       ;; ............................................... real engine ...
-
       (if (ti::nil-p comment-start)     ;they are not defined.
           (if elt                       ;we have comment info?
               (setq comment-start (car elt) comment-end (or (cdr elt) ""))))
-
       (tinycomment-set-c-vars-maybe
        comment-start comment-end comment-column comment-start-skip)
-
       ;;   if the position is NOT set use default comment position
-      ;;
       (if (not (integerp comment-column))
           (setq comment-column com-col))
-
       ;;  - The indent-for-comment WON'T work if this is nill
       ;;    See simple.el for function def.
       ;;  - We don't set _right_ value, just sufficent replacement.
-      ;;
       (setq comment-start-skip (concat comment-start "+"))
       (tinycomment-adjust-comment)
-
       (if (and warn (ti::nil-p comment-start))
           (message
            "TIC: unknown file, no comment syntax available")) ))))
@@ -913,37 +806,35 @@ Version info is on \\[tinycomment-version]."
 ;;{{{ example setup
 
 ;;; ......................................................... &example ...
-;;; - Copy this, and use M-% to remove comment prefixes ';;* '
-;;; - Code can also be extracted with function tinylib.el/ti::package-rip-magic
 
-;;* (autoload 'turn-on-tinytab-mode "tinytab" "" t)
-;;_
-;;* (defun my-fundamental-mode ()
-;;*   "my fundamental-mode"
-;;*   (interactive)
-;;*   (fundamental-mode)
-;;*   (turn-on-tinytab-mode)
-;;*   (setq tinytab-tt-mode nil)
-;;*   (if (fboundp 'folding-mode)
-;;*       (ti::funcall 'folding-mode))
-;;*   (recenter)                                ;Show visible notification
-;;*   ;; delete possible comment settings
-;;*   (setq comment-start nil
-;;*        comment-end    nil
-;;*        comment-column nil
-;;*     ;;   very important to restore this !! See simple.el
-;;*         comment-indent-hook '(lambda () comment-column)))
-;;* _
-;;* (add-hook 'c++-mode-hook  'my-c++-mode-hook)
-;;* _
-;;* (defun my-c++-mode-hook ()
-;;*   (setq comment-column nil   ;; When set to nil, tinycomment.el takes over.
-;;*     comment-start nil
-;;*     comment-end nil))
+;; (autoload 'turn-on-tinytab-mode "tinytab" "" t)
+;;
+;; (defun my-fundamental-mode ()
+;;   "my fundamental-mode"
+;;   (interactive)
+;;   (fundamental-mode)
+;;   (turn-on-tinytab-mode)
+;;   (setq tinytab-tt-mode nil)
+;;   (if (fboundp 'folding-mode)
+;;       (ti::funcall 'folding-mode))
+;;   (recenter)                                ;Show visible notification
+;;   ;; delete possible comment settings
+;;   (setq comment-start nil
+;;        comment-end    nil
+;;        comment-column nil
+;;     ;;   very important to restore this !! See simple.el
+;;         comment-indent-hook '(lambda () comment-column)))
+;;
+;; (add-hook 'c++-mode-hook  'my-c++-mode-hook)
+;;
+;; (defun my-c++-mode-hook ()
+;;   (setq comment-column nil   ;; When set to nil, tinycomment.el takes over.
+;;     comment-start nil
+;;     comment-end nil))
 
 ;;}}}
 
 (provide 'tinycomment)
-(run-hooks       'tinycomment-:load-hook)
+(run-hooks 'tinycomment--load-hook)
 
 ;;; tinycomment.el ends here

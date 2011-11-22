@@ -3,6 +3,7 @@
 ;; This file is not part of Emacs
 
 ;; Copyright (C) 1987 Kyle Jones
+;; Copyright (C) 1997-2010 Jari Aalto
 ;; Author:       Kyle Jones
 ;; Maintainer:   Jari Aalto
 ;; Keywords:     extensions
@@ -22,9 +23,7 @@
 ;; for more details.
 ;;
 ;; You should have received a copy of the GNU General Public License
-;; along with program. If not, write to the
-;; Free Software Foundation, Inc., 51 Franklin Street, Fifth Floor,
-;; Boston, MA 02110-1301, USA.
+;; along with this program. If not, see <http://www.gnu.org/licenses/>.
 ;;
 ;; Visit <http://www.gnu.org/copyleft/gpl.html> for more information
 

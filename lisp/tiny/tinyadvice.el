@@ -2,9 +2,7 @@
 
 ;; This file is not part of Emacs
 
-;;{{{ Id
-
-;; Copyright (C)    1996-2007 Jari Aalto
+;; Copyright (C)    1996-2010 Jari Aalto
 ;; Keywords:        extensions
 ;; Author:          Jari Aalto
 ;; Maintainer:      Jari aalto
@@ -25,42 +23,40 @@
 ;; for more details.
 ;;
 ;; You should have received a copy of the GNU General Public License
-;; along with program. If not, write to the
-;; Free Software Foundation, Inc., 51 Franklin Street, Fifth Floor,
-;; Boston, MA 02110-1301, USA.
+;; along with this program. If not, see <http://www.gnu.org/licenses/>.
 ;;
 ;; Visit <http://www.gnu.org/copyleft/gpl.html> for more information
 
-;;}}}
-;;{{{ Install
 
 ;;; Install:
 
 ;; ....................................................... &t-install ...
-;; Put this file on your Emacs-Lisp load path, add following into your
+;; Put this file on your Emacs-Lisp `load-path', add following into your
 ;; ~/.emacs startup file.
 ;;
 ;;     (require 'tinyadvice)
 ;;
-;; Loading this package takes lot of time. You might gain more comfortable
-;; Emacs startup "feel" using the following autoload suggestion:
+;; Loading this package takes some time. A more faster startup "feel"
+;; could be achieved with following delayed loading:
 ;;
 ;;     (require 'tinylib)
-;;     (when (ti::emacs-p)                           ;Do not load in XEmacs
-;;       (if (fboundp 'run-with-idle-timer)      ;Emacs
-;;           (run-with-idle-time (* 4 60) nil '(lambda () (require 'tinyadvice)))
+;;     (when (ti::emacs-p)                    ;Do not load in XEmacs
+;;       (if (fboundp 'run-with-idle-timer)   ;Emacs
+;;           (run-with-idle-time (* 4 60) nil
+;;             '(lambda () (require 'tinyadvice)))
 ;;         (run-at-time "4 min" nil '(lambda () (require 'tinyadvice)))))
 ;;
-;; But before you leap into this, make sure you want to do it.
+;; But before you leap into that, make sure you want to do it.
 ;;
 ;;      CHECK IF YOUR EMACS IS SUPPORTED
 ;;      THESE ADVICES ARE FOR Emacs, expect trouble in XEmacs.
 ;;
-;;      Change `tinyadvice-:re' to try advices in non-supported Emacs versions
+;;      Advice activation  controlled by variable `tinyadvice-:re'
 ;;
-;; This file modifies original Emacs functions, so read the document
-;; carefully to tailor this package for you (enabling/disabling advices)
-;; The best up to date documentation can be generated from this file:
+;; This file modifies original Emacs functions, so read the
+;; documentation carefully to tailor package for personal use
+;; (enabling/disabling advices). The up to date documentation can be
+;; generated from this file with ocmmands:
 ;;
 ;;      M-x eval-current-buffer
 ;;      M-x load-library tinyliby.el
@@ -69,11 +65,6 @@
 ;; If you have any questions, use this function
 ;;
 ;;      M-x tinyadvice-submit-bug-report      send bug report or feedback
-;;
-
-;;}}}
-
-;;{{{ Documentation
 
 ;; ..................................................... &t-commentary ...
 
@@ -81,10 +72,10 @@
 
 ;;  Preface, Apr 1996
 ;;
-;;      What you see here is a selection of adviced functions that have
-;;      proven to be extremely useful. Some of them have been written by
-;;      the author (if there is no author mentioned) and some of them have
-;;      been collected form the emacs newsgroups.
+;;      What you see here is a selection of adviced functions that
+;;      have proven to be useful. Some of them have been written by
+;;      the author (if there is no author mentioned) and some of them
+;;      have been collected form the Emacs newsgroups.
 ;;
 ;;      Here is one example how to to fontify automatically, whenever
 ;;      compilation buffer runs:
@@ -105,25 +96,24 @@
 ;;              ;;  font-lock-mode-hook
 ;;              (with-current-buffer
 ;;               buffer
-;;                (turn-on-font-lock-mode))))
+;;                (font-lock-mode 1))))
 ;;
 ;;  Note: XEmacs
 ;;
-;;      These advices are for Emacs and it would be a surprise if they
-;;      worked in XEmacs. Use at your own risk. Send fixed XEmacs
-;;      compatible advices to maintained if you try them.
+;;      These advices are for Emacs and it would be a surprise if any
+;;      of them worked in XEmacs. Use at your own risk.
 ;;
 ;;  These advises and Emacs releases
 ;;
 ;;      Many of these enhancements could have shipped with the Emacs
-;;      itself. And there was a time when these were suggested to be added
-;;      to the next Emacs release. For some reason the developers
-;;      were not interested in the features at that time.
+;;      itself. And there was a time when these were suggested to be
+;;      added to the next Emacs release, but the developers were not
+;;      interested in improving or changing functions at those times.
 ;;
 ;;  How to use this package
 ;;
-;;      The best way is to load this package, print the whole file and read
-;;      the comments about individual functions and how they change things.
+;;      The best way is to try. Load package read the comments about
+;;      individual functions and how they change things.
 ;;
 ;;  Overview of features
 ;;
@@ -163,7 +153,7 @@
 ;;          all emacs files). Find-file is done in non dedicated frame.
 ;;          TAB completes filenames.
 ;;
-;;      o   completion:  case sensitive filename completion
+;;      o   completion: case sensitive filename completion
 ;;
 ;;      o   grep: filename and directory completion with TAB key
 ;;
@@ -172,45 +162,43 @@
 ;;          `vc-register' creates RCS directory if does not exist and
 ;;          offers checking as "original" file with existing version
 ;;          numbers (tracking 3rd party sources).
-;;          User to set the initial comment when doing 1st CI.
+;;          User to set the initial comment when doing 1st checkin.
 ;;          If `tinyadvice-:cvs-buffer-read-only' is nil, then keep.
 ;;          CVS files in writable mode (the default CVS behavior)
 ;;
 ;;  Handling advices
 ;;
-;;      If you have some other emacs version that is not supported in
+;;      If you have some other Emacs version that is not supported in
 ;;      the `tinyadvice-:advice-table' you can modify the regexps in
-;;      the list and try if the advice works in your emacs. If it
-;;      does, please drop me a mail immediately and I update the
-;;      regexp. If some advice annoys you, there is simple method how
-;;      you disable advice(s).
+;;      the list and try if the advice works. If it does, please drop
+;;      me a mail to have the regecp updated. If some advice is
+;;      annoying, there is simple method how you disable advice(s).
 ;;
 ;;          (setq tinyadvice-load-hook
 ;;                '(tinyadvice-install my-tinyadvice-load-hook))
 ;;
 ;;          (defun my-tinyadvice-load-hook ()
-;;            "Configure 'tiny tool's advices' to my taste."
+;;            "Configure advices"
 ;;            (interactive)
 ;;            ;; This diables two advices
 ;;            (tinyadvice-advice 'disable
 ;;               '(switch-to-buffer mouse-delete-other-windows)))
+;;
 ;;          (require 'tinyadvice)
 ;;
-;;  Disabling disturbing advice by hand
+;;  Disabling a disturbing advice by hand
 ;;
-;;      If some piece of advice disturbs or causes trouble in your
-;;      current emacs session, you can deactivate it
-;;      immediately. First you have to know the function name that
-;;      generates problems. Say you used `C-x' `C-b'
-;;      `switch-to-buffer' and you don't like the confirmation for
-;;      non-existent buffers. You can disable this behavior by
+;;      If some piece of advice disturbs or causes trouble, it is
+;;      possible to deactivate it immediately. First you have to know
+;;      the function name that generates problems. Say you used `C-x'
+;;      `C-b' `switch-to-buffer' and you don't like the confirmation
+;;      for non-existent buffers. You can disable this behavior by
 ;;      calling:
 ;;
 ;;          C-u M-x tinyadvice-advice
 ;;
-;;      and giving the function name `switch-to-buffer' to it. To
-;;      permanently turn it off in your emacs sessions, see previous
-;;      lisp code.
+;;      and give the function name `switch-to-buffer' to it. To
+;;      permanently turn the advice off, see previous lisp code.
 ;;
 ;;  Code note
 ;;
@@ -220,7 +208,7 @@
 ;;              (defadvice ..
 ;;
 ;;      If emacs version is wrong, the advice is _never_ actually
-;;      assembled.  You can't activate or deactivate this function
+;;      intrumented. You can't activate or deactivate those functions
 ;;      with `tinyadvice-advice'.
 ;;
 ;;  Many thanks to, in no particular order:
@@ -231,13 +219,9 @@
 ;;      Peter    Breton         <pbreton@i-kinetics.com>
 ;;      T. V.    Raman          <raman@adobe.com>
 
-;;}}}
-
 ;;; Change Log:
 
 ;;; Code:
-
-;;{{{ setup: require
 
 ;;; ......................................................... &require ...
 
@@ -256,9 +240,6 @@
                In general, do not use this packaage on XEmacs.")
     (load "overlay" 'noerr)))           ;19.15+
 
-;;}}}
-;;{{{ setup: public
-
 ;;; ......................................................... &v-hooks ...
 
 (defvar tinyadvice-load-hook '(tinyadvice-install)
@@ -276,10 +257,6 @@ writable.
 
 Setting this variable to nil, will override vc.el and
 keep CVS buffers always writable. The t value preserves what vc.el does.")
-
-(defvar tinyadvice-:compile-internal-hook nil
-  "*Hook run after `compile-internal' funtion.
-You can peek variable `tinyadvice-:compile-internal-buffer' too.")
 
 (defvar tinyadvice-:compile-save-re
   "\\(\\.hh?\\|\\.cc?\\|\\.C?\\|\\.java\\)$"
@@ -326,12 +303,10 @@ You can peek variable `tinyadvice-:compile-internal-buffer' too.")
 (defconst tinyadvice-:advice-table      ;alphabetically ordered
   (list
    (list 'after-find-file               ".")    ;;always on
-   (list 'ange-ftp-dired-run-shell-command ".") ;;always on
 
    (list 'call-last-kbd-macro
          ".")
    (list 'compile                       ".")
-   (list 'compile-internal              "2[7-9]") ;;fixed 19.30+
    (list 'compilation-find-file         ".")
    (list 'shell                         ".")
 
@@ -339,7 +314,6 @@ You can peek variable `tinyadvice-:compile-internal-buffer' too.")
 
    (list 'dired-do-rename               ".")
    (list 'dired-man                     ".") ;;always
-   (list 'display-time-process-this-message "19" 'xe)
 
    (list 'exchange-point-and-mark       ".")
    (list 'find-file                     ".")
@@ -351,7 +325,6 @@ You can peek variable `tinyadvice-:compile-internal-buffer' too.")
    (list 'find-alternate-file           ".")
    (list 'find-file-literally           ".")
    (list 'find-tag                      ".")
-   (list 'fill-paragraph                "19\.2[0-8]")
 
    (list 'getenv                        ".") ;;always on
    (list 'goto-line                     ".")
@@ -360,10 +333,8 @@ You can peek variable `tinyadvice-:compile-internal-buffer' too.")
 
    (list 'hkey-help-show                ".") ;;hyberbole
 
-   (list 'imenu                         ".") ;; always
    (list 'indent-for-comment            ".")
    (list 'insert-buffer                 tinyadvice-:re)
-   (list 'Info-build-node-completions   "19\\.\\|20\\.")
    (list 'list-buffers                  ".")
    (list 'line-move                     ".")
 
@@ -379,10 +350,6 @@ You can peek variable `tinyadvice-:compile-internal-buffer' too.")
    (list 'recover-file                  ".")
    (list 'rename-buffer                 tinyadvice-:re)
 
-   (list 'save-buffers-kill-emacs       (if (boundp 'confirm-kill-emacs)
-                                            ;; Do not install in Eamcs 21.x
-                                            nil
-                                          "19\\."))
    (list 'save-some-buffers             ".")
    (list 'sendmail-pre-abbrev-expand-hook tinyadvice-:re)
    (list 'setenv                        ".") ;;always on
@@ -390,10 +357,7 @@ You can peek variable `tinyadvice-:compile-internal-buffer' too.")
    (list 'switch-to-buffer              tinyadvice-:re)
    (list 'switch-to-buffer-other-frame  ".")
 
-   (list 'vc-do-command                 tinyadvice-:re)
    (list 'vc-mode-line                  tinyadvice-:re)
-   (list 'vc-print-log                  "2[89]\\|3[01]") ;;fixed in 19.32
-   (list 'vc-register                   "19\\.\\|20\\.") ;;fixed in 21.x
 
    (list 'what-cursor-position          tinyadvice-:re)
    (list 'write-file                    ".")
@@ -413,9 +377,6 @@ The FLAG is optional and values can be:
   'xe   only works in Xemacs
   t     works both Emacs and XEmacs")
 
-;;}}}
-;;{{{ setup: private
-
 ;;; ....................................................... &v-private ...
 
 (defconst tinyadvice-:advice-re  "^tinyadvice"
@@ -424,14 +385,8 @@ The FLAG is optional and values can be:
 (defconst tinyadvice-:tmp-buffer  "*tinyadvice*"
   "Temporary working buffer.")
 
-(defvar tinyadvice-:compile-internal-buffer  nil
-  "The compilation buffer created by `compile-internal'.")
-
 (defvar tinyadvice-:vc-p nil
   "Variable indicating if file in `vc-do-command' is version controlled.")
-
-;;}}}
-;;{{{ version
 
 ;;; ....................................................... &v-version ...
 
@@ -447,22 +402,17 @@ The FLAG is optional and values can be:
      tinyadvice-:write-file-no-confirm
      tinyadvice-:re)))
 
-;;}}}
-
 ;;; ########################################################### &Funcs ###
-
-;;{{{ tinyadvice: misc
 
 ;;; ----------------------------------------------------------------------
 ;;;
 (defmacro tinyadvice-elts (elt func re type)
   "Decode ELT to variables FUNC RE TYPE."
-  (`
-   (setq (, func) (nth 0 (, elt))
-         (, re)   (nth 1 (, elt))
-         (, type) (if (eq 3 (length (, elt)))
-                      (nth 0 (, elt))
-                    nil))))
+  `(setq ,func (nth 0 ,elt)
+         ,re   (nth 1 ,elt)
+         ,type (if (eq 3 (length ,elt))
+                      (nth 0 ,elt)
+                    nil)))
 
 ;;; ----------------------------------------------------------------------
 ;;;
@@ -636,21 +586,6 @@ Return:
           (require 'jka-compr))))
   file)
 
-;;}}}
-
-;;{{{ ange-ftp
-
-;;; ----------------------------------------------------------------------
-;;; log into the remote host as a different user (including root).
-;;;
-(defadvice ange-ftp-dired-run-shell-command (before tinyadvice-rsh-cmd dis)
-  "Launch rsh -l if needed."
-  (setq ange-ftp-remote-shell-file-name
-        (format "rsh -l %s" (nth 1 (ange-ftp-ftp-path default-directory)))))
-
-;;}}}
-;;{{{ built-ins
-
 ;;; ........................................................ &built-in ...
 
 ;;; ----------------------------------------------------------------------
@@ -665,8 +600,6 @@ Return:
        (buffer-name))))
     ad-do-it))
 
-;;}}}
-;;{{{ compile
 
 ;;; ......................................................... &compile ...
 
@@ -683,7 +616,7 @@ Return:
 (defadvice shell (around tinyadvice dis)
   "If there is *shell* buffer, ask user to give new name for new shell.
 If new buffer name is given, a new shell is created. pressing RET
-doe snot create new buffer, but jumps to existing *shell* buffer."
+does not create new buffer, but jumps to existing *shell* buffer."
   (let* (name
          prev-name)
     (when (and
@@ -706,49 +639,12 @@ doe snot create new buffer, but jumps to existing *shell* buffer."
         (rename-buffer "*shell*")))))
 
 ;;; ----------------------------------------------------------------------
-;;; See variable `compilation-last-buffer'
-;;; - This has been reported to be corrected in 19.30
-;;;
-(when (and (not (boundp 'compilation-scroll-output))
-           (tinyadvice-activate-p 'compile-internal))
-
-  (defadvice compile-internal (after tinyadvice-scroll dis comp)
-    "Force compile buffer to scroll."
-    (let* ((ob (current-buffer))
-           (obw  (get-buffer-window ob t))
-           win)
-      (save-excursion
-        (unless (or (null (setq win (get-buffer-window ad-return-value t)))
-                    (null obw))
-          (select-window win)
-          (goto-char (point-max))
-          (select-window obw))))))
-
-;;; ----------------------------------------------------------------------
-;;; "tap" -- listen secretly :-)
-;;;
-(defadvice compile-internal (around tinyadvice-tap-buffer dis comp)
-  "Save compile buffer name to 'tinyadvice-:compile-internal-buffer'.
-See `tinyadvice-:compile-internal-hook'."
-  (prog1
-      ad-do-it
-    (setq tinyadvice-:compile-internal-buffer ad-return-value)))
-
-;;; ----------------------------------------------------------------------
-;;;
-(defadvice compile-internal (after tinyadvice-run-hook last act comp)
-  "Run hook 'tinyadvice-:compile-internal-hook'.
-E.g. you can add lazy-lock.el fontifying to that hook."
-  (run-hooks 'tinyadvice-:compile-internal-hook))
-
-;;; ----------------------------------------------------------------------
 ;;;
 (defun tinyadvice-compile-save-buffers ()
   "Check what buffers for current compilation target should be saved."
   (interactive)
-  (let* ((case-fold-search      nil)    ;case sensitive
-         (re-file               tinyadvice-:compile-save-re))
-
+  (let ((case-fold-search      nil)    ;case sensitive
+	(re-file               tinyadvice-:compile-save-re))
     ;; Save only interesting buffers, don't care about others.
     (ti::dolist-buffer-list
      (string-match re-file  (buffer-name))
@@ -863,8 +759,6 @@ More smarter buffer saving, seefunction `tinyadvice-compile-save-buffers'."
     (tinyadvice-compile-save-buffers))
   (compile-internal compile-command "No more errors"))
 
-;;}}}
-;;{{{ completion and macros
 
 ;;; ...................................................... &completion ...
 
@@ -889,11 +783,7 @@ Set `completion-ignore-case' locally to nil."
         (setq completion-ignore-case nil))
     ad-do-it))
 
-;;}}}
-
-;;{{{ debugger
-
-;;; -------------------------------------------------------- &debugger ---
+;;; ----------------------------------------------------------------------
 ;;;
 (defadvice debugger-eval-expression (around tinyadvice dis)
   "Chnage interactive so that it offer word from buffer."
@@ -906,8 +796,6 @@ Set `completion-ignore-case' locally to nil."
      'read-expression-history)))
   ad-do-it)
 
-;;}}}
-;;{{{ dired
 
 ;;; ........................................................... &dired ...
 
@@ -938,10 +826,6 @@ Activates advice 'dired-mark-read-file-name during call."
   "Make sure man variables are initialized."
   (require 'man)
   (Man-init-defvars))
-
-;;}}}
-
-;;{{{ env
 
 ;;; ............................................................. &env ...
 
@@ -994,9 +878,6 @@ names are allowed."
       (message "%s" value)
     value))
 
-;;}}}
-;;{{{ grep, tag
-
 ;;; ------------------------------------------------------------ &grep ---
 ;;;
 (defadvice grep  (around tinyadvice  dis)
@@ -1019,10 +900,6 @@ Read word from the current pointand put it into grep prompt."
   "Call reposition-window after finding a tag."
   (reposition-window))
 
-;;}}}
-
-;;{{{ files.el
-
 ;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;
 ;;;
 ;;;                         files.el
@@ -1030,29 +907,13 @@ Read word from the current pointand put it into grep prompt."
 ;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;
 
 ;;; ----------------------------------------------------------------------
-;;; ANGE things...
-;;; - Ange ftp gets "listing" when it tries to guess if the file
-;;;   exists or if it's new file. The listing is produced with the call
-;;;   `insert-file-contents'
-;;;
-;;; find-file-noselect (filename &optional nowarn)
-;;;  ...
-;;;  ange-ftp-insert-file-contents
-;;;    ..file-exists-p
-;;;
-(defadvice after-find-file (around tinyadvice-file dis)
-  "Suppress call if no `buffer-file-name'. This may happen with ange-ftp."
-  (if buffer-file-name
-      ad-do-it))
-
-;;; ----------------------------------------------------------------------
 ;;;
 (defadvice find-file-literally
-  (around  tinyadvice-disable-write-file-hooks dis)
-  "Disable `write-file-hooks' so that file can edited and saved in pure manner."
+  (around  tinyadvice-disable-write-file-functions dis)
+  "Disable `write-file-functions' so that file can edited and saved in pure manner."
   ad-do-it
-  (make-local-hook 'write-file-hooks)
-  (setq write-file-hooks nil)
+  (add-hook 'write-file-functions 'ignore nil 'local)
+  (setq write-file-functions nil)
   ;; (setq indent-tabs-mode t)
   (message "TinyAdvice: write-file-hooks is now nil in %s" (buffer-name)))
 
@@ -1160,55 +1021,6 @@ Confirm overwrite:
     (write-abbrev-file nil)
     (setq abbrevs-changed nil)))
 
-;;}}}
-;;{{{ fill
-
-;;; ............................................................ &fill ...
-
-;;; ----------------------------------------------------------------------
-;;; In new cc-mode there variable `c-hanging-comment-ender-p'
-;;; which does exactly same than this advice.
-;;;
-;;; We install this advice for older emacs only.
-;;;
-(when (tinyadvice-activate-p 'fill-paragraph)
-
-  (defadvice fill-paragraph (after tinyadvice dis)
-    "Touch C comment filling, otherwise do nothing.
-If the fill was done to C comment. It usually levaes it like this,
-while this advice corrects it a bit and moves the last asterisk to
-the next line.
-
-/* comment ...         /* comment ...
- * ends here. */        * ends here.
-                        */
-
-This function does not affect C comments that occupy only one line."
-    (let* (col
-           line)
-      (when (and (save-excursion
-                   (beginning-of-line)
-                   (and
-                    ;;  If this is continuing line "*", then search back
-                    ;;  otw we're at "/*" already
-                    ;;
-                    (if (looking-at "^[ \t]*[*]")
-                        (re-search-backward "^[ \t]*/[*]" nil t)
-                      (looking-at "^[ \t]*/[*]"))
-                    (re-search-forward  "^[ \t]*/[*]" nil t)
-                    (setq col (current-column)  line (ti::current-line-number))))
-                 (re-search-forward "[*]/" nil t)
-                 ;;  - The "/*" and "*/" must be at different lines,
-                 ;;    because only then we want to adjust the last "*/"
-                 ;;  - Skip one line comments.
-                 (not (eq (ti::current-line-number) line)))
-        (delete-backward-char 2) (insert "\n")
-        (move-to-column (1- col) t)
-        (insert "*/")))))
-
-;;}}}
-;;{{{ gud
-
 ;;; ............................................................. &gud ...
 
 ;;; ----------------------------------------------------------------------
@@ -1218,8 +1030,8 @@ This function does not affect C comments that occupy only one line."
   "Highlight current line."
   (when (and tinyadvice-:gud-overlay
              (fboundp 'move-overlay))
-    (let* ((ov tinyadvice-:gud-overlay)
-           (bf (gud-find-file true-file)))
+    (let ((ov tinyadvice-:gud-overlay)
+	  (bf (gud-find-file true-file)))
       (save-excursion
         (set-buffer bf)
         (move-overlay
@@ -1227,21 +1039,6 @@ This function does not affect C comments that occupy only one line."
          (line-beginning-position)
          (line-end-position)
          (current-buffer))))))
-
-;;}}}
-
-;;{{{ imenu
-
-;;; ........................................................... &imenu ...
-
-;;; ----------------------------------------------------------------------
-;;;
-(defadvice imenu (before tinyadvice dis)
-  "Widen the buffer before activating imenu."
-  (widen))
-
-;;}}}
-;;{{{ mail
 
 ;;; ............................................................ &mail ...
 
@@ -1261,8 +1058,6 @@ This function does not affect C comments that occupy only one line."
     (setq abbrev-start-location (point) ; this hack stops expand-abbrev
           abbrev-start-location-buffer (current-buffer))))
 
-;;}}}
-;;{{{ map-ynp
 
 ;;; ......................................................... &map-ynp ...
 
@@ -1293,9 +1088,6 @@ This function does not affect C comments that occupy only one line."
     (if (listp last-nonmenu-event)
         ;; replace with some harmless value
         (setq last-nonmenu-event ?\n))))
-
-;;}}}
-;;{{{ mouse
 
 ;;; ........................................................... &mouse ...
 
@@ -1328,8 +1120,6 @@ This function does not affect C comments that occupy only one line."
       ad-do-it
     (message "")))
 
-;;}}}
-;;{{{ replace.el
 
 (defadvice occur  (before tinyadvice act)
   "Iinteractive change: ask if user want the occur to start from `point-min'.
@@ -1347,9 +1137,6 @@ also Possibly unfold/un-outline the code."
                (re-search-forward "\r" nil t))
              (y-or-n-p "TinyAdvice: Open buffer's selective display too? "))
         (ti::buffer-outline-widen))))
-
-;;}}}
-;;{{{ simple.el
 
 ;;; .......................................................... &simple ...
 
@@ -1428,7 +1215,7 @@ also Possibly unfold/un-outline the code."
   ;;  since it thinks it's formatting code
   (princ (concat
           ad-return-value
-          (int-to-string (ti::widen-safe (ti::current-line-number))))))
+          (number-to-string (ti::widen-safe (ti::current-line-number))))))
 
 ;;; ----------------------------------------------------------------------
 ;;;
@@ -1476,348 +1263,14 @@ References:
         (select-frame (car free-frames))
         (switch-to-buffer buffer))))))
 
-;;}}}
-;;{{{ subr.el
-
-;;; ----------------------------------------------------------------------
-;;;
-(defadvice save-buffers-kill-emacs (around tinyadvice dis)
-  "Redefine `save-buffers-kill-emacs' to prevent accidental logouts."
-  (cond
-   ((and (interactive-p)
-         (y-or-n-p "TinyAdvice: Really quit emacs? "))
-    (message "")
-    ad-do-it)
-   ((not (interactive-p))
-    ad-do-it)))
-
 ;;; ----------------------------------------------------------------------
 ;;; - This puts cursor to generated list. Propably what we
 ;;;   want 99% of the time.
 ;;;
 (defadvice list-buffers  (after tinyadvice dis)
-  "Select buffer list after displaying."
+  "Select buffer list after display."
   (if (interactive-p)
       (select-window (get-buffer-window "*Buffer List*"))))
-
-;;}}}
-;;{{{ time
-
-;;; ............................................................ &time ...
-
-;;; ----------------------------------------------------------------------
-;;; This is for reporter.el by Barry A. Warsaw in the xemacs distribution
-;;;
-(defadvice display-time-process-this-message (around tinyadvice-no-junk-mail dis)
-  "Suppress message in modeline.
-If display-time-announce-junk-mail-too is nil, suppress the [Junk mail]
-message on the modeline."
-  ((let ((modeline display-time-mail-modeline))
-     ad-do-it
-     (if (and ad-return-value           ; junk-p
-              (not display-time-announce-junk-mail-too))
-         ;; restore non-junk modeline
-         (setq display-time-mail-modeline modeline))
-     ad-return-value)))
-
-;;}}}
-;;{{{ vc
-
-;;; .............................................................. &vc ...
-
-;;; ----------------------------------------------------------------------
-;;;
-(defun tinyadvice-rcs-initial-comment (file)
-  "Add initial comment leader to RCS FILE."
-  (let* (buffer
-         file-type
-         str)
-    (when (and (stringp file)                   ;if not nil
-               (ti::vc-rcs-file-exists-p file)) ;RCS controlled file
-
-      ;; ^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^ type of file ^^^
-
-      (with-current-buffer (get-file-buffer file)
-        (setq file-type (or (ti::id-info nil 'variable)
-                            (symbol-name major-mode)))
-        (setq str comment-start))
-
-      ;; ^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^ default comment ^^^
-
-      (cond
-       ((string-match "lisp" file-type)
-        (setq str ";; "))
-       ((string-match "c[+]+" file-type)
-        (setq str "// "))
-       ((stringp str)                ;original comment, leave it as is
-        nil)
-       (t
-        (setq str "# ")))              ;Not set? Suggest shell comment
-
-      ;; ^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^ setting comment ^^^
-
-      (unless (ti::nil-p                ;only if given something
-               (setq str
-                     (read-from-minibuffer
-                      "Set RCS comment leader to:" str)))
-        (setq str (format "rcs -c\"%s\" %s" str file)) ;Shell command
-
-        (message "TinyAdvice: setting rcs comment...")
-        (shell-command str "*vc*" )
-
-        ;; ^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^ fixing emacs buffer ^^^
-
-        ;;  - Now, the rcs -u only modified the delta file in RCS tree,
-        ;;    we must take the version out of the tree, so that the new
-        ;;    comment setting takes place: Do "co" and reread the file
-        ;;    into emacs.
-        ;;
-
-        (message "TinyAdvice: refreshing the file comment...")
-
-        (setq str (format "co %s" file)) ;Easier to debug and print variable
-        (shell-command str)
-
-        (when (setq buffer (get-file-buffer file))
-          (let* (find-file-hooks        ;prevent VC this time
-                 buffer-read-only
-                 enable-local-eval)
-            (set-buffer buffer)
-            (find-alternate-file file)
-            (pop-to-buffer (current-buffer))))
-
-        (when (setq buffer (get-buffer "*VC-log*"))
-          (with-current-buffer buffer
-            ;;  Fix this variable, because we reread the file
-            ;;  see vc-finish-logentry
-            (setq vc-parent-buffer buffer)))
-        (message "TinyAdvice: refreshing the file comment ...done")))))
-
-;;; ----------------------------------------------------------------------
-;;; AROUND advice has been left to user, therefor the
-;;; combination of BEFORE and AFTER advices.
-;;;
-(defadvice vc-do-command  (before tinyadvice-vc  dis)
-  "Set flag `tinyadvice-:vc-p' if file is version controlled.
-Used by TinyAdvice after advice to determine if initial
-comment leader needs to be set."
-  ;;  - The arg 'file' is nil when vc calls this command with
-  ;;    "rcs" nil nil "-V". We are not interested in those cases.
-  (if (stringp file)
-      (setq tinyadvice-:vc-p (or (vc-registered file)
-                                 (string-match ",v" file)))))
-
-;;; ----------------------------------------------------------------------
-;;;
-(defadvice vc-do-command (after tinyadvice-vc dis)
-  "Set initial RCS comment leader.
-According to flag `tinyadvice-:vc-p', if file was not version controlled,
-ie. the CheckIn was done first time, ask from user about the initial
-comment leader and set it."
-  (if (and (stringp file)
-           (null tinyadvice-:vc-p))     ;Initial CheckIn
-      (tinyadvice-rcs-initial-comment file)))
-
-;;; ----------------------------------------------------------------------
-;;;
-(defun tinymy-rcs-p (file)
-  "Check if is registered or can be put to RCS."
-  (or (and (stringp file)
-           (eq 'RCS (vc-file-getprop
-                     file
-                     'vc-backend)))
-      (null (ti::vc-dir-p file))))
-
-;;; ----------------------------------------------------------------------
-;;;
-(defadvice vc-do-command (around tinyadvice-vc dis)
-  "TinyAdvice Changes.
-Set initial RCS comment leader.
-According to flag `tinyadvice-:vc-p', if file was not version controlled,
-ie. the CheckIn was done first time, ask from user about the initial
-comment leader and set it.
-
-Add flags that user gave in `vc-register' (like -k) for initial login
-which preserver keyword values if needed. User must register file with
-C-x v i for this to take in effect."
-  (let* ((tinyadvice-args   (ad-get-args 6))
-         (tinyadvice-flags  (get 'vc-register 'tinyadvice-vc-register))
-         (rcs               (tinymy-rcs-p file)))
-    (when (and rcs
-               (stringp tinyadvice-flags))
-      ;;  Add initial RCS flags that were set in vc-register
-      (setq tinyadvice-args
-            (append tinyadvice-args (split-string tinyadvice-flags)))
-      (put 'vc-register 'tinyadvice-vc-register nil)
-      (when (and (stringp tinyadvice-flags)
-                 (string-match "-k" tinyadvice-flags))
-        ;;  vc add option -u1.1 for initial version, get rid of version number
-        (setq tinyadvice-args
-              (remove-if
-               (function
-                (lambda (x)
-                  (and (stringp x)
-                       (string-match "^-u" x))))
-               tinyadvice-args))
-        (push "-u" tinyadvice-args))
-      (ad-set-args 6 tinyadvice-args)))
-  ad-do-it)
-
-;;; ----------------------------------------------------------------------
-;;;
-(defadvice vc-register (before tinyadvice-vc dis)
-  "Ask if check in as \"original\" file if there is already version number.
-If the current file already includes version control information,
-ask from user if the check in should happen using -k which preserves
-the original keyword attributes."
-  (put 'vc-register 'tinyadvice-vc-register nil)
-  (let* ((file     (buffer-file-name))
-         (version  (and file
-                        ;;  No previous file
-                        (not (ti::vc-rcs-file-exists-p file))
-                        (not (ti::vc-cvs-file-exists-p file))
-                        (ti::vc-rcs-buffer-version)))
-         ans)
-    (when (and version
-               (eq 'RCS (vc-file-getprop file 'vc-backend))
-               (ti::vc-version-simple-p version)
-               ;; if there
-               (not
-                (ti::nil-p
-                 (setq ans
-                       (read-string
-                        (format "(TinyAdvice: found v%s) ci rcs flags:"
-                                version)
-                        "-k")))))
-      (put 'vc-register 'tinyadvice-vc-register ans))))
-
-;;; ----------------------------------------------------------------------
-;;; vc-hooks.el , vc-mode-line (file &optional label)
-;;;
-;;; - The string displayed is included in the `vc-mode' variable
-;;; - This function is called by `vc-rcs-status'
-;;;
-(defadvice vc-mode-line (around tinyadvice-vc dis)
-  "Add word 'b' if RCS revision is in the middle of the
-\(b)ranch and not the last one.
-
-Change to CVS: never make buffer read-only if
-`tinyadvice-:cvs-buffer-read-only' is nil."
-  (let* ((vc      (and file
-                       (vc-registered file)
-                       (vc-file-getprop file 'vc-workfile-version)))
-         (file    buffer-file-name)
-         (backend (and vc
-                       buffer-file-name
-                       (vc-file-getprop file 'vc-backend)))
-         ver)
-    (when (and vc
-               ;; #todo: CVS is missing
-               (eq backend 'RCS)
-               (setq ver (ti::vc-rcs-head-version file))
-               (stringp ver)
-               (not (string= vc ver)))  ;it's not the same as highest
-      (ad-set-arg 0
-                  (format "%s%s"
-                          (or (ad-get-arg 0)
-                              (and backend
-                                   (symbol-name backend))
-                              "")
-                          "b")))
-
-    ad-do-it
-    (when (and vc
-               (null tinyadvice-:cvs-buffer-read-only)
-               (eq 'CVS backend))
-      (setq buffer-read-only nil))))
-
-;;; ----------------------------------------------------------------------
-;;;
-(defadvice vc-print-log (around tinyadvice-vc dis)
-  "Position cursor to current revision."
-  (let* (ver)
-    (setq ver (ti::string-match  "[.0-9]+" 0 (or vc-mode "")))
-    ad-do-it
-    (when ver
-      ;;  the version must end directly,
-      ;;  "1.4" must not match "1.4.1.1"
-      ;;
-      ;;  Watch out for this statement too, thats why we start
-      ;;  searching from the end of buffer.
-      ;;  revision 3.4.1.2      locked by: foo;
-      ;;
-      (ti::pmax)
-      (re-search-backward (concat "revision +" ver "[^.]") nil t))))
-
-;;; ----------------------------------------------------------------------
-;;;
-;;; - Normally each dir have an RCS dir.
-;;; - But sometimes user want to keep all RCS files in one RCS dir,
-;;;   so he just creates symlinks to that main RCS dir.
-;;;
-;;;           /dir/RCS      main RCS dir
-;;;                | |
-;;;   dir1/RCS ----| |      Symlink 1 points there
-;;;   dir2/RCS ------|      Symlink 2 points there
-;;;
-;;;
-(defun tinyadvice-vc-register ()
-  "Check if RCS directory is needed before registering a file."
-  (when (and buffer-file-name           ;let's not take a risk
-             (null (tinymy-rcs-p buffer-file-name)))
-    (let* ( ;;  - Make sure we're looking under right directory:
-           ;;  - It is possible that user has given the `cd' command
-           ;;    in this buffer e.g. due to compilation.
-           (default-directory (file-name-directory buffer-file-name))
-           ;;  Strange things may happen. If there is no RCS directory
-           ;;  and you use `ci' then the file appear in _current_
-           ;;  directory with name file.txt,v
-           (false (concat buffer-file-name ",v"))
-           rcs
-           cmd)
-      (when (file-exists-p false)
-        (message "TinyAdvice: ** Warning Suspicious rcs file %s" false)
-        (sit-for 5))
-      (when (not (and (file-exists-p "RCS")
-                      (file-directory-p "RCS")))
-        (setq rcs (ti::file-make-path default-directory "RCS"))
-        (message "[press esc] No RCS tree in %s" default-directory)
-        (sit-for 7) ;; Make sure user sees the directory name
-        (discard-input)
-        (if (y-or-n-p
-             (concat
-              "Y = Create new RCS dir"
-              (if (not (ti::win32-p))
-                  ", N = create symlink to main depository (unix only)? "
-                "")))
-            (make-directory rcs)
-          ;; -- ELSE --
-          (if (ti::win32-p)
-              (error "TinyAdvice: `vc-register' needs a RCS dir.")
-            (if (not (file-exists-p tinyadvice-:vc-main-rcs-dir))
-                (error
-                 (format
-                  "TinyAdvice: `vc-register' No main RCS dirextory exist: %s"
-                  tinyadvice-:vc-main-rcs-dir)))
-            (setq cmd (format "ln -s %s %s"
-                              (expand-file-name tinyadvice-:vc-main-rcs-dir)
-                              rcs)))
-          (ti::temp-buffer tinyadvice-:tmp-buffer 'clear)
-          (shell-command cmd tinyadvice-:tmp-buffer)
-          (unless (ti::buffer-empty-p tinyadvice-:tmp-buffer)
-            (pop-to-buffer tinyadvice-:tmp-buffer))
-          (message "TinyAdvice: (vc-register) %s"  cmd))))))
-
-;;; ----------------------------------------------------------------------
-;;;
-(defadvice vc-register (before tinyadvice-create-rcs-dir dis)
-  "RCS directory must exist. Ask to create one if it does not exist."
-  (if (not (boundp 'vc-handled-backends)) ;; skip if latest emacs
-      (tinyadvice-vc-register)))
-
-;;}}}
-
-;;{{{ Other
 
 ;;; ........................................................... &other ...
 
@@ -1835,7 +1288,9 @@ Change to CVS: never make buffer read-only if
           (error
            (if (equal error '(error "Current buffer has no process"))
                (kill-buffer (current-buffer))))))))))
- '(term-copy-old-input term-send-input term-send-raw-string))
+ '(term-copy-old-input
+   term-send-input
+   term-send-raw-string))
 
 ;;; ----------------------------------------------------------------------
 ;;; hyberbole package
@@ -1860,8 +1315,6 @@ For `help-mode',switch `view-mode' off."
   (if (and (eq major-mode 'help-mode)
            (boundp view-mode) view-mode)
       (view-exit)))
-
-;;}}}
 
 (provide   'tinyadvice)
 (run-hooks 'tinyadvice-load-hook)

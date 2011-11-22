@@ -4,12 +4,11 @@
 
 ;;{{{ Id
 
-;; Copyright (C)    1997-2007 Jari Aalto
+;; Copyright (C)    1997-2010 Jari Aalto
 ;; Keywords:        tools
 ;; Author:          Jari Aalto
 ;; Maintainer:      Jari Aalto
 ;;
-;; To get information on this program, call M-x tinynbr-version.
 ;; Look at the code with folding.el.
 
 ;; This program is free software; you can redistribute it and/or modify it
@@ -23,9 +22,7 @@
 ;; for more details.
 ;;
 ;; You should have received a copy of the GNU General Public License
-;; along with program. If not, write to the
-;; Free Software Foundation, Inc., 51 Franklin Street, Fifth Floor,
-;; Boston, MA 02110-1301, USA.
+;; along with this program. If not, see <http://www.gnu.org/licenses/>.
 ;;
 ;; Visit <http://www.gnu.org/copyleft/gpl.html> for more information
 
@@ -33,7 +30,7 @@
 ;;{{{ Install
 
 ;; ....................................................... &t-install ...
-;;  Put this file on your Emacs-Lisp load path, add following into your
+;;  Put this file on your Emacs-Lisp `load-path', add following into your
 ;;  ~/.emacs startup file. This must be the very first entry before
 ;;  any keybindings take in effect.
 ;;
@@ -41,10 +38,8 @@
 ;;
 ;;  You can also use the preferred way: autoload
 ;;
-;;       (autoload 'tinynbr-mode "tinynbr t t)
-;;       ;;  Put all minor mode activations below C-c m map
-;;       ;;
-;;       (global-set-key "\C-cmN"  'tinynbr-mode)
+;;       (autoload 'tinynbr-mode "tinynbr "" t)
+;;       (global-set-key "\C-cN"  'tinynbr-mode)
 ;;
 ;;  If you have any questions, use this function to contact author
 ;;
@@ -86,24 +81,13 @@
 
 (require 'tinylibm)
 
-(ti::package-defgroup-tiny TinyNbr tinynbr-: tools
+(ti::package-defgroup-tiny TinyNbr tinynbr-- tools
   "Number conversion minor mode oct/bin/hex.")
 
-(defcustom tinynbr-:load-hook nil
+(defcustom tinynbr--load-hook nil
   "*Hook run when file has been loaded."
   :type  'hook
   :group 'TinyNbr)
-
-;;;###autoload (autoload 'tinynbr-version "tinynbr" "Display commentary." t)
-
-(eval-and-compile
-  (ti::macrof-version-bug-report
-   "tinynbr.el"
-   "tinynbr"
-   tinynbr-:version-id
-   "$Id: tinynbr.el,v 2.40 2007/05/01 17:20:51 jaalto Exp $"
-   '(tinynbr-:version-id
-     tinynbr-:load-hook)))
 
 (defun tinynbr-read-number-at-point (&optional reverse base)
   "Read base 1= or 16 number at point."
@@ -132,18 +116,18 @@
 
 (eval-and-compile
   (ti::macrof-minor-mode-wizard
-   "tinynbr-" " Tnbr" "z" "Nbr" 'Tnbr "tinynbr-:"
+   "tinynbr-" " Tnbr" "z" "Nbr" 'Tnbr "tinynbr--"
    "Simple number conversion minor mode.
 
 Mode description:
 
-\\{tinynbr-:mode-prefix-map}"
+\\{tinynbr--mode-prefix-map}"
 
    "TinyNbr"
    nil
    "Number conversion mode"
    (list                                ;arg 10
-    tinynbr-:mode-easymenu-name
+    tinynbr--mode-easymenu-name
     ["int to hex"  tinynbr-int-to-hex  t]
     ["int to oct"  tinynbr-int-to-bin  t]
     ["int to bin"  tinynbr-int-to-oct  t]
@@ -181,26 +165,26 @@ Mode description:
 ;;;###autoload (autoload 'tinynbr-oct-to-int    "tinynbr" "" t)
 ;;;###autoload (autoload 'tinynbr-bin-to-int    "tinynbr" "" t)
 
-(mapcar
- (function
-  (lambda (x)
+(dolist (x  '((hex 16)
+	      (oct 8)
+	      (bin 2)))
     (let ((sym1  (intern (format "tinynbr-%s-to-int"  (car x))))
           (sym2  (intern (format "tinynbr-int-to-%s"  (car x))))
           (sym3  (intern (format "int-to-%s-string" (car x))))
           (base  (nth 1 x))
           def)
       (setq def
-            (` (defun (, sym1) (&optional insert reverse)
+            `(defun ,sym1 (&optional insert reverse)
                  "If prefix arg INSERT is non-nil, insert result to buffer."
                  (interactive "P")
-                 (let* ((nbr (tinynbr-read-number reverse))
-                        ret)
+                 (let ((nbr (tinynbr-read-number reverse))
+		       ret)
                    (when nbr
                      (if (string-match "^0[Xx]\\(.*\\)" nbr)
                          (setq nbr (match-string 1 nbr)))
                      (if (null reverse)
-                         (setq ret (radix nbr (, base)))
-                       (setq ret ((, sym3) (string-to-int nbr)))))
+                         (setq ret (radix nbr ,base))
+                       (setq ret (,sym3 (string-to-number nbr)))))
                    (cond
                     ((null nbr)
                      (message "TinyNbr: Can't find number at current point."))
@@ -210,35 +194,31 @@ Mode description:
                                   nbr
                                   ret
                                   (cond
-                                   ((equal (, base)  2)
+                                   ((equal ,base  2)
                                     (if reverse "bin - dec" "dec - bin"  ))
-                                   ((equal (, base)  8)
+                                   ((equal ,base  8)
                                     (if reverse "oct - dec" "dec - oct"  ))
-                                   ((equal (, base) 16)
+                                   ((equal ,base 16)
                                     (if reverse "hex - dec" "dec - hex"  ))
                                    (t "")))
                        (save-excursion
                          (end-of-line)
                          (insert " " (if (numberp ret)
-                                         (int-to-string ret)
-                                       ret))))))))))
+                                         (number-to-string ret)
+                                       ret)))))))))
       (eval def)
 
       (setq def
-            (` (defun (, sym2) (&optional insert)
+            `(defun ,sym2 (&optional insert)
                  "If prefix arg INSERT is non-nil, insert result to buffer."
                  (interactive "P")
-                 ((, sym1) insert 'reverse))))
-      (eval def))))
- '(
-   (hex 16)
-   (oct 8)
-   (bin 2)))
+                 (,sym1 insert 'reverse)))
+      (eval def)))
 
 ;;}}}
 
-(add-hook  'tinynbr-:mode-hook 'tinynbr-mode-define-keys)
+(add-hook  'tinynbr--mode-hook 'tinynbr-mode-define-keys)
 (provide   'tinynbr)
-(run-hooks 'tinynbr-:load-hook)
+(run-hooks 'tinynbr--load-hook)
 
 ;;; tinynbr.el ends here

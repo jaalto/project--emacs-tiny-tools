@@ -4,12 +4,11 @@
 
 ;;{{{ Id
 
-;; Copyright (C) 1995-2007 Jari Aalto
+;; Copyright (C) 1995-2010 Jari Aalto
 ;; Keywords:     extensions
 ;; Author:       Jari Aalto
 ;; Maintainer:   Jari Aalto
 ;;
-;; To get information on this program, call M-x tinypair-version.
 ;; Look at the code with folding.el.
 
 ;; COPYRIGHT NOTICE
@@ -25,9 +24,7 @@
 ;; for more details.
 ;;
 ;; You should have received a copy of the GNU General Public License
-;; along with program. If not, write to the
-;; Free Software Foundation, Inc., 51 Franklin Street, Fifth Floor,
-;; Boston, MA 02110-1301, USA.
+;; along with this program. If not, see <http://www.gnu.org/licenses/>.
 ;;
 ;; Visit <http://www.gnu.org/copyleft/gpl.html> for more information
 
@@ -35,7 +32,7 @@
 ;;{{{ Install
 
 ;; ....................................................... &t-install ...
-;; Put this file on your Emacs-Lisp load path, add following into your
+;; Put this file on your Emacs-Lisp `load-path', add following into your
 ;; ~/.emacs startup file.
 ;;
 ;;      ** MINOR MODE IS GLOBALLY ACTIVED WHEN YOU LOAD THIS FILE **
@@ -55,10 +52,6 @@
 ;; If you want to turn the pairing off, use this:
 ;;
 ;;      M-x turn-off-tinypair-mode
-;;
-;; If you have any questions, use this function
-;;
-;;      M-x tinypair-submit-bug-report
 ;;
 ;; If you find any incorrect behavior, please immediately
 ;;
@@ -129,8 +122,8 @@
 ;;      pair chars. But for words, this is impossible, because there is no
 ;;      middle position. Please see the variables
 ;;
-;;          tinypair-:word-positioning
-;;          tinypair-:word-positioning-function
+;;          tinypair--word-positioning
+;;          tinypair--word-positioning-function
 ;;
 ;;      which allow you to customize cursor positioning after word pairing.
 ;;
@@ -200,9 +193,7 @@
 
 (require 'tinylibm)
 
-(eval-when-compile (ti::package-use-dynamic-compilation))
-
-(ti::package-defgroup-tiny TinyPair tinypair-: extensions
+(ti::package-defgroup-tiny TinyPair tinypair-- extensions
   "self insert character pairs () \"\" '' <>
   Overview of features
 
@@ -216,7 +207,7 @@
 ;;}}}
 ;;{{{ setup: hook
 
-(defcustom tinypair-:load-hook nil
+(defcustom tinypair--load-hook nil
   "*Hook that is run when package is loaded."
   :type  'hook
   :group 'TinyPair)
@@ -224,7 +215,7 @@
 ;;}}}
 ;;{{{ setup: private
 
-(defvar tinypair-:us-alist
+(defvar tinypair--us-alist
   '((?\(    ?\) nil)
     (?\[    ?\] nil)
     (?\{    ?\} nil)
@@ -233,7 +224,7 @@
     (?\"    ?\" tinypair-c-\"))
   "Default US pairing alist.")
 
-(defvar tinypair-:european-alist
+(defvar tinypair--european-alist
   '((?\(  ?\)   nil)
     (?\[  ?\]   nil)
     (?\{  ?\}   nil)
@@ -243,7 +234,7 @@
     (?\"  ?\"   tinypair-c-\"))
   "Default European pairing alist.")
 
-(defvar tinypair-:alist tinypair-:us-alist
+(defvar tinypair--alist tinypair--us-alist
   "The pairing alist '((?BEG-CHAR  ?END-CHAR FUNC-SYM) ..)
 The FUNC-SYM element is optional. FUNC definition should have form,
 
@@ -273,7 +264,7 @@ function's decision.")
 ;;
 ;;        tinylibid.el -- Identifying buffer regardless of mode
 
-(defcustom tinypair-:all-pairing-disabled-function
+(defcustom tinypair--all-pairing-disabled-function
   'tinypair-check-if-pairing-allowed
   "*Funtion to determine if any pairing is allowed.
 Takes no args, and must return nil or non-nil.
@@ -281,7 +272,7 @@ If return value is non-nil, pairing is allowed."
   :type  'function
   :group 'TinyPair)
 
-(defcustom tinypair-:disable-mode-list
+(defcustom tinypair--disable-mode-list
   '(message-mode
     gnus-summary-mode
     gnus-article-mode
@@ -309,11 +300,11 @@ If return value is non-nil, pairing is allowed."
   "*List of `major-mode' symbols, where the pairing is prohibited.
 This variable is used by function `tinypair-check-if-pairing-allowed' which is
 the default Manager for pairing. If you
-change `tinypair-:all-pairing-disabled-function', this variable is not used."
+change `tinypair--all-pairing-disabled-function', this variable is not used."
   :type  '(repeat symbol)
   :group 'TinyPair)
 
-(defcustom tinypair-:automatic-word-pairing t
+(defcustom tinypair--automatic-word-pairing t
   "*If non-nil, then the word pairing is allowed.
 Eg when your cursor is at the beginning of word, pressing
 pair-beg char will pair the whole word.
@@ -322,7 +313,7 @@ pair-beg char will pair the whole word.
   :type  'boolean
   :group 'TinyPair)
 
-(defcustom tinypair-:word-positioning-function
+(defcustom tinypair--word-positioning-function
   'tinypair-word-position-function
   "*Function to position the cursor after pairing.
 The value can also be a function symbol, which takes care of positioning
@@ -334,11 +325,11 @@ the cursor. Passed parameters are:
 If function returns, non-nil it is assumed that function handled the
 positioning. If it returns nil, then the control is returned to calling
 program and the positioning is done according to variable
-`tinypair-:word-positioning'"
+`tinypair--word-positioning'"
   :type  'function
   :group 'TinyPair)
 
-(defcustom tinypair-:word-positioning 'end
+(defcustom tinypair--word-positioning 'end
   "*How the cursor should be positioned after word pairing.
 'beg          ,leave point after beg pair char
   'end          ,leave point after end pair char"
@@ -347,7 +338,7 @@ program and the positioning is done according to variable
            (const end))
   :group 'TinyPair)
 
-(defcustom tinypair-:word-syntax-classes  '(?w ?$ ?. )
+(defcustom tinypair--word-syntax-classes  '(?w ?$ ?. )
   "*List of syntax classes that are treated like WORD while pairing.
 Eg if you have following text in LaTeX mode:
 
@@ -370,31 +361,6 @@ so that you get this:
   :group 'TinyPair)
 
 ;;}}}
-;;{{{ setup: version
-
-;;;###autoload (autoload 'tinypair-version "tinypair" "Display commentary." t)
-
-(eval-and-compile
-  (ti::macrof-version-bug-report
-   "tinypair.el"
-   "tinypair"
-   tinypair-:version-id
-   "$Id: tinypair.el,v 2.47 2007/05/01 17:20:51 jaalto Exp $"
-   '(tinypair-:version-id
-     tinypair-:debug
-     tinypair-:load-hook
-     tinypair-:us-alist
-     tinypair-:european-alist
-     tinypair-:alist
-     tinypair-:all-pairing-disabled-function
-     tinypair-:disable-mode-list
-     tinypair-:automatic-word-pairing
-     tinypair-:word-positioning-function
-     tinypair-:word-positioning
-     tinypair-:word-syntax-classes)
-   '(tinypair-:debug-buffer)))
-
-;;}}}
 ;;{{{ misc
 
 ;;; ............................................................ &mode ...
@@ -410,12 +376,12 @@ so that you get this:
 (make-variable-buffer-local 'tinypair-mode)
 
 (ti::macrof-minor-mode-wizard
- "tinypair-" " p" nil  "Pair" 'TinyUrl "tinypair-:"
+ "tinypair-" " p" nil  "Pair" 'TinyUrl "tinypair--"
  "Paired insert of characters.
 
 Defined keys:
 
-\\{tinypair-:mode-map}"
+\\{tinypair--mode-map}"
 
  "Paired insert"
  nil
@@ -435,7 +401,7 @@ Defined keys:
 
 ;;;### (autoload 'tinypair-debug-toggle "tinypair" t t)
 
-(eval-and-compile (ti::macrof-debug-standard "tinypair" "-:"))
+(eval-and-compile (ti::macrof-debug-standard "tinypair" "--"))
 
 (defalias 'tinypair-syntax-info 'ti::string-syntax-info)
 
@@ -443,7 +409,7 @@ Defined keys:
 ;;;
 (defsubst tinypair-word-class-p (class)
   "Check if CLASS of part of logical word classes."
-  (memq class tinypair-:word-syntax-classes))
+  (memq class tinypair--word-syntax-classes))
 
 ;;; ----------------------------------------------------------------------
 ;;;
@@ -457,26 +423,26 @@ Defined keys:
 ;;; ----------------------------------------------------------------------
 ;;;
 (defun tinypair-word-class-skip (&optional back)
-  "Skip forward all `tinypair-:word-syntax-class' characters. Optionally BACK."
-  (let* ((ptr           tinypair-:word-syntax-classes)
-         (func          (if back
-                            'skip-syntax-backward
-                          'skip-syntax-forward))
-         (point         (point)))
+  "Skip forward all `tinypair--word-syntax-class' characters. Optionally BACK."
+  (let ((ptr           tinypair--word-syntax-classes)
+	(func          (if back
+			   'skip-syntax-backward
+			 'skip-syntax-forward))
+	(point         (point)))
     (while ptr
       (funcall func (char-to-string (car ptr)))
       (if (eq (point) point)
           (pop ptr)
         ;; moved, start over.
         (setq point (point))
-        (setq ptr tinypair-:word-syntax-classes)))))
+        (setq ptr tinypair--word-syntax-classes)))))
 
 ;;; ----------------------------------------------------------------------
 ;;;
 (defun tinypair-word-beginning-paired-on-line (char-string)
   "Search backward CHAR-STRING and check if it's next to word in current line.
 The point is not preserved.
-See `tinypair-:word-syntax-classes' for word definition."
+See `tinypair--word-syntax-classes' for word definition."
   (interactive)
   (when (search-backward char-string (line-beginning-position) t)
     (if (tinypair-word-class-p (char-syntax (ti::buffer-read-char nil 1)))
@@ -524,7 +490,7 @@ See `tinypair-:word-syntax-classes' for word definition."
 is tag end,\"slash\", it's not desirable to have <>. Several other HTML
 cases are checked too."
   (setq ch1 ch2) ;;  Byte compiler silencer
-  (let* ((ret 1))
+  (let ((ret 1))
     (cond
      ((memq (following-char) '(?/ ))
       (setq ret nil))
@@ -560,9 +526,9 @@ cases are checked too."
   "Check if \"  character can be paired. Looks backward if previous word
 has starting pair.
 "
-  (let* ((ret 1)                        ;default is main handling
-         prev                           ;char
-         point)
+  (let ((ret 1)                        ;default is main handling
+	prev                           ;char
+	point)
     ;;  The prev is nil if point is in BOB
     (setq  prev (char-syntax (or (ti::buffer-read-char nil -1) ?\ )))
     (if (and prev
@@ -599,7 +565,7 @@ has starting pair.
 (defun tinypair-check-if-pairing-allowed ()
   "Function to determine if pairing is allowed.
 Returns t, when pairing is allowed for buffer."
-  (not (memq major-mode tinypair-:disable-mode-list)))
+  (not (memq major-mode tinypair--disable-mode-list)))
 
 ;;; ----------------------------------------------------------------------
 ;;;
@@ -615,7 +581,7 @@ Returns t, when pairing is allowed for buffer."
 ;;; - I used this before, may use it again...
 ;;;
 (defun tinypair-move-logical-word (&optional count)
-  "Move forward, skipping `tinypair-:word-syntax-classes' COUNT times."
+  "Move forward, skipping `tinypair--word-syntax-classes' COUNT times."
   (let* ((i             0)
          (count         (or count 1))
          (back          (if (< count 0)
@@ -634,12 +600,12 @@ Returns t, when pairing is allowed for buffer."
   "Special cursor positioning function.
 BEG is start point and CHAR is starting pair character."
   (cond
-   ((char= char ?\( )
+   ((char-equal char ?\( )
     ;;  Mostly in minibuffer and for lisp'ish things, put cursor
     ;;  after starting paren.
     (goto-char beg))
-   ((or (char= char ?\' )               ;Move to next word.
-        (char= char ?\` ))
+   ((or (char-equal char ?\' )               ;Move to next word.
+        (char-equal char ?\` ))
     (let (point)
       (save-excursion
         (skip-chars-forward " \t\f")
@@ -653,16 +619,17 @@ BEG is start point and CHAR is starting pair character."
 ;;;
 (defun tinypair-word-pair (arg ch-beg ch-end)
   "Insert pair around word(s) ARG times using CH-BEG and CH-END."
-  (let* ((fid       "tinypair-word-pair: ")
-         (pos-flag  tinypair-:word-positioning)
-         (pos-func  tinypair-:word-positioning-function)
-         ch1
-         ch2
-         read-ch
-         count
-         syntax-now syntax-prev
-         tmp
-         beg)
+  (let ((fid       "tinypair-word-pair: ")
+	(pos-flag  tinypair--word-positioning)
+	(pos-func  tinypair--word-positioning-function)
+	ch1
+	ch2
+	read-ch
+	count
+	syntax-now
+	syntax-prev
+	tmp
+	beg)
     (setq syntax-prev  (char-syntax
                         (setq ch1 (or (preceding-char) ?\ ))))
     (setq syntax-now  (char-syntax
@@ -716,7 +683,7 @@ BEG is start point and CHAR is starting pair character."
                       "read ch end"
                       (char-to-string read-ch)
                       (char-to-string ch-end))
-      (unless (char= read-ch ch-end)
+      (unless (char-equal read-ch ch-end)
         (insert ch-end)))
      ((integerp arg)
       (insert (ti::string-repeat arg ch-beg)))
@@ -756,9 +723,9 @@ Input:
                (if arg "European" "US" )))
   (cond
    ((memq arg '(nil us usa))
-    (setq tinypair-:alist tinypair-:us-alist))
+    (setq tinypair--alist tinypair--us-alist))
    (t
-    (setq tinypair-:alist tinypair-:european-alist))))
+    (setq tinypair--alist tinypair--european-alist))))
 
 ;;; ----------------------------------------------------------------------
 ;;; - Original idea in 19.29+ package paired-insert.el. Unfortunately the
@@ -773,16 +740,16 @@ Input:
   (interactive "P")
   (let*  ((fid          "tinypair-self-insert-command: ")
           (nbr          (prefix-numeric-value arg))
-          (word-pair    tinypair-:automatic-word-pairing)
-          (ch           last-command-char)
-          (elt          (assoc ch tinypair-:alist))
+          (word-pair    tinypair--automatic-word-pairing)
+          (ch           last-command-event)
+          (elt          (assoc ch tinypair--alist))
           ;;  If TinyEf is active in minibuffer prompt, turn ourself off.
           (pair-allow
            (if (and (boundp 'tief-mode)
                     (symbol-value 'tief-mode))
                nil
-             (if (fboundp tinypair-:all-pairing-disabled-function)
-                 (funcall tinypair-:all-pairing-disabled-function)
+             (if (fboundp tinypair--all-pairing-disabled-function)
+                 (funcall tinypair--all-pairing-disabled-function)
                t)))
           (pair         nil)            ;pair control
           (status       1)           ;see user configuration CHAR-FUNC
@@ -843,10 +810,10 @@ Input:
                          "WORD-PAIR" word-pair)
         (cond
          ;; ... ... ... ... ... ... ... ... ... ... ... ... ... ... ... ...
-         ((char= ch-now ch-end)         ;already pair visible
+         ((char-equal ch-now ch-end)         ;already pair visible
           (tinypair-debug  fid "now = End"))
          ;; ... ... ... ... ... ... ... ... ... ... ... ... ... ... ... ...
-         ((char= syntax-now ?\ )        ;whitespace at point
+         ((char-equal syntax-now ?\ )        ;whitespace at point
           (setq pair t)                 ;ok, do pairing
           (tinypair-debug  fid "Whitespace 1 1 t"))
          (word-pair
@@ -877,7 +844,7 @@ Input:
 
 ;;}}}
 
-(add-hook 'tinypair-:mode-define-keys-hook 'tinypair-mode-define-keys)
+(add-hook 'tinypair--mode-define-keys-hook 'tinypair-mode-define-keys)
 
 (ti::add-hooks '(minibuffer-setup-hook
                  dired-mode-hook
@@ -894,6 +861,6 @@ Input:
     (turn-on-tinypair-mode))
 
 (provide   'tinypair)
-(run-hooks 'tinypair-:load-hook)
+(run-hooks 'tinypair--load-hook)
 
 ;;; tinypair.el ends here

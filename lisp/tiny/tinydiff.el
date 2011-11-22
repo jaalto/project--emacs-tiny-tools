@@ -4,13 +4,12 @@
 
 ;;{{{ Id
 
-;; Copyright (C)    1996-2007 Jari Aalto
+;; Copyright (C)    1996-2010 Jari Aalto
 ;; Keywords:        tools
 ;; Author:          Jari Aalto
 ;; Maintainer:      Jari Aalto
 ;;
-;; To get information on this program use ident(1) or call M-x
-;; tinydiff-version Look at the code with folding.el
+;; Look at the code with folding.el
 
 ;; COPYRIGHT NOTICE
 ;;
@@ -25,9 +24,7 @@
 ;; for more details.
 ;;
 ;; You should have received a copy of the GNU General Public License
-;; along with program. If not, write to the
-;; Free Software Foundation, Inc., 51 Franklin Street, Fifth Floor,
-;; Boston, MA 02110-1301, USA.
+;; along with this program. If not, see <http://www.gnu.org/licenses/>.
 ;;
 ;; Visit <http://www.gnu.org/copyleft/gpl.html> for more information
 
@@ -35,14 +32,14 @@
 ;;{{{ Install
 
 ;; ....................................................... &t-install ...
-;;   Put this file on your Emacs-Lisp load path, add following into your
+;;   Put this file on your Emacs-Lisp `load-path', add following into your
 ;;   ~/.emacs startup file
 ;;
 ;;   Here is the very basic setup. You don't necessarily need to set
 ;;   these variables, because they are determined at startup.
 ;;
-;;      (setq tinydiff-:diff-program  "gdiff")      ;; GNU diff
-;;      (setq tinydiff-:patch-program "gpatch -t")  ;; GNU patch
+;;      (setq tinydiff--diff-program  "gdiff")      ;; GNU diff
+;;      (setq tinydiff--patch-program "gpatch -t")  ;; GNU patch
 ;;
 ;;      (require 'tinydiff)
 ;;
@@ -61,11 +58,10 @@
 ;;      (global-set-key "\C-cmdd"         'tinydiff-diff-show)
 ;;      (global-set-key "\C-cmdp"         'tinydiff-patch)
 ;;
-;;   If you have any questions, use these functions
+;;   To debug problems:
 ;;
 ;;      M-x tinydiff-debug-toggle         turn on debug
 ;;      <... do as you did ...>
-;;      M-x tinydiff-submit-bug-report    send bug report
 
 ;;}}}
 ;;{{{ Documentation
@@ -74,7 +70,7 @@
 
 ;;; Commentary:
 
-;;  Preface, jan 1996
+;;  Preface, Jan 1996
 ;;
 ;;      Long ago there was set of simple functions lying around to generate
 ;;      instant diffs for the file that was being edited, before it was
@@ -137,25 +133,26 @@
 ;;
 ;;          C-x b
 ;;
-;;      If you want to generate [rcs]diff for current buffer, call function
+;;      If you want to generate diff against current buffer and file on
+;;      disk, call function
 ;;
 ;;          M-x tinydiff-diff-show
 ;;
-;;      And it generates diff and puts you on `tinydiff-mode'. X window users and
-;;      those that have the highlighting capabitities can enjoy more about
-;;      this mode, because it marks line numbers in buffer with
-;;      `mouse-face'. You just click the point to jump to diff position
+;;      In windowed system an those Emacs versions that have
+;;      highlighting capabitities can enjoy more about this mode,
+;;      because it marks line numbers in buffer with `mouse-face'. You
+;;      can just click the point to jump to diff position.
 ;;
 ;;  Taking diffs
 ;;
-;;      The main purpose of this module is to help you taking "diff shots",
-;;      inside emacs. This means that the file must be loaded into
-;;      emacs and your cursor must be in the buffers, before you execute
+;;      The main purpose of this package is to help taking "diff
+;;      shots". This means that the file must be loaded into emacs and
+;;      the cursor must be in the buffers, before you execute
 ;;
 ;;          M-x tinydiff-diff-show
 ;;
-;;      o   If the file is not rcs controlled you're offered regular diff
-;;      o   if file is rcs controlled, your're offered rcsdiff prompt
+;;      o   if the file is not version controlled, a regular diff is offered
+;;      o   if file is version controlled, your're offered vc prompt
 ;;      o   if the buffer has changed, you're offered to diff against
 ;;          last saved file to see recent changes you have done since you
 ;;          saved the buffer.
@@ -164,7 +161,7 @@
 ;;
 ;;      The help key is on `?', press it to get summary of command while
 ;;      you're in minibuffer prompt. The command prompt in minibuffer looks
-;;      like this for rcs controlled file.
+;;      like this for RCS version controlled file.
 ;;
 ;;          > cd /users/foo/dir1/dir2; rcsdiff -c -r1.21 test.txt
 ;;
@@ -192,7 +189,7 @@
 ;;      That feature should allow you to get filenames into the prompt
 ;;      easily.
 ;;
-;;  Command prompt: diffing between two Rcs revisions
+;;  Command prompt: diffing between two RCS revisions
 ;;
 ;;      There is also more commands, like `C-r' which changes
 ;;
@@ -205,26 +202,26 @@
 ;;
 ;;       Case study:
 ;;
-;;      You see nice package on the net. You download it ;; and notice that
-;;      it needs some fixes. You put the original version ;; to your
-;;      private rcstree with the same version number as what ;; the package
-;;      had; say 2.2. Then you CheckOut the original, make ;; changes, and
-;;      put it back to tree with version 2.2.1.1. You dont't ;; put it back
-;;      with 2.3, because that's not your file. You made the ;; correction
-;;      to 2.2, so you must make a branch.
+;;      You see a package on the net. You download it and notice that
+;;      it needs some fixes. You put the original version to your
+;;      private rcstree with the same version number as what the
+;;      package had; say 2.2. Then you CheckOut the original, make
+;;      changes, and put it back to tree with version 2.2.1.1. You
+;;      dont't put it back with 2.3, because that's not your file. You
+;;      made the correction to 2.2, so you must make a branch.
 ;;
 ;;      Okay. You have the original 2.2 and you have the fixed version
 ;;      2.2.1.1 and you want to send the diff to the author. Here is how
 ;;      you do it
 ;;
-;;      o   Be on the file buffer 2.2.1.1 and hit M-x tinydiff-dif
+;;      o   Be on the file buffer 2.2.1.1 and call `M-x' `tinydiff-dif'
 ;;      o   Hit `C-r' toggle second revision (previous) and edit the line
 ;;          to look "-r2.2 -r2.2.1.1". You are usually comparing _old_ and
 ;;          new_ versions.
 ;;      o   Hit `C-s' to toggle between `-u' or `-c'. You normally want
 ;;          to send `-u' gnu unified diff, because it is more readable.
 ;;          Provided that the receiver has gnu patch to understand it.
-;;      o   Hit `C-f' to add option `tinydiff-:cl-user-option' which by
+;;      o   Hit `C-f' to add option `tinydiff--cl-user-option' which by
 ;;          default is `-kk'. From the rcsdiff(1) man pages you will
 ;;          see that it roughly means: "When you take diff between versions,
 ;;          ignore the rcs tag differencies". Confused? It means that
@@ -234,12 +231,12 @@
 ;;      And hit enter. Then you get clean diff that you can send to author.
 ;;      And when he responds back or sends you new version, say 2.5,
 ;;      you repeat the whole process again if you intend to make more
-;;      changes 8put original 2.5 on ice and make branch 2.5.1.1 for your
+;;      changes put original 2.5 on ice and make branch 2.5.1.1 for your
 ;;      changes)
 ;;
 ;;  Command prompt: autosave and backup file diff
 ;;
-;;      Other helpfull commands insert he #autosaved# and backup~ filenames
+;;      Other helpful commands insert he #autosaved# and backup~ filenames
 ;;      into the current point. Remember to put the # or ~ file to the left
 ;;      and not to the right. you do want to diff current file against the
 ;;      saved one; right? The first one is original prompt. That second is
@@ -267,8 +264,7 @@
 ;;      if the version that person has is exactly N.NN and aborts if
 ;;      he had some other version. This prevent applying diffs that
 ;;      are meant to other versions. Regular Unix *patch* program
-;;      does not notice the *Prereq:* tag, so consider getting more
-;;      safer GNU version as soon as possible.
+;;      does not read the *Prereq:* tag.
 ;;
 ;;  Patching
 ;;
@@ -280,7 +276,7 @@
 ;;      For elisp (.el) files the `load-path' is automatically searched
 ;;      for possible destination of the patch. You can set variable
 ;;
-;;          tinydiff-:patch-list
+;;          tinydiff--patch-list
 ;;
 ;;      To match files and their associated patch directories if you
 ;;      receive patches for other files regularly. This function is most
@@ -354,14 +350,14 @@
 ;;      .orig file and prompts you to choose an appropriate action.
 ;;      Here is the explanation what they do and what should you choose
 ;;
-;;       Command _*o*_
+;;       Command _o_
 ;;
 ;;      Go back to (o)riginal. This copies the FILE.txt.orig over the
 ;;      FILE.txt and deletes FILE.txt.orig and doesn't do _anything_
 ;;      else (stops the patching process). You're back to starting
 ;;      point as if you never patched anything.
 ;;
-;;       Command _*r*_
+;;       Command _r_
 ;;
 ;;      (R)etry means that the FILE.txt.orig is copied over FILE.txt and the
 ;;      pach is tried again for FILE.txt. You may have asked the author to
@@ -369,7 +365,7 @@
 ;;      this new patch you want to try if it now goes ok. The FILE.txt.orig
 ;;      still remains as a backup
 ;;
-;;       Command _*g*_
+;;       Command _g_
 ;;
 ;;      (G)o says that we should apply the diff again to FILE.txt. Do this
 ;;      only if you did not get rejections last time. The intention
@@ -398,11 +394,11 @@
 ;;      This hook setup turns on the view mode for easy scrolling
 ;;      of buffer.
 ;;
-;;          (add-hook 'tinydiff-:diff-hook  'my-tinydiff-diff-hook)
+;;          (add-hook 'tinydiff--diff-hook  'my-tinydiff-diff-hook)
 ;;
 ;;          (defun my-tinydiff-diff-hook ()
 ;;            "Turn on view-mode in diff buffer."
-;;            ;; See tinydiff-:diff-buffer.
+;;            ;; See tinydiff--diff-buffer.
 ;;            (view-mode 1))
 ;;
 ;;  Sending good bug reports
@@ -435,13 +431,12 @@
 (require 'tinylibm)
 
 (eval-and-compile
-  (ti::package-use-dynamic-compilation)
   (ti::package-require-view)
   (defvar diff-command)        ;; Byte compiler silencer
   (defvar ediff-diff-program)  ;; Byte compiler silencer
   (autoload 'dired-get-filename   "dired"  "" t))
 
-(ti::package-defgroup-tiny TinyDiff tinydiff-: tools
+(ti::package-defgroup-tiny TinyDiff tinydiff-- tools
   "Take buffer diffs easily, browse diff and apply patch.
   Overview of features.
 
@@ -464,23 +459,23 @@
 
 ;;; ......................................................... &v-hooks ...
 
-(defcustom tinydiff-:load-hook nil
+(defcustom tinydiff--load-hook nil
   "*Hook that is run when package is loaded."
   :type  'hook
   :group 'TinyDiff)
 
-(defcustom tinydiff-:diff-hook  nil
+(defcustom tinydiff--diff-hook  nil
   "*Hooks that run after successful diff run."
   :type  'hook
   :group 'TinyDiff)
 
-(defcustom tinydiff-:mode-define-keys-minibuffer-hook
+(defcustom tinydiff--mode-define-keys-minibuffer-hook
   'tinydiff-mode-define-keys-minibuffer-default
   "*Function to define the keys for the minibuffer."
   :type  'hook
   :group 'TinyDiff)
 
-(defcustom tinydiff-:parse-buffer-hook  nil
+(defcustom tinydiff--parse-buffer-hook  nil
   "Function called when diff buffer has been parsed. (highight)."
   :type  'hook
   :group 'TinyDiff)
@@ -491,7 +486,7 @@
 ;;; ........................................................ &v-public ...
 ;;; User configurable
 
-(defcustom tinydiff-:auto-mode-alist
+(defcustom tinydiff--auto-mode-alist
   '(("\\.diff\\'"    . turn-on-tinydiff-mode)
     ("\\.patch\\'"   . turn-on-tinydiff-mode))
   "Items to add to `auto-mode-alist' to activate `turn-on-tinydiff-mode'."
@@ -514,10 +509,10 @@ Input:
   DEFAULT           if no gnu binary found, use DEFAULT binary
   OPT               additional option for binary
   SEEK-OPTION       When GNU product, it must know this option."
-    (let* ((exec-path exec-path)
-           (ret       default)
-           gnu
-           path)
+    (let ((exec-path exec-path)
+	  (ret       default)
+	  gnu
+	  path)
       ;;  Give precedence to GNU diff programs
       (dolist (path '("/opt/local/bin/" "/usr/local/bin/"))
         (if (file-directory-p path)
@@ -547,14 +542,14 @@ Input:
 ;;  Different users may want to set the keys differently.
 ;;  You could say
 ;;
-;;  (setq tinydiff-:diff-program (progn (my-diff-program-select)))
+;;  (setq tinydiff--diff-program (progn (my-diff-program-select)))
 ;;
 ;;  Which would return appropriate diff program: maybe you want to use
 ;;  GNU diff for some files and normal diff other times.
 ;;  GNU diff offers line exlude options that you may want
 ;;  to set for RCS files.
 
-(defcustom tinydiff-:diff-program
+(defcustom tinydiff--diff-program
   (cond
    ((and (boundp 'diff-command)
          diff-command)
@@ -574,21 +569,21 @@ which returns program name."
   :type  '(string :tag "Shell command")
   :group 'TinyDiff)
 
-(defcustom tinydiff-:rcsdiff-program "rcsdiff"
+(defcustom tinydiff--rcsdiff-program "rcsdiff"
   "*Shell program to print RCS diff.
 It should output the 'filename: FILE' which is read by `tinydiff-get-buffer-name'.
 This variable is evaled to get the program name."
   :type  '(string :tag "Shell program")
   :group 'TinyDiff)
 
-(defcustom tinydiff-:cvsdiff-program "cvs diff"
+(defcustom tinydiff--cvsdiff-program "cvs diff"
   "*Shell command to print CVS diff."
   :type  '(string :tag "Command")
   :group 'TinyDiff)
 
 ;; The diff-switches is defined at least in vc.el
 
-(defcustom tinydiff-:diff-option
+(defcustom tinydiff--diff-option
   '(or (and (boundp 'diff-switches)
             (stringp diff-switches)
             diff-switches)
@@ -602,14 +597,14 @@ FORM that returns option string."
   :type  '(string :tag "Options")
   :group 'TinyDiff)
 
-(defcustom tinydiff-:cl-user-option  "-kk"
+(defcustom tinydiff--cl-user-option  "-kk"
   "The option inserted or removed when user presses C - s in command line.
 The default option -kk is only meaningful on rcsdiff command where
 it excludes the rcs tags from diff."
   :type  'string
   :group 'TinyDiff)
 
-(defcustom tinydiff-:diff-tmp-file
+(defcustom tinydiff--diff-tmp-file
   (or (let ((temp (or (getenv "TEMPDIR")
                       (getenv "TMP")))
             (file "tinydiff.diff"))
@@ -625,12 +620,12 @@ it excludes the rcs tags from diff."
           (when (and (stringp dir)
                      (file-directory-p dir))
             (return (concat (file-name-as-directory dir) file)))))
-      (error "TinyDiff: Please set tinydiff-:diff-tmp-file"))
+      (error "TinyDiff: Please set tinydiff--diff-tmp-file"))
   "*Temporary file where the diff is stored for patching."
   :type  'file
   :group 'TinyDiff)
 
-(defcustom tinydiff-:patch-program
+(defcustom tinydiff--patch-program
   (if (ti::os-check-gnu-support-p)
       ;;  We Know this is GNU patch, do not search alternatives
       ;; gnu patch : -t, --batch
@@ -649,7 +644,7 @@ This variable is evaluated to get the program name and switches."
   :type  '(string :tag "shell command")
   :group 'TinyDiff)
 
-(defcustom tinydiff-:patch-list
+(defcustom tinydiff--patch-list
   '(( "[.]el$"  load-path)
     ( "."       '("~/txt" "~/elisp")))
   "*List of item that control how patching is applied.
@@ -667,7 +662,7 @@ is used."
             directory))
   :group 'TinyDiff)
 
-(defcustom tinydiff-:font-lock-keywords
+(defcustom tinydiff--font-lock-keywords
   '(
 
     ;; RCS diff
@@ -690,9 +685,9 @@ is used."
 
 ;;; .. .. .. .. .. .. .. .. .. .. .. .. .. .. .. .. .. .. .. .. . misc . .
 
-(defcustom tinydiff-:register-function-name  ?f
+(defcustom tinydiff--register-function-name  ?f
   "*Register used to store the function name.
-Only used if `tinydiff-:function-name-handle-function' is set to
+Only used if `tinydiff--function-name-handle-function' is set to
 'tinydiff-function-name-store."
   :type  'character
   :group 'TinyDiff)
@@ -700,7 +695,7 @@ Only used if `tinydiff-:function-name-handle-function' is set to
 ;;  The diff data is inserted into register automatically, because
 ;;  many time the diff data is needed elswhere.
 
-(defcustom tinydiff-:register-diff ?d
+(defcustom tinydiff--register-diff ?d
   "*Register name where diff is inserted.
 If this variable is nil, then no data is inserted into register.
 
@@ -710,13 +705,13 @@ Variable is evaled to get the register name."
 
 ;;; ......................................................... &v-funcs ...
 
-(defcustom tinydiff-:mail-buffer-function  'ti::mail-get-buffer
+(defcustom tinydiff--mail-buffer-function  'ti::mail-get-buffer
   "Return some mail buffer for function `tinydiff-mime-compose'.
 Default value is `ti::mail-get-buffer'."
   :type 'function
   :group 'TinyDiff)
 
-(defcustom tinydiff-:find-ref-function 'beginning-of-defun
+(defcustom tinydiff--find-ref-function 'beginning-of-defun
   "*Elisp Function to find underlying code's function name around point.
 The cursor is positioned in the source buffer and on the referenced
 line before calling with no arguments. Function should move the point
@@ -729,18 +724,19 @@ If no reference is found, function _must_ call 'error'."
 ;;  - It's great to paste the function name into buffer.
 ;;  - C-x g REG put the name into current buffer...
 
-(defcustom tinydiff-:function-name-handle-function 'tinydiff-function-name-store
+(defcustom tinydiff--function-name-handle-function
+    'tinydiff-function-name-store
   "*Function which find the code's function name string.
 
 Input args to function:
 
-  POINT where the `tinydiff-:find-ref-function' positioned the defun.
+  POINT where the `tinydiff--find-ref-function' positioned the defun.
   This function should store the function name into register
-  `tinydiff-:register-function-name'."
+  `tinydiff--register-function-name'."
   :type  'function
   :group 'TinyDiff)
 
-(defcustom tinydiff-:source-buffer-function 'tinydiff-get-buffer-name
+(defcustom tinydiff--source-buffer-function 'tinydiff-get-buffer-name
   "*Function which return filename for the diff buffer.
 You shouldn't touch this function unless you're coping with very
 strange diff format. Default function is `tinydiff-get-buffer-name'."
@@ -752,89 +748,52 @@ strange diff format. Default function is `tinydiff-get-buffer-name'."
 
 ;;; ....................................................... &v-private ...
 
-(defvar tinydiff-:patch-global-option nil
+(defvar tinydiff--patch-global-option nil
   "Path options in effect. See `tinydiff-patch-set-option'.")
 
-(defvar tinydiff-:patch-reject-buffer "*tinydiff-patch-rejects"
+(defvar tinydiff--patch-reject-buffer "*tinydiff-patch-rejects"
   "Buffer where to display rejected patch parts.")
 
-(defvar tinydiff-:diff-source-buffer nil
-  "Private. Source buffer for diff. See `tinydiff-:source-buffer-function'.")
-(make-variable-buffer-local 'tinydiff-:diff-source-buffer)
+(defvar tinydiff--diff-source-buffer nil
+  "Private. Source buffer for diff. See `tinydiff--source-buffer-function'.")
+(make-variable-buffer-local 'tinydiff--diff-source-buffer)
 
-(defvar tinydiff-:last-data nil
+(defvar tinydiff--last-data nil
   "Private. Data storage eg in `tinydiff-minibuffer--change-diff-command'.")
 
-(defvar tinydiff-:version-list  nil
+(defvar tinydiff--version-list  nil
   "All Version for file. Updated when diff command is being run.")
 
-(defvar tinydiff-:version-branch-list  nil
+(defvar tinydiff--version-branch-list  nil
   "Branches. Updated when diff command is being run.")
 
-(defvar tinydiff-:diff-tmp-buffer "*tinydiff-tmp*"
+(defvar tinydiff--diff-tmp-buffer "*tinydiff-tmp*"
   "Temporary work buffer, patch shell results.")
 
-(defvar tinydiff-:patch-tmp-buffer " *tinydiff-tmp-patch*"
+(defvar tinydiff--patch-tmp-buffer " *tinydiff-tmp-patch*"
   "Temporary work buffer, patch.")
 
-(defvar tinydiff-:package-exist-tinymy  (locate-library  "tinymy.el")
+(defvar tinydiff--package-exist-tinymy  (locate-library  "tinymy.el")
   "Private. Has load path for package tinymy.el if it exist.
 It has some functions we may use from there.")
 
-(defvar tinydiff-:diff-buffer "*diff*"
+(defvar tinydiff--diff-buffer "*diff*"
   "Buffer where diff is inserted.")
 
-(defvar tinydiff-:patch-to-file nil
+(defvar tinydiff--patch-to-file nil
   "Name of the file to patch.
 This variable is made local to current patch/diff buffer.")
 
-(defvar tinydiff-:patch-hunk-count nil
+(defvar tinydiff--patch-hunk-count nil
   "Counter how many patch hunks hvae been applied
 This variable is made local to current patch/diff buffer.")
-
-;;}}}
-;;{{{ setup: version
-
-;;; ....................................................... &v-version ...
-
-;;;###autoload (autoload 'tinydiff-version "tinydiff" "Display commentary." t)
-
-(eval-and-compile
-  (ti::macrof-version-bug-report
-   "tinydiff.el"
-   "tinydiff"
-   tinydiff-:version-id
-   "$Id: tinydiff.el,v 2.83 2007/05/01 17:20:43 jaalto Exp $"
-   '(tinydiff-:version-id
-     tinydiff-:debug
-     tinydiff-:load-hook
-     tinydiff-:mode-hook
-     tinydiff-:diff-hook
-     tinydiff-:mode-name
-     tinydiff-:diff-program
-     tinydiff-:rcsdiff-program
-     tinydiff-:cvsdiff-program
-     tinydiff-:source-buffer-function
-     tinydiff-:function-name-handle-function
-     tinydiff-:register-function-name
-     tinydiff-:find-ref-function
-     tinydiff-:source-buffer-function
-     tinydiff-:mode-define-keys-hook
-     tinydiff-:register-diff
-     tinydiff-:diff-buffer
-     tinydiff-:diff-option
-     tinydiff-:diff-tmp-file
-     tinydiff-:diff-tmp-buffer
-     tinydiff-:patch-global-option
-     tinydiff-:patch-program)
-   '(tinydiff-:debug-buffer)))
 
 ;;}}}
 ;;{{{ code: minor mode definition
 
 ;;; ............................................................ &mode ...
 
-(defvar tinydiff-:minibuffer-map nil
+(defvar tinydiff--minibuffer-map nil
   "Minibuffer key map when asked for the right diff command.")
 
 ;;;###autoload (autoload 'tinydiff-mode          "tinydiff" "" t)
@@ -844,13 +803,13 @@ This variable is made local to current patch/diff buffer.")
 
 (eval-and-compile
   (ti::macrof-minor-mode-wizard
-   "tinydiff-" " Tdi" nil " Tdiff" 'TinyDiff "tinydiff-:" ;1-6
+   "tinydiff-" " Tdi" nil " Tdiff" 'TinyDiff "tinydiff--" ;1-6
 
    "Diff browsing minor mode.
 
 Defined keys:
 
-\\{tinydiff-:mode-map}"
+\\{tinydiff--mode-map}"
 
    "Diff minor mode"
 
@@ -859,7 +818,7 @@ Defined keys:
    "Diff browsing mode"
 
    (list
-    tinydiff-:mode-easymenu-name
+    tinydiff--mode-easymenu-name
     ["goto current point"                tinydiff-goto-kbd               t]
     ["block forward"                     tinydiff-goto-next              t]
     ["block forward, no update"          tinydiff-goto-next-no-update    t]
@@ -936,10 +895,10 @@ A .diff or .patch file invokes `tinydiff-mode' in `automode-alist'."
   (cond
    (uninstall
     (ti::assoc-replace-maybe-add
-     'auto-mode-alist tinydiff-:auto-mode-alist 'remove))
+     'auto-mode-alist tinydiff--auto-mode-alist 'remove))
    (t
     (ti::assoc-replace-maybe-add
-     'auto-mode-alist tinydiff-:auto-mode-alist)
+     'auto-mode-alist tinydiff--auto-mode-alist)
     (if (interactive-p)
         (message "TinyDiff installed")))))
 
@@ -951,14 +910,14 @@ A .diff or .patch file invokes `tinydiff-mode' in `automode-alist'."
 (defun tinydiff-mode-define-keys-minibuffer-default ()
   "This function defines some extra bindings to minibuffer.
 Eg. TAB that completes current filename."
-  (setq tinydiff-:minibuffer-map (copy-keymap minibuffer-local-map))
+  (setq tinydiff--minibuffer-map (copy-keymap minibuffer-local-map))
   ;;
   ;;  Here we define nice tab filename completion inside minibuffer
   ;;  This may be superflous, but what the heck :-)
   ;;
-  (define-key tinydiff-:minibuffer-map "\t"
+  (define-key tinydiff--minibuffer-map "\t"
     'tinydiff-minibuffer--complete-filename)
-  (define-key tinydiff-:minibuffer-map [(kp-tab)]
+  (define-key tinydiff--minibuffer-map [(kp-tab)]
     'tinydiff-minibuffer--complete-filename)
   ;;
   ;;  More command line handling
@@ -969,21 +928,21 @@ Eg. TAB that completes current filename."
   ;;
   ;;  You won't need any of these in echo area prompt
   ;;
-  (define-key tinydiff-:minibuffer-map "\C-z"
+  (define-key tinydiff--minibuffer-map "\C-z"
     'tinydiff-minibuffer--change-diff-command)
-  (define-key tinydiff-:minibuffer-map "\C-r"
+  (define-key tinydiff--minibuffer-map "\C-r"
     'tinydiff-minibuffer--rev-add-command)
-  (define-key tinydiff-:minibuffer-map "\C-c"
+  (define-key tinydiff--minibuffer-map "\C-c"
     'tinydiff-minibuffer--insert-file-autosave)
-  (define-key tinydiff-:minibuffer-map "\C-v"
+  (define-key tinydiff--minibuffer-map "\C-v"
     'tinydiff-minibuffer--insert-file-backup)
-  (define-key tinydiff-:minibuffer-map "\C-s"
+  (define-key tinydiff--minibuffer-map "\C-s"
     'tinydiff-minibuffer--toggle-diff-type)
-  (define-key tinydiff-:minibuffer-map "\C-f"
+  (define-key tinydiff--minibuffer-map "\C-f"
     'tinydiff-minibuffer--user-option)
-  (define-key tinydiff-:minibuffer-map "\C-p"
+  (define-key tinydiff--minibuffer-map "\C-p"
     'tinydiff-minibuffer--insert-previous-word)
-  (define-key tinydiff-:minibuffer-map "?"
+  (define-key tinydiff--minibuffer-map "?"
     'tinydiff-minibuffer--minibuffer-help))
 
 ;;}}}
@@ -993,14 +952,14 @@ Eg. TAB that completes current filename."
 
 ;;;###autoload (autoload 'tinydiff-debug-toggle "tinydiff" "" t)
 
-(eval-and-compile (ti::macrof-debug-standard "tinydiff" "-:"))
+(eval-and-compile (ti::macrof-debug-standard "tinydiff" "--"))
 
 ;;; ----------------------------------------------------------------------
 ;;;
 (defsubst tinydiff-kill-revision-list ()
   "Deletes private version lists."
-  (setq tinydiff-:version-list nil
-        tinydiff-:version-branch-list nil))
+  (setq tinydiff--version-list nil
+        tinydiff--version-branch-list nil))
 
 ;;; ----------------------------------------------------------------------
 ;;;
@@ -1026,7 +985,7 @@ Eg. TAB that completes current filename."
 The passed CMD must be in the format:
 
    cd DIRECTORY; BINARY option option option ...."
-  (let* ((fid                "tinydiff-shell-command"))
+  (let ((fid "tinydiff-shell-command"))
     (multiple-value-bind (dir cmd rest)
         (tinydiff-splice-command cmd)
       (when (or (not dir)
@@ -1067,21 +1026,21 @@ The passed CMD must be in the format:
          (dots  (count-char-in-string ?. ver)))
     (unless fid ;; XEmacs byte compiler silencer
       (setq fid nil))
-    (when (null tinydiff-:version-list)
+    (when (null tinydiff--version-list)
       (tinydiff-debug fid ver dots)
-      (setq tinydiff-:version-list  (ti::vc-rcs-all-versions file)))
-    (when (or (null tinydiff-:version-branch-list)
+      (setq tinydiff--version-list  (ti::vc-rcs-all-versions file)))
+    (when (or (null tinydiff--version-branch-list)
               ;; Chck that there is right brach list
               ;; "1.1"  -- "1.1.1.1" ?
               (not (eq dots
                        (count-char-in-string
                         ?.
-                        (car tinydiff-:version-branch-list)))))
-      (setq tinydiff-:version-branch-list
+                        (car tinydiff--version-branch-list)))))
+      (setq tinydiff--version-branch-list
             (ti::vc-rcs-get-all-branches
-             ver tinydiff-:version-list))
+             ver tinydiff--version-list))
       (tinydiff-debug fid "ver" version))
-    tinydiff-:version-list))
+    tinydiff--version-list))
 
 ;;; ----------------------------------------------------------------------
 ;;; - Doing the version getting is SLOW with lisp. Use some external
@@ -1091,10 +1050,10 @@ The passed CMD must be in the format:
   "Return VC diff command that diffs current version and previous version.
 DIR and FILE is passed to function."
   (interactive)
-  (let* ((ver      (ti::vc-rcs-buffer-version))
-         v-list
-         ret
-         prev)
+  (let ((ver (ti::vc-rcs-buffer-version))
+	v-list
+	ret
+	prev)
     (if (null ver)
         (error "TinyDiff: Cannot find version number."))
     (setq v-list   (tinydiff-update-revision-list (concat dir file)))
@@ -1105,10 +1064,10 @@ DIR and FILE is passed to function."
           (format "cd %s; %s -r%s -r%s %s %s "
                   dir
                   (if (ti::vc-rcs-file-exists-p file)
-                      tinydiff-:rcsdiff-program
-                    tinydiff-:cvsdiff-program)
+                      tinydiff--rcsdiff-program
+                    tinydiff--cvsdiff-program)
                   prev ver
-                  (or (eval tinydiff-:diff-option)
+                  (or (eval tinydiff--diff-option)
                       "")
                   file))
     ret))
@@ -1117,11 +1076,11 @@ DIR and FILE is passed to function."
 ;;;
 (defsubst tinydiff-source ()
   "Return source buffer of diff."
-  (if (and tinydiff-:diff-source-buffer
-           (buffer-live-p (get-buffer tinydiff-:diff-source-buffer)))
-      tinydiff-:diff-source-buffer
-    (setq tinydiff-:diff-source-buffer
-          (funcall tinydiff-:source-buffer-function))))
+  (if (and tinydiff--diff-source-buffer
+           (buffer-live-p (get-buffer tinydiff--diff-source-buffer)))
+      tinydiff--diff-source-buffer
+    (setq tinydiff--diff-source-buffer
+          (funcall tinydiff--source-buffer-function))))
 
 ;;; ----------------------------------------------------------------------
 ;;;
@@ -1130,16 +1089,16 @@ DIR and FILE is passed to function."
   (interactive "bSource buffer: ")
   (if (not (get-buffer buffer))
       (error "TinyDiff: Buffer does not exist")
-    (setq tinydiff-:diff-source-buffer buffer)))
+    (setq tinydiff--diff-source-buffer buffer)))
 
 ;;; ----------------------------------------------------------------------
 ;;;
 (defun tinydiff-function-name-store (line)
-  "Store found function name from LINE into `tinydiff-:register-function-name'.
+  "Store found function name from LINE into `tinydiff--register-function-name'.
 Currently works well only Lisp functions."
-  (let* ((reg  tinydiff-:register-function-name)
-         (mode (symbol-name major-mode))
-         txt)
+  (let ((reg  tinydiff--register-function-name)
+	(mode (symbol-name major-mode))
+	txt)
     (when (string-match "lisp" mode)
       ;;  try to extract symbol-name
       ;;  see tinydiff-get-function-name, because point sits on DEFUN already
@@ -1157,14 +1116,14 @@ Currently works well only Lisp functions."
 (defun tinydiff-get-function-name (buffer line)
   "Return function or variable name at current point.
 Switches to BUFFER and go to LINE and calls `beginning-of-defun'"
-  (let* ((func          tinydiff-:function-name-handle-function)
-         (find-func     tinydiff-:find-ref-function)
-         (max-leap      100)            ;lines
-         point
-         ret)
+  (let ((func          tinydiff--function-name-handle-function)
+	(find-func     tinydiff--find-ref-function)
+	(max-leap      100)            ;lines
+	point
+	ret)
     (with-current-buffer buffer
       (ti::widen-safe
-        (goto-line line)
+        (ti::goto-line line)
         (ignore-errors
           (setq point (point))
           (funcall find-func)           ;exit , if error generated
@@ -1183,9 +1142,9 @@ Switches to BUFFER and go to LINE and calls `beginning-of-defun'"
 (defun tinydiff-show-function-name (&rest args)
   "Show possible function name in mode line on the current diff point. ARGS."
   (interactive)
-  (let* ((line          (tinydiff-get-line-number))
-         (buffer        (tinydiff-source))
-         desc)
+  (let ((line   (tinydiff-get-line-number))
+	(buffer (tinydiff-source))
+	desc)
     (cond
      ((not (and line buffer))
       (message "Tinydiff: Sorry, No line and buffer info."))
@@ -1228,9 +1187,9 @@ Return:
  (nbr . pos)    ,where pos is point at line.
  nil"
   (interactive)
-  (let* ((fid "tinydiff-minibuffer--read-revision:")
-         nbr
-         pos)
+  (let ((fid "tinydiff-minibuffer--read-revision:")
+	nbr
+	pos)
     (unless fid ;; XEmacs byte compiler silencer
       (setq fid nil))
     (save-excursion
@@ -1264,12 +1223,15 @@ Return:
   "Read RCS filename from LINE.
 If OR-DIFF-NAME is non-nil, look for 'diff' command instead."
   (let* ((fid       "tinydiff-minibuffer--read-rcs-file-name:")
-         (line      (or line (ti::read-current-line)))
-         (rcsdiff   tinydiff-:rcsdiff-program)
-         (diff      tinydiff-:diff-program)
+         (line      (or line
+			(ti::read-current-line)))
+         (rcsdiff   tinydiff--rcsdiff-program)
+         (diff      tinydiff--diff-program)
          (re        (concat
                      "cd[ \t]+\\([^;]+\\);[ \t]*"
-                     (if or-diff-name diff rcsdiff)
+                     (if or-diff-name
+			 diff
+		       rcsdiff)
                      ".* \\([^ \t]+\\)"))
          dir
          file
@@ -1299,26 +1261,25 @@ Eg.
         rcsdiff -r1.1 -r1.1 file.cc
 -->     Do nothing, since there is already two -r switches."
   (interactive)
-  (let* ((fid       "tinydiff-minibuffer--rev-add-command:")
-         (line      (ti::remove-properties (ti::read-current-line)))
-         ;; (rcsdiff   tinydiff-:rcsdiff-program)
-         (re        (concat "^.*;[ \t]*"
-                            "\\("
-                            tinydiff-:rcsdiff-program
-                            "\\|cvs[ \t]+diff"
-                            "\\|"
-                            tinydiff-:cvsdiff-program
-                            "\\)"
-                            "\\(.*\\)"))
-         (i         0)
-         prev-list elt
-         r-list
-         args
-         list
-         revision
-         nbr
-         tmp
-         copy)
+  (let ((fid       "tinydiff-minibuffer--rev-add-command:")
+	(line      (ti::remove-properties (ti::read-current-line)))
+	(re        (concat "^.*;[ \t]*"
+			   "\\("
+			   tinydiff--rcsdiff-program
+			   "\\|cvs[ \t]+diff"
+			   "\\|"
+			   tinydiff--cvsdiff-program
+			   "\\)"
+			   "\\(.*\\)"))
+	(i 0)
+	prev-list elt
+	r-list
+	args
+	list
+	revision
+	nbr
+	tmp
+	copy)
     (unless fid ;; XEmacs byte compiler silencer
       (setq fid nil))
     (tinydiff-debug "IN:\n\n" fid line re)
@@ -1370,8 +1331,8 @@ Eg.
         (tinydiff-debug fid "1>" elt "ARGS" args "I=" i "TMP" tmp)
         ;; ........................................... Change revision ...
         (when (string-match "\\.\\([0-9]+\\)$" tmp)
-          (setq revision (string-to-int (match-string 1 tmp))
-                nbr      (string-to-int
+          (setq revision (string-to-number (match-string 1 tmp))
+                nbr      (string-to-number
                           (ti::string-right (match-string 1 tmp) 1)))
           (tinydiff-debug fid "1>REV"   revision "last NBR"  nbr)
           (cond
@@ -1380,7 +1341,7 @@ Eg.
                      (> nbr 1)))
             ;;  2.2 --> 2.1
             (setq revision (1- revision))
-            (setq tmp (ti::replace-match 1 (int-to-string revision) tmp))
+            (setq tmp (ti::replace-match 1 (number-to-string revision) tmp))
             (tinydiff-debug fid "1>CHANGED" revision tmp))
            ((and (> i 1)
                  (= nbr 1))
@@ -1407,8 +1368,8 @@ Eg.
 (defun tinydiff-minibuffer--toggle-diff-type  ()
   "Toggle -c context or -u unified diff option in command line."
   (interactive)
-  (let* ((line (ti::remove-properties (ti::read-current-line)))
-         ret)
+  (let ((line (ti::remove-properties (ti::read-current-line)))
+	ret)
     (cond
      ((string-match "^\\(.+ -[^ \t]*\\)c\\(.+\\)" line)
       (setq ret (format "%su%s"
@@ -1428,13 +1389,13 @@ Eg.
 ;;; ----------------------------------------------------------------------
 ;;;
 (defun tinydiff-minibuffer--user-option  ()
-  "Add or remove tinydiff-:cl-user-option from the line."
+  "Add or remove tinydiff--cl-user-option from the line."
   (interactive)
-  (let* ((line      (ti::remove-properties (ti::read-current-line)))
-         (rcsdiff   tinydiff-:rcsdiff-program)
-         (diff      tinydiff-:diff-program)
-         (opt       tinydiff-:cl-user-option)
-         ret)
+  (let ((line      (ti::remove-properties (ti::read-current-line)))
+	(rcsdiff   tinydiff--rcsdiff-program)
+	(diff      tinydiff--diff-program)
+	(opt       tinydiff--cl-user-option)
+	ret)
     (when (not (ti::nil-p opt))
       (cond
        ((string-match (regexp-quote opt) line)
@@ -1452,13 +1413,13 @@ Eg.
 (defun tinydiff-minibuffer--change-diff-command  ()
   "Change diff command in minibuffer."
   (interactive)
-  (let* ((fid      "tinydiff-minibuffer--change-diff-command: ")
-         (rcsdiff  tinydiff-:rcsdiff-program)
-         (diff     tinydiff-:diff-program)
-         word
-         line
-         list
-         done)
+  (let ((fid      "tinydiff-minibuffer--change-diff-command: ")
+	(rcsdiff  tinydiff--rcsdiff-program)
+	(diff     tinydiff--diff-program)
+	word
+	line
+	list
+	done)
     (unless fid ;; XEmacs byte compiler silencer
       (setq fid nil))
     (tinydiff-debug fid "in")
@@ -1476,17 +1437,16 @@ Eg.
                         "LIST " list "\n"
                         "1 string= word rcsdiff " word rcsdiff "\n"
                         "2 string= word diff "    word diff "\n"
-                        "2 tinydiff-:last-data " tinydiff-:last-data "\n"
+                        "2 tinydiff--last-data " tinydiff--last-data "\n"
                         "3 " (and (string-match word diff)
                                   list
-                                  (not (stringp tinydiff-:last-data))))
-
+                                  (not (stringp tinydiff--last-data))))
         (cond
          ;; ................................................... case-1 ...
          ((or (string= word rcsdiff)
               (string= word "cvs"))
           (tinydiff-debug fid "rcsdiff INPUT:" list)
-          (setq tinydiff-:last-data line)
+          (setq tinydiff--last-data line)
           ;;  Remove some elements from list
           (setq list (ti::list-find
                       list
@@ -1504,18 +1464,18 @@ Eg.
          ;; then we cannot use C-z
          ((and (string-match word diff)
                list
-               (stringp tinydiff-:last-data)
+               (stringp tinydiff--last-data)
                (ti::string-match-case
                 (regexp-quote (nth (1- (length list)) list) )
-                tinydiff-:last-data))
+                tinydiff--last-data))
           (kill-line)
-          (insert tinydiff-:last-data)
+          (insert tinydiff--last-data)
           (setq done t))
          ;; ................................................... case-3 ...
          ;; (3) diff --> rcs diff thing
          ((and (string-match word diff)
                list
-               (not (stringp tinydiff-:last-data)))
+               (not (stringp tinydiff--last-data)))
           (kill-line)
           (insert (concat
                    rcsdiff
@@ -1532,7 +1492,7 @@ Eg.
 ;;;
 (defun tinydiff-minibuffer--sweep-unix () ;; win32
   "Change all backslashes to forward slashes."
-  (let* ((line (ti::remove-properties (ti::read-current-line))))
+  (let ((line (ti::remove-properties (ti::read-current-line))))
     (when (string-match "[\\]" line)
       (setq line (ti::file-name-forward-slashes line))
       (beginning-of-line) (kill-line)
@@ -1546,11 +1506,11 @@ Eg.
   "Complete filename."
   (interactive)
   (tinydiff-minibuffer--sweep-unix)
-  (let* ((fid   "tinydiff-minibuffer--complete-filename")
-         (word  (save-excursion
-                  (forward-char -1)
-                  (ti::buffer-read-space-word)))
-         (dir   default-directory))
+  (let ((fid   "tinydiff-minibuffer--complete-filename")
+	(word  (save-excursion
+		 (forward-char -1)
+		 (ti::buffer-read-space-word)))
+	(dir   default-directory))
     (unless fid ;; XEmacs byte compiler silencer
       (setq fid nil))
     (tinydiff-debug fid "BEGIN" word dir)
@@ -1577,12 +1537,12 @@ Eg.
   "Insert auto-save filename into current point if it exists.
 Prefix arg says to insert BACKUP filename instead."
   (interactive)
-  (let* ((line      (ti::read-current-line))
-         (rcsdiff   tinydiff-:rcsdiff-program)
-         (fid       "tinydiff-minibuffer--insert-file-autosave: ") ;function id
-         file
-         file2
-         stat)
+  (let ((line      (ti::read-current-line))
+	(rcsdiff   tinydiff--rcsdiff-program)
+	(fid       "tinydiff-minibuffer--insert-file-autosave: ") ;function id
+	file
+	file2
+	stat)
     (unless fid ;; XEmacs byte compiler silencer
       (setq fid nil))
     (setq file (tinydiff-minibuffer--read-rcs-file-name line 'diff))
@@ -1640,7 +1600,7 @@ Prefix arg says to insert BACKUP filename instead."
   (with-output-to-temp-buffer "*Help*"
     (princ
      (substitute-command-keys
-      "TinyDiff minibuffer command line keys\n\n \\{tinydiff-:minibuffer-map}")))
+      "TinyDiff minibuffer command line keys\n\n \\{tinydiff--minibuffer-map}")))
   (with-current-buffer "*Help*"
     (ti::pmin)
     (forward-line 4)
@@ -1651,15 +1611,9 @@ Prefix arg says to insert BACKUP filename instead."
 (defun tinydiff-minibuffer--insert-previous-word ()
   "Insert previous word: like filename or rcs switch."
   (interactive)
-  (let* (
-;;;         (char (if (line-end-position)
-;;;                   (preceding-char)
-;;;                 (or (following-char)
-;;;                     (preceding-char))))
-
-         (word (save-excursion
-                 (when (re-search-backward "[^ \t]" nil t)
-                   (ti::buffer-read-space-word)))))
+  (let ((word (save-excursion
+		(when (re-search-backward "[^ \t]" nil t)
+		  (ti::buffer-read-space-word)))))
     (when word
       (insert word))))
 
@@ -1683,7 +1637,7 @@ Prefix arg says to insert BACKUP filename instead."
   "Return FILE from CMD."
   (when cmd
     (setq cmd (ti::string-match
-               (format "cd .*%s +\\([^ \t;]+\\)" tinydiff-:patch-program)
+               (format "cd .*%s +\\([^ \t;]+\\)" tinydiff--patch-program)
                1
                cmd))))
 
@@ -1781,7 +1735,6 @@ Input:
          (fbuffer   (find-buffer-visiting file))
          (modified  (if fbuffer  (ti::buffer-modified-p fbuffer)))
          (was-rcs   (ti::re-search-check "RCS/"))
-
          ;; Is package active in Emacs? Was patched file .el?
          el-file
          sym
@@ -1818,7 +1771,7 @@ Input:
         (message "Tinydiff: file's buffer in Emacs is modified.."))
        ((and was-rcs
              (null no-ask)              ;Maybe set in 1st cond case
-             (y-or-n-p (format "RCS file patched, find-file %s " file "? ")))
+             (y-or-n-p (format "RCS file patched, find-file %s?" file)))
         (find-file file))
        ((and feature
              (not (eq flag 'hunk))
@@ -1839,10 +1792,10 @@ Return:
                 String holds matched failure condition.
   nil           Patch succeeded ok."
   (interactive)
-  (let* ((fid "tinydiff-patch-check-failure")
-         (re  "failed.*saving +rejects +to +\\([^ \t\n]+\\)")
-         (case-fold-search t)
-         file)
+  (let ((fid "tinydiff-patch-check-failure")
+	(re  "failed.*saving +rejects +to +\\([^ \t\n]+\\)")
+	(case-fold-search t)
+	file)
     (unless fid ;; XEmacs byte compiler silencer
       (setq fid nil))
     (with-current-buffer (or buffer (current-buffer))
@@ -1854,7 +1807,6 @@ Return:
                   (ti::re-search-check
                    "^patch:.*--aborting" 1 nil 'get-matched-text))
             (setq file (list file)))
-
        ;;  In SunOS it simply prints the following on success.
        ;;
        ;;       Looks like a new-style context diff.
@@ -1901,13 +1853,13 @@ CMD is the original patch command used.
 
 References:
 
-  `tinydiff-:patch-reject-buffer'"
-  (let* ((fid      "tinydiff-patch-check-rejections: ")
-         file
-         stat
-         tmp
-         dir
-         file-load)
+  `tinydiff--patch-reject-buffer'"
+  (let ((fid      "tinydiff-patch-check-rejections: ")
+	file
+	stat
+	tmp
+	dir
+	file-load)
     (unless fid ;; XEmacs byte compiler silencer
       (setq fid nil))
     (tinydiff-debug fid "in:" cmd buffer)
@@ -1925,7 +1877,7 @@ References:
       (tinydiff-debug fid file-load)
       (cond
        ((file-exists-p file-load)
-        (setq tmp (ti::temp-buffer tinydiff-:patch-reject-buffer 'clear))
+        (setq tmp (ti::temp-buffer tinydiff--patch-reject-buffer 'clear))
         (with-current-buffer tmp (insert-file-contents file-load))
         (display-buffer tmp)
         t)
@@ -1948,15 +1900,15 @@ Input:
   TYPE          Type of patch: 'hunk means partial diff."
   (let* ((fid           "tinydiff-patch-with-diff-1")
          (file          (expand-file-name file))
-         (opt-global    (or tinydiff-:patch-global-option
+         (opt-global    (or tinydiff--patch-global-option
                             ""))
          (diff-tmp      (if (ti::win32-shell-p)
                             ;;  Must use DOS paths
-                            (expand-file-name tinydiff-:diff-tmp-file)
+                            (expand-file-name tinydiff--diff-tmp-file)
                           ;;  Otherwise take it as it is
-                          tinydiff-:diff-tmp-file))
-         (prg           (eval tinydiff-:patch-program))
-         (map           tinydiff-:minibuffer-map)
+                          tinydiff--diff-tmp-file))
+         (prg           (eval tinydiff--patch-program))
+         (map           tinydiff--minibuffer-map)
          (source-buffer (current-buffer))
          (file-buffer   (find-buffer-visiting file))
          buffer                         ;shell messages
@@ -1980,8 +1932,8 @@ Input:
         (error "Tinydiff: file not found: %s" file ))
     (setq dir         (file-name-directory file)
           ff          (file-name-nondirectory file)
-          buffer      (ti::temp-buffer tinydiff-:diff-tmp-buffer  'clear)
-          data-buffer (ti::temp-buffer tinydiff-:patch-tmp-buffer 'clear))
+          buffer      (ti::temp-buffer tinydiff--diff-tmp-buffer  'clear)
+          data-buffer (ti::temp-buffer tinydiff--patch-tmp-buffer 'clear))
     ;;  Sometimes user's UMASK is not ok. PErhaps the file is
     ;;  not readable after the write.
     (when (and (file-exists-p diff-tmp)
@@ -1999,8 +1951,8 @@ Input:
       (setq cmd (format "cd %s ; %s %s %s %s" dir prg opt-global ff diff-tmp))
       (tinydiff-debug fid "cmd:" cmd)
       (when interactive
-        (let* (tinyef-mode              ;Electric file mode OFF
-               tinycompile-mode)        ;Make sure this is off too
+        (let (tinyef-mode              ;Electric file mode OFF
+	      tinycompile-mode)        ;Make sure this is off too
           (if tinyef-mode
               (setq tinyef-mode nil))   ;No-op, bytecomp silencer
           (if tinycompile-mode
@@ -2028,20 +1980,20 @@ Input:
 
 References:
 
-  `tinydiff-:patch-list'
+  `tinydiff--patch-list'
 
 Return:
 
   string     suggested file to patch
   list       list of filenames read from diff."
-  (let* ((fid   "tinydiff-get-file-name-list")
-         (list  tinydiff-:patch-list)
-         stat
-         file
-         file-list
-         re
-         search-path
-         dest-file)
+  (let ((fid   "tinydiff-get-file-name-list")
+	(list  tinydiff--patch-list)
+	stat
+	file
+	file-list
+	re
+	search-path
+	dest-file)
     (unless fid ;; XEmacs byte compiler silencer
       (setq fid nil))
     (ti::dotimes counter 1 4
@@ -2114,7 +2066,7 @@ Input:
 ;;; This is not a good idea if you get many patches; to
 ;;; ask every time...
 ;;;
-;;;     (if (and tinydiff-:package-exist-tinymy
+;;;     (if (and tinydiff--package-exist-tinymy
 ;;;           (y-or-n-p "Do you want to make a safe copy? "))
 ;;;      (call-interactively 'tinymy-copy-file))
      (cond
@@ -2130,12 +2082,12 @@ Input:
         nil
         nil
         (tinydiff-file-to-patch))))))
-  (let* ((fid           "tinydiff-patch")
-         (go-status     t)              ;should we proceed patching?
-         buffer
-         rej-flag
-         char
-         ZIP)
+  (let ((fid           "tinydiff-patch")
+	(go-status     t)              ;should we proceed patching?
+	buffer
+	rej-flag
+	char
+	ZIP)
     (or orig-buffer
         (setq orig-buffer (current-buffer)))
     (let* ((patch-buffer-file-name
@@ -2160,20 +2112,23 @@ Input:
           (setq orig-buffer (current-buffer)))
       (or dest-file
           (with-current-buffer orig-buffer
-            (setq dest-file tinydiff-:patch-to-file)))
+            (setq dest-file tinydiff--patch-to-file)))
       (tinydiff-debug fid "dest-file:" dest-file)
       ;; ......................................................... patch ...
       ;;
       (unless (stringp dest-file)
         (message
-         "Tinydiff: Can't detect file along paths in tinydiff-:patch-list.")
+         "Tinydiff: Can't detect file along paths in tinydiff--patch-list.")
         (sit-for 0.7)
         (let ((default-directory default-directory))
           ;;  The ask prompt will start from HOME in that case.
           (unless patch-buffer-file-name
             (setq default-directory "~"))
           (setq dest-file (read-file-name
-                           "Apply diff to: "
+                           (format "Apply diff %sto: "
+				   (if (eq type 'hunk)
+				       "hunk "
+				     ""))
                            guess-dir
                            nil
                            t
@@ -2182,26 +2137,28 @@ Input:
               (not (file-exists-p dest-file)))
           (error "TinyDiff: Cannot patch non-existing file. Aborted."))
       (with-current-buffer orig-buffer
-        (set (make-local-variable 'tinydiff-:patch-to-file) dest-file))
+        (set (make-local-variable 'tinydiff--patch-to-file) dest-file))
       ;; ........................................................... zip ...
+      ;;
       (when (string-match "\\(.*\\)\\.gz$" dest-file)
         (setq dest-file (match-string 1 dest-file))
         (setq ZIP t)
         (message "TinyDiff: Uncompressing gzip file...")
-        (ti::temp-buffer tinydiff-:diff-tmp-buffer 'clear)
+        (ti::temp-buffer tinydiff--diff-tmp-buffer 'clear)
         (call-process
          "gzip"
          nil                        ;; Input
-         tinydiff-:patch-tmp-buffer ;; Output buffer
+         tinydiff--patch-tmp-buffer ;; Output buffer
          nil                        ;; display
          "-d"
          (format "%s.gz" dest-file))
         (message "TinyDiff: Uncompressing %s file...done." dest-file))
       ;; ....................................................... rejects ...
+      ;;
       (when (file-exists-p (concat dest-file ".rej"))
         (setq rej-flag t))
-      (when (and (not (or (null tinydiff-:patch-hunk-count)
-                          (eq 0 tinydiff-:patch-hunk-count))))
+      (when (and (not (or (null tinydiff--patch-hunk-count)
+                          (eq 0 tinydiff--patch-hunk-count))))
         (if (not
              (and
               (file-exists-p (concat dest-file ".orig"))
@@ -2220,12 +2177,12 @@ Input:
               (sit-for 1))
           ;; .. .. .. .. .. .. .. .. .. .. .. .. .. .. .. .. .orig exist ..
           (cond
-           ((char= char ?r)             ;Retry patch to original
+           ((char-equal char ?r)             ;Retry patch to original
             (delete-file dest-file)     ;copy-file won't work otw
             (copy-file  (concat dest-file ".orig") dest-file))
-           ((char= char ?g)             ;Go ahead
+           ((char-equal char ?g)             ;Go ahead
             nil)
-           ((char= char ?o)
+           ((char-equal char ?o)
             (delete-file dest-file)
             (copy-file  (concat dest-file ".orig") dest-file)
             (delete-file (concat dest-file ".orig"))
@@ -2238,8 +2195,8 @@ Input:
             (message "Tinydiff: Cancelled patching.")))))
       (when go-status
         (with-current-buffer orig-buffer
-          (set (make-local-variable 'tinydiff-:patch-hunk-count)
-               (1+ (or tinydiff-:patch-hunk-count 0))))
+          (set (make-local-variable 'tinydiff--patch-hunk-count)
+               (1+ (or tinydiff--patch-hunk-count 0))))
         (tinydiff-patch-with-diff-1
          dest-file (point-min) (point-max) verb type))
       (when ZIP
@@ -2259,16 +2216,16 @@ Input:
 ;;;
 (defun tinydiff-diff-command-generate  (&optional no-ask)
   "Return diff command as string; optionally NO-ASK."
-  (if (null tinydiff-:minibuffer-map)
-      (run-hooks 'tinydiff-:mode-define-keys-minibuffer-hook))
-  (let* ((map           tinydiff-:minibuffer-map)
+  (if (null tinydiff--minibuffer-map)
+      (run-hooks 'tinydiff--mode-define-keys-minibuffer-hook))
+  (let* ((map           tinydiff--minibuffer-map)
          (tmp-file      (expand-file-name
-                         tinydiff-:diff-tmp-file))
-         (diff-prg      (or (eval tinydiff-:diff-program)
-                            (error "TinyDiff: tinydiff-:diff-program is nil")))
-         (rcsdiff-prg   (eval tinydiff-:rcsdiff-program))
-         (cvsdiff-prg   (eval tinydiff-:cvsdiff-program))
-         (options       (or (eval tinydiff-:diff-option) ""))
+                         tinydiff--diff-tmp-file))
+         (diff-prg      (or (eval tinydiff--diff-program)
+                            (error "TinyDiff: tinydiff--diff-program is nil")))
+         (rcsdiff-prg   (eval tinydiff--rcsdiff-program))
+         (cvsdiff-prg   (eval tinydiff--cvsdiff-program))
+         (options       (or (eval tinydiff--diff-option) ""))
          (ange          (and (stringp default-directory)
                              (string-match "@" default-directory)))
          (dired         (and (null ange)
@@ -2328,7 +2285,7 @@ Input:
                       "")))
       (setq diff-prg
             (or rcsdiff-prg
-                (error "TinyDiff: tinydiff-:rcsdiff-program is nil"))))
+                (error "TinyDiff: tinydiff--rcsdiff-program is nil"))))
      ;; .......................................................... cvs ...
      ((and bf
            (null dired)
@@ -2352,7 +2309,7 @@ Input:
                       "")))
       (setq diff-prg
             (or cvsdiff-prg
-                (error "TinyDiff: tinydiff-:cvsdiff-program is nil"))))
+                (error "TinyDiff: tinydiff--cvsdiff-program is nil"))))
      ;; .................................................... default ...
      ;; General diff prompt
      ((null ange)
@@ -2371,12 +2328,12 @@ Input:
                   file2))
     (if no-ask
         (setq ans prompt)
-      (let* (tinyef-:mode)              ;Electric file mode OFF
-        (if tinyef-:mode
-            (setq tief-mode nil))       ;No-op, bytecompier silencer
-        ;;  Record command line prompt to *Messages* buffer
-        (message (concat "TinyDiff: " prompt))
-        (setq ans (read-from-minibuffer ">" prompt map))))
+      (let (tinyef--mode)              ;Electric file mode OFF
+	(if tinyef--mode
+	    (setq tinyef--mode nil))       ;No-op, bytecompier silencer
+	;;  Record command line prompt to *Messages* buffer
+	(message (concat "TinyDiff: " prompt))
+	(setq ans (read-from-minibuffer ">" prompt map))))
     (if (ti::nil-p ans)
         (setq ans nil))
     (ti::remove-properties ans)))
@@ -2392,26 +2349,22 @@ Input:
   "Prepare diff buffer for `tinydiff-mode'.  VERB.
 Mark diff lines for special handling."
   (interactive)
-  (let* ((diff-type      (car-safe (ti::buffer-diff-type-p)))
-
-         ;;  In GNU diff , there is option --initial-tab
-         ;;  which adds tab before each diff line to make the
-         ;;  text look "as it was originally"
-         ;;
-         ;;  That's why allowed whitespace at the beginning.
-
-         (re-c2         "^[ \t]*[*][*][*] \\([0-9]+\\)")
-         (re-c3         "^[ \t]*[-][-][-] \\([0-9]+\\)")
-         (re-normal     "^\\([0-9]+\\)\\(,[0-9]+\\)?+[acd][0-9]")
-
-         (re-gnu-u      "^@@[ \t]+[-+][0-9]+,[0-9]+[ \t]+[-+]+\\([0-9]+\\)")
-         (re-gnu-n      "^[dac]\\([0-9]+\\) [0-9]+$")
-
-         (prop-list     '(mouse-face    highlight
-                                        owner         tinydiff)))
+  (let ((diff-type (car-safe (ti::buffer-diff-type-p)))
+	;;  In GNU diff , there is option --initial-tab
+	;;  which adds tab before each diff line to make the
+	;;  text look "as it was originally"
+	;;
+	;;  That's why allowed whitespace at the beginning.
+	(re-c2         "^[ \t]*[*][*][*] \\([0-9]+\\)")
+	(re-c3         "^[ \t]*[-][-][-] \\([0-9]+\\)")
+	(re-normal     "^\\([0-9]+\\)\\(,[0-9]+\\)?+[acd][0-9]")
+	(re-gnu-u      "^@@[ \t]+[-+][0-9]+,[0-9]+[ \t]+[-+]+\\([0-9]+\\)")
+	(re-gnu-n      "^[dac]\\([0-9]+\\) [0-9]+$")
+	(prop-list     '(mouse-face    highlight
+			 owner         tinydiff)))
     (ti::verb)
     (let ((sym 'font-lock-keywords))
-      (set sym tinydiff-:font-lock-keywords))
+      (set sym tinydiff--font-lock-keywords))
     (ti::text-clear-region-properties
      (point-min) (point-max) '(owner tinydiff))
     (save-excursion
@@ -2433,7 +2386,7 @@ Mark diff lines for special handling."
                              (prin1-to-string diff-type))))
       (if verb
           (message "Tinydiff: Diff not recognized.")))
-    (run-hooks 'tinydiff-:parse-buffer-hook)))
+    (run-hooks 'tinydiff--parse-buffer-hook)))
 
 ;;; ......................................................... &diff-do ...
 
@@ -2456,8 +2409,8 @@ Lets user to edit option in the command line."
         "Tinydiff: There is autosave file, use minibuffer %s binding"
         (ti::keymap-function-bind-info
          'tinydiff-minibuffer--insert-file-autosave
-         tinydiff-:minibuffer-map)
-        (sit-for 1)))
+         tinydiff--minibuffer-map))
+       (sit-for 1))
      (list
       (tinydiff-diff-command-generate))))
   (if (and (stringp cmd)
@@ -2465,9 +2418,9 @@ Lets user to edit option in the command line."
            (buffer-file-name)
            ;;  If this is in the commend, we're diffing buffer against
            ;;  file on disk
-           (not (or (string-match (regexp-quote tinydiff-:diff-tmp-file) cmd)
+           (not (or (string-match (regexp-quote tinydiff--diff-tmp-file) cmd)
                     (string-match
-                     (regexp-quote (expand-file-name tinydiff-:diff-tmp-file))
+                     (regexp-quote (expand-file-name tinydiff--diff-tmp-file))
                      cmd)))
            (y-or-n-p "Save buffer before running diff? "))
       (save-buffer))
@@ -2518,21 +2471,21 @@ Input:
 
 References:
 
-  `tinydiff-:extra-diff-program'
-  `tinydiff-:diff-buffer'
-  `tinydiff-:diff-options'
+  `tinydiff--extra-diff-program'
+  `tinydiff--diff-buffer'
+  `tinydiff--diff-options'
 
 Return:
 
  nil            ,the no-ask parameter could not determine right diff.
  buffer         ,the shell output buffer. Note, that the diff may have
                  failed, in that case the buffer does not hold valid output."
-  (let* ((fid      "tinydiff-diff")
-         (bf       (buffer-file-name))
-         (buffer   (ti::temp-buffer tinydiff-:diff-buffer 'clear))
-         (reg      (eval tinydiff-:register-diff)) ;where to put the diff content
-         prereq
-         tmp)
+  (let ((fid      "tinydiff-diff")
+	(bf       (buffer-file-name))
+	(buffer   (ti::temp-buffer tinydiff--diff-buffer 'clear))
+	(reg      (eval tinydiff--register-diff)) ;where to put the diff content
+	prereq
+	tmp)
     (tinydiff-debug fid 'cmd cmd 'show show 'verb verb)
     (ti::verb)
     ;;  It the command is rcsdiff, then we must include
@@ -2589,7 +2542,7 @@ Return:
                 (message
                  (concat "Tinydiff: Diff stored in register ..."
                          (char-to-string reg)))))
-          (run-hooks 'tinydiff-:diff-hook))))
+          (run-hooks 'tinydiff--diff-hook))))
     buffer))
 
 ;;}}}
@@ -2600,15 +2553,15 @@ Return:
 (defun tinydiff-compose-diff-filename ()
   "Compose filename by reading the original filename from diff buffer.
 Filename is composed like this: ~/tmp + FILE + .diff suffix."
-  (let* ((dir
-          (cond
-           ((file-directory-p "~/tmp/") "~/tmp/")
-           ((file-directory-p "/tmp/") "/tmp/")
-           (t
-            default-directory)))
-         file
-         stat
-         ret)
+  (let ((dir
+	 (cond
+	  ((file-directory-p "~/tmp/") "~/tmp/")
+	  ((file-directory-p "/tmp/") "/tmp/")
+	  (t
+	   default-directory)))
+	file
+	stat
+	ret)
     (ti::dotimes counter 1 4 ;;  #todo: remove ti::dotimes
       (setq stat (tinydiff-get-file-name counter))
       (when stat
@@ -2646,7 +2599,7 @@ The suggested to be written is named like this: ~/tmp + FILE + .diff suffix."
 ;;;
 (defun tinydiff-mime-compose  (&optional insert-to-mail verb)
   "Read current buffer and make TM MIME attachement.
-Save attachement to `tinydiff-:register-diff' or to a mail buffer,
+Save attachement to `tinydiff--register-diff' or to a mail buffer,
 which must have MIME-edit mode active.
 
 The TM MIME spec is used: 7bit, type=patch.
@@ -2655,7 +2608,7 @@ If you need other specifications, insert diff via TM's insert file.
 Input:
 
   INSERT-TO-MAIL    Flag, if non-nil, add MIME block to the end of
-                    buffer pointed by `tinydiff-:mail-buffer-function'.
+                    buffer pointed by `tinydiff--mail-buffer-function'.
   VERB              Be verbose."
   (interactive "P")
   (let* ((file  (file-name-nondirectory (tinydiff-compose-diff-filename)))
@@ -2672,7 +2625,7 @@ Input:
     (ti::verb)
     (cond
      (insert-to-mail
-      (unless (setq mail-buffer (funcall tinydiff-:mail-buffer-function))
+      (unless (setq mail-buffer (funcall tinydiff--mail-buffer-function))
         (error "Tinydiff: Can't find mail buffer where to insert to"))
       (with-current-buffer mail-buffer
         (when (not (or (ti::mail-mime-tm-edit-p)
@@ -2689,11 +2642,11 @@ Input:
      (t
       (with-temp-buffer
         (insert mime-tag)
-        (insert-buffer obuffer)
-        (set-register tinydiff-:register-diff (buffer-string))
+        (insert-buffer-substring obuffer)
+        (set-register tinydiff--register-diff (buffer-string))
         (when verb
           (message "TinyDiff: MIME diff in register `%c'"
-                   tinydiff-:register-diff)))))))
+                   tinydiff--register-diff)))))))
 
 ;;}}}
 
@@ -2766,15 +2719,15 @@ Input:
 ;;;
 (defun tinydiff-get-line-number ()
   "Return diff line number if line has one."
-  (let* ((diff-type     (car-safe (ti::buffer-diff-type-p)))
-         (re-c2         "^[*][*][*] \\([0-9]+\\)")
-         (re-c3         "^[-][-][-] \\([0-9]+\\)")
-         (re-normal     "^\\([0-9]+\\)\\(,[0-9]+\\)?+[acd][0-9]")
-         ;; Wrong: this returned left hand number
+  (let ((diff-type     (car-safe (ti::buffer-diff-type-p)))
+	(re-c2         "^[*][*][*] \\([0-9]+\\)")
+	(re-c3         "^[-][-][-] \\([0-9]+\\)")
+	(re-normal     "^\\([0-9]+\\)\\(,[0-9]+\\)?+[acd][0-9]")
+	;; Wrong: this returned left hand number
 ;;;         (re-gnu-u      "^@@ [-+]\\([0-9]+\\),[0-9]+[ \t]+[-+]+")
-         (re-gnu-u      "^@@ [-+][0-9]+,[0-9]+[ \t]+[-+]+\\([0-9]+\\)")
-         (re-gnu-n      "^[dac]\\([0-9]+\\) [0-9]+$")
-         ret)
+	(re-gnu-u      "^@@ [-+][0-9]+,[0-9]+[ \t]+[-+]+\\([0-9]+\\)")
+	(re-gnu-n      "^[dac]\\([0-9]+\\) [0-9]+$")
+	ret)
     (save-excursion
       (beginning-of-line)
       (cond
@@ -2789,17 +2742,17 @@ Input:
         (setq ret (ti::buffer-match re-gnu-u 1)))))
 ;;;    (ti::d! (match-string 0) diff-type)
     (when ret
-      (setq ret (string-to-int ret)))
+      (setq ret (string-to-number ret)))
     ret))
 
 ;;; ----------------------------------------------------------------------
 ;;;
 (defun tinydiff-goto (buffer line)
   "Show BUFFER and put cursor at LINE in other window."
-  (let* ((ob     (current-buffer))      ;original buffer
-         (delay  0.1))
+  (let ((ob     (current-buffer))      ;original buffer
+	(delay  0.1))
     (switch-to-buffer-other-window buffer)
-    (goto-line line)
+    (ti::goto-line line)
     ;; Flash the cursor and go back to diff buffer
     (and delay
          (sit-for delay))
@@ -2846,8 +2799,8 @@ Return:
     (ti::verb)
     (setq re (cdr-safe (assoc diff-type type-list)))
     (ignore-errors
-      (when (setq buffer (funcall tinydiff-:source-buffer-function))
-        (setq tinydiff-:diff-source-buffer buffer) ))
+      (when (setq buffer (funcall tinydiff--source-buffer-function))
+        (setq tinydiff--diff-source-buffer buffer) ))
     (when (stringp re)
       (if back
           (beginning-of-line)
@@ -2891,8 +2844,8 @@ Return:
 (defun tinydiff-goto-kbd (&optional verb)
   "Show the diff source in another window. VERB."
   (interactive)
-  (let* ((line          (tinydiff-get-line-number))
-         (buffer        (tinydiff-source)))
+  (let ((line   (tinydiff-get-line-number))
+	(buffer (tinydiff-source)))
     (ti::verb)
     (if (null line)
         ;; nothing to do, not valid line
@@ -2908,13 +2861,13 @@ Return:
   "Show current line in other window. Use mouse EVENT.
 Activate only if point underneath has 'mouse-property."
   (interactive "e")
-  (let* ((buffer        (tinydiff-source))
-         line)
+  (let ((buffer (tinydiff-source))
+	line)
     (when (ti::text-get-mouse-property)
       (setq line (ti::remove-properties (ti::buffer-read-word "[0-9]+")))
       (if (and buffer
                (not (ti::nil-p line)))
-          (tinydiff-goto buffer (string-to-int line))
+          (tinydiff-goto buffer (string-to-number line))
         (message "Tinydiff: Sorry, missing Line Number or filenname.")))))
 
 ;;}}}
@@ -2936,8 +2889,7 @@ Activate only if point underneath has 'mouse-property."
 ;;;
 (defun tinydiff-block-region  ()
   "Return (beg . end) of diff block around current point or nil."
-  (let* ( ;; (type   (ti::buffer-diff-type-p))
-         beg
+  (let (beg
          end)
     (end-of-line)
     (setq end (point))
@@ -2969,8 +2921,8 @@ Activate only if point underneath has 'mouse-property."
 (defun tinydiff-block-kill  ()
   "Kill Diff block around point."
   (interactive)
-  (let* ((region (tinydiff-block-region))
-         buffer-read-only)
+  (let ((region (tinydiff-block-region))
+	buffer-read-only)
     (if (and (interactive-p)
              (null region))
         (message "TinyDiff: can't determine diff block bounds.")
@@ -2979,23 +2931,23 @@ Activate only if point underneath has 'mouse-property."
 ;;; ----------------------------------------------------------------------
 ;;;
 (defun tinydiff-block-apply-patch  ()
-  "Apply diff block around point.
+  "Apply diff hunk around point.
 References:
   `tinydiff-patch-set-option'."
   (interactive)
-  (let* ((add-opt tinydiff-:patch-global-option)
-         (region  (save-excursion
-                    (or (tinydiff-block-region)
-                        (error "TinyDiff: Hunk region not found."))))
-         (header  (or (tinydiff-header)
-                      (progn
-                        (message "TinyDiff: [WARN] Patch header not found.")
-                        "")))
-         (buffer  (current-buffer))
-         file)
+  (let ((add-opt tinydiff--patch-global-option)
+	(region  (save-excursion
+		   (or (tinydiff-block-region)
+		       (error "TinyDiff: Hunk region not found."))))
+	(header  (or (tinydiff-header)
+		     (progn
+		       (message "TinyDiff: [WARN] Patch header not found.")
+		       "")))
+	(buffer  (current-buffer))
+	file)
     (if (and (interactive-p)
              (null region))
-        (message "TinyDiff: can't determine diff block bounds.")
+        (message "TinyDiff: can't determine diff hunk bounds.")
       (setq file (tinydiff-file-to-patch))
       (with-temp-buffer
         (insert header)
@@ -3005,20 +2957,20 @@ References:
 ;;; ----------------------------------------------------------------------
 ;;;
 (defun tinydiff-patch-set-option (opt-string)
-  "Set `tinydiff-:patch-global-option' to OPT-STRING.
+  "Set `tinydiff--patch-global-option' to OPT-STRING.
 E.g. to apply revese diff, you may want to set the option to: -R"
   (interactive
    (list
     (read-string
      (format
       "Tinydiff patch option%s: "
-      (if (and (stringp tinydiff-:patch-global-option)
+      (if (and (stringp tinydiff--patch-global-option)
                (not (string-match "^[ \t]*$"
-                                  tinydiff-:patch-global-option)))
+                                  tinydiff--patch-global-option)))
           (format " [%s]"
-                  tinydiff-:patch-global-option)
+                  tinydiff--patch-global-option)
         "")))))
-  (setq tinydiff-:patch-global-option opt-string))
+  (setq tinydiff--patch-global-option opt-string))
 
 ;;}}}
 ;;{{{ setup: Install
@@ -3030,16 +2982,16 @@ E.g. to apply revese diff, you may want to set the option to: -R"
       (unless (fboundp 'diff-mode)
         (turn-on-tinydiff-mode)))))
 
-(add-hook 'tinydiff-:mode-define-keys-hook  'tinydiff-mode-define-keys)
-(add-hook 'tinydiff-:parse-buffer-hook      'turn-on-font-lock-mode)
+(add-hook 'tinydiff--mode-define-keys-hook  'tinydiff-mode-define-keys)
+(add-hook 'tinydiff--parse-buffer-hook      'turn-on-font-lock-mode)
 
 ;; These have to be here, because when someone says
-;;   (add-hook 'tinydiff-:diff-hook 'my-tinydiff-:diff-hook)
+;;   (add-hook 'tinydiff--diff-hook 'my-tinydiff--diff-hook)
 ;;
 ;; The variable gets defined immediately. --> following does nothing...
-;;   (defvar tinydiff-:diff-hook '(tinydiff-parse-buffer tinydiff-mode))
+;;   (defvar tinydiff--diff-hook '(tinydiff-parse-buffer tinydiff-mode))
 
-(ti::add-hooks 'tinydiff-:diff-hook
+(ti::add-hooks 'tinydiff--diff-hook
                '(tinydiff-parse-buffer
                  turn-on-tinydiff-mode
                  tinydiff-turn-on-view-mode))
@@ -3049,6 +3001,6 @@ E.g. to apply revese diff, you may want to set the option to: -R"
 ;;}}}
 
 (provide   'tinydiff)
-(run-hooks 'tinydiff-:load-hook)
+(run-hooks 'tinydiff--load-hook)
 
 ;;; tinydiff.el ends here

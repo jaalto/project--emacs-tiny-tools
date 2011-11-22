@@ -1,0 +1,115 @@
+Document id
+
+        #T2HTML-TITLE Emacs Tiny Tools package documentation
+        #T2HTML-METAKEYWORDS Emacs, Emacs Lisp, Tiny Tools Documentation
+        #T2HTML-OPTION --css-code-bg
+        #T2HTML-OPTION --css-code-note
+	#T2HTML-OPTION Note:
+        #T2HTML-OPTION --name-uniq
+        #T2HTML-OPTION --html-frame
+
+        Copyright (C) 1995-2010 Jari Aalto
+
+        License: This material may be distributed only subject to
+        the terms and conditions set forth in GNU General Public
+        License v2 or later; or, at your option, distributed under the
+        terms of GNU Free Documentation License version 1.2 or later
+        (GNU FDL).
+
+        This page contains manual pages from each Emacs tiny*.el module in
+        alphabetical order. The tools initially started around 1994 and
+        they include many Emacs related utilities ranging from Emacs path
+        configuration, email, Gnus spam reply functions, diffing, patching,
+        URL jumping, eating text and many more.
+
+            Note: you cannot download single files or install only a
+            single file. the minimum requirement are all libraries
+            _tinylib*.el_ plus any individual utility package.
+
+    Generated documentation
+
+        This document is automatically generated from the Emacs lisp files
+        with 2 small perl scripts: *ripdoc.pl* is available at
+        http://cpan.perl.org/modules/by-authors/id/J/JA/JARIAALTO/
+        and the other is hosted at http://perl-text2html.sourceforge.net/
+
+            % ripdoc.pl `ls ti*.el|sort` | t2html.pl > emacs-tiny-tools.html
+
+        The perl program assume that the documentation sections have been
+        written in Technical Text Format (you are looking at TF layout in
+        this file). An Emacs minor mode for writing TF files is available in
+        package *tinytf.el*.
+
+    Brief overview
+
+        There are plenty of packages to choose from and almost nobody uses
+        them all in one emacs session, so here are some recommendations.
+        The setup examples for many of these packages are available in the
+        unpacked kit under *rc/emacs-rc-tiny.el*. Start with the top ten
+        and add other packages that you find useful. The order of
+        appearance is also the recommended installation order: "install
+        this, see the docs, and go to next one..."
+
+        Top ten or so
+
+        o   _TinyPath_ -- Find your your whole load path hierarchy.
+            No more manual updating of `load-path' or other Emacs system
+            variables. Transparent compressed lisp file support.
+        o   _Tinyeat_ -- More easier text deletion. eg. C-backspace and
+            Alt-backspace do all your text delete operations.
+        o   _TinyTab_ -- Set your tab to 2 4 8 and keep text and code
+            nicely formatted in any mode, like in `mail-mode',
+            `message-mode', `cc-mode', `lisp-mode', `perl-mode' ...
+        o   _TinyUrl_ -- Jump to http url at point (C++, Perl, lisp support
+            too) This minor mode can be permanently on and it marks links
+            all links under current line. Press M-RET or mouse-2 to jump
+            to link. Centralized url handling, no need to configure VM, Gnus or
+            browse-url separately.
+        o   _TinyMail_ -- TAB completes your defined aliases, BBDB entries
+            and /etc/password file. *REPORTS* *INCOMING* *MAIL* in X frame or
+            echo area.
+        o   _TinyMy_ -- Grabbag of utilities. Automatic window change when
+            pointing it with mouse. Make dos files readable with C-c m D
+            display minor mode etc. Automatic save of your most important
+            files.
+        o   _TinyHotlist_ -- Keep hotlist of most important buffers in X-popup
+            and jump to buffer in the list. The selection can be existing
+            buffer, pointer to file (ange-ftp file) or directory. This
+            is the "Most important work files: permanent list"
+        o   _TinySearch_ -- more faster "search word" than cumbersome C-s C-w..
+            At current point hit F2/S-F2 to search the word forward/backward.
+        o   _TinyReplace_ -- More convenient replace than M-%. Can replace
+            over multiple files (run M-x grep to and hit % in compile buffer)
+            RCS file support (checkout before replace)
+        o   _TinyEf_ -- C-x C-f file path manipulation in minibuffer.
+            Electric file composing minor mode: $ / ~ keys are special.
+        o   _TinyCb_ -- Change Buffers in one window. useful only if you have
+            small amount of buffers in Emacs session. Use `C-.' and `C-,' to
+            circulate buffer list in window.
+        o   _TinyLoad_ -- Delayed loading of lisp packages.
+
+        Other packages
+
+        o   _TinyTf_ -- Write text documents easily and convert them to html.
+            Eg. this document uses TF format (Technical Format)
+        o   _TinyLoad_ -- Speed up your Emacs Load up time dramatically.
+        o   _TinyIgrep_ -- Grepping files; directories? Get this and igrep.el
+        o   _TinyPerl_ -- Perl utilities, eg. viewing and browsing POD pages.
+        o   _TinyLisp_ -- Full of utilities for Emacs Lisp programming.
+        o   _TinyDired_ -- Run Ange-ftp get/put request at background
+        o   _TinyPgp_ -- 2nd generation PGP/remailer interface; BBDB, TM mime ...
+        o   _TinyAd_ -- Advice collection, make Emacs a bit more intuitive.
+        o   _TinyScroll_ -- Make any buffer to scroll: *Messages* *Compile*
+        o   _TinyLock_ -- Lock your Emacs session
+        o   _TinyMbx_ -- Browse Unix mailbox files a bit more easily.
+        o   _TinyRlog_ -- RCS revision log minor mode. (hooks itself to vc)
+        o   _TinyLpr_ -- Managing multiple printers and print styles
+        o   _TinyDiff_ -- Taking diffs and applying patches easily. RCS too.
+        o   _TinyDesk_ -- Simple emacs sessiosn saver (files used are recorded)
+        o   _TinyProcmail_ -- procmail mode Lint parser for procmail code
+            Procmail is "mail processing tool" to kill spam, classify your
+            mail and creating autoresponders. See http://www.procmail.org/
+        o   _TinyNbr_ - oct/bin/hex/dec number conversion minor mode.
+
+        And more...which are not listed in these
+

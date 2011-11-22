@@ -1,6 +1,6 @@
 //  bmt-time.js -- Javascript to show internet time
 //
-//      Copyright (C) 1996-2007 Jari Aalto
+//      Copyright (C) 1996-2010 Jari Aalto
 //
 //      This program is free software; you can redistribute it and/or
 //      modify it under the terms of the GNU General Public License as
@@ -13,9 +13,7 @@
 //      General Public License for more details.
 //
 //      You should have received a copy of the GNU General Public License
-//      along with program. If not, write to the
-//      Free Software Foundation, Inc., 51 Franklin Street, Fifth Floor,
-//      Boston, MA 02110-1301, USA.
+//      along with this program. If not, see <http://www.gnu.org/licenses/>.
 //
 //	Visit <http://www.gnu.org/copyleft/gpl.html> for more information
 //
@@ -31,6 +29,7 @@
 //          </HTML>
 
 ///////////////////////////////////////////////////////////////////////
+//
 // DESCRIPTION
 //
 //	    Take UTC time, and do the following: [(Hours + 1 {Make sure
@@ -46,23 +45,23 @@
 //	    float
 ///////////////////////////////////////////////////////////////////////
 
-function SwatchBeats()
+function SwatchBeats ()
 {
     // calculate Middle European Time, i.e. UTC + 1
 
     var bmt = new Date();
 
-
     bmt.setTime( bmt.getTime()
             + (bmt.getTimezoneOffset() + 60) * 60 * 1000 );
 
     var beat = ( bmt.getHours() * 3600 + bmt.getMinutes() * 60
-            + bmt.getSeconds() ) /  86.4;
+             + bmt.getSeconds() ) /  86.4;
 
     return beat;
 }
 
 ///////////////////////////////////////////////////////////////////////
+//
 // DESCRIPTION
 //
 //	    Convert floating point number to N number of decimels.
@@ -76,7 +75,7 @@ function SwatchBeats()
 //	    string
 ///////////////////////////////////////////////////////////////////////
 
-function CutDecimals(n, count)
+function CutDecimals (n, count)
 {
     var str = n.toString();
     var pos = str.indexOf(".");
@@ -85,11 +84,11 @@ function CutDecimals(n, count)
     {
         if ( count < 1 )
         {
-        str = str.substr(0, pos -1 )
+            str = str.substr(0, pos -1 )
         }
         else
         {
-        str = str.substr(0, pos + count + 1);
+            str = str.substr(0, pos + count + 1);
         }
     }
 
@@ -97,6 +96,7 @@ function CutDecimals(n, count)
 }
 
 ///////////////////////////////////////////////////////////////////////
+//
 // DESCRIPTION
 //
 //	    Return Swatch Biel Mean Time (BMT), World tme, Internet time
@@ -111,15 +111,18 @@ function CutDecimals(n, count)
 //	    string
 ///////////////////////////////////////////////////////////////////////
 
-function BMTtime()
+function BMTtime ()
 {
     // "Biel Mean Time" - Swatch headquarter in Switzerland
+
     var beat = SwatchBeats();
     beat = "@" + CutDecimals( beat, 2);
+
     return beat;
 }
 
 ///////////////////////////////////////////////////////////////////////
+//
 // DESCRIPTION
 //
 //		Display the BMT to the target source
@@ -134,14 +137,15 @@ function BMTtime()
 //		string
 ///////////////////////////////////////////////////////////////////////
 
-function BMTtimeDisplay(out)
+function BMTtimeDisplay (out)
 {
     var time = BMTtime();
 
     if ( out < 1 )
     {
         var str = "Swatch Internet time is now "
-              + time;
+                + time;
+
         defaultStatus = str;		    // Print to the status bar
         setTimeout("BMTtimeDisplay(0)", 5000);  // Repeat ourself
     }
