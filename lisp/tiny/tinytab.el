@@ -268,6 +268,9 @@ Mode description:
      ;; ........................................................ X-keys ...
      ;;  Standard key
      (define-key root-map (kbd "<S-tab>")        'tinytab-tab-del-key)
+     ;; Non-windowed environment
+     (unless window-system
+       (define-key root-map [(backtab)]          'tinytab-tab-del-key))
      ;;  Other keyboards
      (define-key root-map [(shift backtab)]      'tinytab-tab-del-key)
      (define-key root-map [(shift hpBackTab)]    'tinytab-tab-del-key) ;; XEmacs

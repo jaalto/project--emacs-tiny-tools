@@ -1,3 +1,8 @@
+2011-11-22 Tue  Jari Aalto  <jari.aalto@cante.net>
+
+	* tiny/tinytab.el (wizard): Define backtab in non-window system.
+	E.g. for Putty terminal.
+
 2011-11-18 Fri  Jari Aalto  <jari.aalto@cante.net>
 
 	* tiny/tinyreplace.el (tinyreplace-define-keys-local-map): Rename
