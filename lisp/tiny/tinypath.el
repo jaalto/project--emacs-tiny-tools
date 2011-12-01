@@ -388,7 +388,7 @@
 ;;     Building part of site-lisp from Internet
 ;;
 ;;      If we continue talking a bit more about site-lisp, there is utility
-;;      *pwget.pl* at <http://freshmeat.net/projects/perlwebget/>. It
+;;      *pwget.pl* at <http://freecode.net/projects/perlwebget/>. It
 ;;      includes an Emacs configuration settings which contain knowledge
 ;;      where the various lisp developers' home pages are and how to
 ;;      download lisp packages. If you have lot of disk space and you're
