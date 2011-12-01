@@ -398,7 +398,6 @@ have to do set this variable to nil and use your own line delete:
      (format "\
 ;; Emacs tinydesk.el state file
 ;;
-;;
 ;;       Date: %s
 ;;       M-x load-library RET tinydesk RET
 ;;       M-x tinydesk-recover-state RET %s RET
@@ -413,7 +412,13 @@ have to do set this variable to nil and use your own line delete:
   :group 'TinyDesk)
 
 (defcustom tinydesk--save-and-sort t
-  "*Non-nil to sort the file list in state file.
+  "*If non-nil, sort file list in state file before save.
+Use nil to preserve `buffer-list' order."
+  :type  'boolean
+  :group 'TinyDesk)
+
+(defcustom tinydesk--recover-mark-problem-lines t
+  "*If non-nil, to mark problematic lines after
 nil to preserve `buffer-list' order."
   :type  'boolean
   :group 'TinyDesk)
@@ -493,11 +498,11 @@ path, garbage at line...Hooks may check the contents of this.")
   "Install package under `ctl-x-4-map'
 \\{ctl-x-4-map}"
   (interactive)
-  (define-key ctl-x-4-map "S" 'tinydesk-save-state) ;; free in Emacs
-  ;;  This was find-file-read-only-other-window
-  (define-key ctl-x-4-map "R" 'tinydesk-recover-state)   ;; Not free
-  (define-key ctl-x-4-map "E" 'tinydesk-edit-state-file) ;; free in Emacs
-  (define-key ctl-x-4-map "U" 'tinydesk-unload)) ;; free in Emacs
+  (define-key ctl-x-4-map "S" 'tinydesk-save-state)
+  ;;  Was: find-file-read-only-other-window
+  (define-key ctl-x-4-map "R" 'tinydesk-recover-state)
+  (define-key ctl-x-4-map "E" 'tinydesk-edit-state-file)
+  (define-key ctl-x-4-map "U" 'tinydesk-unload))
 
 ;;; ----------------------------------------------------------------------
 ;;;
@@ -1441,10 +1446,10 @@ Input:
   ULP           'unload previous' if non-nil then unload previously
                 loaded files according to `tinydesk--last-state-file'
 
-  POP           if non-nil, then show (pop to) first buffer in saved
+  POP           if non-nil, show first buffer in saved
                 state file. This flag is set to t in interactive calls.
 
-  VERB          non-nil enables verbose messages. This flag is set to
+  VERB          if non-nil, enable verbose messages. This flag is set to
                 t in interactive calls.
 
 References:
@@ -1458,9 +1463,9 @@ References:
                     (tinydesk-get-save-dir))
     current-prefix-arg
     t))
-  (let ((count         0)
-	(state-file    (expand-file-name file))
-	(last-state    tinydesk--last-state-file)
+  (let ((count 0)
+	(state-file (expand-file-name file))
+	(last-state tinydesk--last-state-file)
 	buffer
 	kill-buffer
 	err
@@ -1468,10 +1473,10 @@ References:
 	;; first-entry
 	list)
     (ti::verb)
-    ;; o  read the config file
-    ;; o  raise the kill flag if the file ISN'T already loaded, user
+    ;; -  read the config file
+    ;; -  raise the kill flag if the file ISN'T already loaded, user
     ;;    may be editing it.
-    ;; o  There may be buffers with the same name, but different dirs..
+    ;; -  There may be buffers with the same name, but different dirs.
     (unless (setq buffer (get-file-buffer state-file))
       (setq kill-buffer t)              ;different directory
       (unless (file-exists-p state-file)
@@ -1498,12 +1503,13 @@ References:
         (and kill-buffer
              (kill-buffer buffer)))
        (t
-        ;;  Show failed files
-        (message (concat "TinyDesk: Not loaded> " not-loaded))
+        ;;  Write record about failed to load files
+        (message (concat "TinyDesk: Not loaded: " not-loaded))
         (sleep-for 0)
         (pop-to-buffer buffer)
         (tinydesk-mode 'no-face 'verbosee)
-        (tinydesk-set-face-non-files-buffer)
+	(if tinydesk--recover-mark-problem-lines
+	    (tinydesk-set-face-non-files-buffer))
         (ti::pmin)))
       (setq tinydesk--last-state-file file))))
 
