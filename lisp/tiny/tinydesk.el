@@ -371,8 +371,10 @@ For full documentation, see function `tinydesk-auto-save'"
 
 (defcustom tinydesk--save-exclude-regexp
   (concat
+   ;; Backup files
+   "[~#]$"
    ;; Gnus
-   "dribble\\|drafts"
+   "\\|dribble\\|drafts"
    ;;  Do save mail buffers; because you want to call M-x rmail
    ;;  instead.
    "\\|RMAIL\\|VM\\|MH"
@@ -383,13 +385,12 @@ For full documentation, see function `tinydesk-auto-save'"
    ;;  No files from these directories
    "\\|^/tmp/\\|/junk/\\|/trash/\\|/[aA]utosaved?/")
   "*Regexp of files that are not saved to state file.
-match is case sensitive. If you do want not case sensitive match, you
-have to do set this variable to nil and use your own line delete:
+Match is case sensitive. If you do want not case sensitive match,
+set this variable to nil and use custom setup:
 
-   (setq tinydesk--save-after-hook      'my-tinydesk--save-after-hook)
+   (setq tinydesk--save-after-hook 'my-tinydesk--save-after-hook)
    (defun my-tinydesk--save-after-hook ()
       (flush-lines REGEXP))"
-
   :type  '(string :tag "Regexp")
   :group 'TinyDesk)
 

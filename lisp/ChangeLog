@@ -1,3 +1,8 @@
+2011-12-04 Sun  Jari Aalto  <jari.aalto@cante.net>
+
+	* tiny/tinydesk.el (tinydesk--save-exclude-regexp): Add Backup
+	files that match regexp "[~#]$".
+
 2011-12-01 Thu  Jari Aalto  <jari.aalto@cante.net>
 
 	* tiny/tinydesk.el (tinydesk--save-title): Remove extra line.
