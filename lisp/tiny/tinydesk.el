@@ -373,6 +373,8 @@ For full documentation, see function `tinydesk-auto-save'"
   (concat
    ;; Backup files
    "[~#]$"
+   ;; Auto save files
+   "\\|\\.saves-"
    ;; Gnus
    "\\|dribble\\|drafts"
    ;;  Do save mail buffers; because you want to call M-x rmail
