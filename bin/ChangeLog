@@ -2,7 +2,7 @@
 
 	* ripdoc.pl: Minor code layout fixes. Fix typos in Help.
 	[commit d595a52] Remove. ripdoc.el was moved to separate project
-	http://freecode.net/projects/perl-ripdoc
+	http://freecode.com/projects/perl-ripdoc
 
 2010-05-03 Mon  Jari Aalto  <jari.aalto@cante.net>
 

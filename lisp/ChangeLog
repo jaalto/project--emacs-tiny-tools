@@ -399,7 +399,7 @@
 
         * tiny/tinyepkg.el: Remove. Moved to separate project
         under name epackage.el. See
-        http://freecode.net/projects/emacs-epackage
+        http://freecode.com/projects/emacs-epackage
 
         * tiny/tinylibw.el (w32-cygwin-convert): Use plain `let'.
 
@@ -1498,12 +1498,12 @@
 2009-10-27  Jari Aalto  <jari.aalto@cante.net>
 
         * tiny/tinydebian.el (tinydebian-bug-bts-type-determine):
-        Add freecode.net suport.
+        Add freecode.com suport.
         (tinydebian-freecode-bug-type-p): New.
-        (tinydebian-bug-url-forward): Add freecode.net suport.
+        (tinydebian-bug-url-forward): Add freecode.com suport.
         (tinydebian-bug-nbr-debian-url-forward): Correct variable bug to
         str.
-        (tinydebian-bug-ask-bts-and-number): Add freecode.net suport.
+        (tinydebian-bug-ask-bts-and-number): Add freecode.com suport.
 
 2009-10-25  Jari Aalto  <jari.aalto@cante.net>
 
