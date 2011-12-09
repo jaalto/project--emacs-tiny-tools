@@ -1,3 +1,8 @@
+2011-12-09 Fri    <jaalto@KOTO>
+
+	* tiny/tinydesk.el (tinydesk-mark-region): Skip
+	over comment lines. Corrects infinite loop.
+
 2011-12-04 Sun  Jari Aalto  <jari.aalto@cante.net>
 
 	* tiny/tinydesk.el (tinydesk--save-exclude-regexp): Add Backup

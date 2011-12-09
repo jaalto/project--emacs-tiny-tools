@@ -978,12 +978,16 @@ Example:
     (save-restriction
       (narrow-to-region beg end)
       (goto-char (point-min))
+      (setq file nil)
       (while (not (eobp))
 	(cond
-	 ((looking-at
-	   (concat "[ \t]*\\(.+[^ \t\r\n]\\)\\([ \t]*"
-		   "[" tinydesk--comment-characters "]"
-		   ".*\\)"))
+	  ((looking-at
+	    `,(concat"[ \t]*"
+		     "[" tinydesk--comment-characters "]")))
+	  ((looking-at
+	    `,(concat "[ \t]*\\(.+[^ \t\r\n]\\)\\([ \t]*"
+		      "[" tinydesk--comment-characters "]"
+		      ".*\\)"))
 	   (setq file (match-string-no-properties 1)
 		 bp (match-beginning 1)
 		 ep (match-end 1))
@@ -992,24 +996,24 @@ Example:
 	  ((looking-at "[ \t]*\\(.*[^ \t\r\n]\\)")
 	   (setq file (match-string-no-properties 1)
 		 bp (match-beginning 1)
-		 ep (match-end 1)))
-	 (when file
-	   (cond
-	    ((get-file-buffer file)  ;already in Emacs ?
-	     (move-to-column err-col t)
-	     (if (not (looking-at (concat "$\\|[ \t" c-chars "]")))
-		 (end-of-line)) ;no other choices, place is cccupied
-	     (tinydesk-add-space-if-non-space)
-	     (insert (concat comment " loaded")))
-	    (t
-	     ;; ............................... not loaded in Emacs ...
-	     (if (or (string-match "@" file)
-		     (file-exists-p file))
-		 (put-text-property bp ep 'mouse-face file-face)))))
+		 ep (match-end 1))))
+	(when file
+	  (cond
+	   ((get-file-buffer file)  ;already in Emacs ?
+	    (move-to-column err-col t)
+	    (if (not (looking-at (concat "$\\|[ \t" c-chars "]")))
+		(end-of-line)) ;no other choices, place is cccupied
+	    (tinydesk-add-space-if-non-space)
+	    (insert (concat comment " loaded")))
+	   (t
+	    ;; ............................... not loaded in Emacs ...
+	    (if (or (string-match "@" file)
+		    (file-exists-p file))
+		(put-text-property bp ep 'mouse-face file-face)))))
 	(forward-line 1))
       (set-buffer-modified-p nil)
       (and verb                         ;this make take a while...
-           (message "TinyDesk: Marking files...ok"))))))
+           (message "TinyDesk: Marking files...ok")))))
 
 ;;; ----------------------------------------------------------------------
 ;;;
