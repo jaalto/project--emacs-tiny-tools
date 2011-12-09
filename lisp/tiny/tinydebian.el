@@ -2517,13 +2517,13 @@ Return:
   "Check if bug context is Freecode."
   (let ((str (tinydebian-current-line-string)))
     (cond
-     ((string-match "freecode.net" str)
+     ((string-match "freecode.com" str)
       str)
      (t
       (goto-char (point-min))
       (if (re-search-forward
-           ;;  http://freecode.net/projects/wcd#release_307159
-           "https?://freecode.net/[^<> \t\r\n]+[0-9][0-9][0-9]+" nil t)
+           ;;  http://freecode.com/projects/wcd#release_307159
+           "https?://freecode.com/[^<> \t\r\n]+[0-9][0-9][0-9]+" nil t)
           (match-string-no-properties 0))))))
 
 ;;; ----------------------------------------------------------------------
