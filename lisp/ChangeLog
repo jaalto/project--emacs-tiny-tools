@@ -1,5 +1,9 @@
 2011-12-09 Fri  Jari Aalto  <jari.aalto@cante.net>
 
+	* tiny/tinylisp.el: Change all variable names from *-:*
+	to *--*.
+	(tinylisp-find-function-list): Clean EOL whitespaces.
+
 	* tiny/tinydesk.el (tinydesk-mark-region): Skip
 	over comment lines. Corrects infinite loop.
 

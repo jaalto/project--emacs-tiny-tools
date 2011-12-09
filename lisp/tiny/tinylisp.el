@@ -4055,8 +4055,8 @@ return:
 
  '((type-string . name) ...)"
   (interactive)
-  (let ((re     tinylisp-:regexp-function)
-	(buffer tinylisp-:buffer-data)
+  (let ((re     tinylisp--regexp-function)
+	(buffer tinylisp--buffer-data)
 	(loop   t)
 	list
 	type
@@ -4100,9 +4100,12 @@ return:
 
 			    (cdr var)
 			    (or str ""))))
+	  (ti::pmin)
+	  (while (re-search-forward "[ \t]+$" nil t)
+	    (replace-match ""))		;  Clean EOL witespace
 	  (pop-to-buffer (current-buffer))
 	  (ti::pmin)
-	  (run-hooks 'tinylisp-:find-func-list-hook)))
+	  (run-hooks 'tinylisp--find-func-list-hook)))
     list))
 
 ;;; ----------------------------------------------------------------------
