@@ -2,6 +2,10 @@
 
 	* tiny/tinydesk.el (tinydesk-mark-region): Skip
 	over comment lines. Corrects infinite loop.
+	(tinydesk-unload-current-file): Do not mark buffer modified.
+	(tinydesk-load-file): Simplyfy with `when'.
+	(tinydesk-clear-line-properties): Improve `set-buffer-modified-p'.
+	(tinydesk-handle-text-property): Do not mark buffer modified.
 
 2011-12-04 Sun  Jari Aalto  <jari.aalto@cante.net>
 

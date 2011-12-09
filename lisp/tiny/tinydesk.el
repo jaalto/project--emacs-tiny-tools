@@ -812,7 +812,7 @@ TinyDesk: Can't do state autosave: [%s] is not writable." save-to))
 (defun tinydesk-clear-line-properties ()
   "Remove properties from the line."
   (set-text-properties (line-beginning-position) (line-end-position) nil)
-  (set-buffer-modified-p nil))
+  (set-buffer-modified-p (not 'modified)))
 
 ;;; ----------------------------------------------------------------------
 ;;;
@@ -886,6 +886,7 @@ TinyDesk: Can't do state autosave: [%s] is not writable." save-to))
           (end-of-line))
         (tinydesk-add-space-if-non-space)
         (insert comment " loaded")
+	(set-buffer-modified-p (not 'modified))
         (beginning-of-line)))))))
 
 ;;; ----------------------------------------------------------------------
@@ -1080,9 +1081,9 @@ Marking is only done if word is valid filename."
                (progn (delete-region (point) (line-end-position)) t))
           (and (move-to-column tinydesk--message-column t)
                (insert ";;")))
-
       (insert " unloaded")
-      (forward-line 1))))
+      (forward-line 1)
+      (set-buffer-modified-p (not 'modified)))))
 
 ;;; ----------------------------------------------------------------------
 ;;;
@@ -1091,14 +1092,11 @@ Marking is only done if word is valid filename."
   (interactive)
   (let (prop
 	word)
-    (setq prop (get-text-property (point) 'mouse-face))
-    (cond
-     (prop                              ;property found?
-      (setq word  (tinydesk-file-name-absolute
-                   (tinydesk-read-word))) ;read word under cursor
-      (cond
-       (word                            ;grabbed
-        (tinydesk-handle-text-property prop word))))
+    (when (setq prop (get-text-property (point) 'mouse-face))
+      (setq word (tinydesk-file-name-absolute
+		  (tinydesk-read-word))) ;read word under cursor
+      (when word
+        (tinydesk-handle-text-property prop word)))
      ((interactive-p)
       (message
        (substitute-command-keys
