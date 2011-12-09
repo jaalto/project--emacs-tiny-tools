@@ -2934,7 +2934,7 @@ Table of Contents
             ftp://rum.cs.yale.edu/pub/monnier/pcl-cvs/
             <monnier@tequila.cs.yale.edu> ftp://ftp.weird.com/pub/local/
             ftp://ftp.lysator.liu.se/pub/emacs/ [Elib is required by
-            pcl-cvs] <http://www.freshmeat.net/> pcl-cvs is part of the
+            pcl-cvs] <http://www.freecode.net/> pcl-cvs is part of the
             XEmacs 20.3 distribution and is supposed to work for CVS 1.9
             and newer. In Emacs 21.x the file is included with name
             *pcvs.el*
@@ -4874,7 +4874,7 @@ Table of Contents
 
         2000-03 sawmill <http://sawmill.sourceforge.net/> has been
         renamed sawfish. Because of this sawmill.el has been renamed
-        sawfish.el. http://freshmeat.net/projects/sawfish.el/
+        sawfish.el. http://freecode.net/projects/sawfish.el/
 
         [Dave Pearson] 1999-11. The Emacs mode for working with the
         config files of sawfish. As well as providing a programming

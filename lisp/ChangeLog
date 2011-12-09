@@ -1,3 +1,15 @@
+2011-12-04 Sun  Jari Aalto  <jari.aalto@cante.net>
+
+	* tiny/tinydesk.el (tinydesk--save-exclude-regexp): Add Backup
+	files that match regexp "[~#]$".
+
+2011-12-01 Thu  Jari Aalto  <jari.aalto@cante.net>
+
+	* tiny/tinydesk.el (tinydesk--save-title): Remove extra line.
+	(tinydesk-install-default-keybindings): Adjust comments.
+	(tinydesk--recover-mark-problem-lines): New user variable.
+	(tinydesk-recover-state): Use `tinydesk--recover-mark-problem-lines'.
+
 2011-11-22 Tue  Jari Aalto  <jari.aalto@cante.net>
 
 	* tiny/tinytab.el (wizard): Define backtab in non-window system.
@@ -387,7 +399,7 @@
 
         * tiny/tinyepkg.el: Remove. Moved to separate project
         under name epackage.el. See
-        http://freshmeat.net/projects/emacs-epackage
+        http://freecode.net/projects/emacs-epackage
 
         * tiny/tinylibw.el (w32-cygwin-convert): Use plain `let'.
 
@@ -1445,7 +1457,7 @@
 
 2010-03-01 Mon  Jari Aalto  <jari.aalto@cante.net>
 
-        * tiny/tinydebian.el (tinydebian-freshmeat-bug-type-p): remove
+        * tiny/tinydebian.el (tinydebian-freecode-bug-type-p): remove
         extra unused regexp. This fixes CPAN bug URL detection.
 
 2009-12-31  Jari Aalto  <jari.aalto@cante.net>
@@ -1486,12 +1498,12 @@
 2009-10-27  Jari Aalto  <jari.aalto@cante.net>
 
         * tiny/tinydebian.el (tinydebian-bug-bts-type-determine):
-        Add freshmeat.net suport.
-        (tinydebian-freshmeat-bug-type-p): New.
-        (tinydebian-bug-url-forward): Add freshmeat.net suport.
+        Add freecode.net suport.
+        (tinydebian-freecode-bug-type-p): New.
+        (tinydebian-bug-url-forward): Add freecode.net suport.
         (tinydebian-bug-nbr-debian-url-forward): Correct variable bug to
         str.
-        (tinydebian-bug-ask-bts-and-number): Add freshmeat.net suport.
+        (tinydebian-bug-ask-bts-and-number): Add freecode.net suport.
 
 2009-10-25  Jari Aalto  <jari.aalto@cante.net>
 
@@ -1819,7 +1831,7 @@
 2009-08-31  Jari Aalto  <jari.aalto@cante.net>
 
         * tiny/tinytf.el: (top level::Documentation): Remove CPAN
-        references and point to freshmeat t2html project.
+        references and point to freecode t2html project.
 
 2009-08-29  Jari Aalto  <jari.aalto@cante.net>
 

@@ -86,7 +86,7 @@
 ;;          bug messages for Debian, Emacs and GNU bug tracking
 ;;          systems.
 ;;      o   Other BTS: limited support for visting bugs at Sourceforge,
-;;          Launchpad, Freshmeat, KDE, Gnome, MySQL, Perl CPAN, Redhat
+;;          Launchpad, Freecode, KDE, Gnome, MySQL, Perl CPAN, Redhat
 ;;          Sourcewre, Mercurial version control, Trac, Github. You can
 ;;          manipulate these bugs via their Web interface
 ;;      o   In Gnus *Summary* buffer, there is new menu "Tdeb" to
@@ -2513,17 +2513,17 @@ Return:
 
 ;;; ----------------------------------------------------------------------
 ;;;
-(defsubst tinydebian-freshmeat-bug-type-p ()
-  "Check if bug context is Freshmeat."
+(defsubst tinydebian-freecode-bug-type-p ()
+  "Check if bug context is Freecode."
   (let ((str (tinydebian-current-line-string)))
     (cond
-     ((string-match "freshmeat.net" str)
+     ((string-match "freecode.net" str)
       str)
      (t
       (goto-char (point-min))
       (if (re-search-forward
-           ;;  http://freshmeat.net/projects/wcd#release_307159
-           "https?://freshmeat.net/[^<> \t\r\n]+[0-9][0-9][0-9]+" nil t)
+           ;;  http://freecode.net/projects/wcd#release_307159
+           "https?://freecode.net/[^<> \t\r\n]+[0-9][0-9][0-9]+" nil t)
           (match-string-no-properties 0))))))
 
 ;;; ----------------------------------------------------------------------
@@ -2696,8 +2696,8 @@ Return: '(BTS-TYPE-STRING [BUG NUMBER | URL])."
   (tinydebian-with-bug-context
     (let (data)
       (cond
-       ((setq data (tinydebian-freshmeat-bug-type-p))
-        (list "freshmeat" data))
+       ((setq data (tinydebian-freecode-bug-type-p))
+        (list "freecode" data))
        ((setq data (tinydebian-perl-cpan-bug-type-p))
         (list "perl-cpan" data))
        ((setq data (tinydebian-savannah-bug-type-bts-p))
@@ -2918,7 +2918,7 @@ In Gnus summary buffer, look inside original article."
                      "\\|gnu\\.org[^ \t\r\n]+[0-9]"
                      "\\|forge[^ \t\r\n]+[0-9]"
                      "\\|rt\\.cpan\+.org[^ \t\r\n]+[0-9]"
-                     "\\|freshmeat\\.net[^ \t\r\n]+[0-9][0-9][0-9]"
+                     "\\|freecode\\.net[^ \t\r\n]+[0-9][0-9][0-9]"
                      "\\)")
            nil t)
           (let ((str (thing-at-point 'url)))
@@ -3719,7 +3719,7 @@ Input notes:
                ("sourceware" . 1)
                ("mysql" . 1)
                ("google" . 1)
-               ("freshmeat" . 1))
+               ("freecode" . 1))
              nil                                ;; predicate
              t                                  ;; require-match
              bts                                ;; initial-input
@@ -3729,7 +3729,7 @@ Input notes:
   (if (string= bts "")
      (setq bts "debian"))
   (cond
-   ((or (string-match "google\\|freshmeat\\|debian\\|emacs" bts)
+   ((or (string-match "google\\|freecode\\|debian\\|emacs" bts)
         (and (stringp project)
              (string-match "ask" project)))
     (setq project (read-string
