@@ -1,3 +1,16 @@
+2011-12-12 Mon  Jari Aalto  <jari.aalto@cante.net>
+
+	* tiny/tinydebian.el (tinydebian-browse-url-http-get): Fix typo.
+
+2011-12-11 Sun  Jari Aalto  <jari.aalto@cante.net>
+
+	* tiny/tinydebian.el (tinydebian-bug-system-info-os-insert): New.
+	(tinydebian-bug-report-mail-insert-details): Use
+	`tinydebian-bug-system-info-os-insert'.
+
+	* tiny/tinymail.el (tinymail-iso8601-date-value): Delete
+	empty newlines
+
 2011-12-09 Fri  Jari Aalto  <jari.aalto@cante.net>
 
 	* tiny/tinylisp.el: Change all variable names from *-:*
