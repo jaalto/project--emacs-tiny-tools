@@ -2,6 +2,10 @@
 
 	* tiny/tinylisp.el (tinylisp-lisp-mnt-verify): Delete obsolete
 	what(1) and RCS from docstring.
+	(tinylisp--menu-checkdoc): Remove obsolete
+	`checkdoc-triple-semi-comment-check-flag'.
+	(tinylisp--menu-checkdoc): Remove  obsolete
+	`checkdoc-triple-semi-comment-check-flag'.
 
 	* tiny/tinydesk.el (tinydesk-file-p): Return t on success. Use
 	shorter string (from 4o to 20 characters) to test if file matches.
