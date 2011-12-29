@@ -6187,7 +6187,7 @@ function `lm-verify', which you should run in your package. It helps
 ensuring that you have all the proper keywords in place. Here is rough
 valid layout format:
 
-    ;; XXX.el -- proper first line
+    ;;; XXX.el -- proper first line
 
     ;; Author
     ;; Maintainer
@@ -6198,10 +6198,7 @@ valid layout format:
     ;;; Change Log:
     ;;; Code:
 
-    ;;; XXX.el ends here
-
-See unix what(1) and GNU RCS indent(1) why you should adopt a style where
-you use @(#) and $Keywords$."
+    ;;; XXX.el ends here"
   (interactive)
   (require 'lisp-mnt)
   (if (not (string= (symbol-value 'lm-history-header)

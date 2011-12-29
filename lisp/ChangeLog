@@ -1,5 +1,8 @@
 2011-12-29 Thu  Jari Aalto  <jari.aalto@cante.net>
 
+	* tiny/tinylisp.el (tinylisp-lisp-mnt-verify): Delete obsolete
+	what(1) and RCS from docstring.
+
 	* tiny/tinydesk.el (tinydesk-file-p): Return t on success. Use
 	shorter string (from 4o to 20 characters) to test if file matches.
 
