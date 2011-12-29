@@ -6201,11 +6201,7 @@ valid layout format:
     ;;; XXX.el ends here"
   (interactive)
   (require 'lisp-mnt)
-  (if (not (string= (symbol-value 'lm-history-header)
-                    "Change Log\\|History"))
-      (message "\
-TinyLisp: your lisp-mnt.el is too old to have improved checking. Get newer.")
-    (call-interactively 'lm-verify)))
+  (call-interactively 'lm-verify))
 
 ;;}}}
 ;;{{{ lisp-mnt.el
