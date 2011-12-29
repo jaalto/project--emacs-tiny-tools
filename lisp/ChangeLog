@@ -1,3 +1,8 @@
+2011-12-29 Thu  Jari Aalto  <jari.aalto@cante.net>
+
+	* tiny/tinydesk.el (tinydesk-file-p): Return t on success. Use
+	shorter string (from 4o to 20 characters) to test if file matches.
+
 2011-12-12 Mon  Jari Aalto  <jari.aalto@cante.net>
 
 	* tiny/tinydebian.el (tinydebian-browse-url-http-get): Fix typo.

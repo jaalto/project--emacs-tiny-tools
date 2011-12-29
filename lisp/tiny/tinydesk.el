@@ -1218,11 +1218,11 @@ Mode description:
 ;;; ----------------------------------------------------------------------
 ;;;
 (defun tinydesk-file-p ()
-  "Return t if `tinydesk--save-title' at the beginning of buffer."
+  "Return t if `tinydesk--save-title' is at the beginning of buffer."
   (let ((string (substring
 		 (or (eval tinydesk--save-title)
 		     "####No-string-available###")
-		 0 40)))
+		 0 20)))
     (save-excursion
       (ti::pmin)
       (when (re-search-forward
@@ -1230,7 +1230,8 @@ Mode description:
 	     (min 300
 		  (point-max))
 	     'noerr)
-        (turn-on-tinydesk-mode)))))
+        (turn-on-tinydesk-mode)
+	t))))
 
 ;;; ----------------------------------------------------------------------
 ;;;
