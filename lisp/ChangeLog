@@ -1,3 +1,26 @@
+2011-12-31 Sat  Jari Aalto  <jari.aalto@cante.net>
+
+	* tiny/tinylibm.el (ti::nconc): Correct docstring.
+
+	* tiny/tinydesk.el: (tinydesk-pmin): New.
+	(defgroup): Replaced. Was ti::package-defgroup-tiny.
+	(tinydesk--directory-location): Check ~/temp and ~/Temp and
+	last $HOME before giving up.
+	(tinydesk--save-title): Remove ti::* functions.
+	(tinydesk-default-mode-bindings): Remove ti::* functions.
+	(tinydesk-tmp-buffer): Rewrite.
+	(tinydesk-kill-line): New.
+	(tinydesk-only-files-region): Remove ti::* functions.
+	(tinydesk-file-mode-make-writable): New.
+	(tinydesk-expunge-unloaded): Remove ti::* functions.
+	(tinydesk-verbose): New.
+	(tinydesk-string-match-case): New.
+	(tinydesk-file-name-remote-p): New.
+	(tinydesk--temp-buffer): Rename. Was `tinydesk--tmp-buffer'.
+	(tinydesk--trash-temp-buffer): Rename. Was `tinydesk--trash-tmp-buffer'.
+	(tinydesk-nconc): New.
+	(tinydesk-read-word): Rewrite.
+
 2011-12-29 Thu  Jari Aalto  <jari.aalto@cante.net>
 
 	* tiny/tinylisp.el (tinylisp-lisp-mnt-verify): Delete obsolete
