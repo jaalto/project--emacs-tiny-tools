@@ -261,6 +261,8 @@
 
 ;;; Code:
 
+(require 'whitespace)		   ; Define whitespace-trailing-regexp
+
 (defgroup epackage nil
   "Simple desktop: only filenames and directories are read/saved.
 
@@ -563,8 +565,6 @@ Input:
 ;;;
 (defun tinydesk-remove-whitespace-eol ()
   "Clear end of line whitespaces from whole buffer."
-  (require 'whitespace) ;; Define whitespace-trailing-regexp
-  (defvar whitespace-trailing-regexp)
   (whitespace-replace-action
    'delete-region (point-min) (point-max) whitespace-trailing-regexp 1))
 
