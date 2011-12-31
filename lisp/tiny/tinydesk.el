@@ -1,13 +1,15 @@
 ;;; tinydesk.el --- Save and restore files between Emacs sessions
 
-;; This file is not part of Emacs
+;; Copyright (C) 1995-2012 Jari Aalto
 
-;; Copyright (C)    1995-2010 Jari Aalto
-;; Keywords:        extensions
-;; Author:          Jari Aalto
-;; Maintainer:      Jari Aalto
-;;
-;; Look at the code with folding.el
+;; Author:	Jari Aalto
+;; Maintainer:	Jari Aalto
+;; Created:	1995-02-01
+;; Version:	2.0
+;; Keywords:	extensions
+;; URL:		http://www.emacswiki.org/emacs/TinyTools
+
+;; This file is not part of Emacs
 
 ;; COPYRIGHT NOTICE
 ;;
@@ -194,7 +196,7 @@
 ;;          (cond
 ;;           (my-tinydesk-session-mode
 ;;            (when (and (file-exists-p my-tinydesk-session)
-;;                   (y-or-n-p "Recover session "))
+;;                   (y-or-n-p "Recover session? "))
 ;;              (tinydesk-recover-state my-tinydesk-session)))
 ;;            ((member "--no-desktop" command-line-args)
 ;;             (message "My: option --no-desktop; bypass recovering Tiny Desktop session."))
@@ -415,7 +417,7 @@ set this variable to nil and use custom setup:
       (if (boundp 'file)
           file ;; visible in function `tinydesk-save-state'
         "<file>")))
-  "*A lisp form to be included at the beginning of state file."
+  "*A form to be included at the beginning of state file."
   :type  'sexp
   :group 'TinyDesk)
 
@@ -426,8 +428,8 @@ Use nil to preserve `buffer-list' order."
   :group 'TinyDesk)
 
 (defcustom tinydesk--recover-mark-problem-lines t
-  "*If non-nil, to mark problematic lines after
-nil to preserve `buffer-list' order."
+  "*If non-nil, ark problematic lines.
+Value nil to preserve `buffer-list' order."
   :type  'boolean
   :group 'TinyDesk)
 
@@ -448,9 +450,7 @@ Arguments passed to function:
   '((file-pick .  highlight)
     (error     .  italic))
   "*Alist of faces used for marking text.
-The default value is
-
-\(setq tinydesk--face-table
+The default value is:
   '((file-pick .  highlight)
     (error     .  italic)))"
   :type '(list
@@ -503,7 +503,7 @@ path, garbage at line...Hooks may check the contents of this.")
 ;;; ----------------------------------------------------------------------
 ;;;
 (defmacro tinydesk-verbose ()
-  "Set varibale `verb' for interactive calls."
+  "Set variable `verb'."
   `(setq verb (or verb (interactive-p))))
 
 ;;; ----------------------------------------------------------------------
@@ -528,7 +528,7 @@ path, garbage at line...Hooks may check the contents of this.")
 ;;; ----------------------------------------------------------------------
 ;;;
 (defsubst tinydesk-file-name-remote-p (file)
-  "Check if file looks like remote FILE."
+  "Check if FILE is remote. Simplistic string check for FILE."
   (string-match "^[^ \t]+@[^ \t]+:" file))
 
 ;;; ----------------------------------------------------------------------
@@ -571,7 +571,7 @@ Input:
 ;;; ----------------------------------------------------------------------
 ;;;
 (defun tinydesk-install-default-keybindings ()
-  "Install package under `ctl-x-4-map'
+  "Install package under `ctl-x-4-map'.
 \\{ctl-x-4-map}"
   (interactive)
   (define-key ctl-x-4-map "S" 'tinydesk-save-state)
@@ -864,7 +864,7 @@ References:
                 (and (file-exists-p save-to)
                      (not (file-writable-p save-to))))
             (error "\
-TinyDesk: Can't do state autosave: [%s] is not writable." save-to))
+TinyDesk: Can't do state autosave: [%s] is not writable" save-to))
         (save-window-excursion
           (save-excursion
             (message "TinyDesk: state backup in file %s" save-to)
@@ -1133,7 +1133,7 @@ Marking is only done if word is valid filename."
   (save-excursion
     (tinydesk-pmin)
     (while (re-search-forward (format "%s unloaded$" (tinydesk-comment)) nil t)
-      (tinydesk-buffer-kill-line))))
+      (tinydesk-kill-line))))
 
 ;;; ----------------------------------------------------------------------
 ;;;
@@ -1281,7 +1281,8 @@ Mode description:
 
 ;;; ----------------------------------------------------------------------
 ;;;
-;;;###autoload
+;;;###autoload** Lint miscellaneous
+
 (defun turn-on-tinydesk-mode ()
   "Turn on `tinydesk-mode'."
   (interactive)
@@ -1308,7 +1309,7 @@ Mode description:
 ;;; ----------------------------------------------------------------------
 ;;;
 (defun turn-on-tinydesk-mode-maybe ()
-  "Turn on `tinydesk-mode' if `tinydesk-file-p' returns non-nil."
+  "Turn on `tinydesk-mode' on state files."
   (interactive)
   (if (tinydesk-file-p)
       (turn-on-tinydesk-mode)))
