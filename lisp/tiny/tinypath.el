@@ -1320,7 +1320,7 @@ USER and LOGNAME variables are not defined by default."
 
   (defvar tinypath--boot-ignore-directory-regexp
     ;; #todo: /usr/share/emacs/21.3/lisp/obsolete
-    "\\(CVS\\|RCS\\|info\\|texi\\|\\.svn\\|/MT\\)/?$"
+    "\\(CVS\\|RCS\\|info\\|texi\\|\\.svn\\|\\.git\\|\\.bzr\\|\\.hg\\|\\.mtn\\|/MT\\)/?$"
     "While searching lisp boot subdirs, ignore those that match this regexp.
 Popular version control directories are excluded by default.")
 
@@ -2371,8 +2371,8 @@ See Manual for the details M-x tinypath-version and \"Gnus\"."
 (defcustom tinypath--load-path-accept-criteria t
   "*Control which incarnation of the installed package is respected.
 When Emacs is installed, it contains many packages that may be
-maintained out of Emacs core. (e.g. in CVS)
-You may find or install more up to date version from developer's site.
+maintained out of Emacs core. You may find or install more up to
+date version from developer's site.
 
 Example: cperl-mode.el
 
@@ -2724,6 +2724,7 @@ The automatic Perl utility will find every directory under
    "\\|doc[/\\]"
    ;;   Skip Other directories
    "\\|RCS[/\\]\\|CVS[/\\]\\|zip\\|\\.svn\\|/MT/"
+   "\\|\\.git\\|\\.bzr\\|\\.hg\\|\\.mtn"
    ;;   Skip Perl or other build directories
    "\\|\\.\\(cpan\\|build\\|s?inst\\)"
    ;;   Skip temporary directories /T/ /t/ /tmp* /temp*
