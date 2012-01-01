@@ -385,7 +385,7 @@ For full documentation, see function `tinydesk-auto-save'"
    ;; Auto save files
    "\\|\\.saves-"
    ;; Gnus
-   "\\|dribble\\|drafts"
+   "\\|dribble\\|drafts\\|Mail/archive/sent"
    ;;  Do save mail buffers; because you want to call M-x rmail
    ;;  instead.
    "\\|RMAIL\\|VM\\|MH"
