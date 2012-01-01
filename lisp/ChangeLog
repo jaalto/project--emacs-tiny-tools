@@ -2,6 +2,8 @@
 
 	* tiny/tinydesk.el (tinydesk--save-exclude-regexp): Exclude
 	gnus archive files.
+	(tinydesk-save-state): Do not show saved buffer. Caused
+	splitting fram into windows.
 
 2011-12-31 Sat  Jari Aalto  <jari.aalto@cante.net>
 

@@ -1378,7 +1378,8 @@ Input:
   MODE          Control what is saved:
                  nil    only filenames
                  '(4)   \\[universal-argument], filenames and directories.
-                 '(16)  \\[universal-argument] \\[universal-argument], Use absolute paths to HOME.
+                 '(16)  \\[universal-argument] \\[universal-argument]
+                        Use absolute paths to HOME.
 
   FILES         filenames , absolute ones. If nil then
                 `tinydesk--get-save-file-function' is run to get files.
@@ -1386,8 +1387,7 @@ Input:
   (interactive
    (list (read-file-name "Save state to: " (tinydesk-get-save-dir))
          current-prefix-arg))
-  (let ((tmp-buffer    (tinydesk-temp-buffer 'clear))
-	(save-func     tinydesk--get-save-file-function)
+  (let ((save-func     tinydesk--get-save-file-function)
 	(sort          tinydesk--save-and-sort)
 	(title         tinydesk--save-title)
 	(re-no         tinydesk--save-exclude-regexp)
@@ -1399,8 +1399,10 @@ Input:
     ;;  after save
     (when (setq buffer (get-file-buffer file))
       (pop-to-buffer buffer)
-      (error "\
-TinyDesk: State saving aborted. Please save to new file or kill buffer: %s" file ))
+      (error
+       (concat
+	"TinyDesk: State saving aborted. "
+	"Please save to new file or kill buffer: %s" file)))
     (run-hooks 'tinydesk--save-before-hook)
     (or files
         (setq files (and (fboundp save-func)
@@ -1413,36 +1415,32 @@ TinyDesk: State saving aborted. Please save to new file or kill buffer: %s" file
                (and (file-exists-p file)
                     (null (file-name-directory file))))
           (error (format  "TinyDesk: access problem with: '%s'" file)))
-      ;;  We kill this buffer later, so we don't need save-excursion
-      (set-buffer tmp-buffer)
-      (display-buffer tmp-buffer)
-      ;; ... ... ... ... ... ... ... ... ... ... ... ...  insert files . .
-      (dolist (elt files)
-        ;;  Remove some files...
-        (if (or (not (stringp re-no))
-                (and (stringp re-no)
-                     (not
-                      (tinydesk-string-match-case re-no elt))))
-            ;;  win32 needs complete path name, not just ~/path/...
-            (insert
-             (if absolute-p
-                 ;;  Don't try to expand ange-ftp filenames. It would
-                 ;;  cause a ftp connections to be opened and that's slow....
-                 (unless (tinydesk-file-name-remote-p elt)
-                   (expand-file-name elt))
-               (abbreviate-file-name elt))
-             "\n")))
-      ;; ... ... ... ... ... ... ... ... ... ... ... ... ... ...  sort . .
-      (if sort
-          (sort-lines nil (point-min) (point-max)))
-      ;; ... ... ... ... ... ... ... ... ... ... ... ... ... ... title . .
-      (when title
-        (tinydesk-pmin)
-        (insert (eval title)))
-      (run-hooks 'tinydesk--save-after-hook)
-      (write-region (point-min) (point-max) file)
-      (set-buffer-modified-p nil)
-      (kill-buffer tmp-buffer)
+      (with-temp-buffer
+	;; ... ... ... ... ... ... ... ... ... ... ... ...  insert files . .
+	(dolist (elt files)
+	  ;;  Remove some files...
+	  (if (or (not (stringp re-no))
+		  (and (stringp re-no)
+		       (not
+			(tinydesk-string-match-case re-no elt))))
+	      ;;  win32 needs complete path name, not just ~/path/...
+	      (insert
+	       (if absolute-p
+		   ;;  Don't try to expand ange-ftp filenames. It would
+		   ;;  cause a ftp connections to be opened and that's slow....
+		   (unless (tinydesk-file-name-remote-p elt)
+		     (expand-file-name elt))
+		 (abbreviate-file-name elt))
+	       "\n")))
+	;; ... ... ... ... ... ... ... ... ... ... ... ... ... ...  sort . .
+	(if sort
+	    (sort-lines nil (point-min) (point-max)))
+	;; ... ... ... ... ... ... ... ... ... ... ... ... ... ... title . .
+	(when title
+	  (tinydesk-pmin)
+	  (insert (eval title)))
+	(run-hooks 'tinydesk--save-after-hook)
+	(write-region (point-min) (point-max) file))
       (if (interactive-p)
           (message (concat "TinyDesk: State saved to file " file)))
       ;; ^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^ catch ^^^
