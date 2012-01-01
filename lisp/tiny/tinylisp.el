@@ -1715,12 +1715,7 @@ l       List all known instrumented functions.")
         ((eq spell  'interactive)   "sI")
         ((eq spell  t)              "S")
         ((null spell)               "")
-        (t                          "s?"))
-       (let ((sym 'checkdoc-triple-semi-comment-check-flag))
-         (if (and (boundp sym)
-                  (symbol-value sym))
-             "T"
-           ""))))
+        (t                          "s?"))))
     ((?\    . ( (checkdoc-eval-defun)))
      (?\177 . ( (tinylisp-checkdoc)))
      (?\b   . ( (tinylisp-checkdoc)))
@@ -1744,14 +1739,7 @@ l       List all known instrumented functions.")
      (?d    . (t (progn (setq  checkdoc-spellcheck-documentation-flag
                                'defun))))
      (?r    . (t (progn (setq  checkdoc-spellcheck-documentation-flag
-                               'buffer))))
-     (?T    . (t (progn
-                   (when (boundp 'checkdoc-triple-semi-comment-check-flag)
-                     (setq  checkdoc-triple-semi-comment-check-flag t)))))
-     (?t    . (t (progn
-                   (when (boundp 'checkdoc-triple-semi-comment-check-flag)
-                     (setq checkdoc-triple-semi-comment-check-flag
-                           nil)))))))
+                               'buffer))))))
   "According to checkdoc manual:
 ...The Emacs Lisp manual has a nice chapter on how to write
 documentation strings.  Many stylistic suggestions are fairly
@@ -1761,9 +1749,9 @@ checks needed to make sure these styles are remembered.
 
 The echo area menu shows following status information
 
-  [-|O|E|V|S|T] checkdoc:
-   | | | | | |
-   | | | | | `checkdoc-triple-semi-comment-check-flag'
+  [-|O|E|V|S] checkdoc:
+   | | | | |
+   | | | | |
    | | | | `checkdoc-spellcheck-documentation-flag'
    | | | `checkdoc-verb-check-experimental-flag'
    | | `checkdoc-arguments-in-order-flag'
@@ -1787,7 +1775,6 @@ Aa~-    Change `checkdoc-autofix-flag'       A)uto a)semi ~)query -)never
 Bb      Change `checkdoc-bouncy-flag'                     B)on b)off
 Oo      Change `checkdoc-arguments-in-order-flag'         O)n  o)ff
 Ee      Change `checkdoc-verb-check-experimental-flag'    E)on e)off
-Tt      Change `checkdoc-triple-semi-comment-check-flag'  T)on t)off
 Ssdr    Change checkdoc-spellcheck-documentation-flag'
         s)off S)interactive d)efun r)buffer
 
@@ -1845,20 +1832,6 @@ Ssdr    Change checkdoc-spellcheck-documentation-flag'
     'buffer      - Spell-check only when style checking the whole buffer
     'interactive - Spell-check only during `checkdoc-interactive'
     t            - Always spell-check
-
-`checkdoc-triple-semi-comment-check-flag'
-
-    Non-nil means to check for multiple adjacent occurrences of ;;; comments.
-    According to the style of Emacs code in the lisp libraries, a block
-    comment can look like this:
-
-    ;;; Title
-    ;;  text
-    ;;  text
-
-    But when inside a function, code can be commented out using the ;;;
-    construct for all lines.  When this variable is nil, the ;;; construct
-    is ignored regardless of it's location in the code.
 
 Auto-fixing:
 
@@ -4055,8 +4028,8 @@ return:
 
  '((type-string . name) ...)"
   (interactive)
-  (let ((re     tinylisp-:regexp-function)
-	(buffer tinylisp-:buffer-data)
+  (let ((re     tinylisp--regexp-function)
+	(buffer tinylisp--buffer-data)
 	(loop   t)
 	list
 	type
@@ -4100,9 +4073,12 @@ return:
 
 			    (cdr var)
 			    (or str ""))))
+	  (ti::pmin)
+	  (while (re-search-forward "[ \t]+$" nil t)
+	    (replace-match ""))		;  Clean EOL witespace
 	  (pop-to-buffer (current-buffer))
 	  (ti::pmin)
-	  (run-hooks 'tinylisp-:find-func-list-hook)))
+	  (run-hooks 'tinylisp--find-func-list-hook)))
     list))
 
 ;;; ----------------------------------------------------------------------
@@ -6184,7 +6160,7 @@ function `lm-verify', which you should run in your package. It helps
 ensuring that you have all the proper keywords in place. Here is rough
 valid layout format:
 
-    ;; XXX.el -- proper first line
+    ;;; XXX.el -- proper first line
 
     ;; Author
     ;; Maintainer
@@ -6195,17 +6171,10 @@ valid layout format:
     ;;; Change Log:
     ;;; Code:
 
-    ;;; XXX.el ends here
-
-See unix what(1) and GNU RCS indent(1) why you should adopt a style where
-you use @(#) and $Keywords$."
+    ;;; XXX.el ends here"
   (interactive)
   (require 'lisp-mnt)
-  (if (not (string= (symbol-value 'lm-history-header)
-                    "Change Log\\|History"))
-      (message "\
-TinyLisp: your lisp-mnt.el is too old to have improved checking. Get newer.")
-    (call-interactively 'lm-verify)))
+  (call-interactively 'lm-verify))
 
 ;;}}}
 ;;{{{ lisp-mnt.el

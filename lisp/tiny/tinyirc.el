@@ -35,7 +35,7 @@
 ;;
 ;; Requirements:
 ;;
-;; o    Only supports <freecode.net/projects/pastebot> services.
+;; o    Only supports <freecode.com/projects/pastebot> services.
 ;; o    Perl must have been installed
 ;; o    External program pbotutil.pl must have been installed
 ;;      See `tinyirc--pastebot-program-url'.
@@ -367,7 +367,7 @@
 ;;
 ;;      o   Perl client: http://bboett.free.fr/webPaste.html
 ;;      o   The server software is available at
-;;          <http://freecode.net/projects/pastebot/>
+;;          <http://freecode.com/projects/pastebot/>
 
 ;;}}}
 

@@ -86,7 +86,7 @@
 ;;
 ;; For example this lisp file's documentation can be converted into HTML
 ;; with following command sequence. t2html is available at
-;; <http://freecode.net/projects/perl-text2html>.
+;; <http://freecode.com/projects/perl-text2html>.
 ;;
 ;;      % ripdoc.pl tinytf.el | t2html.pl > tinytf.html
 ;;
@@ -115,7 +115,7 @@
 ;;      suitable and more known than any of those exotic formats. The
 ;;      project started by creating the tool that converted text into
 ;;      HTML (Perl *t2html.pl*
-;;      <http://freecode.net/projects/perl-text2html>) and then
+;;      <http://freecode.com/projects/perl-text2html>) and then
 ;;      writing a Emacs package to help writing the text files. It has
 ;;      been proven to be really nice combination where flexibility
 ;;      meets cross-platform demands.
@@ -168,7 +168,7 @@
 ;;
 ;;	You can convert text file into HTML very easily with the perl
 ;;      script which is availale separately at
-;;      <http://freecode.net/projects/perl-text2html>. You do not
+;;      <http://freecode.com/projects/perl-text2html>. You do not
 ;;      need to know a thing about the HTML language itself. It is
 ;;      much easier to update text files, than deal with HTML itself.
 ;;      When you have text ready, you just feed it to the `t2html.pl'
