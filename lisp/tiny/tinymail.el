@@ -4300,12 +4300,10 @@ it toggless both Cc and X-Sender-Info tracking."
                               message-reply-headers
                               (mail-header-date message-reply-headers))))
       (setq date (ti::date-parse-date date))
-
       (setq yyyy     (nth 0 date)
             mm       (nth 1 date)
             dd       (nth 2 date)
             week-day (nth 4 date))
-
       (setq date
             (format "%s%s%s%s"
                     (or week-day "")

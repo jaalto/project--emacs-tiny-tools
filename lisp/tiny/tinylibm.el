@@ -84,7 +84,7 @@
 
 (require 'tinylibb)                     ;Backward compatible functions
 
-(defconst tinylibm-version-time "2010.1208.0756"
+(defconst tinylibm-version-time "2011.1231.1204"
   "Latest version number.")
 
 ;;{{{ function tests
@@ -314,7 +314,7 @@ This FORM preserves restriction and excursion with one command."
 ;;; first time with if.
 ;;;
 (defmacro ti::nconc (list x)
-  "Add to LIST element X. Like nconc, but can also add to empty list.
+  "Add to LIST element X. Like nconc, but can also add to an empty list.
 Using `nconc' is faster than `append'"
   `(setq ,list
 	 (nconc ,list (list ,x))))

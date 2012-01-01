@@ -123,7 +123,7 @@
 
 ;;{{{ setup: libraries
 
-(defconst tinydebian--version-time "2011.0305.1123"
+(defconst tinydebian--version-time "2011.1212.1950"
   "Last edited time.")
 
 (require 'tinylibm)
@@ -3492,7 +3492,7 @@ Were:
 ;;;
 (defun tinydebian-browse-url-http-get (url)
   "Return content of URL as string."
-  (let ((url-http-attempt-keepalives t) ; Must be definedx
+  (let ((url-http-attempt-keepalives t) ; Must be defined
         (buffer (url-retrieve-synchronously url)))
     (if (not buffer)
         (error "TinyDebian: Failed to connect to %s" url)
@@ -7118,6 +7118,13 @@ Locale: %s"
 
 ;;; ----------------------------------------------------------------------
 ;;;
+(defun tinydebian-bug-system-info-os-insert ()
+  "Insert result of `tinydebian-bug-system-info-os'."
+  (insert "-- System Information\n")
+  (insert (tinydebian-bug-system-info-os)))
+
+;;; ----------------------------------------------------------------------
+;;;
 (defun tinydebian-bug-severity ()
   "Select bug severity."
   (setq tinydebian--severity-selected nil)
@@ -7142,9 +7149,9 @@ Locale: %s"
         (package     (or (and info
                               (cdr (assoc "Package" info)))
                          (error "No package information."))))
-    (insert "\n\n-- System Information\n"
-            (tinydebian-bug-system-info-os)
-            (format "\n\n-- Versions of packages `%s depends on'.\n"
+    (insert "\n\n")
+    (tinydebian-bug-system-info-os-insert)
+    (insert (format "\n\n-- Versions of packages `%s depends on'.\n"
                     package)
             (if pre-depends
                 (concat "Pre-Depends:\n" pre-depends)

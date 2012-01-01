@@ -1,4 +1,56 @@
+2011-12-31 Sat  Jari Aalto  <jari.aalto@cante.net>
+
+	* tiny/tinylibm.el (ti::nconc): Correct docstring.
+
+	* tiny/tinydesk.el: (tinydesk-pmin): New.
+	(defgroup): Replaced. Was ti::package-defgroup-tiny.
+	(tinydesk--directory-location): Check ~/temp and ~/Temp and
+	last $HOME before giving up.
+	(tinydesk--save-title): Remove ti::* functions.
+	(tinydesk-default-mode-bindings): Remove ti::* functions.
+	(tinydesk-tmp-buffer): Rewrite.
+	(tinydesk-kill-line): New.
+	(tinydesk-only-files-region): Remove ti::* functions.
+	(tinydesk-file-mode-make-writable): New.
+	(tinydesk-expunge-unloaded): Remove ti::* functions.
+	(tinydesk-verbose): New.
+	(tinydesk-string-match-case): New.
+	(tinydesk-file-name-remote-p): New.
+	(tinydesk--temp-buffer): Rename. Was `tinydesk--tmp-buffer'.
+	(tinydesk--trash-temp-buffer): Rename. Was `tinydesk--trash-tmp-buffer'.
+	(tinydesk-nconc): New.
+	(tinydesk-read-word): Rewrite.
+
+2011-12-29 Thu  Jari Aalto  <jari.aalto@cante.net>
+
+	* tiny/tinylisp.el (tinylisp-lisp-mnt-verify): Delete obsolete
+	what(1) and RCS from docstring.
+	(tinylisp--menu-checkdoc): Remove obsolete
+	`checkdoc-triple-semi-comment-check-flag'.
+	(tinylisp--menu-checkdoc): Remove  obsolete
+	`checkdoc-triple-semi-comment-check-flag'.
+
+	* tiny/tinydesk.el (tinydesk-file-p): Return t on success. Use
+	shorter string (from 4o to 20 characters) to test if file matches.
+
+2011-12-12 Mon  Jari Aalto  <jari.aalto@cante.net>
+
+	* tiny/tinydebian.el (tinydebian-browse-url-http-get): Fix typo.
+
+2011-12-11 Sun  Jari Aalto  <jari.aalto@cante.net>
+
+	* tiny/tinydebian.el (tinydebian-bug-system-info-os-insert): New.
+	(tinydebian-bug-report-mail-insert-details): Use
+	`tinydebian-bug-system-info-os-insert'.
+
+	* tiny/tinymail.el (tinymail-iso8601-date-value): Delete
+	empty newlines
+
 2011-12-09 Fri  Jari Aalto  <jari.aalto@cante.net>
+
+	* tiny/tinylisp.el: Change all variable names from *-:*
+	to *--*.
+	(tinylisp-find-function-list): Clean EOL whitespaces.
 
 	* tiny/tinydesk.el (tinydesk-mark-region): Skip
 	over comment lines. Corrects infinite loop.
