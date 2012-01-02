@@ -123,7 +123,7 @@
 
 ;;{{{ setup: libraries
 
-(defconst tinydebian--version-time "2011.1212.1950"
+(defconst tinydebian--version-time "2012.0102.0009"
   "Last edited time.")
 
 (require 'tinylibm)
@@ -5297,15 +5297,30 @@ Mode description:
                                 ""))))))
        (pop-to-buffer (get-buffer-create ,name))
        (erase-buffer)
-       (mail-setup
-        (if ,email
-            ,email
-          (tinydebian-bts-generic-email-control ,buffer))
-        ,subject
-        nil
-        nil
-        nil
-        nil)
+       (cond
+	((string< emacs-version "24")
+	 (mail-setup
+	  (if ,email
+	      ,email
+	    (tinydebian-bts-generic-email-control ,buffer))
+	  ,subject
+	  nil
+	  nil
+	  nil
+	  nil))
+	 (t				;24
+	  ;; (mail-setup TO SUBJECT IN-REPLY-TO CC REPLYBUFFER ACTIONS
+	  ;;  RETURN-ACTION)
+	  (mail-setup
+	   (if ,email
+	       ,email
+	     (tinydebian-bts-generic-email-control ,buffer))
+	   ,subject
+	   nil
+	   nil
+	   nil
+	   nil
+	   nil)))
        (cond
         ((or (featurep 'message)
              (eq mail-user-agent 'message-user-agent))

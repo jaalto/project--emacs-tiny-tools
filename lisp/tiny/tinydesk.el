@@ -28,6 +28,10 @@
 ;;
 ;; Visit <http://www.gnu.org/copyleft/gpl.html> for more information
 
+;;; Depends:
+
+;; Standard Emac featuress. No external packages are used.
+
 ;;; Install:
 
 ;;   Put this file on your Emacs-Lisp `load-path', add following into your
@@ -38,7 +42,7 @@
 ;;      (require 'tinydesk)
 ;;
 ;;   or use the autoload feature. Notice that the automatic "file
-;;   state backup feature" gets enables only when this file is loaded.
+;;   state backup feature" gets enabled only if this file is loaded.
 ;;   If you want that feature, then use require.
 ;;
 ;;      (add-hook 'tinydesk--load-hook 'tinydesk-default-emacs-keybindings)
@@ -61,55 +65,54 @@
 
 ;;  Preface, Feb 1995
 ;;
-;;      At work working with windowed system, Emacs stays open from day to
-;;      day. In fact people seldom even logout, so Emacs and the files
+;;      At work, working with windowed system, Emacs stays open from day to
+;;      day. In fact people don't much even logout, so Emacs and the files
 ;;      just wait there nicely and there is seldom a need for a sophisticated
 ;;      session saver.
 ;;
-;;      But sometimes it may be necessary to visit lab next
-;;      floor to see what's troubling a C++ program. There has to be a way
-;;      to transfer the list of files that was being editing and bring
-;;      them into lab where person can replicate the setup.
+;;      But sometimes it may be necessary to visit SW testing lab next
+;;      floor to see what's is the trouble. There has to be a way
+;;      to transfer the list of files that was being edited and bring
+;;      them into lab where it would be possible to replicate the setup.
 ;;
-;;      These functions save Emacs file list into a file which can
-;;      later be opened again in Emacs somewhere else. Later Emacs
+;;      These functions save state into a file which can later be
+;;      opened again, e.g in Emacs somewhere else. Later Emacs
 ;;      versions introduced "~/.saves*" files that I found disturbing
 ;;      occupying the home directory. With this package all the files
-;;      are grouped in only one "state" state file, which can be
-;;      reused.
+;;      are put into one state state file, which can be reused.
 ;;
-;;      Hopefully someone finds use for this also, although there exist
-;;      much more better desktop savers, which save points, marks and
-;;      modes.
+;;      Hopefully someone finds use for this also, although there
+;;      exist much more better desktop savers, which can save points,
+;;      marks and modes.
 ;;
 ;;  Overview of features
 ;;
 ;;      o   Simple desktop: only filenames and directories are read/saved.
-;;          Unlike the other desktop savers, this one can also UNLOAD files
+;;          Unlike the other desktop savers, this one can *unload* files
 ;;          from Emacs. You just tell it to remove 'these files listed in
-;;          state file state.XXX', and those files will be removed from
-;;          your Emacs buffers. You can collect 'projects' and switch
-;;          between them easily: after project1, It can can be unload and
-;;          load project3 instead.
+;;          file state.XXX', and those files will be removed. You can
+;;          use this fature to collect 'projects' and switch between
+;;          them easily. After project1, unload it and load
+;;          project2 for editing.
 ;;
 ;;      o   Parse any file that includes filenames and comments
 ;;
 ;;      o   If there were any invalid entries in the state file,
-;;          the state file contents is shown to user and the entries which
+;;          the file contents is shown to user and the entries which
 ;;          had problems are marked.
 ;;
-;;      o   State file editing (tinydesk-mode):
+;;      o   State file editing (tinydesk-mode) features:
 ;;
-;;          --  load single file on the line
-;;          --  clear face properties from buffer, so that they don't
+;;          --  Load a single file on the line
+;;          --  Clear face properties from buffer, so that they don't
 ;;              disturb your view.
-;;          --  parse files for loading.
+;;          --  Parse files for loading.
 ;;          --  Show files that cannot be loaded.
 ;;
-;;      o   In regular intervals save the state of Emacs (files loaded)
+;;      o   In regular intervals saves the state of your Emacs.
 ;;          If Emacs crashes you can recover the previous session.
 ;;          See function `tinydesk-auto-save' for more. Similar functionality
-;;          (".saves") is in new Emacs releases, but this package
+;;          (".saves") is in current Emacs releases, but this package
 ;;          was originally written for Emacs 19.28.
 ;;
 ;;      o   CRASH RECOVERY: If Emacs crashes, or you have to kill it
@@ -118,7 +121,7 @@
 ;;          recover any autosaved files. The best way to get your Emacs
 ;;          back where it was, is that you load the state file for editing:
 ;;          `M-x' `tinydesk-edit-state-file' And from the edit mode
-;;          hit command `tinydesk-find-file-whole-buffer' and
+;;          use commands `tinydesk-find-file-whole-buffer' and
 ;;          `tinydesk-recover-file-whole-buffer' which and you'll be
 ;;          up again with your latest files.
 ;;
@@ -128,22 +131,21 @@
 ;;      I suppose you have copied the installation setup as is.
 ;;
 ;;      o   You have Emacs session open with bunch of files. Now you
-;;          believe that it's time to save this session. You do
-;;          `C-x' `4' `s' and give some name "state.c" if you worked
-;;          with a C project.
+;;          believe that it's time to save this session. Press
+;;          `C-x' `4' `S' and give some name like "state.work".
 ;;
 ;;      Now, it all depends what you want to do after that. You may
 ;;      `find-file' more files to Emacs; or kill few unwanted
-;;      buffers. Re-execute `C-x' `4' `s' whenever you like. You can
-;;      even edit the state file with `C-x' `4' `e' to remove some files
-;;      that you don't want to include to that "project".
+;;      buffers. Re-execute `C-x' `4' `S' whenever you need. You can
+;;      even edit the state file with `C-x' `4' `E' to remove some files
+;;      that you don't want to include.
 ;;
 ;;      o   Next time you open Emacs you can load any state file with
-;;          C-x 4 r "state.c"
+;;          `C-x' `4' `R'.
 ;;
 ;;      If you want to switch between projects; unload first the current
-;;      project with `C-x' `4' `u' "state.c" and reload some other project
-;;      with `C-x' `4' `r', e.g. your current C++ project "state.cc"
+;;      project with `C-x' `4' `U' and reload some other project
+;;      with `C-x' `4' `R'.
 ;;
 ;;  Automatic session handling
 ;;
@@ -151,13 +153,13 @@
 ;;      when Emacs starts again. I must say that this is not necessarily
 ;;      the best, because when you start Emacs for some quick job, you
 ;;      don't necessarily want it to load the saved session (loading all
-;;      files takes some time). Loading Emacs with `-q' is not the
-;;      choice, if you still like to have your other Emacs goodies active.
+;;      files takes some time). Loading Emacs with `-q' is not an options
+;;      if you still like to have your Emacs customizations.
 ;;
-;;      Here is semi-automatic save and restore, put all these, in
+;;      Here is a semi-automatic save and restore, put all these, in
 ;;      addition to ones mentioned at the "install" section, lines
 ;;      near the end of your $HOME/.emacs. The setup saves the state
-;;      when Emacs exists and asks if you want to return to saved
+;;      when Emacs exiys and asks if you want to return to saved
 ;;      session on Emacs startup. Thanks to Gary
 ;;      <help-gnu-emacs@garydjones.name> for the command line option
 ;;      code.
@@ -194,12 +196,12 @@
 ;;
 ;;          ;; Should we recover?
 ;;          (cond
+;;            ((member "--no-desktop" command-line-args)
+;;             (message "My: option --no-desktop; bypass recovering Tiny Desktop session."))
 ;;           (my-tinydesk-session-mode
 ;;            (when (and (file-exists-p my-tinydesk-session)
 ;;                   (y-or-n-p "Recover session? "))
 ;;              (tinydesk-recover-state my-tinydesk-session)))
-;;            ((member "--no-desktop" command-line-args)
-;;             (message "My: option --no-desktop; bypass recovering Tiny Desktop session."))
 ;;            ((file-exists-p my-tinydesk-session)
 ;;             (message "My: recovering Tiny desktop session %s" my-tinydesk-session)
 ;;             (tinydesk-recover-state my-tinydesk-session)))
@@ -208,13 +210,14 @@
 ;;
 ;;  Face setup
 ;;
-;;      This program uses some faces to catch your attention when you're
-;;      working with the state files. If you restore state from a file and
-;;      some file reference cannot be loaded, the state file will be shown
-;;      to you and the problematic lines are highlighted. If you open the
-;;      state file for editing, you can selectively load files. The mouse
-;;      pointer will change and the text is again highlighted. To make the
-;;      highlight work for you, you must set some colors like this
+;;      This program uses faces to catch your attention when you're
+;;      working with the state files. If you restore state from a file
+;;      and some file reference cannot be loaded, the state file will
+;;      be shown to you and the problematic lines are highlighted. If
+;;      you open the state file for editing, you can selectively load
+;;      files. The mouse pointer will change and the text is again
+;;      highlighted. To make the highlight work for you, you must set
+;;      some colors like this
 ;;
 ;;         (set-face-foreground 'italic "LightBlue")
 ;;
@@ -240,17 +243,16 @@
 ;;  Automatic state file saving
 ;;
 ;;      Emacs 19.29+ has feature that makes it possible to recover a session.
-;;      See bunch of `auto-save-list-*' variables.
+;;      See `auto-save-list-*' variables.
 ;;
-;;      Has it ever happened to you that Emacs crashed mystically when you
-;;      were in the middle of your daily routines. You had several C++
-;;      files open, perl code, text files, RMAIL, ... This package installs
-;;      `tinydesk-auto-save' function to `write-file-functions' and in regular
-;;      intervals all your Emacs session files are stored into the state
-;;      file. After a crash you can easily recover your session by reading
-;;      the saved state file information with `tinydesk-recover-state'
-;;      <FILE>. The name of the file of the latest saved state is in file
-;;      "periodic"
+;;      Has it ever happened to you that Emacs crashed when you were
+;;      in the middle of your daily routines. You had several C++
+;;      files open, perl code, text files, RMAIL, ... This package
+;;      installs `tinydesk-auto-save' function to
+;;      `write-file-functions'. In regular intervals all your Emacs
+;;      stat. After a crash you can easily recover your session by
+;;      reading the saved state file "state.periodic" with `M-x'
+;;      `tinydesk-recover-state'.
 ;;
 ;;  Development note
 ;;
@@ -1166,7 +1168,7 @@ Marking is only done if word is valid filename."
 	word)
     (when (setq prop (get-text-property (point) 'mouse-face))
       (setq word (tinydesk-file-name-absolute
-		  (tinydesk-read-word))) ;read word under cursor
+		  (tinydesk-read-word)))
       (when word
         (tinydesk-handle-text-property prop word)))
      ((interactive-p)
@@ -1174,7 +1176,7 @@ Marking is only done if word is valid filename."
        (substitute-command-keys
         (concat
          "TinyDesk: Can't find mouse face...   Mark buffer first with "
-         "\\[tinydesk-mark-buffer-loadable]")))))))
+         "\\[tinydesk-mark-buffer-loadable]"))))))
 
 ;;; ----------------------------------------------------------------------
 ;;;
@@ -1190,16 +1192,14 @@ call always turns on verbose."
     (let ((save-dir    (or (tinydesk-get-save-dir) "~/"))
 	  (msg         (concat "Unload from state file: ")))
       (read-file-name msg  save-dir))))
-  (let ((b      (tinydesk-temp-buffer))
-	(dlist  (tinydesk-dired-table))
+  (let ((dlist  (tinydesk-dired-table))
 	(count  0)
 	(total  0)
 	buffer
 	elt
 	fn)
     (tinydesk-verbose)
-    (with-current-buffer b
-      (erase-buffer)
+    (with-temp-buffer
       (insert-file-contents file)
       ;;  - Now process every line. We don't care if we read commented
       ;;    line as "buffer" because the test inside loop return nil
@@ -1378,7 +1378,8 @@ Input:
   MODE          Control what is saved:
                  nil    only filenames
                  '(4)   \\[universal-argument], filenames and directories.
-                 '(16)  \\[universal-argument] \\[universal-argument], Use absolute paths to HOME.
+                 '(16)  \\[universal-argument] \\[universal-argument]
+                        Use absolute paths to HOME.
 
   FILES         filenames , absolute ones. If nil then
                 `tinydesk--get-save-file-function' is run to get files.
@@ -1386,8 +1387,7 @@ Input:
   (interactive
    (list (read-file-name "Save state to: " (tinydesk-get-save-dir))
          current-prefix-arg))
-  (let ((tmp-buffer    (tinydesk-temp-buffer 'clear))
-	(save-func     tinydesk--get-save-file-function)
+  (let ((save-func     tinydesk--get-save-file-function)
 	(sort          tinydesk--save-and-sort)
 	(title         tinydesk--save-title)
 	(re-no         tinydesk--save-exclude-regexp)
@@ -1399,8 +1399,10 @@ Input:
     ;;  after save
     (when (setq buffer (get-file-buffer file))
       (pop-to-buffer buffer)
-      (error "\
-TinyDesk: State saving aborted. Please save to new file or kill buffer: %s" file ))
+      (error
+       (concat
+	"TinyDesk: State saving aborted. "
+	"Please save to new file or kill buffer: %s" file)))
     (run-hooks 'tinydesk--save-before-hook)
     (or files
         (setq files (and (fboundp save-func)
@@ -1413,36 +1415,32 @@ TinyDesk: State saving aborted. Please save to new file or kill buffer: %s" file
                (and (file-exists-p file)
                     (null (file-name-directory file))))
           (error (format  "TinyDesk: access problem with: '%s'" file)))
-      ;;  We kill this buffer later, so we don't need save-excursion
-      (set-buffer tmp-buffer)
-      (display-buffer tmp-buffer)
-      ;; ... ... ... ... ... ... ... ... ... ... ... ...  insert files . .
-      (dolist (elt files)
-        ;;  Remove some files...
-        (if (or (not (stringp re-no))
-                (and (stringp re-no)
-                     (not
-                      (tinydesk-string-match-case re-no elt))))
-            ;;  win32 needs complete path name, not just ~/path/...
-            (insert
-             (if absolute-p
-                 ;;  Don't try to expand ange-ftp filenames. It would
-                 ;;  cause a ftp connections to be opened and that's slow....
-                 (unless (tinydesk-file-name-remote-p elt)
-                   (expand-file-name elt))
-               (abbreviate-file-name elt))
-             "\n")))
-      ;; ... ... ... ... ... ... ... ... ... ... ... ... ... ...  sort . .
-      (if sort
-          (sort-lines nil (point-min) (point-max)))
-      ;; ... ... ... ... ... ... ... ... ... ... ... ... ... ... title . .
-      (when title
-        (tinydesk-pmin)
-        (insert (eval title)))
-      (run-hooks 'tinydesk--save-after-hook)
-      (write-region (point-min) (point-max) file)
-      (set-buffer-modified-p nil)
-      (kill-buffer tmp-buffer)
+      (with-temp-buffer
+	;; ... ... ... ... ... ... ... ... ... ... ... ...  insert files . .
+	(dolist (elt files)
+	  ;;  Remove some files...
+	  (if (or (not (stringp re-no))
+		  (and (stringp re-no)
+		       (not
+			(tinydesk-string-match-case re-no elt))))
+	      ;;  win32 needs complete path name, not just ~/path/...
+	      (insert
+	       (if absolute-p
+		   ;;  Don't try to expand ange-ftp filenames. It would
+		   ;;  cause a ftp connections to be opened and that's slow....
+		   (unless (tinydesk-file-name-remote-p elt)
+		     (expand-file-name elt))
+		 (abbreviate-file-name elt))
+	       "\n")))
+	;; ... ... ... ... ... ... ... ... ... ... ... ... ... ...  sort . .
+	(if sort
+	    (sort-lines nil (point-min) (point-max)))
+	;; ... ... ... ... ... ... ... ... ... ... ... ... ... ... title . .
+	(when title
+	  (tinydesk-pmin)
+	  (insert (eval title)))
+	(run-hooks 'tinydesk--save-after-hook)
+	(write-region (point-min) (point-max) file))
       (if (interactive-p)
           (message (concat "TinyDesk: State saved to file " file)))
       ;; ^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^ catch ^^^
