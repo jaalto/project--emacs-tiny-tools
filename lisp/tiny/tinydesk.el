@@ -1168,7 +1168,7 @@ Marking is only done if word is valid filename."
 	word)
     (when (setq prop (get-text-property (point) 'mouse-face))
       (setq word (tinydesk-file-name-absolute
-		  (tinydesk-read-word))) ;read word under cursor
+		  (tinydesk-read-word)))
       (when word
         (tinydesk-handle-text-property prop word)))
      ((interactive-p)
@@ -1176,7 +1176,7 @@ Marking is only done if word is valid filename."
        (substitute-command-keys
         (concat
          "TinyDesk: Can't find mouse face...   Mark buffer first with "
-         "\\[tinydesk-mark-buffer-loadable]")))))))
+         "\\[tinydesk-mark-buffer-loadable]"))))))
 
 ;;; ----------------------------------------------------------------------
 ;;;
@@ -1192,16 +1192,14 @@ call always turns on verbose."
     (let ((save-dir    (or (tinydesk-get-save-dir) "~/"))
 	  (msg         (concat "Unload from state file: ")))
       (read-file-name msg  save-dir))))
-  (let ((b      (tinydesk-temp-buffer))
-	(dlist  (tinydesk-dired-table))
+  (let ((dlist  (tinydesk-dired-table))
 	(count  0)
 	(total  0)
 	buffer
 	elt
 	fn)
     (tinydesk-verbose)
-    (with-current-buffer b
-      (erase-buffer)
+    (with-temp-buffer
       (insert-file-contents file)
       ;;  - Now process every line. We don't care if we read commented
       ;;    line as "buffer" because the test inside loop return nil
