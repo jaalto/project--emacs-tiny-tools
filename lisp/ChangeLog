@@ -2,6 +2,7 @@
 
 	* tiny/tinydesk.el (tinydesk-unload): use `with-temp-buffer'.
 	(tinydesk--save-title): Remove unknown variable `time'.
+	(tinydesk-read-word): Correct `thing-at-point'.
 
 	* tiny/tinydebian.el (tinydebian-bts-mail-compose-macro):
 	Fix `mail-setup' for Emacs 24.x.
