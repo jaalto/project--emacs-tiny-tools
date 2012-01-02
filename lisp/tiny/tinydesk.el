@@ -417,7 +417,7 @@ set this variable to nil and use custom setup:
 ;;       M-x tinydesk-recover-state RET %s RET
 
 "
-      (format-time-string "%Y-%m-%d" (or  time (current-time)))
+      (format-time-string "%Y-%m-%d" (current-time))
       (if (boundp 'file)
           file ;; visible in function `tinydesk-save-state'
         "<file>")))
