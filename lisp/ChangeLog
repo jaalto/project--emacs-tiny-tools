@@ -6,6 +6,7 @@
 
 	* tiny/tinydebian.el (tinydebian-bts-mail-compose-macro):
 	Fix `mail-setup' for Emacs 24.x.
+	(tinydebian-bts-mode-gnus-summary-maybe-turn-on): Remove.
 
 2012-01-01 Sun  Jari Aalto  <jari.aalto@cante.net>
 
