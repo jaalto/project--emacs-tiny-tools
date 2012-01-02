@@ -417,7 +417,7 @@ set this variable to nil and use custom setup:
 ;;       M-x tinydesk-recover-state RET %s RET
 
 "
-      (format-time-string "%Y-%m-%d" (or  time (current-time)))
+      (format-time-string "%Y-%m-%d" (current-time))
       (if (boundp 'file)
           file ;; visible in function `tinydesk-save-state'
         "<file>")))
@@ -649,9 +649,10 @@ Input:
 (defsubst tinydesk-read-word ()
   "Read filename word."
   ;;   Windows use spaces in file names
-  (let ((word (thing-at-point 'filaname))) ;FIXME files with spaces
+  (let ((word (thing-at-point 'line))) ;FIXME files with spaces
     ;;  Remove comments from the end
-    (if (string-match "\\(.+[^ \t]\\);;" word)
+    (if (and word
+	     (string-match "^[ \t]*\\(.+[^ ;\t\r\n]\\)\\(;\\)?" word))
         (match-string 1 word)
       word)))
 
@@ -1566,7 +1567,7 @@ References:
              (format "TinyDesk: Cannot unload, file does not exist '%s' "
                      last-state))
           (tinydesk-unload last-state)))
-    (with-current-buffer (tinydesk-temp-buffer buffer)
+    (with-current-buffer buffer
       (setq  list           (tinydesk-find-file-whole-buffer) ;; before hook
              count          (nth 0 list)
              err            (nth 1 list)
