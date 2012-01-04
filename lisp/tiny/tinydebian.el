@@ -123,7 +123,7 @@
 
 ;;{{{ setup: libraries
 
-(defconst tinydebian--version-time "2012.0102.0009"
+(defconst tinydebian--version-time "2012.0104.0553"
   "Last edited time.")
 
 (require 'tinylibm)
@@ -4231,7 +4231,7 @@ Optionally REMOVE. In interactive call, toggle TYPE of address on and off."
   (save-excursion
     (let ((email (if (and type bug)
 		     (tinydebian-bts-email-compose type bug)
-		   (tinydebian-bts-generic-email-control))))r
+		   (tinydebian-bts-generic-email-control))))
       (cond
        (remove
         (tinydebian-mail-mode-debian-address-email-remove email))
