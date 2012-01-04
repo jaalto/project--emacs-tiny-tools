@@ -17,6 +17,12 @@
 
 2011-12-31 Sat  Jari Aalto  <jari.aalto@cante.net>
 
+	* tiny/tinypath.el (tinypath--boot-ignore-directory-regexp):
+	Add .git, .bzr, .hg, .mtn.
+	(tinypath--load-path-accept-criteria): Adjust docstring.
+	(tinypath--load-path-ignore-regexp): Add
+	 .git, .bzr, .hg, .mtn.
+
 	* tiny/tinylibm.el (ti::nconc): Correct docstring.
 
 	* tiny/tinydesk.el: (tinydesk-pmin): New.
