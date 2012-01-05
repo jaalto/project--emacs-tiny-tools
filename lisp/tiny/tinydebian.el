@@ -123,7 +123,7 @@
 
 ;;{{{ setup: libraries
 
-(defconst tinydebian--version-time "2012.0102.0009"
+(defconst tinydebian--version-time "2012.0104.0732"
   "Last edited time.")
 
 (require 'tinylibm)
@@ -4231,7 +4231,7 @@ Optionally REMOVE. In interactive call, toggle TYPE of address on and off."
   (save-excursion
     (let ((email (if (and type bug)
 		     (tinydebian-bts-email-compose type bug)
-		   (tinydebian-bts-generic-email-control))))r
+		   (tinydebian-bts-generic-email-control))))
       (cond
        (remove
         (tinydebian-mail-mode-debian-address-email-remove email))
@@ -4440,14 +4440,14 @@ In interactive call, toggle conrol address on and off."
   "Add STRING containing control command.
 
 Input:
-  STRING   Commadn to add
+  STRING   Command to add
   RE       Optional. If non-nil, remove all command lines matching regexp
   AT-BEG   Optional. If non-nil, add command to the beginning."
   (unless (tinydebian-bts-mail-ctrl-finalize-position)
     (tinydebian-bts-mail-ctrl-command-goto-body-start)
     (tinydebian-bts-mail-ctrl-command-finalize-add))
-  (if re
-      (tinydebian-bts-mail-ctrl-command-remove re))
+  (when re
+    (tinydebian-bts-mail-ctrl-command-remove re))
   (if at-beg
       (tinydebian-bts-mail-ctrl-command-goto-body-start)
     (goto-char (tinydebian-bts-mail-ctrl-finalize-position)))
@@ -4663,17 +4663,48 @@ otgerwise run `tinydebian-bts-mail-ctrl-clone-new-mail'."
 ;;; ----------------------------------------------------------------------
 ;;;
 (defun tinydebian-bts-mail-ctrl-command-tags (bug list)
-  "Set BUG LIST to tags."
+  "Set BUG to LIST of tags."
   (interactive
    (let ((bug (tinydebian-mail-mode-debian-address-ask-bug)))
      (list
       bug
       (tinydebian-bts-ctrl-tags-ask
        (format  "BTS tag #%s [RET when done]: " bug)))))
-  (tinydebian-bts-mail-ctrl-command-add-macro
-   "tags"
-   bug
-   (concat "+ " (mapconcat 'concat list " "))))
+  (let ((bug-str (if (stringp bug)
+		     bug
+		   (number-to-string bug)))
+	line
+	saved
+	nbr
+	type
+	items
+	beg
+	end)
+    (tinydebian-bts-mail-ctrl-command-goto-body-start)
+    (setq beg (point))
+    (when (setq end (tinydebian-bts-mail-ctrl-finalize-position))
+      (goto-char beg)
+      ;; Check existing tags
+      (while (re-search-forward
+	      "^\\(tags[ \t]+\\([0-9]+\\)[ \t]+\\([+-]\\)[ \t]+\\([a-z].*\\)\\)"
+	      end t)
+	(setq line (match-string-no-properties 1)
+	      nbr  (match-string-no-properties 2)
+	      type (match-string-no-properties 3)
+	      str  (match-string-no-properties 4))
+	(if (not (string= bug-str nbr))
+	    (push line saved)
+	  (let ((items (split-string str))
+		(new list))
+	    ;; Combine existing tags to user given LIST
+	    (dolist (elt items)
+	      (unless (member elt new)
+		(push elt new)))
+	    (setq list new)))))
+    (tinydebian-bts-mail-ctrl-command-add-macro
+      "tags"
+      bug
+      (concat "+ " (mapconcat 'concat list " ")))))
 
 ;;; ----------------------------------------------------------------------
 ;;;

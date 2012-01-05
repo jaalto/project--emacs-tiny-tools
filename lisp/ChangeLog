@@ -1,3 +1,24 @@
+2012-01-05 Thu  Jari Aalto  <jari.aalto@cante.net>
+
+	* tiny/tinydesk.el: REMOVED FROM THIS PROJECT. Now
+	a separate project. See http://www.emacswiki.org/emacs/TinyTools
+
+	* tiny/tinybuffer.el
+	(top level): Fix header area to be more compliant.
+	No more depend in tinylib. Drop XEmacs support.
+	(tinybuffer-start-list): Remove `union'.
+	(tinybuffer-nconc): New.
+	(tinybuffer-read-char): New.
+	(tinybuffer-char-in-list-case): New.
+
+	* tiny/tinylibb.el (radix): Remove quote from `lambda'.
+	(require): Add `cl' during compile.
+
+2012-01-04 Wed  Jari Aalto  <jari.aalto@cante.net>
+
+	* tiny/tinydebian.el (tinydebian-bts-mail-ctrl-command-tags):
+	Check exixting tags and add to them.
+
 2012-01-02 Mon  Jari Aalto  <jari.aalto@cante.net>
 
 	* tiny/tinydesk.el (tinydesk-unload): use `with-temp-buffer'.
@@ -6,6 +27,7 @@
 
 	* tiny/tinydebian.el (tinydebian-bts-mail-compose-macro):
 	Fix `mail-setup' for Emacs 24.x.
+	(tinydebian-bts-mode-gnus-summary-maybe-turn-on): Remove.
 
 2012-01-01 Sun  Jari Aalto  <jari.aalto@cante.net>
 
@@ -15,6 +37,12 @@
 	splitting fram into windows.
 
 2011-12-31 Sat  Jari Aalto  <jari.aalto@cante.net>
+
+	* tiny/tinypath.el (tinypath--boot-ignore-directory-regexp):
+	Add .git, .bzr, .hg, .mtn.
+	(tinypath--load-path-accept-criteria): Adjust docstring.
+	(tinypath--load-path-ignore-regexp): Add
+	 .git, .bzr, .hg, .mtn.
 
 	* tiny/tinylibm.el (ti::nconc): Correct docstring.
 
