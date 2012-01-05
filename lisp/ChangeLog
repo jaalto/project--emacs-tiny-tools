@@ -1,5 +1,8 @@
 2012-01-05 Thu  Jari Aalto  <jari.aalto@cante.net>
 
+	* tiny/tinydesk.el: REMOVED FROM THIS PROJECT. Now
+	a separate project. See http://www.emacswiki.org/emacs/TinyTools
+
 	* tiny/tinybuffer.el
 	(top level): Fix header area to be more compliant.
 	No more depend in tinylib. Drop XEmacs support.
