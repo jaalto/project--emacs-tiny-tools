@@ -965,7 +965,7 @@ element from the list is removed.")
 
 (defconst tinylisp--regexp-function
   (concat
-   "^(\\("
+   "^[ \t]*(\\("
    ;;  cl DEFINES defun* macro
    (regexp-opt
     '("defun"
@@ -2020,11 +2020,9 @@ If function does not exist or is string cannot be read, then return nil
                       (match-string 2 string)))))
      ;;  Read first word then
      ((setq sym (ti::string-match "[^()'\",.; \t\n\]+" 0 string))
-
       ;;  Delete trailing garbage "this-function:" --> "this-function"
       (if (string-match "\\(.*\\)[^a-zA-Z0-9*]$" sym)
           (setq sym (match-string 1 sym)))
-
       (setq sym (intern-soft sym))))
     sym))
 
@@ -2974,7 +2972,7 @@ Input:
   (interactive)
   (let ((func (ti::buffer-defun-function-name)))
     (if (not func)
-        (message "TinyLisp: ELP,  Can't find function name.")
+        (message "TinyLisp: ELP, Can't find function name.")
       (tinylisp-symbol-do-macro func nil
 	(elp-restore-function func))
       (message (format "TinyLisp: ELP, restored [%s]" func)))))
@@ -3331,7 +3329,7 @@ References:
                      (tinylisp-read-word)))
 
   (let ((f-re
-	 (concat "^(\\(defun\\*?\\|defmacro\\*?\\|defsubst\\|deffoo"
+	 (concat "^[ \]*(\\(defun\\*?\\|defmacro\\*?\\|defsubst\\|deffoo"
 		 "\\|defun-maybe\\|defsubst-maybe"
 		 "\\|define-derived-mode\\|define-minor-mode"
 		 "\\|defalias\\|fset"
@@ -3463,7 +3461,9 @@ References:
               (setq point nil)          ;Clear flag
               (message "TinyLisp: Strange... cant't find definition: %s"
                        word)
-	      ;;  Try approximation: "(WORD"  or "(setq WORD ...)"
+	      ;;  Try approximation:
+	      ;;    First function call: (WORD ...)
+	      ;;    First variable setting: (setq WORD ...)
 	      (let ((re (format "(%s\\>\\|\\<%s\\>" word word)))
 		(if (re-search-forward re nil t)
 		    (goto-char (match-beginning 0))))
