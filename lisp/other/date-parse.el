@@ -5,7 +5,7 @@
 ;;{{{ Id
 
 ;; Copyright (C)    1989 John Rose
-;; Copyright (C)    1992-2010 Jari Aalto
+;; Copyright (C)    1992-2012 Jari Aalto
 ;; Author:          John Rose <rose@think.com>
 ;; Maintainer:      none
 ;; Packaged-by:     Jari Aalto
