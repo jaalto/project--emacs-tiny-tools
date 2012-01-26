@@ -123,7 +123,7 @@
 
 ;;{{{ setup: libraries
 
-(defconst tinydebian--version-time "2012.0104.0732"
+(defconst tinydebian--version-time "2012.0126.1711"
   "Last edited time.")
 
 (require 'tinylibm)
@@ -6903,7 +6903,9 @@ Example:
                              package)))
               (setq ver (cdr-safe (assoc "Version" info2)))
               ;; cut first few characters
-              (when (setq desc (cdr-safe (assoc "Description" info2)))
+              (when (setq desc (or (cdr-safe (assoc "Description" info2))
+				   (cdr-safe (assoc "Description-en1" info2))
+				   (cdr-safe (assoc "Description-en" info2))))
                 (setq desc (ti::string-left desc 45)))
               (setq str
                     (concat
@@ -7066,7 +7068,8 @@ Return string. Something like:
              (relassoc (cdr-safe  (assoc 'release elt)))
              (release
               (if (or (null match)
-                      (string-match match relassoc))
+		      (and (stringp relassoc)
+			   (string-match match relassoc)))
                   (tinydebian-bug-system-info-apt-cache-policy-parse-release
                    elt "a"))))
         (when release

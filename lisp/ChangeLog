@@ -1,3 +1,10 @@
+2012-01-26 Thu  Jari Aalto  <jari.aalto@cante.net>
+
+	* tiny/tinydebian.el (tinydebian-bug-system-info-apt-policy):
+	Check against null relassoc.
+	(tinydebian-bug-system-info-depends): Try also fields
+	Description-en1, Description-en.
+
 2012-01-04 Wed  Jari Aalto  <jari.aalto@cante.net>
 
 	* tiny/tinydebian.el (tinydebian-bts-mail-ctrl-command-tags):
