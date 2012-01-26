@@ -4,7 +4,7 @@
 
 ;;{{{ Id
 
-;; Copyright (C)    1997-2010 Jari Aalto
+;; Copyright (C)    1997-2012 Jari Aalto
 ;; Keywords:        tools
 ;; Author:          Jari Aalto
 ;; Maintainer:      Jari Aalto
@@ -965,7 +965,7 @@ element from the list is removed.")
 
 (defconst tinylisp--regexp-function
   (concat
-   "^(\\("
+   "^[ \t]*(\\("
    ;;  cl DEFINES defun* macro
    (regexp-opt
     '("defun"
@@ -1499,10 +1499,10 @@ r   Reset timing list.")
      (?a  . ( (call-interactively 'tinylisp-ad-match)))
      (?e  . ( (call-interactively 'tinylisp-library-info-emacs)))
      (?f  . ( (call-interactively 'tinylisp-library-symbol-information)))
-     (?o  . ( (call-interactively 'tinylisp-find-match-from-hooks)))
      (?l  . ( (call-interactively 'tinylisp-find-buffer-local-variables)))
-     (?v  . ( (call-interactively 'tinylisp-find-match-from-variables)))
+     (?o  . ( (call-interactively 'tinylisp-find-match-from-hooks)))
      (?s  . ( (call-interactively 'ti::system-describe-symbols)))
+     (?v  . ( (call-interactively 'tinylisp-find-match-from-variables)))
      (?/  . tinylisp--menu-main)))
   "Display information about lisp symbols in Emacs
 
@@ -1512,16 +1512,15 @@ q   Quit menu
 a   List all adviced functions that match advice NAME. E.g. to find all
     `my' advices.
 
-e   Show all libraries and symbols loaded into Emacs known by `load-history'.
+A   List autoload functions.
+
+e   List all libraries and symbols loaded into Emacs known by `load-history'.
 
 f   Describe file symbols. Gather all documentation from symbols in FILE.
     You have to load the file into Emacs first (eval it with \\[load-file]),
     because this function reads the documentation properties from memory.
 
-l   Decribe library symbols. This is like `f', but you do not need to give
-    the full path name, but the file will be located along `load-path'.
-
-L   Show buffer local variables.
+l   List buffer local variables.
 
 o   Search a match from contents of all -hook -function -functions symbols
     E.g. you can locate all hooks that have function matching 'my'.
@@ -2020,11 +2019,9 @@ If function does not exist or is string cannot be read, then return nil
                       (match-string 2 string)))))
      ;;  Read first word then
      ((setq sym (ti::string-match "[^()'\",.; \t\n\]+" 0 string))
-
       ;;  Delete trailing garbage "this-function:" --> "this-function"
       (if (string-match "\\(.*\\)[^a-zA-Z0-9*]$" sym)
           (setq sym (match-string 1 sym)))
-
       (setq sym (intern-soft sym))))
     sym))
 
@@ -2974,7 +2971,7 @@ Input:
   (interactive)
   (let ((func (ti::buffer-defun-function-name)))
     (if (not func)
-        (message "TinyLisp: ELP,  Can't find function name.")
+        (message "TinyLisp: ELP, Can't find function name.")
       (tinylisp-symbol-do-macro func nil
 	(elp-restore-function func))
       (message (format "TinyLisp: ELP, restored [%s]" func)))))
@@ -3331,7 +3328,7 @@ References:
                      (tinylisp-read-word)))
 
   (let ((f-re
-	 (concat "^(\\(defun\\*?\\|defmacro\\*?\\|defsubst\\|deffoo"
+	 (concat "^[ \]*(\\(defun\\*?\\|defmacro\\*?\\|defsubst\\|deffoo"
 		 "\\|defun-maybe\\|defsubst-maybe"
 		 "\\|define-derived-mode\\|define-minor-mode"
 		 "\\|defalias\\|fset"
@@ -3463,7 +3460,9 @@ References:
               (setq point nil)          ;Clear flag
               (message "TinyLisp: Strange... cant't find definition: %s"
                        word)
-	      ;;  Try approximation: "(WORD"  or "(setq WORD ...)"
+	      ;;  Try approximation:
+	      ;;    First function call: (WORD ...)
+	      ;;    First variable setting: (setq WORD ...)
 	      (let ((re (format "(%s\\>\\|\\<%s\\>" word word)))
 		(if (re-search-forward re nil t)
 		    (goto-char (match-beginning 0))))

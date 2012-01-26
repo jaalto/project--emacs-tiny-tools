@@ -5,6 +5,32 @@
 	(tinydebian-bug-system-info-depends): Try also fields
 	Description-en1, Description-en.
 
+	* tiny/tinylisp.el (tinylisp--menu-info): Correct docstring.
+	Order entries alphabetically.
+
+2012-01-06 Fri  Jari Aalto  <jari.aalto@cante.net>
+
+	* tiny/tinylisp.el (tinylisp-get-symbol): Delete newlines.
+	(tinylisp--regexp-function): Allow whitespace at the beginning.
+	(tinylisp-jump-to-definition): Allow whitespace at the beginning
+	of variable `f-re'.
+
+2012-01-05 Thu  Jari Aalto  <jari.aalto@cante.net>
+
+	* tiny/tinydesk.el: REMOVED FROM THIS PROJECT. Now
+	a separate project. See http://www.emacswiki.org/emacs/TinyTools
+
+	* tiny/tinybuffer.el
+	(top level): Fix header area to be more compliant.
+	No more depend in tinylib. Drop XEmacs support.
+	(tinybuffer-start-list): Remove `union'.
+	(tinybuffer-nconc): New.
+	(tinybuffer-read-char): New.
+	(tinybuffer-char-in-list-case): New.
+
+	* tiny/tinylibb.el (radix): Remove quote from `lambda'.
+	(require): Add `cl' during compile.
+
 2012-01-04 Wed  Jari Aalto  <jari.aalto@cante.net>
 
 	* tiny/tinydebian.el (tinydebian-bts-mail-ctrl-command-tags):
@@ -18,6 +44,7 @@
 
 	* tiny/tinydebian.el (tinydebian-bts-mail-compose-macro):
 	Fix `mail-setup' for Emacs 24.x.
+	(tinydebian-bts-mode-gnus-summary-maybe-turn-on): Remove.
 
 2012-01-01 Sun  Jari Aalto  <jari.aalto@cante.net>
 
@@ -3027,7 +3054,6 @@
 
         * tiny/tinymail.el (tinymail-buffer-email-address-scramble-area):
         Typo 'nilt' => 'nil t' in `search-forward' call.
->>>>>>> 9116e73e01508c0d97196218872b922a05ccdde8:lisp/ChangeLog
 
 2007-10-09  Jari Aalto  <jari.aalto@cante.net>
 

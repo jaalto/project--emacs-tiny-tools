@@ -1,6 +1,6 @@
 ;;; tinylib-ad.el --- Library of adviced functions. Backward compatibility
 
-;; Copyright (C)    1999-2010 Jari Aalto
+;; Copyright (C)    1999-2012 Jari Aalto
 ;; Keywords:        extensions
 ;; Author:          Jari Aalto
 ;; Maintainer:      Jari Aalto

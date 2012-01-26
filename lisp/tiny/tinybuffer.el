@@ -1,15 +1,15 @@
 ;;; tinybuffer.el --- Change buffers in current window.
 
+;; Copyright (C) 1996-2012 Jari Aalto
+
+;; Author:      Jari Aalto
+;; Maintainer:  Jari Aalto
+;; Keywords:    extensions
+;; Version:	2.1
+;; Keywords:    tools
+;; URL:		http://www.emacswiki.org/emacs/TinyTools
+
 ;; This file is not part of Emacs.
-
-;;{{{ Id
-
-;; Copyright (C) 1996-2010 Jari Aalto
-;; Keywords:     extensions
-;; Author:       Jari Aalto
-;; Maintainer:   Jari Aalto
-;;
-;; Look at the code with folding.el
 
 ;; This program is free software; you can redistribute it and/or modify it
 ;; under the terms of the GNU General Public License as published by the Free
@@ -26,10 +26,8 @@
 ;;
 ;; Visit <http://www.gnu.org/copyleft/gpl.html> for more information
 
-;;}}}
-;;{{{ Install
+;; Install:
 
-;; ....................................................... &t-install ...
 ;;  Add following statement(s) to your ~/.emacs
 ;;
 ;;      (require 'tinybuffer)
@@ -66,7 +64,8 @@
 ;;    ;;    Here is code to switch between all visible windows
 ;;
 ;;    (global-set-key [(f5)]
-;;                   (ti::definteractive        ; in tinylibm.el
+;;                   (lambda ()
+;;                     (interactive)
 ;;                     (other-window 1 t)
 ;;                     (raise-frame (window-frame
 ;;                                   (get-buffer-window
@@ -75,11 +74,6 @@
 ;;   If you have any questions, use this function to contact author
 ;;
 ;;      M-x tinybuffer-submit-bug-report
-
-;;}}}
-;;{{{ Documentation
-
-;; ..................................................... &t-commentary ...
 
 ;;; Commentary:
 
@@ -134,21 +128,20 @@
 ;;      Original idea for this package comes from *yic-buffer.el*
 ;;      by choo@cs.yale.edu (young-il choo) 1990-08-07.
 
-;;}}}
-
 ;;; Change Log:
 
 ;;; Code:
 
-(require 'tinylibm)
+(if (featurep 'xemancs)
+    (error "XEmacs unsupported. The character reading code does not work in XEmacs"))
 
-;; (eval-when-compile (require 'cl))
-
-(ti::package-defgroup-tiny TinyBuffer tinybuffer-- extensions
-  "Changing buffers in current window.
-        With this small package you can switch to next or previous buffer
-        in a current window. If you only have small amount of buffers
-        it may be the fastest way.")
+(defgroup tinybuffer nil
+  "Change buffers in current window.
+With this small package you can switch to next or previous buffer
+in a current window. If you only have small amount of buffers it
+may be the fastest way."
+  :link '(url-link :tag "Homepage" "http://www.emacswiki.org/emacs/TinyTools")
+  :group 'extensions)
 
 ;;{{{ setup: -- variables
 
@@ -194,23 +187,20 @@ See \\[tinybuffer-iswitch-to-buffer]."
 (defvar tinybuffer--buffer-list  nil
   "Global buffer list for `tinybuffer-iswitch-to-buffer'.")
 
-;;}}}
-;;{{{ code: macros, functions
+(defmacro tinybuffer-nconc (list place)
+  "Add LIST to PLACE, modify PLACE."
+  `(setq ,place (nconc ,list ,place)))
 
-;;; ----------------------------------------------------------------------
-;;;
 (defmacro tinybuffer-iswitch-next ()
   "Return next buffer in list."
   `(let* ((first (car tinybuffer--buffer-list))
           (rest  (cdr tinybuffer--buffer-list))
           (ret   (car rest)))
      (setq list rest)
-     (ti::nconc list first)                     ;add to the end
+     (tinybuffer-nconc list first)                     ;add to the end
      (setq tinybuffer--buffer-list list)        ;update list
      ret))
 
-;;; ----------------------------------------------------------------------
-;;;
 (defmacro tinybuffer-iswitch-previous ()
   "Return previous buffer in list."
   `(let* ((rev   (reverse tinybuffer--buffer-list))
@@ -222,8 +212,25 @@ See \\[tinybuffer-iswitch-to-buffer]."
      (setq tinybuffer--buffer-list list)        ;update list
      ret))
 
-;;; ----------------------------------------------------------------------
-;;;
+(defun tinybuffer-read-char (&optional prompt)
+  "Read character safely with optional PROMPT."
+  (let (char)
+    (while (null
+	    (setq char
+		  (ignore-errors
+		    (if prompt
+			(message prompt))
+		    (discard-input)	;this is a must before we read
+		    (read-char)))))
+    char))
+
+(defun tinybuffer-char-in-list (char list)
+  "If CHAR can be found in LIST, return a pointer to it.
+The match is case sensitive."
+  (if char
+      (let (case-fold-search)
+	(memq char list))))
+
 (defun tinybuffer-install-default-bindings ()
   "Define default global keys."
   (interactive)
@@ -232,8 +239,6 @@ See \\[tinybuffer-iswitch-to-buffer]."
   (global-set-key [(control meta <)] 'tinybuffer-iswitch-to-buffer)
   (global-set-key [(control meta >)] 'tinybuffer-sort-mode-toggle))
 
-;;; ----------------------------------------------------------------------
-;;;
 (defun tinybuffer-start-list  (buffer-pointer list)
   "Let BUFFER-POINTER be first and arrange LIST."
   (let ((start (memq buffer-pointer list))
@@ -253,12 +258,11 @@ See \\[tinybuffer-iswitch-to-buffer]."
       (error "No such elt in list %s" buffer-pointer))
     (setq before (cdr-safe (memq buffer-pointer rev)))
     (setq ret start)
-    (if before
-        (union (reverse start) before))
+    (when before
+      (setq start (reverse start))
+      (add-to-list 'start before))
     ret))
 
-;;; ----------------------------------------------------------------------
-;;;
 (defun tinybuffer-buffer-filter (&optional blist)
   "Filter BLIST, which defaults to `buffer-list'.
 References:
@@ -270,8 +274,6 @@ References:
           (push elt ret)))
     ret))
 
-;;; ----------------------------------------------------------------------
-;;;
 (defun tinybuffer-sort-buffer-list-1 (&optional blist reverse)
   "Sort BLIST, which defaults to `buffer-list'. Optionally REVERSE."
   (let ((list (or blist (buffer-list))))
@@ -288,8 +290,6 @@ References:
                 (string< (buffer-name a) (buffer-name b)))))))
     list))
 
-;;; ----------------------------------------------------------------------
-;;;
 (defun tinybuffer-sort-buffer-list  (&optional reverse blist)
   "Sort buffer list, optionally REVERSE and use BLIST."
   (let (sorted
@@ -315,11 +315,9 @@ References:
     ;;  all buffers past G.
     (when (setq part (memq (current-buffer) sorted))
       (setq list (cdr part))
-      (ti::nconc list sorted))
+      (tinybuffer-nconc list sorted))
     sorted))
 
-;;; ----------------------------------------------------------------------
-;;;
 (defun tinybuffer-buffer-list-next (&optional reverse)
   "Switch to next buffer in list, skipping unwanted ones. Optionally REVERSE.
 See variable `tinybuffer--ignore-regexp'."
@@ -346,8 +344,6 @@ See variable `tinybuffer--ignore-regexp'."
     (if go
         (switch-to-buffer go))))
 
-;;; ----------------------------------------------------------------------
-;;;
 (defun tinybuffer-init-buffer-list  ()
   "Initialize global variable `tinybuffer--buffer-list'."
   (let ((list (tinybuffer-buffer-filter)))
@@ -357,11 +353,6 @@ See variable `tinybuffer--ignore-regexp'."
                     (tinybuffer-sort-buffer-list-1 list))))
     (setq tinybuffer--buffer-list list)))
 
-;;}}}
-;;{{{ code: interactive
-
-;;; ----------------------------------------------------------------------
-;;;
 ;;;###autoload
 (defun tinybuffer-iswitch-to-buffer  ()
   "Switch to buffer when RETURN/SPACE/TAB pressed.
@@ -415,32 +406,28 @@ References:
       (unless dir
         (setq dir  mode
               mode nil))
-      (setq ch (ti::read-char-safe-until
+      (setq ch (tinybuffer-read-char
                 (format fmt str (or dir "") (or mode "" ))))
       (cond
        ((and ch (char-equal ch key-back))
         (setq buffer (tinybuffer-iswitch-previous)))
        ((and ch (char-equal ch key-fw))
         (setq buffer (tinybuffer-iswitch-next)))
-       ((and ch (ti::char-in-list-case ch go-list))
+       ((and ch (tinybuffer-char-in-list ch go-list))
         (setq loop nil)))
       (if buffer
           (setq str (buffer-name buffer))))
     (if (and ch
              buffer
-             (not (ti::char-in-list-case ch quit-list)))
+             (not (tinybuffer-char-in-list ch quit-list)))
         (switch-to-buffer buffer))))
 
-;;; ----------------------------------------------------------------------
-;;;
 ;;;###autoload
 (defun tinybuffer-previous-buffer ()
   "Switch to previous buffer in current window."
   (interactive)
   (tinybuffer-buffer-list-next 'reverse))
 
-;;; ----------------------------------------------------------------------
-;;;
 ;;;###autoload
 (defun tinybuffer-next-buffer ()
   "Switch to the other buffer (2nd in list-buffer) in current window."
@@ -448,8 +435,6 @@ References:
   (bury-buffer (current-buffer))
   (tinybuffer-buffer-list-next))
 
-;;; ----------------------------------------------------------------------
-;;;
 (defun tinybuffer-sort-mode-toggle ()
   "Sort mode on/off."
   (interactive)
@@ -459,7 +444,6 @@ References:
                        "on"
                      "off"))))
 
-;;}}}
 
 (provide   'tinybuffer)
 (run-hooks 'tinybuffer--load-hook)

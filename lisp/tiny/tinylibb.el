@@ -4,7 +4,7 @@
 
 ;;{{{ Id
 
-;; Copyright (C)    1998-2010 Jari Aalto
+;; Copyright (C)    1998-2012 Jari Aalto
 ;; Keywords:        extensions
 ;; Author:          Jari Aalto
 ;; Maintainer:      Jari Aalto
@@ -69,6 +69,8 @@
 
 ;;; .......................................................... provide ...
 
+(eval-when-compile (require 'cl))
+
 (require 'tinyliba)
 (provide 'tinylibb)
 
@@ -77,7 +79,7 @@
 (eval-and-compile
   (autoload 'ti::replace-match "tinylibm"))
 
-(defconst tinylibb-version-time "2010.1208.0755"
+(defconst tinylibb-version-time "2012.0105.1852"
   "Latest version number as last modified time.")
 
 ;;; ....................................................... &emulation ...
@@ -140,13 +142,13 @@ PAD says to padd hex string with leading zeroes."
   "Convert STR according to BASE."
   (let ((case-fold-search t)
         (n 0))
-    (mapc '(lambda (c &optional i)
-	     (setq i (string-match
-		      (make-string 1 c)
-		      "0123456789abcdefghijklmnopqrstuvwxyz"))
-	     (if (>= (or i 65536) base)
-		 (error "%c illegal in base %d" c base))
-	     (setq n (+ (* n base) i)))
+    (mapc (lambda (c &optional i)
+	    (setq i (string-match
+		     (make-string 1 c)
+		     "0123456789abcdefghijklmnopqrstuvwxyz"))
+	    (if (>= (or i 65536) base)
+		(error "%c illegal in base %d" c base))
+	    (setq n (+ (* n base) i)))
 	  (append str nil))
     n))
 
