@@ -1499,10 +1499,10 @@ r   Reset timing list.")
      (?a  . ( (call-interactively 'tinylisp-ad-match)))
      (?e  . ( (call-interactively 'tinylisp-library-info-emacs)))
      (?f  . ( (call-interactively 'tinylisp-library-symbol-information)))
-     (?o  . ( (call-interactively 'tinylisp-find-match-from-hooks)))
      (?l  . ( (call-interactively 'tinylisp-find-buffer-local-variables)))
-     (?v  . ( (call-interactively 'tinylisp-find-match-from-variables)))
+     (?o  . ( (call-interactively 'tinylisp-find-match-from-hooks)))
      (?s  . ( (call-interactively 'ti::system-describe-symbols)))
+     (?v  . ( (call-interactively 'tinylisp-find-match-from-variables)))
      (?/  . tinylisp--menu-main)))
   "Display information about lisp symbols in Emacs
 
@@ -1512,16 +1512,15 @@ q   Quit menu
 a   List all adviced functions that match advice NAME. E.g. to find all
     `my' advices.
 
-e   Show all libraries and symbols loaded into Emacs known by `load-history'.
+A   List autoload functions.
+
+e   List all libraries and symbols loaded into Emacs known by `load-history'.
 
 f   Describe file symbols. Gather all documentation from symbols in FILE.
     You have to load the file into Emacs first (eval it with \\[load-file]),
     because this function reads the documentation properties from memory.
 
-l   Decribe library symbols. This is like `f', but you do not need to give
-    the full path name, but the file will be located along `load-path'.
-
-L   Show buffer local variables.
+l   List buffer local variables.
 
 o   Search a match from contents of all -hook -function -functions symbols
     E.g. you can locate all hooks that have function matching 'my'.

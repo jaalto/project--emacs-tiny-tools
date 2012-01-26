@@ -1,3 +1,8 @@
+2012-01-26 Thu  Jari Aalto  <jari.aalto@cante.net>
+
+	* tiny/tinylisp.el (tinylisp--menu-info): Correct docstring.
+	Order entries alphabetically.
+
 2012-01-06 Fri  Jari Aalto  <jari.aalto@cante.net>
 
 	* tiny/tinylisp.el (tinylisp-get-symbol): Delete newlines.
