@@ -1,3 +1,11 @@
+2012-02-08 Wed  Jari Aalto  <jari.aalto@cante.net>
+
+	* tiny/tinydebian.el (tinydebian-mail-header-not-matches):
+	Preserve order
+	(tinydebian-mail-mode-debian-address-bug-toggle): Add
+	current-prefix-arg to ask bug number. Support multiple
+	bug addresses.
+
 2012-01-26 Thu  Jari Aalto  <jari.aalto@cante.net>
 
 	* tiny/tinydebian.el (tinydebian-bug-system-info-apt-policy):
