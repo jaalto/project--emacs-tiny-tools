@@ -123,7 +123,7 @@
 
 ;;{{{ setup: libraries
 
-(defconst tinydebian--version-time "2012.0126.1711"
+(defconst tinydebian--version-time "2012.0208.1100"
   "Last edited time.")
 
 (require 'tinylibm)
@@ -3994,7 +3994,7 @@ Mode description:
     (dolist (elt (tinydebian-mail-address-list header))
       (unless (string-match re elt)
         (push elt list)))
-    list))
+    (nreverse list)))			; preserve order
 
 ;;; ----------------------------------------------------------------------
 ;;;
@@ -4078,9 +4078,9 @@ Optional bug checks BUG-TYPE@ address."
       (setq field nil)
       (if (setq list (tinydebian-mail-header-not-matches header re))
           (setq field
-                (mapconcat 'concat
-                           (tinydebian-mail-header-not-matches header re)
-                           ", ")))
+		(mapconcat 'concat
+			   (tinydebian-mail-header-not-matches header re)
+			   ", ")))
       ;; We must not remove "To: field
       (if (and (null field)
                (string-match "To" header))
@@ -4268,22 +4268,23 @@ In interactive call, toggle conrol address on and off."
 ;;; ----------------------------------------------------------------------
 ;;;
 (defun tinydebian-mail-mode-debian-address-bug-toggle (bug &optional remove)
-  "Add BUG address or optionally REMOVE."
+  "Add BUG address or REMOVE.
+In inteactive call, if `current-prefix-arg' is non-nil, ASK bug
+number interactively."
   (interactive
    (let ((now (or (tinydebian-bug-nbr-at-current-point)
 		  (tinydebian-bug-nbr-current-line)))
 	 bug)
      (list
-      (or now
-	  (tinydebian-mail-mode-debian-address-ask-bug))
-      current-prefix-arg)))
+      (if current-prefix-arg
+	  (read-string "Bug number: ")
+	(or now
+	    (tinydebian-mail-mode-debian-address-ask-bug))))))
   (let ((re (format "%s@\\|%s-\\(close\\|quiet\\)@" bug bug)))
-    (when (interactive-p)
-      (when (and (null remove)
-                 (tinydebian-mail-address-match-p re))
-        (setq remove t)))
+    (when (tinydebian-mail-address-match-p re)
+      (setq remove t))
     (if remove
-        (tinydebian-mail-header-send-remove-item-regexp re)
+	(tinydebian-mail-header-send-remove-item-regexp re)
       (tinydebian-mail-mode-debian-address-add-standard-bug
        bug
        (format re bug)))))
