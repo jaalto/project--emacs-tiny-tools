@@ -6,6 +6,7 @@
 	current-prefix-arg to ask bug number. Support multiple
 	bug addresses.
 	(tinydebian-bug-nbr-string): Correct URL matching regexp.
+	(tinydebian-bts-mail-ctrl-retitle): Correct interactive.
 
 2012-01-26 Thu  Jari Aalto  <jari.aalto@cante.net>
 

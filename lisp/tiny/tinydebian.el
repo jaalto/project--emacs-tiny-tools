@@ -123,7 +123,7 @@
 
 ;;{{{ setup: libraries
 
-(defconst tinydebian--version-time "2012.0208.1100"
+(defconst tinydebian--version-time "2012.0208.1135"
   "Last edited time.")
 
 (require 'tinylibm)
@@ -2798,7 +2798,7 @@ Bug#NNNN: O: package -- description."
     (or (and (string-match "#\\([0-9]+\\)" str) ;; Bug#NNNN Debian
              (match-string 1 str))
 	;; http://.../bugreport.cgi?bug=521846
-        (and (string-match "[?]bug=\\([0-9]+\\)" str)
+        (and (string-match "bug=\\([0-9]+\\)" str)
              (match-string 1 str))
 	;; http://bugzilla.abisource.com/show_bug.cgi?id=12984
         ;; (and (string-match "http://.*bugzilla.*=\\([0-9]+\\)" str)
@@ -5844,23 +5844,23 @@ thanks
    (list (tinydebian-bts-mail-ask-bug-number)
          (read-string "Reassign to package: ")))
   (tinydebian-bts-mail-type-macro
-   nil                                  ;Type
-   package-to
-   nil                                  ;Email
-   (format "Bug#%s reassign%s" bug (if package-to
-                                       (format " to package %s"
-                                               package-to)
-                                     ""))
-   (insert
-    (format "\
+      nil                                  ;Type
+      package-to
+      nil                                  ;Email
+      (format "Bug#%s reassign%s" bug (if package-to
+					  (format " to package %s"
+						  package-to)
+					""))
+    (insert
+     (format "\
 reassign %s %s
 thanks
 "
-            bug
-            (if (and package-to
-                     (not (string= "" package-to)))
-                package-to
-              "<to-package>")))))
+	     bug
+	     (if (and package-to
+		      (not (string= "" package-to)))
+		 package-to
+	       "<to-package>")))))
 
 ;;; ----------------------------------------------------------------------
 ;;;
@@ -5869,7 +5869,9 @@ thanks
   (interactive
    (list (tinydebian-bts-mail-ask-bug-number)))
   (tinydebian-bts-mail-type-macro
-   nil nil nil
+      nil
+      nil
+      nil
    (format "Bug#%s reopen" bug)
    (let (point)
      (insert (format "reopen %s\n" bug))
@@ -6037,21 +6039,25 @@ See http://wiki.debian.org/ftpmaster_Removals"
 Optionally from BTS which defaults to \"debian\"."
   (interactive
    (let ((title (tinydebian-bts-mail-title-read))
-         (bug   (tinydebian-bts-mail-ask-bug-number)))
-     (unless (string-match bug title)
-       (tinydebian-debian-bug-info-macro bug bts
+         (bug (tinydebian-bts-mail-ask-bug-number)))
+     (when (and bug
+		(or (null title)
+		    (not (string-match bug title))))
+       (tinydebian-debian-bug-info-macro bug nil
          (setq title (field "subject"))))
      (list
       bug
       (read-string "New title: " title))))
   (tinydebian-bts-mail-type-macro
-   nil nil nil
-   (format "Bug#%s retitle" bug)
-   (let (point)
-     (insert (format "retitle %s " bug))
-     (setq point (point))
-     (insert (format "%s\nthanks\n" title))
-     (goto-char point))))
+      nil ; type
+      nil ; package
+      nil ; email
+      (format "Bug#%s retitle" bug)
+    (let (point)
+      (insert (format "retitle %s " bug))
+      (setq point (point))
+      (insert (format "%s\nthanks\n" title))
+      (goto-char point))))
 
 ;;; ----------------------------------------------------------------------
 ;;;
