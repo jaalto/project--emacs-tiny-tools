@@ -123,7 +123,7 @@
 ;;          (global-set-key "\C-ct" 'my-tabs-highligh-in-buffer)
 ;;
 ;;          (defun my-tabs-highligh-in-buffer (&optional arg)
-;;            "Toggless hilit/dehiliting tabs in buffer.
+;;            "Toggless highlighting tabs in buffer.
 ;;          If ARG is integer, force highlighting. If ARG is C-u, then
 ;;          force dehighlighting."
 ;;            (interactive "P")
