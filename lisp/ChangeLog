@@ -1,3 +1,14 @@
+2012-02-16 Thu  Jari Aalto  <jari.aalto@cante.net>
+
+	* tiny/tinydebian.el (tinydebian-package-info): Check
+	that PACKAGE is not empty string. Add history support.
+	(tinydebian-package-info-history): New.
+	(tinydebian-bug-report-generic-bts-mail): Add history support.
+	Add PACKAGE name to the subject by default. Add history
+	support. Add "tags: patch" if subject contains word patch.
+	(tinydebian--bug-report-generic-bts-mail-history): New.
+	(tinydebian--bug-report-debian-bts-mail-subject-history): New.
+
 2012-02-08 Wed  Jari Aalto  <jari.aalto@cante.net>
 
 	* tiny/tinydebian.el (tinydebian-mail-header-not-matches):

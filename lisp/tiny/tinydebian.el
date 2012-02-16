@@ -123,7 +123,7 @@
 
 ;;{{{ setup: libraries
 
-(defconst tinydebian--version-time "2012.0208.1100"
+(defconst tinydebian--version-time "2012.0216.0816"
   "Last edited time.")
 
 (require 'tinylibm)
@@ -1416,7 +1416,6 @@ Activate on files whose path matches
 (defsubst tinydebian-bug-nbr-any-at-current-point ()
   "Read bug number NNNNNN from current point."
   (tinydebian-bug-nbr-any-in-string (current-word)))
-
 
 ;;; ----------------------------------------------------------------------
 ;;;
@@ -6843,6 +6842,9 @@ References:
                          "Use tinydebian-package-wnpp-main instead.")))
       (error "Tinydebian: Can't find package information. `%s'" package)))
 
+(defvar tinydebian--package-info-history nil
+  "History for `tinydebian-package-info'.")
+
 ;;; ----------------------------------------------------------------------
 ;;;
 (defun tinydebian-package-info (&optional package prompt)
@@ -6853,7 +6855,10 @@ ask with PROMPT."
     (or package
         (setq package (read-string
                        (or prompt
-                           "[TinyDebian] Package name: "))))
+                           "[TinyDebian] Package name: ")
+		       (not 'initial-input)
+		       'tinydebian--package-info-history)))
+    (tinydebian-string-p package "No package name given")
     (or (and dpkg
              (tinydebian-package-status-main package)))))
 
@@ -7211,6 +7216,9 @@ Locale: %s"
               ""))
     (goto-char point)))
 
+(defvar tinydebian--bug-report-debian-bts-mail-subject-history
+  "History for `tinydebian-bug-report-debian'.")
+
 ;;; ----------------------------------------------------------------------
 ;;;
 ;;;###autoload
@@ -7257,12 +7265,23 @@ ii  libc6                         2.2.5-3    GNU C Library: Shared libraries an"
          (t
           (pop-to-buffer (get-buffer-create name))
           (erase-buffer)
-          (let ((subject (read-string "[Debian BTS] bug Subject: ")))
+          (let ((subject
+		 (read-string
+		  "[Debian BTS] bug Subject> "
+		  (if package
+		      (format "%s: " package))
+		  (not 'initial-input)
+		  'tinydebian--bug-report-debian-bts-mail-subject-history)))
             (mail-setup
-             (tinydebian-bts-email-submit) subject nil nil nil nil))
-          (message-mode)
-          (tinydebian-bts-insert-headers)
-          (tinydebian-bug-report-mail-insert-details info))))))))
+             (tinydebian-bts-email-submit) subject nil nil nil nil)
+	    (message-mode)
+	    (tinydebian-bts-insert-headers)
+	    (tinydebian-bug-report-mail-insert-details info)
+	    (when (string-match "patch" subject)
+	      (save-excursion
+		(goto-char (point-min))
+		(when (re-search-forward "^Severity.*\r?[\n]" nil t)
+		  (insert "tags: patch"))))))))))))
 
 ;;; ----------------------------------------------------------------------
 ;;;
@@ -7368,6 +7387,9 @@ GPG key that is registered in Launchpad.>
         ;;     (insert " status " str "\n")))
         (insert " done\n")))))
 
+(defvar tinydebian--bug-report-generic-bts-mail-history nil
+  "History for `tinydebian-bug-report-generic-bts-mail'.")
+
 ;;; ----------------------------------------------------------------------
 ;;;
 ;;;###autoload
@@ -7382,8 +7404,10 @@ This function can only be callaed interactively."
        ("gnu-emacs" . 1)
        ("gnu-coreutils" . 1)
        ("launchpad" . 1))
-     nil
-     t)))
+     (not 'predicate)
+     'require-match
+     (not 'initial-input)
+     'tinydebian--bug-report-generic-bts-mail-history)))
   (when (stringp bts)
     (cond
      ((string-match "debian" bts)
