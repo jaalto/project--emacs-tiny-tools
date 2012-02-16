@@ -2,8 +2,6 @@
 
 ;; This file is not part of Emacs
 
-;;{{{ Id
-
 ;; Copyright (C)   1995-2012 Jari Aalto
 ;; Keywords:       extensions
 ;; Author:         Jari Aalto
@@ -29,9 +27,6 @@
 ;;
 ;; Visit <http://www.gnu.org/copyleft/gpl.html> for more information
 
-;;}}}
-;;{{{ Install
-
 ;; ....................................................... &t-install ...
 ;; Put this file on your Emacs-Lisp `load-path', add following into
 ;; ~/.emacs startup file.
@@ -50,9 +45,6 @@
 ;;  (global-set-key "\C-ztc" 'ti::text-clear-buffer-properties)
 ;;  (global-set-key "\C-ztb" 'ti::text-buffer)
 ;;  (global-set-key "\C-ztU" 'ti::text-undo)
-
-;;}}}
-;;{{{ Documentation
 
 ;; ..................................................... &t-commentary ...
 
@@ -176,13 +168,9 @@
 ;;                (end-of-line))))
 ;;
 
-;;}}}
-
 ;;; Change Log:
 
 ;;; Code:
-
-;;{{{ setup: require
 
 ;;; ......................................................... &require ...
 
@@ -203,9 +191,6 @@
             fingerprints against trusted list like http://www.uit.no/
         o   UNDO: adjustable stack size. Stack is cleared if
             stack limit reached (stack 'wraps')")
-
-;;}}}
-;;{{{ setup: variables
 
 ;;; ......................................................... &v-hooks ...
 
@@ -264,9 +249,6 @@ Format:
                    (symbol :tag "Face name"))))
   :group 'TinylibText)
 
-;;}}}
-;;{{{ version
-
 (eval-and-compile
   (ti::macrof-version-bug-report
    "tinylibt.el"
@@ -281,9 +263,6 @@ Format:
      ti::text-:stack
      ti::text-:face-search-default
      ti::text-:face-table)))
-
-;;}}}
-;;{{{ code: misc funcs
 
 ;;; ----------------------------------------------------------------------
 ;;;
@@ -698,9 +677,6 @@ Input:
       (if ok
           (set-text-properties (point) (1+ (point)) set-plist)))))
 
-;;}}}
-;;{{{ code: interactive
-
 ;;; ----------------------------------------------------------------------
 ;;; Mon, 12 Feb 1996,  Tom Fontaine <fontaine@esd.ray.com>
 ;;; Sent this piece of code.  Thanks Tom!
@@ -820,9 +796,7 @@ See `ti::text-re-search' for descriptions of FACE MODE SAVE-UNDO."
     (with-buffer-modified
       (put-text-property beg end 'face face))))
 
-;;}}}
-
-(provide     'tinylibt)
-(run-hooks   'ti::text-:load-hook)
+(provide 'tinylibt)
+(run-hooks 'ti::text-:load-hook)
 
 ;;; tinylibt.el ends here
