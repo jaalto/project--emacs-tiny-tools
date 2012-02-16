@@ -1,5 +1,11 @@
 2012-02-16 Thu  Jari Aalto  <jari.aalto@cante.net>
 
+	* tiny/tinylisp.el (tinylisp--table-reverse-eval-alist):
+	Add `global-unset-key'.
+	(tinylisp-read-symbol-at-point): Make reading smarter.
+	(tinylisp-symbol-do-macro): Add edebug form.
+	(tinylisp-eval-reverse): Add support for `global-set-key'.
+
 	* tiny/tinydebian.el (tinydebian-package-info): Check
 	that PACKAGE is not empty string. Add history support.
 	(tinydebian-package-info-history): New.
