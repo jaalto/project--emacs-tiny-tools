@@ -43,15 +43,13 @@
 ;; suggested keybings for interactive use.
 ;;
 ;;  (global-unset-key "\C-z")
+;;  (global-set-key "\C-ztb" 'ti::text-re-search-backward)
+;;  (global-set-key "\C-ztf" 'ti::text-re-search-forward)
 ;;  (global-set-key "\C-ztm" 'ti::text-mark-region)   ;; e.g. permanent 'mark'
 ;;  (global-set-key "\C-ztu" 'ti::text-unmark-region) ;; remove 'mark'
 ;;  (global-set-key "\C-ztc" 'ti::text-clear-buffer-properties)
 ;;  (global-set-key "\C-ztb" 'ti::text-buffer)
 ;;  (global-set-key "\C-ztU" 'ti::text-undo)
-;;
-;; If you have any questions or feedback, use this function
-;;
-;;      M-x ti::text-submit-bug-report
 
 ;;}}}
 ;;{{{ Documentation
