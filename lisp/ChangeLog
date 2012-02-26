@@ -1,5 +1,9 @@
 2012-02-26 Sun  Jari Aalto  <jari.aalto@cante.net>
 
+	* other/folding.el (folding-advice-instantiate): Correct
+	`folding-shift-in-on-goto' check which prevented `goto-line'
+	to work. Patch thanks to akshaal at Github.
+
 	* tiny/tinydiff.el (tinydiff-install): Remove. Emacs
 	already has diff and patch modes.
 	(tinydiff--auto-mode-alist): Remove.
