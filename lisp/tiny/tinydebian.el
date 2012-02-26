@@ -123,7 +123,7 @@
 
 ;;{{{ setup: libraries
 
-(defconst tinydebian--version-time "2012.0208.1135"
+(defconst tinydebian--version-time "2012.0226.1629"
   "Last edited time.")
 
 (require 'tinylibm)
@@ -1416,7 +1416,6 @@ Activate on files whose path matches
 (defsubst tinydebian-bug-nbr-any-at-current-point ()
   "Read bug number NNNNNN from current point."
   (tinydebian-bug-nbr-any-in-string (current-word)))
-
 
 ;;; ----------------------------------------------------------------------
 ;;;
@@ -5311,7 +5310,7 @@ Mode description:
 (put 'tinydebian-bts-mail-compose-macro 'lisp-indent-function 5)
 (defmacro tinydebian-bts-mail-compose-macro
   (bug type package subject email &rest body)
-  "Compose mail with SUBJECT and run BODY."
+  "Compose mail for BUG of TYPE to PACKAGE with SUBJECT EMAIL and run BODY."
   (let ((name (gensym "name-"))
         (buffer (gensym "buffer-")))
     `(let ((,buffer (current-buffer))
@@ -5336,11 +5335,11 @@ Mode description:
 	      ,email
 	    (tinydebian-bts-generic-email-control ,buffer))
 	  ,subject
-	  nil
-	  nil
-	  nil
-	  nil))
-	 (t				;24
+	   (not 'in-reply-to)
+	   (not 'cc)
+	   (not 'replybuffer)
+	   (not 'actions)))
+	 (t				;Emacs 24 and later
 	  ;; (mail-setup TO SUBJECT IN-REPLY-TO CC REPLYBUFFER ACTIONS
 	  ;;  RETURN-ACTION)
 	  (mail-setup
@@ -5348,11 +5347,11 @@ Mode description:
 	       ,email
 	     (tinydebian-bts-generic-email-control ,buffer))
 	   ,subject
-	   nil
-	   nil
-	   nil
-	   nil
-	   nil)))
+	   (not 'in-reply-to)
+	   (not 'cc)
+	   (not 'replybuffer)
+	   (not 'actions)
+	   (not 'return-action))))
        (cond
         ((or (featurep 'message)
              (eq mail-user-agent 'message-user-agent))
@@ -5402,7 +5401,7 @@ Variables bound during macro (can all be nil):
 
 ;;; ----------------------------------------------------------------------
 ;;;
-(defun tinydebian-bts-mail-type-ita (bug)
+(defun tinydebian-bts-mail-type-ita (bug &optional bts)
   "Send an ITA request.
 Optionally from BTS which defaults to \"debian\"."
   (interactive (list (tinydebian-bts-mail-ask-bug-number "ITA")))
@@ -6849,6 +6848,9 @@ References:
                          "Use tinydebian-package-wnpp-main instead.")))
       (error "Tinydebian: Can't find package information. `%s'" package)))
 
+(defvar tinydebian--package-info-history nil
+  "History for `tinydebian-package-info'.")
+
 ;;; ----------------------------------------------------------------------
 ;;;
 (defun tinydebian-package-info (&optional package prompt)
@@ -6859,7 +6861,10 @@ ask with PROMPT."
     (or package
         (setq package (read-string
                        (or prompt
-                           "[TinyDebian] Package name: "))))
+                           "[TinyDebian] Package name: ")
+		       (not 'initial-input)
+		       'tinydebian--package-info-history)))
+    (tinydebian-string-p package "No package name given")
     (or (and dpkg
              (tinydebian-package-status-main package)))))
 
@@ -7217,6 +7222,9 @@ Locale: %s"
               ""))
     (goto-char point)))
 
+(defvar tinydebian--bug-report-debian-bts-mail-subject-history
+  "History for `tinydebian-bug-report-debian'.")
+
 ;;; ----------------------------------------------------------------------
 ;;;
 ;;;###autoload
@@ -7263,12 +7271,23 @@ ii  libc6                         2.2.5-3    GNU C Library: Shared libraries an"
          (t
           (pop-to-buffer (get-buffer-create name))
           (erase-buffer)
-          (let ((subject (read-string "[Debian BTS] bug Subject: ")))
+          (let ((subject
+		 (read-string
+		  "[Debian BTS] bug Subject> "
+		  (if package
+		      (format "%s: " package))
+		  (not 'initial-input)
+		  'tinydebian--bug-report-debian-bts-mail-subject-history)))
             (mail-setup
-             (tinydebian-bts-email-submit) subject nil nil nil nil))
-          (message-mode)
-          (tinydebian-bts-insert-headers)
-          (tinydebian-bug-report-mail-insert-details info))))))))
+             (tinydebian-bts-email-submit) subject nil nil nil nil)
+	    (message-mode)
+	    (tinydebian-bts-insert-headers)
+	    (tinydebian-bug-report-mail-insert-details info)
+	    (when (string-match "patch" subject)
+	      (save-excursion
+		(goto-char (point-min))
+		(when (re-search-forward "^Severity.*\r?[\n]" nil t)
+		  (insert "tags: patch"))))))))))))
 
 ;;; ----------------------------------------------------------------------
 ;;;
@@ -7374,6 +7393,9 @@ GPG key that is registered in Launchpad.>
         ;;     (insert " status " str "\n")))
         (insert " done\n")))))
 
+(defvar tinydebian--bug-report-generic-bts-mail-history nil
+  "History for `tinydebian-bug-report-generic-bts-mail'.")
+
 ;;; ----------------------------------------------------------------------
 ;;;
 ;;;###autoload
@@ -7388,8 +7410,10 @@ This function can only be callaed interactively."
        ("gnu-emacs" . 1)
        ("gnu-coreutils" . 1)
        ("launchpad" . 1))
-     nil
-     t)))
+     (not 'predicate)
+     'require-match
+     (not 'initial-input)
+     'tinydebian--bug-report-generic-bts-mail-history)))
   (when (stringp bts)
     (cond
      ((string-match "debian" bts)

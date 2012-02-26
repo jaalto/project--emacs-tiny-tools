@@ -867,7 +867,8 @@ The default command is `macroexpand'."
 
 (defcustom tinylisp--table-reverse-eval-alist
   '((add-hook       . remove-hook)
-    (remove-hook    . add-hook))
+    (remove-hook    . add-hook)
+    (global-set-key . global-unset-key))
   "*Table of reverse commands. Format '((ORIG-FSYM . REVERSE-FSYM) ..)."
   :type  'sexp
   :group 'TinyLisp)
@@ -2046,6 +2047,7 @@ Optionally POP. VERB prints message."
 ;;; ----------------------------------------------------------------------
 ;;;
 (put 'tinylisp-symbol-do-macro 'lisp-indent-function 2)
+(put 'tinylisp-symbol-do-macro 'edebug-form-spec '(body))
 (defmacro tinylisp-symbol-do-macro (string noerr &rest body)
   "Execute body if STRING is interned.
 Input:
@@ -2466,9 +2468,9 @@ That usually means that symbol is not yet defined to obarray."
 (defun tinylisp-read-symbol-at-point ()
   "Read function name around point.
 
-o  Check if cursor is at the beginning of line whitespace
-   and sees ' +(', then valuate next statement
-o  Go backward to opening parenthesis and evaluate command.
+-  Check if cursor is at the beginning of line matching
+   ' +('. Use it.
+-  Go backward to opening parenthesis.
 
 Return:
  (point function-name-string statement)"
@@ -2477,12 +2479,15 @@ Return:
 	point
 	func
 	statement)
+    (when (and word
+	       (string-match "^[ \t]*$\\|\\\\" word)) ; "\\C-m"
+      (setq word nil))
     (save-excursion
       (cond
        ((and (stringp word)
 	     (intern-soft word))
         (skip-chars-backward "^( \t\r\n"))
-       ((line-end-position) ;;move to opening paren in this line
+       ((goto-char (line-end-position)) ;;move to opening paren in this line
         (re-search-backward "(" (line-beginning-position) t))
        (t
         ;;   if there is whitespace  '^      (autoload 'tinylisp-mode...'
@@ -2497,13 +2502,13 @@ Return:
             (goto-char opoint))))
       (when (and (tinylisp-backward-opening-paren)
                  (setq point (point))
+		 ;; Move over first character
                  (re-search-forward "[^ \t\n(]" nil t))
-
         (setq func (or word (tinylisp-read-word)))
         (goto-char point)
         (ignore-errors                  ;In comment; this breaks.
           (forward-sexp 1)
-          (setq statement (buffer-substring point (point))))
+          (setq statement (buffer-substring-no-properties point (point))))
         (if statement
             (list point func statement))))))
 
@@ -3948,7 +3953,7 @@ If current buffer has no file, call `tinylisp-eval-current-buffer'."
 ;;; ----------------------------------------------------------------------
 ;;;
 (defun tinylisp-eval-reverse ()
-  "Search backward for opening parenthesis and Reverse the statement.
+  "Search backward for opening parenthesis and reverse the statement.
 See variable `tinylisp--table-reverse-eval-alist'"
   (interactive)
   (let ((stat  (tinylisp-read-symbol-at-point))
@@ -3969,10 +3974,12 @@ See variable `tinylisp--table-reverse-eval-alist'"
 		statement (nth 2 stat))
 	  ;; Do some special handling, e.g. add hook may have
 	  ;; additional argument 'add , remove it.
-	  (when (string-match "add-hook +[^ ]+ +[^ ]+\\( +[^ )]+\\))"
-			      statement)
+	  (cond
+	   ((string-match "add-hook +[^ ]+ +[^ ]+\\( +[^ )]+\\))"
+			  statement)
 	    (setq statement (ti::replace-match 1 "" statement)))
-
+	   ((string-match "(global-set-key[^[\"]+.[^[\"]+." statement)
+	    (setq statement (concat (match-string 0 statement) ")"))))
 	  (tinylisp-eval str1 str2 'string statement)
 	  (message "TinyLisp: evaled as %s" str2))))))
 

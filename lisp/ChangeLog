@@ -1,3 +1,35 @@
+2012-02-26 Sun  Jari Aalto  <jari.aalto@cante.net>
+
+	* other/folding.el (folding-advice-instantiate): Correct
+	`folding-shift-in-on-goto' check which prevented `goto-line'
+	to work. Patch thanks to akshaal at Github.
+
+	* tiny/tinydiff.el (tinydiff-install): Remove. Emacs
+	already has diff and patch modes.
+	(tinydiff--auto-mode-alist): Remove.
+
+	* tiny/tinydebian.el (tinydebian-bts-mail-type-ita): Add missing
+	variable BTS.
+
+2012-02-16 Thu  Jari Aalto  <jari.aalto@cante.net>
+
+	* tiny/tinylibt.el: (Install): Add backward and forward examples.
+
+	* tiny/tinylisp.el (tinylisp--table-reverse-eval-alist):1
+	Add `global-unset-key'.
+	(tinylisp-read-symbol-at-point): Make reading smarter.
+	(tinylisp-symbol-do-macro): Add edebug form.
+	(tinylisp-eval-reverse): Add support for `global-set-key'.
+
+	* tiny/tinydebian.el (tinydebian-package-info): Check
+	that PACKAGE is not empty string. Add history support.
+	(tinydebian-package-info-history): New.
+	(tinydebian-bug-report-generic-bts-mail): Add history support.
+	Add PACKAGE name to the subject by default. Add history
+	support. Add "tags: patch" if subject contains word patch.
+	(tinydebian--bug-report-generic-bts-mail-history): New.
+	(tinydebian--bug-report-debian-bts-mail-subject-history): New.
+
 2012-02-08 Wed  Jari Aalto  <jari.aalto@cante.net>
 
 	* tiny/tinydebian.el (tinydebian-mail-header-not-matches):
