@@ -1,5 +1,9 @@
 2012-02-26 Sun  Jari Aalto  <jari.aalto@cante.net>
 
+	* tiny/tinydiff.el (tinydiff-install): Remove. Emacs
+	already has diff and patch modes.
+	(tinydiff--auto-mode-alist): Remove.
+
 	* tiny/tinydebian.el (tinydebian-bts-mail-type-ita): Add missing
 	variable BTS.
 
