@@ -123,7 +123,7 @@
 
 ;;{{{ setup: libraries
 
-(defconst tinydebian--version-time "2012.0216.0816"
+(defconst tinydebian--version-time "2012.0226.1204"
   "Last edited time.")
 
 (require 'tinylibm)
@@ -5310,7 +5310,7 @@ Mode description:
 (put 'tinydebian-bts-mail-compose-macro 'lisp-indent-function 5)
 (defmacro tinydebian-bts-mail-compose-macro
   (bug type package subject email &rest body)
-  "Compose mail with SUBJECT and run BODY."
+  "Compose mail for BUG of TYPE to PACKAGE with SUBJECT EMAIL and run BODY."
   (let ((name (gensym "name-"))
         (buffer (gensym "buffer-")))
     `(let ((,buffer (current-buffer))
@@ -5335,11 +5335,11 @@ Mode description:
 	      ,email
 	    (tinydebian-bts-generic-email-control ,buffer))
 	  ,subject
-	  nil
-	  nil
-	  nil
-	  nil))
-	 (t				;24
+	   (not 'in-reply-to)
+	   (not 'cc)
+	   (not 'replybuffer)
+	   (not 'actions)))
+	 (t				;Emacs 24 and later
 	  ;; (mail-setup TO SUBJECT IN-REPLY-TO CC REPLYBUFFER ACTIONS
 	  ;;  RETURN-ACTION)
 	  (mail-setup
@@ -5347,11 +5347,11 @@ Mode description:
 	       ,email
 	     (tinydebian-bts-generic-email-control ,buffer))
 	   ,subject
-	   nil
-	   nil
-	   nil
-	   nil
-	   nil)))
+	   (not 'in-reply-to)
+	   (not 'cc)
+	   (not 'replybuffer)
+	   (not 'actions)
+	   (not 'return-action))))
        (cond
         ((or (featurep 'message)
              (eq mail-user-agent 'message-user-agent))
@@ -5401,7 +5401,7 @@ Variables bound during macro (can all be nil):
 
 ;;; ----------------------------------------------------------------------
 ;;;
-(defun tinydebian-bts-mail-type-ita (bug)
+(defun tinydebian-bts-mail-type-ita (bug &optional bts)
   "Send an ITA request.
 Optionally from BTS which defaults to \"debian\"."
   (interactive (list (tinydebian-bts-mail-ask-bug-number "ITA")))

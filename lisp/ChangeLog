@@ -1,8 +1,13 @@
+2012-02-26 Sun  Jari Aalto  <jari.aalto@cante.net>
+
+	* tiny/tinydebian.el (tinydebian-bts-mail-type-ita): Add missing
+	variable BTS.
+
 2012-02-16 Thu  Jari Aalto  <jari.aalto@cante.net>
 
 	* tiny/tinylibt.el: (Install): Add backward and forward examples.
 
-	* tiny/tinylisp.el (tinylisp--table-reverse-eval-alist):
+	* tiny/tinylisp.el (tinylisp--table-reverse-eval-alist):1
 	Add `global-unset-key'.
 	(tinylisp-read-symbol-at-point): Make reading smarter.
 	(tinylisp-symbol-do-macro): Add edebug form.
