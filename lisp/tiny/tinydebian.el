@@ -123,7 +123,7 @@
 
 ;;{{{ setup: libraries
 
-(defconst tinydebian--version-time "2012.0226.1629"
+(defconst tinydebian--version-time "2012.0301.0701"
   "Last edited time.")
 
 (require 'tinylibm)
@@ -4893,37 +4893,17 @@ Mode description:
 
    (list
     tinydebian--mail-mode-easymenu-name
-    ["Address Bug"         tinydebian-mail-mode-debian-address-bug-toggle       t]
-    ["Address Control"     tinydebian-mail-mode-debian-address-control-toggle   t]
-    ["Address Quiet"       tinydebian-mail-mode-debian-address-quiet-toggle     t]
-    ["Address Close"       tinydebian-mail-mode-debian-address-close-toggle     t]
-    ["Address Submitter"   tinydebian-mail-mode-debian-address-submitter-toggle t]
-    ["Address Maintonly"   tinydebian-mail-mode-debian-address-maintonly-toggle t]
-    ["Address Package maintainer" tinydebian-mail-mode-debian-address-package-toggle t]
 
-    "----"
-
-;;    ["Goto URL by bug number"        tinydebian-bug-browse-url-by-bug          t]
-    ["Goto URL by bug number"        tinydebian-bug-browse-url-main            t]
-
-    ["Goto URL by package bugs"      tinydebian-bug-browse-url-by-package-bugs t]
-    ["Goto URL by package name"      tinydebian-bug-browse-url-by-package-name t]
-
-    "----"
-
-    ["Info bug all insert"     tinydebian-debian-bug-info-all-insert     t]
-    ["Info bug all message"    tinydebian-debian-bug-info-all-message    t]
-    ["Info bug subject insert" tinydebian-debian-bug-info-subject-insert t]
-
-    "----"
-
-    ["Add BTS Ctrl CC"         tinydebian-bts-mail-ctrl-command-cc       t]
-;;;    ["Send BTS Ctrl close"      tinydebian-bts-mail-ctrl-command-close    t] ;; FIXME
-    ["Add BTS Ctrl clone"      tinydebian-bts-mail-ctrl-clone    t]
+    (list
+     "BTS Control"
+    ["Add BTS Ctrl CC"         tinydebian-bts-mail-ctrl-command-cc t]
+;;;    ["Send BTS Ctrl close"      tinydebian-bts-mail-ctrl-command-close t] ;; FIXME
+    ["Add BTS Ctrl clone"      tinydebian-bts-mail-ctrl-clone t]
     ["Add BTS Ctrl fixed"      tinydebian-bts-mail-ctrl-command-fixed t]
-    ["Add BTS Ctrl notfixed"   tinydebian-bts-mail-ctrl-command-notfixed    t]
-    ["Add BTS Ctrl forward"    tinydebian-bts-mail-ctrl-command-forwarded  t]
-    ["Add BTS Ctrl notforwarded"    tinydebian-bts-mail-ctrl-command-notforwarded  t]
+    ["Add BTS Ctrl notfixed"   tinydebian-bts-mail-ctrl-command-notfixed t]
+    ["Add BTS Ctrl forward"    tinydebian-bts-mail-ctrl-command-forwarded t]
+    ["Add BTS Ctrl notforwarded"
+     tinydebian-bts-mail-ctrl-command-notforwarded t]
 ;;;    ["Addend BTS Ctrl forwarded"  tinydebian-bts-mail-ctrl-command-forward  t] ;; FIXME
     ["Add BTS Ctrl found"      tinydebian-bts-mail-ctrl-command-found    t]
     ["Add BTS Ctrl notfound"   tinydebian-bts-mail-ctrl-command-notfound t]
@@ -4940,6 +4920,37 @@ Mode description:
     ["Add BTS Ctrl unarchive"  tinydebian-bts-mail-ctrl-command-unarchive t]
     ["Add BTS Ctrl usertag"    tinydebian-bts-mail-ctrl-command-usertag  t]
     ["Insert Bug number"       tinydebian-bug-nbr-insert-at-point t])
+
+    "----"
+
+    ["Address Bug"
+     tinydebian-mail-mode-debian-address-bug-toggle	    t]
+    ["Address Control"
+     tinydebian-mail-mode-debian-address-control-toggle	    t]
+    ["Address Quiet"
+     tinydebian-mail-mode-debian-address-quiet-toggle	    t]
+    ["Address Close"
+     tinydebian-mail-mode-debian-address-close-toggle	    t]
+    ["Address Submitter"
+     tinydebian-mail-mode-debian-address-submitter-toggle   t]
+    ["Address Maintonly"
+     tinydebian-mail-mode-debian-address-maintonly-toggle   t]
+    ["Address Package maintainer"
+     tinydebian-mail-mode-debian-address-package-toggle	    t]
+
+    "----"
+
+;;    ["Goto URL by bug number" tinydebian-bug-browse-url-by-bug          t]
+    ["Goto URL by bug number"   tinydebian-bug-browse-url-main            t]
+
+    ["Goto URL by package bugs" tinydebian-bug-browse-url-by-package-bugs t]
+    ["Goto URL by package name" tinydebian-bug-browse-url-by-package-name t]
+
+    "----"
+
+    ["Info bug all insert"     tinydebian-debian-bug-info-all-insert     t]
+    ["Info bug all message"    tinydebian-debian-bug-info-all-message    t]
+    ["Info bug subject insert" tinydebian-debian-bug-info-subject-insert t])
 
    (progn
      (define-key map  "ia" 'tinydebian-debian-bug-info-all-insert)

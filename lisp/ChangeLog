@@ -1,3 +1,8 @@
+2012-03-01 Thu  Jari Aalto  <jari.aalto@cante.net>
+
+	* tiny/tinydebian.el (ti::macrof-minor-mode-wizard): Move items
+	to submenu "BTS Control".
+
 2012-02-26 Sun  Jari Aalto  <jari.aalto@cante.net>
 
 	* other/folding.el (folding-advice-instantiate): Correct
