@@ -205,9 +205,17 @@ Created and killed during program execution.")
 ;;; User configurable
 
 (defcustom tinysearch--word-boundary-set "-A-Za-z0-9_"
-  "*Character set to conform a single word.
-You might want to set this to something else before doing search."
+  "*Character set to conform a single word."
   :type  'hook
+  :group 'TinySearch)
+
+(defcustom tinysearch--word-boundary-function 'tinysearch-charset-control
+  "Funnction to return `tinysearch--word-boundary-set'.
+Different modes have different needs and it may be desireable to
+chnage definition of word according to mode. This function is used
+in `tinysearch-search-word-forward' and `tinysearch-search-word-backward'
+to supply character set to `tinysearch-search-word-main'."
+  :type  'function
   :group 'TinySearch)
 
 (defcustom tinysearch--wrap-flag  nil
@@ -466,17 +474,15 @@ NOTE:
 ;;; ----------------------------------------------------------------------
 ;;;
 (defun tinysearch-charset-control ()
-  "Dynamic character set change according to mode. This is example function."
+  "Dynamic character set change according to mode."
   (let ((type (symbol-name major-mode))
 	set)
     (cond
-     ((string-match  "^c-\\|^cc-\\|c[+]+" type)
+     ((string-match  "^c-\\|^cc-\\|c[+]+|perl|python|ruby" type)
       (setq set "A-Za-z0-9_"))
      ((string-match "lisp" type)
-      ;;  Add ':' , which I use in variable names.
-      (setq set "--A-Za-z0-9_"))
-     ((string-match "text\\|shell\\|perl" type)
-      (setq set "A-Za-z0-9_")))
+      ;;  Add ':'
+      (setq set "--A-Za-z0-9_")))
     set))
 
 ;;; ----------------------------------------------------------------------
@@ -485,7 +491,10 @@ NOTE:
 (defun tinysearch-search-word-forward ()
   "Search word at point forward."
   (interactive)
-  (tinysearch-search-word-main nil (tinysearch-charset-control)))
+  (tinysearch-search-word-main
+   nil
+   (if (functionp tinysearch--word-boundary-function)
+       (funcall tinysearch--word-boundary-function))))
 
 ;;; ----------------------------------------------------------------------
 ;;;
@@ -493,7 +502,10 @@ NOTE:
 (defun tinysearch-search-word-backward ()
   "Search word at point backward."
   (interactive)
-  (tinysearch-search-word-main 'back (tinysearch-charset-control)))
+  (tinysearch-search-word-main
+   'back
+   (if (functionp tinysearch--word-boundary-function)
+       (funcall tinysearch--word-boundary-function))))
 
 ;;; ----------------------------------------------------------------------
 ;;;

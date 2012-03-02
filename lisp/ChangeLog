@@ -1,3 +1,15 @@
+2012-03-02 Fri  Jari Aalto  <jari.aalto@cante.net>
+
+	* tiny/tinysearch.el: (tinysearch--word-boundary-set):
+	Update documentation.
+	(tinysearch--word-boundary-function): New variable.
+	(tinysearch-search-word-forward): Use
+	`tinysearch--word-boundary-function'.
+	(tinysearch-search-word-backward): Use
+	`tinysearch--word-boundary-function'.
+	(tinysearch-charset-control): Adjust default modes better.
+	Add Python, Ruby check.
+
 2012-03-01 Thu  Jari Aalto  <jari.aalto@cante.net>
 
 	* tiny/tinydebian.el (ti::macrof-minor-mode-wizard): Move items
