@@ -123,7 +123,7 @@
 
 ;;{{{ setup: libraries
 
-(defconst tinydebian--version-time "2012.0301.0701"
+(defconst tinydebian--version-time "2012.0306.1635"
   "Last edited time.")
 
 (require 'tinylibm)
@@ -1855,8 +1855,8 @@ Judging from optional BUFFER."
 ;; FIXME Move elsewhere
 ;;; ----------------------------------------------------------------------
 ;;;
-(defun tinydebian-bts-generic-email-control (&optional buffer)
-  "Compose control according to BTS, judging from optional BUFFER."
+(defun tinydebian-bts-generic-email-control (&optional buffer info)
+  "Compose control according to BTS, judging from optional BUFFER and INFO."
   (with-current-buffer (or buffer (current-buffer))
     (cond
      ;; FIXME launchpad
@@ -1864,6 +1864,12 @@ Judging from optional BUFFER."
       (tinydebian-gnu-bts-email-control))
      ((tinydebian-emacs-bug-type-p)
       (tinydebian-emacs-bts-email-control))
+     ((and (numberp info)
+	   (> bug 600000))		; Debian bug number around 2011-2012
+      (tinydebian-bts-email-control))
+     ((and (numberp info)
+	   (< bug 30000))   		; GNU Emacs until 2040
+      (tinydebian-gnu-bts-email-control))
      (t
       (tinydebian-bts-email-control)))))
 
@@ -3082,6 +3088,14 @@ Return:
   '(bug-number email)"
   (let ((email (regexp-quote tinydebian--gnu-bts-email-address)))
     (cond
+     ((re-search-forward `,(concat
+			    "http://debbugs.gnu.org[^ \t\r\n]+"
+			    "bug=\\([0-9]+\\)")
+			    nil t)
+      ;; http://debbugs.gnu.org/cgi/bugreport.cgi?bug=NNNN
+      (let ((bug (match-string-no-properties 1)))
+	(list bug
+	      (format "%s@%s" bug tinydebian--gnu-bts-email-address))))
      ((re-search-forward (format
                           "\\(\\([0-9]+\\)@%s\\>\\)"
                           email)
@@ -4230,7 +4244,7 @@ Optionally REMOVE. In interactive call, toggle TYPE of address on and off."
   (save-excursion
     (let ((email (if (and type bug)
 		     (tinydebian-bts-email-compose type bug)
-		   (tinydebian-bts-generic-email-control))))
+		   (tinydebian-bts-generic-email-control nil bug))))
       (cond
        (remove
         (tinydebian-mail-mode-debian-address-email-remove email))
@@ -4472,7 +4486,7 @@ Input:
          (re  (format "^[ \t]*%s" ,cmd)))
      (tinydebian-bts-mail-ctrl-command-add str re ,at-beg)
      ;; Add control@ address
-     (tinydebian-mail-mode-address-type-add "control")
+     (tinydebian-mail-mode-address-type-add "control" bug)
      ;; Position point to better place.
      (forward-line -1)
      (re-search-forward (format "%s %s *" ,cmd ,bug) nil t)))

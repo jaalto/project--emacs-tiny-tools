@@ -1,3 +1,9 @@
+2012-03-06 Tue  Jari Aalto  <jari.aalto@cante.net>
+
+	* tiny/tinydebian.el (tinydebian-bts-generic-email-control): Add
+	Bug number check.
+	(tinydebian-bug-gnu-bts-re-search-email): Add URL check.
+
 2012-03-02 Fri  Jari Aalto  <jari.aalto@cante.net>
 
 	* tiny/tinysearch.el: (tinysearch--word-boundary-set):
