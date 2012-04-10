@@ -123,7 +123,7 @@
 
 ;;{{{ setup: libraries
 
-(defconst tinydebian--version-time "2012.0306.1635"
+(defconst tinydebian--version-time "2012.0410.1048"
   "Last edited time.")
 
 (require 'tinylibm)
@@ -537,7 +537,7 @@ fixed
     "orphaned (no maintainer)"
     "other alternatives"
     "rc-buggy"
-    "rquested by upstream"              ; Upstream has requested removal
+    "requested by upstream"             ; Upstream has requested removal
     "transitional pkg"
     "unredistributable"			; Incompatible Licenses (SSL + GPL...)
     "unmaintained"
