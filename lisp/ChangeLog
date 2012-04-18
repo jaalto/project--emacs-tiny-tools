@@ -1,3 +1,8 @@
+2012-04-18 Wed  Jari Aalto  <jari.aalto@cante.net>
+
+	* tiny/tinydebian.el (tinydebian-install-in-buffers): Check
+	`doit' variable.
+
 2012-04-10 Tue  Jari Aalto  <jari.aalto@cante.net>
 
 	* tiny/tinydebian.el (tinydebian--removal-keyword-list):

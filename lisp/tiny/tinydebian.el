@@ -123,7 +123,7 @@
 
 ;;{{{ setup: libraries
 
-(defconst tinydebian--version-time "2012.0410.1048"
+(defconst tinydebian--version-time "2012.0418.1932"
   "Last edited time.")
 
 (require 'tinylibm)
@@ -1284,9 +1284,9 @@ Install `font-lock-keywords' for log files."
 (defun tinydebian-install-in-buffers (&optional uninstall)
   "Install or UNINSTALL `tinydebiab-bts-mode' in existing buffers.
 Run also `tinydebian-mail-mode-debian-default-keybindings' in all mail buffer.
-Activate on Gnus summary and article modes if there is word 'Debian'.
-Activate on files whose path matches
-`tinydebian--install-buffer-file-name-regexp'."
+See variables:
+   `tinydebian--install-buffer-file-name-regexp'
+   `tinydebian--install-gnus-newsgroup-name-regexp'."
   (flet ((search (regexp)
                  (save-excursion
                    (goto-char (point-min))
@@ -1316,9 +1316,11 @@ Activate on files whose path matches
                      "bug#[0-9][0-9][0-9][0-9][0-9][0-9]\\>"
                      "\\|Closes +#[0-9][0-9][0-9][0-9][0-9][0-9]"))
             (setq doit t)))
-          (if uninstall
-              (turn-off-tinydebian-bts-mode)
-            (turn-on-tinydebian-bts-mode)))))))
+          (cond
+	   (uninstall
+	    (turn-off-tinydebian-bts-mode))
+	   (doit
+	    (turn-on-tinydebian-bts-mode))))))))
 
 ;;; ----------------------------------------------------------------------
 ;;;
