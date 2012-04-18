@@ -7291,7 +7291,7 @@ ii  libc6                         2.2.5-3    GNU C Library: Shared libraries an"
       (message "TinyDebian: bug report skipped. pkg [%s] status is [%s]"
 	       package status))
      ((setq tmp (assoc "E" info))
-      (message "TinyDebian: bug report skipped. [%s] error is [%s]"
+      (message "TinyDebian: bug report skipped. pkg [%s] error is [%s]"
                package (cdr tmp)))
      (t
       (let ((name (format "*mail* Debian Bug %s" package))
