@@ -123,7 +123,7 @@
 
 ;;{{{ setup: libraries
 
-(defconst tinydebian--version-time "2012.0418.2013"
+(defconst tinydebian--version-time "2012.0418.2026"
   "Last edited time.")
 
 (require 'tinylibm)
@@ -7282,13 +7282,17 @@ ii  libc6                         2.2.5-3    GNU C Library: Shared libraries an"
   (interactive
    (list (tinydebian-package-info)))
   (let ((status  (or (cdr-safe (assoc "Status" info)) ""))
-        (package (or (cdr-safe (assoc "Package" info)) "")))
+        (package (or (cdr-safe (assoc "Package" info)) ""))
+	tmp)
     (cond
      ((null info)
       (message "TinyDebian: no INFO available to send a bug report."))
      ((string-match "not-installed" status)
       (message "TinyDebian: bug report skipped. ´%s' status is [%s]"
-               package status))
+	       package status))
+     ((setq tmp (assoc "E" info))
+      (message "TinyDebian: bug report skipped. ´%s' error is [%s]"
+               package (cdr tmp)))
      (t
       (let ((name (format "*mail* Debian Bug %s" package))
             buffer)

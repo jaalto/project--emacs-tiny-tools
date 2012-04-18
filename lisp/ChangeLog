@@ -7,6 +7,7 @@
 	(tinydebian--bug-report-generic-bts-mail-history-last): New.
 	(tinydebian-bug-report-generic-bts-mail): Add
 	`tinydebian--bug-report-generic-bts-mail-history-last'.
+	(tinydebian-bug-report-debian-bts-mail): Check error better.
 
 2012-04-10 Tue  Jari Aalto  <jari.aalto@cante.net>
 
