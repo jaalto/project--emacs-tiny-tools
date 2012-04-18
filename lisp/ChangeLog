@@ -4,6 +4,9 @@
 	`doit' variable.
 	(tinydebian-bug-browse-url-by-package-name): Add
 	`tinydebian-trim-blanks'.
+	(tinydebian--bug-report-generic-bts-mail-history-last): New.
+	(tinydebian-bug-report-generic-bts-mail): Add
+	`tinydebian--bug-report-generic-bts-mail-history-last'.
 
 2012-04-10 Tue  Jari Aalto  <jari.aalto@cante.net>
 

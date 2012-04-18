@@ -123,7 +123,7 @@
 
 ;;{{{ setup: libraries
 
-(defconst tinydebian--version-time "2012.0418.2008"
+(defconst tinydebian--version-time "2012.0418.2013"
   "Last edited time.")
 
 (require 'tinylibm)
@@ -7422,6 +7422,9 @@ GPG key that is registered in Launchpad.>
         ;;     (insert " status " str "\n")))
         (insert " done\n")))))
 
+(defvar tinydebian--bug-report-generic-bts-mail-history-last nil
+  "Last entry in `tinydebian-bug-report-generic-bts-mail'.")
+
 (defvar tinydebian--bug-report-generic-bts-mail-history nil
   "History for `tinydebian-bug-report-generic-bts-mail'.")
 
@@ -7441,8 +7444,9 @@ This function can only be callaed interactively."
        ("launchpad" . 1))
      (not 'predicate)
      'require-match
-     (not 'initial-input)
+     tinydebian--bug-report-generic-bts-mail-history-last
      'tinydebian--bug-report-generic-bts-mail-history)))
+  (setq tinydebian--bug-report-generic-bts-mail-history-last bts)
   (when (stringp bts)
     (cond
      ((string-match "debian" bts)
