@@ -2,6 +2,8 @@
 
 	* tiny/tinydebian.el (tinydebian-install-in-buffers): Check
 	`doit' variable.
+	(tinydebian-bug-browse-url-by-package-name): Add
+	`tinydebian-trim-blanks'.
 
 2012-04-10 Tue  Jari Aalto  <jari.aalto@cante.net>
 

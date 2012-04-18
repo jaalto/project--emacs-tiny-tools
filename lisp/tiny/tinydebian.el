@@ -123,7 +123,7 @@
 
 ;;{{{ setup: libraries
 
-(defconst tinydebian--version-time "2012.0418.1932"
+(defconst tinydebian--version-time "2012.0418.2008"
   "Last edited time.")
 
 (require 'tinylibm)
@@ -3848,8 +3848,10 @@ In Gnus summary buffer, the Article buffer is consulted for bug."
 (defun tinydebian-bug-browse-url-by-package-name (package)
   "Jump to PACKAGE description."
   (interactive
-   (list (read-string "Browse desription URL by package name: "
-                      (my-debian-bug-package-name-any))))
+   (list
+    (tinydebian-trim-blanks
+     (read-string "Browse desription URL by package name: "
+		  (my-debian-bug-package-name-any)))))
   (when (or (not (stringp package))
             (not (string-match "[a-z]" package)))
     (error "TinyDebian: Invalid package name `%s'." package))
