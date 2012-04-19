@@ -123,7 +123,7 @@
 
 ;;{{{ setup: libraries
 
-(defconst tinydebian--version-time "2012.0418.2029"
+(defconst tinydebian--version-time "2012.0419.1745"
   "Last edited time.")
 
 (require 'tinylibm)
@@ -3864,8 +3864,10 @@ In Gnus summary buffer, the Article buffer is consulted for bug."
 (defun tinydebian-bug-browse-url-by-package-bugs (package)
   "Jump to PACKAGE description."
   (interactive
-   (list (read-string "Browse bugs URL by package name: "
-                      (my-debian-bug-package-name-any))))
+   (list
+    (tinydebian-trim-blanks
+     (read-string "Browse bugs URL by package name: "
+		  (my-debian-bug-package-name-any)))))
   (when (or (not (stringp package))
             (not (string-match "[a-z]" package)))
     (error "TinyDebian: Invalid package name `%s'." package))
@@ -4318,7 +4320,7 @@ number interactively."
                             (string-match re (car address)))
                        (match-string 1 (car address)))))
      (list
-      (read-string "package name: " pkg)
+      (tinydebian-trim-blanks (read-string "package name: " pkg))
       (if pkg
           t
         current-prefix-arg))))
@@ -5957,7 +5959,9 @@ For removal request types, see
                   nil
                   t
                   nil))
-      (setq package (read-string "Package name: " pkg))
+      (setq package
+	    (tinydebian-trim-blanks
+	     (read-string "Package name: " pkg)))
       (setq suite (completing-read
                    "Suite: "
                    '(("experimental" . 1)
@@ -6888,11 +6892,13 @@ If PACKAGE is nil and `tinydebian--bin-dpkg' is not available,
 ask with PROMPT."
   (let ((dpkg tinydebian--bin-dpkg))
     (or package
-        (setq package (read-string
-                       (or prompt
-                           "[TinyDebian] Package name: ")
-		       (not 'initial-input)
-		       'tinydebian--package-info-history)))
+        (setq package
+	      (tinydebian-trim-blanks
+	       (read-string
+		(or prompt
+		    "[TinyDebian] Package name: ")
+		(not 'initial-input)
+		'tinydebian--package-info-history))))
     (tinydebian-string-p package "No package name given")
     (or (and dpkg
              (tinydebian-package-status-main package)))))

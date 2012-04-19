@@ -1,3 +1,8 @@
+2012-04-19 Thu  Jari Aalto  <jari.aalto@cante.net>
+
+	* tiny/tinydebian.el Add more calls to
+	`tinydebian-trim-blanks' while reading package name.
+
 2012-04-18 Wed  Jari Aalto  <jari.aalto@cante.net>
 
 	* tiny/tinydebian.el (tinydebian-install-in-buffers): Check
