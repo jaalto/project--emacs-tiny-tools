@@ -1,3 +1,7 @@
+2012-04-20 Fri  Jari Aalto  <jari.aalto@cante.net>
+
+	* tiny/tinydebian.el (tinydebian-bug-nbr-string): Impove.
+
 2012-04-19 Thu  Jari Aalto  <jari.aalto@cante.net>
 
 	* tiny/tinydebian.el Add more calls to

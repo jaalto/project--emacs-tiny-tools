@@ -2831,7 +2831,7 @@ Bug#NNNN: O: package -- description."
                            str)
              (match-string 1 str))
         ;;   BTS message lines: "owner NNNNNN"
-        (and (string-match (concat "\\<\\(?:owner\\|retitle\\) "
+        (and (string-match (concat "\\<\\(?:owner\\|retitle\\|tags\\)[ \t]+"
                                    "\\([0-9][0-9][0-9][0-9][0-9][0-9]\\)\\>")
                            str)
              (match-string 1 str))
