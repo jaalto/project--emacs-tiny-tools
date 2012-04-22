@@ -123,7 +123,7 @@
 
 ;;{{{ setup: libraries
 
-(defconst tinydebian--version-time "2012.0419.1745"
+(defconst tinydebian--version-time "2012.0422.1809"
   "Last edited time.")
 
 (require 'tinylibm)
@@ -1046,6 +1046,7 @@ Mode description:
      ["Send BTS ITA: intent to adopt"      tinydebian-bts-mail-type-ita    t]
      ["Send BTS ITN: intent to NMU"        tinydebian-bts-mail-type-it-nmu t]
      ["Send BTS ITP: reponse to RFP"       tinydebian-bts-mail-type-itp    t]
+     ["Send BTS ITS: reponse to sponsor"   tinydebian-bts-mail-type-its    t]
      ["Send BTS RFA: request for adopt"    tinydebian-bts-mail-type-rfa    t]
      ["Send BTS RFH: request for help"     tinydebian-bts-mail-type-rfh    t]
      ["Send BTS RFP/ITP: request for packege" tinydebian-bts-mail-type-rfp    t]
@@ -1146,6 +1147,7 @@ Mode description:
      (define-key map  "-r" 'tinydebian-bts-mail-type-reply)
 ;;     (define-key map  "-R" 'tinydebian-bts-mail-type-remove)
      (define-key map  "-s" 'tinydebian-bts-mail-type-rfs)
+     (define-key map  "-S" 'tinydebian-bts-mail-type-its)
 
      (define-key map  "mi" 'tinydebian-bts-mail-message-info)
 
@@ -5429,6 +5431,52 @@ Variables bound during macro (can all be nil):
              ,email
            (goto-char (point-max))
            ,@body)))))
+
+;;; ----------------------------------------------------------------------
+;;;
+(defun tinydebian-bts-mail-type-its (bug &optional bts) ;; FIXME: NOT DONE
+  "Send an ITS request: Intent To Sponsor.
+Optionally from BTS which defaults to \"debian\"."
+  (interactive (list (tinydebian-bts-mail-ask-bug-number "ITS")))
+  (tinydebian-bts-mail-type-macro
+      "ITS"
+      (not 'pkg)
+      (not 'email)
+      (not 'subject)
+    (insert
+     (format "\
+retitle %s %s
+owner %s !
+thanks
+"
+             bug
+        (let (fsub
+              fpkg)
+          (unless package
+            (tinydebian-debian-bug-info-macro bug bts
+              (setq package (field "package"))))
+          (unless description
+            (tinydebian-debian-bug-info-macro bug bts
+              (let ((str (field "subject")))
+                (setq description
+                      (replace-regexp-in-string
+                       "^.*-- *\\|O: *"
+                       ""
+                       str))
+                ;; ITA: package -- Description
+                (when (string-match "wnpp" package)
+                  (if (string-match ": *\\([^ \t\r\n]+\\) *--" str)
+                      (setq package (match-string 1 str)))))))
+          (let ((string
+                 (format "ITA: %s -- %s"
+                         (or package "")
+                         (or description ""))))
+            string))
+        bug))
+    (when (re-search-backward "ITA:" nil t)
+      (let ((string (buffer-substring (point) (line-end-position))))
+        (tinydebian-mail-header-subject-set string)))
+    (goto-char (point-max))))
 
 ;;; ----------------------------------------------------------------------
 ;;;
