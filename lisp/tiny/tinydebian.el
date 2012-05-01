@@ -123,7 +123,7 @@
 
 ;;{{{ setup: libraries
 
-(defconst tinydebian--version-time "2012.0422.1809"
+(defconst tinydebian--version-time "2012.0501.1953"
   "Last edited time.")
 
 (require 'tinylibm)
@@ -6720,7 +6720,7 @@ Returned list is
 ;;; Priority: extra
 ;;; Section: admin
 ;;; Installed-Size: 45
-;;; Maintainer: Nicolás Lichtmaier <nick@debian.org>
+;;; Maintainer: Nicolas Lichtmaier <nick@debian.org>
 ;;; Version: 0.35-10
 ;;; Depends: libc6 (>= 2.2.4-2), cron (>= 3.0pl1-42)
 ;;; Recommends: mail-transport-agent
@@ -7313,7 +7313,7 @@ Locale: %s"
 ;;;###autoload
 (defun tinydebian-bug-report-debian-bts-mail (info)
   "Submit Debian bug report. INFO is alist of attributes for a package.
-An example ´reportbug(1)' looks like
+An example `reportbug(1)' looks like
 
 To: submit@bugs.debian.org
 Subject: autolog ....
