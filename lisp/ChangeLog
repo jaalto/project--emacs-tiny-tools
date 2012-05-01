@@ -1,3 +1,87 @@
+2012-04-22 Sun  Jari Aalto  <jari.aalto@cante.net>
+
+	* tiny/tinydebian.el (tinydebian-bts-mail-type-its): New.
+
+2012-04-20 Fri  Jari Aalto  <jari.aalto@cante.net>
+
+	* tiny/tinydebian.el (tinydebian-bug-nbr-string): Impove.
+
+2012-04-19 Thu  Jari Aalto  <jari.aalto@cante.net>
+
+	* tiny/tinydebian.el Add more calls to
+	`tinydebian-trim-blanks' while reading package name.
+
+2012-04-18 Wed  Jari Aalto  <jari.aalto@cante.net>
+
+	* tiny/tinydebian.el (tinydebian-install-in-buffers): Check
+	`doit' variable.
+	(tinydebian-bug-browse-url-by-package-name): Add
+	`tinydebian-trim-blanks'.
+	(tinydebian--bug-report-generic-bts-mail-history-last): New.
+	(tinydebian-bug-report-generic-bts-mail): Add
+	`tinydebian--bug-report-generic-bts-mail-history-last'.
+	(tinydebian-bug-report-debian-bts-mail): Check error better.
+
+2012-04-10 Tue  Jari Aalto  <jari.aalto@cante.net>
+
+	* tiny/tinydebian.el (tinydebian--removal-keyword-list):
+	Correct typo.
+
+2012-03-06 Tue  Jari Aalto  <jari.aalto@cante.net>
+
+	* tiny/tinydebian.el (tinydebian-bts-generic-email-control): Add
+	Bug number check.
+	(tinydebian-bug-gnu-bts-re-search-email): Add URL check.
+
+2012-03-02 Fri  Jari Aalto  <jari.aalto@cante.net>
+
+	* tiny/tinysearch.el: (tinysearch--word-boundary-set):
+	Update documentation.
+	(tinysearch--word-boundary-function): New variable.
+	(tinysearch-search-word-forward): Use
+	`tinysearch--word-boundary-function'.
+	(tinysearch-search-word-backward): Use
+	`tinysearch--word-boundary-function'.
+	(tinysearch-charset-control): Adjust default modes better.
+	Add Python, Ruby check.
+
+2012-03-01 Thu  Jari Aalto  <jari.aalto@cante.net>
+
+	* tiny/tinydebian.el (ti::macrof-minor-mode-wizard): Move items
+	to submenu "BTS Control".
+
+2012-02-26 Sun  Jari Aalto  <jari.aalto@cante.net>
+
+	* other/folding.el (folding-advice-instantiate): Correct
+	`folding-shift-in-on-goto' check which prevented `goto-line'
+	to work. Patch thanks to akshaal at Github.
+
+	* tiny/tinydiff.el (tinydiff-install): Remove. Emacs
+	already has diff and patch modes.
+	(tinydiff--auto-mode-alist): Remove.
+
+	* tiny/tinydebian.el (tinydebian-bts-mail-type-ita): Add missing
+	variable BTS.
+
+2012-02-16 Thu  Jari Aalto  <jari.aalto@cante.net>
+
+	* tiny/tinylibt.el: (Install): Add backward and forward examples.
+
+	* tiny/tinylisp.el (tinylisp--table-reverse-eval-alist):1
+	Add `global-unset-key'.
+	(tinylisp-read-symbol-at-point): Make reading smarter.
+	(tinylisp-symbol-do-macro): Add edebug form.
+	(tinylisp-eval-reverse): Add support for `global-set-key'.
+
+	* tiny/tinydebian.el (tinydebian-package-info): Check
+	that PACKAGE is not empty string. Add history support.
+	(tinydebian-package-info-history): New.
+	(tinydebian-bug-report-generic-bts-mail): Add history support.
+	Add PACKAGE name to the subject by default. Add history
+	support. Add "tags: patch" if subject contains word patch.
+	(tinydebian--bug-report-generic-bts-mail-history): New.
+	(tinydebian--bug-report-debian-bts-mail-subject-history): New.
+
 2012-02-08 Wed  Jari Aalto  <jari.aalto@cante.net>
 
 	* tiny/tinydebian.el (tinydebian-mail-header-not-matches):
@@ -5,6 +89,9 @@
 	(tinydebian-mail-mode-debian-address-bug-toggle): Add
 	current-prefix-arg to ask bug number. Support multiple
 	bug addresses.
+
+	(tinydebian-bug-nbr-string): Correct URL matching regexp.
+	(tinydebian-bts-mail-ctrl-retitle): Correct interactive.
 
 2012-01-26 Thu  Jari Aalto  <jari.aalto@cante.net>
 

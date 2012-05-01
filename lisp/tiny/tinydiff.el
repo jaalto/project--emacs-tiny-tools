@@ -2,14 +2,10 @@
 
 ;; This file is not part of Emacs
 
-;;{{{ Id
-
 ;; Copyright (C)    1996-2012 Jari Aalto
 ;; Keywords:        tools
 ;; Author:          Jari Aalto
 ;; Maintainer:      Jari Aalto
-;;
-;; Look at the code with folding.el
 
 ;; COPYRIGHT NOTICE
 ;;
@@ -27,9 +23,6 @@
 ;; along with this program. If not, see <http://www.gnu.org/licenses/>.
 ;;
 ;; Visit <http://www.gnu.org/copyleft/gpl.html> for more information
-
-;;}}}
-;;{{{ Install
 
 ;; ....................................................... &t-install ...
 ;;   Put this file on your Emacs-Lisp `load-path', add following into your
@@ -63,26 +56,24 @@
 ;;      M-x tinydiff-debug-toggle         turn on debug
 ;;      <... do as you did ...>
 
-;;}}}
-;;{{{ Documentation
-
 ;; ..................................................... &t-commentary ...
 
 ;;; Commentary:
 
 ;;  Preface, Jan 1996
 ;;
-;;      Long ago there was set of simple functions lying around to generate
-;;      instant diffs for the file that was being edited, before it was
-;;      checked in with RCS. At the time *vc.el* was not in the Emacs
-;;      distribution. Looking at diffs and using "goto-line" command in
-;;      other buffer gave an idea to make a separate diff mode. The project
-;;      turned out to be a bit bigger than just taking simple diff. You may
-;;      wonder, why would you use this utility over ediff.el? If you like
-;;      working with "command line" diff interface, then you may want to
-;;      use this utility over *ediff.el*. There is a command prompt when
-;;      various diff options can be manipulated with key bindings. Lik:
-;;      Change rcsdiff to diff command, copy previous argument etc.
+;;      Long ago there was set of simple functions lying around to
+;;      generate instant diffs for the file that was being edited,
+;;      before it was checked in with version control tools. At the
+;;      time *vc.el* was not in the Emacs distribution. Examining
+;;      diffs and using "goto-line" command in other buffer gave an
+;;      idea to make a separate diff mode. The project turned out to
+;;      be a bit bigger than just taking simple diff. You may wonder,
+;;      why would you use this utility over ediff.el? If you like
+;;      working with "command line" diff interface, then you may want
+;;      to use this utility over *ediff.el*. There is a command prompt
+;;      when various diff options can be manipulated with key
+;;      bindings.
 ;;
 ;;  Overview of features
 ;;
@@ -415,13 +406,9 @@
 ;;          immediately go to *tinydiff-debug* buffer and save the
 ;;          content and send it to the maintainer.
 
-;;}}}
-
 ;;; Change Log:
 
 ;;; Code:
-
-;;{{{ setup: require
 
 ;;; ......................................................... &require ...
 
@@ -454,9 +441,6 @@
           and apply them with one or two keystrokes.
       o   loads patch rejection file, if patch didn't succeed 100%")
 
-;;}}}
-;;{{{ setup: hooks
-
 ;;; ......................................................... &v-hooks ...
 
 (defcustom tinydiff--load-hook nil
@@ -480,21 +464,8 @@
   :type  'hook
   :group 'TinyDiff)
 
-;;}}}
-;;{{{ setup: variables
-
 ;;; ........................................................ &v-public ...
 ;;; User configurable
-
-(defcustom tinydiff--auto-mode-alist
-  '(("\\.diff\\'"    . turn-on-tinydiff-mode)
-    ("\\.patch\\'"   . turn-on-tinydiff-mode))
-  "Items to add to `auto-mode-alist' to activate `turn-on-tinydiff-mode'."
-  :type '(repeat
-          (list
-           (string :tag "File Regexp")
-           (const turn-on-tinydiff-mode)))
-  :group  'TinyDiff)
 
 ;;  We need this function in defvar; so instantiate it for compiler
 ;;  to use it.
@@ -743,9 +714,6 @@ strange diff format. Default function is `tinydiff-get-buffer-name'."
   :type  'function
   :group 'TinyDiff)
 
-;;}}}
-;;{{{ setup: private
-
 ;;; ....................................................... &v-private ...
 
 (defvar tinydiff--patch-global-option nil
@@ -787,9 +755,6 @@ This variable is made local to current patch/diff buffer.")
 (defvar tinydiff--patch-hunk-count nil
   "Counter how many patch hunks hvae been applied
 This variable is made local to current patch/diff buffer.")
-
-;;}}}
-;;{{{ code: minor mode definition
 
 ;;; ............................................................ &mode ...
 
@@ -888,25 +853,6 @@ Defined keys:
 
 ;;; ----------------------------------------------------------------------
 ;;;
-(defun tinydiff-install (&optional uninstall)
-  "Install TinyDiff package, or optionally UNINSTALL.
-A .diff or .patch file invokes `tinydiff-mode' in `automode-alist'."
-  (interactive "P")
-  (cond
-   (uninstall
-    (ti::assoc-replace-maybe-add
-     'auto-mode-alist tinydiff--auto-mode-alist 'remove))
-   (t
-    (ti::assoc-replace-maybe-add
-     'auto-mode-alist tinydiff--auto-mode-alist)
-    (if (interactive-p)
-        (message "TinyDiff installed")))))
-
-;;}}}
-;;{{{ code: keymap
-
-;;; ----------------------------------------------------------------------
-;;;
 (defun tinydiff-mode-define-keys-minibuffer-default ()
   "This function defines some extra bindings to minibuffer.
 Eg. TAB that completes current filename."
@@ -944,9 +890,6 @@ Eg. TAB that completes current filename."
     'tinydiff-minibuffer--insert-previous-word)
   (define-key tinydiff--minibuffer-map "?"
     'tinydiff-minibuffer--minibuffer-help))
-
-;;}}}
-;;{{{ code: misc
 
 ;;; ............................................................ &misc ...
 
@@ -1162,9 +1105,6 @@ Switches to BUFFER and go to LINE and calls `beginning-of-defun'"
   (view-mode 1)
   (unless buffer-read-only
     (setq buffer-read-only t)))
-
-;;}}}
-;;{{{ code: command line
 
 ;;; ..................................................... &commandLine ...
 
@@ -1616,10 +1556,6 @@ Prefix arg says to insert BACKUP filename instead."
 		  (ti::buffer-read-space-word)))))
     (when word
       (insert word))))
-
-;;}}}
-
-;;{{{ code: diff type, patch
 
 ;;; ........................................................... &patch ...
 
@@ -2209,9 +2145,6 @@ Input:
                       (format "%s.gz" dest-file))
         (message "TinyDiff: Compressing %s file...done" dest-file)))))
 
-;;}}}
-;;{{{ code: command generate
-
 ;;; ----------------------------------------------------------------------
 ;;;
 (defun tinydiff-diff-command-generate  (&optional no-ask)
@@ -2337,9 +2270,6 @@ Input:
     (if (ti::nil-p ans)
         (setq ans nil))
     (ti::remove-properties ans)))
-
-;;}}}
-;;{{{ code: generating, parsing diff
 
 ;;; .................................................... &diff-parsing ...
 
@@ -2545,9 +2475,6 @@ Return:
           (run-hooks 'tinydiff--diff-hook))))
     buffer))
 
-;;}}}
-;;{{{ code: Misc; mime write
-
 ;;; ----------------------------------------------------------------------
 ;;;
 (defun tinydiff-compose-diff-filename ()
@@ -2647,10 +2574,6 @@ Input:
         (when verb
           (message "TinyDiff: MIME diff in register `%c'"
                    tinydiff--register-diff)))))))
-
-;;}}}
-
-;;{{{ code: Line functions
 
 ;;; ----------------------------------------------------------------------
 ;;;
@@ -2870,9 +2793,6 @@ Activate only if point underneath has 'mouse-property."
           (tinydiff-goto buffer (string-to-number line))
         (message "Tinydiff: Sorry, missing Line Number or filenname.")))))
 
-;;}}}
-;;{{{ code: patch block handling
-
 ;;; ----------------------------------------------------------------------
 ;;;
 (defun tinydiff-header ()
@@ -2972,9 +2892,6 @@ E.g. to apply revese diff, you may want to set the option to: -R"
         "")))))
   (setq tinydiff--patch-global-option opt-string))
 
-;;}}}
-;;{{{ setup: Install
-
 (defadvice cvs-mode-diff (after tinydiff-turn-on-diff-mode act)
   "Call `turn-on-tinydiff-mode'."
   (when (boundp 'cvs-diff-buffer-name)
@@ -2995,10 +2912,6 @@ E.g. to apply revese diff, you may want to set the option to: -R"
                '(tinydiff-parse-buffer
                  turn-on-tinydiff-mode
                  tinydiff-turn-on-view-mode))
-
-(tinydiff-install)
-
-;;}}}
 
 (provide   'tinydiff)
 (run-hooks 'tinydiff--load-hook)

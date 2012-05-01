@@ -25,7 +25,7 @@
 ;; [Latest devel version]
 ;; Vcs-URL:     http://savannah.nongnu.org/projects/emacs-tiny-tools
 
-(defconst folding-version-time "2010.0428.2238"
+(defconst folding-version-time "2012.0226.1623"
   "Last edit time in format YYYY.MMDD.HHMM.")
 
 ;;{{{ GPL
@@ -2030,7 +2030,7 @@ It attempts to keep the buffer in the same visibility state as before."
                        (re-search-forward "[\n\C-m]" nil 0 (1- line)))
                   (let ((goal (point)))
                     (while (prog2 (beginning-of-line)
-                               (if (eq folding-shift-in-on-goto 'show)
+                               (if folding-shift-in-on-goto
                                    (progn
                                      (folding-show-current-entry t t)
                                      (folding-point-folded-p goal))
