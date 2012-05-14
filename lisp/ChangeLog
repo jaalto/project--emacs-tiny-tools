@@ -1,3 +1,8 @@
+2012-05-14 Mon  Jari Aalto  <jari.aalto@cante.net>
+
+	* tiny/tinydebian.el (tinydebian-mail-mode-debian-address-bug-toggle):
+	With prefix-arg, set initial input to bug number for editing.
+
 2012-04-20 Fri  Jari Aalto  <jari.aalto@cante.net>
 
 	* tiny/tinydebian.el (tinydebian-bug-nbr-string): Impove.

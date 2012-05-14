@@ -4296,7 +4296,7 @@ number interactively."
 	 bug)
      (list
       (if current-prefix-arg
-	  (read-string "Bug number: ")
+	  (read-string "Bug number: " now)
 	(or now
 	    (tinydebian-mail-mode-debian-address-ask-bug))))))
   (let ((re (format "%s@\\|%s-\\(close\\|quiet\\)@" bug bug)))
