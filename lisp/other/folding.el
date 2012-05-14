@@ -2,30 +2,22 @@
 
 ;; This file is not part of Emacs
 
-;; Copyright (C) 2000-2012
-;;           Jari Aalto
-;; Copyright (C) 1995, 1996, 1997, 1998, 1999
-;;           Jari Aalto, Anders Lindgren.
-;; Copyright (C) 1994
-;;           Jari Aalto
-;; Copyright (C) 1992, 1993
-;;           Jamie Lokier, All rights reserved.
+;; Copyright (C) 2000-2012 Jari Aalto
+;; Copyright (C) 1995, 1996, 1997, 1998, 1999 Jari Aalto, Anders Lindgren.
+;; Copyright (C) 1994 Jari Aalto
+;; Copyright (C) 1992, 1993 Jamie Lokier, All rights reserved.
 ;;
-;; Author:      Jamie Lokier <jamie A T imbolc.ucc dt ie>
+;; Authors:     Jamie Lokier <jamie A T imbolc.ucc dt ie>
 ;;              Jari Aalto <jari aalto A T cante dt net>
 ;;              Anders Lindgren <andersl A T csd.uu dt se>
 ;; Maintainer:  Jari Aalto <jari aalto A T cante dt net>
 ;; Created:     1992
 ;; Keywords:    tools
 ;;
-;; [Latest XEmacs CVS tree commit and revision]
-;; Vcs-Version: $Revision: 3.42 $
-;; Vcs-Date:    $Date: 2007/05/07 10:50:05 $
-;;
 ;; [Latest devel version]
 ;; Vcs-URL:     http://savannah.nongnu.org/projects/emacs-tiny-tools
 
-(defconst folding-version-time "2012.0226.1623"
+(defconst folding-version-time "2012.0514.2148"
   "Last edit time in format YYYY.MMDD.HHMM.")
 
 ;;{{{ GPL
@@ -637,6 +629,8 @@
 ;;{{{ History
 
 ;; [person version] = developer and his revision tree number.
+;; NOTE: History records were stopped in 2009 when code was moved under
+;; version control. See VCS logs.
 ;;
 ;; Sep  20  2009  23.1             [jari git a80c2d6]
 ;; - Remove 'defmacro custom' for very old Emacs version that did
@@ -3660,14 +3654,17 @@ visible. This is useful after some commands eg., search commands."
                                              folding-stack)
                                      '(folded)))
                              (folding-set-mode-line))
-                           (folding-narrow-to-region (car data) (nth 1 data)))))))
+                           (folding-narrow-to-region
+			    (car data)
+			    (nth 1 data)))))))
     (let ((goal (point)))
       (while (folding-skip-ellipsis-backward)
         (beginning-of-line)
         (open-fold)
         (goto-char goal))
-      (when (not folding-narrow-by-default)
-        (widen)))))
+      (if folding-narrow-by-default
+          (open-fold)
+	(widen)))))
 
 ;;}}}
 ;;{{{ folding-shift-out
@@ -4117,7 +4114,7 @@ function will work on read-only buffers."
       (narrow-to-region narrow-min narrow-max)
       (and (eq t folding-list)
            (error
-            "Cannot fold whole buffer -- unmatched begin-fold mark `%s' ´%s'"
+            "Cannot fold whole buffer -- unmatched begin-fold mark `%s' `%s'"
             (current-buffer)
             folding-top-mark))
       (and (integerp (car folding-list))
