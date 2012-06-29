@@ -8,6 +8,19 @@
 	* tiny/tinydebian.el (tinydebian-mail-mode-debian-address-bug-toggle):
 	With prefix-arg, set initial input to bug number for editing.
 
+2012-05-14 Tue  Jari Aalto  <jari.aalto@cante.net>
+
+	* other/folding.el (folding-shift-in): Correct
+	`folding-narrow-by-default' at the end to enabel shift-in
+	effect. Thanks to PD Priyadarshan <peedsmail@gmail.com>
+	for bug reported and debugging. Fix implemented as in
+	<https://gist.github.com/1571162> by doitian (Ian Yang)
+	<me@iany.me>.
+
+2012-04-22 Sun  Jari Aalto  <jari.aalto@cante.net>
+
+	* tiny/tinydebian.el (tinydebian-bts-mail-type-its): New.
+
 2012-04-20 Fri  Jari Aalto  <jari.aalto@cante.net>
 
 	* tiny/tinydebian.el (tinydebian-bug-nbr-string): Impove.

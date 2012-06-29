@@ -320,7 +320,7 @@
 ;;
 ;;  Elp: Summary mode's sort capabilities
 ;;
-;;      When you call `$' ´E' `s' to show the elp result(s), the results
+;;      When you call `$' `E' `s' to show the elp result(s), the results
 ;;      buffer is put into `tinylisp-elp-summary-mode' where you can sort
 ;;      the columns with simple keystrokes. The sort keys correspond to the
 ;;      column names.
@@ -844,7 +844,7 @@ the minor mode in every Emac slisp buffer."
   :group 'TinyLisp)
 
 (defcustom tinylisp--with-current-buffer-hook '(turn-on-tinylisp-mode)
-  "*Hook run after ´tinylisp-with-current-buffer'."
+  "*Hook run after `tinylisp-with-current-buffer'."
   :type  'hook
   :group 'TinyLisp)
 

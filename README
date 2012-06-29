@@ -28,4 +28,20 @@ Project contacts
     Source code repository
       See freecode page
 
+NEWS
+
+    The project is being split into individual files that will
+    be distributed as Epackages (single Git repositories).
+
+
+    You can clone repositories with Git ot use Epackage manager to
+    download utilities. See
+
+    - Overview: http://www.emacswiki.org/emacs/DELPS
+    - epackage.el: http://freecode.com/projects/emacs-epackage
+
+    Transition completed for:
+    https://github.com/jaalto/project-emacs--tinydesk
+
+
 End of file
