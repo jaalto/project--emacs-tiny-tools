@@ -1,3 +1,8 @@
+2012-06-29 Fri  Jari Aalto  <jari.aalto@cante.net>
+
+	* tiny/tinytab.el (tinyyab-mode): Do not bind C-c C-m.
+	message-mode uses key prefix for PGP commands.
+
 2012-05-14 Mon  Jari Aalto  <jari.aalto@cante.net>
 
 	* tiny/tinydebian.el (tinydebian-mail-mode-debian-address-bug-toggle):
