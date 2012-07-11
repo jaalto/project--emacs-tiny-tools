@@ -1,3 +1,8 @@
+2012-07-11 Wed  Jari Aalto  <jari.aalto@cante.net>
+
+	* tiny/tinydebian.el (tinydebian-bug-nbr-at-current-point-number): Replace
+	`current-word' with direct read; the numbers matched.
+
 2012-06-29 Fri  Jari Aalto  <jari.aalto@cante.net>
 
 	* tiny/tinytab.el (tinyyab-mode): Do not bind C-c C-m.

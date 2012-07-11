@@ -2857,15 +2857,15 @@ Bug#NNNN: O: package -- description."
 ;;; ----------------------------------------------------------------------
 ;;;
 (defun tinydebian-bug-nbr-at-current-point-number ()
-  "Read at least 4 digit bug number from current point.
-The number must be surreounded by whitespace."
-  (when (looking-at "[0-9]+[ \t\r\n]")
+  "Read at least 3 digit bug number from current point.
+The number must be surrounded by whitespace."
+  (when (looking-at "[0-9]+\\([ \t\r\n]\\|$\\)")
     (save-excursion
-      ;; Go to beginning
-      (skip-chars-backward "^ \t\r\n")
+      ;; Go to the beginning
+      (skip-chars-backward "^ \t" (line-beginning-position))
       ;; At least 3 digits
-      (when (looking-at "\\([0-9][0-9][0-9]+\\)[ \t\r\n]")
-        (current-word)))))
+      (when (looking-at "\\([0-9][0-9][0-9]+\\)")
+	(match-string-no-properties 0)))))
 
 ;;; ----------------------------------------------------------------------
 ;;;
