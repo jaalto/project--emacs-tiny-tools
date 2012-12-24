@@ -123,7 +123,7 @@
 
 ;;{{{ setup: libraries
 
-(defconst tinydebian--version-time "2012.0501.1953"
+(defconst tinydebian--version-time "2012.1224.0637"
   "Last edited time.")
 
 (require 'tinylibm)
@@ -527,10 +527,9 @@ fixed
     Currently, these are critical, grave and serious.")
 
 (defvar tinydebian--removal-keyword-list
-  '(
-    "abandoned upstream"                ; Upstream no longer developing it
+  '("abandoned upstream"                ; Upstream no longer developing it
     "buggy"
-    "dead upstream"                     ; No upstream at all an more
+    "dead upstream"                     ; No upstream at all any more
     "FTBFS"                             ; Fails to build from source
     "non-free"				; License problem (DFSG)
     "old"
@@ -540,8 +539,7 @@ fixed
     "requested by upstream"             ; Upstream has requested removal
     "transitional pkg"
     "unredistributable"			; Incompatible Licenses (SSL + GPL...)
-    "unmaintained"
-    )
+    "unmaintained")
   "*List of PAckage removal keywords.
 See http://wiki.debian.org/ftpmaster_Removals")
 
