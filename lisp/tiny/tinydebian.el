@@ -123,7 +123,7 @@
 
 ;;{{{ setup: libraries
 
-(defconst tinydebian--version-time "2012.1224.0637"
+(defconst tinydebian--version-time "2013.0504.1544"
   "Last edited time.")
 
 (require 'tinylibm)
@@ -6038,6 +6038,8 @@ For removal request types, see
 ;;;  7 ROP     Package removal - Request of Porter.
 ;;;  8 ROSRM   Package removal - Request of Stable Release Manager.
 ;;;  9 RoQA    Package removal - Requested by the QA team.
+;;;            ... actually by anyone if no rdeps, low popcom, no unloads
+;;;            ... in 5 years etc.
 ;;; 10 other   Not a package removal request, report other problems.
 ;;;
 (defun tinydebian-bts-mail-ctrl-remove-package

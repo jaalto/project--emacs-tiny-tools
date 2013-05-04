@@ -1,3 +1,11 @@
+2013-05-04 Sat  Jari Aalto  <jari.aalto@cante.net>
+
+	* tiny/tinydebian.el: Adjust comment for RoQA.
+
+2012-10-18 Thu  Jari Aalto  <jari.aalto@cante.net>
+
+	* tiny/tinylib.el (ti::advice-control): Correct docstring.
+
 2012-07-11 Wed  Jari Aalto  <jari.aalto@cante.net>
 
 	* tiny/tinydebian.el (tinydebian-bug-nbr-at-current-point-number): Replace
