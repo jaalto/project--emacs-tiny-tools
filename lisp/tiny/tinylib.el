@@ -6596,7 +6596,7 @@ All advice classes ['any] are ena/disabled for REGEXP.
 
 Input:
 
-  SINGLE-OR-LIST        function of list of functions.
+  SINGLE-OR-LIST        one function or list of functions.
   REGEXP                advice name regexp. Should normally have ^ anchor
   DISABLE               flag, if non-nil then disable
   VERB                  enable verbose messages
