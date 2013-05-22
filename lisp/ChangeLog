@@ -3,6 +3,7 @@
 	* tiny/tinydebian.el (tinydebian-bts-bug-number-pure-p): New.
 	(tinydebian-debian-bug-info-macro): Use
 	`tinydebian-bts-bug-number-pure-p'.
+	(tinydebian-debian-parse-bts-bug-info-raw): Adjust to 80 col.
 
 2013-05-04 Sat  Jari Aalto  <jari.aalto@cante.net>
 

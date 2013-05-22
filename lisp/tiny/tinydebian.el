@@ -3499,14 +3499,17 @@ Were:
         (push (cons field
                     (tinydebian-debian-parse-bts-bug-field field))
               list))
-      (push (cons "found"
-                  (tinydebian-debian-parse-bts-search-tag "Found in version +"))
+      (push (cons
+	     "found"
+	     (tinydebian-debian-parse-bts-search-tag "Found in version +"))
             list)
-      (push (cons "fixed"
-                  (tinydebian-debian-parse-bts-search-tag "Fixed in version +"))
+      (push (cons
+	     "fixed"
+	     (tinydebian-debian-parse-bts-search-tag "Fixed in version +"))
             list)
-      (push (cons "done"
-                    (tinydebian-debian-parse-bts-bug-field "done"))
+      (push (cons
+	     "done"
+	     (tinydebian-debian-parse-bts-bug-field "done"))
             list)
       list))
 
