@@ -3407,13 +3407,26 @@ Return:
 ;;;
 (defsubst tinydebian-debian-parse-bts-bug-package ()
   "Parse buffer content of Debian BTS (HTTP result)."
-       ;; ;package=levee"></a></div>
+  ;; ;package=levee"></a></div>
   (if (re-search-forward "package=\\([^<\"\t\r\n]+\\)\"" nil t)
       (let ((pkg (tinydebian-decode-html (match-string-no-properties 1))))
         ;; src:<package>
         (if (string-match ":\\(.+\\)" pkg)
             (match-string 1 pkg)
           pkg))))
+
+;;; ----------------------------------------------------------------------
+;;;
+(defsubst tinydebian-debian-parse-bts-bug-message ()
+  "Parse buffer content of Debian BTS (HTTP result)."
+  ;; <pre class="message"> ... </pre>
+  (let (point)
+    (when (re-search-forward "<pre +class=.message.>" nil t)
+      (setq point (point))
+      (when (re-search-forward "^ *</pre>" nil t)
+	(tinydebian-decode-html (buffer-substring-no-properties
+				 point
+				 (match-beginning 0)))))))
 
 ;;; ----------------------------------------------------------------------
 ;;;
@@ -3473,7 +3486,8 @@ Were:
     REPORTED    Reported by information
     SEVERITY    Bug severity
     SUBJECT     Bug subject
-    TAGS        List of tags"
+    TAGS        List of tags
+    MESSAGE     Bug report submitter's message"
     (let (list)
       (goto-char (point-min))
       ;; This must be done in order
@@ -3511,6 +3525,10 @@ Were:
 	     "done"
 	     (tinydebian-debian-parse-bts-bug-field "done"))
             list)
+      (push (cons
+	     "message"
+	     (tinydebian-debian-parse-bts-bug-message))
+	    list)
       list))
 
 ;;; ----------------------------------------------------------------------
@@ -4858,6 +4876,21 @@ Optionally from debbugs BTS which defaults to \"debian\"."
 
 ;;; ----------------------------------------------------------------------
 ;;;
+(defun tinydebian-debian-bug-info-message-content-insert (bug &optional bts)
+  "Insert BUG content message at current point.
+Optionally from debbugs BTS which defaults to \"debian\"."
+  (interactive (list (tinydebian-bts-mail-ask-bug-number)))
+  (if (and (interactive-p)
+	   buffer-read-only)
+      (message "TinyDebian: Cannot insert bug message. Buffer is read only.")
+    (tinydebian-debian-bug-info-macro bug bts
+      (let ((str (field "message")))
+	(if (tinydebian-string-p str)
+	    (insert str)
+	  (message "TinyDebian: Cound't read bug message to insert"))))))
+
+;;; ----------------------------------------------------------------------
+;;;
 (defun tinydebian-debian-bug-info-all-message (bug)
   "Display BUG information."
   (interactive (list (tinydebian-bts-mail-ask-bug-number)))
@@ -4978,12 +5011,14 @@ Mode description:
     "----"
 
     ["Info bug all insert"     tinydebian-debian-bug-info-all-insert     t]
+    ["Info bug msg insert" tinydebian-debian-bug-info-message-content-insert t]
     ["Info bug all message"    tinydebian-debian-bug-info-all-message    t]
     ["Info bug subject insert" tinydebian-debian-bug-info-subject-insert t])
 
    (progn
      (define-key map  "ia" 'tinydebian-debian-bug-info-all-insert)
      (define-key map  "iA" 'tinydebian-debian-bug-info-all-message)
+     (define-key map  "im" 'tinydebian-debian-bug-info-message-content-insert)
      (define-key map  "is" 'tinydebian-debian-bug-info-subject-insert)
      (define-key map  "iS" 'tinydebian-debian-bug-info-subject-message)
      (define-key map  "b"  'tinydebian-mail-mode-debian-address-bug-toggle)

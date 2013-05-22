@@ -4,6 +4,10 @@
 	(tinydebian-debian-bug-info-macro): Use
 	`tinydebian-bts-bug-number-pure-p'.
 	(tinydebian-debian-parse-bts-bug-info-raw): Adjust to 80 col.
+	(tinydebian-debian-parse-bts-bug-message): New.
+	(tinydebian-debian-parse-bts-bug-info-raw): Add MESSAGE
+	by using `tinydebian-debian-parse-bts-bug-message'.
+	(tinydebian-debian-bug-info-message-content-insert): New.
 
 2013-05-04 Sat  Jari Aalto  <jari.aalto@cante.net>
 
