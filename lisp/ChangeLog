@@ -1,3 +1,9 @@
+2013-05-22 Wed  Jari Aalto  <jari.aalto@cante.net>
+
+	* tiny/tinydebian.el (tinydebian-bts-bug-number-pure-p): New.
+	(tinydebian-debian-bug-info-macro): Use
+	`tinydebian-bts-bug-number-pure-p'.
+
 2013-05-04 Sat  Jari Aalto  <jari.aalto@cante.net>
 
 	* tiny/tinydebian.el: Adjust comment for RoQA.

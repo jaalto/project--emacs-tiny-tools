@@ -1690,17 +1690,24 @@ String is anything that is attached to
 
 ;;; ----------------------------------------------------------------------
 ;;;
-(defsubst tinydebian-bts-bug-number-trim (str)
+(defsubst tinydebian-bts-bug-number-pure-p (string)
+  "Check that STRING looks like a pure number."
+  (and (stringp string)
+       (string-match "^[0-9][0-9]+$" string)))
+
+;;; ----------------------------------------------------------------------
+;;;
+(defsubst tinydebian-bts-bug-number-trim (string)
   "Remove whitespace and #-hash signs.
 An example: '   #12345   ' => 12345."
-  (if (stringp str)
+  (if (stringp string)
       (replace-regexp-in-string
        "^[ \t\r\n#]#+"
        ""
        (replace-regexp-in-string
         "[ \t\r\n]+$"
         ""
-        str))))
+        string))))
 
 ;;; ----------------------------------------------------------------------
 ;;;
@@ -4762,9 +4769,8 @@ changes, the bug must be unarchived first."
 See `tinydebian-debian-parse-bts-bug-info-raw' for INFO structure.
 Optionally from debbugs BTS which defaults to \"debian\"."
   `(progn
-     (if (or (not (stringp ,bug))
-             (not (string-match "^[0-9][0-9]+$" ,bug)))
-         (error "Invalid bug number: %s" ,bug))
+     (unless (tinydebian-bts-bug-number-pure-p ,bug)
+       (error "Invalid bug number: %s" ,bug))
      (let ((info (tinydebian-debian-url-bug-info ,bug ,bts)))
        (flet ((field (x)
                      (cdr-safe
