@@ -1,3 +1,8 @@
+2013-05-28 Tue  Jari Aalto  <jari.aalto@cante.net>
+
+	* tiny/tinysearch.el (tinysearch-install-default-keybindings): Check
+	Mouse bindings before insall.
+
 2013-05-22 Wed  Jari Aalto  <jari.aalto@cante.net>
 
 	* tiny/tinydebian.el (tinydebian-bts-bug-number-pure-p): New.
