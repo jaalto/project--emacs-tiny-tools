@@ -123,7 +123,7 @@
 
 ;;{{{ setup: libraries
 
-(defconst tinydebian--version-time "2013.0504.1544"
+(defconst tinydebian--version-time "2013.0602.1420"
   "Last edited time.")
 
 (require 'tinylibm)
@@ -5866,6 +5866,8 @@ thanks
 ;;;
 (defun tinydebian-bts-mail-ctrl-usertag (bug &optional email tag-string)
   "Compose BTS control message usertag to a BUG with TAG-STRING.
+See http://wiki.debian.org/bugs.debian.org/usertags
+
 Message format:
     user user@domain.tld
     usertags <#bug> [+-] <tagname>
