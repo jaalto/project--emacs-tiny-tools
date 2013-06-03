@@ -510,22 +510,33 @@ NOTE:
 ;;; ----------------------------------------------------------------------
 ;;;
 ;;;###autoload
-(defun tinysearch-install-default-keybindings (&optional uninstall)
-  "Install default keybindings
+(defun tinysearch-install-default-keybindings ()
+  "Install default keybindings.
 M-Mouse-1   M-s  search forward
 C-M-Mouse-1 M-r  reverse."
   (interactive)
-  (if (lookup-key global-map "\M-s")
-      (message "** Tinysearch: Can't bind. Key M-s already occupied.")
-    (global-set-key "\M-s" 'tinysearch-search-word-forward))
-  (if (lookup-key global-map "\M-s")
-      (message "** Tinysearch: Can't bind. Key M-r already occupied.")
-    (global-set-key "\M-r" 'tinysearch-search-word-backward))
-  ;;  For mouse (under windowed system)
-  (global-set-key [(meta control mouse-1)]
-                  'tinysearch-search-word-forward)
-  (global-set-key [(meta control shift mouse-1)]
-                  'tinysearch-search-word-backward))
+  (let (key)
+    ;; In Emacs 23+ these are no longer available
+    (if (setq key (lookup-key global-map "\M-s"))
+	(message "** Tinysearch: Can't bind. Key M-s already occupied: %s"
+		 key)
+      (global-set-key "\M-s" 'tinysearch-search-word-forward))
+    (if (setq key (lookup-key global-map "\M-s"))
+	(message "** Tinysearch: Can't bind. Key M-r already occupied: %s"
+		 key)
+      (global-set-key "\M-r" 'tinysearch-search-word-backward))
+    ;;  For mouse (under windowed system)
+    (if (setq key (lookup-key global-map  [(meta control mouse-1)]))
+	(message "** Tinysearch: Can't bind. M-C-mouse-1 already occupied: %s"
+		 key)
+      (global-set-key [(meta control mouse-1)]
+		      'tinysearch-search-word-forward))
+    (if (setq key (lookup-key global-map  [(meta control shift mouse-1)]))
+	(message
+	 "** Tinysearch: Can't bind. M-C-S-mouse-1 already occupied: %s"
+	 key)
+      (global-set-key [(meta control shift mouse-1)]
+		      'tinysearch-search-word-backward))))
 
 ;;; ----------------------------------------------------------------------
 ;;;
