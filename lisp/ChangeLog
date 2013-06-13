@@ -1,3 +1,8 @@
+2013-06-13 Thu  Jari Aalto  <jari.aalto@cante.net>
+
+	* tiny/tinymail.el: Update comment and remove `aput' which has
+	been removed in Emacs 24.2; no more assoc.el.
+
 2013-05-28 Tue  Jari Aalto  <jari.aalto@cante.net>
 
 	* tiny/tinysearch.el (tinysearch-install-default-keybindings): Check

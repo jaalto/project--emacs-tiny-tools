@@ -226,20 +226,19 @@
 ;;  Completion: Custom completion of any header
 ;;
 ;;      You can complete any field by setting variable
-;;      `tinymail--table-header-complete' For example to complete "Class" header,
-;;      you would set the variable like this. See variable documentation
-;;      for more information.
+;;      `tinymail--table-header-complete' For example to complete
+;;      "Class" header, you would set the variable like this. See
+;;      variable documentation for more information.
 ;;
-;;          (require 'assoc)
-;;          (aput
-;;           'tinymail--table-header-complete
-;;           "Class"                ;; Add new header for use with TAB
-;;           (list
-;;            '("confidential"       ;; completion list
+;;          (require 'tinymail)
+;;          (push
+;;           '("Class" .             ;; Add new header for use with TAB
+;;             ("confidential"       ;; completion list
 ;;              "private"
 ;;              "for internal use only"
 ;;              "personal private"
-;;              "personal another")))
+;;              "personal another"))
+;;           'tinymail--table-header-complete)
 ;;          ;; end example
 ;;
 ;;  CC field tracking
@@ -1591,7 +1590,7 @@ Format: ((\"ALIAS\" . \"EXPANDED\") ..)")
   "Temporary buffer.")
 
 (defvar tinymail--password-alist nil
-  "Private. Password file in assoc form: '((LOGNAME . PASSWD-ENTRY)).")
+  "Private. Password file in assoc list form: '((LOGNAME . PASSWD-ENTRY)).")
 
 (defvar tinymail--password-completion-alist nil
   "Private. Completion table of login names.")
@@ -2205,7 +2204,8 @@ Return:
       (tinymail-debug "tinymail-resolve-abbrevs" elt)
       ;;  Returns (ABBR . ABBR-EXPANDED)
       (if (not (setq hit (assoc elt abbrevs)))
-          (message "TinyMail: Can't find abbrev '%s', is it in ~/.mailrc ?" elt)
+          (message "TinyMail: Can't find abbrev '%s', is it in ~/.mailrc ?"
+		   elt)
         (if (not (member hit exp-list))
             (push hit exp-list))))
     exp-list))
