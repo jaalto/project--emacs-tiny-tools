@@ -175,7 +175,7 @@
 ;;      perl script and it gives you nicely formatted HTML page.
 ;;      Writing HTML home pages is different story, because you
 ;;      usually want to include some graphics, JavaScript, PHP or JSP
-;;      in the page. But aputting some text document available in HTML
+;;      in the page. But putting some text document available in HTML
 ;;      format is easily made possible with this package.
 ;;
 ;;      On the other hand, while you may not be interested in HTML, you
