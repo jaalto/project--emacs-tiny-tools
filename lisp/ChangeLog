@@ -1,5 +1,7 @@
 2013-06-13 Thu  Jari Aalto  <jari.aalto@cante.net>
 
+	* tiny/load-path.el (require): require cl only compile time.
+
 	* ALL: Replace all files to use `call-interactively-p',
 	`cl-flet' 24.3.
 
