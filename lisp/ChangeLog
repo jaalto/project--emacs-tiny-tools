@@ -1,6 +1,7 @@
 2013-06-13 Thu  Jari Aalto  <jari.aalto@cante.net>
 
-	* ALL: Replace all files to use `call-interactively-p'.
+	* ALL: Replace all files to use `call-interactively-p',
+	`cl-flet' 24.3.
 
 	* tiny/tinylibb.el (called-interactively-p): pre 23.2 emulation.
 

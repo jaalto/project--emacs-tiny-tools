@@ -975,7 +975,7 @@ when it matches REGEXP and set variable SYM to that value, effectively:
 ;;;
 (defun tinyperl-variable-convert (&optional dos-format)
   "Convert all path variables to Unix or DOS-FORMAT."
-  (flet ((convert (var)
+  (cl-flet ((convert (var)
                   (if dos-format
                       (ti::file-name-backward-slashes var)
                     (ti::file-name-forward-slashes var))))
@@ -1043,7 +1043,7 @@ Return:
   t      If some path needed fixing. This means that cache must be resaved."
   (interactive "P")
   (let (ok)
-    (flet ((exec-set
+    (cl-flet ((exec-set
             (sym bin &optional regexp) ;; Parameters
             (let ((value (symbol-value sym)))
               (when (or force
@@ -1094,7 +1094,7 @@ References:
   `tinyperl--pod-path'
   `tinyperl--pod-list'"
   (interactive)
-  (flet ((set-maybe
+  (cl-flet ((set-maybe
 	  (symbol eval-form)
 	  (when (or (eq 'force check)
 		    (and check
@@ -2419,7 +2419,7 @@ Return:
 	dirs3
 	package
 	ret)
-    (flet ((my-add
+    (cl-flet ((my-add
             (file pfx path)
             ;;  As long as the name of the .pl file is unique (not yet
             ;;  added), store without leading prefix directories.
@@ -3183,7 +3183,7 @@ Return:
 
 TOPIC-HEADING  does not end to cr/lf
 TEXT-DATA      ends to cr/lf"
-  (flet ((context-min (point lines)
+  (cl-flet ((context-min (point lines)
                       (goto-char point)
                       (forward-line (- lines))
                       (point))

@@ -84,7 +84,7 @@
 
 (require 'tinylibb)                     ;Backward compatible functions
 
-(defconst tinylibm-version-time "2013.0613.1819"
+(defconst tinylibm-version-time "2013.0613.1825"
   "Latest version number.")
 
 ;;{{{ function tests
@@ -2676,7 +2676,7 @@ Following variables are set during BODY:
 
 `dir'      Directrory name
 `dir-list' All directories under `dir'."
-  `(flet ((recurse
+  `(cl-flet ((recurse
            (dir)
            (let ((dir-list (ti::directory-list dir)))
              ,@body

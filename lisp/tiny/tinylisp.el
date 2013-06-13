@@ -1888,7 +1888,7 @@ Following variables are set during BODY:
 
 `dir'      Directrory name
 `dir-list' All directories under `dir'."
-  `(flet ((recurse
+  `(cl-flet ((recurse
            (dir)
            (let ((dir-list (tinylisp-directory-list dir)))
              ,@body
@@ -5566,7 +5566,7 @@ VERB                    verbose flag"
 (defun tinylisp-find-buffer-local-variables (&optional buffer)
   "Print buffer local variables to BUFFER."
   (interactive)
-  (flet ((my-sort2
+  (cl-flet ((my-sort2
           (list)
           (sort list
                 (function

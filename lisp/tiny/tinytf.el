@@ -3055,7 +3055,7 @@ Return
   (let ((word-skip "^ ,.;\n\r\t\f")
 	beg
 	end)
-    (flet ((marker   (beg skip)
+    (cl-flet ((marker   (beg skip)
                      (save-excursion
                        (skip-chars-forward skip)
                        (list

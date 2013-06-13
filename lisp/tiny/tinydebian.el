@@ -123,7 +123,7 @@
 
 ;;{{{ setup: libraries
 
-(defconst tinydebian--version-time "2013.0613.1819"
+(defconst tinydebian--version-time "2013.0613.1825"
   "Last edited time.")
 
 (require 'tinylibm)
@@ -1287,7 +1287,7 @@ Run also `tinydebian-mail-mode-debian-default-keybindings' in all mail buffer.
 See variables:
    `tinydebian--install-buffer-file-name-regexp'
    `tinydebian--install-gnus-newsgroup-name-regexp'."
-  (flet ((search (regexp)
+  (cl-flet ((search (regexp)
                  (save-excursion
                    (goto-char (point-min))
                    (re-search-forward regexp nil t))))
@@ -4793,7 +4793,7 @@ Optionally from debbugs BTS which defaults to \"debian\"."
      (unless (tinydebian-bts-bug-number-pure-p ,bug)
        (error "Invalid bug number: %s" ,bug))
      (let ((info (tinydebian-debian-url-bug-info ,bug ,bts)))
-       (flet ((field (x)
+       (cl-flet ((field (x)
                      (cdr-safe
                       (assoc x info))))
          ,@body))))
@@ -5751,7 +5751,7 @@ Severity: wishlist
           (desc    (read-string
                     "One line description [required]: ")))
      (list name license bug desc)))
-  (flet ((replace (regexp str &optional point all)
+  (cl-flet ((replace (regexp str &optional point all)
                   (when (and (stringp str)
                              (not (string= "" str)))
                     (goto-char (or point
@@ -5810,7 +5810,7 @@ The default is to use RFP in Subject header."
            desc
            (if current-prefix-arg
                'itp))))
-  (flet ((replace (regexp str &optional point all)
+  (cl-flet ((replace (regexp str &optional point all)
                   (when (and (stringp str)
                              (not (string= "" str)))
                     (goto-char (or point

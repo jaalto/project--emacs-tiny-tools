@@ -460,7 +460,7 @@ tinymail.el: ** No bbdb.el along load-path. Please do not compile this file.
   (defun tinygnus-check-gnus-installation-libraries ()
     "Verify that new enough Gnus version is installed to the Emacs."
     (let ((i 0))
-      (flet ((load-it
+      (cl-flet ((load-it
               (lib)
               (let* ((name   (if (stringp lib)
                                  lib
@@ -2813,7 +2813,7 @@ References:
 (put 'tinygnus-debug-gnus-macro 'edebug-form-spec '(body))
 (defmacro tinygnus-debug-gnus-macro (func &rest body)
   "Instantiate `pr' function to print debug information about FUNC."
-  `(flet ((pr (x y)
+  `(cl-flet ((pr (x y)
 	      (tinygnus-gnus-debug-insert-line x y ,func)))
      ,@body))
 
@@ -2911,7 +2911,7 @@ Possibly REPLCE existing entry."
 (defadvice gnus-open-server (around tinygnus-debug dis)
   ;; (gnus-command-method)
   ;; "Open a connection to GNUS-COMMAND-METHOD."
-  (flet ((pr (x y)
+  (cl-flet ((pr (x y)
              (tinygnus-gnus-debug-insert-line x y 'gnus-open-server )))
     (pr '(CALL-ARGS gnus-command-method)
         (list gnus-command-method))
@@ -2947,7 +2947,7 @@ Possibly REPLCE existing entry."
 (defadvice gnus-summary-read-group-1 (around t-tinygnus-debug dis)
   "Output trace to tinygnus--debug-buffer"
   ;; (group show-all no-article kill-buffer no-display &optional select-articles)
-  (flet ((pr (x y)
+  (cl-flet ((pr (x y)
              (tinygnus-gnus-debug-insert-line x y 'gnus-summary-read-group-1 )))
     ;; Killed foreign groups can't be entered.
     (when (and (not (gnus-group-native-p group))
@@ -3113,7 +3113,7 @@ Possibly REPLCE existing entry."
   ;;  "Select newsgroup GROUP.
   ;;If READ-ALL is non-nil, all articles in the group are selected.
   ;; If SELECT-ARTICLES, only select those articles from GROUP."
-  (flet ((pr (x y)
+  (cl-flet ((pr (x y)
              (tinygnus-gnus-debug-insert-line x y 'gnus-select-newsgroup)))
     (pr '(CALL-ARGS group read-all select-articles)
         (list group read-all select-articles))
@@ -3576,7 +3576,7 @@ Possibly REPLCE existing entry."
          tmp1
          tmp2)
     ;;  make shorter function name
-    (flet ((pr (x y)
+    (cl-flet ((pr (x y)
                (tinygnus-gnus-debug-insert-line x y)))
       (with-current-buffer buffer
         (tinygnus-gnus-debug-on)

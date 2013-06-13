@@ -1627,7 +1627,7 @@ Input
   ZERO-TREAT    If non-nil, consider version numbers starting with 0.NN
                 never than 2.1. In this case it is assumed
                 that zero based versions are latest development releases."
-  (flet ((version (str regexp)
+  (cl-flet ((version (str regexp)
                   (if (string-match regexp str)
                       (string-to-number (match-string 1 str))
                     0)))
@@ -4301,7 +4301,7 @@ Key C-c h   replaces original C-h call
       (define-key key-translation-map "\177" "\C-h")
       (define-key key-translation-map "\C-h" "\177")
       (global-set-key BACKSPACE 'backward-delete-char)
-      (flet ((key-warning
+      (cl-flet ((key-warning
               (key def)
               (message "tinylib: Warning, key already occupied: %s %s"
                        key def)))
@@ -8392,7 +8392,7 @@ Return:
 	list
 	item
 	ret)
-    (flet ((get-elt (elt place)
+    (cl-flet ((get-elt (elt place)
                     (if (vectorp elt)
                         (aref elt place)
                       (nth place elt))))

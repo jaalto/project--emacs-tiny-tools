@@ -1923,7 +1923,7 @@ ROOT can be a single directory or list of directories."
 ;;;
 (defun tinypath-default-load-path-root-user ()
   "Return user's Emacs Lisp path by guessing various directories."
-  (flet ((msg (m)
+  (cl-flet ((msg (m)
 	      (message m)
 	      (unless tinypath--startup-no-messages
 		(sit-for 2))
@@ -2029,7 +2029,7 @@ Input:
   VERB     Verbose messages.
   BUG      If set, and DIR not found, call `tinypath-message-bug'."
   (let (found)
-    (flet ((check-dir
+    (cl-flet ((check-dir
 	    (try dir)
 	    (setq try (tinypath-expand-file-name
 		       (concat (file-name-as-directory try)
@@ -3349,7 +3349,7 @@ Input
   ZERO-TREAT    If non-nil, consider version numbers starting with 0.NN
 		never than 2.1. In this case it is assumed
 		that zero based versions are latest development releases."
-  (flet ((version (str regexp)
+  (cl-flet ((version (str regexp)
 		  (if (string-match regexp str)
 		      (string-to-number (match-string 1 str))
 		    0)))
@@ -3406,7 +3406,7 @@ Return:
 	list
 	item
 	ret)
-    (flet ((get-elt (elt place)
+    (cl-flet ((get-elt (elt place)
 		    (if (vectorp elt)
 			(aref elt place)
 		      (nth place elt))))
@@ -4636,7 +4636,7 @@ Return:
       (setq
        ret
        (catch 'done
-	 (flet (                 ;; First function
+	 (cl-flet (                 ;; First function
 		(path-name (ELT) ;; ELT = '("FILE.EL" (POS . "PATH"))
 			   (when ELT
 			     (concat (cdr (nth 1 ELT)) (car ELT)  )))

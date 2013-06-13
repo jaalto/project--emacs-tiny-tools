@@ -2686,7 +2686,7 @@ Notice that the values may be missing if no such fields were found."
          version
          release
          ret)
-    (flet ((push-ret (tag value function)
+    (cl-flet ((push-ret (tag value function)
                      (when (and value
                                 (setq value (funcall function value)))
                        (push (list tag value) ret))))

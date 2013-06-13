@@ -2187,7 +2187,7 @@ to PostgreSQL."
                       (ti::directory-part-last
                        (file-name-directory file))))
            cmd)
-      (flet ((type-p (regexp1 regexp2)
+      (cl-flet ((type-p (regexp1 regexp2)
                      (or (ti::re-search-check regexp1)
                          (string-match regexp2 (or last "")))))
         (or (and (type-p "postgreSQL"
