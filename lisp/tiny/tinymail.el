@@ -1778,58 +1778,50 @@ This function should be bound to SPACE key."
   ;;  Debian bug report header
   ;;  http://www.debian.org/Bugs/Reporting
   ;;  See http://www.debian.org/Bugs/Developer#severities
-  (aput 'tinymail--table-header-complete
-        "Severity"
-        (list
-         '("critical"    ;; Whole system break, serious data loss
-           "grave"       ;; unuseable, data loss, security hole
-           "serious" ;; violation of Debian policy, unsuitable for release.
-           "important" ;; major effect withour  completely unusable.
-           "normal"    ;; the default value, applicable to most bugs.
-           "minor"     ;; doesn't affect the package's usefulness
-           "wishlist"  ;; feature request
-           "fixed")))  ;; fixed but should not yet be closed.
+  (push '("Severity" .
+	  ("critical"  ;; Whole system break, serious data loss
+	   "grave"     ;; unuseable, data loss, security hole
+	   "serious"   ;; violation of Debian policy, unsuitable for release.
+	   "important" ;; major effect withour  completely unusable.
+	   "normal"    ;; the default value, applicable to most bugs.
+	   "minor"     ;; doesn't affect the package's usefulness
+	   "wishlist"  ;; feature request
+	   "fixed"))   ;; fixed but should not yet be closed.
+	'tinymail--table-header-complete)
   ;;  Debian bug report header
-  (aput 'tinymail--table-header-complete
-        "Tags"
-        (list
-         '("patch"       ;;
+  (push '("Tags" .
+	  ("patch"       ;;
            "wontfix"     ;;  change will cause other, worse, problems
-           "moreinfo" ;;  more information must be provided by the submitter
+           "moreinfo"    ;;  more information must be provided by the submitter
            "unreproducible" ;; can't be reproduced on the maintainer's system
-           "fixed" ;;  bug is fixed or worked around, needs to be resolved
-           "security"                ;:  security problem in a package
-           "potato"                  ;;  potato release
-           "woody"                   ;;  woody distribution
-           "s1id"))) ;;  architecture that is currently unreleased
-  (aput 'tinymail--table-header-complete
-        "Followup-To"
-        (list
-         '(when (eq major-mode 'message-mode)
-            (call-interactively 'message-tab)
-            ;;   We must stop the other completion function from running
-            (setq tinymail--complete-key-return-value t)
-            nil)))
-  (aput 'tinymail--table-header-complete
-        "Gcc"
-        (list
-         '(if (not (featurep 'gnus))
-              (prog1 nil (message "TinyMail: Gcc completion needs Gnus..."))
-            (when (stringp string))
-            (all-completions
-             string
-             gnus-active-hashtb 'gnus-valid-move-group-p))))
-  (aput 'tinymail--table-header-complete
-        "Newsgroups"
-        (list
-         '(if (not (featurep 'gnus))
-              (prog1 nil
-                (message "TinyMail: Newsgroups completion needs Gnus..."))
-            (when (stringp string))
-            (all-completions
-             string
-             gnus-active-hashtb
-             (gnus-read-active-file-p))))))
+           "fixed"      ;;  bug is fixed or worked around, needs to be resolved
+           "security")) ;:  security problem in a package
+	'tinymail--table-header-complete)
+  (push '("Followup-To" .
+	  (when (eq major-mode 'message-mode)
+	    (call-interactively 'message-tab)
+	    ;;   We must stop the other completion function from running
+	    (setq tinymail--complete-key-return-value t)
+	    nil))
+	'tinymail--table-header-complete)
+  (push '("Gcc"
+	  '(if (not (featurep 'gnus))
+	       (prog1 nil (message "TinyMail: Gcc completion needs Gnus..."))
+	     (when (stringp string))
+	     (all-completions
+	      string
+	      gnus-active-hashtb 'gnus-valid-move-group-p)))
+	'tinymail--table-header-complete)
+  (push '("Newsgroups" .
+	  '(if (not (featurep 'gnus))
+	       (prog1 nil
+		 (message "TinyMail: Newsgroups completion needs Gnus..."))
+	     (when (stringp string))
+	     (all-completions
+	      string
+	      gnus-active-hashtb
+	      (gnus-read-active-file-p))))
+	'tinymail--table-header-complete))
 
 ;;; ----------------------------------------------------------------------
 ;;;
