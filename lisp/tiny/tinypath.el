@@ -1351,8 +1351,6 @@ message buffer.")
   (autoload 'ti::macrof-version-bug-report  "tinylib" "" nil 'macro)
 
   (autoload 'pp                             "pp")
-  (autoload 'assq                           "assoc")
-  (autoload 'aput                           "assoc")
   (autoload 'executable-find                "executable")
 
   ;; Quiet byte compiler. These are checked with `boundp' in the code
@@ -5475,7 +5473,7 @@ E.g., if you want to calculate days; you'd do
 	  (message "TinyPath: load time %s %dsec" name diff)
 	(tinypath-verbose-macro 9
 	  (message "TinyPath: load time %s %dsec" name diff)))
-      (aput 'tinypath--time-data name diff))))
+      (push (cons name diff) 'tinypath--time-data))))
 
 ;;; ----------------------------------------------------------------------
 ;;;
