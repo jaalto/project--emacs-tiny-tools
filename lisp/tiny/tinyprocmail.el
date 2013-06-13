@@ -55,10 +55,9 @@
 ;;      ;;  Procmail files usually end to suffix "*.rc", like pm-file.rc
 ;;      ;;  Some older procmail files start with "rc.*", like rc.file-name
 ;;
-;;      (autoload 'aput "assoc")
-;;      (aput 'auto-mode-alist
-;;            "\\.procmailrc\\|pm-.*\\.rc$\\|\\<rc\\.[a-z]"
-;;            'turn-on-tinyprocmail-mode)
+;;      (push '("\\.procmailrc\\|pm-.*\\.rc$\\|\\<rc\\.[a-z]" .
+;;              turn-on-tinyprocmail-mode)
+;;       'auto-mode-alist)
 ;;
 ;;  This source file includes sample procmail test file for Lint. You
 ;;  can unpack it if you have `gpg' and `tar' commands in your system.
@@ -456,7 +455,7 @@
 
 (require 'tinylibm)
 
-(defconst tinyprocmail--version-time "2010.1120.2052"
+(defconst tinyprocmail--version-time "2013.0613.1744"
   "*Version of last edit.")
 
 (eval-and-compile
