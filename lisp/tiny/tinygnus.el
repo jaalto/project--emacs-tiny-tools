@@ -2904,7 +2904,7 @@ Possibly REPLCE existing entry."
             (message "TinyLisp: No files %s %s" group dir)
           (message "TinyGnus: Adding to `nnml-group-alist' %s" dir)
           (if replace
-              (aput 'nnml-group-alist group range))
+              (push (cons group name) 'nnml-group-alist))
           (push (list group range) nnml-group-alist))))))
 
 ;;; 5.8.2
