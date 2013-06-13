@@ -1952,11 +1952,11 @@ References:
       (or (setq files
                 (let ((ans (read-from-minibuffer
                             "TinyIgrep file pattern(s): ")))
-                  (mapcar '(lambda (x)
-                             (format "%s%s"
-                                     (file-name-as-directory
-                                      default-directory)
-                                     x))
+                  (mapcar (lambda (x)
+			    (format "%s%s"
+				    (file-name-as-directory
+				     default-directory)
+				    x))
                           (split-string ans))))
           (error "TinyIgrep: No files for `%s'" ans))
       (setq pattern
