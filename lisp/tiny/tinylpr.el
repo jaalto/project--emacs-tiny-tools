@@ -416,7 +416,7 @@ removes line numbers."
   "Return current settings."
   (interactive)
   (let ((stat (nth 1 lpr-switches)))
-    (if (interactive-p)
+    (if (called-interactively-p 'interactive)
         (message stat))
     stat))
 

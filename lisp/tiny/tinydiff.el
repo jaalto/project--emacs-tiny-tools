@@ -2042,7 +2042,7 @@ Input:
                 guess-path (concat guess-dir guess-file)))
       (unless fid ;; XEmacs byte compiler silencer
         (setq fid nil))
-      (setq verb (or arg verb (interactive-p)))
+      (setq verb (or arg verb (called-interactively-p 'interactive)))
       (tinydiff-debug fid "in:" arg beg end)
       (or orig-buffer
           (setq orig-buffer (current-buffer)))
@@ -2843,7 +2843,7 @@ Activate only if point underneath has 'mouse-property."
   (interactive)
   (let ((region (tinydiff-block-region))
 	buffer-read-only)
-    (if (and (interactive-p)
+    (if (and (called-interactively-p 'interactive)
              (null region))
         (message "TinyDiff: can't determine diff block bounds.")
       (delete-region (car region) (cdr region)))))
@@ -2865,7 +2865,7 @@ References:
 		       "")))
 	(buffer  (current-buffer))
 	file)
-    (if (and (interactive-p)
+    (if (and (called-interactively-p 'interactive)
              (null region))
         (message "TinyDiff: can't determine diff hunk bounds.")
       (setq file (tinydiff-file-to-patch))

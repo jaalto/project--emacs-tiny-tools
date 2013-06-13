@@ -1734,7 +1734,7 @@ This is low level check. Use `tinytf-text-format-ok-p' instead."
             (or (tinytf-text-format-ok-p-test-toc)
                 (tinytf-text-format-ok-p-test-headings)
                 (tinytf-text-format-ok-p-test-heading-and-text))))
-    (if (interactive-p)
+    (if (called-interactively-p 'interactive)
         (if (null ret)
             (message "Tinytf: No TF formattting found in this buffer.")
           (message "Tinytf: Found TF format location [%s]" ret)))

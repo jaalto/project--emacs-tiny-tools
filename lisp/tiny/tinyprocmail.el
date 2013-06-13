@@ -455,7 +455,7 @@
 
 (require 'tinylibm)
 
-(defconst tinyprocmail--version-time "2013.0613.1744"
+(defconst tinyprocmail--version-time "2013.0613.1819"
   "*Version of last edit.")
 
 (eval-and-compile
@@ -867,7 +867,7 @@ Mode description
 \\{tinyprocmail-output--mode-prefix-map}"
    "tinyprocmail"
    (progn
-     (when (and (interactive-p)        ;On when user calls us directly
+     (when (and (called-interactively-p 'interactive)        ;On when user calls us directly
                 ;; Mode is Now turned on, check Lint buffer and confirm
                 tinyprocmail-output-mode
                 (null (ti::re-search-check (concat "^" (regexp-quote "*** "))))
@@ -961,7 +961,7 @@ must match `^:0'."
     (ti::assoc-replace-maybe-add
      'auto-mode-alist
      tinyprocmail--auto-mode-alist)
-    (if (interactive-p)
+    (if (called-interactively-p 'interactive)
         (message "TinyProcmail: uninstalled")))))
 
 ;;; ----------------------------------------------------------------------

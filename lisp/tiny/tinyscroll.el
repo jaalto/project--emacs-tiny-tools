@@ -341,7 +341,7 @@ Return:
  nil    no report"
   (interactive)
   (let ((str   (ti::list-to-string (mapcar 'car tinyscroll--list)))
-	(verb  (interactive-p))
+	(verb  (called-interactively-p 'interactive))
 	ret)
     (if (and (string= str "")  verb)
         (message "TinyScroll: no entries in `tinyscroll--list'.")

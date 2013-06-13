@@ -2015,7 +2015,7 @@ If you have loaded dired-x and it contains variable
     (if (member file tinydired--file-store)
         (message "TinyDireds: %s already in storage." file)
       (push  file tinydired--file-store) file)
-    (if (interactive-p)
+    (if (called-interactively-p 'interactive)
         (tinydired-store-show))))
 
 ;;; ----------------------------------------------------------------------
@@ -2025,7 +2025,7 @@ If you have loaded dired-x and it contains variable
   (interactive)
   (let ((file (tinydired-get-filename)))
     (setq tinydired--file-store (delete file tinydired--file-store))
-    (if (interactive-p)
+    (if (called-interactively-p 'interactive)
         (message "Tinydired: %s" (ti::list-to-string tinydired--file-store)))))
 
 ;;; ----------------------------------------------------------------------
@@ -2034,7 +2034,7 @@ If you have loaded dired-x and it contains variable
   "Clear variable holding files."
   (interactive)
   (setq tinydired--file-store nil)
-  (if (interactive-p)
+  (if (called-interactively-p 'interactive)
       (message "Tinydired: Storage cleared.")))
 
 ;;; ----------------------------------------------------------------------
@@ -2043,7 +2043,7 @@ If you have loaded dired-x and it contains variable
   "Delete current filename from storage."
   (interactive)
   (let ((file   (tinydired-get-filename))
-	(verb   (interactive-p))
+	(verb   (called-interactively-p 'interactive))
 	(store  tinydired--file-store)
 	list)
     (if (null store)
@@ -2060,7 +2060,7 @@ If you have loaded dired-x and it contains variable
 (defun tinydired-store-delete-marked ()
   "Delete marked files from store."
   (interactive)
-  (tinydired-store-add-marked 'delete (interactive-p)))
+  (tinydired-store-add-marked 'delete (called-interactively-p 'interactive)))
 
 ;;; ----------------------------------------------------------------------
 ;;;

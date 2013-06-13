@@ -1967,7 +1967,7 @@ You need to run this function if you change your ~/.mailrc."
   (interactive)
   (tinymail-debug "tinymail-update-mail-abbrevs")
   (when (and (fboundp 'build-mail-abbrevs) ;update abbrevs too
-             (or force (interactive-p)))
+             (or force (called-interactively-p 'interactive)))
     (ti::funcall 'build-mail-abbrevs))
   (setq tinymail--mail-aliases-alist (ti::mail-abbrev-get-alist)))
 
@@ -1984,7 +1984,7 @@ documentation in the tinymail.el or call \\[tinymail-version]."
       (error "TinyMail: Please set variable `user-mail-address'")
     (ti::mail-kill-field  "^to:" user-mail-address)
     (tinymail-field-to-off)
-    (if (interactive-p)
+    (if (called-interactively-p 'interactive)
         (message "Address changed to point to you. TinyMail signs off."))))
 
 ;;; ----------------------------------------------------------------------
@@ -2292,7 +2292,7 @@ References:
   "Toggle `tinymail--password-mode'  on or off."
   (interactive "P")
   (ti::bool-toggle tinymail--password-mode mode)
-  (when (interactive-p)
+  (when (called-interactively-p 'interactive)
     (message "TinyMail: Password complete mode is now %s"
              (if tinymail--password-mode "on" "off"))))
 

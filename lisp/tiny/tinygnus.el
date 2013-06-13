@@ -1256,8 +1256,8 @@ to the article buffer."
 You can refer to `file' when processing the files. Stop loop with
 command (return)."
   `(let ((files (tinygnus-read-files-from-dir ,dir)))
-     (when (or (not (interactive-p))
-               (and (interactive-p)
+     (when (or (not (called-interactively-p 'interactive))
+               (and (called-interactively-p 'interactive)
                     (y-or-n-p
                      (format
                       "Found %d files, Proceed " (length files)))))
@@ -1360,7 +1360,7 @@ See function `tinygnus-article-ube-send-to-postmasters'."
        (read
         (load file)
         (put 'tinygnus--nslookup-table 'pos (length tinygnus--nslookup-table))
-        (if (interactive-p)
+        (if (called-interactively-p 'interactive)
             "TinyGnus: nslookup loaded."))
        (t
         (ti::write-file-variable-state
@@ -1495,7 +1495,7 @@ confirmations."
      (run-hooks 'tinygnus--summary-ube-send-to-postmasters-hook)
      (setq kill-flag t)
      (incf  count))
-    (if (interactive-p)
+    (if (called-interactively-p 'interactive)
         (message "TinyGnus: Mapped %d ube messgaes" count))))
 
 ;;; ----------------------------------------------------------------------
@@ -2323,7 +2323,7 @@ Input:
   (interactive)
   (let ((buffer (get-buffer-create tinygnus--output-buffer)))
     (ti::erase-buffer buffer)
-    (if (interactive-p)
+    (if (called-interactively-p 'interactive)
         (message "TinyGnus: %s cleared" tinygnus--output-buffer))))
 
 ;;}}}

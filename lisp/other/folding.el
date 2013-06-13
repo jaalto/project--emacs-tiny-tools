@@ -17,7 +17,7 @@
 ;; [Latest devel version]
 ;; Vcs-URL:     http://savannah.nongnu.org/projects/emacs-tiny-tools
 
-(defconst folding-version-time "2012.0514.2148"
+(defconst folding-version-time "2013.0613.1821"
   "Last edit time in format YYYY.MMDD.HHMM.")
 
 ;;{{{ GPL
@@ -2564,7 +2564,7 @@ References:
 Return t ot nil if marks were removed."
   (interactive)
   (if (not (folding-mark-look-at))
-      (when (interactive-p)
+      (when (called-interactively-p 'interactive)
         (message "Folding: Cursor not over fold. Can't remove fold marks.")
         nil)
     (destructuring-bind (beg end)
@@ -2603,7 +2603,7 @@ Point must be over beginning fold mark."
       (if (and beg end)
           (folding-region-open-close beg end hide)))
      (t
-      (if (interactive-p)
+      (if (called-interactively-p 'interactive)
           (message "point is not at fold beginning."))))))
 
 (defun folding-display-name ()
@@ -3158,7 +3158,7 @@ Overview
 
 Folding-mode function
 
-    If Folding mode is not called interactively (`(interactive-p)' is nil),
+    If Folding mode is not called interactively (`(called-interactively-p 'interactive)' is nil),
     and it is called with two or less arguments, all of which are nil, then
     the point will not be altered if `folding-folding-on-startup' is set
     and `folding-whole-buffer' is called. This is generally not a good
@@ -3305,7 +3305,7 @@ Mouse behavior
                      (run-hooks hook-symbol)))
             (folding-set-mode-line))
           (and folding-folding-on-startup
-               (if (or (interactive-p)
+               (if (or (called-interactively-p 'interactive)
                        arg
                        inter)
                    (folding-whole-buffer)

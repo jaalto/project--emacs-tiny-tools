@@ -1983,7 +1983,7 @@ Return:
          (elt    (assq syntax ti::var-syntax-info))
          ret)
     (or verb
-	(setq verb (interactive-p)))
+	(setq verb (called-interactively-p 'interactive)))
     (setq ret
           (concat
            (char-to-string syntax)
@@ -3847,7 +3847,7 @@ Return:
 	point
 	ret)
     (or verb
-	(setq verb (interactive-p)))
+	(setq verb (called-interactively-p 'interactive)))
     ;; ... ... ... ... ... ... ... ... ... ... ... ... . preliminaries ...
     (setq
      re   (cond
@@ -5464,7 +5464,7 @@ Return:
           (setq curr-files (if (file-accessible-directory-p dir)
                                (directory-files dir nil ".\\.elc?$" t)))
           (and curr-files
-               (interactive-p)
+               (called-interactively-p 'interactive)
                (message "Checking %d files in %s..." (length curr-files) dir))
           (setq files-seen-this-dir nil)
           (while curr-files
@@ -5491,7 +5491,7 @@ Return:
             (setq curr-files (cdr curr-files)))) ;; if
         (setq path       (cdr path)
               true-names (cdr true-names)))
-      (if (interactive-p)
+      (if (called-interactively-p 'interactive)
           (let ((msg
                  (if out-buffer
                      (let ((n (/ (count-lines (point-min) (point-max)) 3)))
@@ -6106,7 +6106,7 @@ Return:
         user
         host
         ret)
-    (setq verb      (or verb (interactive-p))
+    (setq verb      (or verb (called-interactively-p 'interactive))
           port      (or port 79)
           timeout   (or timeout 25))
     (if (not (string-match "^\\([^ \t]+\\)@\\([^[ \t]+\\)" email))
@@ -6139,7 +6139,7 @@ Return:
                 (ti::buffer-lf-to-crlf 'dos2unix)))))
       (when verb
         (message "Fingering %s ...done" email))
-      (if (interactive-p)
+      (if (called-interactively-p 'interactive)
           (pop-to-buffer buffer))
       (if connection
           buffer ret))))
@@ -6178,7 +6178,7 @@ Return:
   (let (connection
         host
         ret)
-    (setq verb      (or verb (interactive-p))
+    (setq verb      (or verb (called-interactively-p 'interactive))
           port      (or port 80)
           timeout   (or timeout 60))
     (if (not (string-match "^http://\\([^/]+\\)\\(/.*\\)" command))
@@ -6221,7 +6221,7 @@ Return:
           (ti::buffer-lf-to-crlf 'dos2unix))))
     (when verb
       (message "Http %s ...done" host))
-    (if (interactive-p)
+    (if (called-interactively-p 'interactive)
         (pop-to-buffer buffer))
     (list buffer ret)))
 
@@ -6255,7 +6255,7 @@ Command will not return until the process has finished."
          (flist         (ti::list-join files))
          (cmd           (concat zcmd " " zip-file " " flist)))
     (call-process cmd nil shell-buffer)
-    (if (interactive-p)
+    (if (called-interactively-p 'interactive)
         (display-buffer shell-buffer))
     shell-buffer))
 
@@ -6777,7 +6777,7 @@ Input:
               (setq buffer status)
               (setq status t)))))
           (when buffer
-            (when (and (interactive-p)
+            (when (and (called-interactively-p 'interactive)
                        (null status))
               (or
                (y-or-n-p (format "Buffer `%s' missing, continue? Are you sure? "
@@ -6954,7 +6954,7 @@ Return:
   (interactive "sLibrary: ")
   (let ((tmp  "*ti::pkg*")
 	(file (locate-library lib))
-	(verb (interactive-p))
+	(verb (called-interactively-p 'interactive))
 	;;    There has to be " " after the ":" otherwise it's not
 	;;    rcs ident(1) compatible. Also before the last $ ,
 	;;    there must be space.
@@ -7082,7 +7082,7 @@ Return:
   (interactive "r")
   (let ((source (current-buffer))       ;source buf
 	(m      major-mode)             ;we must use same mode
-	(verb   (interactive-p))
+	(verb   (called-interactively-p 'interactive))
 	(reg    ?p))
     (with-temp-buffer
       (insert-buffer-substring source beg end)
@@ -9307,7 +9307,7 @@ DEBUG-VARIABLE DEBUG-BUFFER."
                      buffer
                      (y-or-n-p "Clear debug buffer?"))
             (ti::erase-buffer buffer))
-          (if (interactive-p)
+          (if (called-interactively-p 'interactive)
               (message "Debug is %s"
                        (if ,debug-variable
                            "on"

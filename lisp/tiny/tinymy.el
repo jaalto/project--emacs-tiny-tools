@@ -1426,7 +1426,7 @@ Ignores file whose `file-modes' can't be read, e.g. for ange-ftp files."
         (forward-char 1)                ;Leave newline
         (unless (eq (point) (point-max))
           (delete-region (point-max) (point))))))
-  (if (interactive-p)
+  (if (called-interactively-p 'interactive)
       (message "TinyMy: Blanks trimmed"))
   nil)                                  ;Clean return code
 
@@ -1878,7 +1878,7 @@ the current point."
        (setq sum  (+ sum  rowval))
        (setq prod (* prod rowval)))
      START END 't)
-    (if (interactive-p)
+    (if (called-interactively-p 'interactive)
         (message "TinyMy: For %d rows, sum=%f, product=%f" rownum sum prod))
     (if insert
         (insert (format "%0.2f %0.2f" sum  prod)))))
@@ -2047,7 +2047,7 @@ List of  files can include shell regexps. The result is put into
      (list arg1)))
   (let* ((cmd         (concat tinymy--shar-command " "))
          (register    tinymy--register)
-         (verb        (interactive-p))
+         (verb        (called-interactively-p 'interactive))
          out)
     (if (ti::nil-p single-or-list)
         (error "Missing args")

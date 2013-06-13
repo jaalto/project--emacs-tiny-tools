@@ -123,7 +123,7 @@
 
 ;;{{{ setup: libraries
 
-(defconst tinydebian--version-time "2013.0602.1420"
+(defconst tinydebian--version-time "2013.0613.1819"
   "Last edited time.")
 
 (require 'tinylibm)
@@ -3691,7 +3691,7 @@ Optionally from debbugs BTS which defaults to \"debian\"."
       (if file
           (with-current-buffer (get-buffer tinydebian--buffer-www)
             (write-region (point-min) (point-max) file)
-            (if (interactive-p)
+            (if (called-interactively-p 'interactive)
                   (message "Wrote %s" file))
             file)
         tinydebian--buffer-www))))
@@ -4248,7 +4248,7 @@ In interactive call, toggle quiet address on and off."
    bug
    "quiet"
    remove
-   (interactive-p)
+   (called-interactively-p 'interactive)
    (format "%s@\\|%s-\\(close\\|quiet\\)@" bug bug)))
 
 ;;; ----------------------------------------------------------------------
@@ -4261,7 +4261,7 @@ In interactive call, toggle quiet address on and off."
    bug
    "close"
    remove
-   (interactive-p)
+   (called-interactively-p 'interactive)
    (format "%s@\\|%s-\\(close\\|quiet\\)@" bug bug)))
 
 ;;; ----------------------------------------------------------------------
@@ -4294,7 +4294,7 @@ In interactive call, toggle conrol address on and off."
   (interactive (tinydebian-mail-mode-debian-address-ask-args "Submitter bug"))
   ;; toggle
   (tinydebian-mail-mode-address-type-add
-   "submitter" bug remove (interactive-p)))
+   "submitter" bug remove (called-interactively-p 'interactive)))
 
 ;;; ----------------------------------------------------------------------
 ;;;
@@ -4368,7 +4368,7 @@ In interactive call, toggle conrol address on and off."
   (interactive "P")
   ;; toggle
   (tinydebian-mail-mode-address-type-add
-   "control" nil remove (interactive-p)))
+   "control" nil remove (called-interactively-p 'interactive)))
 
 ;;; ----------------------------------------------------------------------
 ;;;
@@ -4378,7 +4378,7 @@ In interactive call, toggle conrol address on and off."
   (interactive (tinydebian-mail-mode-debian-address-ask-args "Submitter bug"))
   ;; toggle
   (tinydebian-mail-mode-address-type-add
-   "maintonly" bug remove (interactive-p)))
+   "maintonly" bug remove (called-interactively-p 'interactive)))
 
 
 (defvar tinydebian--bts-mail-ctrl-finalize-line-regexp
@@ -4868,7 +4868,7 @@ If `inteactive-p' and `buffer-read-only', display infromation only.
 Optionally from debbugs BTS which defaults to \"debian\"."
   (interactive (list (tinydebian-bts-mail-ask-bug-number)))
   (tinydebian-debian-bug-info-message-all-macro bug bts
-    (if (and (interactive-p)
+    (if (and (called-interactively-p 'interactive)
              buffer-read-only)
         (message str)
       (tinydebian-move-point-to-free-place)
@@ -4880,7 +4880,7 @@ Optionally from debbugs BTS which defaults to \"debian\"."
   "Insert BUG content message at current point.
 Optionally from debbugs BTS which defaults to \"debian\"."
   (interactive (list (tinydebian-bts-mail-ask-bug-number)))
-  (if (and (interactive-p)
+  (if (and (called-interactively-p 'interactive)
 	   buffer-read-only)
       (message "TinyDebian: Cannot insert bug message. Buffer is read only.")
     (tinydebian-debian-bug-info-macro bug bts
@@ -4906,7 +4906,7 @@ Optionally from BTS which defaults to \"debian\"."
   (interactive (list (tinydebian-bts-mail-ask-bug-number)))
   (tinydebian-debian-bug-info-macro bug bts
     (let ((subject (field "subject")))
-      (if (and (interactive-p)
+      (if (and (called-interactively-p 'interactive)
                buffer-read-only)
           (message subject)
         (tinydebian-move-point-to-free-place)

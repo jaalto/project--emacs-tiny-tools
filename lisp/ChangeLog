@@ -1,5 +1,9 @@
 2013-06-13 Thu  Jari Aalto  <jari.aalto@cante.net>
 
+	* ALL: Replace all files to use `call-interactively-p'.
+
+	* tiny/tinylibb.el (called-interactively-p): pre 23.2 emulation.
+
 	* tiny/tinymy.el (tinymy--compile-table): Remove `aput'.
 
 	* tiny/tinytf.el: devel (top level): Fix typo in comment.

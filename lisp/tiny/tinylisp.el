@@ -3533,7 +3533,7 @@ See `tinylisp-jump-to-definition'. VERB."
 (defun tinylisp-backward-user-option ()
   "See `tinylisp-forward-user-option'."
   (interactive)
-  (tinylisp-forward-user-option 'back (interactive-p)))
+  (tinylisp-forward-user-option 'back (called-interactively-p 'interactive)))
 
 ;;; ----------------------------------------------------------------------
 ;;;
@@ -4017,7 +4017,7 @@ Output line format:
 
   [!] If you see exclamation mark then it means that you have mixed
   defsubst and interactive function, which is very dangerous situation,
-  because when function is in-lined the (interactive-p) tests from functions
+  because when function is in-lined the (called-interactively-p 'interactive) tests from functions
   are in-lined too. Check that you really want to do in-lining for
   interactive functions.
 
@@ -4196,7 +4196,7 @@ and function definitions."
     (unless feature-name
       (load file))
     (with-current-buffer (ti::system-get-file-documentation file verb)
-      (if (interactive-p)
+      (if (called-interactively-p 'interactive)
 	  (display-buffer (current-buffer)))
       (turn-on-tinylisp-mode))))
 
@@ -4421,7 +4421,7 @@ Return:
 	file
 	buffer)
     (when list
-      (when (interactive-p)
+      (when (called-interactively-p 'interactive)
         (setq file (car list))
         (if (> (length list) 1)
             (setq file
@@ -4995,7 +4995,7 @@ If VERB is non-nil, display verbose messages."
     (when (setq list (tinylisp-directory-file-list dir exclude))
       (tinylisp-autoload-generate-loaddefs-file-list
        list
-       (or verb (interactive-p))))))
+       (or verb (called-interactively-p 'interactive))))))
 
 ;;; ----------------------------------------------------------------------
 ;;;
