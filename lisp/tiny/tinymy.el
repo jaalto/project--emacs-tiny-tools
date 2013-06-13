@@ -602,25 +602,23 @@ Example:
      `ti::buffer-shebang' reads the command interpreter from the first line.
 
     (add-hook 'tinymy-load-hook 'my-tinymy-compile-customisations)
-    (autoload 'aput \"assoc\")
 
     (defun my-tinymy-compile-customisations ()
-      (aput 'tinymy--compile-table
-            \"perl\"
-            '(if (string-match \"project\" buffer-file-name)
-               (concat (or (ti::buffer-shebang) \"perl\") \" -w  %s\")
-             \"perl -w %s\")))
+      (push '(\"perl\" .
+              (if (string-match \"project\" buffer-file-name)
+                 (concat (or (ti::buffer-shebang) \"perl\") \" -w  %s\")
+               \"perl -w %s\"))
+       'tinymy--compile-table))
 
   If you always want to use the shebang command interpreter, then you
   would simply write
 
    (add-hook 'tinymy-load-hook 'my-tinymy-compile-customisations)
-   (autoload 'aput \"assoc\")
 
-    (defun my-tinymy-compile-customisations ()
-      (aput 'tinymy--compile-table
-            \"perl\"
-            '(concat (or (ti::buffer-shebang) \"perl\") \" -w %s\")))
+   (defun my-tinymy-compile-customisations ()
+     (push '(\"perl\" .
+             (concat (or (ti::buffer-shebang) \"perl\") \" -w %s\"))
+           'tinymy--compile-table))
 
   After this package has been loaded. (Place customizations like this
   to `tinymy--load-hook'."
