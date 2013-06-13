@@ -66,9 +66,6 @@
 
 (require 'tinylibm)
 
-(eval-and-compile
-  (autoload 'adelete "assoc"))
-
 (eval-when-compile
   (require 'advice))
 
@@ -76,7 +73,7 @@
 
 ;;{{{ setup: -- variables
 
-(defconst tinyliby-version-time "2010.1208.0809"
+(defconst tinyliby-version-time "2013.0613.1731"
   "Latest version number as last modified time.")
 
 (defvar ti::system--describe-symbols-history nil
@@ -311,10 +308,11 @@ INPUT:
 ;;;
 (defun ti::system-feature-kill (sym)
   "Kill feature SYM and its `load-history' information permanently."
-  (let ((name (symbol-name sym)))
+  (let ((name (symbol-name sym))
+	elt)
     ;;  Load history , dependencies remove
-    (if (assoc name load-history)
-        (setq load-history (adelete 'load-history name)))
+    (if (setq elt (assoc name load-history))
+        (setq load-history (delq elt 'load-history)))
     ;;  Kill the symbol from feature list
     (if (featurep sym)
         (setq features (delete sym features)))))
