@@ -74,7 +74,7 @@
 
 (provide 'tinyliba)
 
-(defconst tinyliba-version-time "2010.1208.0809"
+(defconst tinyliba-version-time "2013.0613.1737"
   "Latest version number as last modified time.")
 
 (autoload 'with-timeout      "timer"        "" nil 'macro)
@@ -376,17 +376,6 @@ This function is run only once at tinynyliba.el load."
     (autoload 'lisp-indent-function-lambda-hack     "cl-indent" "" nil)
 
     ) ;; when-nil
-
-  ;; assoc.el 20.4
-
-  (autoload 'asort                                "assoc" "" nil)
-  (autoload 'aelement                             "assoc" "" nil)
-  (autoload 'aheadsym                             "assoc" "" nil)
-  (autoload 'anot-head-p                          "assoc" "" nil)
-  (autoload 'aput                                 "assoc" "" nil)
-  (autoload 'adelete                              "assoc" "" nil)
-  (autoload 'aget                                 "assoc" "" nil)
-  (autoload 'amake                                "assoc" "" nil)
 
   ;;}}}
   ;;{{{ Backward compatible lib: tinylibb.el
