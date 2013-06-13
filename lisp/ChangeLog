@@ -1,7 +1,28 @@
 2013-06-13 Thu  Jari Aalto  <jari.aalto@cante.net>
 
+	* tiny/tinymy.el (tinymy--compile-table): Remove `aput'.
+
+	* tiny/tinytf.el: devel (top level): Fix typo in comment.
+
+	* tiny/tinyprocmail.el: (top level::coment): Remove `aput'.
+
+	* tiny/tinypath.el
+	(top level): Remove assoc.el, assq is now built-in.
+	(tinypath-time-record): Replace `aput.
+
+	* tiny/tinygnus.el (tinygnus-gnus-debug-update-nnml-group-alist):
+	Replace `aput'.
+
+	* tiny/tinyscroll.el: Replace `adelete' call.
+
+	* tiny/tinyliby.el (top level): Remove assoc.el require.
+	(ti::system-feature-kill): Delete `adelete'.
+
+	* tiny/tinyliba.el: Delete assoc.el autoloads.
+
 	* tiny/tinymail.el: Update comment and remove `aput' which has
 	been removed in Emacs 24.2; no more assoc.el.
+	(tinymail-install-table-header-complete-gnus): Remove `aput'.
 
 2013-05-28 Tue  Jari Aalto  <jari.aalto@cante.net>
 
