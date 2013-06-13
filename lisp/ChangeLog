@@ -1,6 +1,7 @@
 2013-06-13 Thu  Jari Aalto  <jari.aalto@cante.net>
 
-	* tiny/tinyigrep.el (tinyigrep-main-read-args): Don't quote lambda.
+	* tiny/tinyigrep.el (top level): Adjust union autoload.
+	(tinyigrep-main-read-args): Don't quote lambda.
 
 	* tiny/load-path.el (require): require cl only compile time.
 

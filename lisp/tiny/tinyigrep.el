@@ -339,12 +339,9 @@
 
 (require 'tinylibm)
 
-(eval-and-compile
-  ;; FIXME: Function `union' from cl package called at runtime
-  (autoload 'union "cl-seq"))
-
 (eval-when-compile
-  (require 'cl))
+  (require 'cl)
+  (autoload 'union "cl-union"))
 
 ;;  When tinyigrep.el is compiled, this strange error occurs:
 ;;  ** the function `igrep-read-args' is not known to be defined
