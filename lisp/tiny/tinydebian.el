@@ -5381,6 +5381,33 @@ Mode description:
 
 ;;; ----------------------------------------------------------------------
 ;;;
+(put 'tinydebian-mail-setup 'edebug-form-spec '(body))
+(put 'tinydebian-mail-setup 'lisp-indent-function 0)
+(defmacro tinydebian-mail-setup (to subject &optional reply cc)
+  "Emacs compatibility for `mail-setup'."
+  (cond
+   ((string< emacs-version "24")
+    `(mail-setup
+      ,to
+      ,subject
+      (not 'in-reply-to)
+      (not 'cc)
+      (not 'replybuffer)
+      (not 'actions)))
+   (t				;Emacs 24 and later
+    ;; (mail-setup TO SUBJECT IN-REPLY-TO CC REPLYBUFFER ACTIONS
+    ;;  RETURN-ACTION)
+    `(mail-setup
+      ,to
+      ,subject
+      (not 'in-reply-to)
+      (not 'cc)
+      (not 'replybuffer)
+      (not 'actions)
+      (not 'return-action)))))
+
+;;; ----------------------------------------------------------------------
+;;;
 (put 'tinydebian-bts-mail-compose-macro 'edebug-form-spec '(body))
 (put 'tinydebian-bts-mail-compose-macro 'lisp-indent-function 5)
 (defmacro tinydebian-bts-mail-compose-macro
@@ -5403,30 +5430,11 @@ Mode description:
                                 ""))))))
        (pop-to-buffer (get-buffer-create ,name))
        (erase-buffer)
-       (cond
-	((string< emacs-version "24")
-	 (mail-setup
-	  (if ,email
-	      ,email
-	    (tinydebian-bts-generic-email-control ,buffer))
-	  ,subject
-	   (not 'in-reply-to)
-	   (not 'cc)
-	   (not 'replybuffer)
-	   (not 'actions)))
-	 (t				;Emacs 24 and later
-	  ;; (mail-setup TO SUBJECT IN-REPLY-TO CC REPLYBUFFER ACTIONS
-	  ;;  RETURN-ACTION)
-	  (mail-setup
-	   (if ,email
-	       ,email
-	     (tinydebian-bts-generic-email-control ,buffer))
-	   ,subject
-	   (not 'in-reply-to)
-	   (not 'cc)
-	   (not 'replybuffer)
-	   (not 'actions)
-	   (not 'return-action))))
+       (tinydebian-mail-setup
+	 (if ,email
+	     ,email
+	   (tinydebian-bts-generic-email-control ,buffer))
+	 ,subject)
        (cond
         ((or (featurep 'message)
              (eq mail-user-agent 'message-user-agent))
@@ -7411,8 +7419,7 @@ ii  libc6                         2.2.5-3    GNU C Library: Shared libraries an"
 		      (format "%s: " package))
 		  (not 'initial-input)
 		  'tinydebian--bug-report-debian-bts-mail-subject-history)))
-            (mail-setup
-             (tinydebian-bts-email-submit) subject nil nil nil nil)
+            (tinydebian-mail-setup (tinydebian-bts-email-submit) subject)
 	    (message-mode)
 	    (tinydebian-bts-insert-headers)
 	    (tinydebian-bug-report-mail-insert-details info)
@@ -7451,8 +7458,8 @@ ii  libc6                         2.2.5-3    GNU C Library: Shared libraries an"
         (erase-buffer)
         (let ((subject (read-string
                         (format "[GNU BTS %s] bug Subject: " package))))
-          (mail-setup
-            (tinydebian-gnu-bts-email-compose "submit") subject nil nil nil nil))
+          (tinydebian-mail-setup
+	    (tinydebian-gnu-bts-email-compose "submit") subject))
         (message-mode)
         (ti::mail-text-start 'move)
         (cond
@@ -7483,8 +7490,8 @@ ii  libc6                         2.2.5-3    GNU C Library: Shared libraries an"
       (erase-buffer)
       (let ((subject (read-string
                       (format "[Launcpad BTS %s] bug Subject: " ""))))
-        (mail-setup
-         (tinydebian-launchpad-email-compose "new") subject nil nil nil nil))
+        (tinydebian-mail-setup
+	  (tinydebian-launchpad-email-compose "new") subject))
       (message-mode)
       (ti::mail-text-start 'move)
       (insert "

@@ -1,4 +1,14 @@
+2013-06-14 Fri  Jari Aalto  <jari.aalto@cante.net>
+
+	* tiny/tinydebian.el (tinydebian-mail-setup): New. Handle
+	Emacs compatibility.
+
 2013-06-13 Thu  Jari Aalto  <jari.aalto@cante.net>
+
+	* tiny/tinylisp.el (top level): require elp for Byte compiler.
+	(tinylisp-find-variable-list): Use `custom-variable-p'.
+	(tinylisp-forward-user-option): Use `custom-variable-p'.
+	(tinylisp-snoop-variables): Change to `cl-remprop'.
 
 	* tiny/tinyigrep.el (top level): Adjust union autoload.
 	(tinyigrep-main-read-args): Don't quote lambda.
