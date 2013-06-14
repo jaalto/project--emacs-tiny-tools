@@ -399,6 +399,7 @@
 (ti::package-require-view) ;; TinyLisp must be first in the minor-mode-list
 
 (eval-when-compile
+  (require 'elp)    ;; For elp-results-buffer
   (require 'advice) ;; For apropos.el
   ;; XEmacs 21.2 NT had a problem loading the edug.el. After
   ;; debug.el was loaded first, the edebug.el load succeeded.
@@ -413,11 +414,19 @@
   ;;  we're doing below. Emulation in handled in tinylibb.el
   (put 'frame-parameters 'byte-compile nil))
 
+
 (eval-and-compile
   (autoload 'tinypath-cache-match-fullpath  "tinypath")
-  (autoload 'remprop                        "cl-extra")
   (autoload 'edebug-eval-defun              "edebug" "" t)
+  (autoload 'eval-defun                     "edebug """ t) ;; alias
   (autoload 'generate-file-autoloads        "autoload")
+  (autoload 'ad-has-any-advice              "advice")
+  (autoload 'ad-is-active                   "advice")
+  (autoload 'elp-restore-all		    "elp")
+  (autoload 'elp-reset-all		    "elp")
+  (autoload 'elp-restore-function	    "elp")
+  (autoload 'elp-restore-list	            "elp")
+  (autoload 'elp-set-master	            "elp")
   ;; Silence bytecompiler
   (defvar edebug-all-defs)
   (defvar folding-mode)
@@ -1889,13 +1898,13 @@ Following variables are set during BODY:
 `dir'      Directrory name
 `dir-list' All directories under `dir'."
   `(cl-flet ((recurse
-           (dir)
-           (let ((dir-list (tinylisp-directory-list dir)))
-             ,@body
-             (when dir-list
-               (dolist (elt dir-list)
-                 (unless (string-match tinylisp--ignore-dir-regexp elt)
-                   (recurse elt)))))))
+	      (dir)
+	      (let ((dir-list (tinylisp-directory-list dir)))
+		,@body
+		(when dir-list
+		  (dolist (elt dir-list)
+		    (unless (string-match tinylisp--ignore-dir-regexp elt)
+		      (recurse elt)))))))
      (recurse ,directory)))
 
 ;;; ----------------------------------------------------------------------
@@ -3572,7 +3581,7 @@ See `tinylisp-jump-to-definition'. VERB."
              (or
               (and (not (string-match "defun" type))
                    (boundp sym)         ;Then check is easy
-                   (user-variable-p sym))
+                   (custom-variable-p sym))
               (and (string-match "defun" type)
                    (fboundp sym)
                    (commandp sym))))
@@ -4105,7 +4114,7 @@ to your M - x xxx-submit-bug-report function's variable list.
 the appearing list will wave defvar's first, then defconst.
 
 input:
-  SHOW-TYPE     if non-nil, then show `user-variable-p' and
+  SHOW-TYPE     if non-nil, then show `custom-variable-p' and
                 `defcustom' information too."
   (interactive "p")
   (let ((re     tinylisp--regexp-variable)
@@ -4139,7 +4148,7 @@ input:
                   str  ";; #symbol not found")
             (tinylisp-symbol-do-macro sym 'noerr
 	      (setq str "")
-	      (if (user-variable-p sym)
+	      (if (custom-variable-p sym)
 		  (setq str "user variable"))
 	      (if (string= type "defcustom")
 		  (setq str (concat str " defcustom")))
@@ -4268,7 +4277,7 @@ Return:
 	    (format "%s ..." (ti::string-left (prin1-to-string pkg) 80)))))
 	(if verb
 	    (message "TinyLisp: lib info %d/%d %s" i max name))
-	(incf  i)x
+	(incf  i)
 	(setq dep-list  nil
 	      pkg       nil)))
     (tinylisp-with-current-buffer buffer
@@ -4284,7 +4293,7 @@ Return:
 ;;; ----------------------------------------------------------------------
 ;;;
 (defun tinylisp-read-something ()
-  "Position point to over some words near point."
+  "Position point to over some word near point."
   (save-excursion
     (if (looking-at "[ \t\n]")          ;only spaces ahead?
         (ti::read-current-line)
@@ -4292,7 +4301,7 @@ Return:
       (unless (char-equal (following-char) ?\( )
         (re-search-backward "[( \t\n]" nil t)
         (skip-chars-forward " \t\n")))
-    (buffer-substring (point) (line-end-position))))
+    (buffer-substring-no-properties (point) (line-end-position))))
 
 ;;; ----------------------------------------------------------------------
 ;;;
@@ -5733,7 +5742,7 @@ Flags when viewing, editing echo-area:
        (save
         (put elt prop (symbol-value elt)))
        (kill
-        (remprop elt prop))
+        (cl-remprop elt prop))
        (restore
         (set elt (get elt prop)))
        (reset
