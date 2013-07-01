@@ -650,7 +650,7 @@ TinyTag: `tinytag--database-dir' is not a directory. Please configure"))))
       ;; otherwise put it on post-command-hook.
       ;; The idle hook appeared in Emacs 19.30.
       (funcall cmd hook 'tinytag-post-command)))
-    (when (interactive-p)
+    (when (called-interactively-p 'interactive)
       (message "TinyTag: Package %s" (if uninstall
                                          "deactivated"
                                        "activated")))))

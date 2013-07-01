@@ -1235,7 +1235,7 @@ Mode description:
   (tinyirc-mode-map-activate)           ;turn on the map
   (setq  mode-name   tinyirc--mode-name)
   (setq  major-mode 'tinyirc-pastebot-mode) ;; for C-h m
-  (when (interactive-p)
+  (when (called-interactively-p 'interactive)
     (message
      (substitute-command-keys
       (concat

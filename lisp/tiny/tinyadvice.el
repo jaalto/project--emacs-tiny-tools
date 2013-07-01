@@ -518,13 +518,13 @@ Return:
                           ad-advised-functions )))
     ;; This makes the call to 'ti::' after this if, unefective
     (setq func-or-list nil)
-    (if (interactive-p)
+    (if (called-interactively-p 'interactive)
         ;; more accurate: "No advice found..." but since we deal with
         ;; tinyadvice ones only the following is better.
         (message "\
 TinyAdvice: Sorry, the function is not advice controlled by TinyAdvice.")))
   (ti::advice-control
-   func-or-list tinyadvice-:advice-re disable (interactive-p)))
+   func-or-list tinyadvice-:advice-re disable (called-interactively-p 'interactive)))
 
 ;;; ----------------------------------------------------------------------
 ;;;
@@ -532,7 +532,7 @@ TinyAdvice: Sorry, the function is not advice controlled by TinyAdvice.")))
   "Acivate all TinyAdvice advices. Use extra argument to DISABLE all. VERB."
   (interactive "P")
   (or verb
-      (setq verb (interactive-p)))
+      (setq verb (called-interactively-p 'interactive)))
   (let* (
          (re    tinyadvice-:advice-re)
          (doit  t)
@@ -620,7 +620,7 @@ does not create new buffer, but jumps to existing *shell* buffer."
   (let* (name
          prev-name)
     (when (and
-           (interactive-p)
+           (called-interactively-p 'interactive)
            (comint-check-proc "*shell*")
            (setq
             name
@@ -856,7 +856,7 @@ names are allowed."
   "Offer completion."
   (interactive (list (tinyadvice-read-envvar "Get environment variable: " t)))
   ad-do-it
-  (if (and (interactive-p)
+  (if (and (called-interactively-p 'interactive)
            ad-return-value)
       (message "%s" ad-return-value)
     ad-return-value))
@@ -874,7 +874,7 @@ names are allowed."
               (format "Set %s to value: " var)
               (or (getenv var) ""))))))
   ad-do-it
-  (if (and (interactive-p) value)
+  (if (and (called-interactively-p 'interactive) value)
       (message "%s" value)
     value))
 
@@ -988,7 +988,7 @@ Confirm overwrite:
         (setq pass
               (ti::string-match-case tinyadvice-:write-file-no-confirm fn)))
 
-    (if (or (not (interactive-p))   ;only when user call it, do checks
+    (if (or (not (called-interactively-p 'interactive))   ;only when user call it, do checks
             (not (file-exists-p fn))
             pass
             (y-or-n-p (format "%s already exists; overwrite it? " fn)))
@@ -1006,7 +1006,7 @@ Confirm overwrite:
     (if (stringp fn)
         (setq pass
               (ti::string-match-case tinyadvice-:write-file-no-confirm fn)))
-    (if (or (not (interactive-p))
+    (if (or (not (called-interactively-p 'interactive))
             (not (file-exists-p fn))
             pass
             (y-or-n-p (format "%s already exists; overwrite it? " fn)))
@@ -1124,7 +1124,7 @@ Confirm overwrite:
 (defadvice occur  (before tinyadvice act)
   "Iinteractive change: ask if user want the occur to start from `point-min'.
 also Possibly unfold/un-outline the code."
-  (when (and (interactive-p)
+  (when (and (called-interactively-p 'interactive)
              (not (eq (point) (point-min)))
              (y-or-n-p "TinyAdvice: Start occur from point-min? "))
     (if (and (or (and (featurep 'folding)
@@ -1146,7 +1146,7 @@ also Possibly unfold/un-outline the code."
 (defadvice exchange-point-and-mark (around tinyadvice-pop-if-prefix dis)
   "If given prefix, call `set-mark-command' to pop previous mark positions."
   (if (and current-prefix-arg
-           (interactive-p))
+           (called-interactively-p 'interactive))
       (call-interactively 'set-mark-command))
   ad-do-it)
 
@@ -1228,7 +1228,7 @@ References:
    if non-nil, suggest `find-file' for non-existing buffers"
   (interactive "Bbuffer name: ")
   (let ((buffer-name (ad-get-arg 0)))
-    (if (or (not (interactive-p))       ;user didn't call us
+    (if (or (not (called-interactively-p 'interactive))       ;user didn't call us
             (get-buffer buffer-name))   ;it exists
         ad-do-it
       (cond
@@ -1269,7 +1269,7 @@ References:
 ;;;
 (defadvice list-buffers  (after tinyadvice dis)
   "Select buffer list after display."
-  (if (interactive-p)
+  (if (called-interactively-p 'interactive)
       (select-window (get-buffer-window "*Buffer List*"))))
 
 ;;; ........................................................... &other ...

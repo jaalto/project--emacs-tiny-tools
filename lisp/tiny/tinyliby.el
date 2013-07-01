@@ -66,9 +66,6 @@
 
 (require 'tinylibm)
 
-(eval-and-compile
-  (autoload 'adelete "assoc"))
-
 (eval-when-compile
   (require 'advice))
 
@@ -76,7 +73,7 @@
 
 ;;{{{ setup: -- variables
 
-(defconst tinyliby-version-time "2010.1208.0809"
+(defconst tinyliby-version-time "2013.0613.1819"
   "Latest version number as last modified time.")
 
 (defvar ti::system--describe-symbols-history nil
@@ -311,10 +308,11 @@ INPUT:
 ;;;
 (defun ti::system-feature-kill (sym)
   "Kill feature SYM and its `load-history' information permanently."
-  (let ((name (symbol-name sym)))
+  (let ((name (symbol-name sym))
+	elt)
     ;;  Load history , dependencies remove
-    (if (assoc name load-history)
-        (setq load-history (adelete 'load-history name)))
+    (if (setq elt (assoc name load-history))
+        (setq load-history (delq elt 'load-history)))
     ;;  Kill the symbol from feature list
     (if (featurep sym)
         (setq features (delete sym features)))))
@@ -477,7 +475,7 @@ Write results i temporary buffer or BUFFER."
      (when (string-match regexp (symbol-name function))
        (insert (format "%-34s %s\n" (symbol-name hook)
                        (symbol-name function))))))
-  (if (interactive-p)
+  (if (called-interactively-p 'interactive)
       (pop-to-buffer buffer))
   buffer)
 
@@ -578,7 +576,7 @@ No '%s feature found, are you absolutely sure you have loaded the file? "
                                 "\\)[ \t]*\\([^ \t\n\f()]+\\)"))
          (func-re       (concat "defsubst\\|defmacro\\|defun"
                                 "\\|defadvice\\|deffoo\\|defvoo"))
-         (verb          (or verb (interactive-p)))
+         (verb          (or verb (called-interactively-p 'interactive)))
          (count         0)
          ok-flag
          doc
@@ -906,7 +904,7 @@ Return:
          vlist
          flist)
   (or verb
-      (setq verb (interactive-p)))
+      (setq verb (called-interactively-p 'interactive)))
     (setq list
           (ti::buffer-grep-lines
            (concat (or re "")

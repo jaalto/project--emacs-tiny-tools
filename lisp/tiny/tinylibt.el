@@ -413,7 +413,7 @@ Input:
   See function `ti::text-clear-region-properties'"
   (interactive)
   (ti::text-clear-region-properties (point-min) (point-max) propl)
-  (when (interactive-p)
+  (when (called-interactively-p 'interactive)
     (redraw-display)
     (message "Properties cleared")))
 
@@ -723,7 +723,7 @@ Preserve point.
 See `ti::text-re-search' for descriptions of FACE MODE and SAVE-UNDO."
   (interactive (list (ti::text-read-regexp)  current-prefix-arg))
   (save-excursion
-    (if (interactive-p)
+    (if (called-interactively-p 'interactive)
         (setq save-undo t))
     (goto-char (point-min))
     (ti::text-re-search re nil level nil face mode save-undo)))
@@ -739,7 +739,7 @@ function should highlight. point is preserved during call.
 See `ti::text-re-search' for descriptions of FACE MODE SAVE-UNDO."
   (interactive (list (ti::text-read-regexp)  current-prefix-arg))
   (save-excursion
-    (if (interactive-p)
+    (if (called-interactively-p 'interactive)
         (setq save-undo t))
     (ti::text-re-search re nil level nil face mode save-undo)))
 
@@ -754,7 +754,7 @@ function should highlight. point is preserved during call.
 See `ti::text-re-search' for descriptions of FACE MODE SAVE-UNDO."
   (interactive (list (ti::text-read-regexp)  current-prefix-arg))
   (save-excursion
-    (if (interactive-p)
+    (if (called-interactively-p 'interactive)
         (setq save-undo t))
     (ti::text-re-search re 'back level nil face mode save-undo)))
 

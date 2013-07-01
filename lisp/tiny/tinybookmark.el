@@ -394,7 +394,7 @@
             the file. Uses X-popup [imenu] for showing those book marks and
             moving between them.")
 
-(defvar tinybookmark--version-time "2010.1119.1452"
+(defvar tinybookmark--version-time "2013.0613.1819"
   "Last modified time.")
 
 ;;}}}
@@ -936,7 +936,7 @@ Return:
 ;;;###autoload
 (defun tinybookmark-keyboard-parse ()
   "Reparse book marks."
-  (tinybookmark-mouse-parse nil (interactive-p)))
+  (tinybookmark-mouse-parse nil (called-interactively-p 'interactive)))
 
 ;;; ----------------------------------------------------------------------
 ;;;
@@ -996,7 +996,7 @@ Optional ARG rebuilds cache."
                                   tinybookmark--cache nil 'match)))
        (list ans
              current-prefix-arg))))
-  (unless (interactive-p)
+  (unless (called-interactively-p 'interactive)
     (tinybookmark-cache-regenerate arg))
   (let* ((elt (assoc bookmark tinybookmark--cache)))
     (if (not elt)

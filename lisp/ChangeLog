@@ -1,3 +1,97 @@
+2013-06-14 Fri  Jari Aalto  <jari.aalto@cante.net>
+
+	* tiny/tinydebian.el (tinydebian-mail-setup): New. Handle
+	Emacs compatibility.
+
+2013-06-13 Thu  Jari Aalto  <jari.aalto@cante.net>
+
+	* tiny/tinylisp.el (top level): require elp for Byte compiler.
+	(tinylisp-find-variable-list): Use `custom-variable-p'.
+	(tinylisp-forward-user-option): Use `custom-variable-p'.
+	(tinylisp-snoop-variables): Change to `cl-remprop'.
+
+	* tiny/tinyigrep.el (top level): Adjust union autoload.
+	(tinyigrep-main-read-args): Don't quote lambda.
+
+	* tiny/load-path.el (require): require cl only compile time.
+
+	* ALL: Replace all files to use `call-interactively-p',
+	`cl-flet' 24.3.
+
+	* tiny/tinylibb.el (called-interactively-p): pre 23.2 emulation.
+
+	* tiny/tinymy.el (tinymy--compile-table): Remove `aput'.
+
+	* tiny/tinytf.el: devel (top level): Fix typo in comment.
+
+	* tiny/tinyprocmail.el: (top level::coment): Remove `aput'.
+
+	* tiny/tinypath.el
+	(top level): Remove assoc.el, assq is now built-in.
+	(tinypath-time-record): Replace `aput.
+
+	* tiny/tinygnus.el (tinygnus-gnus-debug-update-nnml-group-alist):
+	Replace `aput'.
+
+	* tiny/tinyscroll.el: Replace `adelete' call.
+
+	* tiny/tinyliby.el (top level): Remove assoc.el require.
+	(ti::system-feature-kill): Delete `adelete'.
+
+	* tiny/tinyliba.el: Delete assoc.el autoloads.
+
+	* tiny/tinymail.el: Update comment and remove `aput' which has
+	been removed in Emacs 24.2; no more assoc.el.
+	(tinymail-install-table-header-complete-gnus): Remove `aput'.
+
+2013-05-28 Tue  Jari Aalto  <jari.aalto@cante.net>
+
+	* tiny/tinysearch.el (tinysearch-install-default-keybindings): Check
+	Mouse bindings before insall.
+
+2013-05-22 Wed  Jari Aalto  <jari.aalto@cante.net>
+
+	* tiny/tinydebian.el (tinydebian-bts-bug-number-pure-p): New.
+	(tinydebian-debian-bug-info-macro): Use
+	`tinydebian-bts-bug-number-pure-p'.
+	(tinydebian-debian-parse-bts-bug-info-raw): Adjust to 80 col.
+	(tinydebian-debian-parse-bts-bug-message): New.
+	(tinydebian-debian-parse-bts-bug-info-raw): Add MESSAGE
+	by using `tinydebian-debian-parse-bts-bug-message'.
+	(tinydebian-debian-bug-info-message-content-insert): New.
+
+2013-05-04 Sat  Jari Aalto  <jari.aalto@cante.net>
+
+	* tiny/tinydebian.el: Adjust comment for RoQA.
+
+2012-10-18 Thu  Jari Aalto  <jari.aalto@cante.net>
+
+	* tiny/tinylib.el (ti::advice-control): Correct docstring.
+
+2012-07-11 Wed  Jari Aalto  <jari.aalto@cante.net>
+
+	* tiny/tinydebian.el (tinydebian-bug-nbr-at-current-point-number): Replace
+	`current-word' with direct read; the numbers matched.
+
+2012-06-29 Fri  Jari Aalto  <jari.aalto@cante.net>
+
+	* tiny/tinytab.el (tinyyab-mode): Do not bind C-c C-m.
+	message-mode uses key prefix for PGP commands.
+
+2012-05-14 Mon  Jari Aalto  <jari.aalto@cante.net>
+
+	* tiny/tinydebian.el (tinydebian-mail-mode-debian-address-bug-toggle):
+	With prefix-arg, set initial input to bug number for editing.
+
+2012-05-14 Tue  Jari Aalto  <jari.aalto@cante.net>
+
+	* other/folding.el (folding-shift-in): Correct
+	`folding-narrow-by-default' at the end to enabel shift-in
+	effect. Thanks to PD Priyadarshan <peedsmail@gmail.com>
+	for bug reported and debugging. Fix implemented as in
+	<https://gist.github.com/1571162> by doitian (Ian Yang)
+	<me@iany.me>.
+
 2012-04-22 Sun  Jari Aalto  <jari.aalto@cante.net>
 
 	* tiny/tinydebian.el (tinydebian-bts-mail-type-its): New.

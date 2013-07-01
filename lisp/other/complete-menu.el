@@ -391,7 +391,7 @@ Note: installation is only possible in X envinronment."
          (nfun  'cm-minibuffer-completion-help))
 
     (or verb
-        (setq verb (interactive-p)))
+        (setq verb (called-interactively-p 'interactive)))
 
     (if (null window-system)
         (if verb

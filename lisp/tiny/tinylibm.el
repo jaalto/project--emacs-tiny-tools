@@ -84,7 +84,7 @@
 
 (require 'tinylibb)                     ;Backward compatible functions
 
-(defconst tinylibm-version-time "2011.1231.1204"
+(defconst tinylibm-version-time "2013.0613.1825"
   "Latest version number.")
 
 ;;{{{ function tests
@@ -425,9 +425,9 @@ Purpose:
 
   The 'verb' is meant to be used in function when it decides if
   should print verbose messages. This is different that using
-  simple (interactive-p) test, because (interactive-p) is only set
+  simple (called-interactively-p 'interactive) test, because (called-interactively-p 'interactive) is only set
   if the function is really called interactively. For complete
-  description why (interactive-p) est alone is not always the solution
+  description why (called-interactively-p 'interactive) est alone is not always the solution
   refer to ftp://cs.uta.fi/pub/ssjaaa/ema-code.html under heading
   that discusses about 'funtion and displaying messages'
 
@@ -447,7 +447,7 @@ Example:
     ..code
     (if verb
         (message 2)))"
-  `(setq verb (or verb (interactive-p))))
+  `(setq verb (or verb (called-interactively-p 'interactive))))
 
 ;;; ----------------------------------------------------------------------
 ;;;
@@ -2676,7 +2676,7 @@ Following variables are set during BODY:
 
 `dir'      Directrory name
 `dir-list' All directories under `dir'."
-  `(flet ((recurse
+  `(cl-flet ((recurse
            (dir)
            (let ((dir-list (ti::directory-list dir)))
              ,@body

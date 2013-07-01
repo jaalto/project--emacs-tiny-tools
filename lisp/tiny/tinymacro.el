@@ -155,7 +155,7 @@ References:
   (interactive)
   (let ((list tinymacro--function-list))
     (if (null list)
-        (if (interactive-p)
+        (if (called-interactively-p 'interactive)
             (message "TinyMacro: No macros active."))
       (dolist (elt  list)
         (global-set-key (nth 0 elt) (nth 1 elt)))
@@ -250,7 +250,7 @@ References:
             (setq key "[??]"))          ;should never happen
         (insert (format "%-10s %s\n" key name))
         (setq round (1+ round))))
-    (if (and (interactive-p)
+    (if (and (called-interactively-p 'interactive)
              (eq 0 round))
         (message "TinyMacro: No macros bound or set."))
     (switch-to-buffer-other-window buffer-pointer)))
@@ -306,7 +306,7 @@ Return:
               (read-key-sequence "Tinymacro: Set last macro to key(s): ")))
     (if (equal key abort-ch)
         (progn
-          (if (interactive-p)
+          (if (called-interactively-p 'interactive)
               (message "Tinymacro: Skipping abort key. Not assigned."))
           nil)
       ;;  Search the key, if it's already assigned

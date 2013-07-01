@@ -339,12 +339,9 @@
 
 (require 'tinylibm)
 
-(eval-and-compile
-  ;; FIXME: Function `union' from cl package called at runtime
-  (autoload 'union "cl-seq"))
-
 (eval-when-compile
-  (require 'cl))
+  (require 'cl)
+  (autoload 'union "cl-union"))
 
 ;;  When tinyigrep.el is compiled, this strange error occurs:
 ;;  ** the function `igrep-read-args' is not known to be defined
@@ -1952,11 +1949,11 @@ References:
       (or (setq files
                 (let ((ans (read-from-minibuffer
                             "TinyIgrep file pattern(s): ")))
-                  (mapcar '(lambda (x)
-                             (format "%s%s"
-                                     (file-name-as-directory
-                                      default-directory)
-                                     x))
+                  (mapcar (lambda (x)
+			    (format "%s%s"
+				    (file-name-as-directory
+				     default-directory)
+				    x))
                           (split-string ans))))
           (error "TinyIgrep: No files for `%s'" ans))
       (setq pattern

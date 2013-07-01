@@ -214,7 +214,9 @@ Format: '((buffer-name-string . max-point) (BN . POINT) ..)"
 ;;;
 (defsubst tinyscroll-remove-1 (buffer-name)
   "Remove BUFFER-NAME from scroll list."
-  (setq tinyscroll--list (adelete 'tinyscroll--list buffer-name)))
+  (let ((elt (assoc buffer-name tinyscroll--list)))
+    (when elt
+      (setq tinyscroll--list (delq elt tinyscroll--list)))))
 
 ;;; ----------------------------------------------------------------------
 ;;;
@@ -339,7 +341,7 @@ Return:
  nil    no report"
   (interactive)
   (let ((str   (ti::list-to-string (mapcar 'car tinyscroll--list)))
-	(verb  (interactive-p))
+	(verb  (called-interactively-p 'interactive))
 	ret)
     (if (and (string= str "")  verb)
         (message "TinyScroll: no entries in `tinyscroll--list'.")

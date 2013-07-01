@@ -316,7 +316,7 @@ Input:
        "1 sec"
        (* tinylock--auto-lock-interval 60)
        'tinylock-process))))
-  (if (interactive-p)
+  (if (called-interactively-p 'interactive)
       (message "Autolock process %s"
                (if uninstall
                    "deleted"

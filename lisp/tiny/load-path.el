@@ -34,7 +34,9 @@
 
 ;;; Code:
 
-(require 'cl)
+(eval-when-compile
+  (require 'cl))
+
 (setq debug-on-error nil) ;; Must be like this in batch byte compile
 
 (autoload 'ti::package-autoload-create-on-file            "tinylib")

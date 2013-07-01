@@ -209,7 +209,7 @@ common beginning for all win cfg registers."
   ;;  C-x is so easy to reach with left hand... and free
   (global-set-key [(control c) (mouse-1)]   'tinyxreg-jump-to-register-mouse)
   (global-set-key [(control c) (shift mouse-1)] 'tinyxreg-point-to-register-mouse)
-  (when (interactive-p)
+  (when (called-interactively-p 'interactive)
     (message "TinyXreg: Register Keys bound ok.")))
 
 ;;; ----------------------------------------------------------------------
@@ -251,7 +251,7 @@ Eg. marker dies if you revert the buffer; kill and load it again."
   "Empties both window and point caches."
   (interactive)
   (setq tinyxreg--preg nil   tinyxreg--wreg nil)
-  (if (interactive-p)
+  (if (called-interactively-p 'interactive)
       (message "TinyXreg: Register lists trashed.")))
 
 ;;; ----------------------------------------------------------------------
@@ -385,7 +385,7 @@ Input:
   (let ((event (or event
 		   (ti::compat-make-fake-event
 		    tinyxreg--x-coord tinyxreg--y-coord)))
-	(title  (interactive-p))
+	(title  (called-interactively-p 'interactive))
 	ref-list
 	list
 	data

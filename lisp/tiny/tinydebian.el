@@ -123,7 +123,7 @@
 
 ;;{{{ setup: libraries
 
-(defconst tinydebian--version-time "2012.0501.2029"
+(defconst tinydebian--version-time "2013.0613.1825"
   "Last edited time.")
 
 (require 'tinylibm)
@@ -527,10 +527,9 @@ fixed
     Currently, these are critical, grave and serious.")
 
 (defvar tinydebian--removal-keyword-list
-  '(
-    "abandoned upstream"                ; Upstream no longer developing it
+  '("abandoned upstream"                ; Upstream no longer developing it
     "buggy"
-    "dead upstream"                     ; No upstream at all an more
+    "dead upstream"                     ; No upstream at all any more
     "FTBFS"                             ; Fails to build from source
     "non-free"				; License problem (DFSG)
     "old"
@@ -540,8 +539,7 @@ fixed
     "requested by upstream"             ; Upstream has requested removal
     "transitional pkg"
     "unredistributable"			; Incompatible Licenses (SSL + GPL...)
-    "unmaintained"
-    )
+    "unmaintained")
   "*List of PAckage removal keywords.
 See http://wiki.debian.org/ftpmaster_Removals")
 
@@ -1289,7 +1287,7 @@ Run also `tinydebian-mail-mode-debian-default-keybindings' in all mail buffer.
 See variables:
    `tinydebian--install-buffer-file-name-regexp'
    `tinydebian--install-gnus-newsgroup-name-regexp'."
-  (flet ((search (regexp)
+  (cl-flet ((search (regexp)
                  (save-excursion
                    (goto-char (point-min))
                    (re-search-forward regexp nil t))))
@@ -1692,17 +1690,24 @@ String is anything that is attached to
 
 ;;; ----------------------------------------------------------------------
 ;;;
-(defsubst tinydebian-bts-bug-number-trim (str)
+(defsubst tinydebian-bts-bug-number-pure-p (string)
+  "Check that STRING looks like a pure number."
+  (and (stringp string)
+       (string-match "^[0-9][0-9]+$" string)))
+
+;;; ----------------------------------------------------------------------
+;;;
+(defsubst tinydebian-bts-bug-number-trim (string)
   "Remove whitespace and #-hash signs.
 An example: '   #12345   ' => 12345."
-  (if (stringp str)
+  (if (stringp string)
       (replace-regexp-in-string
        "^[ \t\r\n#]#+"
        ""
        (replace-regexp-in-string
         "[ \t\r\n]+$"
         ""
-        str))))
+        string))))
 
 ;;; ----------------------------------------------------------------------
 ;;;
@@ -2857,15 +2862,15 @@ Bug#NNNN: O: package -- description."
 ;;; ----------------------------------------------------------------------
 ;;;
 (defun tinydebian-bug-nbr-at-current-point-number ()
-  "Read at least 4 digit bug number from current point.
-The number must be surreounded by whitespace."
-  (when (looking-at "[0-9]+[ \t\r\n]")
+  "Read at least 3 digit bug number from current point.
+The number must be surrounded by whitespace."
+  (when (looking-at "[0-9]+\\([ \t\r\n]\\|$\\)")
     (save-excursion
-      ;; Go to beginning
-      (skip-chars-backward "^ \t\r\n")
+      ;; Go to the beginning
+      (skip-chars-backward "^ \t" (line-beginning-position))
       ;; At least 3 digits
-      (when (looking-at "\\([0-9][0-9][0-9]+\\)[ \t\r\n]")
-        (current-word)))))
+      (when (looking-at "\\([0-9][0-9][0-9]+\\)")
+	(match-string-no-properties 0)))))
 
 ;;; ----------------------------------------------------------------------
 ;;;
@@ -3402,13 +3407,26 @@ Return:
 ;;;
 (defsubst tinydebian-debian-parse-bts-bug-package ()
   "Parse buffer content of Debian BTS (HTTP result)."
-       ;; ;package=levee"></a></div>
+  ;; ;package=levee"></a></div>
   (if (re-search-forward "package=\\([^<\"\t\r\n]+\\)\"" nil t)
       (let ((pkg (tinydebian-decode-html (match-string-no-properties 1))))
         ;; src:<package>
         (if (string-match ":\\(.+\\)" pkg)
             (match-string 1 pkg)
           pkg))))
+
+;;; ----------------------------------------------------------------------
+;;;
+(defsubst tinydebian-debian-parse-bts-bug-message ()
+  "Parse buffer content of Debian BTS (HTTP result)."
+  ;; <pre class="message"> ... </pre>
+  (let (point)
+    (when (re-search-forward "<pre +class=.message.>" nil t)
+      (setq point (point))
+      (when (re-search-forward "^ *</pre>" nil t)
+	(tinydebian-decode-html (buffer-substring-no-properties
+				 point
+				 (match-beginning 0)))))))
 
 ;;; ----------------------------------------------------------------------
 ;;;
@@ -3468,7 +3486,8 @@ Were:
     REPORTED    Reported by information
     SEVERITY    Bug severity
     SUBJECT     Bug subject
-    TAGS        List of tags"
+    TAGS        List of tags
+    MESSAGE     Bug report submitter's message"
     (let (list)
       (goto-char (point-min))
       ;; This must be done in order
@@ -3494,15 +3513,22 @@ Were:
         (push (cons field
                     (tinydebian-debian-parse-bts-bug-field field))
               list))
-      (push (cons "found"
-                  (tinydebian-debian-parse-bts-search-tag "Found in version +"))
+      (push (cons
+	     "found"
+	     (tinydebian-debian-parse-bts-search-tag "Found in version +"))
             list)
-      (push (cons "fixed"
-                  (tinydebian-debian-parse-bts-search-tag "Fixed in version +"))
+      (push (cons
+	     "fixed"
+	     (tinydebian-debian-parse-bts-search-tag "Fixed in version +"))
             list)
-      (push (cons "done"
-                    (tinydebian-debian-parse-bts-bug-field "done"))
+      (push (cons
+	     "done"
+	     (tinydebian-debian-parse-bts-bug-field "done"))
             list)
+      (push (cons
+	     "message"
+	     (tinydebian-debian-parse-bts-bug-message))
+	    list)
       list))
 
 ;;; ----------------------------------------------------------------------
@@ -3665,7 +3691,7 @@ Optionally from debbugs BTS which defaults to \"debian\"."
       (if file
           (with-current-buffer (get-buffer tinydebian--buffer-www)
             (write-region (point-min) (point-max) file)
-            (if (interactive-p)
+            (if (called-interactively-p 'interactive)
                   (message "Wrote %s" file))
             file)
         tinydebian--buffer-www))))
@@ -4222,7 +4248,7 @@ In interactive call, toggle quiet address on and off."
    bug
    "quiet"
    remove
-   (interactive-p)
+   (called-interactively-p 'interactive)
    (format "%s@\\|%s-\\(close\\|quiet\\)@" bug bug)))
 
 ;;; ----------------------------------------------------------------------
@@ -4235,7 +4261,7 @@ In interactive call, toggle quiet address on and off."
    bug
    "close"
    remove
-   (interactive-p)
+   (called-interactively-p 'interactive)
    (format "%s@\\|%s-\\(close\\|quiet\\)@" bug bug)))
 
 ;;; ----------------------------------------------------------------------
@@ -4268,7 +4294,7 @@ In interactive call, toggle conrol address on and off."
   (interactive (tinydebian-mail-mode-debian-address-ask-args "Submitter bug"))
   ;; toggle
   (tinydebian-mail-mode-address-type-add
-   "submitter" bug remove (interactive-p)))
+   "submitter" bug remove (called-interactively-p 'interactive)))
 
 ;;; ----------------------------------------------------------------------
 ;;;
@@ -4298,7 +4324,7 @@ number interactively."
 	 bug)
      (list
       (if current-prefix-arg
-	  (read-string "Bug number: ")
+	  (read-string "Bug number: " now)
 	(or now
 	    (tinydebian-mail-mode-debian-address-ask-bug))))))
   (let ((re (format "%s@\\|%s-\\(close\\|quiet\\)@" bug bug)))
@@ -4342,7 +4368,7 @@ In interactive call, toggle conrol address on and off."
   (interactive "P")
   ;; toggle
   (tinydebian-mail-mode-address-type-add
-   "control" nil remove (interactive-p)))
+   "control" nil remove (called-interactively-p 'interactive)))
 
 ;;; ----------------------------------------------------------------------
 ;;;
@@ -4352,7 +4378,7 @@ In interactive call, toggle conrol address on and off."
   (interactive (tinydebian-mail-mode-debian-address-ask-args "Submitter bug"))
   ;; toggle
   (tinydebian-mail-mode-address-type-add
-   "maintonly" bug remove (interactive-p)))
+   "maintonly" bug remove (called-interactively-p 'interactive)))
 
 
 (defvar tinydebian--bts-mail-ctrl-finalize-line-regexp
@@ -4764,11 +4790,10 @@ changes, the bug must be unarchived first."
 See `tinydebian-debian-parse-bts-bug-info-raw' for INFO structure.
 Optionally from debbugs BTS which defaults to \"debian\"."
   `(progn
-     (if (or (not (stringp ,bug))
-             (not (string-match "^[0-9][0-9]+$" ,bug)))
-         (error "Invalid bug number: %s" ,bug))
+     (unless (tinydebian-bts-bug-number-pure-p ,bug)
+       (error "Invalid bug number: %s" ,bug))
      (let ((info (tinydebian-debian-url-bug-info ,bug ,bts)))
-       (flet ((field (x)
+       (cl-flet ((field (x)
                      (cdr-safe
                       (assoc x info))))
          ,@body))))
@@ -4843,11 +4868,26 @@ If `inteactive-p' and `buffer-read-only', display infromation only.
 Optionally from debbugs BTS which defaults to \"debian\"."
   (interactive (list (tinydebian-bts-mail-ask-bug-number)))
   (tinydebian-debian-bug-info-message-all-macro bug bts
-    (if (and (interactive-p)
+    (if (and (called-interactively-p 'interactive)
              buffer-read-only)
         (message str)
       (tinydebian-move-point-to-free-place)
       (insert str))))
+
+;;; ----------------------------------------------------------------------
+;;;
+(defun tinydebian-debian-bug-info-message-content-insert (bug &optional bts)
+  "Insert BUG content message at current point.
+Optionally from debbugs BTS which defaults to \"debian\"."
+  (interactive (list (tinydebian-bts-mail-ask-bug-number)))
+  (if (and (called-interactively-p 'interactive)
+	   buffer-read-only)
+      (message "TinyDebian: Cannot insert bug message. Buffer is read only.")
+    (tinydebian-debian-bug-info-macro bug bts
+      (let ((str (field "message")))
+	(if (tinydebian-string-p str)
+	    (insert str)
+	  (message "TinyDebian: Cound't read bug message to insert"))))))
 
 ;;; ----------------------------------------------------------------------
 ;;;
@@ -4866,7 +4906,7 @@ Optionally from BTS which defaults to \"debian\"."
   (interactive (list (tinydebian-bts-mail-ask-bug-number)))
   (tinydebian-debian-bug-info-macro bug bts
     (let ((subject (field "subject")))
-      (if (and (interactive-p)
+      (if (and (called-interactively-p 'interactive)
                buffer-read-only)
           (message subject)
         (tinydebian-move-point-to-free-place)
@@ -4971,12 +5011,14 @@ Mode description:
     "----"
 
     ["Info bug all insert"     tinydebian-debian-bug-info-all-insert     t]
+    ["Info bug msg insert" tinydebian-debian-bug-info-message-content-insert t]
     ["Info bug all message"    tinydebian-debian-bug-info-all-message    t]
     ["Info bug subject insert" tinydebian-debian-bug-info-subject-insert t])
 
    (progn
      (define-key map  "ia" 'tinydebian-debian-bug-info-all-insert)
      (define-key map  "iA" 'tinydebian-debian-bug-info-all-message)
+     (define-key map  "im" 'tinydebian-debian-bug-info-message-content-insert)
      (define-key map  "is" 'tinydebian-debian-bug-info-subject-insert)
      (define-key map  "iS" 'tinydebian-debian-bug-info-subject-message)
      (define-key map  "b"  'tinydebian-mail-mode-debian-address-bug-toggle)
@@ -5339,6 +5381,33 @@ Mode description:
 
 ;;; ----------------------------------------------------------------------
 ;;;
+(put 'tinydebian-mail-setup 'edebug-form-spec '(body))
+(put 'tinydebian-mail-setup 'lisp-indent-function 0)
+(defmacro tinydebian-mail-setup (to subject &optional reply cc)
+  "Emacs compatibility for `mail-setup'."
+  (cond
+   ((string< emacs-version "24")
+    `(mail-setup
+      ,to
+      ,subject
+      (not 'in-reply-to)
+      (not 'cc)
+      (not 'replybuffer)
+      (not 'actions)))
+   (t				;Emacs 24 and later
+    ;; (mail-setup TO SUBJECT IN-REPLY-TO CC REPLYBUFFER ACTIONS
+    ;;  RETURN-ACTION)
+    `(mail-setup
+      ,to
+      ,subject
+      (not 'in-reply-to)
+      (not 'cc)
+      (not 'replybuffer)
+      (not 'actions)
+      (not 'return-action)))))
+
+;;; ----------------------------------------------------------------------
+;;;
 (put 'tinydebian-bts-mail-compose-macro 'edebug-form-spec '(body))
 (put 'tinydebian-bts-mail-compose-macro 'lisp-indent-function 5)
 (defmacro tinydebian-bts-mail-compose-macro
@@ -5361,30 +5430,11 @@ Mode description:
                                 ""))))))
        (pop-to-buffer (get-buffer-create ,name))
        (erase-buffer)
-       (cond
-	((string< emacs-version "24")
-	 (mail-setup
-	  (if ,email
-	      ,email
-	    (tinydebian-bts-generic-email-control ,buffer))
-	  ,subject
-	   (not 'in-reply-to)
-	   (not 'cc)
-	   (not 'replybuffer)
-	   (not 'actions)))
-	 (t				;Emacs 24 and later
-	  ;; (mail-setup TO SUBJECT IN-REPLY-TO CC REPLYBUFFER ACTIONS
-	  ;;  RETURN-ACTION)
-	  (mail-setup
-	   (if ,email
-	       ,email
-	     (tinydebian-bts-generic-email-control ,buffer))
-	   ,subject
-	   (not 'in-reply-to)
-	   (not 'cc)
-	   (not 'replybuffer)
-	   (not 'actions)
-	   (not 'return-action))))
+       (tinydebian-mail-setup
+	 (if ,email
+	     ,email
+	   (tinydebian-bts-generic-email-control ,buffer))
+	 ,subject)
        (cond
         ((or (featurep 'message)
              (eq mail-user-agent 'message-user-agent))
@@ -5709,7 +5759,7 @@ Severity: wishlist
           (desc    (read-string
                     "One line description [required]: ")))
      (list name license bug desc)))
-  (flet ((replace (regexp str &optional point all)
+  (cl-flet ((replace (regexp str &optional point all)
                   (when (and (stringp str)
                              (not (string= "" str)))
                     (goto-char (or point
@@ -5768,7 +5818,7 @@ The default is to use RFP in Subject header."
            desc
            (if current-prefix-arg
                'itp))))
-  (flet ((replace (regexp str &optional point all)
+  (cl-flet ((replace (regexp str &optional point all)
                   (when (and (stringp str)
                              (not (string= "" str)))
                     (goto-char (or point
@@ -5824,6 +5874,8 @@ thanks
 ;;;
 (defun tinydebian-bts-mail-ctrl-usertag (bug &optional email tag-string)
   "Compose BTS control message usertag to a BUG with TAG-STRING.
+See http://wiki.debian.org/bugs.debian.org/usertags
+
 Message format:
     user user@domain.tld
     usertags <#bug> [+-] <tagname>
@@ -6040,6 +6092,8 @@ For removal request types, see
 ;;;  7 ROP     Package removal - Request of Porter.
 ;;;  8 ROSRM   Package removal - Request of Stable Release Manager.
 ;;;  9 RoQA    Package removal - Requested by the QA team.
+;;;            ... actually by anyone if no rdeps, low popcom, no unloads
+;;;            ... in 5 years etc.
 ;;; 10 other   Not a package removal request, report other problems.
 ;;;
 (defun tinydebian-bts-mail-ctrl-remove-package
@@ -6720,7 +6774,7 @@ Returned list is
 ;;; Priority: extra
 ;;; Section: admin
 ;;; Installed-Size: 45
-;;; Maintainer: Nicolás Lichtmaier <nick@debian.org>
+;;; Maintainer: Nicolas Lichtmaier <nick@debian.org>
 ;;; Version: 0.35-10
 ;;; Depends: libc6 (>= 2.2.4-2), cron (>= 3.0pl1-42)
 ;;; Recommends: mail-transport-agent
@@ -7313,7 +7367,7 @@ Locale: %s"
 ;;;###autoload
 (defun tinydebian-bug-report-debian-bts-mail (info)
   "Submit Debian bug report. INFO is alist of attributes for a package.
-An example ´reportbug(1)' looks like
+An example `reportbug(1)' looks like
 
 To: submit@bugs.debian.org
 Subject: autolog ....
@@ -7365,8 +7419,7 @@ ii  libc6                         2.2.5-3    GNU C Library: Shared libraries an"
 		      (format "%s: " package))
 		  (not 'initial-input)
 		  'tinydebian--bug-report-debian-bts-mail-subject-history)))
-            (mail-setup
-             (tinydebian-bts-email-submit) subject nil nil nil nil)
+            (tinydebian-mail-setup (tinydebian-bts-email-submit) subject)
 	    (message-mode)
 	    (tinydebian-bts-insert-headers)
 	    (tinydebian-bug-report-mail-insert-details info)
@@ -7405,8 +7458,8 @@ ii  libc6                         2.2.5-3    GNU C Library: Shared libraries an"
         (erase-buffer)
         (let ((subject (read-string
                         (format "[GNU BTS %s] bug Subject: " package))))
-          (mail-setup
-            (tinydebian-gnu-bts-email-compose "submit") subject nil nil nil nil))
+          (tinydebian-mail-setup
+	    (tinydebian-gnu-bts-email-compose "submit") subject))
         (message-mode)
         (ti::mail-text-start 'move)
         (cond
@@ -7437,8 +7490,8 @@ ii  libc6                         2.2.5-3    GNU C Library: Shared libraries an"
       (erase-buffer)
       (let ((subject (read-string
                       (format "[Launcpad BTS %s] bug Subject: " ""))))
-        (mail-setup
-         (tinydebian-launchpad-email-compose "new") subject nil nil nil nil))
+        (tinydebian-mail-setup
+	  (tinydebian-launchpad-email-compose "new") subject))
       (message-mode)
       (ti::mail-text-start 'move)
       (insert "

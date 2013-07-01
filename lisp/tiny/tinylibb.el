@@ -79,7 +79,7 @@
 (eval-and-compile
   (autoload 'ti::replace-match "tinylibm"))
 
-(defconst tinylibb-version-time "2012.0105.1852"
+(defconst tinylibb-version-time "2013.0613.1819"
   "Latest version number as last modified time.")
 
 ;;; ....................................................... &emulation ...
@@ -270,7 +270,7 @@ count-lines function , but (count-char-in-region ?\\n)"
       (goto-char (min beg end))
       (while (search-forward char end  t)
         (incf  i)))
-    (if (interactive-p)
+    (if (called-interactively-p 'interactive)
         (message "%d hits in region." i))
     i))
 
@@ -317,6 +317,10 @@ Default is to convert all tabs in STRING with spaces."
   (defvar shell-command-output-buffer "*Shell Command Output*"))
 
 ;;; ........................................................... &other ...
+
+(unless (fboundp 'called-interactively-p) ;23.2
+  (defmacro called-interactively-p (&rest args)
+    `(called-interactively-p 'interactive)))
 
 (unless (fboundp 'with-buffer-modified)
   ;;  Appeared in Emacs 21.2

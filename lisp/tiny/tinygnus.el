@@ -460,7 +460,7 @@ tinymail.el: ** No bbdb.el along load-path. Please do not compile this file.
   (defun tinygnus-check-gnus-installation-libraries ()
     "Verify that new enough Gnus version is installed to the Emacs."
     (let ((i 0))
-      (flet ((load-it
+      (cl-flet ((load-it
               (lib)
               (let* ((name   (if (stringp lib)
                                  lib
@@ -1256,8 +1256,8 @@ to the article buffer."
 You can refer to `file' when processing the files. Stop loop with
 command (return)."
   `(let ((files (tinygnus-read-files-from-dir ,dir)))
-     (when (or (not (interactive-p))
-               (and (interactive-p)
+     (when (or (not (called-interactively-p 'interactive))
+               (and (called-interactively-p 'interactive)
                     (y-or-n-p
                      (format
                       "Found %d files, Proceed " (length files)))))
@@ -1360,7 +1360,7 @@ See function `tinygnus-article-ube-send-to-postmasters'."
        (read
         (load file)
         (put 'tinygnus--nslookup-table 'pos (length tinygnus--nslookup-table))
-        (if (interactive-p)
+        (if (called-interactively-p 'interactive)
             "TinyGnus: nslookup loaded."))
        (t
         (ti::write-file-variable-state
@@ -1495,7 +1495,7 @@ confirmations."
      (run-hooks 'tinygnus--summary-ube-send-to-postmasters-hook)
      (setq kill-flag t)
      (incf  count))
-    (if (interactive-p)
+    (if (called-interactively-p 'interactive)
         (message "TinyGnus: Mapped %d ube messgaes" count))))
 
 ;;; ----------------------------------------------------------------------
@@ -2323,7 +2323,7 @@ Input:
   (interactive)
   (let ((buffer (get-buffer-create tinygnus--output-buffer)))
     (ti::erase-buffer buffer)
-    (if (interactive-p)
+    (if (called-interactively-p 'interactive)
         (message "TinyGnus: %s cleared" tinygnus--output-buffer))))
 
 ;;}}}
@@ -2813,7 +2813,7 @@ References:
 (put 'tinygnus-debug-gnus-macro 'edebug-form-spec '(body))
 (defmacro tinygnus-debug-gnus-macro (func &rest body)
   "Instantiate `pr' function to print debug information about FUNC."
-  `(flet ((pr (x y)
+  `(cl-flet ((pr (x y)
 	      (tinygnus-gnus-debug-insert-line x y ,func)))
      ,@body))
 
@@ -2904,14 +2904,14 @@ Possibly REPLCE existing entry."
             (message "TinyLisp: No files %s %s" group dir)
           (message "TinyGnus: Adding to `nnml-group-alist' %s" dir)
           (if replace
-              (aput 'nnml-group-alist group range))
+              (push (cons group name) 'nnml-group-alist))
           (push (list group range) nnml-group-alist))))))
 
 ;;; 5.8.2
 (defadvice gnus-open-server (around tinygnus-debug dis)
   ;; (gnus-command-method)
   ;; "Open a connection to GNUS-COMMAND-METHOD."
-  (flet ((pr (x y)
+  (cl-flet ((pr (x y)
              (tinygnus-gnus-debug-insert-line x y 'gnus-open-server )))
     (pr '(CALL-ARGS gnus-command-method)
         (list gnus-command-method))
@@ -2947,7 +2947,7 @@ Possibly REPLCE existing entry."
 (defadvice gnus-summary-read-group-1 (around t-tinygnus-debug dis)
   "Output trace to tinygnus--debug-buffer"
   ;; (group show-all no-article kill-buffer no-display &optional select-articles)
-  (flet ((pr (x y)
+  (cl-flet ((pr (x y)
              (tinygnus-gnus-debug-insert-line x y 'gnus-summary-read-group-1 )))
     ;; Killed foreign groups can't be entered.
     (when (and (not (gnus-group-native-p group))
@@ -3113,7 +3113,7 @@ Possibly REPLCE existing entry."
   ;;  "Select newsgroup GROUP.
   ;;If READ-ALL is non-nil, all articles in the group are selected.
   ;; If SELECT-ARTICLES, only select those articles from GROUP."
-  (flet ((pr (x y)
+  (cl-flet ((pr (x y)
              (tinygnus-gnus-debug-insert-line x y 'gnus-select-newsgroup)))
     (pr '(CALL-ARGS group read-all select-articles)
         (list group read-all select-articles))
@@ -3576,7 +3576,7 @@ Possibly REPLCE existing entry."
          tmp1
          tmp2)
     ;;  make shorter function name
-    (flet ((pr (x y)
+    (cl-flet ((pr (x y)
                (tinygnus-gnus-debug-insert-line x y)))
       (with-current-buffer buffer
         (tinygnus-gnus-debug-on)

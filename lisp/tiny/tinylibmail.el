@@ -3456,7 +3456,7 @@ See `ti::mail-whois-parse'."
   "Whois: Parse registrant from buffer. See `ti::mail-whois-parse'."
   (let ((point (point))
         ret)
-    (flet ((search (func)
+    (cl-flet ((search (func)
                    (goto-char point)
                    (funcall func)))
       (dolist (func '(ti::mail-whois-parse-registrant-1

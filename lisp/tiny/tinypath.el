@@ -1351,8 +1351,6 @@ message buffer.")
   (autoload 'ti::macrof-version-bug-report  "tinylib" "" nil 'macro)
 
   (autoload 'pp                             "pp")
-  (autoload 'assq                           "assoc")
-  (autoload 'aput                           "assoc")
   (autoload 'executable-find                "executable")
 
   ;; Quiet byte compiler. These are checked with `boundp' in the code
@@ -1925,7 +1923,7 @@ ROOT can be a single directory or list of directories."
 ;;;
 (defun tinypath-default-load-path-root-user ()
   "Return user's Emacs Lisp path by guessing various directories."
-  (flet ((msg (m)
+  (cl-flet ((msg (m)
 	      (message m)
 	      (unless tinypath--startup-no-messages
 		(sit-for 2))
@@ -2031,7 +2029,7 @@ Input:
   VERB     Verbose messages.
   BUG      If set, and DIR not found, call `tinypath-message-bug'."
   (let (found)
-    (flet ((check-dir
+    (cl-flet ((check-dir
 	    (try dir)
 	    (setq try (tinypath-expand-file-name
 		       (concat (file-name-as-directory try)
@@ -3351,7 +3349,7 @@ Input
   ZERO-TREAT    If non-nil, consider version numbers starting with 0.NN
 		never than 2.1. In this case it is assumed
 		that zero based versions are latest development releases."
-  (flet ((version (str regexp)
+  (cl-flet ((version (str regexp)
 		  (if (string-match regexp str)
 		      (string-to-number (match-string 1 str))
 		    0)))
@@ -3408,7 +3406,7 @@ Return:
 	list
 	item
 	ret)
-    (flet ((get-elt (elt place)
+    (cl-flet ((get-elt (elt place)
 		    (if (vectorp elt)
 			(aref elt place)
 		      (nth place elt))))
@@ -4638,7 +4636,7 @@ Return:
       (setq
        ret
        (catch 'done
-	 (flet (                 ;; First function
+	 (cl-flet (                 ;; First function
 		(path-name (ELT) ;; ELT = '("FILE.EL" (POS . "PATH"))
 			   (when ELT
 			     (concat (cdr (nth 1 ELT)) (car ELT)  )))
@@ -5251,7 +5249,7 @@ Return:
 	    (setq done t)
 	    (set-buffer-modified-p nil) ;; do not ask user  when killing buffer
 	    (setq buffer-file (buffer-file-name))))) ;; let*
-      (if (interactive-p)
+      (if (called-interactively-p 'interactive)
 	  (when done
 	    (message "TinyPath: [INFO] Edit and verify changes at %s" file))
 	(when (and done buffer-file)
@@ -5302,21 +5300,21 @@ Return
   (interactive "fGive directory with info files: ")
   ;;  If user calls us, make sure new files are also noticed.
   ;;
-  (if (interactive-p)
+  (if (called-interactively-p 'interactive)
       (tinypath-info-initialize))
   (let ((list     (tinypath-info-files-in-directory dir))
 	(dir-file (concat (file-name-as-directory dir) "dir"))
 	cleanup
 	done)
     (when (and (null list)
-	       (interactive-p))
+	       (called-interactively-p 'interactive))
       (message "Tinypath: No info file candidates in %s" dir))
     (when list                          ;info files in this directory?
       (setq done (tinypath-info-handler-DIR dir))
       (tinypath-info-directory-contents-update
        dir-file
-       (interactive-p)
-       (interactive-p)
+       (called-interactively-p 'interactive)
+       (called-interactively-p 'interactive)
        list)
       (tinypath-verbose-macro 2
 	(message "TinyPath: [INFO] PUSH maybe => %s"
@@ -5351,7 +5349,7 @@ Return
       ;;  Kill all previous info files from Emacs, so that next info
       ;;  C-h i will force Emacs to regenerate found new entries.
       (when (or cleanup                 ;Added new directory
-		(interactive-p))
+		(called-interactively-p 'interactive))
 	(tinypath-info-initialize)))
     done))
 
@@ -5407,7 +5405,7 @@ Return
 	  (when (tinypath-info-handler path)
 	    (setq done t)))))
     (when (and done
-	       (interactive-p))
+	       (called-interactively-p 'interactive))
       (tinypath-cache-file-save))
     (when done
       (tinypath-info-initialize))
@@ -5475,7 +5473,7 @@ E.g., if you want to calculate days; you'd do
 	  (message "TinyPath: load time %s %dsec" name diff)
 	(tinypath-verbose-macro 9
 	  (message "TinyPath: load time %s %dsec" name diff)))
-      (aput 'tinypath--time-data name diff))))
+      (push (cons name diff) 'tinypath--time-data))))
 
 ;;; ----------------------------------------------------------------------
 ;;;
@@ -6536,11 +6534,11 @@ Warning:
     (cond
      (tinypath--cache-mode
       (tinypath-ti::advice-control list "tinypath")
-      (if (interactive-p)
+      (if (called-interactively-p 'interactive)
 	  (message "TinyPath: cache advice code ACTIVATED.")))
      (t
       (tinypath-ti::advice-control list "tinypath" 'disable)
-      (if (interactive-p)
+      (if (called-interactively-p 'interactive)
 	  (message "TinyPath: cache advice code DEACTIVATED."))))))
 
 ;;; ----------------------------------------------------------------------
@@ -6652,7 +6650,7 @@ otherwise turn mode off."
 ;;; docs also say that `locate-file' uses hash table to speed up processing.
 ;;; Hm.
 ;;;
-;;; There is problem with functions that use (interactive-p) test, because
+;;; There is problem with functions that use (called-interactively-p 'interactive) test, because
 ;;; advice can't pass the information to the underlying function, so any
 ;;; such test inside here won't work.
 ;;;
@@ -6699,7 +6697,7 @@ otherwise turn mode off."
 	ad-do-it))
       ;; We must simulate in the advice, this interactive behavior, because
       ;; underlying function does not know it any more, due to advice.
-      (when (interactive-p)
+      (when (called-interactively-p 'interactive)
 	(if path
 	    (message path)
 	  (message "locate-library: %s not found."

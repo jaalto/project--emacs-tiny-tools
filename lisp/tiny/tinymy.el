@@ -602,25 +602,23 @@ Example:
      `ti::buffer-shebang' reads the command interpreter from the first line.
 
     (add-hook 'tinymy-load-hook 'my-tinymy-compile-customisations)
-    (autoload 'aput \"assoc\")
 
     (defun my-tinymy-compile-customisations ()
-      (aput 'tinymy--compile-table
-            \"perl\"
-            '(if (string-match \"project\" buffer-file-name)
-               (concat (or (ti::buffer-shebang) \"perl\") \" -w  %s\")
-             \"perl -w %s\")))
+      (push '(\"perl\" .
+              (if (string-match \"project\" buffer-file-name)
+                 (concat (or (ti::buffer-shebang) \"perl\") \" -w  %s\")
+               \"perl -w %s\"))
+       'tinymy--compile-table))
 
   If you always want to use the shebang command interpreter, then you
   would simply write
 
    (add-hook 'tinymy-load-hook 'my-tinymy-compile-customisations)
-   (autoload 'aput \"assoc\")
 
-    (defun my-tinymy-compile-customisations ()
-      (aput 'tinymy--compile-table
-            \"perl\"
-            '(concat (or (ti::buffer-shebang) \"perl\") \" -w %s\")))
+   (defun my-tinymy-compile-customisations ()
+     (push '(\"perl\" .
+             (concat (or (ti::buffer-shebang) \"perl\") \" -w %s\"))
+           'tinymy--compile-table))
 
   After this package has been loaded. (Place customizations like this
   to `tinymy--load-hook'."
@@ -1428,7 +1426,7 @@ Ignores file whose `file-modes' can't be read, e.g. for ange-ftp files."
         (forward-char 1)                ;Leave newline
         (unless (eq (point) (point-max))
           (delete-region (point-max) (point))))))
-  (if (interactive-p)
+  (if (called-interactively-p 'interactive)
       (message "TinyMy: Blanks trimmed"))
   nil)                                  ;Clean return code
 
@@ -1880,7 +1878,7 @@ the current point."
        (setq sum  (+ sum  rowval))
        (setq prod (* prod rowval)))
      START END 't)
-    (if (interactive-p)
+    (if (called-interactively-p 'interactive)
         (message "TinyMy: For %d rows, sum=%f, product=%f" rownum sum prod))
     (if insert
         (insert (format "%0.2f %0.2f" sum  prod)))))
@@ -2049,7 +2047,7 @@ List of  files can include shell regexps. The result is put into
      (list arg1)))
   (let* ((cmd         (concat tinymy--shar-command " "))
          (register    tinymy--register)
-         (verb        (interactive-p))
+         (verb        (called-interactively-p 'interactive))
          out)
     (if (ti::nil-p single-or-list)
         (error "Missing args")
@@ -2189,7 +2187,7 @@ to PostgreSQL."
                       (ti::directory-part-last
                        (file-name-directory file))))
            cmd)
-      (flet ((type-p (regexp1 regexp2)
+      (cl-flet ((type-p (regexp1 regexp2)
                      (or (ti::re-search-check regexp1)
                          (string-match regexp2 (or last "")))))
         (or (and (type-p "postgreSQL"

@@ -175,7 +175,7 @@
 ;;      perl script and it gives you nicely formatted HTML page.
 ;;      Writing HTML home pages is different story, because you
 ;;      usually want to include some graphics, JavaScript, PHP or JSP
-;;      in the page. But aputting some text document available in HTML
+;;      in the page. But putting some text document available in HTML
 ;;      format is easily made possible with this package.
 ;;
 ;;      On the other hand, while you may not be interested in HTML, you
@@ -1734,7 +1734,7 @@ This is low level check. Use `tinytf-text-format-ok-p' instead."
             (or (tinytf-text-format-ok-p-test-toc)
                 (tinytf-text-format-ok-p-test-headings)
                 (tinytf-text-format-ok-p-test-heading-and-text))))
-    (if (interactive-p)
+    (if (called-interactively-p 'interactive)
         (if (null ret)
             (message "Tinytf: No TF formattting found in this buffer.")
           (message "Tinytf: Found TF format location [%s]" ret)))
@@ -3055,7 +3055,7 @@ Return
   (let ((word-skip "^ ,.;\n\r\t\f")
 	beg
 	end)
-    (flet ((marker   (beg skip)
+    (cl-flet ((marker   (beg skip)
                      (save-excursion
                        (skip-chars-forward skip)
                        (list

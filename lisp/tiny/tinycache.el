@@ -696,7 +696,7 @@ the cache is flushed with \\[tinycache-flush]."
   "Kill all cached files by stepping through all compilation buffers. VERB."
   (interactive)
   (let ((count  0)
-	(verb   (or verb (interactive-p))))
+	(verb   (or verb (called-interactively-p 'interactive))))
     (tinycache-map-over-buffers nil
                                 (when (buffer-live-p  (get-buffer BuffeR))
                                   (kill-buffer BuffeR)

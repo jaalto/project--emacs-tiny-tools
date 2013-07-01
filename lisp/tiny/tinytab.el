@@ -264,7 +264,8 @@ Mode description:
      (define-key   root-map "\t"         'tinytab-tab-key)
      (define-key   root-map "\e\t"       'tinytab-tab-del-key)
      (define-key   root-map "\C-c\t"     'tinytab-indent-region-dynamically)
-     (define-key   root-map "\C-c\C-m"   'tinytab-return-key-mode)
+     ;; message-mode uses This key prefix for PGP commands
+     ;; (define-key   root-map "\C-c\C-m"   'tinytab-return-key-mode)
      ;; ........................................................ X-keys ...
      ;;  Standard key
      (define-key root-map (kbd "<S-tab>")        'tinytab-tab-del-key)
@@ -673,7 +674,7 @@ If optional ARG is given, behave exactly like 'newline' function."
 (defun tinytab-change-tab-width ()
   "Toggle tab width according to `tinytab--width-table'."
   (interactive)
-  (let ((verb  (interactive-p))
+  (let ((verb  (called-interactively-p 'interactive))
 	(val   (tinytab-width))
 	(table tinytab--width-table)
 	elt)
@@ -904,14 +905,14 @@ If region is active, indent all lines backward."
 ;;;###autoload
 (defun turn-on-tinytab-return-key-mode ()
   "Turn on auto indent after RET key."
-  (tinytab-return-key-mode 1 (interactive-p)))
+  (tinytab-return-key-mode 1 (called-interactively-p 'interactive)))
 
 ;;; ----------------------------------------------------------------------
 ;;;
 ;;;###autoload
 (defun turn-off-tinytab-return-key-mode ()
   "Turn on auto indent after RET key."
-  (tinytab-return-key-mode 1 (interactive-p)))
+  (tinytab-return-key-mode 1 (called-interactively-p 'interactive)))
 
 ;;; ----------------------------------------------------------------------
 ;;;
@@ -933,7 +934,7 @@ If region is active, indent all lines backward."
     ;;  C-m is exit-minibuffer.
     (if (string-match "minibuf" (buffer-name))
         (error "TinyTab: tinytab-return-key-mode not allowed in minibuffer."))
-    (setq verb (interactive-p))
+    (setq verb (called-interactively-p 'interactive))
     (cond
      ((or (null mode)
           (not (integerp mode)))
