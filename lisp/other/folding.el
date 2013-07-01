@@ -2,7 +2,7 @@
 
 ;; This file is not part of Emacs
 
-;; Copyright (C) 2000-2012 Jari Aalto
+;; Copyright (C) 2000-2013 Jari Aalto
 ;; Copyright (C) 1995, 1996, 1997, 1998, 1999 Jari Aalto, Anders Lindgren.
 ;; Copyright (C) 1994 Jari Aalto
 ;; Copyright (C) 1992, 1993 Jamie Lokier, All rights reserved.
