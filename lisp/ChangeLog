@@ -1,7 +1,7 @@
 2013-07-09 Tue  Jari Aalto  <jari.aalto@cante.net>
 
 	* tiny/tinypath.el: Update comments. Shuffle statement order in
-	`eval-and-compile'.
+	`eval-and-compile'. Move (require 'advice) to the beginning.
 	(tinypath--startup-no-messages): Update docstring.
 
 2013-06-14 Fri  Jari Aalto  <jari.aalto@cante.net>

@@ -1296,7 +1296,8 @@
 (provide 'tinypath)
 
 (eval-when-compile
-  (require 'cl))
+  (require 'cl)
+  (require 'advice))
 
 (eval-and-compile
 
@@ -1368,9 +1369,6 @@ from the *Messages* buffer.")
   ;;  => This is a user variable and defcustom should stay in user section.
   (defvar tinypath--verbose 3
     "*Verbosity level"))
-
-(eval-when-compile
-  (require 'advice))
 
 ;;}}}
 ;;{{{ Environment
