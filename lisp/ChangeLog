@@ -1,3 +1,8 @@
+2013-07-09 Tue  Jari Aalto  <jari.aalto@cante.net>
+
+	* tiny/tinypath.el: Update comments. Shuffle statement order in
+	`eval-and-compile'.
+
 2013-06-14 Fri  Jari Aalto  <jari.aalto@cante.net>
 
 	* tiny/tinydebian.el (tinydebian-mail-setup): New. Handle

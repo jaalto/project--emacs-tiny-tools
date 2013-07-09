@@ -1289,12 +1289,11 @@
 (put 'gc-cons-threshold 'tinypath gc-cons-threshold)
 (setq gc-cons-threshold (* 1024 1024 10))
 
-;;  Why the provide is at the start of file?
-;;  Because XEmacs does not record `load-history' entry unless it sees
-;;  `provide' statement. There is a check for SELF LOCATION by looking at
-;;  the `load-history' in this package
+;;  XEmacs does not record `load-history' entry unless it sees
+;;  `provide' statement. There is a check for SELF LOCATION by looking
+;;  at the `load-history' in this package
 
-(provide   'tinypath)
+(provide 'tinypath)
 
 (eval-when-compile
   (require 'cl))
@@ -1308,41 +1307,12 @@
     ;;  by some package
     (load "cl-macs"))
 
-  ;;  These variables must be here in order to Byte compiler to see them
-  ;;  before they are used.
-
-  (defcustom tinypath--verbose-info-messages nil
-    "*If non-nil, notify missing environment variables like USER.
-This variable is meant for Win32 environment, where Unix style
-USER and LOGNAME variables are not defined by default."
-    :type  'boolean
-    :group 'TinyPath)
-
-  (defvar tinypath--boot-ignore-directory-regexp
-    ;; #todo: /usr/share/emacs/21.3/lisp/obsolete
-    "\\(CVS\\|RCS\\|info\\|texi\\|\\.svn\\|\\.git\\|\\.bzr\\|\\.hg\\|\\.mtn\\|/MT\\)/?$"
-    "While searching lisp boot subdirs, ignore those that match this regexp.
-Popular version control directories are excluded by default.")
-
-  ;;  #todo: Mysterious byte compile bug:
-  ;;  Remove all cache files, compile tinypath, launch emacs.
+  ;;  FIXME: Mysterious byte compile bug:
+  ;;  Remove all cache files, compile tinypath, start Emacs.
   ;;  => Dies with a message of: "function member* not found".
 
   (unless (fboundp 'member*)
     (autoload 'member* "cl-seq"))
-
-  (defconst tinypath--xemacs-p
-    (or (boundp 'xemacs-logo)
-	(featurep 'xemacs)
-	(string-match "XEmacs" (emacs-version)))
-    "Non-nil if running XEmacs.")
-
-  ;;  Mostly for Win32 environment checks
-  (defvar tinypath--startup-no-messages t
-    "*If non-nil, do not display error message buffer at startup.
-You should set this to `nil' if you begin to use this package first
-time to see messages that may need attention. Alternatively, check
-message buffer.")
 
   (defvar font-lock-mode) ;; Byte compiler silencers
   (defvar lazy-lock-mode)
@@ -1362,6 +1332,35 @@ message buffer.")
 
   ;; See find-file.el
   (defvar ff-search-directories)
+
+  ;;  These variables must be here in order for the Byte compiler to
+  ;;  see them before they are used.
+
+  (defcustom tinypath--verbose-info-messages nil
+    "*If non-nil, notify missing environment variables like USER.
+This variable is meant for Win32 environment, where Unix style
+USER and LOGNAME variables are not defined by default."
+    :type  'boolean
+    :group 'TinyPath)
+
+  (defvar tinypath--boot-ignore-directory-regexp
+    ;; FIXME: /usr/share/emacs/21.3/lisp/obsolete
+    "\\(CVS\\|RCS\\|info\\|texi\\|\\.svn\\|\\.git\\|\\.bzr\\|\\.hg\\|\\.mtn\\|/MT\\)/?$"
+    "While searching lisp boot subdirs, ignore those that match this regexp.
+Popular version control directories are excluded by default.")
+
+  (defconst tinypath--xemacs-p
+    (or (boundp 'xemacs-logo)
+	(featurep 'xemacs)
+	(string-match "XEmacs" (emacs-version)))
+    "Non-nil if running XEmacs.")
+
+  ;;  Mostly for Win32 environment checks
+  (defvar tinypath--startup-no-messages t
+    "*If non-nil, do not display error message buffer at startup.
+You should set this to `nil' if you begin to use this package first
+time to see messages that may need attention. Alternatively, check
+message buffer.")
 
   ;;  This is just forward declaration for byte compiler
   ;;  It it not sensible to lift `defcustom' definition apart from
@@ -4616,7 +4615,7 @@ Input:
 
 Return:
 
-  '(PATH  CACHE-ELEMENT)"
+  '(PATH CACHE-ELEMENT)"
   (when tinypath--cache
     (let* ((fid  "TinyPath: tinypath-cache-p-1-new-cache ")
 	   (regexp1  tinypath--ignore-file-regexp)
@@ -4637,7 +4636,7 @@ Return:
        ret
        (catch 'done
 	 (cl-flet (                 ;; First function
-		(path-name (ELT) ;; ELT = '("FILE.EL" (POS . "PATH"))
+		(path-name (ELT) ;; ELT = '("FILE.EL" (POS . "PATH/"))
 			   (when ELT
 			     (concat (cdr (nth 1 ELT)) (car ELT)  )))
 		;; Second function
