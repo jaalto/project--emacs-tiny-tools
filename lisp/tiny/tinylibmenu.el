@@ -123,7 +123,7 @@
 (eval-when-compile
   (autoload 'ignore-errors "cl-macs" nil 'macro))
 
-(defconst tinylibmenu-version-time "2010.1208.0757"
+(defconst tinylibmenu-version-time "2013.0709.0609"
   "Latest version number.")
 
 (defvar ti::menu--load-hook nil
@@ -142,7 +142,7 @@
     ((?1 . (  (ti::menu-test1 1 2 3)))      ;this does not have FLAG
      (?2 . (t (ti::menu-test2)))            ;FLAG used.
      (?m . ti::menu--menu-mode)
-     (?u . ti::menu--menu-not-exist) ;this variable does not exist :-)
+     (?u . ti::menu--menu-not-exists) ;this variable does not exist.
      (?e . (t (progn
                 (message "menu item evaled. Pfx: '%s' "
                          (prin1-to-string ti::menu--prefix-arg))

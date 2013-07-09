@@ -1,5 +1,7 @@
 2013-07-09 Tue  Jari Aalto  <jari.aalto@cante.net>
 
+	* tiny/tinylibmenu.el (ti::menu--menu-sample): Adjust comment.
+
 	* tiny/tinylib.el (ti::compat-mouse-call-original): change
 	variable from `ti::-xe-mouse-call-original' to
 	`ti::xemacs--mouse-call-original'.
