@@ -5470,7 +5470,7 @@ E.g., if you want to calculate days; you'd do
 	  (message "TinyPath: load time %s %dsec" name diff)
 	(tinypath-verbose-macro 9
 	  (message "TinyPath: load time %s %dsec" name diff)))
-      (push (cons name diff) 'tinypath--time-data))))
+      (push (cons name diff) tinypath--time-data))))
 
 ;;; ----------------------------------------------------------------------
 ;;;
