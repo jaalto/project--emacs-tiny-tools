@@ -350,8 +350,9 @@ Default boundary is line limit."
 
 ;;; ----------------------------------------------------------------------
 ;;; - There is lot of re-search-backward/fwd commands and it is intentional,
-;;;   so that the code is totally emacs version independent. Newer emacs
-;;;   has nice functions that shrink this code to 10 lines :->
+;;;   so that the code is completely Emacs version independent.
+;;; - FIXME: Newer emacs has nice functions that could shrink this code
+;;    to 10 lines.
 ;;; - Never grab word function is already coded in tinylib.el
 ;;;
 (defun tinysearch-search-word-main (&optional backward set)
@@ -461,7 +462,7 @@ NOTE:
           (setq loop nil)))
         ;; .................................................... do hilit ...
         (if (and tinysearch--overlay found (null loop))
-            (ti::compat-overlay-move tinysearch--overlay  mb me nil 'highlight))
+            (ti::compat-overlay-move tinysearch--overlay mb me nil 'highlight))
         (when tinysearch--overlay       ;Hide overlay
           (sit-for 1)
           (ti::compat-overlay-move tinysearch--overlay 1 1))
