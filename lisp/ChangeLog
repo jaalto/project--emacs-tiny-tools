@@ -1,5 +1,7 @@
 2013-07-09 Tue  Jari Aalto  <jari.aalto@cante.net>
 
+	* tiny/tinyscroll.el: Adjust commentary at the beginning.
+
 	* tiny/tinypath.el: Update comments. Shuffle statement order in
 	`eval-and-compile'. Move (require 'advice) to the beginning.
 	(tinypath--startup-no-messages): Update docstring.

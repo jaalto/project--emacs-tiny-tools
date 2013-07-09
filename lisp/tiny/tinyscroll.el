@@ -70,9 +70,10 @@
 
 ;;  Preface, May 1996
 ;;
-;;      I was in the middle of testing one of my new packages which didn't
-;;      quite work as I wanted, I was loading all the lisp files to see if
-;;      it breaks. I watched the *Message* buffer to fill with statements
+;;      I was in the middle of testing one of my new packages which
+;;      didn't quite work as I wanted. I was loading all kinds of
+;;      libraries to see if it breaks. I watched the *Message* buffer
+;;      to fill with statements like:
 ;;
 ;;          Loading abbrev...
 ;;          Loading abbrev...done
@@ -81,50 +82,51 @@
 ;;          loading rmail done...
 ;;          ...
 ;;
-;;      But suddendly the emacs died. It kicked me off to the shell and I
+;;      But suddendly the Emacs died. It kicked me off to the shell and I
 ;;      had no idea what package was the last one that got loaded.
 ;;
 ;;      You see, the *Message* buffer keeps growing, but you have to tap
-;;      the pgDown key to get to the end, all the time. Instead I decided
+;;      the PgDown key to get to the end, all the time. Instead I decided
 ;;      to pull out some lisp to do general auto-scrolling for any buffer,
 ;;      so that I can just sit back and watch the buffer move. No more
-;;      guessing in *Message* buffer what was the last message before Emacs
-;;      sunk :-)
+;;      guessing in *Message* buffer what was the last message before
+;;      Emacs went down.
 ;;
 ;;  Overview of features
 ;;
 ;;      o   Select buffer, and hit auto scroll on/off. You can scroll any
 ;;          buffer.
 ;;      o   All windows for the buffer are scrolled in all frames.
-;;          If frame is miimized and contains window to sroll, frame will
+;;          If frame is minized and contains window to sroll, frame will
 ;;          be maximized ("popped up")
 ;;      o   If buffer's point-max doesn't move, scroll is ignored.
-;;      o   Default scroll activated for: *Compilation* *Grep* and *Messages*
+;;      o   Default scroll is activate for: *Compilation* *Grep* and *Messages*
 ;;
 ;;  How to use this package
 ;;
-;;      The scroling here is based on timers, where the lowest interval can
-;;      be one 1 second. This means that you don't get smooth and
-;;      continuous scrolling, but regular update of the buffer, which may
-;;      in rare cases seem jerky. However, using timers is the only
-;;      possibility if we want to have general scroll utility for *any* buffer.
+;;      The scroling here is based on timers, where the lowest
+;;      interval can be one 1 second. This means that you don't get
+;;      smooth and continuous scrolling, but regular update of the
+;;      buffer, which may in rare cases seem jerky. However, using
+;;      timers is the only possibility if we want to have general
+;;      scroll utility for *any* buffer.
 ;;
 ;;      To enable/disable auto-scroll for current buffer, use these:
 ;;
-;;          M-x tinyscroll-control              ;to activate scroll
+;;          M-x tinyscroll-control      ;to activate scroll
 ;;          C-u M-x tinyscroll-control  ;to deactivate scroll
 ;;
 ;;  Lowest window of the same buffer always scrolls
 ;;
 ;;      It is an interesting problem, when you have SAME buffer in multiple
-;;      windows, to decide which window to scroll.  I didn't want to scroll
+;;      windows, to decide which window to scroll. I didn't want to scroll
 ;;      all windows, since otherwise I wouldn't have used two/or more
 ;;      windows for the same buffer.
 ;;
-;;      I decided that the lowest window for the buffer always scrolls. You
-;;      can't change that. This was a design decision and I won't support
-;;      scrolling middle/upper buffers. Just arrange your windows so that
-;;      the scrolling one goes to the bottom.
+;;      I decided that the lowest window for the buffer always
+;;      scrolls. This can't be configured due to the design decision.
+;;      Try to arrange your windows so that the scrolling one goes to
+;;      the bottom.
 
 ;;}}}
 
