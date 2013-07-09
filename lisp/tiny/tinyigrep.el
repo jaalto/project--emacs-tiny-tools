@@ -1542,9 +1542,8 @@ GREP is program to used for grepping. Default is `egrep'."
              (ti::compat-Info-directory-list)))))
     (message "TinyIgrep: Wait, initialising default databases...done")))
 
-
 ;;;### (autoload 'tinyigrep-debug-toggle "tinyigrep" t t)
-(eval-and-compile (ti::macrof-debug-standard "tinyigrep" ":-"))
+(eval-and-compile (ti::macrof-debug-standard "tinyigrep" "--"))
 
 ;;}}}
 ;;{{{ Install

@@ -1,5 +1,8 @@
 2013-07-09 Tue  Jari Aalto  <jari.aalto@cante.net>
 
+	* tiny/tinyigrep.el (ti::macrof-debug-standard): Correct variable
+	prefix start to '--'.
+
 	* tiny/tinydiff.el (tinydiff-mode-define-keys-minibuffer-default):
 	Adjust text in comments.
 
