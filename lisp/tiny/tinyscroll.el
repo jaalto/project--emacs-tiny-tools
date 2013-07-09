@@ -249,7 +249,7 @@ If buffer does not exist, do nothing and return nil."
 ;;; if easier to trap "t" error condition.
 ;;;
 (defun tinyscroll--list-add (buffer-name position &optional remove)
-  "Check is BUFFER-NAME name is in 'tisc:-list'.
+  "Check is BUFFER-NAME name is in 'tinyscroll--list'.
 
 Input:
 
