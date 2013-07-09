@@ -6566,7 +6566,7 @@ otherwise turn mode off."
 ;;;}}}
 ;;;{{{ Advice code
 
-;; ############################   BEGIN FUNCTION -- advice instantiate
+;; ############################ BEGIN FUNCTION -- advice instantiate
 
 (defun tinypath-advice-instantiate ()
   "Instantiate all advices."
@@ -6589,10 +6589,10 @@ otherwise turn mode off."
   (when tinypath--xemacs-p
     (require 'efs))
 
-;;; ----------------------------------------------------------------------
-;;; (turn-on-tinypath-cache-mode)
-;;; (turn-off-tinypath-cache-mode)
-;;;
+  ;; ----------------------------------------------------------------------
+  ;; (turn-on-tinypath-cache-mode)
+  ;; (turn-off-tinypath-cache-mode)
+  ;;
   (defadvice autoload (around tinypath dis)
     "Use `tinypath--cache' for fast lookup of files."
     (let* ((file        (ad-get-arg 1))
@@ -6601,9 +6601,9 @@ otherwise turn mode off."
 	(ad-set-arg 1 path))
       ad-do-it))
 
-;;; ----------------------------------------------------------------------
-;;; (load FILE &optional NOERROR NOMESSAGE NOSUFFIX MUST-SUFFIX)
-;;;
+  ;; ----------------------------------------------------------------------
+  ;; (load FILE &optional NOERROR NOMESSAGE NOSUFFIX MUST-SUFFIX)
+  ;;
   (defadvice load (around tinypath dis)
     "Use `tinypath--cache' for fast lookup of files."
     (let* ((file        (ad-get-arg 0))
@@ -6629,8 +6629,8 @@ otherwise turn mode off."
 	    (ad-set-arg 0 path))))
       ad-do-it))
 
-;;; ----------------------------------------------------------------------
-;;;
+  ;; ----------------------------------------------------------------------
+  ;;
   (defadvice load-library (around tinypath dis)
     "Use `tinypath--cache' for fast lookup of files."
     (let* ((file  (ad-get-arg 0))
@@ -6641,19 +6641,19 @@ otherwise turn mode off."
 	(ad-set-arg 0 path))
       ad-do-it))
 
-;;; ----------------------------------------------------------------------
-;;; In Win32 XEmacs 21.2 beta; the this function calls `locate-file' which
-;;; for some reason breaks if given a absolute file name. The XEmacs
-;;; docs also say that `locate-file' uses hash table to speed up processing.
-;;; Hm.
-;;;
-;;; There is problem with functions that use (called-interactively-p 'interactive) test, because
-;;; advice can't pass the information to the underlying function, so any
-;;; such test inside here won't work.
-;;;
-;;; 21.3.1:
-;;; (locate-library LIBRARY &optional NOSUFFIX PATH INTERACTIVE-CALL)
-;;;
+  ;; ----------------------------------------------------------------------
+  ;; In Win32 XEmacs 21.2 beta; the this function calls `locate-file' which
+  ;; for some reason breaks if given a absolute file name. The XEmacs
+  ;; docs also say that `locate-file' uses hash table to speed up processing.
+  ;; Hm.
+  ;;
+  ;; There is problem with functions that use (called-interactively-p 'interactive) test, because
+  ;; advice can't pass the information to the underlying function, so any
+  ;; such test inside here won't work.
+  ;;
+  ;; 21.3.1:
+  ;; (locate-library LIBRARY &optional NOSUFFIX PATH INTERACTIVE-CALL)
+  ;;
   (defadvice locate-library (around tinypath act)
     "Use `tinypath--cache' for fast lookup of files."
     (interactive
@@ -6700,8 +6700,8 @@ otherwise turn mode off."
 	  (message "locate-library: %s not found."
 		   (or file "<no filename>"))))))
 
-;;; ----------------------------------------------------------------------
-;;;
+  ;; ----------------------------------------------------------------------
+  ;;
   (defadvice require (around tinypath dis)
     "Use `tinypath--cache' for fast lookup of files.
 Property (get 'require 'tinypath-load-list) contains list
@@ -6732,7 +6732,7 @@ of required packages: '((feature . path)."
 	  (ad-set-arg 1 path)))
       ad-do-it))
 
-  ) ;; ############################   END FUNCTION -- end advice instantiate
+  ) ;; ############################ END FUNCTION -- end advice instantiate
 
 ;;;}}}
 ;;;{{{ win32: Unix $HOME directory mounted to PC, like to H: disk
