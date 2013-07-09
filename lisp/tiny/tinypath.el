@@ -1920,11 +1920,11 @@ ROOT can be a single directory or list of directories."
 ;;;
 (defun tinypath-default-load-path-root-user ()
   "Return user's Emacs Lisp path by guessing various directories."
-  (cl-flet ((msg (m)
-	      (message m)
-	      (unless tinypath--startup-no-messages
-		(sit-for 2))
-	      nil))
+  (cl-flet ((msg (msg)
+		 (message msg)
+		 (unless tinypath--startup-no-messages
+		   (sit-for 2))
+		 nil))
     (if (null (getenv "HOME"))
 	(msg "TinyPath: [ERROR] Environment variable HOME is not set.")
       (let (ret)
@@ -2027,16 +2027,16 @@ Input:
   BUG      If set, and DIR not found, call `tinypath-message-bug'."
   (let (found)
     (cl-flet ((check-dir
-	    (try dir)
-	    (setq try (tinypath-expand-file-name
-		       (concat (file-name-as-directory try)
-			       dir)))
-	    (if verb
-		(message "TinyPath: directory search ... %s" try))
-	    (when (file-directory-p try)
-	      (if verb
-		  (message "TinyPath: directory search ... found %s" try))
-	      try)))
+	       (try dir)
+	       (setq try (tinypath-expand-file-name
+			  (concat (file-name-as-directory try)
+				  dir)))
+	       (if verb
+		   (message "TinyPath: directory search ... %s" try))
+	       (when (file-directory-p try)
+		 (if verb
+		     (message "TinyPath: directory search ... found %s" try))
+		 try)))
       (or dir
 	  (setq dir ""))
       (dolist (try list)
@@ -3347,9 +3347,9 @@ Input
 		never than 2.1. In this case it is assumed
 		that zero based versions are latest development releases."
   (cl-flet ((version (str regexp)
-		  (if (string-match regexp str)
-		      (string-to-number (match-string 1 str))
-		    0)))
+		     (if (string-match regexp str)
+			 (string-to-number (match-string 1 str))
+		       0)))
     (let* ((a1 (version a "^\\([0-9]+\\)"))
 	   (a2 (version a "^[0-9]+\\.\\([0-9]+\\)"))
 	   (a3 (version a "^[0-9]+\\.[0-9]+\\.\\([0-9]+\\)"))
@@ -3404,11 +3404,10 @@ Return:
 	item
 	ret)
     (cl-flet ((get-elt (elt place)
-		    (if (vectorp elt)
-			(aref elt place)
-		      (nth place elt))))
-      (dolist (timer '(
-		       ;; (("Mon Dec  9 10:01:47 1996-0" 10
+		       (if (vectorp elt)
+			   (aref elt place)
+			 (nth place elt))))
+      (dolist (timer '(;; (("Mon Dec  9 10:01:47 1996-0" 10
 		       ;;     process nil))
 		       (timer-idle-list . 5)
 		       (timer-alist . 2)
@@ -3420,7 +3419,7 @@ Return:
 	  ;;  NOTE: this is different in Xemacs. It is not a vector
 	  ;; timer-[idle-]list Emacs 19.34
 	  ;;  NOTE: this is different in Xemacs. It is not a vector
-
+	  ;;
 	  ;; ([nil 12971 57604 0 60 display-time-event-handler nil nil])
 	  ;; [nil 13971 14627 646194 60
 	  ;;      (lambda (f) (run-at-time ...))
