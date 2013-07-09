@@ -859,7 +859,6 @@ Eg. TAB that completes current filename."
   (setq tinydiff--minibuffer-map (copy-keymap minibuffer-local-map))
   ;;
   ;;  Here we define nice tab filename completion inside minibuffer
-  ;;  This may be superflous, but what the heck :-)
   ;;
   (define-key tinydiff--minibuffer-map "\t"
     'tinydiff-minibuffer--complete-filename)

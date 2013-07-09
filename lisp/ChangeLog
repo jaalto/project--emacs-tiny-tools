@@ -1,5 +1,8 @@
 2013-07-09 Tue  Jari Aalto  <jari.aalto@cante.net>
 
+	* tiny/tinydiff.el (tinydiff-mode-define-keys-minibuffer-default):
+	Adjust text in comments.
+
 	* tiny/tinygnus.el (tinygnus-gnus-group-get-news-symbolic): Adjust
 	comment above.
 
