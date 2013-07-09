@@ -394,7 +394,7 @@
             the file. Uses X-popup [imenu] for showing those book marks and
             moving between them.")
 
-(defvar tinybookmark--version-time "2013.0613.1819"
+(defvar tinybookmark--version-time "2013.0709.0617"
   "Last modified time.")
 
 ;;}}}
@@ -583,7 +583,7 @@ References:
 ;;;  - Well, I usually add book mark section to my elisp code and while
 ;;;    I did them by hand I added ';;; ' comment at the beginning of
 ;;;    line and fed 70  continuous characters with ESC 70 '-'after
-;;;    comment  --> totals 4 + 70 chars :-/
+;;;    comment this becomes total of 4 + 70 characters.
 ;;;
 ;;;  - The idea of this calculation is that when you hit separator,
 ;;;    like this: COMMENT-SPACE-70_CHAR_SEPARATOR, this will calculate
@@ -612,8 +612,8 @@ References:
      ((string-match "lisp" mode)
       74)
      (t
-      (if (string-match "[ \t]+" cs)  ;does it already have space "# "
-          (+ len (length cs)) ;no it does not "#", add room for it.
+      (if (string-match "[ \t]+" cs)  ;; does it already have space "# "
+          (+ len (length cs))         ;; no it does not "#", add room for it.
         (1+ (+ len (length cs))))))))
 
 ;;; ----------------------------------------------------------------------

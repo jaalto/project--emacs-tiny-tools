@@ -1,5 +1,8 @@
 2013-07-09 Tue  Jari Aalto  <jari.aalto@cante.net>
 
+	* tiny/tinybookmark.el (tinybookmark-calc-max-col): Adjust comment
+	above.
+
 	* tiny/tinytab.el (tinytab-tab-brace-control): Adjust comment above.
 
 	* tiny/tinysearch.el (tinysearch-search-word-main): Adjust comment
