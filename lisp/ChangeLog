@@ -1,5 +1,8 @@
 2013-07-09 Tue  Jari Aalto  <jari.aalto@cante.net>
 
+	* tiny/tinygnus.el (tinygnus-gnus-group-get-news-symbolic): Adjust
+	comment above.
+
 	* tiny/tinyscroll.el: Adjust commentary at the beginning.
 	(tinyscroll--list-add): Correct variable name in docstring to
 	'tinyscroll--list'.

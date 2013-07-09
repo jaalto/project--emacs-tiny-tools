@@ -2758,7 +2758,7 @@ Contact maintainer."))))
 
 ;;; ----------------------------------------------------------------------
 ;;; Note: if yo hit just "3 g"; GNUS will read all level up till 3,
-;;; so you would actually read levels 1,2,3  and not just 3 :-)
+;;; so you would actually read levels 1,2,3 and not just 3.
 ;;;
 (defun tinygnus-gnus-group-get-news-symbolic (elt)
   "Ask for symbolic name which represents level where to get news.
