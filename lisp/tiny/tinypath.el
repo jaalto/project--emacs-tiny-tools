@@ -5851,16 +5851,6 @@ LIST can contains single elements or lists:
 
 ;;; ----------------------------------------------------------------------
 ;;;
-(defun tinypath-load-path-remove-old (regexp)
-  "Remove all paths matching REGEXP from `load-path'"
-  (let (list)
-    (dolist (elt load-path)
-      (unless (string-match regexp elt)
-	(push elt list)))
-    (setq load-path (nreverse load-path))))
-
-;;; ----------------------------------------------------------------------
-;;;
 (defun tinypath-load-path-remove (regexp)
   "Remove any matching REGEXP from `load-path'.
 Return t if removed something."

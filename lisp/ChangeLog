@@ -5,6 +5,7 @@
 	(tinypath--startup-no-messages): Update docstring.
 	(tinypath-time-record):Correct push to `tinypath--time-data'.
 	(tinypath-load-path-remove-old): Rewrite without `remove-if'.
+	Remove function; not used.
 	(tinypath-load-path-remove): Add `nreverse' to preserve order.
 
 2013-06-14 Fri  Jari Aalto  <jari.aalto@cante.net>
