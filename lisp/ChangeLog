@@ -7,6 +7,8 @@
 	(tinypath-load-path-remove-old): Rewrite without `remove-if'.
 	Remove function; not used.
 	(tinypath-load-path-remove): Add `nreverse' to preserve order.
+	(tinypath-cache-p-1-new-cache): Change `cl-flet' to `cl-flet*'.
+	Fixes byte compiler "path-name is not known to be defined".
 
 2013-06-14 Fri  Jari Aalto  <jari.aalto@cante.net>
 

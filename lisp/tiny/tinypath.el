@@ -4633,29 +4633,29 @@ Return:
       (setq
        ret
        (catch 'done
-	 (cl-flet (                 ;; First function
-		(path-name (ELT) ;; ELT = '("FILE.EL" (POS . "PATH/"))
-			   (when ELT
-			     (concat (cdr (nth 1 ELT)) (car ELT)  )))
-		;; Second function
-		(throw-ignore
-		 (ELT)
-		 (cond
-		  ((and ELT
-			(or (and (stringp regexp1)
-				 (string-match regexp1
-					       (car ELT)))
-			    (and (stringp regexp2)
-				 (let (case-fold-search)
-				   (string-match regexp2
-						 (cdr (nth 1 ELT)))))))
-		   (tinypath-verbose-macro 10
-		     (message "%s`ignore-file-regexp' %s"
-			      fid
-			      (car ELT)))
-		   nil)
-		  (ELT
-		   (throw 'done (path-name ELT))))))
+	 (cl-flet* (;; First function
+		    (path-name (ELT) ;; ELT = '("FILE.EL" (POS . "PATH/"))
+			       (when ELT
+				 (concat (cdr (nth 1 ELT)) (car ELT)  )))
+		    ;; Second function
+		    (throw-ignore
+		     (ELT)
+		     (cond
+		      ((and ELT
+			    (or (and (stringp regexp1)
+				     (string-match regexp1
+						   (car ELT)))
+				(and (stringp regexp2)
+				     (let (case-fold-search)
+				       (string-match regexp2
+						     (cdr (nth 1 ELT)))))))
+		       (tinypath-verbose-macro 10
+			 (message "%s`ignore-file-regexp' %s"
+				  fid
+				  (car ELT)))
+		       nil)
+		      (ELT
+		       (throw 'done (path-name ELT))))))
 	   (tinypath-verbose-macro 10
 	     (message (concat fid " ENTRY %s %s")
 		      package
