@@ -2,6 +2,7 @@
 
 	* tiny/tinypath.el: Update comments. Shuffle statement order in
 	`eval-and-compile'.
+	(tinypath--startup-no-messages): Update docstring.
 
 2013-06-14 Fri  Jari Aalto  <jari.aalto@cante.net>
 

@@ -1358,9 +1358,9 @@ Popular version control directories are excluded by default.")
   ;;  Mostly for Win32 environment checks
   (defvar tinypath--startup-no-messages t
     "*If non-nil, do not display error message buffer at startup.
-You should set this to `nil' if you begin to use this package first
-time to see messages that may need attention. Alternatively, check
-message buffer.")
+Set to non-nil for initial uses of this package first
+to see messages that may need attention. The messages can be recalled
+from the *Messages* buffer.")
 
   ;;  This is just forward declaration for byte compiler
   ;;  It it not sensible to lift `defcustom' definition apart from
