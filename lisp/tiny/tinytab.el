@@ -523,9 +523,6 @@ This way you can partly mix e.g. C++ mode and this minor mode."
 ;;; - For a little more smarter TAB key to line up { } braces
 ;;;   in variaous programming modes I made this. It's simple,
 ;;;   but suffices for most common needs.
-;;; - I don't know how the C-mode or cc-mode does this, but, hey,
-;;;   this is one way :-)
-;;;
 ;;;
 (defun tinytab-tab-brace-control ()
   "When hitting TAB, line up {} braces, otherwise do nothing special.

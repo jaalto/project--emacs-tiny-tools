@@ -1,5 +1,10 @@
 2013-07-09 Tue  Jari Aalto  <jari.aalto@cante.net>
 
+	* tiny/tinytab.el (tinytab-tab-brace-control): Adjust comment above.
+
+	* tiny/tinysearch.el (tinysearch-search-word-main): Adjust comment
+	above.
+
 	* tiny/tinylibmenu.el (ti::menu--menu-sample): Adjust comment.
 
 	* tiny/tinylib.el (ti::compat-mouse-call-original): change
