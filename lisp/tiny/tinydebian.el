@@ -2831,16 +2831,18 @@ Bug#NNNN: O: package -- description."
                                    tinydebian--debian-bts-email-address)
                            str)
              (match-string 1 str))
-        ;;   BTS message lines: "owner NNNNNN"
+        ;;   BTS message lines: NNNN@bugs.launchpad.net
         (and (string-match (concat "\\([0-9]+\\)\\(?:-[a-z]+\\)?@"
                                    ;; FIXME: Use variable
                                    "bugs.launchpad.net")
                            str)
              (match-string 1 str))
         ;;   BTS message lines: "owner NNNNNN"
-        (and (string-match (concat "\\<\\(?:owner\\|retitle\\|tags\\)[ \t]+"
-                                   "\\([0-9][0-9][0-9][0-9][0-9][0-9]\\)\\>")
-                           str)
+        (and (string-match
+	      (concat
+	       "\\<\\(?:owner\\|retitle\\|tags\\|forwarded\\)[ \t]+"
+	       "\\([0-9][0-9][0-9][0-9][0-9][0-9]\\)\\>")
+	      str)
              (match-string 1 str))
         (and (string-match          ;; long NUMBER
               "^[ \t\r\n]*#?\\([0-9][0-9][0-9][0-9]+\\)\\(?:[ \t\r\n]\\|$\\)" str)

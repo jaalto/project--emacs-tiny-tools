@@ -1,3 +1,8 @@
+2013-08-14 Wed  Jari Aalto  <jari.aalto@cante.net>
+
+	* tiny/tinydebian.el (tinydebian-bug-nbr-string): Check keyword
+	"forwarded".
+
 2013-07-09 Tue  Jari Aalto  <jari.aalto@cante.net>
 
 	* tiny/tinybookmark.el (tinybookmark-calc-max-col): Adjust comment
