@@ -4338,6 +4338,9 @@ number interactively."
        bug
        (format re bug)))))
 
+(defvar tinydebian--mail-mode-debian-address-package-history nil
+  "History of names in `tinydebian-mail-mode-debian-address-package-toggle'")
+
 ;;; ----------------------------------------------------------------------
 ;;;
 (defun tinydebian-mail-mode-debian-address-package-toggle
@@ -4350,11 +4353,18 @@ number interactively."
                             (string-match re (car address)))
                        (match-string 1 (car address)))))
      (list
-      (tinydebian-trim-blanks (read-string "package name: " pkg))
-      (if pkg
-          t
-        current-prefix-arg))))
+      (setq
+       pkg
+       (tinydebian-trim-blanks
+	(read-string
+	 "package name: "
+	 (or pkg
+	     (and tinydebian--mail-mode-debian-address-package-history
+		  (caar tinydebian--mail-mode-debian-address-package-history)))
+	 tinydebian--mail-mode-debian-address-package-history)))
+      current-prefix-arg)))
   ;; toggle
+  (tinydebian-string-p "Missing string argument: package")
   (let ((email (format "%s@packages.debian.org" package)))
     (cond
      (remove

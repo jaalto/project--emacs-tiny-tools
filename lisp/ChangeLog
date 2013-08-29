@@ -1,3 +1,10 @@
+2013-08-29 Thu  Jari Aalto  <jari.aalto@cante.net>
+
+	* tiny/tinydebian.el
+	(tinydebian--mail-mode-debian-address-package-history): New.
+	(tinydebian-mail-mode-debian-address-package-toggle): Correct
+	enable/disable functionality.
+
 2013-08-14 Wed  Jari Aalto  <jari.aalto@cante.net>
 
 	* tiny/tinydebian.el (tinydebian-bug-nbr-string): Check keyword
