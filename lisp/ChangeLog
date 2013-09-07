@@ -1,3 +1,7 @@
+2013-09-07 Sat  Jari Aalto  <jari.aalto@cante.net>
+
+	* tiny/tinymacro.el: Clean up comments.
+
 2013-08-29 Thu  Jari Aalto  <jari.aalto@cante.net>
 
 	* tiny/tinydebian.el

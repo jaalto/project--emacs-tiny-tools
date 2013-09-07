@@ -2,8 +2,6 @@
 
 ;; This file is not part of Emacs
 
-;;{{{ Id
-
 ;; Copyright (C) 1995-2013 Jari Aalto
 ;; Keywords:     extensions
 ;; Author:       Jari Aalto
@@ -28,12 +26,8 @@
 ;;
 ;; Visit <http://www.gnu.org/copyleft/gpl.html> for more information
 
-;;}}}
-;;{{{ Install
-
 ;;; Intall:
 
-;; ........................................................ &t-install ...
 ;;   Put this file on your Emacs-Lisp `load-path', add following into your
 ;;   ~/.emacs startup file:
 ;;
@@ -46,10 +40,6 @@
 ;;      (autoload 'tinymacro-end-kbd-macro-and-assign  "tinymacro" "" t)
 ;;      (global-set-key "\C-x)" 'tinymacro-end-kbd-macro-and-assign)
 
-;;}}}
-;;{{{ Documentation
-
-;; ..................................................... &t-commentary ...
 
 ;;; Commentary:
 
@@ -69,13 +59,10 @@
 ;;      o   To see the macro assignments to keys, just call `tinymacro-macro-info'
 ;;      o   Default macro count is 10, increase with `tinymacro--stack-max'
 
-;;}}}
 
 ;;; Change log:
 
 ;;; Code:
-
-;;{{{ setup: require
 
 (require 'tinylibm)
 
@@ -87,8 +74,7 @@
             assign it to key.
         o   To see the macro assignments to keys, just call tinymacro-macro-info")
 
-;;}}}
-;;{{{ setup: hooks, private
+;; setup: hooks, private
 
 (defcustom tinymacro--macro-assigned-hook nil
   "*If new macro were asiigned, this hook will be run. The function
@@ -101,8 +87,7 @@ SYMBOL that was used is in variable tinymacro--last-macro-func"
   :type  'hook
   :group 'TinyMacro)
 
-;;}}}
-;;{{{ setup: public, user configurable
+;; setup: public, user configurable
 
 (defcustom tinymacro--macro-function-name-prefix "tinymacro--macro"
   "*The function name prefix to use, when assigning name to last kbd macro"
@@ -125,8 +110,7 @@ SYMBOL that was used is in variable tinymacro--last-macro-func"
   :type  'string
   :group 'TinyMacro)
 
-;;}}}
-;;{{{ setup: private variables
+;; setup: private variables
 
 (defvar tinymacro--stack-ptr 0
   "Keep record of available stack space.")
@@ -141,8 +125,7 @@ SYMBOL that was used is in variable tinymacro--last-macro-func"
   "List of original KEY -- FUNCTION pairs, whic are currently occupied
 by macros")
 
-;;}}}
-;;{{{ code: misc
+;; code: misc
 
 ;;; ----------------------------------------------------------------------
 ;;;
@@ -161,8 +144,7 @@ References:
         (global-set-key (nth 0 elt) (nth 1 elt)))
       (setq  tinymacro--function-list nil))))
 
-;;}}}
-;;{{{ code: symbol
+;; code: symbol
 
 ;;; ----------------------------------------------------------------------
 ;;;
@@ -220,8 +202,7 @@ References:
         (setq tinymacro--stack-ptr stack-pointer))
     new))
 
-;;}}}
-;;{{{ code: main
+;; code: main
 
 ;;; ----------------------------------------------------------------------
 ;;;
@@ -352,9 +333,8 @@ Return:
         (run-hooks 'tinymacro--macro-assigned-hook)
         t)))))
 
-;;}}}
 
-(provide   'tinymacro)
+(provide 'tinymacro)
 (run-hooks 'tinymacro--load-hook)
 
 ;;; tinymacro.el ends here
