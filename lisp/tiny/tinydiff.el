@@ -2,7 +2,7 @@
 
 ;; This file is not part of Emacs
 
-;; Copyright (C)    1996-2012 Jari Aalto
+;; Copyright (C)    1996-2013 Jari Aalto
 ;; Keywords:        tools
 ;; Author:          Jari Aalto
 ;; Maintainer:      Jari Aalto
@@ -859,7 +859,6 @@ Eg. TAB that completes current filename."
   (setq tinydiff--minibuffer-map (copy-keymap minibuffer-local-map))
   ;;
   ;;  Here we define nice tab filename completion inside minibuffer
-  ;;  This may be superflous, but what the heck :-)
   ;;
   (define-key tinydiff--minibuffer-map "\t"
     'tinydiff-minibuffer--complete-filename)

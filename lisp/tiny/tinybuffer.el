@@ -1,6 +1,6 @@
 ;;; tinybuffer.el --- Change buffers in current window.
 
-;; Copyright (C) 1996-2012 Jari Aalto
+;; Copyright (C) 1996-2013 Jari Aalto
 
 ;; Author:      Jari Aalto
 ;; Maintainer:  Jari Aalto

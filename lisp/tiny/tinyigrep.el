@@ -4,7 +4,7 @@
 
 ;;{{{ Id
 
-;; Copyright (C)    1996-2012 Jari Aalto
+;; Copyright (C)    1996-2013 Jari Aalto
 ;; Keywords:        tools
 ;; Author:          Jari Aalto
 ;; Maintainer:      Jari Aalto
@@ -1542,9 +1542,8 @@ GREP is program to used for grepping. Default is `egrep'."
              (ti::compat-Info-directory-list)))))
     (message "TinyIgrep: Wait, initialising default databases...done")))
 
-
 ;;;### (autoload 'tinyigrep-debug-toggle "tinyigrep" t t)
-(eval-and-compile (ti::macrof-debug-standard "tinyigrep" ":-"))
+(eval-and-compile (ti::macrof-debug-standard "tinyigrep" "--"))
 
 ;;}}}
 ;;{{{ Install

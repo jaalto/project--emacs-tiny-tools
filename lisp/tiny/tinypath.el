@@ -4,7 +4,7 @@
 
 ;;{{{ Id
 
-;; Copyright (C)    1999-2012 Jari Aalto
+;; Copyright (C)    1999-2013 Jari Aalto
 ;; Keywords:        extensions
 ;; Author:          Jari Aalto
 ;; Maintainer:      Jari Aalto
@@ -1289,15 +1289,15 @@
 (put 'gc-cons-threshold 'tinypath gc-cons-threshold)
 (setq gc-cons-threshold (* 1024 1024 10))
 
-;;  Why the provide is at the start of file?
-;;  Because XEmacs does not record `load-history' entry unless it sees
-;;  `provide' statement. There is a check for SELF LOCATION by looking at
-;;  the `load-history' in this package
+;;  XEmacs does not record `load-history' entry unless it sees
+;;  `provide' statement. There is a check for SELF LOCATION by looking
+;;  at the `load-history' in this package
 
-(provide   'tinypath)
+(provide 'tinypath)
 
 (eval-when-compile
-  (require 'cl))
+  (require 'cl)
+  (require 'advice))
 
 (eval-and-compile
 
@@ -1308,41 +1308,12 @@
     ;;  by some package
     (load "cl-macs"))
 
-  ;;  These variables must be here in order to Byte compiler to see them
-  ;;  before they are used.
-
-  (defcustom tinypath--verbose-info-messages nil
-    "*If non-nil, notify missing environment variables like USER.
-This variable is meant for Win32 environment, where Unix style
-USER and LOGNAME variables are not defined by default."
-    :type  'boolean
-    :group 'TinyPath)
-
-  (defvar tinypath--boot-ignore-directory-regexp
-    ;; #todo: /usr/share/emacs/21.3/lisp/obsolete
-    "\\(CVS\\|RCS\\|info\\|texi\\|\\.svn\\|\\.git\\|\\.bzr\\|\\.hg\\|\\.mtn\\|/MT\\)/?$"
-    "While searching lisp boot subdirs, ignore those that match this regexp.
-Popular version control directories are excluded by default.")
-
-  ;;  #todo: Mysterious byte compile bug:
-  ;;  Remove all cache files, compile tinypath, launch emacs.
+  ;;  FIXME: Mysterious byte compile bug:
+  ;;  Remove all cache files, compile tinypath, start Emacs.
   ;;  => Dies with a message of: "function member* not found".
 
   (unless (fboundp 'member*)
     (autoload 'member* "cl-seq"))
-
-  (defconst tinypath--xemacs-p
-    (or (boundp 'xemacs-logo)
-	(featurep 'xemacs)
-	(string-match "XEmacs" (emacs-version)))
-    "Non-nil if running XEmacs.")
-
-  ;;  Mostly for Win32 environment checks
-  (defvar tinypath--startup-no-messages t
-    "*If non-nil, do not display error message buffer at startup.
-You should set this to `nil' if you begin to use this package first
-time to see messages that may need attention. Alternatively, check
-message buffer.")
 
   (defvar font-lock-mode) ;; Byte compiler silencers
   (defvar lazy-lock-mode)
@@ -1363,15 +1334,41 @@ message buffer.")
   ;; See find-file.el
   (defvar ff-search-directories)
 
+  ;;  These variables must be here in order for the Byte compiler to
+  ;;  see them before they are used.
+
+  (defcustom tinypath--verbose-info-messages nil
+    "*If non-nil, notify missing environment variables like USER.
+This variable is meant for Win32 environment, where Unix style
+USER and LOGNAME variables are not defined by default."
+    :type  'boolean
+    :group 'TinyPath)
+
+  (defvar tinypath--boot-ignore-directory-regexp
+    ;; FIXME: /usr/share/emacs/21.3/lisp/obsolete
+    "\\(CVS\\|RCS\\|info\\|texi\\|\\.svn\\|\\.git\\|\\.bzr\\|\\.hg\\|\\.mtn\\|/MT\\)/?$"
+    "While searching lisp boot subdirs, ignore those that match this regexp.
+Popular version control directories are excluded by default.")
+
+  (defconst tinypath--xemacs-p
+    (or (boundp 'xemacs-logo)
+	(featurep 'xemacs)
+	(string-match "XEmacs" (emacs-version)))
+    "Non-nil if running XEmacs.")
+
+  ;;  Mostly for Win32 environment checks
+  (defvar tinypath--startup-no-messages t
+    "*If non-nil, do not display error message buffer at startup.
+Set to non-nil for initial uses of this package first
+to see messages that may need attention. The messages can be recalled
+from the *Messages* buffer.")
+
   ;;  This is just forward declaration for byte compiler
   ;;  It it not sensible to lift `defcustom' definition apart from
   ;;  to the beginning of file due to macros and all which refer to it.
   ;;  => This is a user variable and defcustom should stay in user section.
   (defvar tinypath--verbose 3
     "*Verbosity level"))
-
-(eval-when-compile
-  (require 'advice))
 
 ;;}}}
 ;;{{{ Environment
@@ -1923,11 +1920,11 @@ ROOT can be a single directory or list of directories."
 ;;;
 (defun tinypath-default-load-path-root-user ()
   "Return user's Emacs Lisp path by guessing various directories."
-  (cl-flet ((msg (m)
-	      (message m)
-	      (unless tinypath--startup-no-messages
-		(sit-for 2))
-	      nil))
+  (cl-flet ((msg (msg)
+		 (message msg)
+		 (unless tinypath--startup-no-messages
+		   (sit-for 2))
+		 nil))
     (if (null (getenv "HOME"))
 	(msg "TinyPath: [ERROR] Environment variable HOME is not set.")
       (let (ret)
@@ -2030,16 +2027,16 @@ Input:
   BUG      If set, and DIR not found, call `tinypath-message-bug'."
   (let (found)
     (cl-flet ((check-dir
-	    (try dir)
-	    (setq try (tinypath-expand-file-name
-		       (concat (file-name-as-directory try)
-			       dir)))
-	    (if verb
-		(message "TinyPath: directory search ... %s" try))
-	    (when (file-directory-p try)
-	      (if verb
-		  (message "TinyPath: directory search ... found %s" try))
-	      try)))
+	       (try dir)
+	       (setq try (tinypath-expand-file-name
+			  (concat (file-name-as-directory try)
+				  dir)))
+	       (if verb
+		   (message "TinyPath: directory search ... %s" try))
+	       (when (file-directory-p try)
+		 (if verb
+		     (message "TinyPath: directory search ... found %s" try))
+		 try)))
       (or dir
 	  (setq dir ""))
       (dolist (try list)
@@ -3350,9 +3347,9 @@ Input
 		never than 2.1. In this case it is assumed
 		that zero based versions are latest development releases."
   (cl-flet ((version (str regexp)
-		  (if (string-match regexp str)
-		      (string-to-number (match-string 1 str))
-		    0)))
+		     (if (string-match regexp str)
+			 (string-to-number (match-string 1 str))
+		       0)))
     (let* ((a1 (version a "^\\([0-9]+\\)"))
 	   (a2 (version a "^[0-9]+\\.\\([0-9]+\\)"))
 	   (a3 (version a "^[0-9]+\\.[0-9]+\\.\\([0-9]+\\)"))
@@ -3407,11 +3404,10 @@ Return:
 	item
 	ret)
     (cl-flet ((get-elt (elt place)
-		    (if (vectorp elt)
-			(aref elt place)
-		      (nth place elt))))
-      (dolist (timer '(
-		       ;; (("Mon Dec  9 10:01:47 1996-0" 10
+		       (if (vectorp elt)
+			   (aref elt place)
+			 (nth place elt))))
+      (dolist (timer '(;; (("Mon Dec  9 10:01:47 1996-0" 10
 		       ;;     process nil))
 		       (timer-idle-list . 5)
 		       (timer-alist . 2)
@@ -3423,7 +3419,7 @@ Return:
 	  ;;  NOTE: this is different in Xemacs. It is not a vector
 	  ;; timer-[idle-]list Emacs 19.34
 	  ;;  NOTE: this is different in Xemacs. It is not a vector
-
+	  ;;
 	  ;; ([nil 12971 57604 0 60 display-time-event-handler nil nil])
 	  ;; [nil 13971 14627 646194 60
 	  ;;      (lambda (f) (run-at-time ...))
@@ -4616,7 +4612,7 @@ Input:
 
 Return:
 
-  '(PATH  CACHE-ELEMENT)"
+  '(PATH CACHE-ELEMENT)"
   (when tinypath--cache
     (let* ((fid  "TinyPath: tinypath-cache-p-1-new-cache ")
 	   (regexp1  tinypath--ignore-file-regexp)
@@ -4636,29 +4632,29 @@ Return:
       (setq
        ret
        (catch 'done
-	 (cl-flet (                 ;; First function
-		(path-name (ELT) ;; ELT = '("FILE.EL" (POS . "PATH"))
-			   (when ELT
-			     (concat (cdr (nth 1 ELT)) (car ELT)  )))
-		;; Second function
-		(throw-ignore
-		 (ELT)
-		 (cond
-		  ((and ELT
-			(or (and (stringp regexp1)
-				 (string-match regexp1
-					       (car ELT)))
-			    (and (stringp regexp2)
-				 (let (case-fold-search)
-				   (string-match regexp2
-						 (cdr (nth 1 ELT)))))))
-		   (tinypath-verbose-macro 10
-		     (message "%s`ignore-file-regexp' %s"
-			      fid
-			      (car ELT)))
-		   nil)
-		  (ELT
-		   (throw 'done (path-name ELT))))))
+	 (cl-flet* (;; First function
+		    (path-name (ELT) ;; ELT = '("FILE.EL" (POS . "PATH/"))
+			       (when ELT
+				 (concat (cdr (nth 1 ELT)) (car ELT)  )))
+		    ;; Second function
+		    (throw-ignore
+		     (ELT)
+		     (cond
+		      ((and ELT
+			    (or (and (stringp regexp1)
+				     (string-match regexp1
+						   (car ELT)))
+				(and (stringp regexp2)
+				     (let (case-fold-search)
+				       (string-match regexp2
+						     (cdr (nth 1 ELT)))))))
+		       (tinypath-verbose-macro 10
+			 (message "%s`ignore-file-regexp' %s"
+				  fid
+				  (car ELT)))
+		       nil)
+		      (ELT
+		       (throw 'done (path-name ELT))))))
 	   (tinypath-verbose-macro 10
 	     (message (concat fid " ENTRY %s %s")
 		      package
@@ -5473,7 +5469,7 @@ E.g., if you want to calculate days; you'd do
 	  (message "TinyPath: load time %s %dsec" name diff)
 	(tinypath-verbose-macro 9
 	  (message "TinyPath: load time %s %dsec" name diff)))
-      (push (cons name diff) 'tinypath--time-data))))
+      (push (cons name diff) tinypath--time-data))))
 
 ;;; ----------------------------------------------------------------------
 ;;;
@@ -5854,17 +5850,6 @@ LIST can contains single elements or lists:
 
 ;;; ----------------------------------------------------------------------
 ;;;
-(defun tinypath-load-path-remove-old (regexp)
-  "Remove all paths matching REGEXP from `load-path'"
-  (setq load-path
-	(remove-if
-	 (function
-	  (lambda (x)
-	    (string-match regexp x)))
-	 load-path)))
-
-;;; ----------------------------------------------------------------------
-;;;
 (defun tinypath-load-path-remove (regexp)
   "Remove any matching REGEXP from `load-path'.
 Return t if removed something."
@@ -5882,7 +5867,7 @@ Return t if removed something."
 	(message "TinyPath: FATAL regexp %s cleaned whole load-path."
 		 regexp)))
      (t
-      (setq load-path list)))
+      (setq load-path (nreverse list))))
     status))
 
 ;;; ----------------------------------------------------------------------
@@ -6569,7 +6554,7 @@ otherwise turn mode off."
 ;;;}}}
 ;;;{{{ Advice code
 
-;; ############################   BEGIN FUNCTION -- advice instantiate
+;; ############################ BEGIN FUNCTION -- advice instantiate
 
 (defun tinypath-advice-instantiate ()
   "Instantiate all advices."
@@ -6592,10 +6577,10 @@ otherwise turn mode off."
   (when tinypath--xemacs-p
     (require 'efs))
 
-;;; ----------------------------------------------------------------------
-;;; (turn-on-tinypath-cache-mode)
-;;; (turn-off-tinypath-cache-mode)
-;;;
+  ;; ----------------------------------------------------------------------
+  ;; (turn-on-tinypath-cache-mode)
+  ;; (turn-off-tinypath-cache-mode)
+  ;;
   (defadvice autoload (around tinypath dis)
     "Use `tinypath--cache' for fast lookup of files."
     (let* ((file        (ad-get-arg 1))
@@ -6604,9 +6589,9 @@ otherwise turn mode off."
 	(ad-set-arg 1 path))
       ad-do-it))
 
-;;; ----------------------------------------------------------------------
-;;; (load FILE &optional NOERROR NOMESSAGE NOSUFFIX MUST-SUFFIX)
-;;;
+  ;; ----------------------------------------------------------------------
+  ;; (load FILE &optional NOERROR NOMESSAGE NOSUFFIX MUST-SUFFIX)
+  ;;
   (defadvice load (around tinypath dis)
     "Use `tinypath--cache' for fast lookup of files."
     (let* ((file        (ad-get-arg 0))
@@ -6632,8 +6617,8 @@ otherwise turn mode off."
 	    (ad-set-arg 0 path))))
       ad-do-it))
 
-;;; ----------------------------------------------------------------------
-;;;
+  ;; ----------------------------------------------------------------------
+  ;;
   (defadvice load-library (around tinypath dis)
     "Use `tinypath--cache' for fast lookup of files."
     (let* ((file  (ad-get-arg 0))
@@ -6644,19 +6629,19 @@ otherwise turn mode off."
 	(ad-set-arg 0 path))
       ad-do-it))
 
-;;; ----------------------------------------------------------------------
-;;; In Win32 XEmacs 21.2 beta; the this function calls `locate-file' which
-;;; for some reason breaks if given a absolute file name. The XEmacs
-;;; docs also say that `locate-file' uses hash table to speed up processing.
-;;; Hm.
-;;;
-;;; There is problem with functions that use (called-interactively-p 'interactive) test, because
-;;; advice can't pass the information to the underlying function, so any
-;;; such test inside here won't work.
-;;;
-;;; 21.3.1:
-;;; (locate-library LIBRARY &optional NOSUFFIX PATH INTERACTIVE-CALL)
-;;;
+  ;; ----------------------------------------------------------------------
+  ;; In Win32 XEmacs 21.2 beta; the this function calls `locate-file' which
+  ;; for some reason breaks if given a absolute file name. The XEmacs
+  ;; docs also say that `locate-file' uses hash table to speed up processing.
+  ;; Hm.
+  ;;
+  ;; There is problem with functions that use (called-interactively-p 'interactive) test, because
+  ;; advice can't pass the information to the underlying function, so any
+  ;; such test inside here won't work.
+  ;;
+  ;; 21.3.1:
+  ;; (locate-library LIBRARY &optional NOSUFFIX PATH INTERACTIVE-CALL)
+  ;;
   (defadvice locate-library (around tinypath act)
     "Use `tinypath--cache' for fast lookup of files."
     (interactive
@@ -6703,8 +6688,8 @@ otherwise turn mode off."
 	  (message "locate-library: %s not found."
 		   (or file "<no filename>"))))))
 
-;;; ----------------------------------------------------------------------
-;;;
+  ;; ----------------------------------------------------------------------
+  ;;
   (defadvice require (around tinypath dis)
     "Use `tinypath--cache' for fast lookup of files.
 Property (get 'require 'tinypath-load-list) contains list
@@ -6735,7 +6720,7 @@ of required packages: '((feature . path)."
 	  (ad-set-arg 1 path)))
       ad-do-it))
 
-  ) ;; ############################   END FUNCTION -- end advice instantiate
+  ) ;; ############################ END FUNCTION -- end advice instantiate
 
 ;;;}}}
 ;;;{{{ win32: Unix $HOME directory mounted to PC, like to H: disk

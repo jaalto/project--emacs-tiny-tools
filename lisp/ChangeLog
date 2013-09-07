@@ -1,3 +1,64 @@
+2013-09-07 Sat  Jari Aalto  <jari.aalto@cante.net>
+
+	* tiny/tinymacro.el:
+	- Remove. Move to epackage at Github.
+	- Clean up comments.
+	(tinymacro-keymap-function-bind-info): New. Remove
+	tinylib dependency.
+	(tinymacro--version-time): New.
+
+2013-08-29 Thu  Jari Aalto  <jari.aalto@cante.net>
+
+	* tiny/tinydebian.el
+	(tinydebian--mail-mode-debian-address-package-history): New.
+	(tinydebian-mail-mode-debian-address-package-toggle): Correct
+	enable/disable functionality.
+
+2013-08-14 Wed  Jari Aalto  <jari.aalto@cante.net>
+
+	* tiny/tinydebian.el (tinydebian-bug-nbr-string): Check keyword
+	"forwarded".
+
+2013-07-09 Tue  Jari Aalto  <jari.aalto@cante.net>
+
+	* tiny/tinybookmark.el (tinybookmark-calc-max-col): Adjust comment
+	above.
+
+	* tiny/tinytab.el (tinytab-tab-brace-control): Adjust comment above.
+
+	* tiny/tinysearch.el (tinysearch-search-word-main): Adjust comment
+	above.
+
+	* tiny/tinylibmenu.el (ti::menu--menu-sample): Adjust comment.
+
+	* tiny/tinylib.el (ti::compat-mouse-call-original): change
+	variable from `ti::-xe-mouse-call-original' to
+	`ti::xemacs--mouse-call-original'.
+
+	* tiny/tinyigrep.el (ti::macrof-debug-standard): Correct variable
+	prefix start to '--'.
+
+	* tiny/tinydiff.el (tinydiff-mode-define-keys-minibuffer-default):
+	Adjust text in comments.
+
+	* tiny/tinygnus.el (tinygnus-gnus-group-get-news-symbolic): Adjust
+	comment above.
+
+	* tiny/tinyscroll.el: Adjust commentary at the beginning.
+	(tinyscroll--list-add): Correct variable name in docstring to
+	'tinyscroll--list'.
+
+	* tiny/tinypath.el: Update comments. Shuffle statement order in
+	`eval-and-compile'. Move (require 'advice) to the beginning.
+	(tinypath--startup-no-messages): Update docstring.
+	(tinypath-time-record):Correct push to `tinypath--time-data'.
+	(tinypath-load-path-remove-old): Rewrite without `remove-if'.
+	Remove function; not used.
+	(tinypath-load-path-remove): Add `nreverse' to preserve order.
+	(tinypath-cache-p-1-new-cache): Change `cl-flet' to `cl-flet*'.
+	Fixes byte compiler "path-name is not known to be defined".
+	(cl-flet): Adjust indent in all of the code.
+
 2013-06-14 Fri  Jari Aalto  <jari.aalto@cante.net>
 
 	* tiny/tinydebian.el (tinydebian-mail-setup): New. Handle

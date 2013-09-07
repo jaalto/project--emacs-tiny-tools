@@ -4,7 +4,7 @@
 
 ;;{{{ Id
 
-;; Copyright (C)    1997-2012 Jari Aalto
+;; Copyright (C)    1997-2013 Jari Aalto
 ;; Author:          Jari Aalto
 ;; Maintainer:      Jari Aalto
 ;; Created:         1997-09

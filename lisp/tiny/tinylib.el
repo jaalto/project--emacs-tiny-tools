@@ -4,7 +4,7 @@
 
 ;;{{{ Id
 
-;; Copyright (C)    1995-2012 Jari Aalto
+;; Copyright (C)    1995-2013 Jari Aalto
 ;; Keywords:        extensions
 ;; Author:          Jari Aalto
 ;; Maintainer:      Jari Aalto
@@ -3254,7 +3254,6 @@ Return:
         (forward-line 1)))))
 
 ;;; ----------------------------------------------------------------------
-;;; - There must be removing function too.. :-)
 ;;; #defalias (defalias 'remove-line-numbers 'ti::buffer-remove-line-numbers)
 ;;;
 (defsubst ti::buffer-remove-line-numbers (beg end &optional re level)
@@ -6919,7 +6918,7 @@ Input:
 ;;; ......................................................... &package ...
 ;;; - Here is some special functions. When you insert some example to
 ;;;   your package, you can convert functions and text directly to
-;;;   "poor man's shar" format :-)
+;;;   "poor man's shar" format.
 ;;; - With function ti::package-make-mode-magic, you just
 ;;;
 ;;;   1. Be in lisp mode
@@ -7956,9 +7955,10 @@ If mouse is not supported, return nil."
 
 ;;; ----------------------------------------------------------------------
 ;;;
-(defun ti::compat-mouse-call-original-function (minor-mode-symbol &optional event)
+(defun ti::compat-mouse-call-original-function
+  (minor-mode-symbol &optional event)
   "Return original function behind MINOR-MODE-SYMBOL with mouse EVENT.
-See. `ti::-xe-mouse-call-original'."
+See. `ti::xemacs--mouse-call-original'."
   (let (ret
 	flyspell-p)
     (or event
@@ -7991,7 +7991,7 @@ See. `ti::-xe-mouse-call-original'."
 
 ;;; ----------------------------------------------------------------------
 ;;;
-(defvar ti::-xe-mouse-call-original nil "See ti::keymap-mouse-call-original.")
+(defvar ti::xemacs--mouse-call-original nil "See ti::keymap-mouse-call-original.")
 
 (defun ti::compat-mouse-call-original (minor-mode-symbol &optional event)
   "Execute original mouse function by turning of MINOR-MODE-SYMBOL.
@@ -8015,12 +8015,12 @@ Note:
 
 Sets global:
 
-  `ti::-xe-mouse-call-original'"
+  `ti::xemacs--mouse-call-original'"
   ;; Without the following test we could easily end up in a endless
   ;; loop in case we would call a function which would call us.
-  (if ti::-xe-mouse-call-original ;; We're looping already
+  (if ti::xemacs--mouse-call-original ;; We're looping already
       nil
-    (setq ti::-xe-mouse-call-original t)
+    (setq ti::xemacs--mouse-call-original t)
     (unwind-protect
         (let* ((orig-buf (current-buffer))
                (mouse-func (ti::compat-mouse-call-original-function
@@ -8052,7 +8052,7 @@ Sets global:
                                           'ti::orig-value)))))
       ;; .. .. .. .. .. .. .. .. .. .. .. .. .. .. .. .. .. ..  unwind  ..
       ;; This is always executed, even if the above generates an error.
-      (setq ti::-xe-mouse-call-original nil))))
+      (setq ti::xemacs--mouse-call-original nil))))
 
 ;;; ----------------------------------------------------------------------
 ;;;
