@@ -31,13 +31,7 @@
 ;;   Put this file on your Emacs-Lisp `load-path', add following into your
 ;;   ~/.emacs startup file:
 ;;
-;;      ;;  To use default keybinding "C-x("  and "C-x)", add this:
-;;      (add-hook 'tinymacro--load-hook 'tinymacro-install-default-keybindings)
-;;      (require 'tinymacro)
-;;
-;;   or use autoload and your $HOME/.emacs starts faster
-;;
-;;      (autoload 'tinymacro-end-kbd-macro-and-assign  "tinymacro" "" t)
+;;      (autoload 'tinymacro-end-kbd-macro-and-assign "tinymacro" "" t)
 ;;      (global-set-key "\C-x)" 'tinymacro-end-kbd-macro-and-assign)
 
 
@@ -45,18 +39,20 @@
 
 ;;  Preface, 1995
 ;;
-;;      This started as a very little project when
+;;      This started as a very small project when
 ;;      <mosh@ramanujan.cs.albany.edu> (Mohsin-Ahmed) 1995-03-17 in
-;;      gnu.emacs.help post asked for easy way to assign newly created
-;;      macro to some key. In reponse the author sent a simple function to do
-;;      it, but he informaed that one macro, which was recycled every time,
-;;      was too little. That little function was start of this package.
+;;      gnu.emacs.help asked for an easy way to assign newly created
+;;      macro to some key. In reponse the author I sent a simple
+;;      function to do it, but he informed that it was oly suitable
+;;      for one macro; the key was recycled every time. After
+;;      extending the idea, that little function become a package.
 ;;
 ;; Description
 ;;
 ;;      o   Two keystrokes to make a macro: one to record, one to
 ;;          assign it to key.
-;;      o   To see the macro assignments to keys, just call `tinymacro-macro-info'
+;;      o   To see the macro assignments to keys, just call
+;;          `tinymacro-macro-info'
 ;;      o   Default macro count is 10, increase with `tinymacro--stack-max'
 
 
@@ -66,13 +62,18 @@
 
 (require 'tinylibm)
 
-(ti::package-defgroup-tiny TinyMacro tinymacro-- extensions
-  "Fast way to assign newly created macro to key
+(custom-declare-group
+ 'tinymacto
+ nil
+ "An easy way to assign newly created macro to key
   Overview of features.
 
         o   Two keystrokes to make a macro: one to record, one to
             assign it to key.
-        o   To see the macro assignments to keys, just call tinymacro-macro-info")
+        o   To see the macro assignments to keys: M-x tinymacro-macro-info"
+ :link'(url-link :tag "Wiki" "http://www.emacswiki.org/emacs/TinyTools")
+ :prefix (symbol-name 'tinymacro--)
+ :group 'extensions)
 
 ;; setup: hooks, private
 
@@ -80,35 +81,35 @@
   "*If new macro were asiigned, this hook will be run. The function
 SYMBOL that was used is in variable tinymacro--last-macro-func"
   :type  'hook
-  :group 'TinyMacro)
+  :group 'tinymacro)
 
 (defcustom tinymacro--load-hook nil
   "*Hook run when file has been loaded."
   :type  'hook
-  :group 'TinyMacro)
+  :group 'tinymacro)
 
 ;; setup: public, user configurable
 
 (defcustom tinymacro--macro-function-name-prefix "tinymacro--macro"
   "*The function name prefix to use, when assigning name to last kbd macro"
   :type  'string
-  :group 'TinyMacro)
+  :group 'tinymacro)
 
 (defcustom tinymacro--ask-when-stack-wrap-flag nil
   "*Non-nil means ask user if used function stack wraps."
   :type  'boolean
-  :group 'TinyMacro)
+  :group 'tinymacro)
 
 (defcustom tinymacro--stack-max 10
   "*Maximum stack depth of unique macronames.
  The name run from 0..max, and wraps to 0 after max."
   :type  'integer
-  :group 'TinyMacro)
+  :group 'tinymacro)
 
 (defcustom tinymacro--tmp-buffer "*temp*"
   "*Temporary buffer. Eg. displaying the macro bindings to keys."
   :type  'string
-  :group 'TinyMacro)
+  :group 'tinymacro)
 
 ;; setup: private variables
 
