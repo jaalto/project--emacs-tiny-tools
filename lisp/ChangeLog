@@ -1,6 +1,8 @@
 2013-09-07 Sat  Jari Aalto  <jari.aalto@cante.net>
 
-	* tiny/tinymacro.el: Clean up comments.
+	* tiny/tinymacro.el:
+	- Remove. Move to epackage at Github.
+	- Clean up comments.
 	(tinymacro-keymap-function-bind-info): New. Remove
 	tinylib dependency.
 	(tinymacro--version-time): New.
