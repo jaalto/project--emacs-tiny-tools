@@ -60,8 +60,6 @@
 
 ;;; Code:
 
-(require 'tinylibm)
-
 (custom-declare-group
  'tinymacto
  nil
@@ -205,6 +203,38 @@ References:
 
 ;; code: main
 
+(defun tinymacro-keymap-function-bind-info (function-sym &optional map)
+  "Return binding information for FUNCTION-SYM from MAP as string or nil."
+  (let ((gm (current-global-map))
+	global-bindings
+	local-bindings)
+    (setq global-bindings (where-is-internal function-sym)
+          local-bindings
+          (prog2
+              ;;  We have to set this to nil because where-is-internal
+              ;;  searches global map too. We don't want that to happen
+              ;;
+              (use-global-map (make-keymap))
+              (where-is-internal
+               function-sym
+               (or map (current-local-map)))
+            (use-global-map gm)))
+    (if (or global-bindings local-bindings)
+	(format "%s%s%s"
+		(if global-bindings
+		    (format "global %s"
+			    (mapcar 'key-description
+				    global-bindings))
+		  "")
+		(if (and global-bindings local-bindings)
+		    " and "
+		  "")
+		(if local-bindings
+		    (format "local to %s"
+			    (mapcar 'key-description
+				    local-bindings))
+		  "")))))
+
 ;;; ----------------------------------------------------------------------
 ;;;
 (defun tinymacro-macro-info ()
@@ -228,7 +258,8 @@ References:
           (setq buffer-pointer (get-buffer-create buffer))
           (set-buffer buffer-pointer) (erase-buffer)
           (insert (format "Stack pointer : %d\n" stack-pointer)))
-        (if (null (setq key (ti::keymap-function-bind-info (intern name))))
+	(setq key (tinymacro-keymap-function-bind-info (intern name)))
+        (if (null key)
             (setq key "[??]"))          ;should never happen
         (insert (format "%-10s %s\n" key name))
         (setq round (1+ round))))
@@ -282,7 +313,8 @@ Return:
 	do-it
 	macro-name                     ;newly created macro
 	lookup)                        ;what was found
-    (ti::verb)
+    (or verb
+	(setq verb (called-interactively-p 'interactive)))
     (if (null key)
         (setq key
               (read-key-sequence "Tinymacro: Set last macro to key(s): ")))
