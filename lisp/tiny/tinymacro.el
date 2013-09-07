@@ -34,7 +34,6 @@
 ;;      (autoload 'tinymacro-end-kbd-macro-and-assign "tinymacro" "" t)
 ;;      (global-set-key "\C-x)" 'tinymacro-end-kbd-macro-and-assign)
 
-
 ;;; Commentary:
 
 ;;  Preface, 1995
@@ -72,6 +71,9 @@
  :link'(url-link :tag "Wiki" "http://www.emacswiki.org/emacs/TinyTools")
  :prefix (symbol-name 'tinymacro--)
  :group 'extensions)
+
+(defvar tinymacro--version-time "2013.0907.1404"
+  "Last edited time.")
 
 ;; setup: hooks, private
 

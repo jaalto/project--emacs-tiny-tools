@@ -3,6 +3,7 @@
 	* tiny/tinymacro.el: Clean up comments.
 	(tinymacro-keymap-function-bind-info): New. Remove
 	tinylib dependency.
+	(tinymacro--version-time): New.
 
 2013-08-29 Thu  Jari Aalto  <jari.aalto@cante.net>
 
