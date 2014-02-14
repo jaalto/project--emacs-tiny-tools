@@ -166,7 +166,6 @@
 ;;               (beginning-of-line)
 ;;               (ti::text-looking-at ".*"))
 ;;                (end-of-line))))
-;;
 
 ;;; Change Log:
 
