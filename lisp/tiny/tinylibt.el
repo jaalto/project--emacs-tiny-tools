@@ -166,7 +166,6 @@
 ;;               (beginning-of-line)
 ;;               (ti::text-looking-at ".*"))
 ;;                (end-of-line))))
-;;
 
 ;;; Change Log:
 
@@ -557,10 +556,10 @@ Return:
 
  nil            No match
  nbr            start of match at LEVEL."
-  (let* ((func          (if direction
-                            're-search-backward
-                          're-search-forward))
-         (start-point   (point))
+  (let* ((func (if direction
+		   're-search-backward
+		 're-search-forward))
+         (start-point (point))
          buffer-read-only
          max-level
          count
