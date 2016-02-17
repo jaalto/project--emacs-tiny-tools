@@ -1957,7 +1957,7 @@ Return:
        (format "TinyUrl: (url validate) Binary file ignored"))
       ((ti::file-name-remote-p url)
        t)                               ;do not check ange-ftp
-      ((or (string-match "\\<\\(foo\\|bar\\|quux\\)" url)
+      ((or (string-match "\\<\\(foo\\|bar\\|quux\\)\\>" url)
            (string-match "\\$" url))
        (format "TinyUrl: (url validate) Invalid keyword '%s' in URL [%s]"
                (match-string 0 url)
