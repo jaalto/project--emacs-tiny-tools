@@ -30,11 +30,10 @@ Project contacts
 
 NEWS
 
-    The project is being split into individual files that will
+    The project is planned to be split into individual files that will
     be distributed as Epackages (single Git repositories).
 
-
-    You can clone repositories with Git ot use Epackage manager to
+    You can clone repositories with Git or use Epackage manager to
     download utilities. See
 
     - Overview: http://www.emacswiki.org/emacs/DELPS
