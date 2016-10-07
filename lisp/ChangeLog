@@ -1,3 +1,8 @@
+2016-10-07 Fri  Jari Aalto  <jari.aalto@cante.net>
+
+	* tiny/tinylibm.el (ti::read-current-line): Read real line
+	by setting inhibit-field-text-motion to t.
+
 2013-11-27 Wed  Jari Aalto  <jari.aalto@tamk.fi>
 
 	* tiny/tinysearch.el: Remove folding. Remove function headers.
