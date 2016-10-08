@@ -2585,9 +2585,12 @@ TinyPerl: Pod::Checker.pm is not known to this Perl version. @INC trouble?"))
                             (ti::win32-cygwin-p))))
         (tinyperl-debug fid "file" file)
         ;; perl -MPod::Text -e "pod2text shift" -n groff /cygdrive/p/unix/cygwin/lib/perl5/5.8.0/pods/perlfunc.pod
+	(unless (and (stringp tinyperl--pod2text-bin)
+		     (file-exists-p tinyperl--pod2text-bin))
+	  (error "No pod2text binary found. Please set tinyperl--pod2text-bin"))
 	(cond
 	 ((not (string-match "-nt" (emacs-version))) ; Not NT Emacs
-	  (call-process "pod2text"
+	  (call-process tinyperl--pod2text-bin
 			nil
 			buffer
 			nil
