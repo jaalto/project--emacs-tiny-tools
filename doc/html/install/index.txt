@@ -52,13 +52,12 @@ Table of contents
 
     1.2 Unpacking
 
-        Extract the package and it will create directory according to
-        the version number. Under Windows platform: create directories
+        Extract the package. Under Windows platform: create directories
         manually e.g. on `C:\home\elisp'. A Windows
         #URL<http://support.microsoft.com/kb/310519><environment variable>
         HOME must alse be defined to point to suitable location, like
-        `C:\home'. The HOME directory must exist. Create following
-        directories:
+        `C:\home'. The HOME directory must exist. Suggested directory
+	structure:
 
             $HOME
             |
@@ -69,34 +68,59 @@ Table of contents
             +-tmp/
 
         Unpack the archive to suitable location, like
-        `$HOME/elisp/packages'. Unser Unix/Linux the commands are:
+        `$HOME/elisp/packages'. In Linux the commands are:
 
             cd $HOME/elisp/packages
             gzip -dc ~/tmp/download/emacs-tiny-tools*.gz | tar -xvf -
 
-    1.3 Quick install -- personal
+    1.3 Install
 
-        Emacs *load-path* must be configured to point to Emacs Lisp
-        package directories. Add following lines to `$HOME/.emacs'.
-        Substitute the paths as necessary to reflect unpack locations:
+        Configure Emacs *load-path* to point to package directories.
+        Substitute the paths as necessary to reflect your unpack locations:
 
             (add-to-list 'load-path
                          "~/elisp/packages/emacs-tiny-tools/lisp/tiny")
             (add-to-list 'load-path
                          "~/elisp/packages/emacs-tiny-tools/lisp/other")
 
-    1.4 Advanced install -- using tinypath
+            (require 'tiny-autoload-loaddefs-tiny)
+            (require 'tiny-autoload-loaddefs-other)
 
-       1.4.1 Personal install using tinypath
+            ;;  Configure some package.
+            ;;  See each package for further instructions.
+
+            (autoload 'turn-on-tinyperl-mode "tinyperl" "" t)
+            (add-hook 'perl-mode-hook  'turn-on-tinyperl-mode)
+            (add-hook 'cperl-mode-hook 'turn-on-tinyperl-mode)
+
+    1.4 Minimal install
+
+        If you are tight of space or otherwise do not need all the
+        tools or if you're only interested in specific package, a
+        minimum installation is possible. The basic idea is to include
+        libraries + needed package(s).
+
+            tinyliba.el     - autoloads
+            tinylibb.el     - backward compatibility; Emacs version changes
+            tinylibm.el     - macros and other low level forms
+            tinylib.el      - main library
+            tinylibxe.el    - XEmacs support library
+
+            + select packages that you're interested in
+
+    1.5 About tinypath
+
+	You're interested about this only if you have multiple (20+) emacs
+	packages gathered around Internet which are installd in various
+	directories and you do not want any manual handling of keeping
+	`load-path' up to date after new installs.
 
         The following lines below can configure Emacs to be aware of *all*
         lisp paths under `$HOME/elisp' or `$HOME/lisp', so whatever magic
         you used to do to keep your `load-path' up to date is no longer
-        needed. The `load-path' variable is periodically kept up to date
-        without manual tweaking.
+        needed. The `load-path' variable is periodically kept up to date.
 
             ;; $HOME/.emacs
-            ;; This line loads package "tinypath.el"
 
             (load "~/elisp/packages/tiny-tools/lisp/tiny/tinypath")
 
@@ -132,46 +156,6 @@ Table of contents
 
             (load "utility")
             (utility-install)   ;; or whatever is needed to activate it
-
-    1.5 Advanced install -- using autoload files
-
-        The autoload file provide "functions" that are made known to
-        Emacs, but they do not load any packages. This is better than
-        using `require' or `load' commands, because it makes the
-        Emacs start faster.
-
-            ;; $HOME/.emacs
-
-            (load "/path/to/tinypath.el")
-
-            ;;  Load files that tell what functions exist
-
-            (require 'tiny-autoload-loaddefs-tiny)
-            (require 'tiny-autoload-loaddefs-other)
-
-            ;;  Configuration section of wanted packages.
-            ;;  See each package for further instructions.
-
-            (autoload 'turn-on-tinyperl-mode "tinyperl" "" t)
-            (add-hook 'perl-mode-hook  'turn-on-tinyperl-mode)
-            (add-hook 'cperl-mode-hook 'turn-on-tinyperl-mode)
-
-            ;; End of $HOME/.emacs
-
-    1.6 Minimal install
-
-        If you are tight of space or otherwise do not need all the
-        tools or if you're only interested in specific package, a
-        minimum installation is possible. The basic idea is to include
-        libraries + needed package(s).
-
-            tinyliba.el     - autoloads
-            tinylibb.el     - backward compatibility; Emacs version changes
-            tinylibm.el     - macros and other low level forms
-            tinylib.el      - main library
-            tinylibxe.el    - XEmacs support library
-
-            + select packages that you're interested in
 
 2.0 Project information
 
