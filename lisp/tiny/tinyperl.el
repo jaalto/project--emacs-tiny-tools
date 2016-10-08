@@ -39,20 +39,23 @@
 ;;
 ;;      (require 'tinyperl)
 ;;
-;;  Autoload, prefer this one, your emacs starts quicker. The additional
+;;  Autoload, prefer this one and your emacs starts quicker. The additional
 ;;  features are turned on only when `perl-mode' runs.
 ;;
 ;;      (autoload 'turn-on-tinyperl-mode  "tinyperl" "" t)
 ;;      (add-hook 'perl-mode-hook  'turn-on-tinyperl-mode)
 ;;      (add-hook 'cperl-mode-hook 'turn-on-tinyperl-mode)
 ;;
-;;  The package will keep the configuration information in a cache and
-;;  if for some reason the cache becomes invalid, the cache can be
-;;  rebuilt with command:
+;;      ;; optional
+;;      (add-hook 'write-file-functions 'tinyperl-version-stamp)
+;;
+;;  The package will keep the configuration information in a cache.
+;;  If for some reason the cache becomes invalid, the cache can be
+;;  rebuilt with command prefix arg like C-u to command:
 ;;
 ;;      C-u M-x tinyperl-install
 ;;
-;;  To completely uninstall package, call:
+;;  To completely uninstall package, use prefix-arg like C-u:
 ;;
 ;;      C-u M-x tinyperl-install-main
 
@@ -64,23 +67,28 @@
 
 ;;; Commentary:
 
+;;  Note
+;;
+;;      This package contains minor-mode to help access to Perl's inetrnal
+;;      POD documentation. Th minor mode also helps to write POD manually.
+;;
+;;      This is not Perl mode and has no effect on how you write or
+;;      indent the code.
+;;
 ;;  Preface, march 1998
 ;;
 ;;      Perl was quite new in 1994 and perl programs imported
 ;;      libraries using `require' command. Some time passed and the
 ;;      new Perl 5 was a complete rewrite. It introduced new Object
-;;      and reference technologies to language but lot of perl coders
+;;      and reference technologies to language but lot of Perl coders
 ;;      couldn't grasp the new ideas immediately. Many made the
 ;;      decision to move to perl 5 only after it was mature
 ;;      enough. The perl 5 coding was so much cleaner and simpler
 ;;      compared to perl 4.
 ;;
-;;      As a result some additional Emacs functions were needed the Perl
-;;      work going and this module more or less concentrates on helping to
-;;      document perl programs with POD or getting perl man pages via
-;;      `perldoc' interface. The other companion that you would already
-;;      know is the `cperl-mode' which is the best mode for coding the
-;;      perl language.
+;;      This package was born from the idea of helping to document
+;;      perl programs with POD or getting perl man pages via `perldoc'
+;;      interface.
 ;;
 ;;  Overview of features
 ;;
@@ -99,14 +107,14 @@
 ;;
 ;;      `tinyperl-mode' minor mode:
 ;;
-;;      o   Instant function help: See documentation of `shift', `pop'...
+;;      o   Function help: See documentation of `shift', `pop'...
 ;;      o   Lint for Perl is available if Perl::Critic has been installed.
 ;;      o   Show Perl manual pages in *pod* buffer
 ;;      o   Load library source code into Emacs, like Devel::DProf.pm
 ;;      o   Grep through all Perl manual pages (.pod)
 ;;      o   Follow POD manpage references to next pod page with TinyUrl
-;;      o   Colored pod pages with `font-lock'
-;;      o   Update `$VERSION' variable with YYYY.MMDD on save.
+;;      o   Colored POD pages with `font-lock'
+;;      o   Update `$VERSION' variable n Perl code with YYYY.MMDD on save.
 ;;
 ;;      Other minor modes:
 ;;
@@ -116,17 +124,18 @@
 ;;  Package startup
 ;;
 ;;      At package startup the perl binary's `tinyperl--perl-bin'
-;;      `@INC' content is cached. If you have modules somewhere else than
-;;      the standard `@INC', then add additional `-I' switches to the
-;;      `tinyperl--inc-path-switches' so that these additional paths are
-;;      cached too.
+;;      `@INC' content is cached. If you have modules somewhere else
+;;      than the standard `@INC', then add additional `-I' switches to
+;;      the `tinyperl--inc-path-switches' so that these additional
+;;      paths are cached too.
 ;;
-;;      In addition the Perl POD manual pages and paths are cached at startup.
-;;      This is derived from *Config.pm* variable $Config{privlib}.
+;;      In addition the Perl POD manual pages and paths are cached at
+;;      startup. This is derived from *Config.pm* variable
+;;      $Config{privlib}.
 ;;
 ;;      If you need to change any of the above settings in environment
-;;      during the session, reload package or call `tinyperl-install' to
-;;      update the changed values.
+;;      during the session, reload package or call `tinyperl-install'
+;;      to update the changed values.
 ;;
 ;;  Saving TinyPerl state (cache)
 ;;
@@ -141,9 +150,9 @@
 ;;      this by calling `tinyperl-install' with a force flag; use
 ;;      some prefix argument (e.g. `C-u').
 ;;
-;;      The cache information is expired periodically, so it should keep up
-;;      with the environment changes quite well. The default cache period
-;;      is 7 days, but this can be set via
+;;      The cache information is expired periodically, so it should
+;;      keep up with the environment changes quite well. The default
+;;      cache period is 7 days, but this can be set via
 ;;      `tinyperl--cache-file-days-old-max'.
 ;;
 ;;  Perl Minor Mode description
@@ -420,7 +429,7 @@
 ;;
 ;;      If the VERSION variable uses number format NNNN.NNNN, then it
 ;;      is assumed to contain ISO 8601 date YYYY.MMDD and this package
-;;      will update the `$VERSION' variable's date every time file is
+;;      can update the `$VERSION' variable's date every time file is
 ;;      saved (see `write-file-functions' and `tinyperl-version-stamp').
 ;;
 ;;  Submitting your perl script to CPAN
@@ -575,8 +584,8 @@ See `tinyperl-podchecker'."
 ;;{{ setup: public
 
 (defcustom tinyperl--verbose 1
-  "*If number, bigger than zero, dispaly informational messages.
-In error situations you can look old messages from *Messages* buffer."
+  "*If number, bigger than zero, display informational messages.
+See messages in *Messages* buffer."
   :type  '(integer :tag "Verbose level 0 ... 10")
   :group 'TinyPerl)
 
@@ -1369,9 +1378,9 @@ When LOAD: If `(tinyperl-cache-file-name)' does not exist. return nil."
   (ti::add-hooks 'tinyperl--pod-write-mode-define-keys-hook
                  'tinyperl-pod-write-mode-define-keys
                  remove)
-  (ti::add-hooks 'write-file-functions
-                 'tinyperl-version-stamp
-                 remove)
+  ;; (ti::add-hooks 'write-file-functions
+  ;;                'tinyperl-version-stamp
+  ;;                remove)
   (when verb
     (tinyperl-verbose-macro 2
       (message "TinyPerl: Hooks installed"))))
@@ -2220,21 +2229,25 @@ If Emacs is win32 application, convert to DOS style paths."
   ;;
   ;;      PERL5LIB paths refer to cygwin, like /usr/share/site-perl/CPAN
   ;;
-  ;;  But this is not a path that GNU Emacs know, because it is pure
+  ;;  But this is not a path that GNU Emacs knows because it is a pure
   ;;  Windows application. The paths must be converted so that
   ;;
   ;;     CYGWIN-ROOT/path   or CYGWIN-MOUNT-POINT/path
   ;;
-  ;;  #todo: XEmacs is different game, it can be built as Cygwin native
-  ;;  #todo: How to check if running Cygwin or Win32 XEmacs ?
+  ;;  FIXME: XEmacs is different game, it can be built as Cygwin native
+  ;;  FIXME: How to check if running Cygwin or Win32 XEmacs ?
   (let ((perl-type (tinyperl-perl-type)))
     (cond
      ((and (ti::emacs-p)
-           ;;  #todo: if Emacs is built as native cygwin application,
+           ;;  FIXME: if Emacs is built as native cygwin application,
            ;;  this fails.
            (eq perl-type 'win32-cygwin))
       (let (new-list)
         (dolist (path list)
+	  (setq path (subst-char-in-string ?\\ ?/ path))
+	  ;; In Cygwin mount redirects /usr/lib => /lib and there is
+	  ;; no physical /usr/lib directory
+	  (setq path (replace-regexp-in-string "/usr/lib" "/lib" path))
           (cond
            ((and (string-match "^/" path)
                  ;;  Exclude Win32 UNC path formats: //SERVER/dir/dir
@@ -2311,6 +2324,8 @@ References:
     (if path5
         (setq list (append list path5)))
     (setq list (delete "." list))
+    (setq list (delete "./" list))
+    (setq list (delete ".\\" list))
     (tinyperl-debug fid "list [2]" list)
     ;;  Make sure Emacs can read the Paths -- Win32 specific support
     (setq list (tinypath-path-convert-to-emacs-host list))
@@ -2323,7 +2338,7 @@ References:
             ;;  Record to message, so that possible errors can be
             ;;  traced.
             (tinyperl-verbose-macro 3
-	      (message "Tinyperl: invalid @INC dir %s. Ignored." x))))))
+	      (message "Tinyperl: in @INC, non-existing dir %s" x))))))
     (tinyperl-debug fid "result [2]" result)
     (when (and result
                (null ret))
