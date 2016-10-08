@@ -4,7 +4,7 @@
 
 ;;{{{ Id
 
-;; Copyright (C) 1996-2013 Jari Aalto
+;; Copyright (C) 1996-2016 Jari Aalto
 ;; Keywords:     mail
 ;; Author:       Jari Aalto
 ;; Maintainer:   Jari Aalto

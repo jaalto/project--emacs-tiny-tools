@@ -1,3 +1,26 @@
+2016-10-08 Sat  Jari Aalto  <jari.aalto@cante.net>
+
+	* tiny/tinyperl.el
+	(Docs::Note): Add note to epxlain that this is a minor mode for POD.
+	It has no effect the Perl code is written which is controlled by
+	the standard Emacs's perl-mode or cperl-mode etc.
+	(tinypath-path-convert-to-emacs-host): Useforward slash in paths.
+	(tinyperl--verbose): Update docstring.
+	(tinyperl-inc-path): Igore ./ and .\\ current directory variations.
+	(tinypath-path-convert-to-emacs-host): Convert backslashes to forward
+	slashes. In Cywin replace paths containing /usr/lib with /lib as
+	/usr/lib is not a physical directory but a mount point.
+	(tinyperl-install-hooks): Do not add tinyperl-version-stamp to
+	write-file-functions by default. Added an example to the
+	INSTALL section for user to add it manually.
+	(tinyperl-pod2text): Check `tinyperl--pod2text-bin' and display
+	error if not found. Call process using `tinyperl--pod2text-bin'.
+	(tinyperl-pod2text): Change to to `system-type' to check if
+	running in Windows Emacs.
+	(tinyperl-install-variables-lookup): Only display messages if VERB
+	is set
+	(tinyperl-install): Update docstring.
+
 2016-10-07 Fri  Jari Aalto  <jari.aalto@cante.net>
 
 	* tiny/tinylibm.el (ti::read-current-line): Read real line
