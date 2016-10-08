@@ -1104,14 +1104,15 @@ References:
   `tinyperl--pod-list'"
   (interactive)
   (cl-flet ((set-maybe
-	  (symbol eval-form)
-	  (when (or (eq 'force check)
-		    (and check
-			 (symbol-value symbol)))
-	    (tinyperl-verbose-macro 1
-	      (message "TinyPerl: Wait, setting up var: %s" symbol))
-	    (set symbol
-		 (eval eval-form)))))
+	     (symbol eval-form)
+	     (when (or (eq 'force check)
+		       (and check
+			    (symbol-value symbol)))
+	       (when verb
+		 (tinyperl-verbose-macro 1
+		   (message "TinyPerl: Wait, setting up var: %s" symbol)))
+	       (set symbol
+		    (eval eval-form)))))
     (when verb
       (tinyperl-verbose-macro 1
 	(message "TinyPerl: Wait, setting up variables...")))
@@ -2585,11 +2586,11 @@ TinyPerl: Pod::Checker.pm is not known to this Perl version. @INC trouble?"))
                             (ti::win32-cygwin-p))))
         (tinyperl-debug fid "file" file)
         ;; perl -MPod::Text -e "pod2text shift" -n groff /cygdrive/p/unix/cygwin/lib/perl5/5.8.0/pods/perlfunc.pod
-	(unless (and (stringp tinyperl--pod2text-bin)
-		     (file-exists-p tinyperl--pod2text-bin))
-	  (error "No pod2text binary found. Please set tinyperl--pod2text-bin"))
 	(cond
-	 ((not (string-match "-nt" (emacs-version))) ; Not NT Emacs
+	 ((not (memq system-type '(windows-nt)))
+	  (unless (and (stringp tinyperl--pod2text-bin)
+		       (file-exists-p tinyperl--pod2text-bin))
+	    (error "Please set or fix location of tinyperl--pod2text-bin"))
 	  (call-process tinyperl--pod2text-bin
 			nil
 			buffer
