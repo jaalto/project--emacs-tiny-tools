@@ -32,7 +32,7 @@ Table of contents
 
         #t2html-comment http://www.xemacs.org/Documentation/packageGuide.html
 
-        Copyright (C) 1995-2013 Jari Aalto
+        Copyright (C) 1995-2016 Jari Aalto
 
         License: This material may be distributed only subject to
         the terms and conditions set forth in GNU General Public
@@ -52,13 +52,12 @@ Table of contents
 
     1.2 Unpacking
 
-        Extract the package and it will create directory according to
-        the version number. Under Windows platform: create directories
+        Extract the package. Under Windows platform: create directories
         manually e.g. on `C:\home\elisp'. A Windows
         #URL<http://support.microsoft.com/kb/310519><environment variable>
         HOME must alse be defined to point to suitable location, like
-        `C:\home'. The HOME directory must exist. Create following
-        directories:
+        `C:\home'. The HOME directory must exist. Suggested directory
+	structure:
 
             $HOME
             |
@@ -69,35 +68,59 @@ Table of contents
             +-tmp/
 
         Unpack the archive to suitable location, like
-        `$HOME/elisp/packages'. Unser Unix/Linux the commands are:
+        `$HOME/elisp/packages'. In Linux the commands are:
 
-            $ cd $HOME/elisp/packages
-            $ gzip -dc ~/tmp/download/emacs-tiny-tools*.gz | tar -xvf -
+            cd $HOME/elisp/packages
+            gzip -dc ~/tmp/download/emacs-tiny-tools*.gz | tar -xvf -
 
-    1.3 Quick install -- personal
+    1.3 Install
 
-        Emacs *load-path* must be configured to point to Emacs Lisp
-        package directories. Add following lines to `$HOME/.emacs'.
-        Substitute the paths as necessary to reflect unpack locations:
+        Configure Emacs *load-path* to point to package directories.
+        Substitute the paths as necessary to reflect your unpack locations:
 
             (add-to-list 'load-path
                          "~/elisp/packages/emacs-tiny-tools/lisp/tiny")
             (add-to-list 'load-path
                          "~/elisp/packages/emacs-tiny-tools/lisp/other")
 
-    1.4 Advanced install -- using tinypath
+            (require 'tiny-autoload-loaddefs-tiny)
+            (require 'tiny-autoload-loaddefs-other)
 
-       1.4.1 Personal install using tinypath
+            ;;  Configure some package.
+            ;;  See each package for further instructions.
 
-        The following lines below will configure Emacs to be aware of
-        *all* lisp paths under `$HOME/elisp' or `$HOME/lisp', so
-        whatever magic you used to do to keep your `load-path' up to
-        date is no longer needed. The Lisp package path variable
-        `load-path' is periodically kept up to date without manual
-        tweaking.
+            (autoload 'turn-on-tinyperl-mode "tinyperl" "" t)
+            (add-hook 'perl-mode-hook  'turn-on-tinyperl-mode)
+            (add-hook 'cperl-mode-hook 'turn-on-tinyperl-mode)
+
+    1.4 Minimal install
+
+        If you are tight of space or otherwise do not need all the
+        tools or if you're only interested in specific package, a
+        minimum installation is possible. The basic idea is to include
+        libraries + needed package(s).
+
+            tinyliba.el     - autoloads
+            tinylibb.el     - backward compatibility; Emacs version changes
+            tinylibm.el     - macros and other low level forms
+            tinylib.el      - main library
+            tinylibxe.el    - XEmacs support library
+
+            + select packages that you're interested in
+
+    1.5 About tinypath
+
+	You're interested about this only if you have multiple (20+) emacs
+	packages gathered around Internet which are installd in various
+	directories and you do not want any manual handling of keeping
+	`load-path' up to date after new installs.
+
+        The following lines below can configure Emacs to be aware of *all*
+        lisp paths under `$HOME/elisp' or `$HOME/lisp', so whatever magic
+        you used to do to keep your `load-path' up to date is no longer
+        needed. The `load-path' variable is periodically kept up to date.
 
             ;; $HOME/.emacs
-            ;; This line loads package "tinypath.el"
 
             (load "~/elisp/packages/tiny-tools/lisp/tiny/tinypath")
 
@@ -134,121 +157,13 @@ Table of contents
             (load "utility")
             (utility-install)   ;; or whatever is needed to activate it
 
-       1.4.2 Site wide install using tinypath
-
-        If you are administering the current host and you have both
-        XEmacs and Emacs installations; plus you have lot of extra
-        Emacs packages that are available form the Net, you need to
-        tell the _different_ locations where the installed lisp
-        directories are. In this case, you have to set the
-        `tinypath-:load-path-root'. In previous personal installation
-        example, this was automatically determined.
-
-        After the code below, user have access to all packages
-        installed to your system, no matter where they reside. The
-        `load-path' is configured porperly at Emacs startup and you,
-        the admin, can concentrate on getting your hand on the most
-        prospective lisp packages. Just drop them anywhere, move them
-        around, the changes will be noticed automatically.
-
-            ;;  <emacs-version>/lisp/site-start.el
-            ;;
-            ;;  List of ROOT directories where all Emacs lisp
-            ;;  files are located. Update list according to your site.
-            ;;  No need to optimize away non-existing directories,
-            ;;  because they will be ignored.
-
-            (setq tinypath-:load-path-root
-              (list
-                (if (boundp 'xemacs-logo)               ;; ROOT DIR ONE
-                    "The-XEmacs-root/lisp"
-                  "The-Emacs-root/lisp")
-
-                (if (boundp 'xemacs-logo)               ;; ROOT DIR TWO
-                    "Your-XEmacs-site-list-directory"
-                  "Your-Emacs-site-list-directory")
-
-                "~/elisp"                               ;; ... and so on
-                "~/lisp"))
-
-            (load "/path/to/tinypath.el")
-
-            ;; End of example
-
-    1.5 Advanced install -- using autoload files
-
-        The autoload file provide "functions" that are made known to
-        Emacs, but they do not load any packages. This is better than
-        using `require' or `load' commands, because it makes the
-        Emacs start faster.
-
-            ;; $HOME/.emacs
-
-            (load "/path/to/tinypath.el")
-
-            ;;  Load files that tell what functions exist
-
-            (require 'tiny-autoload-loaddefs-tiny)
-            (require 'tiny-autoload-loaddefs-other)
-
-            ;;  Configuration section of wanted packages.
-            ;;  See each package for further instructions.
-
-            (autoload 'turn-on-tinyperl-mode "tinyperl" "" t)
-            (add-hook 'perl-mode-hook  'turn-on-tinyperl-mode)
-            (add-hook 'cperl-mode-hook 'turn-on-tinyperl-mode)
-
-            ;; End of $HOME/.emacs
-
-    1.6 Minimal install
-
-        If you are tight of space or otherwise do not need all the
-        tools or if you're only interested in specific package, a
-        minimum installation is possible. The basic idea is to include
-        libraries + needed package(s).
-
-            tinyliba.el     - autoloads
-            tinylibb.el     - backward compatibility; Emacs version changes
-            tinylibm.el     - macros and other low level forms
-            tinylib.el      - main library
-            tinylibxe.el    - XEmacs support library
-
-            + select packages that you're interested in
-
-    1.7 Optional step - compiling files
-
-        FIXME: <under construction>
-
-    1.8 Submitting bug reports
-
-        IT IS IMPORTANT THAT YOU USE NON-COMPILED FILES AND SUBMIT THE
-        *BACKTRACE*. The backtrace is collection of lines that are
-        printed when Emacs Lisp code signals an error. Send a bug
-        report by using package's contact functions. The `XXX' below
-        refers to the function prefix, like `tinyurl' for package
-        *tinyurl.el*:
-
-            M-x load-library RET package.el RET       # load non-compiled
-
-            M-x turn-on-emacs-debug RET               # From tinyliba.el
-            M-x set-variable RET debug-on-error RET t # Or use this
-
-            ...  repeat what you did until the point of error ...
-
-            M-x XXX-submit-bug-report       << prefer this if it exists >>
-            M-x XXX-submit-feedback
-
-            ... and copy paste any relevant information, like the lisp
-            ... error buffer *Backtrace* that might have been generated.
-
 2.0 Project information
 
     2.1 What does prefix "tiny" mean
 
         The first package made was *tinyappend.el*, a simple utility to
         gather selected areas of text somewhere convenient. Since then the
-        prefix "tiny" has been preserved in front of every lisp file. The
-        word has no other meaning.
+        prefix "tiny" just stuck. The word has no particular meaning.
 
     2.2 Thank you section
 

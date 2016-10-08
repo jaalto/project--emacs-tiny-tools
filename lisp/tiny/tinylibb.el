@@ -4,7 +4,7 @@
 
 ;;{{{ Id
 
-;; Copyright (C)    1998-2013 Jari Aalto
+;; Copyright (C)    1998-2016 Jari Aalto
 ;; Keywords:        extensions
 ;; Author:          Jari Aalto
 ;; Maintainer:      Jari Aalto
@@ -79,14 +79,14 @@
 (eval-and-compile
   (autoload 'ti::replace-match "tinylibm"))
 
-(defconst tinylibb-version-time "2013.0613.1819"
+(defconst tinylibb-version-time "2016.0630.0754"
   "Latest version number as last modified time.")
 
 ;;; ....................................................... &emulation ...
 
-(defun-maybe replace-char-in-string (ch1 ch2 string)
-  ;;  "Search CH1, change it with CH2 in STRING."
-  (nsubstitute ch1 ch2 string))
+(defun-maybe replace-char-in-string (old new string)
+  "Search OLD character with NEW in STRING. Changes STRING."
+  (nsubstitute new old string))
 
 (defun-maybe bin-string-to-int (8bit-string)
   "Convert 8BIT-STRING  string to integer."

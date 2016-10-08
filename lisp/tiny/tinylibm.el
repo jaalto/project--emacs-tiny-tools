@@ -2,7 +2,7 @@
 
 ;;{{{ Id
 
-;; Copyright (C)    1995-2013 Jari Aalto
+;; Copyright (C)    1995-2016 Jari Aalto
 ;; Keywords:        extensions
 ;; Author:          Jari Aalto
 ;; Maintainer:      Jari Aalto
@@ -84,7 +84,7 @@
 
 (require 'tinylibb)                     ;Backward compatible functions
 
-(defconst tinylibm-version-time "2013.0613.1825"
+(defconst tinylibm-version-time "2016.1007.1500"
   "Latest version number.")
 
 ;;{{{ function tests
@@ -1305,10 +1305,12 @@ Lines are counted from 1..x"
   (save-excursion
     (if point
         (goto-char point))
-    (buffer-substring
-     (if point (point)
-       (line-beginning-position))
-     (line-end-position))))
+    (let ((inhibit-field-text-motion t))
+      (buffer-substring
+       (if point
+	   (point)
+	 (line-beginning-position))
+       (line-end-position)))))
 
 ;;; ----------------------------------------------------------------------
 ;;;

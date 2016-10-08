@@ -4,7 +4,7 @@
 
 ;;{{{ Id
 
-;; Copyright (C)    1995-2013 Jari Aalto
+;; Copyright (C)    1995-2016 Jari Aalto
 ;; Keywords:        extensions
 ;; Author:          Jari Aalto
 ;; Maintainer:      Jari Aalto
@@ -5744,13 +5744,13 @@ if MODE is non-nil, return empty string instead."
 ;;;
 (defsubst ti::file-path-to-unix (path)
   "Convert PATH to Unix forward slash format."
-  (replace-char-in-string ?/ ?\\  path))
+  (replace-char-in-string ?\\ ?/ path))
 
 ;;; ----------------------------------------------------------------------
 ;;;
 (defsubst ti::file-path-to-msdos (path)
   "Convert PATH to MS-DOS backward slash format."
-  (replace-char-in-string ?\\ ?/  path))
+  (replace-char-in-string ?/ ?\\ path))
 
 ;;; ----------------------------------------------------------------------
 ;;;
@@ -5764,10 +5764,10 @@ You need to call this function if you pass a absolute path to
 external processes. Emacs in the other hand can handle both \\ and /
 internally."
   (if (ti::emacs-type-win32-p)
-      (replace-char-in-string
-       ?\\ ?/  (concat (file-name-as-directory dir) (or file "")))
-    (replace-char-in-string
-     ?/ ?\\  (concat (file-name-as-directory dir) (or file "")))))
+      (ti::file-path-to-msdos (concat (file-name-as-directory dir)
+				      (or file "")))
+    (ti::file-path-to-unix (concat (file-name-as-directory dir)
+				   (or file "")))))
 
 ;;; ----------------------------------------------------------------------
 ;;; #defalias (defalias 'which 'ti::file-get-load-path)

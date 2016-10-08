@@ -4,7 +4,7 @@
 
 ;;{{{ Id
 
-;; Copyright (C)    1997-2013 Jari Aalto
+;; Copyright (C)    1997-2016 Jari Aalto
 ;; Keywords:        extensions
 ;; Author:          Jari Aalto
 ;; Maintainer:      Jari Aalto
@@ -1957,7 +1957,7 @@ Return:
        (format "TinyUrl: (url validate) Binary file ignored"))
       ((ti::file-name-remote-p url)
        t)                               ;do not check ange-ftp
-      ((or (string-match "\\<\\(foo\\|bar\\|quux\\)" url)
+      ((or (string-match "\\<\\(foo\\|bar\\|quux\\)\\>" url)
            (string-match "\\$" url))
        (format "TinyUrl: (url validate) Invalid keyword '%s' in URL [%s]"
                (match-string 0 url)

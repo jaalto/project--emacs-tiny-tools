@@ -148,7 +148,7 @@ Table of contents
         #T2HTML-OPTION --css-code-bg
         #T2HTML-OPTION --html-frame
 
-        Copyright (C) 1995-2013 Jari Aalto
+        Copyright (C) 1995-2016 Jari Aalto
 
         License: This material may be distributed only subject to
         the terms and conditions set forth in GNU General Public
