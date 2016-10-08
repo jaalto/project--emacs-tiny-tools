@@ -1,6 +1,6 @@
 //  bmt-time.js -- Javascript to show internet time
 //
-//      Copyright (C) 1996-2013 Jari Aalto
+//      Copyright (C) 1996-2016 Jari Aalto
 //
 //      This program is free software; you can redistribute it and/or
 //      modify it under the terms of the GNU General Public License as

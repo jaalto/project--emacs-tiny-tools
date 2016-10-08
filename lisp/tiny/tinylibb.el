@@ -79,7 +79,7 @@
 (eval-and-compile
   (autoload 'ti::replace-match "tinylibm"))
 
-(defconst tinylibb-version-time "2016.0630.0746"
+(defconst tinylibb-version-time "2016.0630.0754"
   "Latest version number as last modified time.")
 
 ;;; ....................................................... &emulation ...
