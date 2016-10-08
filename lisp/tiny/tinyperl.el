@@ -98,7 +98,7 @@
 ;;      is more close to the original one. With Cygwin, you can
 ;;      install and upgrade CPAN archives easily:
 ;;
-;;		perl -MCPAN -e shell
+;;              perl -MCPAN -e shell
 ;;
 ;;      Multiple Perl installations are _not_ _supported._ The one
 ;;      that comes in path first is used. Perl advances each time so
@@ -599,7 +599,7 @@ See messages in *Messages* buffer."
   :type  'string
   :group 'TinyPerl)
 
-(defcustom tinyperl--lint-severity 1	;Max
+(defcustom tinyperl--lint-severity 1    ;Max
   "*Default severity to run Perl::Critic with.
 As of 2010-04-15 perlcritic(1), this can be in range
 1 (brutal) .. 5 (gentle)."
@@ -926,10 +926,10 @@ See `tinyperl-pod-grep-faq-answer'")
 (defmacro tinyperl-directory-files (variable path &optional regexp)
   "Store to VARIABLE .pl and .pm files in PATH. Optionally match REGEXP."
   `(setq ,variable
-	 (directory-files
-	  ,path
-	  nil
-	  (or ,regexp "\\.pl\\|\\.pm"))))
+         (directory-files
+          ,path
+          nil
+          (or ,regexp "\\.pl\\|\\.pm"))))
 
 ;;; ----------------------------------------------------------------------
 ;;;
@@ -958,9 +958,9 @@ when it matches REGEXP and set variable SYM to that value, effectively:
   (unless (string-match "\\.pm$" module)
     (setq module (concat module ".pm")))
   (let ((elt (assoc module tinyperl--inc-module-list))
-	(file (if (string-match ".*::\\(.*\\)" module)
-		  (match-string 1 module)
-		module)))
+        (file (if (string-match ".*::\\(.*\\)" module)
+                  (match-string 1 module)
+                module)))
     (when elt
       (concat (file-name-as-directory (cdr elt))
               file))))
@@ -1079,8 +1079,8 @@ Check variable `exec-path'"
       (tinyperl-perl-examine tinyperl--perl-bin)
       ;;  Leave trace to Message buffer.
       (tinyperl-verbose-macro 2
-	(message "TinyPerl: [Perl version] => %s"
-		 (or (tinyperl-perl-type-version-info) "")))
+        (message "TinyPerl: [Perl version] => %s"
+                 (or (tinyperl-perl-type-version-info) "")))
       ok)))
 
 ;;; ----------------------------------------------------------------------
@@ -1104,18 +1104,18 @@ References:
   `tinyperl--pod-list'"
   (interactive)
   (cl-flet ((set-maybe
-	     (symbol eval-form)
-	     (when (or (eq 'force check)
-		       (and check
-			    (symbol-value symbol)))
-	       (when verb
-		 (tinyperl-verbose-macro 1
-		   (message "TinyPerl: Wait, setting up var: %s" symbol)))
-	       (set symbol
-		    (eval eval-form)))))
+             (symbol eval-form)
+             (when (or (eq 'force check)
+                       (and check
+                            (symbol-value symbol)))
+               (when verb
+                 (tinyperl-verbose-macro 1
+                   (message "TinyPerl: Wait, setting up var: %s" symbol)))
+               (set symbol
+                    (eval eval-form)))))
     (when verb
       (tinyperl-verbose-macro 1
-	(message "TinyPerl: Wait, setting up variables...")))
+        (message "TinyPerl: Wait, setting up variables...")))
     (unless (set-maybe
              'tinyperl--inc-path
              '(tinyperl-inc-path tinyperl--perl-bin))
@@ -1138,7 +1138,7 @@ tinyperl--perl-bin Unrecognized. Need Perl 5. [%s]"
       (error "TinyPerl: Setup failure tinyperl--pod-list"))
     (when verb
       (tinyperl-verbose-macro 1
-	(message "TinyPerl: Wait, setting up variables...Done.")))))
+        (message "TinyPerl: Wait, setting up variables...Done.")))))
 
 ;;; ----------------------------------------------------------------------
 ;;;
@@ -1215,7 +1215,7 @@ Input:
 
   VERB      Allow verbose messaegs."
   (let (stat
-	ok)
+        ok)
     ;;  The FORCE Flag says that we should start all over, no
     ;;  matter how broken our setup is. In case the unfortunate
     ;;  accident of tinyperl--perl-bin being in format
@@ -1244,7 +1244,7 @@ Input:
       (tinyperl-save-state nil verb)
       (when verb
         (tinyperl-verbose-macro 1
-	  (message "TinyPerl: Setting up variables...done"))))
+          (message "TinyPerl: Setting up variables...done"))))
     (put 'tinyperl-mode
          'podchecker
          (tinyperl-perl-module-exists-p "Pod::Checker.pm"))
@@ -1263,7 +1263,8 @@ Input:
   UNINSTALL   Uninstall, remove hooks etc.
   FORCE       Forced install. In case modules have installed from CPAN,
               this variable should be set to force rescan of @INC instead
-              of using cache."
+              of using cache.
+              See \\[tinyperl-install-force]."
   (interactive "P")
   (tinyperl-install-hooks uninstall)
   (unless uninstall
@@ -1304,7 +1305,7 @@ When LOAD: If `(tinyperl-cache-file-name)' does not exist. return nil."
         (load file)
         (when verb
           (tinyperl-verbose-macro 1
-	    (message "TinyPerl: state restored [%s]" file)))
+            (message "TinyPerl: state restored [%s]" file)))
         t))
      (t
       (ti::write-file-variable-state
@@ -1319,7 +1320,7 @@ When LOAD: If `(tinyperl-cache-file-name)' does not exist. return nil."
          tinyperl--pod2text-bin))
       (when verb
         (tinyperl-verbose-macro 1
-	  (message "TinyPerl: state saved [%s]" file)))
+          (message "TinyPerl: state saved [%s]" file)))
       t))))
 
 ;;; ----------------------------------------------------------------------
@@ -1780,10 +1781,10 @@ Mode description:
                                     (symbol-name x)))))
           (setq def
                 `(defun ,sym ()
-		   "Forward declaration wrapper. Will define real function."
-		   (interactive)
-		   (tinyperl-skeleton-initialize)
-		   (funcall (quote ,sym))))
+                   "Forward declaration wrapper. Will define real function."
+                   (interactive)
+                   (tinyperl-skeleton-initialize)
+                   (funcall (quote ,sym))))
           (eval def))))
      '(item
        script-manpage
@@ -2149,10 +2150,10 @@ Hee is one suggestion ofr Module.pm POD layout
 -->
 '(\"C:\\Program files\\this\" \"c:\\temp\")"
   (let (locations
-	beg
-	end
-	ret
-	str)
+        beg
+        end
+        ret
+        str)
     (with-temp-buffer
       (insert string)
       (ti::pmin)
@@ -2172,11 +2173,11 @@ Hee is one suggestion ofr Module.pm POD layout
 (defun tinyperl-inc-split (inc)
   "Split @INC in INC string, where entries are separated by spaces."
   (let ((fid "tinyperl-inc-split")
-	(perl-type (tinyperl-perl-type))
-	;;  We can't just explode RESULT with Emacs function `split'
-	;;  because in Win32 it may contain spaces
-	;;  c:\Program files\activestate\perl\lib
-	list)
+        (perl-type (tinyperl-perl-type))
+        ;;  We can't just explode RESULT with Emacs function `split'
+        ;;  because in Win32 it may contain spaces
+        ;;  c:\Program files\activestate\perl\lib
+        list)
     (when inc
       (cond
        ((and (ti::win32-p)
@@ -2245,10 +2246,10 @@ If Emacs is win32 application, convert to DOS style paths."
            (eq perl-type 'win32-cygwin))
       (let (new-list)
         (dolist (path list)
-	  (setq path (subst-char-in-string ?\\ ?/ path))
-	  ;; In Cygwin mount redirects /usr/lib => /lib and there is
-	  ;; no physical /usr/lib directory
-	  (setq path (replace-regexp-in-string "/usr/lib" "/lib" path))
+          (setq path (subst-char-in-string ?\\ ?/ path))
+          ;; In Cygwin mount redirects /usr/lib => /lib and there is
+          ;; no physical /usr/lib directory
+          (setq path (replace-regexp-in-string "/usr/lib" "/lib" path))
           (cond
            ((and (string-match "^/" path)
                  ;;  Exclude Win32 UNC path formats: //SERVER/dir/dir
@@ -2339,7 +2340,7 @@ References:
             ;;  Record to message, so that possible errors can be
             ;;  traced.
             (tinyperl-verbose-macro 3
-	      (message "Tinyperl: in @INC, non-existing dir %s" x))))))
+              (message "Tinyperl: in @INC, non-existing dir %s" x))))))
     (tinyperl-debug fid "result [2]" result)
     (when (and result
                (null ret))
@@ -2408,10 +2409,12 @@ References:
 ;;;
 (defun tinyperl-build-pod-files ()
   "Build files under pod path."
+  ;; FIXME: Hm. /usr/ib/5.xx/pod directory doesn't much contain *.pod
+  ;; files.
   (let ((path  (or tinyperl--pod-path
-		   (error "TinyPerl: No tinyperl--pod-path")))
-	files
-	ret)
+                   (error "TinyPerl: No tinyperl--pod-path")))
+        files
+        ret)
     (setq files (ti::directory-files path "\\.pod"))
     (dolist (file files)
       (push (cons file (ti::file-name-forward-slashes path)) ret))
@@ -2428,13 +2431,13 @@ Return:
 
   '((package.pm . path) (package::package.pm . path) ..)"
   (let ((INC (or search-list
-		 (error "TinyPerl: No SEARCH-LIST")))
-	files
-	dirs
-	dirs2
-	dirs3
-	package
-	ret)
+                 (error "TinyPerl: No SEARCH-LIST")))
+        files
+        dirs
+        dirs2
+        dirs3
+        package
+        ret)
     (cl-flet ((my-add
             (file pfx path)
             ;;  As long as the name of the .pl file is unique (not yet
@@ -2459,7 +2462,7 @@ Return:
       (dolist (path INC)
         (when verb
           (tinyperl-verbose-macro 2
-	    (message "TinyPerl: Reading @INC path %s" path)))
+            (message "TinyPerl: Reading @INC path %s" path)))
         (tinyperl-directory-files files path)
         (dolist (file files)
           (push (cons file path) ret))
@@ -2528,23 +2531,23 @@ TinyPerl: Pod::Checker.pm is not known to this Perl version. @INC trouble?"))
         (run-hooks 'tinyperl--podchecker-after-hook)))
     (when t
       (let* (compilation-error-regexp-alist
-	     ;;  `shell-quote-argument'  does not work here correctly.
-	     ;;  This tackles bash.exe and  Win32 command-com
-	     (quote (if (and (ti::win32-p)
-			     (string-match "cmd\\|command"
-					   shell-file-name))
-			"\""
-		      "'"))
-	     (cmd (concat
-		   tinyperl--perl-bin
-		   " -MPod::Checker"
-		   " -e"
-		   " "
-		   quote
-		   "podchecker shift, undef, -warnings , q(on)"
-		   quote
-		   " "
-		   (expand-file-name file))))
+             ;;  `shell-quote-argument'  does not work here correctly.
+             ;;  This tackles bash.exe and  Win32 command-com
+             (quote (if (and (ti::win32-p)
+                             (string-match "cmd\\|command"
+                                           shell-file-name))
+                        "\""
+                      "'"))
+             (cmd (concat
+                   tinyperl--perl-bin
+                   " -MPod::Checker"
+                   " -e"
+                   " "
+                   quote
+                   "podchecker shift, undef, -warnings , q(on)"
+                   quote
+                   " "
+                   (expand-file-name file))))
         ;;  Keep the old values and add this regexp.
         ;;  2 = filename, 1 = line number
         ;; *** WARNING: 2 unescaped <> in paragraph at line 1994 in file xxx
@@ -2586,36 +2589,36 @@ TinyPerl: Pod::Checker.pm is not known to this Perl version. @INC trouble?"))
                             (ti::win32-cygwin-p))))
         (tinyperl-debug fid "file" file)
         ;; perl -MPod::Text -e "pod2text shift" -n groff /cygdrive/p/unix/cygwin/lib/perl5/5.8.0/pods/perlfunc.pod
-	(cond
-	 ((not (memq system-type '(windows-nt)))
-	  (unless (and (stringp tinyperl--pod2text-bin)
-		       (file-exists-p tinyperl--pod2text-bin))
-	    (error "Please set or fix location of tinyperl--pod2text-bin"))
-	  (call-process tinyperl--pod2text-bin
-			nil
-			buffer
-			nil
-			file))
+        (cond
+         ((not (memq system-type '(windows-nt)))
+          (unless (and (stringp tinyperl--pod2text-bin)
+                       (file-exists-p tinyperl--pod2text-bin))
+            (error "Please set or fix location of tinyperl--pod2text-bin"))
+          (call-process tinyperl--pod2text-bin
+                        nil
+                        buffer
+                        nil
+                        file))
 
-	(t
-	 ;; NOTE: Perl 5.x has bug in -MPod::Text
-	 ;; FIXME Nothing we can do?
-	 (call-process tinyperl--perl-bin
-		       nil
-		       buffer
-		       nil
-		       "-MPod::Text"
-		       "-e"
-		       "pod2text shift"
-		       ;;  Cygwin's groff(1) was changed to bash
-		       ;;  shell script which cannot be used
-		       ;;  from NTEmacs
+        (t
+         ;; NOTE: Perl 5.x has bug in -MPod::Text
+         ;; FIXME Nothing we can do?
+         (call-process tinyperl--perl-bin
+                       nil
+                       buffer
+                       nil
+                       "-MPod::Text"
+                       "-e"
+                       "pod2text shift"
+                       ;;  Cygwin's groff(1) was changed to bash
+                       ;;  shell script which cannot be used
+                       ;;  from NTEmacs
 ;;;#todo
 ;;;                      (if nt-cygwin
 ;;;                          "-n")
 ;;;                      (if nt-cygwin
 ;;;                          "groff")
-		       file)))
+                       file)))
         (when (eq (point) point)
           (message
            (concat "TinyPerl: pod2text was empty. "
@@ -2635,8 +2638,8 @@ TinyPerl: Pod::Checker.pm is not known to this Perl version. @INC trouble?"))
 (defun tinyperl-pod-manpage-to-file (pod)
   "Convert POD `perldoc.pod' or `perldoc' into absolute filename."
   (let ((elt (assoc (ti::string-verify-ends pod ".pod")
-		    (or tinyperl--pod-list
-			(error "TinyPerl: No tinyperl--pod-list")))))
+                    (or tinyperl--pod-list
+                        (error "TinyPerl: No tinyperl--pod-list")))))
     (when elt
       (concat (cdr elt) (car elt)))))
 
@@ -2840,14 +2843,14 @@ Call arguments are in ARG-LIST."
    (t
     (with-current-buffer buffer
       (let* ((perl-type (tinyperl-perl-type))
-	     (cmd       (if (ti::win32-shell-p)
-			    ;;  Must not contain path name
-			    ;;  I don't know if the exact problem was due to
-			    ;;  SPACES in the path name.
-			    "perldoc"
-			  tinyperl--perldoc-bin))
-	     (call-type (tinyperl-external-command-format cmd))
-	     (args (ti::list-to-string arg-list)))
+             (cmd       (if (ti::win32-shell-p)
+                            ;;  Must not contain path name
+                            ;;  I don't know if the exact problem was due to
+                            ;;  SPACES in the path name.
+                            "perldoc"
+                          tinyperl--perldoc-bin))
+             (call-type (tinyperl-external-command-format cmd))
+             (args (ti::list-to-string arg-list)))
         ;;  Add "perl" to the front of command if it is "perldoc".
         ;;  This will work under Windows/Cygwin and Unix
         (if (listp call-type)
@@ -2889,18 +2892,18 @@ References:
     (read-string "Perldoc -f: "  (ti::buffer-read-word))
     current-prefix-arg))
   (let ((buffer (get-buffer-create tinyperl--perldoc-buffer))
-	(last   (get 'tinyperl-perldoc 'string))
-	(cmd    (format
-		 "%s -f %s"
-		 (if (ti::win32-shell-p)
-		     ;;  Must not contain path name
-		     ;;  I don't know if the exact problem was due to
-		     ;;  SPACES in the path name.
-		     "perldoc"
-		   tinyperl--perldoc-bin)
-		 string))
-	run
-	win)
+        (last   (get 'tinyperl-perldoc 'string))
+        (cmd    (format
+                 "%s -f %s"
+                 (if (ti::win32-shell-p)
+                     ;;  Must not contain path name
+                     ;;  I don't know if the exact problem was due to
+                     ;;  SPACES in the path name.
+                     "perldoc"
+                   tinyperl--perldoc-bin)
+                 string))
+        run
+        win)
     (ti::verb)
     (when (or force
               (and buffer
@@ -2915,8 +2918,8 @@ References:
         (erase-buffer))
       (when verb
         (tinyperl-verbose-macro
-	    2
-	  (message "TinyPerl: Running %s" cmd)))
+            2
+          (message "TinyPerl: Running %s" cmd)))
       ;; Win32 call-process fails if the binary c:\prgram files\..
       ;; name contains spaces. This is special problems for perldoc.bat
       ;; Because it is in fact full of perl code and called again. See
@@ -2930,20 +2933,20 @@ References:
           (erase-buffer)
           (when verb
             (tinyperl-verbose-macro
-		2
-	      (message "TinyPerl: No matches. Trying without -f ...")))
+                2
+              (message "TinyPerl: No matches. Trying without -f ...")))
           (tinyperl-perldoc-1 buffer (list string))
           (setq cmd (format "%s %s"
                             tinyperl--perldoc-bin
                             string))
           (when verb
             (tinyperl-verbose-macro
-		2
-	      (message "TinyPerl: No matches. Trying without -f ...Done.")))))
+                2
+              (message "TinyPerl: No matches. Trying without -f ...Done.")))))
       (when verb
         (tinyperl-verbose-macro
-	    2
-	  (message "TinyPerl: Running %s. Done." cmd))))
+            2
+          (message "TinyPerl: Running %s. Done." cmd))))
     (cond
      ((setq win (or (get-buffer-window buffer t) ;In another frame
                     (get-buffer-window buffer)))
@@ -3027,23 +3030,23 @@ Input:
       ;;  In FEW cases the *.pm file does not contain the documentation,
       ;;  but there is separate *.pod file, E.g POSIX.pm => POSIX.pod
       (let (try)
-	(multiple-value-bind (name path)
-	    (list (car module) (cdr module))
-	  (dolist (elt (list
-			(replace-regexp-in-string
-			 ".pm" ".pod" name)
-			name))
-	    (setq try
-		  (ti::file-make-path
-		   path
-		   ;;  Delete prefix, because (cdr path) will cnotain the
-		   ;;  full directory
-		   ;;
-		   ;;  Getopt::Long.pm --> Long.pm
-		   (replace-regexp-in-string
-		    ".*:" ""
-		    elt)))
-	    (when (file-exists-p try)
+        (multiple-value-bind (name path)
+            (list (car module) (cdr module))
+          (dolist (elt (list
+                        (replace-regexp-in-string
+                         ".pm" ".pod" name)
+                        name))
+            (setq try
+                  (ti::file-make-path
+                   path
+                   ;;  Delete prefix, because (cdr path) will cnotain the
+                   ;;  full directory
+                   ;;
+                   ;;  Getopt::Long.pm --> Long.pm
+                   (replace-regexp-in-string
+                    ".*:" ""
+                    elt)))
+            (when (file-exists-p try)
             (setq file try)
             (return)))))
       (when (or (not file)
@@ -3164,14 +3167,14 @@ to the correct position."
   (unless (file-directory-p pod-path)
     (error "POD directory not found [%s]" pod-path))
   (let ((grep (tinyperl-grep-program))
-	;;  Have to set this variable, because we can't
-	;;  allow to pass full path to the grep. in Win32 Emacs would
-	;;  send path in DOS style, but Cygwin does not accept those;
-	;;  only unix style paths.
-	;:
-	;;  So, it's enough to Emacs to do an "cd" to directory.
-	;;
-	(default-directory (file-name-directory pod-path)))
+        ;;  Have to set this variable, because we can't
+        ;;  allow to pass full path to the grep. in Win32 Emacs would
+        ;;  send path in DOS style, but Cygwin does not accept those;
+        ;;  only unix style paths.
+        ;:
+        ;;  So, it's enough to Emacs to do an "cd" to directory.
+        ;;
+        (default-directory (file-name-directory pod-path)))
     (setq pod-path "")
     (if (fboundp 'igrep)
         (ti::funcall 'igrep nil regexp "*.pod" pod-path)
@@ -3303,7 +3306,7 @@ Return:
       (let ((file (concat grep-dir grep-file)))
         (when verb
           (tinyperl-verbose-macro 2
-	    (message "TinyPerl: reading faq context %s" file)))
+            (message "TinyPerl: reading faq context %s" file)))
         (setq buffer (find-file-noselect file)))
       (with-current-buffer buffer
         (ti::goto-line grep-line))
@@ -3332,8 +3335,8 @@ References:
         (multiple-value-bind (topic text) context-data
           (when verb
             (tinyperl-verbose-macro 2
-	      (message "TinyPerl: processing data %s"
-		       (file-name-nondirectory file))))
+              (message "TinyPerl: processing data %s"
+                       (file-name-nondirectory file))))
           (insert
            (format "FILE: [%s]" (file-name-nondirectory file))
            (if line
@@ -3391,9 +3394,9 @@ been answered in FAQ'"
         (ti::pmin)))
     (if data
         (tinyperl-verbose-macro 1
-	  (message "TinyPerl: FAQ done."))
+          (message "TinyPerl: FAQ done."))
       (tinyperl-verbose-macro 1
-	(message "TinyPerl: FAQ context processing failed [no data].")))))
+        (message "TinyPerl: FAQ context processing failed [no data].")))))
 
 ;;}}}
 ;;{{{ Misc
@@ -3448,15 +3451,15 @@ See also:
    http://perlcritic.tigris.org"
   (interactive "p")
   (let ((current (current-buffer))
-	(buffer  (get-buffer-create tinyperl--lint-buffer-name))
-	(file    (buffer-file-name))
-	(default-file tinyperl--lint-default-file-name))
+        (buffer  (get-buffer-create tinyperl--lint-buffer-name))
+        (file    (buffer-file-name))
+        (default-file tinyperl--lint-default-file-name))
     (or level
-	(setq level tinyperl--lint-severity))
+        (setq level tinyperl--lint-severity))
     (unless file
       (unless default-file
-	(error "No tinyperl--lint-buffer-name to save buffer %s"
-	       (buffer-name)))
+        (error "No tinyperl--lint-buffer-name to save buffer %s"
+               (buffer-name)))
       (write-region (point-min) (point-max) default-file)
       (setq file default-file))
     (with-current-buffer buffer
@@ -3465,24 +3468,24 @@ See also:
       ;; On the other hand, now we get raw results and no ~/.perlcriticrc
       ;; is read.
       (let ((command
-	     (format
-	      (concat "print critique("
-		      tinyperl--lint-arguments
-		      ", shift)")
-	      (number-to-string level))))
-	(call-process "perl"
-		      nil
-		      (current-buffer)
-		      nil
-		      "-MPerl::Critic=critique"
-		      "-e"
-		      command
-		      (expand-file-name file)))
+             (format
+              (concat "print critique("
+                      tinyperl--lint-arguments
+                      ", shift)")
+              (number-to-string level))))
+        (call-process "perl"
+                      nil
+                      (current-buffer)
+                      nil
+                      "-MPerl::Critic=critique"
+                      "-e"
+                      command
+                      (expand-file-name file)))
       (run-hooks 'tinyperl--lint-hook)
       (when (fboundp 'tinycompile-mode)
-	(tinycompile-mode 1)
-	(make-local-variable 'tinycompile--buffer-name)
-	(setq tinycompile--buffer-name current)))
+        (tinycompile-mode 1)
+        (make-local-variable 'tinycompile--buffer-name)
+        (setq tinycompile--buffer-name current)))
     (display-buffer buffer)))
 
 ;;; ----------------------------------------------------------------------
@@ -3496,8 +3499,8 @@ Input:
               try to guess verison number from a Perl variable in script.
               See function `tinyperl-version-stamp-re-search-forward'."
   (let (kill
-	buffer
-	ret)
+        buffer
+        ret)
     (setq buffer (or (and filename
                           (find-buffer-visiting filename))
                      (prog1
@@ -3505,20 +3508,20 @@ Input:
                        (setq kill t))))
     (with-current-buffer buffer
       (tinyperl-version-macro
-	(let* ((ver   (or (match-string 2)
-			  (and use-date
-			       (format-time-string
-				"%Y.%m%d"
-				(current-time)))))
-	       (name1 (file-name-nondirectory
-		       (or filename
-			   (buffer-file-name)
-			   (error "TinyPerl: No `buffer-file-name'"))))
-	       (name  (file-name-sans-extension name1))
-	       (ext   (file-name-extension name1)))
-	  (when (and (stringp ver)
-		     (string-match "^[0-9]+" ver))
-	    (setq ret (format "%s-%s.%s" name ver ext))))))
+        (let* ((ver   (or (match-string 2)
+                          (and use-date
+                               (format-time-string
+                                "%Y.%m%d"
+                                (current-time)))))
+               (name1 (file-name-nondirectory
+                       (or filename
+                           (buffer-file-name)
+                           (error "TinyPerl: No `buffer-file-name'"))))
+               (name  (file-name-sans-extension name1))
+               (ext   (file-name-extension name1)))
+          (when (and (stringp ver)
+                     (string-match "^[0-9]+" ver))
+            (setq ret (format "%s-%s.%s" name ver ext))))))
     (if kill                            ;We loaded this from disk
         (kill-buffer buffer))
     ret))
@@ -3633,11 +3636,11 @@ Input:
                     (file-name-nondirectory buffer-file-name))
     current-prefix-arg))
   (let ((name (file-name-nondirectory file))
-	tmp
-	buffer
-	cmd-1
-	beg
-	end)
+        tmp
+        buffer
+        cmd-1
+        beg
+        end)
     (setq file (expand-file-name file))
     (unwind-protect
         (progn
@@ -3646,7 +3649,7 @@ Input:
             (unless (string-match "\\.pm$" name)
               ;;  SelfStubber expects Modules (.pm) files only
               (tinyperl-verbose-macro 2
-		(message "TinyPerl: %s must end to .pm, fixing..." file))
+                (message "TinyPerl: %s must end to .pm, fixing..." file))
               (setq name (concat name ".pm")))
 
             (setq tmp (ti::temp-file name 'tmp-dir))
@@ -3668,11 +3671,11 @@ Input:
                                            (file-name-directory file))))
 
           (tinyperl-verbose-macro 2
-	    (message ;Record it to *Messages* buffer
-	     (format
-	      "%s -MDevel::SelfStubber -e %s"
-	      tinyperl--perl-bin
-	      cmd-1)))
+            (message ;Record it to *Messages* buffer
+             (format
+              "%s -MDevel::SelfStubber -e %s"
+              tinyperl--perl-bin
+              cmd-1)))
           ;; ........................................... find-position ...
           (and (setq beg (ti::re-search-check
                           "BEGIN:[ \t]+Devel::SelfStubber"))
@@ -3694,7 +3697,7 @@ Input:
                             cmd-1)
 
               (tinyperl-verbose-macro 1
-		(message "TinyPerl: stubs updated in buffer"))))
+                (message "TinyPerl: stubs updated in buffer"))))
            (t                           ;No previoous STUBS
             (call-process tinyperl--perl-bin
                           nil
