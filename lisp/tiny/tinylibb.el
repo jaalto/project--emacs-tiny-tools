@@ -197,12 +197,14 @@ PAD says to padd hex string with leading zeroes."
                    (ti::string-value j)))))
 
 ;;; .. .. .. .. .. .. .. .. .. .. .. .. .. .. .. .. .. .. higher Emacs . .
-;;:  Features found from new emacs only 20.xx
+;;:  Features found from Newer Emacs
 
 (defun-maybe byte-compiling-files-p ()
   "Return t if currently byte-compiling files."
   (string= (buffer-name) " *Compiler Input*"))
 
+(defmacro-maybe cl-flet (&rest args)
+  `(flet ,@args))
 
 (defmacro-maybe with-output-to-file (file &rest body)
   "Open FILE and run BODY.

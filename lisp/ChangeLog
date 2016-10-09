@@ -1,3 +1,7 @@
+2016-10-09  Jari Aalto  <jari.aalto@cante.net>
+
+	* tiny/tinylibb.el (cl-flet): New.
+
 2016-10-08 Sat  Jari Aalto  <jari.aalto@cante.net>
 
 	* tiny/tinyperl.el
