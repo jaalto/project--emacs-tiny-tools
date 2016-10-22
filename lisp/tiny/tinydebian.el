@@ -123,7 +123,7 @@
 
 ;;{{{ setup: libraries
 
-(defconst tinydebian--version-time "2013.0613.1825"
+(defconst tinydebian--version-time "2016.1022.1105"
   "Last edited time.")
 
 (require 'tinylibm)
@@ -1740,27 +1740,31 @@ Return as '(bug) suitable for interactive"
 ;;; ----------------------------------------------------------------------
 ;;;
 (defun tinydebian-debian-bug-bts-type-p ()
-  "Check if buffer is for Emacs BTS."
-  (save-excursion
-    (goto-char (point-min))
-    (when (or (re-search-forward
-               "\\(http://bugs.debian[^<> \t\r\n]+\\)" nil t)
-              (re-search-forward
-               (format "[0-9]+@%s" tinydebian--debian-bts-email-address) nil t)
-              (re-search-forward
-               (concat
-                tinydebian--list-email-address
-                "\\|"
-                "debian\\.org\\>") nil t))
-      (let ((str (or (match-string 1)
-                     (match-string 0))))
-        (when (and str
-                   ;; Remove MIME from
-                   ;; http://bugs.debian.org/cgi-bin/bugreport.cgi?bug=3D515275
-                   (string-match "\\(http.*=\\)3D\\(.+\\)" str))
-          (setq str (concat (match-string 1 str)
-                            (match-string 2 str))))
-        str))))
+  "Check if buffer is for Emacs BTS.
+Return string that was match to determine the type."
+  (let (str)
+    (save-excursion
+      (goto-char (point-min))
+      (cond
+       ((re-search-forward
+	 "\\(http://bugs.debian[^<> \t\r\n]+\\)" nil t)
+	(setq str (match-string 1)))
+       ((re-search-forward
+	 (format "[0-9]+@%s" tinydebian--debian-bts-email-address) nil t)
+	(setq str (match-string 0)))
+       ((re-search-forward
+	 (concat
+	  tinydebian--list-email-address
+	  "\\|"
+	  "debian\\.org\\>") nil t)
+	(setq str (match-string 0))))
+      (when (and str
+		 ;; Remove MIME from
+		 ;; http://bugs.debian.org/cgi-bin/bugreport.cgi?bug=3D515275
+		 (string-match "\\(http.*=\\)3D\\(.+\\)" str))
+	(setq str (concat (match-string 1 str)
+			  (match-string 2 str))))
+      str)))
 
 ;;; ----------------------------------------------------------------------
 ;;;
@@ -2707,39 +2711,41 @@ The last choice os Debian."
 (defun tinydebian-bug-bts-type-determine ()
   "Check what BTS type is in use.
 Return: '(BTS-TYPE-STRING [BUG NUMBER | URL])."
-  (tinydebian-with-bug-context
-    (let (data)
-      (cond
-       ((setq data (tinydebian-freecode-bug-type-p))
-        (list "freecode" data))
-       ((setq data (tinydebian-perl-cpan-bug-type-p))
-        (list "perl-cpan" data))
-       ((setq data (tinydebian-savannah-bug-type-bts-p))
-        (list "savannah" data))
-       ((setq data (tinydebian-bug-gnu-emacs-bts-buffer-p))
-        (list "emacs" data))
-       ((setq data (tinydebian-bug-gnu-bts-buffer-p))
-        (list "gnu" data))
-       ((setq data (tinydebian-sourceforge-bug-type-p))
-        (list "sourceforge" data))
-       ((setq data (tinydebian-gnome-bug-type-p))
-        (list "gnome" data))
-       ((setq data (tinydebian-kde-bug-type-p))
-        (list "kde" data))
-       ((setq data (tinydebian-sourceware-bug-type-p))
-        (list "sourceware" data))
-       ((setq data (tinydebian-mysql-bug-type-p))
-        (list "mysql" data))
-       ((setq data (tinydebian-mercurial-bug-type-p))
-        (list "mercurial" data))
-       ((setq data (tinydebian-trac-bug-type-p))
-        (list "trac" data))
-       ((setq data (tinydebian-github-bug-type-p))
-        (list "github" data))
-       ((setq data (tinydebian-launchpad-bug-type-p))
-        (list "launchpad" data))
-       ((setq data (tinydebian-debian-bug-bts-type-p))
-        (list "debian" data))))))
+  (save-excursion
+    (tinydebian-with-bug-context
+      (let ((bug (tinydebian-bug-nbr-search))
+	    data)
+	(cond
+	 ((setq data (tinydebian-freecode-bug-type-p))
+	  (list "freecode" data))
+	 ((setq data (tinydebian-perl-cpan-bug-type-p))
+	  (list "perl-cpan" data))
+	 ((setq data (tinydebian-savannah-bug-type-bts-p))
+	  (list "savannah" data))
+	 ((setq data (tinydebian-bug-gnu-emacs-bts-buffer-p))
+	  (list "emacs" data))
+	 ((setq data (tinydebian-bug-gnu-bts-buffer-p))
+	  (list "gnu" data))
+	 ((setq data (tinydebian-sourceforge-bug-type-p))
+	  (list "sourceforge" data))
+	 ((setq data (tinydebian-gnome-bug-type-p))
+	  (list "gnome" data))
+	 ((setq data (tinydebian-kde-bug-type-p))
+	  (list "kde" data))
+	 ((setq data (tinydebian-sourceware-bug-type-p))
+	  (list "sourceware" data))
+	 ((setq data (tinydebian-mysql-bug-type-p))
+	  (list "mysql" data))
+	 ((setq data (tinydebian-mercurial-bug-type-p))
+	  (list "mercurial" data))
+	 ((setq data (tinydebian-trac-bug-type-p))
+	  (list "trac" data))
+	 ((setq data (tinydebian-github-bug-type-p))
+	  (list "github" data))
+	 ((setq data (tinydebian-launchpad-bug-type-p))
+	  (list "launchpad" data))
+	 ((setq data (tinydebian-debian-bug-bts-type-p))
+	  (list "debian" bug)))))))
 
 ;;; ----------------------------------------------------------------------
 ;;;
@@ -2866,13 +2872,28 @@ Bug#NNNN: O: package -- description."
 (defun tinydebian-bug-nbr-at-current-point-number ()
   "Read at least 3 digit bug number from current point.
 The number must be surrounded by whitespace."
-  (when (looking-at "[0-9]+\\([ \t\r\n]\\|$\\)")
-    (save-excursion
+  (save-excursion
+    (cond
+     ((and (looking-at "[0-9]+\\([ ,\t\t\n]\\|$\\)")
+	   (progn
+	     (skip-chars-backward "0-9" (line-beginning-position))
+	     (looking-at "\\<\\([0-9][0-9][0-9]+\\)")))
+      (match-string-no-properties 1))
+     ((looking-at "\\<[0-9]+\\([ ,\t\t\n]\\|$\\)")
       ;; Go to the beginning
       (skip-chars-backward "^ \t" (line-beginning-position))
       ;; At least 3 digits
       (when (looking-at "\\([0-9][0-9][0-9]+\\)")
-	(match-string-no-properties 0)))))
+	(match-string-no-properties 0)))
+     ((looking-at "[ \t:]+\\([0-9]+\\)\\>")
+      (match-string-no-properties 1))
+     ((and (looking-at "[ \t]\\|$")
+	   ;; NNNN -!-
+	   (progn
+	     (skip-chars-backward " \t" (line-beginning-position))
+	     (skip-chars-backward "0-9" (line-beginning-position))
+	     (looking-at "\\([0-9]+\\)")))
+      (match-string-no-properties 1)))))
 
 ;;; ----------------------------------------------------------------------
 ;;;
@@ -2911,8 +2932,8 @@ The number must be surrounded by whitespace."
 
 ;;; ----------------------------------------------------------------------
 ;;;
-(defun tinydebian-bug-url-forward ()
-  "Find url that looks like BTS from current point forward.
+(defun tinydebian-bug-url-forward (&optional max)
+  "Find BTS url from current point forward until optional MAX point.
 In Gnus summary buffer, look inside original article."
   (let ((buffer (current-buffer)))
     (when (memq major-mode '(gnus-summary-mode))
@@ -2936,14 +2957,15 @@ In Gnus summary buffer, look inside original article."
                      "\\|rt\\.cpan\+.org[^ \t\r\n]+[0-9]"
                      "\\|freecode\\.net[^ \t\r\n]+[0-9][0-9][0-9]"
                      "\\)")
-           nil t)
+           max t)
           (let ((str (thing-at-point 'url)))
             ;; Clean MIME, bug=3D<number>
             (replace-regexp-in-string "bug=3D" "bug=" str)))
-         ((and (setq nbr (tinydebian-bug-nbr-search))
+         ((and (setq nbr (save-excursion
+			   (tinydebian-bug-nbr-search)))
                (progn
                  (goto-char (point-min))
-                 (re-search-forward "^From:.*@debian.org" nil  t)))
+                 (re-search-forward "^From:.*@debian.org" max t)))
           (tinydebian-bug-url-current-buffer nbr)))))))
 
 ;;; ----------------------------------------------------------------------
@@ -3409,13 +3431,15 @@ Return:
 ;;;
 (defsubst tinydebian-debian-parse-bts-bug-package ()
   "Parse buffer content of Debian BTS (HTTP result)."
-  ;; ;package=levee"></a></div>
-  (if (re-search-forward "package=\\([^<\"\t\r\n]+\\)\"" nil t)
-      (let ((pkg (tinydebian-decode-html (match-string-no-properties 1))))
+  ;; package=levee"></a></div>
+  ;; package=src%3Adesproxy;info=1;
+  (if (re-search-forward "package=\\([^<;\"\t\r\n]+\\)[^ \"\t\r\n]+\"" nil t)
+      (let* ((pkg (match-string-no-properties 1))
+	     (package (tinydebian-decode-html pkg)))
         ;; src:<package>
-        (if (string-match ":\\(.+\\)" pkg)
-            (match-string 1 pkg)
-          pkg))))
+        (if (string-match ":\\(.+\\)" package)
+            (match-string 1 package)
+          package))))
 
 ;;; ----------------------------------------------------------------------
 ;;;
@@ -3472,7 +3496,7 @@ Return '(email field-conent)."
 
 ;; ----------------------------------------------------------------------
 ;;;
-(defsubst tinydebian-debian-parse-bts-bug-info-raw ()
+(defun tinydebian-debian-parse-bts-bug-info-raw ()
   "Parse buffer content of Debian BTS (HTTP result).
 
 Return assoc list with keys:
@@ -3750,7 +3774,6 @@ Input notes:
       (or nbr
           (setq nbr guess-bug))
       (setq bts guess-bts)))
-
   (setq bts (completing-read
              "Select BTS (no input = debian): " ;; prompt
              '(("debian" . 1)                   ;; collection
@@ -3773,6 +3796,7 @@ Input notes:
              ))
   (if (string= bts "")
      (setq bts "debian"))
+  ;; Use cond so that other testa are easier to add later
   (cond
    ((or (string-match "google\\|freecode\\|debian\\|emacs" bts)
         (and (stringp project)
@@ -3811,7 +3835,10 @@ If parameters are passed, do not ask, just return URL."
   (let* ((prev (get 'tinydebian-bug-browse-url-by-bug 'file))
          (dir  (if prev
                    (file-name-directory prev)))
-         (url-str (tinydebian-bug-url-forward))
+         (url-str (save-excursion
+		    (tinydebian-bug-url-forward
+		     (min (+ (point) (* 2 70)) ;look about two line forward
+			  (point-max)))))
          (url (multiple-value-bind (bts data)
                   (save-excursion
                     (tinydebian-bug-bts-type-determine))
@@ -3852,6 +3879,7 @@ In Gnus summary buffer, the Article buffer is consulted for bug."
 ;;; ----------------------------------------------------------------------
 ;;;
 (defsubst tinydebian-bug-buffer-name (bug)
+  "Return buffer name string for BUG number."
   (or bug
       (error "TinyDebian: BUG argument is empty"))
   (format tinydebian--buffer-bug-format bug))
@@ -3876,7 +3904,7 @@ In Gnus summary buffer, the Article buffer is consulted for bug."
 ;;; ----------------------------------------------------------------------
 ;;;
 (defun tinydebian-bug-browse-url-by-package-name (package)
-  "Jump to PACKAGE description."
+  "Goto URL by PACKAGE name."
   (interactive
    (list
     (tinydebian-trim-blanks
@@ -3889,10 +3917,30 @@ In Gnus summary buffer, the Article buffer is consulted for bug."
    (tinydebian-packages-browse-url-compose package)
    package))
 
+(defvar tinydebian--bug-browse-url-by-email-history nil
+  "History for `tinydebian-bug-browse-url-by-email'.")
+
+;;; ----------------------------------------------------------------------
+;;;
+(defun tinydebian-bug-browse-url-by-email (email)
+  "Goto bugs URL by EMAIL address.
+I.e. bugs by developer's EMAIL address."
+  (interactive
+   (list
+    (tinydebian-trim-blanks
+     (read-string "Browse bugs URL by developer email: "
+		  (not 'initial-input)
+		  'tinydebian--bug-browse-url-by-email-history))))
+  (unless (and (stringp email)
+	       (string-match "@.*\\.[a-z][a-z][a-z]?[a-z]?$" email))
+    (error "TinyDebian: Invalid email `%s'." email))
+  (tinydebian-browse-url-1
+   (format "http://bugs.debian.org/%s" email)))
+
 ;;; ----------------------------------------------------------------------
 ;;;
 (defun tinydebian-bug-browse-url-by-package-bugs (package)
-  "Jump to PACKAGE description."
+  "Goto URL by PACKAGE bugs."
   (interactive
    (list
     (tinydebian-trim-blanks
@@ -4720,6 +4768,9 @@ otgerwise run `tinydebian-bts-mail-ctrl-clone-new-mail'."
      'match)))
   (tinydebian-bts-mail-ctrl-command-add-macro "severity" bug severity))
 
+(defvar tinydebian--bts-mail-ctrl-command-tags-history nil
+  "History of tags used in `tinydebian-bts-mail-ctrl-command-tags'")
+
 ;;; ----------------------------------------------------------------------
 ;;;
 (defun tinydebian-bts-mail-ctrl-command-tags (bug list)
@@ -4729,7 +4780,8 @@ otgerwise run `tinydebian-bts-mail-ctrl-clone-new-mail'."
      (list
       bug
       (tinydebian-bts-ctrl-tags-ask
-       (format  "BTS tag #%s [RET when done]: " bug)))))
+       (format  "BTS tag #%s [RET when done]: " bug)
+       'tinydebian--bts-mail-ctrl-command-tags-history))))
   (let ((bug-str (if (stringp bug)
 		     bug
 		   (number-to-string bug)))
@@ -5017,8 +5069,9 @@ Mode description:
 ;;    ["Goto URL by bug number" tinydebian-bug-browse-url-by-bug          t]
     ["Goto URL by bug number"   tinydebian-bug-browse-url-main            t]
 
-    ["Goto URL by package bugs" tinydebian-bug-browse-url-by-package-bugs t]
-    ["Goto URL by package name" tinydebian-bug-browse-url-by-package-name t]
+    ["Goto URL by package (bugs)" tinydebian-bug-browse-url-by-package-bugs t]
+    ["Goto URL by package name"   tinydebian-bug-browse-url-by-package-name t]
+    ["Goto URL by email (bugs)"   tinydebian-bug-browse-url-by-email        t]
 
     "----"
 
@@ -5044,6 +5097,7 @@ Mode description:
      (define-key map  "ub"  'tinydebian-bug-browse-url-by-bug)
      (define-key map  "uB"  'tinydebian-bug-browse-url-by-package-bugs)
      (define-key map  "up"  'tinydebian-bug-browse-url-by-package-name)
+     (define-key map  "ue"  'tinydebian-bug-browse-url-by-package-email)
 
      ;;  (C)ontrol commands
 ;;      (define-key map  "cf"  'tinydebian-bts-mail-ctrl-command-forward)  ;; FIXME
@@ -5653,7 +5707,6 @@ Optionally from BTS which defaults to \"debian\"."
 	bts)
     (if (tinydebian-emacs-bug-type-p)
 	(setq bts "emacs"))
-
     ;; (unless (and (stringp bug)
     ;; 		 (stringp subject)
     ;;              (string-match (regexp-quote bug) subject))
@@ -5941,8 +5994,8 @@ thanks
 
 ;;; ----------------------------------------------------------------------
 ;;;
-(defun tinydebian-bts-ctrl-tags-ask (&optional message)
-  "Ask list of tags interactively with optional MESSAGE."
+(defun tinydebian-bts-ctrl-tags-ask (&optional message history)
+  "Ask list of tags interactively with optional MESSAGE and HISTORY."
   (let (tag
         list)
     (while (or (null tag)
@@ -5951,7 +6004,9 @@ thanks
                  "BTS tag [RET when done]: "
                  tinydebian--tags-list
                  nil
-                 'match))
+                 'match
+		 nil
+		 history))
       (unless (string= "" tag)
         (push tag list)))
     list))
