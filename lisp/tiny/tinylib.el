@@ -7917,26 +7917,30 @@ If mouse is not supported, return nil."
     (let ( ;; (frame (car (mouse-position)))
           (x  (cadr (mouse-position)))
           (y  (cddr (mouse-position))))
-      ;;  window-list returns all windows starting from TOP. Count
-      ;;  Lines in every window and compare that to mouse-position
-      (let ((win (get-buffer-window (current-buffer)))
-            (count 0))
-        (save-window-excursion
-          (dolist (elt (window-list))
-            (when (eq elt win)
-              (return))
-            (select-window elt)
-            ;;  Modeline is not counted as +1
-            (setq count (+ count (window-height)))))
-        ;; (ti::d! count x y)
-        (list (1+ (- y count))
-              ;;  In Emacs 21.x there is a "fringe" that mouse-position
-              ;;  reports as X=0,
-              (if (eq x 0)
-                  ;; Consider "fringe" as column 0
-                  0
-                ;; Removed "fringe" count
-                (1- x)))))))
+      (if (not (and x y))		;No info available
+	  (list
+	   (ti::current-line-number)
+	   (current-column))
+	;;  window-list returns all windows starting from TOP. Count
+	;;  Lines in every window and compare that to mouse-position
+	(let ((win (get-buffer-window (current-buffer)))
+	      (count 0))
+	  (save-window-excursion
+	    (dolist (elt (window-list))
+	      (when (eq elt win)
+		(return))
+	      (select-window elt)
+	      ;;  Modeline is not counted as +1
+	      (setq count (+ count (window-height)))))
+	  ;; (ti::d! count x y)
+	  (list (1+ (- y count))
+		;;  In Emacs 21.x there is a "fringe" that mouse-position
+		;;  reports as X=0,
+		(if (eq x 0)
+		    ;; Consider "fringe" as column 0
+		    0
+		  ;; Removed "fringe" count
+		  (1- x))))))))
 
 ;;; ----------------------------------------------------------------------
 ;;;
