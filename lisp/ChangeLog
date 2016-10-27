@@ -1,3 +1,28 @@
+2016-10-27 Thu  Jari Aalto  <jari.aalto@cante.net>
+
+	* tiny/tinydebian.el: (mode): Change key "C-c - c r" to
+	  "C-c - c r". That is lowercase "r" is now retitle and
+	  "R" is reassign command.
+
+2016-10-26 Wed  Jari Aalto  <jari.aalto@cante.net>
+
+	* tiny/tinydebian.el (tinydebian-read-thing-near-point-any): New.
+	(tinydebian-read-thing-near-point-email): New.
+	(tinydebian-read-line): New.
+	(tinydebian-bug-browse-url-by-email): Use
+	`tinydebian-read-thing-near-point-email'.
+	(tinydebian-bug-browse-url-by-package-bugs): Use
+	`my-debian-bug-package-name-any'.
+	(tinydebian-qa-browse-url-by-package-name): New.
+	(tinydebian-qa-browse-url-by-email): New.
+	(tinydebian-command-show-wnpp-alert): Use URL if no wnpp-alert(1).
+	(tinydebian-bug-browse-url-by-package-name): Use URL.
+
+2016-10-24 Mon  Jari Aalto  <jari.aalto@cante.net>
+
+	* tiny/tinydebian.el (tinydebian-bug-nbr-string): Add simple
+	DIGIT match. to the end.
+
 2016-10-22 Sat  Jari Aalto  <jari.aalto@cante.net>
 
 	* tiny/tinylib.el (ti::compat-mouse-position-coordinates):
