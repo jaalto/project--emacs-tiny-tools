@@ -1,3 +1,5 @@
+;; -*- enable-local-variables: :all;  -*-
+
 ;;; tinyliby.el --- Library of functions related to Emacs s(y)stem
 
 ;; This file is not part of Emacs
@@ -73,7 +75,7 @@
 
 ;;{{{ setup: -- variables
 
-(defconst tinyliby-version-time "2013.0613.1819"
+(defconst tinyliby-version-time "2016.1029.0818"
   "Latest version number as last modified time.")
 
 (defvar ti::system--describe-symbols-history nil
@@ -373,8 +375,8 @@ References:
           (ti::system-feature-kill var))
          ((eq kill-func 'fmakunbound)
           ;;  This is shooting with rocks, by calling advice,
-          ;;  but it's safest this way.
-          (ad-unadvise var)
+          ;;  but it is safest.
+          ;; (ad-unadvise var)
           (funcall kill-func var))
          (t
           (funcall kill-func var)))))))
@@ -632,7 +634,7 @@ No '%s feature found, are you absolutely sure you have loaded the file? "
                 (setq doc
                       (format "%-40s%s\n%s\n\n"
                               sym-name
-                              (if (user-variable-p sym)
+                              (if (custom-variable-p sym)
                                   "Option: " "Variable: ")
                               (or (documentation-property
                                    sym 'variable-documentation)
@@ -829,7 +831,7 @@ References:
               ((and MV (boundp s))
                ;;             (ti::d! 'variable mode s MV MVO MVV)
                (cond
-                ((and MVO (user-variable-p s)) ;; option var
+                ((and MVO (custom-variable-p s)) ;; option var
                  (princ
                   (format "%-40s %-9s%s\n%s\n\n"
                           s
