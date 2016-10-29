@@ -1,3 +1,5 @@
+;; -*- enable-local-variables: :all;  -*-
+
 ;;; tinymailbox.el --- Berkeley style aka std. mailbox browsing minor mode
 
 ;; This file is not part of Emacs
@@ -955,11 +957,11 @@ Try Subject: or From:"
 (defsubst tinymailbox-mail-send-filter (list &optional regexp)
   "Remove all strings from LIST that match current user or REGEXP."
   (let ((user (tinymailbox-user-mail-address-regexp)))
-    (remove-if (lambda (x)
-                 (or (string-match user x)
-                     (and (stringp regexp)
-                          (string-match regexp x))))
-               list)))
+    (cl-remove-if (lambda (x)
+		    (or (string-match user x)
+			(and (stringp regexp)
+			     (string-match regexp x))))
+		  list)))
 
 ;;; ----------------------------------------------------------------------
 ;;;
