@@ -1,3 +1,5 @@
+;; -*- enable-local-variables: :all;  -*-
+
 ;;; tinydebian.el --- Debian, Ubuntu, Emacs, GNU Bug Tracking Utilities
 
 ;;{{{ Id
@@ -122,7 +124,7 @@
 
 ;;{{{ setup: libraries
 
-(defconst tinydebian--version-time "2016.1027.0415"
+(defconst tinydebian--version-time "2016.1029.0739"
   "Last edited time.")
 
 (require 'tinylibm)
@@ -142,6 +144,7 @@
 (autoload 'mail-header-narrow-to-field   "mail-parse")
 
 (eval-and-compile
+  (require 'cl-lib)
   ;;  Forward declarations to quiet byte compiler.
   (defvar tinydebian--mail-mode-map)
   (defvar gnus-original-article-buffer)
@@ -1369,11 +1372,24 @@ See variables:
 
 ;;; ----------------------------------------------------------------------
 ;;;
+(put 'tinydebian-with-url-page-type-macro 'edebug-form-spec '(body))
+(put 'tinydebian-with-url-page-type-macro 'lisp-indent-function 1)
+(defmacro tinydebian-with-url-page-type-macro (page-type &rest body)
+  "Retrieve PAGE-TYPE from `tinydebian--debian-url-page-alist' and run BODY.
+  Variable `page'is bound to the retrieved value.
+  Signal error if PAGE-TYPE is not found."
+  `(let ((page (assoc ,page-type tinydebian--debian-url-page-alist)))
+     (unless page
+       (error "TinyDebian: unknown page-typpe `%s'" ,page-type))
+     ,@body))
+
+;;; ----------------------------------------------------------------------
+;;;
 (put 'tinydebian-with-gnus-article-buffer 'lisp-indent-function 1)
 (put 'tinydebian-with-gnus-article-buffer 'edebug-form-spec '(body))
 (defmacro tinydebian-with-gnus-article-buffer (&optional nbr &rest body)
   "In article NBR, run BODY. Defaults to article at *Summary* buffer."
-  (let ((buffer (gensym "buffer-")))
+  (let ((buffer (cl-gensym "buffer-")))
     `(save-window-excursion
        (gnus-summary-select-article 'all nil 'pseudo ,nbr)
        (let ((,buffer (get-buffer gnus-original-article-buffer)))
@@ -1394,6 +1410,12 @@ See variables:
        ,@body))
     (t
      ,@body)))
+
+;;; ----------------------------------------------------------------------
+;;;
+(defsubst tinydebian-bug-nbr-search ()
+  "Call hook `tinydebian--find-bug-nbr-hook' until value returned."
+  (run-hook-with-args-until-success 'tinydebian--find-bug-nbr-hook))
 
 ;;; ----------------------------------------------------------------------
 ;;;
@@ -1917,10 +1939,10 @@ Judging from optional BUFFER."
      ((tinydebian-emacs-bug-type-p)
       (tinydebian-emacs-bts-email-control))
      ((and (numberp info)
-           (> bug 600000))              ; Debian bug number around 2011-2012
+           (> info 600000))              ; Debian bug number around 2011-2012
       (tinydebian-bts-email-control))
      ((and (numberp info)
-           (< bug 30000))               ; GNU Emacs until 2040
+           (< info 30000))               ; GNU Emacs until 2040
       (tinydebian-gnu-bts-email-control))
      (t
       (tinydebian-bts-email-control)))))
@@ -2970,12 +2992,6 @@ The number must be surrounded by whitespace."
 
 ;;; ----------------------------------------------------------------------
 ;;;
-(defsubst tinydebian-bug-nbr-search ()
-  "Call hook `tinydebian--find-bug-nbr-hook' until value returned."
-  (run-hook-with-args-until-success 'tinydebian--find-bug-nbr-hook))
-
-;;; ----------------------------------------------------------------------
-;;;
 (defun tinydebian-bug-url-forward (&optional max)
   "Find BTS url from current point forward until optional MAX point.
 In Gnus summary buffer, look inside original article."
@@ -3992,7 +4008,7 @@ In Gnus summary buffer, the Article buffer is consulted for bug."
                   (tinydebian-read-thing-near-point-email)))))
   (when (or (not (stringp email))
             (not (string-match "@" email)))
-    (error "TinyDebian: Invalid email `%s'." package))
+    (error "TinyDebian: Invalid email `%s'." email))
   (tinydebian-browse-url-1
    (format "https://qa.debian.org/developer.php?login=%s" email)))
 
@@ -4430,14 +4446,14 @@ In interactive call, toggle conrol address on and off."
   (let ((to  (mail-fetch-field "To"))
         (cc  (mail-fetch-field "Cc"))
         (bcc (mail-fetch-field "Bcc"))
-        (re  (format "%s@\\|%s-\\(close\\|quiet\\)@" bug bug))
+        (re  (format "%s@\\|%s-\\(close\\|quiet\\)@" bug bug)))
     (cond
      ((string-match  re to)
       "To")
      ((string-match  re cc)
       "Cc")
      ((string-match  re bcc)
-      "Bcc")))))
+      "Bcc"))))
 
 ;;; ----------------------------------------------------------------------
 ;;;
@@ -4867,6 +4883,7 @@ otgerwise run `tinydebian-bts-mail-ctrl-clone-new-mail'."
         nbr
         type
         items
+	str
         beg
         end)
     (tinydebian-bts-mail-ctrl-command-goto-body-start)
@@ -4954,7 +4971,7 @@ Optionally from debbugs BTS which defaults to \"debian\"."
 (put 'tinydebian-debian-bug-info-message-all-macro 'edebug-form-spec '(body))
 (put 'tinydebian-debian-bug-info-message-all-macro 'lisp-indent-function 2)
 (defmacro tinydebian-debian-bug-info-message-all-macro (bug bts &rest body)
-  "Set `str' tor BUG information string and run BODY.
+  "Set `str' to BUG information string and run BODY.
 Optionally from debbugs BTS which defaults to \"debian\"."
   `(tinydebian-debian-bug-info-macro ,bug ,bts
      (let (str)
@@ -5035,7 +5052,7 @@ Optionally from debbugs BTS which defaults to \"debian\"."
 (defun tinydebian-debian-bug-info-all-message (bug)
   "Display BUG information."
   (interactive (list (tinydebian-bts-mail-ask-bug-number)))
-  (tinydebian-debian-bug-info-message-all-macro bug
+  (tinydebian-debian-bug-info-message-all-macro bug nil
     (message str)))
 
 ;;; ----------------------------------------------------------------------
@@ -5205,19 +5222,6 @@ Mode description:
 
 ;;}}}
 ;;{{{ BTS URL pages
-
-;;; ----------------------------------------------------------------------
-;;;
-(put 'tinydebian-with-url-page-type-macro 'edebug-form-spec '(body))
-(put 'tinydebian-with-url-page-type-macro 'lisp-indent-function 1)
-(defmacro tinydebian-with-url-page-type-macro (page-type &rest body)
-  "Retrieve PAGE-TYPE from `tinydebian--debian-url-page-alist' and run BODY.
-  Variable `page'is bound to the retrieved value.
-  Signal error if PAGE-TYPE is not found."
-  `(let ((page (assoc ,page-type tinydebian--debian-url-page-alist)))
-     (unless page
-       (error "TinyDebian: unknown page-typpe `%s'" ,page-type))
-     ,@body))
 
 ;;; ----------------------------------------------------------------------
 ;;;
@@ -5560,8 +5564,8 @@ Mode description:
 (defmacro tinydebian-bts-mail-compose-macro
   (bug type package subject email &rest body)
   "Compose mail for BUG of TYPE to PACKAGE with SUBJECT EMAIL and run BODY."
-  (let ((name (gensym "name-"))
-        (buffer (gensym "buffer-")))
+  (let ((name (cl-gensym "name-"))
+        (buffer (cl-gensym "buffer-")))
     `(let ((,buffer (current-buffer))
            (,name (format "*Mail BTS %s*"
                           (cond
@@ -5605,7 +5609,7 @@ Variables bound during macro (can all be nil):
   type-orig
   package        Value of PKG is sent as an argument to macro
   description"
-  (let ((subj (gensym "subject-")))
+  (let ((subj (cl-gensym "subject-")))
     `(multiple-value-bind (bugnbr type-orig package description)
          (or (tinydebian-bts-parse-string-current-line)
              (tinydebian-bts-parse-string-subject))
@@ -5736,7 +5740,7 @@ See documents:
   http://www.debian.org/doc/developers-reference/pkgs.html#nmu (Official)
   http://wiki.debian.org/NmuDep (Complementary)"
   (interactive (list (tinydebian-bts-mail-ask-bug-number "ITN")))
-  (tinydebian-debian-bug-info-macro bug bts
+  (tinydebian-debian-bug-info-macro bug "debian"
     (let ((str (field "subject")))
       ;;  package: <message string>
       (if (string-match "^[a-z][^:]+: *\\(.+\\)" str)
