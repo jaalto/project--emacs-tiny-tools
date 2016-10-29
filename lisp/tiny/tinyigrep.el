@@ -1,3 +1,5 @@
+;; -*- enable-local-variables: :all;  -*-
+
 ;;; tinyigrep.el --- Top level interface to igrep.el
 
 ;; This file is not part of Emacs
@@ -40,7 +42,7 @@
 ;;     (require 'tinyigrep)
 ;;
 ;;      ** YOU NEED igrep.el before you can use this package
-;;      ** See <http://groups.google.com/groups?group=gnu.emacs.sources>
+;;      ** https://www.emacswiki.org/emacs/igrep.el
 ;;
 ;; Or prefer autoload: your emacs loads this package only when you need it.
 ;; Put your customizations to separate file emacs-rc-tinyigrep.el and add
@@ -366,7 +368,7 @@
     (error
      (error "\
   ** tinyigrep.el: Hm, no igrep.el along `load-path'.
-                   You can find it at <http://groups.google.com/groups?group=gnu.emacs.sources>
+                   http://www.emacswiki.org/emacs/download/igrep.el
                    %s"
             (prin1-to-string error))))
 
