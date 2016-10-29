@@ -1,3 +1,9 @@
+2016-10-29 Sat  Jari Aalto  <jari.aalto@cante.net>
+
+	* tiny/tinysearch.el (tinysearch-install): Correct call
+	to `tinysearch-install-default-keybindings'.
+	(tinysearch-install-default-keybindings): docstring.
+
 2016-10-27 Thu  Jari Aalto  <jari.aalto@cante.net>
 
 	* tiny/tinydebian.el: (mode): Change key "C-c - c r" to
