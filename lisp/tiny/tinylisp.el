@@ -1,3 +1,5 @@
+;; -*- enable-local-variables: :all;  -*-
+
 ;;; tinylisp.el --- Emacs lisp programming help grab-bag
 
 ;; This file is not part of Emacs
@@ -427,6 +429,7 @@
   (autoload 'elp-restore-function	    "elp")
   (autoload 'elp-restore-list	            "elp")
   (autoload 'elp-set-master	            "elp")
+  (defvar elp-all-instrumented-list)
   ;; Silence bytecompiler
   (defvar edebug-all-defs)
   (defvar folding-mode)
