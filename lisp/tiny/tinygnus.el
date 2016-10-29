@@ -1,3 +1,5 @@
+;; -*- enable-local-variables: :all;  -*-
+
 ;;; tinygnus.el --- Gnus Plug-in. Additional functions. UBE fight etc.
 
 ;; This file is not part of Emacs
@@ -414,13 +416,11 @@
 (autoload 'gnus-set-mode-line                 "gnus-sum")
 (autoload 'nnfolder-group-pathname            "nnfolder")
 
-(eval-when-compile
-  (require 'advice))
+(require 'advice)
 
 (eval-and-compile
   ;;  Yes, this variable is purposively put to "tinypath" package.
   ;;  See that package for better explanation.
-  ;;
   (defconst tinypath--gnus-load-path
     (locate-library "gnus"))
   (message "tinygnus.el: Gnus path %s"
@@ -442,6 +442,7 @@
       (message "\
 tinymail.el: ** No bbdb.el along load-path. Please do not compile this file.
                 http://bbdb.sourceforge.net/")
+    ;; BBDB is available
     (autoload 'bbdb-search-simple        "bbdb")
     (autoload 'bbdb-canonicalize-address "bbdb")
     (autoload 'bbdb-record-net           "bbdb")
@@ -1720,6 +1721,7 @@ Return:
 	done
 	tmp-list
 	addr-list
+	ns-err-list
 	ip)
     (unless fid ;; No-op. XEmacs byte compiler silencer.
       (setq fid nil))
@@ -2904,7 +2906,7 @@ Possibly REPLCE existing entry."
             (message "TinyLisp: No files %s %s" group dir)
           (message "TinyGnus: Adding to `nnml-group-alist' %s" dir)
           (if replace
-              (push (cons group name) 'nnml-group-alist))
+              (push (cons group dir) 'nnml-group-alist))
           (push (list group range) nnml-group-alist))))))
 
 ;;; 5.8.2
