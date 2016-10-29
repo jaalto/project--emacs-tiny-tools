@@ -1,3 +1,5 @@
+;; -*- enable-local-variables: :all;  -*-
+
 ;;; tinycompile.el --- Compile buffer extras. Minor mode.
 
 ;; This file is not part of Emacs
@@ -85,7 +87,7 @@
 
 ;;; ......................................................... &require ...
 
-(require 'tinyliba)
+(require 'tinylibm)
 
 (eval-when-compile
   (require 'cl)
@@ -162,6 +164,7 @@ Prefix key to access the minor mode is defined in
 \\{tinycompile--mode-prefix-map}"
 
    "TinyCompile"
+
    (progn
      (if (and tinycompile-mode verb
               (not (string-match "compil" (symbol-name major-mode))))

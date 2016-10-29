@@ -1,5 +1,85 @@
 2016-10-29 Sat  Jari Aalto  <jari.aalto@cante.net>
 
+	* tiny/tinyigrep.el: Update link to igrep.el
+
+	* tiny/tinytf.el (eval-and-compile): Update link to htmlize.el
+	https://www.emacswiki.org/emacs/Htmlize
+
+	* tiny/tinyperl.el (tinyperl-pod-font-lock): Change
+	`font-lock-fontify-buffer' to `font-lock-ensure'.
+
+	* tiny/tinypath.el: Change `font-lock-fontify-buffer' to
+	`font-lock-ensure'.
+
+	* tiny/tinymy.el (tinymy-buffer-read-only): Update
+	`toggle-read-only' to `read-only-mode'.
+	(tinymy-package-save-to-file): Change `not-modified' to
+	`set-buffer-modified-p'.
+	(tinymy-scroll-old): Change `next-line' to `forward-line'.
+
+	* tiny/tinymailbox.el (tinymailbox-mail-send-filter): Update
+	`remove-if' to `cl-remove-if'.
+
+	* tiny/tinylisp.el (eval-when-compile): add
+	`elp-all-instrumented-list'.
+
+	* tiny/tinylibmail.el (ti::mail-abbrev-get-alist): Update
+	`abbrev-expand-functions' to `abbrev-expand-function'.
+
+	* tiny/tinylibb.el (subst-char-in-string): Rename
+	`replace-char-in-string' to `subst-char-in-string'. Update
+	to use `cl-nsubstitute'.
+	(with-buffer-modified): Update from `gensym' to `cl-gensym'.
+
+	* tiny/tinyliby.el (ti::system-get-file-documentation): Update
+	`user-variable-p' to `custom-variable-p'
+	(ti::system-describe-symbols):  Update
+	`user-variable-p' to `custom-variable-p'
+	(ti::system-unload): Disable call to `ad-unadvise'.
+
+	* tiny/tinymail.el (tinymail-resolve-abbrevs): Update
+	`abbrev-expand-functions' to `abbrev-expand-function'
+
+	* tiny/tinylib.el (ti::string-mangle): Update `coerce' to
+	`cl-coerce'.
+	(ti::buffer-uu-area): Change to `with-current-buffer'.
+	(ti::buffer-lf-to-crlf): Update `delete-backward-char' to
+	`delete-char'.
+	(ti::buffer-sort-regexp-fields): Update `copy-list' to
+	`cl-copy-list'.
+	(ti::file-path-to-unix): Use to `subst-char-in-string'.
+	(ti::keymap-define-key-backspace): Update `cl-flet' to
+	`lambda'.
+
+	* tiny/tinygnus.el Byte compile fixes.
+	(tinygnus-ube-address-compose): Add `ns-err-list'to let.
+	(tinygnus-gnus-debug-update-nnml-group-alist): Correct variable.
+
+	* tiny/tinydiff.el: Upgrade to cl-lib.el
+
+	* tiny/tinydebian.el (tinydebian-bug-nbr-search): Move location.
+	(tinydebian-mail-mode-debian-address-bug-p): Correct parens.
+	(tinydebian-with-url-page-type-macro): Move location.
+	(tinydebian-bts-generic-email-control): Correct variable.
+	(tinydebian-qa-browse-url-by-email): Correct variable.
+	(tinydebian-bts-mail-ctrl-command-tags): add var `str'.
+	(tinydebian-debian-bug-info-all-message): Correct call to macro
+	`tinydebian-debian-bug-info-message-all-macro'
+	(tinydebian-bts-mail-type-it-nmu): Correct call to macro
+	`tinydebian-debian-bug-info-macro'.
+
+	* GENERAL: Enable lexical binding according to
+	https://www.gnu.org/software/emacs/manual/html_node/elisp/Lexical-Binding.html
+	https://www.gnu.org/software/emacs/manual/html_node/emacs/Specifying-File-Variables.html
+
+	* tiny/tinycygwin.el (tinycygwin-insert-file): Move location
+	after macros.
+
+	* tiny/tinycompile.el: load tinylibm and not tinyliba.
+
+	* tiny/tinyadvice.el: (Kill the buffer if there is no process):
+	correct macro call.
+
 	* tiny/tinysearch.el (tinysearch-install): Correct call
 	to `tinysearch-install-default-keybindings'.
 	(tinysearch-install-default-keybindings): docstring.

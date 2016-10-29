@@ -1,3 +1,5 @@
+;; -*- enable-local-variables: :all;  -*-
+
 ;;; tinysearch.el --- Grab and search word under cursor
 
 ;; This file is not part of Emacs

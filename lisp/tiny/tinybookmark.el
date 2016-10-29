@@ -1,3 +1,5 @@
+;; -*- enable-local-variables: :all;  -*-
+
 ;;; tinybookmark.el --- Keep file in organized sections
 
 ;; This file is not part of Emacs
@@ -394,7 +396,7 @@
             the file. Uses X-popup [imenu] for showing those book marks and
             moving between them.")
 
-(defvar tinybookmark--version-time "2013.0709.0617"
+(defvar tinybookmark--version-time "2016.1029.0704"
   "Last modified time.")
 
 ;;}}}

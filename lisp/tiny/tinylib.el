@@ -1,3 +1,5 @@
+;; -*- enable-local-variables: :all;  -*-
+
 ;;; tinylib.el --- Library of general functions
 
 ;; This file is not part of Emacs
@@ -403,8 +405,8 @@ If STRING is not stringp, then returns STRING as is."
 (defun ti::string-mangle (string)
   "Mangle STRING ie. make STRING unreadable.
 Same mangling is performed for the same STRING. Mangling can't be reversed."
-  (let* ((ch-list (coerce string 'list))
-         ;; (coerce list 'string) to get list of ints to string
+  (let* ((ch-list (cl-coerce string 'list))
+         ;; (cl-coerce list 'string) to get list of ints to string
          (abc "zaybxcwdveuftgshriqjpkolnm0918273645ZAYBXCWDVEUFTGSHRIQJPKOLNM")
          (len (length abc))
          (ret "")
@@ -2365,8 +2367,7 @@ Return:
 	end
 	bol
 	leading)
-    (save-excursion
-      (set-buffer (or data-buffer (current-buffer)))
+    (with-current-buffer (or data-buffer (current-buffer))
       (and (re-search-forward beg-re nil t)
            (setq bol (line-beginning-position))
            (setq beg (match-beginning 0))
@@ -3123,7 +3124,7 @@ Example:
                   ;; Maybe last line does not have newline?
                   (when (looking-at ".*\015$")
                     (end-of-line)
-                    (delete-backward-char 1)))
+                    (delete-char -1)))
               ;; ....................................... unix --> dos ...
               (end-of-line)
               (if (not (char-equal (preceding-char) ?\015))
@@ -4300,14 +4301,13 @@ Key C-c h   replaces original C-h call
       (define-key key-translation-map "\177" "\C-h")
       (define-key key-translation-map "\C-h" "\177")
       (global-set-key BACKSPACE 'backward-delete-char)
-      (cl-flet ((key-warning
-              (key def)
-              (message "tinylib: Warning, key already occupied: %s %s"
-                       key def)))
-        ;; (ti::define-key-if-free global-map
-        ;;   "\C-x\C-?" 'help-for-help 'key-warning)
-        (ti::define-key-if-free global-map
-                                "\C-ch"    'help-command  'key-warning)))))
+      (ti::define-key-if-free
+       global-map
+       "\C-ch"
+       'help-command
+       (lambda (key def)
+	 (message "tinylib: Warning, key already occupied: %s %s"
+		  key def))))))
 
 ;;; ----------------------------------------------------------------------
 ;;;
@@ -4930,7 +4930,7 @@ Sort can optionally be NUMERIC, REVERSE or CASE sensitive.
 
 Return:
   sorted list."
-  (let ((clist (copy-list list)))      ;sort modifies it otw.
+  (let ((clist (cl-copy-list list)))      ;sort modifies it otw.
     (sort clist
           (function
            (lambda (l r &optional ret elt1 elt2)
@@ -5744,13 +5744,13 @@ if MODE is non-nil, return empty string instead."
 ;;;
 (defsubst ti::file-path-to-unix (path)
   "Convert PATH to Unix forward slash format."
-  (replace-char-in-string ?\\ ?/ path))
+  (subst-char-in-string ?\\ ?/ path))
 
 ;;; ----------------------------------------------------------------------
 ;;;
 (defsubst ti::file-path-to-msdos (path)
   "Convert PATH to MS-DOS backward slash format."
-  (replace-char-in-string ?/ ?\\ path))
+  (subst-char-in-string ?/ ?\\ path))
 
 ;;; ----------------------------------------------------------------------
 ;;;

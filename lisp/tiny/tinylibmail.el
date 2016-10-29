@@ -1,3 +1,5 @@
+;; -*- enable-local-variables: :all;  -*-
+
 ;;; tinylibmail.el --- Library of mail related functions
 
 ;; This file is not part of Emacs
@@ -5345,7 +5347,7 @@ Input:
 
 Return:
   '((ABBREV-STRING . EXPANDED-STRING) (A . E) ..)"
-  (let ((abbrev-expand-functions nil) ;; prevent recursion
+  (let ((abbrev-expand-function nil) ;; prevent recursion
 	(mail-abbrev-aliases-need-to-be-resolved t)
 	table
 	exp-list

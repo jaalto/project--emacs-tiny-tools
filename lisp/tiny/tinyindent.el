@@ -1,3 +1,5 @@
+;; -*- enable-local-variables: :all;  -*-
+
 ;;; tinyindent.el --- Like indented-text-mode, but minor-mode.
 
 ;; This file is not part of Emacs

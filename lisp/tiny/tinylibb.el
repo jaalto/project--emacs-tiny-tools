@@ -79,14 +79,14 @@
 (eval-and-compile
   (autoload 'ti::replace-match "tinylibm"))
 
-(defconst tinylibb-version-time "2016.0630.0754"
+(defconst tinylibb-version-time "2016.1029.0813"
   "Latest version number as last modified time.")
 
 ;;; ....................................................... &emulation ...
 
-(defun-maybe replace-char-in-string (old new string)
+(defun-maybe subst-char-in-string (old new string)
   "Search OLD character with NEW in STRING. Changes STRING."
-  (nsubstitute new old string))
+  (cl-nsubstitute new old string))
 
 (defun-maybe bin-string-to-int (8bit-string)
   "Convert 8BIT-STRING  string to integer."
@@ -343,8 +343,8 @@ seen my `buffer-read-only'
    (set-text-properties 1 10 '(face highlight)))
 
 "
-    (let ((modified (gensym "modified-"))
-	  (read-only (gensym "read-only-")))
+    (let ((modified (cl-gensym "modified-"))
+	  (read-only (cl-gensym "read-only-")))
       `(let ((,modified (buffer-modified-p))
 	     (,read-only buffer-read-only))
 	 (unwind-protect
