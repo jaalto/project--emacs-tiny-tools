@@ -124,7 +124,7 @@
 
 ;;{{{ setup: libraries
 
-(defconst tinydebian--version-time "2016.1029.0739"
+(defconst tinydebian--version-time "2016.1116.0405"
   "Last edited time.")
 
 (require 'tinylibm)
@@ -3895,10 +3895,11 @@ If parameters are passed, do not ask, just return URL."
   (let* ((prev (get 'tinydebian-bug-browse-url-by-bug 'file))
          (dir  (if prev
                    (file-name-directory prev)))
-         (url-str (save-excursion
-                    (tinydebian-bug-url-forward
-                     (min (+ (point) (* 2 70)) ;look about two line forward
-                          (point-max)))))
+         (url-str (or (tinydebian-bug-nbr-any)
+		      (save-excursion
+			(tinydebian-bug-url-forward
+			 (min (+ (point) (* 2 70)) ;look about two line forward
+			      (point-max))))))
          (url (multiple-value-bind (bts data)
                   (save-excursion
                     (tinydebian-bug-bts-type-determine))
