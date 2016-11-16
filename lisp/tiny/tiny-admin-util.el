@@ -1,3 +1,5 @@
+;; -*- enable-local-variables: :all;  -*-
+
 ;;; tiny-admin-util.el --- Tiny Tools administrative utilities for maintainer
 
 ;; This file is not part of Emacs
@@ -49,7 +51,7 @@
 ;;     Autoload files
 ;;
 ;;      If *loaddef* files were not included in the package or if they were
-;;      mistakenly deleted. Use following functions
+;;      mistakenly deleted. Use following functions:
 ;;
 ;;          tiny-setup-generate-loaddefs-dir
 ;;          tiny-setup-generate-loaddefs-recursive
@@ -69,7 +71,7 @@
 ;;
 ;;      To check how much time each file load would take, see function
 ;;      `tiny-setup-test-load-time-libraries'. Here are results as of
-;;      2001-03-18 running Win9x/512Meg/400Mhz, Emacs 20.7, non-compiled
+;;      2001-03-18 running Win9x/512M/400Mhz, Emacs 20.7, non-compiled
 ;;      files:
 ;;
 ;;          Timing tinyliba,  took     2.025000 secs (autoloads)
@@ -88,8 +90,8 @@
 ;;; Code:
 
 (eval-when-compile
-  (load "cl-seq")
-  (require 'cl))
+;;  (load "cl-seq")
+  (require 'cl-lib))
 
 (require 'tinylib)
 
@@ -135,16 +137,15 @@ Following variables are set during BODY:
 
 `dir'      Directrory name
 `dir-list' All directories under `dir'."
-  (`
-   (cl-flet ((recurse
-           (dir)
-           (let* ((dir-list (tiny-setup-directory-list dir)))
-             (,@ body)
-             (when dir-list
-               (dolist (elt dir-list)
-                 (unless (string-match tiny-setup-:ignore-dir-regexp elt)
-                   (recurse elt)))))))
-     (recurse (, directory)))))
+  `(cl-flet ((recurse
+	      (dir)
+	      (let ((dir-list (tiny-setup-directory-list dir)))
+		(,@ body)
+		(when dir-list
+		  (dolist (elt dir-list)
+		    (unless (string-match tiny-setup-:ignore-dir-regexp elt)
+		      (recurse elt)))))))
+     (recurse (, directory))))
 
 ;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;
 ;;
@@ -264,7 +265,6 @@ E.g. if you want to calculate days; you'd do
       (dolist (pkg (directory-files path 'full "^tiny.*el"))
         (load pkg))
       (display-buffer "*Messages*"))))
-
 
 ;;; ----------------------------------------------------------------------
 ;;; FIXME: remove
@@ -425,10 +425,10 @@ t or nil if file is to be compiled."
 Optional FUNCTION is passed one argument FILE, and it should return
 t or nil if file is to be compiled."
   (tiny-setup-directory-recursive-macro
-   root
-   (message "TinySetup: compiling directory %s" dir)
-   (tiny-setup-compile-directory
-    dir function)))
+      root
+    (message "TinySetup: compiling directory %s" dir)
+    (tiny-setup-compile-directory
+     dir function)))
 
 ;;; ----------------------------------------------------------------------
 ;;;

@@ -1,3 +1,5 @@
+;; -*- enable-local-variables: :all;  -*-
+
 ;; tinyeat.el --- Eat blocks of text at point, forward and backward
 
 ; This file is not part of Emacs

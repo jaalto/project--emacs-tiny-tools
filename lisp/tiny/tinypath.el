@@ -1,3 +1,5 @@
+;; -*- enable-local-variables: :all;  -*-
+
 ;;; tinypath.el --- Manage Emacs startup dynamically
 
 ;; This file is not part of Emacs
@@ -6129,7 +6131,7 @@ Input:
     (font-lock-mode 1)
     (make-local-variable 'font-lock-keywords)
     (set 'font-lock-keywords tinypath--report-mode-font-lock-keywords)
-    (font-lock-fontify-buffer)))
+    (font-lock-ensure)))
 
 ;;; ----------------------------------------------------------------------
 ;;;

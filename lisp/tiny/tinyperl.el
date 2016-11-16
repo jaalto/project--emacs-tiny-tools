@@ -1,3 +1,5 @@
+;; -*- enable-local-variables: :all;  -*-
+
 ;;; tinyperl.el --- Grab-bag of Perl related utilities. Pod documentation
 
 ;; This file is not part of Emacs
@@ -2755,7 +2757,7 @@ returns non-nil."
     ;;  to take in effect.
     (turn-on-font-lock-mode)
     (setq font-lock-keywords tinyperl--pod-font-lock-keywords)
-    (font-lock-fontify-buffer)
+    (font-lock-ensure)
     nil))
 
 ;;; ----------------------------------------------------------------------

@@ -1,3 +1,5 @@
+;; -*- enable-local-variables: :all;  -*-
+
 ;;; tinysearch.el --- Grab and search word under cursor
 
 ;; This file is not part of Emacs
@@ -479,7 +481,9 @@ NOTE:
 
 ;;;###autoload
 (defun tinysearch-install-default-keybindings ()
-  "Install default keybindings.
+  "Install default keybindings. Not installed if key already occupied.
+Mouse       Kbd  Action
+---------   ---  --------------
 M-Mouse-1   M-s  search forward
 C-M-Mouse-1 M-r  reverse."
   (interactive)
@@ -513,10 +517,10 @@ C-M-Mouse-1 M-r  reverse."
                       'tinysearch-search-word-backward))))
 
 ;;;###autoload
-(defun tinysearch-install (&optional arg)
-  "Call `tinysearch-install-default-keybindings' with ARG."
+(defun tinysearch-install ()
+  "Call `tinysearch-install-default-keybindings'"
   (interactive)
-  (tinysearch-install-default-keybindings arg))
+  (tinysearch-install-default-keybindings))
 
 (provide   'tinysearch)
 (run-hooks 'tinysearch--load-hook)

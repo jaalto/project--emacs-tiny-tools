@@ -1,3 +1,5 @@
+;; -*- enable-local-variables: :all;  -*-
+
 ;;; tinyadvice.el --- Collection of adviced functions
 
 ;; This file is not part of Emacs
@@ -1280,14 +1282,13 @@ References:
  (function
   (lambda (x)
     (eval
-     (`
-      (defadvice (, x) (around tinyadvice-kill-buffer act)
+     `(defadvice (, x) (around tinyadvice-kill-buffer act)
         "Kill the buffer if there is no process."
         (condition-case error
             ad-do-it
           (error
            (if (equal error '(error "Current buffer has no process"))
-               (kill-buffer (current-buffer))))))))))
+               (kill-buffer (current-buffer)))))))))
  '(term-copy-old-input
    term-send-input
    term-send-raw-string))

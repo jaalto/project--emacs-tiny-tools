@@ -1,3 +1,5 @@
+;; -*- enable-local-variables: :all;  -*-
+
 ;;; tinymail.el --- Mail add-ons. Report incoming mail, passwd, BBDB complete.
 
 ;; This file is not part of Emacs
@@ -2189,7 +2191,7 @@ Return:
   alias        = the alias definition
   expansion    = expanded alias"
   (let* ((abbrevs   (tinymail-mail-aliases))
-         abbrev-expand-functions ;; prevent recursion
+         abbrev-expand-function ;; prevent recursion
          exp-list
          hit)
     (dolist (elt list)

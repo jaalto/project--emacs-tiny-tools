@@ -1,3 +1,5 @@
+;; -*- enable-local-variables: :all;  -*-
+
 ;;; tinytf.el --- Document layout tool for (T)echnical text (F)ormat
 
 ;; This file is not part of Emacs
@@ -576,7 +578,7 @@
       (autoload 'htmlize-buffer "htmlize" "" t)
     (message "\
   ** tinytf.el: Hm, no htmlize.el found. [you can still use this package]
-                2001-10-10 it was at http://fly.srk.fer.hr/~hniksic/emacs/htmlize.el")))
+                Download https://www.emacswiki.org/emacs/Htmlize")))
 
 (ti::package-defgroup-tiny TinyTf tinytf-- wp
   "Minor mode for writing text in 'Technical text format'.

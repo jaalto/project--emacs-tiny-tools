@@ -1,3 +1,5 @@
+;; -*- enable-local-variables: :all;  -*-
+
 ;;; tinylisp.el --- Emacs lisp programming help grab-bag
 
 ;; This file is not part of Emacs
@@ -427,6 +429,7 @@
   (autoload 'elp-restore-function	    "elp")
   (autoload 'elp-restore-list	            "elp")
   (autoload 'elp-set-master	            "elp")
+  (defvar elp-all-instrumented-list)
   ;; Silence bytecompiler
   (defvar edebug-all-defs)
   (defvar folding-mode)
@@ -5418,9 +5421,27 @@ User can't see string echoed otherwise. Optionally RESTORE."
 (defun tinylisp-syntax-post-command ()
   "Show syntax information for current point."
   (when (tinylisp-post-command-run-p)
-    (message "[TinyLisp syntax info] %s: %s"
-             (char-to-string (following-char))
-             (ti::string-syntax-info (following-char)))))
+    (let ((ch (char-to-string (following-char)))
+	  (face (get-text-property (point) 'face))
+	  (face-info ""))
+      (when face
+	(let ((fg (face-foreground face))
+	      (bg (face-background face)))
+	  (setq face-info
+		(format " fg:%s bg:%s %s" fg bg (symbol-name face)))))
+      (cond
+       ((string= ch "\n")
+	(setq ch "LF"))
+       ((string= ch "\r")
+	(setq ch "CR"))
+       ((string= ch "\t")
+	(setq ch "TAB"))
+       ((string= ch " ")
+	(setq ch "SPC")))
+      (message "[TinyLisp syntax info] %s: %s%s"
+	       ch
+	       (ti::string-syntax-info (following-char))
+	       face-info))))
 
 ;;; ----------------------------------------------------------------------
 ;;;
@@ -5438,7 +5459,7 @@ User can't see string echoed otherwise. Optionally RESTORE."
       (add-hook 'post-command-hook 'tinylisp-syntax-post-command nil 'local)
       (tinylisp-post-command-config))
      (t
-      (remove-hook    'post-command-hook 'tinylisp-syntax-post-command)
+      (remove-hook 'post-command-hook 'tinylisp-syntax-post-command 'local)
       (tinylisp-post-command-config 'restore)))))
   (if verb
       (message

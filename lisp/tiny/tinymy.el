@@ -1,3 +1,5 @@
+;; -*- enable-local-variables: :all;  -*-
+
 ;;; tinymy.el --- Collection of simple utilities
 
 ;; This file is not part of Emacs
@@ -877,15 +879,16 @@ Important, If file is vc controlled:
     This function is ment for changing the
     buffer characteristics without changing the version control state.
 
-    Normally \\[toggle-read-only] would do CheckOut if the file was
-    read-only, but sometimes it is convenient to put buffer to read-only
-    state to prevent changing anything in there for a while."
+    Normally \\[read-only-mode] would do check out would
+    succeed if the file was read-only. Sometimes it is
+    convenient to put buffer to read-only state to prevent
+    changing anything in there for a while."
   (interactive)
   (let ((fid      "tinymy-buffer-read-only")
 	(key-func (if (or (featurep 'vc)
 			  (featurep 'vc-hooks))
 		      'vc-toggle-read-only
-		    'toggle-read-only))
+		    'read-only-mode))
 	state
 	call
 	turn-mode)
@@ -899,7 +902,7 @@ Important, If file is vc controlled:
     (ti::save-line-column-macro nil nil
       (cond
        ((memq major-mode '(dired-mode)) ;plain C-x C-q for these modes...
-        (toggle-read-only))
+        (read-only-mode))
        (t
         (cond
          ((and (eq key-func 'vc-toggle-read-only)
@@ -908,7 +911,7 @@ Important, If file is vc controlled:
 
           (if (y-or-n-p "Call vc? ")
               (call-interactively 'vc-toggle-read-only)
-            (toggle-read-only)))
+            (read-only-mode)))
          (t
           (call-interactively key-func)))
         (tinymy-debug fid "STATE after" buffer-read-only)
@@ -1344,7 +1347,6 @@ before writing."
                          (tinymy-package-save-to-file-buffer-beginning file)
                          (point))
               p2     (point-max))
-        ;; ^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^ end ^^^
         (setq point (tinymy-package-save-to-file-buffer-ending p1))
         (cond
          (point
@@ -1354,7 +1356,6 @@ before writing."
           (tinymy-debug fid str)
           (message str)
           (sit-for 1)))
-        ;; ^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^ existing file ^^^
         (when (file-exists-p file)
           (setq ans (read-from-minibuffer "overwrite?: " file))
           (cond
@@ -1369,14 +1370,13 @@ before writing."
                   (> p1 p2))
           (error "\
 TinyMy: [ERROR] Can't find region. Save manually (See M-x tinymy-version)."))
-        ;; ^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^ saving ^^^
         (with-temp-buffer
           (insert-buffer-substring code-buffer p1 p2)
           (ti::pmin)
           (when (string-match "\\.\\(zip\\|gz\\)$" file)
             (ti::use-file-compression))
           (write-file file)             ;jka handles compressing
-          (not-modified)
+          (set-buffer-modified-p nil)
           (message (concat "TinyMy: Package saved to " file)))
         ;; Restore point
         (goto-char orig-point)))))
@@ -2024,7 +2024,8 @@ Note:
                   ;;  - The ignore-errors is here in case this calls error,
                   ;;    which it does if the buffer size has changes, like
                   ;;    in live *Messages* buffer
-                  (ignore-errors (next-line (- lines 1))))
+                  (ignore-errors
+		    (forward-line (- lines 1))))
               (goto-char (ti::window-pmax-line-bol)))))))))))
 
 ;;}}}

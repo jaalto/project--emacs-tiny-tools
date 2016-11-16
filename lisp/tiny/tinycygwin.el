@@ -1,3 +1,5 @@
+;; -*- enable-local-variables: :all;  -*-
+
 ;;; tinycygwin.el --- Cygwin utilities (bug reports, administrative tasks).
 
 ;;{{{ Id
@@ -685,13 +687,6 @@ environment."
 
 ;;; ----------------------------------------------------------------------
 ;;;
-(defun tinycygwin-insert-file (file)
-  "INsert FILE literally at point."
-  (tinycygwin-clean-system-with
-   (insert-file-contents-literally file)))
-
-;;; ----------------------------------------------------------------------
-;;;
 (defsubst tinycygwin-mail-attachment-tag (string)
   "Return attachment tag for STRING."
   (format "[ATTACHMENT: %s]"
@@ -1230,6 +1225,13 @@ References:
   `(progn
      ,@body
      (set-buffer-modified-p nil)))
+
+;;; ----------------------------------------------------------------------
+;;;
+(defun tinycygwin-insert-file (file)
+  "Insert FILE literally at point."
+  (tinycygwin-clean-system-with
+   (insert-file-contents-literally file)))
 
 ;;; ----------------------------------------------------------------------
 ;;;

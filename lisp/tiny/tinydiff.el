@@ -1,3 +1,5 @@
+;; -*- enable-local-variables: :all;  -*-
+
 ;;; tinydiff.el --- Diff and patch minor mode. Browsing, patching.
 
 ;; This file is not part of Emacs
@@ -416,6 +418,9 @@
 ;;  keys "n" and "p"
 
 (require 'tinylibm)
+
+(eval-when-compile
+  (require 'cl-lib))
 
 (eval-and-compile
   (ti::package-require-view)
@@ -1225,7 +1230,7 @@ Eg.
     (when (string-match re line)
       (setq args (match-string 1 line)
             list (split-string line)
-            copy (copy-list list))
+            copy (cl-copy-list list))
       (tinydiff-debug fid "ARGS" args "LIST" list)
       (setq args list)
       (while (setq elt (pop copy))
@@ -1236,7 +1241,7 @@ Eg.
           ;;   -- all-the-elements before
           ;;   -- and the rest
           (push (list i
-                      (copy-list prev-list)
+                      (cl-copy-list prev-list)
                       (nthcdr i list))
                 r-list)
           (tinydiff-debug fid "R-LIST>>" r-list))
@@ -1260,7 +1265,7 @@ Eg.
         (setq elt  (car r-list))
         (setq args (nth 2 elt))         ;Revision and rest of the args
         (setq args                      ;car-list to the beginning
-              (reverse (union (reverse (nth 1 elt)) args))))
+              (reverse (cl-union (reverse (nth 1 elt)) args))))
        ((eq (length r-list) 1)          ;Only one -r
         (setq elt (car r-list))
         (setq args (nth 2 elt))         ;Revision and rest of the args
@@ -1290,7 +1295,7 @@ Eg.
             (tinydiff-debug fid "2>CHANGED" tmp))))
         (push tmp args)                 ;--> '(-rN.N -rN.N FILE)
         (setq args                      ;car-list to the beginning
-              (reverse (union (reverse (nth 1 elt)) args)))))
+              (reverse (cl-union (reverse (nth 1 elt)) args)))))
       (setq args (ti::list-to-string args))
       (tinydiff-debug fid "args" args  )
       (delete-region (line-beginning-position) (line-end-position))

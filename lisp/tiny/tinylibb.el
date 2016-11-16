@@ -79,14 +79,14 @@
 (eval-and-compile
   (autoload 'ti::replace-match "tinylibm"))
 
-(defconst tinylibb-version-time "2016.0630.0754"
+(defconst tinylibb-version-time "2016.1029.0813"
   "Latest version number as last modified time.")
 
 ;;; ....................................................... &emulation ...
 
-(defun-maybe replace-char-in-string (old new string)
+(defun-maybe subst-char-in-string (old new string)
   "Search OLD character with NEW in STRING. Changes STRING."
-  (nsubstitute new old string))
+  (cl-nsubstitute new old string))
 
 (defun-maybe bin-string-to-int (8bit-string)
   "Convert 8BIT-STRING  string to integer."
@@ -197,12 +197,14 @@ PAD says to padd hex string with leading zeroes."
                    (ti::string-value j)))))
 
 ;;; .. .. .. .. .. .. .. .. .. .. .. .. .. .. .. .. .. .. higher Emacs . .
-;;:  Features found from new emacs only 20.xx
+;;:  Features found from Newer Emacs
 
 (defun-maybe byte-compiling-files-p ()
   "Return t if currently byte-compiling files."
   (string= (buffer-name) " *Compiler Input*"))
 
+(defmacro-maybe cl-flet (&rest args)
+  `(flet ,@args))
 
 (defmacro-maybe with-output-to-file (file &rest body)
   "Open FILE and run BODY.
@@ -341,8 +343,8 @@ seen my `buffer-read-only'
    (set-text-properties 1 10 '(face highlight)))
 
 "
-    (let ((modified (gensym "modified-"))
-	  (read-only (gensym "read-only-")))
+    (let ((modified (cl-gensym "modified-"))
+	  (read-only (cl-gensym "read-only-")))
       `(let ((,modified (buffer-modified-p))
 	     (,read-only buffer-read-only))
 	 (unwind-protect

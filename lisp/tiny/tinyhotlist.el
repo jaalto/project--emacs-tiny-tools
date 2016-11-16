@@ -1,3 +1,5 @@
+;; -*- enable-local-variables: :all;  -*-
+
 ;;; tinyhotlist.el --- Hot-list of important buffers, files(ange-ftp), dired
 
 ;; This file is not part of Emacs

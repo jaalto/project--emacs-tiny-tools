@@ -3,14 +3,9 @@ Table of contents
        1.0 Installation instructions
            1.1 Foreword
            1.2 Unpacking
-           1.3 Quick install -- personal
-           1.4 Advanced install -- using tinypath
-              1.4.1 Personal install using tinypath
-              1.4.2 Site wide install using tinypath
-           1.5 Advanced install -- using autoload files
-           1.6 Minimal install
-           1.7 Optional step - compiling files
-           1.8 Submitting bug reports
+           1.3 Install
+           1.4 Minimal install
+           1.5 About tinypath
 
        2.0 Project information
            2.1 What does prefix "tiny" mean
@@ -86,8 +81,9 @@ Table of contents
             (require 'tiny-autoload-loaddefs-tiny)
             (require 'tiny-autoload-loaddefs-other)
 
-            ;;  Configure some package.
-            ;;  See each package for further instructions.
+	See each package for further instructions:
+
+            ;;  An example for configure some package.
 
             (autoload 'turn-on-tinyperl-mode "tinyperl" "" t)
             (add-hook 'perl-mode-hook  'turn-on-tinyperl-mode)
@@ -110,7 +106,7 @@ Table of contents
 
     1.5 About tinypath
 
-	You're interested about this only if you have multiple (20+) emacs
+	You're interested about this only if you have multiple (NN+) emacs
 	packages gathered around Internet which are installd in various
 	directories and you do not want any manual handling of keeping
 	`load-path' up to date after new installs.
@@ -210,24 +206,23 @@ Table of contents
     3.1 Dynamic byte compilation note
 
           Please read these instructions with some salt, because the
-          they may not be 100% accurate for later Emacs versions.
-          Feel free to suggest corrections to this text.
+          they may not be 100% accurate. Feel free to suggest
+          corrections to this text.
 
         All the files in Tiny Tools kit turn on the dynamic byte
-        compilation flag, which appeared in Emacs 19.29 and XEmacs 19.14.
-        That's something you don't have to worry about, but I think you are
-        would be interested in hearing, that it has some nice benefits over
-        the normal compilation. If you say
+        compilation flag, which appeared in Emacs 19.29 and XEmacs
+        19.14. That's something you don't have to worry about, This
+        has some nice benefits over the normal compilation. If you say:
 
             (require 'tinylibm)
 
-        the statement used to mean "load library tinylibm". All functions
-        were imported into emacs in a whip. But that's  different now with
-        dynamically compiled files. Now it means "load STUBS from library
-        tinylibm". The STUBS are pointers in a table to all the rest of the
-        functions in the library. So, the functions are not actually loaded
-        to your Emacs; neither does your Emacs suffer from sudden memory
-        bloat.
+        the statement used to mean "load library tinylibm". All
+        functions were imported into emacs in a whip. But that's with
+        dynamically compiled files. Instead it means "load STUBS from
+        library tinylibm". The STUBS are pointers in a table to all
+        the rest of the functions in the library. So, the functions
+        are not actually loaded to your Emacs; neither does your Emacs
+        suffer from sudden memory bloat.
 
         When the actual function is called, Emacs automatically substitutes
         the STUB with the function definition by loading it from the
@@ -249,7 +244,7 @@ Table of contents
         all the necessary autoloads to rest of the function and you don't
         have to worry about the location of a particular function
 
-            ;;  Define everything, publish interfaces. Defines
+            ;;  Define everything. Publishes functions. Defines
             ;;  backward compatibility functions, autoloads etc.
             (require 'tinylibm)
 
@@ -260,33 +255,31 @@ Table of contents
 
             (require 'tinytab)  ;; TAB minor mode
 
-        Because it means that the whole package is loaded (or STUBS) if you
-        do have many `require' commands, your Emacs startup time grows
-        proportionally. You hate slow Emacs startup; right? Okay, there is
-        much better way to load files; called `autoload'. It means that you
-        tell Emacs; that "function exists in package xxx". When function or
-        feature is called (and the autoload triggers), Emacs loads function
-        from the package. Some day you don't use some feature in your emacs,
-        sometimes you use, and Emacs grows and loads the packages when you
-        happen to need them. No need to use `require' to have it all at once.
+        Because it means that the whole package is loaded (or STUBS
+        when loading a byte compiled version). If you have many
+        `require' commands, your Emacs startup time grows
+        proportionally. There is a better way to load files; called
+        `autoload'. It means that you tell Emacs; that "function
+        exists in package xxx". When function or feature is called
+        (and the autoload triggers), Emacs loads function from the
+        package. Some day you don't use some feature in your emacs,
+        sometimes you use, and Emacs loads the package as needed.
 
-        Now, if you read carefully the *installation* section from every
-        package and prefer copying the autoload setup instead, you will
-        have the most optimized way to install the package to your .emacs.
-        If some package doesn't have autoload choice, complain immediately
-        to the Author. The package writer should have thought the autoload
-        possibility too. There may also be a note that package can't be
-        autoloaded, so in that case there is no other possibility that to
-        `require' it. For even more slicker and faster Emacs startup
-        sequence, see package *TinyLoad* which you can uset to optimise
-        lisp file loadings even more.
+        Now, if you read the *installation* section from every package
+        and prefer copying the autoload setup instead, you will have
+        the most optimized way to install the package to your Emacs.
+        There may also be a note that package can't be autoloaded. In
+
+        For even more lazy-loading packages, see package *TinyLoad*
+        which you can use to optimise lisp file loads.
 
     3.3 Customizing packages
 
-        Emacs releases come with the package *defcustom.el* bundled.
-        If you have limited lisp skills or if you want an easy
-        interface to packages' variables, then you can customize the
-        modules. The *group* is completed when you press TAB key:
+        Emacs comes with the package *defcustom.el* bundled. If you
+        have limited Emacs lisp knowledge or if you want an easy
+        interface to packages' variables, you can customize the
+        modules using defcustom interface. Use TAB key to complete
+	*group* part, e.g. Tiny<TAB>:
 
             M-x customize-group RET group RET
 
