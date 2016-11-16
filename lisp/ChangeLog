@@ -1,3 +1,15 @@
+2016-11-16 Wed  Jari Aalto  <jari.aalto@cante.net>
+
+	* tiny/tinydebian.el (tinydebian-bug-browse-url-main-interactive):
+	Check current line for bug number.
+
+2016-11-05 Sat  Jari Aalto  <jari.aalto@cante.net>
+
+	* tiny/tinylisp.el (tinylisp-syntax-show-mode): Remove
+	local hook.
+	(tinylisp-syntax-post-command): Display font lock info.
+	Display CR, LF, TAB, SPC symbols instead of plain characters.
+
 2016-10-29 Sat  Jari Aalto  <jari.aalto@cante.net>
 
 	* tiny/tinyigrep.el: Update link to igrep.el
