@@ -22,15 +22,14 @@ Project contacts
     Homepage
       https://github.com/jaalto/project--emacs-tiny-tools
 
-      Note:: Freecode is shutting down, see
-      Note:: http://freecode.com/about
+      Note:: Freecode site is no longer active or available
       http://freecode.com/projects/emacs-tiny-tools
 
     Reporting bugs
-      See freecode page
+      See Github
 
     Source code repository
-      See freecode page
+      See Github
 
 NEWS
 
@@ -41,7 +40,7 @@ NEWS
     download utilities. See
 
     - Overview: http://www.emacswiki.org/emacs/DELPS
-    - epackage.el: http://freecode.com/projects/emacs-epackage
+    - epackage.el: https://github.com/jaalto/project--emacs-epackage
 
     Transition completed for:
     https://github.com/jaalto/project-emacs--tinydesk
