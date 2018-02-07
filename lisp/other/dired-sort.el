@@ -182,7 +182,7 @@ Cache the result, and return it the next time without calling FUNC.
       (unless (looking-at "[0-9][0-9][0-9][0-9]-")
         (dired-sort-move-word-backward))
       (if and-extract
-          (parse-date (buffer-substring (point) end) t)
+          (date-parse (buffer-substring (point) end) t)
         (point)))))
 
 (defun dired-sort-extract-date ()
