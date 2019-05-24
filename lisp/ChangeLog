@@ -1,3 +1,7 @@
+2019-05-24 Fri  Jari Aalto  <jari.aalto@cante.net>
+
+	* tiny/tinypath.el: Use ~/.emacs.d in documentation.
+
 2016-11-16 Wed  Jari Aalto  <jari.aalto@cante.net>
 
 	* tiny/tinydebian.el (tinydebian-bug-browse-url-main-interactive):

@@ -1,3 +1,7 @@
+2019-05-24 Fri  Jari Aalto  <jari.aalto@cante.net>
+
+	* html/install/index.txt: Clean up. Use new ~/.emacs.d/
+
 2009-02-20  Jari Aalto  <jari.aalto@cante.net>
 
 	* html/packages/index.txt: (2.3 Use valid LCD format):
@@ -389,7 +393,7 @@
 
         * txt/emacs-elisp.txt (1.1 Emacs package links): 1.45 Phoaks link
         is no longer there http://www.phoaks.com/comp/emacs/index.html
-        Removed.Removed `tutorials_toc.html' from Kaiäs FTP site
+        Removed.Removed `tutorials_toc.html' from Kai's FTP site
         `ls6-ftp.cs.uni-dortmund.de'.
         (1.2 Developer contact addresses and site list): [theberge] Added
         note to SF project `emacsmp3player'.[Grossjohann] Corrected
