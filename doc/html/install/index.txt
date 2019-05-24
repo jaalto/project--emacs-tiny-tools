@@ -27,7 +27,7 @@ Table of contents
 
         #t2html-comment http://www.xemacs.org/Documentation/packageGuide.html
 
-        Copyright (C) 1995-2016 Jari Aalto
+        Copyright (C) 1995-2019 Jari Aalto
 
         License: This material may be distributed only subject to
         the terms and conditions set forth in GNU General Public
@@ -36,54 +36,50 @@ Table of contents
         (GNU FDL).
 
         Emacs Tiny Tools is a collection of libraries and packages,
-        which are designed to be OS and X/Emacs platform independent.
-        E.g. configure load-path automatically, URL handler,
-        easy-delete, mail complete and many more. This file is
-        README.txt included in Emacs Tiny Tools kit. It contains
-        instructions how to install a cross platform Emacs/XEmacs/
-        Unix/Win32 compatible utilities for wide variety of tasks:
-        diff/patch; searching, replacing, caching files, automatic
-        load-path setup and more.
+        which are designed to be OS and Emacs platform independent.
+        For example there are utilities to configure load-path
+        automatically, to jump to URLs, ways to delete chunks of text,
+        mail completion utilities, generating diffs and applying patch
+        (or chunks), to search search, to replace replace, to cache
+        files, to automaticaly set up `load-path' for Emacs Lisp
+        utilities.
 
     1.2 Unpacking
 
-        Extract the package. Under Windows platform: create directories
-        manually e.g. on `C:\home\elisp'. A Windows
-        #URL<http://support.microsoft.com/kb/310519><environment variable>
-        HOME must alse be defined to point to suitable location, like
-        `C:\home'. The HOME directory must exist. Suggested directory
-	structure:
+	A HOME must point to location of user's default file. In
+	Windows, e.g. `C:\home', see
+	#URL<http://support.microsoft.com/kb/310519><environment
+	variable>. Suggested directorystructure:
 
             $HOME
             |
-            +-elisp/
+            +-.emacs.d/
             | |
             | +-packages/
             |
             +-tmp/
 
-        Unpack the archive to suitable location, like
-        `$HOME/elisp/packages'. In Linux the commands are:
+        Unpack the archive. In Linux the commands are:
 
-            cd $HOME/elisp/packages
-            gzip -dc ~/tmp/download/emacs-tiny-tools*.gz | tar -xvf -
+            cd $HOME/,emacs.d/packages
+            tar -zxvf ~/tmp/download/emacs-tiny-tools*.gz
 
     1.3 Install
 
         Configure Emacs *load-path* to point to package directories.
-        Substitute the paths as necessary to reflect your unpack locations:
+        Substitute the paths as necessary to reflect the unpack locations:
 
             (add-to-list 'load-path
-                         "~/elisp/packages/emacs-tiny-tools/lisp/tiny")
+                         "~/.emacs.d/packages/emacs-tiny-tools/lisp/tiny")
             (add-to-list 'load-path
-                         "~/elisp/packages/emacs-tiny-tools/lisp/other")
+                         "~/.emacs.d/packages/emacs-tiny-tools/lisp/other")
 
             (require 'tiny-autoload-loaddefs-tiny)
             (require 'tiny-autoload-loaddefs-other)
 
 	See each package for further instructions:
 
-            ;;  An example for configure some package.
+            ;;  An example to configure packages.
 
             (autoload 'turn-on-tinyperl-mode "tinyperl" "" t)
             (add-hook 'perl-mode-hook  'turn-on-tinyperl-mode)
@@ -93,8 +89,7 @@ Table of contents
 
         If you are tight of space or otherwise do not need all the
         tools or if you're only interested in specific package, a
-        minimum installation is possible. The basic idea is to include
-        libraries + needed package(s).
+        minimum installation requires libraries + needed package(s).
 
             tinyliba.el     - autoloads
             tinylibb.el     - backward compatibility; Emacs version changes
@@ -106,33 +101,34 @@ Table of contents
 
     1.5 About tinypath
 
-	You're interested about this only if you have multiple (NN+) emacs
-	packages gathered around Internet which are installd in various
-	directories and you do not want any manual handling of keeping
-	`load-path' up to date after new installs.
+	If you have multiple (NN+) emacs packages which are installd
+	in various directories and you do not want to manual handle
+	keeping the `load-path' up to date after new installs, the package
+	tinypth may help in organizing.
 
-        The following lines below can configure Emacs to be aware of *all*
-        lisp paths under `$HOME/elisp' or `$HOME/lisp', so whatever magic
-        you used to do to keep your `load-path' up to date is no longer
-        needed. The `load-path' variable is periodically kept up to date.
+        The following lines configure Emacs to be aware of *all* lisp
+        paths under `$HOME/.emacs.d' so whatever magic you used to do
+        to keep the `load-path' up to date can be removed. The
+        `load-path' variable is periodically kept up to date.
 
             ;; $HOME/.emacs
 
-            (load "~/elisp/packages/tiny-tools/lisp/tiny/tinypath")
+            (load "~/.emacs.d/packages/tiny-tools/lisp/tiny/tinypath")
 
             ;; ... rest of the startup
 
             ;; End of example
 
-        When the `tinypath.el' package is active, you can pretty much put
+        When `tinypath.el' is active, you can pretty much put more
         packages or individual lisp files anywhere, provided that they
-        reside under *$HOME/elisp*. you can create or delete directories
-        and move files around to organize your lisp files. The only
-        restriction is that you do not use any symlinks; not to directories
-        or not to files (reason is explained in file tinypath.el).
-        Let's suppose the hierarchy of lisp files look something like this:
+        reside under *$HOME/.emacs.d*. You can create or delete
+        directories and move files around to organize your lisp files.
+        The only restriction is that you do not use any symlinks; not
+        to directories or not to files (reason is explained in
+        documentation of tinypath.el). Let's suppose the hierarchy of
+        lisp files look something like this:
 
-            $HOME/elisp/
+            $HOME/.emacs.d/
                         |
                         +-packages/
                         |         |
@@ -141,9 +137,9 @@ Table of contents
                         +-other/
                         +-my/
 
-        Now, perhaps you see an *utility.el* in gnu.emacs.sources that
-        you would like to use. How do you install it? Just drop it in,
-        say, to `$HOME/elisp/other/' directory and call `M-x'
+        Now, perhaps you see an *utility.el* that you would like to
+        use. How do you install it? Just drop it in, say, to
+        `$HOME/.emacs.d/other/' directory and call `M-x'
         `tinypath-cache-regenerate'. After that Emacs knows the
         package in next Emacs sessions. You still have to add relevant
         lines to your Emacs startup which make the package active.
@@ -165,11 +161,11 @@ Table of contents
 
         The Emacs utilities evolved in the direction of "Tiny Tools";
         modules that got initially written in the past years starting
-        with Emacs 18.59. The current code base is aimed to be
-        XEmacs/Emacs Unix/Win32 platform independent. The cross
-        platform could not be possible without following testers that
-        patiently kept reporting bugs and making improvement
-        suggestions. Most sincere thanks to you all.
+        with Emacs 18.59. The code base is aimed to be XEmacs/Emacs
+        Unix/Win32 platform independent. The cross platform could not
+        be possible without following persons that patiently kept
+        reporting bugs and making improvement suggestions. Most
+        sincere thanks to you all.
 
         o   Henk SPG <tank AT xs4all.nl> who had courage to take early v1.6x
             TinyPgp in XEmacs. I got very good feedback and bug tracing
@@ -209,10 +205,10 @@ Table of contents
           they may not be 100% accurate. Feel free to suggest
           corrections to this text.
 
-        All the files in Tiny Tools kit turn on the dynamic byte
-        compilation flag, which appeared in Emacs 19.29 and XEmacs
-        19.14. That's something you don't have to worry about, This
-        has some nice benefits over the normal compilation. If you say:
+        All the files use dynamic byte compilation flag, which
+        appeared in Emacs 19.29 and XEmacs 19.14. That's something you
+        don't have to worry about, This has some nice benefits over
+        the normal compilation. If you say:
 
             (require 'tinylibm)
 
@@ -251,19 +247,20 @@ Table of contents
     3.2 Autoloads
 
         When you install packages, try to avoid loading them from your
-        $HOME/.emacs like this
+        $HOME/.emacs startup file like this
 
             (require 'tinytab)  ;; TAB minor mode
 
         Because it means that the whole package is loaded (or STUBS
         when loading a byte compiled version). If you have many
         `require' commands, your Emacs startup time grows
-        proportionally. There is a better way to load files; called
-        `autoload'. It means that you tell Emacs; that "function
-        exists in package xxx". When function or feature is called
-        (and the autoload triggers), Emacs loads function from the
-        package. Some day you don't use some feature in your emacs,
-        sometimes you use, and Emacs loads the package as needed.
+        proportionally. There is a better way to load files. It's
+        called `autoload' method. It means that you tell Emacs; that
+        "function exists in package xxx". When function or feature is
+        called (and the autoload triggers), Emacs loads function from
+        the package. Some day you don't use some feature in your
+        emacs, sometimes you use, and Emacs loads the package as
+        needed.
 
         Now, if you read the *installation* section from every package
         and prefer copying the autoload setup instead, you will have

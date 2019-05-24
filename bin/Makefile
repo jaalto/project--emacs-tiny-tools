@@ -52,7 +52,7 @@ PERL	    =	perl
 LIB	    =	--load ../lisp/tiny/load-path.el
 
 FILE_DOC_MAKE =	perl ripdoc.pl
-README	    = ../doc/txt/README.txt
+README	    = ../doc/html/install/index.txt
 
 # ############################################################ &rules ###
 

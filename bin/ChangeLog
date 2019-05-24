@@ -1,3 +1,7 @@
+2019-05-24 Fri  Jari Aalto  <jari.aalto@cante.net>
+
+	* Makefile (README): Update file location.
+
 2010-12-05 Sun  Jari Aalto  <jari.aalto@cante.net>
 
 	* ripdoc.pl: Minor code layout fixes. Fix typos in Help.

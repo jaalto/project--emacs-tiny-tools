@@ -1,3 +1,7 @@
+2019-05-24 Fri  Jari Aalto  <jari.aalto@cante.net>
+
+	* tiny/tinypath.el: Use ~/.emacs.d in documentation.
+
 2016-11-16 Wed  Jari Aalto  <jari.aalto@cante.net>
 
 	* tiny/tinydebian.el (tinydebian-bug-browse-url-main-interactive):
@@ -441,6 +445,7 @@
 	(tinydebian-mail-mode-debian-address-bug-toggle): Add
 	current-prefix-arg to ask bug number. Support multiple
 	bug addresses.
+
 	(tinydebian-bug-nbr-string): Correct URL matching regexp.
 	(tinydebian-bts-mail-ctrl-retitle): Correct interactive.
 

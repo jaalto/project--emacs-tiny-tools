@@ -6,7 +6,7 @@
 
 ;;{{{ Id
 
-;; Copyright (C)    1999-2016 Jari Aalto
+;; Copyright (C)    1999-2019 Jari Aalto
 ;; Keywords:        extensions
 ;; Author:          Jari Aalto
 ;; Maintainer:      Jari Aalto
@@ -55,7 +55,7 @@
 ;;          ;;  PLEASE COPY VERBATIM. THERE ARE OPTIMIZATIONS
 ;;          ;;  THAT ACTIVATE IF YOU use absolute path
 ;;
-;;          (add-to-list 'load-path "~/elisp/tiny-tools-NNNN.NNNN/lisp/tiny")
+;;          (add-to-list 'load-path "~/.emacs.d/packges/tiny-tools-NNNN.NNNN/lisp/tiny")
 ;;
 ;;          ;; - If you use XEmacs that ships the lisp
 ;;          ;;   files in separately, tell where the directories are
@@ -92,7 +92,7 @@
 ;;      ********************************************************************
 ;;
 ;;      The perl method guarantees, that anything you put into your
-;;      private `~/elisp' will override and precede any other package
+;;      private `~/.emacs.d' will override and precede any other package
 ;;      found elswhere in `load-path' hierarchy.
 ;;
 ;;      At any time you can read the manual with `M-x' `tinypath-version'
@@ -106,7 +106,7 @@
 ;;      cache size is around 500k and if you use compression, it takes
 ;;      somewhere 200k.
 ;;
-;;          mkdir -p ~/elisp/config     (or ~/.emacs.d/config)
+;;          mkdir -p ~/.emacs.d/config
 ;;
 ;;  Transparent compression
 ;;
