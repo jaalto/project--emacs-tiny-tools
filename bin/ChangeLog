@@ -1,3 +1,9 @@
+2019-05-25 Sat  Jari Aalto  <jari.aalto@cante.net>
+
+	* Makefile
+	(all): correct target. Now compiles.
+	(compile-tiny-*): New.
+
 2019-05-24 Fri  Jari Aalto  <jari.aalto@cante.net>
 
 	* Makefile (README): Update file location.
