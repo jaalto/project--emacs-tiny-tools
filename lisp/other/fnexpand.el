@@ -105,7 +105,8 @@
 
 ;;; Code:
 
-(require 'assoc)
+;; obsolete
+;; (require 'assoc)
 
 (eval-when-compile
   (require 'advice))
@@ -428,8 +429,8 @@ References:
          ((and (not (string-match fnexpand-executable-cache-no-dirs path))
                (file-exists-p path))    ;ignore non-existing paths
           (setq files (directory-files path))
-          (mapcar
-           '(lambda (x)
+          (mapc
+           #'(lambda (x)
               (setq file (concat path x))
 
               (cond
