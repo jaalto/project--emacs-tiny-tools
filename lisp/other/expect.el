@@ -27,7 +27,8 @@
 
 ;;; Code:
 
-(require 'cl)
+(eval-when-compile
+  (require 'cl))
 
 (eval-and-compile
   ;; Old XEmacs does not have this, ignore load error
