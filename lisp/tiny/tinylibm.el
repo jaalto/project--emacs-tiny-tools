@@ -68,7 +68,8 @@
 ;;{{{ Load forms
 
 (eval-when-compile
-  ;; 2010-11-20 After these autoloads, these following is a bogus warning:
+  (require 'cl)
+  ;; 2010-11-20 A bogus warning:
   ;;
   ;;     Warning: Function `xxxx' from cl package called at runtime
   ;;
@@ -78,13 +79,12 @@
     (set (make-local-variable 'byte-compile-warnings) '(not cl-functions))))
 
 (eval-and-compile
-  (autoload 'defmacro* "cl-macs" "" nil 'macro)
   (autoload 'gensym  "cl-macs")
   (autoload 'member* "cl-seq"))
 
 (require 'tinylibb)                     ;Backward compatible functions
 
-(defconst tinylibm-version-time "2016.1007.1500"
+(defconst tinylibm-version-time "2019.0524.1802"
   "Latest version number.")
 
 ;;{{{ function tests
@@ -986,7 +986,7 @@ Return:
          (new-components
           (mapcar (lambda (comp)
                     (setq comp (/ comp 256))
-                    (incf comp (/ (* percentage 256) 100))
+                    (cl-incf comp (/ (* percentage 256) 100))
                     (when (< comp 0)
                       (setq comp 0))
                     (if (> comp 255)
@@ -1480,45 +1480,6 @@ Return:
 
 ;;; ----------------------------------------------------------------------
 ;;;
-(put 'ti::let-transform-nil 'edebug-form-spec '(body))
-(put 'ti::let-transform-nil 'lisp-indent-function 1)
-(defmacro* ti::let-transform-nil ((&rest vars) &body body)
-  "Wrap list of VARS inside `let' and set all value to nil.
-This macro could be used to set e.g. hook values to temporarily
-nil.
-
-  (defvar my-hook-list '(find-file-hook write-fil-hooks))
-
-  (defun my-test ()
-    (ti::let-transform-nil my-hook-list
-      ... do something, the hooks are now suppressed.
-      ...))
-
-That is efectively save as you would have written:
-
-  (defun my-test ()
-    (let (find-file-hook
-          write-fil-hooks)
-      ... do something, the hooks are now suppressed.
-      ...))"
-  ;; If VARS is a variable, assume we wanted its value.
-  ;; otherwise, we just take it as a literal list.
-  ;; This means that both (ti::let-transform-nil (a b) ...)
-  ;; and (ti::let-transform-nil foo ...) work (assuming foo is boundp).
-  ;;
-  ;; This would also work:
-  ;;
-  ;;    (defmacro my-let (symbols &rest body)
-  ;;      `(progv ,symbols ,(make-list (length symbols) nil)
-  ;;         ,@body))
-  ;;
-  (ignore-errors
-    (setq vars (symbol-value vars)))
-  `(let ,vars
-     ,@body))
-
-;;; ----------------------------------------------------------------------
-;;;
 (defsubst ti::list-make (single-or-list)
   "Converts SINGLE-OR-LIST into list.
 If argument is already a list this macro is no-op."
@@ -1527,7 +1488,7 @@ If argument is already a list this macro is no-op."
     (list single-or-list)))
 
 ;;; ----------------------------------------------------------------------
-;;; - unfortunately recursion is quite slow, but this is
+;;; - unfortunately recursion is quite slow, but this is an
 ;;;   exceptional example!
 ;;;
 ;;; (defun list-flatten (l)
@@ -1580,7 +1541,7 @@ This is useful, if you call x popup menu or completion. For example:
       (if (integerp elt)
           (setq elt (number-to-string elt)))
       (push (cons elt i) ret)
-      (incf  i))
+      (cl-incf  i))
     ret))
 
 ;;; ----------------------------------------------------------------------
@@ -1698,7 +1659,7 @@ Return:
               (eval test-form)
             (equal (car list) arg))
           (setq ret i  list  nil)
-        (incf  i)
+        (cl-incf  i)
         (setq list (cdr list))))
     ret))
 
@@ -1761,7 +1722,7 @@ Return:
         (if all-matches                 ;how to put results ?
             (ti::nconc ret element)
           (setq ret element)
-          (return))))
+          (cl-return))))
     ret))
 
 ;;}}}
@@ -2167,7 +2128,7 @@ Default is to convert all tabs in STRING with spaces."
         (if (char-equal char (aref string i))
             (setq elt to-string))
         (setq ret (concat ret elt))
-        (incf  i))))
+        (cl-incf  i))))
     ret))
 
 ;;; ----------------------------------------------------------------------
@@ -3465,7 +3426,7 @@ In XEmacs ~/.xemacs/config is preferred first."
                   "c:/"))
       (when (and (stringp dir)
                  (file-directory-p dir))
-        (return dir)))))
+        (cl-return dir)))))
 
 (defvar tinylib-:package-config-file-directory
   (ti::package-config-file-directory-default)
@@ -3474,7 +3435,7 @@ In XEmacs ~/.xemacs/config is preferred first."
 (defvar tinylib-:package-config-file-prefix "emacs-config-"
   "*Prefix to add to configuration files. Default 'emacs-config-'.")
 
-(defun ti::package-config-file-prefix (&optional file &optional os emacs)
+(defun ti::package-config-file-prefix (&optional file os emacs)
   "Return directory and prefix with config FILE optionally for OS and EMACS
 
 The default value is currenly combination of
