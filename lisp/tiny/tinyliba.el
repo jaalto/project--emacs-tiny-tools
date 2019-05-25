@@ -74,7 +74,7 @@
 
 (provide 'tinyliba)
 
-(defconst tinyliba-version-time "2013.0613.1737"
+(defconst tinyliba-version-time "2019.0524.1812"
   "Latest version number as last modified time.")
 
 (autoload 'with-timeout      "timer"        "" nil 'macro)
@@ -111,7 +111,9 @@ This function is run only once at tinynyliba.el load."
       ;;  broken implementation.
       (condition-case err
           (dolist (elt '(1))
-            (return elt))
+	    (if (fboundp 'return)
+		(funcall 'return elt)
+	      (funcall 'cl-return elt)))
         (error
          (message "\
 ** tinyliba.el [ERROR] Broken `dolist' implementation.
@@ -122,7 +124,9 @@ This function is run only once at tinynyliba.el load."
       ;;  Do post-check if everything is ok.
       (condition-case nil
           (dolist (elt '(1))
-            (return elt))
+	    (if (fboundp 'return)
+		(funcall 'return elt)
+	      (funcall 'cl-return elt)))
         (error
          (message "\
 ** tinyliba.el [ERROR] Still broken `dolist' implementation!
@@ -135,22 +139,22 @@ This function is run only once at tinynyliba.el load."
             (if (fboundp func)
                 (funcall func 1)))))))
 
-(eval-and-compile
-  ;;  TODO: Probably should be gone by now.
-  ;;  Long story short: At a time Emacs shipped with crippled cl.el
-  ;;  library which broke everything. This check was necessary to
-  ;;  regain sane environment.
-  (unless (fboundp 'return)  ;; CL is not loaded yet
-    (autoload 'return "cl-macs" nil nil 'macro)
-    (when (string< emacs-version "24")
-      ;; Broken subr.el::dolist implementation which is not same
-      ;; as cl-macs.el::dolist => Delete sub.el::dolist and arrange
-      ;; Emacs to load it from CL library.
-      ;;
-      ;; See http://debbugs.gnu.org/cgi/bugreport.cgi?bug=7408
-      ;; FIXME: Remove (ti::tmp-cl-library-check)
-      (fmakunbound 'dolist)
-      (autoload 'dolist "cl-macs" "" nil 'macro))))
+;; (eval-and-compile
+;;   ;;  TODO: Probably should be gone by now.
+;;   ;;  Long story short: At a time Emacs shipped with crippled cl.el
+;;   ;;  library which broke everything. This check was necessary to
+;;   ;;  regain sane environment.
+;;   (unless (fboundp 'return)  ;; CL is not loaded yet
+;;     (autoload 'return "cl-macs" nil nil 'macro)
+;;     (when (string< emacs-version "24")
+;;       ;; Broken subr.el::dolist implementation which is not same
+;;       ;; as cl-macs.el::dolist => Delete sub.el::dolist and arrange
+;;       ;; Emacs to load it from CL library.
+;;       ;;
+;;       ;; See http://debbugs.gnu.org/cgi/bugreport.cgi?bug=7408
+;;       ;; FIXME: Remove (ti::tmp-cl-library-check)
+;;       (fmakunbound 'dolist)
+;;      (autoload 'dolist "cl-macs" "" nil 'macro))))
 
 ;;}}}
 
@@ -186,36 +190,6 @@ This function is run only once at tinynyliba.el load."
 
   ;;}}}
   ;;{{{ code: Autoload cl
-
-  ;; cl-compat.el Emacs 19.34
-
-  (autoload 'defkeyword                           "cl-compat" "" nil 'macro)
-  (autoload 'keywordp                             "cl-compat" "" nil)
-  (autoload 'keyword-of                           "cl-compat" "" nil)
-  (autoload 'values                               "cl-compat" "" nil)
-  (autoload 'values-list                          "cl-compat" "" nil)
-  (autoload 'multiple-value-list                  "cl-compat" "" nil 'macro)
-  (autoload 'multiple-value-call                  "cl-compat" "" nil 'macro)
-  (autoload 'multiple-value-bind                  "cl-compat" "" nil 'macro)
-  (autoload 'multiple-value-setq                  "cl-compat" "" nil 'macro)
-  (autoload 'multiple-value-prog1                 "cl-compat" "" nil 'macro)
-  (autoload 'build-klist                          "cl-compat" "" nil)
-  (autoload 'extract-from-klist                   "cl-compat" "" nil)
-  (autoload 'keyword-argument-supplied-p          "cl-compat" "" nil)
-  (autoload 'elt-satisfies-test-p                 "cl-compat" "" nil)
-  (autoload 'cl-floor                             "cl-compat" "" nil)
-  (autoload 'cl-ceiling                           "cl-compat" "" nil)
-  (autoload 'cl-round                             "cl-compat" "" nil)
-  (autoload 'cl-truncate                          "cl-compat" "" nil)
-  (autoload 'safe-idiv                            "cl-compat" "" nil)
-  (autoload 'pair-with-newsyms                    "cl-compat" "" nil)
-  (autoload 'zip-lists                            "cl-compat" "" nil)
-  (autoload 'unzip-lists                          "cl-compat" "" nil)
-  (autoload 'reassemble-argslists                 "cl-compat" "" nil)
-  (autoload 'duplicate-symbols-p                  "cl-compat" "" nil)
-  (autoload 'setnth                               "cl-compat" "" nil)
-  (autoload 'setnthcdr                            "cl-compat" "" nil)
-  (autoload 'setelt                               "cl-compat" "" nil)
 
   ;; cl-extra.el 19.34
 
