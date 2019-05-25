@@ -124,7 +124,10 @@
 
 ;;{{{ setup: libraries
 
-(defconst tinydebian--version-time "2016.1116.0405"
+(eval-when-compile
+  (require 'cl))
+
+(defconst tinydebian--version-time "2019.0525.1321"
   "Last edited time.")
 
 (require 'tinylibm)
