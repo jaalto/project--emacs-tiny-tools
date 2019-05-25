@@ -253,6 +253,9 @@
 
 (require 'tinylibm)
 
+(eval-when-compile
+  (require 'cl))
+
 (ti::package-defgroup-tiny TinyEat tinyeat-- extension
   "Eat blocks of text forward, backward.
 Overview of features
