@@ -763,11 +763,14 @@
 (require 'tinytab    nil 'noerr)
 (require 'tinyindent nil 'noerr)
 
-(autoload 'bbdb-hashtable    "bbdb" "" nil 'macro)
-(autoload 'bbdb-gethash      "bbdb")
-(autoload 'bbdb-record-net   "bbdb")
-(autoload 'bbdb-record-name  "bbdb")
+(require 'bbdb)
+
+(autoload 'bbdb-gethash "bbdb")
+(autoload 'bbdb-record-net "bbdb")
+(autoload 'bbdb-record-name "bbdb")
 (autoload 'bbdb-record-notes "bbdb")
+(autoload 'bbdb-get-field "bbdb")
+(autoload 'bbdb-search-simple "bbdb")
 
 (autoload 'mail-position-on-field "sendmail")
 (autoload 'mml-secure-message-sign-pgpmime "mml")
@@ -778,7 +781,9 @@
 (autoload 'message-narrow-to-headers  "message")
 
 (eval-when-compile
-  (require 'cl))
+  (locate-library "bbdb") ;; Leave message
+  (require 'cl)
+  (require 'bbdb nil 'noerr))
 
 (eval-and-compile
   (ti::package-require-mail-abbrevs)
@@ -1793,7 +1798,7 @@ This function should be bound to SPACE key."
 	   "minor"     ;; doesn't affect the package's usefulness
 	   "wishlist"  ;; feature request
 	   "fixed"))   ;; fixed but should not yet be closed.
-	'tinymail--table-header-complete)
+	tinymail--table-header-complete)
   ;;  Debian bug report header
   (push '("Tags" .
 	  ("patch"       ;;
@@ -1802,14 +1807,14 @@ This function should be bound to SPACE key."
            "unreproducible" ;; can't be reproduced on the maintainer's system
            "fixed"      ;;  bug is fixed or worked around, needs to be resolved
            "security")) ;:  security problem in a package
-	'tinymail--table-header-complete)
+	tinymail--table-header-complete)
   (push '("Followup-To" .
 	  (when (eq major-mode 'message-mode)
 	    (call-interactively 'message-tab)
 	    ;;   We must stop the other completion function from running
 	    (setq tinymail--complete-key-return-value t)
 	    nil))
-	'tinymail--table-header-complete)
+	tinymail--table-header-complete)
   (push '("Gcc"
 	  '(if (not (featurep 'gnus))
 	       (prog1 nil (message "TinyMail: Gcc completion needs Gnus..."))
@@ -1817,7 +1822,7 @@ This function should be bound to SPACE key."
 	     (all-completions
 	      string
 	      gnus-active-hashtb 'gnus-valid-move-group-p)))
-	'tinymail--table-header-complete)
+	tinymail--table-header-complete)
   (push '("Newsgroups" .
 	  '(if (not (featurep 'gnus))
 	       (prog1 nil
@@ -1827,7 +1832,7 @@ This function should be bound to SPACE key."
 	      string
 	      gnus-active-hashtb
 	      (gnus-read-active-file-p))))
-	'tinymail--table-header-complete))
+	tinymail--table-header-complete))
 
 ;;; ----------------------------------------------------------------------
 ;;;
@@ -2802,7 +2807,7 @@ Return:
           (setq str (concat str (format "\C-m%s\C-j%s"
                                         name
                                         (prin1-to-string record)))))))
-     (bbdb-hashtable))
+     bbdb-hashtable)
     str))
 
 ;;; ----------------------------------------------------------------------
@@ -3040,7 +3045,7 @@ Input:
                 (when (>= (length regexp) len)
                   (while (< i max)
                     (setq elt (aref record i))
-                    (incf i)
+                    (cl-incf i)
                     (if (not (listp elt))
                         (setq elt (list elt)))
                     (dolist (item elt)
@@ -3100,8 +3105,7 @@ Input:
                           (format "%s <%s>" name net))))
                 (pushnew completion list :test 'string=)))) ;; When-end
           (setq record nil)))
-       (bbdb-hashtable))
-
+       bbdb-hashtable)
       (tinymail-debug fid 'RETURN-COMPLETIONS list)
       list)))
 
@@ -3123,7 +3127,7 @@ Input:
 
 ;;; ----------------------------------------------------------------------
 ;;;
-(defun tinymail-complete-bbdb-fuzzy (&optional info &optional force)
+(defun tinymail-complete-bbdb-fuzzy (&optional info force)
   "Scan through BBDB 'net for partial matches and offer completion list.
 
 Input:
@@ -4090,7 +4094,7 @@ References:
       (when cc-list
         (dolist (elt cc-list)
           (unless (string-match tinymail--cc-kill-regexp elt)
-            (incf count)
+            (cl-incf count)
             (setq ccl (format "%s\n  %s," (or ccl "")  elt))))
 
         (when (and cc-list  (not (stringp ccl)))
