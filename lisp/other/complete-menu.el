@@ -250,7 +250,7 @@ Goes backward if ARG is negative; goes to end of buffer if CHAR not found."
                         mouse-pos
                       (set-mouse-position (car mouse-pos)
                                           (/ (frame-width) 2) 2)
-                      (unfocus-frame)
+                      ;; (unfocus-frame) obsoltet as of 22.1
                       (mouse-position)))
          (pos (list (list (car (cdr mouse-pos))
                           (1+ (cdr (cdr mouse-pos))))
@@ -337,8 +337,7 @@ Goes backward if ARG is negative; goes to end of buffer if CHAR not found."
   (interactive "e")
   (let ((buffer (window-buffer))
         choice)
-    (save-excursion
-      (set-buffer (window-buffer (posn-window (event-start event))))
+    (with-current-buffer (window-buffer (posn-window (event-start event)))
       (save-excursion
         (goto-char (posn-point (event-start event)))
         (skip-chars-backward "^ \t\n")
