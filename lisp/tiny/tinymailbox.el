@@ -160,6 +160,9 @@
 
 (require 'tinylibm)
 
+(eval-when-compile
+  (require 'cl))
+
 (eval-and-compile
   (defvar mail-yank-prefix) ;; Byte compiler silencer
   (autoload 'mail-fetch-field           "mail-utils")
