@@ -5,7 +5,7 @@
 ;; This file is not part of Emacs
 
 ;; Copyright (C) 1993 Alon Albert
-;; Copyright (C) 1997-2016 Jari Aalto
+;; Copyright (C) 1997-2019 Jari Aalto
 ;; Author:       Alon Albert <alon@milcse.rtsg.mot.com>
 ;; Maintainer:   Jari Aalto
 ;; Created:      1993-12-07

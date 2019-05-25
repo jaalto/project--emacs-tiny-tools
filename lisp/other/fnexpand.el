@@ -2,7 +2,7 @@
 
 ;; This file is not part of Emacs
 
-;; Copyright (C) 1991-2016 eirik and trost
+;; Copyright (C) 1991-2019 eirik and trost
 
 ;; Author: <eirik@theory.tn.cornell.edu> and <trost@reed.edu>
 ;; Adapted-By: Jari Aalto
