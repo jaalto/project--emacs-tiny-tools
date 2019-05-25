@@ -107,7 +107,9 @@
 
 (require 'tinylibm)
 
-(eval-when-compile (require 'advice))
+(eval-when-compile
+  (require 'cl)
+  (require 'advice))
 
 (ti::package-defgroup-tiny TinyPad tinypad-- tools
   "Emulate Windows notepad with extra menu")
@@ -283,7 +285,7 @@ Mode description:
           ;;  For every buffer, either turn mode on or off.
           (dolist (buffer (buffer-list))
             ;;  Exclude hidden buffers
-            (incf  i)
+            (cl-incf i)
             (if (not (string-match "^ " (buffer-name buffer)))
                 (with-current-buffer buffer
                   (if (get 'tinypad-mode 'global)
