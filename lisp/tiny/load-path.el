@@ -1,4 +1,10 @@
-;;; load-path.el --- Used for compiling Emacs lisp files
+;;; load-path.el --- Developer only. Used for compiling Emacs lisp files
+
+;; DO NOT TOUCH - THIS IS NOT A USER CONFIGURATION FILE
+;; Instead write your won and use:
+;;
+;; cd bin/
+;; make LIB=your-load-path.el compile
 
 ;;; Commentary:
 
@@ -53,45 +59,43 @@
 (dolist (path
          '(
 
+	   ;; Directory that contains symbolic links to ALL
+	   ;; emacs packages
+
            "~/var/link/emacs"
 
-           ;; Define any new path HERE. It won't matter if you
-           ;; define non-exiting paths, they are stripped away.
-           ;;
-           ;;  some users prefer the directory called ~/lisp istead of
-           ;;  ~/elisp (Emacs Lisp)
+           ;; More diretories
 
+           "~/.emacs.d"
+           "~/.emacs.d/epackage/packages/htmlize"
+           "~/.emacs.d/epackage/packages/igrep"
+           "~/.emacs.d/epackage/packages/bbdb/lisp"
            "~/elisp"
            "~/lisp"
 
-           ;;  Unix: Posisbly the best is to have
-           ;;  this directory to be a symbolic link to latest distribution
-           ;;
-           ;;  Windows: Symbolic links don't work, change this to the absolute
-           ;;  path of the kit location directories.
+           ;;  Windows: Symbolic links don't work,
 
            "~/elisp/tiny"
            "~/elisp/tiny/lisp"
            "~/elisp/tiny/lisp/tiny"
            "~/elisp/tiny/lisp/other"
 
-           ;;  Any other directories that you have in you ~/elips or
+           ;;  Any other directories
 
            "/usr/share/site-lisp"
            "/usr/share/site-lisp/net"
 
            ;; The best way to keep up with the development is to
-           ;; use CVS. See BBDB and Gnus sites for CVS.
+           ;; use version ontrol.
 
-           "/usr/share/site-lisp/net/cvs-packages"
-           "/usr/share/site-lisp/net/cvs-packages/bbdb/lisp"
-           "/usr/share/site-lisp/net/cvs-packages/gnus/lisp"
+           "/usr/share/site-lisp/net/packages"
+           "/usr/share/site-lisp/net/packages/bbdb/lisp"
+           "/usr/share/site-lisp/net/packages/gnus/lisp"
 
-           ;;  Any other directories that you have in you ~/elips or
-           ;;  site wide /usr/share/site-lisp or under /opt hierarchy
+           ;;  More directories
 
            "~/elisp/other"
-           "~/elisp/bbdb/lisp"        ;usually symbolic link to latest
+           "~/elisp/bbdb/lisp"
            "~/elisp/rc"
            "."
            ".."
@@ -120,7 +124,7 @@ Default is `message'. Eval optional EVAL."
       (if function
           (funcall function "  %d %s" i path)
         (message "  %d %s" i path))
-      (incf i))))
+      (cl-incf i))))
 
 (eval-and-compile
   ;;  Remove comment if you want to  see the load path
