@@ -193,6 +193,9 @@
 
 (require 'tinylibm)
 
+(eval-when-compile
+  (require 'cl))
+
 (ti::package-defgroup-tiny TinyPair tinypair-- extensions
   "self insert character pairs () \"\" '' <>
   Overview of features
@@ -592,7 +595,7 @@ Returns t, when pairing is allowed for buffer."
     (while (< i count)
       (funcall func " \f\t\r\n")        ;ignore whitespace
       (tinypair-word-class-skip back)
-      (incf i))))
+      (cl-incf i))))
 
 ;;; ----------------------------------------------------------------------
 ;;;
