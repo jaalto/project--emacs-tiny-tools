@@ -1,4 +1,89 @@
+2019-05-25 Sat  Jari Aalto  <jari.aalto@cante.net>
+
+	* tiny/tiny-admin-util.el: (top level): require cl.
+	Restore 'autoload utilities' section from commit 6c6284a2862.
+	(tiny-setup-with-file-env-macro): Use `write-file-functions'.
+	(tiny-setup-update-update-file-autoloads-1):Use
+	`write-file-functions'.
+	(tiny-setup-autoload-build-for-file-1): Use `write-file-functions'.
+
+	* tiny/tinygnus.el (top level): remove obsolte Gnus
+	version check from 2000. Removed functions:
+	`tinygnus-check-gnus-installation-libraries',
+	`tinygnus-check-gnus-installation-gnus'
+	`tinygnus-check-gnus-installation-emacs'
+	`tinygnus-check-gnus-installation'.
+
+	* tiny/tinylibenv.el (ti::xemacs-p): Adjust docstring.
+
+	* tiny/tinytf.el (tinytf-mark-br-line): Remove extra &optional.
+
+	* tiny/tinyperl.el (tinyperl--lint-arguments): Add missing
+	defcustom spec.
+	(tinyperl-save-state): Remove extra &optional.
+
+	* tiny/tinymail.el: (eval-when-compile): require cl.
+
+	* tiny/tinylisp.el (tinylisp-install-menu): Add escapes
+	for characters.
+	(eval-when-compile): require cl.
+
+	* tiny/tinydired.el (tinydired-marked-vc-ci): Remove extra
+	&optional.
+
+	* tiny/tinybuffer.el (tinybuffer-buffer-list-next):
+	Use `cl-return'.
+
+	* tiny/tinylib.el (ti::buffer-surround-with-char):
+	 Add escapes for characters.
+
 2019-05-24 Fri  Jari Aalto  <jari.aalto@cante.net>
+
+	* tiny/tinylib.el
+	(top level): require cl. Add cl-* prefixes.
+	(ti::var-syntax-info): Add escapes for parentheses.
+	(ti::buffer-surround-with-char): Add escapes for
+	parentheses.
+
+	* tiny/tinyliby.el
+	(ti::system-load-history-where-exactly): Use `cl-return'.
+	(ti::system-autoload-function-list): Use `cl-pushnew'.
+	(ti::system-get-file-documentation): Use `cl-incf'.
+	(ti::system-load-history-where-1): Use `cl-return'.
+	(ti::system-autoload-function-file-list): Use `cl-pushnew'.
+
+	* tiny/tinylibw.el
+	(w32-cygwin-mount-table-path-to-dos): Use `cl-return'.
+	(w32-cygwin-dos-path-to-cygwin): Use `cl-return'.
+
+	* tiny/tinylibt.el (ti::text-save-data): Use `cl-incf'.
+	(ti::text-undo): Use `cl-decf'.
+
+	* tiny/tinylibo.el (ti::overlay-get-prop): Use `cl-incf'.
+
+	* tiny/tinylibid.el (ti::id-cnv-txt2mode): Use `cl-return'.
+	(ti::id-cnv-txt2comment): Use `cl-return'.
+	(ti::id-match): Use `cl-return'.
+	(ti::id-buffer-re-search): Use `cl-return'.
+	(ti::id-buffer-re-search): Use `cl-return'.
+
+	* tiny/tinylibenv.el (ti::emacs-install-root): Use `cl-return'.
+	(ti::win32-cygwin-p-1): Use `cl-return'.
+
+	* tiny/tinyliba.el
+	(top level): Delete cl-compat autoloads.
+	(ti::tmp-cl-library-check). Use `cl-return'.
+
+	* tiny/tinylibm.el
+	(top level): require cl.
+	(ti::let-transform-nil): Delete unused.
+	(ti::list-find): Use `cl-return'.
+	(ti::package-config-file-prefix): Delete duplicate &optional.
+	(ti::package-config-file-directory-default): Use `cl-return'.
+	(ti::color-lighter): use `cl-incf'.
+	(ti::list-to-assoc-menu): use `cl-incf'.
+	(ti::list-elt-position): use `cl-incf'.
+	(subst-char-with-string): use `cl-incf'.
 
 	* tiny/tinypath.el: Use ~/.emacs.d in documentation.
 
