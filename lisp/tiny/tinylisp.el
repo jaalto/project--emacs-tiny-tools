@@ -401,6 +401,7 @@
 (ti::package-require-view) ;; TinyLisp must be first in the minor-mode-list
 
 (eval-when-compile
+  (require 'cl)
   (require 'elp)    ;; For elp-results-buffer
   (require 'advice) ;; For apropos.el
   ;; XEmacs 21.2 NT had a problem loading the edug.el. After
@@ -415,7 +416,6 @@
   ;;  Don't show "obsolete function warning", because we know what
   ;;  we're doing below. Emulation in handled in tinylibb.el
   (put 'frame-parameters 'byte-compile nil))
-
 
 (eval-and-compile
   (autoload 'tinypath-cache-match-fullpath  "tinypath")
@@ -679,7 +679,6 @@ Defined keys:
        ;;  Using menu to remeber commands is easier if you don't use
        ;;  menu bar at all.
        (define-key root-map p 'tinylisp-menu-main))
-
       (t
        (tinylisp-install-menu)
 
@@ -1070,13 +1069,10 @@ Format:
   ;;  calls tinylisp-install, we must reflect the change here in
   ;;  self insert command.
   ;;
-
   (defconst tinylisp--menu-main         ;bookmark -- &menu
     (list
-
      ;;  All commands do not fit to echo menu, but here are at least
      ;;  the most used ones.
-
      '(format
        "\
 %s -=*.\\rmE)val ,;'+)call wn)ar py)mode o)ccur a)uto vVfF xSdD >beEcilX C-e"
@@ -1101,10 +1097,10 @@ Format:
       (cons ?+  (list '(call-interactively 'tinylisp-jump-to-definition-chain)))
       (cons ?'  (list '(call-interactively 'tinylisp-jump-to-definition)))
       (cons ?\177  (list '(tinylisp-back-to-definition)))
-      (cons ?{  (list '(call-interactively 'tinylisp-backward-user-option)))
-      (cons ?}  (list '(call-interactively 'tinylisp-forward-user-option)))
-      (cons ?[  (list '(call-interactively 'tinylisp-backward-user-option)))
-            (cons ?]  (list '(call-interactively 'tinylisp-forward-user-option)))
+      (cons ?\{ (list '(call-interactively 'tinylisp-backward-user-option)))
+      (cons ?\} (list '(call-interactively 'tinylisp-forward-user-option)))
+      (cons ?\[ (list '(call-interactively 'tinylisp-backward-user-option)))
+      (cons ?\]  (list '(call-interactively 'tinylisp-forward-user-option)))
       (cons ?<  (list '(call-interactively 'tinylisp-indent-around-point)))
       (cons ?B  (list '(call-interactively 'tinylisp-byte-compile-sexp)))
       (cons ?f  (list '(call-interactively 'tinylisp-find-function-list)))
@@ -4124,7 +4120,8 @@ input:
 	(buffer tinylisp--buffer-variables)
 	str
 	sym
-	type var
+	type
+	var
 	vl                             ;def(v)ar   (l)ist
 	cl                             ;def(c)onst (l)ist
 	list)
@@ -4296,7 +4293,7 @@ Return:
 ;;; ----------------------------------------------------------------------
 ;;;
 (defun tinylisp-read-something ()
-  "Position point to over some word near point."
+  "Position point to over some word near point. Return word."
   (save-excursion
     (if (looking-at "[ \t\n]")          ;only spaces ahead?
         (ti::read-current-line)
