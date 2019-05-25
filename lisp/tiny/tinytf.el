@@ -3087,7 +3087,7 @@ Return
 
 ;;; ----------------------------------------------------------------------
 ;;;
-(defun tinytf-mark-br-line (&optional unmark &optional verb)
+(defun tinytf-mark-br-line (&optional unmark verb)
   "Mark current line with symbolic <BR>. Optionally UNMARK. VERB."
   (interactive "*P")
   (let (point
