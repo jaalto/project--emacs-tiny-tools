@@ -560,6 +560,7 @@
 (require 'tinylibm)
 
 (eval-when-compile
+  (require 'cl)
   ;;  Need grep-regexp-alist
   (require 'compile))
 
@@ -577,7 +578,7 @@
           (locate-library "htmlize"))
       (autoload 'htmlize-buffer "htmlize" "" t)
     (message "\
-  ** tinytf.el: Hm, no htmlize.el found. [you can still use this package]
+  ** tinytf.el: Hm, no htmlize.el found. You can still use this package.
                 Download https://www.emacswiki.org/emacs/Htmlize")))
 
 (ti::package-defgroup-tiny TinyTf tinytf-- wp
@@ -2668,10 +2669,12 @@ Return:
      (unless (bobp)
        (cond
         ((not (looking-at "^[ \t]*$"))  ;no whitespace at all
-         (end-of-line) (insert "\n") (incf  fix))
+         (end-of-line) (insert "\n")
+	 (cl-incf  fix))
         ((not (zerop (skip-chars-backward " \t\r\n"))) ;extra whitespace
          (forward-line 1)
-         (delete-region beg (point)) (incf  fix))))
+         (delete-region beg (point))
+	 (cl-incf  fix))))
      (goto-char (marker-position mark))
      (forward-line 1)
      (setq beg (point))
@@ -2680,7 +2683,7 @@ Return:
         ((not (looking-at "^[ \t]*$"))  ;no whitespace at all
          (beginning-of-line)
          (insert "\n")
-         (incf  fix))
+         (cl-incf fix))
         ((not (zerop (skip-chars-forward " \t\r\n"))) ;extra whitespace
          (beginning-of-line)
 
@@ -2694,7 +2697,7 @@ Return:
          ;;     (*)Sub header 2
          (when (not (memq (point) (list beg (1+ beg))))
            (delete-region beg (point))
-           (incf  fix))))))
+           (cl-incf fix))))))
     (setq mark nil)                     ;kill marker
     (if verb
         (if (> fix 0)
@@ -2726,7 +2729,7 @@ other case conversions are done."
       (while (re-search-forward re nil t)
         (backward-char 1)
         (capitalize-word 1)
-        (incf  count)))
+        (cl-incf count)))
     (if verb
         (message "%s: Fixed %d headings" tinytf--mode-name count))))
 
@@ -2754,7 +2757,7 @@ Optionally REMOVE numbering. VERB."
          str)
     (ti::verb)
     (tinytf-heading-macro
-     (incf  count)
+     (cl-incf count)
      (beginning-of-line)
      (cond
       (remove
@@ -2765,42 +2768,42 @@ Optionally REMOVE numbering. VERB."
                     (looking-at re3)))
            (ti::replace-match 1)))
       ((looking-at re1)                 ;heading 1
-       (incf c1)
+       (cl-incf c1)
        (setq c2 0)
        (setq str (tinytf-heading-string c1 c2))
        ;;  Only change if different, this prevents buffer modify flag
        ;;  change
        (unless (tinytf-heading-same-p 0 str)
-         (incf  fix)
+         (cl-incf fix)
          (ti::replace-match 1 str)))
       ((and re2 (looking-at re2))
-       (incf c2)
+       (cl-incf c2)
        (setq c3 0)
        (setq str (tinytf-heading-string c1 c2))
        (unless (tinytf-heading-same-p 1 str)
-         (incf  fix)
+         (cl-incf fix)
          (ti::replace-match 1 str)))
       ((and re3 (looking-at re3))
-       (incf c3)
+       (cl-incf c3)
        (setq str (tinytf-heading-string c1 c2 c3))
        (unless (tinytf-heading-same-p 2 str)
-         (incf  fix)
+         (cl-incf fix)
          (ti::replace-match 1 str)))
       ((and re-no-nbr2
             (looking-at re-no-nbr2))    ;Level 2
        (goto-char (match-end 0))
        (backward-char 1)
-       (incf  c2)
+       (cl-incf c2)
        (insert (tinytf-heading-string c1 c2)))
       ((and re-no-nbr3
             (looking-at re-no-nbr3))    ;Level 2
        (goto-char (match-end 0))
        (backward-char 1)
-       (incf  c3)
+       (cl-incf c3)
        (insert (tinytf-heading-string c1 c2 c3)))
       ((looking-at "^")                 ;must be level 1
-       (setq c2 0)     (incf  c1)
-       (incf  fix)
+       (setq c2 0)     (cl-incf c1)
+       (cl-incf fix)
        (insert (tinytf-heading-string c1 c2))))
      (end-of-line))
     (when verb
