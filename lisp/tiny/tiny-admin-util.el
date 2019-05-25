@@ -91,9 +91,12 @@
 
 (eval-when-compile
   (require 'cl)
+  (require 'cl-seq)
   (require 'cl-lib))
 
 (require 'tinylib)
+
+(autoload 'generate-file-autoloads "autoload")
 
 (defconst tiny-setup-:library-compile-order
   '("tinylibenv.el"
@@ -102,6 +105,9 @@
     "tinylibb.el")
   "Order of compilation of the libraries.
 This variable is list of REGEXPS.")
+
+(defconst tiny-setup-:library-compile-exclude nil
+  "List of excluded libraries.")
 
 ;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;
 ;;
@@ -137,10 +143,11 @@ Following variables are set during BODY:
 
 `dir'      Directrory name
 `dir-list' All directories under `dir'."
-  `(cl-flet ((recurse
+  ;; Cannot use cl-flat which is lexical
+  `(flet ((recurse
 	      (dir)
 	      (let ((dir-list (tiny-setup-directory-list dir)))
-		(,@ body)
+		,@body
 		(when dir-list
 		  (dolist (elt dir-list)
 		    (unless (string-match tiny-setup-:ignore-dir-regexp elt)
@@ -374,7 +381,7 @@ E.g. if you want to calculate days; you'd do
 ;;;
 (defun tiny-setup-generate-loaddefs-recursive (dir)
   "Generate ###autoload recursively starting from DIR."
-  (interactive "DGenerate ###autoload recursive dir: ")
+  (interactive "DGenerate ###autoload recursive from dir: ")
   (tiny-setup-directory-recursive-macro
       dir
     (tiny-setup-generate-loaddefs-dir dir)))
@@ -395,7 +402,7 @@ E.g. if you want to calculate days; you'd do
   (interactive "fUpdate ###autoload from lisp file: ")
   (let* ((dest (format "%s-loaddefs.el"
                        (file-name-sans-extension file))))
-    (tiny-setup-update-autoloads-loaddefs-1 file dest)))
+    (tiny-setup-update-update-file-autoloads-1 file dest)))
 
 ;;; ----------------------------------------------------------------------
 ;;;
@@ -438,7 +445,8 @@ Obey optional INCLUDE and EXCLUDE regexps."
        ((string-match "-\\(loaddefs\\|autoload\\)\\.el" file))
        ((and (stringp exclude)
              (not (string-match "^[ \t]*$" exclude))
-             ((string-match exclude file))))
+	     (and (stringp exclude)
+		  (string-match exclude file))))
        ((or (not (stringp include))
             (string-match "^[ \t]*$" include)
 	    (and (stringp include)
@@ -643,19 +651,19 @@ t or nil if file is to be compiled."
 	 ;; There is certain order of compilation. Low level libraries first.
 	 (dolist (regexp tiny-setup-:library-compile-order)
 	   (when (setq compile-file ;; compile these first
-		       (find-if (function
-				 (lambda (elt)
-				   (string-match regexp elt)))
+		       (cl-find-if (function
+				    (lambda (elt)
+				      (string-match regexp elt)))
 				libs))
 	     (setq libs (delete compile-file libs))
 	     (byte-compile-file compile-file)))
 	 (message "TinySetup: compiling rest of the libraries.")
 	 (dolist (file libs) ;; Rest of the libraries
 	   (cond
-	    ((find-if (function
-		       (lambda (regexp)
-			 (string-match regexp file)))
-		      tiny-setup-:library-compile-exclude)
+	    ((cl-find-if (function
+			  (lambda (regexp)
+			    (string-match regexp file)))
+			 tiny-setup-:library-compile-exclude)
 	     (message "TinySetup: ignoring library %s" file))
 	    (t
 	     (byte-compile-file file)))))))))
