@@ -304,6 +304,9 @@
 
 (require 'tinylibm)
 
+(eval-when-compile
+  (require 'cl))
+
 (eval-and-compile
   (defvar track-mouse)                  ;ByteComp silencer for XEmacs
   (ti::package-package-require-timer)
