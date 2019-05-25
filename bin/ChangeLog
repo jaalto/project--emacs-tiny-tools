@@ -3,6 +3,10 @@
 	* Makefile
 	(all): correct target. Now compiles.
 	(compile-tiny-*): New.
+	(LIB): Correct path.
+	(all): Add message.
+	(compile-tiny-lib): Use LIB.
+	(compile-tiny): Use LIB.
 
 2019-05-24 Fri  Jari Aalto  <jari.aalto@cante.net>
 
