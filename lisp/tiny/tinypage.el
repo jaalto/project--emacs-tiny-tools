@@ -208,6 +208,9 @@
 (require 'tinylibm)
 (require 'easymenu)
 
+(eval-when-compile
+  (require 'cl))
+
 (eval-and-compile
   (if (ti::xemacs-p)
       (or (load "overlay" 'noerr)
@@ -495,7 +498,7 @@ Mode description:
     (save-excursion
       (ti::pmin)
       (while (re-search-forward "^[ \t]*\C-l" nil t)
-        (incf  count)))
+        (cl-incf count)))
     count))
 
 ;;; ----------------------------------------------------------------------
@@ -521,9 +524,9 @@ Mode description:
     (save-excursion
       (ti::pmin)
       (while (re-search-forward re point t)
-        (incf count)))
+        (cl-incf count)))
     (if (looking-at re)
-        (incf count))
+        (cl-incf count))
     count))
 
 ;;; ----------------------------------------------------------------------
@@ -548,7 +551,7 @@ Mode description:
   (when tinypage-mode                   ;only now!
     (if (not (integerp tinypage--post-command-wakeup-counter))
         (setq tinypage--post-command-wakeup-counter 0))
-    (incf  tinypage--post-command-wakeup-counter)
+    (cl-incf tinypage--post-command-wakeup-counter)
 
     (when (eq 0 (% tinypage--post-command-wakeup-counter
                    tinypage--post-command-wakeup-count))
@@ -664,7 +667,7 @@ References:
                    (setq nbr (match-string lev2)))
           (if (null counter)            ;first value ?
               (setq counter (string-to-number nbr))
-            (incf  counter)
+            (cl-incf counter)
             ;;  Replace the last number with the right increment
             (ti::replace-match lev2 (number-to-string counter))))))
     (when verb
