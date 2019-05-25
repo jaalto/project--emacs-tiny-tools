@@ -64,8 +64,43 @@ README	    = ../doc/html/install/index.txt
 	@cat $<
 
 # Rule: all - Make and Compile all. Cleans everything first
-all:	clean
-	perl makefile.pl --binary "$(EMACS)" $(LIB) all
+all:	clean compile-other compile-tiny-lib compile-tiny
+
+# Rule: compile-other - compile lisp/other
+compile-other:
+	cd ../lisp/other && \
+	for file in *.el; \
+	do \
+	    env LANG=en_US.UTF-8 $(EMACS) --no-site-file -Q --batch -f batch-byte-compile $$file; \
+	done
+
+# Rule: compile-tiny-lib - compile lisp/tiny libraries
+compile-tiny-lib:
+	cd ../lisp/tiny && \
+	for file in \
+	    tinyliba.el \
+	    tinylibb.el \
+	    tinylibm.el \
+	    tinylibenv.el \
+	    tinylibid.el \
+	    tinylibo.el \
+	    tinylibt.el \
+	    tinylibw.el \
+	    tinyliby.el \
+	    tinylib.el \
+	    tinylibmail.el \
+	    tinylibmenu.el ; \
+	do \
+	    env LANG=en_US.UTF-8 $(EMACS) --no-site-file -Q --batch --eval "(add-to-list 'load-path \".\")" -f batch-byte-compile $$file; \
+	done
+
+# Rule: compile-tiny-lib - compile lisp/tiny packages
+compile-tiny:
+	cd ../lisp/tiny && \
+	for file in `ls *.el | grep -v lib`; \
+	do \
+	    env LANG=en_US.UTF-8 $(EMACS) --no-site-file -Q --batch --eval "(add-to-list 'load-path \".\")" -f batch-byte-compile $$file; \
+	done
 
 # Rule: autoload - Make autoload files
 autoload:
