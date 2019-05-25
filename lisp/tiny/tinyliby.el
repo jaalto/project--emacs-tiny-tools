@@ -75,7 +75,7 @@
 
 ;;{{{ setup: -- variables
 
-(defconst tinyliby-version-time "2016.1029.0818"
+(defconst tinyliby-version-time "2019.0524.1808"
   "Latest version number as last modified time.")
 
 (defvar ti::system--describe-symbols-history nil
@@ -164,7 +164,7 @@ Example of LOAD-HISTORY-ELT:
           ;;   (provide 'package)
           (when ret
             (setq ret provide)
-            (return)))))
+            (cl-return)))))
        ((symbolp elt)
         (setq current elt)))
       (when (eq sym current)
@@ -183,7 +183,7 @@ Return:
   (dolist (entry load-history)          ;point to functions
     ;;  (FILE (REQUIRE) (REQ) SYM SYM SYM ...)
     (when (memq sym entry)
-      (return entry))))
+      (cl-return entry))))
 
 ;;; ----------------------------------------------------------------------
 ;;;
@@ -515,7 +515,7 @@ Eg. test-form = '(or (fboundp sym) (boundp sym))"
      (function
       (lambda (sym)
         (when (ti::autoload-p sym)
-          (pushnew sym list :test 'equal)))))
+          (cl-pushnew sym list :test 'equal)))))
     list))
 
 ;;; ----------------------------------------------------------------------
@@ -526,9 +526,9 @@ Eg. test-form = '(or (fboundp sym) (boundp sym))"
 	str)
     (dolist (func function-list)
       (when (setq str (inline (ti::function-autoload-file func)))
-        (pushnew (match-string 1 str)
-		 list
-		 :test 'string-equal)))
+        (cl-pushnew (match-string 1 str)
+		    list
+		    :test 'string-equal)))
     list))
 
 ;;; ----------------------------------------------------------------------
@@ -598,7 +598,7 @@ No '%s feature found, are you absolutely sure you have loaded the file? "
                                  (looking-at "[ \t]*)"))
                   sym       (intern-soft sym-name)
                   doc       nil)
-            (incf count)
+            (cl-incf count)
             ;;  print messages for every 10th only, it's too fast to
             ;;  show every symbol...
             (if (and verb
