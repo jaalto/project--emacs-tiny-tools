@@ -420,6 +420,7 @@
 (require 'tinylibm)
 
 (eval-when-compile
+  (require 'cl)
   (require 'cl-lib))
 
 (eval-and-compile
@@ -1245,7 +1246,7 @@ Eg.
                       (nthcdr i list))
                 r-list)
           (tinydiff-debug fid "R-LIST>>" r-list))
-        (incf  i))
+        (cl-incf i))
       (tinydiff-debug fid "r-list NOW:" (length r-list)  r-list)
       (cond
        ((eq (length r-list) 0)          ;no -r --> add it
