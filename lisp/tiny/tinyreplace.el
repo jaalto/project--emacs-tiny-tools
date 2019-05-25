@@ -212,6 +212,9 @@
 
 (require 'tinylibm)
 
+(eval-when-compile
+  (require 'cl))
+
 (eval-and-compile
   (autoload 'vc-registered "vc"))
 
@@ -1235,7 +1238,7 @@ Input:
             (push file cache)           ;Now we have dealt with it
             (cond
              ((not (file-writable-p file))
-              (incf  read-only)
+              (cl-incf read-only)
               (push file ro-cache))
              (t
               (save-excursion
