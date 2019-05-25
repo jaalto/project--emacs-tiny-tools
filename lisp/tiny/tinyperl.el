@@ -616,8 +616,10 @@ The default value is:
 
   {-severity => %s}
 
-And the string must contain one '%s' for the value of
-`tinyperl--lint-severity'.")
+The string must contain one '%s' for the value of
+`tinyperl--lint-severity'."
+  :type  'string
+  :group 'TinyPerl)
 
 (defcustom tinyperl--key-pageup-control 'heading
   "*How to use PgUp and PgDown keys. 'heading or 'normal."
@@ -1295,7 +1297,7 @@ Input:
 
 ;;; ----------------------------------------------------------------------
 ;;;
-(defun tinyperl-save-state (&optional load &optional verb)
+(defun tinyperl-save-state (&optional load verb)
   "Save or LOAD variables to `(tinyperl-cache-file-name).'
 When LOAD: If `(tinyperl-cache-file-name)' does not exist. return nil."
   (interactive)
