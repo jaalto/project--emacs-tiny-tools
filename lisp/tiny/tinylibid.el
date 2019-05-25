@@ -167,7 +167,7 @@
 
 (require 'tinylibm)
 
-(defconst tinylibid-version-time "2010.1208.0809"
+(defconst tinylibid-version-time "2019.0524.1753"
   "Latest version number.")
 
 ;;; setup: hooks
@@ -509,7 +509,7 @@ NOTE:
     (dolist (elt ti::id--type2mode)
       (when (string-match (nth 0 elt) txt)
         (setq ret (nth 1 elt))          ;Mode name
-        (return)))
+        (cl-return)))
     ret))
 
 ;;; ----------------------------------------------------------------------
@@ -529,7 +529,7 @@ is not needed for mode."
           (setq com-s (nth 3 elt)))
       (if (null (string-match re txt))
           (setq com-s nil   com-e nil)
-        (return)))
+        (cl-return)))
     (if com-s
         (cons com-s com-e))))
 
@@ -604,7 +604,7 @@ Return:
       (setq regexp (nth 0 elt))
       (when (string-match regexp string)
         (setq ret (nth 1 elt))
-        (return)))
+        (cl-return)))
     ret))
 
 ;;; ----------------------------------------------------------------------
@@ -622,7 +622,7 @@ Start searching from `point-min' or from optional POINT."
         (dolist (elt list)
           (when  (re-search-forward (nth 0 elt) nil t)
             (setq ret (nth 1 elt))
-            (return)))))
+            (cl-return)))))
     ret))
 
 ;;; Study
