@@ -688,7 +688,7 @@ Match 1 contains line numer, 2 contains rest of the line."
           (throw 'stop 'abort))
         (insert (format "%03d: " i))
         (forward-line 1)
-        (incf i)))))
+        (cl-incf i)))))
 
 ;;; ----------------------------------------------------------------------
 ;;;
