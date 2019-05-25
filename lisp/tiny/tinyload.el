@@ -456,6 +456,9 @@
 ;; #todo: Does Xemacs reportmail.el define this function too?
 ;; #todo: 2000-11 Emacs 2?.7 seems to include reportmail.el
 
+(eval-when-compile
+  (require 'cl))
+
 (eval-and-compile
   (autoload 'display-time "time"))
 
@@ -724,7 +727,7 @@ To start loader process, call \\[tinyload-install]."
                     file (prin1-to-string err)))
          (message str)
          (tinyload-debug str)))
-      (incf count)
+      (cl-incf count)
       (when verb
         (message "Tinyload: autoloading clean %d/%d %s"
                  count (length load) file)))
@@ -1133,7 +1136,7 @@ Return:
      ((not (integerp busy-count))
       (setq busy-count 0))
      (t
-      (incf busy-count)))
+      (cl-incf busy-count)))
     (put 'tinyload--process-busy-p 'count  busy-count)
     (put 'tinyload--process-busy-p 'count2 busy-count)))
 
@@ -1213,7 +1216,7 @@ Return:
   deadlock     if non-nil, deadlock was detected."
   (let ((busy-count (tinyload-busy-count-incf))
 	deadlock)
-    (incf  busy-count)
+    (cl-incf busy-count)
     (when (> busy-count 5)
       (tinyload-debug "Tinyload: busy count too high, clearing DEADLOCK")
       (tinyload-message "TinyLoad: Deadlock detected, clearing...")
@@ -1329,7 +1332,7 @@ If called interactively, FORCE loading all packages in the list."
                       (throw 'exit t)))
                   (tinyload-debug "TinyLoad: >>> 2 -- feature present?")
                   (setq stat (tinyload-feature-p pkg feature))
-                  (incf  pos)
+                  (cl-incf pos)
                   (put 'tinyload--load-list 'pos pos)
                   (tinyload-debug
                    (format "TinyLoad: >>> 3, pkg %s feature `%s' status: %s"
