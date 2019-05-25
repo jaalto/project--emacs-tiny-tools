@@ -21,18 +21,12 @@
 #
 #   Description
 #
-#	This simplistic makefile is for Unix users. Win32 users should
-#	Use makefile.pl directly. See --help for more.
-#
-#	    dos> perl makefile.pl --load e:/myhome/elisp/load-path.el \
-#		 --binary "c:/program files/absolute-path-to/emacs.exe"
-#
-#	Without reading any of the instructions from doc/txt/README.txt,
+#	Without reading any of the instructions in doc/html/index.txt,
 #	copy lisp/tiny/load-path.el to your private place, modify and compile:
 #
-#	    % make rules
-#	    % make help | less
-#	    % make EMACS=xemacs LIB="--load ~/elisp/load-path.el"
+#	    make rules
+#	    make help | less
+#	    make EMACS=xemacs LIB="~/elisp/load-path.el"
 #
 #	This Makefile is designed to work only with GNU bash(1)
 
@@ -49,7 +43,7 @@ SHELL	    =	sh
 EMACS	    =	emacs
 # EMACSVER    =	`${EMACS} -batch -version`
 PERL	    =	perl
-LIB	    =	--load ../lisp/tiny/load-path.el
+LIB	    =	load-path.el
 
 FILE_DOC_MAKE =	perl ripdoc.pl
 README	    = ../doc/html/install/index.txt
@@ -63,8 +57,12 @@ README	    = ../doc/html/install/index.txt
 	@echo "--  #FILE: $< --------------------------"
 	@cat $<
 
-# Rule: all - Make and Compile all. Cleans everything first
-all:	clean compile-other compile-tiny-lib compile-tiny
+# Rule: all - Nothing interesting. This Makefile is for developer only.
+all:
+	@echo "make LIB=your-load-path.el compile"
+
+# Rule: compile - Developer target. Make and Compile all. Cleans everything first
+compile: clean compile-other compile-tiny-lib compile-tiny
 
 # Rule: compile-other - compile lisp/other
 compile-other:
@@ -91,7 +89,7 @@ compile-tiny-lib:
 	    tinylibmail.el \
 	    tinylibmenu.el ; \
 	do \
-	    env LANG=en_US.UTF-8 $(EMACS) --no-site-file -Q --batch --eval "(add-to-list 'load-path \".\")" -f batch-byte-compile $$file; \
+	    env LANG=en_US.UTF-8 $(EMACS) --no-site-file -Q --batch --load $(LIB) -f batch-byte-compile $$file; \
 	done
 
 # Rule: compile-tiny-lib - compile lisp/tiny packages
@@ -99,7 +97,7 @@ compile-tiny:
 	cd ../lisp/tiny && \
 	for file in `ls *.el | grep -v lib`; \
 	do \
-	    env LANG=en_US.UTF-8 $(EMACS) --no-site-file -Q --batch --eval "(add-to-list 'load-path \".\")" -f batch-byte-compile $$file; \
+	    env LANG=en_US.UTF-8 $(EMACS) --no-site-file -Q --batch --load $(LIB) -f batch-byte-compile $$file; \
 	done
 
 # Rule: autoload - Make autoload files
