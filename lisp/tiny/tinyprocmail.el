@@ -455,7 +455,10 @@
 
 (require 'tinylibm)
 
-(defconst tinyprocmail--version-time "2013.0613.1819"
+(eval-when-compile
+  (require 'cl))
+
+(defconst tinyprocmail--version-time "2019.0525.1332"
   "*Version of last edit.")
 
 (eval-and-compile
@@ -1767,16 +1770,16 @@ Return:
         ;;    pos = 2 if the ch was 'f'
         (setq pos (match-beginning 0))
         ;;  Increment the logical length: The character was valid
-        (incf  ret-len)                 ;OK
+        (cl-incf ret-len)                 ;OK
         ;;   filter duplicates: If the hash doen't have this character already
         ;;   then add it to new string.
         (when (null (elt hash pos))
           ;; Mark the flas as used in hash table
           (aset hash pos t)
           (if (string-match ch "aAeE")
-              (incf  conflict1))
+              (cl-incf conflict1))
           (if (string-match ch "wW")
-              (incf  conflict2)))))
+              (cl-incf conflict2)))))
     ;;  Map the hash and see what flags it set
     (ti::dotimes counter 0 (1- (length hash))
       (if (elt hash counter)
@@ -3103,18 +3106,18 @@ Refrences:
     (save-excursion
       (ti::pmin)
       (while (tinyprocmail-forward)
-        (incf  found)
+        (cl-incf found)
         ;;   We're sitting on :  go to 2 char forward
         (forward-char 2)
         (cond
          ((eq style 'flags-together)
           (when (looking-at "\\([ \t]\\)[^#]")
             (ti::replace-match 1)
-            (incf  i)))
+            (cl-incf i)))
          (t
           (unless (looking-at "[ \t\n]")
             (insert " ")
-            (incf  i))))
+            (cl-incf i))))
         (end-of-line)))
 
     (unless (zerop i)
@@ -3259,7 +3262,7 @@ Input:
     (goto-char opoint)
     (while (tinyprocmail-forward)
       (setq point (point))
-      (incf  count)
+      (cl-incf count)
       (when (and verb mode)
         (message "TinyProcmail: Linting %d %s" count (ti::read-current-line)))
       ;; There is no point of checking the recipe if the Flags are
