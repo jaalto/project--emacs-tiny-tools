@@ -134,6 +134,9 @@
 
 ;;; Code:
 
+(eval-when-compile
+  (require 'cl))
+
 (if (featurep 'xemancs)
     (error "XEmacs unsupported. The character reading code does not work in XEmacs"))
 
@@ -337,7 +340,7 @@ See variable `tinybuffer--ignore-regexp'."
     (dolist (buffer list)
       (unless (string-match re (buffer-name buffer))
         (setq go buffer)                ;Stop and select it
-        (return)))
+        (cl-return)))
     (if (null go)
         (message
 	 (concat
