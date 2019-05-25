@@ -763,16 +763,22 @@
 (require 'tinytab    nil 'noerr)
 (require 'tinyindent nil 'noerr)
 
-(autoload 'message-mail-p    "message")
 (autoload 'bbdb-hashtable    "bbdb" "" nil 'macro)
 (autoload 'bbdb-gethash      "bbdb")
 (autoload 'bbdb-record-net   "bbdb")
 (autoload 'bbdb-record-name  "bbdb")
 (autoload 'bbdb-record-notes "bbdb")
 
-(autoload 'mail-position-on-field              "sendmail")
-(autoload 'mml-secure-message-sign-pgpmime     "mml")
-(autoload 'mml-secure-message-encrypt-pgpmime  "mml")
+(autoload 'mail-position-on-field "sendmail")
+(autoload 'mml-secure-message-sign-pgpmime "mml")
+(autoload 'mml-secure-message-encrypt-pgpmime "mml")
+
+(autoload 'message-mail-p "message")
+(autoload 'message-tab "message"  "" t)
+(autoload 'message-narrow-to-headers  "message")
+
+(eval-when-compile
+  (require 'cl))
 
 (eval-and-compile
   (ti::package-require-mail-abbrevs)
@@ -786,18 +792,16 @@
 
   (unless (locate-library "bbdb")
     (message "\
-  ** tinymail.el: No bbdb.el along `load-path'. http://bbdb.sourceforge.net/
+  ** tinymail.el: No bbdb.el along `load-path'. http://bbdb.sourceforge.net
                   You can still use the package if you do not byte compile it.
                   Package will adapt to missing BBDB features."))
 
-  (autoload 'message-tab                "message"  "" t)
-  (autoload 'message-narrow-to-headers  "message")
-
-  (let ((loc (locate-library "nnheader")))
-    (unless loc
-      (message "\
-  ** tinymail.el: You have too old Gnus, visit http://www.gnus.org/
-                  Old Gnus version found at %s" loc)))
+;; obsolete code: FIXME remove
+;;  (let ((loc (locate-library "nnheader")))
+;;    (unless loc
+;;      (message "\
+;;  ** tinymail.el: You have too old Gnus, visit http://www.gnus.org/
+;;                  Old Gnus version found at %s" loc)))
 
   (autoload 'mail-header-from   "nnheader" "" nil 'macro)
   (autoload 'mail-header-date   "nnheader" "" nil 'macro))
