@@ -203,8 +203,10 @@
 
 (require 'tinylibm)                     ;macro package
 
-(eval-and-compile
+(eval-when-compile
+  (require 'cl))
 
+(eval-and-compile
   (defvar generated-autoload-file) ;; See autoload.el
   (defvar flyspell-mode)
 
@@ -255,8 +257,8 @@
     (?w  "Word")
     (?_  "Symbol, variables and commands")
     (?.  "Punctuation, separate symbols from one another")
-    (?(  "Open parenthesis")
-      (?)  "Close parenthesis")
+    (?\( "Open parenthesis")
+    (?\) "Close parenthesis")
     (?\" "String quote, string as a single token")
     (?\\ "Escape")
     (?/  "Character quote, only the character immediately following.")
@@ -455,7 +457,7 @@ Same mangling is performed for the same STRING. Mangling can't be reversed."
         (if (char-equal ch ?%)
             (setq extra ch-string))
         (setq ret (concat ret ch-string extra))
-        (incf i))))
+        (cl-incf i))))
     ret))
 
 ;;; ----------------------------------------------------------------------
@@ -884,7 +886,7 @@ one slash actually when assigned to string to form the regexp."
       (setq ch      (aref str i)
             chs     (char-to-string ch))
       (if (eq ch look-ch)               ;add counter when EQ
-          (incf count))
+          (cl-incf count))
       (cond
        ((eq count 2)                    ;two successive ?
         (if (eq prev-ch look-ch)
@@ -905,7 +907,7 @@ one slash actually when assigned to string to form the regexp."
        (t
         (setq ret (concat ret chs))))
       (setq prev-ch ch )
-      (incf i))
+      (cl-incf i))
     ret))
 
 ;;; ----------------------------------------------------------------------
@@ -1870,9 +1872,9 @@ In calculation each month is supposed to have 30 days and a year 356 days."
     (if (>= (- d2 d1) 0)                ;day2 is smaller
         (setq ret (- d2 d1))
       (setq ret (- (+ 30 d2) d1))
-      (decf m2))
-    (incf ret (* 30  (- m2 m1)))
-    (incf ret (* 356 (- y2 y1)))
+      (cl-decf m2))
+    (cl-incf ret (* 30  (- m2 m1)))
+    (cl-incf ret (* 356 (- y2 y1)))
     ret))
 
 ;;; ----------------------------------------------------------------------
@@ -1973,7 +1975,7 @@ Return:
       (setq ret "")
       (while (< i count)
         (setq ret (concat ret char-or-string))
-        (incf i)))
+        (cl-incf i)))
     ret))
 
 ;;; ----------------------------------------------------------------------
@@ -2140,7 +2142,7 @@ If the model is too short the variable REST-CASE instructs what to do
               (setq ch (upcase ch))
             (setq ch (downcase ch)))))
         (setq ret (concat ret ch))
-        (incf i))
+        (cl-incf i))
       ;; ............................................. REST characters ...
       ;;  if MODEL is too short, then determine what to do to the rest
       ;;  of the characters theat are left.
@@ -2175,13 +2177,13 @@ If REVERSE is non-nil, start searching at the end of string."
         (i   -1))
     (cond
      (reverse
-      (while (and (>= (decf len) 0)
+      (while (and (>= (cl-decf len) 0)
                   (/= (aref str len) char))) ;check character in string
       (if (>= len 0)
           len
         nil))
      (t
-      (while (and   (< (incf i) len)
+      (while (and   (< (cl-incf i) len)
                     (/= (aref str i) char)))
       (if (< i len)
           i
@@ -3060,7 +3062,7 @@ Return:
     ;;  emacs kill-line is little awkward, because if you're at the
     ;;  end of buffer it signals an error...
     (while (< i count)
-      (incf i)
+      (cl-incf i)
       (cond
        ((eobp)                          ;nothing to kill
         nil)
@@ -3362,7 +3364,7 @@ You just give RE \"r\\([0-9]+\\)\" and start value 1, increment 1"
         (delete-region beg end)
         (goto-char beg)
         (insert (format fmt inc-val))
-        (incf inc-val increment)))))
+        (cl-incf inc-val increment)))))
 
 ;;; ----------------------------------------------------------------------
 ;;; - Here is slightly different version. this increments every number
@@ -3484,7 +3486,7 @@ Point is not preserved."
             (delete-region pb pe)
             (setq count nbr)
             (while (> count 0)          ;leave that many
-              (decf count) (insert "\n"))
+              (cl-decf count) (insert "\n"))
             (if (> count 1)
                 (beginning-of-line)
               ;;  nothing done, next line
@@ -4560,7 +4562,7 @@ Return:
             up  (char-to-string (+ 97 i)))
       (define-key map low func)
       (define-key map  up func)
-      (incf i))))
+      (cl-incf i))))
 
 ;;; ----------------------------------------------------------------------
 ;;;
@@ -4570,7 +4572,7 @@ Return:
 	(func (or func 'ignore)))
     (while (< i 128 )
       (define-key map (char-to-string i) func)
-      (incf i))))
+      (cl-incf i))))
 
 ;;; ----------------------------------------------------------------------
 ;;; - Mapping keysto functions easily.
@@ -4736,9 +4738,9 @@ Also makes a great gift."
   (let ((begchar char)
 	(endchar char))
     (cond
-     ((or (char-equal char ?{) (char-equal char ?}))
-      (setq begchar ?{)
-      (setq endchar ?}))
+     ((or (char-equal char ?\{) (char-equal char ?\}))
+      (setq begchar ?\{)
+      (setq endchar ?\}))
      ((or (char-equal char ?\() (char-equal char ?\)))
       (setq begchar ?\()
       (setq endchar ?\)))
@@ -4746,22 +4748,24 @@ Also makes a great gift."
       (setq begchar ?<)
       (setq endchar ?>))
      ((or (char-equal char ?`) (char-equal char ?'))
-      (setq begchar ?`)
-      (setq endchar ?'))
-     ((or (char-equal char ?[) (char-equal char ?]))
-      (setq begchar ?[)
-            (setq endchar ?])))
+      (setq begchar ?\`)
+      (setq endchar ?\'))
+     ((or (char-equal char ?\[) (char-equal char ?\]))
+      (setq begchar ?\[)
+      (setq endchar ?\])))
     (re-search-backward "^\\|\\s-" (point-min))
     (if (not (bolp))
         (re-search-forward "\\s-")
-      (if (looking-at "\\s-") (re-search-forward "\\s-")))
+      (if (looking-at "\\s-")
+	  (re-search-forward "\\s-")))
     (insert-char begchar 1)
     (let ((opoint (point)))
       (if (re-search-forward "\\s-\\|\n" (point-max) t)
           (forward-char -1)
         (goto-char (point-max)))
       (insert-char endchar 1)
-      (if (eq (point) (+ opoint 1))
+      (if (eq (point)
+	      (+ opoint 1))
           (forward-char -1)))))
 
 ;;; ----------------------------------------------------------------------
@@ -5383,7 +5387,7 @@ Return:
                  ;;  ftp> 250 CWD command successful.
                  (not (string-match "success" (ti::read-current-line))))
                (< try max-try))
-        (incf try)))
+        (cl-incf try)))
     (push mode file-list)               ;command for ange
     (with-current-buffer (process-buffer proc)
       (ti::pmax)
@@ -5399,7 +5403,7 @@ Return:
          (list func)                    ;called after completion ?
          (not not-bg))                  ;continue without wait
         (ti::pmax)
-        (incf try)))
+        (cl-incf try)))
     ;;  The status value is valid only when process finishes.
     (if not-bg
         (with-current-buffer (process-buffer proc)
@@ -8145,7 +8149,7 @@ Return:
                        (string= ret (elt arg 0)))
               (setq ret  (1- count))
               (return))
-            (incf count))))))
+            (cl-incf count))))))
     ret))
 
 ;;; ----------------------------------------------------------------------
