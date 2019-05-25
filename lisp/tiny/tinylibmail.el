@@ -81,6 +81,7 @@
   (autoload 'gnus-group-get-parameter	"gnus"))
 
 (eval-when-compile
+  (require 'cl)
   (defvar mail-abbrevs)                 ;Silence ByteCompiler
   (defvar mail-aliases)
   (defvar rmail-current-message nil))
@@ -3459,14 +3460,14 @@ See `ti::mail-whois-parse'."
   (let ((point (point))
         ret)
     (cl-flet ((search (func)
-                   (goto-char point)
-                   (funcall func)))
+		      (goto-char point)
+		      (funcall func)))
       (dolist (func '(ti::mail-whois-parse-registrant-1
                       ti::mail-whois-parse-registrant-domain
                       ti::mail-whois-parse-registrant-organization
                       ti::mail-whois-parse-registrant-organization-2))
         (when (setq ret (search func))
-          (return ret))))))
+          (cl-return ret))))))
 
 ;;; ----------------------------------------------------------------------
 ;;;
@@ -3622,7 +3623,7 @@ Values examined are: expires, created and updated."
 		       (list (format "%s-%s-%s" year month day)
 			     raw))
 		      ret))
-	      (return))))))
+	      (cl-return))))))
     ret))
 
 ;;; ----------------------------------------------------------------------
@@ -4105,7 +4106,7 @@ Example:
 
     (dolist (mode mode-list)
       (when (setq buffer (car-safe (get 'list mode)))
-        (return)))
+        (cl-return)))
     buffer))
 
 ;;; ----------------------------------------------------------------------
