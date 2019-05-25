@@ -272,6 +272,9 @@
 
 (require 'tinylibm)
 
+(eval-when-compile
+  (require 'cl))
+
 (eval-and-compile
   (autoload 'dired-do-shell-command   "dired-x" "" t)
   (autoload 'dired-read-shell-command "dired-x" "" t)
@@ -1631,10 +1634,10 @@ If ARG is non-nil, remove mark if file was loaded. VERB."
       (message "Tinydired: No marked files."))
      ((y-or-n-p "Tinydired: Load all marked files, No kidding? ")
       (dolist (file files)
-        (incf all)
+        (cl-incf all)
         (if (get-file-buffer file)
-            (incf  not-loaded)
-          (incf  loaded)
+            (cl-incf not-loaded)
+          (cl-incf loaded)
           (find-file-noselect file))
         (if arg
             (save-excursion (dired-unmark 1))))))
@@ -1697,7 +1700,7 @@ Note:
             vc-reg-stat  (vc-registered file)
             load         nil
             diff-no-stat nil)
-      (incf  count)
+      (cl-incf count)
       ;; ... ... ... ... ... ... ... ... ... ... ... ... possible load . .
       (when (and (null buffer)
                  (file-writable-p file)
@@ -1711,7 +1714,7 @@ Note:
        ((null buffer)
         nil)                            ;no file, no vc controlled
        (diff-no-stat
-        (incf  handled)
+        (cl-incf handled)
         (save-window-excursion
           (vc-next-action-on-file file 'verbose)
           (if load
@@ -1756,7 +1759,7 @@ Marks are left only to files which were loaded into Emacs."
 	    (with-current-buffer buffer
 	      (setq modify-stat (buffer-modified-p)
 		    read-stat   buffer-read-only))))
-      (incf count)
+      (cl-incf count)
       ;; ... ... ... ... ... ... ... ... ... ... ... ... possible load . .
       (when (and (null buffer)
 		 vc-reg-stat                        ;; in VC
@@ -1764,7 +1767,7 @@ Marks are left only to files which were loaded into Emacs."
 		 (or arg
 		     (y-or-n-p
 		      (concat "file " fn " not in Emacs. Load? " ))))
-        (incf loaded)
+        (cl-incf loaded)
         (setq buffer (find-file-noselect file)
               load   t))
       ;; ... ... ... ... ... ... ... ... ... ... ... ... ... .. handle . .
@@ -1795,7 +1798,7 @@ Marks are left only to files which were loaded into Emacs."
         nil)
        (t
         (save-window-excursion
-          (incf  handled)
+          (cl-incf handled)
           (vc-next-action-on-file file 'verbose)))))
     (if (not (eq 0 handled))
         (dired-do-redisplay))
@@ -1857,7 +1860,7 @@ Bugs:
             buffer      (get-file-buffer file)
             vc-reg-stat (vc-registered file)
             load        nil)
-      (incf  count)
+      (cl-incf count)
       ;; ... ... ... ... ... ... ... ... ... ... ... ... possible load . .
       (when (and (null buffer)
 		 vc-reg-stat
@@ -1865,7 +1868,7 @@ Bugs:
 		 (y-or-n-p (concat "file " fn " not in Emacs. Load? " )))
         (setq buffer (find-file-noselect file)
               load   t)
-        (incf loaded))
+        (cl-incf loaded))
       ;; ... ... ... ... ... ... ... ... ... ... ... ... ... ...  stat . .
       (when (setq buffer (get-file-buffer file))
         (save-excursion
@@ -1902,7 +1905,7 @@ Bugs:
               (kill-buffer buffer))))
        ((and buffer
              vc-reg-stat)
-        (incf handled)
+        (cl-incf handled)
         (save-excursion
           (save-window-excursion
             (unwind-protect
@@ -2140,10 +2143,10 @@ This is like `dired-delete-and-exit'."
     (ti::verb)
     (dolist (elt ange)
       (kill-buffer elt)
-      (incf ange-count))
+      (cl-incf ange-count))
     (dolist (elt dired)
       (kill-buffer elt)
-      (incf  dired-count))
+      (cl-incf dired-count))
     (if verb
         (message "Tinydired: Killed %s ange, %s dired buffers."
                  ange-count dired-count))))
@@ -2168,7 +2171,7 @@ that is associated with ange-ftp."
   (let ((list  (ti::buffer-get-ange-buffer-list))
 	(i     0))
     (dolist (elt list)
-      (incf  i) (kill-buffer elt))
+      (cl-incf i) (kill-buffer elt))
     (if (> i 0 )
         (message (concat "Tinydired: Ange buffers killed: " i))
       (message "Tinydired: No ange buffers found."))))
