@@ -1805,7 +1805,7 @@ Marks are left only to files which were loaded into Emacs."
 ;;; ----------------------------------------------------------------------
 ;;; - This is vastly different than C-x v v in dired mode
 ;;;
-(defun tinydired-marked-vc-ci (&optional arg &optional verb)
+(defun tinydired-marked-vc-ci (&optional arg verb)
   "Check In all marked files and load them inside Emacs. Ignore ARG.
 Do some heavy checking, before doing ci.
 o  if file is not writable, skip over
