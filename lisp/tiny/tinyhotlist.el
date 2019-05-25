@@ -269,6 +269,9 @@
 
 (require 'tinylibm)
 
+(eval-when-compile
+  (require 'cl))
+
 (ti::package-defgroup-tiny TinyHotlist tinyhotlist-- tools
   "Hotlist of important buffers and files, easy add, easy remove")
 
