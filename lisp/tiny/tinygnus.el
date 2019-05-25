@@ -386,8 +386,38 @@
 
 ;;; ......................................................... &require ...
 
+(require 'nnml)
+(require 'gnus-sum)
+(require 'gnus-score)
+(require 'gnus-agent)
+
+(autoload 'message-buffer-name "message")
+(autoload 'message-narrow-to-head "message")
+(autoload 'message-pop-to-buffer "message")
+(autoload 'message-remove-header "message")
+
+(autoload 'gnus-activate-group "gnus-start")
+(autoload 'gnus-check-server "gnus-int")
+(autoload 'gnus-get-function "gnus-int")
+(autoload 'gnus-request-group "gnus-int")
+(autoload 'gnus-server-opened "gnus-int")
+(autoload 'gnus-setup-message "gnus-msg")
+(autoload 'gnus-group-get-new-news-this-group "gnus-group")
+(autoload 'gnus-group-goto-group "gnus-group")
+(autoload 'gnus-group-group-level "gnus-group")
+(autoload 'gnus-group-kill-group "gnus-group")
+(autoload 'gnus-group-make-doc-group "gnus-group")
+(autoload 'gnus-group-make-group "gnus-group")
+(autoload 'gnus-group-process-prefix "gnus-group")
+(autoload 'gnus-group-read-init-file "gnus-group")
+(autoload 'gnus-group-remove-mark "gnus-group")
+(autoload 'gnus-group-set-current-level "gnus-group")
+
+(eval-when-compile
+  (require 'cl))
+
 (eval-and-compile
-  (message (locate-library "gnus")) ;; Leave location to compile output
+  (message (locate-library "gnus")) ;; Display location during compile
   ;; 2000-01 When compiling CVS gnus with XEmacs ....
   (condition-case err
       (require 'gnus)
@@ -422,9 +452,7 @@
   ;;  Yes, this variable is purposively put to "tinypath" package.
   ;;  See that package for better explanation.
   (defconst tinypath--gnus-load-path
-    (locate-library "gnus"))
-  (message "tinygnus.el: Gnus path %s"
-           (or tinypath--gnus-load-path "<path not found>"))
+    (locate-file "gnus" load-path (get-load-suffixes)))
   (defvar bbdb/gnus-summary-show-bbdb-names)
   (defvar bbdb/gnus-summary-prefer-bbdb-data)
   (defvar bbdb/gnus-summary-prefer-real-names)
@@ -1387,7 +1415,7 @@ confirmations."
       kill-flag)
      (run-hooks 'tinygnus--summary-ube-send-to-postmasters-hook)
      (setq kill-flag t)
-     (incf  count))
+     (cl-incf count))
     (if (called-interactively-p 'interactive)
         (message "TinyGnus: Mapped %d ube messgaes" count))))
 
@@ -2182,7 +2210,7 @@ Input:
       subject-field (mail-fetch-field "Subject"))
      (setq count 0)
      (while (re-search-forward "\\(http\\|ftp\\|telnet\\|wais\\):/" nil t)
-       (incf  count)
+       (cl-incf count)
        (setq url (buffer-substring-no-properties
                   (line-beginning-position) (line-end-position)))
        (with-current-buffer out
@@ -2192,7 +2220,7 @@ Input:
            (if arg
                (insert (format "%s:%d: %s\n" gnus-newsgroup-name nbr url))
              (insert url "\n")))))
-     (incf total count)
+     (cl-incf total count)
      (when verb
        (message "TinyGnus: msg %d, %d (%d urls) %s"
                 nbr count total subject-field)))
@@ -2708,7 +2736,7 @@ References:
 (defmacro tinygnus-debug-gnus-macro (func &rest body)
   "Instantiate `pr' function to print debug information about FUNC."
   `(cl-flet ((pr (x y)
-	      (tinygnus-gnus-debug-insert-line x y ,func)))
+		 (tinygnus-gnus-debug-insert-line x y ,func)))
      ,@body))
 
 ;;; ----------------------------------------------------------------------
@@ -2722,16 +2750,16 @@ References:
 (defun tinygnus-gnus-newsrc-alist (function)
   "Return elts from `gnus-newsrc-alist' according to FUNCTION."
   (let (list
-        ;;      method
-        ;;      backend
-        ;;      server
+        ;; method
+        ;; backend
+        ;; server
         group)
     ;; (("dummy.group" 0 nil) ("comp.security.ssh" 3 nil nil nil) ...
     (dolist (elt gnus-newsrc-alist)
       (setq
-;;;         method  (gnus-find-method-for-group group)
-;;;         backend (car method)
-;;;         server  (cdr method)
+       ;; method  (gnus-find-method-for-group group)
+       ;; backend (car method)
+       ;; server  (cdr method)
        group   (car elt))
       (when (funcall function group)
         (push elt list)))
@@ -2798,7 +2826,7 @@ Possibly REPLCE existing entry."
             (message "TinyLisp: No files %s %s" group dir)
           (message "TinyGnus: Adding to `nnml-group-alist' %s" dir)
           (if replace
-              (push (cons group dir) 'nnml-group-alist))
+              (push (cons group dir) nnml-group-alist))
           (push (list group range) nnml-group-alist))))))
 
 ;;; 5.8.2
