@@ -81,7 +81,7 @@
 
 ;;; Code:
 
-;;(require 'date-parse)
+;; (require 'date-parse), see autoloads
 
 (eval-and-compile
   ;;  Silence Byte compiler
