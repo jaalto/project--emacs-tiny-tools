@@ -531,6 +531,7 @@
 (require 'tinylibm)
 
 (eval-when-compile
+  (require 'cl)
   (require 'advice))
 
 (eval-and-compile
@@ -1086,7 +1087,7 @@ function `tinyurl-mode' function instead. VERB."
           (put 'tinyurl-mode 'self-call t)
           ;;  For every buffer, either turn mode on or off.
           (dolist (buffer (buffer-list))
-            (incf  i)
+            (cl-incf i)
             ;;  Exclude hidden buffers
             (when (not (string-match "^ " (buffer-name buffer)))
               (with-current-buffer buffer
@@ -2492,7 +2493,7 @@ References: `tinyurl--command-table'"
     (let (counter)
       (unless (integerp (setq counter (get 'tinyurl-mode 'counter)))
         (setq counter 0))
-      (incf  counter)
+      (cl-incf counter)
       (put 'tinyurl-mode 'counter counter)
       ;;  Activate only every 5th time.
       (when (zerop (% counter tinyurl--post-command-hook-threshold))
