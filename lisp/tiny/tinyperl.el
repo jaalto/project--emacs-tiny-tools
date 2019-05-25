@@ -514,6 +514,10 @@
 
 (require 'tinylibm)
 
+(eval-when-compile
+  (require 'cl)
+  (require 'cl-lib))
+
 (eval-and-compile
   (defvar tinycompile--buffer-name)
   (defvar compilation-error-regexp-alist)
