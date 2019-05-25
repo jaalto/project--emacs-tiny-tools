@@ -162,7 +162,10 @@
 
 ;;; Code:
 
-(eval-when-compile (require 'advice))
+(eval-when-compile
+  (require 'cl)
+  (require 'advice))
+
 (require 'tinylibm)
 
 (eval-and-compile
@@ -530,10 +533,10 @@ Setting 'list' to nil terminates this macro."
             (beginning-of-line)
             (when (eq (following-char)
                       (symbol-value 'dired-marker-char))
-              (incf  i)
+              (cl-incf i)
               (dired-unmark 1)))
            (t
-            (incf  i)
+            (cl-incf  i)
             (dired-mark 1))))))
     (if verb
         (message "%d cached files %smarked" i
@@ -700,7 +703,7 @@ the cache is flushed with \\[tinycache-flush]."
     (tinycache-map-over-buffers nil
                                 (when (buffer-live-p  (get-buffer BuffeR))
                                   (kill-buffer BuffeR)
-                                  (incf  count)))
+                                  (cl-incf count)))
     (if verb
         (message (format "Flushed %d buffers." count)))))
 
