@@ -1,35 +1,133 @@
 2019-05-25 Sat  Jari Aalto  <jari.aalto@cante.net>
 
+	* tiny/tinyigrep.el (tinyigrep-install-default-databases):
+	Use `cl-union'.
+
+	* tiny/tinyeat.el (eval-when-compile): require cl.
+
+	* tiny/tinyhotlist.el (eval-when-compile): require cl.
+
+	* tiny/tinymailbox.el: (eval-when-compile): require cl.
+
+	* tiny/tinytab.el: (eval-when-compile): require cl.
+
+	* tiny/tinydiff.el Use `cl-incf'.
+	(eval-when-compile): require cl.
+
+	* tiny/tinyirc.el: Use `cl-incf'.
+
+	* tiny/tinylibb.el: Use `cl-incf'.
+
+	* tiny/tinylibmail.el Use `cl-incf'.
+
+	* tiny/tinyload.el: Use `cl-incf'.
+	(eval-when-compile): require cl.
+
+	* tiny/tinylock.el: Use `cl-incf'.
+	(eval-when-compile): require cl.
+
+	* tiny/tinypad.el Use `cl-incf'.
+	(eval-when-compile): require cl.
+
+	* tiny/tinypair.el: Use `cl-incf'.
+	(eval-when-compile): require cl.
+
+	* tiny/tinypage.el: Use `cl-incf'.
+	(eval-when-compile): require cl.
+
+	* tiny/tinyprocmail.el: Use `cl-incf'.
+	(eval-when-compile): require cl.
+
+	* tiny/tinyreplace.el Use `cl-incf'.
+	(eval-when-compile): require cl.
+
+	* tiny/tinysearch.el Use `cl-incf'.
+	(eval-when-compile): require cl.
+
+	* tiny/tinytag.el (tinytag-post-command): Use `cl-incf'.
+
+	* tiny/tinyurl.el: Use `cl-incf'.
+	(eval-when-compile): require cl.
+
+	* tiny/load-path.el: Use `cl-incf'.
+	Update dolist for Epackage directories.
+
+	* tiny/tinymy.el (eval-when-compile): require cl.
+
+	* tiny/tinydebian.el (eval-when-compile): require cl.
+
+	* tiny/tinycache.el (tinycache-flush-all-compilation):
+	Use `cl-incf'.
+	(tinycache-dired-mark): Use `cl-incf'.
+
+	* other/complete-menu.el (cm-choose-completion): Use
+	`with-current-buffer'.
+	(cm-minibuffer-completion-help): comment out
+	`unfocus-frame'. Obsolete since Emacs 22.1.
+
+	* other/fnexpand.el (fnexpand-executables): Use #'. Change
+	`mapcar' to `mapc'. Comment out package ´assoc', no longer
+	needed in latest Emacs.
+
+	* other/expect.el (eval-when-compile): require cl.
+
 	* tiny/tiny-admin-util.el: (top level): require cl.
 	Restore 'autoload utilities' section from commit 6c6284a2862.
 	(tiny-setup-with-file-env-macro): Use `write-file-functions'.
 	(tiny-setup-update-update-file-autoloads-1):Use
 	`write-file-functions'.
 	(tiny-setup-autoload-build-for-file-1): Use `write-file-functions'.
+	(tiny-setup-update-file-autoloads): Call
+	`tiny-setup-update-update-file-autoloads-1'.
+	(tiny-setup-directory-recursive-macro): Use `flet' and
+	not `cl-flet'.
+	(tiny-setup-autoload-build-for-dir): Correct 
+	`(string-match exclude file)' call.
+	(tiny-setup-directory-recursive-macro): Correct ,@body
+	in macro.
+	(tiny-setup-compile-kit-libraries): Use `cl-find-if'.
 
-	* tiny/tinygnus.el (top level): remove obsolte Gnus
+	* tiny/tinygnus.el Use `cl-incf'.
+	(eval-when-compile): require cl.
+	(top level): remove obsolte Gnus
 	version check from 2000. Removed functions:
 	`tinygnus-check-gnus-installation-libraries',
 	`tinygnus-check-gnus-installation-gnus'
 	`tinygnus-check-gnus-installation-emacs'
 	`tinygnus-check-gnus-installation'.
+	(tinygnus-gnus-debug-update-nnml-group-alist):
+	Correct `push' call to use plain variable.
 
 	* tiny/tinylibenv.el (ti::xemacs-p): Adjust docstring.
 
-	* tiny/tinytf.el (tinytf-mark-br-line): Remove extra &optional.
+	* tiny/tinytf.el Use `cl-incf'.
+	(eval-when-compile): require cl.
+	(tinytf-mark-br-line): Remove extra &optional.
 
-	* tiny/tinyperl.el (tinyperl--lint-arguments): Add missing
-	defcustom spec.
+	* tiny/tinyperl.el
+	(eval-when-compile): require cl.
+	(tinyperl--lint-arguments): Add missing defcustom spec.
 	(tinyperl-save-state): Remove extra &optional.
 
-	* tiny/tinymail.el: (eval-when-compile): require cl.
-
-	* tiny/tinylisp.el (tinylisp-install-menu): Add escapes
-	for characters.
+	* tiny/tinymail.el: Use `cl-incf'.
 	(eval-when-compile): require cl.
+	(tinymail-complete-bbdb-fuzzy): delete extra &optional.
+	(tinymail-bbdb-parse-to-string): `bbdb-hashtable'
+	is variable, not a function.
+	(tinymail-complete-list-bbdb-1): `bbdb-hashtable'
+	is variable, not a function.
+	(tinymail-install-table-header-complete-gnus): Correct `push'
+	calls to use plain variables.
 
-	* tiny/tinydired.el (tinydired-marked-vc-ci): Remove extra
-	&optional.
+	* tiny/tinylisp.el Use `cl-incf'.
+	(tinylisp-install-menu): Add escapesfor characters.
+	(eval-when-compile): require cl.
+	(tinylisp-directory-recurse-macro): Use `flet' and
+	not `cl-flet'.
+
+	* tiny/tinydired.el Use `cl-incf'.
+	(eval-when-compile): require cl.
+	(tinydired-marked-vc-ci): Remove extra &optional.
 
 	* tiny/tinybuffer.el (tinybuffer-buffer-list-next):
 	Use `cl-return'.
