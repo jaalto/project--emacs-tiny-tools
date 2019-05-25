@@ -342,8 +342,7 @@
 (require 'tinylibm)
 
 (eval-when-compile
-  (require 'cl)
-  (autoload 'union "cl-union"))
+  (require 'cl))
 
 ;;  When tinyigrep.el is compiled, this strange error occurs:
 ;;  ** the function `igrep-read-args' is not known to be defined
@@ -1330,8 +1329,7 @@ GREP is program to used for grepping. Default is `egrep'."
        "man"
        (list
         "zgrep"
-        (union
-
+        (cl-union
          (mapcar ;; These are system's man paths
           (function
            (lambda (x)
