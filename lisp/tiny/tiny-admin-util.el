@@ -90,7 +90,7 @@
 ;;; Code:
 
 (eval-when-compile
-;;  (load "cl-seq")
+  (require 'cl)
   (require 'cl-lib))
 
 (require 'tinylib)
@@ -193,7 +193,7 @@ E.g. if you want to calculate days; you'd do
 (defmacro tiny-setup-with-file-env-macro (&rest body)
   "Run BODY with all the interfering hooks turned off."
   `(let* (find-file-hook
-          write-file-hooks
+          write-file-functions
           font-lock-mode
           ;; buffer-auto-save-file-name
           auto-save-hook
@@ -208,8 +208,8 @@ E.g. if you want to calculate days; you'd do
      ;;  silencers:
      (if (null find-file-hook)
          (setq find-file-hook nil))
-     (if (null write-file-hooks)
-         (setq write-file-hooks nil))
+     (if (null write-file-functions)
+         (setq write-file-functions nil))
      (if (null font-lock-mode)
          (setq font-lock-mode nil))
      (if (null auto-save-hook)
@@ -265,6 +265,195 @@ E.g. if you want to calculate days; you'd do
       (dolist (pkg (directory-files path 'full "^tiny.*el"))
         (load pkg))
       (display-buffer "*Messages*"))))
+
+;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;
+;;
+;;
+;;      AUTOLOAD UTILITIES
+;;      These are admistrative utilies for package maintainer(s)
+;;
+;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;
+
+;;; ----------------------------------------------------------------------
+;;;
+(defun tiny-setup-directory-last (dir)
+  "Return last directory name in DIR. /dir1/dir2/ -> dir2."
+  (if (string-match "[/\\]\\([^/\\]+\\)[/\\]?$" dir)
+      (match-string 1 dir)
+    ""))
+
+;;; ----------------------------------------------------------------------
+;;;
+(defun tiny-setup-directory-to-file-name (dir template)
+  "Make file name from NAME and TEMPLATE. <template>-<last-dir>.el."
+  (concat
+   (file-name-as-directory dir)
+   template
+   (tiny-setup-directory-last dir)
+   ".el"))
+
+;;; ----------------------------------------------------------------------
+;;;
+(defun tinypath-tmp-autoload-file-footer (file &optional end)
+  "Return 'provide and optional END of the file marker."
+  (concat
+   (format
+    "\n\n(provide '%s)\n\n"
+    (file-name-sans-extension (file-name-nondirectory file)))
+   (if end
+       (format ";; End of file %s\n"
+               (file-name-nondirectory (file-name-nondirectory file)))
+     "")))
+
+;;; ----------------------------------------------------------------------
+;;;
+(defun tiny-setup-directories (list)
+  "Return only directories from LIST."
+  (let* (ret)
+    (dolist (elt list)
+      (when (and (file-directory-p elt)
+                 ;;  Drop . ..
+                 (not (string-match
+                       "[/\\]\\.+$\\|CVS\\|RCS"
+                       elt)))
+        (push elt ret)))
+    ret))
+
+;;; ----------------------------------------------------------------------
+;;;
+(defun tiny-setup-generate-file-autoloads-1 (file dest)
+  "Generate ###autoload from FILE to DEST."
+  (let ((generated-autoload-file dest))
+    (ti::file-delete-safe dest)
+;;;    (ti::package-autoload-loaddefs-create-maybe dest)
+    (tiny-setup-with-file-env-macro
+      (with-current-buffer (find-file-noselect dest)
+        (goto-char (point-max))
+        ;;  line added by `ti::package-autoload-loaddefs-create-maybe'
+;;;        (re-search-backward "\n.*provide")
+        (let ((point (point)))
+          (generate-file-autoloads file)
+          ;;  something was inserted?
+          (unless (eq (point) point)
+            (let ((backup-inhibited t))
+              (save-buffer))
+            (kill-buffer (current-buffer))))))))
+
+;;; ----------------------------------------------------------------------
+;;;
+(defun tiny-setup-generate-file-autoloads (file)
+  "Generate ###autoload from FILE to FILE-loaddefs.el"
+  (interactive "fGenerate ###autoload from lisp file: ")
+  (let* ((dest (format "%s-loaddefs.el"
+                       (file-name-sans-extension file))))
+    (tiny-setup-generate-file-autoloads-1 file dest)))
+
+;;; ----------------------------------------------------------------------
+;;;
+(defun tiny-setup-generate-loaddefs-file-list (list)
+  "Generate ###autoload from every file in LIST."
+  (dolist (file list)
+    (tiny-setup-generate-file-autoloads file)))
+
+;;; ----------------------------------------------------------------------
+;;;
+(defun tiny-setup-generate-loaddefs-dir (dir &optional regexp)
+  "Generate ###autoload from DIR excluding optional REGEXP."
+  (interactive "DGenerate ###autoload loaddefs in dir\nsIgnore regexp: ")
+  (let ((files (directory-files dir 'full "\\.el"))
+        list)
+    (dolist (file files)
+      ;;  Ignore couple of other files as well.
+      (unless (or (string-match "-\\(loaddefs\\|autoload\\)\\.el" file)
+                  (and (stringp regexp)
+                       (string-match "^[ \t]*$" regexp)))
+        (push file list)))
+    (tiny-setup-generate-loaddefs-file-list list)))
+
+;;; ----------------------------------------------------------------------
+;;;
+(defun tiny-setup-generate-loaddefs-recursive (dir)
+  "Generate ###autoload recursively starting from DIR."
+  (interactive "DGenerate ###autoload recursive dir: ")
+  (tiny-setup-directory-recursive-macro
+      dir
+    (tiny-setup-generate-loaddefs-dir dir)))
+
+;;; ----------------------------------------------------------------------
+;;;
+(defun tiny-setup-update-update-file-autoloads-1 (file dest)
+  "Update ###autoload from FILE to DEST."
+    (ti::package-autoload-loaddefs-create-maybe dest)
+    (let ((generated-autoload-file dest))
+      (tiny-setup-with-file-env-macro
+        (update-file-autoloads file))))
+
+;;; ----------------------------------------------------------------------
+;;;
+(defun tiny-setup-update-file-autoloads (file)
+  "Update ###autoload from FILE to FILE-loaddefs.el"
+  (interactive "fUpdate ###autoload from lisp file: ")
+  (let* ((dest (format "%s-loaddefs.el"
+                       (file-name-sans-extension file))))
+    (tiny-setup-update-autoloads-loaddefs-1 file dest)))
+
+;;; ----------------------------------------------------------------------
+;;;
+(defun tiny-setup-autoload-build-for-file-1 (file dest)
+  "Generate autoload from FILE to DEST."
+  (with-temp-buffer
+    (tiny-setup-with-file-env-macro
+     (ti::package-autoload-create-on-file
+      file
+      (current-buffer)
+      'no-show
+      'no-desc
+      'no-path)
+     (insert (tinypath-tmp-autoload-file-footer dest 'eof))
+     (write-region (point-min) (point-max) dest))
+    dest))
+
+;;; ----------------------------------------------------------------------
+;;;
+(defun tiny-setup-autoload-build-for-file (file)
+  "Generate autoload from FILE to FILE-autoload.el"
+  (interactive "fGenerate autoload from lisp file: ")
+  (let* ((dest (format "%s-autoload.el"
+                       (file-name-sans-extension file))))
+    (tiny-setup-autoload-build-for-file-1 file dest)))
+
+;;; ----------------------------------------------------------------------
+;;;
+(defun tiny-setup-autoload-build-for-dir (dir &optional include exclude)
+  "Generate all autoloads from DIR.
+Obey optional INCLUDE and EXCLUDE regexps."
+  (interactive
+   "DGenerate all autoloads in dir\nsInclude re: \nsExlude re: ")
+  (let ((files (directory-files dir 'full "\\.el"))
+        list)
+    (dolist (file files)
+      ;;  Ignore couple of other files as well.
+      (cond
+       ;; Ignore these
+       ((string-match "-\\(loaddefs\\|autoload\\)\\.el" file))
+       ((and (stringp exclude)
+             (not (string-match "^[ \t]*$" exclude))
+             ((string-match exclude file))))
+       ((or (not (stringp include))
+            (string-match "^[ \t]*$" include)
+	    (and (stringp include)
+		 (string-match include file)))
+        (tiny-setup-autoload-build-for-file file))))))
+
+;;; ----------------------------------------------------------------------
+;;;
+(defun tiny-setup-autoload-build-recursive (dir &optional include exclude)
+  "Generate all autoloads recursively starting from DIR."
+  (interactive
+   "DGenerate all autoloads recursive dir: \nsInclude re: \nsExlude re: ")
+  (tiny-setup-directory-recursive-macro
+      dir
+    (tiny-setup-autoload-build-for-dir dir include exclude)))
 
 ;;; ----------------------------------------------------------------------
 ;;; FIXME: remove
