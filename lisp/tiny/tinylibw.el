@@ -48,7 +48,7 @@
 (require 'tinyliba)
 (provide 'tinylibw)
 
-(defconst tinylibw-version-time "2010.1208.0757"
+(defconst tinylibw-version-time "2019.0524.1807"
   "Latest version number as last modified time.")
 
 ;;; These functions has been submitted to Emacs 21.2
@@ -252,7 +252,7 @@ You should not call this function, use `w32-cygwin-path-to-dos'."
           (setq dos (concat dos (match-string 1 path))))
         ;; Convert to forward slashes
         (setq final-path (subst-char-in-string ?\\ ?/ dos))
-        (return)))
+        (cl-return)))
     (unless final-path
       ;; None matched, so this path is under cygwin root dir.
       (let ((root (ti::win32-cygwin-p)))
@@ -310,7 +310,7 @@ Be sure to call `expand-file-name' before you pass PATH to the function."
               (setq path (match-string 1 path))
               (setq cygwin (concat cygwin path)))
             ;; Convert to forward slashes
-            (return (subst-char-in-string ?\\ ?/ cygwin)))))))
+            (cl-return (subst-char-in-string ?\\ ?/ cygwin)))))))
    (t
     (error "Cannot convert to cygwin. path is not absolute %s" path))))
 
