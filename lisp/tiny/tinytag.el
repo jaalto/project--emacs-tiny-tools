@@ -370,6 +370,9 @@
 
 (require 'tinylibm)
 
+(eval-when-compile
+  (require 'cl))
+
 (eval-and-compile
   (autoload 'man "man" "" t))
 
@@ -1162,7 +1165,7 @@ References:
              (and (not (eq 0  tinytag--post-command-hook-counter))
                   (eq 0 (% tinytag--post-command-hook-counter
                            tinytag--post-command-hook-wakeup)))))
-        (incf tinytag--post-command-hook-counter)
+        (cl-incf tinytag--post-command-hook-counter)
         (if it-is-time                  ;do reset
             (setq tinytag--post-command-hook-counter 0))))
       ;; ... ... ... ... ... ... ... ... ... ... ... ... ... do action . .
