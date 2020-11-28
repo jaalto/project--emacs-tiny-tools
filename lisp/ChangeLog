@@ -6,6 +6,7 @@
 	  (tinyreplace-install): Do not call
 	  `tinyreplace-install-default-keybings'
 	  (tinyreplace-define-keys-local-map): Use `tinyreplace--default-key'
+	  (tinyreplace-install-default-keybings): Rewrite.
 
 2019-05-25 Sat  Jari Aalto  <jari.aalto@cante.net>
 
