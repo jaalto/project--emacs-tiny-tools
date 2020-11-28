@@ -468,34 +468,33 @@ Special commands:
 ;;{{{ install
 
 ;;; ----------------------------------------------------------------------
+;;;
+;;;###autoload
+(defun tinyreplace-define-keys-local-map ()
+  "Define key binding in local compile and grep buffers.
+See `tinyreplace--default-key'."
+  (interactive)
+  (local-set-key tinyreplace--default-key
+		 'tinyreplace-replace-over-files-compile-buffer))
+
+;;; ----------------------------------------------------------------------
 ;;;###autoload
 (defun tinyreplace-install-default-keybings (&optional key)
   "Install optional KEY or `tinyreplace--default-key'."
   (interactive)
   (or key
-      (setq key tinyreplace--default-key)
-  (let ((def (lookup-key global-map key)))
-    (when (featurep 'compile)
-      (let (buffer (get-buffer "*compilation*"))
-	(when buffer
-	  (with-current-buffer buffer
-	    (tinyreplace-define-keys-local-map)))))
-    (when (featurep 'grep)
-      (let (buffer (get-buffer "*grep*"))
-	(when buffer
-	  (with-current-buffer buffer
-	    (tinyreplace-define-keys-local-map)))))
+      (setq key tinyreplace--default-key))
+  (let ((def (lookup-key global-map key))
+	buffer)
+    (when (and (featurep 'compile)
+	       (setq buffer (get-buffer "*compilation*")))
+      (with-current-buffer buffer
+	(tinyreplace-define-keys-local-map)))
+    (when (and (featurep 'grep)
+	       (setq buffer (get-buffer "*grep*")))
+      (with-current-buffer buffer
+	(tinyreplace-define-keys-local-map)))
     (global-set-key key 'tinyreplace-menu)))
-
-;;; ----------------------------------------------------------------------
-;;;
-;;;###autoload
-(defun tinyreplace-define-keys-local-map ()
-  "Define key binding in local map. For compilation like modes.
-See `tinyreplace--default-key'."
-  (interactive)
-  (local-set-key tinyreplace--default-key
-		 'tinyreplace-replace-over-files-compile-buffer))
 
 ;;; ----------------------------------------------------------------------
 ;;;
