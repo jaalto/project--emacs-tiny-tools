@@ -4370,7 +4370,7 @@ Return:
         (dolist (z compressions)
           (setq try (format "%s%s%s%s" path file end z))
           (if (file-exists-p try)
-              (pushnew try ret :test 'string=)) )))
+              (cl-pushnew try ret :test 'string=)) )))
     ;; Preserve search order (due to push)
     (nreverse ret)))
 
@@ -5944,7 +5944,7 @@ See function `tinylisp-edebug-uninstrument-everything' for more information."
      (cond
       ((ad-get-arg 0)
        (message "TinyLisp: instrumented and cached %s (Edebug advice)" name)
-       (pushnew
+       (cl-pushnew
         (list
          sym
          (current-buffer)

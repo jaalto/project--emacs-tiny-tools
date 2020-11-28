@@ -3272,7 +3272,7 @@ Optional TYPE
                     "[%d]Bug email (TAB choices; empty to quit): "
                     (length list))
                    choice-alist)))
-      (pushnew email list :test 'string=))
+      (cl-pushnew email list :test 'string=))
     (reverse list)))
 
 ;;; ----------------------------------------------------------------------

@@ -1304,7 +1304,7 @@ function ´tinyurl-default-exclude', which you can recall with:
                        "\\|archive")
                       name)))
           (when stat
-            (pushnew (cons buffer 'exclude) exclude-list :test 'equal)
+            (cl-pushnew (cons buffer 'exclude) exclude-list :test 'equal)
             (put 'tinyurl-default-exclude 'exclude-list exclude-list)
             (message "TinyUrl: Excluded buffer ´%s' Major-mode: %s"
                      (buffer-name)

@@ -1599,7 +1599,7 @@ Return:
         (multiple-value-bind (nok)
             (tinygnus-nslookup-do ip)
           (unless nok ;; Succeeded, top level was ok
-            (pushnew ip list :test 'string=)))))
+            (cl-pushnew ip list :test 'string=)))))
     list))
 
 ;;; ----------------------------------------------------------------------

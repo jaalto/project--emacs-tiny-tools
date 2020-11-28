@@ -102,7 +102,7 @@
            "../other"
            "../.."))
   (when (file-exists-p path)
-    (pushnew (expand-file-name path) load-path :test 'string=)))
+    (cl-pushnew (expand-file-name path) load-path :test 'string=)))
 
 ;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;
 ;;

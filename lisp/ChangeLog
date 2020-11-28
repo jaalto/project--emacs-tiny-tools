@@ -1,5 +1,7 @@
 2020-11-28 Sat  Jari Aalto  <jari.aalto@tuni.fi>
 
+	* tiny/*: Replace `pushnew' with `cl-pushnew'.
+
 	* tiny/tinyreplace.el (tinyreplace-install-default-keybings):
 	  Accept KEY parameter. In new Emacs M-& is `async-shell-command'
 	  (tinyreplace--default-key): New.

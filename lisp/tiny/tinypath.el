@@ -373,11 +373,11 @@
 ;;                             "/usr/share/xemacs/site-lisp"
 ;;                           "/usr/share/emacs/site-lisp/emacs")))
 ;;            (when (stringp path)
-;;              (pushnew path tinypath--load-path-root :test 'string=)))
+;;              (cl-pushnew path tinypath--load-path-root :test 'string=)))
 ;;
 ;;          ;; PLEASE COPY VERBATIM. THERE ARE OPTIMIZATIONS
 ;;          ;; THAT ACTIVATE IF YOU ADD THE PATH
-;;          (pushnew "~/elisp/tiny/lisp" load-path :test 'string=)
+;;          (cl-pushnew "~/elisp/tiny/lisp" load-path :test 'string=)
 ;;          (load "tinypath.el")
 ;;
 ;;      The package will check current emacs version and make sure
@@ -524,7 +524,7 @@
 ;;          ;; PLEASE COPY VERBATIM. THERE ARE OPTIMIZATIONS
 ;;          ;; THAT ACTIVATE If YOU ADD THE PATH
 ;;          (require 'cl)
-;;          (pushnew "~/elisp/tiny/lisp" load-path :test 'string=)
+;;          (cl-pushnew "~/elisp/tiny/lisp" load-path :test 'string=)
 ;;          (load "tinypath.el")
 ;;
 ;;      [For advanced Lisp programmers] You can add ignored gnus directory
@@ -588,7 +588,7 @@
 ;;
 ;;          (load "~/elisp/tiny/tinypath")
 ;;          ;;  Add more directories.
-;;          (pushnew "TMP-OLD-OLD-DIR" load-path :test 'string=)
+;;          (cl-pushnew "TMP-OLD-OLD-DIR" load-path :test 'string=)
 ;;          (tinypath-cache-regenerate)
 ;;
 ;;      Remember to mention to users that they need to update cache with
@@ -821,7 +821,7 @@
 ;;
 ;;          (require 'cl)
 ;;          (dolist (path '("one" "two" "three"))
-;;            (pushnew (expand-file-name path) woman-manpath :test 'string))
+;;            (cl-pushnew (expand-file-name path) woman-manpath :test 'string))
 ;;
 ;;  Faster Emacs configuration (Perl emacs-util.pl)
 ;;
@@ -1082,7 +1082,7 @@
 ;;      package is pushed into the `load-path' before the package is loaded:
 ;;
 ;;          (require 'cl)
-;;          (pushnew "~/elisp/tiny/lisp/tiny" load-path :test 'string=)
+;;          (cl-pushnew "~/elisp/tiny/lisp/tiny" load-path :test 'string=)
 ;;          (load "tinypath.el")
 ;;
 ;;      Please follow this instruction. The reason is that program
@@ -1798,7 +1798,7 @@ If CACHE is set, use cached value."
 	   ret)
       (dolist (ver (list  version  major-version major-version-x-x))
 	(when ver
-	  (pushnew ver ret :test 'string=)))
+	  (cl-pushnew ver ret :test 'string=)))
       (when ret
 	(put 'tinypath-emacs-versions 'version ret))
       (or ret
@@ -1916,7 +1916,7 @@ ROOT can be a single directory or list of directories."
       (unless (string-match tinypath--boot-ignore-directory-regexp subdir)
 	(tinypath-verbose-macro (or verbose 8)
 	  (message "TinyPath: add subdir %s" subdir))
-	(pushnew subdir load-path :test 'string=)))))
+	(cl-pushnew subdir load-path :test 'string=)))))
 
 ;;; ----------------------------------------------------------------------
 ;;;
@@ -2200,7 +2200,7 @@ Emacs core-lisp installation directories."
       ;;
       (unless (or (member root load-path)
 		  (member (file-name-as-directory root) load-path))
-	(pushnew root load-path :test 'string=)
+	(cl-pushnew root load-path :test 'string=)
 	(message "TinyPath: load-path auto-boot [%s added]." root))
       ;;
       ;;  We might have included this line inside the above `unless',
@@ -3668,7 +3668,7 @@ The MSG should contain %s format string to write each element."
       (dolist (postfix suffix)
 	(setq path (concat dir file postfix))
 	(when (file-exists-p path)
-	  (pushnew path path-list :test 'string=))))
+	  (cl-pushnew path path-list :test 'string=))))
     path-list))
 
 ;;; ----------------------------------------------------------------------
@@ -3907,7 +3907,7 @@ Input:
 	(setq path (tinypath-file-remove-trailing-slash path))
 	(tinypath-verbose-macro 7
 	  (message "TinyPath: %s added %s" list-name path))
-	(pushnew path new-path :test 'string=))))
+	(cl-pushnew path new-path :test 'string=))))
     (nreverse new-path)))
 
 ;;; ----------------------------------------------------------------------
@@ -4433,7 +4433,7 @@ Return:
     (tinypath-verbose-macro 5
       (message "TinyPath: PATH-NOK not candidate %s" path)))
    ((tinypath-path-ok-p path)
-    (pushnew path load-path :test 'string=))))
+    (cl-pushnew path load-path :test 'string=))))
 
 ;;; ----------------------------------------------------------------------
 ;;;
@@ -4444,7 +4444,7 @@ Return:
 	    (not (string-match
 		  tinypath--manpath-ignore-regexp
 		  path)))
-    (pushnew path tinypath--extra-manpath :test 'string=)))
+    (cl-pushnew path tinypath--extra-manpath :test 'string=)))
 
 ;;; ----------------------------------------------------------------------
 ;;;
@@ -4487,7 +4487,7 @@ This is combination of `load-path' and `tinypath--load-path-root'."
 	   ((equal type 'man)
 	    (tinypath-external-setup-1-man-path path))
 	   ((equal type 'c-src-dir)
-	    (pushnew path
+	    (cl-pushnew path
 		     tinypath--extra-ff-search-directories
 		     :test
 		     'string=))
@@ -4497,7 +4497,7 @@ This is combination of `load-path' and `tinypath--load-path-root'."
 	   ((and (equal type 'info)
 		 correct-emacs)
 	    (tinypath-info-handler path)
-	    (pushnew path
+	    (cl-pushnew path
 		     (tinypath-Info-default-directory-list)
 		     :test
 		     'string=)))))
@@ -5168,7 +5168,7 @@ Returned list in the above case is '(\"Tar\" \"Fileutils\")."
 		  (setq re (concat re ext "$"))
 		  (when (string-match re file)
 		    (throw 'exit file)))))
-	(pushnew (capitalize (downcase (match-string 1 file)))
+	(cl-pushnew (capitalize (downcase (match-string 1 file)))
 		 ret
 		 :test 'string=)))
     (sort ret 'string-lessp)))
@@ -5802,7 +5802,7 @@ lisp code. With it, the check will spend much more time."
 	(message "TinyPath: Add ignored. No LISP files in %s" path))
     (if (member path load-path)
 	(setq load-path (delete path load-path)))
-    (pushnew
+    (cl-pushnew
      (if tinypath--win32-p
 	 (downcase path)
        path)
@@ -5960,7 +5960,7 @@ is not a string. `tinypath--load-path-root': %s "
   "Merge LIST to `load-path'."
   ;;  Merge original path to loaded path
   (dolist (path list)
-    (pushnew path load-path :test 'string=)))
+    (cl-pushnew path load-path :test 'string=)))
 
 ;;; ----------------------------------------------------------------------
 ;;;
@@ -6432,10 +6432,10 @@ and `tinypath-cache-problem-report'. VERB.
       ;; ( ("file" (POS . PATH)) .. )
       (setq dir (cdr (nth 1 dir)))
       (unless (file-exists-p dir)
-	(pushnew path list :test 'string=)))
+	(cl-pushnew path list :test 'string=)))
     (dolist (dir load-path)
       (unless (file-exists-p dir)
-	(pushnew path list :test 'string=)))
+	(cl-pushnew path list :test 'string=)))
     list))
 
 ;;; ----------------------------------------------------------------------
@@ -6792,7 +6792,7 @@ References:
 	(when (string-match "\\.[0-9]$" file)
 	  (tinypath-verbose-macro 9
 	    (message "TinyPath: MAN %s [found %s] " path file))
-	  (pushnew path tinypath--extra-manpath :test 'string=)
+	  (cl-pushnew path tinypath--extra-manpath :test 'string=)
 	  (setq ret path)
 	  (return))))
     ret))
@@ -6845,7 +6845,7 @@ References:
     (if (null cygwin-path)
 	(tinypath-verbose-macro 2
 	  (message "TinyPath: [Cygwin] not found from PATH."))
-      (pushnew cygwin-path
+      (cl-pushnew cygwin-path
 	       tinypath--extra-path-root
 	       :test 'string=)
       ;;  Be absolutely sure that the path is not added multiple
@@ -6925,7 +6925,7 @@ Reference:
       (when (stringp path)
 	(tinypath-verbose-macro 7
 	  (message "TinyPath: Adding to `woman-manpath' %s" path))
-	(pushnew path woman-manpath :test 'string=)))))
+	(cl-pushnew path woman-manpath :test 'string=)))))
 
 ;;; ----------------------------------------------------------------------
 ;;;
@@ -6936,7 +6936,7 @@ Reference:
       (when (stringp path)
 	(tinypath-verbose-macro 7
 	  (message "TinyPath: Adding to `ff-search-directories' %s" path))
-	(pushnew path ff-search-directories :test 'string=)))))
+	(cl-pushnew path ff-search-directories :test 'string=)))))
 
 ;;; ----------------------------------------------------------------------
 ;;;
@@ -6958,7 +6958,7 @@ Reference:
 	   ;;  `pushnew' calls.
 	   (not (equal previous found))
 	   (setq previous found)
-	   (pushnew found list :test 'string=)))
+	   (cl-pushnew found list :test 'string=)))
     list))
 
 ;;; ----------------------------------------------------------------------
@@ -7046,7 +7046,7 @@ any N.N version."
       (tinypath-verbose-macro 1
 	(message "TinyPath: One Gnus found along `load-path' %s"
 		 (car list)))
-      (pushnew (car list) load-path :test 'string=)
+      (cl-pushnew (car list) load-path :test 'string=)
       list)
      (t
       ;; Latest gnus version is first in the returned list, drop it out

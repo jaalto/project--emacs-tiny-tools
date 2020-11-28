@@ -51,10 +51,10 @@
 ;;  To add more mailbox files for the mode, use code like:
 ;;
 ;;      (require 'cl)
-;;      (pushnew '("\\.spool\\'" . turn-on-tinymailbox-mode-maybe)
+;;      (cl-pushnew '("\\.spool\\'" . turn-on-tinymailbox-mode-maybe)
 ;;               auto-mode-alist
 ;;               :test 'equal)
-;;      (pushnew '("\\.mbo?x\\'" . turn-on-tinymailbox-mode-maybe)
+;;      (cl-pushnew '("\\.mbo?x\\'" . turn-on-tinymailbox-mode-maybe)
 ;;               auto-mode-alist
 ;;               :test 'equal)
 
