@@ -1,3 +1,12 @@
+2020-11-28 Sat  Jari Aalto  <jari.aalto@tuni.fi>
+
+	* tiny/tinyreplace.el (tinyreplace-install-default-keybings):
+	  Accept KEY parameter. In new Emacs M-& is `async-shell-command'
+	  (tinyreplace--default-key): New.
+	  (tinyreplace-install): Do not call
+	  `tinyreplace-install-default-keybings'
+	  (tinyreplace-define-keys-local-map): Use `tinyreplace--default-key'
+
 2019-05-25 Sat  Jari Aalto  <jari.aalto@cante.net>
 
 	* tiny/tinyigrep.el (tinyigrep-install-default-databases):
