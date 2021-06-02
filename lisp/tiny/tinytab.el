@@ -250,11 +250,12 @@ Mode description:
     ["Mode off"                      turn-off-tinytab-mode               t])
    (progn
      ;; ... ... ... ... ... ... ... ... ... ... ... ... ...  non-X keys . .
-     (define-key   root-map "\t"         'tinytab-tab-key)
-     (define-key   root-map "\e\t"       'tinytab-tab-del-key)
-     (define-key   root-map "\C-c\t"     'tinytab-indent-region-dynamically)
-     (define-key   root-map (kbd "C-c <tab>") 'tinytab-indent-region-dynamically)
-     ;; (define-key   root-map "\C-c\C-m"   'tinytab-return-key-mode)
+     (define-key root-map "\t" 'tinytab-tab-key)
+     (define-key root-map "\e\t" 'tinytab-tab-del-key)
+     (define-key root-map (kbd "ESC <tab>") 'tinytab-tab-del-key)
+     (define-key root-map "\C-c\t" 'tinytab-indent-region-dynamically)
+     (define-key root-map (kbd "C-c <tab>") 'tinytab-indent-region-dynamically)
+     ;; (define-key   root-map "\C-c\C-m" 'tinytab-return-key-mode)
      ;; ........................................................ X-keys ...
      ;;  Standard key
      (define-key root-map (kbd "<S-tab>")        'tinytab-tab-del-key)
