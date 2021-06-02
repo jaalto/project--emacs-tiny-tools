@@ -253,7 +253,7 @@ Mode description:
      (define-key   root-map "\t"         'tinytab-tab-key)
      (define-key   root-map "\e\t"       'tinytab-tab-del-key)
      (define-key   root-map "\C-c\t"     'tinytab-indent-region-dynamically)
-     ;; message-mode uses This key prefix for PGP commands
+     (define-key   root-map (kbd "C-c <tab>") 'tinytab-indent-region-dynamically)
      ;; (define-key   root-map "\C-c\C-m"   'tinytab-return-key-mode)
      ;; ........................................................ X-keys ...
      ;;  Standard key
