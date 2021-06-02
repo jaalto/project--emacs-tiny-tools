@@ -2,12 +2,10 @@
 
 ;; This file is not part of Emacs
 
-;; Copyright (C)    1995-2019 Jari Aalto
+;; Copyright (C)    1995-2021 Jari Aalto
 ;; Keywords:        tools
 ;; Author:          Jari Aalto
 ;; Maintainer:      Jari Aalto
-;;
-;; Look at the code with folding.el.
 
 ;; COPYIGHT NOTICE
 ;;
