@@ -2,8 +2,6 @@
 
 ;; This file is not part of Emacs
 
-;;{{{ Id
-
 ;; Copyright (C)    1995-2019 Jari Aalto
 ;; Keywords:        tools
 ;; Author:          Jari Aalto
@@ -27,9 +25,6 @@
 ;; along with this program. If not, see <http://www.gnu.org/licenses/>.
 ;;
 ;; Visit <http://www.gnu.org/copyleft/gpl.html> for more information
-
-;;}}}
-;;{{{ Install
 
 ;; ....................................................... &t-install ...
 ;;   Put this file on your Emacs-Lisp `load-path', add following into your
@@ -55,10 +50,6 @@
 ;;      (defun my-tinytab-keys ()
 ;;        "My tinytab key additions, override settings."
 ;;        ... code here ...)
-
-;;}}}
-
-;;{{{ Documentation
 
 ;; ..................................................... &t-commentary ...
 
@@ -199,8 +190,6 @@
 ;;
 ;;      what line prefixes are "copied" along with the indented spaces.
 
-;;}}}
-
 ;;; Change Log:
 
 ;;; Code:
@@ -208,8 +197,6 @@
 (eval-when-compile
   (require 'cl)
   (require 'cl-lib))
-
-;;{{{ setup: mode
 
 ;;;###autoload (autoload 'tinytab-mode                  "tinytab" "" t)
 ;;;###autoload (autoload 'turn-on-tinytab-mode          "tinytab" "" t)
@@ -282,9 +269,6 @@ Mode description:
      (define-key root-map [(shift kp-tab)]       'tinytab-tab-del-key)
      (define-key root-map [(shift iso-lefttab)]  'tinytab-tab-del-key))))
 
-;;}}}
-;;{{{ setup: hooks
-
 (defcustom tinytab--load-hook nil
   "*Hook that is run when package is loaded."
   :type  'hook
@@ -311,9 +295,6 @@ If any of these functions return non-nil, it is assumed,
 that the tab handling was performed."
   :type  'hook
   :group 'TinyTab)
-
-;;}}}
-;;{{{ setup: public, user configurable
 
 ;;   Simple name is enough. Think this as "Tab +" or "extended tab" -mode
 ;;
@@ -380,30 +361,18 @@ See function `tinytab-return-key-mode' to turn on this auto-indent feature."
   :type  'string
   :group 'TinyTab)
 
-;;}}}
-;;{{{ setup: private
-
 (defvar tinytab--width 4
   "Current tab division.")
 
-;;}}}
-;;{{{ extra functions
-
-;;; ----------------------------------------------------------------------
-;;;
 (defsubst tinytab-activate-region (beg end)
   "Activate region which was previously selected.")
   ;;  #todo:
 
-;;; ----------------------------------------------------------------------
-;;;
 (defmacro tinytab-message (&rest body)
   "Run BODY if `tinytab--verbose' is non nil."
   `(when tinytab--verbose
      (message ,@body)))
 
-;;; ----------------------------------------------------------------------
-;;;
 (defsubst tinytab-region-bounds (&optional beg end)
   "Set variables BEG and END if region is active.
 Otherwise use current line's end points."
@@ -419,16 +388,12 @@ Otherwise use current line's end points."
       ;; Interactive call. Single line
       nil)))
 
-;;; ----------------------------------------------------------------------
-;;;
 (defsubst tinytab-width ()
   "Return TAB advance."
   (if (not (integerp tinytab--width))
       (setq tinytab--width 4))
   tinytab--width)
 
-;;; ----------------------------------------------------------------------
-;;;
 (defun tinytab-indent-by-tab-width (&optional beg end back)
   "Indent region BEG END by current tab division.
 Optional BACK indents backward. If BEG is nil and region is active,
@@ -446,9 +411,7 @@ determine BEG and END."
         (indent-rigidly b e div)
         (tinytab-activate-region b e)))))
 
-;;; ----------------------------------------------------------------------
 ;;; - So that you can bind this to fast key
-;;;
 (defun tinytab-indent-by-tab-width-back (&optional beg end)
   "Just shortcut to `tinytab-indent-by-tab-width'. Indent BEG END backward.
 If BEG and END are nil, indent current line. (interactive call on current line)
@@ -458,8 +421,6 @@ If region is active, use that. (interactive + region selected)."
       (tinytab-region-bounds beg end)
     (tinytab-indent-by-tab-width b e 'back)))
 
-;;; ----------------------------------------------------------------------
-;;;
 (defun tinytab-bol-forward-del ()
   "If at beginning of line, delete `tinytab--width' spaces to the right."
   (interactive)
@@ -491,8 +452,6 @@ If region is active, use that. (interactive + region selected)."
        (tinytab--verbose
         (message "TinyTab: Cannot delete %d spaces" width))))))
 
-;;; ----------------------------------------------------------------------
-;;;
 (defun tinytab-tab-mode-control ()
   "If `mode-name' in in the list `tinytab--mode-table', call mode's tab key.
 But only if
@@ -523,11 +482,9 @@ This way you can partly mix e.g. C++ mode and this minor mode."
           nil
         t))))
 
-;;; ----------------------------------------------------------------------
 ;;; - For a little more smarter TAB key to line up { } braces
 ;;;   in variaous programming modes I made this. It's simple,
 ;;;   but suffices for most common needs.
-;;;
 (defun tinytab-tab-brace-control ()
   "When hitting TAB, line up {} braces, otherwise do nothing special.
 Remember that opening brace, the {, follows previous line's indentation
@@ -603,10 +560,6 @@ Return:
         (forward-char -1))))
     ret))
 
-;;}}}
-;;{{{ code: return key
-
-;;; ----------------------------------------------------------------------
 ;;; Replaces the RET key
 ;;; The arg is just due to: (newline &optional ARG1)
 ;;;
@@ -656,11 +609,6 @@ If optional ARG is given, behave exactly like 'newline' function."
           (newline)
           (insert str)))))))
 
-;;}}}
-;;{{{ code: tab
-
-;;; ----------------------------------------------------------------------
-;;;
 (defun tinytab-set-mode-name ()
   "Set mode name according to tab count in effect."
   (interactive)
@@ -670,8 +618,6 @@ If optional ARG is given, behave exactly like 'newline' function."
     (if (fboundp 'force-mode-line-update)
         (force-mode-line-update))))
 
-;;; ----------------------------------------------------------------------
-;;;
 (defun tinytab-change-tab-width ()
   "Toggle tab width according to `tinytab--width-table'."
   (interactive)
@@ -694,8 +640,6 @@ If optional ARG is given, behave exactly like 'newline' function."
     (if verb                            ;this does no harm....
         (message "TinyTab: Tab factor is now %d" val))))
 
-;;; ----------------------------------------------------------------------
-;;;
 (defun tinytab-tab-backward-del ()
   "Move Tab backward.
 Delete whitespace if all characters preceding the point are white spaces
@@ -769,8 +713,6 @@ References:
         (tinytab-message "Tinytab: Deleted")))
     (setq MARK nil)))                   ;kill the marker
 
-;;; ----------------------------------------------------------------------
-;;;
 (defun tinytab-tab-backward ()
   "Logical tab movement backward, until reach beginning of line."
   (interactive)
@@ -782,8 +724,6 @@ References:
     (if (looking-at "[ \t]+$")
         (tinytab-message "TinyTab: Moved."))))
 
-;;; ----------------------------------------------------------------------
-;;;
 (defun tinytab-tab-forward-insert ()
   "Move tab forward, insert spaces or tabs, see variable `indent-tabs-mode'.
 
@@ -819,12 +759,9 @@ References:
       (goto-char (if eob
                      (line-end-position)
                    (1- (marker-position MARK))))
-
       (setq MARK nil))                  ;kill it
     t))                                 ;we handled this
 
-;;; ----------------------------------------------------------------------
-;;;
 (defun tinytab-tab-forward ()
   "Step logical tab forward. Does not insert anything. Stops at EOL.
 Tabs are converted to spaces when needed; because you can't step inside
@@ -844,8 +781,6 @@ Tabs are converted to spaces when needed; because you can't step inside
       (if (looking-at "[ \t]+$")
           (tinytab-message "Tinytab: Moved."))))))
 
-;;; ----------------------------------------------------------------------
-;;;
 (defun tinytab-tab-key-insert ()
   "Run all functions in `tinytab--tab-insert-hook' until success."
   ;;  We could use this instead:
@@ -859,8 +794,6 @@ Tabs are converted to spaces when needed; because you can't step inside
       (tinytab-message "TinyTab: %s" (symbol-name function))
       (return))))
 
-;;; ----------------------------------------------------------------------
-;;;
 ;;;###autoload
 (defun tinytab-tab-key (&optional beg end)
   "Run list of function to handle TAB key. See variable `tinytab--tab-insert-hook'.
@@ -886,8 +819,6 @@ If region is active and BEG and END are nil, then call function
         (add-hook    'tinytab--tab-insert-hook 'tab-to-tab-stop 'append))
       (tinytab-tab-key-insert)))))
 
-;;; ----------------------------------------------------------------------
-;;;
 ;;;###autoload
 (defun tinytab-tab-del-key (&optional beg end)
   "Remove indentation. See variable `tinytab--tab-delete-hook'.
@@ -901,22 +832,16 @@ If region is active, indent all lines backward."
    (t
     (run-hook-with-args-until-success 'tinytab--tab-delete-hook))))
 
-;;; ----------------------------------------------------------------------
-;;;
 ;;;###autoload
 (defun turn-on-tinytab-return-key-mode ()
   "Turn on auto indent after RET key."
   (tinytab-return-key-mode 1 (called-interactively-p 'interactive)))
 
-;;; ----------------------------------------------------------------------
-;;;
 ;;;###autoload
 (defun turn-off-tinytab-return-key-mode ()
   "Turn on auto indent after RET key."
   (tinytab-return-key-mode 1 (called-interactively-p 'interactive)))
 
-;;; ----------------------------------------------------------------------
-;;;
 ;;;###autoload
 (defun tinytab-return-key-mode (&optional mode verb)
   "Toggle auto indent MODE / regular newline mode. VERB."
@@ -954,8 +879,6 @@ If region is active, indent all lines backward."
                    "off")))
     to))
 
-;;; ----------------------------------------------------------------------
-;;;
 (defun tinytab-indent-region-dynamically (beg end)
   "Move region BEG END until exit key is pressed.
 For ey setup, see `tinytab--indent-region-key-list'. The default keys  are:
@@ -992,8 +915,6 @@ LEFT   RIGHT
         (setq count 4)))
       (if count
           (indent-rigidly (region-beginning) (region-end) count)))))
-
-;;}}}
 
 (add-hook 'tinytab--mode-define-keys-hook 'tinytab-mode-define-keys)
 
