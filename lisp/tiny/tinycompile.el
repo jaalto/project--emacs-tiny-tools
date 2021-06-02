@@ -46,6 +46,7 @@
 ;;       (autoload 'tinycompile-mode            "tinycompile" "" t)
 ;;       (autoload 'turn-on-tinycompile-mode    "tinycompile" "" t)
 ;;       (add-hook 'compilation-mode-hook 'turn-on-tinycompile-mode 'append)
+;;       (add-hook 'grep-mode-hook 'turn-on-tinycompile-mode 'append)
 ;;
 ;; If you find any incorrect behavior, please immediately
 ;;

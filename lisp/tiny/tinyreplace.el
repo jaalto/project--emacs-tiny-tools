@@ -46,7 +46,9 @@
 ;;
 ;; Or you can load this file directly:
 ;;
-;;      (add-hook 'tinyreplace-load-hook 'tinyreplace-install)       ;; M-& key
+;;      (add-hook 'tinyreplace-load-hook 'tinyreplace-install)
+;;      ;; M-& key calls replace
+;;      (add-hook 'tinyreplace-load-hook 'tinyreplace-install-default-keybings)
 ;;      (require 'tinyreplace)
 ;;
 ;; Check that you have colors on, otherwise the replaced region may
@@ -262,6 +264,11 @@
   :type 'boolean
   :group 'TinyReplace)
 
+(defcustom tinyreplace--default-key (kbd "M-&")
+  "If non-nil go to beginning of region before replace starts."
+  :type 'string
+  :group 'TinyReplace)
+
 (defcustom tinyreplace--exclude-line  nil
   "*When search stops to found position, this variable is consulted.
 
@@ -461,31 +468,33 @@ Special commands:
 ;;{{{ install
 
 ;;; ----------------------------------------------------------------------
-;;;###autoload
-(defun tinyreplace-install-default-keybings ()
-  "Install M-& default keybing."
-  (interactive)
-  (let* ((key "\M-&")
-	 (def (lookup-key global-map key)))
-    (when (featurep 'compile)
-      (let (buffer (get-buffer "*compilation*"))
-	(when buffer
-	  (with-current-buffer buffer
-	    (tinyreplace-define-keys-local-map)))))
-    (when (featurep 'grep)
-      (let (buffer (get-buffer "*grep*"))
-	(when buffer
-	  (with-current-buffer buffer
-	    (tinyreplace-define-keys-local-map)))))
-    (global-set-key "\M-&" 'tinyreplace-menu)))
-
-;;; ----------------------------------------------------------------------
 ;;;
 ;;;###autoload
 (defun tinyreplace-define-keys-local-map ()
-  "Define key binding M-& in local map. For compilation like modes."
+  "Define key binding in local compile and grep buffers.
+See `tinyreplace--default-key'."
   (interactive)
-  (local-set-key "\M-&" 'tinyreplace-replace-over-files-compile-buffer))
+  (local-set-key tinyreplace--default-key
+		 'tinyreplace-replace-over-files-compile-buffer))
+
+;;; ----------------------------------------------------------------------
+;;;###autoload
+(defun tinyreplace-install-default-keybings (&optional key)
+  "Install optional KEY or `tinyreplace--default-key'."
+  (interactive)
+  (or key
+      (setq key tinyreplace--default-key))
+  (let ((def (lookup-key global-map key))
+	buffer)
+    (when (and (featurep 'compile)
+	       (setq buffer (get-buffer "*compilation*")))
+      (with-current-buffer buffer
+	(tinyreplace-define-keys-local-map)))
+    (when (and (featurep 'grep)
+	       (setq buffer (get-buffer "*grep*")))
+      (with-current-buffer buffer
+	(tinyreplace-define-keys-local-map)))
+    (global-set-key key 'tinyreplace-menu)))
 
 ;;; ----------------------------------------------------------------------
 ;;;
@@ -510,9 +519,8 @@ See:
 ;;; ----------------------------------------------------------------------
 ;;;###autoload
 (defun tinyreplace-install ()
-  "Call `tinyreplace-install-default-keybings' and `tinyreplace-install-hooks'."
+  "Call `tinyreplace-install-hooks'."
   (interactive)
-  (tinyreplace-install-default-keybings)
   (tinyreplace-install-hooks))
 
 ;;}}}

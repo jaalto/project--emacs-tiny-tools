@@ -2687,7 +2687,7 @@ Return:
                           (tinymail-complete-list-bbdb mode data)
                           (tinymail-complete-list-passwd mode data)))
           (dolist (address results)
-            (pushnew address matches :test 'string=)))
+            (cl-pushnew address matches :test 'string=)))
         ;; ............................................... any matches ...
         ;;  How many matches?
         (cond
@@ -2979,7 +2979,7 @@ Input:
               ;;  Previously used `pushnew' to to remove duplicates.
               ;;  push is faster. See `tinymail-complete-everything'
               ;;
-              ;;  (pushnew elt list :test 'string=)
+              ;;  (cl-pushnew elt list :test 'string=)
               (push elt list)))
           (forward-line 1))))
     (if tinymail--debug
@@ -3103,7 +3103,7 @@ Input:
                                  (string-match (regexp-quote (nth 1 tmp)) net))
                             net
                           (format "%s <%s>" name net))))
-                (pushnew completion list :test 'string=)))) ;; When-end
+                (cl-pushnew completion list :test 'string=)))) ;; When-end
           (setq record nil)))
        bbdb-hashtable)
       (tinymail-debug fid 'RETURN-COMPLETIONS list)
@@ -3862,7 +3862,7 @@ TinyMail: tinymail-report-mail-install: 'reportmail feature found, install ignor
       (setq frame-title-format (ti::list-make frame-title-format))
       (if uninstall
           (delete 'tinymail--report-mail-info-string frame-title-format)
-        (pushnew 'tinymail--report-mail-info-string
+        (cl-pushnew 'tinymail--report-mail-info-string
                  frame-title-format
                  :test 'equal)))
     ;; Delete old timer

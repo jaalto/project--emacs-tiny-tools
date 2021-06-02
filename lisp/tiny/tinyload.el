@@ -200,7 +200,7 @@
 ;;          ;; $HOME/.emacs -- Emacs startup controller
 ;;
 ;;          (require 'cl)   ;; Tell location of startup files
-;;          (pushnew "~/elisp/rc" load-path :test 'string=)
+;;          (cl-pushnew "~/elisp/rc" load-path :test 'string=)
 ;;
 ;;          (require 'emacs-rc-path)
 ;;          (require 'emacs-rc-bup)
@@ -237,7 +237,7 @@
 ;;          ;; $HOME/.emacs -- Emacs startup controller
 ;;
 ;;          (require 'cl)   ;; Tell location of startup files
-;;          (pushnew "~/elisp/rc" load-path :test 'string=)
+;;          (cl-pushnew "~/elisp/rc" load-path :test 'string=)
 ;;
 ;;          ;; Have these minimum features immediately available
 ;;

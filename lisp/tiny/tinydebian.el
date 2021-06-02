@@ -127,7 +127,7 @@
 (eval-when-compile
   (require 'cl))
 
-(defconst tinydebian--version-time "2019.0525.1321"
+(defconst tinydebian--version-time "2020.1128.1155"
   "Last edited time.")
 
 (require 'tinylibm)
@@ -7378,7 +7378,7 @@ Return string. Something like:
                   (tinydebian-bug-system-info-apt-cache-policy-parse-release
                    elt "a"))))
         (when release
-          (pushnew (list priority release) list :test 'equal))))
+          (cl-pushnew (list priority release) list :test 'equal))))
     list))
 
 ;;; ----------------------------------------------------------------------

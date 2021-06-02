@@ -1944,7 +1944,7 @@ Return:
               stat (nth 1 stat))
         ;;  Try to find also gzipped files
         (push file file-list)
-        (pushnew (concat file ".gz") file-list :test 'string=)
+        (cl-pushnew (concat file ".gz") file-list :test 'string=)
         (if (string-match "/" file)
             (push (file-name-nondirectory file)  file-list))))
     ;;  Preserve the order. Try to find the original file first.
