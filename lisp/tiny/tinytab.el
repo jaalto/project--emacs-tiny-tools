@@ -254,6 +254,7 @@ Mode description:
      (define-key root-map "\e\t" 'tinytab-tab-del-key)
      (define-key root-map (kbd "ESC <tab>") 'tinytab-tab-del-key)
      (define-key root-map "\C-c\t" 'tinytab-indent-region-dynamically)
+     (define-key root-map (kbd "C-c TAB") 'tinytab-indent-region-dynamically)
      (define-key root-map (kbd "C-c <tab>") 'tinytab-indent-region-dynamically)
      ;; (define-key   root-map "\C-c\C-m" 'tinytab-return-key-mode)
      ;; ........................................................ X-keys ...
