@@ -74,7 +74,7 @@
 
 (provide 'tinyliba)
 
-(defconst tinyliba-version-time "2019.0524.1812"
+(defconst tinyliba-version-time "2022.0102.2119"
   "Latest version number as last modified time.")
 
 (autoload 'with-timeout      "timer"        "" nil 'macro)
@@ -82,6 +82,7 @@
 (autoload 'executable-find   "executable")
 
 (eval-and-compile ;; This function must be visible at load time
+  (when nil ;; obsolete 2022-01-02
   (defun ti::tmp-cl-library-check ()
     "Check that cl.el library is correct and force loading if not.
 This function is run only once at tinynyliba.el load."
@@ -137,12 +138,12 @@ This function is run only once at tinynyliba.el load."
       (if (and pkg mode)
           (let ((func 'tinypath-cache-mode))
             (if (fboundp func)
-                (funcall func 1)))))))
+                (funcall func 1))))))))
 
 ;; (eval-and-compile
 ;;   ;;  TODO: Probably should be gone by now.
-;;   ;;  Long story short: At a time Emacs shipped with crippled cl.el
-;;   ;;  library which broke everything. This check was necessary to
+;;   ;;  Long story short: At a time Emacs shipped with broken cl.el
+;;   ;;  library. This check was necessary to
 ;;   ;;  regain sane environment.
 ;;   (unless (fboundp 'return)  ;; CL is not loaded yet
 ;;     (autoload 'return "cl-macs" nil nil 'macro)
