@@ -2879,7 +2879,7 @@ Caveats:
   if it's sitting at whitespace, when using 'this modes.
   Try yourself with `forward-word' command.
 
-  REMEMBER THAT WORD IS MODE DEPENDENT (syntax tables)
+  REMEMBER THAT WORD IS MODE DEPENDENT (see Emacs syntax tables)
 
 Return:
 
@@ -2895,9 +2895,14 @@ Return:
     (save-excursion
       ;; ... ... ... ... ... ... ... ... ... ... ... ... ...  set limits ...
       (if (memq mode '(end nil))        ;starting position
-          (if back (line-end-position) (line-beginning-position)))
+	  (goto-char
+           (if back
+	       (line-end-position)
+	     (line-beginning-position))))
       (if (memq mode '(end thisEnd))    ;setting the limit value
-          (setq limit (if back (line-beginning-position) (line-end-position))))
+          (setq limit (if back
+			  (line-beginning-position)
+			(line-end-position))))
       (if (eq 0 count)
           ;; Skip over spaces, stay put ...
           (if (ti::char-in-list-case (following-char) '(?\t ?\ ))

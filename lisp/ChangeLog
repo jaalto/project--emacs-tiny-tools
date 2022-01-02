@@ -1,3 +1,12 @@
+2022-01-02 Sun  Jari Aalto  <jari.aalto@tuni.fi>
+
+	* tiny/tinyliba.el
+	(ti::tmp-cl-library-check): disable. Obsoleted.
+
+	* tiny/tinylib.el (ti::buffer-read-nth-word): byte compile fix:
+	unused functions. Use goto-char to select beginning position
+	according to MODE.
+
 2020-11-28 Sat  Jari Aalto  <jari.aalto@tuni.fi>
 
 	* tiny/*: Replace `pushnew' with `cl-pushnew'.
