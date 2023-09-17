@@ -199,10 +199,10 @@ and the normal `indent-for-comment' is used."
 
 (defcustom tinycomment--comment-notify nil
   "*If non-nil allow printing notify messages.
-When the comment syntax wasn't found according to file name.
-The message is _not_ displayed when `buffer-name' contains '*'.
+When the comment syntax was not found according to file name.
+The message is not displayed when `buffer-name' contains '*'.
 
-You may want to set this to 't for awhile, so that you can add all
+You may want to set this to `t' for awhile, so that you can add all
 those files that are missing from the list. When you're satisfied,
 you can turn off the warning."
   :type 'boolean
@@ -212,12 +212,12 @@ you can turn off the warning."
   "*Default comment position for empty lines.
 Possible choices are:
 
-  'code            code level indent [usually as previous code line]
-  'cpos            normal `comment-column'
+  \\='code            code level indent [usually as previous code line]
+  \\='cpos            normal `comment-column'
 
-Note that 'cpos doesn't always put comment where you would expect, because
-it looks back until it finds code. In spite of that, it normally works
-well _inside_ functions"
+Note that etting value to \\='cpos does not always put comment
+where you would expect, because it looks back until it finds
+code. In spite of that, it normally works well inside functions."
   :type  '(choice
            (const code)
            (const cpos))
@@ -244,9 +244,9 @@ comment is at the end. This variable determines how such
 line is handled when you now hit M-;
 
 Current choices are:
-    'tab      Insert tab between code and comment, so that they get
+    \\='tab      Insert tab between code and comment, so that they get
               separated. Any previous whitespace is deleted.
-    'spc      Same, but insert space instead. The number or spaces inserted
+    \\='spc      Same, but insert space instead. The number or spaces inserted
               is told in variable  `tinycomment--comment-extra-arg'
 
 None of these actions are carried out if the comment was placed in
@@ -437,12 +437,12 @@ Eg.
    <now press ESC ;> # inserts comment here
 
 The problem is that the first comment is considered as indent
-for code by normal Lisp functions, when it should be the 'echo' line.
-We look upward till there is code line that isn't full comment line.
+for code by normal Lisp functions, when it should be the `echo' line.
+We look upward till there is code line that is not full comment line.
 
 NOTE:
 
-  This doesn't work on C/C++, or any mode that has `comment-end',
+  This does not work on C/C++, or any mode that has `comment-end',
   because we can't keep track of multiline comments.
 
 Return:
@@ -583,22 +583,23 @@ These are the known comment classes:
 Suggested usage: while writing your code, trigger this command repeatedly
 until you are satisfied with the comment.
 
-Comment on it's own line note:
+Comment on its own line note:
 
-- Following lines has two comment chars '#', I call it double commented line.
+- Following lines has two comment chars `#', I call it double commented line.
               # comment text # more text
               # set myVariable = 100;      # temporarily commented
-  Because It's hard to know if the line is 'full comment' as in case 1, or
-  has 'code temporarily commented out' as line 2, we always consider
-  line as 'full comment' if line starts with `comment-start'.
+  Because it is hard to know if the line is `full comment' as in case 1, or
+  has \\='code temporarily commented out' as line 2, we always consider
+  line as `full comment' if line starts with `comment-start'.
+
 - In this case whole line moves when converting to classes.
 
 Code note:
 
--  `tinycomment-set-com' is used instead of standard `indent-for-comment'.
+- `tinycomment-set-com' is used instead of standard `indent-for-comment'.
 -  Considered adding 4th choice: indent like previous comment,
    but I decided 4th choice or 4 taps was too much...3 seemed ideal,
-   so I left it out from 'full comment line'."
+   so I left it out from `full comment line'."
   (let* ((def-place tinycomment--def-com-pos)
          (tab-alist tinycomment--tab-call-no-alist)
          (ci        (current-indentation))
