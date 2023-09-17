@@ -3497,7 +3497,7 @@ References:
               (when (re-search-forward re nil t)
                 (setq buffer (current-buffer))
                 (setq point  (line-beginning-position))
-                (return))))))
+                (cl-return))))))
        ;; ....................................................... other ...
        (point ;; point is set
         (when save
@@ -4571,7 +4571,7 @@ NOTE
 ;;; (defun describe-symbol-find-file (symbol)
 ;;;  (loop for (file . load-data) in load-history
 ;;;    do (when (memq symbol load-data)
-;;;      (return file))))
+;;;      (cl-return file))))
 ;;;
 (defun tinylisp-library-find-symbol-load-info ()
   "Try to look up load history to determine from where functions was defined.
@@ -4788,7 +4788,7 @@ Dot-dirs and version control directories are filtered out."
 	(dolist (ext '("" ".gz" ".bz2" ".lzma"))
 	  (setq try (concat path ext))
 	  (if (file-exists-p try)
-	      (return (setq path try))))))
+	      (cl-return (setq path try))))))
      ((not (string-match "\\.el$" path))
       (setq path (concat path ".el"))))
     (ti::use-file-compression-maybe path)

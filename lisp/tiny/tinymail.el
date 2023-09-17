@@ -2770,7 +2770,7 @@ Return:
                (t
                 (funcall func data)))
           (setq ret t)
-          (return)))
+          (cl-return)))
       ret)))
 
 ;;; ----------------------------------------------------------------------
@@ -2963,15 +2963,15 @@ Input:
                                (setq elt (cdr elt))
                                (when (and (stringp elt)
                                           (string-match regexp elt))
-                                 (return t))))
+                                 (cl-return t))))
                             ((and (listp str)
                                   (stringp (car-safe str)))
                              (dolist (s str)
                                (when (string-match regexp s)
-                                 (return t))))))
+                                 (cl-return t))))))
                   (if tinymail--debug
                       (tinymail-debug fid 'MATCH regexp func str))
-                  (return))))
+                  (cl-return))))
             ;; .................................... make completions ...
             (dolist (elt (inline
                            (tinymail-bbdb-record-net-completions
@@ -3058,7 +3058,7 @@ Input:
                                  (string-match  regexp item))
                         (tinymail-debug fid 'ANYTHING regexp elt)
                         (setq max (1+ max))
-                        (return))))))))
+                        (cl-return))))))))
           ;; ..................................... make completions ...
           (when (and record
                      name
@@ -3252,7 +3252,7 @@ INFO is '(string beg end) of the completion word"
            (dolist (completion complete-list)
              (when (string-match " " completion)
                (setq multi-word t)
-               (return)))
+               (cl-return)))
            ;; ....................................... completion-list ...
            (cond
             ((null complete-list)
@@ -3547,7 +3547,7 @@ functions. Each function is passed the word info at point: '(BEG END STRING)."
                (t
                 (funcall func string)))
           (setq ret t)
-          (return)))
+          (cl-return)))
       (tinymail-debug fid fid 'RET ret)
       ret)))
 
@@ -3966,7 +3966,7 @@ E.g. in XEmacs you can use package reportmail.el."
                 (unless ret
                   (tinymail-debug fid 'point (point) 'LOOP-SELECT elt )
                   (setq ret (cdr elt)))
-                (return)))
+                (cl-return)))
             ret))
     ;; ............................................... guess mail type ...
     ;; If not yet set, look at message and decide right postfix
@@ -4179,7 +4179,7 @@ Return:
                   folder (nth 1 elt))
             (when (re-search-forward re hmax t)
               (setq ret folder)
-              (return)))))
+              (cl-return)))))
       (if (and (stringp ret)
                (string-match "gz$\\|Z$" ret))
           (ti::use-file-compression))

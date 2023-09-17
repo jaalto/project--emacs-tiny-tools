@@ -1012,7 +1012,7 @@ Return:
         (when (string-match re string)
           (setq ret (tinytag-search-db string db))
           (tinytag-debug fid " MATCH" "re" re "str" string "ret" ret"\n")
-          (return))))
+          (cl-return))))
     ret))
 
 ;;}}}

@@ -1373,7 +1373,7 @@ The TABLE is modified in place."
      ((listp browse-url-browser-function)
       (dolist (elt browse-url-browser-function)
         (when (string-match "netscape" (symbol-name (cdr-safe elt)))
-          (return (cdr elt))))))))
+          (cl-return (cdr elt))))))))
 
 ;;; ----------------------------------------------------------------------
 ;;;
@@ -1486,7 +1486,7 @@ URL defaults to http"
       ;; and apply the function (which might be a lambda).
       (dolist (elt browse-url-browser-function)
         (when (string-match (car elt) (or url "http"))
-          (return (cdr elt)))))))
+          (cl-return (cdr elt)))))))
 
 ;;; ----------------------------------------------------------------------
 ;;;

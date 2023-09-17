@@ -508,7 +508,7 @@ Input:
                           seek-option)
             (when (ti::re-search-check seek-option)
               (setq gnu path)
-              (return))))
+              (cl-return))))
         (if gnu
             (setq ret gnu)
           (message "TinyDiff: Hm, no GNU %s, but using it anyway" default)
@@ -596,7 +596,7 @@ it excludes the rcs tags from diff."
                       "c:/windows/temp"))
           (when (and (stringp dir)
                      (file-directory-p dir))
-            (return (concat (file-name-as-directory dir) file)))))
+            (cl-return (concat (file-name-as-directory dir) file)))))
       (error "TinyDiff: Please set tinydiff--diff-tmp-file"))
   "*Temporary file where the diff is stored for patching."
   :type  'file

@@ -1549,7 +1549,7 @@ Return:
         (if (not (string= elt version))
             (setq tmp elt)
           (setq ret tmp)
-          (return)))))
+          (cl-return)))))
     ret))
 
 ;;; ----------------------------------------------------------------------
@@ -2050,7 +2050,7 @@ Return:
       (if (and terminate (null str))
           (progn
             (setq ret nil)              ;that's it then...
-            (return))
+            (cl-return))
         (push str ret)))
     (nreverse ret)))
 
@@ -2306,7 +2306,7 @@ Return:
     (when (with-current-buffer buffer
             (and (eq major-mode 'dired-mode)
                  (string= dired-directory dir)))
-      (return buffer))))
+      (cl-return buffer))))
 
 ;;; ----------------------------------------------------------------------
 ;;;
@@ -3102,7 +3102,7 @@ Return:
 ;;;
 (defun ti::buffer-lf-to-crlf (&optional arg force)
   "Simple Unix to Dos converter. If ARG is non-nil -->  Dos to Unix.
-Strips or inserts ^M (return) marker _only_ at the end of line.
+Strips or inserts ^M (cl-return) marker _only_ at the end of line.
 
 If optional FORCE is given, ignores possible write protection.
 
@@ -4151,7 +4151,7 @@ in some other frame window than in the current frame."
       ;;  maybe in other frame...
       (when (setq win (get-buffer-window buffer frame))
         (setq ret (cons frame win))
-        (return)))
+        (cl-return)))
     ret))
 
 ;;; ----------------------------------------------------------------------
@@ -4661,7 +4661,7 @@ Return:
                ;; cannot set
                nil))
         ;; succesfull; stop the loop
-        (return)))
+        (cl-return)))
     status))
 
 ;;}}}
@@ -5630,7 +5630,7 @@ Unix path handling:
 	(setq try (w32-cygwin-path-to-dos try)))
     (when (and try
 	       (file-directory-p try))
-      (return try))))
+      (cl-return try))))
 
 ;;; ----------------------------------------------------------------------
 ;;;
@@ -5814,7 +5814,7 @@ Return:
           (if all-paths
               (push file found)
             (setq  found file)
-            (return)))))
+            (cl-return)))))
     (if (and found all-paths)           ;preserve order
         (setq found (nreverse found)))
     (if (and found verb)
@@ -7730,7 +7730,7 @@ otherwise `load-path' is conculted."
                           "^\\(.*xemacs[-\\/][0-9]+\\.[0-9.]*[0-9]\\)[\\/]"
                           1 path))))
         (setq ret (concat match "/lisp"))
-        (return)))
+        (cl-return)))
     ret))
 
 ;;; ----------------------------------------------------------------------
@@ -7937,7 +7937,7 @@ If mouse is not supported, return nil."
 	  (save-window-excursion
 	    (dolist (elt (window-list))
 	      (when (eq elt win)
-		(return))
+		(cl-return))
 	      (select-window elt)
 	      ;;  Modeline is not counted as +1
 	      (setq count (+ count (window-height)))))
@@ -8153,7 +8153,7 @@ Return:
             (when (and (vectorp arg)
                        (string= ret (elt arg 0)))
               (setq ret  (1- count))
-              (return))
+              (cl-return))
             (cl-incf count))))))
     ret))
 
@@ -8438,7 +8438,7 @@ Return:
                                          (prin1-to-string
                                           (get-elt elt (1+ pos))))))
               (setq ret (list elt (car timer)))
-              (return))))))
+              (cl-return))))))
     ret))
 
 ;;; ----------------------------------------------------------------------

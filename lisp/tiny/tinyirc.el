@@ -455,7 +455,7 @@ package load and when `tinyirc-pastebot-mode' is called."
                  "c:/"))
       (when (file-directory-p d)
         (setq dir d)
-        (return)))
+        (cl-return)))
     (unless dir
       (error (concat "TinyIrc: Can't find suitable directory. "
                      "Set `tinyirc--pastebot-send-file'.")))

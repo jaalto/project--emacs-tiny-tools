@@ -792,7 +792,7 @@ Tabs are converted to spaces when needed; because you can't step inside
   (dolist (function tinytab--tab-insert-hook)
     (when (funcall function)
       (tinytab-message "TinyTab: %s" (symbol-name function))
-      (return))))
+      (cl-return))))
 
 ;;;###autoload
 (defun tinytab-tab-key (&optional beg end)

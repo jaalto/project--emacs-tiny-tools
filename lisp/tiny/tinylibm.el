@@ -84,7 +84,7 @@
 
 (require 'tinylibb)                     ;Backward compatible functions
 
-(defconst tinylibm-version-time "2019.0524.1802"
+(defconst tinylibm-version-time "2023.0917.1002"
   "Latest version number.")
 
 ;;{{{ function tests
@@ -2315,7 +2315,7 @@ Examples:
 "
   (let ((ok (gensym "ok-"))
 	(buffer-name (gensym "buffer-name-"))
-	(return-list (gensym "return-list-")))
+	(cl-return-list (gensym "return-list-")))
     `(let (,ok
 	   ,buffer-name
 	   ,return-list)

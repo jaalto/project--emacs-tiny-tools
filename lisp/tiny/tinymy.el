@@ -1167,7 +1167,7 @@ Return '(file-name  point)."
       (when (dolist (re (list re5 re1 re2 re3 re4))
               (when (re-search-forward re nil t)
                 (tinymy-debug fid 'MATCH re 'LINE (ti::read-current-line) "\n")
-                (return t)))
+                (cl-return t)))
         (setq file  (match-string 2)
               com   (match-string 1)
               point (line-beginning-position))
@@ -2137,7 +2137,7 @@ Return:
   "Search match car of `tinymy--compile-table' against TYPE and return cdr."
   (dolist (elt tinymy--compile-table)
     (when (string-match (car elt) type)
-      (return (cdr elt)))))
+      (cl-return (cdr elt)))))
 
 ;;; ----------------------------------------------------------------------
 ;;;
@@ -2163,7 +2163,7 @@ Return:
       (cl-multiple-value-bind (cmd args)
           elt
         (when (executable-find cmd)
-          (return (format "%s %s %s"
+          (cl-return (format "%s %s %s"
                           cmd
                           (or args "")
                           (file-name-nondirectory

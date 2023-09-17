@@ -417,7 +417,7 @@ in the dired listing."
                  "~/tmp"
                  "~"))
     (when (file-directory-p dir)
-      (return dir)))
+      (cl-return dir)))
   "*Temporary directory where to store ange ftp files.
 This should be user's private directory, and _must_not_ not be
 /tmp,  because someone else may be running tinydired too and using
@@ -431,7 +431,7 @@ same filenames."
                  "~/tmp"
                  "~"))
     (when (file-directory-p dir)
-      (return dir)))
+      (cl-return dir)))
   "*Directory where to down load selected files in dired listing."
   :type  'directory
   :group 'Tinydired)

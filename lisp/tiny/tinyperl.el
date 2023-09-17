@@ -2407,7 +2407,7 @@ References:
                     try
                     nil
                     "\\.pod$"))
-          (return (setq correct try))))
+          (cl-return (setq correct try))))
       (unless correct
         (error "TinyPerl: Can't determine POD path %s [%s]" path perl))
       (tinyperl-debug fid "correct" correct)
@@ -3056,7 +3056,7 @@ Input:
                     elt)))
             (when (file-exists-p try)
             (setq file try)
-            (return)))))
+            (cl-return)))))
       (when (or (not file)
                 (not (file-exists-p file)))
         (error "TinyPerl: Cache error, %s does not exist" (car module)))

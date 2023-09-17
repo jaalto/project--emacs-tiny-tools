@@ -2514,11 +2514,11 @@ This function calls `tinytf-utility-programs-check' with 'force."
         (cond
          ((not (stringp re))            ;Stop there
           (setq ret (nth 1 elt))
-          (return))
+          (cl-return))
          ((looking-at re)               ;found match ?
           (setq ret (nth 1 elt))
           ;; Yes, stop there
-          (return)))))
+          (cl-return)))))
     ret))
 
 ;;; ----------------------------------------------------------------------
@@ -3083,7 +3083,7 @@ Return
               (delete-region beg end)
               (insert word)
               (setq end (point))
-              (return))))
+              (cl-return))))
         (unless end
           (skip-chars-forward word-skip))
         (skip-chars-forward " (){}<>,.;:!?\"\'\n\r\t\f")))))

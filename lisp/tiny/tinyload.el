@@ -816,7 +816,7 @@ The SEARCH item is checked with `equal' function."
       ;;  package feature noerr nomsg before after
       (setq picked (nth position elt))
       (when (equal picked search)
-        (return elt)))))
+        (cl-return elt)))))
 
 ;;; ----------------------------------------------------------------------
 ;;;

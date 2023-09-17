@@ -1117,7 +1117,7 @@ Return:
             (push (concat (file-name-as-directory path)
                           "*-rc-*el")
                   list)
-            (return)))))
+            (cl-return)))))
     (when list
       (tinyigrep-db-push-elt (list "lisp-rc-files" (list grep list))))))
 
@@ -1818,10 +1818,10 @@ PATTERN is new search patter and ARG-LIST is original argument list."
         (cond
          ((string-match "z2$" file)
           (setq prg "bzgrep")
-          (return))
+          (cl-return))
          ((string-match "gz$" file)
           (setq prg "zgrep")
-          (return))))
+          (cl-return))))
       prg)))
 
 ;;; ----------------------------------------------------------------------

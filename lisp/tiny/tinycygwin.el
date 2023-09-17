@@ -974,7 +974,7 @@ inserted in `message-mode' with \\[mml-attach-file]."
       (cl-multiple-value-bind (regexp subexp) elt
         (when (and (re-search-forward regexp nil t)
                    (setq version (match-string subexp)))
-          (return))))
+          (cl-return))))
     version))
 
 ;;; ----------------------------------------------------------------------
@@ -1024,7 +1024,7 @@ Possible values for variable MODE
           (when (setq version (tinycygwin-program-parse-version))
             (write-region (point-min) (point-max) file)
             (setq opt option)
-            (return))))
+            (cl-return))))
       (cond
        ((null version)
         (message "Couldn't read version information. Please insert manually."))
@@ -1090,7 +1090,7 @@ Return correct email address or nil."
                 (getenv "EMAIL")))
     (if (and (stringp try)
              (tinycygwin-user-mail-address-valid-p try))
-        (return try))))
+        (cl-return try))))
 
 ;;; ----------------------------------------------------------------------
 ;;;
@@ -1553,7 +1553,7 @@ is started. Here are few inportant Eamcs commands to help you:
   "Return Cygwin package documentation root directory"
   (dolist (dir list)
     (when (file-directory-p dir)
-      (return dir))))
+      (cl-return dir))))
 
 ;;; ----------------------------------------------------------------------
 ;;;
@@ -1765,7 +1765,7 @@ is started. Here are few inportant Eamcs commands to help you:
   "Check if REGEXP matched LIST of strings."
   (dolist (str list)
     (when (string-match regexp str)
-      (return str))))
+      (cl-return str))))
 
 ;;; ----------------------------------------------------------------------
 ;;;
@@ -2042,7 +2042,7 @@ References:
 	(setq list (directory-files path 'full regexp))
 	(when (and list (eq 1 (length list)))
 	  (setq ret (car list))
-	  (return))))
+	  (cl-return))))
     ret))
 
 ;;; ----------------------------------------------------------------------

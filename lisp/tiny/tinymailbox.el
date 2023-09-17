@@ -1019,7 +1019,7 @@ References:
      (dolist (elt to-list)
        (unless (dolist (eltc cc-list)
                  (if (string= elt eltc)
-                     (return t)))
+                     (cl-return t)))
          (push elt cc-list)))
      (if cc-list
          (setq cc (mapconcat 'concat cc-list ", ")))

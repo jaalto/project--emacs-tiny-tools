@@ -1126,7 +1126,7 @@ Prefix key to access the minor mode is defined in `tinygnus--group-mode-prefix-k
 (defmacro tinygnus-summary-map-articles-macro (&rest body)
   "Map through marked mesaes in Summary buffer and execute BODY.
 The variable `nbr' has the current article number. Use command
- (return) to stop the loop."
+ (cl-return) to stop the loop."
   `(let ((articles (gnus-summary-work-articles nil))
 	 gnus-article-display-hook     ;Do not run this
 	 gnus-article-prepare-hook
@@ -1175,7 +1175,7 @@ to the article buffer."
 (defmacro  tinygnus-files-from-dir-macro (dir &rest body)
   "Read all files from DIR and do BODY.
 You can refer to `file' when processing the files. Stop loop with
-command (return)."
+command (cl-return)."
   `(let ((files (tinygnus-read-files-from-dir ,dir)))
      (when (or (not (called-interactively-p 'interactive))
                (and (called-interactively-p 'interactive)
@@ -1377,7 +1377,7 @@ See function `tinygnus-article-ube-send-to-postmasters'."
       (setq name  (buffer-name (setq disp-buffer (window-buffer win))))
       (when (string-match "article" name)
         (setq disp-win win)
-        (return)))
+        (cl-return)))
     (cond
      ((eq disp-buffer (get-buffer gnus-article-buffer))
       (if (null (setq buffer (get-buffer gnus-original-article-buffer)))
@@ -1430,7 +1430,7 @@ confirmations."
           (setq ret (cdr elt))
           (if (not (stringp ret))
               (error "Invalid format in tinygnus--domain-table: %s" elt))
-          (return)))
+          (cl-return)))
       ret)))
 
 ;;; ----------------------------------------------------------------------
