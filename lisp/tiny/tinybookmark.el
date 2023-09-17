@@ -396,7 +396,7 @@
             the file. Uses X-popup [imenu] for showing those book marks and
             moving between them.")
 
-(defvar tinybookmark--version-time "2016.1029.0704"
+(defvar tinybookmark--version-time "2023.0917.1119"
   "Last modified time.")
 
 ;;}}}
@@ -422,14 +422,14 @@
 (defcustom tinybookmark--cache-update 'threshold
   "*Method when to update cache.
 
-nil         manual update -- you have to call `tinybookmark-parse'
-'always     always update cache when menu displayed.
-'threshold  update happens when buffer's total character change
+nil         Manual update -- you have to call `tinybookmark-parse'
+\\='always     Update happens when menu is displayed.
+\\='threshold  Update happens when buffer's character count
             exceeds previous value of `tinybookmark--cache-threshold-val'."
   :type '(choice
           (const nil)
-          (const 'always)
-          (const 'threshold))
+          (const always)
+          (const threshold))
   :group 'TinyBookmark)
 
 (defcustom tinybookmark--cache-threshold-val 100
@@ -869,8 +869,8 @@ References:
 ;;; ----------------------------------------------------------------------
 ;;;
 (defun tinybookmark-search-bm-re ()
-  "Search buffer for automatic book mark identifier 'BookMarkRegexp'.
-Returns regexp defined in it. if is doesn't exist returns default
+  "Search buffer for automatic book mark identifier `BookMarkRegexp'.
+Returns regexp defined in it. if is does not exist returns default
 book mark regexp."
   (let ((id          "BookMarkRegexp")
 	(re-default  (tinybookmark-regexp-default))
