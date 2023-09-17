@@ -1,5 +1,7 @@
 2023-09-17 Sun  Jari Aalto  <jari.aalto@tuni.fi>
 
+	* tiny/tinycygwin.el (all): Emacs 30.0.50 correct byte compile errors.
+
 	* tiny/tinycompile.el (all): Emacs 30.0.50 correct byte compile errors.
 
 	* tiny/tinycomment.el (all): Emacs 30.0.50 correct byte compile errors.

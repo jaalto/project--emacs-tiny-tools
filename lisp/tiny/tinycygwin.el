@@ -98,7 +98,7 @@
   (defvar byte-compile-warnings)
   (unless (featurep 'xemacs)
     (set (make-local-variable 'byte-compile-warnings)
-	 '(not cl-functions))))
+         '(not cl-functions))))
 
 (eval-when-compile
   (require 'cl))
@@ -312,9 +312,9 @@ See function `tinycygwin-message-mode-attach-program-version'.")
   '((devel-tools ("gcc" "make" "libtool" "automake"))
     (lang        ("perl" "python" "ruby")))
   "List of system information bundles.
-Format:
+Format of list:
 
-  '((BUNDLE-SYMBOL (\"program\" \"program\" ...))
+  ((BUNDLE-SYMBOL (\"program\" \"program\" ...))
     ..)")
 
 (defconst tinycygwin--sysinfo-environment-list
@@ -340,17 +340,17 @@ be good to contact the Author.")
 ;;  Same as in Debian
 (defconst tinycygwin--severity-list
   '(("critical"
-     "Makes unrelated software on the system (or the whole system) break,
-or causes serious data loss, or introduces a security hole on systems where
-you install the package.")
+     "Makes unrelated software on the system (or the whole system)
+break, or causes serious data loss, or introduces a security hole
+on systems where you install the package.")
     ("grave"
-     "Makes the package in question unuseable or mostly so, or causes data
-loss, or introduces a security hole allowing access to the accounts of users
-who use the package.")
+     "Makes the package in question unuseable or mostly so, or
+causes data loss, or introduces a security hole allowing access
+to the accounts of users who use the package.")
     ("serious"
      "Severe violation of policy (that is, it violates a
-\"must\" or \"required\" directive), or, in the package maintainer's
-opinion, makes the package unsuitable for release.")
+\"must\" or \"required\" directive), or, in the package
+maintainer's opinion, makes the package unsuitable for release.")
     ("important"
      "A bug which has a major effect on the usability of a package,
 without rendering it completely unusable to everyone.")
@@ -367,7 +367,9 @@ difficult to fix due to major design considerations.")
 exception for bugs fixed by non-maintainer uploads. Note: the "fixed"
 tag should be used instead."))
   "The bug system may record a severity level with each bug report.
-This is set to normal by default, but can be overridden either by supplying a Severity line in the pseudo-header when the bug is submitted Severity or error.")
+This is set to normal by default, but can be overridden either
+by supplying a Severity line in the pseudo-header when the bug
+is submitted Severity or error.")
 
 (defvar tinycygwin--menu-severity-selected nil
   "Functions `tinycygwin-severity-select-*' set this to user selection.")
@@ -393,11 +395,11 @@ standard
     in incorrect places, configuration files have problems, default setup
     does not work etc.
 
-    Please do not report program's behavious problems. The package
+    Please do not report program\\='s behavious problems. The package
     maintainer does not know how the program is supposed to work. He has
     only put it available in Cygwin Net Release form, so he is not the
     correct person where to report problems in the program itself (see
-    bug type 'upstream' below).
+    bug type `upstream' below).
 
 update
     Request package update. Package included in Cygwin is out of date
@@ -626,8 +628,8 @@ This is for XEmacs. Activated only if `tinycygwin--expert-flag' is nil.")
   '((" A *T " "@")
     (" do?t " "."))
   "List of regexp to correct email addresses.
-Format:
-  '((SEARCH-REGEXP  REPLACE-STRING)
+Format of list:
+   ((SEARCH-REGEXP  REPLACE-STRING)
     (SEARCH-8REGEXP REPLACE-STRING)
      ...)")
 
@@ -660,9 +662,9 @@ to exist."
 
 (defun tinycygwin-window-system ()
   "XEmacs and Emacs Compatibility, Mimic Emacs `window-system' variable.
-In XEmacs the `cosole-type' returns 'tty on terminal, but this function
-return nil to be in par with Emacs behavior. An 'tty is not a windowed
-environment."
+In XEmacs the `cosole-type' returns \\='tty on terminal, but this function
+return nil to be in par with Emacs behavior. A \\='tty would not be considerd
+as a windowed environment."
   (let ((func 'console-type))
     (cond
      ((fboundp func)
@@ -778,8 +780,8 @@ followed by indented two space explanation. An example:
   item
     The item is ..."
   (let ((string (tinycygwin-variable-documentation variable-sym))
-	case-fold-search
-	list)
+        case-fold-search
+        list)
     (when string
       (with-temp-buffer
         (insert string)
@@ -952,8 +954,8 @@ inserted in `message-mode' with \\[mml-attach-file]."
   "Insert cygcheck retults to the end of buffer as a MIME attachement."
   (interactive)
   (let ((file (make-temp-file "emacs-tinycygwin-cygcheck"))
-	point
-	status)
+        point
+        status)
     (save-current-buffer
       (goto-char (point-max))
       (message "Wait, calling cygcheck [may take a while]... ")
@@ -968,7 +970,7 @@ inserted in `message-mode' with \\[mml-attach-file]."
 (defun tinycygwin-program-parse-version ()
   "Parse version information from program's version output."
   (let ((list '(("[0-9]+\\.[0-9]+\\([0-9.]+\\)?" 0)))
-	version)
+        version)
     (dolist (elt list)
       (goto-char (point-min))
       (cl-multiple-value-bind (regexp subexp) elt
@@ -985,8 +987,8 @@ inserted in `message-mode' with \\[mml-attach-file]."
 
 Possible values for variable MODE
 
-  'end    Insert to the end of buffer.
-  'ask    Ask user what to do.
+  \\='end    Insert to the end of buffer.
+  \\='ask    Ask user what to do.
   nil     Insert at point."
   (interactive
    (list
@@ -1070,7 +1072,7 @@ Possible values for variable MODE
 ;;; ----------------------------------------------------------------------
 ;;;
 (defun tinycygwin-user-full-name-valid-p (str)
-  "Check if STR includes valid 'Firstname Lastname'."
+  "Check if STR includes valid \"Firstname Lastname\"."
   (and (stringp str)
        (let (case-fold-search)
          (string-match "^[^ \t\r\n]+ +[^ \t\r\n]" str))))
@@ -1134,7 +1136,7 @@ does not contain space separated Firstname Lastname."
 ;;; ----------------------------------------------------------------------
 ;;;
 (defun tinycygwin-user-mail-address-correct (str)
-  "Correct words like 'A T' as @ etc."
+  "Correct words like \"A T\" as @ etc."
   (with-temp-buffer
     (insert str)
     (dolist (elt tinycygwin--email-address-correct-list)
@@ -1146,7 +1148,7 @@ does not contain space separated Firstname Lastname."
 ;;; ----------------------------------------------------------------------
 ;;;
 (defun tinycygwin-user-mail-address-fix (list)
-  "Add missing <> around LIST of email addresses like '(me@example.com)."
+  "Add missing <> around LIST of email addresses like \"(me@example.com)\"."
   (when list
     (with-temp-buffer
       (let (ret)
@@ -1252,9 +1254,9 @@ References:
 ;;; ----------------------------------------------------------------------
 ;;;
 (defsubst tinycygwin-bug-report-email-prefix (&optional type)
-  "Return Subejct's bug prefix string 'OS-TYPE#YYYYMMDDTHHMM'
-The time is in UTC and similar to 'date ----iso-8601=minutes'
-The TYPE is 'bug' by default, but can also be other type, like
+  "Return bug prefix of Subject string `OS-TYPE#YYYYMMDDTHHMM'
+The time is in UTC and similar to `date ----iso-8601=minutes'
+The TYPE is `bug' by default, but can also be other type, like
 rfa, rfp, itp, orphan, update. See `tinycygwin--menu-wnpp'."
   (format
    ;;  Cygwin-bug#NNNN Linux-Bug#NNNN
@@ -1418,9 +1420,9 @@ If not found, goto `point-max'."
 (defun tinycygwin-update-file-autoloads (dir)
   "Generate autoloads in DIR."
   (let ((default-directory dir)
-	(generated-autoload-file
-	 (concat (file-name-as-directory dir)
-		 "tinycygwin-autoloads.el")))
+        (generated-autoload-file
+         (concat (file-name-as-directory dir)
+                 "tinycygwin-autoloads.el")))
     (unless (file-exists-p generated-autoload-file)
       (message "TinyCygwin: [WARN] %s does not exist. Creating it."
                generated-autoload-file)
@@ -1571,7 +1573,7 @@ is started. Here are few inportant Eamcs commands to help you:
  Trailing slash is stripped."
   (when path
     (let ((root tinycygwin--root-dir)
-	  ret)
+          ret)
       (setq ret
             (cond
              ((string= root "/")
@@ -1628,9 +1630,9 @@ is started. Here are few inportant Eamcs commands to help you:
   "Add color support to various log files by setting
 `font-lock-keywords'."
   (let ((today   "xxx") ;; (ti::date-standard-rfc-regexp "mon-date"))
-	;; (cs     (or comment-start-skip "[ \t]+"))
-	(file   "")
-	keywords)
+        ;; (cs     (or comment-start-skip "[ \t]+"))
+        (file   "")
+        keywords)
     (when (stringp buffer-file-name)
       (setq file (or buffer-file-name "no-name?")))
     (setq
@@ -1681,7 +1683,7 @@ is started. Here are few inportant Eamcs commands to help you:
                0 'font-lock-reference-face)
               (list
                (concat "connection attempt" );  See "iplogger" package
-	       0 'tinycygwin--warn-face)
+               0 'tinycygwin--warn-face)
               (list
                (concat "signal +[0-9]+\\|no such user"
                        "\\|connect from .*")
@@ -1802,7 +1804,7 @@ References:
   ;;  mail-setup: (to subject in-reply-to cc replybuffer actions)
   (mail-setup (or (pop to-list) "")
               (or subject "")
-              nil nil nil nil)
+              nil nil nil nil nil)
   (when to-list ;; More recipients
     (unless (message-fetch-field "CC")
       ;;  This creates field as well
@@ -1860,7 +1862,10 @@ for taking maintenance of other packages.
 
 REQUEST-TYPE can be symbol:
 
-  'package 'orphan 'adopt or 'new.
+  \\='package
+  \\='orphan
+  \\='adopt
+  \\='new
 
 Optional PACKAGE in question, DESC string and package INFO.
 
@@ -1895,7 +1900,7 @@ References:
                 (file-directory-p file)) ;; User pressed return. No file.
             (if (y-or-n-p (format "Include file %s. Are you sure? "
                                   (file-name-nondirectory file)))
-		(push file file-list))))))
+                (push file file-list))))))
       (tinycygwin-package-wnpp-mail-generic "ITP" desc nil file-list))
      ((string= type "new")
       (let ((desc  (read-string "[RFP] Package name -- description: ")))
@@ -2039,10 +2044,10 @@ References:
         ret)
     (dolist (path exec-path)
       (when (file-directory-p path)
-	(setq list (directory-files path 'full regexp))
-	(when (and list (eq 1 (length list)))
-	  (setq ret (car list))
-	  (cl-return))))
+        (setq list (directory-files path 'full regexp))
+        (when (and list (eq 1 (length list)))
+          (setq ret (car list))
+          (cl-return))))
     ret))
 
 ;;; ----------------------------------------------------------------------
@@ -2053,12 +2058,12 @@ Optional VERSION-ARG defaults to --version."
   (when program
     (with-temp-buffer
       (let ((bin (executable-find program))
-	    (args (list (or version-arg "--version"))))
+            (args (list (or version-arg "--version"))))
         (unless bin
           ;;  This was not a .exe program, but a shell script or something
           ;;  like that. E.g. 'automake' is in /usr/bin/automake
           (let ((found (tinycygwin-executable-find program))
-		shell)
+                shell)
             (when (and found
                        (setq shell (executable-find "sh")))
               (setq bin  shell
@@ -2081,8 +2086,8 @@ Optional VERSION-ARG defaults to --version."
 If optional CALL-SHELL is non-nil, then query the information from
 shell (more reliable, but slower).
 
-Return:
-  '((PROGRAM VERSION)
+Return list:
+  ((PROGRAM VERSION)
     ...)."
   (let (ver
         list)
@@ -2164,9 +2169,9 @@ Return:
 (defun tinycygwin-sysinfo-os-cygwin-dll-info ()
   "Return DLL information.
 
-Return:
+Return lisy:
 
-'((version \"1.5.7\")
+ ((version \"1.5.7\")
   (api     \"0.109\")  ;; Major.Minor
   (cvs-tag     \"cr-0x9e\"))"
   (let ((str (tinycygwin-sysinfo-os-cygwin-dll-all)))
@@ -2192,8 +2197,8 @@ Return:
   (let ((info (tinycygwin-sysinfo-os-cygwin-dll-info)))
     (when info
       (let ((ver (nth 1 (assq 'version info)))
-	    (api (nth 1 (assq 'api info)))
-	    (cvs (nth 1 (assq 'cvs-tag info))))
+            (api (nth 1 (assq 'api info)))
+            (cvs (nth 1 (assq 'cvs-tag info))))
         (concat
          (if ver
              ver
@@ -2385,7 +2390,7 @@ Optinally add ADD-LIST to the returned list."
   "Return PACKAGE install.db information."
   (tinycygwin-install-database-buffer-with
    (let ((case-fold-search t)
-	 (regexp (format "^%s +.+" package)))
+         (regexp (format "^%s +.+" package)))
      (goto-char (point-min))
      (when (re-search-forward regexp nil t)
        (match-string 0)))))
@@ -2419,8 +2424,8 @@ Optinally add ADD-LIST to the returned list."
              "^\\([a-z0-9]+[0-9]?\\)-\\([0-9]+[0-9.-]*[0-9]\\)\\(.*\\)"
              string))
     (let ((name (match-string 1 string))
-	  (ver  (match-string 2 string))
-	  rel)
+          (ver  (match-string 2 string))
+          rel)
       (setq string (match-string 3 string)) ;; The rest
       ;;  Release cannot be more than 2 numbers.
       (when (string-match "^\\([0-9][0-9]?\\)\\([^0-9]+\\|$\\)" string)
@@ -2460,7 +2465,7 @@ Optinally add ADD-LIST to the returned list."
 ;;; ----------------------------------------------------------------------
 ;;;
 (defun tinycygwin-package-info-path-doc-cygwin-package (package)
-  "Return Cygwin documentation file path for PACKAGE like 'foo'."
+  "Return Cygwin documentation file path for PACKAGE like `foo'."
   (let ((dir (tinycygwin-path-doc-cygwin)))
     (when (and dir
                (file-directory-p dir))
@@ -2619,8 +2624,8 @@ PACKAGE is not special and
 (defun tinycygwin-package-info-heading-value
   (package heading header &optional subexp)
   "Read PACKAGE and position to HEADING regexp and read HEADER SUBEXP
-Like if HEADER were 'Upstream contact' and HEADING were
-'Author: +\(.+\)' from text:
+Like if HEADER were `Upstream contact' and HEADING were
+`Author: +\(.+\)' from text:
 
     Upstream contact:
       Author: Foo Bar <foo@example.com>
@@ -2650,10 +2655,10 @@ Like if HEADER were 'Upstream contact' and HEADING were
 (defun tinycygwin-package-info-upstream-contacts (package)
   "Return upstream contact addresses.
 
-Return:
+Return list:
 
-  '((author address)
-    (bugs   address))
+    ((author address)
+     (bugs   address))
 
 Notice that the values may be missing if no such fields were found."
   (let ((fields
@@ -2676,8 +2681,8 @@ Notice that the values may be missing if no such fields were found."
 ;;; ----------------------------------------------------------------------
 ;;;
 (defun tinycygwin-package-status-cygwin (package)
-  "Return Cygwin PACKAGE details.
-'((\"Package\" \"foo\")
+  "Return Cygwin PACKAGE details as list:
+ ((\"Package\" \"foo\")
    (\"Status\"  \"installed\")
    (\"Version\" \"1.13\")
    (\"Release\" \"1\")
@@ -2846,12 +2851,12 @@ package ask list."
 (defun tinycygwin-bug-system-info-locale ()
   "Get locale information."
   (let ((list
-	 '("LC_ALL"
-	   "LANG"
-	   "LC_MESSAGES"
-	   "LC_CTYPE"))
-	val
-	ret)
+         '("LC_ALL"
+           "LANG"
+           "LC_MESSAGES"
+           "LC_CTYPE"))
+        val
+        ret)
     (dolist (var list)
       (when (setq val (getenv var))
         (setq val (format "%s=%s" var val))
@@ -2920,8 +2925,8 @@ Locale: %s
 
 Optional TYPE
 
-  'as-is        Add as plain text.
-  'mime         Add as a mime attachment.
+  \\='as-is        Add as plain text.
+  \\='mime         Add as a mime attachment.
   nil           Ask user wat to do with files that are not binaries."
   (when list
     (unless (eq major-mode 'message-mode)
@@ -2983,9 +2988,9 @@ Optional TYPE
         info)
     (dolist (var tinycygwin--sysinfo-environment-list)
       (when (setq info (getenv var))
-	(unless done
-	  (insert "\n-- Environment information\n")
-	  (setq done t))
+        (unless done
+          (insert "\n-- Environment information\n")
+          (setq done t))
         (insert (format "%s: %s\n" var info))))))
 
 ;;; ----------------------------------------------------------------------
@@ -3017,9 +3022,9 @@ Optional TYPE
   (goto-char (point-min))
   (tinycygwin-goto-mail-header-separator)
   (let ((status  (tinycygwin-package-info-field-status  info))
-	(package (tinycygwin-package-info-field-package info))
-	(version (tinycygwin-package-info-field-version info))
-	(release (tinycygwin-package-info-field-release info)))
+        (package (tinycygwin-package-info-field-package info))
+        (version (tinycygwin-package-info-field-version info))
+        (release (tinycygwin-package-info-field-release info)))
     (dolist (elt (list
                   (list "Package"   package)
                   (list "Version"   (concat
@@ -3096,13 +3101,13 @@ Optional TYPE
         ;;    (2 'message-header-other-face nil t))
         (setq
          message-font-lock-keywords
-         (delete-if (lambda (x)
-                      (let* ((str (prin1-to-string x))
-                             (status
-                              (string-match
-                               "other-face\\|cited-text" str)))
-                        status))
-                    message-font-lock-keywords))
+         (cl-delete-if (lambda (x)
+			 (let* ((str (prin1-to-string x))
+				(status
+				 (string-match
+				  "other-face\\|cited-text" str)))
+                           status))
+                       message-font-lock-keywords))
         ;; (put 'message-mode
         ;;      'font-lock-defaults
         ;;      '(message-font-lock-keywords t))
@@ -3167,7 +3172,7 @@ Optional TYPE
 (defun tinycygwin-bug-report-mail-mode-subject-tags ()
   "Add subject tags [patch] etc. if needed"
   (let (value
-	tag)
+        tag)
     (save-current-buffer
       (when (and (setq value (tinycygwin-bug-report-mail-body-header-value
                               "Severity"))
@@ -3183,8 +3188,8 @@ Optional TYPE
   "Split subject STR on ':' or if it does not exist return BUG ID."
   (when (stringp str)
     (let (prefix
-	  rest
-	  list)
+          rest
+          list)
       (cond
        ((and (string-match ":" str)
              (setq list (split-string str ":")))
@@ -3415,9 +3420,9 @@ An example bug report would look something like:
     -- Environment information
     CYGWIN: tty ntsec binmode smbntsec
 
-For lisp calls, The INFO variables is like:
+For lisp calls, The INFO variable list format is:
 
-    '((\"Status\" ...)
+     ((\"Status\" ...)
       (\"Package\" ...)
       ...)."
   (let* ((status        (tinycygwin-package-info-field-status info))
