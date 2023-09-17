@@ -448,8 +448,8 @@
 
 (defcustom tinyigrep--user-level 'basic
   "*Interface level.
-'basic       Suppose defautls for everything.
-'advanced    Show additional features."
+\\='basic       Suppose defautls for everything.
+\\='advanced    Show additional features."
   :type  '(choice
            (const basic)
            (const advanced))
@@ -497,31 +497,31 @@ organization chart:
     +-xemacs        Fieles than only work in XEmacs
     +-net                   Packages available directly from internet
         |
-        +-cvs-packages  by CVS pserver directories (Gnus, Mailcrypt ..)
-        +-packages          complete kits, like Tamp, Notes, etc (multiple files)
-        +-users     by User, Emacs Lisp developers
+        +-vc-packages  version control packages
+        +-packages     other packages
+        +-users        from users
           |
           +-firedman-noah
           +-zakharevich-llya
           ..
 
-If the entry is
+If the entry is list:
 
-  '(\"lisp-site-lisp\" \"site-lisp-flag.el\" 'rec)
+  (\"lisp-site-lisp\" \"site-lisp-flag.el\" \\='rec)
 
 then you would create file directly to the SITE-LISP ROOT,
 /usr/share/site-lisp/site-lisp-flag.el and TinyIgrep.el will flag that
 directory as searchable dir, effectively searching all of your lisp.
 
-Similarly, you can drop 'flags' to other directories, like database entry
+Similarly, you can drop `flags' to other directories, like database entry
 
-  '(\"lisp-site-lisp-net-users\" \"site-lisp-net-users-flag.el\" 'rec)
+  \\='(\"lisp-site-lisp-net-users\" \"site-lisp-net-users-flag.el\" \\='rec)
 
 Format:
 
-  '((DB-NAME lisp-flag-file-name recursive-search)
-    (DB-NAME lisp-flag-file-name recursive-search)
-    ..)."
+  ((DB-NAME lisp-flag-file-name recursive-search)
+   (DB-NAME lisp-flag-file-name recursive-search)
+   ...)."
   :type  '(list sexp)
   :group 'TinyIgrep)
 
@@ -550,7 +550,7 @@ is treated differently.
 You can use following entry to tell that it should be skipped, the
 DB-NAME here is string \"nil\".
 
-  '(\"nil\")
+  \\='(\"nil\")
 
 This is useful when you build the database in a variable and you test if
 certain directories exist. Like this, which builds dynamically one
@@ -581,9 +581,9 @@ Note [igrep find fag]:
 
     These values are same as in `igrep-find-use-xargs', only in list format:
 
-    '(gnu)      find is called with ...  -print0 | xargs -0 -e grep
-    '(not-nil)  find is called with ...  -print  | xargs -e grep
-    '(nil)      find is called with ...  -exec grep -n -e grep
+    \\='(gnu)      find is called with ...  -print0 | xargs -0 -e grep
+    \\='(not-nil)  find is called with ...  -print  | xargs -e grep
+    \\='(nil)      find is called with ...  -exec grep -n -e grep
 
 Adding an entry to the database
 
@@ -591,29 +591,29 @@ Adding an entry to the database
     for you. It will replace existing entry or add a new one. The argument
     isa same as is described in Format below.
 
-      (tinyigrep-db-push-elt '(\"Elisp\" (\"egrep\" (\"~/elisp/*el\"))))
+      (tinyigrep-db-push-elt \\='(\"Elisp\" (\"egrep\" (\"~/elisp/*el\"))))
 
 Format:
 
-    '((DB-NAME
-      '(GREP-PROGRAM
-        (DIR DIR ..)
-        [(igrep-find flag)]))
-      ..)
+    ((DB-NAME
+      (GREP-PROGRAM
+       (DIR DIR ..)
+       [(igrep-find flag)]))
+       ...)
 
 Alternatively the database entry can contain a lisp function that defines
 the actual entry to the variables. For example a call:
 
-    (tinyigrep-db-push-lazy-define \"test-db\" 'my-db-define-test-db)
+    (tinyigrep-db-push-lazy-define \"test-db\" \\='my-db-define-test-db)
 
 Would add a database entry in format:
 
-    '(\"test-db\" (my-db-define-test-db))
+    \\='(\"test-db\" (my-db-define-test-db))
 
 And the function `my-db-define-test-db' is invoked when user requests
 \"test-db\" search. Tee function MUST DEFINE real entry with the same
 name: \"test-db\" by calling e.g. `tinyigrep-db-push-elt'. See
-source code of tinyigrep.el for examples of this 'deferred until called'
+source code of tinyigrep.el for examples of this \\='deferred until called'
 lazy defining."
   :type  'sexp
   :group 'TinyIgrep)
@@ -663,18 +663,18 @@ if they do not exist.")
   "*Lisp databases to search.
 Format:
 
-   '((DATABASE-NAME LISP-FILE-TO-SEARCH [RECURSIVE-OPTION])
+   ((DATABASE-NAME LISP-FILE-TO-SEARCH [RECURSIVE-OPTION])
      ...)
 
 For example, to seach Gnus files, the entry looks like:
 
-   '((\"lisp-gnus\" \"gnus.el\") ...)
+   ((\"lisp-gnus\" \"gnus.el\") ...)
 
 Which means, that when gnus.el if found from path, that directory is
-used as a base for searches. If you supply a recursive option '(nil),
+used as a base for searches. If you supply a recursive option \\='(nil),
 then all directories below are searched as well.
 
-   '((\"lisp-gnus\" \"gnus.el\" '(nil)) ...)")
+   ((\"lisp-gnus\" \"gnus.el\" \\='(nil)) ...)")
 
 (defvar tinyigrep--databases-lazy-defined
   '(("lisp-cl"
@@ -690,7 +690,7 @@ then all directories below are searched as well.
   "Databases whose definition is deferred until used.
 Format:
 
-   '((DATABASE DEFINE-FUNCTION) ...)
+   ((DATABASE DEFINE-FUNCTION) ...)
 
 In practise it means that for each element in list the
 following is called:
@@ -716,7 +716,7 @@ searching the accompanying info files (if they are even installed).
 
 Format:
 
-  '((DATABASE LISP-FILE-TO-SEARCH-WHERE-TEXI-COULD-BE-FOUND) ...)")
+  ((DATABASE LISP-FILE-TO-SEARCH-WHERE-TEXI-COULD-BE-FOUND) ...)")
 
 (defvar tinyigrep--igrep-previous-args nil
   "List of variables used for calling igrep.")
@@ -874,7 +874,7 @@ The path is not expanded, but returned as is."
   "Examine database ELT and call embedded function to define database.
 This function activates only, if ELT is in format:
 
-   '(\"database-name\" (lisp-function))
+   (\"database-name\" (lisp-function))
 
 `lisp-function' is called and it should immediately define the
 real entries -- that is: it should replace \"database-name\"
@@ -921,18 +921,18 @@ Examples:
 
    ;;  With recursion, see (nil) argument
 
-   (tinyigrep-db-push-elt '(\"my-perl\" (\"egrep\" (\"~/bin/perl/\") (nil) )))
-   (tinyigrep-db-push-elt '(\"my-bin\"  (\"egrep\" (\"~/bin/\") (nil) )))
+   (tinyigrep-db-push-elt \\='(\"my-perl\" (\"egrep\" (\"~/bin/perl/\") (nil) )))
+   (tinyigrep-db-push-elt \\='(\"my-bin\"  (\"egrep\" (\"~/bin/\") (nil) )))
 
    ;; Without recursion, filename spec mst be included: `*'
 
-   (tinyigrep-db-push-elt '(\"news-all\"      (\"egrep\" (\"~/News/*\"))))
-   (tinyigrep-db-push-elt '(\"news-Incoming\" (\"egrep\" (\"~/Mail/Inc*\"))))
+   (tinyigrep-db-push-elt \\='(\"news-all\"      (\"egrep\" (\"~/News/*\"))))
+   (tinyigrep-db-push-elt \\='(\"news-Incoming\" (\"egrep\" (\"~/Mail/Inc*\"))))
 
    ;;  Easy and free web server http://www.xitami.com/
 
    (tinyigrep-db-push-elt
-    '(\"Xitami-root\"
+    \\='(\"Xitami-root\"
       (\"egrep\"
        (\"d:/bin/server/xitami/*cfg\"
         \"d:/bin/server/xitami/*txt\"
@@ -960,14 +960,14 @@ Input:
 Examples:
 
   ;;    Define shorter names. The default database names are prefixed with
-  ;;    lisp- These don't need recursice search.
+  ;;    lisp- These do not need recursice search.
 
-  (dolist (package '(\"vm\" \"irchat\" \"semi-def\" \"mc\" \"tinylib\" \"bbdb\"))
+  (dolist (package \\='(\"vm\" \"irchat\" \"semi-def\" \"mc\" \"tinylib\" \"bbdb\"))
     (tinyigrep-db-push-elt-lisp-package package (concat package \".el\")))
 
   ;;    Recursively seached
 
-  (tinyigrep-db-push-elt-lisp-package \"gnus\" \"gnus.el\" \"egrep\" '(nil) )"
+  (tinyigrep-db-push-elt-lisp-package \"gnus\" \"gnus.el\" \"egrep\" \\='(nil) )"
   (tinyigrep-db-push-elt
    (tinyigrep-db-lisp-elt
     file name (or grep  "egrep")
@@ -976,12 +976,11 @@ Examples:
 ;;; ----------------------------------------------------------------------
 ;;;
 (defun tinyigrep-db-push-elt-package (name package &optional recursive grep)
-  "Find PACKAGE and create NAME entry to database for RECURSIVE '(nil).
+  "Find PACKAGE and create NAME entry to database for RECURSIVE \\='(nil).
 
 Example:
 
-  (dolist (elt '(
-                 (\"lisp-bbdb\"     \"bbdb.el\")
+  (dolist (elt \\='((\"lisp-bbdb\"     \"bbdb.el\")
                  (\"lisp-ede\"      \"ede.el\")
                  (\"lisp-efs\"      \"efs-auto.el\")
                  (\"lisp-eieo\"     \"eieo.el\")))
@@ -1005,11 +1004,11 @@ Example:
 ;;;
 (defun tinyigrep-db-push-elt-package-texi
   (name package &optional recursive grep)
-  "Find PACKAGE texi and create NAME entry to database for RECURSIVE '(nil).
+  "Find PACKAGE texi and create NAME entry to database. RECURSIVE \\='(nil).
 
 Examples:
 
-  (dolist (elt '((\"texi-bbdb\"     .  \"bbdb.el\")
+  (dolist (elt \\='((\"texi-bbdb\"     .  \"bbdb.el\")
                  (\"texi-ede\"      .  \"ede.el\")
                  (\"texi-eieio\"    .  \"eieio.el\")))
     (tinyigrep-db-push-elt-package-texi (car elt) (cdr elt) nil \"egrep\"))"
@@ -1033,7 +1032,7 @@ Examples:
 (defmacro tinyigrep-countdown (message count &optional msg)
   "Show (format MESSAGE COUNT MSG) and decrease COUNT."
   `(progn
-     (decf ,count)
+     (cl-decf ,count)
      (message (format ,message ,count (or ,msg "") ))))
 
 ;;; ----------------------------------------------------------------------
@@ -1649,11 +1648,11 @@ Example:
   (igr-push-elt
    (tinyigrep-db-lisp-elt
     \"bbdb.el\" \"bbdb\" \"zgrep\"
-    '(list (concat dir \"*\"))))
+    \\='(list (concat dir \"*\"))))
 
 This will dynamically find the directory where bbdb.el is stored and
 assign local variable `dir' to it (which you see used here).
-If bbdb.el is not found, then this return valid 'null' entry."
+If bbdb.el is not found, then this return valid `null' entry."
   (let* ((some  (eval file))
          (path  (when (stringp some)
                   (if (file-directory-p some)
