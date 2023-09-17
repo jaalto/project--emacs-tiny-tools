@@ -274,7 +274,7 @@ for each electric character. Consult also `tinyef--step-delete-chars'.
 The default action table is as follows:
 
     (setq tinyef--mode-key-table
-      '((?\<   . step-delete-back)              ;KEY -- action symbol
+      \\='((?\<   . step-delete-back)              ;KEY -- action symbol
         (?\>   . step-delete-fwd)
         (?|    . chunk-delete)
         (?\;   . move-back)
@@ -288,9 +288,9 @@ In these presented cases cursor it at the end of line.
 Alternatively, just load this file, press C-x C-f and experiment
 with keys `[]\/~'.
 
-o   b>> means what's on the line *before*
-o   a>> means what's there *after*
-o   `'  means what you just pressed
+o   b>> means what is on the line *before*
+o   a>> means what is there *after*
+o   \\='  means what you just pressed
 o   []  means which action the character triggered
 
     b>> http:/www.site.com/~userFoo/dir1/dir2/dir3/ `/` [e-slash]
@@ -313,7 +313,7 @@ o   []  means which action the character triggered
     a>> ~/dir1/dir2/dir3/
     The action works like normal undo.
 
-    b>> ~/dir1/dir2/                            `\' [chunk-delete]
+    b>> ~/dir1/dir2/                            `\\=' [chunk-delete]
     a>>
     The action deleted whole line. It deletes until special marks
     like `@:'. If repeated, it deletes constantly backward
