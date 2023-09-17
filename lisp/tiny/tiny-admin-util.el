@@ -91,12 +91,14 @@
 
 (eval-when-compile
   (require 'cl)
+  (require 'autoload)
   (require 'cl-seq)
   (require 'cl-lib))
 
 (require 'tinylib)
 
 (autoload 'generate-file-autoloads "autoload")
+(autoload 'update-file-autoloads "update-file-autoloads")
 
 (defconst tiny-setup-:library-compile-order
   '("tinylibenv.el"
@@ -167,7 +169,7 @@ Following variables are set during BODY:
 ;;;
 (defun tiny-setup-time-difference (a b)
   "Calculate difference between times A and B.
-The input must be in form of '(current-time)'
+The input must be in form of `(current-time)'
 The returned value is difference in seconds.
 E.g. if you want to calculate days; you'd do
 \(/ (ti::date-time-difference a b) 86400)  ;; 60sec * 60min * 24h"
@@ -302,7 +304,7 @@ E.g. if you want to calculate days; you'd do
 ;;; ----------------------------------------------------------------------
 ;;;
 (defun tinypath-tmp-autoload-file-footer (file &optional end)
-  "Return 'provide and optional END of the file marker."
+  "Return `provide' statement and optional END of the file marker."
   (concat
    (format
     "\n\n(provide '%s)\n\n"
@@ -623,7 +625,7 @@ Optional FUNCTION is passed one argument FILE, and it should return
 t or nil if file is to be compiled."
   (tiny-setup-directory-recursive-macro
       root
-    (message "TinySetup: compiling directory %s" dir)
+    (message "TinySetup: compiling in directory %s" dir)
     (tiny-setup-compile-directory
      dir function)))
 
@@ -671,23 +673,26 @@ t or nil if file is to be compiled."
 ;;; ----------------------------------------------------------------------
 ;;;
 (defun tiny-setup-compile-kit-all (&optional dir)
-  "Compile tiny tools kit under DIR.
+  "Compile tiny tools under DIR.
 This function can be called from shell command line, where the
 last argument is the DIR from where to start compiling.
 
-Notice that there is `.' at the end of call to `tiny-setup-compile-kit-all':
+Usage from command line:
 
-$ cd root-dir
-$ find . -name \"*elc\" -exec rm {} \\;
-$ emacs -batch -l load-path.el -l tiny-setup.el -f tiny-setup-compile-kit-all .
+   cd root-dir
+   find . -name \"*elc\" -exec rm {} \\;
+   emacs -batch -l load-path.el -l tiny-setup.el \\
+      -f tiny-setup-compile-kit-all .
 
-If only the libraries need compilation, use this command:
+To compile libraries:
 
-$ emacs -batch -l load-path.el -l tiny-setup.el -f -eval '(tiny-setup-compile-kit-libraries \".\")
+  emacs -batch -l load-path.el -l tiny-setup.el -f \\
+    -eval \'(tiny-setup-compile-kit-libraries \".\")
 
-If only one file needs to be compiled:
+To compile other than libraries:
 
-$ emacs -batch -l load-path.el -l tiny-setup.el -f -eval batch-byte-compile <file>"
+   emacs -batch -l load-path.el -l tiny-setup.el \\
+     -f -eval batch-byte-compile <file>"
   (interactive "D[compile] installation root dir: ")
   (unless dir
     (setq dir (car-safe command-line-args-left)))
