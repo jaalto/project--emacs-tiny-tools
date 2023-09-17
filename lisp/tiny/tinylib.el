@@ -204,32 +204,28 @@
 (require 'tinylibm)                     ;macro package
 
 (eval-when-compile
+  (require 'lisp-mnt)
+  (unless (fboundp 'lm-maintainers) ;; Only in new Emacs
+    (defalias 'lm-maintainers 'lm-maintainer))
   (require 'cl))
 
 (eval-and-compile
   (defvar generated-autoload-file) ;; See autoload.el
   (defvar flyspell-mode)
-
   (autoload 'vc-name         "vc-hooks")
   (autoload 'vc-file-getprop "vc-hooks")
-
   ;;  Can't autoload timer, because various calls in this lib are behind
   ;;  ti::funcall --> Bytecompiler doesn't see them.
-
   (ti::package-package-require-timer)   ;XEmacs and Emacs differencies
-
   (cond
    ((ti::xemacs-p)
-
     ;;  Ange-ftp function used in this package won't work in XEmacs.
     ;;  The ange functions used for backgroung ftp downloads
     ;;  and low level calling calling of ange functions. Currently used in
     ;;  one pacakge: tinydired.el, which let's you donwload/upload
     ;;  files at the background.
-
     (require 'efs-auto nil 'noerr)
     (autoload 'read-passwd "passwd" "" t))
-
    ((ti::emacs-p)
     (defvar ange-ftp-process-result                 nil)
     (defvar ange-ftp-ascii-hash-mark-size           1024)
@@ -353,22 +349,22 @@ Examples:
    (ti::string-verify-ends \"dir\" \"/\")       --> \"dir/\"
 
    Making sure, time is zero based:
-   (ti::string-verify-ends \"7\" \"0\" nil 'beg) --> \"07\"
+   (ti::string-verify-ends \"7\" \"0\" nil \\='beg) --> \"07\"
 
    This does not give you the rsult you assume!
    because the second parameter, \"  \", is regexp that is tried.
-   This function can't know that there is only \" \" space at front,
-   since the regexp dind't match.
+   This function cannot know that there is only \" \" space at front,
+   since the regexp did not match.
 
-   (ti::string-verify-ends \" padd\" \"  \" nil 'beg)
+   (ti::string-verify-ends \" padd\" \"  \" nil \\='beg)
    --> \"   padd\"
 
 Return:
   str    possibly modified"
   (let ((RE  (if beg
-		 (concat "\\`" re)
-	       (concat re "\\'")))
-	(add (or add-str re)))         ;which one to add.
+                 (concat "\\`" re)
+               (concat re "\\'")))
+        (add (or add-str re)))         ;which one to add.
     (if (string-match RE str)
         str
       (if beg
@@ -442,11 +438,11 @@ Same mangling is performed for the same STRING. Mangling can't be reversed."
 (defun ti::string-format-percent (str)
   "Convert STR to message string, doubling diffucult charactes, like % and \\."
   (let ((len  (length str))
-	(i    0)
-	(ret  str)
-	ch-string
-	extra
-	ch)
+        (i    0)
+        (ret  str)
+        ch-string
+        extra
+        ch)
     (cond
      ((string-match "[%\\]" str)        ;only now do
       (setq ret "")
@@ -480,11 +476,11 @@ Return:
   string
   nil"
   (let (ref
-	idx
-	login
-	host
-	dir
-	ret)
+        idx
+        login
+        host
+        dir
+        ret)
     (cond
      ( ;;
       (string-match "ftp:/\\(/.*@\\)\\([^/]+:\\)\\(/.*\\)" str)
@@ -726,10 +722,10 @@ Input:
                 seearching mixed case words."
   (interactive "*r\nP")
   (let ((case-fold-search case-fold) ;; case is significant..
-	(ptable           (syntax-table)) ;; previous
-	(table            (make-syntax-table))
-	f1
-	f2)
+        (ptable           (syntax-table)) ;; previous
+        (table            (make-syntax-table))
+        f1
+        f2)
     (save-restriction
       (unwind-protect
           (progn
@@ -758,12 +754,11 @@ Input:
                   ;; Capit. command moves forward while doing
                   (and (looking-at "_")
                        (delete-char 1))
-                  (capitalize-word 1)))))
-            ;; ... ... ... ... ... ... ... ... ... ... ... .. unwind end . .
-            ;;  Now, make sure the old table is restored,
-            ;;  the unwind protects against Ctrl-g
-            (set-syntax-table ptable))))
-    ;; let-defun end
+                  (capitalize-word 1))))))
+        ;; unwind
+        ;; Make sure the old table is restored,
+        ;; the unwind protects against Ctrl-g
+        (set-syntax-table ptable)))
     nil))
 
 ;;; ----------------------------------------------------------------------
@@ -806,7 +801,7 @@ Return list form: \( dd mm ...\)
   1 mm     nbr,  month                if zero-form: ti::string-value
   2 yy     2nbr, year
   3 tt     2nbr, hh:mm
-  4 wd     3str, week day, string like 'Mon'
+  4 wd     3str, week day, string like \"Mon\"
   5 m      str,  month, full string
   6 yyyy   4str, whole year"
   (interactive)
@@ -852,15 +847,15 @@ Return:
   nil        if cannot identify ITEM.
   string     escape char"
   (let (ret
-	elt
-	(table
-	 '(("a" . 7)
-	   ("b" . 8)
-	   ("f" . 12)
-	   ("n" . 10)
-	   ("r" . 13)
-	   ("t" . 9)
-	   ("v" . 11))))
+        elt
+        (table
+         '(("a" . 7)
+           ("b" . 8)
+           ("f" . 12)
+           ("n" . 10)
+           ("r" . 13)
+           ("t" . 9)
+           ("v" . 11))))
     (if (integerp item)
         (setq item (char-to-string item)))
     (if (setq elt (assoc item table))
@@ -875,13 +870,13 @@ If you read from buffer two some special characters, it can't be
 used like that right a way for regexp. E.g. in buffer \\\\ two slashes mean
 one slash actually when assigned to string to form the regexp."
   (let ((ret     "")
-	(i       0)
-	(len     (length str))
-	(look-ch ?\\)
-	(prev-ch ?d)             ;just some dummy
-	(count   0)
-	chs
-	ch)
+        (i       0)
+        (len     (length str))
+        (look-ch ?\\)
+        (prev-ch ?d)             ;just some dummy
+        (count   0)
+        chs
+        ch)
     (while (< i len)
       (setq ch      (aref str i)
             chs     (char-to-string ch))
@@ -938,22 +933,22 @@ one slash actually when assigned to string to form the regexp."
 ;;; to backward slashes under win32.
 ;;;
 (defun ti::file-name-for-correct-system (path system)
-  "Convert PATH to correct system: 'emacs, 'dos or 'cygwin.
+  "Convert PATH to correct system: \\='emacs, \\='dos or \\='cygwin.
 
 Input:
 
 PATH        Path name. This must already be in expanded form.
             Use Emacs function `expand-file-name' as needed.
 
-SYSTEM      'cygwin => convert to cygwin path notation
-            'dos    => convert to DOS notation.
-            'emacs  => convert to notation which current Emacs uses.
+SYSTEM      \\='cygwin => convert to cygwin path notation
+            \\='dos    => convert to DOS notation.
+            \\='emacs  => convert to notation which current Emacs uses.
                        If running Win32 native Emacs, convert to DOS.
                        If running Cygwin Emacs, convert to cygwin.
 
 Notes:
 
-  In native Win32 Emacs, the choice 'emacs work correctly only if package
+  In native Win32 Emacs, the choice \\='emacs work correctly only if package
   cygwin-mount.el is active. The cygwin path are handled by it."
   (when (stringp path)
     (when (string-match "~\\|\\.\\." path) ;; Need absolute path
@@ -988,8 +983,8 @@ Notes:
 (defsubst ti::vc-rcs-delta-get-revisions  (&optional buffer)
   "Parse all revision numbers from delta file BUFFER.
 
-Return:
-  '(version version ..)"
+Return list:
+  (version version ...)"
   (let (list)
     (save-excursion
       (if buffer
@@ -1101,8 +1096,17 @@ Return:
 ;;;
 (defun ti::vc-dir-p (file-or-dir)
   "Check if FILE-OR-DIR looks like version controlled.
-Return type: 'rcs, 'cvs, 'monotone, 'subversion 'git' 'bzr' 'hg' or 'arch.
-Note, the return value is LIST."
+Return type:
+  \\='rcs
+  \\='cvs
+  \\='monotone
+  \\='subversion
+  \\='git
+  \\='bzr
+  \\=hg
+  \\='arch
+
+Note, the return value is a LIST."
   (let ((dir (cond
               ((file-directory-p file-or-dir)
                file-or-dir)
@@ -1200,7 +1204,7 @@ If CVS-FILE does not exist, return nil."
   "Return cvs-entry if FILE is in VCS controlled.
 Look into CVS/Entries and return line from it if file was CVS controlled."
   (let ((cvs-dir (ti::vc-cvs-to-cvs-dir-p file))
-	cvs-file)
+        cvs-file)
     (when (and cvs-dir
                (file-directory-p cvs-dir)
                (setq cvs-file (concat cvs-dir "/Entries"))
@@ -1226,7 +1230,7 @@ D/calendar////"
 ;;; ----------------------------------------------------------------------
 ;;;
 (defsubst ti::vc-cvs-entry-type (line)
-  "Return type 'dir or 'file for cvs /Entries LINE"
+  "Return type symbol \\='dir or \\='file for cvs /Entries LINE"
   (when line
     (cond
      ((string-match "^D/" line) 'dir)
@@ -1239,7 +1243,11 @@ D/calendar////"
 Input:
 
   INFO  list returned by `ti::vc-cvs-entry-split'
-  WHAT  list of returned values: 'file 'revision 'time 'rest."
+  WHAT  list of returned symbols:
+        \\='file
+        \\='revision
+        \\='time
+        \\='rest."
   (let (ret)
     (dolist (type (ti::list-make what))
       (push (cond
@@ -1269,8 +1277,8 @@ That is, if FILE has ,v at the end."
   "Constructs RCS controlled FILE name. VC-SUBDIR is by default RCS/.
 FILE --> PATH/vc-subdir/FILE,v"
   (let (ret
-	fn
-	dir)
+        fn
+        dir)
     (cond
      ((ti::vc-rcs-file-p file)
       (setq ret file))
@@ -1306,12 +1314,12 @@ If the following condition is met, then such file exists:
 Ie. when only the last version number changes:
 1.1 1.2 1.3, or 1.2.1.1 1.2.1.3 1.2.1.10"
   (let ((max 0)
-	ptr
-	new-list
-	len
-	ret
-	padd
-	str)
+        ptr
+        new-list
+        len
+        ret
+        padd
+        str)
     ;; ... ... ... ... ... ... ... ... ... ... ... ... ... .. greatest ...
     (dolist (nbr list)                  ;find greatest. 1.xx
       (setq max (max (length nbr) max)))
@@ -1365,11 +1373,11 @@ Optional RE tells to return files matching RE only.
 Return:
  list           (file file ..)"
   (let ((re (or re "."))               ;default to match all
-	d
-	fn
-	fnn
-	list
-	ret)
+        d
+        fn
+        fnn
+        list
+        ret)
     (if (null (file-directory-p dir))
         (error "Not a directory"))
     (setq d (or (and dir
@@ -1424,8 +1432,8 @@ Return:
   string
   nil"
   (let ((user (or user (user-login-name)))
-	list
-	ver)
+        list
+        ver)
     (when (not buffer-read-only)        ;It's Checked Out
       ;; Never trust the ID string in the buffer, always look
       ;; at delta file --> this may be checked out with -k and
@@ -1453,14 +1461,14 @@ Return:
 ;;;
 (defun ti::vc-rcs-buffer-version (&optional buffer)
   "Return version number for optional BUFFER.
-Supposes that RCS string 'Revision' 'Id' or 'Log' exist.
+Supposes that RCS string `Revision' `Id' or `Log' exist.
 If they do not exist, then see if VC is loaded and look at the modeline.
 
 Please use `ti::vc-rcs-guess-buffer-version' and not this function."
   (let (rev
-	tmp)
+        tmp)
     (with-current-buffer (or buffer
-			     (current-buffer))
+                             (current-buffer))
       (ti::widen-safe
         (ti::pmin)
         (cond
@@ -1492,8 +1500,8 @@ Return:
   list    revision numbers
   nil"
   (let ((re "^revision[ \t]+\\([.0-9]+\\)$")
-	ver
-	list)
+        ver
+        list)
     (save-excursion
       (ti::pmin)
       (while (re-search-forward re nil t)
@@ -1533,9 +1541,9 @@ Return:
   1.2           1.1
   1.1           nil"
   (let (branch-list
-	list
-	tmp
-	ret)
+        list
+        tmp
+        ret)
     (setq branch-list   (ti::vc-rcs-get-all-branches version v-list))
     (cond
      ((null branch-list)
@@ -1567,7 +1575,7 @@ Example:
   if version is 1.2,     return all 1.x     branches
   if version is 1.2.1.1, return all 1.2.1.x branches"
   (let (list
-	val)
+        val)
     (if (null val)                      ;Quiet XEmacs 19.14 ByteComp
         (setq val (ti::string-match ".*\\." 0 rev))) ;remove last number
     (setq
@@ -1636,11 +1644,11 @@ Input
                       (string-to-number (match-string 1 str))
                     0)))
     (let ((a1 (version a "^\\([0-9]+\\)"))
-	  (a2 (version a "^[0-9]+\\.\\([0-9]+\\)"))
-	  (a3 (version a "^[0-9]+\\.[0-9]+\\.\\([0-9]+\\)"))
-	  (b1 (version b "^\\([0-9]+\\)"))
-	  (b2 (version b "^[0-9]+\\.\\([0-9]+\\)"))
-	  (b3 (version b "^[0-9]+\\.[0-9]+\\.\\([0-9]+\\)")))
+          (a2 (version a "^[0-9]+\\.\\([0-9]+\\)"))
+          (a3 (version a "^[0-9]+\\.[0-9]+\\.\\([0-9]+\\)"))
+          (b1 (version b "^\\([0-9]+\\)"))
+          (b2 (version b "^[0-9]+\\.\\([0-9]+\\)"))
+          (b3 (version b "^[0-9]+\\.[0-9]+\\.\\([0-9]+\\)")))
       (or (and zero-treat
                (and (= a1 0)
                     (> b1 0)))
@@ -1666,7 +1674,7 @@ Return:
   ;;        $ Revision:
 
   (let ((re (concat "[$]" str ":[^$]+[$]"))
-	ret)
+        ret)
     (if (null (re-search-forward re nil t))
         nil
       (setq ret (match-string 0))
@@ -1686,7 +1694,7 @@ Return:
 
 Example call:
 
-  (ti::vc-rcs-str-find-buffer \"Id\" 'value)"
+  (ti::vc-rcs-str-find-buffer \"Id\" \\='value)"
   (save-excursion
     (ti::widen-safe
       (ti::pmin)
@@ -1719,12 +1727,12 @@ tag in order:
   (or time
       (setq time (current-time)))
   (let ((mon  (format-time-string "%b" time))
-	(dd   (ti::string-trim-blanks
-	       (format-time-string "%e" time)))
-	(hh   (format-time-string "%H" time))
-	(mm   (format-time-string "%M" time))
-	(ss   (format-time-string "%S" time))
-	ret)
+        (dd   (ti::string-trim-blanks
+               (format-time-string "%e" time)))
+        (hh   (format-time-string "%H" time))
+        (mm   (format-time-string "%M" time))
+        (ss   (format-time-string "%S" time))
+        ret)
     (cond
      ((not (stringp type))
       nil)
@@ -1747,10 +1755,10 @@ tag in order:
 
 (when (fboundp 'format-time-string)     ;19.29+
   (defun ti::date-standard-date (&optional type time)
-    "Return time RFC 'Nov 07 1995 20:49' or in SHORT
+    "Return time RFC \"Nov 07 1995 20:49\" or in SHORT
 Input:
-  TYPE  return YYYY-MM-DD instead (ISO 8601).
-        if 'minutes, return YYYY-MM-DD HH:MM.
+  TYPE          if t, return YYYY-MM-DD (ISO 8601).
+                if \\='minutes, return YYYY-MM-DD HH:MM.
   TIME-STRING   User supplied string in format `current-time-string'."
     (cond
      ((eq 'minutes type)
@@ -1764,18 +1772,18 @@ Input:
 ;;; ---
 (unless (fboundp 'format-time-string)
   (defun ti::date-standard-date (&optional type time)
-    "Return Time 'Nov 10th 1995 20:49'.
+    "Return Time \"Nov 10th 1995 20:49\".
 Input:
-  TYPE  return YYYY-MM-DD ISO 8601.
-        if 'minutes, return YYYY-MM-DD HH:MM.
+  TYPE  if t, return YYYY-MM-DD ISO 8601.
+        if \\='minutes, return YYYY-MM-DD HH:MM.
   TIME  User supplied time in format `current-time'."
     (interactive "P")
     (let ((list (ti::date-time-elements
-		 nil
-		 (current-time-string
-		  (or time
-		      (current-time)))))
-	  nbr)
+                 nil
+                 (current-time-string
+                  (or time
+                      (current-time)))))
+          nbr)
       (cond
        (type
         (setq nbr (cdr (assoc (nth 5 list) (ti::month-mm-alist))))
@@ -1834,9 +1842,9 @@ When MODE is non-nil
 ;;;
 (defun ti::date-time-difference (a b &optional float)
   "Calculate difference beween times A and B optionally in FLOAT seconds.
-The input must be in form of '(current-time)'
+The input must be in form of `current-time'
 The returned value is difference in seconds.
-E.g. if you want to calculate days; you'd do
+E.g. if you want to calculate days; you would do
 \(/ (ti::date-time-difference a b) 86400) ;; 60sec * 60min * 24h"
   (if float
       (progn
@@ -1849,7 +1857,7 @@ E.g. if you want to calculate days; you'd do
         (- a b))
     (let ((hi (- (car a) (car b)))
           (lo (- (car (cdr a)) (car (cdr b)))))
-      (+ (lsh hi 16) lo))))
+      (+ (ash hi 16) lo))))
 
 ;;; ----------------------------------------------------------------------
 ;;;
@@ -1886,7 +1894,7 @@ In calculation each month is supposed to have 30 days and a year 356 days."
 Return:
 
   list          ,(dd mm yy tt wd m yy tz)
-                 \"\" in fields which weren't identified.
+                 \"\" in fields which were nor identified.
 
   list members:
   0 YYYY   year         4 numbers
@@ -1967,7 +1975,7 @@ Return:
 (defun ti::string-repeat (count char-or-string)
   "Repeat COUNT times CHAR-OR-STRING."
   (let ((i 0)
-	ret)
+        ret)
     (if (characterp char-or-string) ;; XEmacs compatibility needed
         (setq char-or-string (char-to-string char-or-string)))
     (if (integerp char-or-string)
@@ -1987,14 +1995,14 @@ Return:
          (elt    (assq syntax ti::var-syntax-info))
          ret)
     (or verb
-	(setq verb (called-interactively-p 'interactive)))
+        (setq verb (called-interactively-p 'interactive)))
     (setq ret
           (concat
            (char-to-string syntax)
            " "
            (if elt
-	       (nth 1 elt)
-	     "")))
+               (nth 1 elt)
+             "")))
     (if verb
         (message ret))
     ret))
@@ -2034,17 +2042,17 @@ given, the buffer will be used for reading.
 
 If optional TERMINATE is non-nil, terminates if any of the matches return
 nil. In this case the return list will be empty signifying that all matches
-weren't satisfied.
+were nor satisfied.
 
 Input:
-  level-list    list    e.g.   '(1 0 2)
+  level-list    list    e.g.   \\='(1 0 2)
   string        str     e.g.   \"testThis\"
 
-Return:
- ( \"str\" nil \"str\" .. )
+Return list:
+ (\"str\" nil \"str\" ...)
  nil                    ,see TERMINATE"
   (let (ret
-	str)
+        str)
     (dolist (level level-list)
       (setq str (match-string level string))
       (if (and terminate (null str))
@@ -2062,25 +2070,25 @@ Return:
 
 Input:
 
-  MATCH-LIST    list    e.g.   '(\"\\(re1\\)\" \"re2\" \"\\(cash\\(re3\\)\\)\"
-  LEVEL-LIST    list    e.g.   '(1 0 2)
+  MATCH-LIST    list    e.g.   \\='(\"\\(re1\\)\" \"re2\" \"\\(cash\\(re3\\)\\)\"
+  LEVEL-LIST    list    e.g.   \\='(1 0 2)
   STRING        str     e.g.   \"re1 re2 cashre3\"
-  TERMINATE     any     e.g.   nil, 'terminate
+  TERMINATE     any     e.g.   nil, \\='terminate
 
 Supposes that you have already done the matching.
 
-If the match wasn't found in current level, it assign nil to the
+If the match was not found in current level, it assign nil to the
 corresponding position in return list
 
 If optional TERMINATE is non-nil, terminates if any of the matches return
 nil. In this case the return list will be empty signifying that all matches
-weren't satisfied.
+were not satisfied.
 
 Return:
- ( \"str\" nil \"str\" .. )
- nil                    ,see TERMINATE"
+ (\"str\" nil \"str\" ...)
+ nil  ;; see TERMINATE."
   (let (ret
-	str)
+        str)
     (if (not (eq (length match-list)
                  (length level-list)))
         (error "List length mismatch."))
@@ -2111,18 +2119,18 @@ and the symmetry is non-nil, you get
 If the model is too short the variable REST-CASE instructs what to do
 
   nil      -->  the rest of the STR will be added \"as is\"
-  'follow  -->  the rest of the STR are in the same case as last
-                char in MODEL
-  'lower   -->  insert rest as lowercase
-  'upper   -->  insert rest as uppercase"
+  \\='follow  -->  the rest of the STR are in the same case as last
+  \\=              char in MODEL
+  \\='lower   -->  insert rest as lowercase
+  \\='upper   -->  insert rest as uppercase"
   (let ((i         0)
-	(part      "")
-	case-fold-search               ;case is important
-	last
-	len
-	ret
-	ch
-	ch-model)
+        (part      "")
+        case-fold-search               ;case is important
+        last
+        len
+        ret
+        ch
+        ch-model)
     (if (null symmetry)
         str                             ;don't care
       (setq len (min (length str) (length model))
@@ -2202,15 +2210,15 @@ Input:
 
 Example:
 
-    ;; To get only the file part, you'd say
+    ;; To get only the file part, you would say.
 
     (setq string \"user@site:~/bin/myfile\")
-    (ti::string-index-substring string ?: nil 'right)
+    (ti::string-index-substring string ?: nil \\='right)
 
     ;; To get last item, separated by |
 
     (setq string \"aa|bb|cc|dd\")
-    (ti::string-index-substring string ?| nil 'right 'seek-end)
+    (ti::string-index-substring string ?| nil \\='right \\='seek-end)
 
 Input:
 
@@ -2224,7 +2232,7 @@ Return:
 
   str   if ch found
   nil   no ch found, or impossible condition. Like if input STR is \":\"
-        and don't want to include ?: character."
+        and do not want to include `:' character."
   (let (idx
         ret)
     ;;   common mistakes, prevent it immediately, because
@@ -2258,8 +2266,8 @@ Return:
   ;; #todo: Would using a temporary buffer + untabify + replace-regexps
   ;; be faster?
   (let ((out "")
-	beg
-	end)
+        beg
+        end)
     (while (and (> (length str) 0)
                 (string-match "[ \t]+\\|$" str))
       (setq beg (match-beginning 0) end (match-end 0))
@@ -2339,7 +2347,7 @@ Return:
  list    list of possible buffers
  nil"
   (let ( ;;      Check that we're in ange buffer "*ftp ..."
-	(name   (ti::string-match "^[*]ftp +\\(.*\\)[*]" 1 (buffer-name))))
+        (name   (ti::string-match "^[*]ftp +\\(.*\\)[*]" 1 (buffer-name))))
     (when name
       (ti::dolist-buffer-list
        (and (eq major-mode 'dired-mode)
@@ -2363,12 +2371,12 @@ Return:
   (beg . end)   list, the uu data area
   nil           no uu after point found"
   (let ((case-fold-search  nil)        ;must use case sensitive
-	(beg-re "begin[ \t]+[0-9]+[ \t]+.")
-	(end-re "end[ \t]*$")
-	beg
-	end
-	bol
-	leading)
+        (beg-re "begin[ \t]+[0-9]+[ \t]+.")
+        (end-re "end[ \t]*$")
+        beg
+        end
+        bol
+        leading)
     (with-current-buffer (or data-buffer (current-buffer))
       (and (re-search-forward beg-re nil t)
            (setq bol (line-beginning-position))
@@ -2406,10 +2414,10 @@ the UU start [applies to buffer reading only].
 Return length of line if it's UU, nil if not."
   ;; (interactive)
   (let ((case-fold-search nil)    ;case is important
-	(at-least 50)
-	line
-	len
-	ret)
+        (at-least 50)
+        line
+        len
+        ret)
     (cond
      ((setq line (or string (ti::buffer-read-if-solid)))
       (setq len  (length line))
@@ -2429,14 +2437,14 @@ Return:
   nil"
   (condition-case nil
       (let (p
-	    pp)
+            pp)
         (save-excursion
           (search-backward beg)
           (setq p (point))
           (search-forward end)
           (setq pp (point)))
         (if (< (point) pp)
-	    (cons p pp) nil))
+            (cons p pp) nil))
     (search-failed
      nil)))
 
@@ -2450,11 +2458,11 @@ Return:
 ;;;
 (defun ti::buffer-parse-grep-line ()
   "Parse grep(1) formatted line. FILE:LINE:<content>.
-Return:
-  '(file line content)."
+Return list:
+  (file line content)."
   (let (file
-	line
-	rest)
+        line
+        rest)
     (save-excursion
       (beginning-of-line)
       (cond
@@ -2478,13 +2486,13 @@ Return:
 ;;; ----------------------------------------------------------------------
 ;;;
 (defun ti::buffer-parse-grep-line2 ()
-  "Parse 'file nbr' format. Return '(file line)."
+  "Parse \"file nbr\" format. Return list: (file line)."
   (save-excursion
     (beginning-of-line)
     (when
         (or (looking-at "^[ \t]*\\([^ \t\n:]+\\)[ \t]+\\([0-9]+\\)[ \t:]+")
             (looking-at `,(concat ".*line[ \t,\n]+\\([0-9]+\\)[ \t,\n]+"
-				  "file[ \t,\n]+\\([^ \t\n:)]+\\)")))
+                                  "file[ \t,\n]+\\([^ \t\n:)]+\\)")))
       (list
        (match-string 1)
        (match-string 2)))))
@@ -2496,13 +2504,13 @@ Return:
   (save-excursion
     (beginning-of-line)
     (if (looking-at ".*at +line[ :]+\\([0-9]+\\).*column[ :]+\\([0-9]+\\)")
-	(list (match-string-no-properties 1)
-	      (match-string-no-properties 2)))))
+        (list (match-string-no-properties 1)
+              (match-string-no-properties 2)))))
 
 ;;; ----------------------------------------------------------------------
 ;;;
 (defun ti::buffer-parse-line-main ()
-  "Find directory from the previous 'cd' command.
+  "Find directory from the previous `cd' command.
 Look current line first and if it has no directory part, search backward.
 
 Line formats recognized are:
@@ -2525,13 +2533,13 @@ Return:
   (file line)         information
   nil                 not a valid line"
   (let ( ;;       (drive  "\\([a-zA-Z]:\\)?")
-	(cd-re1 ".*cd +\\(.*\\)")
-	(cd-re2 "^cd +\\(.*\\)")
-	path
-	elt
-	line
-	ret
-	file)
+        (cd-re1 ".*cd +\\(.*\\)")
+        (cd-re2 "^cd +\\(.*\\)")
+        path
+        elt
+        line
+        ret
+        file)
     ;; ................................................ grep-format ...
     (when (setq elt (or (ti::buffer-parse-grep-line)
                         (ti::buffer-parse-grep-line2)))
@@ -2579,8 +2587,8 @@ Return:
   "Read from current point all the non-whitespace characters.
 Ignores leading and trailing whitespace."
   (let ((eol (line-end-position))
-	beg
-	ret)
+        beg
+        ret)
     (save-excursion
       (if (looking-at "[ \t]")
           (skip-syntax-forward " " eol))
@@ -2612,8 +2620,8 @@ Return:
   ''     if no whitespace
   str    whitespace string"
   (let ((re-w "[ \t]+")                ;whitespace
-	mp                             ;maximum point, end of line
-	op)
+        mp                             ;maximum point, end of line
+        op)
     (save-excursion
       (if (null point)
           (setq op (point))
@@ -2676,9 +2684,9 @@ Return:
 
   nil or  \(str str str ..\)"
   (let ((beg (or beg (point-min)))   ;point begin
-	(end (or end (point-max)))   ;point end
-	list
-	line)
+        (end (or end (point-max)))   ;point end
+        list
+        line)
     (save-excursion
       (goto-char beg)
       (while (re-search-forward re end t)
@@ -2759,7 +2767,7 @@ Limitations:
 Return:
   str         word or nil."
   (let ((charset (or charset "-a-zA-Z0-9_"))
-	(not     (concat "^" charset)))
+        (not     (concat "^" charset)))
     (save-excursion
       (if (or (null strict)
               (and strict (looking-at charset)))
@@ -2787,7 +2795,7 @@ Return:
  str
  nil    empty line"
   (let ((bol (line-beginning-position))
-	p)                             ;point
+        p)                             ;point
     (cond
      ((or (bobp)
           (equal (char-syntax  (preceding-char)) ?\  ))
@@ -2815,17 +2823,16 @@ Blocks are separated by SYNTAX Normally the block is read
 from current point forward.
 
 Input:
- SYNTAX         class like \"w\" for words.
- MODE    'back  read backward
-         'word  read full word, skip syntax forward, then backward.
+ SYNTAX  class like \"w\" for words.
+ MODE    \\='back  read backward
+         \\='word  read full word, skip syntax forward, then backward.
 
 Return:
-
  str
  nil    current point does not contain SYNTAX class char."
   (let ((beg (point))
-	end
-	ret)
+        end
+        ret)
     (save-excursion
       (cond
        ((eq mode 'back)
@@ -2856,27 +2863,27 @@ Input:
 
   COUNT                 defaults to 0 ,current word according to MODE.
   MODE   nil            count from the bol/eol.
-         'end           count from the bol/eol, stop at eol/bol
-         'this          start counting from this position
-         'thisEnd       start counting from this position, stop at eol/bol
+         \\='end           count from the bol/eol, stop at eol/bol
+         \\='this          start counting from this position
+         \\='thisEnd       start counting from this position, stop at eol/bol
   BACK                  read backward. Affects the mode parameter.
-  CHARSET               use charset as \"word\", otw defaults to mode's
+  CHARSET               use charset as \"word\", otw defaults to mode\\='s
                         word syntax.
 
 Examples:
 
- (ti::buffer-read-nth-word)                  ,return first word in line
- (ti::buffer-read-nth-word 5 'end)           ,return 5th word, but stop at eol
+ (ti::buffer-read-nth-word)  ;; return first word in line
+ (ti::buffer-read-nth-word 5 \\='end) ;; return 5th word, but stop at eol
 
  ;; return 5th word, counting backwards stopping at bol. Read the word
  ;; with charset a-zA-z.
 
- (ti::buffer-read-nth-word 5 'end 'back \"a-zA-Z\")
+ (ti::buffer-read-nth-word 5 \\='end \\='back \"a-zA-Z\")
 
 Caveats:
 
   You get different results, if point is already sitting at word, or
-  if it's sitting at whitespace, when using 'this modes.
+  if it is sitting at whitespace, when using \\='this modes.
   Try yourself with `forward-word' command.
 
   REMEMBER THAT WORD IS MODE DEPENDENT (see Emacs syntax tables)
@@ -2886,23 +2893,23 @@ Return:
   str   word
   nil   nth word does not exist."
   (let ((next-func     (if back 'backward-word 'forward-word))
-	(prev-func     (if back 'forward-word 'backward-word))
-	(next-skip     (if back 'skip-chars-backward 'skip-chars-forward))
-	(cmp-func      (if back '< '>))
-	(count         (or count 0))
-	limit
-	ret)
+        (prev-func     (if back 'forward-word 'backward-word))
+        (next-skip     (if back 'skip-chars-backward 'skip-chars-forward))
+        (cmp-func      (if back '< '>))
+        (count         (or count 0))
+        limit
+        ret)
     (save-excursion
       ;; ... ... ... ... ... ... ... ... ... ... ... ... ...  set limits ...
       (if (memq mode '(end nil))        ;starting position
-	  (goto-char
+          (goto-char
            (if back
-	       (line-end-position)
-	     (line-beginning-position))))
+               (line-end-position)
+             (line-beginning-position))))
       (if (memq mode '(end thisEnd))    ;setting the limit value
           (setq limit (if back
-			  (line-beginning-position)
-			(line-end-position))))
+                          (line-beginning-position)
+                        (line-end-position))))
       (if (eq 0 count)
           ;; Skip over spaces, stay put ...
           (if (ti::char-in-list-case (following-char) '(?\t ?\ ))
@@ -2939,8 +2946,8 @@ pairs like this
          (\"$$TIMESTAMP$$\"   . (current-time-string))
 
 then the function skips through the buffer doing replace-string
-$$AUTHORNAME$$ 'Charles R Martin' followed by replace-string
-$$TIMESTAMP$$ (results of 'current-time-string')."
+$$AUTHORNAME$$ \"Charles R Martin\" followed by replace-string
+$$TIMESTAMP$$ (results of `current-time-string')."
   (interactive
    (list (symbol-value
           (intern
@@ -3015,7 +3022,7 @@ Input:
   STRICT        if non-nil then if word NBR is not found delete whole line"
   (interactive "*r\nP")
   (let ((nbr (or nbr 1))
-	word)
+        word)
     (save-restriction
       (narrow-to-region beg end) (ti::pmin)
       (while (not (eobp))
@@ -3062,8 +3069,8 @@ Return:
   nil           sitting at eob, cannot kill line"
   (interactive "*P")
   (let ((null-line-re "^$")
-	(count        (or count 1))
-	(i            0))
+        (count        (or count 1))
+        (i            0))
     ;;  emacs kill-line is little awkward, because if you're at the
     ;;  end of buffer it signals an error...
     (while (< i count)
@@ -3108,7 +3115,7 @@ If optional FORCE is given, ignores possible write protection.
 
 Example:
   (if (ti::file-dos-p)
-      (ti::buffer-lf-to-crlf 'Dos2unix 'doReadOnly))"
+      (ti::buffer-lf-to-crlf \\='Dos2unix \\='doReadOnly))"
   (interactive "P")
   (let ((stat buffer-read-only))
     (cond
@@ -3151,13 +3158,13 @@ Example:
 
 Input:
   BUFFER        Where to put the arrow, must be visible.
-  MODE  'show   show the arrow with optional STRING
-        'hide   remove the arrow. If STR is given, change the value
+  MODE  \\='show   show the arrow with optional STRING
+        \\='hide   remove the arrow. If STR is given, change the value
                 of `overlay-arrow-position'. This is usually for restoring
                 the original content.
-        'move   move to current bol position or to POS. STR argument is
+        \\='move   move to current bol position or to POS. STR argument is
                 ignored.
-        any     same as 'hide
+        any     same as \\='hide
 
   STR           arrow string to use, defaults to \"=>\"
   POS           any position, converted to beginning of line
@@ -3356,10 +3363,10 @@ And now you want to make them unique:
 You just give RE \"r\\([0-9]+\\)\" and start value 1, increment 1"
   (interactive "sRE: \nnstart value: \nnIncrement: ")
   (let ((level (or level 1))
-	len
-	beg
-	end
-	fmt)
+        len
+        beg
+        end
+        fmt)
     (while (re-search-forward re nil t) ;search whole buffer
       (when (match-end level)
         (setq beg (match-beginning level)
@@ -3385,11 +3392,11 @@ You just give RE \"r\\([0-9]+\\)\" and start value 1, increment 1"
 Prefix ARG is the increment value. Defaults to 1."
   (interactive "p")
   (let ((col           (current-column))
-	(line          (ti::read-current-line))
-	len
-	out
-	mark
-	num)
+        (line          (ti::read-current-line))
+        len
+        out
+        mark
+        num)
     (unless (integerp increment)
       (setq increment 1))
     (end-of-line)
@@ -3457,11 +3464,11 @@ must have NBR amount of empty lines, no more or less.
 Point is not preserved."
   (interactive "*r\nP")
   (let ((empty-line-re  "^[ \t]+$\\|\n")
-	pb pe                          ;points beg, end
-	count
-	do-it)
+        pb pe                          ;points beg, end
+        count
+        do-it)
     (or nbr
-	(setq nbr 0))		   ;default is to leave no empty lines
+        (setq nbr 0))              ;default is to leave no empty lines
     (save-restriction
       (narrow-to-region beg end)
       (ti::pmin)
@@ -3615,8 +3622,8 @@ Input:
   BEG END   region. If both BEG and END is given, the
             BACK parameter is ignored."
   (let ((func (if back 're-search-backward 're-search-forward))
-	bp
-	ep)
+        bp
+        ep)
     (if (not (integerp level))          ;common error
         (error "Level is not integer."))
     (cond
@@ -3668,7 +3675,7 @@ Gnu diff -n (or --rcs, Output an RCS format diff)
 
     d696 1
     a696 1
-            (tdi-goto-kbd 'verb)
+            (tdi-goto-kbd \\='verb)
     d704 2
     a705 2
 
@@ -3686,14 +3693,14 @@ Gnu diff -u (unified diff)
 
 Returns:
   cons cell
-    (TYPE . POS)        ,POS is the diff start position
-    nil                 ,no diff found
+    (TYPE . POS)        POS is the diff start position
+    nil                 no diff found
 
   TYPE can be
-    'context            ,context diff -c
-    'gnu-n              ,gnu diff -n
-    'gnu-u              ,gnu diff -u
-    'normal             ,normal diff
+    \\='context            context diff -c
+    \\='gnu-n              gnu diff -n
+    \\='gnu-u              gnu diff -u
+    \\='normal             normal diff
 
  POS
     character position where the first diff was found"
@@ -3806,7 +3813,7 @@ Return:
 
  (filename ..)      list of filenames"
   (let (list
-	file)
+        file)
     (dolist (elt (buffer-list))
       (setq file  (buffer-file-name elt))
       (when (stringp file)         ;might be nil if buffer has no file
@@ -3841,20 +3848,20 @@ Return:
   nil   begin or end delimiter was not found"
   (interactive "P")
   (let ((alist '(( ?\(  ?\) )
-		 ( ?\{  ?\} )
-		 ( ?\[  ?\] )
-		 ( ?\`  ?\' )
-		 ( ?\<  ?\> )))
-	beg-ch
-	end-ch
-	beg-re
-	end-re
-	re
-	elt
-	point
-	ret)
+                 ( ?\{  ?\} )
+                 ( ?\[  ?\] )
+                 ( ?\`  ?\' )
+                 ( ?\<  ?\> )))
+        beg-ch
+        end-ch
+        beg-re
+        end-re
+        re
+        elt
+        point
+        ret)
     (or verb
-	(setq verb (called-interactively-p 'interactive)))
+        (setq verb (called-interactively-p 'interactive)))
     ;; ... ... ... ... ... ... ... ... ... ... ... ... . preliminaries ...
     (setq
      re   (cond
@@ -3907,12 +3914,12 @@ be used with skip-chars functions.
 E.g. \"-[]$%@#&*\":;{}()<>/\\ \t\n\""
   (interactive)
   (let ((nset     (concat "^" set)) ;not-set
-	(set-re   (concat "[" (regexp-quote set) "]"))
-	(char     (char-to-string
-		   (if back
-		       (preceding-char)
-		     (following-char))))
-	(point (point)))
+        (set-re   (concat "[" (regexp-quote set) "]"))
+        (char     (char-to-string
+                   (if back
+                       (preceding-char)
+                     (following-char))))
+        (point (point)))
     (cond
      (back
       (if (string-match set-re char)
@@ -3940,8 +3947,8 @@ E.g. \"-[]$%@#&*\":;{}()<>/\\ \t\n\""
   "Find consecutive occurrences of same word, optionally search BACK."
   (interactive "P")
   (let ((func (if back
-		  're-search-back
-		're-search-forward)))
+                  're-search-back
+                're-search-forward)))
     (if (funcall func "\\(\\<\\w*\\>\\)[ \t\n]*\\1" nil t)
         (isearch-highlight (match-beginning 0) (match-end 0))
       nil)))
@@ -4040,7 +4047,7 @@ E.g. folding.el and outline based modes use selective display."
       (region-end)
       (read-from-minibuffer "To buffer: " "*selective display*"))))
   (let ((buffer (get-buffer-create buffer))  ;barfs if invalid...
-	line)
+        line)
     (ti::temp-buffer buffer 'clear)
     (ti::verb)
     (save-excursion
@@ -4090,10 +4097,10 @@ Input:
   WIN                   Use this is as a current window when searching
                         current frame."
   (let ((oframe  (if win
-		     (window-frame win)
-		   (selected-frame)))
-	flist
-	ret)
+                     (window-frame win)
+                   (selected-frame)))
+        flist
+        ret)
     (if exclude-current
         (setq flist (delete oframe (frame-list)))
       (setq flist (frame-list)))
@@ -4135,7 +4142,7 @@ Input:
   "Check if there is only one window in current frame."
   ;;  No need to run `length' when `nth' suffices.
   (let ((win      (selected-window))
-	(next     (next-window)))
+        (next     (next-window)))
     ;;  Same window?
     (eq win next)))
 
@@ -4145,7 +4152,7 @@ Input:
   "Return (frame . win). If BUFFER is visible..
 in some other frame window than in the current frame."
   (let (win
-	ret)
+        ret)
     (dolist (frame
              (delete (selected-frame) (frame-list)))
       ;;  maybe in other frame...
@@ -4174,12 +4181,12 @@ If there are adjacent windows, return all of them.
 Return:
   list          single or many windows. In any order."
   (let (data
-	top
-	top-cmp
-	bot
-	bot-cmp
-	win-val
-	init)
+        top
+        top-cmp
+        bot
+        bot-cmp
+        win-val
+        init)
     (dolist (win win-list)
       (setq data (window-edges win))
       (if (null init)                   ;init vars
@@ -4213,17 +4220,17 @@ Return:
 
 Input:
 
-  BUFFER-NAME-LIST      ,strings, list of buffer names.
+  BUFFER-NAME-LIST   strings, list of buffer names.
 
-Return:
+Return list:
 
-  '((BUFFER-NAME WIN-PTR WIN-PTR ..)
+   ((BUFFER-NAME WIN-PTR WIN-PTR ..)
     (BUFFER-NAME ..)
     ..)"
   (let (alist
-	buffer
-	ptr
-	p)
+        buffer
+        ptr
+        p)
     (dolist (win (ti::window-list))
       ;;  last walue will tell the BOTTOM
       (setq buffer      (buffer-name (window-buffer win)))
@@ -4297,7 +4304,7 @@ Key C-c h   replaces original C-h call
 "
   (interactive)
   (let (;;;     (DELETE    "\C-h")
-	(BACKSPACE "\177"))
+        (BACKSPACE "\177"))
     (unless (ti::compat-window-system)
       (defvar key-translation-map (make-sparse-keymap))
       ;;  If it's nil then something is wrong. Fix it.
@@ -4313,17 +4320,17 @@ Key C-c h   replaces original C-h call
        "\C-ch"
        'help-command
        (lambda (key def)
-	 (message "tinylib: Warning, key already occupied: %s %s"
-		  key def))))))
+         (message "tinylib: Warning, key already occupied: %s %s"
+                  key def))))))
 
 ;;; ----------------------------------------------------------------------
 ;;;
 (defun ti::keymap-function-bind-info  (function-sym &optional map)
   "Return binding information for FUNCTION-SYM from MAP as string or nil."
   (let ((gm (current-global-map))
-	global-bindings
-	local-bindings
-	bind-info)
+        global-bindings
+        local-bindings
+        bind-info)
     (setq global-bindings (where-is-internal function-sym)
           local-bindings
           (prog2
@@ -4371,10 +4378,10 @@ Return:
  t       minor mode found and reinstalled
  nil     no susch minor mode."
   (let (sym
-	mode-string
-	elt
-	map-sym
-	map)
+        mode-string
+        elt
+        map-sym
+        map)
     (when (setq elt (assq mode-name-symbol minor-mode-alist))
       (setq mode-string (nth 1 elt))
       (setq elt (assq mode-name-symbol minor-mode-map-alist))
@@ -4407,11 +4414,10 @@ Input:
 Examples:
 
    ;;  to add mode
-   (ti::keymap-add-minor-mode 'foo-mode 'foo-mode-name  foo-mode-map)
+   (ti::keymap-add-minor-mode \\='foo-mode \\='foo-mode-name foo-mode-map)
 
    ;;  to remove mode
-   (ti::keymap-add-minor-mode 'foo-mode nil nil 'remove)"
-
+   (ti::keymap-add-minor-mode \\='foo-mode nil nil \\='remove)"
   (let (elt)
     (cond
      ((null remove)
@@ -4443,47 +4449,47 @@ Input:
 
   MAP-SYMBOL    map name
   GET-SET       operation.
-                'get  = return previous property value (key definition)
-                'set  = copy definition once.
-                'sett = (force) copy definition even if already copied.
-                The 'set copies the key definition behind the propert
-                PROP only if there is no previous value. 'sett
+                \\='get  = return previous property value (key definition)
+                \\='set  = copy definition once.
+                \\='sett = (force) copy definition even if already copied.
+                The \\='set copies the key definition behind the propert
+                PROP only if there is no previous value. Value \\='sett
                 replaces the content of PROPERTY.
   PROP          property name
   KEY           string -- key binding.
 
 Examples:
 
-  (ti::keymap-bind-control 'mail-mode-map 'set 'my \"\\C-c\\C-c\")
-  --> mail-send-and-exit, saved to property 'my
+  (ti::keymap-bind-control \\='mail-mode-map \\='set \\='my \"\\C-c\\C-c\")
+  --> mail-send-and-exit, saved to property \\='my
 
-  (ti::keymap-bind-control 'mail-mode-map 'set 'my \"\\C-c\\C-c\")
-  --> nil, property 'my Was already set
+  (ti::keymap-bind-control \\='mail-mode-map \\='set \\='my \"\\C-c\\C-c\")
+  --> nil, property \\='my Was already set
 
-  (ti::keymap-bind-control 'mail-mode-map 'get 'my \"\\C-c\\C-c\")
-  --> mail-send-and-exit, get the saved property 'my.
+  (ti::keymap-bind-control \\='mail-mode-map \\='get \\='my \"\\C-c\\C-c\")
+  --> mail-send-and-exit, get the saved property \\='my.
 
 Live example:
 
   ;; - first save original, then use our function. Use property
-  ;;   'my, because The C-c C-c can already be occupied by
+  ;;   \\='my, because The C-c C-c can already be occupied by
   ;;   some other package...
   ;; - it calls the original afterwards
 
-  (ti::keymap-bind-control 'mail-mode-map 'set 'my \"\\C-c\\C-c\")
-  (define-key      mail-mode-map \"\\C-c\\C-c\" 'my-mail-func-CcCc)
+  (ti::keymap-bind-control \\='mail-mode-map \\='set \\='my \"\\C-c\\C-c\")
+  (define-key mail-mode-map \"\\C-c\\C-c\" \\='my-mail-func-CcCc)
 
   (defun my-mail-func-CcCc (arg)
     ...
     (funcall  ;; Call the original.
-      (ti::keymap-bind-control 'mail-mode-map 'get 'my \"\C-c\C-c\")
+      (ti::keymap-bind-control \\='mail-mode-map \\='get \\='my \"\C-c\C-c\")
       arg)
     ;; Function ends here.)"
   (let (map
-	map-key
-	sym
-	val
-	func)
+        map-key
+        sym
+        val
+        func)
     (unless (boundp map-symbol)
       (error "No variable bound %s" map))
     (setq map (eval map-symbol))
@@ -4520,23 +4526,23 @@ Live example:
 
 Input ARG
 
-  'use      Start using the new table if the
-            `keyboard-translate-table' if nil. Otherwise does nothing.
-  'use-new  replace current table with fresh one
+  \\='use      Start using the new table if the
+  \\=          `keyboard-translate-table' if nil. Otherwise does nothing.
+  \\='use-new  replace current table with fresh one
   nil       return new, default translate table.
 
 Examples:
 
-    Switch these keys. Let's assume the \\ key is on top after this,
+    Switch these keys. Let\\='s assume the \\ key is on top after this,
     since it is used more often in emacs.
 
-    (ti::keymap-translate-table 'use)
+    (ti::keymap-translate-table \\='use)
     (aset keyboard-translate-table ?\\| ?\\\\ )
     (aset keyboard-translate-table ?\\\\ ?\\| )
 
 Return:
 
-  new translate table"
+  New translate table"
   (let ((index 0)
         (xlat-table (make-string 128 0)))
     (while (< index 128)                ;Generate the identity map.
@@ -4558,9 +4564,9 @@ Return:
 (defun ti::keymap-put-abc-map (map &optional func)
   "Put function `ignore' to abc key MAP, optionally put FUNC."
   (let ((i    0)
-	(func (or func 'ignore))
-	low
-	up)
+        (func (or func 'ignore))
+        low
+        up)
     (while (< i 27 )
       ;;  Set lowercase/upcase keys to nil
       (setq low (char-to-string (+ 65 i))
@@ -4574,7 +4580,7 @@ Return:
 (defun ti::keymap-put-map (map &optional func)
   "Put function `ignore' to a0 > x <128 key MAP, optionally put FUNC."
   (let ((i    20)
-	(func (or func 'ignore)))
+        (func (or func 'ignore)))
     (while (< i 128 )
       (define-key map (char-to-string i) func)
       (cl-incf i))))
@@ -4587,10 +4593,10 @@ Return:
 
 Example:
   (mapkeys
-   'global-set-key
-   '([f1] 'hilit-rehighlight-buffer
-     [f2] 'eval-defun
-     [f3] 'repeat-complex-command))"
+   \\='global-set-key
+   \\='([f1] \\='hilit-rehighlight-buffer
+     [f2] \\='eval-defun
+     [f3] \\='repeat-complex-command))"
   (let (key
         func
         (i 0)
@@ -4632,18 +4638,18 @@ Doesn't care about read only status of buffer."
   "Try to assign color to face.
 The input is list of color names which are tried one by one.
 First one that succeeds is assigned. If color is occupied, try
-next one. Don't signal any errors.
+next one. Do not signal any errors.
 
 Input:
 
   LIST          (\"color1\" \"color2\" ..) or single color string
-  FACE          symbol. E.g. 'region
-  ATTRIBUTE     symbol. Choices are 'fg and 'bg. Default is 'fg
+  FACE          symbol. E.g. \\='region
+  ATTRIBUTE     symbol. Choices are \\='fg and \\='bg. Default is \\='fg
 
 Return:
 
-  color         color that was assigned
-  nil           all tries failed"
+  color         Color that was assigned
+  nil           All tries failed."
   (let (status)
     (or attribute
         (setq attribute 'fg))
@@ -4700,9 +4706,9 @@ This is a position where there is only one tab or one space or point is
 followed by one newline. Similarly if point is at `point-min' and there is
 only one whitepace, or at `point-max' is preceded by one whitespace."
   (let ((char-backward (if (not (bobp))
-			   (preceding-char)))
-	(char-forward (if (not (eobp))
-			  (following-char))))
+                           (preceding-char)))
+        (char-forward (if (not (eobp))
+                          (following-char))))
     ;;  Point-!-Here
     (cond
      ((and (null char-backward)
@@ -4741,7 +4747,7 @@ Also makes a great gift."
   (interactive "cSurround with char: ")
   ;; hmm, ought to be able to do this with syntax tables?
   (let ((begchar char)
-	(endchar char))
+        (endchar char))
     (cond
      ((or (char-equal char ?\{) (char-equal char ?\}))
       (setq begchar ?\{)
@@ -4762,7 +4768,7 @@ Also makes a great gift."
     (if (not (bolp))
         (re-search-forward "\\s-")
       (if (looking-at "\\s-")
-	  (re-search-forward "\\s-")))
+          (re-search-forward "\\s-")))
     (insert-char begchar 1)
     (let ((opoint (point)))
       (if (re-search-forward "\\s-\\|\n" (point-max) t)
@@ -4770,7 +4776,7 @@ Also makes a great gift."
         (goto-char (point-max)))
       (insert-char endchar 1)
       (if (eq (point)
-	      (+ opoint 1))
+              (+ opoint 1))
           (forward-char -1)))))
 
 ;;; ----------------------------------------------------------------------
@@ -4781,7 +4787,7 @@ In picture mode paste/copying rectangles,
 it easiest if the area has spaces in every row up till
 column \"80\".
 
-To return to 'ragged' text, use function `ti::buffer-trim-blanks'
+To return to `ragged' text, use function `ti::buffer-trim-blanks'
 
 Input:
   BEG           beginning of area, always line beginning
@@ -4792,9 +4798,9 @@ Input:
   (or column
       (setq column 79))
   (let ((spaces (make-string (+ 2 column) ?\ ))
-	line
-	len
-	add)
+        line
+        len
+        add)
     (save-restriction
       (narrow-to-region beg end)
       (untabify (point-min) (point-max)) ;very important !!
@@ -4854,8 +4860,8 @@ Return:
 Preserves words by substituting every [a-zA-Z] with optional CHAR."
   (interactive "r")
   (let ((ch (if char                   ;pick the scramble char
-		(char-to-string char)
-	      "o")))
+                (char-to-string char)
+              "o")))
     (save-excursion
       (save-restriction                 ;preserve prev narrowing
         (narrow-to-region beg end)
@@ -4875,10 +4881,10 @@ commenting arbitrary blocks of code.
 1) set mark to _exact_column_ where to add string
 2) move cursor to destination line, column does not matter.
 
-If you want to add string to specific lines only, supply
-rex when you are asked for 'look for rex'. Remember that this
-rex will be used from that mark column to the end of line, so whole line
-is not looked. Here is one example:
+If you want to add string to specific lines only, supply regexp
+RE-LOOK. Remember that this regexp will be used from that mark
+column to the end of line, so whole line is not looked. Here is
+one example:
 
       *mark here
     ;;; triple comment
@@ -4891,10 +4897,10 @@ is not looked. Here is one example:
     ; single comment
 
     ;;#; another triplet
-      ^^^^^^^^^^^^^^^^^^^^ --> the REX match area, note not incl. leading!
+      ^^^^^^^^^^^^^^^^^^^^ --> the regex match area, note not incl. leading!
 
-Note that the single ';' isn't matched, because the mark's column position
-is further away.
+Note that the single `;' is not matched, because the mark\\='s
+column position is further away.
 
 References:
 
@@ -4902,7 +4908,7 @@ References:
   `string-rectangle'. It does not overwrite existing text."
   (interactive "r\nsString to region :\nsLook for re :")
   (let (col
-	look)
+        look)
     (if (ti::nil-p re-look)             ;reset
         (setq re-look nil))
     (if (ti::nil-p str)
@@ -4994,13 +5000,13 @@ information. It should be alist int he form returned by function
 Return:
   ((login  . user-name-entry) ..)"
   (let ((passwd-buffer ti::var-passwd-buffer)
-	;;  The name is 5th entry
-	;;  neva:I5KJd2C33dtMg:418:200:Max Neva,Houston Texas ...
-	(passwd-re   "^\\([^:]+\\):[^:]+:[^:]+:[^:]+:\\([^:,]+\\)")
-	alist
-	line
-	login
-	person)
+        ;;  The name is 5th entry
+        ;;  neva:I5KJd2C33dtMg:418:200:Max Neva,Houston Texas ...
+        (passwd-re   "^\\([^:]+\\):[^:]+:[^:]+:[^:]+:\\([^:,]+\\)")
+        alist
+        line
+        login
+        person)
     (cond
      (passwd-alist
       ;; ^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^ list ^^^
@@ -5065,22 +5071,21 @@ References:
          (re     (concat "^" user ":"))
          (buffer (get-buffer-create ti::var-passwd-buffer))
          ret)
-    (unwind-protect
-        (with-current-buffer buffer
-          (when (eq (point-min) (point-max)) ;No entries yet
-            (if (null cmd)
-                (error "Need command to get the passwd file")
-              (erase-buffer)
-              (let ((list (split-string cmd)))
-                (apply 'call-process
-                       (car list)
-                       nil
-                       (current-buffer)
-                       nil
-                       (cdr list)))))
-          (ti::pmin)
-          (if (re-search-forward re nil t)
-              (setq ret (ti::read-current-line)))))
+    (with-current-buffer buffer
+      (when (eq (point-min) (point-max)) ;No entries yet
+        (if (null cmd)
+            (error "Need command to get the passwd file")
+          (erase-buffer)
+          (let ((list (split-string cmd)))
+            (apply 'call-process
+                   (car list)
+                   nil
+                   (current-buffer)
+                   nil
+                   (cdr list)))))
+      (ti::pmin)
+      (if (re-search-forward re nil t)
+          (setq ret (ti::read-current-line))))
     ret))
 
 ;;; ----------------------------------------------------------------------
@@ -5100,9 +5105,9 @@ Return:
 
     ((login . full-passwd-entry) ..)"
   (let ((passwd-buffer   ti::var-passwd-buffer)
-	alist
-	line
-	login)
+        alist
+        line
+        login)
     ;;  force loading passwd entries
     (ti::file-passwd-read-entry "SomeUser" cmd)
     (with-current-buffer passwd-buffer
@@ -5146,12 +5151,12 @@ Input:
 Return:
   nil
   string"
-  (let ((name      (symbol-name major-mode))
-	(lisp-re   `,(concat
-		      "def\\(un\\|subst\\|macro\\|advice\\|var\\|const\\)"
-		      "[ \t]+\\([^ \t]+\\)"))
-	line
-	ret)
+  (let ((name (symbol-name major-mode))
+        (lisp-re `,(concat
+                    "def\\(un\\|subst\\|macro\\|advice\\|var\\|const\\)"
+                    "[ \t]+\\([^ \t]+\\)"))
+        line
+        ret)
     (setq line (ti::read-current-line))
     (save-excursion
       (ignore-errors
@@ -5216,8 +5221,8 @@ filename is understood by shell and does not contain meta characters."
   (if (not (file-exists-p file))
       (with-temp-buffer (write-region (point) (point) file))
     (let ((touch (or (get 'ti::file-touch 'touch-binary)
-		     (executable-find  "touch")
-		     (error "`touch' binary not found."))))
+                     (executable-find  "touch")
+                     (error "`touch' binary not found."))))
       (put 'ti::file-touch 'touch-binary touch)
       (call-process touch nil nil nil (expand-file-name file)))))
 
@@ -5234,17 +5239,17 @@ filename is understood by shell and does not contain meta characters."
   "Return status on ANGE-REF ftp buffer.
 
 Return:
- 'no-ange        if no ange buffer exists
- (..)            some ange status values"
+ \\='no-ange     If no ange-ftp buffer exists
+ (..)            List of some ange-ftp status values"
   (let ((ret 'no-ange)
-	ange
-	buffer
-	host
-	user
-	proc
-	line
-	stat
-	busy)
+        ange
+        buffer
+        host
+        user
+        proc
+        line
+        stat
+        busy)
     (require 'ange-ftp)
     (setq ange  (ange-ftp-ftp-name ange-ref) ;crack addr
           host  (nth 0 ange)
@@ -5288,11 +5293,11 @@ Return:
   status        if in fg. Nil means failure."
 
   (let (ange
-	host
-	user
-	dir
-	file
-	to-dir)
+        host
+        user
+        dir
+        file
+        to-dir)
     (require 'ange-ftp)
     (setq ange          (ange-ftp-ftp-name ange-ref) ;crack addr
           host  (nth 0 ange)
@@ -5319,7 +5324,7 @@ Important:
 
 Input:
 
-  MODE          'put or 'get
+  MODE          \\='put or \\='get
   USER          login name when logging to site
   HOST          site name
   DIR           remote site directory
@@ -5334,12 +5339,13 @@ Return:
   nil           always if NOT-BG is nil
   status        if NOT-BG is non-nil. Value nil means that session
                 failed."
-  (let ((func    (or msg-func 'ti::file-ange-completed-message))
-	(max-try 5)
-	(try     0)
-	proc
-	point
-	ret)
+  (let ((func    (or msg-func
+		     #'ti::file-ange-completed-message))
+        (max-try 5)
+        (try     0)
+        proc
+        point
+        ret)
     (require 'ange-ftp)
     (cond                               ;get commands
      ((eq mode 'get)
@@ -5423,11 +5429,11 @@ If file does not exist, or is not owned by user this function does nothing.
 
 Return:
 
-  'w+    file made writable
-  'w-    file made read-only.
+  \\='w+    file made writable
+  \\='w-    file made read-only.
   nil    file not processed."
   (let ((file (expand-file-name file))
-	mode)
+        mode)
     (when (ti::file-modify-p file)
       (setq mode (ti::file-toggle-read-write (file-modes file)))
       (set-file-modes file mode)
@@ -5624,12 +5630,12 @@ Unix path handling:
 (defun ti::directory-unix-man-path-root ()
   "Determine manual page root path. "
   (dolist (try '("/opt/local/man"     ;HP-UX new
-		 "/usr/share/man"     ;HP old
-		 "/usr/man"))         ;Sun and Linux
+                 "/usr/share/man"     ;HP old
+                 "/usr/man"))         ;Sun and Linux
     (if (ti::win32-cygwin-p)
-	(setq try (w32-cygwin-path-to-dos try)))
+        (setq try (w32-cygwin-path-to-dos try)))
     (when (and try
-	       (file-directory-p try))
+               (file-directory-p try))
       (cl-return try))))
 
 ;;; ----------------------------------------------------------------------
@@ -5647,20 +5653,23 @@ Input:
 
 Example:
 
-  ;;  Get all filenames that aren't zipped, backups or objects.
-  ;;  The 'arg' will hold the filename
+  ;;  Get all filenames that are nor zipped, backups or objects.
+  ;;  The `arg' will hold the filename
 
-  (ti::directory-files dir re t nil '(string-match \"g?[Z~#o]$\" arg)))
+  (ti::directory-files dir re t nil \\='(string-match \"g?[Z~#o]$\" arg)))
 
   ;; Return only directory names
 
-  (ti::directory-files dir \".\" 'absolute
-                   '(file-directory-p arg)
-                   '(string-match \"\\\\.\\\\.?$\" arg))
+  (ti::directory-files
+   dir
+   \".\"
+   \\='absolute
+   \\='(file-directory-p arg)
+   \\='(string-match \"\\\\.\\\\.?$\" arg))
 
-Return:
+Return list:
 
-  list          (file file file ..)"
+  (file file file ..)."
   (let (ret)
     (dolist (arg
              (directory-files dir absolute re))
@@ -5678,7 +5687,7 @@ Return:
   "Return existing files. Drop directories from LIST of strings.
 Note: 200 files takes about 2-3 secs. If you supply EVAL-FORM, the item
 will be included if the form Return t. You can refer to current item
-with symbol 'arg'.
+with symbol `arg'.
 
 Input:
 
@@ -5723,8 +5732,8 @@ Return:
 If MODE is nil, then return nil if none exist,
 if MODE is non-nil, return empty string instead."
   (let (list
-	ext
-	len)
+        ext
+        len)
 ;;;    (ti::d! (null file) (null (string-match "\\." file)))
     (if (or (null file)
             (null (string-match "\\." file)))
@@ -5774,9 +5783,9 @@ external processes. Emacs in the other hand can handle both \\ and /
 internally."
   (if (ti::emacs-type-win32-p)
       (ti::file-path-to-msdos (concat (file-name-as-directory dir)
-				      (or file "")))
+                                      (or file "")))
     (ti::file-path-to-unix (concat (file-name-as-directory dir)
-				   (or file "")))))
+                                   (or file "")))))
 
 ;;; ----------------------------------------------------------------------
 ;;; #defalias (defalias 'which 'ti::file-get-load-path)
@@ -5797,8 +5806,8 @@ Return:
   list          list of matches along paths."
   (interactive
    (let ((map (copy-keymap minibuffer-local-map))
-	 var1
-	 var2)
+         var1
+         var2)
      (define-key map "\t"   'lisp-complete-symbol)
      (define-key map "\C-m" 'exit-minibuffer)
      (setq var1 (read-from-minibuffer "sFile: "))
@@ -5830,10 +5839,10 @@ Return:
    /PATH/PATH/USER/    users home
    nil                 not found"
   (let ((usr  (or (getenv "USER")
-		  (getenv "LOGNAME") ))
-	(home (or (getenv "HOME")
-		  (getenv "home") ))
-	(path (expand-file-name "~")))
+                  (getenv "LOGNAME") ))
+        (home (or (getenv "HOME")
+                  (getenv "home") ))
+        (path (expand-file-name "~")))
     (cond
      (path)
      ((> (length home) 0)               ;$HOME exist
@@ -5967,10 +5976,10 @@ NO-MSG  if non-nil, do not flash possible choices at current point
               (forward-char -1)
               (ti::buffer-read-space-word))))
   (let ((oword word)
-	(enable-recursive-minibuffers t)
-	all
-	tmp
-	msg)
+        (enable-recursive-minibuffers t)
+        all
+        tmp
+        msg)
     ;;  expand-file-name dies if default-directory is nil
     (or default-directory
         (error "default-directory is nil !!"))
@@ -6005,7 +6014,7 @@ NO-MSG  if non-nil, do not flash possible choices at current point
 (put 'ti::file-complete-filename-minibuffer-macro 'lisp-indent-function 0)
 (defmacro ti::file-complete-filename-minibuffer-macro (&rest body)
   "Complete filename in minibuffer and do BODY.
-Use variable 'map' to pass map to `read-from-minibuffer' function.
+Use variable `map' to pass map to `read-from-minibuffer' function.
 
 Example call:
 
@@ -6024,7 +6033,7 @@ Example 2:
            (read-from-minibuffer \"Gimme file-list: \" nil map)))))
       (list string file-list))
 
-    (setq result (call-interactively 'my-example)) \"test\" RET <files> RET
+    (setq result (call-interactively \\='my-example)) \"test\" RET <files> RET
     result
     --> (\"test\" (\"~/\" \"~/bin\" \"~/exe/\"))"
   `(let ((map (copy-keymap minibuffer-local-map)))
@@ -6046,14 +6055,14 @@ slash.
 
 Example:
 
-  (setq files (mapcar 'expand-file-name (ti::file-read-file-list)))
+  (setq files (mapcar #\\='expand-file-name (ti::file-read-file-list)))
 
 Return:
 
   (ELT ELT ..)          with `default-directory'
   nil                   no input"
   (let (list
-	str)
+        str)
     (setq str
           (ti::file-complete-filename-minibuffer-macro
             (read-from-minibuffer
@@ -6122,29 +6131,29 @@ Return:
       (setq user (match-string 1 email)
             host (match-string 2 email))
       (save-excursion
-        (unwind-protect
+        (if verb
+	    (message "Fingering %s ..." email))
+        (setq buffer (or buffer (ti::temp-buffer "*finger tmp*" 'clear)))
+;;;           (pop-to-buffer buffer) (ti::d! "calling finger....")
+        (condition-case error
             (progn
-              (if verb     (message "Fingering %s ..." email))
-              (setq buffer (or buffer (ti::temp-buffer "*finger tmp*" 'clear)))
-;;;           (pop-to-buffer buffer) (ti::d! "going finger....")
-              (condition-case error
-                  (progn
-                    (setq
-                     connection
-                     (open-network-stream "*finger*" buffer host port))
-                    (process-send-string
-                     connection (concat "/W " user "\r\n"))
-                    (while (and (memq  (process-status connection) '(open))
-                                (accept-process-output connection timeout))))
-                (file-error
-                 ;; '(file-error "connection refused "connection failed" ..)
-                 (setq ret (ti::list-to-string (cdr error))))
-                (error
-                 (setq ret (ti::list-to-string (cdr error)))))
-              (if connection (delete-process connection))
-              ;;  Strip Ctrl-M marks
-              (with-current-buffer buffer
-                (ti::buffer-lf-to-crlf 'dos2unix)))))
+              (setq
+               connection
+               (open-network-stream "*finger*" buffer host port))
+              (process-send-string
+               connection (concat "/W " user "\r\n"))
+              (while (and (memq  (process-status connection) '(open))
+                          (accept-process-output connection timeout))))
+          (file-error
+           ;; '(file-error "connection refused "connection failed" ..)
+           (setq ret (ti::list-to-string (cdr error))))
+          (error
+           (setq ret (ti::list-to-string (cdr error)))))
+        (if connection
+	    (delete-process connection))
+        ;;  Strip Ctrl-M marks
+        (with-current-buffer buffer
+          (ti::buffer-lf-to-crlf 'dos2unix)))
       (when verb
         (message "Fingering %s ...done" email))
       (if (called-interactively-p 'interactive)
@@ -6176,9 +6185,9 @@ Input:
   BUFFER        where to store result, default is *finger tmp*
   VERB          print verbose messages
 
-Return:
+Return list:
 
- '(buffer-pointer  error-string)
+ (buffer-pointer error-string)
 
   error-string      network stream error message.
   buffer            HTTP response."
@@ -6258,7 +6267,7 @@ Return:
 The ZIP-CMD defaults to \"zip -9 -q\",
 Command will not return until the process has finished."
   (let* ((zcmd          (or zip-cmd
-			    "zip -9 -q "))
+                            "zip -9 -q "))
          (shell-buffer  (get-buffer-create "*Shell output*"))
          (flist         (ti::list-join files))
          (cmd           (concat zcmd " " zip-file " " flist)))
@@ -6277,7 +6286,7 @@ Input:
   FILE      tar file
   BUFFER    defaults to current buffer
   NICE      if non-nil, insert file name and empty lines around listing.
-  ZIP-CMD   defaults to 'unzip -v %s'
+  ZIP-CMD   defaults to `unzip -v %s'
   VERB      verbose mode
 
 Return:
@@ -6317,7 +6326,7 @@ Fixe TEMP variable during the process call.
 
 Input:
 
-  PERL-TYPE   'perl 'win32-cygwin 'win32-activestate
+  PERL-TYPE   \\='perl \\='win32-cygwin \\='win32-activestate
   BODY        Code to run."
   `(let ((process-environment process-environment) ;; Make a local copy
          new)
@@ -6361,15 +6370,15 @@ Return:
   (VERSION TYPE PATH OUTPUT)
 
   VERSION   Version number from command line option -version
-  TYPE      is 'win32-activestate 'win32-cygwin or 'perl
+  TYPE      is \\='win32-activestate \\='win32-cygwin or \\='perl
   PATH      Path to the BINARY or `perl'.
   OUTPUT    Whole output of -v."
   (let ((perl  (if binary
-		   (executable-find binary)
-		 (executable-find "perl")))
-	version
-	type
-	string)
+                   (executable-find binary)
+                 (executable-find "perl")))
+        version
+        type
+        string)
     (when perl
       (with-temp-buffer
         (call-process perl
@@ -6405,13 +6414,13 @@ Return:
   (VERSION TYPE PATH FULL)
 
   VERSION   Version number from command line option -version
-  TYPE      is 'sun or 'gcc or any other known Java vendor.
+  TYPE      is \\='sun or \\='gcc or any other known Java vendor.
   PATH      Path to the BINARY or `java'.
   FULL      Whole output of -version."
   (let ((java (executable-find (or binary "java")))
-	version
-	type
-	string)
+        version
+        type
+        string)
     ;;  Under Debian, `call-process' will hang during
     ;;  call to /usr/bin/java, which is a symlink
     (when (and java
@@ -6467,14 +6476,14 @@ Return:
   nbr       shell return code"
   (interactive "fTar file: ")
   (let ((def (cond
-	      ((string-match "\\.tar$" file)
-	       "tar tvf %s")
-	      ((string-match "\\.tar\\.gz$" file)
-	       "gzip -d -c %s |tar -tvf -")
-	      ;;  don't know this currently ...
-	      ((string-match "\\.tgz$" file)
-	       nil)))
-	cmd)
+              ((string-match "\\.tar$" file)
+               "tar tvf %s")
+              ((string-match "\\.tar\\.gz$" file)
+               "gzip -d -c %s |tar -tvf -")
+              ;;  don't know this currently ...
+              ((string-match "\\.tgz$" file)
+               nil)))
+        cmd)
     ;; Default tar switches:
     ;; -t       ,List the name
     ;; -v       ,verbose
@@ -6512,14 +6521,14 @@ or
 
 -r--r--r-- foo/bar 14764 1998-06-22 15:05:55 file.txt
 
-Return:
+Return list:
 
- '((FILE SIZE PERMISSIONS) ..)"
+ ((FILE SIZE PERMISSIONS) ..)"
   (let ((re `,(concat
-	       "^\\([drwx-]+\\)[ \t]+[0-9A-Za-z_]+/[0-9A-Za-z_]+"
-	       "[ \t]+\\([0-9]+\\)[ \t]+.*[0-9]:[0-9]+[ \t]+"
-	       "\\(.*\\)"))
-	list)
+               "^\\([drwx-]+\\)[ \t]+[0-9A-Za-z_]+/[0-9A-Za-z_]+"
+               "[ \t]+\\([0-9]+\\)[ \t]+.*[0-9]:[0-9]+[ \t]+"
+               "\\(.*\\)"))
+        list)
     (beginning-of-line)
     (when (or (looking-at re)
               (re-search-forward re nil t))
@@ -6541,8 +6550,8 @@ Return:
   nil
   string"
   (let ((echo-keystrokes 0)            ;prevent showing
-	str
-	ch)
+        str
+        ch)
     (while (not (ti::char-in-list-case ch '(?\n ?\C-m ?\e)))
       (cond
        ((ti::char-in-list-case ch '(?\b ?\177))
@@ -6570,7 +6579,7 @@ If user presses ESC, return nil."
          ch
          len)
     (or prompt
-	(setq prompt ""))
+        (setq prompt ""))
     (message prompt)
     (while (not (ti::char-in-list-case ch '(?\n ?\C-m ?\e)))
       (cond
@@ -6670,11 +6679,11 @@ command `lm-verify'.
 Input:
 
   LIB           the filename of the package, including \".el\"
-  HEADER-LIST   string or list of strings. E.g. '(\"maintainer\")
+  HEADER-LIST   string or list of strings. E.g. \\='(\"maintainer\")
 
 Return:
 
-  list          notice that empty hits are stored: '(nil nil ..)
+  list          notice that empty hits are stored: \\='(nil nil ..)
   nil"
   (let ((header-list  (ti::list-make header-list))
         hit elt
@@ -6686,11 +6695,11 @@ Return:
       (require 'lisp-mnt)
       (unwind-protect                   ;make sure file is removed
           (with-current-buffer (setq buffer (ti::find-file-literally file))
-	    (dolist (header header-list)
-	       (setq elt (lm-header header))
-	       (if elt                         ;did we find any ?
-		   (setq hit t))               ;raise flag
-	       (push elt ret)))
+            (dolist (header header-list)
+               (setq elt (lm-header header))
+               (if elt                         ;did we find any ?
+                   (setq hit t))               ;raise flag
+               (push elt ret)))
         ;; Kill the file no matter what happens.
         (kill-buffer buffer)))
      (t
@@ -6716,7 +6725,7 @@ PRECONDITIONS before using this function
      \"\$ Id: tinylib.el,v 1.18 1996/01/24 09:44:48 jaalto Exp jaalto \$\"
      \"Latest modification time and version number.\")
 
-2. The package must be valid according to lisp-mnt.el's command
+2. The package must be valid according to lisp-mnt.el\\='s command
    `lm-verify' so that the \"maintainer\" information can be extracted.
    This means that you file must have header like this:
 
@@ -6726,7 +6735,7 @@ Input:
 
   LIB           filename without path. E.g. \"tinylib.el\"
   ID            the RCS Id string
-  VAR-LIST      list of variables to get from package. Like '(var1 var2)
+  VAR-LIST      list of variables to get from package. Like \\='(var1 var2)
   VERB          Verbose messages and questions.
   ELTS          a) Buffer to included in report.
                 b) If this is functionp, then function must return a
@@ -6735,8 +6744,8 @@ Input:
                    name string."
   (interactive)
   (let (maintainer
-	subj
-	list)
+        subj
+        list)
     (ti::verb)
     (require 'reporter)
     (setq maintainer
@@ -6820,7 +6829,7 @@ Input:
 ;;;
 (defun ti::package-version-info (lib &optional arg)
   "Gets package information and display it in another buffer.
-The LIB is searched along 'load-path'.
+The LIB is searched along `load-path'.
 
 Preconditions:
 
@@ -6884,7 +6893,7 @@ Input:
           (setq
            lm-version             (lm-version)
            lm-summary             (lm-summary)
-           lm-maintainer          (lm-maintainer)
+           lm-maintainer          (lm-maintainers)
            lm-creation-date       (lm-creation-date)
            lm-last-modified-date  (lm-last-modified-date)
            lm-commentary          (lm-commentary)
@@ -6949,11 +6958,11 @@ Input:
 ;;
 (defun ti::package-install-example (lib &optional re)
   "Install example setup for you from LIB.
-The LIB must be normal source file name ending in '.el'.
-Function tries to find $PackageInstallRe: 'REGEXP' $
+The LIB must be normal source file name ending in \".el\".
+Function tries to find $PackageInstallRe: \"REGEXP\" $
 line which has the installation code chars in the surrounding
-quotes. The common practise is to have '^[ \t]*;;+[*]' for Lisp.
-If that regexp is followed by char '_' it means that the line is left empty.
+quotes. The common practise is to have \"^[ \t]*;;+[*]\" for Lisp.
+If that regexp is followed by char \"_\" it means that the line is left empty.
 
 If you supply RE, it must have match in LEVEL 1.
 
@@ -6961,17 +6970,17 @@ Return:
   buffer pointer"
   (interactive "sLibrary: ")
   (let ((tmp  "*ti::pkg*")
-	(file (locate-library lib))
-	(verb (called-interactively-p 'interactive))
-	;;    There has to be " " after the ":" otherwise it's not
-	;;    rcs ident(1) compatible. Also before the last $ ,
-	;;    there must be space.
-	(empty-line-ch "_")
-	comment-re
-	bp                             ;buffer pointer
-	id)
+        (file (locate-library lib))
+        (verb (called-interactively-p 'interactive))
+        ;;    There has to be " " after the ":" otherwise it's not
+        ;;    rcs ident(1) compatible. Also before the last $ ,
+        ;;    there must be space.
+        (empty-line-ch "_")
+        comment-re
+        bp                             ;buffer pointer
+        id)
     (or re
-	(setq re "[$]PackageInstallRe: [ \t]*'\\(.*\\)' [$]"))
+        (setq re "[$]PackageInstallRe: [ \t]*'\\(.*\\)' [$]"))
     (if (or (null file)
             (null (file-readable-p file)))
         (error (concat "Cannot locate/read " lib " in load-path: " file))
@@ -7055,11 +7064,11 @@ Return:
   t or nil"
   (interactive "r")
   (let ((ob    (current-buffer))
-	(str   (ti::package-make-var))
-	(empty "_")
-	(reg   ?p)                   ; "p" as "package"
-	ret
-	re)
+        (str   (ti::package-make-var))
+        (empty "_")
+        (reg   ?p)                   ; "p" as "package"
+        ret
+        re)
     (ti::verb)
     (if (ti::nil-p str)
         (error "\
@@ -7089,9 +7098,9 @@ Return:
   t or nil according to success."
   (interactive "r")
   (let ((source (current-buffer))       ;source buf
-	(m      major-mode)             ;we must use same mode
-	(verb   (called-interactively-p 'interactive))
-	(reg    ?p))
+        (m      major-mode)             ;we must use same mode
+        (verb   (called-interactively-p 'interactive))
+        (reg    ?p))
     (with-temp-buffer
       (insert-buffer-substring source beg end)
       ;;  turning mode on may have effects, since it runs hooks...
@@ -7113,8 +7122,8 @@ Return:
   nil or t if successfull."
   (interactive "*r")
   (let ((str   (ti::package-make-var))
-	(empty "_")
-	ret)
+        (empty "_")
+        ret)
     (if (not (ti::nil-p comment-end))
         (message "tinylib: Comment end found, cannot proceed.")
       (ti::package-make beg end str empty)
@@ -7124,8 +7133,8 @@ Return:
 ;;; ----------------------------------------------------------------------
 ;;;
 (defun ti::package-make-var ()
-  "Return Packaging variable 'str' according to mode.
-If mode has no comment syntax default ';;* ' is used."
+  "Return Packaging variable `str' according to mode.
+If mode has no comment syntax default \";;* \" is used."
   (let* ((cs comment-start)
          (cs (cond                      ;set up something special
               ((memq major-mode
@@ -7149,12 +7158,12 @@ Input:
   STR           string to be added at front
   CH            additional character for empty lines."
   (let ((empty (concat
-		str
-		(cond
-		 ((integerp ch)
-		  (char-to-string ch))
-		 (t
-		  ch)))))
+                str
+                (cond
+                 ((integerp ch)
+                  (char-to-string ch))
+                 (t
+                  ch)))))
     (save-restriction
       (narrow-to-region beg end)
       (goto-char (min beg end))
@@ -7185,33 +7194,33 @@ Input:
   NO-PATH   Do not include path location comment."
   (interactive "fConstruct lisp autoloads from file: ")
   (let ((fn     (file-name-nondirectory file))
-	(regexp `,(concat
-		   "^(\\("
-		   "defun[*]?"
-		   "\\|defmacro[*]?"
-		   "\\|defsubst"
-		   "\\|defun-maybe"
-		   "\\|defsubst-maybe"
-		   "\\|defmacro-maybe"
-		   "\\|define-compilation-mode"
-		   "\\|define-derived-mode"
-		   "\\|define-generic-mode"
-		   "\\|define-global-minor-mode"
-		   "\\|define-globalized-minor-mode"
-		   "\\|define-minor-mode"
-		   "\\|easy-mmode-define-global-mode"
-		   "\\|easy-mmode-define-minor-mode"
-		   "\\)"
-		   "[ \t]+\\([^ \t\n(]+\\)[ \t]*"))
-	list
-	args
-	func
-	type
-	str
-	iact
-	point
-	read-buffer
-	tmp)
+        (regexp `,(concat
+                   "^(\\("
+                   "defun[*]?"
+                   "\\|defmacro[*]?"
+                   "\\|defsubst"
+                   "\\|defun-maybe"
+                   "\\|defsubst-maybe"
+                   "\\|defmacro-maybe"
+                   "\\|define-compilation-mode"
+                   "\\|define-derived-mode"
+                   "\\|define-generic-mode"
+                   "\\|define-global-minor-mode"
+                   "\\|define-globalized-minor-mode"
+                   "\\|define-minor-mode"
+                   "\\|easy-mmode-define-global-mode"
+                   "\\|easy-mmode-define-minor-mode"
+                   "\\)"
+                   "[ \t]+\\([^ \t\n(]+\\)[ \t]*"))
+        list
+        args
+        func
+        type
+        str
+        iact
+        point
+        read-buffer
+        tmp)
     (or buffer
         (setq buffer (get-buffer-create (or buffer  "*Autoloads*"))))
     ;;   We want to say (autoload 'func "pacakge" t t)
@@ -7229,9 +7238,9 @@ Input:
               (setq emacs-lisp-mode-hook nil))
           (emacs-lisp-mode)))
       (unless no-path
-	(ti::append-to-buffer
-	 buffer
-	 (format ";; %s\n" (file-name-nondirectory file)))
+        (ti::append-to-buffer
+         buffer
+         (format ";; %s\n" (file-name-nondirectory file)))
         (ti::append-to-buffer
          buffer
          (format ";; %s\n" file)))
@@ -7239,7 +7248,7 @@ Input:
       (while (re-search-forward regexp nil t)
         (setq iact nil                  ;interactive flag
               args nil
-	      ;; match (match-string 0)
+              ;; match (match-string 0)
               type (match-string 1)
               func (match-string 2))
         (when (and func
@@ -7252,53 +7261,53 @@ Input:
                        (backward-char 1)
                        (setq
                         args
-			(replace-regexp-in-string
-			 "[ \t]+" " "
-			 (subst-char-in-string
-			  ;;  Convert multiline args to one line.
-			  ?\n ?\ (buffer-substring point (point)) ))))))
-	  (if (or (string-match "define.*mode" type)
-		  (re-search-forward
-		   "[ \t\n]+([ \t]*interactive"
-		   (save-excursion (end-of-defun) (point))
-		   t))
-	      (setq iact "t"))
-	  (cond
-	   ((null args)
-	    (setq args (format ";; %-36s <args not known>\n" func)))
-	   ((string= args "")
-	    (setq args (format ";; %s\n" func)))
-	   ((> (length args) 32)
-	    (setq args (format ";; %-15s %s\n" func args)))
-	   (t
-	    (setq args (format ";; %-36s %s\n" func args))))
-	  (push (list func args) list)
-	  ;; (autoload FUNCTION FILE &optional DOCSTRING INTERACTIVE TYPE)
-	  (setq str (format "(autoload '%-36s %s \"\" %s%s)%s\n"
-			    func
-			    (format "\"%s\""
-				    (file-name-sans-extension fn))
-			    (or iact "nil")
-			    (if (string-match "defmacro" type )
-				" 'macro" "")
-			    (if (string= type "defsubst")
-				(format ";;%s" type) "")))
-	  (ti::append-to-buffer buffer str)
-	  (setq iact "t")))
+                        (replace-regexp-in-string
+                         "[ \t]+" " "
+                         (subst-char-in-string
+                          ;;  Convert multiline args to one line.
+                          ?\n ?\ (buffer-substring point (point)) ))))))
+          (if (or (string-match "define.*mode" type)
+                  (re-search-forward
+                   "[ \t\n]+([ \t]*interactive"
+                   (save-excursion (end-of-defun) (point))
+                   t))
+              (setq iact "t"))
+          (cond
+           ((null args)
+            (setq args (format ";; %-36s <args not known>\n" func)))
+           ((string= args "")
+            (setq args (format ";; %s\n" func)))
+           ((> (length args) 32)
+            (setq args (format ";; %-15s %s\n" func args)))
+           (t
+            (setq args (format ";; %-36s %s\n" func args))))
+          (push (list func args) list)
+          ;; (autoload FUNCTION FILE &optional DOCSTRING INTERACTIVE TYPE)
+          (setq str (format "(autoload '%-36s %s \"\" %s%s)%s\n"
+                            func
+                            (format "\"%s\""
+                                    (file-name-sans-extension fn))
+                            (or iact "nil")
+                            (if (string-match "defmacro" type )
+                                " 'macro" "")
+                            (if (string= type "defsubst")
+                                (format ";;%s" type) "")))
+          (ti::append-to-buffer buffer str)
+          (setq iact "t")))
       (unless no-desc
-	(with-current-buffer buffer
-	  (insert "\n")                   ;list arguments for functions.
-	  (dolist (elt list)
-	    (cl-multiple-value-bind (func args) elt
-	      (if (and (stringp args)
-		       (string-match "[a-z]" args))
-		  (insert (format ";; %-35s %s\n" func args))
-		(insert (format ";; %s\n" func)))))))
+        (with-current-buffer buffer
+          (insert "\n")                   ;list arguments for functions.
+          (dolist (elt list)
+            (cl-multiple-value-bind (func args) elt
+              (if (and (stringp args)
+                       (string-match "[a-z]" args))
+                  (insert (format ";; %-35s %s\n" func args))
+                (insert (format ";; %s\n" func)))))))
       (if tmp                          ;We loaded this to Emacs, remove it
-	  (kill-buffer tmp))
+          (kill-buffer tmp))
       (unless no-show
-	(pop-to-buffer buffer)
-	(ti::pmin))
+        (pop-to-buffer buffer)
+        (ti::pmin))
       buffer)))
 
 ;;; ----------------------------------------------------------------------
@@ -7316,9 +7325,9 @@ Input:
 
   See argument description in function `ti::package-autoload-create-on-file'."
   (let ((files (directory-files
-		dir
-		'full
-		"\\.el$")))
+                dir
+                'full
+                "\\.el$")))
     (dolist (file files)
       (ti::package-autoload-create-on-file file buffer no-show no-desc))))
 
@@ -7378,7 +7387,7 @@ TO-FILE is excluded from autoload search."
              ;;      (regexp-quote generate-autoload-cookie)
              ;;
              find-file-hook
-	     write-file-functions
+             write-file-functions
              font-lock-mode
              ;; buffer-auto-save-file-name
              auto-save-hook
@@ -7426,9 +7435,9 @@ Input:
   REGEXP    Ignore files matching regexp.
   FORCE     If non-nil, delete previous TO-FILE."
   (let ((generated-autoload-file to-file) ;; See autoload.el, must be bound
-	(name          (file-name-nondirectory to-file))
-	(buffer        (find-buffer-visiting to-file))
-	load)
+        (name          (file-name-nondirectory to-file))
+        (buffer        (find-buffer-visiting to-file))
+        load)
     (unless generated-autoload-file ;; just byte compiler silencer.
       (setq generated-autoload-file nil))
     ;;  Exclude to-file from search.
@@ -7484,12 +7493,12 @@ Input:
   (unless dir
     (error "need DIR"))
   (let ((dirs (ti::package-autoload-directories
-	       (directory-files
-		(expand-file-name dir)
-		'abs)))
-	(to-file (or (and function
-			  (funcall function dir))
-		     "loaddefs.el")))
+               (directory-files
+                (expand-file-name dir)
+                'abs)))
+        (to-file (or (and function
+                          (funcall function dir))
+                     "loaddefs.el")))
     (cond
      (dirs
       (ti::package-autoload-loaddefs-build-dir dir to-file regexp force)
@@ -7503,10 +7512,10 @@ Input:
 ;;;
 (defun ti::package-install-pgp-tar  (dir &optional log-buffer source test)
   "Install PGP signed tar block using DIR from the end of current buffer.
-The 'BEGIN PGP MESSAGE' is searched from the end of buffer backward.
+Search backward \"BEGIN PGP MESSAGE\" from the end of buffer.
 
 The TAR block in the buffer looks like this and it is base64 pgp
-signed (clearsig is off) with Author's public key.
+signed (clearsig is off) with Author\\='s public key.
 
     ;; -----BEGIN PGP MESSAGE-----
     ;; Version: 2.6.3ia
@@ -7526,8 +7535,8 @@ o   temporary files are stored to TMP, TMPDIR or /tmp
 
 Error conditions:
 
-o   if 'pgp' executable is not found, function aborts.
-o   if 'tar' executable is not found, function aborts.
+o   if \"pgp\" executable is not found, function aborts.
+o   if \"tar\" executable is not found, function aborts.
 o   if previously installed files exists, function aborts.
 
 Input:
@@ -7537,34 +7546,34 @@ Input:
   SOURCE        instead of using current buffer, read this file"
 
   (interactive "DSave programs to directory: ")
-  (let* ((pgp     (or (and (executable-find "pgp")
-                           ;;  Do not use returned absolute path
-                           ;;  due to platform independency
-                           "pgp")
-                      (progn (message "TinyLib: Can't find `pgp'.")
-			     nil)))
-         (gpg     (or (and (executable-find "gpg")
-                           "gpg")
-		      (progn
-			(message "TinyLib: Can't find `gpg'.")
-			nil)))
+  (let* ((pgp (or (and (executable-find "pgp")
+                       ;;  Do not use returned absolute path
+                       ;;  due to platform independency
+                       "pgp")
+                  (progn (message "TinyLib: Can't find `pgp'.")
+                         nil)))
+         (gpg (or (and (executable-find "gpg")
+                       "gpg")
+                  (progn
+                    (message "TinyLib: Can't find `gpg'.")
+                    nil)))
          (pgp-bin (or gpg
-		      pgp
-		      (error "No pgp or gpg program in `exec-path'")))
-         (tar     (or (executable-find "tar")
-                      (error "TinyLib: No tar in 'exec-path'.")))
-         (tmp     (or (and (getenv "TEMPDIR")
-                           (ti::file-make-path (getenv "TEMPDIR")))
-		      (and (getenv "TMP")
-                           (ti::file-make-path (getenv "TMP")))
-                      (and  (getenv "TMPDIR")
-                            (ti::file-make-path (getenv "TMPDIR")))
-                      "/tmp/"))
+                      pgp
+                      (error "No pgp or gpg program in `exec-path'")))
+         (tar (or (executable-find "tar")
+                  (error "TinyLib: No tar in 'exec-path'.")))
+         (tmp (or (and (getenv "TEMPDIR")
+                       (ti::file-make-path (getenv "TEMPDIR")))
+                  (and (getenv "TMP")
+                       (ti::file-make-path (getenv "TMP")))
+                  (and  (getenv "TMPDIR")
+                        (ti::file-make-path (getenv "TMPDIR")))
+                  "/tmp/"))
          ;;  This may be system dependent someday..
          (tar-opt-show "tvf")
-         (tar-opt-x    "xvf")
-         (obuffer  (current-buffer))
-         (in-file  (expand-file-name (concat tmp "t.in")))
+         (tar-opt-x "xvf")
+         (obuffer (current-buffer))
+         (in-file (expand-file-name (concat tmp "t.in")))
          (out-file (expand-file-name (concat tmp "t.out")))
          cmd
          in
@@ -7584,7 +7593,7 @@ Input:
      ((not (file-directory-p tmp))
       (error
        (format `,(concat "TinyLib: Can't use directory '%s'. "
-			 "Set env variable TEMPDIR.") tmp)))
+                         "Set env variable TEMPDIR.") tmp)))
      ((not (file-exists-p dir))
       (error "TinyLib: No such directory %s." dir)))
     (setq buffer (ti::temp-buffer
@@ -7645,7 +7654,7 @@ Input:
           (ti::pmin)
           (unless (re-search-forward "Plaintext filename:" nil t)
             (message
-	     "WARN: TinyLib: Can't proceed, process didn't set filename.")))
+             "WARN: TinyLib: Can't proceed, process didn't set filename.")))
         ;; .. .. .. .. .. .. .. .. .. .. .. .. .. .. .. show tar content  ..
         (ti::pmax)
         (setq cmd  (format "cd %s ; %s %s %s"
@@ -7706,7 +7715,7 @@ If this is queried unde Emacs, `exec-path' must contain XEmacs binary,
 otherwise `load-path' is conculted."
   (let* ((xemacs (ti::xemacs-p))
          (ver    (if xemacs
-		     (ti::emacs-version-number-as-string))) ;eg "19.14"
+                     (ti::emacs-version-number-as-string))) ;eg "19.14"
          match
          ret)
     (dolist (path (if xemacs
@@ -7791,7 +7800,7 @@ Return:
 (defun ti::compat-overlay-move (ov-sym beg end &optional make-local face)
   "Move overlay OV-SYM to BEG END. Overlay is created if it does not exist.
 MAKE-LOCAL localizes the overlay. If the overlay is created,
-then FACE is assigned to it (default 'highlight)"
+then FACE is assigned to it (default \\='highlight)"
   (cond
    ((ti::overlay-supported-p)
     ;; ................................................ create overlay ...
@@ -7829,19 +7838,19 @@ then FACE is assigned to it (default 'highlight)"
     (if off
         (ti::funcall 'zmacs-deactivate-region)
       (let ((var 'zmacs-regions)) ;Avoid bute compile mesage in Emacs
-	(set var t)
-	(ti::funcall 'activate-region)))))
+        (set var t)
+        (ti::funcall 'activate-region)))))
 
 ;;; ----------------------------------------------------------------------
 ;;;
 (defun ti::compat-read-password  (&optional prompt)
-  "Read password with PROMPT which defaults to 'Password: '."
+  "Read password with PROMPT which defaults to \"Password: \"."
   (let ((var-bind  (boundp 'record-keystrokes))
-	;; If a GC occurred during that timing window, and a core dump was
-	;; forced later, the core might contain the string.
-	;;  --> use most-positive-fixnum
-	(gc-cons-threshold (* 1024 1024))
-	record-keystrokes)             ;XEmacs 20.4
+        ;; If a GC occurred during that timing window, and a core dump was
+        ;; forced later, the core might contain the string.
+        ;;  --> use most-positive-fixnum
+        (gc-cons-threshold (* 1024 1024))
+        record-keystrokes)             ;XEmacs 20.4
     (setq prompt (or prompt "Password: "))
     (prog1
         (cond
@@ -7897,11 +7906,11 @@ then FACE is assigned to it (default 'highlight)"
   "Turn of MINOR-MODE-SYMBOL and execute original KEY-BINDING.
 This won't work on mouse commands that examine the mouse `event'"
   (let* ((map           (or (current-local-map)
-			    global-map))
+                            global-map))
          (function      (lookup-key map key-binding))
          (this-command  (if function
-			    function
-			  this-command)))
+                            function
+                          this-command)))
     (when (and (not (ti::bool-p function))
                (symbolp function)
                (fboundp function))
@@ -7912,44 +7921,45 @@ This won't work on mouse commands that examine the mouse `event'"
             (set minor-mode-symbol nil)
             ;;  This is very simplistic call. E.g. mouse event should
             ;;  be called with  (funcall function event)
-            (call-interactively function)))
-      ;; Make sure minor mode setting is restored
-      (set minor-mode-symbol
-           (get minor-mode-symbol 'ti::orig-value-key)))))
+            (call-interactively function))
+	;; unwind
+	;; Make sure minor mode setting is restored
+	(set minor-mode-symbol
+             (get minor-mode-symbol 'ti::orig-value-key))))))
 
 ;;; ----------------------------------------------------------------------
 ;;;
 (defun ti::compat-mouse-position-coordinates ()
-  "Return '(LINE COLUMN) where mouse pointer is currently.
+  "Return list (LINE COLUMN) where mouse pointer is currently.
 If mouse is not supported, return nil."
   (when (fboundp 'mouse-position)
     (let ( ;; (frame (car (mouse-position)))
           (x  (cadr (mouse-position)))
           (y  (cddr (mouse-position))))
-      (if (not (and x y))		;No info available
-	  (list
-	   (ti::current-line-number)
-	   (current-column))
-	;;  window-list returns all windows starting from TOP. Count
-	;;  Lines in every window and compare that to mouse-position
-	(let ((win (get-buffer-window (current-buffer)))
-	      (count 0))
-	  (save-window-excursion
-	    (dolist (elt (window-list))
-	      (when (eq elt win)
-		(cl-return))
-	      (select-window elt)
-	      ;;  Modeline is not counted as +1
-	      (setq count (+ count (window-height)))))
-	  ;; (ti::d! count x y)
-	  (list (1+ (- y count))
-		;;  In Emacs 21.x there is a "fringe" that mouse-position
-		;;  reports as X=0,
-		(if (eq x 0)
-		    ;; Consider "fringe" as column 0
-		    0
-		  ;; Removed "fringe" count
-		  (1- x))))))))
+      (if (not (and x y))               ;No info available
+          (list
+           (ti::current-line-number)
+           (current-column))
+        ;;  window-list returns all windows starting from TOP. Count
+        ;;  Lines in every window and compare that to mouse-position
+        (let ((win (get-buffer-window (current-buffer)))
+              (count 0))
+          (save-window-excursion
+            (dolist (elt (window-list))
+              (when (eq elt win)
+                (cl-return))
+              (select-window elt)
+              ;;  Modeline is not counted as +1
+              (setq count (+ count (window-height)))))
+          ;; (ti::d! count x y)
+          (list (1+ (- y count))
+                ;;  In Emacs 21.x there is a "fringe" that mouse-position
+                ;;  reports as X=0,
+                (if (eq x 0)
+                    ;; Consider "fringe" as column 0
+                    0
+                  ;; Removed "fringe" count
+                  (1- x))))))))
 
 ;;; ----------------------------------------------------------------------
 ;;;
@@ -7973,7 +7983,7 @@ If mouse is not supported, return nil."
   "Return original function behind MINOR-MODE-SYMBOL with mouse EVENT.
 See. `ti::xemacs--mouse-call-original'."
   (let (ret
-	flyspell-p)
+        flyspell-p)
     (or event
         (setq event last-input-event))
     (when (or (null minor-mode-symbol)
@@ -8004,11 +8014,12 @@ See. `ti::xemacs--mouse-call-original'."
 
 ;;; ----------------------------------------------------------------------
 ;;;
-(defvar ti::xemacs--mouse-call-original nil "See ti::keymap-mouse-call-original.")
+(defvar ti::xemacs--mouse-call-original nil
+  "See `ti::keymap-mouse-call-original'.")
 
 (defun ti::compat-mouse-call-original (minor-mode-symbol &optional event)
   "Execute original mouse function by turning of MINOR-MODE-SYMBOL.
-EVENT is mouse event. You use this function to to handle 'hot spots' in the
+EVENT is mouse event. You use this function to to handle hot spots in the
 buffer and in other places you call the original function.
 
 Do nothing if original function does not exist.
@@ -8020,7 +8031,7 @@ Example for some minor mode implementation:
 ext-pro  (defun folding-mode-context-sensitive  (event)
     (interactive \"e\")
     ;; If test.. if test..no, then call original function
-    (ti::compat-mouse-call-original 'folding-mode event))
+    (ti::compat-mouse-call-original \\='folding-mode event))
 
 Note:
 
@@ -8075,7 +8086,7 @@ Works in XEmacs and Emacs.
 
 Input:
 
-  STRING-LIST   '(str str ..)
+  STRING-LIST   (str str ..)
   EVENT         mouse-event or nil
   MODE          if non-nil, return selection NBR [0..n]. Normally
                 returns the selection itself.
@@ -8087,16 +8098,16 @@ Return:
   nil           nothing selected"
   (interactive "e")
   (let ((count  0)
-	;;  Allow calling from key press also.
-	(event  (or event
-		    (ti::compat-make-x-popup-event
-		     ti::var-x-coord ti::var-y-coord)))
-	menu
-	item-list
-	alist
-	ret)
+        ;;  Allow calling from key press also.
+        (event  (or event
+                    (ti::compat-make-x-popup-event
+                     ti::var-x-coord ti::var-y-coord)))
+        menu
+        item-list
+        alist
+        ret)
     (or title
-	(setq title ""))
+        (setq title ""))
     (when (ti::listp string-list)
       (setq alist  (ti::list-to-assoc-menu string-list))
       (cond
@@ -8214,10 +8225,8 @@ Very handy if you call from kbd a function that requires mouse event."
 ;;;
 (defun ti::compat-make-fake-event (x y &optional mouse-sym)
   "Make fake event using X and Y coordinates and MOUSE-SYM[mouse - 1].
-
 Remeber: this is not full blown fake, just sufficent one, if
-receiver uses any of 'posn-' function, this doesn't fool it."
-
+receiver uses any of posn-* function, this doe not fool it."
   ;; (mouse-1 (#<window 42 on tinylib.el> 271088 (92 . 138) -492011))
   (cond
    ((ti::emacs-p)
@@ -8257,12 +8266,12 @@ receiver uses any of 'posn-' function, this doesn't fool it."
 ;;; - Changing the frame label is same as changing the icon label
 ;;;
 (defun ti::compat-set-frame-parameter (prop-or-list value &optional frame)
-  "Use PROP-OR-LIST and VALUE to set FRAME's parameters.
+  "Use PROP-OR-LIST and VALUE to set FRAME\\='s parameters.
 When called interactively, set name of the frame.
 
 Input:
  PROP-OR-LIST       alist of parameters or single property name
-                    '((param . val) ..)
+                    ((param . val) ..)
  VALUE              only used if single property given.
  FRAME              defaults to current frame."
   (interactive
@@ -8303,7 +8312,7 @@ If GET is non-nil return frame name."
 ;;; ----------------------------------------------------------------------
 ;;;
 (defun ti::compat-frame-window-config ()
-  "Return list '((FRAME WINDOW-CONFIGURATION) (F W) ..)."
+  "Return list: ((FRAME WINDOW-CONFIGURATION) ...)."
   (let (ret)
     (dolist (elt
              (cdr (current-frame-configuration)))
@@ -8315,9 +8324,9 @@ If GET is non-nil return frame name."
 ;;;
 (defun ti::compat-window-system  ()
   "XEmacs and Emacs Compatibility, Mimic Emacs `window-system' variable.
-In XEmacs the `cosole-type' returns 'tty on terminal, but this function
-return nil to be in par with Emacs behavior. An 'tty is not a windowed
-environment."
+In XEmacs the `cosole-type' returns \\='tty on terminal, but this function
+return nil to be in par with Emacs behavior. In this fucntion, \\='tty
+is not considerd windowed environment."
   (cond
    ((fboundp 'console-type)
     (let ((val (ti::funcall 'console-type)))
@@ -8331,26 +8340,21 @@ environment."
 ;;; ----------------------------------------------------------------------
 ;;;
 (defun ti::compat-timer-list-control (&optional mode)
-  "Timer handling: MODE can be 'save 'restore or 'kill.
+  "Timer handling: MODE can be \\='save \\='restore or \\='kill.
 
 Example:
 
   ;; Turn off all processes for a while...
-
-  (ti::compat-timer-list-control 'save)
-  (ti::compat-timer-list-control 'kill)
-
+  (ti::compat-timer-list-control \\='save)
+  (ti::compat-timer-list-control \\='kill)
   ;; ... do something
-
-  ;;  Now restore the prosesses
-
-  (ti::compat-timer-list-control 'restore)"
-
+  ;;  Restore the prosesses
+  (ti::compat-timer-list-control \\='restore)"
   (let ((sym
-	 (cond
-	  ((boundp 'timer-alist)  'timer-alist)
-	  ((boundp 'timer-list)   'timer-list)
-	  ((boundp 'itimer-list)  'itimer-list))))
+         (cond
+          ((boundp 'timer-alist)  'timer-alist)
+          ((boundp 'timer-list)   'timer-list)
+          ((boundp 'itimer-list)  'itimer-list))))
     ;;  We store/restore the list into the timer variable symbol
     ;;  properties.
     (cond
@@ -8396,15 +8400,15 @@ The timer lists are searched in following order:
 
   `itimer-list'
   `timer-list'
-  'timer-idle-list'
+  \\='timer-idle-list'
 
-Return:
+Return list:
 
-  '(timer-elt timer-variable)"
+  (timer-elt timer-variable)"
   (let (pos
-	list
-	item
-	ret)
+        list
+        item
+        ret)
     (cl-flet ((get-elt (elt place)
                     (if (vectorp elt)
                         (aref elt place)
@@ -8502,9 +8506,9 @@ if you know the function in timer list."
 (defun ti::compat-set-mode-line-format  (fmt)
   "Set modeline format using FMT."
   (let ((sym
-	 (if (ti::emacs-p)
-	     'mode-line-format
-	   'modeline-format)))
+         (if (ti::emacs-p)
+             'mode-line-format
+           'modeline-format)))
     ;; XEmacs 19.14 says:
     ;; ** mode-line-format is an obsolete var; use modeline-format instead.
     (set sym fmt)))
@@ -8522,8 +8526,8 @@ if you know the function in timer list."
    mode-Name-prefix-key
    easymenu-Name
    custom-group
-
-   &optional style)
+   &optional
+   style)
   "Return standard minor mode variables.
 See below how to call this function  from the top of your minor mode package.
 
@@ -8546,7 +8550,7 @@ Example, when:
   STYLE             is nil              ;; Standard Emacs style
 
   (defvar xxx-mode                      nil)
-  (make-variable-buffer-local           'xxx-mode)
+  (make-variable-buffer-local           \\='xxx-mode)
 
   (defvar xxx-mode-name                 MODE-NAME)
   (defvar xxx-mode-prefix-key           MODE-NAME-PREFIX-KEY)
@@ -8560,10 +8564,10 @@ Example, when:
 Example, when:
 
   PFX               is \"xxx\"
-  STYLE             is 'xxx-:
+  STYLE             is \\='xxx-:
 
   (defvar xxx-mode                      nil)
-  (make-variable-buffer-local           'xxx-mode)
+  (make-variable-buffer-local           \\='xxx-mode)
 
   (defvar xxx-:mode-name                MODE-NAME)
   (defvar xxx-:mode-prefix-key          MODE-NAME-PREFIX-KEY)
@@ -8599,8 +8603,8 @@ How to call this function:
 PFX MODE-NAME MODE-NAME-PREFIX-KEY
 EASYMENU-NAME CUSTOM-GROUP PREFIX-STYLE"
   (let ((x "-")
-	sym
-	ret)
+        sym
+        ret)
     (if prefix-style
         (if (not (stringp prefix-style))
             (error "style must be string")
@@ -8706,30 +8710,30 @@ EASYMENU-NAME CUSTOM-GROUP PREFIX-STYLE"
 Input:
 
   FUNC-MIN-SYM  symbol, the name of the function that is created.
-                E.g. 'xxx-mode
+                E.g. \\='xxx-mode
 
   DOC-STR       string, the function documentation string
 
-  INSTALL-FUNC  symbol, if func-min-sym isn't in `minor-mode-alist', this
+  INSTALL-FUNC  symbol, if func-min-sym is not in `minor-mode-alist', this
                 function is called to install the minor mode.
 
   MODE-VAR      symbol, a variable which turns minor mode on or off
   MODE-NAME     symbol, a variable, contains mode name.
-  [PREFIX-VAR]  symbol, a variable, mode's prefix key. Can be nil
-  [MENU-VAR]    symbol, a variable, mode's menu definitions. The menu must be
+  [PREFIX-VAR]  symbol, a variable, mode\\='s prefix key. Can be nil
+  [MENU-VAR]    symbol, a variable, mode\\='s menu definitions. The menu must be
                 in format of easy-menu.el so that it is Emacs and
                 XEmacs compatible
 
   [NO-MODE-MSG] if non-nil, then default mode turn on or off message
                 is not displayed. The default message is
-                'MODE-DESC mode minor mode is ON. Prefix key is XXX'
+                \#MODE-DESC mode minor mode is ON. Prefix key is XXX\"
   MODE-DESC     string, used in the default turn on message, see above.
 
   [HOOK]        symbol, hook that is run when mode is called.
 
   [BODY]        Lisp code to be added inside middle body. Can be nil.
 
-Created function's arguments:
+Created function\\='s arguments:
 
   (&optional arg verb)
   ARG           is mode on off variable. nil toggles mode.
@@ -8740,7 +8744,7 @@ Created function's arguments:
 Example how to use this macro:
 
   ;;; We have to inform autoload that function exist after macro
-  ;;;###autoload (autoload 'xxx-mode          \"package-file\" t t)
+  ;;;###autoload (autoload \\='xxx-mode \"package-file\" t t)
 
   (ti::macrof-minor-mode
    xxx-mode
@@ -8803,13 +8807,12 @@ Example how to call created functions:
 FUNC-MIN-SYM DOC-STR INSTALL-FUNC MODE-VAR
 MODE-NAME PREFIX-VAR MENU-VAR NO-MODE-MSG MODE-DESC
 HOOK BODY"
-
 ;;;  (ti::d!! "\n\n" body)
   (let ((sym
-	 (intern (symbol-name `,func-min-sym)))
-	(viper-sym
-	 (intern (concat (symbol-name `,func-min-sym)
-			 "-viper-attach"))))
+         (intern (symbol-name `,func-min-sym)))
+        (viper-sym
+         (intern (concat (symbol-name `,func-min-sym)
+                         "-viper-attach"))))
     `(defun ,sym
        (&optional arg verb)
        ,doc-str
@@ -8837,7 +8840,7 @@ HOOK BODY"
        ,@body
        (ti::compat-modeline-update)
        (if (and verb
-		(null ,no-mode-msg))
+                (null ,no-mode-msg))
            (message
             "%s minor mode is %s %s"
             ,mode-desc
@@ -8900,8 +8903,8 @@ HOOK BODY"
        ;;
        ;; Work around that bug.
        (let ((buffer (or (get-buffer ,file2)
-			 (find-buffer-visiting ,file2)
-			 (find-buffer-visiting ,file1))))
+                         (find-buffer-visiting ,file2)
+                         (find-buffer-visiting ,file1))))
          (if (not buffer)
              (finder-commentary ,file2)
            ;;  This is only a pale emulation....will do for now.
@@ -8943,21 +8946,21 @@ Returned function will install and remove minor mode.
 Input:
 
   FUNC-INS-SYM  symbol, the name of the function that is created.
-                E.g. 'xxx-install-mode
+                E.g. \\='xxx-install-mode
 
-  MODE-SYM      function symbol to call to run the mode e.g. 'xxx-mode
+  MODE-SYM      function symbol to call to run the mode e.g. \\='xxx-mode
 
-  MAP-SYM       mode's keymap symbol. E.g. 'xxx-mode-map
+  MAP-SYM       mode\\='s keymap symbol. E.g. \\='xxx-mode-map
 
-  MODE-NAME-SYM mode's name symbol. E.g. 'xxx-mode-name
+  MODE-NAME-SYM mode\\='s name symbol. E.g. \\='xxx-mode-name
 
   HOOK-SYM      hook symbol to call when mode has been installed.
-                e.g. 'xxx-key-define-hook, which calls necessary
+                e.g. \\='xxx-key-define-hook, which calls necessary
                 functions to install keys and menus.
 
   BODY          Lisp forms executed in the beginning of function.
 
-Created function's arguments:
+Created function\\='s arguments:
 
   (&optional remove verb)
   REMOVE        uninstall minor mode
@@ -8979,9 +8982,8 @@ How to call this function:
 
 Example how to call created function:
 
-  M -x xxx-install-mode      ;; this calls created function and installs mode
-  (xxx-install-mode)         ;; Same
-  (xxx-install-mode 'remove) ;; Or prefix ARG, removes the minor mode"
+  (xxx-install-mode) ;; Calls created function and install the minor mode
+  (xxx-install-mode \\='remove) ;; With prefix ARG, remove the minor mode."
   `,(ti::macrof-minor-mode-install-1
      func-ins-sym
      mode-sym
@@ -9048,11 +9050,11 @@ The returned function will install keymaps and menu-bar menu for minor mode.
 
 Inside the function you can refer to variables
 
- 'root-map'             refers to ROOT keymap from where the prefix map is accessed
+ `root-map'             ROOT keymap from where the prefix map is accessed
                         This is the original keymap where the PREFIX-KEY is
-                        assigned. The actual commands are put to 'map'.
- 'map'                  refers to separate minor mode prefix keymap
- 'p'                    holds the prefix key.
+                        assigned. The actual commands are put to `map'.
+ `map'                  refers to separate minor mode prefix keymap
+ `p'                    holds the prefix key.
 
 Input:
 
@@ -9062,12 +9064,12 @@ Input:
  KEYMAP-SYM             symbol, keymap where to define keys, must exist
  PREFIX-KEY-SYM         symbol, variable holding the prefix key.
  [EASYMENU-SYM]         symbol, easy menu variable or nil.
- [EASYMENU-NAME-SYM]    symbol, easy menu's menu-bar name variable or nil
+ [EASYMENU-NAME-SYM]    symbol, easy menu\\='s menu-bar name variable or nil
  [EASYMENU-DOC-STR]     string, Describe string for menu.
  [EASY-MENU-FORMS]      forms to define menus
  EVAL-BODY              forms executed at the end of function.
 
-Created function's arguments:
+Created function\\='s arguments:
 
   ()
 
@@ -9086,9 +9088,9 @@ How to call this function:
        \"----\"
        [\"menu item3\"  xxx-function3 t])
      (progn
-        (define-key  map  \"a\"   'xxx-function1)
-        (define-key  map  \"b\"   'xxx-function2)
-        (define-key  map  \"c\"   'xxx-function3)))
+        (define-key  map  \"a\"   \\='xxx-function1)
+        (define-key  map  \"b\"   \\='xxx-function2)
+        (define-key  map  \"c\"   \\='xxx-function3)))
 
 Example how to call created function:
 
@@ -9113,9 +9115,9 @@ Example how to call created function:
   (let ((sym  (vector (intern (symbol-name `,mode-symbol)))))
     `(when (boundp 'mode-line-mode-menu) ;; Emacs 21.1
        (define-key mode-line-mode-menu ,sym
-	 '(menu-item ,text
-		     ,mode-symbol
-		     :button (:toggle . ,mode-symbol))))))
+         '(menu-item ,text
+                     ,mode-symbol
+                     :button (:toggle . ,mode-symbol))))))
 
 ;;; ----------------------------------------------------------------------
 ;;;
@@ -9138,8 +9140,8 @@ BODY"
   (let ((sym (intern (symbol-name `,func-def-sym))))
     `(defun ,sym ()
        (let ((root-map  ,keymap-sym)
-	     (map       ,prefix-keymap-sym)
-	     (p         ,prefix-key-sym))
+             (map       ,prefix-keymap-sym)
+             (p         ,prefix-key-sym))
          (when (stringp ,easymenu-doc-str) ;This could be nil (no menus)
            (if (ti::xemacs-p)
                (easy-menu-define
@@ -9173,7 +9175,7 @@ BODY"
          ;;  repeated key: C-aC-a, only "aa"
          (let ((char (ti::keymap-single-key-definition-p p)))
            (when (and (characterp char)
-		      (ti::print-p char))
+                      (ti::print-p char))
              ;;  The prefix key is single; printable character.
              (define-key map p 'self-insert-command)))
          ,body))))
@@ -9194,8 +9196,8 @@ BODY"
 FILENAME PREFIX VERSION-VARIABLE VERSION-VALUE
 BUG-VAR-LIST BUFFER-LIST BUG-BODY."
   (let (sym
-	ret
-	elt)
+        ret
+        elt)
     (push 'progn ret)
     (setq elt
           (list
@@ -9259,7 +9261,7 @@ How to call this macro:
      xxx-:version-id
      \"...version Id string here, RCS controlled.\"
 
-     '(xxx-:load-hook
+     \\='(xxx-:load-hook
        xxx-:mode-hook
        xxx-mode-define-keys-hook
        xxx-:mode-name))
@@ -9291,8 +9293,8 @@ PREFIX
 DEBUG-FUNCTION DEBUG-TOGGLE-FUNCTION DEBUG-BUFFER-SHOW-FUNCTION
 DEBUG-VARIABLE DEBUG-BUFFER."
   (let (str
-	ret
-	elt)
+        ret
+        elt)
     (push 'progn ret)
     (setq elt
           (list
@@ -9469,14 +9471,14 @@ Input:
   ELISP-FILE    your Lisp package name (with .el)
   [LOG-BUFFER]  where to print the install log. Can be nil.
 
-Created function's arguments:
+Created function\\='s arguments:
 
   (dir)
   DIR           Where to untar the included file, asked interactively
 
 How to call this function:
 
-  ;;;###autoload (autoload 'xxx-install-programs  \"package-file\" t t)
+  ;;;###autoload (autoload \\='xxx-install-programs  \"package-file\" t t)
 
    (ti::macrof-install-pgp-tar
     xxx-install-programs
@@ -9510,7 +9512,7 @@ Example how to call created function:
    define-key-body)                     ;12
   "Do all the necessary things to create minor mode.
 Following macros are called one by one. If you want personalized
-minor mode control, call each of these individually and don't use
+minor mode control, call each of these individually and do not use
 this wizard.
 
     `ti::macrov-minor-mode'
@@ -9545,7 +9547,7 @@ How to call this function:
 
 If you want to see what this macro produces, use
 
-  (macroexpand '(ti::macrof-minor-mode-wizard ...))C - x C - e
+  (macroexpand \\='(ti::macrof-minor-mode-wizard ...))C - x C - e
 
 Here is example how you would define the minor mode.
 
@@ -9575,11 +9577,10 @@ Here is example how you would define the minor mode.
 
      ;; ............................................................
      ;;  this block defines keys to the mode. The mode minor map is
-     ;;  locally bound to 'map' symbol.
+     ;;  locally bound to `map' symbol.
      (progn
-       (define-key map \"-\" 'xxx-eval-current-buffer)
-       (define-key map \"=\" 'xxx-calculate))))
-"
+       (define-key map \"-\" \\='xxx-eval-current-buffer)
+       (define-key map \"=\" \\='xxx-calculate))))"
   `,(ti::macrof-minor-mode-wizard-1
      pfx                              ;1
      mode-Name                        ;
@@ -9627,15 +9628,15 @@ Here is example how you would define the minor mode.
    DEFINE-KEY-BODY"
 
   (let (sym1
-	sym2
-	sym3
-	sym4
-	sym5
-	sym6
-	sym7
-	ret
-	elt
-	vs)
+        sym2
+        sym3
+        sym4
+        sym5
+        sym6
+        sym7
+        ret
+        elt
+        vs)
     (ti::nconc ret 'eval-and-compile)
     ;; ........................................... create variables ...
     (setq elt
