@@ -1069,10 +1069,11 @@ If nil, then include all headings, dropping none.")
           (nil
            "Sample"))))
   "Column positions and their properties. DO NOT TOUCH THIS.
-The positions are fixed and reflect the perl program t2html.pl's HTML generation.
+The positions are fixed and reflect the HTML output of perl
+program t2html.pl.
 
 Format:
- '((COL ((REGEXP-OR-NIL EXPLANATION-STRING)
+  ((COL ((REGEXP-OR-NIL EXPLANATION-STRING)
          (REGEXP-OR-NIL EXPLANATION-STRING)
          ..))
    (COL ((RE EXPL) (RE EXPL) ..)))")
@@ -1960,7 +1961,7 @@ The BODY must move the point so that next heading can be found."
 (put 'tinytf-level-macro 'edebug-form-spec '(body))
 (defmacro tinytf-level-macro (&rest body)
   "Search begin point of current heading level or signal error.
-You can refer to variable 'level' and 'beg' and 'end' in the BODY.
+You can refer to variable `level', `beg' and `end' in the BODY.
 The point is at start of level."
   `(let ((level (tinytf-level-number))
 	 beg
@@ -2012,7 +2013,7 @@ The point is at start of level."
 ;;; ----------------------------------------------------------------------
 ;;;
 (defsubst tinytf-heading-number-regexp (&optional no-grouping)
-  "Return heading number regexp: match 'N.n '  or  'N.n) '.
+  "Return heading number regexp: match \"N.n \" or \"N.n) \".
 If NO-GROUPING is non-nil, the regexp will not have regexp group operator."
   (if no-grouping
       "[0-9]+\\.[0-9.]*[0-9])?[ \t]+"
@@ -2029,7 +2030,7 @@ If NO-GROUPING is non-nil, the regexp will not have regexp group operator."
 ;;; ----------------------------------------------------------------------
 ;;;
 (defsubst tinytf-heading-string (&rest levels)
-  "Return heading string. 'MAJOR.MINOR '."
+  "Return heading string. \"MAJOR.MINOR \"."
   (let ((str (number-to-string (pop levels))))
     (dolist (nbr levels)
       (setq str (concat str "." (number-to-string nbr))))
@@ -2217,22 +2218,24 @@ Input:
 
   OPTIONS   List of option to be passed to t2html.pl
             Following options are usually the minunum:
-            '(\"--Out\" \"buffer-file-name.txt\")
+            \\='(\"--Out\" \"buffer-file-name.txt\")
             Nil values will be ignored.
 
-  PROCESS   'compile  [this is default]
-            'call-prosess, see also MODE
+  PROCESS   \\='compile  [this is default]
+            \\='call-prosess, see also MODE
 
-  MODE      This is only used for PROCESS 'call-process
-            'noerr   = Do not display log on error.
-            'display = Display the result buffer
+  MODE      This is only used for PROCESS \\='call-process
+            \\='noerr   = Do not display log on error.
+            \\='display = Display the result buffer
             nil      = Dislpay on only if process printed something
                        (a possible HTML conversion error)
 
-Return:
+Return list:
 
- '(html-file-name  status).   non-nil status is an error.
-                              Status may also be compile buffer process."
+ (html-file-name status
+ ;; NOTES:
+ ;; A non-nil status is an error.
+ ;; Status may also be compile buffer process."
   (interactive)
   (setq options (delq nil options))
   (tinytf-convert-wrapper-macro
@@ -2378,7 +2381,9 @@ Return:
 (defun tinytf-compile-mode-settings ()
   "Install font lock and additional keybindings for Link check."
   ;; #todo: font-lock
-  (let ()))
+  (let ()
+    nil ;; not implemented yet
+    ))
 
 ;;; ----------------------------------------------------------------------
 ;;;
@@ -2422,7 +2427,7 @@ you must run this function.
 
 Reference:
 
-  See (symbol-plist 'tinytf-mode)."
+  See (symbol-plist \\='tinytf-mode)."
   (interactive (list t t))
   (let ((sym 'tinytf-mode)
 	;; Affects expand-file-name to use only / in XEmacs
@@ -2471,7 +2476,7 @@ available during startup. If you later install the conversion programs
 either to PATH or `load-path', run this function to enable menu
 selections.
 
-This function calls `tinytf-utility-programs-check' with 'force."
+This function calls `tinytf-utility-programs-check' with \\='force."
   (interactive)
   (tinytf-utility-programs-check 'force 'verb))
 
@@ -2558,11 +2563,10 @@ Input:
 
  AND-HEADING-NAMES  see return value.
 
-Return:
+Return list or nil:
 
- '(pos pos ..)
- '((heading pos) (heading pos) ..) If AND-HEADING-NAMES is non-nil
- nil"
+ (pos pos ..)
+ ((heading pos) (heading pos) ..) If AND-HEADING-NAMES is non-nil."
   (let (point
 	heading
 	list)
@@ -3034,28 +3038,28 @@ Return
 ;;;
 (tinytf-fmacro-mark-word
  tinytf-mark-word-sample
- "Put 'SAMP' code around word and move forward." ?` ?' )
+ "Put `SAMP' code around word and move forward." ?` ?' )
 
 (tinytf-fmacro-mark-word
  tinytf-mark-word-emp
- "Put 'EM' code around word and move forward." ?* )
+ "Put `EM' code around word and move forward." ?* )
 
 (tinytf-fmacro-mark-word
  tinytf-mark-word-strong
- "Put 'STRONG' code around word and move forward." ?_ )
+ "Put `STRONG' code around word and move forward." ?_ )
 
 (tinytf-fmacro-mark-word
  tinytf-mark-word-big
- "Put 'BIG' code around word and move forward." ?+ )
+ "Put `BIG' code around word and move forward." ?+ )
 
 (tinytf-fmacro-mark-word
  tinytf-mark-word-small
- "Put 'SMALL' code around word and move forward." ?= )
+ "Put `SMALL' code around word and move forward." ?= )
 
 ;;; ----------------------------------------------------------------------
 ;;;
 (defun tinytf-unmark-word ()
-  "Remove 'STRONG' and 'EMP' mark from word and move forward."
+  "Remove `STRONG' and `EMP' mark from word and move forward."
   (interactive "*")
   (let ((word-skip "^ ,.;\n\r\t\f")
 	beg
@@ -3147,8 +3151,8 @@ Point sits somewhere in current bullet. Bullets accepted are:
     - text here
     o text here
 
-If the bullet strarts with 'o' or '.', then that is used as bullet
-mark. In all other cases 'o' is used."
+If the bullet strarts with `o' or `.', then that is used as bullet
+mark. In all other cases `o' is used."
   (interactive "*")
   (let* ((bullet-re     "^[ \t]*\\([-*o.+]\\)[ \t]")
          (para-re       (concat bullet-re "\\|^[ \t]*$"))
