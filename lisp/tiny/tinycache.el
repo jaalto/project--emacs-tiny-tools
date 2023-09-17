@@ -448,7 +448,7 @@ so that they do not clash with the toplevel definitions.
     \\='NamE'      buffers's name
     \\='LisT'      current list of buffers to loop over.
 
-Setting 'list' to nil terminates this macro."
+In BODY, setting variable `list' to nil terminates this macro."
   `(let (NamE)
      (dolist (BuffeR (tinycache-cached-file-list ,off) )
        (setq NamE (buffer-name BuffeR))
