@@ -1,1160 +1,1163 @@
 2023-09-17 Sun  Jari Aalto  <jari.aalto@tuni.fi>
 
-	* tiny/tinyreplace.el (all): Correct 30.0.50 byte compile errors.
-	(tinyreplace-read-compile-buffer-filename):
-	Read lines with NULL character (Emacs 29.* M-x grep output)
+        * tiny/tiny-admin-util.el: Emacs 30.0.50 correct
+        some byte compile errors.
 
-	* tiny/tinylibmail.el (ti::with-mail-whois): Change
-	`symbol-macrolet' to `cl-symbol-macrolet'.
+        * tiny/tinyreplace.el (all): Correct 30.0.50 byte compile errors.
+        (tinyreplace-read-compile-buffer-filename):
+        Read lines with NULL character (Emacs 29.* M-x grep output)
+
+        * tiny/tinylibmail.el (ti::with-mail-whois): Change
+        `symbol-macrolet' to `cl-symbol-macrolet'.
 
 2022-01-02 Sun  Jari Aalto  <jari.aalto@tuni.fi>
 
-	* tiny/tinyliba.el
-	(ti::tmp-cl-library-check): disable. Obsoleted.
+        * tiny/tinyliba.el
+        (ti::tmp-cl-library-check): disable. Obsoleted.
 
-	* tiny/tinylib.el (ti::buffer-read-nth-word): byte compile fix:
-	unused functions. Use goto-char to select beginning position
-	according to MODE.
+        * tiny/tinylib.el (ti::buffer-read-nth-word): byte compile fix:
+        unused functions. Use goto-char to select beginning position
+        according to MODE.
 
 2020-11-28 Sat  Jari Aalto  <jari.aalto@tuni.fi>
 
-	* tiny/*: Replace `pushnew' with `cl-pushnew'.
+        * tiny/*: Replace `pushnew' with `cl-pushnew'.
 
-	* tiny/tinyreplace.el (tinyreplace-install-default-keybings):
-	  Accept KEY parameter. In new Emacs M-& is `async-shell-command'
-	  (tinyreplace--default-key): New.
-	  (tinyreplace-install): Do not call
-	  `tinyreplace-install-default-keybings'
-	  (tinyreplace-define-keys-local-map): Use `tinyreplace--default-key'
-	  (tinyreplace-install-default-keybings): Rewrite.
+        * tiny/tinyreplace.el (tinyreplace-install-default-keybings):
+          Accept KEY parameter. In new Emacs M-& is `async-shell-command'
+          (tinyreplace--default-key): New.
+          (tinyreplace-install): Do not call
+          `tinyreplace-install-default-keybings'
+          (tinyreplace-define-keys-local-map): Use `tinyreplace--default-key'
+          (tinyreplace-install-default-keybings): Rewrite.
 
 2019-05-25 Sat  Jari Aalto  <jari.aalto@cante.net>
 
-	* tiny/tinyigrep.el (tinyigrep-install-default-databases):
-	Use `cl-union'.
+        * tiny/tinyigrep.el (tinyigrep-install-default-databases):
+        Use `cl-union'.
 
-	* tiny/tinyeat.el (eval-when-compile): require cl.
+        * tiny/tinyeat.el (eval-when-compile): require cl.
 
-	* tiny/tinyhotlist.el (eval-when-compile): require cl.
+        * tiny/tinyhotlist.el (eval-when-compile): require cl.
 
-	* tiny/tinymailbox.el: (eval-when-compile): require cl.
+        * tiny/tinymailbox.el: (eval-when-compile): require cl.
 
-	* tiny/tinytab.el: (eval-when-compile): require cl.
+        * tiny/tinytab.el: (eval-when-compile): require cl.
 
-	* tiny/tinydiff.el Use `cl-incf'.
-	(eval-when-compile): require cl.
+        * tiny/tinydiff.el Use `cl-incf'.
+        (eval-when-compile): require cl.
 
-	* tiny/tinyirc.el: Use `cl-incf'.
+        * tiny/tinyirc.el: Use `cl-incf'.
 
-	* tiny/tinylibb.el: Use `cl-incf'.
+        * tiny/tinylibb.el: Use `cl-incf'.
 
-	* tiny/tinylibmail.el Use `cl-incf'.
+        * tiny/tinylibmail.el Use `cl-incf'.
 
-	* tiny/tinyload.el: Use `cl-incf'.
-	(eval-when-compile): require cl.
+        * tiny/tinyload.el: Use `cl-incf'.
+        (eval-when-compile): require cl.
 
-	* tiny/tinylock.el: Use `cl-incf'.
-	(eval-when-compile): require cl.
+        * tiny/tinylock.el: Use `cl-incf'.
+        (eval-when-compile): require cl.
 
-	* tiny/tinypad.el Use `cl-incf'.
-	(eval-when-compile): require cl.
+        * tiny/tinypad.el Use `cl-incf'.
+        (eval-when-compile): require cl.
 
-	* tiny/tinypair.el: Use `cl-incf'.
-	(eval-when-compile): require cl.
+        * tiny/tinypair.el: Use `cl-incf'.
+        (eval-when-compile): require cl.
 
-	* tiny/tinypage.el: Use `cl-incf'.
-	(eval-when-compile): require cl.
+        * tiny/tinypage.el: Use `cl-incf'.
+        (eval-when-compile): require cl.
 
-	* tiny/tinyprocmail.el: Use `cl-incf'.
-	(eval-when-compile): require cl.
+        * tiny/tinyprocmail.el: Use `cl-incf'.
+        (eval-when-compile): require cl.
 
-	* tiny/tinyreplace.el Use `cl-incf'.
-	(eval-when-compile): require cl.
+        * tiny/tinyreplace.el Use `cl-incf'.
+        (eval-when-compile): require cl.
 
-	* tiny/tinysearch.el Use `cl-incf'.
-	(eval-when-compile): require cl.
+        * tiny/tinysearch.el Use `cl-incf'.
+        (eval-when-compile): require cl.
 
-	* tiny/tinytag.el (tinytag-post-command): Use `cl-incf'.
+        * tiny/tinytag.el (tinytag-post-command): Use `cl-incf'.
 
-	* tiny/tinyurl.el: Use `cl-incf'.
-	(eval-when-compile): require cl.
+        * tiny/tinyurl.el: Use `cl-incf'.
+        (eval-when-compile): require cl.
 
-	* tiny/load-path.el: Use `cl-incf'.
-	Update dolist for Epackage directories.
+        * tiny/load-path.el: Use `cl-incf'.
+        Update dolist for Epackage directories.
 
-	* tiny/tinymy.el (eval-when-compile): require cl.
+        * tiny/tinymy.el (eval-when-compile): require cl.
 
-	* tiny/tinydebian.el (eval-when-compile): require cl.
+        * tiny/tinydebian.el (eval-when-compile): require cl.
 
-	* tiny/tinycache.el (tinycache-flush-all-compilation):
-	Use `cl-incf'.
-	(tinycache-dired-mark): Use `cl-incf'.
+        * tiny/tinycache.el (tinycache-flush-all-compilation):
+        Use `cl-incf'.
+        (tinycache-dired-mark): Use `cl-incf'.
 
-	* other/complete-menu.el (cm-choose-completion): Use
-	`with-current-buffer'.
-	(cm-minibuffer-completion-help): comment out
-	`unfocus-frame'. Obsolete since Emacs 22.1.
+        * other/complete-menu.el (cm-choose-completion): Use
+        `with-current-buffer'.
+        (cm-minibuffer-completion-help): comment out
+        `unfocus-frame'. Obsolete since Emacs 22.1.
 
-	* other/fnexpand.el (fnexpand-executables): Use #'. Change
-	`mapcar' to `mapc'. Comment out package ´assoc', no longer
-	needed in latest Emacs.
+        * other/fnexpand.el (fnexpand-executables): Use #'. Change
+        `mapcar' to `mapc'. Comment out package ´assoc', no longer
+        needed in latest Emacs.
 
-	* other/expect.el (eval-when-compile): require cl.
+        * other/expect.el (eval-when-compile): require cl.
 
-	* tiny/tiny-admin-util.el: (top level): require cl.
-	Restore 'autoload utilities' section from commit 6c6284a2862.
-	(tiny-setup-with-file-env-macro): Use `write-file-functions'.
-	(tiny-setup-update-update-file-autoloads-1):Use
-	`write-file-functions'.
-	(tiny-setup-autoload-build-for-file-1): Use `write-file-functions'.
-	(tiny-setup-update-file-autoloads): Call
-	`tiny-setup-update-update-file-autoloads-1'.
-	(tiny-setup-directory-recursive-macro): Use `flet' and
-	not `cl-flet'.
-	(tiny-setup-autoload-build-for-dir): Correct 
-	`(string-match exclude file)' call.
-	(tiny-setup-directory-recursive-macro): Correct ,@body
-	in macro.
-	(tiny-setup-compile-kit-libraries): Use `cl-find-if'.
+        * tiny/tiny-admin-util.el: (top level): require cl.
+        Restore 'autoload utilities' section from commit 6c6284a2862.
+        (tiny-setup-with-file-env-macro): Use `write-file-functions'.
+        (tiny-setup-update-update-file-autoloads-1):Use
+        `write-file-functions'.
+        (tiny-setup-autoload-build-for-file-1): Use `write-file-functions'.
+        (tiny-setup-update-file-autoloads): Call
+        `tiny-setup-update-update-file-autoloads-1'.
+        (tiny-setup-directory-recursive-macro): Use `flet' and
+        not `cl-flet'.
+        (tiny-setup-autoload-build-for-dir): Correct
+        `(string-match exclude file)' call.
+        (tiny-setup-directory-recursive-macro): Correct ,@body
+        in macro.
+        (tiny-setup-compile-kit-libraries): Use `cl-find-if'.
 
-	* tiny/tinygnus.el Use `cl-incf'.
-	(eval-when-compile): require cl.
-	(top level): remove obsolte Gnus
-	version check from 2000. Removed functions:
-	`tinygnus-check-gnus-installation-libraries',
-	`tinygnus-check-gnus-installation-gnus'
-	`tinygnus-check-gnus-installation-emacs'
-	`tinygnus-check-gnus-installation'.
-	(tinygnus-gnus-debug-update-nnml-group-alist):
-	Correct `push' call to use plain variable.
+        * tiny/tinygnus.el Use `cl-incf'.
+        (eval-when-compile): require cl.
+        (top level): remove obsolte Gnus
+        version check from 2000. Removed functions:
+        `tinygnus-check-gnus-installation-libraries',
+        `tinygnus-check-gnus-installation-gnus'
+        `tinygnus-check-gnus-installation-emacs'
+        `tinygnus-check-gnus-installation'.
+        (tinygnus-gnus-debug-update-nnml-group-alist):
+        Correct `push' call to use plain variable.
 
-	* tiny/tinylibenv.el (ti::xemacs-p): Adjust docstring.
+        * tiny/tinylibenv.el (ti::xemacs-p): Adjust docstring.
 
-	* tiny/tinytf.el Use `cl-incf'.
-	(eval-when-compile): require cl.
-	(tinytf-mark-br-line): Remove extra &optional.
+        * tiny/tinytf.el Use `cl-incf'.
+        (eval-when-compile): require cl.
+        (tinytf-mark-br-line): Remove extra &optional.
 
-	* tiny/tinyperl.el
-	(eval-when-compile): require cl.
-	(tinyperl--lint-arguments): Add missing defcustom spec.
-	(tinyperl-save-state): Remove extra &optional.
+        * tiny/tinyperl.el
+        (eval-when-compile): require cl.
+        (tinyperl--lint-arguments): Add missing defcustom spec.
+        (tinyperl-save-state): Remove extra &optional.
 
-	* tiny/tinymail.el: Use `cl-incf'.
-	(eval-when-compile): require cl.
-	(tinymail-complete-bbdb-fuzzy): delete extra &optional.
-	(tinymail-bbdb-parse-to-string): `bbdb-hashtable'
-	is variable, not a function.
-	(tinymail-complete-list-bbdb-1): `bbdb-hashtable'
-	is variable, not a function.
-	(tinymail-install-table-header-complete-gnus): Correct `push'
-	calls to use plain variables.
+        * tiny/tinymail.el: Use `cl-incf'.
+        (eval-when-compile): require cl.
+        (tinymail-complete-bbdb-fuzzy): delete extra &optional.
+        (tinymail-bbdb-parse-to-string): `bbdb-hashtable'
+        is variable, not a function.
+        (tinymail-complete-list-bbdb-1): `bbdb-hashtable'
+        is variable, not a function.
+        (tinymail-install-table-header-complete-gnus): Correct `push'
+        calls to use plain variables.
 
-	* tiny/tinylisp.el Use `cl-incf'.
-	(tinylisp-install-menu): Add escapesfor characters.
-	(eval-when-compile): require cl.
-	(tinylisp-directory-recurse-macro): Use `flet' and
-	not `cl-flet'.
+        * tiny/tinylisp.el Use `cl-incf'.
+        (tinylisp-install-menu): Add escapesfor characters.
+        (eval-when-compile): require cl.
+        (tinylisp-directory-recurse-macro): Use `flet' and
+        not `cl-flet'.
 
-	* tiny/tinydired.el Use `cl-incf'.
-	(eval-when-compile): require cl.
-	(tinydired-marked-vc-ci): Remove extra &optional.
+        * tiny/tinydired.el Use `cl-incf'.
+        (eval-when-compile): require cl.
+        (tinydired-marked-vc-ci): Remove extra &optional.
 
-	* tiny/tinybuffer.el (tinybuffer-buffer-list-next):
-	Use `cl-return'.
+        * tiny/tinybuffer.el (tinybuffer-buffer-list-next):
+        Use `cl-return'.
 
-	* tiny/tinylib.el (ti::buffer-surround-with-char):
-	 Add escapes for characters.
+        * tiny/tinylib.el (ti::buffer-surround-with-char):
+         Add escapes for characters.
 
 2019-05-24 Fri  Jari Aalto  <jari.aalto@cante.net>
 
-	* tiny/tinylib.el
-	(top level): require cl. Add cl-* prefixes.
-	(ti::var-syntax-info): Add escapes for parentheses.
-	(ti::buffer-surround-with-char): Add escapes for
-	parentheses.
+        * tiny/tinylib.el
+        (top level): require cl. Add cl-* prefixes.
+        (ti::var-syntax-info): Add escapes for parentheses.
+        (ti::buffer-surround-with-char): Add escapes for
+        parentheses.
 
-	* tiny/tinyliby.el
-	(ti::system-load-history-where-exactly): Use `cl-return'.
-	(ti::system-autoload-function-list): Use `cl-pushnew'.
-	(ti::system-get-file-documentation): Use `cl-incf'.
-	(ti::system-load-history-where-1): Use `cl-return'.
-	(ti::system-autoload-function-file-list): Use `cl-pushnew'.
+        * tiny/tinyliby.el
+        (ti::system-load-history-where-exactly): Use `cl-return'.
+        (ti::system-autoload-function-list): Use `cl-pushnew'.
+        (ti::system-get-file-documentation): Use `cl-incf'.
+        (ti::system-load-history-where-1): Use `cl-return'.
+        (ti::system-autoload-function-file-list): Use `cl-pushnew'.
 
-	* tiny/tinylibw.el
-	(w32-cygwin-mount-table-path-to-dos): Use `cl-return'.
-	(w32-cygwin-dos-path-to-cygwin): Use `cl-return'.
+        * tiny/tinylibw.el
+        (w32-cygwin-mount-table-path-to-dos): Use `cl-return'.
+        (w32-cygwin-dos-path-to-cygwin): Use `cl-return'.
 
-	* tiny/tinylibt.el (ti::text-save-data): Use `cl-incf'.
-	(ti::text-undo): Use `cl-decf'.
+        * tiny/tinylibt.el (ti::text-save-data): Use `cl-incf'.
+        (ti::text-undo): Use `cl-decf'.
 
-	* tiny/tinylibo.el (ti::overlay-get-prop): Use `cl-incf'.
+        * tiny/tinylibo.el (ti::overlay-get-prop): Use `cl-incf'.
 
-	* tiny/tinylibid.el (ti::id-cnv-txt2mode): Use `cl-return'.
-	(ti::id-cnv-txt2comment): Use `cl-return'.
-	(ti::id-match): Use `cl-return'.
-	(ti::id-buffer-re-search): Use `cl-return'.
-	(ti::id-buffer-re-search): Use `cl-return'.
+        * tiny/tinylibid.el (ti::id-cnv-txt2mode): Use `cl-return'.
+        (ti::id-cnv-txt2comment): Use `cl-return'.
+        (ti::id-match): Use `cl-return'.
+        (ti::id-buffer-re-search): Use `cl-return'.
+        (ti::id-buffer-re-search): Use `cl-return'.
 
-	* tiny/tinylibenv.el (ti::emacs-install-root): Use `cl-return'.
-	(ti::win32-cygwin-p-1): Use `cl-return'.
+        * tiny/tinylibenv.el (ti::emacs-install-root): Use `cl-return'.
+        (ti::win32-cygwin-p-1): Use `cl-return'.
 
-	* tiny/tinyliba.el
-	(top level): Delete cl-compat autoloads.
-	(ti::tmp-cl-library-check). Use `cl-return'.
+        * tiny/tinyliba.el
+        (top level): Delete cl-compat autoloads.
+        (ti::tmp-cl-library-check). Use `cl-return'.
 
-	* tiny/tinylibm.el
-	(top level): require cl.
-	(ti::let-transform-nil): Delete unused.
-	(ti::list-find): Use `cl-return'.
-	(ti::package-config-file-prefix): Delete duplicate &optional.
-	(ti::package-config-file-directory-default): Use `cl-return'.
-	(ti::color-lighter): use `cl-incf'.
-	(ti::list-to-assoc-menu): use `cl-incf'.
-	(ti::list-elt-position): use `cl-incf'.
-	(subst-char-with-string): use `cl-incf'.
+        * tiny/tinylibm.el
+        (top level): require cl.
+        (ti::let-transform-nil): Delete unused.
+        (ti::list-find): Use `cl-return'.
+        (ti::package-config-file-prefix): Delete duplicate &optional.
+        (ti::package-config-file-directory-default): Use `cl-return'.
+        (ti::color-lighter): use `cl-incf'.
+        (ti::list-to-assoc-menu): use `cl-incf'.
+        (ti::list-elt-position): use `cl-incf'.
+        (subst-char-with-string): use `cl-incf'.
 
-	* tiny/tinypath.el: Use ~/.emacs.d in documentation.
+        * tiny/tinypath.el: Use ~/.emacs.d in documentation.
 
 2016-11-16 Wed  Jari Aalto  <jari.aalto@cante.net>
 
-	* tiny/tinydebian.el (tinydebian-bug-browse-url-main-interactive):
-	Check current line for bug number.
+        * tiny/tinydebian.el (tinydebian-bug-browse-url-main-interactive):
+        Check current line for bug number.
 
 2016-11-05 Sat  Jari Aalto  <jari.aalto@cante.net>
 
-	* tiny/tinylisp.el (tinylisp-syntax-show-mode): Remove
-	local hook.
-	(tinylisp-syntax-post-command): Display font lock info.
-	Display CR, LF, TAB, SPC symbols instead of plain characters.
+        * tiny/tinylisp.el (tinylisp-syntax-show-mode): Remove
+        local hook.
+        (tinylisp-syntax-post-command): Display font lock info.
+        Display CR, LF, TAB, SPC symbols instead of plain characters.
 
 2016-10-29 Sat  Jari Aalto  <jari.aalto@cante.net>
 
-	* tiny/tinyigrep.el: Update link to igrep.el
+        * tiny/tinyigrep.el: Update link to igrep.el
 
-	* tiny/tinytf.el (eval-and-compile): Update link to htmlize.el
-	https://www.emacswiki.org/emacs/Htmlize
+        * tiny/tinytf.el (eval-and-compile): Update link to htmlize.el
+        https://www.emacswiki.org/emacs/Htmlize
 
-	* tiny/tinyperl.el (tinyperl-pod-font-lock): Change
-	`font-lock-fontify-buffer' to `font-lock-ensure'.
+        * tiny/tinyperl.el (tinyperl-pod-font-lock): Change
+        `font-lock-fontify-buffer' to `font-lock-ensure'.
 
-	* tiny/tinypath.el: Change `font-lock-fontify-buffer' to
-	`font-lock-ensure'.
+        * tiny/tinypath.el: Change `font-lock-fontify-buffer' to
+        `font-lock-ensure'.
 
-	* tiny/tinymy.el (tinymy-buffer-read-only): Update
-	`toggle-read-only' to `read-only-mode'.
-	(tinymy-package-save-to-file): Change `not-modified' to
-	`set-buffer-modified-p'.
-	(tinymy-scroll-old): Change `next-line' to `forward-line'.
+        * tiny/tinymy.el (tinymy-buffer-read-only): Update
+        `toggle-read-only' to `read-only-mode'.
+        (tinymy-package-save-to-file): Change `not-modified' to
+        `set-buffer-modified-p'.
+        (tinymy-scroll-old): Change `next-line' to `forward-line'.
 
-	* tiny/tinymailbox.el (tinymailbox-mail-send-filter): Update
-	`remove-if' to `cl-remove-if'.
+        * tiny/tinymailbox.el (tinymailbox-mail-send-filter): Update
+        `remove-if' to `cl-remove-if'.
 
-	* tiny/tinylisp.el (eval-when-compile): add
-	`elp-all-instrumented-list'.
+        * tiny/tinylisp.el (eval-when-compile): add
+        `elp-all-instrumented-list'.
 
-	* tiny/tinylibmail.el (ti::mail-abbrev-get-alist): Update
-	`abbrev-expand-functions' to `abbrev-expand-function'.
+        * tiny/tinylibmail.el (ti::mail-abbrev-get-alist): Update
+        `abbrev-expand-functions' to `abbrev-expand-function'.
 
-	* tiny/tinylibb.el (subst-char-in-string): Rename
-	`replace-char-in-string' to `subst-char-in-string'. Update
-	to use `cl-nsubstitute'.
-	(with-buffer-modified): Update from `gensym' to `cl-gensym'.
+        * tiny/tinylibb.el (subst-char-in-string): Rename
+        `replace-char-in-string' to `subst-char-in-string'. Update
+        to use `cl-nsubstitute'.
+        (with-buffer-modified): Update from `gensym' to `cl-gensym'.
 
-	* tiny/tinyliby.el (ti::system-get-file-documentation): Update
-	`user-variable-p' to `custom-variable-p'
-	(ti::system-describe-symbols):  Update
-	`user-variable-p' to `custom-variable-p'
-	(ti::system-unload): Disable call to `ad-unadvise'.
+        * tiny/tinyliby.el (ti::system-get-file-documentation): Update
+        `user-variable-p' to `custom-variable-p'
+        (ti::system-describe-symbols):  Update
+        `user-variable-p' to `custom-variable-p'
+        (ti::system-unload): Disable call to `ad-unadvise'.
 
-	* tiny/tinymail.el (tinymail-resolve-abbrevs): Update
-	`abbrev-expand-functions' to `abbrev-expand-function'
+        * tiny/tinymail.el (tinymail-resolve-abbrevs): Update
+        `abbrev-expand-functions' to `abbrev-expand-function'
 
-	* tiny/tinylib.el (ti::string-mangle): Update `coerce' to
-	`cl-coerce'.
-	(ti::buffer-uu-area): Change to `with-current-buffer'.
-	(ti::buffer-lf-to-crlf): Update `delete-backward-char' to
-	`delete-char'.
-	(ti::buffer-sort-regexp-fields): Update `copy-list' to
-	`cl-copy-list'.
-	(ti::file-path-to-unix): Use to `subst-char-in-string'.
-	(ti::keymap-define-key-backspace): Update `cl-flet' to
-	`lambda'.
+        * tiny/tinylib.el (ti::string-mangle): Update `coerce' to
+        `cl-coerce'.
+        (ti::buffer-uu-area): Change to `with-current-buffer'.
+        (ti::buffer-lf-to-crlf): Update `delete-backward-char' to
+        `delete-char'.
+        (ti::buffer-sort-regexp-fields): Update `copy-list' to
+        `cl-copy-list'.
+        (ti::file-path-to-unix): Use to `subst-char-in-string'.
+        (ti::keymap-define-key-backspace): Update `cl-flet' to
+        `lambda'.
 
-	* tiny/tinygnus.el Byte compile fixes.
-	(tinygnus-ube-address-compose): Add `ns-err-list'to let.
-	(tinygnus-gnus-debug-update-nnml-group-alist): Correct variable.
+        * tiny/tinygnus.el Byte compile fixes.
+        (tinygnus-ube-address-compose): Add `ns-err-list'to let.
+        (tinygnus-gnus-debug-update-nnml-group-alist): Correct variable.
 
-	* tiny/tinydiff.el: Upgrade to cl-lib.el
+        * tiny/tinydiff.el: Upgrade to cl-lib.el
 
-	* tiny/tinydebian.el (tinydebian-bug-nbr-search): Move location.
-	(tinydebian-mail-mode-debian-address-bug-p): Correct parens.
-	(tinydebian-with-url-page-type-macro): Move location.
-	(tinydebian-bts-generic-email-control): Correct variable.
-	(tinydebian-qa-browse-url-by-email): Correct variable.
-	(tinydebian-bts-mail-ctrl-command-tags): add var `str'.
-	(tinydebian-debian-bug-info-all-message): Correct call to macro
-	`tinydebian-debian-bug-info-message-all-macro'
-	(tinydebian-bts-mail-type-it-nmu): Correct call to macro
-	`tinydebian-debian-bug-info-macro'.
+        * tiny/tinydebian.el (tinydebian-bug-nbr-search): Move location.
+        (tinydebian-mail-mode-debian-address-bug-p): Correct parens.
+        (tinydebian-with-url-page-type-macro): Move location.
+        (tinydebian-bts-generic-email-control): Correct variable.
+        (tinydebian-qa-browse-url-by-email): Correct variable.
+        (tinydebian-bts-mail-ctrl-command-tags): add var `str'.
+        (tinydebian-debian-bug-info-all-message): Correct call to macro
+        `tinydebian-debian-bug-info-message-all-macro'
+        (tinydebian-bts-mail-type-it-nmu): Correct call to macro
+        `tinydebian-debian-bug-info-macro'.
 
-	* GENERAL: Enable lexical binding according to
-	https://www.gnu.org/software/emacs/manual/html_node/elisp/Lexical-Binding.html
-	https://www.gnu.org/software/emacs/manual/html_node/emacs/Specifying-File-Variables.html
+        * GENERAL: Enable lexical binding according to
+        https://www.gnu.org/software/emacs/manual/html_node/elisp/Lexical-Binding.html
+        https://www.gnu.org/software/emacs/manual/html_node/emacs/Specifying-File-Variables.html
 
-	* tiny/tinycygwin.el (tinycygwin-insert-file): Move location
-	after macros.
+        * tiny/tinycygwin.el (tinycygwin-insert-file): Move location
+        after macros.
 
-	* tiny/tinycompile.el: load tinylibm and not tinyliba.
+        * tiny/tinycompile.el: load tinylibm and not tinyliba.
 
-	* tiny/tinyadvice.el: (Kill the buffer if there is no process):
-	correct macro call.
+        * tiny/tinyadvice.el: (Kill the buffer if there is no process):
+        correct macro call.
 
-	* tiny/tinysearch.el (tinysearch-install): Correct call
-	to `tinysearch-install-default-keybindings'.
-	(tinysearch-install-default-keybindings): docstring.
+        * tiny/tinysearch.el (tinysearch-install): Correct call
+        to `tinysearch-install-default-keybindings'.
+        (tinysearch-install-default-keybindings): docstring.
 
 2016-10-27 Thu  Jari Aalto  <jari.aalto@cante.net>
 
-	* tiny/tinydebian.el: (mode): Change key "C-c - c r" to
-	  "C-c - c r". That is lowercase "r" is now retitle and
-	  "R" is reassign command.
+        * tiny/tinydebian.el: (mode): Change key "C-c - c r" to
+          "C-c - c r". That is lowercase "r" is now retitle and
+          "R" is reassign command.
 
 2016-10-26 Wed  Jari Aalto  <jari.aalto@cante.net>
 
-	* tiny/tinydebian.el (tinydebian-read-thing-near-point-any): New.
-	(tinydebian-read-thing-near-point-email): New.
-	(tinydebian-read-line): New.
-	(tinydebian-bug-browse-url-by-email): Use
-	`tinydebian-read-thing-near-point-email'.
-	(tinydebian-bug-browse-url-by-package-bugs): Use
-	`my-debian-bug-package-name-any'.
-	(tinydebian-qa-browse-url-by-package-name): New.
-	(tinydebian-qa-browse-url-by-email): New.
-	(tinydebian-command-show-wnpp-alert): Use URL if no wnpp-alert(1).
-	(tinydebian-bug-browse-url-by-package-name): Use URL.
+        * tiny/tinydebian.el (tinydebian-read-thing-near-point-any): New.
+        (tinydebian-read-thing-near-point-email): New.
+        (tinydebian-read-line): New.
+        (tinydebian-bug-browse-url-by-email): Use
+        `tinydebian-read-thing-near-point-email'.
+        (tinydebian-bug-browse-url-by-package-bugs): Use
+        `my-debian-bug-package-name-any'.
+        (tinydebian-qa-browse-url-by-package-name): New.
+        (tinydebian-qa-browse-url-by-email): New.
+        (tinydebian-command-show-wnpp-alert): Use URL if no wnpp-alert(1).
+        (tinydebian-bug-browse-url-by-package-name): Use URL.
 
 2016-10-24 Mon  Jari Aalto  <jari.aalto@cante.net>
 
-	* tiny/tinydebian.el (tinydebian-bug-nbr-string): Add simple
-	DIGIT match. to the end.
+        * tiny/tinydebian.el (tinydebian-bug-nbr-string): Add simple
+        DIGIT match. to the end.
 
 2016-10-22 Sat  Jari Aalto  <jari.aalto@cante.net>
 
-	* tiny/tinylib.el (ti::compat-mouse-position-coordinates):
-	Check for errors: availability of both x and y.
+        * tiny/tinylib.el (ti::compat-mouse-position-coordinates):
+        Check for errors: availability of both x and y.
 
-	* tiny/tinydebian.el (tinydebian-bug-buffer-name): docstring.
-	(tinydebian-bug-browse-url-by-package-name): docstring.
-	(tinydebian-bug-browse-url-by-email): New.
-	(tinydebian-bug-bts-type-determine): Add `save-excursion'
-	(tinydebian-debian-bug-bts-type-p): docstring.
-	(tinydebian-bug-bts-type-determine): Use
-	`tinydebian-bug-nbr-search'.
+        * tiny/tinydebian.el (tinydebian-bug-buffer-name): docstring.
+        (tinydebian-bug-browse-url-by-package-name): docstring.
+        (tinydebian-bug-browse-url-by-email): New.
+        (tinydebian-bug-bts-type-determine): Add `save-excursion'
+        (tinydebian-debian-bug-bts-type-p): docstring.
+        (tinydebian-bug-bts-type-determine): Use
+        `tinydebian-bug-nbr-search'.
 
 2016-10-21 Fri  Jari Aalto  <jari.aalto@cante.net>
 
-	* tiny/tinydebian.el (tinydebian-bug-nbr-at-current-point-number):
-	Improve and add more regexps.
-	(tinydebian-debian-bug-bts-type-p): Re-arrange.
-	(tinydebian-debian-parse-bts-bug-info-raw): Change from
-	defsubst to defun.
-	(tinydebian-debian-parse-bts-bug-package): Tighten regexp.
-	(tinydebian-bug-nbr-at-current-point-number): Look also
-	for commas.
+        * tiny/tinydebian.el (tinydebian-bug-nbr-at-current-point-number):
+        Improve and add more regexps.
+        (tinydebian-debian-bug-bts-type-p): Re-arrange.
+        (tinydebian-debian-parse-bts-bug-info-raw): Change from
+        defsubst to defun.
+        (tinydebian-debian-parse-bts-bug-package): Tighten regexp.
+        (tinydebian-bug-nbr-at-current-point-number): Look also
+        for commas.
 
 2016-10-20 Thu  Jari Aalto  <jari.aalto@cante.net>
 
-	* tiny/tinydebian.el
-	(tinydebian--bts-mail-ctrl-command-tags-history): New.
-	(tinydebian-bts-ctrl-tags-ask): Add arg HISTORY.
-	(tinydebian-bts-mail-ctrl-command-tags): Use
-	`tinydebian--bts-mail-ctrl-command-tags-history'
-	(tinydebian-bug-url-forward): add arg MAX point.
-	(tinydebian-bug-browse-url-main-interactive): Limit
-	initial URL search by two lines forward.
+        * tiny/tinydebian.el
+        (tinydebian--bts-mail-ctrl-command-tags-history): New.
+        (tinydebian-bts-ctrl-tags-ask): Add arg HISTORY.
+        (tinydebian-bts-mail-ctrl-command-tags): Use
+        `tinydebian--bts-mail-ctrl-command-tags-history'
+        (tinydebian-bug-url-forward): add arg MAX point.
+        (tinydebian-bug-browse-url-main-interactive): Limit
+        initial URL search by two lines forward.
 
 2016-10-09  Jari Aalto  <jari.aalto@cante.net>
 
-	* tiny/tinylibb.el (cl-flet): New.
+        * tiny/tinylibb.el (cl-flet): New.
 
 2016-10-08 Sat  Jari Aalto  <jari.aalto@cante.net>
 
-	* tiny/tinyperl.el
-	(Docs::Note): Add note to epxlain that this is a minor mode for POD.
-	It has no effect the Perl code is written which is controlled by
-	the standard Emacs's perl-mode or cperl-mode etc.
-	(tinypath-path-convert-to-emacs-host): Useforward slash in paths.
-	(tinyperl--verbose): Update docstring.
-	(tinyperl-inc-path): Igore ./ and .\\ current directory variations.
-	(tinypath-path-convert-to-emacs-host): Convert backslashes to forward
-	slashes. In Cywin replace paths containing /usr/lib with /lib as
-	/usr/lib is not a physical directory but a mount point.
-	(tinyperl-install-hooks): Do not add tinyperl-version-stamp to
-	write-file-functions by default. Added an example to the
-	INSTALL section for user to add it manually.
-	(tinyperl-pod2text): Check `tinyperl--pod2text-bin' and display
-	error if not found. Call process using `tinyperl--pod2text-bin'.
-	(tinyperl-pod2text): Change to to `system-type' to check if
-	running in Windows Emacs.
-	(tinyperl-install-variables-lookup): Only display messages if VERB
-	is set
-	(tinyperl-install): Update docstring.
+        * tiny/tinyperl.el
+        (Docs::Note): Add note to epxlain that this is a minor mode for POD.
+        It has no effect the Perl code is written which is controlled by
+        the standard Emacs's perl-mode or cperl-mode etc.
+        (tinypath-path-convert-to-emacs-host): Useforward slash in paths.
+        (tinyperl--verbose): Update docstring.
+        (tinyperl-inc-path): Igore ./ and .\\ current directory variations.
+        (tinypath-path-convert-to-emacs-host): Convert backslashes to forward
+        slashes. In Cywin replace paths containing /usr/lib with /lib as
+        /usr/lib is not a physical directory but a mount point.
+        (tinyperl-install-hooks): Do not add tinyperl-version-stamp to
+        write-file-functions by default. Added an example to the
+        INSTALL section for user to add it manually.
+        (tinyperl-pod2text): Check `tinyperl--pod2text-bin' and display
+        error if not found. Call process using `tinyperl--pod2text-bin'.
+        (tinyperl-pod2text): Change to to `system-type' to check if
+        running in Windows Emacs.
+        (tinyperl-install-variables-lookup): Only display messages if VERB
+        is set
+        (tinyperl-install): Update docstring.
 
 2016-10-07 Fri  Jari Aalto  <jari.aalto@cante.net>
 
-	* tiny/tinylibm.el (ti::read-current-line): Read real line
-	by setting inhibit-field-text-motion to t.
+        * tiny/tinylibm.el (ti::read-current-line): Read real line
+        by setting inhibit-field-text-motion to t.
 
 2013-11-27 Wed  Jari Aalto  <jari.aalto@tamk.fi>
 
-	* tiny/tinysearch.el: Remove folding. Remove function headers.
-	(tinysearch-function-ours-p): New.
-	(tinysearch-install-default-keybindings): check binding name before
-	displaying messages.
+        * tiny/tinysearch.el: Remove folding. Remove function headers.
+        (tinysearch-function-ours-p): New.
+        (tinysearch-install-default-keybindings): check binding name before
+        displaying messages.
 
 2013-09-07 Sat  Jari Aalto  <jari.aalto@cante.net>
 
-	* tiny/tinymacro.el:
-	- Remove. Move to epackage at Github.
-	- Clean up comments.
-	(tinymacro-keymap-function-bind-info): New. Remove
-	tinylib dependency.
-	(tinymacro--version-time): New.
+        * tiny/tinymacro.el:
+        - Remove. Move to epackage at Github.
+        - Clean up comments.
+        (tinymacro-keymap-function-bind-info): New. Remove
+        tinylib dependency.
+        (tinymacro--version-time): New.
 
 2013-08-29 Thu  Jari Aalto  <jari.aalto@cante.net>
 
-	* tiny/tinydebian.el
-	(tinydebian--mail-mode-debian-address-package-history): New.
-	(tinydebian-mail-mode-debian-address-package-toggle): Correct
-	enable/disable functionality.
+        * tiny/tinydebian.el
+        (tinydebian--mail-mode-debian-address-package-history): New.
+        (tinydebian-mail-mode-debian-address-package-toggle): Correct
+        enable/disable functionality.
 
 2013-08-14 Wed  Jari Aalto  <jari.aalto@cante.net>
 
-	* tiny/tinydebian.el (tinydebian-bug-nbr-string): Check keyword
-	"forwarded".
+        * tiny/tinydebian.el (tinydebian-bug-nbr-string): Check keyword
+        "forwarded".
 
 2013-07-09 Tue  Jari Aalto  <jari.aalto@cante.net>
 
-	* tiny/tinybookmark.el (tinybookmark-calc-max-col): Adjust comment
-	above.
+        * tiny/tinybookmark.el (tinybookmark-calc-max-col): Adjust comment
+        above.
 
-	* tiny/tinytab.el (tinytab-tab-brace-control): Adjust comment above.
+        * tiny/tinytab.el (tinytab-tab-brace-control): Adjust comment above.
 
-	* tiny/tinysearch.el (tinysearch-search-word-main): Adjust comment
-	above.
+        * tiny/tinysearch.el (tinysearch-search-word-main): Adjust comment
+        above.
 
-	* tiny/tinylibmenu.el (ti::menu--menu-sample): Adjust comment.
+        * tiny/tinylibmenu.el (ti::menu--menu-sample): Adjust comment.
 
-	* tiny/tinylib.el (ti::compat-mouse-call-original): change
-	variable from `ti::-xe-mouse-call-original' to
-	`ti::xemacs--mouse-call-original'.
+        * tiny/tinylib.el (ti::compat-mouse-call-original): change
+        variable from `ti::-xe-mouse-call-original' to
+        `ti::xemacs--mouse-call-original'.
 
-	* tiny/tinyigrep.el (ti::macrof-debug-standard): Correct variable
-	prefix start to '--'.
+        * tiny/tinyigrep.el (ti::macrof-debug-standard): Correct variable
+        prefix start to '--'.
 
-	* tiny/tinydiff.el (tinydiff-mode-define-keys-minibuffer-default):
-	Adjust text in comments.
+        * tiny/tinydiff.el (tinydiff-mode-define-keys-minibuffer-default):
+        Adjust text in comments.
 
-	* tiny/tinygnus.el (tinygnus-gnus-group-get-news-symbolic): Adjust
-	comment above.
+        * tiny/tinygnus.el (tinygnus-gnus-group-get-news-symbolic): Adjust
+        comment above.
 
-	* tiny/tinyscroll.el: Adjust commentary at the beginning.
-	(tinyscroll--list-add): Correct variable name in docstring to
-	'tinyscroll--list'.
+        * tiny/tinyscroll.el: Adjust commentary at the beginning.
+        (tinyscroll--list-add): Correct variable name in docstring to
+        'tinyscroll--list'.
 
-	* tiny/tinypath.el: Update comments. Shuffle statement order in
-	`eval-and-compile'. Move (require 'advice) to the beginning.
-	(tinypath--startup-no-messages): Update docstring.
-	(tinypath-time-record):Correct push to `tinypath--time-data'.
-	(tinypath-load-path-remove-old): Rewrite without `remove-if'.
-	Remove function; not used.
-	(tinypath-load-path-remove): Add `nreverse' to preserve order.
-	(tinypath-cache-p-1-new-cache): Change `cl-flet' to `cl-flet*'.
-	Fixes byte compiler "path-name is not known to be defined".
-	(cl-flet): Adjust indent in all of the code.
+        * tiny/tinypath.el: Update comments. Shuffle statement order in
+        `eval-and-compile'. Move (require 'advice) to the beginning.
+        (tinypath--startup-no-messages): Update docstring.
+        (tinypath-time-record):Correct push to `tinypath--time-data'.
+        (tinypath-load-path-remove-old): Rewrite without `remove-if'.
+        Remove function; not used.
+        (tinypath-load-path-remove): Add `nreverse' to preserve order.
+        (tinypath-cache-p-1-new-cache): Change `cl-flet' to `cl-flet*'.
+        Fixes byte compiler "path-name is not known to be defined".
+        (cl-flet): Adjust indent in all of the code.
 
 2013-06-14 Fri  Jari Aalto  <jari.aalto@cante.net>
 
-	* tiny/tinydebian.el (tinydebian-mail-setup): New. Handle
-	Emacs compatibility.
+        * tiny/tinydebian.el (tinydebian-mail-setup): New. Handle
+        Emacs compatibility.
 
 2013-06-13 Thu  Jari Aalto  <jari.aalto@cante.net>
 
-	* tiny/tinylisp.el (top level): require elp for Byte compiler.
-	(tinylisp-find-variable-list): Use `custom-variable-p'.
-	(tinylisp-forward-user-option): Use `custom-variable-p'.
-	(tinylisp-snoop-variables): Change to `cl-remprop'.
+        * tiny/tinylisp.el (top level): require elp for Byte compiler.
+        (tinylisp-find-variable-list): Use `custom-variable-p'.
+        (tinylisp-forward-user-option): Use `custom-variable-p'.
+        (tinylisp-snoop-variables): Change to `cl-remprop'.
 
-	* tiny/tinyigrep.el (top level): Adjust union autoload.
-	(tinyigrep-main-read-args): Don't quote lambda.
+        * tiny/tinyigrep.el (top level): Adjust union autoload.
+        (tinyigrep-main-read-args): Don't quote lambda.
 
-	* tiny/load-path.el (require): require cl only compile time.
+        * tiny/load-path.el (require): require cl only compile time.
 
-	* ALL: Replace all files to use `call-interactively-p',
-	`cl-flet' 24.3.
+        * ALL: Replace all files to use `call-interactively-p',
+        `cl-flet' 24.3.
 
-	* tiny/tinylibb.el (called-interactively-p): pre 23.2 emulation.
+        * tiny/tinylibb.el (called-interactively-p): pre 23.2 emulation.
 
-	* tiny/tinymy.el (tinymy--compile-table): Remove `aput'.
+        * tiny/tinymy.el (tinymy--compile-table): Remove `aput'.
 
-	* tiny/tinytf.el: devel (top level): Fix typo in comment.
+        * tiny/tinytf.el: devel (top level): Fix typo in comment.
 
-	* tiny/tinyprocmail.el: (top level::coment): Remove `aput'.
+        * tiny/tinyprocmail.el: (top level::coment): Remove `aput'.
 
-	* tiny/tinypath.el
-	(top level): Remove assoc.el, assq is now built-in.
-	(tinypath-time-record): Replace `aput.
+        * tiny/tinypath.el
+        (top level): Remove assoc.el, assq is now built-in.
+        (tinypath-time-record): Replace `aput.
 
-	* tiny/tinygnus.el (tinygnus-gnus-debug-update-nnml-group-alist):
-	Replace `aput'.
+        * tiny/tinygnus.el (tinygnus-gnus-debug-update-nnml-group-alist):
+        Replace `aput'.
 
-	* tiny/tinyscroll.el: Replace `adelete' call.
+        * tiny/tinyscroll.el: Replace `adelete' call.
 
-	* tiny/tinyliby.el (top level): Remove assoc.el require.
-	(ti::system-feature-kill): Delete `adelete'.
+        * tiny/tinyliby.el (top level): Remove assoc.el require.
+        (ti::system-feature-kill): Delete `adelete'.
 
-	* tiny/tinyliba.el: Delete assoc.el autoloads.
+        * tiny/tinyliba.el: Delete assoc.el autoloads.
 
-	* tiny/tinymail.el: Update comment and remove `aput' which has
-	been removed in Emacs 24.2; no more assoc.el.
-	(tinymail-install-table-header-complete-gnus): Remove `aput'.
+        * tiny/tinymail.el: Update comment and remove `aput' which has
+        been removed in Emacs 24.2; no more assoc.el.
+        (tinymail-install-table-header-complete-gnus): Remove `aput'.
 
 2013-05-28 Tue  Jari Aalto  <jari.aalto@cante.net>
 
-	* tiny/tinysearch.el (tinysearch-install-default-keybindings): Check
-	Mouse bindings before insall.
+        * tiny/tinysearch.el (tinysearch-install-default-keybindings): Check
+        Mouse bindings before insall.
 
 2013-05-22 Wed  Jari Aalto  <jari.aalto@cante.net>
 
-	* tiny/tinydebian.el (tinydebian-bts-bug-number-pure-p): New.
-	(tinydebian-debian-bug-info-macro): Use
-	`tinydebian-bts-bug-number-pure-p'.
-	(tinydebian-debian-parse-bts-bug-info-raw): Adjust to 80 col.
-	(tinydebian-debian-parse-bts-bug-message): New.
-	(tinydebian-debian-parse-bts-bug-info-raw): Add MESSAGE
-	by using `tinydebian-debian-parse-bts-bug-message'.
-	(tinydebian-debian-bug-info-message-content-insert): New.
+        * tiny/tinydebian.el (tinydebian-bts-bug-number-pure-p): New.
+        (tinydebian-debian-bug-info-macro): Use
+        `tinydebian-bts-bug-number-pure-p'.
+        (tinydebian-debian-parse-bts-bug-info-raw): Adjust to 80 col.
+        (tinydebian-debian-parse-bts-bug-message): New.
+        (tinydebian-debian-parse-bts-bug-info-raw): Add MESSAGE
+        by using `tinydebian-debian-parse-bts-bug-message'.
+        (tinydebian-debian-bug-info-message-content-insert): New.
 
 2013-05-04 Sat  Jari Aalto  <jari.aalto@cante.net>
 
-	* tiny/tinydebian.el: Adjust comment for RoQA.
+        * tiny/tinydebian.el: Adjust comment for RoQA.
 
 2012-10-18 Thu  Jari Aalto  <jari.aalto@cante.net>
 
-	* tiny/tinylib.el (ti::advice-control): Correct docstring.
+        * tiny/tinylib.el (ti::advice-control): Correct docstring.
 
 2012-07-11 Wed  Jari Aalto  <jari.aalto@cante.net>
 
-	* tiny/tinydebian.el (tinydebian-bug-nbr-at-current-point-number): Replace
-	`current-word' with direct read; the numbers matched.
+        * tiny/tinydebian.el (tinydebian-bug-nbr-at-current-point-number): Replace
+        `current-word' with direct read; the numbers matched.
 
 2012-06-29 Fri  Jari Aalto  <jari.aalto@cante.net>
 
-	* tiny/tinytab.el (tinyyab-mode): Do not bind C-c C-m.
-	message-mode uses key prefix for PGP commands.
+        * tiny/tinytab.el (tinyyab-mode): Do not bind C-c C-m.
+        message-mode uses key prefix for PGP commands.
 
 2012-05-14 Mon  Jari Aalto  <jari.aalto@cante.net>
 
-	* tiny/tinydebian.el (tinydebian-mail-mode-debian-address-bug-toggle):
-	With prefix-arg, set initial input to bug number for editing.
+        * tiny/tinydebian.el (tinydebian-mail-mode-debian-address-bug-toggle):
+        With prefix-arg, set initial input to bug number for editing.
 
 2012-05-14 Tue  Jari Aalto  <jari.aalto@cante.net>
 
-	* other/folding.el (folding-shift-in): Correct
-	`folding-narrow-by-default' at the end to enabel shift-in
-	effect. Thanks to PD Priyadarshan <peedsmail@gmail.com>
-	for bug reported and debugging. Fix implemented as in
-	<https://gist.github.com/1571162> by doitian (Ian Yang)
-	<me@iany.me>.
+        * other/folding.el (folding-shift-in): Correct
+        `folding-narrow-by-default' at the end to enabel shift-in
+        effect. Thanks to PD Priyadarshan <peedsmail@gmail.com>
+        for bug reported and debugging. Fix implemented as in
+        <https://gist.github.com/1571162> by doitian (Ian Yang)
+        <me@iany.me>.
 
 2012-04-22 Sun  Jari Aalto  <jari.aalto@cante.net>
 
-	* tiny/tinydebian.el (tinydebian-bts-mail-type-its): New.
+        * tiny/tinydebian.el (tinydebian-bts-mail-type-its): New.
 
 2012-04-20 Fri  Jari Aalto  <jari.aalto@cante.net>
 
-	* tiny/tinydebian.el (tinydebian-bug-nbr-string): Impove.
+        * tiny/tinydebian.el (tinydebian-bug-nbr-string): Impove.
 
 2012-04-19 Thu  Jari Aalto  <jari.aalto@cante.net>
 
-	* tiny/tinydebian.el Add more calls to
-	`tinydebian-trim-blanks' while reading package name.
+        * tiny/tinydebian.el Add more calls to
+        `tinydebian-trim-blanks' while reading package name.
 
 2012-04-18 Wed  Jari Aalto  <jari.aalto@cante.net>
 
-	* tiny/tinydebian.el (tinydebian-install-in-buffers): Check
-	`doit' variable.
-	(tinydebian-bug-browse-url-by-package-name): Add
-	`tinydebian-trim-blanks'.
-	(tinydebian--bug-report-generic-bts-mail-history-last): New.
-	(tinydebian-bug-report-generic-bts-mail): Add
-	`tinydebian--bug-report-generic-bts-mail-history-last'.
-	(tinydebian-bug-report-debian-bts-mail): Check error better.
+        * tiny/tinydebian.el (tinydebian-install-in-buffers): Check
+        `doit' variable.
+        (tinydebian-bug-browse-url-by-package-name): Add
+        `tinydebian-trim-blanks'.
+        (tinydebian--bug-report-generic-bts-mail-history-last): New.
+        (tinydebian-bug-report-generic-bts-mail): Add
+        `tinydebian--bug-report-generic-bts-mail-history-last'.
+        (tinydebian-bug-report-debian-bts-mail): Check error better.
 
 2012-04-10 Tue  Jari Aalto  <jari.aalto@cante.net>
 
-	* tiny/tinydebian.el (tinydebian--removal-keyword-list):
-	Correct typo.
+        * tiny/tinydebian.el (tinydebian--removal-keyword-list):
+        Correct typo.
 
 2012-03-06 Tue  Jari Aalto  <jari.aalto@cante.net>
 
-	* tiny/tinydebian.el (tinydebian-bts-generic-email-control): Add
-	Bug number check.
-	(tinydebian-bug-gnu-bts-re-search-email): Add URL check.
+        * tiny/tinydebian.el (tinydebian-bts-generic-email-control): Add
+        Bug number check.
+        (tinydebian-bug-gnu-bts-re-search-email): Add URL check.
 
 2012-03-02 Fri  Jari Aalto  <jari.aalto@cante.net>
 
-	* tiny/tinysearch.el: (tinysearch--word-boundary-set):
-	Update documentation.
-	(tinysearch--word-boundary-function): New variable.
-	(tinysearch-search-word-forward): Use
-	`tinysearch--word-boundary-function'.
-	(tinysearch-search-word-backward): Use
-	`tinysearch--word-boundary-function'.
-	(tinysearch-charset-control): Adjust default modes better.
-	Add Python, Ruby check.
+        * tiny/tinysearch.el: (tinysearch--word-boundary-set):
+        Update documentation.
+        (tinysearch--word-boundary-function): New variable.
+        (tinysearch-search-word-forward): Use
+        `tinysearch--word-boundary-function'.
+        (tinysearch-search-word-backward): Use
+        `tinysearch--word-boundary-function'.
+        (tinysearch-charset-control): Adjust default modes better.
+        Add Python, Ruby check.
 
 2012-03-01 Thu  Jari Aalto  <jari.aalto@cante.net>
 
-	* tiny/tinydebian.el (ti::macrof-minor-mode-wizard): Move items
-	to submenu "BTS Control".
+        * tiny/tinydebian.el (ti::macrof-minor-mode-wizard): Move items
+        to submenu "BTS Control".
 
 2012-02-26 Sun  Jari Aalto  <jari.aalto@cante.net>
 
-	* other/folding.el (folding-advice-instantiate): Correct
-	`folding-shift-in-on-goto' check which prevented `goto-line'
-	to work. Patch thanks to akshaal at Github.
+        * other/folding.el (folding-advice-instantiate): Correct
+        `folding-shift-in-on-goto' check which prevented `goto-line'
+        to work. Patch thanks to akshaal at Github.
 
-	* tiny/tinydiff.el (tinydiff-install): Remove. Emacs
-	already has diff and patch modes.
-	(tinydiff--auto-mode-alist): Remove.
+        * tiny/tinydiff.el (tinydiff-install): Remove. Emacs
+        already has diff and patch modes.
+        (tinydiff--auto-mode-alist): Remove.
 
-	* tiny/tinydebian.el (tinydebian-bts-mail-type-ita): Add missing
-	variable BTS.
+        * tiny/tinydebian.el (tinydebian-bts-mail-type-ita): Add missing
+        variable BTS.
 
 2012-02-16 Thu  Jari Aalto  <jari.aalto@cante.net>
 
-	* tiny/tinylibt.el: (Install): Add backward and forward examples.
+        * tiny/tinylibt.el: (Install): Add backward and forward examples.
 
-	* tiny/tinylisp.el (tinylisp--table-reverse-eval-alist):1
-	Add `global-unset-key'.
-	(tinylisp-read-symbol-at-point): Make reading smarter.
-	(tinylisp-symbol-do-macro): Add edebug form.
-	(tinylisp-eval-reverse): Add support for `global-set-key'.
+        * tiny/tinylisp.el (tinylisp--table-reverse-eval-alist):1
+        Add `global-unset-key'.
+        (tinylisp-read-symbol-at-point): Make reading smarter.
+        (tinylisp-symbol-do-macro): Add edebug form.
+        (tinylisp-eval-reverse): Add support for `global-set-key'.
 
-	* tiny/tinydebian.el (tinydebian-package-info): Check
-	that PACKAGE is not empty string. Add history support.
-	(tinydebian-package-info-history): New.
-	(tinydebian-bug-report-generic-bts-mail): Add history support.
-	Add PACKAGE name to the subject by default. Add history
-	support. Add "tags: patch" if subject contains word patch.
-	(tinydebian--bug-report-generic-bts-mail-history): New.
-	(tinydebian--bug-report-debian-bts-mail-subject-history): New.
+        * tiny/tinydebian.el (tinydebian-package-info): Check
+        that PACKAGE is not empty string. Add history support.
+        (tinydebian-package-info-history): New.
+        (tinydebian-bug-report-generic-bts-mail): Add history support.
+        Add PACKAGE name to the subject by default. Add history
+        support. Add "tags: patch" if subject contains word patch.
+        (tinydebian--bug-report-generic-bts-mail-history): New.
+        (tinydebian--bug-report-debian-bts-mail-subject-history): New.
 
 2012-02-08 Wed  Jari Aalto  <jari.aalto@cante.net>
 
-	* tiny/tinydebian.el (tinydebian-mail-header-not-matches):
-	Preserve order
-	(tinydebian-mail-mode-debian-address-bug-toggle): Add
-	current-prefix-arg to ask bug number. Support multiple
-	bug addresses.
+        * tiny/tinydebian.el (tinydebian-mail-header-not-matches):
+        Preserve order
+        (tinydebian-mail-mode-debian-address-bug-toggle): Add
+        current-prefix-arg to ask bug number. Support multiple
+        bug addresses.
 
-	(tinydebian-bug-nbr-string): Correct URL matching regexp.
-	(tinydebian-bts-mail-ctrl-retitle): Correct interactive.
+        (tinydebian-bug-nbr-string): Correct URL matching regexp.
+        (tinydebian-bts-mail-ctrl-retitle): Correct interactive.
 
 2012-01-26 Thu  Jari Aalto  <jari.aalto@cante.net>
 
-	* tiny/tinydebian.el (tinydebian-bug-system-info-apt-policy):
-	Check against null relassoc.
-	(tinydebian-bug-system-info-depends): Try also fields
-	Description-en1, Description-en.
+        * tiny/tinydebian.el (tinydebian-bug-system-info-apt-policy):
+        Check against null relassoc.
+        (tinydebian-bug-system-info-depends): Try also fields
+        Description-en1, Description-en.
 
-	* tiny/tinylisp.el (tinylisp--menu-info): Correct docstring.
-	Order entries alphabetically.
+        * tiny/tinylisp.el (tinylisp--menu-info): Correct docstring.
+        Order entries alphabetically.
 
 2012-01-06 Fri  Jari Aalto  <jari.aalto@cante.net>
 
-	* tiny/tinylisp.el (tinylisp-get-symbol): Delete newlines.
-	(tinylisp--regexp-function): Allow whitespace at the beginning.
-	(tinylisp-jump-to-definition): Allow whitespace at the beginning
-	of variable `f-re'.
+        * tiny/tinylisp.el (tinylisp-get-symbol): Delete newlines.
+        (tinylisp--regexp-function): Allow whitespace at the beginning.
+        (tinylisp-jump-to-definition): Allow whitespace at the beginning
+        of variable `f-re'.
 
 2012-01-05 Thu  Jari Aalto  <jari.aalto@cante.net>
 
-	* tiny/tinydesk.el: REMOVED FROM THIS PROJECT. Now
-	a separate project. See http://www.emacswiki.org/emacs/TinyTools
+        * tiny/tinydesk.el: REMOVED FROM THIS PROJECT. Now
+        a separate project. See http://www.emacswiki.org/emacs/TinyTools
 
-	* tiny/tinybuffer.el
-	(top level): Fix header area to be more compliant.
-	No more depend in tinylib. Drop XEmacs support.
-	(tinybuffer-start-list): Remove `union'.
-	(tinybuffer-nconc): New.
-	(tinybuffer-read-char): New.
-	(tinybuffer-char-in-list-case): New.
+        * tiny/tinybuffer.el
+        (top level): Fix header area to be more compliant.
+        No more depend in tinylib. Drop XEmacs support.
+        (tinybuffer-start-list): Remove `union'.
+        (tinybuffer-nconc): New.
+        (tinybuffer-read-char): New.
+        (tinybuffer-char-in-list-case): New.
 
-	* tiny/tinylibb.el (radix): Remove quote from `lambda'.
-	(require): Add `cl' during compile.
+        * tiny/tinylibb.el (radix): Remove quote from `lambda'.
+        (require): Add `cl' during compile.
 
 2012-01-04 Wed  Jari Aalto  <jari.aalto@cante.net>
 
-	* tiny/tinydebian.el (tinydebian-bts-mail-ctrl-command-tags):
-	Check exixting tags and add to them.
+        * tiny/tinydebian.el (tinydebian-bts-mail-ctrl-command-tags):
+        Check exixting tags and add to them.
 
 2012-01-02 Mon  Jari Aalto  <jari.aalto@cante.net>
 
-	* tiny/tinydesk.el (tinydesk-unload): use `with-temp-buffer'.
-	(tinydesk--save-title): Remove unknown variable `time'.
-	(tinydesk-read-word): Correct `thing-at-point'.
+        * tiny/tinydesk.el (tinydesk-unload): use `with-temp-buffer'.
+        (tinydesk--save-title): Remove unknown variable `time'.
+        (tinydesk-read-word): Correct `thing-at-point'.
 
-	* tiny/tinydebian.el (tinydebian-bts-mail-compose-macro):
-	Fix `mail-setup' for Emacs 24.x.
-	(tinydebian-bts-mode-gnus-summary-maybe-turn-on): Remove.
+        * tiny/tinydebian.el (tinydebian-bts-mail-compose-macro):
+        Fix `mail-setup' for Emacs 24.x.
+        (tinydebian-bts-mode-gnus-summary-maybe-turn-on): Remove.
 
 2012-01-01 Sun  Jari Aalto  <jari.aalto@cante.net>
 
-	* tiny/tinydesk.el (tinydesk--save-exclude-regexp): Exclude
-	gnus archive files.
-	(tinydesk-save-state): Do not show saved buffer. Caused
-	splitting fram into windows.
+        * tiny/tinydesk.el (tinydesk--save-exclude-regexp): Exclude
+        gnus archive files.
+        (tinydesk-save-state): Do not show saved buffer. Caused
+        splitting fram into windows.
 
 2011-12-31 Sat  Jari Aalto  <jari.aalto@cante.net>
 
-	* tiny/tinypath.el (tinypath--boot-ignore-directory-regexp):
-	Add .git, .bzr, .hg, .mtn.
-	(tinypath--load-path-accept-criteria): Adjust docstring.
-	(tinypath--load-path-ignore-regexp): Add
-	 .git, .bzr, .hg, .mtn.
+        * tiny/tinypath.el (tinypath--boot-ignore-directory-regexp):
+        Add .git, .bzr, .hg, .mtn.
+        (tinypath--load-path-accept-criteria): Adjust docstring.
+        (tinypath--load-path-ignore-regexp): Add
+         .git, .bzr, .hg, .mtn.
 
-	* tiny/tinylibm.el (ti::nconc): Correct docstring.
+        * tiny/tinylibm.el (ti::nconc): Correct docstring.
 
-	* tiny/tinydesk.el: (tinydesk-pmin): New.
-	(defgroup): Replaced. Was ti::package-defgroup-tiny.
-	(tinydesk--directory-location): Check ~/temp and ~/Temp and
-	last $HOME before giving up.
-	(tinydesk--save-title): Remove ti::* functions.
-	(tinydesk-default-mode-bindings): Remove ti::* functions.
-	(tinydesk-tmp-buffer): Rewrite.
-	(tinydesk-kill-line): New.
-	(tinydesk-only-files-region): Remove ti::* functions.
-	(tinydesk-file-mode-make-writable): New.
-	(tinydesk-expunge-unloaded): Remove ti::* functions.
-	(tinydesk-verbose): New.
-	(tinydesk-string-match-case): New.
-	(tinydesk-file-name-remote-p): New.
-	(tinydesk--temp-buffer): Rename. Was `tinydesk--tmp-buffer'.
-	(tinydesk--trash-temp-buffer): Rename. Was `tinydesk--trash-tmp-buffer'.
-	(tinydesk-nconc): New.
-	(tinydesk-read-word): Rewrite.
+        * tiny/tinydesk.el: (tinydesk-pmin): New.
+        (defgroup): Replaced. Was ti::package-defgroup-tiny.
+        (tinydesk--directory-location): Check ~/temp and ~/Temp and
+        last $HOME before giving up.
+        (tinydesk--save-title): Remove ti::* functions.
+        (tinydesk-default-mode-bindings): Remove ti::* functions.
+        (tinydesk-tmp-buffer): Rewrite.
+        (tinydesk-kill-line): New.
+        (tinydesk-only-files-region): Remove ti::* functions.
+        (tinydesk-file-mode-make-writable): New.
+        (tinydesk-expunge-unloaded): Remove ti::* functions.
+        (tinydesk-verbose): New.
+        (tinydesk-string-match-case): New.
+        (tinydesk-file-name-remote-p): New.
+        (tinydesk--temp-buffer): Rename. Was `tinydesk--tmp-buffer'.
+        (tinydesk--trash-temp-buffer): Rename. Was `tinydesk--trash-tmp-buffer'.
+        (tinydesk-nconc): New.
+        (tinydesk-read-word): Rewrite.
 
 2011-12-29 Thu  Jari Aalto  <jari.aalto@cante.net>
 
-	* tiny/tinylisp.el (tinylisp-lisp-mnt-verify): Delete obsolete
-	what(1) and RCS from docstring.
-	(tinylisp--menu-checkdoc): Remove obsolete
-	`checkdoc-triple-semi-comment-check-flag'.
-	(tinylisp--menu-checkdoc): Remove  obsolete
-	`checkdoc-triple-semi-comment-check-flag'.
+        * tiny/tinylisp.el (tinylisp-lisp-mnt-verify): Delete obsolete
+        what(1) and RCS from docstring.
+        (tinylisp--menu-checkdoc): Remove obsolete
+        `checkdoc-triple-semi-comment-check-flag'.
+        (tinylisp--menu-checkdoc): Remove  obsolete
+        `checkdoc-triple-semi-comment-check-flag'.
 
-	* tiny/tinydesk.el (tinydesk-file-p): Return t on success. Use
-	shorter string (from 4o to 20 characters) to test if file matches.
+        * tiny/tinydesk.el (tinydesk-file-p): Return t on success. Use
+        shorter string (from 4o to 20 characters) to test if file matches.
 
 2011-12-12 Mon  Jari Aalto  <jari.aalto@cante.net>
 
-	* tiny/tinydebian.el (tinydebian-browse-url-http-get): Fix typo.
+        * tiny/tinydebian.el (tinydebian-browse-url-http-get): Fix typo.
 
 2011-12-11 Sun  Jari Aalto  <jari.aalto@cante.net>
 
-	* tiny/tinydebian.el (tinydebian-bug-system-info-os-insert): New.
-	(tinydebian-bug-report-mail-insert-details): Use
-	`tinydebian-bug-system-info-os-insert'.
+        * tiny/tinydebian.el (tinydebian-bug-system-info-os-insert): New.
+        (tinydebian-bug-report-mail-insert-details): Use
+        `tinydebian-bug-system-info-os-insert'.
 
-	* tiny/tinymail.el (tinymail-iso8601-date-value): Delete
-	empty newlines
+        * tiny/tinymail.el (tinymail-iso8601-date-value): Delete
+        empty newlines
 
 2011-12-09 Fri  Jari Aalto  <jari.aalto@cante.net>
 
-	* tiny/tinylisp.el: Change all variable names from *-:*
-	to *--*.
-	(tinylisp-find-function-list): Clean EOL whitespaces.
+        * tiny/tinylisp.el: Change all variable names from *-:*
+        to *--*.
+        (tinylisp-find-function-list): Clean EOL whitespaces.
 
-	* tiny/tinydesk.el (tinydesk-mark-region): Skip
-	over comment lines. Corrects infinite loop.
-	(tinydesk-unload-current-file): Do not mark buffer modified.
-	(tinydesk-load-file): Simplyfy with `when'.
-	(tinydesk-clear-line-properties): Improve `set-buffer-modified-p'.
-	(tinydesk-handle-text-property): Do not mark buffer modified.
+        * tiny/tinydesk.el (tinydesk-mark-region): Skip
+        over comment lines. Corrects infinite loop.
+        (tinydesk-unload-current-file): Do not mark buffer modified.
+        (tinydesk-load-file): Simplyfy with `when'.
+        (tinydesk-clear-line-properties): Improve `set-buffer-modified-p'.
+        (tinydesk-handle-text-property): Do not mark buffer modified.
 
 2011-12-04 Sun  Jari Aalto  <jari.aalto@cante.net>
 
-	* tiny/tinydesk.el (tinydesk--save-exclude-regexp): Add Backup
-	files that match regexp "[~#]$".
+        * tiny/tinydesk.el (tinydesk--save-exclude-regexp): Add Backup
+        files that match regexp "[~#]$".
 
 2011-12-01 Thu  Jari Aalto  <jari.aalto@cante.net>
 
-	* tiny/tinydesk.el (tinydesk--save-title): Remove extra line.
-	(tinydesk-install-default-keybindings): Adjust comments.
-	(tinydesk--recover-mark-problem-lines): New user variable.
-	(tinydesk-recover-state): Use `tinydesk--recover-mark-problem-lines'.
+        * tiny/tinydesk.el (tinydesk--save-title): Remove extra line.
+        (tinydesk-install-default-keybindings): Adjust comments.
+        (tinydesk--recover-mark-problem-lines): New user variable.
+        (tinydesk-recover-state): Use `tinydesk--recover-mark-problem-lines'.
 
 2011-11-22 Tue  Jari Aalto  <jari.aalto@cante.net>
 
-	* tiny/tinytab.el (wizard): Define backtab in non-window system.
-	E.g. for Putty terminal.
+        * tiny/tinytab.el (wizard): Define backtab in non-window system.
+        E.g. for Putty terminal.
 
 2011-11-18 Fri  Jari Aalto  <jari.aalto@cante.net>
 
-	* tiny/tinyreplace.el (tinyreplace-define-keys-local-map): Rename
-	from `tinyreplace-define-keys-compile-map'.
+        * tiny/tinyreplace.el (tinyreplace-define-keys-local-map): Rename
+        from `tinyreplace-define-keys-compile-map'.
 
 2011-11-16 Wed  Jari Aalto  <jari.aalto@cante.net>
 
-	* tiny/tinymailbox.el (tinymailbox--header-begin-regexp):
-	Rename from `tinymailbox:-header-begin-regexp'.
+        * tiny/tinymailbox.el (tinymailbox--header-begin-regexp):
+        Rename from `tinymailbox:-header-begin-regexp'.
 
-	* tiny/tinypath.el (tinypath-cache-display): Correct docstring
-	variable name `tinypath--cache'.
+        * tiny/tinypath.el (tinypath-cache-display): Correct docstring
+        variable name `tinypath--cache'.
 
-	* tiny/tinyurl.el (tinyurl-dispatcher-1): correct message to
-	announce `tinyurl--validate-hook"'.
+        * tiny/tinyurl.el (tinyurl-dispatcher-1): correct message to
+        announce `tinyurl--validate-hook"'.
 
 2011-09-20 Tue  Jari Aalto  <jari.aalto@cante.net>
 
-	* tiny/tinydebian.el (tinydebian-bug-nbr-string):
-	Add Debian bug URL detection. Tighten plain number regexp not
-	to match YYYY-MM-DD
+        * tiny/tinydebian.el (tinydebian-bug-nbr-string):
+        Add Debian bug URL detection. Tighten plain number regexp not
+        to match YYYY-MM-DD
 
 2011-06-23 Thu  Jari Aalto  <jari.aalto@cante.net>
 
-	* tiny/tinydesk.el (tinydesk-mark-region): Add missing paren.
+        * tiny/tinydesk.el (tinydesk-mark-region): Add missing paren.
 
 2011-04-30 Sat  Jari Aalto  <jari.aalto@cante.net>
 
-	* tiny/tinydebian.el (tinydebian-mail-mode-debian-address-bug-p):
-	Add missing paren.
-	(tinydebian-bts-generic-bug-subject): New. Support Emacs BTS.
-	(tinydebian-bts-mail-type-reply): Use `tinydebian-bts-generic-bug-subject'.
-	(tinydebian-debian-url-bug-initialize-p): Add BTS parameter.
-	(tinydebian-debian-url-bug-info): Add BTS parameter.
-	(tinydebian-debian-url-bug-initialize): Add BTS parameter. Add Emacs BTS
-	support.
-	(tinydebian-debian-bug-info-message-all-macro): Add BTS parameter.
-	(tinydebian-debian-bug-info-macro): Add BTS parameter.
-	(tinydebian-debian-bug-info-all-insert): Add BTS parameter.
-	(tinydebian-bts-mail-ctrl-retitle): Add BTS parameter.
-	(tinydebian-bts-mail-type-reply): Add BTS parameter.
-	(tinydebian-bts-mail-type-it-nmu): Add BTS parameter.
-	(tinydebian-bts-mail-type-ita): Add BTS parameter.
-	(tinydebian-debian-bug-info-subject-message): Add BTS parameter.
-	(tinydebian-debian-bug-info-subject-insert): Add BTS parameter.
-	(tinydebian-bts-mail-type-reply): Always consult URL for the subject.
+        * tiny/tinydebian.el (tinydebian-mail-mode-debian-address-bug-p):
+        Add missing paren.
+        (tinydebian-bts-generic-bug-subject): New. Support Emacs BTS.
+        (tinydebian-bts-mail-type-reply): Use `tinydebian-bts-generic-bug-subject'.
+        (tinydebian-debian-url-bug-initialize-p): Add BTS parameter.
+        (tinydebian-debian-url-bug-info): Add BTS parameter.
+        (tinydebian-debian-url-bug-initialize): Add BTS parameter. Add Emacs BTS
+        support.
+        (tinydebian-debian-bug-info-message-all-macro): Add BTS parameter.
+        (tinydebian-debian-bug-info-macro): Add BTS parameter.
+        (tinydebian-debian-bug-info-all-insert): Add BTS parameter.
+        (tinydebian-bts-mail-ctrl-retitle): Add BTS parameter.
+        (tinydebian-bts-mail-type-reply): Add BTS parameter.
+        (tinydebian-bts-mail-type-it-nmu): Add BTS parameter.
+        (tinydebian-bts-mail-type-ita): Add BTS parameter.
+        (tinydebian-debian-bug-info-subject-message): Add BTS parameter.
+        (tinydebian-debian-bug-info-subject-insert): Add BTS parameter.
+        (tinydebian-bts-mail-type-reply): Always consult URL for the subject.
 
 2011-04-21 Thu  Jari Aalto  <jari.aalto@cante.net>
 
-	* tiny/tinydebian.el (tinydebian-mail-mode-debian-address-bug-p):
-	New.
-	(tinydebian-mail-mode-debian-address-bug-toggle): Improve interactive
-	use. Use bug number found from current line.
+        * tiny/tinydebian.el (tinydebian-mail-mode-debian-address-bug-p):
+        New.
+        (tinydebian-mail-mode-debian-address-bug-toggle): Improve interactive
+        use. Use bug number found from current line.
 
 2011-03-18 Fri  Jari Aalto  <jari.aalto@cante.net>
 
-	* tiny/tinydebian.el (tinydebian--removal-keyword-list):
-	Add 'non-free', 'unredistributable'.
+        * tiny/tinydebian.el (tinydebian--removal-keyword-list):
+        Add 'non-free', 'unredistributable'.
 
 2011-03-05 Sat  Jari Aalto  <jari.aalto@cante.net>
 
-	* tiny/tinydebian.el (tinydebian-bts-mail-type-rfp): Fix
-	indentation. Clarify docstring.
+        * tiny/tinydebian.el (tinydebian-bts-mail-type-rfp): Fix
+        indentation. Clarify docstring.
 
 2011-02-10 Thu  Jari Aalto  <jari.aalto@cante.net>
 
-	* tiny/tinycygwin.el (tinycygwin-executable-find): Add
-	`file-directory-p' check.
-	(tinycygwin--os-type): Add system-type `cygwin'.
-	(tinycygwin-bug-report-mail-insert-environment): Do not
-	print --Envvironment tag if there is nothing to report.
-	(tinycygwin--sysinfo-environment-list): Fix typo.
+        * tiny/tinycygwin.el (tinycygwin-executable-find): Add
+        `file-directory-p' check.
+        (tinycygwin--os-type): Add system-type `cygwin'.
+        (tinycygwin-bug-report-mail-insert-environment): Do not
+        print --Envvironment tag if there is nothing to report.
+        (tinycygwin--sysinfo-environment-list): Fix typo.
 
 2011-01-26 Wed  Jari Aalto  <jari.aalto@cante.net>
 
-	* tiny/tinydesk.el (top level): remove folding marks.
-	(tinydesk-recover-file-whole-buffer):Move location.
-	(tinydesk-save-state): Change `not-modified' to
-	`set-buffer-modified-p'.
-	(tinydesk-mark-buffer-loadable): Move location.
-	(tinydesk-comment-re): Optimize. Add macro expansion.
-	(tinydesk-mark-region): Rewrite. Much simpler now. Fix handling
-	of files and directory names with spaces. Savannah Bug#32253.
+        * tiny/tinydesk.el (top level): remove folding marks.
+        (tinydesk-recover-file-whole-buffer):Move location.
+        (tinydesk-save-state): Change `not-modified' to
+        `set-buffer-modified-p'.
+        (tinydesk-mark-buffer-loadable): Move location.
+        (tinydesk-comment-re): Optimize. Add macro expansion.
+        (tinydesk-mark-region): Rewrite. Much simpler now. Fix handling
+        of files and directory names with spaces. Savannah Bug#32253.
 
 2011-01-24 Mon  Jari Aalto  <jari.aalto@cante.net>
 
-	* tiny/tinydebian.el (tinydebian-bts-mail-ctrl-command-clone-in-mail):
-	New.
-	(tinydebian-bts-mail-ctrl-command-clone): Rewrite.
-	(tinydebian-bts-mail-ctrl-clone-new-mail): Rename. Was
-	`tinydebian-bts-mail-ctrl-command-clone'.
+        * tiny/tinydebian.el (tinydebian-bts-mail-ctrl-command-clone-in-mail):
+        New.
+        (tinydebian-bts-mail-ctrl-command-clone): Rewrite.
+        (tinydebian-bts-mail-ctrl-clone-new-mail): Rename. Was
+        `tinydebian-bts-mail-ctrl-command-clone'.
 
 2011-01-14 Fri  Jari Aalto  <jari.aalto@cante.net>
 
-	* tiny/tiny-admin-util.el (tiny-setup-autoload-build-functions-all):
-	Exclude loaddefs file.
+        * tiny/tiny-admin-util.el (tiny-setup-autoload-build-functions-all):
+        Exclude loaddefs file.
 
 2011-01-06  Jari Aalto  <jari.aalto@cante.net>
 
-	* tiny/tinylisp.el (tinylisp-with-file-env-macro):
-	remove unused let variable `original-backup-inhibited'.
+        * tiny/tinylisp.el (tinylisp-with-file-env-macro):
+        remove unused let variable `original-backup-inhibited'.
 
 
 2010-12-27 Mon  Jari Aalto  <jari.aalto@cante.net>
 
-	* tiny/tinydebian.el (tinydebian-mail-mode): Remove
-	`tinydebian-bug-browse-url-by-bug' and use generic
-	`tinydebian-bug-browse-url-main'.
-	(tinydebian--emacs-bts-email-address): Change emacsbugs.donarmstrong.com
-	to debbugs.gnu.org.
-	(tinydebian-bug-gnu-emacs-bts-re-search-email): Check control@ address.
-	(tinydebian--emacs-bts-url-http-bugs): Chnage emacsbugs.donarmstrong.com
-	to debbugs.gnu.org.
+        * tiny/tinydebian.el (tinydebian-mail-mode): Remove
+        `tinydebian-bug-browse-url-by-bug' and use generic
+        `tinydebian-bug-browse-url-main'.
+        (tinydebian--emacs-bts-email-address): Change emacsbugs.donarmstrong.com
+        to debbugs.gnu.org.
+        (tinydebian-bug-gnu-emacs-bts-re-search-email): Check control@ address.
+        (tinydebian--emacs-bts-url-http-bugs): Chnage emacsbugs.donarmstrong.com
+        to debbugs.gnu.org.
 
 2010-12-26 Sun  Jari Aalto  <jari.aalto@cante.net>
 
-	* tiny/tinydebian.el (tinydebian-bug-nbr-any-in-string): Adjust
-	submatch.
-	(tinydebian-bug-nbr-any-in-string): Add another regecp.
-	(tinydebian-bug-nbr-article-buffer): New. Look at Subject.
+        * tiny/tinydebian.el (tinydebian-bug-nbr-any-in-string): Adjust
+        submatch.
+        (tinydebian-bug-nbr-any-in-string): Add another regecp.
+        (tinydebian-bug-nbr-article-buffer): New. Look at Subject.
 
 2010-12-22 Wed  Jari Aalto  <jari.aalto@cante.net>
 
-	* tiny/tinytf.el: (top level): Update documentation to
-	use `write-file-functions'.
+        * tiny/tinytf.el: (top level): Update documentation to
+        use `write-file-functions'.
 
-	* tiny/tinyperl.el (tinyperl-install-hooks): Update to
-	`write-file-functions' from `write-file-hooks'.
+        * tiny/tinyperl.el (tinyperl-install-hooks): Update to
+        `write-file-functions' from `write-file-hooks'.
 
-	* tiny/tinymail.el (tinymail-install-hooks): Update to
-	`write-file-functions' from `write-file-hooks'.
+        * tiny/tinymail.el (tinymail-install-hooks): Update to
+        `write-file-functions' from `write-file-hooks'.
 
-	* tiny/tinylib.el (ti::package-autoload-loaddefs-build-dir-1):
-	Remove `write-file-hooks'.
+        * tiny/tinylib.el (ti::package-autoload-loaddefs-build-dir-1):
+        Remove `write-file-hooks'.
 
-	* tiny/tinydesk.el: Update to `write-file-functions' from
-	`write-file-hooks'.
+        * tiny/tinydesk.el: Update to `write-file-functions' from
+        `write-file-hooks'.
 
-	* tiny/tinydebian.el (tinydebian-install): Adjust comments.
+        * tiny/tinydebian.el (tinydebian-install): Adjust comments.
 
-	* tiny/tinyadvice.el (after-find-file): Remove.
+        * tiny/tinyadvice.el (after-find-file): Remove.
 
 2010-12-20  Jari Aalto  <jari.aalto@cante.net>
 
-	* tiny/tinydebian.el (tinydebian-bug-url-forward): Tighten
-	regexps.
+        * tiny/tinydebian.el (tinydebian-bug-url-forward): Tighten
+        regexps.
 
 2010-12-17 Fri  Jari Aalto  <jari.aalto@cante.net>
 
-	* tiny/tinylisp.el (tinylisp--regexp-function): Use `regexp-opt'.
-	(tinylisp--regexp-variable): Use `regexp-opt'.
+        * tiny/tinylisp.el (tinylisp--regexp-function): Use `regexp-opt'.
+        (tinylisp--regexp-variable): Use `regexp-opt'.
 
 2010-12-15 Wed  Jari Aalto  <jari.aalto@cante.net>
 
-	* tiny/tinydebian.el (tinydebian-mysql-bug-type-p): Improve
-	regexp.
+        * tiny/tinydebian.el (tinydebian-mysql-bug-type-p): Improve
+        regexp.
 
 2010-12-14 Tue  Jari Aalto  <jari.aalto@cante.net>
 
-	* tiny/tinylisp.el (tinylisp--table-reverse-eval-alist):
-	Change defcustom:typo from 'list to 'sexp.
-	(tinylisp-install-hooks): Remove obsolete defadvice from
-	`debugger-mode'.
+        * tiny/tinylisp.el (tinylisp--table-reverse-eval-alist):
+        Change defcustom:typo from 'list to 'sexp.
+        (tinylisp-install-hooks): Remove obsolete defadvice from
+        `debugger-mode'.
 
-	* tiny/tinydebian.el (tinydebian-github-bug-type-p): New.
-	(tinydebian-bug-bts-type-determine): Add Github support.
-
-2010-12-12 Sun  Jari Aalto  <jari.aalto@cante.net>
-
-	* tiny/tinylib.el (ti::keymap-reinstall-minor-mode): Change let*.
-	(ti::keymap-add-minor-mode): Change let*.
-	(ti::macrof-minor-mode-1): Add function call parens around
-	`install-func' in near if-statement `minor-mode-alist'.
-	(ti::string-verify-ends): Change let*.
-	(ti::string-format-percent): Change let*.
-	(ti::string-url-to-ange-ftp): Change let*.
-	(ti::buffer-upcase-words-to-variable-names): Change let*.
-	(ti::string-char-to-escape-char): Change let*.
-	(ti::string-plain-string-to-regexp): Change let*.
-	(ti::vc-rcs-delta-get-file): Change let*.
-	(ti::vc-dir-p): Add darcs. Update monotone from MT to .mtn
-	(ti::vc-rcs-read-val): Change let*.
-	(ti::vc-rcs-look-id): Change let*.
-	(ti::vc-cvs-to-cvs-dir-p): Change let*.
-	(ti::vc-cvs-to-cvs-file-content): Change let*.
-	(ti::vc-cvs-file-exists-p): Change let*.
-	(ti::vc-cvs-entry-split-info): Change let*.
-	(ti::vc-rcs-guess-buffer-version): Change let*.
-	(ti::vc-rcs-buffer-version): Change let*.
-	(ti::vc-rcs-str-find): Change let*.
-	(ti::string-match-string-subs): Change let*.
-	(ti::string-match-string-list): Change let*.
-	(ti::string-case-replace): Change let*.
-	(ti::string-replace-one-space): Change let*.
-	(ti::buffer-find-ange-to-dired-buffer): Change let*.
-	(ti::buffer-uu-area): Change let*.
-	(ti::buffer-parse-line-main): Change let*.
-	(ti::buffer-grep-lines): Change let*.
-	(ti::buffer-read-word): Change let*.
-	(ti::buffer-read-nth-word): Change let*.
-	(ti::buffer-leave-nth-word): Change let*.
-	(ti::buffer-kill-line): Change let*.
-	(ti::buffer-copy-line-and-inc-numbers): Change let*.
-	(ti::buffer-cnv-empty-lines): Change let*.
-	(ti::buffer-del-dup-lines): Change let*.
-	(ti::buffer-delete-until-non-empty-line): Change let*.
-	(ti::buffer-replace-regexp): Change let*.
-	(ti::buffer-buffer-list-files): Change let*.
-	(ti::buffer-count-chars-in-delimited-area): Change let*.
-	(ti::buffer-word-move): Change let*.
-	(ti::buffer-find-duplicate-same-word): Change let*.
-	(ti::buffer-selective-display-copy-to): Change let*.
-	(ti::buffer-selective-display-print): Change let*.
-	(ti::window-frame-list): Change let*.
-	(ti::window-single-p): Change let*.
-	(ti::window-get-buffer-window-other-frame): Change let*.
-	(ti::window-find-bottom): Change let*.
-	(ti::window-match-buffers): Change let*.
-	(ti::keymap-define-key-backspace): Change let*.
-	(ti::keymap-function-bind-info): Change let*.
-	(ti::keymap-bind-control): Change let*.
-	(ti::keymap-put-abc-map): Change let*.
-	(ti::keymap-put-map): Change let*.
-	(ti::buffer-forward-line): Change let*.
-	(ti::buffer-looking-at-one-space): Change let*.
-	(ti::buffer-find-longer-line): Change let*.
-	(ti::buffer-scramble-region): Change let*.
-	(ti::buffer-add-string-region): Change let*.
-	(ti::buffer-sort-regexp-fields): Change let*.
-	(ti::file-passwd-grep-user-alist): Change let*.
-	(ti::file-passwd-build-alist): Change let*.
-	(ti::buffer-defun-function-name): Change let*. Optimize `concat'.
-	(ti::file-touch): Change let*.
-	(ti::file-ange-status): Change let*.
-	(ti::file-ange-download-file): Change let*.
-	(ti::file-ange-file-handle): Change let*.
-	(ti::file-chmod-w-toggle): Change let*.
-	(ti::directory-subdirectory-list): Change let*.
-	(ti::directory-recursive-do): Change let*.
-	(ti::directory-files): Change let*.
-	(ti::file-files-only): Change let*.
-	(ti::file-get-extension): Change let*.
-	(ti::file-path-and-line-info): Change let*.
-	(ti::file-get-load-path): Change let*.
-	(ti::file-user-home): Change let*.
-	(ti::file-complete-file-name-word): Change let*.
-	(ti::file-read-file-list): Change let*.
-	(ti::process-finger-error): Change let*.
-	(ti::process-uname): Change let*.
-	(ti::process-perl-version): Change let*.
-	(ti::process-java-version): Change let*.
-	(ti::process-tar-view-command): Change let*.
-	(ti::process-tar-read-listing-forward): Change let*.
-	(ti::query-read-input-invisible): Change let*.
-	(ti::package-submit-bug-report): Change let*.
-	(ti::package-install-example): Change let*.
-	(ti::package-rip): Change let*.
-	(ti::package-rip-magic): Change let*.
-	(ti::package-make-mode-magic): Change let*.
-	(ti::package-make-mode): Change let*.
-	(ti::macrof-minor-mode-off): Correct macro definition.
-	(ti::macrof-minor-mode-on): Correct macro definition.
-	(ti::vc-rcs-delta-get-revisions): Change let*.
-	(fboundp): Change let*.
-	(ti::string-syntax-info): Move `verb'.
-	(ti::string-tabify): Change let*.
-	(ti::buffer-inc-string-nbr): Change let*.
-	(ti::compat-popup): Change let*.
-	(ti::compat-timer-list-control): Change let*.
-	(ti::compat-timer-control): Change let*.
-	(ti::compat-timer-elt): Change let*.
-	(ti::macrof-minor-mode-1): Change let*.
-	(ti::macrof-define-keys-1): Change let*.
-	(ti::vc-version-lessp): Change let*.
-	(ti::buffer-fill-region-spaces): Change let*.
-	(ti::package-make): Change let*.
-	(ti::package-autoload-create-on-file): optimize `concat'.
-	Change let*.
-	(ti::package-autoload-loaddefs-create-maybe): Change let*.
-	(ti::package-autoload-loaddefs-dir-files): Change let*.
-	(ti::package-autoload-loaddefs-build-dir): Change let*.
-	(ti::package-autoload-directories): Change let*.
-	(ti::package-autoload-loaddefs-build-recursive): Change let*.
-	(ti::package-install-pgp-tar): Change let*.
-	(ti::compat-overlays-at): Change let*.
-	(ti::compat-read-password): Change let*.
-	(ti::compat-mouse-call-original-function): Change let*.
-	(ti::string-nth-from-number): Add %s to `error'.
-	(ti::vc-rcs-guess-buffer-version): Use `with-current-buffer'.
-	(ti::vc-rcs-buffer-version): Use `with-current-buffer'.
-	(ti::buffer-selective-display-copy-to): Change `bp'
-	to `buffer'.
-	(ti::file-ange-status): Use `with-current-buffer'.
-	(ti::file-ange-file-handle): Use `with-current-buffer'.
-	(ti::file-file-list): Fix `mapcar'.
-	(ti::package-get-header): Change `mapcar' to `dolist'.
-	(ti::package-submit-bug-reportsn): Chnage `insert-buffer'
-	tp `insert-buffer-substring'.
-	(ti::package-autoload-loaddefs-build-dir-1): Add
-	`write-file-functions'.
-	(ti::package-install-pgp-tar): Use `insert-buffer-substring'.
-	Fix format.
-	(ti::compat-activate-region): Byte compile hide for
-	`zmacs-regions'.
-	(ti::string-mangle): Remove `char-to-int'.
-
-2010-12-12  Jari Aalto  <jari.aalto@cante.net>
-
-	* tiny/tinydesk.el (turn-on-tinydesk-mode): Add
-	autoload.
-	(turn-off-tinydesk-mode): Add autoload.
-	(turn-on-tinydesk-mode-maybe): Rewrite.
-	(tinydesk-file-p): New.
+        * tiny/tinydebian.el (tinydebian-github-bug-type-p): New.
+        (tinydebian-bug-bts-type-determine): Add Github support.
 
 2010-12-12 Sun  Jari Aalto  <jari.aalto@cante.net>
 
-	* tiny/tinyeat.el (tinyeat-install-default-bindings): Define
-	M-SPC.
+        * tiny/tinylib.el (ti::keymap-reinstall-minor-mode): Change let*.
+        (ti::keymap-add-minor-mode): Change let*.
+        (ti::macrof-minor-mode-1): Add function call parens around
+        `install-func' in near if-statement `minor-mode-alist'.
+        (ti::string-verify-ends): Change let*.
+        (ti::string-format-percent): Change let*.
+        (ti::string-url-to-ange-ftp): Change let*.
+        (ti::buffer-upcase-words-to-variable-names): Change let*.
+        (ti::string-char-to-escape-char): Change let*.
+        (ti::string-plain-string-to-regexp): Change let*.
+        (ti::vc-rcs-delta-get-file): Change let*.
+        (ti::vc-dir-p): Add darcs. Update monotone from MT to .mtn
+        (ti::vc-rcs-read-val): Change let*.
+        (ti::vc-rcs-look-id): Change let*.
+        (ti::vc-cvs-to-cvs-dir-p): Change let*.
+        (ti::vc-cvs-to-cvs-file-content): Change let*.
+        (ti::vc-cvs-file-exists-p): Change let*.
+        (ti::vc-cvs-entry-split-info): Change let*.
+        (ti::vc-rcs-guess-buffer-version): Change let*.
+        (ti::vc-rcs-buffer-version): Change let*.
+        (ti::vc-rcs-str-find): Change let*.
+        (ti::string-match-string-subs): Change let*.
+        (ti::string-match-string-list): Change let*.
+        (ti::string-case-replace): Change let*.
+        (ti::string-replace-one-space): Change let*.
+        (ti::buffer-find-ange-to-dired-buffer): Change let*.
+        (ti::buffer-uu-area): Change let*.
+        (ti::buffer-parse-line-main): Change let*.
+        (ti::buffer-grep-lines): Change let*.
+        (ti::buffer-read-word): Change let*.
+        (ti::buffer-read-nth-word): Change let*.
+        (ti::buffer-leave-nth-word): Change let*.
+        (ti::buffer-kill-line): Change let*.
+        (ti::buffer-copy-line-and-inc-numbers): Change let*.
+        (ti::buffer-cnv-empty-lines): Change let*.
+        (ti::buffer-del-dup-lines): Change let*.
+        (ti::buffer-delete-until-non-empty-line): Change let*.
+        (ti::buffer-replace-regexp): Change let*.
+        (ti::buffer-buffer-list-files): Change let*.
+        (ti::buffer-count-chars-in-delimited-area): Change let*.
+        (ti::buffer-word-move): Change let*.
+        (ti::buffer-find-duplicate-same-word): Change let*.
+        (ti::buffer-selective-display-copy-to): Change let*.
+        (ti::buffer-selective-display-print): Change let*.
+        (ti::window-frame-list): Change let*.
+        (ti::window-single-p): Change let*.
+        (ti::window-get-buffer-window-other-frame): Change let*.
+        (ti::window-find-bottom): Change let*.
+        (ti::window-match-buffers): Change let*.
+        (ti::keymap-define-key-backspace): Change let*.
+        (ti::keymap-function-bind-info): Change let*.
+        (ti::keymap-bind-control): Change let*.
+        (ti::keymap-put-abc-map): Change let*.
+        (ti::keymap-put-map): Change let*.
+        (ti::buffer-forward-line): Change let*.
+        (ti::buffer-looking-at-one-space): Change let*.
+        (ti::buffer-find-longer-line): Change let*.
+        (ti::buffer-scramble-region): Change let*.
+        (ti::buffer-add-string-region): Change let*.
+        (ti::buffer-sort-regexp-fields): Change let*.
+        (ti::file-passwd-grep-user-alist): Change let*.
+        (ti::file-passwd-build-alist): Change let*.
+        (ti::buffer-defun-function-name): Change let*. Optimize `concat'.
+        (ti::file-touch): Change let*.
+        (ti::file-ange-status): Change let*.
+        (ti::file-ange-download-file): Change let*.
+        (ti::file-ange-file-handle): Change let*.
+        (ti::file-chmod-w-toggle): Change let*.
+        (ti::directory-subdirectory-list): Change let*.
+        (ti::directory-recursive-do): Change let*.
+        (ti::directory-files): Change let*.
+        (ti::file-files-only): Change let*.
+        (ti::file-get-extension): Change let*.
+        (ti::file-path-and-line-info): Change let*.
+        (ti::file-get-load-path): Change let*.
+        (ti::file-user-home): Change let*.
+        (ti::file-complete-file-name-word): Change let*.
+        (ti::file-read-file-list): Change let*.
+        (ti::process-finger-error): Change let*.
+        (ti::process-uname): Change let*.
+        (ti::process-perl-version): Change let*.
+        (ti::process-java-version): Change let*.
+        (ti::process-tar-view-command): Change let*.
+        (ti::process-tar-read-listing-forward): Change let*.
+        (ti::query-read-input-invisible): Change let*.
+        (ti::package-submit-bug-report): Change let*.
+        (ti::package-install-example): Change let*.
+        (ti::package-rip): Change let*.
+        (ti::package-rip-magic): Change let*.
+        (ti::package-make-mode-magic): Change let*.
+        (ti::package-make-mode): Change let*.
+        (ti::macrof-minor-mode-off): Correct macro definition.
+        (ti::macrof-minor-mode-on): Correct macro definition.
+        (ti::vc-rcs-delta-get-revisions): Change let*.
+        (fboundp): Change let*.
+        (ti::string-syntax-info): Move `verb'.
+        (ti::string-tabify): Change let*.
+        (ti::buffer-inc-string-nbr): Change let*.
+        (ti::compat-popup): Change let*.
+        (ti::compat-timer-list-control): Change let*.
+        (ti::compat-timer-control): Change let*.
+        (ti::compat-timer-elt): Change let*.
+        (ti::macrof-minor-mode-1): Change let*.
+        (ti::macrof-define-keys-1): Change let*.
+        (ti::vc-version-lessp): Change let*.
+        (ti::buffer-fill-region-spaces): Change let*.
+        (ti::package-make): Change let*.
+        (ti::package-autoload-create-on-file): optimize `concat'.
+        Change let*.
+        (ti::package-autoload-loaddefs-create-maybe): Change let*.
+        (ti::package-autoload-loaddefs-dir-files): Change let*.
+        (ti::package-autoload-loaddefs-build-dir): Change let*.
+        (ti::package-autoload-directories): Change let*.
+        (ti::package-autoload-loaddefs-build-recursive): Change let*.
+        (ti::package-install-pgp-tar): Change let*.
+        (ti::compat-overlays-at): Change let*.
+        (ti::compat-read-password): Change let*.
+        (ti::compat-mouse-call-original-function): Change let*.
+        (ti::string-nth-from-number): Add %s to `error'.
+        (ti::vc-rcs-guess-buffer-version): Use `with-current-buffer'.
+        (ti::vc-rcs-buffer-version): Use `with-current-buffer'.
+        (ti::buffer-selective-display-copy-to): Change `bp'
+        to `buffer'.
+        (ti::file-ange-status): Use `with-current-buffer'.
+        (ti::file-ange-file-handle): Use `with-current-buffer'.
+        (ti::file-file-list): Fix `mapcar'.
+        (ti::package-get-header): Change `mapcar' to `dolist'.
+        (ti::package-submit-bug-reportsn): Chnage `insert-buffer'
+        tp `insert-buffer-substring'.
+        (ti::package-autoload-loaddefs-build-dir-1): Add
+        `write-file-functions'.
+        (ti::package-install-pgp-tar): Use `insert-buffer-substring'.
+        Fix format.
+        (ti::compat-activate-region): Byte compile hide for
+        `zmacs-regions'.
+        (ti::string-mangle): Remove `char-to-int'.
 
 2010-12-12  Jari Aalto  <jari.aalto@cante.net>
 
-	* tiny/tinydesk.el (tinydesk-default-mode-bindings):
-	Arrange key bindings in alphabetical order.
+        * tiny/tinydesk.el (turn-on-tinydesk-mode): Add
+        autoload.
+        (turn-off-tinydesk-mode): Add autoload.
+        (turn-on-tinydesk-mode-maybe): Rewrite.
+        (tinydesk-file-p): New.
 
 2010-12-12 Sun  Jari Aalto  <jari.aalto@cante.net>
 
-	* tiny/tinylib.el (ti::buffer-parse-grep-line): Fix let*.
-	(ti::file-access-mode-to-string): Adjust doc.
+        * tiny/tinyeat.el (tinyeat-install-default-bindings): Define
+        M-SPC.
 
 2010-12-12  Jari Aalto  <jari.aalto@cante.net>
 
-	* tiny/tinydesk.el (tinydesk-remove-file-coments): Call
-	`ti::buffer-remove-whitespace-eol'.
+        * tiny/tinydesk.el (tinydesk-default-mode-bindings):
+        Arrange key bindings in alphabetical order.
 
-	* tiny/tinyeat.el
-	(top level): Update docs.
-	(tinyeat-install-default-bindings): Add C-S-k, C-S-SPC.
+2010-12-12 Sun  Jari Aalto  <jari.aalto@cante.net>
+
+        * tiny/tinylib.el (ti::buffer-parse-grep-line): Fix let*.
+        (ti::file-access-mode-to-string): Adjust doc.
+
+2010-12-12  Jari Aalto  <jari.aalto@cante.net>
+
+        * tiny/tinydesk.el (tinydesk-remove-file-coments): Call
+        `ti::buffer-remove-whitespace-eol'.
+
+        * tiny/tinyeat.el
+        (top level): Update docs.
+        (tinyeat-install-default-bindings): Add C-S-k, C-S-SPC.
 
 2010-12-08 Wed  Jari Aalto  <jari.aalto@cante.net>
 
-	* tiny/tinylibm.el (ti::package-use-dynamic-compilation): Remove.
-	Obsolete; the default is t.
+        * tiny/tinylibm.el (ti::package-use-dynamic-compilation): Remove.
+        Obsolete; the default is t.
 
-	* tiny/tinylisp.el (tinylisp--menu-compile): Update
-	(t)ree description.
-	(tinylisp-byte-compile-display-call-tree): Add sort
-	criteria `byte-compile-call-tree-sort'.
+        * tiny/tinylisp.el (tinylisp--menu-compile): Update
+        (t)ree description.
+        (tinylisp-byte-compile-display-call-tree): Add sort
+        criteria `byte-compile-call-tree-sort'.
 
 2010-12-07 Tue  Jari Aalto  <jari.aalto@cante.net>
 
         * tiny/tinylib.el
-	(top level): Convert all 10+ years old macro definitions
-	to modern style.
-	(ti::package-version-info): adjust docstring.
+        (top level): Convert all 10+ years old macro definitions
+        to modern style.
+        (ti::package-version-info): adjust docstring.
         (ti::package-get-header): Move location.
         (ti::file-complete-filename-minibuffer-macro): Modernize.
         (ti::process-perl-process-environment-macro): Modernize.

@@ -79,7 +79,7 @@
 (eval-and-compile
   (autoload 'ti::replace-match "tinylibm"))
 
-(defconst tinylibb-version-time "2019.0525.1340"
+(defconst tinylibb-version-time "2023.0917.1021"
   "Latest version number as last modified time.")
 
 ;;; ....................................................... &emulation ...
@@ -204,7 +204,7 @@ PAD says to padd hex string with leading zeroes."
   (string= (buffer-name) " *Compiler Input*"))
 
 (defmacro-maybe cl-flet (&rest args)
-  `(flet ,@args))
+  `(cl-flet ,@args))
 
 (defmacro-maybe with-output-to-file (file &rest body)
   "Open FILE and run BODY.

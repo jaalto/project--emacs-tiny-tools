@@ -1897,7 +1897,7 @@ Following variables are set during BODY:
 `dir'      Directrory name
 `dir-list' All directories under `dir'."
   ;; Cannot use `cl-flet' which is lexical
-  `(flet ((recurse
+  `(cl-flet ((recurse
 	      (dir)
 	      (let ((dir-list (tinylisp-directory-list dir)))
 		,@body

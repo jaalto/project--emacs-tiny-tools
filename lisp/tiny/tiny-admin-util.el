@@ -146,7 +146,7 @@ Following variables are set during BODY:
 `dir'      Directrory name
 `dir-list' All directories under `dir'."
   ;; Cannot use cl-flat which is lexical
-  `(flet ((recurse
+  `(cl-flet ((recurse
 	      (dir)
 	      (let ((dir-list (tiny-setup-directory-list dir)))
 		,@body
