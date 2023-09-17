@@ -184,7 +184,7 @@ If HOST is raw numeric IP, do nothing."
 ;;; ----------------------------------------------------------------------
 ;;;
 (defsubst ti::mail-ip-cleanup (word)
-  "Clean WORD to format 'aa.bb.cc'. Remove offending characters.
+  "Clean WORD to format \"aa.bb.cc\". Remove offending characters.
 Remove all characters up till @: this@email.com => email.com
 Remove all not(alphanumeric, dash, dot) charcters.
 
@@ -440,8 +440,8 @@ References:
 
 Return:
 
-  list          '(header-name-symbol .. )
-  nil           gnus not loaded ?"
+  list          \\='(header-name-symbol ...)
+  nil           Gnus not loaded?"
   (cond
    ((listp ti:mail-required-headers)
     ti:mail-required-headers)
@@ -474,7 +474,7 @@ Return:
 ;;; ----------------------------------------------------------------------
 ;;;
 (defun ti::mail-mail-p ()
-  "Check if first line contain left flushed header 'Header:'.
+  "Check if first line contain left flushed header \"Header:\".
 This is a sign that current buffer is in mail-like.
 You should also check the mode name to get more reliable results."
   (or (memq major-mode '(message-mode mail-mode))
@@ -798,7 +798,7 @@ but in encrypted format."
 ;;;
 (defun ti::mail-pgp-comment-file-p (&optional point)
   "You can send binary files with base64 signing.
-This function checks if comment block has have words 'File: FILE '.
+This function checks if comment block has have words \"File: FILE \".
 
 Example:
 
@@ -864,9 +864,9 @@ The beginning point of PGP is returned."
 ;;;
 (defun ti::mail-pgp-headers-p ()
   "Return t if PGP information is in headers.
-Searches string 'X-Pgp-Signed:' and return end of match or nil."
-  (let ((psig           "^X-Pgp-Signed:")
-        (hmax           (ti::mail-hmax)))
+Searches string \"X-Pgp-Signed:\" and return end of match or nil."
+  (let ((psig "^X-Pgp-Signed:")
+        (hmax (ti::mail-hmax)))
     (save-excursion
       (ti::pmin)
       (re-search-forward psig hmax t))))
@@ -874,7 +874,7 @@ Searches string 'X-Pgp-Signed:' and return end of match or nil."
 ;;; ----------------------------------------------------------------------
 ;;;
 (defun ti::mail-pgp-re (str)
-  "Add possible beginning anchor if STR doesn't have one."
+  "Add possible beginning anchor if STR does not have one."
   (if (not (char-equal (aref str 0) ?^))
       (concat "^" str)))
 
@@ -898,17 +898,17 @@ Input:
 
 Input:
   MODE      nil   search signed start line..
-            'sig  search signature start instead.
-            'signed  search signed message area
-            'pkey search public key block start instead.
-            'msg  search for pgp base64 signed \"message\"
-            'any  go to `point-min' and search beginning of any
+            \\='sig  search signature start instead.
+            \\='signed  search signed message area
+            \\='pkey search public key block start instead.
+            \\='msg  search for pgp base64 signed \"message\"
+            \\='any  go to `point-min' and search beginning of any
                   PGP line, then go to the end of buffer and search
                   backward any PGP line.  The lines must not be at
                   same position.  This gives you the whole PGP
                   region.
 
-  INSIDE    if non-nil, beg and end are 'inside' without the PGP tags.
+  INSIDE    if non-nil, beg and end are inside without the PGP tags.
   MAX       max point to search
   NSTRICT   If non-nil; then the pgp bounds must not be left flushed,
             but can contains \"- -\".
@@ -974,18 +974,18 @@ Return:
 
 Input:
   MODE          nil     search signed start line.
-                'sig    search signature start.
-                'sige   search signature block end.
-                'pkey   search public key block start.
-                'pkeye  search public key block end.
-                'msg    search for pgp base64 signed \"message\"
+                \\='sig    search signature start.
+                \\='sige   search signature block end.
+                \\='pkey   search public key block start.
+                \\='pkeye  search public key block end.
+                \\='msg    search for pgp base64 signed \"message\"
                         This also finds conventionally crypted tag.
-                'kid    search for  'Key for user ID: '
-                'kpub   search for 'pub   512/47141D35 1996/06/03 ...'
+                \\='kid    search for \"Key for user ID: \"
+                \\='kpub   search for \"pub   512/47141D35 1996/06/03 ...\"
                         note: match level 1 matches 0x code 47141D35
   MOVE          flag    non-nil moves point to found point
   END           flag    use `match-end' instead of math-beginning.
-  NO-ANCHOR     flag    non-nil disables using '^' anchor.
+  NO-ANCHOR     flag    non-nil disables using \"^\" anchor.
 
 Return:
   point         ,beginning of line
@@ -1048,7 +1048,10 @@ EXE-FILE-LOCATION defaults to \"pgp\" but can also be absolute path."
 (defun ti::mail-pgp-data-type ()
   "Examine pgp data packet type by searching _forward_.
 Return:
-  'base64 'pgp 'conventional or nil"
+  \\='base64
+  \\='pgp
+  \\='conventional
+  nil"
   (let ((re  (ti::mail-pgp-any-pgp-line-regexp 'anchor))
         char)
     (save-excursion
@@ -1089,7 +1092,7 @@ Return:
 (defun ti::mail-pgp-chop-region (beg end)
   "Delete junk around BEG END from pgp public key block.
 Area BEG END that correspond to pgp begin and end
-lines (call `ti::mail-pgp-block-area' with argument 'any),
+lines (call `ti::mail-pgp-block-area' with argument \\='any),
 then we chop the public key region so that only the pgp area
 is left without additional garbage.
 
@@ -1239,19 +1242,19 @@ Convert 8bit binary byte string \"000001...\" into list of ints."
   "From single INT, examine the PGP CTB structure.
 Return
  nil    ,input was not CTB byte
- '(ctb-type length-field)
+ \\='(ctb-type length-field)
         ctb-type  is
-        'enc      (pgp encrypted message)
-        'signed   (signed message)
-        'secring  (secret keyring)
-        'pring    (public keyring)
-        'base64   (base 64 signed)
-        'crypt    (conventionally crypted)
-        'raw      (raw literal plaintext)
-        'trust    (keyring trust packet)
-        'uid      (user id packet)
-        'comment  (comment packet)
-        'unknown  (none of the above...)
+        \\='enc      (pgp encrypted message)
+        \\='signed   (signed message)
+        \\='secring  (secret keyring)
+        \\='pring    (public keyring)
+        \\='base64   (base 64 signed)
+        \\='crypt    (conventionally crypted)
+        \\='raw      (raw literal plaintext)
+        \\='trust    (keyring trust packet)
+        \\='uid      (user id packet)
+        \\='comment  (comment packet)
+        \\='unknown  (none of the above...)
 
         length is
         nil       no length, unknown length
@@ -1272,14 +1275,12 @@ Return
             (14 . comment)))
          (type 'unknown)
          val
+	 tmp
          ret)
-    (when (logand int ctb-mask)
-
+    (when (setq tmp (logand int ctb-mask))
       ;; shift to the right 2 bits
-
-      (when (setq val (assq (lsh (logand int type-mask) -2) table))
+      (when (setq val (assq (ash (logand int type-mask) -2) table))
         (setq type (cdr val)))
-
       (setq val (logand int length-mask))
       (cond
        ((eq 0 val)  (setq val 1))
@@ -1340,11 +1341,11 @@ STREAM will be advanced during read."
 ;;; ----------------------------------------------------------------------
 ;;;
 (defun ti::mail-pgp-stream-study-enc (length stream)
-  "Study the 'enc packet, which has known LENGTH.
-STREAM is list of ints, minimum 11 integers, 13 is the full 'enc packet.
+  "Study the \\='enc packet, which has known LENGTH.
+STREAM is list of ints, minimum 11 integers, 13 is the full \\='enc packet.
 
-Return:
- '(version-string
+Return list:
+  (version-string
    key-msb-hex-string
    key-lsb-hex-string
 
@@ -1371,22 +1372,18 @@ Return:
 ;;; ----------------------------------------------------------------------
 ;;;
 (defun ti::mail-pgp-stream-study-signed (length stream)
-  "Study the 'sign packet, which has known LENGTH. STREAM is list of ints.
+  "Study the \\='sign packet, which has known LENGTH. STREAM is list of ints.
 
-Return:
-
- '(version-string
+Return list:
+  (version-string
    md-length
    sig-class
    timestamp
-
    key-msb-hex-string
    key-lsb-hex-string
-
    alg-rsa                  ;; nil if stream is not long enough
    alg-md5                  ;; nil if ...
-   digest                   '(int int);; nil if ...
-
+   digest                   \\='(int int);; nil if ...
    rsa-algorithm                 ;; nil if stream is not long enough
    rsa-int (encrypted integer)   ;; nil if stream is not long enough)"
   (let* ((msb "")
@@ -1425,11 +1422,10 @@ Return:
 ;;; ----------------------------------------------------------------------
 ;;;
 (defun ti::mail-pgp-stream-study-pring (length stream)
-  "Study the 'pring packet, which has known LENGTH. STREAM is list of ints.
+  "Study the \\='pring packet, which has known LENGTH. STREAM is list of ints.
 
-Return:
-
- '(version-string
+Return list:
+  (version-string
    timestamp
    key-msb-hex-string
    key-lsb-hex-string)"
@@ -1572,7 +1568,7 @@ Return:
 (defun ti::mail-pgp-stream-forward-and-study (&optional search any)
   "Find PGP data stream forward and study it.
 
-If normal search fails, then find X-Pgp-Signed field's first
+If normal search fails, then find X-Pgp-Signed field\\='s first
 data stream.
 
 Input:
@@ -1583,7 +1579,7 @@ Input:
 
 Return:
 
-  '(CTB . (INFO-LIST))  the CTB type and data for CTB
+  \\='(CTB . (INFO-LIST))  the CTB type and data for CTB
   nil                   no stream found forward."
   (interactive)
   (let* ((point (point))
@@ -1643,8 +1639,9 @@ Input:
 ;;;
 (defun ti::mail-pgp-stream-data-elt (data elt)
   "Study DATA and Return packet ELT.
-DATA must be in the format of `ti::mail-pgp-stream-forward-and-study'
-ELT  can be 'ver 'time 'key-id"
+Values:
+  DATA   must be in the format of `ti::mail-pgp-stream-forward-and-study'
+  ELT    can be \\='ver \\='time \\='key-id"
   (let* ((type (car data))
          (pos  (assq
                 elt
@@ -1732,8 +1729,8 @@ The blocks searched are in following format.
 
 Note1:
 
-  If there _no_ 'Key for user ID:' string in the buffer, this function
-  can't find the public key block while it may be there. It is
+  If there no \"Key for user ID:\" string in the buffer, this function
+  cannot find the public key block while it may be there. It is
   assumed that each p-key block is _preceded_ by that string.
 
   All anonymous p-key block are skipped.
@@ -1749,15 +1746,15 @@ Note2:
 
 Note3:
 
-   If RELAX argument is non-nil, then the 'Key for user ID:'
+   If RELAX argument is non-nil, then the \"Key for user ID:\"
    must not exit. Only the Public key tags are searched.
 
    Recommended way of informing public keys is however displaying
    full public key information and not just PK block
 
-Return:
+Return list:
 
-  '((KEY-ID-STRING PUBLIC-KEY_BLOCK)"
+  ((KEY-ID-STRING PUBLIC-KEY_BLOCK)"
   (let ((opt  (if relax 'pkey 'kid))
         id
         block
@@ -2001,10 +1998,10 @@ Return:
 (defun ti::mail-pgp-signature-header-info-v3xx ()
   "Return signature information from X-pgp v3.xx headers.
 
-Return:
- '((nil . nil)
+Return list:
+  ((nil . nil)
    (\"Version: x.x.x\" \"Charset: xxxx\" ...)
-   (signature-string sig-string ..))"
+   (signature-string sig-string ...))"
   (let ((field  (ti::remove-properties (ti::mail-get-field "X-Pgp-signed")))
         info-list
         sig-list
@@ -2044,13 +2041,13 @@ The VAL returned is different for continued string. It is a list of
 individual parts in the parsed. In this case the whole returned value
 would be:
 
-'((var1 . (val1))
+\\='((var1 . (val1))
   (var2 . (val2))
   (var3 . (\"starts here \" \" continues here\"))
   (var4 . (\" v1,v2,v3\")))
 
-Return:
-  ((var . VAL) (var . VAL) ..)"
+Return list:
+  ((var . VAL) (var . VAL) ...)"
   (let ((tag-re  "^[ \t]*\\([^ \t\n]+\\)[ \t\"]*=")
         (val-re  "[ \t\"]*\\([^\n\"]+\\)")
         (buffer  (ti::temp-buffer "*tmp*" 'clear))
@@ -2096,7 +2093,7 @@ Input:
 
   RAW           If non-nil, return only raw public key block.
   KILL-FILE     if non-nil, kill temporary file after statement
-                'Key extracted to file ...' Once the file is killed the
+                \"Key extracted to file ...\" Once the file is killed the
                 message will be removed from buffer."
   (let* (beg
          end
@@ -2154,11 +2151,11 @@ This function does nothing if first line is not header.
 
 Input:
 
-  MODE       'move-to-body moves, all headers to body
-             'move-to-body-maybe, all headers to body only if
+  MODE       \\='move-to-body moves, all headers to body
+             \\='move-to-body-maybe, all headers to body only if
              there is not already hash marks.
-             arg1 is used for subject       defaults to 'dummy'
-             arg2 is used for organisation  defaults to 'dummy'
+             arg1 is used for subject       defaults to \"dummy\"
+             arg2 is used for organisation  defaults to \"dummy\"
 
   NO-INS     Do not insert the hash headers into body, but return them
              as list instead.
@@ -2230,7 +2227,7 @@ Return:
 ;;;
 (defun ti::mail-pgpr-reply-type (property-string)
   "Return remailer reply block type from PROPERTY-STRING.
-The 'post' type is not checked, because it relates to Usenet
+The ´post' type is not checked, because it relates to Usenet
 and can be mixed with other types."
   (if (string-match "cpunk\\|eric\\|penet" property-string)
       (match-string 0 property-string)))
@@ -2245,11 +2242,11 @@ be sure to have <> in the email, which defaults to `user-mail-address'.
 
 Input:
 
-  MODE      'epgp -- return encrypted pgp tag.
-            'post -- return simple Newsgroup post block. 'email'
+  MODE      \\='epgp -- return encrypted pgp tag.
+            \\='post -- return simple Newsgroup post block. `email'
             contains the address of post remailer.
             If there is not enough
-            parameters, say for 'tk, the previous one is used: 't
+            parameters, say for \\='tk, the previous one is used: \\='t
 
   TYPE      cpunk   Anon-To
             eric    Anon-Send-To
@@ -2304,24 +2301,24 @@ The parsing starts from current point forward.
 Input:
 
   BUFFER            defaults to current buffer
-  CONTROL-LIST      '(remailer-alias  (prop-no-list) [(prop-add-list)])
-                    This control list says 'if REGEXP matches the
+  CONTROL-LIST      \\='(remailer-alias (prop-no-list) [(prop-add-list)])
+                    This control list says: if REGEXP matches the
                     email address, remove all properties listed in
                     prop-no-list and add all properties listed in
                     prop-add-list.
 
-                    So, if you're sure that the levien-list has some
-                    faulty entries, e.g. say remailer@replay.com doesn't
-                    have feature 'ek' although levien list contains that,
+                    So, if you are sure that the levien-list has some
+                    faulty entries, e.g. say remailer@replay.com does not
+                    have feature \"ek\" although levien list contains that,
                     your control-list is like this. The ek property
                     is removed even if the list says otherwise.
 
-                    '(\"replay\" '(\"ek\"))
+                    \\='(\"replay\" \\='(\"ek\"))
 
-Return:
+Return list:
 
-  '((alias remailer property_string (property property ...))
-    (alias remailer property_string (p p p ..)))
+   ((alias remailer property_string (property property ...))
+    (alias remailer property_string (p p p ...)))
 
   The properties are sorted: cpunk mix pgp..."
   (let ((re  (concat
@@ -2451,7 +2448,7 @@ xx.domain.co.uk   --> domain.co.uk"
 ;;;
 (defun ti::mail-email-domain-canonilize (list)
   "Canonilize list of addresses to top level domain names only
-Eg: '(\"aa.foo.com\" \"bb.foo.com\") --> '(\"foo.com\")"
+E.g.: \\='(\"aa.foo.com\" \"bb.foo.com\") --> \\='(\"foo.com\")"
   (let* (ret
          domain)
     (dolist (elt list)
@@ -2568,43 +2565,34 @@ that the old functionality is preserved in spite of changes."
 ;;; ----------------------------------------------------------------------
 ;;; ( ti::mail-parse-name "\"Dr. Volker Zell\" <dr.volker.zell-QHcLZuEGTsvQT0dZR+AlfA@public.gmane.org>")
 (defun ti::mail-parse-name (line)
-  "Try to parse various formats of 'From:' fields.
-Supposes that the 'From:' keyword is removed from the LINE.
+  "Try to parse various formats of \"From:\" fields.
+Supposes that the \"From:\" keyword is removed from the LINE.
 
 Return:
-  list          '(firstname surname)
+  list          \\='(firstname surname)
   nil           if cannot parse both"
   (let* ((re-ignore "\\(?:Dr. +\\|Mr. +\\)?")
-
 	 (re-A          "[-a-zA-Z0-9.{|]")
          (re-AG         (concat "\\("  re-A "+\\)"))
-
          ;;  'From: Mr-CEO John Doe <jdoe@example.com'
          (fs-re2  (concat re-ignore re-AG " +" re-AG))
-
          ;;  'USER <\"CLUSTER::VAX\@site.cm\"'
          (fs-vax  (concat "^" re-AG "[ \t<\"]+[A-Z]+::" re-AG))
-
          ;;  '\"CLUSTER::LOGIN\"@example.com'
          ;;  This is incomplete Name, it does not contain NAMES at all, but
          ;;  we consider mail name as surname. The first group-RE is dummy.
          (fs-vax2 (concat re-AG "::" re-AG))
-
          ;;  'Job.Ganzevoort@cwi.nl', where person's name is complete
          ;;  address
          (fs-fse    (concat re-AG "\\." re-AG "@" ))
-
          ;;  matches gateway-type addresses
          ;;  'Marla=Bush%aoa.rdt%OS.DC@Ban-Gate.AoA.DHHS.EDU'
          (gtw-re1    (concat re-AG "=" re-AG "%" ))
-
          (q-no-re   ti:mail-parse-name-not-accept)
-
          (mail      (or (ti::mail-parse-email line) ""))
          (account   (if (= 2 (length mail))
                         (nth 0 mail)
                       "#@$@#$@#$"))     ;just some dummy
-
          fn
          sn                             ;first, surname
          pick
@@ -2620,19 +2608,15 @@ Return:
          end2
          tmp
          list)
-
     (if D
         (setq D D))                 ;XE 19.14 ByteComp silencer, no-op
-
     (catch 'found
-
       ;;  It's most important that the match test are made IN THIS ORDER
       ;;  - Quote test cannot precede vax name test.
       ;;  - Try most restrictive first.
-
+      ;;
       ;; ..............................................................
       ;;  VAX is identified by "::" marks
-
       (when (string-match "::" line)
         (setq list (ti::mail-get-2re fs-vax line))
         (when (not (string= "" (nth 0 list)))
@@ -2642,56 +2626,44 @@ Return:
         (when (not (string= "" (nth 0 list)))
           (setq D "vax2")
           (throw 'found t)))
-
       ;; ............................................................
       ;; Try gateway addresses, rare, but seen in net still
-
       (when (string-match "%" line)
         (setq list (ti::mail-get-2re gtw-re1 line))
         (when (not (string= "" (nth 0 list)))
           (setq D "gtw1")
           (throw 'found t)))
-
       ;; X.400 address
-
       (when (string-match "/G=\\(.*\\)/S=\\([^/]+\\).*C=" line)
         (setq fn (match-string 1 line)
               sn (match-string 2 line))
         (when (and fn sn)
           (setq list (list fn sn)   D "gateX400")
           (throw 'found t)))
-
       ;; .................................................................
       ;; foo.bar@example.com
-
       (when (string-match fs-fse line)
         (setq list (ti::mail-get-2re fs-fse line))
         (when (not (string= "" (nth 0 list)))
           (setq D "mike.gordon")
           (throw 'found t)))
-
       ;; ............................................................
       ;; And the rest , is there paren or ""  somewhere ?
       ;;
-
       ;;  If this is a full email string Joe@foo.com
       ;;  then get only the first part.
-
-      (when (and (setq tmp (ti::string-match "^\\([^ \t]+\\)[@%][^ \t]+$" 1 line))
+      (when (and (setq tmp
+		       (ti::string-match "^\\([^ \t]+\\)[@%][^ \t]+$" 1 line))
                  (setq tmp (ti::string-match re-AG 1 tmp)))
         (setq D "email")
         (setq list (list tmp ""))
         (throw 'found t))
-
       ;;   - if we get multiple match "stephane (s.) boucher" ,
       ;;     (L.G. \"Ted\" Stern) , pick the one that's longer.
-
       (if (string-match "\"\\(.*\\)\"" line)
           (setq beg1 (match-beginning 1)  end1  (match-end 1)))
-
       (if (string-match "[(]\\(.*\\)[)]" line)
           (setq beg2 (match-beginning 1)  end2  (match-end 1)))
-
       (cond
        ((and beg1 beg2)
         (if (> (- end1 beg1) (- end2 beg2))
@@ -2701,9 +2673,7 @@ Return:
         (setq beg beg1  end end1))
        (beg2
         (setq beg beg2  end end2)))
-
       ;; ...  ...  ...  ...  ...  ...  ...  ...  ...  ...  ...  ...  ...
-
       (cond
        (beg
         ;;   - Get list of words into W
@@ -2712,13 +2682,10 @@ Return:
         ;;   - The latter picks only NON-ABBREVIATED names, non-phones..
         ;;     M. "Mack" Monroe --> Mack Monroe
         ;;
-
         (setq pick (substring line beg end))
         (setq w (split-string pick "[][@%. \"]+"))
-
         (setq D "standard")
 ;;;     (ti::d! "w-1" w)
-
         (let ((case-fold-search nil))   ;case is important !!
           (setq w                       ;returned word list
                 (ti::list-find
@@ -2728,50 +2695,35 @@ Return:
                   (lambda (arg elt)
                     (not (string-match arg elt))))
                  'all-items)))
-
 ;;;     (ti::d! "w-2" w)
-
         (cond
          ((> (length w) 2)              ;too much abbrev names
           ;;  pick first and account or last word
-
 ;;;       (setq W w AC account)
-
           (setq w1 (nth 0 w)  w2 (nth (1-(length w)) w)  )
-
           (setq tmp (ti::list-find
                      w account
                      (function
                       (lambda (arg elt)
                         (string-match elt arg)))))
-
           (if tmp                       ;account name found
               (setq w2 tmp))
-
           (setq list (list w1 w2)))
-
          ((= 2 (length w))
           (setq w1 (nth 0 w)  w2 (nth 1 w))
           (setq list (list w1 w2)))
-
          ((eq 1 (length w))
           (setq list w))
-
          (t
           nil))
-
         (if list
             (throw 'found t))))
-
       ;; .................................................................
-
       (setq list (ti::mail-get-2re fs-re2 line))
       (when (not (string= "" (nth 0 list)))
         (setq D "2.1")
         (throw 'found t))) ;; Catch end
-
 ;;;    (ti::d! "parsed" D  list)
-
     ;;   what should we return ?
     (if (and (string= (nth 0 list) "")
              (string= (nth 1 list) ""))
@@ -2781,12 +2733,12 @@ Return:
 ;;; ----------------------------------------------------------------------
 ;;;
 (defun ti::mail-parse-email (line)
-  "Try to parse various formats of 'From:' field from LINE.
-Input is full LINE, possibly containing 'From' keyword.
+  "Try to parse various formats of \"From:\" field from LINE.
+Input is full LINE, possibly containing \"From:\" keyword.
 
 Return:
 
-  list          '(usrname site)
+  list          \\='(usrname site)
   nil           if cannot parse."
   (let* (account
          site
@@ -2851,10 +2803,10 @@ Return:
 ;;; ----------------------------------------------------------------------
 ;;;
 (defun ti::mail-parse-received-regexp-list ()
-  "Return list of regexps that match `Received:' header content.
-The Return ed list content is
+  "Return list of regexps that match \"Received:\" header content.
+The Return list content:
 
-'((3  (re re re ..))
+ ((3  (re re re ..))
   (2  (re re re ..))
   (1  (re re re ..)))
 
@@ -2955,7 +2907,7 @@ Where the number indicated how many submatches can be read. E.g. Number
 ;;; ----------------------------------------------------------------------
 ;;;
 (defun ti::mail-parse-received-line (regexp-list)
-  "Parse all `Received:' IPs from current line with REGEXP-LIST.
+  "Parse all \"Received:\" IPs from current line with REGEXP-LIST.
 The point must be placed just after the colon in header:
 
   Received:-!-
@@ -2977,7 +2929,7 @@ The -!- indicates the location of point."
 ;;; ----------------------------------------------------------------------
 ;;;
 (defun ti::mail-parse-received-string-smtp (string)
-  "Parse SMTP field from 'Received:' STRING."
+  "Parse SMTP field from \"Received:\" STRING."
   ;; from 111.npgco.com (HELO NAZ-AZPIRE1) (24.121.15.77)
   (when (string-match
          (concat
@@ -3007,7 +2959,7 @@ The -!- indicates the location of point."
 ;;; ----------------------------------------------------------------------
 ;;;
 (defsubst ti::mail-parse-received-string-from (string)
-  "Parse 'from' field from 'Received:' STRING."
+  "Parse \"from\" field from \"Received:\" STRING."
   (when (string-match "\\<from[ \t\r\n]+\\([^ \t\r\n]+\\)" string)
     ;;  from cm-24-121-15-77.flagstaff.az.npgco.com (HELO NAZ-AZPIRE1)
     (match-string 1 string)))
@@ -3015,14 +2967,14 @@ The -!- indicates the location of point."
 ;;; ----------------------------------------------------------------------
 ;;;
 (defsubst ti::mail-parse-received-string-by (string)
-  "Parse 'from' field from 'Received:' STRING."
+  "Parse \"from\" field from \"Received:\" STRING."
   (when (string-match "\\<by[ \t\r\n]+\\([^ \t\r\n]+\\)" string)
     (match-string 1 string)))
 
 ;;; ----------------------------------------------------------------------
 ;;;
 (defsubst ti::mail-parse-received-string-smtp-id (string)
-  "Parse 'from' field from 'Received:' STRING."
+  "Parse \"from\" field from \"Received:\" STRING."
   (cond
    ((string-match
      "[ \t\r\n]+id[ \t\r\n]+\\([^ ;\t\r\n]+\\)" string)
@@ -3031,14 +2983,14 @@ The -!- indicates the location of point."
 ;;; ----------------------------------------------------------------------
 ;;;
 (defsubst ti::mail-parse-received-string-for (string)
-  "Parse 'from' field from 'Received:' STRING."
+  "Parse \"from\" field from \"Received:\" STRING."
   (when (string-match "\\<for[ \t\r\n]+\\([^ ;\t\r\n]+\\)" string)
     (match-string 1 string)))
 
 ;;; ----------------------------------------------------------------------
 ;;;
 (defsubst ti::mail-parse-received-string-date (string)
-  "Parse 'from' field from 'Received:' STRING."
+  "Parse \from\" field from \"Received:\" STRING."
   (when (string-match
          "^.+;[ \t\r\n]+\\(.+[^ \t\r\n]\\)" string)
     (match-string 1 string)))
@@ -3055,9 +3007,9 @@ Recognized format are:
 
 The timezone value is optional.
 
-Returns alist;
+Returns list;
 
-   '(weekday
+    (weekday
      dd
      mon
      mm           ;; numeric string, like \"07\" for \"Jul\"
@@ -3139,7 +3091,7 @@ If TZ is non-nil, add timezone information to the end."
 ;;; ----------------------------------------------------------------------
 ;;;
 (defun ti::mail-parse-received-string (string)
-  "Parse 'Received:' Header STRING.
+  "Parse \"Received:\" Header STRING.
 From this STRING
 
     Received: from host1 (host2 [ww.xx.yy.zz]) by host3
@@ -3147,7 +3099,7 @@ From this STRING
 
 Return list:
 
-    '((from    . HOST1)
+     ((from    . HOST1)
       (smtp    . (HOST2 ...))
       (by      . HOST3)
       (smtp-id . ID)
@@ -3170,7 +3122,7 @@ References:
 ;;; ----------------------------------------------------------------------
 ;;;
 (defun ti::mail-parse-received (&optional not-matching no-dupes)
-  "Search all 'Receive:' fields and read site names followed by 'from' 'by'.
+  "Search all \"Received:\" lines. Read domains by \"from\" and \"by\".
 Duplicate entries are not added.
 
 Point must be at the beginning of headers to search, and
@@ -3185,9 +3137,9 @@ Input:
                 returned list
   NO-DUPES      flag, if non-nil then do not include duplicate addresses.
 
-Return:
+Return list:
 
-    '((IP IP IP) (IP IP) ..)   as they appear in Received fields.
+    ((IP IP IP) (IP IP) ...)   as they appear in Received fields.
 
 Received headers explained:
 
@@ -3251,7 +3203,7 @@ Received: from mail.msss.v.com [atl.asd.com [234.454.54]]
 (put 'ti::with-mail-received-header 'edebug-form-spec '(body))
 (put 'ti::with-mail-received-header 'lisp-indent-function 1)
 (defmacro ti::with-mail-received-header (string &rest body)
-  "With Mail 'received:' heading in STRING, run BODY.
+  "With Mail \"Received:\" heading in STRING, run BODY.
 For this STRING
 
     Received: from host1 (host2 [ww.xx.yy.zz]) by host3
@@ -3261,7 +3213,7 @@ The following access variables are available within BODY:
 
   received-header-data
   from              => host1
-  smtp              => '(host2 ww.xx.yy.zz)
+  smtp              => \\='(host2 ww.xx.yy.zz)
   smtp-id           => MAA04298
   by                => host3
   for               => host1
@@ -3459,14 +3411,14 @@ See `ti::mail-whois-parse'."
   "Whois: Parse registrant from buffer. See `ti::mail-whois-parse'."
   (let ((point (point))
         ret)
-    (cl-flet ((search (func)
-		      (goto-char point)
-		      (funcall func)))
+    (cl-flet ((search-my (func)
+		(goto-char point)
+		(funcall func)))
       (dolist (func '(ti::mail-whois-parse-registrant-1
                       ti::mail-whois-parse-registrant-domain
                       ti::mail-whois-parse-registrant-organization
                       ti::mail-whois-parse-registrant-organization-2))
-        (when (setq ret (search func))
+        (when (setq ret (search-my func))
           (cl-return ret))))))
 
 ;;; ----------------------------------------------------------------------
@@ -3726,9 +3678,9 @@ See `ti::mail-whois-parse'."
 (defun ti::mail-whois-parse (string)
   "Parse whois output STRING.
 
-Return:
+Return alist:
 
-   '((email      .  ((ADDED EMAIL REST)  ;; ADDED is \"REST <EMAIL>\"
+    ((email      .  ((ADDED EMAIL REST)  ;; ADDED is \"REST <EMAIL>\"
                     ...))
      (registrant .  STRING)
      (admin      .  STRING)
@@ -3741,7 +3693,7 @@ Return:
 
 Note:
 
-  All the keys, like 'admin', are present in returned list, but any of the
+  All the keys, like `admin', are present in returned list, but any of the
   `cdr' values or their components may be nil, if no value was found.
 
   Do not relay in the order of these fields. They may change
@@ -3898,9 +3850,9 @@ Buffer contains:
   Name:    NAME.ANSWER.COM
   Addresses:  NNN.NNN.NNN.NNN,NNN.NNN.NNN.NNN
 
-Return:
+Return list:
 
-'(NAME.ANSWER.COM (NNN.NNN.NNN.NNN  NNN.NNN.NNN.NNN ..))."
+  (NAME.ANSWER.COM (NNN.NNN.NNN.NNN  NNN.NNN.NNN.NNN ..))."
   (let* (name
          ip-list
          (re            "[ \t]+\\([^ \t\r\n]+\\)")
@@ -3961,11 +3913,11 @@ Input:
   VERB          flag, if non-nil print verbose messages. (Recommended)
   BIN           Location of the binary
 
-Return:
+Return alist:
 
-  '(name . address)
+  (name . address)
 
-If nslookup fails, the return value is '(ORIG-IP nil)"
+If nslookup fails, the return value is list: (ORIG-IP nil)"
   (let* ( ;;  It's faster to use absolute pathname.
          ;;
          (path  (or bin
@@ -4001,7 +3953,7 @@ If nslookup fails, the return value is '(ORIG-IP nil)"
 (put 'ti::with-mail-nslookup 'edebug-form-spec '(body))
 (put 'ti::with-mail-nslookup 'lisp-indent-function 1)
 (defmacro ti::with-mail-nslookup (data &rest body)
-  "with resault of `ti::mail-nslookup' DATA '(ip (ip ...)) run BODY.
+  "with resault of `ti::mail-nslookup' DATA \\='(ip (ip ...)) run BODY.
 The following variables are available during looping within BODY:
 
   ip-name  ip-found."
@@ -4030,11 +3982,11 @@ Input:
   VERB          flag, if non-nil print verbose messages. (Recommended)
   BIN           Location of the binary
 
-Return:
+Return alist:
 
-  '(name . address)
+  (name . address)
 
-If nslookup fails, the return value is '(ORIG-IP nil)"
+If nslookup fails, the return value is (ORIG-IP . nil)"
   (let* ( ;;  It's faster to use absolute pathname.
          ;;
          (path  (or bin
@@ -4073,15 +4025,14 @@ If nslookup fails, the return value is '(ORIG-IP nil)"
 (defun ti::mail-get-buffer  (&optional mode-list)
   "Return open mail buffer if one exists.
 MODE-LIST is the search order precedence. It can take values
-'mail-mode 'message-mode and any
-other valid mail like modes.
+\\='mail-mode \\='message-mode and any other valid mail like modes.
 
 Example:
 
   ;; Return some mail-mode buffer. If there is none, then
   ;; return some message-mode buffer.
 
-  (ti::mail-get-buffer '(mail-mode message-mode))"
+  (ti::mail-get-buffer \\='(mail-mode message-mode))"
   (let* (list
          buffer)
     (or mode-list
@@ -4202,7 +4153,7 @@ Return:
   "Check how many spaces is at the beginning of field.
 Input:
 
-  FIELD-NAME        If given, fetch FIELD-NAME like 'to' and check it's value.
+  FIELD-NAME        If given, fetch FIELD-NAME like \"To:\" and check it.
   FIELD-VALUE       If given, use this string as field content. Argument
                     FIELD-NAME is ignored.
 
@@ -4249,7 +4200,7 @@ Input:
 
 Note:
 
-  If you're somewhere else than inside header area, the return value
+  If you are somewhere else than inside header area, the return value
   is not defined.
 
 Input:
@@ -4341,7 +4292,7 @@ Subexpression 1 contains field name and 2 contains rest."
 ;;; ----------------------------------------------------------------------
 ;;;FIXME:
 (defun ti::mail-field-line-p ()
-  "Return `field' name if the bginning of line contains 'NNNN:'."
+  "Return `field' name if the bginning of line contains \"NNNN:\"."
   (let ((str (buffer-substring
               (line-beginning-position)
               (line-end-position))))
@@ -4486,17 +4437,17 @@ you can use this function safely."
 
 Input:
 
-   FIELD         field name without anchor '^' and char ':'
+   FIELD         field name without anchor \"^\" and character \":\"
    ANY           return any field. When non-nil, drops anchor ^
                  from the  ^field: criteria
    MODE          nil    read the field as is, returning all chars
-                        after the ':'
+                        after the \":\"
                  t      If field has only spaces, Return nil
-                 'pure  Include header name as well as content.
+                 \\='pure  Include header name as well as content.
 
 Return:
 
-   nil or contents of field."
+   nil or contents of the field."
   (let ((case-fold-search t)            ;ignore case = t
         (re (if any
                 (concat field ":")      ; pick first one met
@@ -4693,12 +4644,12 @@ References
 
 Input:
 
- FIELD-LIST     Eg. '(\"To\" \"CC\"). Default is To CC and BCC.
+ FIELD-LIST     Eg. \\='(\"To\" \"CC\"). Default is To CC and BCC.
  ABBREV-ALIST   see function `ti::mail-abbrev-expand-mail-aliases'
  NO-EXPAND      if non-nil, Do not expand addresses on current buffer.
 
-Return:
- '(str str ..)  notice that there may be \"\" empty strings"
+Return list:
+  (str str ..)  notice that there may be \"\" empty strings"
   (let ((buffer  (if no-expand
                      (generate-new-buffer "*tmp*")
                    (current-buffer)))
@@ -4817,11 +4768,11 @@ Input:
 ;;;
 (defun ti::mail-news-reply-p ()
   "Return type of message being composed.
-This function is meaningful _only_ when you use it inside
+This function is meaningful only when you use it inside
 some GNUS or mail hook.  The buffer must be current mail buffer.
 
 Return:
-  'news         news
+  \\='news
   nil"
   (let* ((mode          (symbol-name major-mode))
 
@@ -4877,7 +4828,7 @@ Return:
 (defun ti::mail-nymserver-email-convert (email &optional na-mode)
   "Convert penet EMAIL address.
 
-If NA-MODE is nil: do 'an' conversion
+If NA-MODE is nil: do `an' conversion
         anXXX@example.com   --> anXXX
         naXXX@example.com   --> anXXX
        VANITY@example.com   --> VANITY@example.com
@@ -4885,7 +4836,7 @@ If NA-MODE is nil: do 'an' conversion
     VANITY.na@example.com   --> VANITY@example.com
 
 If NA-MODE is non-nil:
-    Then do opposite 'na' conversion"
+    Then do opposite `na' conversion"
   (cond
    (na-mode
     (if (string-match "\\(an\\)[0-9]+@\\|\\.\\(an\\)@" email)
@@ -5345,8 +5296,8 @@ Build the abbrev table from your ~/.mailrc with command
 Input:
   EXPAND-UNTIL        expand until the RH elt is pure email.
 
-Return:
-  '((ABBREV-STRING . EXPANDED-STRING) (A . E) ..)"
+Return alist:
+  ((ABBREV-STRING . EXPANDED-STRING) ...)"
   (let ((abbrev-expand-function nil) ;; prevent recursion
 	(mail-abbrev-aliases-need-to-be-resolved t)
 	table
@@ -5406,13 +5357,13 @@ no \",\" chained lists in the line.
 
   alias[spaces]some[spaces]user@address.xx
 
-Input:
+Input alist:
 
-  '((\"abbrev\" . \"expansion\") (A . E) ..)
+  ((\"abbrev\" . \"expansion\") ...)
 
-Return:
+Return list:
 
-  '(email email ...)"
+  (email ...)"
   (let* (str
          email
          list)
