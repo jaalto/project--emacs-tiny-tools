@@ -36,7 +36,7 @@
 ;; ~/.emacs startup file
 ;;
 ;;      (global-set-key "\M-&" 'tinyreplace-menu)
-;;      (autoload 'tinyreplace-menu			"tinyreplace" "" t)
+;;      (autoload 'tinyreplace-menu                     "tinyreplace" "" t)
 ;;      (autoload 'tinyreplace-replace-forward          "tinyreplace" "" t)
 ;;      (autoload 'tinyreplace-replace-region           "tinyreplace" "" t)
 ;;      (autoload 'tinyreplace-replace-over-files       "tinyreplace" "" t)
@@ -284,11 +284,11 @@ It can be:
 
 Example:
 
-  (setq tinyreplace--exclude-line 'my-tinyreplace-exclude)
+  (setq tinyreplace--exclude-line (quote my-tinyreplace-exclude))
   (defun my-tinyreplace-exclude ()
     ;;  Exclude comment lines
     (cond
-     ((eq major-mode 'c++-mode)
+     ((eq major-mode (quote c++-mode))
       (beginning-of-line)
       (looking-at \"^[ \t]*//\"))))"
   :type  '(string :tag "Regexp")
@@ -303,9 +303,12 @@ replacement place."
 
 (defcustom tinyreplace--arrow-initial-state 'show
   "*When replacing interactively, this is the default arrow state.
-If your terminal supports highlighting you may want to set this to 'hide.
+If your terminal supports highlighting you may want to set this to
+symbol hide.
 
-The only valid values are 'show and 'hide."
+The valid values are symbols:
+    show
+    hide."
   :type '(choice
           (const show)
           (const hide))
@@ -318,7 +321,7 @@ The only valid values are 'show and 'hide."
 
 (defcustom tinyreplace--word-boundary "[^a-zA-Z0-9_]"
   "*This is complement set of characters forming a word.
-For example if you want to replace 'i' with 'j' , you don't want to match
+For example if you want to replace `i' with `j' , you don't want to match
 
      \"Ignore ThIs match, but replace i with j\"
                                      ^^^
@@ -360,13 +363,13 @@ Input:
 
 Output:
 
-  '(\"arg1\" \"arg2\")
+  (list (\"arg1\" \"arg2\"))
 
 Function must terminate with error if it cannot return list of
 two strings.")
 
 (defcustom tinyreplace--user-function 'ti::buffer-outline-widen
-  "*User function fun from command prompt key 'U'."
+  "*User function fun from command prompt key `U'."
   :type  'function
   :group 'TinyReplace)
 
@@ -411,8 +414,8 @@ It tells where the current point is.")
   "Private. The asked string1. Set in `tinyreplace-read-args'.")
 
 (defvar tinyreplace--word-match-mode nil
-  "Not a user variable. Hold value t if user switch to exact word matching.
-Property 're will have the original regexp.")
+  "Not a user variable. Holds value t if user switched to exact word matching.
+Property `re' contains the original regexp.")
 
 ;;; ............................................................ &menu ...
 
@@ -433,7 +436,7 @@ replace: (f)wd (r)eg (w)ord (c)ompile buffer (f)iles (lL)atex (?)help "
      (?F  . ( (call-interactively 'tinyreplace-replace-over-files)))
      (?l  . ( (call-interactively 'tinyreplace-latex-blk-replace)))
      (?L  . ( (call-interactively 'tinyreplace-latex-math-replace)))))
-  "Help menu for the commands. Press 'q' to return to menu.
+  "Help menu for the commands. Press `q' to return to menu.
 
 Standard replace commands:
 
@@ -475,7 +478,7 @@ Special commands:
 See `tinyreplace--default-key'."
   (interactive)
   (local-set-key tinyreplace--default-key
-		 'tinyreplace-replace-over-files-compile-buffer))
+                 'tinyreplace-replace-over-files-compile-buffer))
 
 ;;; ----------------------------------------------------------------------
 ;;;###autoload
@@ -485,15 +488,15 @@ See `tinyreplace--default-key'."
   (or key
       (setq key tinyreplace--default-key))
   (let ((def (lookup-key global-map key))
-	buffer)
+        buffer)
     (when (and (featurep 'compile)
-	       (setq buffer (get-buffer "*compilation*")))
+               (setq buffer (get-buffer "*compilation*")))
       (with-current-buffer buffer
-	(tinyreplace-define-keys-local-map)))
+        (tinyreplace-define-keys-local-map)))
     (when (and (featurep 'grep)
-	       (setq buffer (get-buffer "*grep*")))
+               (setq buffer (get-buffer "*grep*")))
       (with-current-buffer buffer
-	(tinyreplace-define-keys-local-map)))
+        (tinyreplace-define-keys-local-map)))
     (global-set-key key 'tinyreplace-menu)))
 
 ;;; ----------------------------------------------------------------------
@@ -541,13 +544,13 @@ See:
   "Construct interactive tag for functions that need region.
 STRING is argument to `tinyreplace--read-args-function'.
 
-Return:
- '(BEG END ARG1-STRING ARG2-STRING)"
+Return list:
+ (BEG END ARG1-STRING ARG2-STRING)"
   `(if (region-active-p)
        (ti::list-merge-elements
-	(region-beginning)
-	(region-end)
-	(funcall tinyreplace--read-args-function ,string))
+        (region-beginning)
+        (region-end)
+        (funcall tinyreplace--read-args-function ,string))
      (error "TinyReplace: Region is not active. Please select one.")))
 
 ;;; ----------------------------------------------------------------------
@@ -561,10 +564,10 @@ Return:
 ;;; ----------------------------------------------------------------------
 ;;;
 (defun tinyreplace-read-args (&optional prompt)
-  "Read two arguments with PROMPT. Return '(ARG1 ARG2)."
+  "Read two arguments with PROMPT. Return list: (ARG1 ARG2)."
   (let ((opoint (point))
-	arg1
-	arg2)
+        arg1
+        arg2)
     ;; Disable electric file minor mode, which defines specilal
     ;; characters.
     (setq tinyreplace--replace-buffer   (current-buffer)
@@ -605,7 +608,7 @@ Return:
 ;;;
 (defun tinyreplace-transient-mark-mode  (mode)
   "Record function  `transient-mark-mode' status.
-This is done only if function exists. MODE can be 'write or 'read."
+This is done only if function exists. MODE can be symbol `writeä or `read'."
   (when (and (ti::emacs-p)                  ;#todo: zmacs-region-stays
              (boundp 'transient-mark-mode)) ;XEmacs doesn't have this
     (cond
@@ -624,8 +627,8 @@ This is done only if function exists. MODE can be 'write or 'read."
 Input:
 
   BUFFER        buffer pointer
-  MODE          symbol 'show, 'hide, 'toggle, 'maybe or 'move.
-  STR           Used for restoring the original contents when mode is 'hide
+  MODE          symbol: show, hide, toggle, maybe, move
+  STR           Used for restoring the original contents when mode is `hide'
 
 Sets global:
 
@@ -673,9 +676,9 @@ Note:
 
   `tinyreplace--o-exclude'    must be set in the calling function"
   (let ((o-exclude  tinyreplace--o-exclude)
-	(loop       t)
-	msg
-	ans)
+        (loop       t)
+        msg
+        ans)
     (while loop
       (setq from-str (ti::string-format-percent from-str)
             to-str   (ti::string-format-percent to-str))
@@ -855,7 +858,7 @@ then insert into the replace prompt with \\[tinyreplace-key-yank-word]. When"
 ;;;   any emacs command that would undo last change...one at a time.
 ;;;
 (defun tinyreplace-replace-region-1 (beg end re str &optional level ask func)
-  "Perform replace.
+  "Run replace on region BEG END. Search RE and replace with STR.
 
 Input:
 
@@ -866,7 +869,7 @@ Input:
   ASK       interactive
   FUNC      Call function
 
-Commands while ASK is non-nil:     (simple undo backward is = 'v u' )
+Commands while ASK is non-nil:     (simple undo backward is = `v u' )
 
  y or SPACE             replace
  n or BACKSPACE         skip
@@ -881,7 +884,7 @@ Search modes
  c                      Mode: toggle case sensitivity in search.
  w                      Mode: toggle word only search.
  a                      Mode: toggle arrow display.
- x                      Mode: toggle `tinyreplace--exclude-line' variable on/off.
+ x                      Mode: toggle `tinyreplace--exclude-line' on/off.
 
 Search control forward/backward
 
@@ -899,8 +902,8 @@ Moving point of search
  F                      flash function name
 
  N                      narrow to function.
-                        You can't cancel this if you use it. The
-                        'N' is indicated in the command line,
+                        You cannot cancel this if you use it. The
+                        `N' is indicated in the command line,
 
  U                      Run user function `tinyreplace--user-function'
 
@@ -1169,24 +1172,30 @@ Region is active. Go to beginning of region? "))
 ;;; ----------------------------------------------------------------------
 ;;;
 (defun tinyreplace-read-compile-buffer-filename ()
-  "Read filename on line."
-  (let (;; allow drive letter at front d:/file/
-	(re "^\\(\\(.:\\)?[^\n:]+\\):")
+  "Read filename from current line in buffers like compile."
+  (let (;; Allow drive letter at front d:/file/
+        (re "^\\(\\([a-z]:\\)?[^\r\n:]+\\):")
         dir
+        list
         file)
     (save-excursion
       (beginning-of-line)
       (when (setq file (ti::remove-properties (ti::buffer-match re 1)))
+        ;; In *grep* buffer, the line can contain NULL in later Emacs:
+        ;;     FILE<NULL CHAR>:<LINE>:<MATCH
+        ;; Read until null character
+        (when (setq list (split-string file "\000"))
+          (setq file (car list)))
         (save-excursion
           (if (re-search-backward "^cd[ \t]+\\([^\t\n]+\\)" nil t)
               (setq dir (ti::remove-properties (match-string 1)))))
         (when (and dir
-		   ;;  Check drive letter
+                   ;;  Check drive letter
                    (not (string-match "^\\(.:\\)?/" file)))
           (setq file (concat
-		      ;;  Make sure there is trailing slash
-		      (file-name-as-directory dir)
-		      file)))
+                      ;;  Make sure there is trailing slash
+                      (file-name-as-directory dir)
+                      file)))
         (setq file (ti::file-name-for-correct-system file 'emacs))))
     file))
 
@@ -1228,8 +1237,7 @@ Input:
     (save-excursion
       (ti::keep-lower-order beg end)
       (goto-char end)
-      (end-of-line)
-      (setq end (point))
+      (setq end (line-end-position))
       (goto-char beg)
       (catch 'exit
         (while (and (not (eobp))
@@ -1240,7 +1248,7 @@ Input:
           ;;  /users/jaalto/elisp/test.el:;; $Id: ...
           (cond
            ((and file (not (file-exists-p file)))
-	    (format "TinyReplace: [press] invalid filename %s" file))
+            (message (format "TinyReplace: [press] invalid filename %s" file)))
            ((and file (not (member file cache)))
             (raise-frame (select-frame w-frame))
             (push file cache)           ;Now we have dealt with it
@@ -1259,8 +1267,8 @@ Input:
                  (no-confirm
                   ;; Automatic replace
                   (message "TinyReplace: Processing %s" file)
-		  (while (search-forward str1 nil 'noerr)
-		    (replace-match str2 nil t))
+                  (while (search-forward str1 nil 'noerr)
+                    (replace-match str2 nil t))
                   (with-current-buffer buffer
                     (save-buffer)))
                  (t
