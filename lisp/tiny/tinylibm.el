@@ -84,7 +84,7 @@
 
 (require 'tinylibb)                     ;Backward compatible functions
 
-(defconst tinylibm-version-time "2023.0917.1005"
+(defconst tinylibm-version-time "2023.0917.1716"
   "Latest version number.")
 
 ;;{{{ function tests
@@ -139,7 +139,7 @@ Return:
 ;;;
 (defun ti::subrp-p (symbol)
   "Test if function SYMBOL is built-in function.
-Emacs default test (subrp 'move-to-column) returns nil, but according to
+Emacs default test (subrp \\='move-to-column) returns nil, but according to
 the documentation string that function is built-in. This function also
 checks the documentation string."
   (when (and symbol
@@ -244,7 +244,7 @@ In your programs, like:
 ;;;
 (defmacro-maybe ti::definteractive (&rest body)
   "Define simple anonymous interactive function.
-Function can take one optional argument 'arg'.
+Function can take one optional argument `arg'.
 Very useful place where you can use this function is when you
 want to define simple key functions
 
@@ -345,8 +345,8 @@ A nil is not accepted as a true list."
 (defmacro ti::when-package  (feature &optional package &rest body)
   "If FEATURE is present or if PACKAGE exist along `load-path' do BODY.
 
-  (when-package 'browse-url nil
-    (autoload 'browse-url-at-mouse \"browse-url\" \"\" t))"
+  (when-package \\='browse-url nil
+    (autoload \\='browse-url-at-mouse \"browse-url\" \"\" t))"
   `(when (or (and ,feature
                   (featurep ,feature))
              (locate-library (or ,package
@@ -362,7 +362,7 @@ A nil is not accepted as a true list."
   "Load FEATURE from FILENAME and execute BODY if feature is present.
 E.g. try loading a package and only if load succeeds, execute BODY.
 
-  (with-feature 'browse-url nil
+  (with-feature \\='browse-url nil
      ;;; Setting the variables etc)"
   `(when (require ,feature ,filename 'noerr)
      ,@body))
@@ -375,7 +375,7 @@ E.g. try loading a package and only if load succeeds, execute BODY.
   "Run FUNCTION after executing BODY and time execution.
 Float time value in seconds is sent to FUNCTION.
 
-  (ti::with-time-this '(lambda (time) (message \"Secs %f\" time))
+  (ti::with-time-this \\='(lambda (time) (message \"Secs %f\" time))
      (sit-for 4))."
   (let ((time-a    (gensym "time-a-"))
 	(time-b    (gensym "time-b-"))
@@ -417,23 +417,21 @@ If there is no process mark, return nil."
 ;;; ----------------------------------------------------------------------
 ;;;
 (defmacro ti::verb ()
-  "Setq variable 'verb'.
-The variable is set If interactive flag is set or if 'verb' variable is set.
+  "Set variable `verb'.
+The variable is set If interactive flag is set or if `verb' variable is set.
 This is usually the verbosity flag that allows printing messages.
 
 Purpose:
 
-  The 'verb' is meant to be used in function when it decides if
+  The `verb' is meant to be used in function when it decides if
   should print verbose messages. This is different that using
-  simple (called-interactively-p 'interactive) test, because (called-interactively-p 'interactive) is only set
-  if the function is really called interactively. For complete
-  description why (called-interactively-p 'interactive) est alone is not always the solution
-  refer to ftp://cs.uta.fi/pub/ssjaaa/ema-code.html under heading
-  that discusses about 'funtion and displaying messages'
+  simple (called-interactively-p \\='interactive) test,
+  because (called-interactively-p \\='interactive) is only set if
+  the function is really called interactively.
 
 Note:
 
-  You have to define variable 'verb' prior calling this macro,
+  You have to define variable `verb' prior calling this macro,
   preferably in function argument definition list.
 
 Example:
@@ -479,26 +477,26 @@ Example:
 
 The full story:
 
-  Byte Compiler isn't very smart when it comes to knowing if
+  Byte Compiler is not very smart when it comes to knowing if
   symbols exist or not. If you have following statement in your function,
   it still complaints that the function \"is not known\"
 
-  (if (fboundp 'some-non-existing-func)
+  (if (fboundp \\='some-non-existing-func)
       (some-non-existing-func arg1 arg2 ...))
 
   instead use:
 
-  (if (fboundp 'some-non-existing-func)
-      (ti::funcall 'some-non-existing-func arg1 arg2 ...)
+  (if (fboundp \\='some-non-existing-func)
+      (ti::funcall \\='some-non-existing-func arg1 arg2 ...)
 
   to get rid of the unnecessary warning.
 
 Warning:
 
-  You _cannot_ use ti::funcall if the function is in autoload state, because
-  `symbol-function' doesn't return a function to call. Rearrange
-  code so that you do (require 'package) or (ti::autoload-p func) test before
-  using ti::funcall."
+  You _cannot_ use ti::funcall if the function is in autoload
+  state, because `symbol-function' does not return a function to
+  call. Rearrange code so that you do (require \\='package)
+  or (ti::autoload-p func) test before using ti::funcall."
   `(let ((func ,func-sym))
      (when (fboundp ,func-sym)
        (apply func ,@args nil))))
@@ -712,7 +710,7 @@ Input:
 The match is case sensitive."
   (when char
     (let (case-fold-search)
-      (member* char list :test 'char-equal))))
+      (cl-member char list :test 'char-equal))))
 
 ;;; ----------------------------------------------------------------------
 ;;; #todo: read-char-exclusive?
@@ -720,7 +718,7 @@ The match is case sensitive."
 (defsubst ti::read-char-safe (&optional prompt)
   "Wait for character until given and ignore all other events with PROMPT.
 The `read-char' command chokes if mouse is moved while reading input.
-This function returns 'ignore if the `read-char' couldn't read answer.
+This function returns \\='ignore if the `read-char' could not read answer.
 Otherwise it returns normal character.
 
 Note:
@@ -736,7 +734,7 @@ References:
 Return:
 
   ch        character
-  'ignore   if read failed due to non-character event."
+  \\='ignore   if read failed due to non-character event."
   (condition-case nil
       (progn
         (message (or prompt ""))        ;prevent echoing keycodes...
@@ -803,18 +801,17 @@ invoking some function with many different sets of arguments.
 
 Examples:
 
-    (ti::applycar 'global-set-key
-      '(
-        ([f12]  repeat-complex-command) ; Again         L2
+    (ti::applycar \\='global-set-key
+      \\='(([f12]  repeat-complex-command) ; Again         L2
         ([f14]  undo)                   ; Undo          L4
         ([f16]  copy-region-as-kill)    ; Copy          L6
         ([f18]  yank)                   ; Paste         L8
         ([f20]  kill-region)))          ; Cut           L10
 
-  -->  (nil nil nil nil nil) ;; global - set - key returns 'nil
+  -->  (nil nil nil nil nil) ;; global - set - key returns \\='nil
 
     (ti::applycar (lambda (a b) (list b a)) ;; swaps arguments
-      '((1 2)(3 4)))
+      \\='((1 2)(3 4)))
 
   -->  ((2 1) (4 3))"
   (let ((spec-name (gensym "spec-name-")))
@@ -828,7 +825,7 @@ Examples:
   "Add ARG into `command-switch-alist' if it's not already there.
 This inhibits argument to be treated as filename.
 
-Optional FUNC is called when arg is found. Default FUNC used is 'ignore."
+Optional FUNC is called when arg is found. Default FUNC used is \\='ignore."
   ;;  make sure it's not there already
   (or (assoc arg command-switch-alist)
       (setq command-switch-alist
@@ -900,7 +897,7 @@ Return:
 
   nil           buffer contains something
   t             it is empty.
-  'empty        contains only whitespace"
+  \\='empty        contains only whitespace"
   (with-current-buffer (or buffer (current-buffer))
     (if (eq (point-min-marker) (point-max-marker))
         t
@@ -949,7 +946,7 @@ Return:
 ;;; ----------------------------------------------------------------------
 ;;;
 (defun ti::color-type ()
-  "Read Frame background and return `background-mode: 'dark 'light."
+  "Read frame and return `background-mode': \\='dark or \\='light."
   ;; (frame-parameter 'display-type)
   ;; (frame-parameters (selected-frame))
   ;;  We can't read frame information when we have no visible window.
@@ -1232,11 +1229,11 @@ o   keyboard macro is executing
 
 Input MODE
 
- 'timer
+ \\='timer
  This says that the function that calls us is currently run
  by an timer functin (19.34+)
 
- 'post-command
+ \\='post-command
  Same as above; but this time calling command is running in post hook.
 
 This function is usually called from background processes that are
@@ -1381,22 +1378,22 @@ Input:
 (defmacro ti::assoc-append-inside (func key list add)
   "Add to the ASSOC list new ELT.
 List must be in format, K = key, E = element.
-  ( (K . (E E) (K . (E E)) .. )
+  ((K . (E E) (K . (E E)) ...)
 
 Input:
 
-  FUNC      'assq or 'assoc or any other to get inner list
+  FUNC      \\='assq or \\='assoc or any other to get inner list
   KEY       key
   LIST      list
   ADD       element to add
 
 Example:
 
-  (setq list '( (1 . (a b)) (2 . (c d))))
-  (ti::assoc-append-inside 'assq 1 list 'x)
+  (setq list \\='((1 . (a b)) (2 . (c d))))
+  (ti::assoc-append-inside \\='assq 1 list \\='x)
 
   -->
-  '( (1 . (a b x)) (2 . (c d))))"
+  \\='((1 . (a b x)) (2 . (c d))))"
   (let ((elt (gensym "elt-"))
 	(list (gensym "list-")))
     `(let (,elt
@@ -1411,7 +1408,7 @@ Example:
 ;;;
 (defun ti::assoc-replace-maybe-add (target-list-sym list &optional remove)
   "Set TARGET-LIST-SYM entry to LIST of pairs (STRING . CDR-ELT).
-If the LIST's STRING is found, replace CDR-ELT of TARGET-LIST-SYM.
+If the LIST\\='s STRING is found, replace CDR-ELT of TARGET-LIST-SYM.
 If no STRING found, add new one to the beginning of TARGET-LIST-SYM.
 
 Input:
@@ -1428,9 +1425,9 @@ Examples:
   ;; in `auto-mode-alist'
 
   (ti::assoc-replace-maybe-add
-   'auto-mode-alist
-   '((\"\\.el\\'\"    . lisp-mode)
-     (\"\\.h\\'\"     . c++-mode)))
+   \\='auto-mode-alist
+   \\='((\"\\.el\\'\" . lisp-mode)
+     (\"\\.h\\'\" . c++-mode)))
 
 Return:
 
@@ -1529,12 +1526,14 @@ If argument is already a list this macro is no-op."
   "Converts string or number items in LIST into assoc menu.
 Items are numbered starting from 0.
 
-'(1 2 \"a\" \"b\")  --> '((\"1\" . 1) (\"2\" . 2) (\"a\" . 3) (\"b\" . 4))
+  \\='(1 2 \"a\" \"b\")
+  -->
+  \\='((\"1\" . 1) (\"2\" . 2) (\"a\" . 3) (\"b\" . 4))
 
 This is useful, if you call x popup menu or completion. For example:
 
 \(completing-read \"complete number: \"
-                 (ti::list-to-assoc-menu '(111 222 333 444)))"
+                 (ti::list-to-assoc-menu \\='(111 222 333 444)))"
   (let ((i 0)
          ret)
     (dolist (elt list)
@@ -1547,7 +1546,7 @@ This is useful, if you call x popup menu or completion. For example:
 ;;; ----------------------------------------------------------------------
 ;;;
 (defsubst ti::list-to-cons (list)
-  "Turn list to paired cons list '(1 2 3 4) --> '((1 . 2) (3 .4))."
+  "Convert list to paired cons list \\='(1 2 3 4) --> \\='((1 . 2) (3 .4))."
   (let (ret)
     (while list
       (push (cons (pop list) (pop list)) ret))
@@ -1563,14 +1562,14 @@ Input:
   LIST          list
   FUNCTION      accept Arg1 and Arg2 in list, should return non-nil
                 if elements are the same. Arg1 and Arg2 are taken
-                as 'car' in the list.
+                as `car' in the list.
 
 Example:
 
-  (ti::list-remove-successive '(1 1 2 2 3) 'eq)
-  --> '(1 2 3)
-  (ti::list-remove-successive '(\"1\" \"1\" \"2\" \"2\" \"3\") 'string=)
-  --> '(\"1\" \"2\" \"3\")"
+  (ti::list-remove-successive \\='(1 1 2 2 3) \\='eq)
+  --> \\='(1 2 3)
+  (ti::list-remove-successive \\='(\"1\" \"1\" \"2\" \"2\" \"3\") \\='string=)
+  --> \\='(\"1\" \"2\" \"3\")"
   (let (new-list
 	prev)
     (dolist (elt list)
@@ -1596,9 +1595,9 @@ Example:
 (defun ti::list-merge-elements (&rest args)
   "Merge single elements, ARGS, and one dimensional lists to one list.
 Example:
-  (ti::list-merge-elements 1 2 'some '(type here))
+  (ti::list-merge-elements 1 2 \\='some \\='(type here))
   -->
-  '(1 2 some type here)"
+  \\='(1 2 some type here)"
   (let (ret)
     (dolist (elt args)
       (if (ti::listp elt)
@@ -1627,11 +1626,11 @@ Example:
 
 Input:
 
-  LIST       '(\"str\" \"str\" ...)
-  separator  ' '
+  LIST       \\='(\"str\" \"str\" ...)
+  separator  \" \"
 
 Return:
-  str"
+  string"
   (mapconcat
    (function identity)                  ;returns "as is"
    list
@@ -1647,8 +1646,8 @@ Input:
 
   LIST          list
   ARG           this position in list is sought
-  TEST-FORM     defaults to 'equal, you can use ARG and LIST in the
-                test form. Example:  '(string= (car list) arg)
+  TEST-FORM     defaults to \\='equal, you can use ARG and LIST in the
+                test form. Example:  \\='(string= (car list) arg)
 
 Return:
   nil  ,no ARG in list"
@@ -1672,7 +1671,7 @@ Input:
 
   TEST-FUNCTION defaults to (string-match (caar element) arg)
                 and the supposed list is assumed to be:
-                '( (\"REGEXP\"  ANY_DATA)  ..)
+                \\='((\"REGEXP\" ANY_DATA) ...)
 
   ALL-MATCHES   flag, if non-nil return list of matches.
 
@@ -1684,28 +1683,28 @@ You can refer to these items in the test-form
 
 Examples:
 
-   (defconst my-list '((\"1\" \"a\") (\"2\" \"b\")))
+   (defconst my-list \\='((\"1\" \"a\") (\"2\" \"b\")))
 
-   ;;  This is like using 'assoc'
+   ;;  This is like using `assoc'
 
    (ti::list-find my-list \"1\")
    --> (\"1\" \"a\")
 
    ;;  Do match against member 2
 
-   (ti::list-find my-list \"b\" '(string-match (nth 1 element) arg))
+   (ti::list-find my-list \"b\" \\='(string-match (nth 1 element) arg))
    --> (\"2\" \"b\")
 
-   ;;  This is little tricky, we search all '.fi' sites, and then
+   ;;  This is little tricky, we search all \".com\" sites, and then
    ;;  remove all whitespaces around the items.
 
-   (defconst my-list2 '(\"   foo@a.fi \" \"Bar <man@b.fi>   \" \"gee@c.uk  \"))
+   (defconst my-list2 \\='(\"   foo@a.net \" \"Bar <man@b.com>   \" \"gee@co.uk  \"))
 
    (ti::list-find my-list2  \"[.]fi\"
-              '(and
+              \\='(and
                  (string-match arg element)
                  (setq element (ti::string-remove-whitespace element)))
-        'all-matches)
+        \\='all-matches)
 
    --> (\"foo@a.fi\" \"Bar <man@b.fi>\")
 
@@ -1766,7 +1765,7 @@ no matter how the package is loaded you would do this:
   (defun function2 () ...)
 
   ;; At the end of file
-  (ti::byte-compile-defun-maybe '(function1 function2))
+  (ti::byte-compile-defun-maybe \\='(function1 function2))
 
 Now if package is loaded in .el format, this will trigger byte compiling
 those functions. If the package is currently beeing byte compiled, then
@@ -1792,7 +1791,7 @@ do much harm."
 ;;;
 (defmacro ti::package-require-for-emacs (emacs xemacs &rest body)
   "EMACS and XEMACS package compatibility. Evaluate BODY.
-E.g. `timer' in Emacs and 'itimer in XEmacs
+E.g. `timer' in Emacs and \\='itimer in XEmacs
 Recommended usage: (eval-and-compile (ti::package-require-for-emacs ...))."
   `(progn
      (if (ti::emacs-p)
@@ -1872,7 +1871,7 @@ Recommended usage: (eval-and-compile (use-mail-abbrevs))"
   "Push current definition of SYMBOL to stack.
 If FUNC-FLAG is non-nil, then push function definition.
 
-Stack is at kept in property 'definition-stack"
+Stack is at kept in property \\='definition-stack"
   (if func-flag
       (push (symbol-function symbol) (get symbol 'definition-stack))
     (push (symbol-value symbol) (get symbol 'definition-stack))))
@@ -1883,7 +1882,7 @@ Stack is at kept in property 'definition-stack"
   "Retrieve previous definition of SYMBOL from stack.
 If FUNC-FLAG is non-nil, then pop function definition.
 
-Stack is at kept in property 'definition-stack"
+Stack is at kept in property \\='definition-stack"
   (if func-flag
       (setf (symbol-function symbol) (pop (get symbol 'definition-stack)))
     (setf (symbol-value symbol) (pop (get symbol 'definition-stack)))))
@@ -1906,10 +1905,10 @@ Return KEY's original binding."
 
 Example:
 
-  Suppose you have Gnus map 'A' and you don't like to type
-  uppercase letters. You want to change the keymap 'A' to 'a'. Here is
+  Suppose you have Gnus map `A' and you do not like to type
+  uppercase letters. You want to change the keymap `A' to `a'. Here is
   the command. Notice that this executes only once, because after the
-  function is called the \"a\" NEW-KEY is the keymap of 'A' now. You
+  function is called the \"a\" NEW-KEY is the keymap of `A' now. You
   can safely use this function within hooks for that reason.
 
   (ti::swap-keys-if-not-keymap \"A\" \"a\")"
@@ -1951,14 +1950,14 @@ After that your commands with `local-set-key' are buffer local."
 Key can be assigned if
 
 o   slot is nil
-o   slot has function 'ignore
+o   slot has function \\='ignore
 o   slot has already object
 
 Any other case generates error: the slot is already occupied.
 
-You normally call this function from package that want's to define
-e.g. function keys permanently and if there is already user definition
-you can stop right there and print message.
+This function is called from package which wants to define
+e.g. function keys permanently. I there is already a definition,
+a message is displayed and no key is defined.
 
 Input:
 
@@ -1971,7 +1970,7 @@ Input:
 Example:
 
   (ti::define-key-if-free global-map  [f10]
-    'xxx-func 'xxx-define-key-error)
+    \\='xxx-func \\='xxx-define-key-error)
 
   (defun xxx-define-key-error (key def)
     (error
@@ -1997,17 +1996,17 @@ Example:
 ;;; ----------------------------------------------------------------------
 ;;;
 (defun ti::define-in-function-keymap (list)
-  "Move key definition according to LIST '((FROM  TO) (FROM  TO) ..)
+  "Move key definition according to LIST \\='((FROM  TO) (FROM  TO) ...)
 This function remap each key FROM to produce TO key instead.
 
 Example:
 
-  You're in terminal where tab key produces `kp-tab' and not the normal `tab'.
+  Say, in terminal where tab key produces `kp-tab' and not the normal `tab'.
   You verified this by looking at the \\[view-lossage]. You want that key
   to give key code `tab' to Emacs:
 
   (ti::define-in-function-keymap
-    '(([kp-tab]   [?\t])
+    \\='(([kp-tab]   [?\t])
       ([C-kp-tab] [C-tab])
       ([S-kp-tab] [S-tab])
       ([A-kp-tab] [A-tab])
@@ -2041,7 +2040,7 @@ Example:
 
     ;; Now occupy  minor map definition
 
-    (define-key [prior] 'minor-mode-function)"
+    (define-key [prior] \\='minor-mode-function)"
   `(define-key ,map ,to-key
      (or (and (current-local-map)
               (lookup-key (current-local-map) ,from-key))
@@ -2080,7 +2079,7 @@ If ARG is string, the length of string is returned."
 
 Remember:
 
-  `add-hook' call creates a hook variable if it doesn't exist.
+  `add-hook' call creates a hook variable if it does not exist.
 
 Input:
 
@@ -2095,7 +2094,7 @@ Example:
 
   ;;  Add 2 functions to 2 hooks
 
-  (ti::add-hooks '(mode1-hook mode2-hook) '(hook1 hook2))"
+  (ti::add-hooks \\='(mode1-hook mode2-hook) \\='(hook1 hook2))"
   (let ((list  (ti::list-make single-or-list))
 	(hlist (ti::list-make hook-or-list)))
     (dolist (hook hlist)
@@ -2281,8 +2280,8 @@ VAR is set to following values when ARG is:
 
 If optional TEMP-BUF is non-nil, every buffer is searched.
 Normally following buffers are ignored.
--  Temporary buffers which start with character asterisk '*'
--  Invisible buffers which start with space ' '
+-  Temporary buffers which start with character asterisk \"*\"
+-  Invisible buffers which start with space \" \"
 
 Optional EXCLUDE can also be given, which excludes buffers from
 matched ones.
@@ -2311,8 +2310,7 @@ Examples:
   (ti::dolist-buffer-list \"cc\")
 
   ;;  Get all buffers in `dired-mode'
-  (ti::dolist-buffer-list '(eq major-mode 'dired-mode))
-"
+  (ti::dolist-buffer-list \\='(eq major-mode \\='dired-mode))"
   (let ((ok (gensym "ok-"))
 	(buffer-name (gensym "buffer-name-"))
 	(return-list (gensym "return-list-")))
@@ -3030,12 +3028,12 @@ Input:
 ;;; ----------------------------------------------------------------------
 ;;;
 (defsubst ti::i-macro-region-ask (&optional prompt)
-  "Macro, usually called from 'interactive' command.
+  "Macro, usually called from interactive command.
 Ask to include whole buffer with PROMPT if region is not selected. If there is
 no region given, signal error.
 
-Return:
-   '(beg end)"
+Return list:
+   (beg end)"
   (cond
    ((region-active-p)
     (list (region-beginning) (region-end)))
@@ -3051,12 +3049,12 @@ Return:
 ;;;
 (put 'ti::i-macro-region-body 'lisp-indent-function 0)
 (defmacro ti::i-macro-region-body (&rest body)
-  "Macro, usually called from 'interactive' command.
+  "Macro, usually called from interactive command.
 Return selected region and execute BODY. Signal error if
 region is not selected.
 
-Return:
-  '(beg end BODY-return-value)"
+Return list:
+  (beg end BODY-return-value)"
   `(if (null (region-active-p))
        (error "No region selected.")
      (list
@@ -3140,7 +3138,7 @@ tinylibm.el: ** ignore following byte compiler message if you see it
 Send mail to tiny* package maintainer. Read keyword :func-args
 which should hold elements
 
-  '(list PACKAGE-PREFIX PACKAGE-NAME)  ;; nth 0 \"list\" is ignored.
+  \\='(list PACKAGE-PREFIX PACKAGE-NAME)  ;; nth 0 \"list\" is ignored.
 
 The PACKAGE-PREFIX is in format \"xxx-:\" where a contact function
 name `PACKAGE-PREFIX-submit-bug-report' is derived."
@@ -3164,8 +3162,8 @@ name `PACKAGE-PREFIX-submit-bug-report' is derived."
 (put 'ti::grep-output-parse-macro 'lisp-indent-function 1)
 (put 'ti::grep-output-parse-macro 'edebug-form-spec '(body))
 (defmacro ti::grep-output-parse-macro (buffer &rest body)
-  "In current buffer, run BODY for every 'grep' line.
-Point is set to point-min. The BODY must not change BUFFER's point.
+  "In current buffer, run BODY for every `grep' line.
+Point is set to point-min. The BODY must not change BUFFER\\='s point.
 
 Following variables in lowercase are bound during loop (lowercase
 variable names):
@@ -3242,7 +3240,7 @@ You normally use this to display messages to user.
 Buffer is buried after this form finishes.
 
 The output is accomplished using `with-output-to-temp-buffer', so
-you have to use 'princ' to write output.
+you have to use `princ' to write output.
 
 Input:
 
@@ -3433,7 +3431,7 @@ In XEmacs ~/.xemacs/config is preferred first."
   "*Directory where to save configuration files.")
 
 (defvar tinylib-:package-config-file-prefix "emacs-config-"
-  "*Prefix to add to configuration files. Default 'emacs-config-'.")
+  "*Prefix to add to configuration files. Default is \"emacs-config-\".")
 
 (defun ti::package-config-file-prefix (&optional file os emacs)
   "Return directory and prefix with config FILE optionally for OS and EMACS
