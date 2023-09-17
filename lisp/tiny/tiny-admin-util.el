@@ -91,7 +91,6 @@
 
 (eval-when-compile
   (require 'cl)
-  (require 'autoload)
   (require 'cl-seq)
   (require 'cl-lib))
 

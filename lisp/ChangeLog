@@ -1,7 +1,7 @@
 2023-09-17 Sun  Jari Aalto  <jari.aalto@tuni.fi>
 
         * tiny/tiny-admin-util.el: Emacs 30.0.50 correct
-        some byte compile errors.
+        byte compile errors. Remove deprecated (require 'autoload).
 
         * tiny/tinyreplace.el (all): Correct 30.0.50 byte compile errors.
         (tinyreplace-read-compile-buffer-filename):
