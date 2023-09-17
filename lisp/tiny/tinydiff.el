@@ -540,7 +540,7 @@ Input:
     (or (tinydiff-find-program '("gdiff" "diff") "diff" nil "--help")
         "diff")))
   "*Program to generate diff.
-It should print 'filename: FILE.XXX' tag which is read by function
+It should print \"filename: FILE.XXX\" tag which is read by function
 `tinydiff-get-buffer-name'. The variable can contain a Lisp expression
 which returns program name."
   :type  '(string :tag "Shell command")
@@ -548,7 +548,8 @@ which returns program name."
 
 (defcustom tinydiff--rcsdiff-program "rcsdiff"
   "*Shell program to print RCS diff.
-It should output the 'filename: FILE' which is read by `tinydiff-get-buffer-name'.
+It should output the \"filename: FILE\" which
+is read by `tinydiff-get-buffer-name'.
 This variable is evaled to get the program name."
   :type  '(string :tag "Shell program")
   :group 'TinyDiff)
@@ -625,9 +626,9 @@ This variable is evaluated to get the program name and switches."
   '(( "[.]el$"  load-path)
     ( "."       '("~/txt" "~/elisp")))
   "*List of item that control how patching is applied.
-The list form is:
+Fomat of list:
 
-   '((REGEXP EVAL-FORM) (REGEXP EVAL-FORM) ..)
+   ((REGEXP EVAL-FORM) (REGEXP EVAL-FORM) ...)
 
 Where REGEXP is tried against the filename that is found from the patch
 itself. EVAL-FORM can be any form that return list of pathnames that can
@@ -665,7 +666,7 @@ is used."
 (defcustom tinydiff--register-function-name  ?f
   "*Register used to store the function name.
 Only used if `tinydiff--function-name-handle-function' is set to
-'tinydiff-function-name-store."
+symbol \\='tinydiff-function-name-store."
   :type  'character
   :group 'TinyDiff)
 
@@ -689,12 +690,12 @@ Default value is `ti::mail-get-buffer'."
   :group 'TinyDiff)
 
 (defcustom tinydiff--find-ref-function 'beginning-of-defun
-  "*Elisp Function to find underlying code's function name around point.
+  "*Elisp Function to find underlying code\\='s function name around point.
 The cursor is positioned in the source buffer and on the referenced
 line before calling with no arguments. Function should move the point
 in the line below where the associated reference is located.
 
-If no reference is found, function _must_ call 'error'."
+If no reference is found, function must call `error'."
   :type 'function
   :group 'TinyDiff)
 
@@ -912,7 +913,7 @@ Eg. TAB that completes current filename."
 ;;; ----------------------------------------------------------------------
 ;;;
 (defun tinydiff-splice-command  (string)
-  "Splice off directory from string and return '(DIR CMD REST)"
+  "Splice off directory from string and return list: (DIR CMD REST)"
   (when (string-match
          (concat
           "cd[ \t]+\\([^;]+\\);"    ;; dir
@@ -1157,7 +1158,7 @@ Return:
 ;;; ----------------------------------------------------------------------
 ;;;
 (defun tinydiff-minibuffer--directory  ()
-  "Return directory name from 'cd' command."
+  "Return directory name from `cd' command."
   (save-excursion
     (beginning-of-line)
     (ti::buffer-match "cd +\\([^;]+\\)" 1)))
@@ -1166,7 +1167,7 @@ Return:
 ;;;
 (defun tinydiff-minibuffer--read-rcs-file-name (&optional line or-diff-name)
   "Read RCS filename from LINE.
-If OR-DIFF-NAME is non-nil, look for 'diff' command instead."
+If OR-DIFF-NAME is non-nil, look for `diff' command instead."
   (let* ((fid       "tinydiff-minibuffer--read-rcs-file-name:")
          (line      (or line
 			(ti::read-current-line)))
@@ -1619,8 +1620,7 @@ ARG says which to look:
   3 pick line +++ file.xx      GNU unified diff.
 
 Return list:
-  '(file (type pos))
-  nil"
+  (file (type pos))."
   (let* ((stat (ti::buffer-diff-type-p))
          (re1   "^[ \t]*[*][*][*] +\\([^ \t\n]+\\)")
          (re2   "^[ \t]*--- +\\([^ \t\n]+\\)")
@@ -1670,7 +1670,7 @@ Input:
 
   FILE      File name
   BUFFER    The patch(1) command output buffer
-  FLAG      If 'hunk, this is only partial diff."
+  FLAG      If \\='hunk, consider as partial diff."
   (let* (case-fold-search               ;case sensitive matches
          (fid       "tinydiff-patch-check-if-load")
          (fbuffer   (find-buffer-visiting file))
@@ -1729,7 +1729,7 @@ Input:
   "Check patch failure messages from BUFFER.
 Return:
   filename      rejection file if failure happened.
-  '(\"\")       some unknown failure happened; rejection file not available
+  \\='(\"\")       some unknown failure happened; rejection file not available
                 String holds matched failure condition.
   nil           Patch succeeded ok."
   (interactive)
@@ -1838,7 +1838,7 @@ Input:
   BEG           diff start point in buffer
   END           diff end point
   INTERACTIVE   User interaction, allow editing the patch command etc.
-  TYPE          Type of patch: 'hunk means partial diff."
+  TYPE          Type of patch: \\='hunk means partial diff."
   (let* ((fid           "tinydiff-patch-with-diff-1")
          (file          (expand-file-name file))
          (opt-global    (or tinydiff--patch-global-option
@@ -2000,7 +2000,7 @@ Input:
   BEG END       diff region; defaults to whole buffer if nil.
   DEST-FILE     file to patch
   VERB          Be verbose.
-  TYPE          Type of diff: 'hunk or nil (whole diff)
+  TYPE          Type of diff: \\='hunk or nil (whole diff)
   ORIG-BUFFER   Original buffer where the whole patch is."
   (interactive
    (progn
@@ -2395,7 +2395,7 @@ Lets user to edit option in the command line."
   "Run diff on buffer, possibly using rcsdiff if file is version controlled.
 Inserts contents into register.
 
-The version control is determined by searching RCS strings 'Id' or 'Log'
+The version control is determined by searching RCS strings `Id' or `Log'
 
 Input:
 
@@ -2787,7 +2787,7 @@ Return:
 ;;;
 (defun tinydiff-goto-mouse (event)
   "Show current line in other window. Use mouse EVENT.
-Activate only if point underneath has 'mouse-property."
+Activate only if point underneath has `mouse-property."
   (interactive "e")
   (let ((buffer (tinydiff-source))
 	line)
