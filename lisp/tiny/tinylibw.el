@@ -48,7 +48,7 @@
 (require 'tinyliba)
 (provide 'tinylibw)
 
-(defconst tinylibw-version-time "2019.0524.1807"
+(defconst tinylibw-version-time "2023.0917.1752"
   "Latest version number as last modified time.")
 
 ;;; These functions has been submitted to Emacs 21.2
@@ -171,7 +171,7 @@ Return:
 ;;; ----------------------------------------------------------------------
 ;;;
 (defun w32-cygwin-mount-table ()
-  "Return Cygwin mount table '((CYGWIN . DOS) ..) using `mount' command."
+  "Run mount(1) and return list: \\='((CYGWIN . DOS) ...)."
   (when ;; (memq system-type '(ms-dos windows-nt))
       (ti::win32-p)
     ;; specifically request the .exe which must be along PATH
@@ -216,7 +216,7 @@ Return:
         ;;
         (if (null last-choice)
             (setq last-choice (cons (car cygwin) try))
-          (if (length (> (car cygwin) (car last-choice)))
+          (if (> (car cygwin) (car last-choice))
               (setq last-choice (cons (car cygwin) try))))))
     (if (null last-choice)
         path
