@@ -69,7 +69,7 @@
 
 (require 'tinylibm)
 
-(defconst tinylibo-version-time "2019.0524.1804"
+(defconst tinylibo-version-time "2023.0917.1746"
   "Latest version number as last modified time.")
 
 (eval-and-compile
@@ -157,7 +157,7 @@ The match is checked. Returns new overlay or nil."
 
 Input:
   LEVEL     match level
-  PLIST     property list '(PRO-NAME PROP-VAL)
+  PLIST     property list \\='(PRO-NAME PROP-VAL)
 
 Return:
   ov        overlay or nil"
@@ -196,7 +196,7 @@ Return:
 ;;;
 (defun ti::overlay-mouse-on-p (ov)
   "Check if overlay OV has `mouse-face' on.
-If `mouse-face' contains 'default, it's treated to mean same as nil.
+If `mouse-face' contains \\='default, it's treated to mean same as nil.
 
 Return:
   nil or property value of `mouse-face'"
@@ -214,7 +214,7 @@ Return:
 ;;; ----------------------------------------------------------------------
 ;;;
 (defun ti::overlay-get-mouse ()
-  "Check if the point has 'mouse-face overlay.
+  "Check if the point has \\='mouse-face overlay.
 
 Return:
 
@@ -265,7 +265,7 @@ Input:
 ;; - This is more heavier function
 ;;
 (defun ti::overlay-get-prop-val (ovl prop-list)
-  "Read OVL and find overlay(s) which contain PROP-LIST '(PROP VAL PROP VAL..)
+  "Read OVL which contain PROP-LIST \\='(PROP VAL PROP VAL..)
 
 Input:
 
@@ -336,7 +336,7 @@ Input:
 Return:
 
   nil                          nothing created or used.
-  '(used-list created-list)    two lists, list of used and created overlays."
+  \\='(used-list created-list)    two lists, list of used and created overlays."
   (let* ((func (if back 're-search-backward 're-search-forward))
          (max  (if max
                    max                  ;it's given
