@@ -93,6 +93,8 @@
 ;; Due to variable message-cite-prefix-regexp
 (require 'message)
 
+(autoload 'update-file-autoloads "autoload")
+
 (eval-when-compile
   ;; Quiet bogus CL warnings
   (defvar byte-compile-warnings)
