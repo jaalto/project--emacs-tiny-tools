@@ -123,7 +123,7 @@
 (eval-when-compile
   (autoload 'ignore-errors "cl-macs" nil 'macro))
 
-(defconst tinylibmenu-version-time "2013.0709.0609"
+(defconst tinylibmenu-version-time "2023.0917.1743"
   "Latest version number.")
 
 (defvar ti::menu--load-hook nil
@@ -167,12 +167,12 @@ Menu structure is as follows
     Below you see 3 different ways to define one menu element.
 
     (defconst my-meny
-     '(
+     \\='(
       DISPLAYED-MENU-STRING
       ((CHARACTER-KEY  . ANOTHER-MENU-VARIABLE-SYMBOL)
        (CHARACTER-KEY  . ([FLAG] (FUNCTION-NAME PARAMETER PARAMETER...)))
        (CHARACTER-KEY  . ([FLAG] (FORM-TO-EVAL)))
-       ..))
+       ...))
     \" MENU HELP RESIDES IN THE DOCUMENTATION STRING\")")
 
 ;; This is just an example how you could utilize the prefix arguments.
@@ -241,8 +241,8 @@ Special keys
 
 Example:
 
-  (ti::menu-add 'ti::menu--menu-sample ?2  nil 'delete)
-  (ti::menu-add 'ti::menu--menu-sample ?t '( (my-test 1 2 3)))
+  (ti::menu-add \\='ti::menu--menu-sample ?2  nil \\='delete)
+  (ti::menu-add \\='ti::menu--menu-sample ?t \\='((my-test 1 2 3)))
 
 Return:
 
@@ -275,7 +275,9 @@ Return:
 
 Example:
 
-  (ti::menu-set-doc-string 'ti::menu--menu-sample \"?=help, 1=test1, t=myTest\")"
+  (ti::menu-set-doc-string
+    \\='ti::menu--menu-sample
+    \"?=help, 1=test1, t=myTest\")"
   (let* ((menu (symbol-value menu-symbol)))
     ;;  It's better to check that the arg is right; setcar won't
     ;;  do that
@@ -457,8 +459,8 @@ References:
 Please read the documentation of variable `ti::menu--menu-sample' to see
 the structure of menu.
 
-Menu pointed by `ti::menu--menu' is used and PREFIX-ARG is passed to menu engine
-'ti::menu--menu'.
+Menu pointed by `ti::menu--menu' is used and PREFIX-ARG is passed
+to menu engine `ti::menu--menu'.
 
 References:
   `ti::menu--menu-sample'"
