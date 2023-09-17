@@ -92,10 +92,10 @@
 ;;      o   Special indentation is suggested if cursor is at BOL and
 ;;          user defined regexp is matched in line above. (like adding
 ;;          multiple c++ comments)
-;;      o   Extra tinyindent-tt-mode for writing descriptions within comments. This
-;;          allows user to choose when to use HARD tab or SOFT tab = relative
-;;          to the text above. TAB TAB inserts hard tab, TAB SPC inserts soft
-;;          tab.
+;;      o   Extra tinyindent-tt-mode for writing descriptions within
+;;          comments. This allows user to choose when to use HARD tab
+;;          or SOFT tab = relative to the text above. TAB TAB inserts
+;;          hard tab, TAB SPC inserts soft tab.
 
 ;;}}}
 
@@ -121,10 +121,10 @@
         o   Special indentation is suggested if cursor is at BOL and
             user defined regexp is matched in line above. (like adding
             multiple c++ comments)
-        o   Extra tinyindent-tt-mode for writing descriptions within comments. This
-            allows user to choose when to use HARD tab or SOFT tab = relative
-            to the text above. TAB TAB inserts hard tab, TAB SPC inserts soft
-            tab.")
+        o   Extra tinyindent-tt-mode for writing descriptions within
+            comments. This allows user to choose when to use HARD
+            tab or SOFT tab = relative to the text above. TAB TAB
+            inserts hard tab, TAB SPC inserts soft tab.")
 
 ;;}}}
 ;;{{{ setup: all
@@ -278,8 +278,8 @@ Returns:
   filling pattern to use at front of line or nil"
   ;;  Look for some special lines, like C++
   (let ((s-re tinyindent--special-regexp)
-	fill
-	line)
+        fill
+        line)
     (when (looking-at s-re)
       ;;  back to original line
       ;;
@@ -318,17 +318,17 @@ References:
   `tinyindent--special-regexp'"
   (interactive)
   (let ((bolp-flag     tinyindent--bol)
-	(p             (point))
-	(cur-col       (current-column))
-	(imode         t)
-	(SPC           ?\ )
-	prev-empty
-	prev-col
-	bp ep                          ;BEG END point
-	fill
-	line
-	ch
-	skip)
+        (p             (point))
+        (cur-col       (current-column))
+        (imode         t)
+        (SPC           ?\ )
+        prev-empty
+        prev-col
+        bp ep                          ;BEG END point
+        fill
+        line
+        ch
+        skip)
     (catch 'cancel
       (save-excursion
         (save-excursion
@@ -340,14 +340,14 @@ References:
           (setq prev-col (current-column)))
         ;;  make sure these are NOT nil
         (if (null tinyindent--cp)
-	    (setq tinyindent--cp 0))
+            (setq tinyindent--cp 0))
         (if (null tinyindent--cl)
-	    (setq tinyindent--cl 0))
+            (setq tinyindent--cl 0))
         ;;  Count lines has A BUG! , If I'm at the beg of line
         ;;  or 1 char forward it gives different values!
         (setq line (count-lines 1 p))
         (if (or (eq p bp)
-		(eobp))
+                (eobp))
             (setq line (1+ line)))      ;BEG of line error
         ;;   - the user has answered to question, we are on the same line
         ;;   - if he is at the beginning, then ALWAYS ask (forced ask)
@@ -425,7 +425,7 @@ References:
 ;;;
 ;;;###autoload
 (defun tinyindent-tt-mode (&optional arg)
-  "Toggle variable `tinyindent-tt-mode' with ARG. See description in `tinyindent-mode'."
+  "Toggle `tinyindent-tt-mode' with ARG. See description in `tinyindent-mode'."
   (interactive "P")
   (ti::bool-toggle tinyindent-tt-mode arg) ;toggle mode variable
   (cond
@@ -450,13 +450,15 @@ he wants to have relative or \"hard\" indentation.
 
 Abount function `tinyindent-tt-mode'
 
-This isn't really mode. It just turns one flag on in `tinyindent-mode', so that
-it behaves a little differently. If the `tinyindent-mode' is not running, it
-wiil be turned on. turning off `tinyindent-tt-mode' _does_not_ end `tinyindent-mode'.
+NOTE: This is not really mode. The functon just turns one flag on in
+`tinyindent-mode', so that it behaves a little differently. If
+the `tinyindent-mode' is not running, it wiil be turned on.
+turning off `tinyindent-tt-mode' does not end
+`tinyindent-mode'.
 
-Sometimes you want to control between 'hard' tab and 'soft' tab, ie.
-relative indent. This mode causes second character to be read after
-tab key is hit. The following happens:
+Sometimes you want to control between `hard' tab and `soft' tab,
+ie. relative indent. This mode causes second character to be read
+after tab key is hit. The following happens:
 
 TAB TAB     inserts hard tab
 TAB SPC     indent relative without inserting space char.
@@ -464,12 +466,9 @@ TAB x       indents relative and inserting character x
 
 \\{tinyindent--mode-map}"
   (interactive "P")
-
   (if (null (assq 'tinyindent-mode minor-mode-alist))
       (tinyindent-install-mode))
-
   (ti::bool-toggle tinyindent-mode arg) ;toggle mode variable
-
   (cond
    (tinyindent-mode
     (unless tinyindent-tt-mode
@@ -483,7 +482,9 @@ TAB x       indents relative and inserting character x
 ;;}}}
 
 (add-hook 'tinyindent--mode-define-keys-hook 'tinyindent-mode-map-define-keys)
+
 (provide   'tinyindent)
+
 (run-hooks 'tinyindent--mode-load-hook)
 
 ;;; tinyindent.el ends here
