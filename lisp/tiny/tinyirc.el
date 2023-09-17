@@ -722,7 +722,7 @@ Match 1 contains line numer, 2 contains rest of the line."
 ;;; ----------------------------------------------------------------------
 ;;;
 (defun tinyirc-pastebot-font-lock-mode-select (mode &optional off)
-  "MODE is 'sent or 'received. Turn on or OFF font lock."
+  "MODE is \\='sent or \\='received. Turn on or OFF font lock."
   (let ((kwds (if (eq mode 'sent)
                   tinyirc--pastebot-font-lock-keywords-sent
                 tinyirc--pastebot-font-lock-keywords-received)))
@@ -1060,7 +1060,7 @@ Point is at the beginning of line."
 ;;; ----------------------------------------------------------------------
 ;;;
 (defun tinyirc-pastebot-message-region ()
-  "Determine retrieved message's region. Return list '(beg end).
+  "Determine retrieved message's region. Return list: (beg end).
 The region searched starts with a time stamp and ends in another timestamp
 or `eobp'."
   (let (point
