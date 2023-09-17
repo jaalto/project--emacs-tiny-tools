@@ -442,11 +442,11 @@ If OFF is non-nil, maps over buffers whose `tinycache--cache' is off
 and do BODY.
 
 In macro you can refer to these variables. The names are mangled
-so that they don't clash with the toplevel definitions.
+so that they do not clash with the toplevel definitions.
 
-    'BuffeR'    as current buffer
-    'NamE'      buffers's name
-    'LisT'      current list of buffers to loop over.
+    \\='BuffeR'    as current buffer
+    \\='NamE'      buffers's name
+    \\='LisT'      current list of buffers to loop over.
 
 Setting 'list' to nil terminates this macro."
   `(let (NamE)
