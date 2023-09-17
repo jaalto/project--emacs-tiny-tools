@@ -209,17 +209,17 @@
   "Incremented after every search. Do not touch.")
 
 (defvar ti::text-:stack-push-flag nil
-  "Non-nil  means ('undo-func) do not record match data to stack.
-If this variable has value 'undo-func then the next calls to
-`ti::text-re-search' won't record data to stack.")
+  "Non-nil  means \\='undo-func i.e. do not record match data to stack.
+If this variable has value \\=''undo-func then the next calls to
+`ti::text-re-search' will not record data to stack.")
 
 (defvar ti::text-:stack nil
   "Private. Contain last search data.
 This is actually property list stack so that undo can be done.
 
-Format:
+Format is list:
 
-  '(start-point
+   (start-point
     last-func
     last-re
     las-beg-point
@@ -352,7 +352,7 @@ If the stack is full, then Clear the stack before pushing to it."
 ;;;
 (defun ti::text-undo ()
   "Undo last highlighting.
-`ti::text-:stack-push-flag' is set to 'undo-func while this function runs."
+`ti::text-:stack-push-flag' is set to \\='undo-func while this function runs."
   (interactive)
   (let* ((ti::text-:stack-push-flag  'undo-func)
          (prev   ti::text-:stack)
@@ -473,7 +473,7 @@ Input:
 ;;; ----------------------------------------------------------------------
 ;;;
 (defun ti::text-get-mouse-property ()
-  "Check if the point has 'mouse-face text property.
+  "Check if the point has \\='mouse-face text property.
 notice that if value read from point is nil,
 that means same as no `mouse-face' property exists.
 
@@ -495,9 +495,9 @@ added to the end of match unless FACE-OR-PROPL contains it.
 Input:
 
   LEVEL             Defaults to 0
-  FACE-OR-PROPL     Defaults to '(face highlight)
+  FACE-OR-PROPL     Defaults to \\='(face highlight)
                     If symbol, must be face symbol.
-                    Can also be property list '(PROP VAL PROP VAL ..))
+                    Can also be property list \\='(PROP VAL PROP VAL ..))
 
   BEG END           If given, then these are the are matched."
   (let ((add-flag   t))
@@ -526,9 +526,9 @@ Input:
 
 Note:
 
-    The beginning of match and end of match will have
-    property 'rear-nonsticky t, so that adding characters before of after
-    text, won't inherit the face.
+    The beginning of match and end of match will have property
+    \\='rear-nonsticky set to `t', so that adding characters before
+    of after text, will not inherit the face.
 
 Input:
 
@@ -538,13 +538,13 @@ Input:
   MAXP          nbr  last search point [default until bob/eob]
 
   FACE          sym  face symbol
-                     if symbol is 'null then set face to value nil
+                     if symbol is \\='null then set face to value nil
                      or if this is list; then it must be properly list
-                     of format '(PROP PROP-VAL  PROP PROP-VAL ..)
+                     of format \\='(PROP PROP-VAL  PROP PROP-VAL ..)
 
   MODE          nbr  signify that function should highlight all matches
                      that occur within LEVEL..NBR
-                     if you have lot's of xx(match)yy|zz(match)tt|
+                     if you have many xx(match)yy|zz(match)tt|
                      the subexpression are counted from left to to
                      right: 1,2 ...
   SAVE-UNDO     flag non-nil means that the highlight information is
@@ -642,8 +642,8 @@ Set properties to SET-PLIST. The point moves along the search.
 
 Input:
 
- MATCH-PLIST    property list '(prop val prop val ..)
- SET-PLIST      property list '(prop val prop val ..)
+ MATCH-PLIST    property list \\='(prop val prop val ..)
+ SET-PLIST      property list \\='(prop val prop val ..)
  BEG            start point of search; defaults to `point-min'
  END            end point of search; defaults to `point-max'"
   (let* ((sprop (car match-plist))      ;serach property
