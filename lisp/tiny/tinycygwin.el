@@ -971,7 +971,7 @@ inserted in `message-mode' with \\[mml-attach-file]."
 	version)
     (dolist (elt list)
       (goto-char (point-min))
-      (multiple-value-bind (regexp subexp) elt
+      (cl-multiple-value-bind (regexp subexp) elt
         (when (and (re-search-forward regexp nil t)
                    (setq version (match-string subexp)))
           (return))))
@@ -2449,7 +2449,7 @@ Optinally add ADD-LIST to the returned list."
 ;;;
 (defun tinycygwin-package-info-path-doc-cygwin (string)
   "Return Cygwin documentation file path for STRING like foo-1.2.0-1.tar.bz2."
-  (multiple-value-bind (package version release)
+  (cl-multiple-value-bind (package version release)
       (tinycygwin-package-info-string-split string)
     (if (not version)
         (message "TinyCygwin: Can't parse doc dir from %s" string)
@@ -2663,7 +2663,7 @@ Notice that the values may be missing if no such fields were found."
         ret
         val)
     (dolist (elt fields)
-      (multiple-value-bind (tag regexp) elt
+      (cl-multiple-value-bind (tag regexp) elt
         (when (setq val
                     (tinycygwin-package-info-heading-value
                      package
@@ -2700,7 +2700,7 @@ Notice that the values may be missing if no such fields were found."
                (list "Status" "not-installed"))))
        (db
         ;; keychain keychain-1.9-1.tar.bz2 0
-        (multiple-value-bind (name package dummy)
+        (cl-multiple-value-bind (name package dummy)
             (split-string db)
           (setq ret
                 (list (list "Package" name)
@@ -2963,7 +2963,7 @@ Optional TYPE
     (dolist (bundle '(devel-tools lang))
       (when (setq info
                   (mapconcat (lambda (x)
-                               (multiple-value-bind (bin ver) x
+                               (cl-multiple-value-bind (bin ver) x
                                  (format "%s %s" bin ver)))
                              (tinycygwin-sysinfo-bundle-item
                               bundle (not (eq tinycygwin--os-type 'cygwin)))
@@ -2996,7 +2996,7 @@ Optional TYPE
     (let ((upstream-info
            (tinycygwin-package-info-upstream-contacts package)))
       (dolist (info upstream-info)
-        (multiple-value-bind (type email) info
+        (cl-multiple-value-bind (type email) info
           (insert (format "Upstream-%s: %s"
                           (symbol-name type)
                           email)))))))
@@ -3029,7 +3029,7 @@ Optional TYPE
                                        "")))
                   (list "Status"    status)
                   (list "Severity" (or severity "normal"))))
-      (multiple-value-bind (field value) elt
+      (cl-multiple-value-bind (field value) elt
         (insert (format "%s: %s\n"   field (or value "")))))))
 
 ;;; ----------------------------------------------------------------------
@@ -3219,7 +3219,7 @@ Optional TYPE
       ;; message-field-value
       (let ((subject (message-fetch-field "Subject")))
         (when subject
-          (multiple-value-bind (prefix rest)
+          (cl-multiple-value-bind (prefix rest)
               (tinycygwin-bug-report-mail-mode-subject-split subject)
             (when (and rest
                        ;; Does not have tags already?

@@ -934,7 +934,7 @@ The passed CMD must be in the format:
 
    cd DIRECTORY; BINARY option option option ...."
   (let ((fid "tinydiff-shell-command"))
-    (multiple-value-bind (dir cmd rest)
+    (cl-multiple-value-bind (dir cmd rest)
         (tinydiff-splice-command cmd)
       (when (or (not dir)
                 (not (file-directory-p dir)))

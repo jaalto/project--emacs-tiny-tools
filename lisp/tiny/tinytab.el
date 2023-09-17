@@ -403,7 +403,7 @@ determine BEG and END."
          (div   (if back
                     (- 0 width)
                   width)))
-    (multiple-value-bind (b e)
+    (cl-multiple-value-bind (b e)
         (tinytab-region-bounds beg end)
       (if (eq b e)
           (tinytab-tab-forward-insert)
@@ -417,7 +417,7 @@ determine BEG and END."
 If BEG and END are nil, indent current line. (interactive call on current line)
 If region is active, use that. (interactive + region selected)."
   (interactive)
-  (multiple-value-bind (b e)
+  (cl-multiple-value-bind (b e)
       (tinytab-region-bounds beg end)
     (tinytab-indent-by-tab-width b e 'back)))
 

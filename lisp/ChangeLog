@@ -1,3 +1,12 @@
+2023-09-17 Sun  Jari Aalto  <jari.aalto@tuni.fi>
+
+	* tiny/tinyreplace.el (all): Correct 30.0.50 byte compile errors.
+	(tinyreplace-read-compile-buffer-filename):
+	Read lines with NULL character (Emacs 29.* M-x grep output)
+
+	* tiny/tinylibmail.el (ti::with-mail-whois): Change
+	`symbol-macrolet' to `cl-symbol-macrolet'.
+
 2022-01-02 Sun  Jari Aalto  <jari.aalto@tuni.fi>
 
 	* tiny/tinyliba.el

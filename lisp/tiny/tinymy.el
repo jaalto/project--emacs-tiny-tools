@@ -1317,7 +1317,7 @@ before writing."
   (interactive
    (let ((buffer (tinymy-package-save-to-file-buffer)))
      (with-current-buffer buffer
-       (multiple-value-bind (file point buf)
+       (cl-multiple-value-bind (file point buf)
            (tinymy-package-save-get-file-name)
          (unless file
            (error
@@ -2160,7 +2160,7 @@ Return:
                  ;; verbose, Validate
                  "-v -V"))))
     (dolist (elt list)
-      (multiple-value-bind (cmd args)
+      (cl-multiple-value-bind (cmd args)
           elt
         (when (executable-find cmd)
           (return (format "%s %s %s"

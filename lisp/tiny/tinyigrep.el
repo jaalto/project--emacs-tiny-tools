@@ -386,7 +386,7 @@
            (string< igrep-version "2.83"))
       (message "  ** TinyIgrep: [XEmacs check] you must have igrep.el 2.83+."))
 
-  (multiple-value-bind (major minor)
+  (cl-multiple-value-bind (major minor)
       (if (string-match "^\\([0-9]+\\)\+.\\([0-9]+\\)" igrep-version)
           (list (match-string 1 igrep-version)
                 (match-string 2 igrep-version)))
@@ -1186,7 +1186,7 @@ References:
          def
          sym)
     (dolist (elt list)
-      (multiple-value-bind (db lisp-file recursive) elt
+      (cl-multiple-value-bind (db lisp-file recursive) elt
         (setq sym (intern (format "%s%s" base db)))
         (setq def
               `(defun ,sym (&optional grep)
@@ -1224,7 +1224,7 @@ References:
          def
          sym)
     (dolist (elt list)
-      (multiple-value-bind (db lisp-file recursive) elt
+      (cl-multiple-value-bind (db lisp-file recursive) elt
         (setq sym (intern (format "%s%s" base db)))
         (setq def
               `(defun ,sym (&optional grep)
@@ -1260,7 +1260,7 @@ References:
          def
          sym)
     (dolist (elt list)
-      (multiple-value-bind (db lisp-file) ;; ... recursive)
+      (cl-multiple-value-bind (db lisp-file) ;; ... recursive)
           elt
         (setq sym (intern (format "%s%s" base db)))
         (setq def
@@ -1289,7 +1289,7 @@ References:
   (let* ((list tinyigrep--databases-lazy-defined)
          (count  (length list)))
     (dolist (elt list)
-      (multiple-value-bind (db function) elt
+      (cl-multiple-value-bind (db function) elt
         (tinyigrep-countdown
          "TinyIgrep: Wait, initialising default lazy database... %d %s"
          count

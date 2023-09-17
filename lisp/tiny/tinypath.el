@@ -2047,7 +2047,7 @@ Input:
 	  (if (setq found (check-dir try dir))
 	      (return)))
 	 ((listp try)
-	  (multiple-value-bind (path count) try
+	  (cl-multiple-value-bind (path count) try
 	    (cond
 	     ((and (stringp path)
 		   (eq count 'abs))

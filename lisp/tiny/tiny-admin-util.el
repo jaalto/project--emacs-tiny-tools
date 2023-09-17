@@ -171,10 +171,10 @@ The input must be in form of '(current-time)'
 The returned value is difference in seconds.
 E.g. if you want to calculate days; you'd do
 \(/ (ti::date-time-difference a b) 86400)  ;; 60sec * 60min * 24h"
-  (multiple-value-bind (s0 s1 s2) a
+  (cl-multiple-value-bind (s0 s1 s2) a
     (setq a (+ (* (float (ash 1 16)) s0)
                (float s1) (* 0.0000001 s2))))
-  (multiple-value-bind (s0 s1 s2) b
+  (cl-multiple-value-bind (s0 s1 s2) b
     (setq b (+ (* (float (ash 1 16)) s0)
                (float s1) (* 0.0000001 s2))))
   (- a b))

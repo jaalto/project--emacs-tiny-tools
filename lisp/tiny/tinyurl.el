@@ -2505,7 +2505,7 @@ References: `tinyurl--command-table'"
 (defun tinyurl-mark-mouse ()
   "Mark URLs on current mouse line."
   (when (fboundp 'mouse-position)
-    (multiple-value-bind (line col)
+    (cl-multiple-value-bind (line col)
         (ti::compat-mouse-position-coordinates)
       (when (and line col)
         (save-excursion

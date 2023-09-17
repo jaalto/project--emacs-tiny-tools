@@ -127,7 +127,7 @@
 (eval-when-compile
   (require 'cl))
 
-(defconst tinydebian--version-time "2020.1128.1155"
+(defconst tinydebian--version-time "2023.0917.0958"
   "Last edited time.")
 
 (require 'tinylibm)
@@ -2370,7 +2370,7 @@ This function needs network connection."
 ;;;
 (defun tinydebian-sourceforge-bug-url-main (str)
   "Return URL for STR foo-Bugs-2040281"
-  (multiple-value-bind (project bug)
+  (cl-multiple-value-bind (project bug)
       (tinydebian-sourceforge-bug-type-parse-bug-string str)
     (when bug
       (tinydebian-sourceforge-bug-url-1 project bug))))
@@ -2450,7 +2450,7 @@ Return:
 ;;;
 (defun tinydebian-bug-gnu-emacs-bts-buffer-p ()
   "Check if bug context is Emacs BTS."
-  (multiple-value-bind (bug email)
+  (cl-multiple-value-bind (bug email)
       (tinydebian-bug-gnu-emacs-bts-re-search-p)
     (if email
         bug)))
@@ -2556,7 +2556,7 @@ Return:
   (cond
    ((eq major-mode 'gnus-summary-mode)
     (let ((str (tinydebian-current-line-string)))
-      (multiple-value-bind (project bug)
+      (cl-multiple-value-bind (project bug)
           (tinydebian-sourceforge-bug-type-parse-bug-string str)
         (tinydebian-sourceforge-bug-url-1 project bug))))
    (t
@@ -2893,7 +2893,7 @@ Bug#NNNN: O: package -- description."
         ;; [foo-Bugs-192841] Sourceforge
         (and (string-match "[[] *[a-zA-Z]+-Bugs-\\([0-9]+\\) *[]]" str)
              (match-string 1 str))
-        (multiple-value-bind (bug)
+        (cl-multiple-value-bind (bug)
             (tinydebian-bug-string-parse-wnpp-alert str)
           bug)
         ;;   NNNN@bugs.debian.org
@@ -3144,11 +3144,11 @@ At current point, current line, headers of the mail message
     ;;
     (setq str
           (replace-regexp-in-string "[\r\n]+" " " str))
-    (multiple-value-bind (bug type package desc)
+    (cl-multiple-value-bind (bug type package desc)
         (tinydebian-bts-parse-string-with-bug str)
       (when (and (not package)
                  desc)
-        (multiple-value-bind (ret-pkg ret-desc)
+        (cl-multiple-value-bind (ret-pkg ret-desc)
             (tinydebian-bts-parse-string-with-package desc)
           (setq package ret-pkg
                 desc    ret-desc)))
@@ -3251,7 +3251,7 @@ Return:
 ;;;
 (defun tinydebian-bug-gnu-bts-buffer-p ()
   "Check if bug context is Emacs BTS."
-  (multiple-value-bind (bug email)
+  (cl-multiple-value-bind (bug email)
       (tinydebian-bug-gnu-bts-re-search-p)
     (if email
         bug)))
@@ -3303,7 +3303,7 @@ Return:
   "Parse wnpp-alert(1) line."
   (let ((line (tinydebian-current-line-string)))
     (when line
-      (multiple-value-bind (bug package)
+      (cl-multiple-value-bind (bug package)
           (tinydebian-bug-string-parse-wnpp-alert line)
         package))))
 
@@ -3313,7 +3313,7 @@ Return:
   "PArse BTS Suject line."
   (let ((line (tinydebian-current-line-string)))
     (when line
-      (multiple-value-bind (bug package)
+      (cl-multiple-value-bind (bug package)
           (tinydebian-bug-string-parse-bts-wnpp-subject line)
         package))))
 
@@ -3326,7 +3326,7 @@ Return:
       (tinydebian-bug-package-name-header-pool)
       (tinydebian-bug-package-name-header-package)
       (progn
-        (multiple-value-bind (bug type-orig package description)
+        (cl-multiple-value-bind (bug type-orig package description)
             (or (tinydebian-bts-parse-string-current-line)
                 (tinydebian-bts-parse-string-subject))
           package))))
@@ -3580,7 +3580,7 @@ Were:
     (let (list)
       (goto-char (point-min))
       ;; This must be done in order
-      (multiple-value-bind (b str)
+      (cl-multiple-value-bind (b str)
           (tinydebian-debian-parse-bts-bug-title-parse
            (tinydebian-debian-parse-bts-bug-title))
         (push (cons "bug" b) list)
@@ -3589,7 +3589,7 @@ Were:
             list)
       (push (cons "maintainer" (tinydebian-debian-parse-bts-bug-maintainer))
             list)
-      (multiple-value-bind (email rest)
+      (cl-multiple-value-bind (email rest)
           (tinydebian-debian-parse-bts-bug-reported-by)
         (push (cons "reported" rest) list))
       (let* ((str (tinydebian-debian-parse-bts-bug-date-iso))
@@ -3832,7 +3832,7 @@ Input notes:
   ;;  INITIAL-INPUT HIST DEF INHERIT-INPUT-METHOD)
   ;;
   (unless bts
-    (multiple-value-bind (guess-bts guess-bug)
+    (cl-multiple-value-bind (guess-bts guess-bug)
         (tinydebian-bug-bts-type-determine)
       (or nbr
           (setq nbr guess-bug))
@@ -3887,7 +3887,7 @@ Input notes:
   (&optional bts nbr project)
   "Ask BTS and NBR and possibly PROJECT. Return URL.
 If parameters are passed, do not ask, just return URL."
-  (multiple-value-bind (bts nbr project)
+  (cl-multiple-value-bind (bts nbr project)
       (tinydebian-bug-ask-bts-and-number bts nbr project)
     (tinydebian-bts-url-bug-compose bts nbr project)))
 
@@ -3903,7 +3903,7 @@ If parameters are passed, do not ask, just return URL."
 			(tinydebian-bug-url-forward
 			 (min (+ (point) (* 2 70)) ;look about two line forward
 			      (point-max))))))
-         (url (multiple-value-bind (bts data)
+         (url (cl-multiple-value-bind (bts data)
                   (save-excursion
                     (tinydebian-bug-bts-type-determine))
                 (if (and (or (null data)
@@ -4594,7 +4594,7 @@ In interactive call, toggle conrol address on and off."
 ;;;
 (defun tinydebian-bts-mail-ctrl-command-goto (command)
   "Goto command."
-  (multiple-value-bind (beg end)
+  (cl-multiple-value-bind (beg end)
       (tinydebian-bts-mail-ctrl-command-position command)
     (if end
         (goto-char end))))
@@ -5614,7 +5614,7 @@ Variables bound during macro (can all be nil):
   package        Value of PKG is sent as an argument to macro
   description"
   (let ((subj (cl-gensym "subject-")))
-    `(multiple-value-bind (bugnbr type-orig package description)
+    `(cl-multiple-value-bind (bugnbr type-orig package description)
          (or (tinydebian-bts-parse-string-current-line)
              (tinydebian-bts-parse-string-subject))
        (if (stringp ,pkg) ;; Use input argument
@@ -6197,7 +6197,7 @@ For removal request types, see
         suite
         message
         type)
-    (multiple-value-bind (bugnbr type-orig pkg description)
+    (cl-multiple-value-bind (bugnbr type-orig pkg description)
         (or (tinydebian-bts-parse-string-current-line)
             (tinydebian-bts-parse-string-subject))
       (unless package
@@ -6684,7 +6684,7 @@ Return:
   "Compose BTS control message to close BUG.
 Optional PACAGE name and VERSION number can be supplied."
   (interactive
-   (multiple-value-bind (bts bug project)
+   (cl-multiple-value-bind (bts bug project)
        (tinydebian-bug-ask-bts-and-number)
      (let (;; (bug      (tinydebian-bts-mail-ask-bug-number))
            ;;  (package  (read-string "Package name [RET=ignore]: "))
@@ -7190,7 +7190,7 @@ Example:
       (setq str "")
       (dolist (dep-info
                (tinydebian-package-status-parse-depends depends))
-        (multiple-value-bind (package op version)
+        (cl-multiple-value-bind (package op version)
             dep-info
           (unless (tinydebian-package-virtual-p package)
             (if op ;; Not used yet, quiet byte compiler
@@ -7395,7 +7395,7 @@ See `tinydebian-bug-system-info-apt-policy' for POLICY-DATA."
   (when policy-data
     (let (str)
       (dolist (elt policy-data)
-        (multiple-value-bind (priority value) elt
+        (cl-multiple-value-bind (priority value) elt
           (setq str
                 (if str
                     (concat str (format " (%s, %s)" priority value))

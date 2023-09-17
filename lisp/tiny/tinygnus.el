@@ -1596,7 +1596,7 @@ Return:
       (unless (ti::mail-ip-raw-p ip)
         (setq ip
               (ti::mail-ip-top-level-domain ip))
-        (multiple-value-bind (nok)
+        (cl-multiple-value-bind (nok)
             (tinygnus-nslookup-do ip)
           (unless nok ;; Succeeded, top level was ok
             (cl-pushnew ip list :test 'string=)))))
@@ -1613,13 +1613,13 @@ Return:
         ns-list)
     (dolist (received ip-list)          ; '((IP IP IP) ..)
       (setq received (tinygnus-article-received-list-handle received))
-      (multiple-value-bind (need-lookup ok)
+      (cl-multiple-value-bind (need-lookup ok)
           (tinygnus-nslookup-filter received)
         (if ok
             (setq ns-list (append ok ns-list)))
         ;;  Now run nslookup for ip's that are not known and
         ;;  add them to total list.
-        (multiple-value-bind (nok)
+        (cl-multiple-value-bind (nok)
             (tinygnus-nslookup-do need-lookup)
           (if nok
               (setq ns-err-list (append nok ns-err-list))))))
@@ -1772,7 +1772,7 @@ References:
       (put  'tinygnus--use-postmaster-addresses 'ip-list ip-list)
       ;; ........................................ &check-need-nslookup ...
       ;;  Check if we have done nslookup for this already.
-      (multiple-value-bind (nok ok)
+      (cl-multiple-value-bind (nok ok)
           (tinygnus-nslookup-examine-ip-list ip-list)
         (setq ns-err-list nok
               ns-list     ok))

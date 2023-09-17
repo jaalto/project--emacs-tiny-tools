@@ -458,7 +458,7 @@
 (eval-when-compile
   (require 'cl))
 
-(defconst tinyprocmail--version-time "2019.0525.1332"
+(defconst tinyprocmail--version-time "2023.0917.0958"
   "*Version of last edit.")
 
 (eval-and-compile
@@ -1131,7 +1131,7 @@ Return:
                    (priority       1)
                    (face           highlight)
                    (before-string  ">")))
-      (multiple-value-bind (property value) elt
+      (cl-multiple-value-bind (property value) elt
         (overlay-put tinyprocmail--overlay property value)
         (if (eq property 'before-string)
             (overlay-put tinyprocmail--overlay-second

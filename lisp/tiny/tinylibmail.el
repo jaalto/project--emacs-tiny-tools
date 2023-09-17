@@ -2964,7 +2964,7 @@ The -!- indicates the location of point."
   (let* (candidates)
     (catch 'done
       (dolist (elt regexp-list)
-        (multiple-value-bind (submatch-max regexp-list)
+        (cl-multiple-value-bind (submatch-max regexp-list)
             elt
           (dolist (regexp regexp-list)
             (when (looking-at regexp)
@@ -3122,7 +3122,7 @@ Return ISO 8601 date
 
 If TZ is non-nil, add timezone information to the end."
   (interactive)
-  (multiple-value-bind
+  (cl-multiple-value-bind
       (dd
        mm
        yyyy
@@ -3598,17 +3598,17 @@ Values examined are: expires, created and updated."
 	 (beg (point))
 	 ret)
     (dolist (elt search)
-      (multiple-value-bind (type line)
+      (cl-multiple-value-bind (type line)
 	  elt
 	(dolist (date-data date-info)
-	  (multiple-value-bind (regexp pos-list)
+	  (cl-multiple-value-bind (regexp pos-list)
 	      date-data
 	    (setq regexp (concat line regexp))
 	    ;;  The order of the fields can be anything, start over
 	    ;;  every time from the same point
 	    (goto-char beg)
 	    (when (re-search-forward regexp nil t)
-	      (multiple-value-bind (raw day month year)
+	      (cl-multiple-value-bind (raw day month year)
 		  (list
 		   (match-string 2)
 		   (match-string (nth 0 pos-list))
@@ -3804,15 +3804,14 @@ References:
 
   `ti::mail-whois-parse'."
   `(let ((whois-data (ti::mail-whois-parse ,string)))
-     (symbol-macrolet (
-                       (referral   (cdr (assq 'referral   whois-data)))
-                       (registrant (cdr (assq 'registrant whois-data)))
-                       (email      (cdr (assq 'email      whois-data)))
-                       (admin      (cdr (assq 'admin      whois-data)))
-                       (tech       (cdr (assq 'tech       whois-data)))
-                       (zone       (cdr (assq 'zone       whois-data)))
-                       (records    (cdr (assq 'records    whois-data)))
-                       (servers    (cdr (assq 'servers    whois-data))))
+     (cl-symbol-macrolet ((referral   (cdr (assq 'referral   whois-data)))
+			  (registrant (cdr (assq 'registrant whois-data)))
+			  (email      (cdr (assq 'email      whois-data)))
+			  (admin      (cdr (assq 'admin      whois-data)))
+			  (tech       (cdr (assq 'tech       whois-data)))
+			  (zone       (cdr (assq 'zone       whois-data)))
+			  (records    (cdr (assq 'records    whois-data)))
+			  (servers    (cdr (assq 'servers    whois-data))))
        ,@body)))
 
 ;;; ----------------------------------------------------------------------
@@ -4006,7 +4005,7 @@ If nslookup fails, the return value is '(ORIG-IP nil)"
 The following variables are available during looping within BODY:
 
   ip-name  ip-found."
-  `(multiple-value-bind (ip-name ip-list)
+  `(cl-multiple-value-bind (ip-name ip-list)
        (list
         (car ,data)
         (cdr ,data))

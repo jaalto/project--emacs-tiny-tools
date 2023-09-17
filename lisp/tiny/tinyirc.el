@@ -1087,7 +1087,7 @@ or `eobp'."
 ;;;
 (defun tinyirc-pastebot-message-string ()
   "Return received message at point."
-  (multiple-value-bind (beg end)
+  (cl-multiple-value-bind (beg end)
       (tinyirc-pastebot-message-region)
     (when (and beg end)
       (buffer-substring beg end))))
@@ -1098,7 +1098,7 @@ or `eobp'."
   "Write message at BEG END to a FILE."
   (interactive
    (let (file)
-     (multiple-value-bind (beg end)
+     (cl-multiple-value-bind (beg end)
          (tinyirc-pastebot-message-region)
        (unless beg
          (error "TinyIrc: Can't find timestamp at point %d"
@@ -1162,7 +1162,7 @@ automatically asks what URL to receive."
   (interactive)
   (if (not (tinyirc-pastebot-message-timestamp-p))
       (message "TinyIrc: Move to a timestamp first.")
-    (multiple-value-bind (beg end)
+    (cl-multiple-value-bind (beg end)
         (tinyirc-pastebot-message-region)
       (if (not (and beg end))
           (message "TinyIrc:  Cannot find message's region.")

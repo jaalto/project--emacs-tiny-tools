@@ -3038,7 +3038,7 @@ Input:
       ;;  In FEW cases the *.pm file does not contain the documentation,
       ;;  but there is separate *.pod file, E.g POSIX.pm => POSIX.pod
       (let (try)
-        (multiple-value-bind (name path)
+        (cl-multiple-value-bind (name path)
             (list (car module) (cdr module))
           (dolist (elt (list
                         (replace-regexp-in-string
@@ -3339,8 +3339,8 @@ References:
     (when colors-p
       (turn-on-font-lock-mode))
     (dolist (elt data)
-      (multiple-value-bind (file line grep-data context-data) elt
-        (multiple-value-bind (topic text) context-data
+      (cl-multiple-value-bind (file line grep-data context-data) elt
+        (cl-multiple-value-bind (topic text) context-data
           (when verb
             (tinyperl-verbose-macro 2
               (message "TinyPerl: processing data %s"

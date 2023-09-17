@@ -415,7 +415,7 @@ Note:
       (tinyurl-dispatcher "\C-m" 'key)
       nil)
      (elt
-      (multiple-value-bind (file line)
+      (cl-multiple-value-bind (file line)
           elt
         (setq file (ti::file-name-for-correct-system file 'emacs))
         (setq buffer (or (find-buffer-visiting file)

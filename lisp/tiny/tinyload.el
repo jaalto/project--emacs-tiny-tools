@@ -1145,7 +1145,7 @@ Return:
 (defun tinyload-continue-check (&optional force)
   "Check if process can continue with FORCE.
 Return CONTINUE if there is no activity."
-  (multiple-value-bind (continue no-act no-input)
+  (cl-multiple-value-bind (continue no-act no-input)
       (tinyload-process-continue force)
     (tinyload-message
      (format
@@ -1306,7 +1306,7 @@ If called interactively, FORCE loading all packages in the list."
               ;;  simple STRING is package name only
               (when elt
                 (setq elt (ti::list-make elt)))
-              (multiple-value-bind (pkg feature noerr nomsg
+              (cl-multiple-value-bind (pkg feature noerr nomsg
                                         form-before form-after)
                   elt
                 ;;  Remove entry from failed list

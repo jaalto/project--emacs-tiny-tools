@@ -3076,7 +3076,7 @@ Return
         ;;      This _sentence._ And new sentence.
         ;;      This _sentence_. And new sentence.
         (dolist (try (list "^ \n\r\t\f" word-skip))
-          (multiple-value-bind (word end)
+          (cl-multiple-value-bind (word end)
               (marker beg try)
             (when (string-match "[_*='`]+\\([^_*='`]+\\)[_*='`]+$" word)
               (setq word (match-string 1 word))

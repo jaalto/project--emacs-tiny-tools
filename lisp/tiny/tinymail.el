@@ -2032,7 +2032,7 @@ Exclude patches and attachments."
   "Spam protect email address words.
 Scramble Email addresses do that spammers cannot use them.
 The end position is before text that looks like a patch or `point-max'"
-  (multiple-value-bind (beg end)
+  (cl-multiple-value-bind (beg end)
       (tinymail-buffer-email-address-scramble-area)
     (when beg
       (save-excursion

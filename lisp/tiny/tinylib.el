@@ -1125,7 +1125,7 @@ Note, the return value is LIST."
         ret)
     (setq dir (file-name-as-directory dir))
     (dolist (elt check)
-      (multiple-value-bind (try type) elt
+      (cl-multiple-value-bind (try type) elt
         (setq try (concat dir try))
         (if (or (file-exists-p try)
                 (file-directory-p try))
@@ -1840,10 +1840,10 @@ E.g. if you want to calculate days; you'd do
 \(/ (ti::date-time-difference a b) 86400) ;; 60sec * 60min * 24h"
   (if float
       (progn
-        (multiple-value-bind (s0 s1 s2) a
+        (cl-multiple-value-bind (s0 s1 s2) a
           (setq a (+ (* (float (ash 1 16)) s0)
                      (float s1) (* 0.0000001 s2))))
-        (multiple-value-bind (s0 s1 s2) b
+        (cl-multiple-value-bind (s0 s1 s2) b
           (setq b (+ (* (float (ash 1 16)) s0)
                      (float s1) (* 0.0000001 s2))))
         (- a b))
@@ -7289,7 +7289,7 @@ Input:
 	(with-current-buffer buffer
 	  (insert "\n")                   ;list arguments for functions.
 	  (dolist (elt list)
-	    (multiple-value-bind (func args) elt
+	    (cl-multiple-value-bind (func args) elt
 	      (if (and (stringp args)
 		       (string-match "[a-z]" args))
 		  (insert (format ";; %-35s %s\n" func args))
