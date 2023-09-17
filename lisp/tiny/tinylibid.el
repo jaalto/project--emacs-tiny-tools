@@ -167,7 +167,7 @@
 
 (require 'tinylibm)
 
-(defconst tinylibid-version-time "2019.0524.1753"
+(defconst tinylibid-version-time "2023.0917.1656"
   "Latest version number.")
 
 ;;; setup: hooks
@@ -182,7 +182,7 @@
 function ti::id-info called. For faster responses, you may wan to write your
 code like this:
 
-        (setq info ti::id-info nil 'var)
+        (setq info ti::id-info nil \\='var)
 
 Because peeking the variable is 40x times faster.")
 
@@ -485,11 +485,12 @@ returns non-nil. Notice, that this is also the order of evaluation.")
     ("resource-code-shell-csh" csh-mode "#")
     ("resource-code-shell-sh"   sh-mode "#")
     ("tex$"                tex-mode     "%"))
-  "*List of
-'((REGEXP MODE-NAME-SYMBOL [COMMENT-START COMMENT-END]) (
-  (R M C C)
-  ..)
-where RE represent match against string that describes the buffer
+  "*Lust of REGEXP followed by MODE-NAME-SYMBOL.
+Format:
+ ((REGEXP MODE-NAME-SYMBOL [COMMENT-START COMMENT-END]) (
+  ...)
+
+where REGEXP represent match against string that describes the buffer
 contents. The comment-start and end fields are optional.")
 
 ;;; Misc
@@ -500,11 +501,11 @@ contents. The comment-start and end fields are optional.")
   "This is kinda fake function, it returns the original MODE based
 on the text that represents the buffer contents. This functions purpose
 is solely to return you a _symbol_ that is more commonly known to all, than
-the _string_ representing a mode.
+the string representing a mode.
 
 NOTE:
  Symbol returned does not necessary representy any mode you can turn on.
- Use 'fboundp' test to be sure the symbol is callable function."
+ Use `fboundp' test to be sure the symbol is callable function."
   (let (ret)
     (dolist (elt ti::id--type2mode)
       (when (string-match (nth 0 elt) txt)
@@ -657,7 +658,7 @@ This reduces overhead of getting these variables multiple times."
 ;;;
 (defun ti::id-study-buffer (type)
   "Chew buffer contents.
-Be sure to run `ti::id-global-variable-set' first so that global variables get set.
+Before call, run `ti::id-global-variable-set' to set global variables.
 
 Input:
   TYPE      symbol; See source code of function.
