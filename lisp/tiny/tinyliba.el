@@ -74,7 +74,7 @@
 
 (provide 'tinyliba)
 
-(defconst tinyliba-version-time "2022.0102.2119"
+(defconst tinyliba-version-time "2023.0917.1222"
   "Latest version number as last modified time.")
 
 (autoload 'with-timeout      "timer"        "" nil 'macro)
@@ -164,8 +164,8 @@ This function is run only once at tinynyliba.el load."
   ;;{{{ code: Autoload easymenu.el
 
   (autoload 'easy-menu-do-define                  "easymenu" "" nil)
-  (autoload 'easy-menu-add                        "easymenu" "" nil)
-  (autoload 'easy-menu-remove                     "easymenu" "" nil)
+  ;; (autoload 'easy-menu-add                        "easymenu" "" nil)
+  ;; (autoload 'easy-menu-remove                     "easymenu" "" nil)
 
 ;;; ..  ..  ..  ..  ..  ..  ..  ..  ..  ..  ..  ..  ..  .. Emacs 19.30  ..
 
