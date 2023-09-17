@@ -367,7 +367,7 @@ is loaded."
          'tinydired-shorten-links))
   "*List of functions to run after dired read.
 These are inserted into `dired-after-readin-hook' when package
-installs itself. Do not remove 'tinydired-sort-dir' or
+installs itself. Do not remove `tinydired-sort-dir' or
 it paralyzes package, because it relies on seeing directories first
 in the dired listing."
   :type  'hook
@@ -439,7 +439,7 @@ same filenames."
 (defcustom tinydired--force-add-keys-flag 'overrride
   "*Non-nil means to install and override default keys to dired.
 Normally the keys are defined _only_ if the prefix key is in state
-'undefined"
+\\='undefined"
   :type  'boolean
   :group 'Tinydired)
 
@@ -473,7 +473,8 @@ This feature is not used if dired-x is present."
 (defcustom tinydired--mput-sites nil
   "*List of ange-ftp style site location strings, where user can upload files.
 
-Format '(\"ANGE-FTP-REF\" ..),  ange-ftp-ref is like /login@site:dir/dir/"
+Format:
+  (\"ANGE-FTP-REF\" ..),  ange-ftp-ref is like /login@site:dir/dir/"
   :type  '(repeat (string :tag "Ange-Ftp"))
   :group 'Tinydired)
 
@@ -748,7 +749,7 @@ errors."
 ;;; - See dired-repeat-over-lines
 ;;;
 (defmacro tinydired-map-over-regexp (re &rest body)
-  "If '(looking-at RE)' then do BODY over all lines matching.
+  "If `looking-at' RE then run BODY for the line.
 Start from current point. The point is positioned at the beginning of line.
 Buffer read-only is removed.
 
@@ -950,13 +951,13 @@ The ARG is `dired-get-filename' parameter.
 Input:
 
   ARG           If non-nil, no absolute names
-  MODE          if 're then make regexp out of files.
-                if 'files then return just filenames
+  MODE          if \\='re then make regexp out of files.
+                if \\='files then return just filenames
 
 Return list:
 
-  (re re ..)            If mode is 're
-  (file file ...)       If mode is 'plain
+  (re re ..)            If mode is \\='re
+  (file file ...)       If mode is \\='plain
   ((mark file) ..)      default
 
 The `mark' is first character in the left for file or dir."
@@ -1892,7 +1893,7 @@ Bugs:
         (and load
              (y-or-n-p (concat "Unload " fn " ? "))
              (kill-buffer buffer)
-             (decf loaded)))
+             (cl-decf loaded)))
        ;; ... ... ... ... ... ... ... ... ... ... ... ... ... ... ... ...
        ((and buffer
              vc-reg-stat
