@@ -144,14 +144,14 @@ Following variables are set during BODY:
 
 `dir'      Directrory name
 `dir-list' All directories under `dir'."
-  `(flet ((recurse   ;; Cannot use cl-flat which is lexical
-	   (dir)
-	   (let ((dir-list (tiny-setup-directory-list dir)))
-	     ,@body
-	     (when dir-list
-	       (dolist (elt dir-list)
-		 (unless (string-match tiny-setup-:ignore-dir-regexp elt)
-		   (recurse elt)))))))
+  `(cl-labels ((recurse   ;; Cannot use cl-flat which is lexical
+		 (dir)
+		 (let ((dir-list (tiny-setup-directory-list dir)))
+		   ,@body
+		   (when dir-list
+		     (dolist (elt dir-list)
+		       (unless (string-match tiny-setup-:ignore-dir-regexp elt)
+			 (recurse elt)))))))
      (recurse ,directory)))
 
 ;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;
