@@ -241,8 +241,8 @@ Prefix key to access the minor mode is defined in
 If filename in the beginning of line matches elt1 then
 show/hide all lines matching elt2.
 
-Format:
- '((FILENAME-REGEXP HIDE-REGEXP)
+Format of list:
+  ((FILENAME-REGEXP HIDE-REGEXP)
    (FILENAME-REGEXP HIDE-REGEXP)
    ...)"
   :type  '(repeat
@@ -473,11 +473,11 @@ Input:
 
   MAX-POINT     max search point, defaults to `point-max'
   LIST-FUNC     if given apply it to extract data member.
-                Eg 'car, gives you only list of filenames
+                Eg \\='car, gives you only list of filenames
 
-Return:
+Return list:
 
- '((\"filename\" . NBR) ...)
+ ((\"filename\" . NBR) ...)
  or whatever format LIST-FUNC says."
   (let ((max-point (or max-point
 		       (point-max)))

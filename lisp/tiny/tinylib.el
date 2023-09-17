@@ -8826,11 +8826,12 @@ HOOK BODY"
 ;;;       (if (symbol-value (, mode-var))
 ;;;           (easy-menu-add (symbol-value (, menu-var)))
 ;;;         (easy-menu-remove (symbol-value (, menu-var))))
-       (if (and ,mode-var
-                ,menu-var)
-           ;;  easy-menu-add dies if menu-var is nil
-           (easy-menu-add ,menu-var)
-         (easy-menu-remove ,menu-var))
+;;; 2023-09-17 obsoleted by Emacs 29.1: easy-menu-add, easy-menu-remove
+;;;       (if (and ,mode-var
+;;;                ,menu-var)
+;;;           ;;  easy-menu-add dies if menu-var is nil
+;;;           (easy-menu-add ,menu-var)
+;;;         (easy-menu-remove ,menu-var))
        (when ,mode-var
          (funcall (quote ,viper-sym)))
        ,@body

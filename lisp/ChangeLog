@@ -1,12 +1,12 @@
 2023-09-17 Sun  Jari Aalto  <jari.aalto@tuni.fi>
 
-	* tiny/tinycomment.el (tinycomment--def-com-pos): Emacs 30.0.50
-	correct byte compile errors.
+	* tiny/tinycompile.el (all): Emacs 30.0.50 correct byte compile errors.
 
-	* tiny/tinycache.el (tinycache-map-over-buffers): Emacs 30.0.50
-	correct byte compile errors.
+	* tiny/tinycomment.el (all): Emacs 30.0.50 correct byte compile errors.
 
-	* tiny/tinybookmark.el (tinybookmark--cache-update): Emacs 30.0.50
+	* tiny/tinycache.el (all: Emacs 30.0.50 correct byte compile errors.
+
+	* tiny/tinybookmark.el (all): Emacs 30.0.50
 	correct byte compile errors.
 
 	* tiny/tinyadvice.el: (docstrings): Emacs 30.0.50 correct
