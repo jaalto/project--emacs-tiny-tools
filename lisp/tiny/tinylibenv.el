@@ -490,7 +490,7 @@ at is, Linux and Cygwin qualifies."
 ;;; ----------------------------------------------------------------------
 ;;;
 (defun ti::executable-find (program &optional type)
-  "Find PROGRAM, according to TYPE (default is 'cygwin). For example
+  "Find PROGRAM, according to TYPE (default is \\='cygwin). For example
 Windows includes program `ftp', but also Cygwin distribution includes
 program `ftp'. The one which is found depends on the order of paths in
 `exec-path'. In some case the wanted location could be either windows or
@@ -500,8 +500,8 @@ Input:
 
   PROGRAM    the name of the program (.exe not required)
   TYPE       [optional]
-             'cygwin, which means that windows %SYSTEMROOT% is ignored.
-             'win32, which means Cygwin root path and below are ignored."
+             \\='cygwin, which means that windows %SYSTEMROOT% is ignored.
+             \\='win32, which means Cygwin root path and below are ignored."
   (let* ((cygwin-root (ti::win32-cygwin-p))
          (win32-root  (getenv "SYSTEMROOT")) ; Win2000
          (list        exec-path))
