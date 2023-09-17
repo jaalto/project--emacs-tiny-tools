@@ -1,5 +1,8 @@
 2023-09-17 Sun  Jari Aalto  <jari.aalto@tuni.fi>
 
+	* tiny/tinyadvice.el: (docstrings): Emacs 30.0.50 correct
+        byte compile errors
+
         * tiny/tiny-admin-util.el: Emacs 30.0.50 correct
         byte compile errors. Remove deprecated (require 'autoload).
 

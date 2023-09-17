@@ -376,7 +376,7 @@ It is consulted if particular advice can be used in current emacs. Format is
 The FLAG is optional and values can be:
 
   nil   or missing: Only works in Emacs
-  'xe   only works in Xemacs
+  \\='xe   only works in Xemacs
   t     works both Emacs and XEmacs")
 
 ;;; ....................................................... &v-private ...
@@ -423,7 +423,7 @@ The FLAG is optional and values can be:
 TYPE :
   nil = Emacs
   t   = XEmacs and Emacs
-  'xe = XEmacs"
+  \\='xe = XEmacs"
   (let* ((ver   (emacs-version))
          ret)
     (when (stringp re)
@@ -467,10 +467,10 @@ return entries in the table. See source file's \"Code note\"
 
 If STRING-FORMAT is non nil, then return string list.
 
-Return:
+Return list:
 
-  '(func    func ..)
-  '(\"func\" \"func\" ..)"
+  (func    func ..)
+  (\"func\" \"func\" ..)"
   (let* (func
          re
          type
