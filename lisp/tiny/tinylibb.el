@@ -79,7 +79,7 @@
 (eval-and-compile
   (autoload 'ti::replace-match "tinylibm"))
 
-(defconst tinylibb-version-time "2023.0917.1021"
+(defconst tinylibb-version-time "2023.0917.1651"
   "Latest version number as last modified time.")
 
 ;;; ....................................................... &emulation ...
@@ -209,7 +209,7 @@ PAD says to padd hex string with leading zeroes."
 (defmacro-maybe with-output-to-file (file &rest body)
   "Open FILE and run BODY.
 \(with-output-to-file \"foo\"
-  (print '(bar baz)))."
+  (print \\='(bar baz)))."
   `(with-temp-file ,file
      (let ((standard-output (current-buffer)))
        ,@body)))
@@ -340,7 +340,7 @@ but at the end of form it will restore the possible read-only state as
 seen my `buffer-read-only'
 
 \(with-buffer-modified
-   (set-text-properties 1 10 '(face highlight)))
+   (set-text-properties 1 10 \\='(face highlight)))
 
 "
     (let ((modified (cl-gensym "modified-"))
