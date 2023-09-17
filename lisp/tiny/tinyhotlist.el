@@ -303,7 +303,8 @@ Functions in hook are called with two arguments:
 
   BUFFER ADD-STATUS
 
-Default value is `tinyhotlist-save-hotlist' which saves cache after every change."
+Default value is `tinyhotlist-save-hotlist' which saves
+cache after every change."
   :type  'hook
   :group 'TinyHotlist)
 
@@ -313,7 +314,8 @@ Functions in hook are called with two arguments:
 
   BUFFER REMOVE-STATUS
 
-Default value is `tinyhotlist-save-hotlist' which saves cache after every change."
+Default value is `tinyhotlist-save-hotlist' which saves cache
+after every change."
   :type  'hook
   :group 'TinyHotlist)
 
@@ -322,7 +324,7 @@ Default value is `tinyhotlist-save-hotlist' which saves cache after every change
 (defvar tinyhotlist--cache nil
   "Hotlist cache.
 Format:
-  '((\"BUFFER-NAME[ DIRECTORY]\" . [FILE-NAME])
+  ((\"BUFFER-NAME[ DIRECTORY]\" . [FILE-NAME])
     ...)
 
 The BUFFER-NAME is the actual name of the buffer. It may contains
@@ -330,8 +332,8 @@ The BUFFER-NAME is the actual name of the buffer. It may contains
 The DIRECTORY part is only included if buffer is readlly connected to file.
 the DIRECTORY contains leading space if the directory part is included
 
-  'buffer'     -- single entry
-  'buffer2 ~/' -- buffer and filename.")
+  \"buffer\"     -- single entry
+  \"buffer2 ~/\" -- buffer and filename.")
 
 (defvar tinyhotlist--history nil
   "History for completion.")
@@ -409,13 +411,13 @@ hotlist. If you want to rebuild the whole hotlist using the
 `tinyhotlist--default-regexp', call `tinyhotlist-build-default-hotlist'
 
 Format:
- '((PATH  SUBSTITUTE) (P S) ..)
+ ((PATH  SUBSTITUTE) (P S) ..)
 
 Example:
 
   ;;  Remember to put _longest_ substitutionmatches first.
   ;;
-  '((\"/etc/daemons/interalarms/\" \"ALARM\")
+  \\='((\"/etc/daemons/interalarms/\" \"ALARM\")
     (\"/users/foo/\" \"\"))   ;; Don't show my home at all
 
 Please look at the many examples that are in the end of tinyhotlist.el"
@@ -574,9 +576,12 @@ Returns:
 Input:
 
   ARG    Depends on mode.
-  TYPE   what type the arg is: 'menu-item   'buffer  'file
+  TYPE   Type the arg:
+         \\='menu-item
+         \\='buffer
+         \\='file
 
-Return
+Return:
 
  nil t   if removed."
   (let (list
