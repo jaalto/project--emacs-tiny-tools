@@ -145,16 +145,15 @@ Following variables are set during BODY:
 
 `dir'      Directrory name
 `dir-list' All directories under `dir'."
-  ;; Cannot use cl-flat which is lexical
-  `(cl-flet ((recurse
-	      (dir)
-	      (let ((dir-list (tiny-setup-directory-list dir)))
-		,@body
-		(when dir-list
-		  (dolist (elt dir-list)
-		    (unless (string-match tiny-setup-:ignore-dir-regexp elt)
-		      (recurse elt)))))))
-     (recurse (, directory))))
+  `(flet ((recurse   ;; Cannot use cl-flat which is lexical
+	   (dir)
+	   (let ((dir-list (tiny-setup-directory-list dir)))
+	     ,@body
+	     (when dir-list
+	       (dolist (elt dir-list)
+		 (unless (string-match tiny-setup-:ignore-dir-regexp elt)
+		   (recurse elt)))))))
+     (recurse ,directory)))
 
 ;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;
 ;;
@@ -629,6 +628,8 @@ t or nil if file is to be compiled."
     (tiny-setup-compile-directory
      dir function)))
 
+;; (tiny-setup-compile-directory-recursive "~/vc/project/sforge/emacs-tiny-tools.git/lisp/tiny")
+
 ;;; ----------------------------------------------------------------------
 ;;;
 (defun tiny-setup-compile-directory-delete-recursive (root)
@@ -687,7 +688,7 @@ Usage from command line:
 To compile libraries:
 
   emacs -batch -l load-path.el -l tiny-setup.el -f \\
-    -eval \'(tiny-setup-compile-kit-libraries \".\")
+    -eval \\='(tiny-setup-compile-kit-libraries \".\")
 
 To compile other than libraries:
 
