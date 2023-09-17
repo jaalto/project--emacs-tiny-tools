@@ -203,17 +203,19 @@
 
 (require 'tinylibm)                     ;macro package
 
+(autoload 'update-file-autoloads "autoload")
+(autoload 'vc-name "vc-hooks")
+(autoload 'vc-file-getprop "vc-hooks")
+
 (eval-when-compile
-  (require 'lisp-mnt)
-  (unless (fboundp 'lm-maintainers) ;; Only in new Emacs
-    (defalias 'lm-maintainers 'lm-maintainer))
   (require 'cl))
 
 (eval-and-compile
+  (require 'lisp-mnt)
+  (unless (fboundp 'lm-maintainers) ;; Only in new Emacs
+    (defalias 'lm-maintainers 'lm-maintainer))
   (defvar generated-autoload-file) ;; See autoload.el
   (defvar flyspell-mode)
-  (autoload 'vc-name         "vc-hooks")
-  (autoload 'vc-file-getprop "vc-hooks")
   ;;  Can't autoload timer, because various calls in this lib are behind
   ;;  ti::funcall --> Bytecompiler doesn't see them.
   (ti::package-package-require-timer)   ;XEmacs and Emacs differencies
