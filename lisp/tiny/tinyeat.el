@@ -317,7 +317,7 @@ Normally word is terminated by whitespace or newlines."
 ;;;
 ;;;###autoload
 (defun tinyeat-install-default-bindings ()
-  "Bind default keys to various 'eat' functions."
+  "Bind default keys to package\\='s functions."
   (interactive)
 
   ;; was `kill-sentence'
@@ -540,11 +540,12 @@ This way you can retain mouse selection in cut buffer."
 (defun tinyeat-kill-line-backward (&optional count)
   "Like `kill-line' back; COUNT times. Killed text isn't put into cut buffer."
   (interactive "p")
-  (tinyeat-repeat-macro (or count 1)
-                        (when (not (bobp))
-                          (if (bolp) ;Kill previous newline (shift line up)
-                              (backward-delete-char 1)
-                            (delete-region (point) (line-beginning-position))))))
+  (tinyeat-repeat-macro
+      (or count 1)
+    (when (not (bobp))
+      (if (bolp) ;Kill previous newline (shift line up)
+          (delete-char -1)
+        (delete-region (point) (line-beginning-position))))))
 
 ;;; ----------------------------------------------------------------------
 ;;;
