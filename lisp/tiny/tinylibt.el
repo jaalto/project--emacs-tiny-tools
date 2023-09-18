@@ -368,7 +368,7 @@ If the stack is full, then Clear the stack before pushing to it."
     ;;   there is values in the stack! ... We'll we don't nag about that
     ;;   here. I just thought you should know about it.
     (unless  prev
-      (cl-decf ti::text-:stack-count)
+      (setq ti::text-:stack-count (1- ti::text-:stack-count))
       (ti::pop-definition 'ti::text-:stack)
       (setq prev ti::text-:stack)) ;Maybe this time there is something
     (if (not (and (ti::listp prev)
@@ -381,7 +381,7 @@ If the stack is full, then Clear the stack before pushing to it."
             beg     (nth 2 prev)
             level   (nth 3 prev)
             mode    (nth 4 prev))
-      (cl-decf ti::text-:stack-count)
+      (setq ti::text-:stack-count (1- ti::text-:stack-count))
       (save-excursion
         ;;  - What if user has narrowed the buffer
         ;;  - Or he has deleted text
