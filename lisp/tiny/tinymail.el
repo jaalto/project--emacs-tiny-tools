@@ -781,8 +781,9 @@
 (autoload 'message-narrow-to-headers  "message")
 
 (eval-when-compile
+  (or (require 'cl-lib nil 'noerr) ;; Emacs 29.x
+      (require 'cl))
   (locate-library "bbdb") ;; Leave message
-  (require 'cl)
   (require 'bbdb nil 'noerr))
 
 (eval-and-compile
@@ -3045,7 +3046,7 @@ Input:
                 (when (>= (length regexp) len)
                   (while (< i max)
                     (setq elt (aref record i))
-                    (cl-incf i)
+                    (setq i (1+ i))
                     (if (not (listp elt))
                         (setq elt (list elt)))
                     (dolist (item elt)
@@ -4094,7 +4095,7 @@ References:
       (when cc-list
         (dolist (elt cc-list)
           (unless (string-match tinymail--cc-kill-regexp elt)
-            (cl-incf count)
+            (setq count (1+ count))
             (setq ccl (format "%s\n  %s," (or ccl "")  elt))))
 
         (when (and cc-list  (not (stringp ccl)))
