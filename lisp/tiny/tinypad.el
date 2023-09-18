@@ -108,7 +108,8 @@
 (require 'tinylibm)
 
 (eval-when-compile
-  (require 'cl)
+  (or (require 'cl-lib nil 'noerr) ;; Emacs 29.x
+      (require 'cl))
   (require 'advice))
 
 (ti::package-defgroup-tiny TinyPad tinypad-- tools
@@ -285,7 +286,7 @@ Mode description:
           ;;  For every buffer, either turn mode on or off.
           (dolist (buffer (buffer-list))
             ;;  Exclude hidden buffers
-            (cl-incf i)
+            (setq i (1+ i))
             (if (not (string-match "^ " (buffer-name buffer)))
                 (with-current-buffer buffer
                   (if (get 'tinypad-mode 'global)
