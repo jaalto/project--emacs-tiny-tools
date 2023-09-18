@@ -1,30 +1,260 @@
-2023-09-17 Sun  Jari Aalto  <jari.aalto@tuni.fi>
+2023-09-18 Mon  Jari Aalto  <jari.aalto@tuni.fi>
 
-	* tiny/tinycygwin.el (all): Emacs 30.0.50 correct byte compile errors.
+	* tiny/tinyurl.el (tinyurl-mark-process-post-command):
+	rm `cl-incf'.
+	(tinyurl-mode-action): rm `cl-incf'.
 
-	* tiny/tinycompile.el (all): Emacs 30.0.50 correct byte compile errors.
+	* tiny/tinytf.el (tinytf-heading-fix-newlines):
+	rm `cl-incf'.
+	(tinytf-heading-fix-newlines): rm `cl-incf'.
+	(tinytf-heading-fix): rm `cl-incf'.
+	(tinytf-heading-numbering): rm `cl-incf'.
 
-	* tiny/tinycomment.el (all): Emacs 30.0.50 correct byte compile errors.
 
-	* tiny/tinycache.el (all: Emacs 30.0.50 correct byte compile errors.
+	* tiny/tinytag.el (tinytag-post-command): rm `cl-incf'.
 
-	* tiny/tinybookmark.el (all): Emacs 30.0.50
-	correct byte compile errors.
+	* tiny/tinysearch.el (tinysearch-search-word-main):
+	rm `cl-incf'.
 
-	* tiny/tinyadvice.el: (docstrings): Emacs 30.0.50 correct
+	* tiny/tinyreplace.el (tinyreplace-replace-over-files-compile-buffer):
+	rm `cl-incf'.
+
+	* tiny/tinyprocmail.el (tinyprocmail-flag-standardize):
+	rm `cl-incf'.
+	(tinyprocmail-flag-standardize): rm `cl-incf'.
+	(tinyprocmail-flag-standardize): rm `cl-incf'.
+	(tinyprocmail-standardize-recipe-start): rm `cl-incf'.
+	(tinyprocmail-lint-forward): rm `cl-incf'.
+
+	* tiny/tinypath.el (tinypath-replace-regexp-in-string):
+	rm `cl-incf'.
+	(tinypath-list-display): rm `cl-incf'.
+	(tinypath-external-output-parse-1-cache): rm `cl-incf'.
+	(tinypath-load-path-directory-files): rm `cl-incf'.
+
+	* tiny/tinypair.el (tinypair-move-logical-word):
+	rm `cl-incf'.
+
+	* tiny/tinypage.el (tinypage-count-pages): rm `cl-incf'.
+	(tinypage-current-page): rm `cl-incf'.
+	(tinypage-post-command): rm `cl-incf'.
+	(tinypage-renumber-level-forward): rm `cl-incf'.
+
+	* tiny/tinypad.el (tinypad-mode-action): rm `cl-incf'.
+
+	* tiny/tinymail.el (tinymail-field-cc-kill-by-regexp):
+	rm `cl-incf'.
+	(tinymail-complete-list-bbdb-1): rm `cl-incf'.
+
+	* tiny/tinylock.el (tinylock-process-data-unchanged-p):
+	rm `cl-incf'.
+
+	* tiny/tinyload.el (tinyload-autoload-function-load):
+	rm `cl-incf'.
+	(tinyload-busy-count-incf): rm `cl-incf'.
+	(tinyload-busy-count-controller): rm `cl-incf'.
+	(tinyload-loader-process): rm `cl-incf'.
+
+	* tiny/tinylisp.el (tinylisp-elp-instrument-buffer):
+	rm `cl-incf'.
+	(tinylisp-error-debug-add-tags): rm `cl-incf'.
+	(tinylisp-error-debug-add-tags): rm `cl-incf'.
+	(tinylisp-library-info-emacs): rm `cl-incf'.
+	(tinylisp-library-load-by-regexp): rm `cl-incf'.
+	(tinylisp-property-info): rm `cl-incf'.
+
+	* tiny/tinyliby.el (ti::system-get-file-documentation):
+	rm `cl-incf'.
+
+	* tiny/tinylibt.el (ti::text-save-data): rm `cl-incf'.
+
+	* tiny/tinylibo.el (ti::overlay-get-prop): rm `cl-incf'.
+
+	* tiny/tinylibmail.el (ti::mail-pgp-data-string-to-bin-string):
+	rm `cl-incf'.
+	(ti::mail-pgp-data-bin-string-to-int-list): rm `cl-incf'.
+
+	* tiny/tinylibm.el (ti::color-lighter): rm `cl-incf'.
+	(ti::list-to-assoc-menu): rm `cl-incf'.
+	(ti::list-elt-position): rm `cl-incf'.
+	(subst-char-with-string): rm `cl-incf'.
+
+	* tiny/tinylibb.el (bin-string-to-int): rm `cl-incf'.
+	(count-char-in-string): rm `cl-incf'.
+	(count-char-in-region): rm `cl-incf'.
+	(subst-char-with-string): rm `cl-incf'.
+
+	* tiny/tinyirc.el (tinyird-line-number-add-region):
+	rm `cl-incf'.
+
+	* tiny/tinygnus.el (tinygnus-summary-ube-send-to-postmasters):
+	rm `cl-incf'.
+	(tinygnus-summary-gather-urls): rm `cl-incf'.
+	(tinygnus-summary-gather-urls): rm `cl-incf'.
+
+	* tiny/tinydired.el (tinydired-load-all-marked-files):
+	rm `cl-incf'.
+	(tinydired-load-all-marked-files): rm `cl-incf'.
+	(tinydired-marked-vc-revert): rm `cl-incf'.
+	(tinydired-marked-vc-co): rm `cl-incf'.
+	(tinydired-marked-vc-ci): rm `cl-incf'.
+	(tinydired-kill-all-ange-and-dired-buffers): rm `cl-incf'.
+	(tinydired-kill-all-ange-buffers): rm `cl-incf'.
+
+	* tiny/tinydiff.el (tinydiff-minibuffer--rev-add-command):
+	rm `cl-incf'.
+
+	* tiny/tinycache.el (tinycache-flush-all-compilation): rm `cl-incf'.
+	(tinycache-dired-mark): rm `cl-incf'.
+
+	* tiny/load-path.el (tiny-tmp-load-path-print): rm `cl-incf'.
+
+        * tiny/tinylib.el (ti::string-format-percent): rm `cl-incf'.
+        (ti::string-plain-string-to-regexp): rm `cl-incf'.
+        (ti::string-plain-string-to-regexp): rm `cl-incf'.
+        (ti::date-time-diff-days): rm `cl-incf' `cl-decf'.
+        (ti::string-repeat): rm `cl-incf'.
+        (ti::string-case-replace): rm `cl-incf'.
+        (ti::string-index): rm `cl-incf'.
+        (ti::buffer-kill-line): rm `cl-incf'.
+        (ti::buffer-inc-string-nbr): rm `cl-incf'.
+        (ti::keymap-put-abc-map): rm `cl-incf'.
+        (ti::keymap-put-map): rm `cl-incf'.
+        (ti::file-ange-file-handle): rm `cl-incf'.
+        (ti::file-ange-file-handle): rm `cl-incf'.
+        (ti::compat-popup): rm `cl-incf'.
+        (ti::string-index): rm `cl-decf'.
+        (ti::buffer-cnv-empty-lines): rm `cl-decf'.
+
+2023-09-18 Mon  Jari Aalto  <jari.aalto@cante.net>
+
+        * tiny/tinylibid.el (ti::id-cnv-txt2mode): update to cl-lib:
+        replace `return' with `catch' `throw'.
+
+        * tiny/tinylim.el (require): rm `cl'.
+
+2023-09-18 Mon  Jari Aalto  <jari.aalto@cante.net>
+
+        * tiny/load-path.el (eval-when-compile): Load 'cl-lib' or 'cl.
+
+        * tiny/tinylibb.el (eval-when-compile): Load 'cl-lib' or 'cl.
+
+        * tiny/tinyliby.el (all): Emacs 30.0.50 correct byte compile errors.
+
+        * tiny/tinyvc.el (all): Emacs 30.0.50 correct byte compile errors.
+
+        * tiny/tinyurl.el (all): Emacs 30.0.50 correct byte compile errors.
+
+        * tiny/tinytag.el (all): Emacs 30.0.50 correct byte compile errors.
+
+        * tiny/tinytab.el (all): Emacs 30.0.50 correct byte compile errors.
+
+        * tiny/tinysearch.el (all): Emacs 30.0.50 correct byte compile errors.
+
+        * tiny/tinyscroll.el (all): Emacs 30.0.50 correct byte compile errors.
+
+        * tiny/tinyprocmail.el (all): Emacs 30.0.50 correct some
+        byte compile errors.
+
+        * tiny/tinyperl.el (all): Emacs 30.0.50 correct byte compile errors.
+
+        * tiny/tinypath.el (all): Emacs 30.0.50 correct byte compile errors.
+
+        * tiny/tinypair.el (all): Emacs 30.0.50 correct byte compile errors.
+
+        * tiny/tinypage.el (all): Emacs 30.0.50 correct byte compile errors.
+
+        * tiny/tinymy.el (all): Emacs 30.0.50 correct byte compile errors.
+
+        * tiny/tinylock.el (all): Emacs 30.0.50 correct byte compile errors.
+
+        * tiny/tinymailbox.el (all): Emacs 30.0.50 correct byte compile errors.
+
+        * tiny/tinylpr.el (all): Emacs 30.0.50 correct byte compile errors.
+
+        * tiny/tinyload.el (all): Emacs 30.0.50 correct byte compile errors.
+
+        * tiny/tinylisp.el (all): Emacs 30.0.50 correct byte compile errors.
+        (tinylisp-directory-recurse-macro): Use `cl-labels' to define
+        local function.
+
+2023-09-17 Sun  Jari Aalto  <jari.aalto@cante.net>
+
+        * tiny/tinylibw.el (all): Emacs 30.0.50 correct byte compile errors.
+        (w32-cygwin-mount-point-to-dos): Remove unused ´length' call.
+
+        * tiny/tinylibt.el (all): Emacs 30.0.50 correct byte compile errors.
+
+        * tiny/tinylibo.el (all): Emacs 30.0.50 correct byte compile errors.
+
+        * tiny/tinylibmenu.el (all): Emacs 30.0.50 correct byte compile errors.
+
+        * tiny/tinylibmail.el (all): Emacs 30.0.50 correct byte compile errors.
+        (ti::with-mail-whois): Change `symbol-macrolet' to
+        `cl-symbol-macrolet'.
+
+        * tiny/tinylibm.el (all): Emacs 30.0.50 correct byte compile errors.
+
+        * tiny/tinylibid.el (all): Emacs 30.0.50 correct byte compile errors.
+
+        * tiny/tinylibb.el (all): Emacs 30.0.50 correct byte compile errors.
+
+        * tiny/tinylib.el (ti::buffer-upcase-words-to-variable-names):
+        In `unwind-protect', move UNWINDFORMS.
+        (ti::process-finger): rm unused `unwind-protect'.
+        (ti::compat-key-call-original) In `unwind-protect', move UNWINDFORMS.
+        (ti::file-passwd-read-entry): rm unused `unwind-protect'.
+        (eval-when-compile):
+
+        * tiny/tinyirc.el (all): Emacs 30.0.50 correct byte compile errors.
+
+        * tiny/tinyindent.el (all): Emacs 30.0.50 correct byte compile errors.
+
+        * tiny/tinyigrep.el (all): Emacs 30.0.50 correct byte compile errors.
+
+        * tiny/tinyhotlist.el (all): Emacs 30.0.50 correct byte compile errors.
+
+        * tiny/tinyed.el (all): Emacs 30.0.50 correct byte compile errors.
+
+        * tiny/tinytf.el (all): Emacs 30.0.50 correct byte compile errors.
+
+        * tiny/tinygnus.el (all): Emacs 30.0.50 correct byte compile errors.
+
+        * tiny/tinyeat.el (all): Emacs 30.0.50 correct byte compile errors.
+
+        * tiny/tinydired.el (all): Emacs 30.0.50 correct byte compile errors.
+
+        * tiny/tinydiff.el (all): Emacs 30.0.50 correct byte compile errors.
+
+        * tiny/tinydebian.el: (all): Emacs 30.0.50 correct byte compile errors.
+
+        * tiny/tinyliba.el (autolaod): coment out easy-menu-add,
+        easy-menu-remove.
+
+        * tiny/tinycygwin.el (all): Emacs 30.0.50 correct byte compile errors.
+
+        * tiny/tinycompile.el (all): Emacs 30.0.50 correct byte compile errors.
+
+        * tiny/tinycomment.el (all): Emacs 30.0.50 correct byte compile errors.
+
+        * tiny/tinycache.el (all: Emacs 30.0.50 correct byte compile errors.
+
+        * tiny/tinybookmark.el (all): Emacs 30.0.50
+        correct byte compile errors.
+
+        * tiny/tinyadvice.el: (docstrings): Emacs 30.0.50 correct
         byte compile errors.
 
         * tiny/tiny-admin-util.el: Emacs 30.0.50 correct
         byte compile errors. Remove deprecated (require 'autoload).
+        (tiny-setup-directory-recursive-macro): Change deprecated `letf'
+        to `cl-lables'.
 
         * tiny/tinyreplace.el (all): Correct 30.0.50 byte compile errors.
         (tinyreplace-read-compile-buffer-filename):
         Read lines with NULL character (Emacs 29.* M-x grep output)
 
-        * tiny/tinylibmail.el (ti::with-mail-whois): Change
-        `symbol-macrolet' to `cl-symbol-macrolet'.
-
-2022-01-02 Sun  Jari Aalto  <jari.aalto@tuni.fi>
+2022-01-02 Sun  Jari Aalto  <jari.aalto@cante.net>
 
         * tiny/tinyliba.el
         (ti::tmp-cl-library-check): disable. Obsoleted.
@@ -33,7 +263,7 @@
         unused functions. Use goto-char to select beginning position
         according to MODE.
 
-2020-11-28 Sat  Jari Aalto  <jari.aalto@tuni.fi>
+2020-11-28 Sat  Jari Aalto  <jari.aalto@cante.net>
 
         * tiny/*: Replace `pushnew' with `cl-pushnew'.
 
