@@ -152,7 +152,8 @@
 (require 'tinylibm)
 
 (eval-when-compile
-  (require 'cl))
+  (or (require 'cl-lib nil 'noerr) ;; Emacs 29.x
+      (require 'cl)))
 
 (ti::package-defgroup-tiny TinySearch tinysearch-- extensions
   "search word under cursor: backward, forward.")
@@ -442,7 +443,7 @@ NOTE:
           (sit-for 1)
           (ti::compat-overlay-move tinysearch--overlay 1 1))
         (if loop
-            (cl-incf loop))))
+            (setq loop (1+ loop)))))
     ;; ---------------------- grabbed
     (if tinysearch--final-hook
         (run-hooks 'tinysearch--final-hook))))
