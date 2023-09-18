@@ -209,7 +209,8 @@
 (require 'easymenu)
 
 (eval-when-compile
-  (require 'cl))
+  (or (require 'cl-lib nil 'noerr) ;; Emacs 29.x
+      (require 'cl)))
 
 (eval-and-compile
   (if (ti::xemacs-p)
@@ -498,7 +499,7 @@ Mode description:
     (save-excursion
       (ti::pmin)
       (while (re-search-forward "^[ \t]*\C-l" nil t)
-        (cl-incf count)))
+        (setq count (1+ count))))
     count))
 
 ;;; ----------------------------------------------------------------------
@@ -524,9 +525,9 @@ Mode description:
     (save-excursion
       (ti::pmin)
       (while (re-search-forward re point t)
-        (cl-incf count)))
+        (setq count (1+ count))))
     (if (looking-at re)
-        (cl-incf count))
+        (setq count (1+ count)))
     count))
 
 ;;; ----------------------------------------------------------------------
@@ -551,8 +552,8 @@ Mode description:
   (when tinypage-mode                   ;only now!
     (if (not (integerp tinypage--post-command-wakeup-counter))
         (setq tinypage--post-command-wakeup-counter 0))
-    (cl-incf tinypage--post-command-wakeup-counter)
-
+    (setq tinypage--post-command-wakeup-counter
+	  (1+ tinypage--post-command-wakeup-counter))
     (when (eq 0 (% tinypage--post-command-wakeup-counter
                    tinypage--post-command-wakeup-count))
       (tinypage-modeline))))
@@ -667,7 +668,7 @@ References:
                    (setq nbr (match-string lev2)))
           (if (null counter)            ;first value ?
               (setq counter (string-to-number nbr))
-            (cl-incf counter)
+            (setq counter (1+ counter))
             ;;  Replace the last number with the right increment
             (ti::replace-match lev2 (number-to-string counter))))))
     (when verb
