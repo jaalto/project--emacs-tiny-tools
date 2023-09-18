@@ -2836,7 +2836,7 @@ Input:
             (setq func (cdr func))      ;("defun" . "t1")
             ;;  elp can only insrument functions
             (when (string-match "defun\\|defsubst" type)
-              (cl-incf count)
+              (setq count (1+ count))
               (tinylisp-symbol-do-macro func nil
                 (elp-restore-function func) ;do this first
                 (if (null remove)
@@ -3182,7 +3182,7 @@ DebugTag: 22-56 file.el
       (if remove
           (while (re-search-forward tag nil t)
             (if verb (message "TinyLisp:  uninstrumenting tag %d" i))
-            (cl-incf i)
+            (setq i (1+ i))
             (beginning-of-line)
             (kill-line 1))
         (when (or (null (re-search-forward tag nil t))
@@ -3199,7 +3199,7 @@ DebugTag: 22-56 file.el
             (forward-line 1)
             (if verb
                 (message "TinyLisp:  instrumenting tag %d" i))
-            (cl-incf  i)))))
+            (setq i (1+ i))))))
     (when (and verb (not (zerop i)))
       (if remove
           (message "TinyLisp: Debug tags removed.")
@@ -4283,7 +4283,7 @@ Return:
             (format "%s ..." (ti::string-left (prin1-to-string pkg) 80)))))
         (if verb
             (message "TinyLisp: lib info %d/%d %s" i max name))
-        (cl-incf i)
+        (setq i (1+ ))
         (setq dep-list  nil
               pkg       nil)))
     (tinylisp-with-current-buffer buffer
@@ -4562,7 +4562,7 @@ NOTE
               (progn
                 (setq elt (file-name-nondirectory elt))
                 (load elt 'noerr)))
-          (cl-incf count))
+          (setq count (1+ count)))
          (t
           (message "TinyLisp: Reload failed %s" elt)))))
     (when verb
@@ -5491,7 +5491,7 @@ User can't see string echoed otherwise. Optionally RESTORE."
       (if (> (length ovl) 1)
           (setq prefix-ok t))
       (dolist (elt ovl)
-        (cl-incf count)
+        (setq count (1+ count))
         (setq ov-str
               (format
                "%sov%s%s "
