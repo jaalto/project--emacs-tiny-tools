@@ -458,7 +458,7 @@
 (eval-when-compile
   (require 'cl))
 
-(defconst tinyprocmail--version-time "2023.0917.0958"
+(defconst tinyprocmail--version-time "2023.0918.1058"
   "*Version of last edit.")
 
 (eval-and-compile
@@ -511,8 +511,9 @@ Call arguments:
  FLAGS          Read flags
  STD-FLAGS      Standardized flag sequence.
 
-Function should offer fixing recipe if `tinyprocmail--lint-fix-mode' is activated
-and it should write log if `tinyprocmail--lint' is nil."
+Function should offer fixing recipe if
+`tinyprocmail--lint-fix-mode' is activated and it should write
+log if `tinyprocmail--lint' is nil."
   :type  '(repeat function)
   :group 'TinyProcmail)
 
@@ -535,8 +536,8 @@ This function standardizes the flag order by calling
 `tinyprocmail-flag-standardize'.
 
 It must also respect the value of `tinyprocmail--flag-and-recipe-start-style':
-e.g. if given 'Afbwic' the standard function adds one
-leading space so that the recipe looks like  ':0 Afbwic'"
+e.g. if given \"Afbwic\" the standard function adds one
+leading space so that the recipe looks like  \":0 Afbwic\"."
   :type  'function
   :group 'TinyProcmail)
 
@@ -551,14 +552,14 @@ Say you have the following recipe:
   | echo \"status info\" > file
 
 Then the \"w\" is not essential at all. The default rexgexp ignores all
-these `echo' pipes and doesn't complaint about missing 'w'. Be carefull,
-if you set this regexp, so that you don't miss important `w' warnings."
+these `echo' pipes and doesn't complaint about missing \"w\". Be carefull,
+if you set this regexp, so that you don't miss important \"w\" warnings."
   :type  'string
   :group 'TinyProcmail)
 
 (defcustom tinyprocmail--flag-and-recipe-start-style  nil
   "What is the receipe start style used.
-If 'flags-together, then the receipe start llike looks like
+If \\='flags-together, then the receipe start llike looks like
 
   :0flags:
 
@@ -701,13 +702,13 @@ procmail v3.11pre4 1995/10/29 written and created by Stephen R. van den Berg"
   :type '(repeat
           (list
            (regexp :tag "Regexp to match filename")
-           (const 'tinyprocmail-mode)))
+           (const tinyprocmail-mode)))
   :group  'TinyMbx)
 
 (defcustom tinyprocmail--lint-fix-mode 'semi
   "*The mode of fixing code.
-'auto   Automatic fixing.
-'semi   Ask permission to fix.
+\\='auto   Automatic fixing.
+\\='semi   Ask permission to fix.
 nil     no fixing."
   :type '(choice
           (const nil)
@@ -717,7 +718,7 @@ nil     no fixing."
 
 (defcustom tinyprocmail--lint-log-verbose 'pedantic
   "If nil, then do not log new features available only in latest procmail.
-If 'pedantic, warn about all possible things that may not work in older
+If \\='pedantic, warn about all possible things that may not work in older
 procmail releases."
   :type '(choice
           (const nil)
@@ -1072,7 +1073,7 @@ If buffer does not exist, do nothing."
   "Check is STRING is valid variable. Find any supicious character.
 Input:
   STRING    variable or read filename.
-  TYPE      if 'path; then check as path."
+  TYPE      if \\='path; then check as path."
   (cond
    ((eq type 'path)
     (string-match "^[-_a-zA-Z0-9.$\\/@]+$" string))
@@ -1300,7 +1301,8 @@ Input:
 ;;; ----------------------------------------------------------------------
 ;;;
 (defun tinyprocmail-brace-p (&optional line)
-  "Check if cursor is under brace or in brace LINE. Return 'beg, 'end or nil."
+  "Check if cursor is under brace or in brace LINE.
+Return \\='beg, \\='end or nil."
   (interactive)
   (cond
    (line
@@ -1542,8 +1544,8 @@ Input:
 Input:
 
   BACK      Search backward
-  METHOD    if 'any then search commented recipe too.
-            if 'strict then only left flushed recipes.
+  METHOD    if \\='any then search commented recipe too.
+            if \\='strict then only left flushed recipes.
             nil searches ^WHITESPACE:
   VERB      Be verbose
 
@@ -1655,7 +1657,7 @@ Return:
 ;;; ----------------------------------------------------------------------
 ;;;
 (defun tinyprocmail-output-region ()
-  "Return output region block '(beg . end)."
+  "Return output region block as alist: (beg . end)."
   (save-excursion
     (let ((beg (tinyprocmail-output-line-start)))
       (tinyprocmail-output-end)
@@ -1686,7 +1688,8 @@ Return:
 ;;; ----------------------------------------------------------------------
 ;;;
 (defun tinyprocmail-output-file-save (&optional file)
-  "Write `tinyprocmail--lint-output-buffer' to `tinyprocmail--lint-file' using FILE."
+  "Write `tinyprocmail--lint-output-buffer'
+to `tinyprocmail--lint-file' using FILE."
   (interactive)
   (save-excursion
     (if (null (ti::set-buffer-safe tinyprocmail--lint-output-buffer))
@@ -1747,9 +1750,9 @@ Return:
 
  string   Standardized order.
  symbol   Standardized order, flags, ok, but flags were uniqueied:
-          e.g. 'fhih' --> 'fhi'
+          e.g. \"fhih\" --> \"fhi\"
  1        Error, The input string had invalid flags.
- 2        Error, flag conflict, aAeE used simultaneously"
+ 2        Error, flag conflict, \"aAeE\" used simultaneously"
   (let* ((flags      (tinyprocmail-flag-string))
          (hash       (make-vector (length flags) nil))
          (len        (length string))
@@ -3136,7 +3139,7 @@ Refrences:
 (defun tinyprocmail-lint-list-lint-directives  ()
   "Find all recipes that have Lint directives.
 This function puts the results to `tinyprocmail--lint-output-buffer'.
-Function activates only of `tinyprocmail--lint-log-verbose' is 'pedantic."
+Function activates only of `tinyprocmail--lint-log-verbose' is \\='pedantic."
   (let (options
 	flags
 	point)
