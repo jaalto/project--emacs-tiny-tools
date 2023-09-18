@@ -560,7 +560,7 @@ Mode description:
 ;;; ----------------------------------------------------------------------
 ;;;
 (defun tinypage-overlay (act &optional beg end)
-  "If ACT is 'hide, hide overlay, otherwise highlight BEG END."
+  "If ACT is \\='hide, hide overlay, otherwise highlight BEG END."
   (let ((ov (ti::compat-overlay-some)))
     (cond
      ((eq act 'hide)
@@ -589,7 +589,7 @@ Input:
 
   BEG           region beg
   END           region end
-  ACT           action name, default is 'copy. Can be also 'cut 'select
+  ACT           default is \\='copy but can be \\='cut or \\='select
   MAYBE         flag to check is BEG END are valid: if not then do
                 nothing. If vallid; then select and do ACT.
 
@@ -723,17 +723,17 @@ References:
 ;;;
 (defun tinypage-toc (&optional ragged no-show)
   "Create toc to temporary buffer.
-Optional argument RAGGED makes the heading to 'hang'.
+Optional argument RAGGED makes the heading to \"hang\".
 With nil RAGGED, the headings are lined up.
 
-NO-SHOW doesn't show buffer after creating table of content.
+NO-SHOW does not show buffer after creating table of content.
 
 Return:
   buffer"
   (interactive "P")
-  (let ((list          (ti::buffer-grep-lines
-			(nth 0 tinypage--renumber-format)))
-	(buffer        (ti::temp-buffer tinypage--buffer-toc 'clear))
+  (let ((list (ti::buffer-grep-lines
+	       (nth 0 tinypage--renumber-format)))
+	(buffer (ti::temp-buffer tinypage--buffer-toc 'clear))
 	dots
 	padd
 	heading
