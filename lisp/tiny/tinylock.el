@@ -206,8 +206,8 @@ Cleared every time lock takes effect.")
 
 (defvar tinylock--auto-lock-data  nil
   "Data to tell about the idle state, updated by timer process.
-Contains:
-'(current-time          ;; time stamp of user activity
+Contains list:
+ (current-time          ;; time stamp of user activity
   (BUFFER-LIST)
   (SIZE SIZE SIZE ..))   ;; every buffers size.")
 
