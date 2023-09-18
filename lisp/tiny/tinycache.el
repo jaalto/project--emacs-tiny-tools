@@ -163,8 +163,9 @@
 ;;; Code:
 
 (eval-when-compile
-  (require 'cl)
-  (require 'advice))
+  (require 'advice)
+  (or (require 'cl-lib nil 'noerr) ;; Emacs 29.x
+      (require 'cl)))
 
 (require 'tinylibm)
 
@@ -533,10 +534,10 @@ In BODY, setting variable `list' to nil terminates this macro."
             (beginning-of-line)
             (when (eq (following-char)
                       (symbol-value 'dired-marker-char))
-              (cl-incf i)
+              (setq i (1+ i))
               (dired-unmark 1)))
            (t
-            (cl-incf  i)
+	    (setq i (1+ i))
             (dired-mark 1))))))
     (if verb
         (message "%d cached files %smarked" i
@@ -703,7 +704,7 @@ the cache is flushed with \\[tinycache-flush]."
     (tinycache-map-over-buffers nil
                                 (when (buffer-live-p  (get-buffer BuffeR))
                                   (kill-buffer BuffeR)
-                                  (cl-incf count)))
+                                  (setq count (1+ count))))
     (if verb
         (message (format "Flushed %d buffers." count)))))
 
