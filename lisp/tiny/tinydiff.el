@@ -420,8 +420,8 @@
 (require 'tinylibm)
 
 (eval-when-compile
-  (require 'cl)
-  (require 'cl-lib))
+  (or (require 'cl-lib nil 'noerr) ;; Emacs 29.x
+      (require 'cl)))
 
 (eval-and-compile
   (ti::package-require-view)
@@ -1247,7 +1247,7 @@ Eg.
                       (nthcdr i list))
                 r-list)
           (tinydiff-debug fid "R-LIST>>" r-list))
-        (cl-incf i))
+        (setq i (1+ i)))
       (tinydiff-debug fid "r-list NOW:" (length r-list)  r-list)
       (cond
        ((eq (length r-list) 0)          ;no -r --> add it
