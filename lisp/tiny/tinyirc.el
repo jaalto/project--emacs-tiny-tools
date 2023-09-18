@@ -382,7 +382,8 @@
 ;;; ......................................................... &require ...
 
 (eval-when-compile
-  (require 'cl))
+  (or (require 'cl-lib nil 'noerr) ;; Emacs 29.x
+      (require 'cl)))
 
 (eval-and-compile
   ;; predeclare - Byte compiler silencer.
@@ -680,15 +681,15 @@ Match 1 contains line numer, 2 contains rest of the line."
   (let ((i 1))
     (goto-char beg)
     (beginning-of-line)
-    (catch 'stop
+    (catch 'break
       (while (and (not (eobp))
                   (< (point) end))
         ;;  Abort if there is already a line number
         (when (tinyirc-line-number-p)
-          (throw 'stop 'abort))
+          (throw 'break 'abort))
         (insert (format "%03d: " i))
         (forward-line 1)
-        (cl-incf i)))))
+        (setq i (1+ i))))))
 
 ;;; ----------------------------------------------------------------------
 ;;;
