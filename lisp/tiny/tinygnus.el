@@ -414,7 +414,8 @@
 (autoload 'gnus-group-set-current-level "gnus-group")
 
 (eval-when-compile
-  (require 'cl))
+  (or (require 'cl-lib nil 'noerr) ;; Emacs 29.x
+      (require 'cl)))
 
 (eval-and-compile
   (message (locate-library "gnus")) ;; Display location during compile
@@ -1417,7 +1418,7 @@ confirmations."
       kill-flag)
      (run-hooks 'tinygnus--summary-ube-send-to-postmasters-hook)
      (setq kill-flag t)
-     (cl-incf count))
+     (setq count (1+ count)))
     (if (called-interactively-p 'interactive)
         (message "TinyGnus: Mapped %d ube messgaes" count))))
 
@@ -2211,7 +2212,7 @@ Input:
       subject-field (mail-fetch-field "Subject"))
      (setq count 0)
      (while (re-search-forward "\\(http\\|ftp\\|telnet\\|wais\\):/" nil t)
-       (cl-incf count)
+       (setq count (1+ count))
        (setq url (buffer-substring-no-properties
                   (line-beginning-position) (line-end-position)))
        (with-current-buffer out
@@ -2221,7 +2222,7 @@ Input:
            (if arg
                (insert (format "%s:%d: %s\n" gnus-newsgroup-name nbr url))
              (insert url "\n")))))
-     (cl-incf total count)
+     (setq total (+ total count))
      (when verb
        (message "TinyGnus: msg %d, %d (%d urls) %s"
                 nbr count total subject-field)))
