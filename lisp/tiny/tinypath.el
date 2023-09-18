@@ -1843,9 +1843,8 @@ If CACHE is set, use cached value."
 ;;;
 (defun tinypath-emacs-root-by-load-path ()
   "Return ROOT of emacs installation directory by reading `load-path'.
-Return:
-
-   '(matched-part original-path)."
+Return list:
+   (matched-part original-path)."
   (let ((ver (car-safe (tinypath-emacs-versions 'noerr 'cache)))
 	ret)
     (if (null ver)
@@ -1921,7 +1920,7 @@ ROOT can be a single directory or list of directories."
 ;;; ----------------------------------------------------------------------
 ;;;
 (defun tinypath-default-load-path-root-user ()
-  "Return user's Emacs Lisp path by guessing various directories."
+  "Return user\\='s Emacs Lisp path by guessing various directories."
   (cl-flet ((msg (msg)
 		 (message msg)
 		 (unless tinypath--startup-no-messages
@@ -2060,7 +2059,7 @@ Input:
 			  (> count 0))
 		(if (setq found (check-dir path dir))
 		    (cl-return))
-		(decf count)
+		(cl-decf count)
 		(setq path
 		      (tinypath-directory-up path)))))))))
 
@@ -2405,21 +2404,21 @@ Which package loads?
   :group 'TinyPath)
 
 (defcustom tinypath--compression-support nil
-  "*Type of compression support: 'default, 'all or 'none.
+  "*Type of compression support: \\='default, \\='all or \\='none.
 
-'default
+\\='default
 
     Files ending to .gz and .bz2 files are counted in when
     a load command is issued.
 
-'all
+\\='all
 
-    In addition to 'default, also autoloaded functions can be found from
+    In addition to \\='default, also autoloaded functions can be found from
     compressed files. This means that statements like these will work:
 
-    (autoload 'jka-compr \"jka-compr\")
+    (autoload \\='jka-compr \"jka-compr\")
 
-    The recommendation is that you set this value to 'all if you keep your lisp
+    The recommendation is that you set this value to \\='all if you keep your lisp
     files in compressed format to save space.
 
 nil
@@ -2430,7 +2429,7 @@ nil
 
     Variable `tinypath--compressed-file-extensions' is not used.
 
-'none
+\\='none
 
     Do not use cache at all. Use this if the cache is broken. In Total
     emergency, call M-x -1 `tinypath-cache-mode' to disable all advises.
@@ -2567,7 +2566,7 @@ fixed and added to `Info-default-directory-list'."
 The default list is built dynamically by checking the binary in `exec-path'.
 The default list is:
 
-\(setq tinypath--compressed-file-extensions '( \".gz\" \".bz2\"))
+\(setq tinypath--compressed-file-extensions \\='( \".gz\" \".bz2\"))
 
 References:
   `tinypath--compression-support'."
@@ -2601,9 +2600,10 @@ An example:  /home/some/elisp/config/tinypah-cache-"
   'tinypath-cache-file-hostname
   "*Function to return HOST for the cache file name.
 
-You're interested on this variable only if you're running several networked
-machines and 1) you always have same, ONE mounted $HOME directory 2) and
-each machine has its own run-files, like site-lisp.
+You are interested on this variable only if you are running
+several networked machines and 1) you always have same, ONE
+mounted $HOME directory 2) and each machine has its own
+run-files, like site-lisp.
 
 Use value nil to disable using hostname in cache file name:
 
@@ -2612,7 +2612,7 @@ Use value nil to disable using hostname in cache file name:
 To activate the hostname portion in cache name, set variable to like this:
 This makes each HOST have its own cache.
 
-  (setq tinypath--cache-file-hostname-function 'tinypath-cache-file-hostname)
+  (setq tinypath--cache-file-hostname-function \\='tinypath-cache-file-hostname)
 
 See manual \\[tinypath-version] for more information."
   :type  'function
@@ -2766,8 +2766,8 @@ To start debugging the package, set this variable nil before loading. Nothing
 is done until function `tinypath-install-main' is called.
 
     (defun my-tinypath-debug-prepare ()
-      (require 'elp)
-      (require 'edebug)
+      (require \\='elp)
+      (require \\='edebug)
       (setq debug-on-error t)
       (setq debug-ignored-errors nil)
       (setq tinypath--install-flag nil)
@@ -2775,7 +2775,7 @@ is done until function `tinypath-install-main' is called.
       (setq tinypath--load-hook nil)
       (setq tinypath--verbose 5)
       (setq tinypath--load-path-root)))
-	  '(
+	  \\='(
 	    ;; \"~/elisp\"   ;; Commented out while debugging
 	       ;;  Run statements one by one with C-x C-e
     (my-tinypath-debug-prepare)
@@ -3099,14 +3099,14 @@ VAR is set to following values when ARG is:
 ;;; #copy: tinylib.el
 (defsubst tinypath-ti::date-time-difference (a b)
   "Calculate difference between times A and B.
-The input must be in form of '(current-time)'
+The input must be in form of \\='(current-time)'
 The returned value is difference in seconds.
 E.g., if you want to calculate days; you'd do
 
 \(/ (tinypath-ti::date-time-difference a b) 86400)  ;; 60sec * 60min * 24h"
   (let ((hi (- (car a) (car b)))
 	(lo (- (car (cdr a)) (car (cdr b)))))
-    (+ (lsh hi 16) lo)))
+    (+ (ash hi 16) lo)))
 
 ;;; ----------------------------------------------------------------------
 ;;; #copy: tinylib.el
@@ -3137,25 +3137,25 @@ Like funcall, but secretly call function if it exists.
 
 The full story:
 
-  Byte Compiler isn't very smart when it comes to knowing if
+  Byte Compiler is not very smart when it comes to knowing if
   symbol exist or not. If you have following statement in your function,
   it still complaints that the function \"is not known\"
 
-  (if (fboundp 'some-non-existing-func)
+  (if (fboundp \\='some-non-existing-func)
       (some-non-existing-func arg1 arg2 ...))
 
   instead use:
 
-  (if (fboundp 'some-non-existing-func)
-      (tinypath-ti::funcall 'some-non-existing-func arg1 arg2 ...)
+  (if (fboundp \\='some-non-existing-func)
+      (tinypath-ti::funcall \\='some-non-existing-func arg1 arg2 ...)
 
   to get rid of the unnecessary warning.
 
 Warning:
 
   You _cannot_ use ti::funcall if the function is in autoload state, because
-  `symbol-function' doesn't return a function to call. Rearrange
-  code so that you do (require 'package) test."
+  `symbol-function' does not return a function to call. Rearrange
+  code so that you do (require \\='package) test."
   `(let ((func ,func-sym))
      (when (fboundp ,func-sym)
        ;; Old
@@ -3170,7 +3170,7 @@ Warning:
 	 (b  (nth 5 (file-attributes file)))
 	 (hi (- (car a) (car b)))
 	 (lo (- (car (cdr a)) (car (cdr b)))))
-    (/ (+ (lsh hi 16) lo) 86400)))
+    (/ (+ (ash hi 16) lo) 86400)))
 
 ;;; ----------------------------------------------------------------------
 ;;; #copy from tinylibm.el
@@ -3178,7 +3178,7 @@ Warning:
   "Kill match from buffer at sub-match LEVEL or replace with REPLACE.
 Point sits after the replaced or killed area.
 
-Optionally you can give STRING. If level didn't match, do nothing.
+Optionally you can give STRING. If level did not match, do nothing.
 
 Call:
 
@@ -3187,7 +3187,7 @@ Call:
 Return:
 
   t     Action taken
-  nil   If match at LEVEL doesn't exist.
+  nil   If match at LEVEL does not exist.
   str   If string was given."
   (if (null string)
       (cond
@@ -3298,7 +3298,7 @@ Input:
   (list regexp &optional disable verb msg)
   "Enables/disable SINGLE-OR-LIST of advised functions that match REGEXP.
 Signals no errors, even if function in LIST is not advised.
-All advice classes ['any] are ena/disabled for REGEXP.
+All advice classes [\\='any] are ena/disabled for REGEXP.
 
 Input:
 
@@ -3396,11 +3396,11 @@ The timer lists are searched in following order:
 
   `itimer-list'
   `timer-list'
-  'timer-idle-list'
+  `timer-idle-list'
 
-Return:
+Return list:
 
-  '(timer-elt timer-variable)"
+  (timer-elt timer-variable)"
   (let (pos
 	list
 	item
@@ -3648,7 +3648,7 @@ The MSG should contain %s format string to write each element."
 ;;; ----------------------------------------------------------------------
 ;;;
 (defsubst tinypath-suffixes (file)
-  "Return list of try suffixes for FILE. '(\".el\" \".elc\")."
+  "Return list of try suffixes for FILE: (\".el\" \".elc\")."
   (cond
    ((string-match "\\.elc?$" file)
     '(""))
@@ -3812,7 +3812,7 @@ effect."
 ;;;
 (defun tinypath-file-extension-list-choices ()
   "Return list of choices to search.
- '((el . (list)) (elc . (list)) (nil . (list)))."
+  ((el . (list)) (elc . (list)) (nil . (list)))."
   (let* (
 	 ;; As a fall back, should we search .el choices if .elc
 	 ;; choices fail
@@ -4372,9 +4372,9 @@ Return:
 (defun tinypath-external-helper-main (path-list)
   "Call external helper with PATH-LIST and parse output.
 
-Return:
+Return list:
 
-  '((info . (path path ..))
+   ((info . (path path ..))
     (man  . (path path ..))
     (bin  . (path path ..))
     (lisp . (path path ..))
@@ -4411,7 +4411,7 @@ Return:
 ;;; ----------------------------------------------------------------------
 ;;;
 (defun tinypath-external-setup-cache (data)
-  "Set `tinypath--cache from DATA '((cache (DATA) ..)."
+  "Set `tinypath--cache from list DATA: ((cache (DATA) ..)."
   (let ((list (assq 'cache data)))
     (when list
       (setq list (cdr list))
@@ -4568,8 +4568,8 @@ See `tinypath-external-helper-main'."
 Input:
 
   PACKAGE   vt100
-  CHOICES   '(\"vt100\" \".el.gz\" \".el\" ...)
-  REGEXP    If string, ignore files matching this regexp. E.g. '\.elc'."
+  CHOICES   \\='(\"vt100\" \".el.gz\" \".el\" ...)
+  REGEXP    If string, ignore files matching this regexp. E.g. \"\\.elc\"."
   (let ((fid  "tinypath-cache-p-1-new-cache-lookup")
 	(file package)
 	try
@@ -4603,7 +4603,7 @@ Input:
 If package contains absolute directory part, return PACKAGE.
 
 The search order for unidentified package is:
-'(\".elc\" \".elc.bz2\" \".elc.gz\" \".el\" \".el.bz2\" \".el.gz\")
+  \\='(\".elc\" \".elc.bz2\" \".elc.gz\" \".el\" \".el.bz2\" \".el.gz\")
 
 Input:
 
@@ -4612,9 +4612,9 @@ Input:
 		checked for compressed file. Non-nil bypasses special
 		case handling.
 
-Return:
+Return list:
 
-  '(PATH CACHE-ELEMENT)"
+  (PATH CACHE-ELEMENT)"
   (when tinypath--cache
     (let* ((fid  "TinyPath: tinypath-cache-p-1-new-cache ")
 	   (regexp1  tinypath--ignore-file-regexp)
@@ -5139,7 +5139,7 @@ The list is composed of capitalized names of the found files:
     tar.info       --> Tar
     fileutils.info --> Fileutils
 
-Returned list in the above case is '(\"Tar\" \"Fileutils\")."
+Returned list in the above case is \\='(\"Tar\" \"Fileutils\")."
   ;;  Cache this value only once and reuse as needed.
   (unless (get 'tinypath-info-files-in-directory
 	       'compress-extensions)
@@ -5193,8 +5193,8 @@ Returned list in the above case is '(\"Tar\" \"Fileutils\")."
 	       (re-search-forward
 		(format "^[*]\\([ \t]+[^ \t\r\n]+\\)?[ \t]+%s:[ \t]+"
 			entry)
-		nil t)
-	       (setq ret (point))))
+		nil t))
+      (setq ret (point)))
     (goto-char point) ;; Restore point
     ret))
 
@@ -5416,16 +5416,16 @@ Return
 ;;;
 (defun tinypath-time-difference (a b)
   "Calculate difference between times A and B.
-The input must be in form of '(current-time)'
+The input must be in form of `(current-time)'
 The returned value is difference in seconds.
-E.g., if you want to calculate days; you'd do
+E.g., if you want to calculate days; you would do
 
 \(/ (tinypath-time-difference a b) 86400)  ;; 60sec * 60min * 24h"
   (let ((hi  (- (car a) (car b)))
 	(lo  (- (car (cdr a)) (car (cdr b))))
 	(mic (- (car (cddr a)) (car (cddr b)))))
     (+
-     (+ (lsh hi 16) lo)
+     (+ (ash hi 16) lo)
      (/ mic 1000000))))
 
 ;;; ----------------------------------------------------------------------
@@ -5558,7 +5558,7 @@ Optionally FIX by adding missing directories to the end."
 ;;; ----------------------------------------------------------------------
 ;;;
 (defun tinypath-exec-path-check-verbose-fix ()
-  "Call `tinypath-exec-path-check-verbose' with argument 'fix."
+  "Call `tinypath-exec-path-check-verbose' with argument \\='fix."
   (tinypath-exec-path-check-verbose 'fix))
 
 ;;; ----------------------------------------------------------------------
@@ -5610,7 +5610,7 @@ is not used.
 Return
 
   path          Absolute path location
-  '(path ..)    If option ALL was set."
+  \\='(path ...)    If option ALL was set."
   (unless (get 'tinypath-cache-p-1 'extension-cache)
     (tinypath-cache-p-1-initialize))
   (let (case-fold-search ;; Case sensitive match.
@@ -5762,8 +5762,8 @@ lisp code. With it, the check will spend much more time."
     (when extensive-test
       (dolist (path load-path)
 	(when (and (tinypath-path-ok-p path)
-		   (tinypath-directory-lisp-p path)))
-	(push path list))
+		   (tinypath-directory-lisp-p path))
+	  (push path list)))
       (setq load-path (nreverse list))))
   load-path)
 
@@ -5814,7 +5814,7 @@ lisp code. With it, the check will spend much more time."
 (defun tinypath-add-directory-many (list)
   "Add to `load-path' each directory in LIST.
 LIST can contains single elements or lists:
- '(single single (elt elt) single (elt elt)))"
+  (single single (elt elt) single (elt elt)))"
   (dolist (elt list)
     (when elt
       (if (not (listp elt))
@@ -6168,14 +6168,14 @@ Input:
 
 	if given, report duplicate file only if the size is
 	different. If you just have copy of the same file in the
-	`load-path' that is not critical, but if the file size differs
-	then you have different versions of the file and you should
-	remove the old one(s) from path.
+	`load-path' that is not critical, but if the file size
+	differs then you have different versions of the file and
+	you should remove the old one(s) from path.
 
 Output:
 
   alist.el
-	    35  2971 1999-02-27 12:51:12 /usr/local/share/site-lisp/common/mime/apel-9.13/
+	    35  2971 1999-02-27 12:51:12 /.../site-lisp/common/mime/apel-9.13/
 	  1166  2971 1999-11-25 00:37:18 /home/foo/elisp/tiny/lisp/other/
 	     |  |    |                   |
 	     |  |    |                   location
@@ -7007,7 +7007,7 @@ Return ((VER . PATH) ..)."
 (defun tinypath-gnus-latest-version (path-list)
   "Return latest gnus version from PATH-LIST.
 Return structure is ordered so, that the latest version is first:
-'((VERSION-STRING . PATH) ..).
+ ((VERSION-STRING . PATH) ..).
 
 Development versions starting with 0.N are condired newer that
 any N.N version."
@@ -7089,7 +7089,7 @@ References:
 ;;;
 (defun tinypath-load-path-root-changed-p ()
   "Check if `tinypath--load-path-root' has changed since last run.
-The property value (get 'tinypath--load-path-root 'tinypath-last-value)
+The property value (get \\='tinypath--load-path-root \\='tinypath-last-value)
 holds the last stored value."
   (let ((last (get 'tinypath--load-path-root 'tinypath-last-value)))
     (and last
@@ -7204,7 +7204,7 @@ TinyPath: ** Hm, manual pages found, but you do not have woman.el
 
 (eval-and-compile
   (defun tinypath-original-values (mode)
-    "MODE can be 'save 'restore original `load-path' and `exec-path'.
+    "MODE can be \\='save \\='restore original `load-path' and `exec-path'.
 The original value is saved under property `tinypath-saved-value'."
     (let ((savesym 'tinypath-saved-value))
       (dolist (sym '(load-path
