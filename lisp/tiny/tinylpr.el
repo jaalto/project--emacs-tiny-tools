@@ -207,7 +207,7 @@ changing printer."
            (getenv "PRINTER")
            (if (ti::win32-p) "lpt1:")
            (if (ti::win32-p) "prn:")))
-    "*List of available printers, like  '(\"PRINTER1\" \"PRINTER2\")."
+    "*List of available printers. E.g. (\"PRINTER1\" \"PRINTER2\" ...)."
     :type  '(repeat (string :tag "printer"))
     :group 'TinyLpr)
 
@@ -265,11 +265,11 @@ The # char tells where to install printer in command.
 
 Format:
 
-  '((COMPLETION-STRING PRINTER-COMMAND-STRING) ..)
+  ((COMPLETION-STRING PRINTER-COMMAND-STRING) ...)
 
-Example
+An example
 
-  '((\"2 pages\"  \"mpage -A -2 -P#\"))"
+  ((\"2 pages\"  \"mpage -A -2 -P#\"))"
     :type '(repeat
             (list (string :tag "Completion name")
                   (string :tag "Shell Command.")))
