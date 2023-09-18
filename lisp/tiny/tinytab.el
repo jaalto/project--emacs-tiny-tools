@@ -313,7 +313,7 @@ that the tab handling was performed."
 
 (defcustom tinytab--width-table '(2 4 8)
   "*After call to \\[tinytab-change-tab-width], cycle through list of tab positions.
-Default values are '(2 4 8)"
+Default values are \\='(2 4 8)"
   :type  '(repeat integer)
   :group 'TinyTab)
 
@@ -565,7 +565,7 @@ Return:
 ;;;
 (defun tinytab-auto-indent (&optional arg)
   "Automatically indent according to previous line.
-If optional ARG is given, behave exactly like 'newline' function."
+If optional ARG is given, behave exactly like the `newline' function."
   (interactive "P")
   ;;  The RE matches few common comments and empty whitespaces
   ;;  #     = shell
