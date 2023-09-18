@@ -100,10 +100,9 @@
   (defvar byte-compile-warnings)
   (unless (featurep 'xemacs)
     (set (make-local-variable 'byte-compile-warnings)
-         '(not cl-functions))))
-
-(eval-when-compile
-  (require 'cl))
+         '(not cl-functions)))
+  (or (require 'cl-lib nil 'noerr) ;; Emacs 29.x
+      (require 'cl)))
 
 (eval-and-compile
   (autoload 'delete-if "cl-seq")
@@ -973,12 +972,13 @@ inserted in `message-mode' with \\[mml-attach-file]."
   "Parse version information from program's version output."
   (let ((list '(("[0-9]+\\.[0-9]+\\([0-9.]+\\)?" 0)))
         version)
-    (dolist (elt list)
-      (goto-char (point-min))
-      (cl-multiple-value-bind (regexp subexp) elt
-        (when (and (re-search-forward regexp nil t)
-                   (setq version (match-string subexp)))
-          (cl-return))))
+    (catch 'break
+      (dolist (elt list)
+	(goto-char (point-min))
+	(cl-multiple-value-bind (regexp subexp) elt
+          (when (and (re-search-forward regexp nil t)
+                     (setq version (match-string subexp)))
+            (throw 'break nil)))))
     version))
 
 ;;; ----------------------------------------------------------------------
@@ -1016,19 +1016,20 @@ Possible values for variable MODE
     (unless bin
       (error "TinyCygwin: [ERROR] %s not found in PATH" program))
     (save-current-buffer
-      (dolist (option try-opt)
-        (message "Wait, calling %s %s ... "
-                 program option)
-        (with-temp-buffer
-          (call-process bin
-                        nil              ;infile
-                        (current-buffer) ;buffer
-                        nil              ;display
-                        option)
-          (when (setq version (tinycygwin-program-parse-version))
-            (write-region (point-min) (point-max) file)
-            (setq opt option)
-            (cl-return))))
+      (catch 'break
+	(dolist (option try-opt)
+          (message "Wait, calling %s %s ... "
+                   program option)
+          (with-temp-buffer
+            (call-process bin
+                          nil              ;infile
+                          (current-buffer) ;buffer
+                          nil              ;display
+                          option)
+            (when (setq version (tinycygwin-program-parse-version))
+              (write-region (point-min) (point-max) file)
+              (setq opt option)
+              (throw 'break nil)))))
       (cond
        ((null version)
         (message "Couldn't read version information. Please insert manually."))
@@ -1084,17 +1085,18 @@ Possible values for variable MODE
 (defun tinycygwin-user-mail-address-value (&optional email)
   "Check `user-mail-address' and read environment variable EMAIL.
 Return correct email address or nil."
-  (dolist (try (list
-                email
-                tinycygwin--external-email-address
-                (and (boundp 'message-user-mail-address)
-                     message-user-mail-address)
-                (and (boundp 'user-mail-address)
-                     user-mail-address)
-                (getenv "EMAIL")))
-    (if (and (stringp try)
-             (tinycygwin-user-mail-address-valid-p try))
-        (cl-return try))))
+  (catch 'break
+    (dolist (try (list
+                  email
+                  tinycygwin--external-email-address
+                  (and (boundp 'message-user-mail-address)
+                       message-user-mail-address)
+                  (and (boundp 'user-mail-address)
+                       user-mail-address)
+                  (getenv "EMAIL")))
+      (if (and (stringp try)
+               (tinycygwin-user-mail-address-valid-p try))
+          (throw 'break try)))))
 
 ;;; ----------------------------------------------------------------------
 ;;;
@@ -1555,9 +1557,10 @@ is started. Here are few inportant Eamcs commands to help you:
 ;;;
 (defsubst tinycygwin-first-directory (list)
   "Return Cygwin package documentation root directory"
-  (dolist (dir list)
-    (when (file-directory-p dir)
-      (cl-return dir))))
+  (catch 'break
+    (dolist (dir list)
+      (when (file-directory-p dir)
+	(throw 'break dir)))))
 
 ;;; ----------------------------------------------------------------------
 ;;;
@@ -1767,9 +1770,10 @@ is started. Here are few inportant Eamcs commands to help you:
 ;;;
 (defsubst tinycygwin-list-match (regexp list)
   "Check if REGEXP matched LIST of strings."
-  (dolist (str list)
-    (when (string-match regexp str)
-      (cl-return str))))
+  (catch 'break
+    (dolist (str list)
+      (when (string-match regexp str)
+	(throw 'break str)))))
 
 ;;; ----------------------------------------------------------------------
 ;;;
@@ -2044,12 +2048,13 @@ References:
   (let ((regexp (format "^%s$" program))
         list
         ret)
-    (dolist (path exec-path)
-      (when (file-directory-p path)
-        (setq list (directory-files path 'full regexp))
-        (when (and list (eq 1 (length list)))
-          (setq ret (car list))
-          (cl-return))))
+    (catch 'break
+      (dolist (path exec-path)
+	(when (file-directory-p path)
+          (setq list (directory-files path 'full regexp))
+          (when (and list (eq 1 (length list)))
+            (setq ret (car list))
+            (throw 'break nil)))))
     ret))
 
 ;;; ----------------------------------------------------------------------
