@@ -316,7 +316,7 @@ E.g. if you want to calculate days; you'd do
 ;;;
 (defun tiny-setup-directories (list)
   "Return only directories from LIST."
-  (let* (ret)
+  (let (ret)
     (dolist (elt list)
       (when (and (file-directory-p elt)
                  ;;  Drop . ..
