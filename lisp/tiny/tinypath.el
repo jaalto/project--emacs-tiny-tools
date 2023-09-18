@@ -2060,7 +2060,7 @@ Input:
 			  (> count 0))
 		(if (setq found (check-dir path dir))
 		    (cl-return))
-		(cl-decf count)
+		(setq count (1- count))
 		(setq path
 		      (tinypath-directory-up path)))))))))
 
