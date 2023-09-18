@@ -1,5 +1,7 @@
 2023-09-18 Mon  Jari Aalto  <jari.aalto@tuni.fi>
 
+	* tiny/tinyigrep.el (tinyigrep-countdown): rm `cl-decf'.
+
 	* tiny/tinyurl.el (tinyurl-mark-process-post-command):
 	rm `cl-incf'.
 	(tinyurl-mode-action): rm `cl-incf'.
@@ -31,6 +33,7 @@
 	(tinypath-list-display): rm `cl-incf'.
 	(tinypath-external-output-parse-1-cache): rm `cl-incf'.
 	(tinypath-load-path-directory-files): rm `cl-incf'.
+	(tinypath-directory-search): rm `cl-decf'.
 
 	* tiny/tinypair.el (tinypair-move-logical-word):
 	rm `cl-incf'.
@@ -67,6 +70,7 @@
 	rm `cl-incf'.
 
 	* tiny/tinylibt.el (ti::text-save-data): rm `cl-incf'.
+	(ti::text-undo): rm `cl-decf'.
 
 	* tiny/tinylibo.el (ti::overlay-get-prop): rm `cl-incf'.
 
@@ -97,7 +101,7 @@
 	(tinydired-load-all-marked-files): rm `cl-incf'.
 	(tinydired-marked-vc-revert): rm `cl-incf'.
 	(tinydired-marked-vc-co): rm `cl-incf'.
-	(tinydired-marked-vc-ci): rm `cl-incf'.
+	(tinydired-marked-vc-ci): rm `cl-incf' `cl-decf'.
 	(tinydired-kill-all-ange-and-dired-buffers): rm `cl-incf'.
 	(tinydired-kill-all-ange-buffers): rm `cl-incf'.
 
