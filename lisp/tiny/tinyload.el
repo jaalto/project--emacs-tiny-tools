@@ -572,8 +572,8 @@ References:
 
 Format:
 
-  '((PACKAGE-OF-FILE [FEATURE-SYM] [NOERR] [NOMSG] [FORM-BEFORE] [FORM-AFTER])
-     ...)
+  ((PACKAGE-OF-FILE [FEATURE-SYM] [NOERR] [NOMSG] [FORM-BEFORE] [FORM-AFTER])
+    ...)
 
   PACKAGE-OR-FILE can be any valid `load' command filename parameter:
 
@@ -583,8 +583,8 @@ Format:
         \"~/elisp/package.el\"
 
   You must provide FEATURE-SYM if the package provides different feature than
-  the package name; e.g. entry (\"~/rc/emacs-rc-my\" 'rc-my) says; that you
-  want to do (load \"~/rc/emacs-rc-my\") only if (featurep 'rc-my) returns false.
+  the package name; e.g. entry (\"~/rc/emacs-rc-my\" \\='rc-my) says; that you
+  want to do (load \"~/rc/emacs-rc-my\") only if (featurep \\='rc-my) returns false.
 
   [NOERR] is optional and parameter for `load' command
   [NOMSG] is optional and parameter for `load' command
@@ -601,14 +601,14 @@ Note:
         (list
          (if (and (ti::emacs-p)
                   (= 28 emacs-minor-version))
-             (list \"~/rc/emacs-rc-19.28\" 'rc-28))))
+             (list \"~/rc/emacs-rc-19.28\" \\='rc-28))))
 
-  The `tinyload--load-list' would be '(nil) in non-19.28 Emacs
+  The `tinyload--load-list' would be \\='(nil) in non-19.28 Emacs
 
 Example:
 
   (setq tinyload--load-list
-    '(\"ffap.el\"
+    \\='(\"ffap.el\"
       \"tinylibmail.el\"))"
   :type  '(repeat sexp)
   :group 'TinyLoad)
@@ -844,7 +844,7 @@ load-before form is exected: it runs the FUNCTION."
 ;;; ----------------------------------------------------------------------
 ;;;
 (defun tinyload-load-list-add-package (package &optional feature)
-  "Add PACKAGE FEATURE with 'noerr 'nomsg attributes to `tinyload--load-list'."
+  "Add PACKAGE FEATURE with \\='noerr \\='nomsg to `tinyload--load-list'."
   (let ((elt   (list package feature 'noerr 'nomsg))
         (entry (tinyload-load-list-search-package package)))
     (unless entry
@@ -909,9 +909,9 @@ File format is:
 
     ;; End of file
 
-In the above example, FILE means command \(load \"file\" 'noerr). You can
-add additional .el or .elc extension to force loading uncompiled or
-compiled version of the file.
+In the above example, FILE means command \(load \"file\"
+\\='noerr). You can add additional .el or .elc extension to force
+loading uncompiled or compiled version of the file.
 
 The additional PARAMETER-WORD follows directly after the filename. It must
 be only one word and you can separate different tests with dash(-). Valid
@@ -1004,7 +1004,8 @@ Return:
 ;;;
 (defun tinyload-process-continue (&optional force)
   "Check if process is clear to continue and Emacs is not busy.
-Return status '(continue no-action no-input)."
+Return status. List of symbols:
+  \\='(continue no-action no-input)."
   (let ((fid "tinyload-process-continue")
 	no-action
 	no-input
@@ -1087,9 +1088,9 @@ Return status '(continue no-action no-input)."
 ;;;
 (defun tinyload-initialize ()
   "Initialise `tinyload--load-list'.
-Return:
+Return list:
 
- '(load-list pointer)."
+ (load-list pointer)."
   (let ((orig (get 'tinyload--load-list 'original)))
     ;; first invocation
     (put 'tinyload--process-busy-p 'count 0)
@@ -1161,7 +1162,7 @@ Return CONTINUE if there is no activity."
 ;;; ----------------------------------------------------------------------
 ;;;
 (defun tinyload-failed-list-update (elt)
-  "Update `tinyload--load-list' property 'failed-list with ELT."
+  "Update `tinyload--load-list' property \\='failed-list with ELT."
   (let ((fid         "tinyload-failed-list-update")
 	(failed-list (get 'tinyload--load-list 'failed-list)))
     (unless fid ;; No-op. XEmacs byte compiler silencer
