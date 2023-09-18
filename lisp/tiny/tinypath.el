@@ -2009,12 +2009,12 @@ Input:
 	    -- A simple string means absolute location/DIR
 	    -- Directory enclosed in (dir count) means that the directory is
 	       also searched `count' levels upward.
-	    -- Directory enclosed in (dir 'abs) means absolute location
+	    -- Directory enclosed in (dir \\='abs) means absolute location
 	       without using parameter DIR.
 
 	    For example with value:
 
-	    '(/dir1 (/some/more/of/dir2 2) (/this/location abs)  /dir3 ...)
+	    \\='(/dir1 (/some/more/of/dir2 2) (/this/location abs)  /dir3 ...)
 
 	    The choices searched are:
 
