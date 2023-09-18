@@ -90,9 +90,9 @@
 ;;; Code:
 
 (eval-when-compile
-  (require 'cl)
-  (require 'cl-seq)
-  (require 'cl-lib))
+  (or (require 'cl-lib nil 'noerr)
+      (require 'cl))
+  (require 'cl-seq))
 
 (require 'tinylib)
 
