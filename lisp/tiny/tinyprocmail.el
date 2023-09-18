@@ -456,9 +456,10 @@
 (require 'tinylibm)
 
 (eval-when-compile
-  (require 'cl))
+  (or (require 'cl-lib nil 'noerr) ;; Emacs 29.x
+      (require 'cl)))
 
-(defconst tinyprocmail--version-time "2023.0918.1058"
+(defconst tinyprocmail--version-time "2023.0918.1913"
   "*Version of last edit.")
 
 (eval-and-compile
@@ -1773,16 +1774,16 @@ Return:
         ;;    pos = 2 if the ch was 'f'
         (setq pos (match-beginning 0))
         ;;  Increment the logical length: The character was valid
-        (cl-incf ret-len)                 ;OK
+        (setq ret-len (1+ ret-len))                 ;OK
         ;;   filter duplicates: If the hash doen't have this character already
         ;;   then add it to new string.
         (when (null (elt hash pos))
           ;; Mark the flas as used in hash table
           (aset hash pos t)
           (if (string-match ch "aAeE")
-              (cl-incf conflict1))
+              (setq conflict1 (1+ conflict1)))
           (if (string-match ch "wW")
-              (cl-incf conflict2)))))
+              (setq conflict2 (1+ conflict2))))))
     ;;  Map the hash and see what flags it set
     (ti::dotimes counter 0 (1- (length hash))
       (if (elt hash counter)
@@ -3109,14 +3110,14 @@ Refrences:
     (save-excursion
       (ti::pmin)
       (while (tinyprocmail-forward)
-        (cl-incf found)
+        (setq found (1+ found))
         ;;   We're sitting on :  go to 2 char forward
         (forward-char 2)
         (cond
          ((eq style 'flags-together)
           (when (looking-at "\\([ \t]\\)[^#]")
             (ti::replace-match 1)
-            (cl-incf i)))
+            (setq i (1+ i))))
          (t
           (unless (looking-at "[ \t\n]")
             (insert " ")
