@@ -426,9 +426,10 @@ Every function in this hook is called with
 
 arg1:  string, word picked at current point to initiate database search
 
-The function should return nil if the word should not be searched.
-many times short words are not valid 'keys' in database: e.g. in
-C/C++ code common words like 'char' 'double' 'int' can be ignored."
+The function should return nil if the word should not be
+searched. many times short words are not valid \"keys\" in
+database: e.g. in C/C++ code common words like \"char\",
+\"double\", \"int\" can be ignored."
   :type  'hook
   :group 'TinyTag)
 
@@ -456,7 +457,7 @@ have valid values when the hook is called."
 ;;; ....................................................... &v-private ...
 
 (defvar tinytag--last-word-lookup  nil
-  "Last lookup,  '(WORD . (DB-STRING DB-STRING)).")
+  "Last lookup: \\='(WORD . (DB-STRING DB-STRING)).")
 (make-variable-buffer-local 'tinytag--last-word-lookup)
 
 (defvar tinytag--noerror  nil
@@ -476,12 +477,12 @@ and your Emacs probably slows down. The values must be 0 in 19.30+,
 because `post-command-hook' is not used there.")
 
 (defvar tinytag--database-map nil
-  "Databases available, format '((NAME-SYMBOL FILENAME) .. )
+  "Databases available. Format: \\='((NAME-SYMBOL FILENAME) .. )
 Do not put directory name here, use `tinytag--database-dir' instead.")
 
 (defvar tinytag--regexp-to-databases nil
   "Which REGEXP on word should initiate database search?.
-Format: '((REGEXP '(database1 database2 ..)) (RE  (d1 d1 ..))  ..)")
+Format: ((REGEXP (database1 database2 ...)) ...)")
 
 (defvar tinytag--idle-timer-elt  nil
   "If idle timer is used, this variable has the timer elt.")
@@ -558,10 +559,10 @@ Please define the directory of database directory to `tinytag--database-dir'."))
          (string-match tinytag--filter-default-c++-words string))))
   "*Format is:
 
-'((BUFFER-TYPE-REGEXP EVAL-STATEMENT-TO-REJECT) (B E) ..)
+  \\='((BUFFER-TYPE-REGEXP EVAL-STATEMENT-TO-REJECT) ...)
 
 If buffer type/mode matches REGEXP then the eval statement is evaluated
-for current word that is stored into 'string'. The statement should return
+for current word that is stored into \"string\". The statement should return
 t if word should be rejected. During the eval, any matches done are
 case sensitive."
   :type '(repeat
@@ -591,8 +592,8 @@ for current buffer. The function detects various progrmaming.
 
 Format:
 
-'((BUFFER-TYPE-REGEXP (DATABASE-MAP-SYM DATABASE-REGEXP-SYM))
-  ..)"
+ ((BUFFER-TYPE-REGEXP (DATABASE-MAP-SYM DATABASE-REGEXP-SYM))
+   ...)"
   :type '(repeat
           (list
            (string :tag "mode regexp")
@@ -819,7 +820,7 @@ The output is written to FILE."
 (defun tinytag-install-sample-databases ()
   "Install Sample databases: C/C++ and Java.
 This function sets ´tinytag-install-sample-databases'
-property 'done to non-nil value, when called."
+property \\='done to non-nil value, when called."
   (tinytag-install-sample-database-c)
   (tinytag-install-sample-database-java)
   ;;  This is signal for other setups, that can check if functon
@@ -950,9 +951,9 @@ References:
   `tinytag--noerror'
   `tinytag--word-modify-hook'
 
-Return:
+Return list:
 
-  list  '(line line ..)  matched lines or nil."
+  (line line ...)  ;; matched lines or nil."
   (tinytag-initialize)
   (let ((fid       "tinytag-search-db: ")
 	(table     tinytag--database-map)
@@ -995,8 +996,8 @@ Return:
 References:
   `tinytag--regexp-to-databases'
 
-Return:
-  list   '(db-matched-line ..)  or nil"
+Return list:
+  (db-matched-line ...)  ;; or nil"
   (let ((fid   "tinytag-do-search: ")
 	(table tinytag--regexp-to-databases)
 	e
