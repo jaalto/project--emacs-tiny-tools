@@ -208,7 +208,8 @@
 (autoload 'vc-file-getprop "vc-hooks")
 
 (eval-when-compile
-  (require 'cl))
+  (or (require 'cl-lib nil 'noerr) ;; Emacs 29.x
+      (require 'cl)))
 
 (eval-and-compile
   (require 'lisp-mnt)
@@ -405,12 +406,12 @@ If STRING is not stringp, then returns STRING as is."
 (defun ti::string-mangle (string)
   "Mangle STRING ie. make STRING unreadable.
 Same mangling is performed for the same STRING. Mangling can't be reversed."
-  (let* ((ch-list (cl-coerce string 'list))
-         ;; (cl-coerce list 'string) to get list of ints to string
-         (abc "zaybxcwdveuftgshriqjpkolnm0918273645ZAYBXCWDVEUFTGSHRIQJPKOLNM")
-         (len (length abc))
-         (ret "")
-         x)
+  (let ((ch-list (cl-coerce string 'list))
+        ;; (cl-coerce list 'string) to get list of ints to string
+        (abc "zaybxcwdveuftgshriqjpkolnm0918273645ZAYBXCWDVEUFTGSHRIQJPKOLNM")
+        (len (length abc))
+        (ret "")
+        x)
     (dolist (ch ch-list)
       (setq x (% ch len))
       (setq ret (concat ret (substring abc x (1+ x)))))
@@ -440,13 +441,12 @@ Same mangling is performed for the same STRING. Mangling can't be reversed."
 (defun ti::string-format-percent (str)
   "Convert STR to message string, doubling diffucult charactes, like % and \\."
   (let ((len  (length str))
-        (i    0)
-        (ret  str)
+        (i 0)
+        (ret str)
         ch-string
         extra
         ch)
-    (cond
-     ((string-match "[%\\]" str)        ;only now do
+    (when (string-match "[%\\]" str)        ;only now do
       (setq ret "")
       (while (< i len)
         (setq ch        (aref str i)
@@ -455,7 +455,7 @@ Same mangling is performed for the same STRING. Mangling can't be reversed."
         (if (char-equal ch ?%)
             (setq extra ch-string))
         (setq ret (concat ret ch-string extra))
-        (cl-incf i))))
+        (setq i (1+ i))))
     ret))
 
 ;;; ----------------------------------------------------------------------
@@ -871,19 +871,19 @@ Return:
 If you read from buffer two some special characters, it can't be
 used like that right a way for regexp. E.g. in buffer \\\\ two slashes mean
 one slash actually when assigned to string to form the regexp."
-  (let ((ret     "")
-        (i       0)
-        (len     (length str))
+  (let ((ret "")
+        (i 0)
+        (len (length str))
         (look-ch ?\\)
         (prev-ch ?d)             ;just some dummy
-        (count   0)
+        (count 0)
         chs
         ch)
     (while (< i len)
-      (setq ch      (aref str i)
-            chs     (char-to-string ch))
+      (setq ch (aref str i)
+            chs (char-to-string ch))
       (if (eq ch look-ch)               ;add counter when EQ
-          (cl-incf count))
+          (setq count (1+ count)))
       (cond
        ((eq count 2)                    ;two successive ?
         (if (eq prev-ch look-ch)
@@ -904,7 +904,7 @@ one slash actually when assigned to string to form the regexp."
        (t
         (setq ret (concat ret chs))))
       (setq prev-ch ch )
-      (cl-incf i))
+      (setq i (1+ i)))
     ret))
 
 ;;; ----------------------------------------------------------------------
@@ -1882,9 +1882,9 @@ In calculation each month is supposed to have 30 days and a year 356 days."
     (if (>= (- d2 d1) 0)                ;day2 is smaller
         (setq ret (- d2 d1))
       (setq ret (- (+ 30 d2) d1))
-      (cl-decf m2))
-    (cl-incf ret (* 30  (- m2 m1)))
-    (cl-incf ret (* 356 (- y2 y1)))
+      (setq m2 (1- m2)))
+    (setq ret (+ ret (* 30  (- m2 m1))))
+    (setq ret (+ ret (* 356 (- y2 y1))))
     ret))
 
 ;;; ----------------------------------------------------------------------
@@ -1985,7 +1985,7 @@ Return:
       (setq ret "")
       (while (< i count)
         (setq ret (concat ret char-or-string))
-        (cl-incf i)))
+        (setq i (1+ i))))
     ret))
 
 ;;; ----------------------------------------------------------------------
@@ -2152,7 +2152,7 @@ If the model is too short the variable REST-CASE instructs what to do
               (setq ch (upcase ch))
             (setq ch (downcase ch)))))
         (setq ret (concat ret ch))
-        (cl-incf i))
+        (setq i (1+ i)))
       ;; ............................................. REST characters ...
       ;;  if MODEL is too short, then determine what to do to the rest
       ;;  of the characters theat are left.
@@ -2184,17 +2184,17 @@ If the model is too short the variable REST-CASE instructs what to do
   "Check STR and first CHAR position 0..nbr.
 If REVERSE is non-nil, start searching at the end of string."
   (let ((len (length str))
-        (i   -1))
+        (i -1))
     (cond
      (reverse
-      (while (and (>= (cl-decf len) 0)
+      (while (and (>= (setq len (1- len)) 0)
                   (/= (aref str len) char))) ;check character in string
       (if (>= len 0)
           len
         nil))
      (t
-      (while (and   (< (cl-incf i) len)
-                    (/= (aref str i) char)))
+      (while (and (< (setq i (1+ i)) len)
+                  (/= (aref str i) char)))
       (if (< i len)
           i
         nil)))))
@@ -3076,7 +3076,7 @@ Return:
     ;;  emacs kill-line is little awkward, because if you're at the
     ;;  end of buffer it signals an error...
     (while (< i count)
-      (cl-incf i)
+      (setq i (1+ i))
       (cond
        ((eobp)                          ;nothing to kill
         nil)
@@ -3378,7 +3378,7 @@ You just give RE \"r\\([0-9]+\\)\" and start value 1, increment 1"
         (delete-region beg end)
         (goto-char beg)
         (insert (format fmt inc-val))
-        (cl-incf inc-val increment)))))
+        (setq inc-val (+ inc-val increment))))))
 
 ;;; ----------------------------------------------------------------------
 ;;; - Here is slightly different version. this increments every number
@@ -3500,7 +3500,8 @@ Point is not preserved."
             (delete-region pb pe)
             (setq count nbr)
             (while (> count 0)          ;leave that many
-              (cl-decf count) (insert "\n"))
+              (setq count (1- count))
+              (insert "\n"))
             (if (> count 1)
                 (beginning-of-line)
               ;;  nothing done, next line
@@ -4575,7 +4576,7 @@ Return:
             up  (char-to-string (+ 97 i)))
       (define-key map low func)
       (define-key map  up func)
-      (cl-incf i))))
+      (setq i (1+ i)))))
 
 ;;; ----------------------------------------------------------------------
 ;;;
@@ -4585,7 +4586,7 @@ Return:
         (func (or func 'ignore)))
     (while (< i 128 )
       (define-key map (char-to-string i) func)
-      (cl-incf i))))
+      (setq i (1+ i)))))
 
 ;;; ----------------------------------------------------------------------
 ;;; - Mapping keysto functions easily.
@@ -5342,7 +5343,7 @@ Return:
   status        if NOT-BG is non-nil. Value nil means that session
                 failed."
   (let ((func    (or msg-func
-		     #'ti::file-ange-completed-message))
+                     #'ti::file-ange-completed-message))
         (max-try 5)
         (try     0)
         proc
@@ -5400,7 +5401,7 @@ Return:
                  ;;  ftp> 250 CWD command successful.
                  (not (string-match "success" (ti::read-current-line))))
                (< try max-try))
-        (cl-incf try)))
+        (setq try (1+ try))))
     (push mode file-list)               ;command for ange
     (with-current-buffer (process-buffer proc)
       (ti::pmax)
@@ -5416,7 +5417,7 @@ Return:
          (list func)                    ;called after completion ?
          (not not-bg))                  ;continue without wait
         (ti::pmax)
-        (cl-incf try)))
+        (setq try (1+ try))))
     ;;  The status value is valid only when process finishes.
     (if not-bg
         (with-current-buffer (process-buffer proc)
@@ -6134,7 +6135,7 @@ Return:
             host (match-string 2 email))
       (save-excursion
         (if verb
-	    (message "Fingering %s ..." email))
+            (message "Fingering %s ..." email))
         (setq buffer (or buffer (ti::temp-buffer "*finger tmp*" 'clear)))
 ;;;           (pop-to-buffer buffer) (ti::d! "calling finger....")
         (condition-case error
@@ -6152,7 +6153,7 @@ Return:
           (error
            (setq ret (ti::list-to-string (cdr error)))))
         (if connection
-	    (delete-process connection))
+            (delete-process connection))
         ;;  Strip Ctrl-M marks
         (with-current-buffer buffer
           (ti::buffer-lf-to-crlf 'dos2unix)))
@@ -7924,9 +7925,9 @@ This won't work on mouse commands that examine the mouse `event'"
             ;;  This is very simplistic call. E.g. mouse event should
             ;;  be called with  (funcall function event)
             (call-interactively function))
-	;; unwind
-	;; Make sure minor mode setting is restored
-	(set minor-mode-symbol
+        ;; unwind
+        ;; Make sure minor mode setting is restored
+        (set minor-mode-symbol
              (get minor-mode-symbol 'ti::orig-value-key))))))
 
 ;;; ----------------------------------------------------------------------
@@ -8167,7 +8168,7 @@ Return:
                        (string= ret (elt arg 0)))
               (setq ret  (1- count))
               (cl-return))
-            (cl-incf count))))))
+            (setq count (1+ count)))))))
     ret))
 
 ;;; ----------------------------------------------------------------------
