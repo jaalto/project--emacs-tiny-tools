@@ -41,7 +41,8 @@
 ;;; Code:
 
 (eval-when-compile
-  (require 'cl))
+  (or (require 'cl-lib nil 'noerr) ;; Emacs 29.x
+      (require 'cl nil 'noerr)))
 
 (setq debug-on-error nil) ;; Must be like this in batch byte compile
 
