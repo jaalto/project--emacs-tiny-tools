@@ -346,7 +346,7 @@ If the stack is full, then Clear the stack before pushing to it."
            beg
            level
            mode))
-    (cl-incf ti::text-:stack-count)))
+    (setq ti::text-:stack-count (1+ ti::text-:stack-count))))
 
 ;;; ----------------------------------------------------------------------
 ;;;
