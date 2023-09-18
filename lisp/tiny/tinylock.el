@@ -163,7 +163,8 @@
 (require 'tinylibm)
 
 (eval-when-compile
-  (require 'cl))
+  (or (require 'cl-lib nil 'noerr) ;; Emacs 29.x
+      (require 'cl)))
 
 (eval-and-compile
   (ti::package-package-require-timer))
@@ -383,7 +384,7 @@ Input:
                          ;; killing the list
                          ;;
                          (setq list nil  unchanged nil))
-                     (cl-incf i)))))
+                     (setq i (1+ i))))))
         ;;  Data is corrupted somehow, fix it.
         (error
          (tinylock-process-data-set)))
