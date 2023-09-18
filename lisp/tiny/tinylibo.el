@@ -69,7 +69,7 @@
 
 (require 'tinylibm)
 
-(defconst tinylibo-version-time "2023.0917.1746"
+(defconst tinylibo-version-time "2023.0918.1901"
   "Latest version number as last modified time.")
 
 (eval-and-compile
@@ -254,7 +254,7 @@ Input:
             i 0)
       (dolist (elt prop-list)           ;check all properties
         (when (memq elt propl)
-          (cl-incf  i)))                   ;hit counter
+          (setq i (1+ i))))             ;hit counter
       (if (eq i len)
           (setq ov ovx))                ;found all matches
       (setq ovl (cdr ovl)))
