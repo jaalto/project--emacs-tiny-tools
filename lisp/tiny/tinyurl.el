@@ -2494,7 +2494,7 @@ References: `tinyurl--command-table'"
     (let (counter)
       (unless (integerp (setq counter (get 'tinyurl-mode 'counter)))
         (setq counter 0))
-      (cl-incf counter)
+      (setq counter (1+ counter))
       (put 'tinyurl-mode 'counter counter)
       ;;  Activate only every 5th time.
       (when (zerop (% counter tinyurl--post-command-hook-threshold))
