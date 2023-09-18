@@ -1298,7 +1298,8 @@
 (provide 'tinypath)
 
 (eval-when-compile
-  (require 'cl)
+  (or (require 'cl-lib nil 'noerr) ;; Emacs 29.x
+      (require 'cl))
   (require 'advice))
 
 (eval-and-compile
@@ -3214,9 +3215,8 @@ Return:
   (let ((i  0))
     (or subexp
 	(setq subexp 0))
-
     (while (string-match regexp string)
-      (if (> (cl-incf i) 5000)
+      (if (> (setq i (1+ i)) 5000)
 	  (error "Substituted string causes circular match. Loop never ends.")
 	(setq string (inline (tinypath-ti::replace-match subexp rep string)))))
     string))
@@ -3632,7 +3632,7 @@ The MSG should contain %s format string to write each element."
 	       (< (tinypath-message-log-max-sym-value) size))
       (tinypath-message-log-max-sym-set size))
     (dolist (elt list)
-      (cl-incf i)
+      (setq i (1+ i))
       (setq elt (if (stringp elt)
 		    elt
 		  (prin1-to-string elt)))
@@ -4177,7 +4177,7 @@ NOERR NOMSG are parameters to `load'."
       (when t
 	;; (set-text-properties 0 (length dir) nil dir)
 	;; (set-text-properties 0 (length file) nil file)
-	(cl-incf i)
+	(setq i (1+ i))
 	(when (zerop (% i 10))
 	  (tinypath-verbose-macro 2
 	    (message "TinyPath: EXT Caching files... %d %s" i path)))
@@ -4189,15 +4189,15 @@ NOERR NOMSG are parameters to `load'."
 	;;  newer versions than what Emacs has.
 	(cond
 	 ((tinypath-load-path-emacs-distribution-p path)
-	  (cl-incf emacs-count)
+	  (setq emacs-count (1+ emacs-count))
 	  (setq elt (list file (cons emacs-count dir)))
 	  (push elt emacs))
 	 ((tinypath-load-path-personal-p path)
-	  (cl-incf personal-count)
+	  (setq personal-count (1+ personal-count))
 	  (setq elt (list file (cons personal-count dir)))
 	  (push elt personal))
 	 (t
-	  (cl-incf other-count)
+	  (setq other-count (1+ other-count))
 	  (setq elt (list file (cons other-count dir)))
 	  (push elt other)))))
     (append (nreverse personal) (append other emacs))))
@@ -5942,7 +5942,7 @@ is not a string. `tinypath--load-path-root': %s "
 		   dir))
 	(dolist (file (directory-files dir nil "\\.elc?$"))
 	  (unless (file-directory-p (concat dir file))
-	    (cl-incf count)
+	    (setq count (1+ count))
 	    (when (or t ) ;; (string-match "other" dir))
 	      (tinypath-verbose-macro 9
 		(message "TinyPath: TRAD Cached %s"
