@@ -125,7 +125,7 @@ Default is `message'. Eval optional EVAL."
       (if function
           (funcall function "  %d %s" i path)
         (message "  %d %s" i path))
-      (cl-incf i))))
+      (setq i (1+ i)))))
 
 (eval-and-compile
   ;;  Remove comment if you want to  see the load path
