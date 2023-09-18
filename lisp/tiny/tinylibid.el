@@ -167,7 +167,7 @@
 
 (require 'tinylibm)
 
-(defconst tinylibid-version-time "2023.0917.1656"
+(defconst tinylibid-version-time "2023.0918.1821"
   "Latest version number.")
 
 ;;; setup: hooks
@@ -506,11 +506,13 @@ the string representing a mode.
 NOTE:
  Symbol returned does not necessary representy any mode you can turn on.
  Use `fboundp' test to be sure the symbol is callable function."
-  (let (ret)
-    (dolist (elt ti::id--type2mode)
-      (when (string-match (nth 0 elt) txt)
-        (setq ret (nth 1 elt))          ;Mode name
-        (cl-return)))
+  (let ((loop t)
+	ret)
+    (catch 'break
+      (dolist (elt ti::id--type2mode)
+	(when (string-match (nth 0 elt) txt)
+          (setq ret (nth 1 elt))          ;Mode name
+          (throw 'break ret))))
     ret))
 
 ;;; ----------------------------------------------------------------------
