@@ -1894,7 +1894,7 @@ Bugs:
         (and load
              (y-or-n-p (concat "Unload " fn " ? "))
              (kill-buffer buffer)
-             (cl-decf loaded)))
+             (setq loaded (1- loaded))))
        ;; ... ... ... ... ... ... ... ... ... ... ... ... ... ... ... ...
        ((and buffer
              vc-reg-stat
