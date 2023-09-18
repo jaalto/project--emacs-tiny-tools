@@ -135,7 +135,8 @@
 ;;; Code:
 
 (eval-when-compile
-  (require 'cl))
+  (or (require 'cl-lib nil 'noerr) ;; Emacs 29.x
+      (require 'cl)))
 
 (if (featurep 'xemancs)
     (error "XEmacs unsupported. The character reading code does not work in XEmacs"))
@@ -337,10 +338,11 @@ See variable `tinybuffer--ignore-regexp'."
      (t
       (setq list (buffer-list))))
     (setq list (delq (current-buffer) list))
-    (dolist (buffer list)
-      (unless (string-match re (buffer-name buffer))
-        (setq go buffer)                ;Stop and select it
-        (cl-return)))
+    (catch 'break
+      (dolist (buffer list)
+	(unless (string-match re (buffer-name buffer))
+          (setq go buffer)                ;Stop and select it
+          (throw 'break nil))))
     (if (null go)
         (message
 	 (concat
