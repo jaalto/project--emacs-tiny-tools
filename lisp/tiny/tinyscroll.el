@@ -172,13 +172,13 @@ Must be bigger that 1."
 ;; Initalize this in tinyscroll--load-hook if you want to have some
 ;; other default buffers at startup.
 (defcustom tinyscroll--list
-  '(
-    ("*compilation*" . 1)               ;set this to auto scroll
+  '(("*compilation*" . 1)               ;set this to auto scroll
     ("*grep*"        . 1)
     ("*igrep*"       . 1)
     ("*Messages*"    . 1))
   "*List of buffers  that have auto scroll active.
-Format: '((buffer-name-string . max-point) (BN . POINT) ..)"
+Format:
+ ((buffer-name-string . max-point) ...)"
   :type '(repeat
           (string :tag "buffer")
           (integer :tag "point"))
@@ -249,7 +249,7 @@ If buffer does not exist, do nothing and return nil."
 ;;; if easier to trap "t" error condition.
 ;;;
 (defun tinyscroll--list-add (buffer-name position &optional remove)
-  "Check is BUFFER-NAME name is in 'tinyscroll--list'.
+  "Check is BUFFER-NAME name is in `tinyscroll--list'.
 
 Input:
 
