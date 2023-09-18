@@ -75,7 +75,7 @@
 
 ;;{{{ setup: -- variables
 
-(defconst tinyliby-version-time "2019.0524.1808"
+(defconst tinyliby-version-time "2023.0918.1128"
   "Latest version number as last modified time.")
 
 (defvar ti::system--describe-symbols-history nil
@@ -128,7 +128,8 @@ nil parameter is also accepted."
 ;;; ----------------------------------------------------------------------
 ;;;
 (defun ti::system-load-history-where-exactly (sym load-history-elt)
-  "After `ti::system-load-history-where' return the elt whre entry is, check `require'.
+  "Return the elt where entry is. Shecks `require'.
+Call `ti::system-load-history-where' first.
 
 Return:
 
@@ -137,7 +138,7 @@ Return:
 
 Example of LOAD-HISTORY-ELT:
 
-'(\"some-package.el\"
+\\='(\"some-package.el\"
   (require . custom)
   gnus-undo-limit gnus-undo-mode gnus-undo-mode-hook ...
                   |
@@ -210,7 +211,9 @@ Return:
 		    "^.*Lisp[ \t]+function[ \t]+in[ \t'`]+\\([^ \n\r\f\t'`\"]+\\)"
 		    ;; XEmacs:   -- loaded from "e:\usr\local\bin\emacs...
 		    "\\|--[ \t]+loaded from[ \t\"]+\\([^ \n\r\f\t'`\"]+\\)")
-                 (or doc "")))))))
+                 (or doc ""))
+	    nil ;; TODO: not implemented yet
+	    )))))
 
 ;;; ----------------------------------------------------------------------
 ;;; Emacs doc string say: Defined in `frame'.
@@ -284,7 +287,7 @@ by default, Emacs comes with few presetting disabled. You
 can enable those features (if you knwo what are disabled) wtih
 code like:
 
-    (put 'downcase-region 'disabled nil)
+    (put \\='downcase-region \\='disabled nil)
 
 However, this function is more general and it can find
 all user variables i.e. options, that might be disabled.
@@ -336,11 +339,11 @@ INPUT:
   "According to MODE, unload all variables/features/functions in LIST.
 
 MODE can be
-'var        list of variables
-'func       list of functions
-'feature    list of features  , caution !! Be sure to get
-            feature's variable and function list before you use this,
-            since it'll delete all information that `unload-feature' needs.
+\\='var        list of variables
+\\='func       list of functions
+\\='feature    list of features  , caution !! Be sure to get
+            feature\\='s variable and function list before you use this,
+            since it will delete all information that `unload-feature' needs.
             The `unload-feature' is not always good cmd, because it checks
             dependencies and may not allow you to delete a feature.
 
@@ -443,9 +446,10 @@ You can refer to variables `hook' and `function' in BODY."
 (defun ti::system-remove-from-hooks (symlist re)
   "Look hook SYMLIST and remove all symbols matching RE.
 
-If hook element is in form of  'lambda' instead of callable function symbol,
-this element is ignored. This function cannot remove lambda functions
-from hook, because match is done against `symbol-name'."
+If hook element is in form of `lambda' instead of callable
+function symbol, this element is ignored. This function cannot
+remove lambda functions from hook, because match is done against
+`symbol-name'."
   (dolist (hook symlist)
     (when (boundp hook)			;is list element variable ?
       (cond
@@ -489,13 +493,13 @@ Write results i temporary buffer or BUFFER."
 (defun ti::system-get-symbols (re &optional test-form)
   "Return list of symbols that match RE.
 
-The function 'mapatom' will return ALL symbols, no matter if they don't
+The function `mapatom' will return ALL symbols, no matter if they don't
 even exist any more [fboundp, boundp].
 
 You can supply your own TEST-FORM to cause it drop away certain atoms.
-the current atom is stored in variable 'sym'.
+the current atom is stored in variable `sym'.
 
-Eg. test-form = '(or (fboundp sym) (boundp sym))"
+Eg. test-form = \\='(or (fboundp sym) (boundp sym))"
   (let (list)
     (mapatoms
      (function
