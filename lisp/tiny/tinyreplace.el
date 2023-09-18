@@ -215,7 +215,8 @@
 (require 'tinylibm)
 
 (eval-when-compile
-  (require 'cl))
+  (or (require 'cl-lib nil 'noerr) ;; Emacs 29.x
+      (require 'cl)))
 
 (eval-and-compile
   (autoload 'vc-registered "vc"))
@@ -1254,7 +1255,7 @@ Input:
             (push file cache)           ;Now we have dealt with it
             (cond
              ((not (file-writable-p file))
-              (cl-incf read-only)
+              (setq read-only (1+ read-only))
               (push file ro-cache))
              (t
               (save-excursion
