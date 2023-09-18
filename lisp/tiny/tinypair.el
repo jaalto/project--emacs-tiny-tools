@@ -238,7 +238,7 @@
   "Default European pairing alist.")
 
 (defvar tinypair--alist tinypair--us-alist
-  "The pairing alist '((?BEG-CHAR  ?END-CHAR FUNC-SYM) ..)
+  "The pairing list ((?BEG-CHAR  ?END-CHAR FUNC-SYM) ...)
 The FUNC-SYM element is optional. FUNC definition should have form,
 
 accepted args:
@@ -254,7 +254,7 @@ Return values:
    sym  func handled pairing, main program should terminate.
 
 If the func element is missing, pairing is done always according to main
-function's decision.")
+function\\='s decision.")
 
 ;;; ........................................................ &v-public ...
 ;;; User configurable
@@ -334,8 +334,9 @@ program and the positioning is done according to variable
 
 (defcustom tinypair--word-positioning 'end
   "*How the cursor should be positioned after word pairing.
-'beg          ,leave point after beg pair char
-  'end          ,leave point after end pair char"
+Values:
+  \\='beg          leave point after beg pair char
+  \\='end          leave point after end pair char"
   :type  '(choice
            (const beg)
            (const end))
@@ -718,8 +719,8 @@ BEG is start point and CHAR is starting pair character."
 (defun tinypair-pair-type-select (&optional arg)
   "Pairing control center.
 Input:
- nil 'us 'usa    Use US pairing.
- other value     Use European pairing style."
+ nil \\='us \\='usa    Use US pairing style.
+ other value           Use European pairing style."
   (interactive "P")
   (if (called-interactively-p 'interactive)
       (message "TinyPair: Selected %s pairing style "
