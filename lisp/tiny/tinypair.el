@@ -194,7 +194,8 @@
 (require 'tinylibm)
 
 (eval-when-compile
-  (require 'cl))
+  (or (require 'cl-lib nil 'noerr) ;; Emacs 29.x
+      (require 'cl)))
 
 (ti::package-defgroup-tiny TinyPair tinypair-- extensions
   "self insert character pairs () \"\" '' <>
@@ -596,7 +597,7 @@ Returns t, when pairing is allowed for buffer."
     (while (< i count)
       (funcall func " \f\t\r\n")        ;ignore whitespace
       (tinypair-word-class-skip back)
-      (cl-incf i))))
+      (setq i (1+ i)))))
 
 ;;; ----------------------------------------------------------------------
 ;;;
