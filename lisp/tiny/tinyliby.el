@@ -75,7 +75,7 @@
 
 ;;{{{ setup: -- variables
 
-(defconst tinyliby-version-time "2023.0918.1128"
+(defconst tinyliby-version-time "2023.0918.1903"
   "Latest version number as last modified time.")
 
 (defvar ti::system--describe-symbols-history nil
@@ -602,7 +602,7 @@ No '%s feature found, are you absolutely sure you have loaded the file? "
                                  (looking-at "[ \t]*)"))
                   sym       (intern-soft sym-name)
                   doc       nil)
-            (cl-incf count)
+            (setq count (1+ count))
             ;;  print messages for every 10th only, it's too fast to
             ;;  show every symbol...
             (if (and verb
