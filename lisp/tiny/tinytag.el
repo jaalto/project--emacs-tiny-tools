@@ -371,7 +371,8 @@
 (require 'tinylibm)
 
 (eval-when-compile
-  (require 'cl))
+  (or (require 'cl-lib nil 'noerr) ;; Emacs 29.x
+      (require 'cl)))
 
 (eval-and-compile
   (autoload 'man "man" "" t))
@@ -1166,7 +1167,8 @@ References:
              (and (not (eq 0  tinytag--post-command-hook-counter))
                   (eq 0 (% tinytag--post-command-hook-counter
                            tinytag--post-command-hook-wakeup)))))
-        (cl-incf tinytag--post-command-hook-counter)
+        (setq tinytag--post-command-hook-counter
+	      (1+ tinytag--post-command-hook-counter))
         (if it-is-time                  ;do reset
             (setq tinytag--post-command-hook-counter 0))))
       ;; ... ... ... ... ... ... ... ... ... ... ... ... ... do action . .
