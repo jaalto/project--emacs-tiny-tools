@@ -69,7 +69,9 @@
 
 ;;; .......................................................... provide ...
 
-(eval-when-compile (require 'cl))
+(eval-when-compile
+  (or (require 'cl-lib nil 'noerr) ;; Emacs 29.x
+      (require 'cl nil 'noerr)))
 
 (require 'tinyliba)
 (provide 'tinylibb)
@@ -79,7 +81,7 @@
 (eval-and-compile
   (autoload 'ti::replace-match "tinylibm"))
 
-(defconst tinylibb-version-time "2023.0917.1651"
+(defconst tinylibb-version-time "2023.0918.1140"
   "Latest version number as last modified time.")
 
 ;;; ....................................................... &emulation ...
@@ -340,9 +342,7 @@ but at the end of form it will restore the possible read-only state as
 seen my `buffer-read-only'
 
 \(with-buffer-modified
-   (set-text-properties 1 10 \\='(face highlight)))
-
-"
+   (set-text-properties 1 10 \\='(face highlight)))."
     (let ((modified (cl-gensym "modified-"))
 	  (read-only (cl-gensym "read-only-")))
       `(let ((,modified (buffer-modified-p))
