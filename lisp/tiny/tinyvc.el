@@ -140,7 +140,7 @@
 
    "RCS Log minor mode.
 With this mode you can CheckOut, Lock, unlock the file whose version
-log your're looking at. You can also 'find file' some specific version
+log your are looking at. You can also `find-file' some specific version
 to temporary buffer e.g. to look at some changes in that version.
 
 By default the commands are accessed through guided echo menu. You
@@ -209,7 +209,7 @@ can examine."
   "*Return RCS executable shell command.
 See `tinyvc-cmd-get' source code. Input parameters are symbols:
 
-  'co 'ci 'rcs 'rcsdiff.
+  \\='co \\='ci \\='rcs \\='rcsdiff.
 
 Predefined functions you coud assign to this variable:
 
@@ -281,14 +281,14 @@ c  = Toggle chmod in the file underneath for this buffer.
      made a branch where you want to continue.
 f  = `find-file'. Load the version in the line to temporary buffer
 h  = go to the head: string in the log buffer
-k  = Kill all temporary version files that have been loaded with 'f' command
-     above.
+k  = Kill all temporary version files that have been loaded
+     with \"f\" command.
 l  = lock the current version found in the line
 m  = Mark this line.
 p  = `pop-to-buffer'. Go to to buffer where this Log belongs to.
 r  = Reload Rlog buffer (it may be old if you have deposited new versions)
-s  = Status. Show some of the file's status information.
-uU = Cancel Checkout with 'co'")
+s  = Status. Show some of the file\\='s status information.
+uU = Cancel Checkout with co(1) command.")
 
 ;;; ----------------------------------------------------------------------
 ;;;
@@ -331,8 +331,8 @@ uU = Cancel Checkout with 'co'")
 ;;;
 (put 'tinyvc-do-macro 'lisp-indent-function 0)
 (defmacro tinyvc-do-macro (&rest body)
-  "Store info to variables 'ver' and 'file'. Variable VERB must e also bound.
-If 'ver' of 'file' cannot be set, print message and do nothing with BODY."
+  "Store info to variables `ver' and `file'. Variable VERB must e also bound.
+If `ver' of `file' cannot be set, print message and do nothing with BODY."
   `(when (and (or (setq ver (tinyvc-get-version))
                   (error "No version found on the line."))
               (or (setq file (tinyvc-get-filename))
@@ -391,11 +391,10 @@ executing BODY."
 ;;;
 (put 'tinyvc-do-over-locks-macro 'lisp-indent-function 2)
 (defmacro tinyvc-do-over-locks-macro (user ver &rest body)
-  "USER and VER is currently unused. Execute BODY over 'locks:' keyword.
-
-While the macro loops each line; the variables 'user' and 'ver'
+  "USER and VER is currently unused. Execute BODY over \"locks:\" keyword.
+While the macro loops each line; the variables `user' and `ver'
 are updated. If you want to terminate macro, move point away from the
-lock lines: eg by (goto-char (point-min)))."
+lock lines: e.g. by (goto-char (point-min)))."
   `(save-excursion
      (ti::pmin) (re-search-forward "^locks:") (forward-line 1)
      (while (looking-at "^[ \t]+\\([^:]+\\):[ \t]\\([.0-9]+\\)")
@@ -409,7 +408,7 @@ lock lines: eg by (goto-char (point-min)))."
 ;;; ----------------------------------------------------------------------
 ;;;
 (defsubst tinyvc-cmd-cd-template (file &optional options)
-  "Create 'cd' command template: \"cd DIR; %s FILE OPTIONS\"."
+  "Create `cd' command template: \"cd DIR; %s FILE OPTIONS\"."
   (interactive)
   (concat  "cd " (file-name-directory file) "; "
            "%s " (or options "") " " (file-name-nondirectory file)))
@@ -455,9 +454,9 @@ lock lines: eg by (goto-char (point-min)))."
 
 Input:
 
-  SYM           Command symbol like 'co
+  SYM           Command symbol like \\='co
   SHELL-CMD     Full shell command. If this command has %s in
-                a string, then RCS-SH-EXE is sprintf'd into that position.
+                a string, then RCS-SH-EXE is sprintf\\='d into that position.
                 Normally the rcs exe is prepended to the command.
   BUFFER        where to put shell command results
   NOERR         ignore errors
@@ -497,7 +496,7 @@ References:
 ;;; ----------------------------------------------------------------------
 ;;;
 (defun tinyvc-lock-list ()
-  "Return lock list. '((USER . LOCK-VER) ..)."
+  "Return lock list: ((USER . LOCK-VER) ...)."
   (let (list
         user
         ver)
@@ -790,7 +789,7 @@ Input:
 ;;; ----------------------------------------------------------------------
 ;;;
 (defun tinyvc-unlock-unsafely (&optional all verb)
-  "Read 'locks:' keyword and unlock first locked version in the list.
+  "Read \"locks:\" keyword and unlock first locked version in the list.
 If there is no locks, then do nothing. ALL unlocks all locks.
 
 This is unsafe function, because no attempt is made to
