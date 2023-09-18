@@ -626,13 +626,13 @@ The string must contain one '%s' for the value of
   :group 'TinyPerl)
 
 (defcustom tinyperl--key-pageup-control 'heading
-  "*How to use PgUp and PgDown keys. 'heading or 'normal."
+  "*How to use PgUp and PgDown keys. \\='heading or \\='normal."
   :type '(choice (const heading)
                  (const normal))
   :group  'TinyPerl)
 
 (defcustom tinyperl--pod-buffer-control 'one
-  "*How to display POD documentation. 'single or 'many windows."
+  "*How to display POD documentation. \\='single or \\='many windows."
   :type  '(choice (const one)
                   (const many))
   :group 'TinyPerl)
@@ -691,7 +691,7 @@ Normally \".el\"  but to save space this could be set to \".el.gz\"."
   "Maximum days before expiring `tinyperl--cache-file'.
 If your Perl environmnt lives a lot, new packages are installed in periodic
 intervals, then keep this value withing 7 days. If your environment is on the
-other hand very stable and packages don't change often, then you can set
+other hand very stable and packages do not change often, then you can set
 this to very large value, say, 30 days.
 
 You can always rebuild the cached Perl information with
@@ -735,7 +735,7 @@ You can always rebuild the cached Perl information with
 
 (defcustom tinyperl--inc-path-switches nil
   "*List of swithes you want to pass to perl to add mode @INC paths.
-Example : '(\"-I\" \"/path/path\"."
+Example : \\='(\"-I\" \"/path/path\"."
   :type  'string
   :group 'TinyPerl)
 
@@ -897,7 +897,7 @@ paths in DOS style.")
   "Path to perl distribution POD files.")
 
 (defvar tinyperl--pod-list  nil
-  "List of pod files. '((file.pod . path) (file.pod . path) ..).")
+  "List of pod files: ((file.pod . path) (file.pod . path) ...).")
 
 (defvar tinyperl--pod-buffer-name "*pod*"
   "Buffer where to print POD.")
@@ -951,7 +951,7 @@ when it matches REGEXP and set variable SYM to that value, effectively:
           (tinyperl-executable-find-path
            \"perldoc\" tinyperl--perldoc-bin \"perldoc\"))
 
---> (tinyperl-executable-set 'tinyperl--perldoc-bin \"perldoc\")"
+--> (tinyperl-executable-set \\='tinyperl--perldoc-bin \"perldoc\")"
   `(set ,sym
         (tinyperl-executable-find-path
          ,bin
@@ -1023,15 +1023,15 @@ when it matches REGEXP and set variable SYM to that value, effectively:
 ;;; ----------------------------------------------------------------------
 ;;;
 (defun tinyperl-perl-examine (perl)
-  "Check type of PERL. Return 'win32-activestate 'win32-cygwin 'perl.
+  "Check type of PERL. Return \\='win32-activestate \\='win32-cygwin \\='perl.
 Perl is called with -v. Following properties are stored in
 
 variable `tinyperl--perl-bin' are set to properties:
 
-  'version-answer   =>  The -v result string
-  'type             =>  'win32-activestate
-                        'win32-cygwin
-                        'perl"
+  \\='version-answer   =>  The -v result string
+  \\='type             =>  \\='win32-activestate
+                        \\='win32-cygwin
+                        \\='perl"
   (let ((info (ti::process-perl-version perl)))
     (put 'tinyperl--perl-bin 'version-answer (nth 3 info))
     (put 'tinyperl--perl-bin 'type (nth 1 info))))
@@ -1100,7 +1100,7 @@ Input:
 
   CHECK     Check variable: preserve previous content and set only
             those that do not have value.
-            If value is 'force, reset variable in all cases.
+            If value is \\='force, reset variable in all cases.
 
   VERB      Allow verbose messages
 
@@ -1430,8 +1430,8 @@ you can put to your $HOME/.emacs startup file:
 
   ;;  Take global prefix key C-c p  for perl pod view commands
 
-  (global-set-key \"\C-cpp\" 'tinyperl-pod-by-manpage)
-  (global-set-key \"\C-cpP\" 'tinyperl-pod-by-module)
+  (global-set-key \"\C-cpp\" \\='tinyperl-pod-by-manpage)
+  (global-set-key \"\C-cpP\" \\='tinyperl-pod-by-module)
 
 You can also run `perl2text' filter on any perl file with command
 M-x `tinyperl-find-file' See also `tinyperl-pod-view-mode'
@@ -2154,9 +2154,9 @@ Hee is one suggestion ofr Module.pm POD layout
 ;;;
 (defun tinyperl-inc-split-win32-path (string)
   "Separate different absolute directories.
-\(tinyperl-inc-split-win32-path \"C:\\Program files\\this  c:\\temp\")
+ (tinyperl-inc-split-win32-path \"C:\\Program files\\this  c:\\temp\")
 -->
-'(\"C:\\Program files\\this\" \"c:\\temp\")"
+ \\='(\"C:\\Program files\\this\" \"c:\\temp\")"
   (let (locations
         beg
         end
@@ -2435,9 +2435,9 @@ References:
   "Build list of files under @INC. Only 3 subdir levels are scanned.
 SEARCH-LIST corresponds to `tinyperl--inc-path'
 
-Return:
+Return alist:
 
-  '((package.pm . path) (package::package.pm . path) ..)"
+  ((package.pm . path) (package::package.pm . path) ...)"
   (let ((INC (or search-list
                  (error "TinyPerl: No SEARCH-LIST")))
         files
@@ -2698,12 +2698,12 @@ Input:
 
   MODULE    String, name of perl module that should be along
             `tinyperl--inc-module-list'
-  NO-GUESS  Flag, if non-nil don't try searching suffixes .pm and .pl. Trus
-            MODULE to be exact name.
+  NO-GUESS  Flag, if non-nil do not try searching suffixes *.pm and *.pl.
+            MODULE must match name exactly.
 
-Return:
+Return alist:
 
- '(module . path)"
+ (module . path)"
   (if no-guess
       (assoc module tinyperl--inc-module-list)
     (or (assoc module tinyperl--inc-module-list)
@@ -2729,7 +2729,7 @@ Return:
 ;;;
 (defun tinyperl-manpage-at-point ()
   "Read word under cursor, if it looks like a perl manual page.
-The word must be in lowercase and start with 'perl'."
+The word must be in lowercase and start with \"perl\"."
   (let ((word (thing-at-point 'word))
         case-fold-search)
     (when (and word
@@ -2826,7 +2826,7 @@ Rerefences:
 (defun tinyperl-external-command-format (bin)
   "Determine how to call external BIN. Prepend Perl interpreter as needed.
 If BIN name contain .bat .cmd etc, return BIN as it.
-Otherwise prepend \"perl\" at from and return '(\"perl\" . BIN)."
+Otherwise prepend \"perl\" at from and return list: (\"perl\" . BIN)."
   (if (string-match "\\....?$" bin) ;; .ex or .ext
       bin
     (cons tinyperl--perl-bin bin)))
@@ -3207,12 +3207,12 @@ to the correct position."
 Enough context is a) FAQ entry  b) or paragraph if there
 is no direct faq entry.
 
-Return:
+Return list:
 
- '(TOPIC-HEADING TEXT-DATA)
+ (TOPIC-HEADING TEXT-DATA)
 
-TOPIC-HEADING  does not end to cr/lf
-TEXT-DATA      ends to cr/lf"
+  TOPIC-HEADING  does not end to CR/LF
+  TEXT-DATA      ends to CR/LF"
   (cl-flet ((context-min (point lines)
                       (goto-char point)
                       (forward-line (- lines))
@@ -3285,9 +3285,9 @@ TEXT-DATA      ends to cr/lf"
   "Read FAQ context around point in BUFFER.
 GREP-DATA is the actual grep content.
 
-Return:
+Return list:
 
-'(absolute-file-name GREP-DATA LINE (topic context-excerpt))"
+ (absolute-file-name GREP-DATA LINE (topic context-excerpt))"
   (with-current-buffer (or buffer (current-buffer))
     (list (ti::remove-properties (buffer-file-name))
           line
@@ -3302,9 +3302,9 @@ Return:
   "Read every grep in BUFFER and retun text excerpts from files.
 VERB allows verbose messages.
 
-Return:
+Return list:
 
-'((absolute-file-name grep-data (topic text-data)
+ ((absolute-file-name grep-data (topic text-data)
   (absolute-file-name grep-data (topic text-data)
   ...)"
   (let (list
@@ -3357,7 +3357,6 @@ References:
              ""))
           (setq point (point))
           (insert text "\n")
-          (when colors-p)
           (goto-char point)
           ;;  Mark line that matched.
           (ti::text-re-search-forward (regexp-quote grep-data))
@@ -3370,8 +3369,8 @@ References:
   "Grep REGEXP from perl pod files. VERB.
 
 This function also gathers all =head topics that match the REGEXP.
-You can use generated page as an answer to 'Has this this question
-been answered in FAQ'"
+You can use generated page as an answer to \"Has this this question
+been answered in FAQ\"."
   (interactive "sPod FAQ search regexp: ")
   (let* ((path (or tinyperl--pod-path
                    (error "TinyPerl: No tinyperl--pod-path")))
