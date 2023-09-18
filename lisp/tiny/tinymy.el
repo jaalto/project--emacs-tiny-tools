@@ -336,8 +336,7 @@ The full feature list is in the source code documentation, read it well.")
   :group 'TinyMy)
 
 (defcustom tinymy--define-key-table
-  '(
-    ;; .. .. .. .. .. .. .. .. .. .. .. .. .. .. .. .. .. .. .. .. C-x . .
+  '(;; .. .. .. .. .. .. .. .. .. .. .. .. .. .. .. .. .. .. .. .. C-x . .
     ;;  The 'rectangle' map. This sould be free
 
     ("\C-xrA"   . tinymy-add-rectangle)
@@ -376,9 +375,8 @@ default Emacs keybindings if installed in `tinymy--load-hook'.
 
 Format:
 
-   '((KEY . FUNCTION)
-      ...)"
-
+   ((KEY . FUNCTION)
+     ...)"
   :type '(repeat
           (cons
            (string :tag "Key Bind sequence")
@@ -389,7 +387,7 @@ Format:
 
 (defcustom tinymy--load-hook '(tinymy-install)
   "*Hook that is run when package is loaded.
-The default value is '(tinymy-install)"
+The default value is list \\='(tinymy-install)"
   :type  'hook
   :group 'TinyMy)
 
@@ -410,13 +408,13 @@ menu bar reflects the current window: When you are at lower window and reach
 for the menu bar, the upper window gets selected and the menu bar reflects
 that window. You never get menu bar for the other windows but for the
 topmost one. (Well, you can go round of Emacs, and then reach for
-menu-bar, but that's a bit awkward)
+menu-bar, but that is a bit awkward)
 
 Values in this variable:
 
-  'yes
-  'no
-  'ask"
+  \\='yes
+  \\='no
+  \\='ask"
   :type '(choice
           (const yes)
           (const no)
@@ -441,7 +439,7 @@ o  down: --''-- behaves same as up"
 (defcustom tinymy--copy-file-suffix ".original"
   "Suffix to add when making copy of file with `tinymy-copy-file'.
 This variable is only used in interactive call. Default extension
-is \".original\", same as used by Unix 'patch' program to save original
+is \".original\", same as used by patch(1) program to save original
 working file.
 
 If the version number can be found from file, that is suggested instead
@@ -480,14 +478,13 @@ the search is forced FORWARD."
 Format:
 
   ((BEGIN-CHARACTER-PAIR-STR . END-CHARACTER-PAIR-STR)
-   (B . E)
-   ..)
+   ...)
 
 Example:
 
-  '( ( \"(\" . \")\" )
-     ( \"{\" . \"}\" )
-     ( \"[\" . \"]\" )))")
+   (( \"(\" . \")\" )
+    ( \"{\" . \"}\" )
+    ( \"[\" . \"]\" )))")
 
 ;;; ......................................................... &vu-word ...
 
@@ -575,14 +572,14 @@ The command is put into %s in the COMPILE-COMMAND part.
 
 format:
 
-  '((REGEXP-for-buffer-type  . COMPILE-COMMAND)
+   ((REGEXP-for-buffer-type  . COMPILE-COMMAND)
     (REGEXP-for-buffer-type  . COMPILE-COMMAND)
-    ..)
+    ...)
 
 REGEXP
 
-  The regexp is like 'code-c' 'code-pascal' or alternatively a
-  `mode-name' if buffer content can't be identified. See
+  The regexp is like \"code-c\", \"code-pascal\" or alternatively a
+  `mode-name' if buffer content cannot be identified. See
   tinylibid.el and function `ti::id-info' for more.
 
 COMPILE-COMMAND
@@ -598,7 +595,7 @@ COMPILE-COMMAND
 Example:
 
   Suppose you have several perl interpreters and you want to use the
-  shebang interpreter (first line in the script) for your project's perl
+  shebang interpreter (first line in the script) for your project\\='s perl
   scripts. The following code:
 
   -- Looks up the existing perl compile command and stores it to ELT
@@ -606,27 +603,28 @@ Example:
      determines the perl command according to file name. Function
      `ti::buffer-shebang' reads the command interpreter from the first line.
 
-    (add-hook 'tinymy-load-hook 'my-tinymy-compile-customisations)
+    (add-hook \\='tinymy-load-hook \\='my-tinymy-compile-customisations)
 
     (defun my-tinymy-compile-customisations ()
-      (push '(\"perl\" .
+      (push \\='(\"perl\" .
               (if (string-match \"project\" buffer-file-name)
                  (concat (or (ti::buffer-shebang) \"perl\") \" -w  %s\")
                \"perl -w %s\"))
-       'tinymy--compile-table))
+       \\='tinymy--compile-table))
 
   If you always want to use the shebang command interpreter, then you
   would simply write
 
-   (add-hook 'tinymy-load-hook 'my-tinymy-compile-customisations)
+   (add-hook \\='tinymy-load-hook \\='my-tinymy-compile-customisations)
 
    (defun my-tinymy-compile-customisations ()
-     (push '(\"perl\" .
+     (push \\='(\"perl\" .
              (concat (or (ti::buffer-shebang) \"perl\") \" -w %s\"))
-           'tinymy--compile-table))
+           \\='tinymy--compile-table))
 
   After this package has been loaded. (Place customizations like this
-  to `tinymy--load-hook'."
+  to `tinymy--load-hook'.
+"
   :type '(retpeat
           (string :tag "Regexp")
           (string :tag "Shell command"))
@@ -635,8 +633,8 @@ Example:
 (defvar tinymy--buffer-info-cache nil
   "Cached buffer data values in function `tinymy-buffer-info'.
 Format:
-  '((buffer-pointer size message-string)
-    ...)")
+  ((buffer-pointer size message-string)
+   ...)")
 
 ;;;### (autoload 'tinymy-debug-toggle "tinymy" t t)
 (eval-and-compile (ti::macrof-debug-standard "tinymy" "--"))
@@ -1147,7 +1145,8 @@ Contact maintaner with M-x tinymy-submit-bug-report.")))
 ;;;
 (defun tinymy-package-save-get-file-name ()
   "See `tinymy-package-save-to-file'. Find out package file name.
-Return '(file-name  point)."
+Return list:
+ (file-name  point)."
   (let* ((fid "tinymy-package-save-get-file-name:")
 	 ;;  - the file start and it's name
 	 ;;  - The regexp will jump until there is a-zA-Z0-9
@@ -1530,7 +1529,7 @@ If you supply PREFIX ARG, then
 ;;;
 (defun tinymy-vi-type-paren-match (&optional arg)
   "Match engine: find {[( or )]} pairs. ARG is character repeat count.
-See also 'tinymy--vi-type-paren-match-special-list
+See also `tinymy--vi-type-paren-match-special-list'.
 
 References:
   `tinymy--vi-type-paren-match-list'
@@ -1649,15 +1648,15 @@ References:
 
 diff buffer:
 
-  'context diff file.txt'
+  \"context diff file.txt\"
 
 rcsdiff buffer:
 
-  'diff 1.23 --> 1.25 file.txt'
+  \"diff 1.23 --> 1.25 file.txt\"
 
 Regular buffer:
 
-   '1.25 file.txt'       ;; possibly without version information
+   \"1.25 file.txt\"       ;; possibly without version information
 
 buffer with no filename:
 
@@ -2244,14 +2243,13 @@ to PostgreSQL."
 ;;;
 (defun tinymy-compile-command-for-buffer (mode &optional buffer value)
   "Use MODE to control BUFFER' compile command VALUE.
-If mode is 'get, recall the buffer's value.
-If mode is 'clear, clear previous compile command.
-Any other value is equal to 'put with BUFFER and VALUE.
+If mode is \\='get, recall the buffer\\='s value.
+If mode is \\='clear, clear previous compile command.
+Any other value is equal to \\='put with BUFFER and VALUE.
 
 References:
-
   `tinymy--compile-table'  Values are stored to property list
-                           '(<buffer> compile-command ..)"
+                           \\='(<buffer> compile-command ...)"
   (or buffer
       (setq buffer (current-buffer)))
   (cond
@@ -2280,16 +2278,16 @@ acched command try the search again from fresh. You can
 supply the \\[universal-argument\\] if you have made changes
 to `tinymy--compile-table'.
 
-If mode 'text' or 'fundamental'
+If mode \"text\" or \"fundamental\"
 
     Do not try to identify buffer, but ask compile command directly
 
-If mode is not 'text' or 'fundamental'
+If mode is not \"text\" or \"fundamental\"
 
     Try to find suitable compile command by identifying the buffer
     and looking at the command table.
 
-    For C/C++ code the default command suggested if 'mak', but if there
+    For C/C++ code the default command suggested if \"mak\", but if there
     is no makefile in the directory, then a normal compile command
     is proposed.
 
