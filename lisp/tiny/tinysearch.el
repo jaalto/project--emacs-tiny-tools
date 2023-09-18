@@ -219,7 +219,7 @@ content of the variable is ignored.
 
 Default function:
 
-  'tinysearch-accept-word'
+  `tinysearch-accept-word'
 
 Passed args to function:
 
