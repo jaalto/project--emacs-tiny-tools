@@ -81,7 +81,7 @@
 (eval-and-compile
   (autoload 'ti::replace-match "tinylibm"))
 
-(defconst tinylibb-version-time "2023.0918.1145"
+(defconst tinylibb-version-time "2023.0918.1858"
   "Latest version number as last modified time.")
 
 ;;; ....................................................... &emulation ...
@@ -98,7 +98,7 @@
     (while (< i 8)
       (if (not (string= "0" (substring 8bit-string i (1+ i))))
           (setq int (+ int (nth i list) )))
-      (cl-incf i))
+      (setq i (1+ i)))
     int))
 
 (defun-maybe int-to-bin-string (n &optional length)
@@ -257,8 +257,8 @@ arguments.  If ARGS is not a list, no argument will be passed."
         (pos   0))
     (while (< pos (length s))
       (if (char-equal (aref s pos) c)
-          (cl-incf count))
-      (cl-incf pos))
+          (setq count (1+ count)))
+      (setq pos (1+ pos)))
     count))
 
 (defun-maybe count-char-in-region  (beg end char)
@@ -273,7 +273,7 @@ count-lines function , but (count-char-in-region ?\\n)"
     (save-excursion
       (goto-char (min beg end))
       (while (search-forward char end  t)
-        (cl-incf i)))
+        (setq i (1+ i))))
     (if (called-interactively-p 'interactive)
         (message "%d hits in region." i))
     i))
@@ -309,7 +309,7 @@ Default is to convert all tabs in STRING with spaces."
         (if (char-equal char (aref string i))
             (setq elt to-string))
         (setq ret (concat ret elt))
-        (cl-incf i))))
+        (setq i (1+ i)))))
     ret))
 
 ;; shell.el, term.el, terminal.el
