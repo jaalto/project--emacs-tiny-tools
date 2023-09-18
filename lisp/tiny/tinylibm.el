@@ -68,7 +68,6 @@
 ;;{{{ Load forms
 
 (eval-when-compile
-  (require 'cl)
   ;; 2010-11-20 A bogus warning:
   ;;
   ;;     Warning: Function `xxxx' from cl package called at runtime
@@ -84,7 +83,7 @@
 
 (require 'tinylibb)                     ;Backward compatible functions
 
-(defconst tinylibm-version-time "2023.0917.1716"
+(defconst tinylibm-version-time "2023.0918.1900"
   "Latest version number.")
 
 ;;{{{ function tests
@@ -983,7 +982,7 @@ Return:
          (new-components
           (mapcar (lambda (comp)
                     (setq comp (/ comp 256))
-                    (cl-incf comp (/ (* percentage 256) 100))
+                    (setq comp (+ comp (/ (* percentage 256) 100)))
                     (when (< comp 0)
                       (setq comp 0))
                     (if (> comp 255)
@@ -1540,7 +1539,7 @@ This is useful, if you call x popup menu or completion. For example:
       (if (integerp elt)
           (setq elt (number-to-string elt)))
       (push (cons elt i) ret)
-      (cl-incf  i))
+      (setq i (1+ i)))
     ret))
 
 ;;; ----------------------------------------------------------------------
@@ -1658,7 +1657,7 @@ Return:
               (eval test-form)
             (equal (car list) arg))
           (setq ret i  list  nil)
-        (cl-incf  i)
+        (setq i (1+ i))
         (setq list (cdr list))))
     ret))
 
@@ -2127,7 +2126,7 @@ Default is to convert all tabs in STRING with spaces."
         (if (char-equal char (aref string i))
             (setq elt to-string))
         (setq ret (concat ret elt))
-        (cl-incf  i))))
+        (setq i (1+ i)))))
     ret))
 
 ;;; ----------------------------------------------------------------------
