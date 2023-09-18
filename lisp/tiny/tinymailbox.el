@@ -235,7 +235,7 @@ The point is at the beginning of message."
   :type '(repeat
           (list
            (string :tag "File Regexp")
-           (const 'tinymailbox-mode)))
+           (const tinymailbox-mode)))
   :group  'TinyMailbox)
 
 (defcustom tinymailbox--move-header-regexp "^Subject:"
@@ -609,7 +609,7 @@ Ignore big mailboxes."
 ;;; ----------------------------------------------------------------------
 ;;;
 (defun tinymailbox-overlay (act &optional beg end)
-  "If ACT is 'hide, hide overlay, otherwise highlight BEG END."
+  "If ACT is \\='hide, hide overlay, otherwise highlight BEG END."
   (let ((ov
 	 (if (boundp 'mouse-drag-overlay) ;Emacs, use this by default
 	     'mouse-drag-overlay
