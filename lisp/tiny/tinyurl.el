@@ -569,7 +569,7 @@
 
 (defcustom tinyurl--dispatch-hook  '(tinyurl-dispatch-ignore-p)
   "When calling urls, check if it is allowed.
-this hook's purpose is to check current buffer, current line or anything
+this hook\\='s purpose is to check current buffer, current line or anything
 else to determine if pushing URL is ste wanted action. Eg in dired
 buffer the pushing acting should not be respected but passed back
 to Dired.
@@ -579,7 +579,7 @@ Default function in this hook is `tinyurl-dispatch-ignore-p'.
 Function call arguments:
 
   url                   Matched url text
-  '(buffer . point)     Pointer to location of url in Emacs
+  \\='(buffer . point)     Pointer to location of url in Emacs
 
 Function should return:
 
@@ -599,7 +599,7 @@ Function should return:
 
   t         Accept and continue with url
   string    Display message STRING and ignore url
-  nil       Display default message 'url ignored' and ignore url"
+  nil       Display default message \"url ignored\" and \"ignore url"
   :type  'hook
   :group 'TinyUrl)
 
@@ -615,12 +615,12 @@ current buffer it it returns t."
 
 (defcustom tinyurl--plugged-function  'tinyurl-plugged-always-p
   "Function to determine disconnected state.
-Function takes no arguments and should return t if Emacs is disconnected
-and unable to serve external URL requests.
+Function takes no arguments and should return `t' if Emacs is
+disconnected and unable to serve external URL requests.
 
-Possible values:
-  'tinyurl-plugged-always-p
-  'tinyurl-plugged-p
+Possible symbol values:
+  \\='tinyurl-plugged-always-p
+  \\='tinyurl-plugged-p
 
 See also: `tinyurl--url-cache-buffer'"
   :type  'function
@@ -692,26 +692,26 @@ If there is Lisp FUNCTION, then it is called with argument URL.
 
 Format:
 
-  '((REGEXP . SHELL-COMMAND)      ;; nil element also accepted
+   ((REGEXP . SHELL-COMMAND)      ;; nil element also accepted
     (REGEXP . FUNCTION)
-    ..)
+    ...)
 
-Example:
+An example:
 
   The default value for this variable is set like this. If you
-  have executables `xv' and `catdoc', then the shell commands are
-  defined. If you don't have, then the slot if filled with nil,
-  which is acceptable value. The Picture file handler is set to
-  `ignore' function, if no `xv' is present to prevent loading
-  pictures into Emacs buffer.
+  have executables xv(1) and catdoc(1), then the shell commands
+  are defined. If you do not have, then the slot if filled with
+  nil, which is acceptable value. The Picture file handler is set
+  to `ignore' function, if no xv(1) program is present to prevent
+  loading pictures into Emacs buffer.
 
  (setq file-filter-table
        (list
         (if (executable-find \"catdoc\")
-            '(\"\\\\.doc$\"  . \"catdoc %s\"))  ;View MS WORD files
+            \\='(\"\\\\.doc$\"  . \"catdoc %s\"))  ;View MS WORD files
         (if (executable-find \"xv\")
-            '(\".\\\\(jpg\\\\|jpeg\\\\|gif\\\\)$\" .  \"xv %s\")
-          'ignore)))"
+            \\='(\".\\\\(jpg\\\\|jpeg\\\\|gif\\\\)$\" .  \"xv %s\")
+          \\='ignore)))"
   :type '(repeat
           (list regexp (choice
                         (string   :tag "Shell command")
@@ -738,18 +738,19 @@ used table is stored at `tinyurl--command-table'. See command
 
 The elements:
 
-  TYPE      can be 'mail 'url 'file or 'other. These are the types that
-            trigger calling VALUE as function. There is special type name
-            'overlay-plist which is used for displaying the overlay.
-            Refer to function `tinyurl-type' for all possible TYPE values.
+  TYPE      can be \\='mail \\='url \\='file or \\='other.
+            These are the types that trigger calling VALUE as
+            function. There is special type name
+            \\='overlay-plist which is used for displaying the
+            overlay. Refer to function `tinyurl-type' for all
+            possible TYPE values.
 
   FUNCTION  Either function or value. Functions are called interactively.
 
 Format:
 
- '((COMPLETION-NAME
-    (
-     (TYPE . VALUE)
+  ((COMPLETION-NAME
+    ((TYPE . VALUE)
      ..
      (overlay-plist (PROPERTY VAL PROPERTY VAL ..)))))
 
@@ -757,7 +758,7 @@ References:
 
   You can contruct one entry to this table with
   functions `tinyurl-command-table-put' `tinyurl-command-table-put-2nd'
-  and `tinyurl-command-table-default-1'. See tinyurl.el's source code and
+  and `tinyurl-command-table-default-1'. See tinyurl.el\\='s source code and
   function `tinyurl-command-table-netscape' how to use these."
   :type  'sexp
   :group 'TinyUrl)
@@ -835,9 +836,9 @@ will be followed. If there was no url then call original mouse binding.
 If non-nil, The mouse-point is not scanned for urls. Only existing
 overlays under point are read.
 
-In short: the t gives the usual 'run marked urls only' and t will say
-'install buttins to line, run url at point where the click happened if
-there was url'")
+In short: value `t' gives the usual \"run marked urls only\" and
+will say \"install buttins to line, run url at point where the
+click happened if there was url\".")
 
 ;;      Keyboard user's want to see the highlight immediately, so
 ;;      a 'face setting is better than the 'mouse-face, which is only
@@ -951,7 +952,7 @@ Defined keys:
 ;;; ----------------------------------------------------------------------
 ;;;
 (defun tinyurl-mode-turn-on-ok-p ()
-  "Check if 'tinyurl-mode-1' is allowed to be turned on for the buffer.
+  "Check if `tinyurl-mode-1' is allowed to be turned on for the buffer.
 The buffer is seached for basic URL references and checked against
 `tinyurl--exclude-function'."
   (and (null tinyurl-mode)
@@ -1291,7 +1292,7 @@ Ignores VM, W3, DIRED, ARCHIVE, COMPILE, GREP buffers.
 The buffer ignore status is recorded to the plist of
 function ´tinyurl-default-exclude', which you can recall with:
 
-  (get 'tinyurl-default-exclude 'exclude-list)"
+  (get \\='tinyurl-default-exclude \\='exclude-list)"
   (with-current-buffer buffer
     (let* ((exclude-list  (get 'tinyurl-default-exclude
                                'exclude-list))
@@ -1424,9 +1425,9 @@ This might be \"netscape\" or \"iexplore\"."
 ;;;
 (defun tinyurl-command-table-default-1 ()
   "Return default `tinyurl--command-table' entry.
-If you change this function's source, run
+If you change this function\\='s source, run
 
-  (tinyurl-install-command-table 'force)
+  (tinyurl-install-command-table \\='force)
 
 References:
  `tinyurl--overlay-plist'"
@@ -1460,7 +1461,7 @@ References:
 ;;; ----------------------------------------------------------------------
 ;;;
 (defmacro tinyurl-command-table-before-string (entry string)
-  "Replace property 'before-string in ENTRY with STRING."
+  "Replace property \\='before-string in ENTRY with STRING."
   `(if (ti::emacs-p)
        (tinyurl-command-table-put-2nd
         ,entry
@@ -1721,7 +1722,7 @@ References:
 ;;; ----------------------------------------------------------------------
 ;;;
 (defsubst tinyurl-overlay-get (&optional point)
-  "Reeturn overlay from current POINT if there is any '(owner tinyurl)."
+  "Reeturn overlay from current POINT if there is any \\='(owner tinyurl)."
   (let ((list (overlays-at (or point (point)))))
     (if list
         (ti::overlay-get-prop list '(owner tinyurl)))))
@@ -1851,8 +1852,7 @@ References:
 Input:
 
   EVENT     mouse-event or key binding
-  TYPE      'mouse or 'key. The EVENT type"
-
+  TYPE      \\='mouse or \\='key. The EVENT type"
   (let* ((ov     (tinyurl-overlay-get))
          (url    (and ov
                       (ti::overlay-buffer-substring ov 'no-properties)))
@@ -2250,7 +2250,7 @@ Convert URL ftp:// to ange-ftp format and use `find-file'."
 ;;; ----------------------------------------------------------------------
 ;;;
 (defun tinyurl-find-url-mail (url)
-  "Ignore URL and call 'mail."
+  "Ignore URL and call \\='mail."
   (if (fboundp 'compose-mail)
       (call-interactively 'compose-mail) ;New Emacs
     (call-interactively 'mail-other-window)))
@@ -2292,7 +2292,7 @@ Convert URL ftp:// to ange-ftp format and use `find-file'."
 ;;; ----------------------------------------------------------------------
 ;;;
 (defun tinyurl-find-url-http (url)
-  "Simple 'www.*' URL handler."
+  "Simple \"www.*\" URL handler."
   (unless (string-match "://" url)
     (setq url (concat "http://" url)))
   (tinyurl-debug "tinyurl-find-url-http" url)
@@ -2541,7 +2541,7 @@ References: `tinyurl--command-table'"
 (defun tinyurl-default-mark-table ()
   "Return default table used by `tinyurl-mark-line'.
 Format:
-  '( (REGEXP [SUB-MATCH] [SPAN-FLAG] [VALIDATE-HANDLER]) ..)
+  ((REGEXP [SUB-MATCH] [SPAN-FLAG] [VALIDATE-HANDLER]) ..)
 
 REGEXP      To mark the URL
 SUB-MATCH   In REGEXP to match URL
@@ -2731,9 +2731,8 @@ VALIDATE-HANDLER    Function to discard and check marked url"
 (defun tinyurl-mark-line ()
   "Mark URLs with overlays on current line.
 Return:
-   list of overlays where the regexps matched.
-
-  '((ov ov ..) (regexp regexp ..))"
+   List of overlays where the regexps matched.
+  ((ov ov ..) (regexp regexp ..))"
   (interactive)
   (let ((fid      "tinyurl-mark-line:")
 	(plist    (tinyurl-overlay-plist))
