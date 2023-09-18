@@ -71,7 +71,7 @@
 
 (eval-when-compile
   (or (require 'cl-lib nil 'noerr) ;; Emacs 29.x
-      (require 'cl nil 'noerr)))
+      (require 'cl)))
 
 (require 'tinyliba)
 (provide 'tinylibb)
@@ -81,7 +81,7 @@
 (eval-and-compile
   (autoload 'ti::replace-match "tinylibm"))
 
-(defconst tinylibb-version-time "2023.0918.1140"
+(defconst tinylibb-version-time "2023.0918.1145"
   "Latest version number as last modified time.")
 
 ;;; ....................................................... &emulation ...
