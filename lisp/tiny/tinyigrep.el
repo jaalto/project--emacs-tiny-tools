@@ -1032,7 +1032,7 @@ Examples:
 (defmacro tinyigrep-countdown (message count &optional msg)
   "Show (format MESSAGE COUNT MSG) and decrease COUNT."
   `(progn
-     (cl-decf ,count)
+     (setq ,count (1- ,count))
      (message (format ,message ,count (or ,msg "") ))))
 
 ;;; ----------------------------------------------------------------------
