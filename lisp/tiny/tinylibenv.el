@@ -46,9 +46,8 @@
 
 ;;{{{ code: Init
 
-(eval-when-compile
-  (autoload 'executable-find "executable")
-  (autoload 'ti::directory-up "tinylib"))
+(autoload 'executable-find "executable")
+(autoload 'ti::directory-up "tinylib")
 
 (eval-and-compile
   (if (not (or (boundp 'xemacs-logo)
