@@ -81,7 +81,8 @@
   (autoload 'gnus-group-get-parameter	"gnus"))
 
 (eval-when-compile
-  (require 'cl)
+  (or (require 'cl-lib nil 'noerr) ;; Emacs 29.x
+      (require 'cl))
   (defvar mail-abbrevs)                 ;Silence ByteCompiler
   (defvar mail-aliases)
   (defvar rmail-current-message nil))
@@ -1209,7 +1210,7 @@ Convert quoted printable ASCII armor STRING into binary string."
       (setq int (inline (ti::mail-pgp-data-char-to-int ch)))
       (setq bin (inline (int-to-bin-string int 6)))
       (setq ret (concat ret bin))
-      (cl-incf i))
+      (setq i (1+ i)))
     ret))
 
 ;;; ----------------------------------------------------------------------
@@ -1225,7 +1226,7 @@ Convert 8bit binary byte string \"000001...\" into list of ints."
     (while (< i len)
       (setq bin (substring string (* i 8) (+ 8 (* i 8))))
       (setq int (inline (bin-string-to-int bin)))
-      (cl-incf i)
+      (setq i (1+ i))
       (push int ret))
     (nreverse ret)))
 
