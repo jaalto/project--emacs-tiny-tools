@@ -531,7 +531,8 @@
 (require 'tinylibm)
 
 (eval-when-compile
-  (require 'cl)
+  (or (require 'cl-lib nil 'noerr) ;; Emacs 29.x
+      (require 'cl))
   (require 'advice))
 
 (eval-and-compile
@@ -1088,7 +1089,7 @@ function `tinyurl-mode' function instead. VERB."
           (put 'tinyurl-mode 'self-call t)
           ;;  For every buffer, either turn mode on or off.
           (dolist (buffer (buffer-list))
-            (cl-incf i)
+            (setq i (1+ i))
             ;;  Exclude hidden buffers
             (when (not (string-match "^ " (buffer-name buffer)))
               (with-current-buffer buffer
