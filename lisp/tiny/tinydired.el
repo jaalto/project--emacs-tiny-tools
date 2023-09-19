@@ -414,11 +414,12 @@ in the dired listing."
 ;;; User configurable
 
 (defcustom tinydired--tmp-dir
-  (dolist (dir '("~/tmp/dired/"
-                 "~/tmp"
-                 "~"))
-    (when (file-directory-p dir)
-      (cl-return dir)))
+  (catch 'break
+    (dolist (dir '("~/tmp/dired/"
+                   "~/tmp"
+                   "~"))
+      (when (file-directory-p dir)
+	(throw 'break dir))))
   "*Temporary directory where to store ange ftp files.
 This should be user's private directory, and _must_not_ not be
 /tmp,  because someone else may be running tinydired too and using
@@ -427,12 +428,13 @@ same filenames."
   :group 'Tinydired)
 
 (defcustom tinydired--download-dir
-  (dolist (dir '("~/tmp/ftp"
-                 "~/ftp"
-                 "~/tmp"
-                 "~"))
-    (when (file-directory-p dir)
-      (cl-return dir)))
+  (catch 'break
+    (dolist (dir '("~/tmp/ftp"
+                   "~/ftp"
+                   "~/tmp"
+                   "~"))
+      (when (file-directory-p dir)
+	(throw 'break dir))))
   "*Directory where to down load selected files in dired listing."
   :type  'directory
   :group 'Tinydired)
