@@ -451,12 +451,13 @@ package load and when `tinyirc-pastebot-mode' is called."
 (defcustom tinyirc--pastebot-send-file
   (let ((file "pastebot-submit.txt")
         dir)
-    (dolist (d '("~/tmp/"
-                 "~/"
-                 "c:/"))
-      (when (file-directory-p d)
-        (setq dir d)
-        (cl-return)))
+    (catch 'break
+      (dolist (d '("~/tmp/"
+                   "~/"
+                   "c:/"))
+	(when (file-directory-p d)
+          (setq dir d)
+          (throw 'break))))
     (unless dir
       (error (concat "TinyIrc: Can't find suitable directory. "
                      "Set `tinyirc--pastebot-send-file'.")))
