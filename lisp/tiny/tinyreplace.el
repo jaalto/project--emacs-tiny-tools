@@ -126,7 +126,7 @@
 ;;
 ;;      o   toggle case sensitivity during replace
 ;;      o   toggle symmetry during replace (character by character conversion)
-;;      o   Go to start of buffer _now_ (cl-return back when you exit replace)
+;;      o   Go to start of buffer _now_ to go back when you exit replace)
 ;;      o   search backward
 ;;      o   Narrow to current function, so that you can replace local variables
 ;;      o   Flash function name where you're (only for some programming
