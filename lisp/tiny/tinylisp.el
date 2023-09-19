@@ -3494,12 +3494,13 @@ References:
         (when (null file)
           ;;  No load-history so try searching all buffers in Emacs
           (setq buffer nil)
-          (dolist (buf (buffer-list))
-            (with-current-buffer buf
-              (when (re-search-forward re nil t)
-                (setq buffer (current-buffer))
-                (setq point  (line-beginning-position))
-                (cl-return))))))
+	  (catch 'break
+            (dolist (buf (buffer-list))
+              (with-current-buffer buf
+		(when (re-search-forward re nil t)
+                  (setq buffer (current-buffer))
+                  (setq point  (line-beginning-position))
+                  (throw 'break)))))))
        ;; ....................................................... other ...
        (point ;; point is set
         (when save
@@ -4570,12 +4571,6 @@ NOTE
     list))
 
 ;;; ----------------------------------------------------------------------
-;;; See XEmacs ilisp.el :: describe-symbol-find-file
-;;;
-;;; (defun describe-symbol-find-file (symbol)
-;;;  (loop for (file . load-data) in load-history
-;;;    do (when (memq symbol load-data)
-;;;      (cl-return file))))
 ;;;
 (defun tinylisp-library-find-symbol-load-info ()
   "Try to look up load history to determine from where functions was defined.
@@ -4789,10 +4784,11 @@ Dot-dirs and version control directories are filtered out."
       (setq path (replace-match ".el" nil t path))
       ;; File may also be stored in compressed format
       (let (try)
-        (dolist (ext '("" ".gz" ".bz2" ".lzma"))
-          (setq try (concat path ext))
-          (if (file-exists-p try)
-              (cl-return (setq path try))))))
+	(catch 'break
+          (dolist (ext '("" ".gz" ".bz2" ".lzma"))
+            (setq try (concat path ext))
+            (if (file-exists-p try)
+		(throw 'break (setq path try)))))))
      ((not (string-match "\\.el$" path))
       (setq path (concat path ".el"))))
     (ti::use-file-compression-maybe path)
