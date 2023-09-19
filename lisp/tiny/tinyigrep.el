@@ -342,7 +342,8 @@
 (require 'tinylibm)
 
 (eval-when-compile
-  (require 'cl))
+  (or (require 'cl-lib nil 'noerr) ;; Emacs 29.x
+      (require 'cl)))
 
 ;;  When tinyigrep.el is compiled, this strange error occurs:
 ;;  ** the function `igrep-read-args' is not known to be defined
