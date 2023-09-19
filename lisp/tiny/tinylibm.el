@@ -83,7 +83,7 @@
 
 (require 'tinylibb)                     ;Backward compatible functions
 
-(defconst tinylibm-version-time "2023.0918.1900"
+(defconst tinylibm-version-time "2023.0919.0731"
   "Latest version number.")
 
 ;;{{{ function tests
@@ -1713,14 +1713,15 @@ Return:
   element      single element
   list         list is returned if all-items is non-nil"
   (let (ret)
-    (dolist (element table)
-      (when (if test-function
-                (funcall test-function arg element)
-              (string-match (car element) arg))
-        (if all-matches                 ;how to put results ?
-            (ti::nconc ret element)
-          (setq ret element)
-          (cl-return))))
+    (catch 'break
+      (dolist (element table)
+	(when (if test-function
+                  (funcall test-function arg element)
+		(string-match (car element) arg))
+          (if all-matches                 ;how to put results ?
+              (ti::nconc ret element)
+            (setq ret element)
+            (throw 'break)))))
     ret))
 
 ;;}}}
@@ -3400,7 +3401,6 @@ Return:
 ;;{{{ misc
 
 ;;; ----------------------------------------------------------------------
-;;;
 (eval-and-compile
   (defun ti::package-config-file-directory-default ()
     "Determine default configuration file directory.
@@ -3408,22 +3408,23 @@ The preferred locations are ~/elisp/config ~/lisp/config
 ~/elisp ~/lisp ~/tmp and last ~/.
 
 In XEmacs ~/.xemacs/config is preferred first."
-    (dolist (dir (list
-                  (if (ti::xemacs-p)
-                      "~/.xeamcs/config"
-                    nil)
-                  "~/.emacs.d/config"
-                  "~/elisp/config"
-                  "~/lisp/config"
-                  "~/tmp"
-                  "~"
-                  ;;   Last resort if this is Win32 Emacs and
-                  ;;   HOME is not set ("~" did not expand)
-                  "/cygdrive/c"
-                  "c:/"))
-      (when (and (stringp dir)
-                 (file-directory-p dir))
-        (cl-return dir)))))
+    (catch 'break
+      (dolist (dir (list
+                    (if (ti::xemacs-p)
+			"~/.xeamcs/config"
+                      nil)
+                    "~/.emacs.d/config"
+                    "~/elisp/config"
+                    "~/lisp/config"
+                    "~/tmp"
+                    "~"
+                    ;;   Last resort if this is Win32 Emacs and
+                    ;;   HOME is not set ("~" did not expand)
+                    "/cygdrive/c"
+                    "c:/"))
+	(when (and (stringp dir)
+                   (file-directory-p dir))
+          (throw 'break dir))))))
 
 (defvar tinylib-:package-config-file-directory
   (ti::package-config-file-directory-default)
