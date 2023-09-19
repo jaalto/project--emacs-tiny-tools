@@ -334,7 +334,7 @@ functions `ti::os-check-linux-like-p' or `ti::win32-cygwin-p'."
 ;;; ----------------------------------------------------------------------
 ;;;
 (defun ti::win32-cygwin-p-1 (&optional use-no-cache)
-  "You should use `ti::win32-cygwin-p'. Optionally USE-NO-CACHE value."
+  "Use `ti::win32-cygwin-p' instead. Optionally USE-NO-CACHE value."
   (let (ret)
     (cond
      ((and (null use-no-cache)
