@@ -406,12 +406,12 @@ If STRING is not stringp, then returns STRING as is."
 (defun ti::string-mangle (string)
   "Mangle STRING ie. make STRING unreadable.
 Same mangling is performed for the same STRING. Mangling can't be reversed."
-  (let ((ch-list (cl-coerce string 'list))
-        ;; (cl-coerce list 'string) to get list of ints to string
-        (abc "zaybxcwdveuftgshriqjpkolnm0918273645ZAYBXCWDVEUFTGSHRIQJPKOLNM")
-        (len (length abc))
-        (ret "")
-        x)
+  (let* ((ch-list (cl-coerce string 'list))
+         ;; (cl-coerce list 'string) to get list of ints to string
+         (abc "zaybxcwdveuftgshriqjpkolnm0918273645ZAYBXCWDVEUFTGSHRIQJPKOLNM")
+         (len (length abc))
+         (ret "")
+         x)
     (dolist (ch ch-list)
       (setq x (% ch len))
       (setq ret (concat ret (substring abc x (1+ x)))))
@@ -7857,7 +7857,7 @@ then FACE is assigned to it (default \\='highlight)"
 ;;;
 (defun ti::compat-read-password  (&optional prompt)
   "Read password with PROMPT which defaults to \"Password: \"."
-  (let ((var-bind  (boundp 'record-keystrokes))
+  (let ((var-bind (boundp 'record-keystrokes))
         ;; If a GC occurred during that timing window, and a core dump was
         ;; forced later, the core might contain the string.
         ;;  --> use most-positive-fixnum
@@ -7905,11 +7905,11 @@ then FACE is assigned to it (default \\='highlight)"
 ;;;
 (defun ti::compat-key-local-map (key)
   "Return local map function for KEY"
-  (let* ((prop      (text-properties-at (point)))
-         (map       (and  prop
-                          (nth 1 (memq 'keymap prop))))
-         (function  (and  map
-                          (lookup-key map key))))
+  (let* ((prop (text-properties-at (point)))
+         (map (and prop
+                   (nth 1 (memq 'keymap prop))))
+         (function (and map
+                        (lookup-key map key))))
     function))
 
 ;;; ----------------------------------------------------------------------
@@ -7946,8 +7946,8 @@ This won't work on mouse commands that examine the mouse `event'"
 If mouse is not supported, return nil."
   (when (fboundp 'mouse-position)
     (let ( ;; (frame (car (mouse-position)))
-          (x  (cadr (mouse-position)))
-          (y  (cddr (mouse-position))))
+          (x (cadr (mouse-position)))
+          (y (cddr (mouse-position))))
       (if (not (and x y))               ;No info available
           (list
            (ti::current-line-number)
@@ -7958,12 +7958,12 @@ If mouse is not supported, return nil."
               (count 0))
           (save-window-excursion
 	    (catch 'break
-              (dolist (elt (window-list))
+              (dolist (elt (window-list)) ;; TODO: why the code?
 		(when (eq elt win)
-                  (throw 'break nil)))
-              (select-window elt)
+                  (throw 'break win))
+		(select-window win)
               ;;  Modeline is not counted as +1
-              (setq count (+ count (window-height)))))
+              (setq count (+ count (window-height))))))
           ;; (ti::d! count x y)
           (list (1+ (- y count))
                 ;;  In Emacs 21.x there is a "fringe" that mouse-position
@@ -7971,7 +7971,7 @@ If mouse is not supported, return nil."
                 (if (eq x 0)
                     ;; Consider "fringe" as column 0
                     0
-                  ;; Removed "fringe" count
+                  ;; Remove "fringe" count
                   (1- x))))))))
 
 ;;; ----------------------------------------------------------------------
