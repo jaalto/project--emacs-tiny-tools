@@ -75,7 +75,7 @@
 
 ;;{{{ setup: -- variables
 
-(defconst tinyliby-version-time "2023.0918.1903"
+(defconst tinyliby-version-time "2023.0919.0759"
   "Latest version number as last modified time.")
 
 (defvar ti::system--describe-symbols-history nil
@@ -150,24 +150,26 @@ Example of LOAD-HISTORY-ELT:
 	item
 	current
 	ret)
-    (dolist (elt load-history-elt)
-      (cond
-       ((ti::listp elt)
-        (setq item (car elt))
-        (cond
-         ((eq item 'provide)
-          (setq provide     (cdr elt))
-          ;;   if RET has been; indicating that SYM was found,
-          ;;   terminate on next provide that should be just after the sym list
-          ;;
-          ;;   (require ...)
-          ;;   ...sym sym SYM sym sym
-          ;;   (provide 'package)
-          (when ret
-            (setq ret provide)
-            (cl-return)))))
-       ((symbolp elt)
-        (setq current elt)))
+    (catch 'break
+      (dolist (elt load-history-elt)
+	(cond
+	 ((ti::listp elt)
+          (setq item (car elt))
+          (cond
+           ((eq item 'provide)
+            (setq provide     (cdr elt))
+            ;;   if RET has been; indicating that SYM was found,
+            ;;   terminate on next provide that should be just after
+            ;;   the sym list
+            ;;
+            ;;   (require ...)
+            ;;   ...sym sym SYM sym sym
+            ;;   (provide 'package)
+            (when ret
+              (setq ret provide)
+              (throw 'break))))))
+	((symbolp elt)
+         (setq current elt)))
       (when (eq sym current)
         (setq ret provide)))
     ret))
@@ -179,12 +181,13 @@ Example of LOAD-HISTORY-ELT:
 
 Return:
 
-  list       feature's load history entry where variable were found.
+  list       feature\\='s load history entry where variable were found.
   nil        no information in `load-history' about this variable."
-  (dolist (entry load-history)          ;point to functions
-    ;;  (FILE (REQUIRE) (REQ) SYM SYM SYM ...)
-    (when (memq sym entry)
-      (cl-return entry))))
+  (catch 'break
+    (dolist (entry load-history)          ;point to functions
+      ;;  (FILE (REQUIRE) (REQ) SYM SYM SYM ...)
+      (when (memq sym entry)
+	(throw 'break entry)))))
 
 ;;; ----------------------------------------------------------------------
 ;;;
