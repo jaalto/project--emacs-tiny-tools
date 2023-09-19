@@ -1,5 +1,18 @@
 2023-09-19 Tue  Jari Aalto  <jari.aalto@tuni.fi>
 
+	* tiny/tinyeat.el (tinyeat-repeat-macro):
+	Update `loop' to `cl-loop'.
+
+	* other/expect.el: Remove `cl' and XEmacs `run-at-time' check.
+
+	* other/fnexpand.el (all) docstrng. Correct Emacs 30.0.50
+	byte compile errors.
+	(fnexpand-complete): rm unused 	`unwind-protect'.
+
+	* other/dired-sort.el (dired-sort-line-property-table):
+	docstrng. Correct Emacs 30.0.50 correct byte compile error.
+        Update to cl-lib.
+
 	* tiny/tinypath.el (tinypath-ti::win32-cygwin-p):
 	in dolist, correct 'cl-return' to catch..throw.
 	(tinypath-executable-find):
@@ -128,6 +141,7 @@
         in dolist, correct 'cl-return' to catch..throw.
         (ti::package-config-file-directory-default):
         in dolist, correct 'cl-return' to catch..throw.
+	(ti::dotimes): change ´loop' to `cl-loop'.
 
         * tiny/tinylibid.el (ti::id-cnv-txt2comment):
         in dolist, correct 'cl-return' to catch..throw.
@@ -163,6 +177,8 @@
         in dolist, correct 'cl-return' to catch..throw.
         (ti::compat-timer-elt):
         in dolist, correct 'cl-return' to catch..throw.
+	(ti::string-mangle): User `let*'.
+	(ti::compat-key-local-map): correct indent.
 
         * tiny/tinyirc.el (tinyirc--pastebot-send-file):
         in dolist, correct 'cl-return' to catch..throw.
