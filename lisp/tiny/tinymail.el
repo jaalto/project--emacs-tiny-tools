@@ -2750,9 +2750,9 @@ Return:
   "Like `tinymail-complete-guess', but complete only in body. Ignore ARG."
   (interactive)
   (when (>(point) (ti::mail-hmax))
-    (let ((fid    "tinymail-complete-guess-in-body")
-	  (hook   tinymail--complete-body-hook)
-	  (data  (tinymail-complete-string-read))
+    (let ((fid "tinymail-complete-guess-in-body")
+	  (hook tinymail--complete-body-hook)
+	  (data (tinymail-complete-string-read))
 	  ret)
       (unless fid ;; No-op. XEmacs byte compiler silencer
         (setq fid nil))
@@ -2762,16 +2762,17 @@ Return:
                       'POINT   (point)
                       'data    data
                       'hook    hook)
-      (dolist (func hook)
-        (tinymail-debug fid 'FUNC func)
-        (when (cond
-               ((not (fboundp func))
-                (tinymail-debug fid 'FUNC func "not exist")
-                nil)
-               (t
-                (funcall func data)))
-          (setq ret t)
-          (cl-return)))
+      (catch 'break
+	(dolist (func hook)
+          (tinymail-debug fid 'FUNC func)
+          (when (cond
+		 ((not (fboundp func))
+                  (tinymail-debug fid 'FUNC func "not exist")
+                  nil)
+		 (t
+                  (funcall func data)))
+            (setq ret t)
+            (throw 'break))))
       ret)))
 
 ;;; ----------------------------------------------------------------------
@@ -2951,28 +2952,31 @@ Input:
             ;; ......................................... field match ...
             (if (null check)
                 nil ;; (setq ok t)
-              (dolist (func check)
-                (when (and (functionp func)
-                           (setq str (funcall func record))
-                           (cond
-                            ((stringp str)
-                             (string-match regexp str))
-                            ((and (listp str)
-                                  ;; '((field . "str") ..)
-                                  (ti::consp (car-safe str)))
-                             (dolist (elt str)
-                               (setq elt (cdr elt))
-                               (when (and (stringp elt)
-                                          (string-match regexp elt))
-                                 (cl-return t))))
-                            ((and (listp str)
-                                  (stringp (car-safe str)))
-                             (dolist (s str)
-                               (when (string-match regexp s)
-                                 (cl-return t))))))
-                  (if tinymail--debug
-                      (tinymail-debug fid 'MATCH regexp func str))
-                  (cl-return))))
+	      (catch 'outer
+		(dolist (func check)
+                  (when (and (functionp func)
+                             (setq str (funcall func record))
+                             (cond
+                              ((stringp str)
+                               (string-match regexp str))
+                              ((and (listp str)
+                                    ;; '((field . "str") ..)
+                                    (ti::consp (car-safe str)))
+			       (catch 'break
+				 (dolist (elt str)
+				   (setq elt (cdr elt))
+				   (when (and (stringp elt)
+                                              (string-match regexp elt))
+                                     (throw 'break t)))))
+                              ((and (listp str)
+                                    (stringp (car-safe str)))
+			       (catch 'break
+				 (dolist (s str)
+				   (when (string-match regexp s)
+                                     (throw 'break t)))))))
+                    (if tinymail--debug
+			(tinymail-debug fid 'MATCH regexp func str))
+                    (throw 'outer)))))
             ;; .................................... make completions ...
             (dolist (elt (inline
                            (tinymail-bbdb-record-net-completions
@@ -3049,17 +3053,18 @@ Input:
                     (setq i (1+ i))
                     (if (not (listp elt))
                         (setq elt (list elt)))
-                    (dolist (item elt)
-                      ;;   Try CDR: (notes . "value")
-                      ;;   or  CAR: ("string")
-                      (if (listp item)
-                          (setq item (or (cdr-safe item)
-                                         (car-safe item))))
-                      (when (and (stringp item)
-                                 (string-match  regexp item))
-                        (tinymail-debug fid 'ANYTHING regexp elt)
-                        (setq max (1+ max))
-                        (cl-return))))))))
+		    (catch 'break
+                      (dolist (item elt)
+			;;   Try CDR: (notes . "value")
+			;;   or  CAR: ("string")
+			(if (listp item)
+                            (setq item (or (cdr-safe item)
+                                           (car-safe item))))
+			(when (and (stringp item)
+                                   (string-match  regexp item))
+                          (tinymail-debug fid 'ANYTHING regexp elt)
+                          (setq max (1+ max))
+                          (throw 'break)))))))))
           ;; ..................................... make completions ...
           (when (and record
                      name
@@ -3205,102 +3210,103 @@ INFO contains list '(begin-point end-point text-between-points)."
 INFO is '(string beg end) of the completion word"
   (interactive)
   (ti::mail-point-in-header-macro
-   (let* ((fid        "tinymail-complete-simple: ")
-          (field-1    (ti::remove-properties (ti::mail-current-field-name)))
-          (field      (and field-1
-                           (capitalize field-1))) ;; gcc -> Gcc
-          (field-info (or info
-                          (tinymail-complete-string-read)))
-          multi-word
-          complete-list
-          tmp
-          choices
-          string
-          ret)
-     (unless fid ;; No-op. XEmacs byte compiler silencer
-       (setq fid nil))
-     ;;  The EVAL-FORM may set this if it does not return `choices'
-     (setq tinymail--complete-key-return-value nil)
-     ;;  The STRING is dynamically bound and visible for EVAL CHOICES
-     (when (stringp (setq string (nth 2 field-info)))
-       (setq choices (tinymail-header-complete-choices field)))
-     (tinymail-debug fid
-                     'INFO    info
-                     'FIELD   field
-                     'STRING  string
-                     'CHOICES choices)
-     ;; ............................................... check choices ...
-     (when choices
-       (cond
-        ((null string) ;; Empty field, user expects all completions
-         (setq string (completing-read
-                       (concat field ": ")
-                       (ti::list-to-assoc-menu choices)))
-         (unless (ti::nil-p string)
-           (insert string)
-           (setq ret t)))
-        (t
-         (setq choices (ti::list-to-assoc-menu choices))
-         ;;  Forget choices that are multiwords "val val"
-         (unless (string-match " " string)
-           (setq complete-list (all-completions string choices))
-           ;;  This is the common string at the beginning
-           (setq tmp (try-completion string choices))
-           (tinymail-debug fid
-                           'COMPLETE-LIST complete-list
-                           'TRY tmp
-                           'str string)
-           (dolist (completion complete-list)
-             (when (string-match " " completion)
-               (setq multi-word t)
-               (cl-return)))
-           ;; ....................................... completion-list ...
-           (cond
-            ((null complete-list)
-             (message "TinyMail: no simple completions matching `%s'" string))
-            ((or (and (eq 1 (length complete-list))      ;; ONE found
-                      (setq string (car complete-list))) ;; that's it
-                 (and tmp
-                      ;;  Don't accept partial match from "Multi Word"
-                      ;;  completion strings.
-                      multi-word
-                      (not (ti::nil-p
-                            (setq string
-                                  (completing-read
-                                   "Complete: "
-                                   (ti::list-to-assoc-menu complete-list)
-                                   nil
-                                   nil
-                                   ;; initial value
-                                   tmp))))))
-             (tinymail-complete-insert-completion string info)
-             (setq ret t))
+    (let* ((fid        "tinymail-complete-simple: ")
+           (field-1    (ti::remove-properties (ti::mail-current-field-name)))
+           (field      (and field-1
+                            (capitalize field-1))) ;; gcc -> Gcc
+           (field-info (or info
+                           (tinymail-complete-string-read)))
+           multi-word
+           complete-list
+           tmp
+           choices
+           string
+           ret)
+      (unless fid ;; No-op. XEmacs byte compiler silencer
+	(setq fid nil))
+      ;;  The EVAL-FORM may set this if it does not return `choices'
+      (setq tinymail--complete-key-return-value nil)
+      ;;  The STRING is dynamically bound and visible for EVAL CHOICES
+      (when (stringp (setq string (nth 2 field-info)))
+	(setq choices (tinymail-header-complete-choices field)))
+      (tinymail-debug fid
+                      'INFO    info
+                      'FIELD   field
+                      'STRING  string
+                      'CHOICES choices)
+      ;; ............................................... check choices ...
+      (when choices
+	(cond
+         ((null string) ;; Empty field, user expects all completions
+          (setq string (completing-read
+			(concat field ": ")
+			(ti::list-to-assoc-menu choices)))
+          (unless (ti::nil-p string)
+            (insert string)
+            (setq ret t)))
+         (t
+          (setq choices (ti::list-to-assoc-menu choices))
+          ;;  Forget choices that are multiwords "val val"
+          (unless (string-match " " string)
+            (setq complete-list (all-completions string choices))
+            ;;  This is the common string at the beginning
+            (setq tmp (try-completion string choices))
+            (tinymail-debug fid
+                            'COMPLETE-LIST complete-list
+                            'TRY tmp
+                            'str string)
+	    (catch 'break
+              (dolist (completion complete-list)
+		(when (string-match " " completion)
+		  (setq multi-word t)
+		  (throw 'break))))
+            ;; ....................................... completion-list ...
+            (cond
+             ((null complete-list)
+              (message "TinyMail: no simple completions matching `%s'" string))
+             ((or (and (eq 1 (length complete-list))      ;; ONE found
+                       (setq string (car complete-list))) ;; that's it
+                  (and tmp
+                       ;;  Don't accept partial match from "Multi Word"
+                       ;;  completion strings.
+                       multi-word
+                       (not (ti::nil-p
+                             (setq string
+                                   (completing-read
+                                    "Complete: "
+                                    (ti::list-to-assoc-menu complete-list)
+                                    nil
+                                    nil
+                                    ;; initial value
+                                    tmp))))))
+              (tinymail-complete-insert-completion string info)
+              (setq ret t))
 
-            ((and tmp (not (string= tmp string)))
-             ;;  there was common denominator, complete further
-             (tinymail-complete-insert-completion tmp info)
-             (message "Tinymail complete:  %s"
-                      (ti::list-to-string complete-list ", " ))
-             (setq ret t))
-            (complete-list
-             (let (ret)
-               (setq ret (completing-read
-                          (concat field ": ")
-                          (ti::list-to-assoc-menu complete-list)
-                          nil
-                          nil
-                          string))
-               (unless (ti::nil-p ret)
-                 (tinymail-complete-insert-completion ret info)))
-             ;; More than 1, stop and return t
-             (setq ret t)))))))
-     (tinymail-debug fid
-                     "RET"    ret
-                     "GLOBAL COMPLETE VALUE"
-                     tinymail--complete-key-return-value)
-     ;;  Return status if we did something in this function
-     (or ret
-         tinymail--complete-key-return-value))))
+             ((and tmp (not (string= tmp string)))
+              ;;  there was common denominator, complete further
+              (tinymail-complete-insert-completion tmp info)
+              (message "Tinymail complete:  %s"
+                       (ti::list-to-string complete-list ", " ))
+              (setq ret t))
+             (complete-list
+              (let (ret)
+		(setq ret (completing-read
+                           (concat field ": ")
+                           (ti::list-to-assoc-menu complete-list)
+                           nil
+                           nil
+                           string))
+		(unless (ti::nil-p ret)
+                  (tinymail-complete-insert-completion ret info)))
+              ;; More than 1, stop and return t
+              (setq ret t)))))))
+      (tinymail-debug fid
+                      "RET"    ret
+                      "GLOBAL COMPLETE VALUE"
+                      tinymail--complete-key-return-value)
+      ;;  Return status if we did something in this function
+      (or ret
+          tinymail--complete-key-return-value))))
 
 ;;; ----------------------------------------------------------------------
 ;;;
@@ -3539,16 +3545,17 @@ functions. Each function is passed the word info at point: '(BEG END STRING)."
                        'tinymail-complete-everything))))
       ;; .................................................... cond-end ...
       (tinymail-debug fid 'LOOPING-LIST tinymail--complete-key-hook)
-      (dolist (func tinymail--complete-key-hook)
-        (tinymail-debug fid 'FUNC func string)
-        (when (cond
-               ((not (fboundp func))
-                (tinymail-debug fid 'FUNC func "not exist")
-                nil)
-               (t
-                (funcall func string)))
-          (setq ret t)
-          (cl-return)))
+      (catch 'break
+	(dolist (func tinymail--complete-key-hook)
+          (tinymail-debug fid 'FUNC func string)
+          (when (cond
+		 ((not (fboundp func))
+                  (tinymail-debug fid 'FUNC func "not exist")
+                  nil)
+		 (t
+                  (funcall func string)))
+            (setq ret t)
+            (throw 'break))))
       (tinymail-debug fid fid 'RET ret)
       ret)))
 
@@ -3958,16 +3965,17 @@ E.g. in XEmacs you can use package reportmail.el."
     ;; ................................ according to message content ...
     (setq msg-postfix
           (save-excursion
-            (dolist (elt postfixes)
-              (ti::mail-text-start 'move)
-              (setq condition (car elt))
-              (when (if (stringp condition)
-                        (re-search-forward condition nil t)
-                      (setq ret (funcall condition)))
-                (unless ret
-                  (tinymail-debug fid 'point (point) 'LOOP-SELECT elt )
-                  (setq ret (cdr elt)))
-                (cl-return)))
+	    (catch 'break
+              (dolist (elt postfixes)
+		(ti::mail-text-start 'move)
+		(setq condition (car elt))
+		(when (if (stringp condition)
+                          (re-search-forward condition nil t)
+			(setq ret (funcall condition)))
+                  (unless ret
+                    (tinymail-debug fid 'point (point) 'LOOP-SELECT elt )
+                    (setq ret (cdr elt)))
+                  (throw 'break))))
             ret))
     ;; ............................................... guess mail type ...
     ;; If not yet set, look at message and decide right postfix
@@ -4175,12 +4183,13 @@ Return:
       (when (setq hmax (ti::mail-hmax)) ;header end must be found
         (save-excursion
           (ti::pmin)
-          (dolist (elt ptr)
-            (setq re     (nth 0 elt)
-                  folder (nth 1 elt))
-            (when (re-search-forward re hmax t)
-              (setq ret folder)
-              (cl-return)))))
+	  (catch 'break
+            (dolist (elt ptr)
+              (setq re     (nth 0 elt)
+                    folder (nth 1 elt))
+              (when (re-search-forward re hmax t)
+		(setq ret folder)
+		(throw 'break))))))
       (if (and (stringp ret)
                (string-match "gz$\\|Z$" ret))
           (ti::use-file-compression))
