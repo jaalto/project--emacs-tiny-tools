@@ -270,7 +270,8 @@
 (require 'tinylibm)
 
 (eval-when-compile
-  (require 'cl))
+  (or (require 'cl-lib nil 'noerr) ;; Emacs 29.x
+      (require 'cl)))
 
 (ti::package-defgroup-tiny TinyHotlist tinyhotlist-- tools
   "Hotlist of important buffers and files, easy add, easy remove")
@@ -448,14 +449,15 @@ NO-CONFIRM suppresses confirm of loading ange-ftp files."
      (file
       ;; Find ange-ftp dired buffer
       (when (string-match "@.*:" file)
-        (dolist (buffer (buffer-list))
-          (with-current-buffer buffer
-            (when (and (eq major-mode 'dired-mode)
-                       (string=
-                        file
-                        (symbol-value 'dired-directory)))
-              (setq ptr (current-buffer))
-              (cl-return)))))
+	(catch 'break
+          (dolist (buffer (buffer-list))
+            (with-current-buffer buffer
+              (when (and (eq major-mode 'dired-mode)
+			 (string=
+                          file
+                          (symbol-value 'dired-directory)))
+		(setq ptr (current-buffer))
+		(throw 'break))))))
       (setq ptr
             (or ptr
                 (get-file-buffer file)
@@ -495,17 +497,17 @@ using `tinyhotlist--abbreviate-file-name-table'."
 	substitute
 	match
 	replace)
-    (dolist (elt tinyhotlist--abbreviate-file-name-table)
-      (setq str (nth 0 elt)  substitute (nth 1 elt))
-      (setq match (if restore substitute str)
-            replace
-            (if restore
-                (file-name-as-directory str)
-              substitute))
-
-      (when (string-match (concat "^" (regexp-quote match)) file)
-        (setq file (ti::replace-match 0 replace file))
-        (cl-return)))
+    (catch 'break
+      (dolist (elt tinyhotlist--abbreviate-file-name-table)
+	(setq str (nth 0 elt)  substitute (nth 1 elt))
+	(setq match (if restore substitute str)
+              replace
+              (if restore
+                  (file-name-as-directory str)
+		substitute))
+	(when (string-match (concat "^" (regexp-quote match)) file)
+          (setq file (ti::replace-match 0 replace file))
+          (throw 'break))))
     file))
 
 ;;; ----------------------------------------------------------------------
