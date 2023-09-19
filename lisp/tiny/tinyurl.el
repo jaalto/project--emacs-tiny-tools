@@ -1373,9 +1373,10 @@ The TABLE is modified in place."
                    'tinyurl-dispatcher-1))
           browse-url-browser-function))
      ((listp browse-url-browser-function)
-      (dolist (elt browse-url-browser-function)
-        (when (string-match "netscape" (symbol-name (cdr-safe elt)))
-          (cl-return (cdr elt))))))))
+      (catch 'break
+	(dolist (elt browse-url-browser-function)
+          (when (string-match "netscape" (symbol-name (cdr-safe elt)))
+            (throw 'break (cdr elt)))))))))
 
 ;;; ----------------------------------------------------------------------
 ;;;
@@ -1478,7 +1479,7 @@ References:
 ;;; ----------------------------------------------------------------------
 ;;; This is a copy from function `browse-url'.
 (defun tinyurl-command-browse-url-default-browser-function-1
-  (&optional url)
+    (&optional url)
   "Return function from `browse-url-browser-function' for URL.
 URL defaults to http"
   (when (boundp 'browse-url-browser-function)
@@ -1486,9 +1487,10 @@ URL defaults to http"
         browse-url-browser-function
       ;; The `function' can be an alist; look down it for first match
       ;; and apply the function (which might be a lambda).
-      (dolist (elt browse-url-browser-function)
-        (when (string-match (car elt) (or url "http"))
-          (cl-return (cdr elt)))))))
+      (catch 'break
+	(dolist (elt browse-url-browser-function)
+          (when (string-match (car elt) (or url "http"))
+            (throw 'break (cdr elt))))))))
 
 ;;; ----------------------------------------------------------------------
 ;;;
