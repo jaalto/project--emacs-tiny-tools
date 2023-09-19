@@ -228,15 +228,16 @@ is equal or greater than VERSION-STRING."
           "[.0-9]*"))
         try
         ret)
-    (dolist (elt load-path)
-      (when (and (stringp elt)
-                 (string-match regexp elt)
-                 (setq try (match-string 0 elt))
-                 ;;  load-path may contain whatever directories, but
-                 ;;  is it on disk too?
-                 (file-directory-p (concat try "/lisp" )))
-        (setq ret try)
-        (cl-return)))
+    (catch 'break
+      (dolist (elt load-path)
+	(when (and (stringp elt)
+                   (string-match regexp elt)
+                   (setq try (match-string 0 elt))
+                   ;;  load-path may contain whatever directories, but
+                   ;;  is it on disk too?
+                   (file-directory-p (concat try "/lisp" )))
+          (setq ret try)
+          (throw 'break))))
     ret))
 
 ;;; ----------------------------------------------------------------------
@@ -341,42 +342,43 @@ functions `ti::os-check-linux-like-p' or `ti::win32-cygwin-p'."
       (setq ret (get 'ti::win32-cygwin-p 'cache-value)))
      (t
       (put 'ti::win32-cygwin-p 'cache-set t)
-      (dolist (path exec-path)
-        ;;  Sometimes there can be $PATH errors like "/bin::/sbin" and
-        ;;  Emacs exec-path gets corrupted to read "/:/bin"  etc. Fix those.
-        (when (and (stringp path)
-                   (not (string-match "^[a-z]:" path))
-                   (string-match ".*:" path))
-          (setq path (replace-match "" nil nil path)))
-        (when (and (stringp path)
-                   ;;  Many embedded programs do include *.dll, but
-                   ;;  not the whole cygwin suite. Search also typical
-                   ;;  cygpath.exe
-                   (file-exists-p
-                    (concat
-                     (file-name-as-directory path) "cygwin1.dll"))
-                   (file-exists-p
-                    (concat
-                     (file-name-as-directory path) "cygpath.exe")))
-          ;;  The root directory is one DIR up from bin/cygwin1.dll
-          ;;
-          ;;  1) Drop the trailing slash  ../bin
-          ;;  2) Go one directory up    ..
-          ;;
-          ;;  Leave a trailing slash, because the resulting
-          ;;  directory may be in the worst case at C:/
-          ;;  (which is NOT a recommended place for cygwin install)
-          ;;
-          (when (string-match "^\\(.*\\)[/\\]" path)
-            (setq path
-                  (match-string 1 path))
-            (setq ret path)
-            ;;  This is native Cygwin Emacs, not a Win32 version
-            ;;  if path is empty: /bin => one up => ''
-            (when (string= ret "")
-              (setq ret "/"))
-            (put 'ti::win32-cygwin-p 'cache-value ret)
-            (cl-return))))))
+      (catch 'break
+	(dolist (path exec-path)
+          ;;  Sometimes there can be $PATH errors like "/bin::/sbin" and
+          ;;  Emacs exec-path gets corrupted to read "/:/bin"  etc. Fix those.
+          (when (and (stringp path)
+                     (not (string-match "^[a-z]:" path))
+                     (string-match ".*:" path))
+            (setq path (replace-match "" nil nil path)))
+          (when (and (stringp path)
+                     ;;  Many embedded programs do include *.dll, but
+                     ;;  not the whole cygwin suite. Search also typical
+                     ;;  cygpath.exe
+                     (file-exists-p
+                      (concat
+                       (file-name-as-directory path) "cygwin1.dll"))
+                     (file-exists-p
+                      (concat
+                       (file-name-as-directory path) "cygpath.exe")))
+            ;;  The root directory is one DIR up from bin/cygwin1.dll
+            ;;
+            ;;  1) Drop the trailing slash  ../bin
+            ;;  2) Go one directory up    ..
+            ;;
+            ;;  Leave a trailing slash, because the resulting
+            ;;  directory may be in the worst case at C:/
+            ;;  (which is NOT a recommended place for cygwin install)
+            ;;
+            (when (string-match "^\\(.*\\)[/\\]" path)
+              (setq path
+                    (match-string 1 path))
+              (setq ret path)
+              ;;  This is native Cygwin Emacs, not a Win32 version
+              ;;  if path is empty: /bin => one up => ''
+              (when (string= ret "")
+		(setq ret "/"))
+              (put 'ti::win32-cygwin-p 'cache-value ret)
+              (throw 'break)))))))
     ret))
 
 ;;; ----------------------------------------------------------------------
