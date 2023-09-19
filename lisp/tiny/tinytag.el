@@ -1008,13 +1008,14 @@ Return list:
     (tinytag-debug fid "string" string "\n")
     (when (run-hook-with-args-until-success
            'tinytag--word-filter-hook string)
-      (dolist (elt table)
-        (setq re (car elt)
-              db (nth 1 elt))
-        (when (string-match re string)
-          (setq ret (tinytag-search-db string db))
-          (tinytag-debug fid " MATCH" "re" re "str" string "ret" ret"\n")
-          (cl-return))))
+      (catch 'break
+	(dolist (elt table)
+          (setq re (car elt)
+		db (nth 1 elt))
+          (when (string-match re string)
+            (setq ret (tinytag-search-db string db))
+            (tinytag-debug fid " MATCH" "re" re "str" string "ret" ret"\n")
+            (throw 'break)))))
     ret))
 
 ;;}}}
