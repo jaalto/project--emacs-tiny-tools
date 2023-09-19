@@ -305,7 +305,8 @@
 (require 'tinylibm)
 
 (eval-when-compile
-  (require 'cl))
+  (or (require 'cl-lib nil 'noerr) ;; Emacs 29.x
+      (require 'cl)))
 
 (eval-and-compile
   (defvar track-mouse)                  ;ByteComp silencer for XEmacs
@@ -1163,10 +1164,12 @@ Return list:
     (save-excursion
       (ti::pmin)
       ;;  See if we can detect the package name in this buffer
-      (when (dolist (re (list re5 re1 re2 re3 re4))
-              (when (re-search-forward re nil t)
-                (tinymy-debug fid 'MATCH re 'LINE (ti::read-current-line) "\n")
-                (cl-return t)))
+      (when (catch 'break
+	      (dolist (re (list re5 re1 re2 re3 re4))
+		(when (re-search-forward re nil t)
+                  (tinymy-debug
+		   fid 'MATCH re 'LINE (ti::read-current-line) "\n")
+                  (throw 'break t))))
         (setq file  (match-string 2)
               com   (match-string 1)
               point (line-beginning-position))
@@ -2134,9 +2137,10 @@ Return:
 ;;;
 (defun tinymy-compile-command-search (type)
   "Search match car of `tinymy--compile-table' against TYPE and return cdr."
-  (dolist (elt tinymy--compile-table)
-    (when (string-match (car elt) type)
-      (cl-return (cdr elt)))))
+  (catch 'break
+    (dolist (elt tinymy--compile-table)
+      (when (string-match (car elt) type)
+	(throw 'break (cdr elt))))))
 
 ;;; ----------------------------------------------------------------------
 ;;;
@@ -2158,15 +2162,17 @@ Return:
                  "rxp"
                  ;; verbose, Validate
                  "-v -V"))))
-    (dolist (elt list)
-      (cl-multiple-value-bind (cmd args)
-          elt
-        (when (executable-find cmd)
-          (cl-return (format "%s %s %s"
-                          cmd
-                          (or args "")
-                          (file-name-nondirectory
-                           (buffer-file-name)))))))))
+    (catch 'break
+      (dolist (elt list)
+	(cl-multiple-value-bind (cmd args)
+            elt
+          (when (executable-find cmd)
+            (throw 'break
+		   (format "%s %s %s"
+			   cmd
+                           (or args "")
+                           (file-name-nondirectory
+                            (buffer-file-name))))))))))
 
 ;;; ----------------------------------------------------------------------
 ;;;
