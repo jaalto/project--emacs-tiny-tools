@@ -4237,10 +4237,10 @@ Return:
 
  buffer     `tinylisp--buffer-data'"
   (interactive)
-  (let ((max       (length load-history ))
-        (buffer    (ti::temp-buffer tinylisp--buffer-library 'clear))
-        (i         0)
-        (unknown   "--unknown--")
+  (let ((max (length load-history ))
+        (buffer (ti::temp-buffer tinylisp--buffer-library 'clear))
+        (i 0)
+        (unknown "--unknown--")
         dep-list
         name
         path)
@@ -4285,7 +4285,7 @@ Return:
             (format "%s ..." (ti::string-left (prin1-to-string pkg) 80)))))
         (if verb
             (message "TinyLisp: lib info %d/%d %s" i max name))
-        (setq i (1+ ))
+        (setq i (1+ i))
         (setq dep-list  nil
               pkg       nil)))
     (tinylisp-with-current-buffer buffer
