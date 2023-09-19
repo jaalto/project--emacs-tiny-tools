@@ -498,17 +498,18 @@ Input:
           (setq path t))               ;XEmacs ByteCom silencer, no-op
       (with-temp-buffer
         ;;   Select gnu if possible
-        (dolist (prg program-list)
-          (message "TinyDiff: Please wait. Searching for binary `%s'" prg)
-          (when (setq path (executable-find prg))
-            (call-process prg
-                          nil
-                          (current-buffer)
-                          nil
-                          seek-option)
-            (when (ti::re-search-check seek-option)
-              (setq gnu path)
-              (cl-return))))
+	(catch 'brak
+          (dolist (prg program-list)
+            (message "TinyDiff: Please wait. Searching for binary `%s'" prg)
+            (when (setq path (executable-find prg))
+              (call-process prg
+                            nil
+                            (current-buffer)
+                            nil
+                            seek-option)
+              (when (ti::re-search-check seek-option)
+		(setq gnu path)
+		(throw 'break)))))
         (if gnu
             (setq ret gnu)
           (message "TinyDiff: Hm, no GNU %s, but using it anyway" default)
@@ -586,18 +587,19 @@ it excludes the rcs tags from diff."
   (or (let ((temp (or (getenv "TEMPDIR")
                       (getenv "TMP")))
             (file "tinydiff.diff"))
-        (dolist (dir (list
-                      "~/tmp"
-                      "~/temp"
-                      "/tmp"
-                      temp ;; this may be nil
-                      "c:/tmp"
-                      "c:/temp"
-                      "c:/winnt/tmp"
-                      "c:/windows/temp"))
-          (when (and (stringp dir)
-                     (file-directory-p dir))
-            (cl-return (concat (file-name-as-directory dir) file)))))
+	(catch 'brak
+          (dolist (dir (list
+			"~/tmp"
+			"~/temp"
+			"/tmp"
+			temp ;; this may be nil
+			"c:/tmp"
+			"c:/temp"
+			"c:/winnt/tmp"
+			"c:/windows/temp"))
+            (when (and (stringp dir)
+                       (file-directory-p dir))
+              (throw 'break (concat (file-name-as-directory dir) file))))))
       (error "TinyDiff: Please set tinydiff--diff-tmp-file"))
   "*Temporary file where the diff is stored for patching."
   :type  'file
