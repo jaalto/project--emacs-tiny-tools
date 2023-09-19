@@ -254,7 +254,8 @@
 (require 'tinylibm)
 
 (eval-when-compile
-  (require 'cl))
+  (or (require 'cl-lib nil 'noerr) ;; Emacs 29.x
+      (require 'cl)))
 
 (ti::package-defgroup-tiny TinyEat tinyeat-- extension
   "Eat blocks of text forward, backward.
