@@ -1108,15 +1108,16 @@ Return:
       (setq grep tinyigrep--grep-program))
   (let (list)
     (message "TinyIgrep: activating database `lisp-rc-files'")
-    (dolist (path load-path)
-      (when (and (stringp path)
-                 (file-directory-p path))
-        (dolist (file (directory-files path))
-          (when (string-match "-rc-" file)
-            (push (concat (file-name-as-directory path)
-                          "*-rc-*el")
-                  list)
-            (cl-return)))))
+    (catch 'break
+      (dolist (path load-path)
+	(when (and (stringp path)
+                   (file-directory-p path))
+          (dolist (file (directory-files path))
+            (when (string-match "-rc-" file)
+              (push (concat (file-name-as-directory path)
+                            "*-rc-*el")
+                    list)
+              (throw 'break))))))
     (when list
       (tinyigrep-db-push-elt (list "lisp-rc-files" (list grep list))))))
 
@@ -1813,14 +1814,15 @@ PATTERN is new search patter and ARG-LIST is original argument list."
   "Guess proper grep program for FILE-LIST."
   (when file-list
     (let ((prg "egrep"))
-      (dolist (file file-list)
-        (cond
-         ((string-match "z2$" file)
-          (setq prg "bzgrep")
-          (cl-return))
-         ((string-match "gz$" file)
-          (setq prg "zgrep")
-          (cl-return))))
+      (catch 'break
+	(dolist (file file-list)
+          (cond
+           ((string-match "z2$" file)
+            (setq prg "bzgrep")
+            (throw 'break))
+          ((string-match "gz$" file)
+           (setq prg "zgrep")
+           (throw 'break)))))
       prg)))
 
 ;;; ----------------------------------------------------------------------
