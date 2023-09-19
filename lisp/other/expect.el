@@ -27,17 +27,6 @@
 
 ;;; Code:
 
-(eval-when-compile
-  (require 'cl))
-
-(eval-and-compile
-  ;; Old XEmacs does not have this, ignore load error
-  (ignore-errors (require 'timer))
-
-  (when (and (not (fboundp 'run-at-time))
-             (locate-library "tinyliba"))
-    (require 'tinyliba)))
-
 (defvar expect-message nil
   "*If non-nil, report how much data has arrived in the process buffer.
 This variable is buffer-local to all Expect buffers, and should be set
