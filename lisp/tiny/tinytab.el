@@ -193,8 +193,8 @@
 ;;; Code:
 
 (eval-when-compile
-  (require 'cl)
-  (require 'cl-lib))
+  (or (require 'cl-lib nil 'noerr) ;; Emacs 29.x
+      (require 'cl)))
 
 ;;;###autoload (autoload 'tinytab-mode                  "tinytab" "" t)
 ;;;###autoload (autoload 'turn-on-tinytab-mode          "tinytab" "" t)
@@ -789,10 +789,11 @@ Tabs are converted to spaces when needed; because you can't step inside
   ;;
   ;;  But then it would not be possible to debug which function gets
   ;;  called.
-  (dolist (function tinytab--tab-insert-hook)
-    (when (funcall function)
-      (tinytab-message "TinyTab: %s" (symbol-name function))
-      (cl-return))))
+  (catch 'break
+    (dolist (function tinytab--tab-insert-hook)
+      (when (funcall function)
+	(tinytab-message "TinyTab: %s" (symbol-name function))
+	(throw 'break)))))
 
 ;;;###autoload
 (defun tinytab-tab-key (&optional beg end)
