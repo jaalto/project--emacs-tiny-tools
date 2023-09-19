@@ -167,7 +167,7 @@
 
 (require 'tinylibm)
 
-(defconst tinylibid-version-time "2023.0919.0728"
+(defconst tinylibid-version-time "2023.0919.0837"
   "Latest version number.")
 
 ;;; setup: hooks
@@ -533,7 +533,7 @@ is not needed for mode."
             (setq com-s (nth 3 elt)))
 	(if (null (string-match re txt))
             (setq com-s nil   com-e nil)
-          (throw 'break))))
+          (throw 'break nil))))
     (if com-s
         (cons com-s com-e))))
 
@@ -609,7 +609,7 @@ Return:
 	(setq regexp (nth 0 elt))
 	(when (string-match regexp string)
           (setq ret (nth 1 elt))
-          (throw 'break))))
+          (throw 'break nil))))
     ret))
 
 ;;; ----------------------------------------------------------------------
@@ -628,7 +628,7 @@ Start searching from `point-min' or from optional POINT."
           (dolist (elt list)
             (when  (re-search-forward (nth 0 elt) nil t)
               (setq ret (nth 1 elt))
-              (throw 'break))))))
+              (throw 'break nil))))))
     ret))
 
 ;;; Study

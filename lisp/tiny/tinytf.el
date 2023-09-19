@@ -2521,11 +2521,11 @@ This function calls `tinytf-utility-programs-check' with \\='force."
           (cond
            ((not (stringp re))            ;Stop there
             (setq ret (nth 1 elt))
-            (throw 'break))
+            (throw 'break nil))
            ((looking-at re)               ;found match ?
             (setq ret (nth 1 elt))
             ;; Yes, stop there
-            (throw 'break))))))
+            (throw 'break nil))))))
     ret))
 
 ;;; ----------------------------------------------------------------------
@@ -3091,7 +3091,7 @@ Return
 		(delete-region beg end)
 		(insert word)
 		(setq end (point))
-		(throw 'break)))))
+		(throw 'break nil)))))
         (unless end
           (skip-chars-forward word-skip))
         (skip-chars-forward " (){}<>,.;:!?\"\'\n\r\t\f")))))

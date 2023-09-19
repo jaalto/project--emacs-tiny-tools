@@ -75,7 +75,7 @@
 
 ;;{{{ setup: -- variables
 
-(defconst tinyliby-version-time "2023.0919.0759"
+(defconst tinyliby-version-time "2023.0919.0837"
   "Latest version number as last modified time.")
 
 (defvar ti::system--describe-symbols-history nil
@@ -167,7 +167,7 @@ Example of LOAD-HISTORY-ELT:
             ;;   (provide 'package)
             (when ret
               (setq ret provide)
-              (throw 'break))))))
+              (throw 'break nil))))))
 	((symbolp elt)
          (setq current elt)))
       (when (eq sym current)

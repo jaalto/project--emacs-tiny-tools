@@ -83,7 +83,7 @@
 
 (require 'tinylibb)                     ;Backward compatible functions
 
-(defconst tinylibm-version-time "2023.0919.0731"
+(defconst tinylibm-version-time "2023.0919.0837"
   "Latest version number.")
 
 ;;{{{ function tests
@@ -1721,7 +1721,7 @@ Return:
           (if all-matches                 ;how to put results ?
               (ti::nconc ret element)
             (setq ret element)
-            (throw 'break)))))
+            (throw 'break nil)))))
     ret))
 
 ;;}}}

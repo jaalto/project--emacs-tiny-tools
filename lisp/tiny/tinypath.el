@@ -1737,7 +1737,7 @@ If USE-CACHE is non-nil, retrieve cached value."
 	      (when (string= ret "")
 		(setq ret "/"))
 	      (put 'tinypath-ti::win32-cygwin-p 'cache-value ret)
-	      (throw 'break)))))))
+	      (throw 'break nil)))))))
     ret))
 
 ;;; ----------------------------------------------------------------------
@@ -1755,7 +1755,7 @@ function just looks if FILE exists along load path."
 	(when (and (not (file-directory-p name))
 		   (file-exists-p name))
 	  (setq ret (tinypath-expand-file-name name))
-	  (throw 'break))))
+	  (throw 'break nil))))
     ret))
 
 ;;; ----------------------------------------------------------------------
@@ -2050,21 +2050,21 @@ Input:
 	  (cond
 	   ((stringp try)
 	    (if (setq found (check-dir try dir))
-		(throw 'break)))
+		(throw 'break nil)))
 	   ((listp try)
 	    (cl-multiple-value-bind (path count) try
 	      (cond
 	       ((and (stringp path)
 		     (eq count 'abs))
 		(if (setq found (check-dir path dir))
-		    (throw 'break)))
+		    (throw 'break nil)))
 	       ((and (stringp path)
 		     (integerp count))
 		(while (and (stringp path)
 			    (not (zerop count))
 			    (> count 0))
 		  (if (setq found (check-dir path dir))
-		      (throw 'break))
+		      (throw 'break nil))
 		  (setq count (1- count))
 		  (setq path
 			(tinypath-directory-up path))))))))))
@@ -2239,7 +2239,7 @@ Emacs core-lisp installation directories."
 		   (file-directory-p path))
 	  (message "TinyPath: tinypath-tmp-find-root-home [%s]" path)
 	  (setq ret path)
-	  (throw 'break))))
+	  (throw 'break nil))))
     ret))
 
 ;;; ----------------------------------------------------------------------
@@ -2309,7 +2309,7 @@ References:
 	  (when (string= dir "/tmp/")
 	    (setq dir (concat dir "-" user "-" )))
 	  (setq ret (concat dir (or file "")))
-	  (throw 'break))))
+	  (throw 'break nil))))
     ;;  Last thing to do. If User has set his HOME to point to
     ;;  C:/, that is not a good idea. Move cache file under C:/TEMP
     (when (and (string-match "^[Cc]:[/\\]?$" ret)
@@ -3450,7 +3450,7 @@ Return list:
 					   (prin1-to-string
 					    (get-elt elt (1+ pos))))))
 		(setq ret (list elt (car timer)))
-		(throw 'break)))))))
+		(throw 'break nil)))))))
     ret))
 
 ;;; ----------------------------------------------------------------------
@@ -3765,7 +3765,7 @@ TinyPath: [PANIC] Can't find Emacs core library jka-cmpr.el."))))
 		  (dolist (ext '("" ".el" ".elc"))
 		    (when (file-exists-p (concat file ext))
 		      (setq ret t)
-		      (throw 'break))))
+		      (throw 'break nil))))
 		ret))
     (message
      (substitute-command-keys
@@ -3938,7 +3938,7 @@ Note: directory list passed can contain non-string entries. They are ignored."
 		 (concat (file-name-as-directory dir)
 			 (or file "")))
 	    (setq ret (tinypath-expand-file-name dir))
-	    (throw 'break)))))
+	    (throw 'break nil)))))
     ret))
 
 ;;; ----------------------------------------------------------------------
@@ -4496,7 +4496,7 @@ This is combination of `load-path' and `tinypath--load-path-root'."
 	    (cond
 	     ((equal type 'cache)
 	      ;; Not handled in this loop
-	      (throw 'break))
+	      (throw 'break nil))
 	     ((and (equal type 'lisp-dir)
 		   correct-emacs)
 	      (tinypath-external-setup-1-load-path path lisp-lookup))
@@ -4606,7 +4606,7 @@ Input:
 	  (tinypath-verbose-macro 10
 	    (message "%s ASSOC %s" fid (prin1-to-string elt)))
 	  (setq ret elt)
-	  (throw 'break))))
+	  (throw 'break nil))))
     ret))
 
 ;;; ----------------------------------------------------------------------
@@ -4806,7 +4806,7 @@ If PACKAGE contains a path name, return PACKAGE."
 	  (unless level2
 	    ;; This was not in level 2, put it these
 	    (push (cons package ret) tinypath--cache-level-two))
-	  (throw 'break))
+	  (throw 'break nil))
 	 (ret
 	  ;;  Invalid cache entry, file does not exist any more.
 	  (tinypath-verbose-macro 3
@@ -5040,7 +5040,7 @@ References:
 		   file))
 	(when stat
 	  (load file)
-	  (throw 'break))))))
+	  (throw 'break nil))))))
 
 ;;; ----------------------------------------------------------------------
 ;;;
@@ -5762,7 +5762,7 @@ Return:
 		   (not (file-directory-p path)))
 	  (push path list)
 	  (if fast
-	      (throw 'break)))))
+	      (throw 'break nil)))))
     (tinypath-verbose-macro 3
       (message "TinyPath: CACHE SYNC error status is => [%s]"
 	       (prin1-to-string list)))
@@ -6174,7 +6174,7 @@ Check if ELT contains different files by size."
 	(when (and size-old
 		   (not (eq size-old size)))
 	  (setq ret t)
-	  (throw 'break)))
+	  (throw 'break nil)))
       (setq size-old size))
     ret))
 
@@ -6240,7 +6240,7 @@ References:
 			(dolist (func ignore-functions)
 			  (when (funcall func (concat (cdr path) file))
 			    (setq ret t)
-			    (throw 'break)))
+			    (throw 'break nil)))
 			ret)))
 		    (null ignore-functions)))
 	  (when accept
@@ -6817,7 +6817,7 @@ References:
 	      (message "TinyPath: MAN %s [found %s] " path file))
 	    (cl-pushnew path tinypath--extra-manpath :test 'string=)
 	    (setq ret path)
-	    (throw 'break)))))
+	    (throw 'break nil)))))
     ret))
 
 ;;; ----------------------------------------------------------------------

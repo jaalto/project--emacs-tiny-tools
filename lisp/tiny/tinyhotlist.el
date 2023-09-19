@@ -457,7 +457,7 @@ NO-CONFIRM suppresses confirm of loading ange-ftp files."
                           file
                           (symbol-value 'dired-directory)))
 		(setq ptr (current-buffer))
-		(throw 'break))))))
+		(throw 'break nil))))))
       (setq ptr
             (or ptr
                 (get-file-buffer file)
@@ -507,7 +507,7 @@ using `tinyhotlist--abbreviate-file-name-table'."
 		substitute))
 	(when (string-match (concat "^" (regexp-quote match)) file)
           (setq file (ti::replace-match 0 replace file))
-          (throw 'break))))
+          (throw 'break nil))))
     file))
 
 ;;; ----------------------------------------------------------------------

@@ -1561,7 +1561,7 @@ Return:
           (if (not (string= elt version))
               (setq tmp elt)
             (setq ret tmp)
-            (throw 'break))))))
+            (throw 'break nil))))))
     ret))
 
 ;;; ----------------------------------------------------------------------
@@ -2063,7 +2063,7 @@ Return list:
 	(if (and terminate (null str))
             (progn
               (setq ret nil)              ;that's it then...
-              (throw 'break))
+              (throw 'break nil))
           (push str ret))))
     (nreverse ret)))
 
@@ -4166,7 +4166,7 @@ in some other frame window than in the current frame."
 	;;  maybe in other frame...
 	(when (setq win (get-buffer-window buffer frame))
           (setq ret (cons frame win))
-          (throw 'break))))
+          (throw 'break nil))))
     ret))
 
 ;;; ----------------------------------------------------------------------
@@ -4676,7 +4676,7 @@ Return:
 		 ;; cannot set
 		 nil))
           ;; Success, stop the loop
-          (throw 'break))))
+          (throw 'break nil))))
     status))
 
 ;;}}}
@@ -5834,7 +5834,7 @@ Return:
             (if all-paths
 		(push file found)
               (setq  found file)
-              (throw 'break))))))
+              (throw 'break nil))))))
     (if (and found all-paths)           ;preserve order
         (setq found (nreverse found)))
     (if (and found verb)
@@ -7751,7 +7751,7 @@ otherwise `load-path' is conculted."
                             "^\\(.*xemacs[-\\/][0-9]+\\.[0-9.]*[0-9]\\)[\\/]"
                             1 path))))
           (setq ret (concat match "/lisp"))
-          (throw 'break))))
+          (throw 'break nil))))
     ret))
 
 ;;; ----------------------------------------------------------------------
@@ -7960,7 +7960,7 @@ If mouse is not supported, return nil."
 	    (catch 'break
               (dolist (elt (window-list))
 		(when (eq elt win)
-                  (throw 'break)))
+                  (throw 'break nil)))
               (select-window elt)
               ;;  Modeline is not counted as +1
               (setq count (+ count (window-height)))))
@@ -8178,7 +8178,7 @@ Return:
               (when (and (vectorp arg)
 			 (string= ret (elt arg 0)))
 		(setq ret  (1- count))
-		(throw 'break)))
+		(throw 'break nil)))
             (setq count (1+ count)))))))
     ret))
 
@@ -8458,7 +8458,7 @@ Return list:
                               (prin1-to-string
                                (get-elt elt (1+ pos))))))
 		(setq ret (list elt (car timer)))
-		(throw 'break)))))))
+		(throw 'break nil)))))))
     ret))
 
 ;;; ----------------------------------------------------------------------

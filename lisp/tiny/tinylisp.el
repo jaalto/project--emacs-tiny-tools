@@ -3500,7 +3500,7 @@ References:
 		(when (re-search-forward re nil t)
                   (setq buffer (current-buffer))
                   (setq point  (line-beginning-position))
-                  (throw 'break)))))))
+                  (throw 'break nil)))))))
        ;; ....................................................... other ...
        (point ;; point is set
         (when save

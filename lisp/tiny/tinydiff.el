@@ -509,7 +509,7 @@ Input:
                             seek-option)
               (when (ti::re-search-check seek-option)
 		(setq gnu path)
-		(throw 'break)))))
+		(throw 'break nil)))))
         (if gnu
             (setq ret gnu)
           (message "TinyDiff: Hm, no GNU %s, but using it anyway" default)

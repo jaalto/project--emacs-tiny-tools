@@ -237,7 +237,7 @@ is equal or greater than VERSION-STRING."
                    ;;  is it on disk too?
                    (file-directory-p (concat try "/lisp" )))
           (setq ret try)
-          (throw 'break))))
+          (throw 'break nil))))
     ret))
 
 ;;; ----------------------------------------------------------------------
@@ -378,7 +378,7 @@ functions `ti::os-check-linux-like-p' or `ti::win32-cygwin-p'."
               (when (string= ret "")
 		(setq ret "/"))
               (put 'ti::win32-cygwin-p 'cache-value ret)
-              (throw 'break)))))))
+              (throw 'break nil)))))))
     ret))
 
 ;;; ----------------------------------------------------------------------

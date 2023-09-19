@@ -51,7 +51,7 @@
 (require 'tinyliba)
 (provide 'tinylibw)
 
-(defconst tinylibw-version-time "2023.0919.0756"
+(defconst tinylibw-version-time "2023.0919.0837"
   "Latest version number as last modified time.")
 
 ;;; Some of the functions were submitted for Emacs 21.2
@@ -246,7 +246,7 @@ You should not call this function, use `w32-cygwin-path-to-dos'."
           (setq dos (concat dos (match-string 1 path))))
         ;; Convert to forward slashes
         (setq final-path (subst-char-in-string ?\\ ?/ dos))
-        (throw 'break)))
+        (throw 'break nil)))
     (unless final-path
       ;; None matched, so this path is under cygwin root dir.
       (let ((root (ti::win32-cygwin-p)))

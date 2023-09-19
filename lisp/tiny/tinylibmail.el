@@ -3581,7 +3581,7 @@ Note: this function relies on dynamically bound values."
 		       (list (format "%s-%s-%s" year month day)
 			     raw))
 		      ret))
-	      (throw 'break))))))
+	      (throw 'break nil))))))
     ret))
 
 ;;; ----------------------------------------------------------------------
@@ -4061,7 +4061,7 @@ Example:
     (catch 'break
       (dolist (mode mode-list)
 	(when (setq buffer (car-safe (get 'list mode)))
-          (throw 'break))))
+          (throw 'break nil))))
     buffer))
 
 ;;; ----------------------------------------------------------------------

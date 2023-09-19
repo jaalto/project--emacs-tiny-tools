@@ -3058,7 +3058,7 @@ Input:
                       elt)))
               (when (file-exists-p try)
 		(setq file try)
-		(throw 'break))))))
+		(throw 'break nil))))))
       (when (or (not file)
                 (not (file-exists-p file)))
         (error "TinyPerl: Cache error, %s does not exist" (car module)))

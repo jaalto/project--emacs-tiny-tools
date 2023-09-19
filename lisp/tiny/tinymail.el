@@ -2772,7 +2772,7 @@ Return:
 		 (t
                   (funcall func data)))
             (setq ret t)
-            (throw 'break))))
+            (throw 'break nil))))
       ret)))
 
 ;;; ----------------------------------------------------------------------
@@ -3064,7 +3064,7 @@ Input:
                                    (string-match  regexp item))
                           (tinymail-debug fid 'ANYTHING regexp elt)
                           (setq max (1+ max))
-                          (throw 'break)))))))))
+                          (throw 'break nil)))))))))
           ;; ..................................... make completions ...
           (when (and record
                      name
@@ -3259,7 +3259,7 @@ INFO is '(string beg end) of the completion word"
               (dolist (completion complete-list)
 		(when (string-match " " completion)
 		  (setq multi-word t)
-		  (throw 'break))))
+		  (throw 'break nil))))
             ;; ....................................... completion-list ...
             (cond
              ((null complete-list)
@@ -3555,7 +3555,7 @@ functions. Each function is passed the word info at point: '(BEG END STRING)."
 		 (t
                   (funcall func string)))
             (setq ret t)
-            (throw 'break))))
+            (throw 'break nil))))
       (tinymail-debug fid fid 'RET ret)
       ret)))
 
@@ -3975,7 +3975,7 @@ E.g. in XEmacs you can use package reportmail.el."
                   (unless ret
                     (tinymail-debug fid 'point (point) 'LOOP-SELECT elt )
                     (setq ret (cdr elt)))
-                  (throw 'break))))
+                  (throw 'break nil))))
             ret))
     ;; ............................................... guess mail type ...
     ;; If not yet set, look at message and decide right postfix
@@ -4189,7 +4189,7 @@ Return:
                     folder (nth 1 elt))
               (when (re-search-forward re hmax t)
 		(setq ret folder)
-		(throw 'break))))))
+		(throw 'break nil))))))
       (if (and (stringp ret)
                (string-match "gz$\\|Z$" ret))
           (ti::use-file-compression))
