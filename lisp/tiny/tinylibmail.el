@@ -4039,8 +4039,8 @@ Example:
   ;; return some message-mode buffer.
 
   (ti::mail-get-buffer \\='(mail-mode message-mode))"
-  (let* (list
-         buffer)
+  (let (list
+        buffer)
     (or mode-list
         (setq mode-list '(mail-mode message-mode mh-letter-mode)))
     (dolist (buffer (buffer-list))
@@ -4057,12 +4057,11 @@ Example:
             (push (current-buffer) list) ;Add one
             ;;  And update plist
             (put 'list mode list)))))
-
     ;;  Step through mode lists and return first buffer
-
-    (dolist (mode mode-list)
-      (when (setq buffer (car-safe (get 'list mode)))
-        (cl-return)))
+    (catch 'break
+      (dolist (mode mode-list)
+	(when (setq buffer (car-safe (get 'list mode)))
+          (throw 'break))))
     buffer))
 
 ;;; ----------------------------------------------------------------------
