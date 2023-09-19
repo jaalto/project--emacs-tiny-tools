@@ -498,7 +498,7 @@ Input:
           (setq path t))               ;XEmacs ByteCom silencer, no-op
       (with-temp-buffer
         ;;   Select gnu if possible
-	(catch 'brak
+	(catch 'break
           (dolist (prg program-list)
             (message "TinyDiff: Please wait. Searching for binary `%s'" prg)
             (when (setq path (executable-find prg))
@@ -587,7 +587,7 @@ it excludes the rcs tags from diff."
   (or (let ((temp (or (getenv "TEMPDIR")
                       (getenv "TMP")))
             (file "tinydiff.diff"))
-	(catch 'brak
+	(catch 'break
           (dolist (dir (list
 			"~/tmp"
 			"~/temp"
