@@ -401,7 +401,8 @@
 (ti::package-require-view) ;; TinyLisp must be first in the minor-mode-list
 
 (eval-when-compile
-  (require 'cl)
+  (or (require 'cl-lib nil 'noerr) ;; Emacs 29.x
+      (require 'cl))
   (require 'elp)    ;; For elp-results-buffer
   (require 'advice) ;; For apropos.el
   ;; XEmacs 21.2 NT had a problem loading the edug.el. After
