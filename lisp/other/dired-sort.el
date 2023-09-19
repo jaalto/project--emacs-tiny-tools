@@ -81,7 +81,9 @@
 
 ;;; Code:
 
-;; (require 'date-parse), see autoloads
+(eval-when-compile
+  (or (require 'cl-lib nil 'noerr) ;; Emacs 29.x
+      (require 'cl)))
 
 (eval-and-compile
   ;;  Silence Byte compiler
@@ -94,7 +96,7 @@
   (autoload 'dired-get-filename       "dired")
   (autoload 'dired-move-to-filename   "dired")
   (autoload 'sort-skip-fields         "sort")
-  (autoload 'parse-date               "date-parse")
+  (autoload 'date-parse               "date-parse")
   (autoload 'date-compare-key         "date-parse"))
 
 ;;; ....................................................... &variables ...
@@ -107,7 +109,7 @@
 (defvar dired-sort-line-property-table nil
   "Buffer local obarray:
 Each symbol is a file name whose plist caches file properties,
-accessed by #'dired-line-property")
+accessed by #\\='dired-line-property")
 (make-variable-buffer-local 'dired-sort-line-property-table)
 
 (defvar dired-sort-resort-last-kind '(date)
@@ -202,7 +204,7 @@ Cache the result, and return it the next time without calling FUNC.
 (defun dired-sort-header-line-p ()
   "Check `dired-sort-extract-size'."
   (save-excursion
-    (minusp (dired-sort-extract-size))))
+    (cl-minusp (dired-sort-extract-size))))
 
 (defun dired-sort-first-file ()
   "Goto first file."
