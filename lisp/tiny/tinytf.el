@@ -2515,16 +2515,17 @@ This function calls `tinytf-utility-programs-check' with \\='force."
          ret)
     (when elt
       (setq list (nth 1 elt))
-      (dolist (elt list)
-        (setq re (car elt))
-        (cond
-         ((not (stringp re))            ;Stop there
-          (setq ret (nth 1 elt))
-          (cl-return))
-         ((looking-at re)               ;found match ?
-          (setq ret (nth 1 elt))
-          ;; Yes, stop there
-          (cl-return)))))
+      (catch 'break
+	(dolist (elt list)
+          (setq re (car elt))
+          (cond
+           ((not (stringp re))            ;Stop there
+            (setq ret (nth 1 elt))
+            (throw 'break))
+           ((looking-at re)               ;found match ?
+            (setq ret (nth 1 elt))
+            ;; Yes, stop there
+            (throw 'break))))))
     ret))
 
 ;;; ----------------------------------------------------------------------
@@ -3067,13 +3068,13 @@ Return
 	beg
 	end)
     (cl-flet ((marker   (beg skip)
-                     (save-excursion
-                       (skip-chars-forward skip)
-                       (list
-                        (buffer-substring beg (point))
-                        (point))))
-           (markup-p (word)
-                     (string-match "[_*='`]+\\([^_*='`]+\\)[_*='`]+$" word)))
+                (save-excursion
+                  (skip-chars-forward skip)
+                  (list
+                   (buffer-substring beg (point))
+                   (point))))
+              (markup-p (word)
+                (string-match "[_*='`]+\\([^_*='`]+\\)[_*='`]+$" word)))
       (unless (looking-at "[ \t\f]")
         (skip-chars-backward "^ ,\n\r\t\f")
         (setq beg (point))
@@ -3081,15 +3082,16 @@ Return
         ;;
         ;;      This _sentence._ And new sentence.
         ;;      This _sentence_. And new sentence.
-        (dolist (try (list "^ \n\r\t\f" word-skip))
-          (cl-multiple-value-bind (word end)
-              (marker beg try)
-            (when (string-match "[_*='`]+\\([^_*='`]+\\)[_*='`]+$" word)
-              (setq word (match-string 1 word))
-              (delete-region beg end)
-              (insert word)
-              (setq end (point))
-              (cl-return))))
+	(catch 'break
+          (dolist (try (list "^ \n\r\t\f" word-skip))
+            (cl-multiple-value-bind (word end)
+		(marker beg try)
+              (when (string-match "[_*='`]+\\([^_*='`]+\\)[_*='`]+$" word)
+		(setq word (match-string 1 word))
+		(delete-region beg end)
+		(insert word)
+		(setq end (point))
+		(throw 'break)))))
         (unless end
           (skip-chars-forward word-skip))
         (skip-chars-forward " (){}<>,.;:!?\"\'\n\r\t\f")))))
