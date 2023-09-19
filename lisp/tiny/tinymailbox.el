@@ -161,7 +161,8 @@
 (require 'tinylibm)
 
 (eval-when-compile
-  (require 'cl))
+  (or (require 'cl-lib nil 'noerr) ;; Emacs 29.x
+      (require 'cl)))
 
 (eval-and-compile
   (defvar mail-yank-prefix) ;; Byte compiler silencer
@@ -1017,9 +1018,10 @@ References:
      ;;  To: me@here.at, other@there.com
      ;;  => Move them to CC
      (dolist (elt to-list)
-       (unless (dolist (eltc cc-list)
-                 (if (string= elt eltc)
-                     (cl-return t)))
+       (unless (catch 'break
+		 (dolist (eltc cc-list)
+                   (if (string= elt eltc)
+		       (throw 'break t))))
          (push elt cc-list)))
      (if cc-list
          (setq cc (mapconcat 'concat cc-list ", ")))
