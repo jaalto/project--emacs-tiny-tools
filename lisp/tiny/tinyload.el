@@ -813,11 +813,12 @@ package feature noerr nomsg before after
 
 The SEARCH item is checked with `equal' function."
   (let (picked)
-    (dolist (elt tinyload--load-list)
-      ;;  package feature noerr nomsg before after
-      (setq picked (nth position elt))
-      (when (equal picked search)
-        (cl-return elt)))))
+    (catch 'break
+      (dolist (elt tinyload--load-list)
+	;;  package feature noerr nomsg before after
+	(setq picked (nth position elt))
+	(when (equal picked search)
+          (throw 'break elt))))))
 
 ;;; ----------------------------------------------------------------------
 ;;;
