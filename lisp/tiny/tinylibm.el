@@ -83,7 +83,7 @@
 
 (require 'tinylibb)                     ;Backward compatible functions
 
-(defconst tinylibm-version-time "2023.0919.0837"
+(defconst tinylibm-version-time "2023.0919.0850"
   "Latest version number.")
 
 ;;{{{ function tests
@@ -464,10 +464,10 @@ Example:
 (put 'ti::dotimes 'lisp-indent-function 3)
 (defmacro ti::dotimes (var beg end &rest body)
   "Loop using VAR from BEG to END and do BODY."
-  `(loop for ,var from ,beg to ,end
-	 do
-	 (progn
-	   ,@body)))
+  `(cl-loop for ,var from ,beg to ,end
+	    do
+	    (progn
+	      ,@body)))
 
 ;;; ----------------------------------------------------------------------
 ;;;
