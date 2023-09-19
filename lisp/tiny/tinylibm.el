@@ -83,7 +83,7 @@
 
 (require 'tinylibb)                     ;Backward compatible functions
 
-(defconst tinylibm-version-time "2023.0919.0850"
+(defconst tinylibm-version-time "2023.0919.0851"
   "Latest version number.")
 
 ;;{{{ function tests
@@ -2452,8 +2452,8 @@ This should clear memory location contents."
   (maphash
    (lambda (k v)
      (fillarray v ?\0)) ;; propably faster
-;;;     (loop for i from 0 to (1- (length v))
-;;;           do (aset v i ?\0))
+;;;     (cl-loop for i from 0 to (1- (length v))
+;;;              do (aset v i ?\0))
    hash)
   (clrhash hash))
 
