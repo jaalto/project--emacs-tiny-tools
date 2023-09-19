@@ -1710,33 +1710,34 @@ If USE-CACHE is non-nil, retrieve cached value."
       (setq ret (get 'tinypath-ti::win32-cygwin-p 'cache-value)))
      (t
       (put 'tinypath-ti::win32-cygwin-p 'cache-set t)
-      (dolist (path exec-path)
-	(when (and (stringp path)
-		   (file-exists-p
-		    (concat
-		     (file-name-as-directory path) "cygwin1.dll"))
-		   (file-exists-p
-		    (concat
-		     (file-name-as-directory path) "cygpath.exe")))
-	  ;;  The root directory is one DIR up from bin/cygwin1.dll
-	  ;;
-	  ;;  1) Drop the trailing slash  ../bin
-	  ;;  2) Give one directory up    ..
-	  ;;
-	  ;;  We have to leave trailing slash, because the resulting
-	  ;;  directory may be in the worst case C:/
-	  ;;  (which is NOT recommended place for cygwin install)
-	  ;;
-	  (when (string-match "^\\(.*\\)[/\\]" path)
-	    (setq path
-		  (match-string 1 path))
-	    (setq ret path)
-	    ;;  This is native Cygwin Emacs, not a Win32 version
-	    ;;  if path is empty: /bin => one up => ''
-	    (when (string= ret "")
-	      (setq ret "/"))
-	    (put 'tinypath-ti::win32-cygwin-p 'cache-value ret)
-	    (cl-return))))))
+      (catch 'break
+	(dolist (path exec-path)
+	  (when (and (stringp path)
+		     (file-exists-p
+		      (concat
+		       (file-name-as-directory path) "cygwin1.dll"))
+		     (file-exists-p
+		      (concat
+		       (file-name-as-directory path) "cygpath.exe")))
+	    ;;  The root directory is one DIR up from bin/cygwin1.dll
+	    ;;
+	    ;;  1) Drop the trailing slash  ../bin
+	    ;;  2) Give one directory up    ..
+	    ;;
+	    ;;  We have to leave trailing slash, because the resulting
+	    ;;  directory may be in the worst case C:/
+	    ;;  (which is NOT recommended place for cygwin install)
+	    ;;
+	    (when (string-match "^\\(.*\\)[/\\]" path)
+	      (setq path
+		    (match-string 1 path))
+	      (setq ret path)
+	      ;;  This is native Cygwin Emacs, not a Win32 version
+	      ;;  if path is empty: /bin => one up => ''
+	      (when (string= ret "")
+		(setq ret "/"))
+	      (put 'tinypath-ti::win32-cygwin-p 'cache-value ret)
+	      (throw 'break)))))))
     ret))
 
 ;;; ----------------------------------------------------------------------
@@ -1748,12 +1749,13 @@ If USE-CACHE is non-nil, retrieve cached value."
 Emacs `executable-find' tries various suffixes in Win32, but this
 function just looks if FILE exists along load path."
   (let (ret name)
-    (dolist (path exec-path)
-      (setq name (concat (file-name-as-directory path) file))
-      (when (and (not (file-directory-p name))
-		 (file-exists-p name))
-	(setq ret (tinypath-expand-file-name name))
-	(cl-return)))
+    (catch 'break
+      (dolist (path exec-path)
+	(setq name (concat (file-name-as-directory path) file))
+	(when (and (not (file-directory-p name))
+		   (file-exists-p name))
+	  (setq ret (tinypath-expand-file-name name))
+	  (throw 'break))))
     ret))
 
 ;;; ----------------------------------------------------------------------
@@ -1850,13 +1852,14 @@ Return list:
 	ret)
     (if (null ver)
 	(tinypath-message-bug "root-by-load-path")
-      (dolist (path load-path)
-	(when (and (stringp path)
-		   (tinypath-emacs-core-path-p path ver))
-	  (cl-return
-	   (setq ret (list
-		      (match-string 0 path)
-		      path))))))
+      (catch 'break
+	(dolist (path load-path)
+	  (when (and (stringp path)
+		     (tinypath-emacs-core-path-p path ver))
+	    (throw 'break
+		   (setq ret (list
+			      (match-string 0 path)
+			      path)))))))
     (unless ret
       ;; User has wiped the load-path information by accident,
       ;; Try doing something about it.
@@ -1891,10 +1894,11 @@ Return list:
 ;;;
 (defun tinypath-load-path-string-match (regexp)
   "Check if REGEXP is found form load path. Return first match."
-  (dolist (path load-path)
-    (when (and (stringp path)
-	       (string-match regexp path))
-      (cl-return path))))
+  (catch 'break
+    (dolist (path load-path)
+      (when (and (stringp path)
+		 (string-match regexp path))
+	(throw 'break path)))))
 
 ;;; ----------------------------------------------------------------------
 ;;;
@@ -2029,40 +2033,41 @@ Input:
   BUG      If set, and DIR not found, call `tinypath-message-bug'."
   (let (found)
     (cl-flet ((check-dir
-	       (try dir)
-	       (setq try (tinypath-expand-file-name
-			  (concat (file-name-as-directory try)
-				  dir)))
-	       (if verb
-		   (message "TinyPath: directory search ... %s" try))
-	       (when (file-directory-p try)
-		 (if verb
-		     (message "TinyPath: directory search ... found %s" try))
-		 try)))
+		(try dir)
+		(setq try (tinypath-expand-file-name
+			   (concat (file-name-as-directory try)
+				   dir)))
+		(if verb
+		    (message "TinyPath: directory search ... %s" try))
+		(when (file-directory-p try)
+		  (if verb
+		      (message "TinyPath: directory search ... found %s" try))
+		  try)))
       (or dir
 	  (setq dir ""))
-      (dolist (try list)
-	(cond
-	 ((stringp try)
-	  (if (setq found (check-dir try dir))
-	      (cl-return)))
-	 ((listp try)
-	  (cl-multiple-value-bind (path count) try
-	    (cond
-	     ((and (stringp path)
-		   (eq count 'abs))
-	      (if (setq found (check-dir path dir))
-		  (cl-return)))
-	     ((and (stringp path)
-		   (integerp count))
-	      (while (and (stringp path)
-			  (not (zerop count))
-			  (> count 0))
+      (catch 'break
+	(dolist (try list)
+	  (cond
+	   ((stringp try)
+	    (if (setq found (check-dir try dir))
+		(throw 'break)))
+	   ((listp try)
+	    (cl-multiple-value-bind (path count) try
+	      (cond
+	       ((and (stringp path)
+		     (eq count 'abs))
 		(if (setq found (check-dir path dir))
-		    (cl-return))
-		(setq count (1- count))
-		(setq path
-		      (tinypath-directory-up path)))))))))
+		    (throw 'break)))
+	       ((and (stringp path)
+		     (integerp count))
+		(while (and (stringp path)
+			    (not (zerop count))
+			    (> count 0))
+		  (if (setq found (check-dir path dir))
+		      (throw 'break))
+		  (setq count (1- count))
+		  (setq path
+			(tinypath-directory-up path))))))))))
 
       (cond
        (found ;;#todo: anything to do here?
@@ -2221,19 +2226,20 @@ Emacs core-lisp installation directories."
 (defun tinypath-tmp-find-root-home ()
   "Return suitable root user HOME directory. /home/root etc."
   (let (ret)
-    (dolist (path (list
-		   (if (and (not tinypath--win32-p)
-			    (eq (user-uid) 0))
-		       (getenv "HOME"))
-		   "/home/root"
-		   "/users/root"
-		   "/root"
-		   "/"))
-      (when (and (stringp path)
-		 (file-directory-p path))
-	(message "TinyPath: tinypath-tmp-find-root-home [%s]" path)
-	(setq ret path)
-	(cl-return)))
+    (catch 'break
+      (dolist (path (list
+		     (if (and (not tinypath--win32-p)
+			      (eq (user-uid) 0))
+			 (getenv "HOME"))
+		     "/home/root"
+		     "/users/root"
+		     "/root"
+		     "/"))
+	(when (and (stringp path)
+		   (file-directory-p path))
+	  (message "TinyPath: tinypath-tmp-find-root-home [%s]" path)
+	  (setq ret path)
+	  (throw 'break))))
     ret))
 
 ;;; ----------------------------------------------------------------------
@@ -2265,44 +2271,45 @@ References:
     (when (and (not (file-directory-p "~/tmp"))
 	       (not (file-directory-p "c:/"))) ;; Non-Win32 system
       (message "TinyPath: [WARNING] Cannot find $HOME/tmp directory."))
-    (dolist (dir '("~/.emacs.d/config/"
-		   "~/elisp/config/"
-		   "~/elisp/conf/"
-		   "~/lisp/config/"
-		   "~/lisp/conf/"
-		   "~/.xemacs/config/"
-		   "~/tmp/"
-		   "~"
-		   "/tmp/"
-		   "/var/tmp/"
-		   "c:/temp/"
-		   "c:/tmp/"
-		   "c:/"))
-      ;; The ROOT user is special case. (expand-file-name "~")
-      ;; may return plain "/".
-      ;; check if SysAdm has created
-      ;; /home/root, /users/root etc. directory.
-      (cond
-       ((and root-user-p
-	     (string-match "~" dir))
-	(setq dir
-	      (if (string= root-home "/")
-		  ;; ~  =>  ""
-		  (replace-match "" nil nil dir)
-		;; ~/tmp =>  /home/root/tmp
-		(replace-match root-home nil nil dir))))
-       (t
-	(setq dir (file-name-as-directory
-		   (expand-file-name dir)))))
-      (when (and (file-directory-p dir)
-		 (file-writable-p
-		  (concat dir
-			  (or file "###tinypath.el-test###"))))
-	;; In multi-user environment, we must say /tmp/-USER-file
-	(when (string= dir "/tmp/")
-	  (setq dir (concat dir "-" user "-" )))
-	(setq ret (concat dir (or file "")))
-	(cl-return)))
+    (catch 'break
+      (dolist (dir '("~/.emacs.d/config/"
+		     "~/elisp/config/"
+		     "~/elisp/conf/"
+		     "~/lisp/config/"
+		     "~/lisp/conf/"
+		     "~/.xemacs/config/"
+		     "~/tmp/"
+		     "~"
+		     "/tmp/"
+		     "/var/tmp/"
+		     "c:/temp/"
+		     "c:/tmp/"
+		     "c:/"))
+	;; The ROOT user is special case. (expand-file-name "~")
+	;; may return plain "/".
+	;; check if SysAdm has created
+	;; /home/root, /users/root etc. directory.
+	(cond
+	 ((and root-user-p
+	       (string-match "~" dir))
+	  (setq dir
+		(if (string= root-home "/")
+		    ;; ~  =>  ""
+		    (replace-match "" nil nil dir)
+		  ;; ~/tmp =>  /home/root/tmp
+		  (replace-match root-home nil nil dir))))
+	 (t
+	  (setq dir (file-name-as-directory
+		     (expand-file-name dir)))))
+	(when (and (file-directory-p dir)
+		   (file-writable-p
+		    (concat dir
+			    (or file "###tinypath.el-test###"))))
+	  ;; In multi-user environment, we must say /tmp/-USER-file
+	  (when (string= dir "/tmp/")
+	    (setq dir (concat dir "-" user "-" )))
+	  (setq ret (concat dir (or file "")))
+	  (throw 'break))))
     ;;  Last thing to do. If User has set his HOME to point to
     ;;  C:/, that is not a good idea. Move cache file under C:/TEMP
     (when (and (string-match "^[Cc]:[/\\]?$" ret)
@@ -2477,12 +2484,12 @@ everything to `tinypath--log-file'."
 
 (defcustom tinypath--verbose-timing
   (tinypath-set-default-value-macro
-   "tinypath--verbose-timing"
-   nil)
+      "tinypath--verbose-timing"
+    nil)
   "*If non-nil, dispaly laod time of each `load' `load-library' `require' call.
 This variable is obsolete and not used."
-    :type  'integer
-    :group 'TinyPath)
+  :type  'integer
+  :group 'TinyPath)
 
 (eval-and-compile
 
@@ -2497,12 +2504,13 @@ This variable is obsolete and not used."
 	     ;;  Which doesn't see autoload definition.
 	     (funcall (symbol-function 'executable-find) "cygrunsrv"))
 	    ((let (file)
-	       (dolist (dir exec-path)
-		 (setq file
-		       (concat (file-name-as-directory dir)
-			       "cygrunsrv.exe"))
-		 (if (file-exists-p file)
-		     (cl-return file))))))))
+	       (catch 'break
+		 (dolist (dir exec-path)
+		   (setq file
+			 (concat (file-name-as-directory dir)
+				 "cygrunsrv.exe"))
+		   (if (file-exists-p file)
+		       (throw 'break file)))))))))
       (when cygwin-p
 	;;  X:/SOME/PREFIX/bin/cygrunsrv.exe => X:/SOME/PREFIX/
 	(when (string-match "^\\(.*\\)/[^/]+/" cygwin-p)
@@ -3114,11 +3122,12 @@ E.g., if you want to calculate days; you'd do
 (defun tinypath-ti::dired-buffer (dir)
   "Return dired buffer runninr DIR."
   (setq dir (file-name-as-directory dir)) ;; Dired uses trailing slash
-  (dolist (buffer (buffer-list))
-    (with-current-buffer buffer
-      (when (and (eq major-mode 'dired-mode)
-		 (string= dired-directory dir))
-	(cl-return buffer)))))
+  (catch 'break
+    (dolist (buffer (buffer-list))
+      (with-current-buffer buffer
+	(when (and (eq major-mode 'dired-mode)
+		   (string= dired-directory dir))
+	  (throw 'break buffer))))))
 
 ;;; ----------------------------------------------------------------------
 ;;;
@@ -3406,9 +3415,9 @@ Return list:
 	item
 	ret)
     (cl-flet ((get-elt (elt place)
-		       (if (vectorp elt)
-			   (aref elt place)
-			 (nth place elt))))
+		(if (vectorp elt)
+		    (aref elt place)
+		  (nth place elt))))
       (dolist (timer '(;; (("Mon Dec  9 10:01:47 1996-0" 10
 		       ;;     process nil))
 		       (timer-idle-list . 5)
@@ -3429,18 +3438,19 @@ Return list:
 	  (if (and (not tinypath--xemacs-p)
 		   (vectorp (car list)))
 	      (setq pos 5))
-	  (dolist (elt list)
-	    (setq item (get-elt elt pos))
-;;;     (d!! (functionp item) (get-elt elt (1+ pos)))
-	    (when (or (and (symbolp item)
-			   (eq item function))
-		      ;;  It may be lambda expression
-		      (and (functionp item)
-			   (string-match (regexp-quote (symbol-name function))
-					 (prin1-to-string
-					  (get-elt elt (1+ pos))))))
-	      (setq ret (list elt (car timer)))
-	      (cl-return))))))
+	  (catch 'break
+	    (dolist (elt list)
+	      (setq item (get-elt elt pos))
+	      ;; (d!! (functionp item) (get-elt elt (1+ pos)))
+	      (when (or (and (symbolp item)
+			     (eq item function))
+			;;  It may be lambda expression
+			(and (functionp item)
+			     (string-match (regexp-quote (symbol-name function))
+					   (prin1-to-string
+					    (get-elt elt (1+ pos))))))
+		(setq ret (list elt (car timer)))
+		(throw 'break)))))))
     ret))
 
 ;;; ----------------------------------------------------------------------
@@ -3525,7 +3535,7 @@ Return list:
       'tinypath-cache-duplicate-report)
     (define-key tinypath-report-mode-map "\C-cg"
       'tinypath-cache-regenerate)
-    (define-key tinypath-report-mode-map [(cl-return)]
+    (define-key tinypath-report-mode-map [(return)]
       'tinypath-report-mode-find-file)
     (define-key tinypath-report-mode-map "\C-cf"
       'tinypath-report-mode-find-file)))
@@ -3751,10 +3761,11 @@ TinyPath: [PANIC] Can't find Emacs core library jka-cmpr.el."))))
   (when (stringp file)
     (tinypath-use-compression-maybe file))
   (when (null (let (ret)
-		(dolist (ext '("" ".el" ".elc"))
-		  (when (file-exists-p (concat file ext))
-		    (setq ret t)
-		    (cl-return)))
+		(catch 'break
+		  (dolist (ext '("" ".el" ".elc"))
+		    (when (file-exists-p (concat file ext))
+		      (setq ret t)
+		      (throw 'break))))
 		ret))
     (message
      (substitute-command-keys
@@ -3918,15 +3929,16 @@ If FILE is nil, then return first existing directory in DIR-LIST.
 
 Note: directory list passed can contain non-string entries. They are ignored."
   (let (ret)
-    (dolist (dir dir-list)
-      (when (stringp dir)
-	(when (string-match "[/\\]$" dir) ;Remove trailing slash
-	  (setq dir (substring dir 0 (1- (length dir))  )))
-	(when (file-exists-p
-	       (concat (file-name-as-directory dir)
-		       (or file "")))
-	  (setq ret (tinypath-expand-file-name dir))
-	  (cl-return))))
+    (catch 'break
+      (dolist (dir dir-list)
+	(when (stringp dir)
+	  (when (string-match "[/\\]$" dir) ;Remove trailing slash
+	    (setq dir (substring dir 0 (1- (length dir))  )))
+	  (when (file-exists-p
+		 (concat (file-name-as-directory dir)
+			 (or file "")))
+	    (setq ret (tinypath-expand-file-name dir))
+	    (throw 'break)))))
     ret))
 
 ;;; ----------------------------------------------------------------------
@@ -4018,9 +4030,10 @@ Return t if path is ok for current Emacs."
     (tinypath-verbose-macro 5
       (message "TinyPath: [error] directory not found %s" path)))
    (t
-    (dolist (elt (directory-files path))
-      (when (string-match "\\.elc?" elt)
-	(cl-return t))))))
+    (catch 'break
+      (dolist (elt (directory-files path))
+	(when (string-match "\\.elc?" elt)
+	  (throw 'break t)))))))
 
 ;;; ----------------------------------------------------------------------
 ;;;
@@ -4041,12 +4054,13 @@ Return t if path is ok for current Emacs."
 (defun tinypath-self-location-load-history ()
   "Return `load-history' entry"
   (let (file)
-    (dolist (elt load-history)
-      (setq file (car elt))
-      (when (and (stringp file)
-		 (setq file (tinypath-expand-file-name file))
-		 (string-match "^\\(.+\\)[\\/]tinypath\\." file))
-	(cl-return (match-string 1 file))))))
+    (catch 'break
+      (dolist (elt load-history)
+	(setq file (car elt))
+	(when (and (stringp file)
+		   (setq file (tinypath-expand-file-name file))
+		   (string-match "^\\(.+\\)[\\/]tinypath\\." file))
+	  (throw 'break (match-string 1 file)))))))
 
 ;;; ----------------------------------------------------------------------
 ;;;
@@ -4055,15 +4069,16 @@ Return t if path is ok for current Emacs."
 Uses `load-history' and `load-path' information."
   (let ((ret (tinypath-self-location-load-history)))
     (unless ret ;; No luck with load-history, try load-path
-      (dolist (path load-path)
-	(setq path (file-name-as-directory (expand-file-name path)))
-	(when (or (and (file-exists-p (concat path "tinypath.el"))
-		       path)
-		  (and (file-exists-p (concat path "tinypath.elc"))
-		       path)
-		  (and (file-exists-p (concat path "tinypath.el.gz"))
-		       path))
-	  (cl-return (setq ret path)))))
+      (catch 'break
+	(dolist (path load-path)
+	  (setq path (file-name-as-directory (expand-file-name path)))
+	  (when (or (and (file-exists-p (concat path "tinypath.el"))
+			 path)
+		    (and (file-exists-p (concat path "tinypath.elc"))
+			 path)
+		    (and (file-exists-p (concat path "tinypath.el.gz"))
+			 path))
+	    (throw 'break (setq ret path))))))
     (unless ret
       (message
        (concat
@@ -4470,37 +4485,38 @@ This is combination of `load-path' and `tinypath--load-path-root'."
 	correct-emacs
 	type)
     (when data
-      (dolist (elt data)
-	(setq type (car elt))
-	(dolist (path (cdr elt))
-	  ;; 'cache element is not a string.
-	  (when (stringp path)
-	    (setq correct-emacs
-		  (tinypath-path-ok-this-emacs-p path)))
-	  (cond
-	   ((equal type 'cache)
-	    ;; Not handled in this loop
-	    (cl-return))
-	   ((and (equal type 'lisp-dir)
-		 correct-emacs)
-	    (tinypath-external-setup-1-load-path path lisp-lookup))
-	   ((equal type 'man)
-	    (tinypath-external-setup-1-man-path path))
-	   ((equal type 'c-src-dir)
-	    (cl-pushnew path
-		     tinypath--extra-ff-search-directories
-		     :test
-		     'string=))
-	   ((and (equal type 'bin)
-		 correct-emacs)
-	    (tinypath-exec-path-append path))
-	   ((and (equal type 'info)
-		 correct-emacs)
-	    (tinypath-info-handler path)
-	    (cl-pushnew path
-		     (tinypath-Info-default-directory-list)
-		     :test
-		     'string=)))))
+      (catch 'break
+	(dolist (elt data)
+	  (setq type (car elt))
+	  (dolist (path (cdr elt))
+	    ;; 'cache element is not a string.
+	    (when (stringp path)
+	      (setq correct-emacs
+		    (tinypath-path-ok-this-emacs-p path)))
+	    (cond
+	     ((equal type 'cache)
+	      ;; Not handled in this loop
+	      (throw 'break))
+	     ((and (equal type 'lisp-dir)
+		   correct-emacs)
+	      (tinypath-external-setup-1-load-path path lisp-lookup))
+	     ((equal type 'man)
+	      (tinypath-external-setup-1-man-path path))
+	     ((equal type 'c-src-dir)
+	      (cl-pushnew path
+			  tinypath--extra-ff-search-directories
+			  :test
+			  'string=))
+	     ((and (equal type 'bin)
+		   correct-emacs)
+	      (tinypath-exec-path-append path))
+	     ((and (equal type 'info)
+		   correct-emacs)
+	      (tinypath-info-handler path)
+	      (cl-pushnew path
+			  (tinypath-Info-default-directory-list)
+			  :test
+			  'string=))))))
       (tinypath-external-setup-cache data)) ;; When
     (tinypath-verbose-macro 3
       (message "TinyPath: EXT END tinypath-external-setup %s"
@@ -4563,7 +4579,7 @@ See `tinypath-external-helper-main'."
 ;;; ----------------------------------------------------------------------
 ;;;
 (defun tinypath-cache-p-1-new-cache-lookup
-  (package choices &optional regexp)
+    (package choices &optional regexp)
   "Search PACKAGE and CHOICES from `tinypath--cache'.
 Input:
 
@@ -4579,18 +4595,18 @@ Input:
       (setq file (match-string 1 package))
       (tinypath-verbose-macro 10
 	(message "%s REMOVE EXTENSION %s" fid package)))
-
-    (dolist (elt choices)
-      (tinypath-verbose-macro 10
-	(message "%s trying... %s"  fid (concat file elt)))
-      (setq try (concat file elt))
-      (when (and (or (null regexp)
-		     (not (string-match regexp try)))
-		 (setq elt (assoc try tinypath--cache)))
+    (catch 'break
+      (dolist (elt choices)
 	(tinypath-verbose-macro 10
-	  (message "%s ASSOC %s" fid (prin1-to-string elt)))
-	(setq ret elt)
-	(cl-return)))
+	  (message "%s trying... %s"  fid (concat file elt)))
+	(setq try (concat file elt))
+	(when (and (or (null regexp)
+		       (not (string-match regexp try)))
+		   (setq elt (assoc try tinypath--cache)))
+	  (tinypath-verbose-macro 10
+	    (message "%s ASSOC %s" fid (prin1-to-string elt)))
+	  (setq ret elt)
+	  (throw 'break))))
     ret))
 
 ;;; ----------------------------------------------------------------------
@@ -4767,39 +4783,40 @@ If PACKAGE contains a path name, return PACKAGE."
       nil)
      (t
       (setq list (list package))))
-    (dolist (file list)
-      (setq elt    nil
-	    elt2   nil
-	    level2 nil)
-      (cond
-       ;; If level two cache exists, then check that the entry has not
-       ;; been resolved before.
-       ((and tinypath--cache-level-two
-	     (setq elt2 (assoc file tinypath--cache-level-two))
-	     (setq ret  (cdr elt)))
-	(setq level2 t))
-       (t
-	(and (setq elt (tinypath-cache-p-1 file))
-	     (setq ret (car elt)))))
-      ;;  Did cache hold the information?
-      (cond
-       ((null ret))
-       ((and (stringp ret)
-	     (file-exists-p ret))
-	(unless level2
-	  ;; This was not in level 2, put it these
-	  (push (cons package ret) tinypath--cache-level-two))
-	(cl-return))
-       (ret
-	;;  Invalid cache entry, file does not exist any more.
-	(tinypath-verbose-macro 3
-	  (tinypath-cache-warn-if-not-exist ret))
-	;;  Remove from both caches
-	(when elt
-	  (setq tinypath--cache (delq (cadr elt) tinypath--cache)))
-	(when elt2
-	  (setq tinypath--cache-level-two
-		(delq elt2 tinypath--cache-level-two))))))
+    (catch 'break
+      (dolist (file list)
+	(setq elt    nil
+	      elt2   nil
+	      level2 nil)
+	(cond
+	 ;; If level two cache exists, then check that the entry has not
+	 ;; been resolved before.
+	 ((and tinypath--cache-level-two
+	       (setq elt2 (assoc file tinypath--cache-level-two))
+	       (setq ret  (cdr elt)))
+	  (setq level2 t))
+	 (t
+	  (and (setq elt (tinypath-cache-p-1 file))
+	       (setq ret (car elt)))))
+	;;  Did cache hold the information?
+	(cond
+	 ((null ret))
+	 ((and (stringp ret)
+	       (file-exists-p ret))
+	  (unless level2
+	    ;; This was not in level 2, put it these
+	    (push (cons package ret) tinypath--cache-level-two))
+	  (throw 'break))
+	 (ret
+	  ;;  Invalid cache entry, file does not exist any more.
+	  (tinypath-verbose-macro 3
+	    (tinypath-cache-warn-if-not-exist ret))
+	  ;;  Remove from both caches
+	  (when elt
+	    (setq tinypath--cache (delq (cadr elt) tinypath--cache)))
+	  (when elt2
+	    (setq tinypath--cache-level-two
+		  (delq elt2 tinypath--cache-level-two)))))))
     (when (null ret)
       ;;  Do full scan.
       (setq ret (tinypath-load-path-locate-library package))
@@ -5012,17 +5029,18 @@ References:
 (defun tinypath-cache-file-load ()
   "Load cache."
   (let (stat)
-    (dolist (file (tinypath-cache-file-name-all))
-      (setq stat (file-exists-p file))
-      (tinypath-verbose-macro 2
-	(message "TinyPath: %sLoading cache file %s"
-		 (if stat
-		     ""
-		   "[ERROR] ")
-		 file))
-      (when stat
-	(load file)
-	(cl-return)))))
+    (catch 'break
+      (dolist (file (tinypath-cache-file-name-all))
+	(setq stat (file-exists-p file))
+	(tinypath-verbose-macro 2
+	  (message "TinyPath: %sLoading cache file %s"
+		   (if stat
+		       ""
+		     "[ERROR] ")
+		   file))
+	(when stat
+	  (load file)
+	  (throw 'break))))))
 
 ;;; ----------------------------------------------------------------------
 ;;;
@@ -5622,44 +5640,45 @@ Return
 	"TinyPath: [WARNING] Performance problem; `%s' caused "
 	"full load-path scan.")
        package))
-    (dolist (dir load-path)
-      (when (and (stringp dir)
-		 (file-directory-p dir)
-		 (or include-all
-		     (null tinypath--load-path-ignore-regexp)
-		     (not (string-match
-			   tinypath--load-path-ignore-regexp
-			   dir))))
-	(let* ((try (if  (string-match "\\.elc?$" package)
-			(file-name-sans-extension package)
-		      package))
-	       (choices (tinypath-cache-p-1-extensions package))
-	       (files   (directory-files
-			 dir
-			 nil
-			 (concat "^"
-				 (regexp-quote try)
-				 "\\("
-				 (mapconcat
-				  ;;  "\\.el\\|\\.el\\.gz\\|..."  etc.
-				  (function
-				   (lambda (x)
-				     (regexp-quote x)))
-				  choices
-				  "\\|")
-				 "\\)$"))))
-	  (cond
-	   ((eq 1 (length files))
-	    (setq file (concat
-			(file-name-as-directory
-			 (expand-file-name dir))
-			(car files)))
-	    (if all
-		(push file ret)
-	      (cl-return (setq ret file))))
-	   (t
-	    ;;  Multiple matches. Hm #todo.
-	    nil)))))
+    (catch 'break
+      (dolist (dir load-path)
+	(when (and (stringp dir)
+		   (file-directory-p dir)
+		   (or include-all
+		       (null tinypath--load-path-ignore-regexp)
+		       (not (string-match
+			     tinypath--load-path-ignore-regexp
+			     dir))))
+	  (let* ((try (if  (string-match "\\.elc?$" package)
+			  (file-name-sans-extension package)
+			package))
+		 (choices (tinypath-cache-p-1-extensions package))
+		 (files   (directory-files
+			   dir
+			   nil
+			   (concat "^"
+				   (regexp-quote try)
+				   "\\("
+				   (mapconcat
+				    ;;  "\\.el\\|\\.el\\.gz\\|..."  etc.
+				    (function
+				     (lambda (x)
+				       (regexp-quote x)))
+				    choices
+				    "\\|")
+				   "\\)$"))))
+	    (cond
+	     ((eq 1 (length files))
+	      (setq file (concat
+			  (file-name-as-directory
+			   (expand-file-name dir))
+			  (car files)))
+	      (if all
+		  (push file ret)
+		(throw 'break (setq ret file))))
+	     (t
+	      ;;  Multiple matches. Hm #todo.
+	      nil))))))
     ;;  Retain order how files were encountered.
     (if (listp ret)
 	(nreverse ret)
@@ -5737,12 +5756,13 @@ Return:
 
   List of directories that do not exist."
   (let (list)
-    (dolist (path load-path)
-      (when (and (stringp path)
-		 (not (file-directory-p path)))
-	(push path list)
-	(if fast
-	    (cl-return))))
+    (catch 'break
+      (dolist (path load-path)
+	(when (and (stringp path)
+		   (not (file-directory-p path)))
+	  (push path list)
+	  (if fast
+	      (throw 'break)))))
     (tinypath-verbose-macro 3
       (message "TinyPath: CACHE SYNC error status is => [%s]"
 	       (prin1-to-string list)))
@@ -6146,14 +6166,15 @@ Check if ELT contains different files by size."
 	ret)
     (setq file (car elt)
 	  elt  (cdr elt))
-    (dolist (item elt)
-      (setq path  (concat (cdr item) file)
-	    stat  (file-attributes path)
-	    size  (nth 7 stat))
-      (when (and size-old
-		 (not (eq size-old size)))
-	(setq ret t)
-	(cl-return))
+    (catch 'break
+      (dolist (item elt)
+	(setq path  (concat (cdr item) file)
+	      stat  (file-attributes path)
+	      size  (nth 7 stat))
+	(when (and size-old
+		   (not (eq size-old size)))
+	  (setq ret t)
+	  (throw 'break)))
       (setq size-old size))
     ret))
 
@@ -6204,29 +6225,30 @@ References:
 	seen)
     ;; .................................................... build list ...
     ;;  result: ( (FILE . (PATH PATH PATH ..)) (FILE . (PATH ..)) )
-    (dolist (elt tinypath--cache)
-      (setq file  (car elt)
-	    path  (nth 1 elt))
-      (when (string-match "\\.el" file)
-	(when tinypath--win32-p
-	  (setq file (downcase file)))
-	(setq accept
-	      (or (and
-		   ignore-functions
-		   (null
-		    (let (ret)
-		      (dolist (func ignore-functions)
-			(when (funcall func (concat (cdr path) file))
-			  (setq ret t)
-			  (cl-return)))
-		      ret)))
-		  (null ignore-functions)))
-	(when accept
-	  (if (not (setq ptr (assoc file list)))
-	      (push (cons file (list path)) list)
-	    (setq list-tmp (cdr ptr))
-	    (push path list-tmp)
-	    (setcdr ptr list-tmp)))))
+    (catch 'break
+      (dolist (elt tinypath--cache)
+	(setq file  (car elt)
+	      path  (nth 1 elt))
+	(when (string-match "\\.el" file)
+	  (when tinypath--win32-p
+	    (setq file (downcase file)))
+	  (setq accept
+		(or (and
+		     ignore-functions
+		     (null
+		      (let (ret)
+			(dolist (func ignore-functions)
+			  (when (funcall func (concat (cdr path) file))
+			    (setq ret t)
+			    (throw 'break)))
+			ret)))
+		    (null ignore-functions)))
+	  (when accept
+	    (if (not (setq ptr (assoc file list)))
+		(push (cons file (list path)) list)
+	      (setq list-tmp (cdr ptr))
+	      (push path list-tmp)
+	      (setcdr ptr list-tmp))))))
     ;; .............................................. check duplicates ...
     (dolist (elt list)
       (when (> (length (cdr elt)) 1)
@@ -6788,13 +6810,14 @@ References:
   "If PATH has manual pages, add to `tinypath--extra-manpath'."
   (let (ret)
     (unless (member path tinypath--extra-manpath)
-      (dolist (file (directory-files path))
-	(when (string-match "\\.[0-9]$" file)
-	  (tinypath-verbose-macro 9
-	    (message "TinyPath: MAN %s [found %s] " path file))
-	  (cl-pushnew path tinypath--extra-manpath :test 'string=)
-	  (setq ret path)
-	  (cl-return))))
+      (catch 'break
+	(dolist (file (directory-files path))
+	  (when (string-match "\\.[0-9]$" file)
+	    (tinypath-verbose-macro 9
+	      (message "TinyPath: MAN %s [found %s] " path file))
+	    (cl-pushnew path tinypath--extra-manpath :test 'string=)
+	    (setq ret path)
+	    (throw 'break)))))
     ret))
 
 ;;; ----------------------------------------------------------------------
