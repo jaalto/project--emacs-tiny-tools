@@ -119,11 +119,11 @@
 
 (defvar fnexpand-envvars nil
   "Private, a list of environment variable names and values.
-Format: '((ENV-VAR-NAME . ENAV-VAR-VALUE).")
+Format: ((ENV-VAR-NAME . ENAV-VAR-VALUE).")
 
 (defvar fnexpand-executable-file-cache  nil
   "Private, list of executable files. The list is updated periodically.
-Format: '((FILE . 1) (FILE . 2) ..).")
+Format: ((FILE . 1) (FILE . 2) ..).")
 
 (defvar fnexpand-executable-file-cache-counter  nil
   "Private, incremented every time when executable file cache is asked.")
@@ -165,8 +165,8 @@ When non-nil
     (insert-file-contents "/etc/passwd" t)
     (setq buffer-file-name nil)))      ;Make sure it is not saved back
   "EVAL form to readt the password file to fnexpand-yp-passwd-buffer.
-HPUX	 'ypcat	    --> ypcat passwd
-Solaris	 'NIS+	    --> niscat passwd.org_dir
+HPUX	 \\='ypcat	    --> ypcat passwd
+Solaris	 \\='NIS+	    --> niscat passwd.org_dir
 others    nil       --> cat /etc/passwd
 ")
 
@@ -174,7 +174,7 @@ others    nil       --> cat /etc/passwd
 ;;;
 (defvar fnexpand-executable-file-cache-update  200
   "*Counter when to update fnexpand-executable-file-cache.
-Default every 200th call. See also 'fnexpand-executable-enable'.")
+Default every 200th call. See also `fnexpand-executable-enable'.")
 
 (defvar fnexpand-executable-cache-no-dirs  "RCS"
   "*Regexp, which directories in path not to cache. Eg looking into
@@ -186,10 +186,11 @@ RCS directory makes no sense.")
 Beware, this may be time consuming.")
 
 (defvar fnexpand-filename-boundary-chars "[^#$%+-9=@-Z_a-z~]"
-  "*Characters used to bound filenames in 'fnexpand-find-filename'.")
+  "*Characters used to bound filenames in `fnexpand-find-filename'.")
 
 (defvar fnexpand-complete-filename-look-right nil
-  "*If t, consider text on both sides of point in fnexpand-complete-filename.")
+  "*Flag to look right.
+If `t', consider text on both sides of point in `fnexpand-complete-filename'.")
 
 ;;; .................................................... compatibility ...
 
@@ -207,7 +208,7 @@ Beware, this may be time consuming.")
 (defun fnexpand-getenv  (&optional var)
   "Return env VAR slot. If VAR is t, then update
 global list 'fnexpand-envvars' if needed and return all variables
-in format '((ENV-VAR-NAME . ENAV-VAR-VALUE) (E-NAME. E-VAL) ..)"
+in alist format: ((ENV-VAR-NAME . ENAV-VAR-VALUE) ...)"
   (cond
    ((eq t var)
     (if fnexpand-envvars
@@ -224,7 +225,7 @@ in format '((ENV-VAR-NAME . ENAV-VAR-VALUE) (E-NAME. E-VAL) ..)"
     (getenv var))))
 
 (defun fnexpand-read-file-name-internal (name dir action)
-  "Like 'read-file-name-internal' that expands partial usernames and
+  "Like `read-file-name-internal' that expands partial usernames and
 environment variable names.
 
 NAME is the filename to complete; DIR is the directory to complete in.
@@ -363,8 +364,8 @@ line is assumed to indicate a yp entry."
               (try-completion string list))))))))
 
 (defun fnexpand-path-list  ()
-  "Return PATH in list format '(PATH PATH ..). Only unique paths are
-returned."
+  "Return PATH in list format (PATH PATH ...).
+Only unique paths are returned."
   (let* ((path (or (getenv "PATH")
                    (getenv "path")))
          list
@@ -390,13 +391,12 @@ returned."
 (defun fnexpand-executables  (&optional verb)
   "Return all unique executable files. If VERB is non-nil, print
 verbose messages during updating cache. Cache is updated only
-if it's nil or of cache counter reaches certain value.
+if it' is nil or of cache counter reaches certain value.
 
 References:
-  'fnexpand-executable-file-cache-counter'
-  'fnexpand-executable-file-cache-update'
-  'fnexpand-executable-file-cache'
-"
+  `fnexpand-executable-file-cache-counter'
+  `fnexpand-executable-file-cache-update'
+  `fnexpand-executable-file-cache'."
   (let* ((counter 0)
          path-list
          path
@@ -517,15 +517,15 @@ a file name. Ignore the most recent prompt in a shell buffer"
                (fnexpand-read-file-name-internal name
                                                  default-directory t)))
             (sit-for 32767))
-        (unwind-protect
-            (if (eq t (fnexpand-read-file-name-internal
-                       completion
-                       default-directory
-                       nil))
-                (setq completion (concat completion " "))))
+        (if (eq t (fnexpand-read-file-name-internal
+                   completion
+                   default-directory
+                   nil))
+            (setq completion (concat completion " ")))
         (delete-region (- (point) (length name)) (point))
         (insert completion)))
-     (t (message "[No match]")))))
+     (t
+      (message "[No match]")))))
 
 ;;; ----------------------------------------------------------------------
 ;;;
