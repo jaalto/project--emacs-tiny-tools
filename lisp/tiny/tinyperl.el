@@ -515,8 +515,8 @@
 (require 'tinylibm)
 
 (eval-when-compile
-  (require 'cl)
-  (require 'cl-lib))
+  (or (require 'cl-lib nil 'noerr) ;; Emacs 29.x
+      (require 'cl)))
 
 (eval-and-compile
   (defvar tinycompile--buffer-name)
@@ -2400,14 +2400,15 @@ References:
     ;;  files under /pods.
     (let (correct
           try)
-      (dolist (pod '("pod/" "pods/"))
-        (setq try (concat (file-name-as-directory path) pod))
-        (when (and (file-directory-p try)
-                   (directory-files
-                    try
-                    nil
-                    "\\.pod$"))
-          (cl-return (setq correct try))))
+      (catch 'break
+	(dolist (pod '("pod/" "pods/"))
+          (setq try (concat (file-name-as-directory path) pod))
+          (when (and (file-directory-p try)
+                     (directory-files
+                      try
+                      nil
+                      "\\.pod$"))
+            (throw 'break (setq correct try)))))
       (unless correct
         (error "TinyPerl: Can't determine POD path %s [%s]" path perl))
       (tinyperl-debug fid "correct" correct)
@@ -3040,23 +3041,24 @@ Input:
       (let (try)
         (cl-multiple-value-bind (name path)
             (list (car module) (cdr module))
-          (dolist (elt (list
-                        (replace-regexp-in-string
-                         ".pm" ".pod" name)
-                        name))
-            (setq try
-                  (ti::file-make-path
-                   path
-                   ;;  Delete prefix, because (cdr path) will cnotain the
-                   ;;  full directory
-                   ;;
-                   ;;  Getopt::Long.pm --> Long.pm
-                   (replace-regexp-in-string
-                    ".*:" ""
-                    elt)))
-            (when (file-exists-p try)
-            (setq file try)
-            (cl-return)))))
+	  (catch 'break
+            (dolist (elt (list
+                          (replace-regexp-in-string
+                           ".pm" ".pod" name)
+                          name))
+              (setq try
+                    (ti::file-make-path
+                     path
+                     ;;  Delete prefix, because (cdr path) will cnotain the
+                     ;;  full directory
+                     ;;
+                     ;;  Getopt::Long.pm --> Long.pm
+                     (replace-regexp-in-string
+                      ".*:" ""
+                      elt)))
+              (when (file-exists-p try)
+		(setq file try)
+		(throw 'break))))))
       (when (or (not file)
                 (not (file-exists-p file)))
         (error "TinyPerl: Cache error, %s does not exist" (car module)))
