@@ -125,9 +125,10 @@
 ;;{{{ setup: libraries
 
 (eval-when-compile
-  (require 'cl))
+  (or (require 'cl-lib nil 'noerr) ;; Emacs 29.x
+      (require 'cl)))
 
-(defconst tinydebian--version-time "2023.0917.1229"
+(defconst tinydebian--version-time "2023.0919.0915"
   "Last edited time.")
 
 (require 'tinylibm)
@@ -147,7 +148,6 @@
 (autoload 'mail-header-narrow-to-field   "mail-parse")
 
 (eval-and-compile
-  (require 'cl-lib)
   ;;  Forward declarations to quiet byte compiler.
   (defvar tinydebian--mail-mode-map)
   (defvar gnus-original-article-buffer)
