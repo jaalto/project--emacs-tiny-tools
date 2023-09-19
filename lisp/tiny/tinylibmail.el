@@ -3415,12 +3415,13 @@ See `ti::mail-whois-parse'."
     (cl-flet ((search-my (func)
 		(goto-char point)
 		(funcall func)))
-      (dolist (func '(ti::mail-whois-parse-registrant-1
-                      ti::mail-whois-parse-registrant-domain
-                      ti::mail-whois-parse-registrant-organization
-                      ti::mail-whois-parse-registrant-organization-2))
-        (when (setq ret (search-my func))
-          (cl-return ret))))))
+      (catch 'break
+	(dolist (func '(ti::mail-whois-parse-registrant-1
+			ti::mail-whois-parse-registrant-domain
+			ti::mail-whois-parse-registrant-organization
+			ti::mail-whois-parse-registrant-organization-2))
+          (when (setq ret (search-my func))
+            (throw 'break ret)))))))
 
 ;;; ----------------------------------------------------------------------
 ;;;
@@ -3460,7 +3461,8 @@ See `ti::mail-whois-parse'."
 ;;;
 (defun ti::mail-whois-parse-records ()
   "Whois: Parse records from buffer. See `ti::mail-whois-parse'.
-Values examined are: expires, created and updated."
+Values examined are: expires, created and updated.
+Note: this function relies on dynamically bound values."
   (let* ((date-info
 	  (list
 	   ;;  10-Aug-1998
@@ -3549,24 +3551,27 @@ Values examined are: expires, created and updated."
 		      "\\|^changed:[^\r\n0-9]+"
 		      "\\)"))))
 	 (beg (point))
+	 raw
+	 day
+	 month
+	 year
 	 ret)
-    (dolist (elt search)
-      (cl-multiple-value-bind (type line)
-	  elt
-	(dolist (date-data date-info)
-	  (cl-multiple-value-bind (regexp pos-list)
-	      date-data
-	    (setq regexp (concat line regexp))
-	    ;;  The order of the fields can be anything, start over
-	    ;;  every time from the same point
-	    (goto-char beg)
-	    (when (re-search-forward regexp nil t)
-	      (cl-multiple-value-bind (raw day month year)
-		  (list
-		   (match-string 2)
-		   (match-string (nth 0 pos-list))
-		   (match-string (nth 1 pos-list))
-		   (match-string (nth 2 pos-list)))
+    (catch 'break
+      (dolist (elt search)
+	(cl-multiple-value-bind (type line)
+	    elt
+	  (dolist (date-data date-info)
+	    (cl-multiple-value-bind (regexp pos-list)
+		date-data
+	      (setq regexp (concat line regexp))
+	      ;;  The order of the fields can be anything, start over
+	      ;;  every time from the same point
+	      (goto-char beg)
+	      (when (re-search-forward regexp nil t)
+		(setq raw (match-string 2))
+		(setq day (match-string (nth 0 pos-list)))
+		(setq month (match-string (nth 1 pos-list)))
+		(setq year (match-string (nth 2 pos-list)))
 		(if (eq 3 (length month))
 		    (setq month (ti::month-to-number
 				 (capitalize month)
@@ -3576,7 +3581,7 @@ Values examined are: expires, created and updated."
 		       (list (format "%s-%s-%s" year month day)
 			     raw))
 		      ret))
-	      (cl-return))))))
+	      (throw 'break))))))
     ret))
 
 ;;; ----------------------------------------------------------------------
