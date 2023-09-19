@@ -51,10 +51,10 @@
 (require 'tinyliba)
 (provide 'tinylibw)
 
-(defconst tinylibw-version-time "2023.0919.0745"
+(defconst tinylibw-version-time "2023.0919.0756"
   "Latest version number as last modified time.")
 
-;;; These functions has been submitted to Emacs 21.2
+;;; Some of the functions were submitted for Emacs 21.2
 ;;; (w32-fns.el)
 
 (defvar w32-cygwin-mount-table nil
@@ -80,18 +80,10 @@ Variables `cygwin' and `dos' are bound respectively."
 (put 'w32-cygwin-shell-environment 'lisp-indent-function 0)
 (put 'w32-cygwin-shell-environment 'edebug-form-spec '(body))
 (defmacro w32-cygwin-shell-environment  (&rest body)
-  "Run BODY under Cygwin shell environment.
-For example, you you want to call program ´zgrep' which is not an
-.exe, but a shell program, you have to switch to the Cygwin context.
-
-   (when (and (ti::win32-p)
-              (ti::win32-cygwin-p))
-      (w32-cygwin-shell-environment
-           ...))
-
+  "Run BODY under Cygwin Bash.
 Variable `shell-file-name' is locally bound during call."
   `(let ((shell-file-name (format "%s/bin/hash.exe"
-                                  (ti::win32-cygwin-p 'use-cache))))
+                                  (ti::win32-cygwin-p))))
      ,@body))
 
 ;;; ----------------------------------------------------------------------
@@ -126,7 +118,7 @@ Variable `shell-file-name' is locally bound during call."
               "[ \t]+"
               "\\(/[^ \t\r\n]*\\)")))))
     (while (re-search-forward regexp nil t)
-      (let ((dos    (match-string 2))
+      (let ((dos (match-string 2))
             (cygwin (match-string 1)))
         (push (cons dos cygwin)
               list)))
@@ -176,12 +168,11 @@ Return:
 ;;;
 (defun w32-cygwin-mount-table ()
   "Run mount(1) and return list: \\='((CYGWIN . DOS) ...)."
-  (when ;; (memq system-type '(ms-dos windows-nt))
-      (ti::win32-p)
+  (when (memq system-type '(cygwin))
     ;; specifically request the .exe which must be along PATH
     ;; if we used only `mount', that could call user's "mount.bat" or
     ;; something.
-    (let ((cmd  (executable-find "mount.exe")))
+    (let ((cmd (executable-find "mount.exe")))
       (when cmd
         (with-temp-buffer
           (call-process cmd nil (current-buffer))
@@ -232,8 +223,7 @@ Return:
   "Run mount.exe and set internal variable `w32-cygwin-mount-table'.
 You should run this function after you have made a change to
 Cygwin mount points."
-  ;;   (interactive)
-  (if (ti::win32-p) ;; (memq system-type '(ms-dos windows-nt))
+  (if (memq system-type '(cygwin))
       (setq w32-cygwin-mount-table
             (w32-cygwin-mount-table))))
 
@@ -321,17 +311,17 @@ Be sure to call `expand-file-name' before you pass PATH to the function."
 (defsubst w32-expand-file-name-for-cygwin (path)
   "Expand PATH to Cygwin notation if Cygwin is present."
   (when (and (string-match "^[A-Za-z]:" path)
-             (ti::win32-cygwin-p))
+             (memq system-type '(cygwin)))
     (setq path (w32-cygwin-dos-path-to-cygwin path)))
   path)
 
 (defsubst w32-expand-file-name-for-emacs (path)
   "Expand PATH to DOS Emacs notation if PATH is in Cygwin notation."
   (cond
-   ((and (ti::emacs-type-win32-p)
+   ((and (memq system-type '(ms-dos windows-nt))
          (string-match "^/cygdrive" path))
     (setq path (w32-cygwin-path-to-dos path)))
-   ((and (ti::emacs-type-cygwin-p)
+   ((and (memq system-type '(cygwin))
          (string-match "^[a-zA-Z]:" path))
     (setq path (w32-cygwin-dos-path-to-cygwin path))))
   path)
