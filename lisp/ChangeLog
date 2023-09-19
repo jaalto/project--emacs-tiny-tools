@@ -1,117 +1,327 @@
+2023-09-19 Tue  Jari Aalto  <jari.aalto@tuni.fi>
+
+	* tiny/tinypath.el (tinypath-ti::win32-cygwin-p):
+	in dolist, correct 'cl-return' to catch..throw.
+	(tinypath-executable-find):
+	in dolist, correct 'cl-return' to catch..throw.
+	(tinypath-emacs-root-by-load-path):
+	in dolist, correct 'cl-return' to catch..throw.
+	(tinypath-load-path-string-match):
+	in dolist, correct 'cl-return' to catch..throw.
+	(tinypath-directory-search):
+	in dolist, correct 'cl-return' to catch..throw.
+	(tinypath-tmp-find-root-home):
+	in dolist, correct 'cl-return' to catch..throw.
+	(tinypath-tmp-find-writable-dir):
+	in dolist, correct 'cl-return' to catch..throw.
+	(tinypath-cygwin-p):
+	in dolist, correct 'cl-return' to catch..throw.
+	(tinypath-ti::dired-buffer):
+	in dolist, correct 'cl-return' to catch..throw.
+	(tinypath-ti::compat-timer-elt):
+	in dolist, correct 'cl-return' to catch..throw.
+	(tinypath-cache-warn-if-not-exist):
+	in dolist, correct 'cl-return' to catch..throw.
+	(tinypath-find-dir):
+	in dolist, correct 'cl-return' to catch..throw.
+	(tinypath-directory-lisp-p):
+	in dolist, correct 'cl-return' to catch..throw.
+	(tinypath-self-location-load-history):
+	in dolist, correct 'cl-return' to catch..throw.
+	(tinypath-self-location):
+	in dolist, correct 'cl-return' to catch..throw.
+	(tinypath-external-setup-parse-data):
+	in dolist, correct 'cl-return' to catch..throw.
+	(tinypath-cache-p-1-new-cache-lookup):
+	in dolist, correct 'cl-return' to catch..throw.
+	(tinypath-cache-p-2):
+	in dolist, correct 'cl-return' to catch..throw.
+	(tinypath-cache-file-load):
+	in dolist, correct 'cl-return' to catch..throw.
+	(tinypath-load-path-search):
+	in dolist, correct 'cl-return' to catch..throw.
+	(tinypath-load-path-not-in-synch-p):
+	in dolist, correct 'cl-return' to catch..throw.
+	(tinypath-cache-duplicate-different-size-p):
+	in dolist, correct 'cl-return' to catch..throw.
+	(tinypath-cache-duplicate-report):
+	in dolist, correct 'cl-return' to catch..throw.
+	(tinypath-manpage-handler):
+	in dolist, correct 'cl-return' to catch..throw.
+
+	* tiny/tinyurl.el (tinyurl-browse-url-browser-function):
+	in dolist, correct 'cl-return' to catch..throw.
+	(tinyurl-command-browse-url-default-browser-function-1):
+	in dolist, correct 'cl-return' to catch..throw.
+
+	* tiny/tinytf.el (tinytf-column-info):
+	in dolist, correct 'cl-return' to catch..throw.
+	(tinytf-unmark-word):
+	in dolist, correct 'cl-return' to catch..throw.
+
+	* tiny/tinytag.el (tinytag-do-search):
+	in dolist, correct 'cl-return' to catch..throw.
+
+	* tiny/tinytab.el (tinytab-tab-key-insert):
+	in dolist, correct 'cl-return' to catch..throw.
+
+	* tiny/tinyperl.el (tinyperl-pod-path):
+	in dolist, correct 'cl-return' to catch..throw.
+	(tinyperl-pod-by-module):
+	in dolist, correct 'cl-return' to catch..throw.
+
+	* tiny/tinymy.el (tinymy-package-save-get-file-name):
+	in dolist, correct 'cl-return' to catch..throw.
+	(tinymy-compile-command-search):
+	in dolist, correct 'cl-return' to catch..throw.
+	(tinymy-compile-xml-command):
+	in dolist, correct 'cl-return' to catch..throw.
+
+	* tiny/tinymailbox.el (tinymailbox-mail-send-at-point):
+	in dolist, correct 'cl-return' to catch..throw.
+
+	* tiny/tinymail.el (tinymail-complete-guess-in-body):
+	in dolist, correct 'cl-return' to catch..throw.
+	(tinymail-complete-list-bbdb-2):
+	in dolist, correct 'cl-return' to catch..throw.
+	(tinymail-complete-list-bbdb-1):
+	in dolist, correct 'cl-return' to catch..throw.
+	(tinymail-complete-simple):
+	in dolist, correct 'cl-return' to catch..throw.
+	(tinymail-complete-key):
+	in dolist, correct 'cl-return' to catch..throw.
+	(tinymail-from-field-value-plus):
+	in dolist, correct 'cl-return' to catch..throw.
+	(tinymail-field-fcc-determine):
+	in dolist, correct 'cl-return' to catch..throw.
+
+	* tiny/tinyload.el (tinyload-load-list-search-elt):
+	in dolist, correct 'cl-return' to catch..throw.
+
+	* tiny/tinylisp.el (tinylisp-jump-to-definition):
+	in dolist, correct 'cl-return' to catch..throw.
+	(tinylisp-autoload-generate-library):
+	in dolist, correct 'cl-return' to catch..throw.
+
+	* tiny/tinyliby.el (ti::system-load-history-where-exactly):
+	in dolist, correct 'cl-return' to catch..throw.
+	(ti::system-load-history-where-1):
+	in dolist, correct 'cl-return' to catch..throw.
+
+        * tiny/tinylibw.el (w32-cygwin-dos-path-to-cygwin):
+        in dolist, correct 'cl-return' to catch..throw.
+        (w32-cygwin-mount-table-path-to-dos):
+        in dolist, correct 'cl-return' to catch..throw.
+        (w32-cygwin-mount-table-dolist): Add `catch'.
+        (w32-cygwin-mount-table): Use `system-type'.
+        (w32-cygwin-mount-table-set): Use `system-type'.
+	(w32-expand-file-name-for-cygwin): Use `system-type'.
+
+        * tiny/tinylibmail.el (ti::mail-whois-parse-registrant):
+        in dolist, correct 'cl-return' to catch..throw.
+        (ti::mail-whois-parse-records):
+        in dolist, correct 'cl-return' to catch..throw.
+        (ti::mail-get-buffer):
+        in dolist, correct 'cl-return' to catch..throw.
+
+        * tiny/tinylibm.el (ti::list-find):
+        in dolist, correct 'cl-return' to catch..throw.
+        (ti::package-config-file-directory-default):
+        in dolist, correct 'cl-return' to catch..throw.
+
+        * tiny/tinylibid.el (ti::id-cnv-txt2comment):
+        in dolist, correct 'cl-return' to catch..throw.
+        (ti::id-match):
+        in dolist, correct 'cl-return' to catch..throw.
+        (ti::id-buffer-re-search):
+        in dolist, correct 'cl-return' to catch..throw.
+
+        * tiny/tinylibenv.el (ti::emacs-install-root):
+        in dolist, correct 'cl-return' to catch..throw.
+        (ti::win32-cygwin-p-1):
+        in dolist, correct 'cl-return' to catch..throw.
+
+        * tiny/tinylib.el (ti::vc-rcs-previous-version):
+        in dolist, correct 'cl-return' to catch..throw.
+        (ti::string-match-string-subs):
+        in dolist, correct 'cl-return' to catch..throw.
+        (ti::dired-buffer):
+        in dolist, correct 'cl-return' to catch..throw.
+        (ti::window-get-buffer-window-other-frame):
+        in dolist, correct 'cl-return' to catch..throw.
+        (ti::set-face-try-list):
+        in dolist, correct 'cl-return' to catch..throw.
+        (ti::directory-unix-man-path-root):
+        in dolist, correct 'cl-return' to catch..throw.
+        (ti::file-get-load-path):
+        in dolist, correct 'cl-return' to catch..throw.
+        (ti::compat-installation-root):
+        in dolist, correct 'cl-return' to catch..throw.
+        (ti::compat-mouse-position-coordinates):
+        in dolist, correct 'cl-return' to catch..throw.
+        (ti::compat-popup):
+        in dolist, correct 'cl-return' to catch..throw.
+        (ti::compat-timer-elt):
+        in dolist, correct 'cl-return' to catch..throw.
+
+        * tiny/tinyirc.el (tinyirc--pastebot-send-file):
+        in dolist, correct 'cl-return' to catch..throw.
+
+        * tiny/tinyigrep.el (tinyigrep-install-database-setup-lisp-rc-files):
+        in dolist, correct 'cl-return' to catch..throw.
+        (tinyigrep-determine-grep-program):
+        in dolist, correct 'cl-return' to catch..throw.
+
+        * tiny/tinyhotlist.el (tinyhotlist-find-buffer):
+        in dolist, correct 'cl-return' to catch..throw.
+        (tinyhotlist-abbreviate-file-name):
+        in dolist, correct 'cl-return' to catch..throw.
+
+        * tiny/tinygnus.el (tinygnus-summary-map-articles-macro):
+        Add `catch'.
+        (tinygnus-files-from-dir-macro): Add `catch'.
+        (tinygnus-summary-toggle-original):
+        in dolist, correct 'cl-return' to catch..throw.
+        (tinygnus-domain): in dolist, correct 'cl-return' to catch..throw.
+
+        * tiny/tinydired.el (tinydired--tmp-dir):
+        in dolist, correct 'cl-return' to catch..throw.
+        (tinydired--download-dir):
+        in dolist, correct 'cl-return' to catch..throw.
+
+        * tiny/tinydiff.el:
+        in dolist, correct 'cl-return' to catch..throw.
+
 2023-09-18 Mon  Jari Aalto  <jari.aalto@tuni.fi>
 
-	* tiny/tinyigrep.el (tinyigrep-countdown): rm `cl-decf'.
+        * tiny/tinycygwin.el (tinycygwin-program-parse-version):
+        in dolist, correct 'cl-return' to catch..throw.
+        (tinycygwin-message-mode-attach-program-version):
+        in dolist, correct 'cl-return' to catch..throw.
+        (tinycygwin-user-mail-address-value):
+        in dolist, correct 'cl-return' to catch..throw.
+        (tinycygwin-first-directory):
+        in dolist, correct 'cl-return' to catch..throw.
+        (tinycygwin-list-match):
+        in dolist, correct 'cl-return' to catch..throw.
+        (tinycygwin-executable-find):
+        in dolist, correct 'cl-return' to catch..throw.
 
-	* tiny/tinyurl.el (tinyurl-mark-process-post-command):
-	rm `cl-incf'.
-	(tinyurl-mode-action): rm `cl-incf'.
+        * tiny/tinybuffer.el (tinybuffer-buffer-list-next):
+        in dolist, correct 'cl-return' to catch..throw.
 
-	* tiny/tinytf.el (tinytf-heading-fix-newlines):
-	rm `cl-incf'.
-	(tinytf-heading-fix-newlines): rm `cl-incf'.
-	(tinytf-heading-fix): rm `cl-incf'.
-	(tinytf-heading-numbering): rm `cl-incf'.
+        * tiny/tinyigrep.el (tinyigrep-countdown): rm `cl-decf'.
+
+        * tiny/tinyurl.el (tinyurl-mark-process-post-command):
+        rm `cl-incf'.
+        (tinyurl-mode-action): rm `cl-incf'.
+
+        * tiny/tinytf.el (tinytf-heading-fix-newlines):
+        rm `cl-incf'.
+        (tinytf-heading-fix-newlines): rm `cl-incf'.
+        (tinytf-heading-fix): rm `cl-incf'.
+        (tinytf-heading-numbering): rm `cl-incf'.
 
 
-	* tiny/tinytag.el (tinytag-post-command): rm `cl-incf'.
+        * tiny/tinytag.el (tinytag-post-command): rm `cl-incf'.
 
-	* tiny/tinysearch.el (tinysearch-search-word-main):
-	rm `cl-incf'.
+        * tiny/tinysearch.el (tinysearch-search-word-main):
+        rm `cl-incf'.
 
-	* tiny/tinyreplace.el (tinyreplace-replace-over-files-compile-buffer):
-	rm `cl-incf'.
+        * tiny/tinyreplace.el (tinyreplace-replace-over-files-compile-buffer):
+        rm `cl-incf'.
 
-	* tiny/tinyprocmail.el (tinyprocmail-flag-standardize):
-	rm `cl-incf'.
-	(tinyprocmail-flag-standardize): rm `cl-incf'.
-	(tinyprocmail-flag-standardize): rm `cl-incf'.
-	(tinyprocmail-standardize-recipe-start): rm `cl-incf'.
-	(tinyprocmail-lint-forward): rm `cl-incf'.
+        * tiny/tinyprocmail.el (tinyprocmail-flag-standardize):
+        rm `cl-incf'.
+        (tinyprocmail-flag-standardize): rm `cl-incf'.
+        (tinyprocmail-flag-standardize): rm `cl-incf'.
+        (tinyprocmail-standardize-recipe-start): rm `cl-incf'.
+        (tinyprocmail-lint-forward): rm `cl-incf'.
 
-	* tiny/tinypath.el (tinypath-replace-regexp-in-string):
-	rm `cl-incf'.
-	(tinypath-list-display): rm `cl-incf'.
-	(tinypath-external-output-parse-1-cache): rm `cl-incf'.
-	(tinypath-load-path-directory-files): rm `cl-incf'.
-	(tinypath-directory-search): rm `cl-decf'.
+        * tiny/tinypath.el (tinypath-replace-regexp-in-string):
+        rm `cl-incf'.
+        (tinypath-list-display): rm `cl-incf'.
+        (tinypath-external-output-parse-1-cache): rm `cl-incf'.
+        (tinypath-load-path-directory-files): rm `cl-incf'.
+        (tinypath-directory-search): rm `cl-decf'.
 
-	* tiny/tinypair.el (tinypair-move-logical-word):
-	rm `cl-incf'.
+        * tiny/tinypair.el (tinypair-move-logical-word):
+        rm `cl-incf'.
 
-	* tiny/tinypage.el (tinypage-count-pages): rm `cl-incf'.
-	(tinypage-current-page): rm `cl-incf'.
-	(tinypage-post-command): rm `cl-incf'.
-	(tinypage-renumber-level-forward): rm `cl-incf'.
+        * tiny/tinypage.el (tinypage-count-pages): rm `cl-incf'.
+        (tinypage-current-page): rm `cl-incf'.
+        (tinypage-post-command): rm `cl-incf'.
+        (tinypage-renumber-level-forward): rm `cl-incf'.
 
-	* tiny/tinypad.el (tinypad-mode-action): rm `cl-incf'.
+        * tiny/tinypad.el (tinypad-mode-action): rm `cl-incf'.
 
-	* tiny/tinymail.el (tinymail-field-cc-kill-by-regexp):
-	rm `cl-incf'.
-	(tinymail-complete-list-bbdb-1): rm `cl-incf'.
+        * tiny/tinymail.el (tinymail-field-cc-kill-by-regexp):
+        rm `cl-incf'.
+        (tinymail-complete-list-bbdb-1): rm `cl-incf'.
 
-	* tiny/tinylock.el (tinylock-process-data-unchanged-p):
-	rm `cl-incf'.
+        * tiny/tinylock.el (tinylock-process-data-unchanged-p):
+        rm `cl-incf'.
 
-	* tiny/tinyload.el (tinyload-autoload-function-load):
-	rm `cl-incf'.
-	(tinyload-busy-count-incf): rm `cl-incf'.
-	(tinyload-busy-count-controller): rm `cl-incf'.
-	(tinyload-loader-process): rm `cl-incf'.
+        * tiny/tinyload.el (tinyload-autoload-function-load):
+        rm `cl-incf'.
+        (tinyload-busy-count-incf): rm `cl-incf'.
+        (tinyload-busy-count-controller): rm `cl-incf'.
+        (tinyload-loader-process): rm `cl-incf'.
 
-	* tiny/tinylisp.el (tinylisp-elp-instrument-buffer):
-	rm `cl-incf'.
-	(tinylisp-error-debug-add-tags): rm `cl-incf'.
-	(tinylisp-error-debug-add-tags): rm `cl-incf'.
-	(tinylisp-library-info-emacs): rm `cl-incf'.
-	(tinylisp-library-load-by-regexp): rm `cl-incf'.
-	(tinylisp-property-info): rm `cl-incf'.
+        * tiny/tinylisp.el (tinylisp-elp-instrument-buffer):
+        rm `cl-incf'.
+        (tinylisp-error-debug-add-tags): rm `cl-incf'.
+        (tinylisp-error-debug-add-tags): rm `cl-incf'.
+        (tinylisp-library-info-emacs): rm `cl-incf'.
+        (tinylisp-library-load-by-regexp): rm `cl-incf'.
+        (tinylisp-property-info): rm `cl-incf'.
 
-	* tiny/tinyliby.el (ti::system-get-file-documentation):
-	rm `cl-incf'.
+        * tiny/tinyliby.el (ti::system-get-file-documentation):
+        rm `cl-incf'.
 
-	* tiny/tinylibt.el (ti::text-save-data): rm `cl-incf'.
-	(ti::text-undo): rm `cl-decf'.
+        * tiny/tinylibt.el (ti::text-save-data): rm `cl-incf'.
+        (ti::text-undo): rm `cl-decf'.
 
-	* tiny/tinylibo.el (ti::overlay-get-prop): rm `cl-incf'.
+        * tiny/tinylibo.el (ti::overlay-get-prop): rm `cl-incf'.
 
-	* tiny/tinylibmail.el (ti::mail-pgp-data-string-to-bin-string):
-	rm `cl-incf'.
-	(ti::mail-pgp-data-bin-string-to-int-list): rm `cl-incf'.
+        * tiny/tinylibmail.el (ti::mail-pgp-data-string-to-bin-string):
+        rm `cl-incf'.
+        (ti::mail-pgp-data-bin-string-to-int-list): rm `cl-incf'.
 
-	* tiny/tinylibm.el (ti::color-lighter): rm `cl-incf'.
-	(ti::list-to-assoc-menu): rm `cl-incf'.
-	(ti::list-elt-position): rm `cl-incf'.
-	(subst-char-with-string): rm `cl-incf'.
+        * tiny/tinylibm.el (ti::color-lighter): rm `cl-incf'.
+        (ti::list-to-assoc-menu): rm `cl-incf'.
+        (ti::list-elt-position): rm `cl-incf'.
+        (subst-char-with-string): rm `cl-incf'.
 
-	* tiny/tinylibb.el (bin-string-to-int): rm `cl-incf'.
-	(count-char-in-string): rm `cl-incf'.
-	(count-char-in-region): rm `cl-incf'.
-	(subst-char-with-string): rm `cl-incf'.
+        * tiny/tinylibb.el (bin-string-to-int): rm `cl-incf'.
+        (count-char-in-string): rm `cl-incf'.
+        (count-char-in-region): rm `cl-incf'.
+        (subst-char-with-string): rm `cl-incf'.
 
-	* tiny/tinyirc.el (tinyird-line-number-add-region):
-	rm `cl-incf'.
+        * tiny/tinyirc.el (tinyird-line-number-add-region):
+        rm `cl-incf'.
 
-	* tiny/tinygnus.el (tinygnus-summary-ube-send-to-postmasters):
-	rm `cl-incf'.
-	(tinygnus-summary-gather-urls): rm `cl-incf'.
-	(tinygnus-summary-gather-urls): rm `cl-incf'.
+        * tiny/tinygnus.el (tinygnus-summary-ube-send-to-postmasters):
+        rm `cl-incf'.
+        (tinygnus-summary-gather-urls): rm `cl-incf'.
+        (tinygnus-summary-gather-urls): rm `cl-incf'.
 
-	* tiny/tinydired.el (tinydired-load-all-marked-files):
-	rm `cl-incf'.
-	(tinydired-load-all-marked-files): rm `cl-incf'.
-	(tinydired-marked-vc-revert): rm `cl-incf'.
-	(tinydired-marked-vc-co): rm `cl-incf'.
-	(tinydired-marked-vc-ci): rm `cl-incf' `cl-decf'.
-	(tinydired-kill-all-ange-and-dired-buffers): rm `cl-incf'.
-	(tinydired-kill-all-ange-buffers): rm `cl-incf'.
+        * tiny/tinydired.el (tinydired-load-all-marked-files):
+        rm `cl-incf'.
+        (tinydired-load-all-marked-files): rm `cl-incf'.
+        (tinydired-marked-vc-revert): rm `cl-incf'.
+        (tinydired-marked-vc-co): rm `cl-incf'.
+        (tinydired-marked-vc-ci): rm `cl-incf' `cl-decf'.
+        (tinydired-kill-all-ange-and-dired-buffers): rm `cl-incf'.
+        (tinydired-kill-all-ange-buffers): rm `cl-incf'.
 
-	* tiny/tinydiff.el (tinydiff-minibuffer--rev-add-command):
-	rm `cl-incf'.
+        * tiny/tinydiff.el (tinydiff-minibuffer--rev-add-command):
+        rm `cl-incf'.
 
-	* tiny/tinycache.el (tinycache-flush-all-compilation): rm `cl-incf'.
-	(tinycache-dired-mark): rm `cl-incf'.
+        * tiny/tinycache.el (tinycache-flush-all-compilation): rm `cl-incf'.
+        (tinycache-dired-mark): rm `cl-incf'.
 
-	* tiny/load-path.el (tiny-tmp-load-path-print): rm `cl-incf'.
+        * tiny/load-path.el (tiny-tmp-load-path-print): rm `cl-incf'.
 
         * tiny/tinylib.el (ti::string-format-percent): rm `cl-incf'.
         (ti::string-plain-string-to-regexp): rm `cl-incf'.
