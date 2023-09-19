@@ -1546,7 +1546,7 @@ Return:
         list
         tmp
         ret)
-    (setq branch-list   (ti::vc-rcs-get-all-branches version v-list))
+    (setq branch-list (ti::vc-rcs-get-all-branches version v-list))
     (cond
      ((null branch-list)
       ;; record the error to *Message* buffer
@@ -1554,12 +1554,14 @@ Return:
      ;; after 1.1.1.1 we go up one level, to 1.1
      ((setq ret (ti::string-match"\\([.0-9]*\\).1.1$" 1  version)))
      (t
-      (setq list branch-list    tmp nil)
-      (dolist (elt list)
-        (if (not (string= elt version))
-            (setq tmp elt)
-          (setq ret tmp)
-          (cl-return)))))
+      (setq list branch-list)
+      (setq tmp nil)
+      (catch 'break
+	(dolist (elt list)
+          (if (not (string= elt version))
+              (setq tmp elt)
+            (setq ret tmp)
+            (throw 'break))))))
     ret))
 
 ;;; ----------------------------------------------------------------------
@@ -2055,13 +2057,14 @@ Return list:
  nil                    ,see TERMINATE"
   (let (ret
         str)
-    (dolist (level level-list)
-      (setq str (match-string level string))
-      (if (and terminate (null str))
-          (progn
-            (setq ret nil)              ;that's it then...
-            (cl-return))
-        (push str ret)))
+    (catch 'break
+      (dolist (level level-list)
+	(setq str (match-string level string))
+	(if (and terminate (null str))
+            (progn
+              (setq ret nil)              ;that's it then...
+              (throw 'break))
+          (push str ret))))
     (nreverse ret)))
 
 ;;; ----------------------------------------------------------------------
@@ -2312,11 +2315,12 @@ Return:
 (defun ti::dired-buffer (dir)
   "Return dired buffer for DIR if any."
   (setq dir (file-name-as-directory dir)) ;; Dired uses trailing slash
-  (dolist (buffer (buffer-list))
-    (when (with-current-buffer buffer
-            (and (eq major-mode 'dired-mode)
-                 (string= dired-directory dir)))
-      (cl-return buffer))))
+  (catch 'break
+    (dolist (buffer (buffer-list))
+      (when (with-current-buffer buffer
+              (and (eq major-mode 'dired-mode)
+                   (string= dired-directory dir)))
+	(throw 'break buffer)))))
 
 ;;; ----------------------------------------------------------------------
 ;;;
@@ -3111,7 +3115,7 @@ Return:
 ;;;
 (defun ti::buffer-lf-to-crlf (&optional arg force)
   "Simple Unix to Dos converter. If ARG is non-nil -->  Dos to Unix.
-Strips or inserts ^M (cl-return) marker _only_ at the end of line.
+Strips or inserts ^M cgaracter only at the end of line.
 
 If optional FORCE is given, ignores possible write protection.
 
@@ -4156,12 +4160,13 @@ Input:
 in some other frame window than in the current frame."
   (let (win
         ret)
-    (dolist (frame
-             (delete (selected-frame) (frame-list)))
-      ;;  maybe in other frame...
-      (when (setq win (get-buffer-window buffer frame))
-        (setq ret (cons frame win))
-        (cl-return)))
+    (catch 'break
+      (dolist (frame
+               (delete (selected-frame) (frame-list)))
+	;;  maybe in other frame...
+	(when (setq win (get-buffer-window buffer frame))
+          (setq ret (cons frame win))
+          (throw 'break))))
     ret))
 
 ;;; ----------------------------------------------------------------------
@@ -4656,21 +4661,22 @@ Return:
   (let (status)
     (or attribute
         (setq attribute 'fg))
-    (dolist (color (ti::list-make list))
-      (when (condition-case nil
-                (progn
-                  (cond
-                   ((eq attribute 'fg)
-                    (set-face-foreground face color))
-                   (t
-                    (set-face-background face color)))
-                  (setq status color)
-                  t)
-              (error
-               ;; cannot set
-               nil))
-        ;; succesfull; stop the loop
-        (cl-return)))
+    (catch 'break
+      (dolist (color (ti::list-make list))
+	(when (condition-case nil
+                  (progn
+                    (cond
+                     ((eq attribute 'fg)
+                      (set-face-foreground face color))
+                     (t
+                      (set-face-background face color)))
+                    (setq status color)
+                    t)
+		(error
+		 ;; cannot set
+		 nil))
+          ;; Success, stop the loop
+          (throw 'break))))
     status))
 
 ;;}}}
@@ -5632,14 +5638,15 @@ Unix path handling:
 ;;;
 (defun ti::directory-unix-man-path-root ()
   "Determine manual page root path. "
-  (dolist (try '("/opt/local/man"     ;HP-UX new
-                 "/usr/share/man"     ;HP old
-                 "/usr/man"))         ;Sun and Linux
-    (if (ti::win32-cygwin-p)
-        (setq try (w32-cygwin-path-to-dos try)))
-    (when (and try
-               (file-directory-p try))
-      (cl-return try))))
+  (catch 'break
+    (dolist (try '("/opt/local/man"     ;HP-UX new
+                   "/usr/share/man"     ;HP old
+                   "/usr/man"))         ;Sun and Linux
+      (if (ti::win32-cygwin-p)
+          (setq try (w32-cygwin-path-to-dos try)))
+      (when (and try
+		 (file-directory-p try))
+	(throw 'break try)))))
 
 ;;; ----------------------------------------------------------------------
 ;;;
@@ -5818,15 +5825,16 @@ Return:
      (list var1 (eval (intern-soft var2)))))
   (let (file found)
     (ti::verb)
-    (dolist (elt paths)
-      (when (stringp elt)           ;you never know what's in there...
-        (setq file (ti::file-make-path elt fn))
-        (when (and (file-exists-p file)
-                   (not (file-directory-p file)))
-          (if all-paths
-              (push file found)
-            (setq  found file)
-            (cl-return)))))
+    (catch 'break
+      (dolist (elt paths)
+	(when (stringp elt)           ;you never know what's in there...
+          (setq file (ti::file-make-path elt fn))
+          (when (and (file-exists-p file)
+                     (not (file-directory-p file)))
+            (if all-paths
+		(push file found)
+              (setq  found file)
+              (throw 'break))))))
     (if (and found all-paths)           ;preserve order
         (setq found (nreverse found)))
     (if (and found verb)
@@ -7721,28 +7729,29 @@ otherwise `load-path' is conculted."
                      (ti::emacs-version-number-as-string))) ;eg "19.14"
          match
          ret)
-    (dolist (path (if xemacs
-                      load-path
-                    exec-path))
-      ;;  When we find the version from the path, ve know the root
-      ;;  directory
-      ;;
-      ;;  /opt/local/lib/xemacs-19.14/lisp/vms -->
-      ;;  /opt/local/lib/xemacs-19.14/lisp/
-      (when (and (stringp path)
-                 (string-match "xemacs" path)
-                 (if ver
-                     ;; running under XEmacs, we know what to look for.
-                     (setq match (ti::string-match
-                                  (concat "^.*" ver) 0 path))
-                   ;; Take a guess, anything that looks like XEmacs in path
-                   (setq match
-                         (ti::string-match
-                          ;;  XEmacs-21.2.36/ or XEmacs/21.2.36/
-                          "^\\(.*xemacs[-\\/][0-9]+\\.[0-9.]*[0-9]\\)[\\/]"
-                          1 path))))
-        (setq ret (concat match "/lisp"))
-        (cl-return)))
+    (catch 'break
+      (dolist (path (if xemacs
+			load-path
+                      exec-path))
+	;;  When we find the version from the path, ve know the root
+	;;  directory
+	;;
+	;;  /opt/local/lib/xemacs-19.14/lisp/vms -->
+	;;  /opt/local/lib/xemacs-19.14/lisp/
+	(when (and (stringp path)
+                   (string-match "xemacs" path)
+                   (if ver
+                       ;; running under XEmacs, we know what to look for.
+                       (setq match (ti::string-match
+                                    (concat "^.*" ver) 0 path))
+                     ;; Take a guess, anything that looks like XEmacs in path
+                     (setq match
+                           (ti::string-match
+                            ;;  XEmacs-21.2.36/ or XEmacs/21.2.36/
+                            "^\\(.*xemacs[-\\/][0-9]+\\.[0-9.]*[0-9]\\)[\\/]"
+                            1 path))))
+          (setq ret (concat match "/lisp"))
+          (throw 'break))))
     ret))
 
 ;;; ----------------------------------------------------------------------
@@ -7948,9 +7957,10 @@ If mouse is not supported, return nil."
         (let ((win (get-buffer-window (current-buffer)))
               (count 0))
           (save-window-excursion
-            (dolist (elt (window-list))
-              (when (eq elt win)
-                (cl-return))
+	    (catch 'break
+              (dolist (elt (window-list))
+		(when (eq elt win)
+                  (throw 'break)))
               (select-window elt)
               ;;  Modeline is not counted as +1
               (setq count (+ count (window-height)))))
@@ -8163,11 +8173,12 @@ Return:
         (if (ti::funcall 'misc-user-event-p ret)
             (setq ret (car-safe (ti::funcall 'event-object  ret))))
         (when (and ret mode)            ;find position in list
-          (dolist (arg menu)
-            (when (and (vectorp arg)
-                       (string= ret (elt arg 0)))
-              (setq ret  (1- count))
-              (cl-return))
+	  (catch 'break
+            (dolist (arg menu)
+              (when (and (vectorp arg)
+			 (string= ret (elt arg 0)))
+		(setq ret  (1- count))
+		(throw 'break)))
             (setq count (1+ count)))))))
     ret))
 
@@ -8413,9 +8424,9 @@ Return list:
         item
         ret)
     (cl-flet ((get-elt (elt place)
-                    (if (vectorp elt)
-                        (aref elt place)
-                      (nth place elt))))
+                (if (vectorp elt)
+                    (aref elt place)
+                  (nth place elt))))
       (dolist (timer '( ;; (("Mon Dec  9 10:01:47 1996-0" 10 tipgp-process nil))
                        (timer-idle-list . 5)
                        (timer-alist . 2)
@@ -8435,17 +8446,19 @@ Return list:
           (if (and (ti::emacs-p)
                    (vectorp (car list)))
               (setq pos 5))
-          (dolist (elt list)
-            (setq item (get-elt elt pos))
-            (when (or (and (symbolp item)
-                           (eq item function))
-                      ;;  It may be lambda expression
-                      (and (functionp item)
-                           (string-match (regexp-quote (symbol-name function))
-                                         (prin1-to-string
-                                          (get-elt elt (1+ pos))))))
-              (setq ret (list elt (car timer)))
-              (cl-return))))))
+	  (catch 'break
+            (dolist (elt list)
+              (setq item (get-elt elt pos))
+              (when (or (and (symbolp item)
+                             (eq item function))
+			;;  It may be lambda expression
+			(and (functionp item)
+                             (string-match
+			      (regexp-quote (symbol-name function))
+                              (prin1-to-string
+                               (get-elt elt (1+ pos))))))
+		(setq ret (list elt (car timer)))
+		(throw 'break)))))))
     ret))
 
 ;;; ----------------------------------------------------------------------
