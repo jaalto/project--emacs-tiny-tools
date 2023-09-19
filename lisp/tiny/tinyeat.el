@@ -379,10 +379,10 @@ Normally word is terminated by whitespace or newlines."
 (put 'tinyeat-repeat-macro 'lisp-indent-function 1)
 (defmacro tinyeat-repeat-macro (end &rest body)
   "Loop using VAR from BEG to END and do BODY."
-  `(loop for var from 1 to ,end
-	 do
-	 (progn
-	   ,@body)))
+  `(cl-loop for var from 1 to ,end
+	    do
+	    (progn
+	      ,@body)))
 
 ;;; ----------------------------------------------------------------------
 ;;;
