@@ -207,7 +207,7 @@ If `t', consider text on both sides of point in `fnexpand-complete-filename'.")
 
 (defun fnexpand-getenv  (&optional var)
   "Return env VAR slot. If VAR is t, then update
-global list 'fnexpand-envvars' if needed and return all variables
+global list `fnexpand-envvars' if needed and return all variables
 in alist format: ((ENV-VAR-NAME . ENAV-VAR-VALUE) ...)"
   (cond
    ((eq t var)
