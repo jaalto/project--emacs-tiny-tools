@@ -28,18 +28,21 @@
 ;;
 ;;; Install:
 ;;
-;; DO NOT LOAD THIS FILE, but load the central library "m". It will handle arranging
-;; everything for you.
+;; DO NOT LOAD THIS FILE, but load the central library "m".
+;; It will handle arranging everything for you.
 ;;
 ;;      (require 'tinylibm)
 ;;
 ;;; Commentary:
 ;;
-;;  Preface, 1998 (rearranged 2010)
+;;  Preface, 1998
 ;;
-;;      This is lisp function library, package itself does nothing.
+;;      This is a lisp function library, package itself does nothing.
 ;;      This library defines some Emacs backward compatibility function.
-;;      In 2010 these function were moved from tinylibb.el here.
+;;
+;;  Notrs
+;;
+;;      In 2010 these function were moved here from tinylibb.el.
 
 ;;; Change Log:
 
@@ -48,7 +51,7 @@
 (require 'tinyliba)
 (provide 'tinylibw)
 
-(defconst tinylibw-version-time "2023.0917.1752"
+(defconst tinylibw-version-time "2023.0919.0745"
   "Latest version number as last modified time.")
 
 ;;; These functions has been submitted to Emacs 21.2
@@ -65,11 +68,12 @@
   "Run DOLIST for Cygwin mount table.
 `mount' is complete mount element (cygwin . dos).
 Variables `cygwin' and `dos' are bound respectively."
-  `(dolist (mount w32-cygwin-mount-table)
-     ;;  mount => ("/tmp" . "c:\\temp")
-     (let* ((cygwin (car mount))
-            (dos    (cdr mount)))
-       ,@body)))
+  `(catch 'break
+     (dolist (mount w32-cygwin-mount-table)
+       ;;  mount => ("/tmp" . "c:\\temp")
+       (let* ((cygwin (car mount))
+              (dos    (cdr mount)))
+	 ,@body))))
 
 ;;; ----------------------------------------------------------------------
 ;;;
@@ -252,7 +256,7 @@ You should not call this function, use `w32-cygwin-path-to-dos'."
           (setq dos (concat dos (match-string 1 path))))
         ;; Convert to forward slashes
         (setq final-path (subst-char-in-string ?\\ ?/ dos))
-        (cl-return)))
+        (throw 'break)))
     (unless final-path
       ;; None matched, so this path is under cygwin root dir.
       (let ((root (ti::win32-cygwin-p)))
@@ -310,7 +314,7 @@ Be sure to call `expand-file-name' before you pass PATH to the function."
               (setq path (match-string 1 path))
               (setq cygwin (concat cygwin path)))
             ;; Convert to forward slashes
-            (cl-return (subst-char-in-string ?\\ ?/ cygwin)))))))
+            (throw 'break (subst-char-in-string ?\\ ?/ cygwin)))))))
    (t
     (error "Cannot convert to cygwin. path is not absolute %s" path))))
 
