@@ -167,7 +167,7 @@
 
 (require 'tinylibm)
 
-(defconst tinylibid-version-time "2023.0918.1821"
+(defconst tinylibid-version-time "2023.0919.0728"
   "Latest version number.")
 
 ;;; setup: hooks
@@ -524,15 +524,16 @@ is not needed for mode."
   (let (com-s
         com-e
         re)
-    (dolist (elt ti::id--type2mode)
-      (setq re (nth 0 elt))
-      (if (> (length elt) 2)
-          (setq com-s (nth 2 elt)))
-      (if (> (length elt) 3)
-          (setq com-s (nth 3 elt)))
-      (if (null (string-match re txt))
-          (setq com-s nil   com-e nil)
-        (cl-return)))
+    (catch 'break
+      (dolist (elt ti::id--type2mode)
+	(setq re (nth 0 elt))
+	(if (> (length elt) 2)
+            (setq com-s (nth 2 elt)))
+	(if (> (length elt) 3)
+            (setq com-s (nth 3 elt)))
+	(if (null (string-match re txt))
+            (setq com-s nil   com-e nil)
+          (throw 'break))))
     (if com-s
         (cons com-s com-e))))
 
@@ -603,11 +604,12 @@ Return:
   "Match STRING against LIST el 1, return LIST elt 2"
   (let (ret
 	regexp)
-    (dolist (elt list)
-      (setq regexp (nth 0 elt))
-      (when (string-match regexp string)
-        (setq ret (nth 1 elt))
-        (cl-return)))
+    (catch 'break
+      (dolist (elt list)
+	(setq regexp (nth 0 elt))
+	(when (string-match regexp string)
+          (setq ret (nth 1 elt))
+          (throw 'break))))
     ret))
 
 ;;; ----------------------------------------------------------------------
@@ -622,10 +624,11 @@ Start searching from `point-min' or from optional POINT."
     (save-excursion
       (ti::widen-safe
         (goto-char point)               ;start here
-        (dolist (elt list)
-          (when  (re-search-forward (nth 0 elt) nil t)
-            (setq ret (nth 1 elt))
-            (cl-return)))))
+	(catch 'break
+          (dolist (elt list)
+            (when  (re-search-forward (nth 0 elt) nil t)
+              (setq ret (nth 1 elt))
+              (throw 'break))))))
     ret))
 
 ;;; Study
