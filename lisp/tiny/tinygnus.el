@@ -1129,7 +1129,7 @@ Prefix key to access the minor mode is defined in
 (defmacro tinygnus-summary-map-articles-macro (&rest body)
   "Map through marked mesaes in Summary buffer and execute BODY.
 The variable `nbr' has the current article number. Use command
- (cl-return) to stop the loop."
+ (throw 'break) to stop the loop."
   `(let ((articles (gnus-summary-work-articles nil))
          gnus-article-display-hook     ;Do not run this
          gnus-article-prepare-hook
@@ -1143,8 +1143,9 @@ The variable `nbr' has the current article number. Use command
      (if gnus-article-mode-hook (setq gnus-article-mode-hook t))
      (if gnus-visual-mark-article-hook (setq gnus-visual-mark-article-hook t))
      ;; (gnus-summary-save-process-mark)
-     (dolist (nbr articles)
-       ,@body)))
+     (catch 'break
+       (dolist (nbr articles)
+	 ,@body))))
 
 ;;; ----------------------------------------------------------------------
 ;;;
@@ -1175,18 +1176,19 @@ to the article buffer."
 
 ;;; ----------------------------------------------------------------------
 ;;;
-(defmacro  tinygnus-files-from-dir-macro (dir &rest body)
+(defmacro tinygnus-files-from-dir-macro (dir &rest body)
   "Read all files from DIR and do BODY.
 You can refer to `file' when processing the files. Stop loop with
-command (cl-return)."
+command (throw 'break)."
   `(let ((files (tinygnus-read-files-from-dir ,dir)))
      (when (or (not (called-interactively-p 'interactive))
                (and (called-interactively-p 'interactive)
                     (y-or-n-p
                      (format
                       "Found %d files, Proceed " (length files)))))
-       (dolist (file files)
-         ,@body))))
+       (catch 'break
+	 (dolist (file files)
+           ,@body)))))
 
 ;;; ----------------------------------------------------------------------
 ;;;
@@ -1376,11 +1378,12 @@ See function `tinygnus-article-ube-send-to-postmasters'."
         disp-buffer
         name)
     ;;  Is there any "article" buffer in this
-    (dolist (win wlist)
-      (setq name  (buffer-name (setq disp-buffer (window-buffer win))))
-      (when (string-match "article" name)
-        (setq disp-win win)
-        (cl-return)))
+    (catch 'break
+      (dolist (win wlist)
+	(setq name  (buffer-name (setq disp-buffer (window-buffer win))))
+	(when (string-match "article" name)
+          (setq disp-win win)
+          (throw 'break))))
     (cond
      ((eq disp-buffer (get-buffer gnus-article-buffer))
       (if (null (setq buffer (get-buffer gnus-original-article-buffer)))
@@ -1428,12 +1431,13 @@ confirmations."
   "Change ADDRESS xx.domain.com --> domain.com using `tinygnus--domain-table'."
   (let ((ret address))
     (when tinygnus--domain-table
-      (dolist (elt tinygnus--domain-table)
-        (when (string-match (car elt) address)
-          (setq ret (cdr elt))
-          (if (not (stringp ret))
-              (error "Invalid format in tinygnus--domain-table: %s" elt))
-          (cl-return)))
+      (catch 'break
+	(dolist (elt tinygnus--domain-table)
+          (when (string-match (car elt) address)
+            (setq ret (cdr elt))
+            (if (not (stringp ret))
+		(error "Invalid format in tinygnus--domain-table: %s" elt))
+            (throw 'break))))
       ret)))
 
 ;;; ----------------------------------------------------------------------
