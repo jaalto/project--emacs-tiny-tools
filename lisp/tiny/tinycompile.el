@@ -91,7 +91,8 @@
 (require 'tinylibm)
 
 (eval-when-compile
-  (require 'cl)
+  (or (require 'cl-lib nil 'noerr) ;; Emacs 29.x
+      (require 'cl)))
   (defvar mode-line-mode-menu)
   (defvar tinyurl-mode))
 
