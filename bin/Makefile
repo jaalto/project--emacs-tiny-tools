@@ -2,7 +2,7 @@
 #
 #   File id
 #
-#	Copyright (C)  2001-2019 Jari Aalto
+#	Copyright (C)  2001-2023 Jari Aalto
 #
 #	This program is free software; you can redistribute it and/or
 #	modify it under the terms of the GNU General Public License as

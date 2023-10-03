@@ -30,7 +30,7 @@ Table of contents
         #T2HTML-OPTION --css-code-bg
         #T2HTML-OPTION --html-frame
 
-        Copyright (C) 1995-2019 Jari Aalto
+        Copyright (C) 1995-2023 Jari Aalto
 
         License: This material may be distributed only subject to
         the terms and conditions set forth in GNU General Public
@@ -487,7 +487,7 @@ Table of contents
             ;; This file is not part of Emacs
 
             ;; Emacs Lisp Archive Entry
-            ;; Copyright (C) 1998-2019 Foo BarMan
+            ;; Copyright (C) 1998-2023 Foo BarMan
             ;; Filename: hello.el
             ;; Version: 1.1   (or RCS/CVS *Revision*)
             ;; Keywords: hello, greeting (see finder.el)

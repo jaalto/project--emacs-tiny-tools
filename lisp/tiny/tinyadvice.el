@@ -4,7 +4,7 @@
 
 ;; This file is not part of Emacs
 
-;; Copyright (C)    1996-2019 Jari Aalto
+;; Copyright (C)    1996-2023 Jari Aalto
 ;; Keywords:        extensions
 ;; Author:          Jari Aalto
 ;; Maintainer:      Jari aalto

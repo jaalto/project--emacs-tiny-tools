@@ -4,7 +4,7 @@
 
 ;;{{{ Id
 
-;; Copyright (C) 1997-2019 Jari Aalto
+;; Copyright (C) 1997-2023 Jari Aalto
 ;; Keywords:     emulations
 ;; Author:       Jari Aalto
 ;; Maintainer:   Jari Aalto
