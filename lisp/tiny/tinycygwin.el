@@ -105,8 +105,7 @@
       (require 'cl)))
 
 (eval-and-compile
-  (autoload 'delete-if "cl-seq")
-  (autoload 'member*   "cl-seq"))
+  (autoload 'cl-delete-if "cl-seq"))
 
 (eval-and-compile
   ;;  Forward declarations
