@@ -6,7 +6,7 @@
 
 ;;{{{ Id
 
-;; Copyright (C)    2003-2023 Jari Aalto
+;; Copyright (C)    2003-2024 Jari Aalto
 ;; Keywords:        tools
 ;; Author:          Jari Aalto
 ;; Maintainer:      Jari Aalto

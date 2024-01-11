@@ -4,7 +4,7 @@
 
 ;;{{{ Id
 
-;; Copyright (C)    2004-2023 Jari Aalto
+;; Copyright (C)    2004-2024 Jari Aalto
 ;; Keywords:        extensions
 ;; Author:          Jari Aalto
 ;; Maintainer:      Jari Aalto
