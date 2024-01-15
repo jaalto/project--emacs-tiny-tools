@@ -4273,7 +4273,7 @@ Return:
               (file-name-directory path)
             "<no path>")
           (mapconcat
-           (function (lambda (x) (symbol-name x)))
+           (lambda (x) (symbol-name x))
            dep-list
            " ")
           ;;  - If the package name is unknow, print some symbol
