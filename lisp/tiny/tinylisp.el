@@ -5596,19 +5596,17 @@ VERB                    verbose flag"
   "Print buffer local variables to BUFFER."
   (interactive)
   (cl-flet ((my-sort2
-          (list)
-          (sort list
-                (function
-                 (lambda (a b)
-                   (string< (symbol-name (car a))
-                            (symbol-name (car b)))))))
-         (my-sort1
-          (list)
-          (sort list
-                (function
-                 (lambda (a b)
-                   (string< (symbol-name a)
-                            (symbol-name b)))))))
+              (list)
+              (sort list
+                    (lambda (a b)
+                      (string< (symbol-name (car a))
+			       (symbol-name (car b))))))
+            (my-sort1
+              (list)
+              (sort list
+                    (lambda (a b)
+                      (string< (symbol-name a)
+			       (symbol-name b))))))
     (let (var
           val)
       (or buffer
