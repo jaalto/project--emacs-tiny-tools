@@ -3229,12 +3229,12 @@ References:
   See functions ti::mail-parse-received-string-*
   and `ti::mail-parse-received-string'."
   `(let ((received-header-data (ti::mail-parse-received-string ,string)))
-     (symbol-macrolet ((from     (cdr (assq 'from received-header-data)))
-                       (smtp     (cdr (assq 'smtp received-header-data)))
-                       (by       (cdr (assq 'by received-header-data)))
-                       (smtp-id  (cdr (assq 'smtp-id received-header-data)))
-                       (for      (cdr (assq 'for received-header-data)))
-                       (date     (cdr (assq 'date received-header-data))))
+     (cl-symbol-macrolet ((from     (cdr (assq 'from received-header-data)))
+			  (smtp     (cdr (assq 'smtp received-header-data)))
+			  (by       (cdr (assq 'by received-header-data)))
+			  (smtp-id  (cdr (assq 'smtp-id received-header-data)))
+			  (for      (cdr (assq 'for received-header-data)))
+			  (date     (cdr (assq 'date received-header-data))))
        ,@body)))
 
 ;;; ----------------------------------------------------------------------
