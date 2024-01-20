@@ -516,7 +516,6 @@ Format: ((REGEXP (database1 database2 ...)) ...)")
 
 ;;;  You propably should program your own filter function for variaous
 ;;;  modes. This variable belongs to default filter only.
-;;;
 (defcustom tinytag--filter-default-c++-words
   (concat
    "^char\\|^double\\|^int$\\|^float\\|^void\\|static"
@@ -615,8 +614,6 @@ Should accept one ARG, which is list of matched lines from databases."
 ;;;### (autoload 'tinytab-debug-toggle "tinytag"  t t)
 (eval-and-compile (ti::macrof-debug-standard "tinytag" "--"))
 
-;;; ----------------------------------------------------------------------
-;;;
 (defun tinytag-initialize  ()
   "Start package and verify that some variables exist."
   (interactive)
@@ -626,8 +623,6 @@ Should accept one ARG, which is list of matched lines from databases."
         (error "\
 TinyTag: `tinytag--database-dir' is not a directory. Please configure"))))
 
-;;; ----------------------------------------------------------------------
-;;;
 ;;;###autoload
 (defun tinytag-install (&optional uninstall)
   "Install package. Optionally UNINSTALL."
@@ -660,15 +655,11 @@ TinyTag: `tinytag--database-dir' is not a directory. Please configure"))))
                                          "deactivated"
                                        "activated")))))
 
-;;; ----------------------------------------------------------------------
-;;;
 ;;;###autoload
 (defun tinytag-uninstall ()
   "Uninstall package."
   (tinytag-install 'uninstall))
 
-;;; ----------------------------------------------------------------------
-;;;
 (defun tinytag-install-sample-database-java-external-process (doc-dir file)
   "Call external process to examine DOC-DIR to build Java function calls.
 The output is written to FILE."
@@ -722,8 +713,6 @@ The output is written to FILE."
         (message "Tinytag: [install] Java database...done %s"
                  file))))))
 
-;;; ----------------------------------------------------------------------
-;;;
 ;;;###autoload
 (defun tinytag-install-sample-database-java ()
   "Install Java database from Sub JDK documentation."
@@ -769,8 +758,6 @@ The output is written to FILE."
           (message "Tinytag: [install] Can't find java docs/ dir [%s]"
                    doc-dir))))))))
 
-;;; ----------------------------------------------------------------------
-;;;
 ;;;###autoload
 (defun tinytag-install-sample-database-c ()
   "Install c/C++ database from file tintytag.el."
@@ -816,8 +803,6 @@ The output is written to FILE."
           (message
            "Tinytag: [install]  C/C++ database...installed %s" db))))))
 
-;;; ----------------------------------------------------------------------
-;;;
 (defun tinytag-install-sample-databases ()
   "Install Sample databases: C/C++ and Java.
 This function sets ´tinytag-install-sample-databases'
@@ -833,21 +818,15 @@ property \\='done to non-nil value, when called."
 
 ;;{{{ code: misc
 
-;;; ----------------------------------------------------------------------
-;;;
 (defsubst tinytag-word-at-point ()
   "Read word on current point."
   (if (looking-at "[.a-z0-9_]+[ \t\n\r]*(") ;is here word ?
       (ti::buffer-read-word "-_.A-Za-z0-9" )))
 
-;;; ----------------------------------------------------------------------
-;;;
 (defsubst tinytag-display (list)
   "Call display function with LIST."
   (funcall tinytag--display-function list))
 
-;;; ----------------------------------------------------------------------
-;;;
 (defun tinytag-display-function  (list)
   "Display car of LIST and count of LIST.
 Output matched to tinytag--output-buffer too."
@@ -860,8 +839,6 @@ Output matched to tinytag--output-buffer too."
    (format
     "%s: %s" (length list) (car list))))
 
-;;; ----------------------------------------------------------------------
-;;;
 (defun tinytag-filter-default-function  (string)
   "Default filter function. Reject STRING."
   (let ((fid       "tinytag-filter-default-function: ")
@@ -877,8 +854,6 @@ Output matched to tinytag--output-buffer too."
     (tinytag-debug fid " ret accept" accept "elt" elt "\n")
     accept))
 
-;;; ----------------------------------------------------------------------
-;;;
 (defun tinytag-word-default-adjust  (string)
   "Convert STRING to suitable regexp.
 Currently supports only C/C++ and Java."
@@ -940,8 +915,6 @@ Currently supports only C/C++ and Java."
 ;;}}}
 ;;{{{ code: search engine
 
-;;; ----------------------------------------------------------------------
-;;;
 (defun tinytag-search-db (re single-or-list)
   "Search RE from databases in SINGLE-OR-LIST.
 
@@ -989,8 +962,6 @@ Return list:
     (tinytag-debug fid "RET" ret "\n")
     ret))
 
-;;; ----------------------------------------------------------------------
-;;;
 (defun tinytag-do-search (string)
   "Search those databases which match predefined regexp against STRING.
 
@@ -1021,8 +992,6 @@ Return list:
 ;;}}}
 ;;{{{ code: try funcs
 
-;;; ----------------------------------------------------------------------
-;;;
 (defun tinytag-try-function-show-cached-word (&optional noerr)
   "Pick word at point and show info if word was same as previously looked.
 NOERR ignores errors."
@@ -1050,8 +1019,6 @@ NOERR ignores errors."
         (tinytag-display prev-info)
         (throw 'quit t)))))
 
-;;; ----------------------------------------------------------------------
-;;;
 (defun tinytag-try-function-search-db ()
   "Do lookup, pick word at point and search databases.
 Show the matched word from database."
@@ -1067,8 +1034,6 @@ Show the matched word from database."
       (tinytag-display info)
       t)))
 
-;;; ----------------------------------------------------------------------
-;;;
 (defun tinytag-try-function-man ()
   "Suggest man page search for current word."
   (interactive)
@@ -1089,16 +1054,12 @@ Show the matched word from database."
 ;;}}}
 ;;{{{ main
 
-;;; ----------------------------------------------------------------------
-;;;
 ;;;###autoload
 (defun tinytag-main ()
   "Run `tinytag--try-hook' until some of the functions return non-nil."
   (interactive)
   (run-hook-with-args-until-success 'tinytag--try-hook))
 
-;;; ----------------------------------------------------------------------
-;;;
 ;;;###autoload
 (defun tinytag-main-mouse (&optional event)
   "See `tinytag-main'. Function is called with mouse EVENT."
@@ -1108,8 +1069,6 @@ Show the matched word from database."
 ;;}}}
 ;;{{{ code: example
 
-;;; ----------------------------------------------------------------------
-;;;
 (defun tinytag-post-command-1  ()
   "Do lookup."
   ;; ... ... ... ... ... ... ... ... ... ... ... ... ... do action . .
@@ -1125,10 +1084,8 @@ Show the matched word from database."
     ;;(discard-input)
     nil))
 
-;;; ----------------------------------------------------------------------
 ;;; - The functionality is copied from Noah's <friedman@prep.ai.mit.edu>
 ;;;   eldoc.el: eldoc-mode-print-current-symbol-info
-;;;
 ;;;###autoload
 (defun tinytag-post-command ()
   "Activates only if `tinytag--set-database-hook' wakes up.
@@ -1177,9 +1134,7 @@ References:
       (if it-is-time
           (tinytag-post-command-1)))))
 
-;;; ----------------------------------------------------------------------
 ;;; This is default function. Copy this and  you _have_to_ write your own.
-;;;
 (defun tinytag-set-database  ()
   "Set correct database values according to buffer content.
 Return:
