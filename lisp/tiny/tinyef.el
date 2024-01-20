@@ -326,8 +326,6 @@ Defined keys:
    nil
    nil))
 
-;;; ----------------------------------------------------------------------
-;;;
 (defmacro tinyef-function-macro (action)
   "Define interactive command ACTION."
   (let ((sym (intern (format "tinyef-%s" (symbol-name `,action)))))
@@ -338,20 +336,14 @@ Defined keys:
 (tinyef-function-macro chunk-delete)
 (tinyef-function-macro step-delete-back)
 
-;;; ----------------------------------------------------------------------
-;;;
 (defsubst tinyef-key-p (map key)
   "Test if function `tinyef-mode' is in MAP with KEY."
   (eq 'tinyef-mode (lookup-key map key)))
 
-;;; ----------------------------------------------------------------------
-;;;
 (defsubst tinyef-action (char)
   "Return action for CHAR."
   (cdr-safe (char-assq char tinyef--mode-key-table)))
 
-;;; ----------------------------------------------------------------------
-;;;
 (defun tinyef-install-maps (&optional remove force)
   "Define Electric file mode's hot key. Optionally REMOVE.
 The install is done only once, but you can FORCE reinstall.
@@ -376,8 +368,6 @@ See `tinyef--mode-defined-maps'."
     ;; Mark as installed
     (put 'tinyef-install-maps 'installed t)))
 
-;;; ----------------------------------------------------------------------
-;;;
 (defun tinyef-mode-map-define-keys ()
   "Define `tinyef--mode-map' keys.
 Always clears the keymap first and reinstalls the minor mode."
@@ -392,8 +382,6 @@ Always clears the keymap first and reinstalls the minor mode."
                              'tinyef--mode-name
                              tinyef--mode-map))
 
-;;; ----------------------------------------------------------------------
-;;;
 (defun tinyef-install (&optional arg)
   "Install package. With optional ARG, cancel installation."
   (interactive)
@@ -410,8 +398,6 @@ Always clears the keymap first and reinstalls the minor mode."
     (tinyef-mode-map-define-keys)       ;installs also minor-mode
     (tinyef-install-maps))))
 
-;;; ----------------------------------------------------------------------
-;;;
 (defun tinyef-install-mouse  (&optional arg)
   "Install default mouse binding. With ARG, remove."
   (dolist (map (list
@@ -432,8 +418,6 @@ Always clears the keymap first and reinstalls the minor mode."
 ;;}}}
 ;;{{{ code: extra minibuffer commands
 
-;;; ----------------------------------------------------------------------
-;;;
 (defun tinyef-buffer-name-not-minibuffer ()
   "Return the name of current buffer, as a string.
 If current buffer is the *mini-buffer* return name of previous-window."
@@ -443,15 +427,11 @@ If current buffer is the *mini-buffer* return name of previous-window."
                      (window-buffer (next-window)))
                  nil)))
 
-;;; ----------------------------------------------------------------------
-;;;
 (defun tinyef-insert-buffer-name ()
   "Insert buffer name of most recent buffer."
   (interactive)
   (insert (tinyef-buffer-name-not-minibuffer)))
 
-;;; ----------------------------------------------------------------------
-;;;
 (defun tinyef-insert-buffer-dir-name ()
   "Insert dir name of most recent buffer."
   (interactive)
@@ -460,8 +440,6 @@ If current buffer is the *mini-buffer* return name of previous-window."
     (if bfn
         (insert (file-name-directory bfn)))))
 
-;;; ----------------------------------------------------------------------
-;;;
 (defun tinyef-insert-buffer-file-name ()
   "Insert file name of most recent buffer."
   (interactive)
@@ -470,8 +448,6 @@ If current buffer is the *mini-buffer* return name of previous-window."
     (if bfn
         (insert bfn))))
 
-;;; ----------------------------------------------------------------------
-;;;
 (defun tinyef-complete-from-minibuffer-history ()
   "Take the history list and make it available as a `completions' buffer"
   (interactive)
@@ -480,15 +456,11 @@ If current buffer is the *mini-buffer* return name of previous-window."
     (with-current-buffer standard-output
       (setq completion-base-position 0))))
 
-;;; ----------------------------------------------------------------------
-;;;
 (defun tinyef-insert-current-date-time-minibuf ()
   "Insert the current date and time."
   (interactive)
   (insert (format-time-string "%Y-%m-%d--%H%-%M" (current-time))))
 
-;;; ----------------------------------------------------------------------
-;;;
 (defun tinyef-minibuffer-define-key-extras ()
   "Define keys to minibuffer maps."
   (dolist (map (apropos-internal
@@ -506,9 +478,7 @@ If current buffer is the *mini-buffer* return name of previous-window."
 ;;}}}
 ;;{{{ code: minibuffer
 
-;;; ----------------------------------------------------------------------
 ;;; by Anders Lindgren.
-;;;
 (defun tinyef-minibuffer-setup ()
   "Turn on function `tinyef-mode' when entering minibuffer."
   (setq
@@ -522,8 +492,6 @@ If current buffer is the *mini-buffer* return name of previous-window."
 ;;}}}
 ;;{{{ code: main
 
-;;; ----------------------------------------------------------------------
-;;;
 (defun tinyef-step (&optional back)
   "Position cursor, optionally BACK."
   (let* ((set    tinyef--step-delete-chars)
@@ -545,8 +513,6 @@ If current buffer is the *mini-buffer* return name of previous-window."
         ;; fix position a little
         (forward-char 1)))))
 
-;;; ----------------------------------------------------------------------
-;;;
 (defun tinyef-char (&optional character action)
   "Handle Electric file mode's commands.
 If there is no action for character insert it as is.
