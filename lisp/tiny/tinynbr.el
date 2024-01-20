@@ -24,10 +24,9 @@
 
 ;;; Install
 
-;; ....................................................... &t-install ...
-;;  Put this file on your Emacs-Lisp `load-path', add following into your
-;;  ~/.emacs startup file. This must be the very first entry before
-;;  any keybindings take in effect.
+;;  Put this file on your Emacs Lisp load-path, and add the following
+;;  to your ~/.emacs startup file. This must be the very first entry
+;;  before any keybindings take effect:
 ;;
 ;;      (require 'tinynbr)
 ;;
@@ -44,22 +43,22 @@
 
 ;;  Preface, Aug 1997
 ;;
-;;      One day in a laboratory the developer once forgot his desk
+;;      One day in a laboratory, the developer forgot his desk
 ;;      calculator in another building. He was examining binary (hex)
-;;      files and other electronic documents that used hex and base10
-;;      numbers. He shroudly remembered that Unix included some basic
-;;      calculator, but he dind't remember what was the name and how
-;;      to use it. Whoops. Grin.
+;;      files and other electronic documents that used hex and base-10
+;;      numbers. He vaguely remembered that Unix included some basic
+;;      calculator, but he didn't recall its name or how to use it.
+;;      Whoops. Grin.
 ;;
 ;;      Instead of returning to get the missing calculator, he started
-;;      pouring some lisp to make a simple minor mode to help
-;;      to get along with the current task at hand. It didn't take
-;;      long to make it, and the laboratory day was success.
-;;      Ahem. Maybe should look at package calc.el someday.
+;;      pouring some Lisp to create a simple minor mode to help with
+;;      the current task at hand. It didn't take long to make, and the
+;;      laboratory day was a success. Ahem. Maybe should look at the
+;;      package calc.el someday.
 ;;
 ;;  Overview of features
 ;;
-;;      o   Int         --> hex,oct,bin conversion at current point
+;;      o   int         --> hex,oct,bin conversion at current point
 ;;      o   hex,oct,bin --> int         conversion at current point
 
 ;;; Change Log:
@@ -153,8 +152,8 @@ Mode description:
 ;;;###autoload (autoload 'tinynbr-bin-to-int "tinynbr" "" t)
 
 (dolist (x '((hex 16)
-	     (oct 8)
-	     (bin 2)))
+             (oct 8)
+             (bin 2)))
     (let ((sym1 (intern (format "tinynbr-%s-to-int" (car x))))
           (sym2 (intern (format "tinynbr-int-to-%s" (car x))))
           (sym3 (intern (format "int-to-%s-string" (car x))))
@@ -165,7 +164,7 @@ Mode description:
                  "If prefix arg INSERT is non-nil, insert result to buffer."
                  (interactive "P")
                  (let ((nbr (tinynbr-read-number reverse))
-		       ret)
+                       ret)
                    (when nbr
                      (if (string-match "^0[Xx]\\(.*\\)" nbr)
                          (setq nbr (match-string 1 nbr)))
