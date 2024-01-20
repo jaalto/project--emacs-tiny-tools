@@ -4,8 +4,6 @@
 
 ;; This file is not part of Emacs
 
-;;{{{ Id
-
 ;; Copyright (C)    1995-2024 Jari Aalto
 ;; Keywords:        tools
 ;; Author:          Jari Aalto
@@ -29,9 +27,6 @@
 ;; along with this program. If not, see <http://www.gnu.org/licenses/>.
 ;;
 ;; Visit <http://www.gnu.org/copyleft/gpl.html> for more information
-
-;;}}}
-;;{{{ Installation
 
 ;;; Install:
 
@@ -80,10 +75,7 @@
 ;;      otherwise, the inserted text won't have the proper prefix and
 ;;      ending.
 
-;;}}}
-;;{{{ Documentation
-
-;;; .................................................... &t-commentary ...
+;; .................................................... &t-commentary ...
 
 ;;; Commentary:
 
@@ -383,15 +375,13 @@
 ;;      feel like tapping a couple of pgUp/pgDown keys after the point
 ;;      is positioned in the break section.
 
-;;}}}
-
 ;;; Change Log:
 
 ;;; Code:
 
-;;{{{ setup: require
+;;;; Setup: require
 
-;;; ......................................................... &require ...
+;; ......................................................... &require ...
 
 (require 'tinylibm)
 
@@ -411,13 +401,12 @@
             the file. Uses X-popup [imenu] for showing those book marks and
             moving between them.")
 
-(defvar tinybookmark--version-time "2024.0120.1300"
+(defvar tinybookmark--version-time "2024.0120.1306"
   "Last modified time.")
 
-;;}}}
-;;{{{ setup: -- hooks
+;;; Setup: hooks
 
-;;; ......................................................... &v-hooks ...
+;; ......................................................... &v-hooks ...
 
 (defcustom tinybookmark--parse-before-hook nil
   "*Hook that is run just before the buffer is scanned for book marks."
@@ -429,10 +418,9 @@
   :type  'hook
   :group 'TinyBookmark)
 
-;;}}}
-;;{{{ setup: user configuration
+;;; Setup: user configuration
 
-;;; ........................................................ &v-public ...
+;; ........................................................ &v-public ...
 
 (defcustom tinybookmark--cache-update 'threshold
   "*Method when to update cache.
@@ -510,10 +498,9 @@ See `tinybookmark-insert'"
   :type  'boolean
   :group 'TinyBookmark)
 
-;;}}}
-;;{{{ setup: -- private vars
+;;; Setup: -- private vars
 
-;;; ....................................................... &v-private ...
+;; ....................................................... &v-private ...
 
 (defvar tinybookmark--cache nil
   "Private.
@@ -531,11 +518,8 @@ Cache where book marks are stored in alist \(bookMarkName . point\)")
   "Private. Hold buffers book mark regexp.")
 (make-variable-buffer-local 'tinybookmark--bookmark-regexp)
 
-;;}}}
-;;{{{ Macros
+;;; Macros
 
-;;; ----------------------------------------------------------------------
-;;;
 (defsubst tinybookmark-regexp-read-from-buffer ()
   "Return buffer's book mark regexp.
 If the local value where the regexp is stored is nil, the rescan buffer.
@@ -546,10 +530,8 @@ References:
       (setq tinybookmark--bookmark-regexp
             (tinybookmark-search-bm-re))))
 
-;;; ----------------------------------------------------------------------
-;;; Default book mark syntax that is used if file does not contain
-;;; it's own definition of book mark syntax.
-;;;
+;; Default book mark syntax that is used if file does not contain
+;; it's own definition of book mark syntax.
 (defsubst tinybookmark-regexp-default  ()
   "Return default book mark regexp.
 References:
@@ -560,66 +542,49 @@ References:
    " &+\\([^ \t]+\\) "
    tinybookmark--re-default-chars "+"))
 
-;;}}}
-;;{{{ movement functions
+;;; Movement functions
 
-;;; ........................................................ &movement ...
+;; ........................................................ &movement ...
 
-;;; ----------------------------------------------------------------------
-;;;
 (defun tinybookmark-search-regexp ()
   "Return book mark search regexp."
   (concat "^[ \t]*" (or comment-start "") "+ *"
           (tinybookmark-regexp-read-from-buffer)))
 
-;;; ----------------------------------------------------------------------
-;;;
 ;;;###autoload
 (defun tinybookmark-backward ()
   "Search book mark line backward."
   (interactive)
   (re-search-backward (tinybookmark-search-regexp) nil t))
 
-;;; ----------------------------------------------------------------------
-;;;
 ;;;###autoload
 (defun tinybookmark-forward (&optional back)
   "Search book mark line forward or optionally BACK."
   (interactive)
   (re-search-forward (tinybookmark-search-regexp) nil t))
 
-;;}}}
+;;; Miscellaneous functions
 
-;;{{{ miscellaneous functions
+;; ............................................................ &misc ...
 
-;;; ............................................................ &misc ...
-
-;;; ----------------------------------------------------------------------
-;;; LISP column
-;;;  - I can hear you saying: "Why 74? why not 70 or 75 ?..."
-;;;  - Well, I usually add book mark section to my elisp code and while
-;;;    I did them by hand I added ';;; ' comment at the beginning of
-;;;    line and fed 70  continuous characters with ESC 70 '-'after
-;;;    comment this becomes total of 4 + 70 characters.
-;;;
-;;;  - The idea of this calculation is that when you hit separator,
-;;;    like this: COMMENT-SPACE-70_CHAR_SEPARATOR, this will calculate
-;;;    the column so, that when tinybookmark-insert is called, the last
-;;;    char lines up with yours.
-;;;
-;;;    E.g. in shell mode:
-;;;
-;;;             # ---------------, 70 chars long sep, last col is 2 + 70
-;;;             # ..............., tinybookmark-insert lines up to col 72
-;;;
-;;;    But in lisp
-;;;
-;;;             ;;; -------------, again 70 chars long sep, 4 + 70
-;;;             ;;; ............., tinybookmark-insert lines up to col 74
-;;;
-;;;    Now you can hit 70 line separator in any mode and to be sure the
-;;;    tinybookmark-insert lines up with you.
-;;;
+;; LISP column
+;;  - I can hear you saying: "Why 74? why not 70 or 75 ?..."
+;;  - Well, I usually add book mark section to my elisp code and while
+;;    I did them by hand I added ';;; ' comment at the beginning of
+;;    line and fed 70  continuous characters with ESC 70 '-'after
+;;    comment this becomes total of 4 + 70 characters.
+;;  - The idea of this calculation is that when you hit separator,
+;;    like this: COMMENT-SPACE-70_CHAR_SEPARATOR, this will calculate
+;;    the column so, that when tinybookmark-insert is called, the last
+;;    char lines up with yours.
+;;    E.g. in shell mode:
+;;             # ---------------, 70 chars long sep, last col is 2 + 70
+;;             # ..............., tinybookmark-insert lines up to col 72
+;;    But in lisp
+;;             ;;; -------------, again 70 chars long sep, 4 + 70
+;;             ;;; ............., tinybookmark-insert lines up to col 74
+;;    Now you can hit 70 line separator in any mode and to be sure the
+;;    tinybookmark-insert lines up with you.
 (defun tinybookmark-calc-max-col ()
   "Calculates column for mode."
   (let ((mode (symbol-name major-mode))
@@ -633,8 +598,6 @@ References:
           (+ len (length cs))         ;; no it does not "#", add room for it.
         (1+ (+ len (length cs))))))))
 
-;;; ----------------------------------------------------------------------
-;;;
 (defun tinybookmark-goto (point)
   "Go to the selected POINT."
   (let ((re ".*{{{"))
@@ -649,16 +612,12 @@ References:
      (t
       (goto-char point)))))
 
-;;; ----------------------------------------------------------------------
-;;; - include all lines
-;;;
+;; Include all lines
 (defun tinybookmark-scan-filter (full-line pos id)
   "Return always t, so all matched lines are cached.
 Ignore FULL-LINE POS ID."
   t)
 
-;;; ----------------------------------------------------------------------
-;;;
 (defun tinybookmark-comment-end ()
   "Return appropriate comment end, according to mode."
   (let ((str (or comment-end "")))
@@ -666,8 +625,6 @@ Ignore FULL-LINE POS ID."
       (setq str (ti::string-add-space str)))
     str))
 
-;;; ----------------------------------------------------------------------
-;;;
 (defun tinybookmark-comment-start ()
   "Return appropriate comment, according to mode."
   (let ((str (or comment-start "")))   ;comment
@@ -680,8 +637,6 @@ Ignore FULL-LINE POS ID."
       (setq str (ti::string-add-space str t)))
     str))
 
-;;; ----------------------------------------------------------------------
-;;;
 (defun tinybookmark-cache-update ()
   "Determines when and how to update cache.
 References: `tinybookmark-cache-update'"
@@ -703,11 +658,8 @@ References: `tinybookmark-cache-update'"
         ;; Let's be transparent this time: no messages.
         (tinybookmark-parse))))))
 
-;;}}}
-;;{{{ book mark line insert
+;;; Book mark line insert
 
-;;; ----------------------------------------------------------------------
-;;;
 ;;;###autoload
 (defun tinybookmark-repeat (str count &optional col strict)
   "Repeats character or string sequence STR COUNT times.
@@ -782,8 +734,6 @@ STRICT has effect only if COL is given:
         (while (< i c)
           (insert str) (setq i (1+ i))))))))
 
-;;; ----------------------------------------------------------------------
-;;;
 ;;;###autoload
 (defun tinybookmark-insert (txt sep &optional strict)
   "Add book mark until the end of line.
@@ -856,11 +806,8 @@ References:
     (insert cs)
     (goto-char orig-point)))
 
-;;}}}
-;;{{{ Book Mark find, caching
+;;; Book Mark find, caching
 
-;;; ----------------------------------------------------------------------
-;;;
 (defun tinybookmark-scan (re)
   "Gather all book marks from current point forward using RE.
 Return list: (id . beginning-of-line-point).
@@ -881,8 +828,6 @@ References:
             (ti::nconc list (cons id point)))))
     list))
 
-;;; ----------------------------------------------------------------------
-;;;
 (defun tinybookmark-search-bm-re ()
   "Search buffer for automatic book mark identifier `BookMarkRegexp'.
 Returns regexp defined in it. if is does not exist returns default
@@ -902,8 +847,6 @@ book mark regexp."
       (setq ret (match-string 1 fixed-val)))
     ret))
 
-;;; ----------------------------------------------------------------------
-;;;
 ;;;###autoload
 (defun tinybookmark-parse ()
   "Build book mark list and save it to cache.
@@ -945,18 +888,13 @@ Return:
     (goto-char op)
     ret))
 
-;;}}}
-;;{{{ mouse
+;;; Mouse
 
-;;; ----------------------------------------------------------------------
-;;;
 ;;;###autoload
 (defun tinybookmark-keyboard-parse ()
   "Reparse book marks."
   (tinybookmark-mouse-parse nil (called-interactively-p 'interactive)))
 
-;;; ----------------------------------------------------------------------
-;;;
 ;;;###autoload
 (defun tinybookmark-mouse-parse (&optional event verb)
   "Reparse book mark list. This function is called from mouse binding.
@@ -966,8 +904,6 @@ Called with mouse EVENT. VERB displays message."
   (if (and verb (tinybookmark-parse))
       (message "TinyBookmark: Book Marks cached.")))
 
-;;; ----------------------------------------------------------------------
-;;;
 (defun tinybookmark-selection (event)
   "Display cache menu. Called with mouse EVENT."
   (interactive "e")
@@ -987,8 +923,6 @@ Called with mouse EVENT. VERB displays message."
       (if data
           (funcall go-func (cdr data))))))
 
-;;; ----------------------------------------------------------------------
-;;;
 (defun tinybookmark-cache-regenerate (&optional force)
   "Regenerate cache if needed. Optional FORCE."
   (let ((cache-ok tinybookmark--cache))
@@ -999,8 +933,6 @@ Called with mouse EVENT. VERB displays message."
       (message "")
       (tinybookmark-parse))))
 
-;;; ----------------------------------------------------------------------
-;;;
 ;;;###autoload
 (defun tinybookmark-keyboard (bookmark &optional arg)
   "Complete and jump to bookmarks.
@@ -1024,8 +956,6 @@ Optional ARG rebuilds cache."
            "\\[universal-argument] \\[tinybookmark-keyboard]")))
       (goto-char (cdr elt)))))
 
-;;; ----------------------------------------------------------------------
-;;;
 ;;;###autoload
 (defun tinybookmark-mouse (event &optional arg)
   "Display book mark pop up menu. Use mouse EVENT.
@@ -1034,7 +964,7 @@ Optional ARG rebuilds cache."
   (tinybookmark-cache-regenerate arg)
   (tinybookmark-selection event))
 
-;;}}}
+;;; Provide
 
 (provide   'tinybookmark)
 (run-hooks 'tinybookmark--load-hook)
