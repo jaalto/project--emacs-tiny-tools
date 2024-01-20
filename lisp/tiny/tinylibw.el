@@ -33,12 +33,14 @@
 ;;
 ;;      (require 'tinylibm)
 ;;
+
 ;;; Commentary:
+
 ;;
 ;;  Preface, 1998
 ;;
 ;;      This is a lisp function library, package itself does nothing.
-;;      This library defines some Emacs backward compatibility function.
+;;      This library defines some w32-* functions.
 ;;
 ;;  Notrs
 ;;
@@ -51,7 +53,7 @@
 (require 'tinyliba)
 (provide 'tinylibw)
 
-(defconst tinylibw-version-time "2023.0919.0837"
+(defconst tinylibw-version-time "2024.0120.1559"
   "Latest version number as last modified time.")
 
 ;;; Some of the functions were submitted for Emacs 21.2
