@@ -1,5 +1,3 @@
-;; -*- enable-local-variables: :all;  -*-
-
 ;;; tinycompile.el --- Compile buffer extras. Minor mode.
 
 ;; This file is not part of Emacs
