@@ -461,15 +461,11 @@ Mode description:
 ;;}}}
 ;;{{{ misc, engine funcs
 
-;;; ----------------------------------------------------------------------
-;;;
 (defun tinypage-modeline ()
   "Update modeline information."
   (interactive)
   (funcall tinypage--modeline-function))
 
-;;; ----------------------------------------------------------------------
-;;;
 (defun tinypage-page-region (&optional verb)
   "Return region (BEG . END) of page. VERB."
   (interactive)
@@ -491,8 +487,6 @@ Mode description:
           (message "Couldn't find region")))
     ret))
 
-;;; ----------------------------------------------------------------------
-;;;
 (defun tinypage-count-pages ()
   "Count page characters ^L."
   (let ((count 0))
@@ -502,8 +496,6 @@ Mode description:
         (setq count (1+ count))))
     count))
 
-;;; ----------------------------------------------------------------------
-;;;
 (defun tinypage-count-lines-in-page ()
   "Count lines."
   (let* ((elt (tinypage-page-region))
@@ -514,8 +506,6 @@ Mode description:
       (setq ret (count-lines beg end)))
     ret))
 
-;;; ----------------------------------------------------------------------
-;;;
 (defun tinypage-current-page ()
   "Current page."
   (interactive)
@@ -530,8 +520,6 @@ Mode description:
         (setq count (1+ count)))
     count))
 
-;;; ----------------------------------------------------------------------
-;;;
 (defun tinypage-update-mode-line ()
   "Update modeline info."
   (interactive)
@@ -545,8 +533,6 @@ Mode description:
     (setq tinypage--mode-name
           (format  " %s %s/%s/%s" mode-string now pages (or lines "-")))))
 
-;;; ----------------------------------------------------------------------
-;;;
 (defun tinypage-post-command ()
   "Keep page info in modeline up to date."
   (when tinypage-mode                   ;only now!
@@ -558,8 +544,6 @@ Mode description:
                    tinypage--post-command-wakeup-count))
       (tinypage-modeline))))
 
-;;; ----------------------------------------------------------------------
-;;;
 (defun tinypage-overlay (act &optional beg end)
   "If ACT is \\='hide, hide overlay, otherwise highlight BEG END."
   (let ((ov (ti::compat-overlay-some)))
@@ -581,8 +565,6 @@ Mode description:
        t t)
       (setq this-command 'set-mark)))))
 
-;;; ----------------------------------------------------------------------
-;;;
 (defun tinypage-page-mark-region (beg end &optional act maybe)
   "Mark region and do some command act.
 
@@ -625,8 +607,6 @@ Return:
 ;;}}}
 ;;{{{ application functions
 
-;;; ----------------------------------------------------------------------
-;;;
 (defun tinypage-renumber-level-forward (&optional verb)
   "Renumber current level starting from current line. VERB.
 Only the last level number is incremented. Put cursor line above
@@ -679,8 +659,6 @@ References:
         (message "Last heading was %s%s" orig-level-string counter))))
     counter))
 
-;;; ----------------------------------------------------------------------
-;;;
 (defun tinypage-renumber-forward (&optional verb)
   "Renumber all found headings forward. VERB."
   (interactive "P")
@@ -701,8 +679,6 @@ References:
     (if verb
         (message "Renumbering...done"))))
 
-;;; ----------------------------------------------------------------------
-;;;
 (defun tinypage-renumber-buffer ()
   "Renumber all headings in buffer starting from `point-min'."
   (interactive)
@@ -710,8 +686,6 @@ References:
     (ti::pmin)
     (tinypage-renumber-forward 'verb)))
 
-;;; ----------------------------------------------------------------------
-;;;
 (defsubst tinypage-get-index-list ()
   "Return list of strings."
   (let ((list (ti::buffer-grep-lines (nth 0 tinypage--renumber-format)))
@@ -720,8 +694,6 @@ References:
       (push (ti::string-remove-whitespace elt) ret))
     ret))
 
-;;; ----------------------------------------------------------------------
-;;;
 (defun tinypage-toc (&optional ragged no-show)
   "Create toc to temporary buffer.
 Optional argument RAGGED makes the heading to \"hang\".
@@ -766,16 +738,12 @@ Return:
         (shrink-window-if-larger-than-buffer)))
     buffer))
 
-;;; ----------------------------------------------------------------------
-;;;
 (defun tinypage-toc-x-popup-keyboard ()
   "Create index. Show it in X-popup."
   (interactive)
   (tinypage-toc-x-popup
    (ti::compat-make-fake-event tinypage--x-coord tinypage--y-coord)))
 
-;;; ----------------------------------------------------------------------
-;;;
 (defun tinypage-toc-x-popup (event)
   "Create index. Show it in X-popup with EVENT."
   (interactive "e")
@@ -804,8 +772,6 @@ Return:
       (if point
           (goto-char point))))))
 
-;;; ----------------------------------------------------------------------
-;;;
 (defun tinypage-toc-occur ()
   "Create occur buffer for jumpig to Headings easily."
   (interactive)
@@ -814,8 +780,6 @@ Return:
 ;;}}}
 ;;{{{ interactive funcs
 
-;;; ----------------------------------------------------------------------
-;;;
 ;;;###autoload
 (defun tinypage-region-action (act &optional verb)
   "Execute action ACT. Return t or nil. VERB."
@@ -825,8 +789,6 @@ Return:
     (ti::verb)
     (tinypage-page-mark-region beg end act 'maybe)))
 
-;;; ----------------------------------------------------------------------
-;;;
 ;;;###autoload
 (defun tinypage-select (&optional verb)
   "Select page. If sitting on page Marker, use page below. VERB."
@@ -836,8 +798,6 @@ Return:
        (if verb
            (message "Page selected."))))
 
-;;; ----------------------------------------------------------------------
-;;;
 ;;;###autoload
 (defun tinypage-copy (&optional verb)
   "Select page. If sitting on page Marker, use page below. VERB."
@@ -847,8 +807,6 @@ Return:
        (if verb
            (message "Page copied."))))
 
-;;; ----------------------------------------------------------------------
-;;;
 ;;;###autoload
 (defun tinypage-cut (&optional verb)
   "Select page. If sitting on page Marker, use page below. VERB."
@@ -856,8 +814,6 @@ Return:
   (ti::verb)
   (tinypage-region-action 'cut verb))
 
-;;; ----------------------------------------------------------------------
-;;;
 ;;;###autoload
 (defun tinypage-yank (&optional verb)
   "Yank page from register. VERB."
@@ -865,8 +821,6 @@ Return:
   (insert-register tinypage--register)
   (tinypage-overlay 'hide))
 
-;;; ----------------------------------------------------------------------
-;;;
 ;;;###autoload
 (defun tinypage-yank-before (&optional verb)
   "Yank page from register, but _before_ current page. VERB."
@@ -874,8 +828,6 @@ Return:
   (ti::verb)
   (tinypage-yank-after 'before "Yanked before this page." verb))
 
-;;; ----------------------------------------------------------------------
-;;;
 ;;;###autoload
 (defun tinypage-yank-after (&optional before msg verb)
   "Yank page from register, but _after_ current page.
@@ -891,8 +843,6 @@ Optionally BEFORE with MSG and VERB."
       (if (and verb msg)
 	  (message msg)))))
 
-;;; ----------------------------------------------------------------------
-;;;
 ;;;###autoload
 (defun tinypage-go-previous (&optional verb)
   "Go to previous page. VERB."
@@ -900,8 +850,6 @@ Optionally BEFORE with MSG and VERB."
   (ti::verb)
   (tinypage-go-next  'back verb))
 
-;;; ----------------------------------------------------------------------
-;;;
 ;;;###autoload
 (defun tinypage-go-next (&optional back verb)
   "Go to next page, optionally BACK. Return point if moved. VERB."
