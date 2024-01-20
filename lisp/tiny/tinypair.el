@@ -1,15 +1,11 @@
-;;; tinypair.el --- Self insert character (pa)irs () "" '' <>
+;;; tinypair.el --- Self insert character pairs like parens quotes etc.
 
 ;; This file is not part of Emacs
-
-;;{{{ Id
 
 ;; Copyright (C) 1995-2024 Jari Aalto
 ;; Keywords:     extensions
 ;; Author:       Jari Aalto
 ;; Maintainer:   Jari Aalto
-;;
-;; Look at the code with folding.el.
 
 ;; COPYRIGHT NOTICE
 ;;
@@ -28,23 +24,21 @@
 ;;
 ;; Visit <http://www.gnu.org/copyleft/gpl.html> for more information
 
-;;}}}
-;;{{{ Install
+;;; Install
 
-;; ....................................................... &t-install ...
-;; Put this file on your Emacs-Lisp `load-path', add following into your
-;; ~/.emacs startup file.
+;; Place this file on your Emacs-Lisp `load-path' and add the
+;; following to your ~/.emacs startup file:
 ;;
 ;;      ** MINOR MODE IS GLOBALLY ACTIVED WHEN YOU LOAD THIS FILE **
 ;;
-;;      ;;  If you don't want global activation, use
-;;      ;;  (defvar tinypair-mode nil)
+;;      ;; If you don't want global activation, use
+;;      ;; (defvar tinypair-mode nil)
 ;;
 ;;      (require 'tinypair)
 ;;      (tinypair-pair-type-select 'us)         ;; US `style'
 ;;      (tinypair-pair-type-select 'european)   ;; European 'style'
 ;;
-;; Or use autoload and your Emacs starts faster
+;; Or use autoload and your Emacs starts faster:
 ;;
 ;;      (autoload 'turn-on-tinypair-mode "tinypair")
 ;;      (add-hook <your-favourite-mode-hook> 'turn-on-tinypair-mode)
@@ -59,10 +53,6 @@
 ;;      o   Repeat the task
 ;;      o   Send bug report
 
-;;}}}
-;;{{{ Documentation
-
-;; ..................................................... &t-commentary ...
 ;;; Commentary:
 
 ;;  Preface, 1995
@@ -183,13 +173,11 @@
 ;;      of course put the chars into any class you like.
 ;;
 
-;;}}}
-
 ;;; Change Log:
 
 ;;; Code:
 
-;;{{{ setup: require
+;;; Setup: require
 
 (require 'tinylibm)
 
@@ -208,16 +196,14 @@
         o   Every pair beginning character may have it's own function
             to handle the pairing.")
 
-;;}}}
-;;{{{ setup: hook
+;;; setup: hook
 
 (defcustom tinypair--load-hook nil
   "*Hook that is run when package is loaded."
   :type  'hook
   :group 'TinyPair)
 
-;;}}}
-;;{{{ setup: private
+;;; Setup: private
 
 (defvar tinypair--us-alist
   '((?\(    ?\) nil)
@@ -257,7 +243,6 @@ Return values:
 If the func element is missing, pairing is done always according to main
 function\\='s decision.")
 
-;;; ........................................................ &v-public ...
 ;;; User configurable
 
 ;;  - Since not all people program with perl-mode when coding perl
@@ -365,10 +350,7 @@ so that you get this:
   :type  '(repeat character :tag "syntax class")
   :group 'TinyPair)
 
-;;}}}
-;;{{{ misc
-
-;;; ............................................................ &mode ...
+;;; Misc
 
 ;;;###autoload (autoload 'tinypair-mode            "tinypair" "" t)
 ;;;###autoload (autoload 'turn-on-tinypair-mode    "tinypair" "" t)
@@ -459,10 +441,9 @@ See `tinypair--word-syntax-classes' for word definition."
       (nth 2 elt)
     nil))
 
-;;}}}
-;;{{{ pair control
+;;; Pair control
 
-;;; "c"  refers to "checking func"
+;; "c"  refers to "checking func"
 (defun tinypair-c-\' (ch1 ch2)
   "Check if tick '  character can be paired."
   (setq ch1 ch2) ;;  Byte compiler silencer
@@ -505,10 +486,10 @@ cases are checked too."
       (setq ret nil)))
     ret))
 
-;;;  It's like you have opened ne quote
-;;;   "txt txt txt
-;;;       *               ,point here, and you want to end the quote..
-;;;  In this case the pairing isn't desiredable
+;;  It's like you have opened ne quote
+;;   "txt txt txt
+;;       *               ,point here, and you want to end the quote..
+;;  In this case the pairing isn't desiredable
 (defun tinypair-c-\" (ch1 ch2)
   "Check if \"  character can be paired. Looks backward if previous word
 has starting pair.
@@ -538,14 +519,13 @@ has starting pair.
             (when (and (not (= point (point))) ;require movement
                        (not (bobp))
                        (prog1 t (forward-char -1)) ;now we can move
-;;;                (ti::d! (following-char) ch1)
+;;                (ti::d! (following-char) ch1)
                        (eq (following-char) ch1))
               ;;  disallow pairing
               (setq ret nil)))))
     ret))
 
-;;}}}
-;;{{{ other
+;; Other
 
 (defun tinypair-check-if-pairing-allowed ()
   "Function to determine if pairing is allowed.
@@ -560,7 +540,7 @@ Returns t, when pairing is allowed for buffer."
    (t
     (backward-char (/ count 2)))))
 
-;;; - I used this before, may use it again...
+;; - I used this before, may use it again...
 (defun tinypair-move-logical-word (&optional count)
   "Move forward, skipping `tinypair--word-syntax-classes' COUNT times."
   (let* ((i             0)
@@ -684,8 +664,7 @@ BEG is start point and CHAR is starting pair character."
      (t
       nil))))
 
-;;}}}
-;;{{{ main
+;;; Main
 
 (defun tinypair-pair-type-select (&optional arg)
   "Pairing control center.
@@ -702,11 +681,11 @@ Input:
    (t
     (setq tinypair--alist tinypair--european-alist))))
 
-;;; - Original idea in 19.29+ package paired-insert.el. Unfortunately the
-;;;   package didn't satisfy my needs, so here is better pairing func.
-;;; - the 'pair' variable in this function is purposively set
-;;;   many times, although it is not always necessary. It is just eases
-;;;   following the program flow.
+;; - Original idea in 19.29+ package paired-insert.el. Unfortunately the
+;;   package didn't satisfy my needs, so here is better pairing func.
+;; - the 'pair' variable in this function is purposively set
+;;   many times, although it is not always necessary. It is just eases
+;;   following the program flow.
 (defun tinypair-self-insert-command (arg)
   "Smart pairing. ARG is repeat count of character."
   (interactive "P")
@@ -814,7 +793,7 @@ Input:
        ((symbolp status)
         nil))))))
 
-;;}}}
+;;; Provide
 
 (add-hook 'tinypair--mode-define-keys-hook 'tinypair-mode-define-keys)
 
