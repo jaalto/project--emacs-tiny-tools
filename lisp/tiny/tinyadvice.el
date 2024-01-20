@@ -1,5 +1,3 @@
-;; -*- enable-local-variables: :all;  -*-
-
 ;;; tinyadvice.el --- Collection of adviced functions
 
 ;; This file is not part of Emacs
