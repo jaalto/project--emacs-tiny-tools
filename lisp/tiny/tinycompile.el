@@ -211,8 +211,6 @@ Prefix key to access the minor mode is defined in
        ;;  Overwrite {compilation-minor-mode|grep-mode} definition
        (define-key root-map "\C-m" 'tinycompile-parse-line-goto-main))))))
 
-;;; ----------------------------------------------------------------------
-;;;
 (defun tinycompile-menu-main (&optional arg)
   "Show echo area menu and pass ARG to `ti::menu-menu'."
   (interactive "P")
@@ -252,8 +250,6 @@ Format of list:
 ;;}}}
 ;;{{{ code: macros
 
-;;; ----------------------------------------------------------------------
-;;;
 (defsubst tinycompile-get-files  (&optional max-point)
   "Return all filenames in compile buffer, optionally until MAX-POINT."
   (beginning-of-line)
@@ -262,8 +258,6 @@ Format of list:
 ;;}}}
 ;;{{{ code: support functions
 
-;;; ----------------------------------------------------------------------
-;;;
 (defun tinycompile-install (&optional uninstall)
   "Install or optinally UNINSTALL package with prefix arg."
   (interactive "p")
@@ -277,15 +271,11 @@ Format of list:
         (remove-hook 'grep-mode-hook 'turn-on-tinycompile-mode))
     (remove-hook 'compilation-mode-hook 'turn-on-tinycompile-mode))))
 
-;;; ----------------------------------------------------------------------
-;;;
 (defun tinycompile-uninstall ()
   "Uninstall package."
   (interactive)
   (tinycompile-install 'remove))
 
-;;; ----------------------------------------------------------------------
-;;;
 (defun tinycompile-cd-directory ()
   "Return the CD directory."
   ;; Emacs 22 uses line like:
@@ -295,8 +285,6 @@ Format of list:
     (or (ti::buffer-match "^-[*]- mode: grep.*\"\\([^\"]+\\)" 1)
         (ti::buffer-match "^cd +\\(.*\\)" 1))))
 
-;;; ----------------------------------------------------------------------
-;;;
 (defun tinycompile-shorten-lines ()
   "Shorten the filenames in compile buffer.
 
@@ -348,8 +336,6 @@ Line format must be
             (message "Tinycompile: Wait, processing done."))
         (end-of-line)))))
 
-;;; ----------------------------------------------------------------------
-;;;
 (defvar tinycompile--buffer-name nil
   "Buffer name is asked from user.
 Varaible is made buffer local.
@@ -378,8 +364,6 @@ See `tinycompile-parse-line-goto-guess'.")
 	  (setq col (1- col))		;Emacs columns are zero based
 	(move-to-column col))))))
 
-;;; ----------------------------------------------------------------------
-;;;
 (defun tinycompile-parse-line-goto-basic ()
   "Go to line under cursor.
 The found file is loaded to Emacs and cursor put on the line.
@@ -443,8 +427,6 @@ Note:
         (when line
 	  (ti::goto-line line)))))))
 
-;;; ----------------------------------------------------------------------
-;;;
 (defun tinycompile-parse-line-goto-pass ()
   "Let the mode handle the line."
   (message "TinyCompile: Can't read file/line information.")
@@ -455,8 +437,6 @@ Note:
       (when (fboundp func)
 	(funcall func)))))
 
-;;; ----------------------------------------------------------------------
-;;;
 (defun tinycompile-parse-line-goto-main ()
   "Main controller for goto."
   (interactive)
@@ -464,8 +444,6 @@ Note:
       (tinycompile-parse-line-goto-guess)
       (tinycompile-parse-line-goto-pass)))
 
-;;; ----------------------------------------------------------------------
-;;;
 (defun tinycompile-get-error-lines  (&optional max-point list-func)
   "Get error lines in compile buffer from current point forward.
 Input:
@@ -492,8 +470,6 @@ Return list:
             (push elt table)))
       (nreverse table))))
 
-;;; ----------------------------------------------------------------------
-;;;
 (defun tinycompile-kill-all-file-lines ()
   "Kill all lines associated with the file on the current line."
   (interactive)
@@ -537,8 +513,6 @@ Return list:
       (if (< point (point-max))
           (goto-char point)))))
 
-;;; ----------------------------------------------------------------------
-;;;
 (defun tinycompile-show-hide-toggle (&optional regexp)
   "Hide or show comment lines matching REGEXP.
 References:
@@ -571,23 +545,17 @@ References:
                'null
              '(owner tinycompile  invisible t)))))))))
 
-;;; ----------------------------------------------------------------------
-;;;
 (defun tinycompile-hide-by-regexp (regexp)
   "Hide lines matching REGEXP."
   (interactive "s[TinyCompile] Hide strings matching: ")
   (tinycompile-show-hide-toggle regexp))
 
-;;; ----------------------------------------------------------------------
-;;;
 (defun tinycompile-hide-by-regexp-whole-line (regexp)
   "If REGEXP is found, hide whole line."
   (interactive "s[TinyCompile] Hide lines matching: ")
   (tinycompile-show-hide-toggle
    (format "^.*\\(%s\\).*[\r\n]+" regexp)))
 
-;;; ----------------------------------------------------------------------
-;;;
 (defun tinycompile-unhide ()
   "UNhide all hidden text or lines.
 See `tinycompile-hide-by-regexp' and `tinycompile-hide-by-regexp-whole-line'."
