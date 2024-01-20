@@ -410,14 +410,10 @@ Defined keys:
 
 (defalias 'tinypair-syntax-info 'ti::string-syntax-info)
 
-;;; ----------------------------------------------------------------------
-;;;
 (defsubst tinypair-word-class-p (class)
   "Check if CLASS of part of logical word classes."
   (memq class tinypair--word-syntax-classes))
 
-;;; ----------------------------------------------------------------------
-;;;
 (defun tinypair-whitespace-p ()
   "Check that current point is sitting alone. No word next to it."
   (let ((prev (char-to-string (or (preceding-char) ?\n )))
@@ -425,8 +421,6 @@ Defined keys:
     (and (string-match "[ \000\t\n\f\r]" prev)
          (string-match "[ \000\t\n\f\r]" next))))
 
-;;; ----------------------------------------------------------------------
-;;;
 (defun tinypair-word-class-skip (&optional back)
   "Skip forward all `tinypair--word-syntax-class' characters. Optionally BACK."
   (let ((ptr           tinypair--word-syntax-classes)
@@ -442,8 +436,6 @@ Defined keys:
         (setq point (point))
         (setq ptr tinypair--word-syntax-classes)))))
 
-;;; ----------------------------------------------------------------------
-;;;
 (defun tinypair-word-beginning-paired-on-line (char-string)
   "Search backward CHAR-STRING and check if it's next to word in current line.
 The point is not preserved.
@@ -453,8 +445,6 @@ See `tinypair--word-syntax-classes' for word definition."
     (if (tinypair-word-class-p (char-syntax (ti::buffer-read-char nil 1)))
         t)))
 
-;;; ----------------------------------------------------------------------
-;;;
 (defun tinypair-elt-beg (elt)
   "Return begin pair from ELT."
   (nth 0  elt))
@@ -472,9 +462,7 @@ See `tinypair--word-syntax-classes' for word definition."
 ;;}}}
 ;;{{{ pair control
 
-;;; ----------------------------------------------------------------------
 ;;; "c"  refers to "checking func"
-;;;
 (defun tinypair-c-\' (ch1 ch2)
   "Check if tick '  character can be paired."
   (setq ch1 ch2) ;;  Byte compiler silencer
@@ -488,8 +476,6 @@ See `tinypair--word-syntax-classes' for word definition."
    (t
     1)))
 
-;;; ----------------------------------------------------------------------
-;;;
 (defun tinypair-c-\< (ch1 ch2)
   "Check if <  character can be paired. In HTML mode when there
 is tag end,\"slash\", it's not desirable to have <>. Several other HTML
@@ -519,14 +505,10 @@ cases are checked too."
       (setq ret nil)))
     ret))
 
-;;; ----------------------------------------------------------------------
-;;;
 ;;;  It's like you have opened ne quote
 ;;;   "txt txt txt
 ;;;       *               ,point here, and you want to end the quote..
-;;;
 ;;;  In this case the pairing isn't desiredable
-;;;
 (defun tinypair-c-\" (ch1 ch2)
   "Check if \"  character can be paired. Looks backward if previous word
 has starting pair.
@@ -565,15 +547,11 @@ has starting pair.
 ;;}}}
 ;;{{{ other
 
-;;; ----------------------------------------------------------------------
-;;;
 (defun tinypair-check-if-pairing-allowed ()
   "Function to determine if pairing is allowed.
 Returns t, when pairing is allowed for buffer."
   (not (memq major-mode tinypair--disable-mode-list)))
 
-;;; ----------------------------------------------------------------------
-;;;
 (defun tinypair-move (count)
   (cond
    ((or (not (integerp count))
@@ -582,9 +560,7 @@ Returns t, when pairing is allowed for buffer."
    (t
     (backward-char (/ count 2)))))
 
-;;; ----------------------------------------------------------------------
 ;;; - I used this before, may use it again...
-;;;
 (defun tinypair-move-logical-word (&optional count)
   "Move forward, skipping `tinypair--word-syntax-classes' COUNT times."
   (let* ((i             0)
@@ -599,8 +575,6 @@ Returns t, when pairing is allowed for buffer."
       (tinypair-word-class-skip back)
       (setq i (1+ i)))))
 
-;;; ----------------------------------------------------------------------
-;;;
 (defun tinypair-word-position-function (beg char)
   "Special cursor positioning function.
 BEG is start point and CHAR is starting pair character."
@@ -620,8 +594,6 @@ BEG is start point and CHAR is starting pair character."
    (t
     nil)))
 
-;;; ----------------------------------------------------------------------
-;;;
 (defun tinypair-word-pair (arg ch-beg ch-end)
   "Insert pair around word(s) ARG times using CH-BEG and CH-END."
   (let ((fid       "tinypair-word-pair: ")
@@ -715,8 +687,6 @@ BEG is start point and CHAR is starting pair character."
 ;;}}}
 ;;{{{ main
 
-;;; ----------------------------------------------------------------------
-;;;
 (defun tinypair-pair-type-select (&optional arg)
   "Pairing control center.
 Input:
@@ -732,14 +702,11 @@ Input:
    (t
     (setq tinypair--alist tinypair--european-alist))))
 
-;;; ----------------------------------------------------------------------
 ;;; - Original idea in 19.29+ package paired-insert.el. Unfortunately the
 ;;;   package didn't satisfy my needs, so here is better pairing func.
-;;;
 ;;; - the 'pair' variable in this function is purposively set
 ;;;   many times, although it is not always necessary. It is just eases
 ;;;   following the program flow.
-;;;
 (defun tinypair-self-insert-command (arg)
   "Smart pairing. ARG is repeat count of character."
   (interactive "P")
