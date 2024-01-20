@@ -1,5 +1,3 @@
-;; -*- enable-local-variables: :all;  -*-
-
 ;;; tinyef.el --- (E)lectric (f)ile minor mode. Easy C-x C-f filename composing
 
 ;; This file is not part of Emacs
