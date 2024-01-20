@@ -258,8 +258,6 @@ left untouched, because adjusting may push it out of the window edge."
 ;;}}}
 ;;{{{ code: misc
 
-;;; ----------------------------------------------------------------------
-;;;
 (defun tinycomment-find-prev-com-col (com-start &optional not-this-col column-further)
   "Look upward to find previous comment column.
 
@@ -300,8 +298,6 @@ Return:
             (setq loop t found nil))))) ;keep going
     ret))
 
-;;; ----------------------------------------------------------------------
-;;;
 (defun tinycomment-find-com-col ()
   "Look current line to find `comment-start'.
 
@@ -337,8 +333,6 @@ Return:
 ;;}}}
 ;;{{{ positions
 
-;;; ----------------------------------------------------------------------
-;;;
 (defun tinycomment-check-line (mode &optional arg)
   "Few commands to use to determine line data according to MODE and ARG.
 
@@ -416,16 +410,12 @@ Return:
         (setq ret (looking-at "[ \t]*")))))
     ret))
 
-;;; ----------------------------------------------------------------------
-;;;
 (defun tinycomment-find-comment-col (com-start)
   "Look upward to find possible COM-START position."
   (save-excursion
     (if (re-search-backward (regexp-quote com-start) nil t)
         (current-column))))
 
-;;; ----------------------------------------------------------------------
-;;;
 (defun tinycomment-find-code-col (com-start)
   "Look upward to find possible code indent column. Use COM-START.
 Eg.
@@ -474,14 +464,12 @@ Return:
 
 ;;{{{ tinycomment-set-com
 
-;;; ----------------------------------------------------------------------
 ;;; See simple.el (funcall comment-indent-function)
 ;;; - Funny thing is that you just can't set comment-column to NBR
 ;;;   and expect it to be comment place, because the indent-for-comment
 ;;;   might decide to move the position to another place!
 ;;; - This function instead, will always put comment there where
 ;;;   user want's it.
-;;;
 (defun tinycomment-set-com (&optional new)
   "Lighter version of function `indent-for-comment'.
 Moves current comment tocomment-position. Doesn't signal any errors.
@@ -557,7 +545,6 @@ Return:
 ;;}}}
 ;;{{{ tinycomment-adj-com
 
-;;; ----------------------------------------------------------------------
 ;;; Original idea in asm-mode.el by :
 ;;;   Martin Neitzel,  Techn. Univ. Braunschweig, W.Germany
 ;;;   BITNET/EARN:   neitzel@dbsinf6.bitnet    (mail via bitnet preferred)
@@ -566,10 +553,8 @@ Return:
 ;;;   but the same principle 'converting to bigger class'
 ;;;   is preserved.
 ;;; - This is self standing function.
-;;;
 ;;; - I really should write this again some day, divide into more smaller
 ;;;   blocks of funcs...
-;;;
 (defun tinycomment-adjust-comment ()
   "Introduce a comment or convert an already existing comment to next class.
 These are the known comment classes:
@@ -723,8 +708,6 @@ Code note:
 ;;}}}
 ;;{{{ code: main
 
-;;; ----------------------------------------------------------------------
-;;;
 (defun tinycomment-status ()
   "Displays comment info."
   (interactive)
@@ -735,8 +718,6 @@ Code note:
     "ce=" (prin1-to-string comment-end) " "
     "css=" (prin1-to-string comment-start-skip) " ")))
 
-;;; ----------------------------------------------------------------------
-;;;
 (defun tinycomment-set-c-vars-maybe (&optional cs ce cc css)
   "Set comment variables CS CE CC and CSS.
 The names are `comment-start' `comment-end' etc. If some
@@ -746,8 +727,6 @@ comment variable is nil, it will be set to some harmless value."
   (if (not (integerp cc))       (setq comment-column 48))
   (if (null css)                (setq comment-start-skip "")))
 
-;;; ----------------------------------------------------------------------
-;;;
 ;;;###autoload
 (defun tinycomment-indent-for-comment ()
   "Alternative to standard `indent-for-comment'.
