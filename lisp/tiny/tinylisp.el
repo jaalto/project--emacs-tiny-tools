@@ -5917,11 +5917,9 @@ Return list:
           (push (list file stat) list)))
     list))
 
-;; (tinylisp-lisp-mnt-tag-check-and-fix-dir "~/elisp/tiny/lisp" 'err)
-
 ;;}}}
 
-(provide   'tinylisp)
+(provide 'tinylisp)
 
 ;;  These must be set, otherwise the mode setup will not activate
 ;;  correctly when user calls M-x tinylisp-mode.
