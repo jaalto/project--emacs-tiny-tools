@@ -471,8 +471,6 @@ Special commands:
 ;;}}}
 ;;{{{ install
 
-;;; ----------------------------------------------------------------------
-;;;
 ;;;###autoload
 (defun tinyreplace-define-keys-local-map ()
   "Define key binding in local compile and grep buffers.
@@ -481,7 +479,6 @@ See `tinyreplace--default-key'."
   (local-set-key tinyreplace--default-key
                  'tinyreplace-replace-over-files-compile-buffer))
 
-;;; ----------------------------------------------------------------------
 ;;;###autoload
 (defun tinyreplace-install-default-keybings (&optional key)
   "Install optional KEY or `tinyreplace--default-key'."
@@ -500,8 +497,6 @@ See `tinyreplace--default-key'."
         (tinyreplace-define-keys-local-map)))
     (global-set-key key 'tinyreplace-menu)))
 
-;;; ----------------------------------------------------------------------
-;;;
 ;;;###autoload
 (defun tinyreplace-install-hooks (&optional uninstall)
   "Install or UNINSTALL `tinyreplace-define-keys-local-map' into hooks.
@@ -520,7 +515,6 @@ See:
     (remove-hook 'compilation-minor-mode-hook 'tinyreplace-define-keys-local-map)
     (remove-hook 'grep-mode-hook 'tinyreplace-define-keys-local-map))))
 
-;;; ----------------------------------------------------------------------
 ;;;###autoload
 (defun tinyreplace-install ()
   "Call `tinyreplace-install-hooks'."
@@ -530,7 +524,6 @@ See:
 ;;}}}
 ;;{{{ misc
 
-;;; ----------------------------------------------------------------------
 ;;;###autoload
 (defun tinyreplace-menu ()
   "Run `tinyreplace--menu'."
@@ -539,8 +532,6 @@ See:
       (message "My: Cannot start replace, buffer is read-only.")
     (ti::menu-menu 'tinyreplace--menu)))
 
-;;; ----------------------------------------------------------------------
-;;;
 (defmacro tinyreplace-interactive-region-args  (string)
   "Construct interactive tag for functions that need region.
 STRING is argument to `tinyreplace--read-args-function'.
@@ -554,16 +545,12 @@ Return list:
         (funcall tinyreplace--read-args-function ,string))
      (error "TinyReplace: Region is not active. Please select one.")))
 
-;;; ----------------------------------------------------------------------
-;;;
 (defun tinyreplace-make-word-regexp  (string)
   "See `tinyreplace--word-boundary'. Make regexp from STRING."
   (concat tinyreplace--word-boundary
           "\\(" (regexp-quote string) "\\)"
           tinyreplace--word-boundary))
 
-;;; ----------------------------------------------------------------------
-;;;
 (defun tinyreplace-read-args (&optional prompt)
   "Read two arguments with PROMPT. Return list: (ARG1 ARG2)."
   (let ((opoint (point))
@@ -589,9 +576,7 @@ Return list:
     (goto-char opoint)                  ;restore
     (list arg1 arg2)))
 
-;;; ----------------------------------------------------------------------
 ;;; - This is for user friendliness
-;;;
 ;;;###autoload
 (defun tinyreplace-symmetry-toggle (&optional arg verb)
   "Toggle variable` tinyreplace--symmetry' with ARG. VERB."
@@ -605,8 +590,6 @@ Return list:
                    "on"
                  "off"))))
 
-;;; ----------------------------------------------------------------------
-;;;
 (defun tinyreplace-transient-mark-mode  (mode)
   "Record function  `transient-mark-mode' status.
 This is done only if function exists. MODE can be symbol `writeä or `read'."
@@ -620,8 +603,6 @@ This is done only if function exists. MODE can be symbol `writeä or `read'."
      ((eq mode 'read)
       tinyreplace--transient-mark-mode))))
 
-;;; ----------------------------------------------------------------------
-;;;
 (defun tinyreplace-arrow-control (buffer mode &optional str)
   "Handles showing the arrow.
 
@@ -664,8 +645,6 @@ Returns:
     (setq tinyreplace--arrow-state 'hide)))
   mode)
 
-;;; ----------------------------------------------------------------------
-;;;
 (defun tinyreplace-replace-ask (buffer from-str to-str )
   "Perform asking while in interactive replace mode.
 
@@ -736,9 +715,7 @@ Note:
           (setq loop nil))) ;; while loop
     ans))
 
-;;; ----------------------------------------------------------------------
 ;;; Press Ctrl-g to abort replace.
-;;;
 (defun tinyreplace-show-function-name (point)
   "Flashes function name briefly from POINT."
   (let* ((name (ti::buffer-defun-function-name point))
@@ -748,9 +725,7 @@ Note:
     (message txt)
     (sit-for 1)))
 
-;;; ----------------------------------------------------------------------
 ;;; Press Ctrl-g to abort replace.
-;;;
 (defun tinyreplace-move-overlay (beg end)
   "Move overlay to BEG END."
   (ti::compat-overlay-move 'tinyreplace--replace-region-overlay beg end  nil)
@@ -758,8 +733,6 @@ Note:
    'tinyreplace--replace-region-overlay
    'face tinyreplace--face))
 
-;;; ----------------------------------------------------------------------
-;;;
 (defun tinyreplace-replace-1 (beg end str)
   "Replace region BEG END with STR, point with after replace."
   (when (and (integerp beg) (integerp end))
@@ -769,15 +742,11 @@ Note:
 ;;}}}
 ;;{{{ key
 
-;;; ----------------------------------------------------------------------
-;;;
 (defun tinyreplace-key-clear-input  ()
   "Clear the line."
   (interactive)
   (delete-region (line-beginning-position) (line-end-position)))
 
-;;; ----------------------------------------------------------------------
-;;;
 (defun tinyreplace-key-forward-word (&optional count)
   "Forward word. COUNT is argument to `forward-word', and defaults to 1.
 
@@ -796,15 +765,11 @@ then insert into the replace prompt with \\[tinyreplace-key-yank-word]. When"
               40))
     (select-window (get-buffer-window  obuffer))))
 
-;;; ----------------------------------------------------------------------
-;;;
 (defun tinyreplace-key-backward-word ()
   "See `tinyreplace-key-forward-word'."
   (interactive)
   (tinyreplace-key-forward-word -1))
 
-;;; ----------------------------------------------------------------------
-;;;
 (defun tinyreplace-key-yank-string1  ()
   "Yank previous string (search string)."
   (interactive)
@@ -812,8 +777,6 @@ then insert into the replace prompt with \\[tinyreplace-key-yank-word]. When"
       (insert tinyreplace--string1)
     (message "TinyReplace: Sorry, there is no STRING1 to yank yet ")))
 
-;;; ----------------------------------------------------------------------
-;;;
 (defun tinyreplace-key-yank-word ()
   "Yank word from buffer. `tinyreplace--replace-buffer' must be set."
   (interactive)
@@ -831,8 +794,6 @@ then insert into the replace prompt with \\[tinyreplace-key-yank-word]. When"
       (setq word (ti::remove-properties word))
       (insert word))))
 
-;;; ----------------------------------------------------------------------
-;;;
 (defun tinyreplace-args-keymap-create  ()
   "Create keymap."
   (setq tinyreplace--args-keymap (copy-keymap minibuffer-local-map))
@@ -846,18 +807,14 @@ then insert into the replace prompt with \\[tinyreplace-key-yank-word]. When"
 ;;}}}
 ;;{{{ main
 
-;;; ----------------------------------------------------------------------
 ;;; - The "v" has been chosen because it's close to "b". I first
 ;;;   used "B" for backward REPLACEMENT, but it was too much
 ;;;   trouble to reach extra shift key.
-;;;
 ;;;   Eg. If I want to replace backward (to undo some changes),
 ;;;   you just press "v" and "u". Much more awkward would have
 ;;;   been "B" and "u". The shift-modifier is not good in this case.
-;;;
 ;;; - The "undo" feature here is hand coded, because I couldn't find
 ;;;   any emacs command that would undo last change...one at a time.
-;;;
 (defun tinyreplace-replace-region-1 (beg end re str &optional level ask func)
   "Run replace on region BEG END. Search RE and replace with STR.
 
@@ -1170,8 +1127,6 @@ Region is active. Go to beginning of region? "))
 ;;}}}
 ;;{{{ applications
 
-;;; ----------------------------------------------------------------------
-;;;
 (defun tinyreplace-read-compile-buffer-filename ()
   "Read filename from current line in buffers like compile."
   (let (;; Allow drive letter at front d:/file/
@@ -1200,8 +1155,6 @@ Region is active. Go to beginning of region? "))
         (setq file (ti::file-name-for-correct-system file 'emacs))))
     file))
 
-;;; ----------------------------------------------------------------------
-;;;
 ;;;###autoload
 (defun tinyreplace-replace-over-files-compile-buffer
   (beg end str1 str2 &optional func verb)
@@ -1318,8 +1271,6 @@ Input:
        (mapconcat 'concat ro-cache " ")))
     nil))
 
-;;; ----------------------------------------------------------------------
-;;;
 ;;;###autoload
 (defun tinyreplace-replace-region (beg end str1 str2)
   "In region BEG END, find STR1 and replace with STR2."
@@ -1327,8 +1278,6 @@ Input:
   (tinyreplace-replace-region-1
    beg end (regexp-quote str1) str2 0 t))
 
-;;; ----------------------------------------------------------------------
-;;;
 ;;;###autoload
 (defun tinyreplace-replace-forward (str1 str2)
   "Find STR1 and replace with STR2 from current point forward.
@@ -1340,9 +1289,7 @@ you can use. Normally C - l yanks, and \"\\\" key deletes line."
    (point-max)
    (regexp-quote str1) str2 0 t))
 
-;;; ----------------------------------------------------------------------
 ;;; ** Not gurranteed to work interactively.
-;;;
 ;;;###autoload
 (defun tinyreplace-latex-blk-replace (str1 str2 blk &optional beg-re end-re)
   "Select latex block areas for replace.
@@ -1382,8 +1329,6 @@ Input:
             (goto-char move)
           (goto-char (point-max)))))))
 
-;;; ----------------------------------------------------------------------
-;;;
 ;;;###autoload
 (defun tinyreplace-latex-math-replace (str1 str2)
   "Find STR1 and replace with STR2 inside latex math blocks."
