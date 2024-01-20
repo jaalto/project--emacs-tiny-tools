@@ -2,14 +2,10 @@
 
 ;; This file is not part of Emacs
 
-;;{{{ Id
-
 ;; Copyright (C) 1997-2024 Jari Aalto
 ;; Keywords:     emulations
 ;; Author:       Jari Aalto
 ;; Maintainer:   Jari Aalto
-;;
-;; Look at the code with folding.el.
 
 ;; This program is free software; you can redistribute it and/or modify it
 ;; under the terms of the GNU General Public License as published by the Free
@@ -26,10 +22,8 @@
 ;;
 ;; Visit <http://www.gnu.org/copyleft/gpl.html> for more information
 
-;;}}}
-;;{{{ Install
+;;; Install
 
-;; ....................................................... &t-install ...
 ;;  Put this file on your Emacs-Lisp `load-path', add following into your
 ;;  ~/.emacs startup file. This must be the very first entry before
 ;;  any keybindings take in effect.
@@ -44,13 +38,9 @@
 ;;      ;;
 ;;      (global-set-key "\C-cmn"  'tinypad-mode)
 
-;;}}}
-;;{{{ Documentation
-
-;; ..................................................... &t-commentary ...
 ;;; Commentary:
-;;
-;;  Preface, aug 1997
+
+;;  Preface, Aug 1997
 ;;
 ;;      In gnu newsgroup there was a request that a class had been used to
 ;;      using Windows notepad and in order to make the transition to Emacs
@@ -74,9 +64,9 @@
 ;;          with 'xmodmap' in order to get 'Alt' key produce `Meta'
 ;;      o   Windows specific commands are not emulated, like
 ;;          `Print' 'Setup'.
-;;      o   Following famous windows shortcut keys are _not_
+;;      o   Following famous windows shortcut keys are not
 ;;          Emulated; I was lazy and didn't try to reorganize the
-;;          Emacs keys. Erm... for now you have to stick to emacs
+;;          Emacs keys. Erm, for now you have to stick to Emacs
 ;;          equivalents and live without these.
 ;;
 ;;          Undo   in   Control-z
@@ -88,22 +78,20 @@
 ;;
 ;;      Why on earth I made this package to use "global" minor mode?
 ;;      I can't remember the reason. A simple menubar entry may have
-;;      sufficed just fine.... Oh, it was that remaping the bindings.
+;;      sufficed just fine. Oh, it was that remaping the bindings.
 ;;      You see, when minor mode is turned on, it conquers the mappings
 ;;      underneath.
 ;;
-;;      [1997-10-23] Hey, I just saw pointer to package Map-zxcv.el which
-;;      takes care oc mapping the missing zxcv, so I don't have to bother
+;;      [1997-10-23] Hey, I just saw pointer to package `Map-zxcv.el' which
+;;      takes care of mapping the missing zxcv, so I don't have to bother
 ;;      with those here. Nice. You can ask it from Kim F. Storm
 ;;      <storm@olicom.dk>
-
-;;}}}
 
 ;;; Change Log:
 
 ;;; Code:
 
-;;{{{ setup: require
+;;; Setup: require
 
 (require 'tinylibm)
 
@@ -120,8 +108,7 @@
   :type  'hook
   :group 'TinyPad)
 
-;;}}}
-;;{{{ minor mode
+;;; Minor mode
 
 ;;;###autoload (autoload 'tinypad-mode          "tinypad" "" t)
 ;;;###autoload (autoload 'turn-on-tinypad-mode  "tinypad" "" t)
@@ -194,7 +181,7 @@ Mode description:
      ["A)bout Tinypad"       tinypad-version             t]
      ["V)ersion, mode desc." tinypad-mode-help           t]))
    (progn
-;;;    (set map (setq tinypad--mode-map (make-keymap)))
+;;    (set map (setq tinypad--mode-map (make-keymap)))
      (define-key   root-map [(meta f) (n)]  'tinypad-erase-buffer)
      (define-key   root-map [(meta f) (o)]  'find-file)
      (define-key   root-map [(meta f) (s)]  'save-buffer)
@@ -222,16 +209,15 @@ Mode description:
      ;; Bad idea beacuse C-x/C-x are the crucial prefix keys in
      ;; emacs and occupying it causes havoc and grief
      ;;
-;;;    (define-key   root-map [(control z)]  'undo)
-;;;    (define-key   root-map [(control x)]  'kill-region)
-;;;    (define-key   root-map [(control c)]  'copy-region-as-kill)
-;;;    (define-key   root-map [(control v)]  'yank)
+;;    (define-key   root-map [(control z)]  'undo)
+;;    (define-key   root-map [(control x)]  'kill-region)
+;;    (define-key   root-map [(control c)]  'copy-region-as-kill)
+;;    (define-key   root-map [(control v)]  'yank)
      ;;
      (define-key   root-map [(f5)]            'tinypad-insert-time)
      (define-key   root-map [(f3)]            'isearch-forward))))
 
-;;}}}
-;;{{{ Code
+;;; Code
 
 (defadvice switch-to-buffer  (after tipad act)
   "Turn on `tinypad-mode' if if global Pad mode is non-nil."
@@ -263,7 +249,8 @@ Mode description:
              (null tinypad-mode))
     (setq tinypad-mode 1)))
 
-;;; ------------------------------------------------------------ &main ---
+;;; Main
+
 (defun tinypad-mode-action ()
   "Activate `tinypad-mode' on or off everywhere, depending on var `tinypad-mode'."
   (unless (get 'tinypad-mode 'self-call)
@@ -287,7 +274,7 @@ Mode description:
       (sit-for 1)
       (put 'tinypad-mode 'self-call nil))))
 
-;;}}}
+;;; Provide
 
 (add-hook 'tinypad--mode-define-keys-hook 'tinypad-mode-define-keys)
 
