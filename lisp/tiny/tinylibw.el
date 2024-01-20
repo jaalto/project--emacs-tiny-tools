@@ -32,11 +32,9 @@
 ;; It will handle arranging everything for you.
 ;;
 ;;      (require 'tinylibm)
-;;
 
 ;;; Commentary:
 
-;;
 ;;  Preface, 1998
 ;;
 ;;      This is a lisp function library, package itself does nothing.
