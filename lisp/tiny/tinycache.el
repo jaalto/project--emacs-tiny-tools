@@ -277,22 +277,16 @@ Format: (BUFFER-POINTER BP ..)")
 ;;}}}
 ;;{{{ code: misc functions
 
-;;; ----------------------------------------------------------------------
-;;;
 (defun tinycache-uninstall ()
   "Deactivate package."
   (tinycache-advice-control 'disable))
 
-;;; ----------------------------------------------------------------------
-;;;
 (defun tinycache-advice-control (&optional disable)
   "Turn advices on. Optionally DISABLE."
   (interactive)
   (ti::advice-control
    '(compile-internal compilation-find-file) "^tinycache"  disable 'verb))
 
-;;; ----------------------------------------------------------------------
-;;;
 (defun tinycache-install-mode ()
   "Install `tinycache-mode'."
   ;;  Make sure we can display string in mode line
@@ -302,8 +296,6 @@ Format: (BUFFER-POINTER BP ..)")
                                  ;; No key map
                                  (make-sparse-keymap))))
 
-;;; ----------------------------------------------------------------------
-;;;
 (defun tinycache-install (&optional uninstall)
   "Install or UNINSTALL cache."
   (interactive)
@@ -319,8 +311,6 @@ Format: (BUFFER-POINTER BP ..)")
     (add-hook 'dired-mode-hook       'tinycache-add-local-hook)
     (add-hook 'dired-mode-hook       'tinycache-define-default-keys))))
 
-;;; ----------------------------------------------------------------------
-;;;
 (defun tinycache-install-msb ()
   "Install new cache menu to msb.el if it is loaded."
   (let ((elt
@@ -338,8 +328,6 @@ Format: (BUFFER-POINTER BP ..)")
       (push elt menu)
       (set sym menu))))
 
-;;; ----------------------------------------------------------------------
-;;;
 (defun tinycache-define-default-keys ()
   "Define keys to `compilation-minor-mode-map'."
   (interactive)
@@ -363,8 +351,6 @@ Format: (BUFFER-POINTER BP ..)")
       (ti::define-key-if-free map "\C-ccm" 'tinycache-dired-mark)
       (ti::define-key-if-free map "\C-ccu" 'tinycache-dired-unmark))))
 
-;;; ----------------------------------------------------------------------
-;;;
 (defun tinycache-buffer-list-bindings-on ()
   "Add default bindings to buffer list, \\[list-buffers]."
   ;;  Choose "c" for cache commands
@@ -381,15 +367,12 @@ Format: (BUFFER-POINTER BP ..)")
   ;;  Bye, bye. No need to call us again. Installation already done.
   (remove-hook 'buffer-menu-mode-hook 'tinycache-define-default-keys))
 
-;;; ----------------------------------------------------------------------
 ;;;  - The following says that "Load view-(minor)mode in Emacs 19.30, but
 ;;;    for other (X)Emacs load mview-mode if it exists."
 ;;;  - The view-mode is minor mode in new Emacs releases, older
 ;;;    versions are encouraged to get mview.el minor mode
-;;;
 ;;;            mview.el
 ;;;            Mike Williams
-;;;
 (defun tinycache-maybe-view-mode ()
   "Turen on view (minor) mode if needed."
   (interactive)
@@ -428,14 +411,10 @@ Format: (BUFFER-POINTER BP ..)")
 ;;}}}
 ;;{{{ code: Buffer list control
 
-;;; ----------------------------------------------------------------------
-;;;
 (defsubst tinycache--mode-on-string-p ()
   "Check if `tinycache-mode' is on."
   (memq tinycache-mode '(t on)))
 
-;;; ----------------------------------------------------------------------
-;;;
 (put 'tinycache-map-over-buffers 'lisp-indent-function 1)
 (defmacro tinycache-map-over-buffers (off &rest body)
   "Map over all cached buffers.
@@ -457,8 +436,6 @@ In BODY, setting variable `list' to nil terminates this macro."
            (setq NamE nil))             ; No-op, silence byte compiler
        ,@body)))
 
-;;; ----------------------------------------------------------------------
-;;;
 (put 'tinycache-buffer-list-map-over-buffers 'lisp-indent-function 0)
 (defmacro tinycache-buffer-list-map-over-buffers (&rest body)
   "Special Buffer list macro to execute BODY at found buffer line."
@@ -469,8 +446,6 @@ In BODY, setting variable `list' to nil terminates this macro."
                                  (beginning-of-line)
                                  ,@body)))
 
-;;; ----------------------------------------------------------------------
-;;;
 (put 'tinycache-buffer-list-map-over-off-buffers 'lisp-indent-function 0)
 (defmacro tinycache-buffer-list-map-over-off-buffers (&rest body)
   "Special Buffer list macro to execute BODY at found buffer line."
@@ -481,32 +456,24 @@ In BODY, setting variable `list' to nil terminates this macro."
                                  (beginning-of-line)
                                  ,@body)))
 
-;;; ----------------------------------------------------------------------
-;;;
 ;;;###autoload
 (defun tinycache-buffer-list-mark ()
   "Mark Cached files in buffer list."
   (interactive)
   (tinycache-buffer-list-map-over-buffers (Buffer-menu-mark)))
 
-;;; ----------------------------------------------------------------------
-;;;
 ;;;###autoload
 (defun tinycache-buffer-list-unmark ()
   "Mark Cached files in buffer list."
   (interactive)
   (tinycache-buffer-list-map-over-buffers (Buffer-menu-unmark)))
 
-;;; ----------------------------------------------------------------------
-;;;
 ;;;###autoload
 (defun tinycache-buffer-list-mark-deleted ()
   "Mark Cached files in buffer list."
   (interactive)
   (tinycache-buffer-list-map-over-buffers (Buffer-menu-delete)))
 
-;;; ----------------------------------------------------------------------
-;;;
 ;;;###autoload
 (defun tinycache-buffer-list-mark-cache-off ()
   "Mark files whose cache property has been turned off."
@@ -516,8 +483,6 @@ In BODY, setting variable `list' to nil terminates this macro."
 ;;}}}
 ;;{{{ Dired buffer
 
-;;; ----------------------------------------------------------------------
-;;;
 (defun tinycache-dired-mark (&optional unmark verb)
   "Mark cached files. Optionally UNMARK. VERB."
   (interactive)
@@ -545,8 +510,6 @@ In BODY, setting variable `list' to nil terminates this macro."
 		     "un"
 		   "") ))))
 
-;;; ----------------------------------------------------------------------
-;;;
 (defun tinycache-dired-unmark (&optional verb)
   "Unmark cached files. VERB."
   (interactive)
@@ -556,8 +519,6 @@ In BODY, setting variable `list' to nil terminates this macro."
 ;;}}}
 ;;{{{ code: cache control
 
-;;; ----------------------------------------------------------------------
-;;;
 (defun tinycache-add-local-hook ()
   "Make `kill-buffer-hook' local to this buffer. And add `tinycache-flush' to it.
 When you kill the dired buffer, cached buffers loaded from this
@@ -581,8 +542,6 @@ buffer are also killed."
       ;;  Make sure there are no constants in the hook.
       (setq kill-buffer-hook (delq nil (delq t kill-buffer-hook))))))
 
-;;; ----------------------------------------------------------------------
-;;;
 (defun tinycache-activate (this-buffer buffer)
   "THIS-BUFFER is the root buffer (dired,compile) and put BUFFER to cache."
   (interactive)
@@ -609,8 +568,6 @@ buffer are also killed."
         (ti::compat-modeline-update))
       (run-hooks 'tinycache--find-file-buffer-hook))))
 
-;;; ----------------------------------------------------------------------
-;;;
 (defun tinycache-cached-file-list (&optional off)
   "Return all cached files by looking at every compilation buffer.
 This excludes files that user has manually instructed not to be in
@@ -639,8 +596,6 @@ has been turned manually off."
                     (push elt2 buffers))))))  ))) ;; dolist1 - 2
     buffers))
 
-;;; ----------------------------------------------------------------------
-;;;
 (defun tinycache-mode-root-buffer (&optional remove)
   "Update root buffer's `tinycache-mode' flag. Optionally REMOVE from cache.
 This is the buffer where `tinycache--cache' resides."
@@ -653,9 +608,7 @@ This is the buffer where `tinycache--cache' resides."
     (setq tinycache-mode 'on)
     (setq tinycache--mode-name
           (format "%s%d" tinycache--mode-on-string (length tinycache--cache))))))
-;;; ----------------------------------------------------------------------
 ;;; - This function must be called by user only!
-;;;
 ;;;###autoload
 (defun tinycache-mode (&optional arg)
   "Toggle cache flag for this buffer with ARG.
@@ -693,8 +646,6 @@ the cache is flushed with \\[tinycache-flush]."
 ;;}}}
 ;;{{{ code: flush
 
-;;; ----------------------------------------------------------------------
-;;;
 ;;;###autoload
 (defun tinycache-flush-all-compilation (&optional verb)
   "Kill all cached files by stepping through all compilation buffers. VERB."
@@ -708,8 +659,6 @@ the cache is flushed with \\[tinycache-flush]."
     (if verb
         (message (format "Flushed %d buffers." count)))))
 
-;;; ----------------------------------------------------------------------
-;;;
 ;;;###autoload
 (defun tinycache-flush (&optional verb)
   "Kill buffers listed in `tinycache--cache'. VERB.
@@ -750,8 +699,6 @@ buffer and kill compilation cached files."
 ;;}}}
 ;;{{{ code: advice
 
-;;; ----------------------------------------------------------------------
-;;;
 (defadvice compilation-find-file (around tinycache activate)
   "Cache newly visited files in `tinycache--cache';
 use `\\[tinycache-flush]' in compilation buffer,
@@ -768,15 +715,11 @@ to kill these loaded files."
         (if (setq buffer ad-return-value)
             (tinycache-activate this-buffer buffer))))))
 
-;;; ----------------------------------------------------------------------
-;;;
 (defadvice compile-internal (after tinycache activate)
   "Automatically kill the buffers listed in `tinycache--cache'.
 `kill-buffer-hook' when the `compile' buffer is killed."
   (tinycache-add-local-hook))
 
-;;; ----------------------------------------------------------------------
-;;;
 (defadvice dired-view-file (around tinycache act)
   "Cache newly visited files in `tinycache--cache';
 Kill the dired buffer to kill cached files."
