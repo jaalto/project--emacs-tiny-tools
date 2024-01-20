@@ -60,8 +60,6 @@
 (defvar w32-cygwin-mount-table nil
   "Cygwin mount.exe mapping. See `w32-cygwin-mount-table'.")
 
-;;; ----------------------------------------------------------------------
-;;;
 (put 'w32-cygwin-mount-table-dolist 'lisp-indent-function 0)
 (put 'w32-cygwin-mount-table-dolist 'edebug-form-spec '(body)) ;;#todo: not working
 (defmacro w32-cygwin-mount-table-dolist (&rest body)
@@ -75,8 +73,6 @@ Variables `cygwin' and `dos' are bound respectively."
               (dos    (cdr mount)))
 	 ,@body))))
 
-;;; ----------------------------------------------------------------------
-;;;
 (put 'w32-cygwin-shell-environment 'lisp-indent-function 0)
 (put 'w32-cygwin-shell-environment 'edebug-form-spec '(body))
 (defmacro w32-cygwin-shell-environment  (&rest body)
@@ -86,8 +82,6 @@ Variable `shell-file-name' is locally bound during call."
                                   (ti::win32-cygwin-p))))
      ,@body))
 
-;;; ----------------------------------------------------------------------
-;;;
 (defun w32-cygwin-mount-table-parse ()
   "Parse cygwin mount table from current point forward."
   ;;  Search lines with backslash
@@ -135,8 +129,6 @@ Variable `shell-file-name' is locally bound during call."
              (> (length (car a))
                 (length (car b))))))))
 
-;;; ----------------------------------------------------------------------
-;;;
 (defun w32-cygwin-convert (path &optional flag)
   "Run `cygpath' to find out PATH.
 Return:
@@ -164,8 +156,6 @@ Return:
           (setq ret (match-string 0)))))
     ret))
 
-;;; ----------------------------------------------------------------------
-;;;
 (defun w32-cygwin-mount-table ()
   "Run mount(1) and return list: \\='((CYGWIN . DOS) ...)."
   (when (memq system-type '(cygwin))
@@ -186,8 +176,6 @@ Return:
                      (buffer-string)))
             ret))))))
 
-;;; ----------------------------------------------------------------------
-;;;
 (defun w32-cygwin-mount-point-to-dos (path)
   "Convert Cygwin mount filenames like  /tmp to DOS paths."
   (let* (last-choice
@@ -217,8 +205,6 @@ Return:
         path
       (cdr last-choice))))
 
-;;; ----------------------------------------------------------------------
-;;;
 (defun w32-cygwin-mount-table-set ()
   "Run mount.exe and set internal variable `w32-cygwin-mount-table'.
 You should run this function after you have made a change to
@@ -227,8 +213,6 @@ Cygwin mount points."
       (setq w32-cygwin-mount-table
             (w32-cygwin-mount-table))))
 
-;;; ----------------------------------------------------------------------
-;;;
 (defun w32-cygwin-mount-table-path-to-dos (path)
   "Convert PATH to dos using cygwin mount table.
 You should not call this function, use `w32-cygwin-path-to-dos'."
@@ -253,8 +237,6 @@ You should not call this function, use `w32-cygwin-path-to-dos'."
         (setq final-path (concat root path))))
     final-path))
 
-;;; ----------------------------------------------------------------------
-;;;
 (defun w32-cygwin-path-to-dos (path)
   "Convert cygwin like //c/temp  or /cygdrive/c/temp path to
 DOS notation c:/temp."
@@ -281,8 +263,6 @@ DOS notation c:/temp."
    (t
     path)))
 
-;;; ----------------------------------------------------------------------
-;;;
 (defun w32-cygwin-dos-path-to-cygwin (path)
   "Convert dos PATH to cygwin path.
 Be sure to call `expand-file-name' before you pass PATH to the function."
