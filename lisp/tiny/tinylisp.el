@@ -798,7 +798,7 @@ Defined keys:
        (define-key map "1p"      'tinylisp-process-kill)
        (define-key map "1P"      'list-processes))))))
 
-;;; ................................................... &&mode-summary ...
+;; ................................................... &&mode-summary ...
 
 ;;;###autoload (autoload 'tinylisp-elp-summary-mode          "tinylisp" "" t)
 ;;;###autoload (autoload 'turn-on-tinylisp-elp-summary-mode  "tinylisp" "" t)
@@ -1051,7 +1051,7 @@ Format:
 ;;}}}
 ;;{{{ setup: private, mode
 
-;;; These must not be made buffer local.
+;; These must not be made buffer local.
 
 (defvar tinylisp--property-show-mode nil
   "Property show mode (flag).")
@@ -2178,7 +2178,7 @@ To turn on mode on by buffer basis, call `tinylisp-mode'."
 ;;}}}
 ;;{{{ advice
 
-;;; byte-compile-file (filename &optional load)
+;; byte-compile-file (filename &optional load)
 (defadvice byte-compile-file (around tinylisp act)
   "Change interactive prompt and offer current buffer for compiling(.el).
 With prefix arg, byte compile and load file."
@@ -2268,8 +2268,8 @@ If you see this message when calling following, there is bug in TinyLisp.
         (push (list var face) list)))
     list))
 
-;;; (load-library "flyspell")
-;;; (tinylisp-face-print (current-buffer) '(flyspell-incorrect-face))
+;; (load-library "flyspell")
+;; (tinylisp-face-print (current-buffer) '(flyspell-incorrect-face))
 (defun tinylisp-face-print (buffer face-list &optional details)
   "Insert description to BUFFER for each symbol in FACE-LIST.
 If optional DETAILS is non-nil, display also \\='face-defface-spec properties."
@@ -2469,13 +2469,13 @@ References:
      (replace-match str2 nil t))
    (tinylisp-eval-fix-defconst)
    (tinylisp-eval-current-buffer)
-;;;    (erase-buffer)                   ;May be big
+;;    (erase-buffer)                   ;May be big
    nil))
 
 ;;}}}
 ;;{{{ Internally used buffers
 
-;;; --------------------------------------------------------- &buffers ---
+;; --------------------------------------------------------- &buffers ---
 (defun tinylisp-b-display (buffer point-min)
   "Display BUFFER (must be string) if it exists and go to optional POINT-MIN.
 Shrink and print message if not exist."
@@ -2499,9 +2499,9 @@ Shrink and print message if not exist."
           (shrink-window-if-larger-than-buffer)
           (if point-min (ti::pmin))))))))
 
-;;; (defun tinylisp-b-eval (&optional pmin)
-;;;     (interactive) (tinylisp-b-display tinylisp--buffer-eval pmin))
-;;; This is just byteComp forward declaration, kinda.
+;; (defun tinylisp-b-eval (&optional pmin)
+;;     (interactive) (tinylisp-b-display tinylisp--buffer-eval pmin))
+;; This is just byteComp forward declaration, kinda.
 
 (defun tinylisp-b-record (&rest args)
   "Ignore ARGS."
@@ -2977,7 +2977,7 @@ harness run is over."
         def)
     (setq def
           `(defun ,sym (&optional arg)
-;;;              "Sort by field. ARG to reverse sort."
+;;              "Sort by field. ARG to reverse sort."
              (interactive "P")
              (tinylisp-elp-summary-sort-column ,x arg)))
     (eval def)))
@@ -3062,7 +3062,7 @@ DebugTag: 22-56 file.el
           (message "TinyLisp: Debug tags removed.")
         (message "TinyLisp: %d Debug tags inserted." i)))))
 
-;;; Simple solution
+;; Simple solution
 (defun tinylisp-error-find-2 ()
   "Start from point min and Eval region at time until error occurs."
   (interactive)
@@ -3458,10 +3458,10 @@ See `tinylisp-jump-to-definition'. VERB."
           (message "TinyLisp: no more user variables or functions.")))
     point))
 
-;;;  You can also do this in program code like this.
-;;;  (fset 'test
-;;;    (byte-compile-sexp
-;;;      (lambda () nil)))
+;;  You can also do this in program code like this.
+;;  (fset 'test
+;;    (byte-compile-sexp
+;;      (lambda () nil)))
 (defun tinylisp-byte-compile-sexp (&optional disassemble verb)
   "Byte compile function around point.
 If you give prefix argument DISASSEMBLE, then the function is also
@@ -3489,8 +3489,8 @@ disassembled to byte code format. VERB."
        (if verb
            (message "TinyLisp: byte compiled [%s]" name)))))))
 
-;;; #todo: how do you detect the emacs binary used ?
-;;; #todo: unfinished
+;; #todo: how do you detect the emacs binary used ?
+;; #todo: unfinished
 (defun tinylisp-byte-compile-buffer ()
   "Compile current buffer as if Emacs were newer loaded.
 Since your current Emacs has already loaded packages, it's not
@@ -3528,7 +3528,7 @@ you would catch any errors with undefined variables and functions."
 means that the functions were declared defsubst.\n"))
               buffer)))))))
 
-;;; #todo:
+;; #todo:
 (defun tinylisp-byte-compile-parse-needed-packages ()
   "Byte Compile file and check what packages it needs.
 With this function you can find out what other packages are needed to
@@ -4131,12 +4131,12 @@ Return:
           (setq file (concat file ".el")))))
     file))
 
-;;; The name is not a mistake although it may sound repetitive. All
-;;; function in TinyLisp have prefix "tinylisp-library" if they deal with
-;;; load-path libraries.
-;;; The second part is `locate-library' which is standard Emacs function.
-;;; If you do a C-h a  `locate-library' you will correctly find both
-;;; of these implementations.
+;; The name is not a mistake although it may sound repetitive. All
+;; function in TinyLisp have prefix "tinylisp-library" if they deal with
+;; load-path libraries.
+;; The second part is `locate-library' which is standard Emacs function.
+;; If you do a C-h a  `locate-library' you will correctly find both
+;; of these implementations.
 (defun tinylisp-library-locate-library-1 (file &optional extensions)
   "Like `locate-library' but find all possible occurrances of FILE.
 This also finds compressed files. Path portion and file extensions
@@ -4433,12 +4433,12 @@ Can't find _defined_ variable or function on the line (eval buffer first).")
 ;;}}}
 ;;{{{ code help: misc
 
-;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;
+;; ;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;
 ;;
 ;;      AUTOLOAD UTILITIES
 ;;      These are admistrative utilies for package maintainer(s)
 ;;
-;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;
+;; ;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;
 
 (defconst tinylisp--ignore-dir-regexp
   "\\(\\.\\(bzr\\|hg\\|git\\|svn\\|mtn\\)\\|CVS\\|RCS\\|_MTN\\|\\.\\.?\\)$"
@@ -4603,7 +4603,7 @@ Call arguments:
    (t
     (error "Can't generate autoload statements. (buffer-file-name) is nil."))))
 
-;;; FIXME: See tinylisp-autoload-quick-autoload-build-dir
+;; FIXME: See tinylisp-autoload-quick-autoload-build-dir
 ;;;###autoload
 (defun tinylisp-autoload-guick-build-from-dir
   (file-or-dir &optional regexp no-desc buffer verb)
@@ -4641,12 +4641,12 @@ Input:
   "Write ###autoload from FILE to DEST. VERB."
   (let ((generated-autoload-file dest))
     (ti::file-delete-safe dest)
- ;;;    (ti::package-autoload-loaddefs-create-maybe dest)
+ ;;    (ti::package-autoload-loaddefs-create-maybe dest)
     (tinylisp-with-file-env-macro
       (with-current-buffer (tinylisp-find-file-noselect dest)
         (goto-char (point-max))
         ;;  line added by `ti::package-autoload-loaddefs-create-maybe'
-;;;        (re-search-backward "\n.*provide")
+;;        (re-search-backward "\n.*provide")
         (let ((point (point)))
           ;;  FIXME: This call generates ^L lines. Are they important?
           (generate-file-autoloads file)
@@ -4756,8 +4756,8 @@ Optionally EXCLUDE files by regexp."
       (tinylisp-with-file-env-macro
         (update-file-autoloads file))))
 
-;;; tinylisp-loaddefs-update-from-file
-;;; FIXME: unused.
+;; tinylisp-loaddefs-update-from-file
+;; FIXME: unused.
 (defun tinylisp-autoload-real-update-file-autoloads (file)
   "Update autoload from FILE to FILE-loaddefs.el"
   (interactive "fLoaddedfs from file: ")
@@ -4957,11 +4957,11 @@ Obey optional INCLUDE and EXCLUDE regexps."
       dir
     (tinylisp-autoload-quick-autoload-build-dir dir include exclude)))
 
-;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;
+;; ;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;
 ;;
 ;;      OTHER
 ;;
-;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;
+;; ;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;
 
 (defun tinylisp-forward-def (&optional back verb)
   "Go to next `def' forward or `BACK'. VERB."
@@ -5657,7 +5657,7 @@ Show results in `tinylisp--buffer-record'. The display shows
               buffer      (nth 1 elt)
               live-buffer (if (buffer-live-p buffer) (get-buffer buffer))
               live-name   (if live-buffer            (buffer-name live-buffer))
-;;;         key         (or live-buffer file)
+;;         key         (or live-buffer file)
               file        (nth 2 elt))
         (insert (format "\n%-20s %-15s %-15s %s"
                         name buffer live-name file))))))
