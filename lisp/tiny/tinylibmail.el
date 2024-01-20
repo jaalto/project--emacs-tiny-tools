@@ -1,5 +1,3 @@
-;; -*- enable-local-variables: :all;  -*-
-
 ;;; tinylibmail.el --- Library of mail related functions
 
 ;; This file is not part of Emacs
