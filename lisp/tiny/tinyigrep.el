@@ -1,5 +1,3 @@
-;; -*- enable-local-variables: :all;  -*-
-
 ;;; tinyigrep.el --- Top level interface to igrep.el
 
 ;; This file is not part of Emacs
