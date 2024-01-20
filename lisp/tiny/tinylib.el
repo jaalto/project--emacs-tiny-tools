@@ -1,5 +1,3 @@
-;; -*- enable-local-variables: :all;  -*-
-
 ;;; tinylib.el --- Library of general functions
 
 ;; This file is not part of Emacs
