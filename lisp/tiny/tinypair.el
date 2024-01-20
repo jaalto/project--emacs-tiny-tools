@@ -57,9 +57,10 @@
 
 ;;  Preface, 1995
 ;;
-;;      Pacakge paired-insert.el was posted to gnu.emacs.help group, and
-;;      the code was not very well documented, The code showed lot of
-;;      promises, but it lacked smart pairing, so this package was born instead.
+;;      Package `paired-insert.el' was posted to the gnu.emacs.help
+;;      group, and the code was not very well documented. The code
+;;      showed a lot of promise, but it lacked smart pairing, so this
+;;      package was born instead.
 ;;
 ;;  Overview of features
 ;;
@@ -68,12 +69,14 @@
 ;;
 ;;  Pairing control
 ;;
-;;      *Remember* Always ask youself "Does this character the cursor is
-;;      on, belong to _word_ class?", when you wonder why the pairing does
-;;      not take in effect around the current character block.
+;;      Always ask yourself, 'Does this character where the cursor is
+;;      on belong to the word class?' when you wonder why the pairing
+;;      does not take effect around the current character block.
 ;;
-;;      The pair control is turned off for lisp mode, because it makes
-;;      things worse if the pairing is on. The pairing in US style includes
+;;      The pair control is turned off for `emacs-lisp-mode' because
+;;      it makes things worse if the pairing is on. The pairing in US
+;;      style includes:
+;;
 ;;
 ;;          `'
 ;;
@@ -85,67 +88,69 @@
 ;;
 ;;      The pairing is done according to assoc lists in the following way:
 ;;
-;;      o   if there is whitespace in front of char, then pair is inserted
-;;      o   if character is over pair-end, no pairing takes effect.
-;;          Like if you press opening paren when you're sitting on the
-;;          closing paren:
+;;      o   If there is whitespace in front of the character, then the
+;;          pair is inserted.
+;;      o   If the cursor is over the pair-end, no pairing takes
+;;          effect. For example, if you press the opening parenthesis
+;;          when you're sitting on the closing parenthesis:
 ;;
 ;;          ()
 ;;           *  <-- cursor here, pressing another ( does not pair.
 ;;
 ;;      but this behavior can be controlled through variable
 ;;
-;;      o  if the cursor is at the beginning of the word (see syntax-table):
-;;          -- if there is no pairs around the word, the whole word is paired.
-;;          -- if there is pair, no pairing takes effect. The char acts as
-;;          self-insert-command.
-;;
-;;      o   if previous character is word. then the '  doesn't pair. Reason
-;;          is in english language .........................^
-;;
-;;      o   if character is repeated with prefix arg, the pairing isn't done,
-;;          instead the character is repeated as in self-insert-command.
+;;      o   If the cursor is at the beginning of the word (see
+;;          syntax-table):
+;;          -- If there are no pairs around the word, the whole word
+;;             is paired.
+;;          -- If there is a pair, no pairing takes effect. The
+;;             character acts as a self-insert-command.
+
+;;      o   If the previous character is a word, then the ' doesn't
+;;          pair. The reason is in the English language..........^
 ;;
 ;;  Cursor positioning
 ;;
-;;      By default the cursor is positioned in the "middle" of the inserted
-;;      pair chars. But for words, this is impossible, because there is no
-;;      middle position. Please see the variables
+;;      By default, the cursor is positioned in the middle of the
+;;      inserted pair chars. But for words, this is impossible because
+;;      there is no middle position. Please see the variables:
 ;;
 ;;          tinypair--word-positioning
 ;;          tinypair--word-positioning-function
 ;;
-;;      which allow you to customize cursor positioning after word pairing.
+;;      Those allow you to customize cursor positioning after word
+;;      pairing.
 ;;
-;;  Word about syntax tables
+;;  A word about Emacs syntax tables
 ;;
-;;      Syntax table play a major part in pairing, especially pairing words
-;;      correctly. Suppose you're writing in text mode:
+;;      Syntax tables play a major part in pairing, especially pairing
+;;      words correctly. Suppose you're writing in text mode:
 ;;
 ;;          ...txt txt... (help is the key)
 ;;                         *                    <-- cursor
 ;;
-;;      If you now press " to have the word HELP paired, you don't get it,
-;;      because normally text mode's syntax table says that "(" belongs
-;;      to group "w" (word) too. So the actual word is seen as "(help" and
-;;      the program determines that you're inside a word, thus not
-;;      allowing the pairing.
+;;      If you now press the double quote (") to have the word `HELP'
+;;      paired, you won't get it. This is because, in normal text
+;;      mode's syntax table, the "(" belongs to group 'w' (word) too.
+;;      Consequently, the actual word is seen as '(help,' and the
+;;      program determines that you're inside a word, thus preventing
+;;      the pairing.
 ;;
-;;      In the other hand, if you were in any other mode, say in C++, the
-;;      "(" is defined as open parenthesis syntax and it that case the
-;;      seen word seen would have been "help" and the " character would have
-;;      been added around the HELP string. Like this:
+;;      On the other hand, if you were in any other mode, say C++, the
+;;      "(" is defined as open parenthesis syntax, and in that case,
+;;      the seen word would have been 'help,' and the " character
+;;      would have been added around the `HELP' string, like this:
 ;;
 ;;          ...txt txt... ("help" is the key)
 ;;                          *                   <-- cursor
 ;;
-;;      You may propably want quickly to see the syntax definition of
-;;      characters; use function from my lisp libraries
+;;      You may probably want to quickly see the syntax definition of
+;;      characters:
 ;;
 ;;          (defalias 'syntax-info 'ti::string-syntax-info)
 ;;
-;;      To return to this syntax problem in text mode, you could do the
-;;      following, to make certain characters out of "w" class.
+;;      Returning to the syntax problem in text mode, you could do the
+;;      following to place certain characters outside the 'w' class.
 ;;
 ;;          (defun my-syntax-default (table )
 ;;            "My syntax table settings."
@@ -160,18 +165,18 @@
 ;;            (modify-syntax-entry ?\" "\"" table)
 ;;            (modify-syntax-entry ?_ "w" table))
 ;;
-;;      Then you just change the definitions of syntax table in hook:
+;;      Then you just change the definitions of the syntax table in the hook:
 ;;
 ;;          (setq text-mode-hook 'my-text-mode-hook)
 ;;          (defun my-text-mode-hook ()
 ;;            (my-syntax-default  text-mode-syntax-table))
 ;;
-;;      Do you wonder why I put {}()[] into "_" class and not in
-;;      corresponding "(" or ")" classes? Well, my stig-paren just went
-;;      beserk and started beeping the bell whenever I was nearby
-;;      ")" class... The "_" shut it down, so I just chose it. You can
-;;      of course put the chars into any class you like.
-;;
+;;      Do you wonder why chracters {}()[] were put into the "" class
+;;      and not in the corresponding "(" or ")" classes? Well, my
+;;      stig-paren just went berserk and started beeping the bell
+;;      whenever I was near ")" class... The "" shut it down, so I
+;;      just chose it. You can, of course, put the chars into any
+;;      class you like.
 
 ;;; Change Log:
 
@@ -406,10 +411,10 @@ Defined keys:
 (defun tinypair-word-class-skip (&optional back)
   "Skip forward all `tinypair--word-syntax-class' characters. Optionally BACK."
   (let ((ptr           tinypair--word-syntax-classes)
-	(func          (if back
-			   'skip-syntax-backward
-			 'skip-syntax-forward))
-	(point         (point)))
+        (func          (if back
+                           'skip-syntax-backward
+                         'skip-syntax-forward))
+        (point         (point)))
     (while ptr
       (funcall func (char-to-string (car ptr)))
       (if (eq (point) point)
@@ -495,8 +500,8 @@ cases are checked too."
 has starting pair.
 "
   (let ((ret 1)                        ;default is main handling
-	prev                           ;char
-	point)
+        prev                           ;char
+        point)
     ;;  The prev is nil if point is in BOB
     (setq  prev (char-syntax (or (ti::buffer-read-char nil -1) ?\ )))
     (if (and prev
@@ -577,16 +582,16 @@ BEG is start point and CHAR is starting pair character."
 (defun tinypair-word-pair (arg ch-beg ch-end)
   "Insert pair around word(s) ARG times using CH-BEG and CH-END."
   (let ((fid       "tinypair-word-pair: ")
-	(pos-flag  tinypair--word-positioning)
-	(pos-func  tinypair--word-positioning-function)
-	ch1
-	ch2
-	read-ch
-	count
-	syntax-now
-	syntax-prev
-	tmp
-	beg)
+        (pos-flag  tinypair--word-positioning)
+        (pos-func  tinypair--word-positioning-function)
+        ch1
+        ch2
+        read-ch
+        count
+        syntax-now
+        syntax-prev
+        tmp
+        beg)
     (setq syntax-prev  (char-syntax
                         (setq ch1 (or (preceding-char) ?\ ))))
     (setq syntax-now  (char-syntax
