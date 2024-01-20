@@ -435,8 +435,6 @@ Please look at the many examples that are in the end of tinyhotlist.el"
 ;;}}}
 ;;{{{ menu handle
 
-;;; ----------------------------------------------------------------------
-;;;
 (defun tinyhotlist-find-buffer (item &optional no-confirm)
   "Find buffer for corresponding menu ITEM.
 The buffer is loaded from disk if it does not exist in Emacs.
@@ -489,8 +487,6 @@ NO-CONFIRM suppresses confirm of loading ange-ftp files."
      (t
       (message "TinyHotlist: Can't find buffer [%s]" buffer)))))
 
-;;; ----------------------------------------------------------------------
-;;;
 (defun tinyhotlist-abbreviate-file-name (file &optional restore)
   "Abbreviate FILE by looking at `tinyhotlist--abbreviate-file-name-table'.
 If RESTORE is passed, the convert abbreviated FILE into absolute path
@@ -513,8 +509,6 @@ using `tinyhotlist--abbreviate-file-name-table'."
           (throw 'break nil))))
     file))
 
-;;; ----------------------------------------------------------------------
-;;;
 (defun tinyhotlist-add-internal (buffer)
   "Add BUFFER or list of buffers to hotlist. Arg must be STRING [list].
 
@@ -573,8 +567,6 @@ Returns:
     (run-hook-with-args 'tinyhotlist--add-hook buffer ret)
     ret))
 
-;;; ----------------------------------------------------------------------
-;;;
 (defun tinyhotlist-remove-internal (arg type)
   "Remove according to ARG and MODE a item from `tinyhotlist--cache'.
 
@@ -616,8 +608,6 @@ Return:
     (run-hook-with-args 'tinyhotlist--remove-hook arg ret)
     ret))
 
-;;; ----------------------------------------------------------------------
-;;;
 (defun tinyhotlist-add-by-regexp (regexp &optional temp-buf)
   "Add all buffers matchig REGEXP to hotlist.
 If optional TEMP-BUF prefix arg is non-nil the mach is made
@@ -628,8 +618,6 @@ against temporary buffers too. Otherwise they are not counted."
     (string-match regexp (buffer-name))
     temp-buf)))
 
-;;; ----------------------------------------------------------------------
-;;;
 (defun tinyhotlist-kill (&optional default)
   "Kill hotlist or initialise with defaults if DEFAULT flag is non-nil.
 References:
@@ -639,14 +627,10 @@ References:
   (if (and default (stringp tinyhotlist--default-regexp))
       (tinyhotlist-add-by-regexp tinyhotlist--default-regexp)))
 
-;;; ----------------------------------------------------------------------
-;;;
 (defun tinyhotlist-set-defaults ()
   "Initialise hotlist according to `tinyhotlist--default-regexp'."
   (tinyhotlist-kill 'init))
 
-;;; ----------------------------------------------------------------------
-;;;
 (defun tinyhotlist-build-default-hotlist ()
   "Delete existing hotlist and build with `tinyhotlist--default-regexp'.
 See variable `tinyhotlist--abbreviate-file-name-table'."
@@ -654,16 +638,12 @@ See variable `tinyhotlist--abbreviate-file-name-table'."
   (setq tinyhotlist--cache nil)
   (tinyhotlist-set-defaults))
 
-;;; ----------------------------------------------------------------------
-;;;
 ;;;###autoload
 (defun tinyhotlist-save-hotlist (&rest ARGS)
   "Call `tinyhotlist-load-hotlist' with arg to save hotlist. ARGS are ignored."
   (interactive)
   (tinyhotlist-load-hotlist 'save))
 
-;;; ----------------------------------------------------------------------
-;;;
 ;;;###autoload
 (defun tinyhotlist-load-hotlist (&optional save)
   "Load or SAVE hotlist configuration from `tinyhotlist--hotlist-file'.
@@ -720,8 +700,6 @@ Return:
 ;;}}}
 ;;{{{ X menu
 
-;;; ----------------------------------------------------------------------
-;;;
 (defun tinyhotlist-complete (list)
   "Show LIST in completion menu.
 Return:
@@ -739,8 +717,6 @@ Return:
         nil
       ret)))
 
-;;; ----------------------------------------------------------------------
-;;;
 (defun tinyhotlist-show-menu (event &optional title)
   "Pop the menu and select the buffer.
 If EVENT is nil, use default coordinates to display the menu and TITLE.
@@ -760,8 +736,6 @@ Return:
         (ti::compat-popup list event nil title)
       (tinyhotlist-complete list))))
 
-;;; ----------------------------------------------------------------------
-;;;
 ;;;###autoload
 (defun tinyhotlist-control-kbd (&optional arg)
   "Same as `tinyhotlist-control' with ARG, but you can call this from keyboard."
@@ -769,8 +743,6 @@ Return:
   (tinyhotlist-control
    (ti::compat-make-fake-event tinyhotlist--x-coord tinyhotlist--y-coord) arg))
 
-;;; ----------------------------------------------------------------------
-;;;
 ;;;###autoload
 (defun tinyhotlist-control (event &optional arg)
   "Control center of hotlist. Use mouse EVENT to position popup.
@@ -852,16 +824,12 @@ Optional ARG can be:
         (message "TinyHotlist: Can't load %s" tinyhotlist--hotlist-file))
       (sleep-for 2)))))
 
-;;; ----------------------------------------------------------------------
-;;;
 ;;;###autoload
 (defun tinyhotlist-add ()
   "Add current buffer to hotlist."
   (interactive)
   (tinyhotlist-control nil 1))
 
-;;; ----------------------------------------------------------------------
-;;;
 ;;;###autoload
 (defun tinyhotlist-remove ()
   "Remove current buffer from hotlist."
