@@ -1,5 +1,3 @@
-;; -*- enable-local-variables: :all;  -*-
-
 ;;; tinygnus.el --- Gnus Plug-in. Additional functions. UBE fight etc.
 
 ;; This file is not part of Emacs
