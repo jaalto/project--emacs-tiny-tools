@@ -1,5 +1,3 @@
-;; -*- enable-local-variables: :all;  -*-
-
 ;;; tinylisp.el --- Emacs lisp programming help grab-bag
 
 ;; This file is not part of Emacs
