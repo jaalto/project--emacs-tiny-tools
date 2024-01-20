@@ -235,7 +235,6 @@ Format is list:
   :group 'TinylibText)
 
 ;;; For now, only search face is used, but maybe in the future the others..
-;;;
 (defcustom ti::text-:face-table
   (list
    (cons 'search 'highlight)
@@ -263,8 +262,6 @@ Format is list:
      ti::text-:face-search-default
      ti::text-:face-table)))
 
-;;; ----------------------------------------------------------------------
-;;;
 (defmacro ti::text-search-face-reset ()
   "Reset used face to the default value.
 If you use many colours to highlight text. Remember to call this
@@ -273,49 +270,35 @@ when you're finished."
    'setcdr (list 'assq ''search 'ti::text-:face-table)
    'ti::text-:face-search-default))
 
-;;; ----------------------------------------------------------------------
-;;;
 (defmacro ti::text-search-face-set (face)
   "Change search colour to FACE."
   (list 'setcdr (list 'assq ''search 'ti::text-:face-table) face))
 
-;;; ----------------------------------------------------------------------
-;;;
 (defmacro ti::text-face (face)
   "Return real face when logical FACE is given."
   ;;  This way the global variable does not float around the file
   (list 'cdr (list 'assoc face 'ti::text-:face-table)))
 
-;;; ----------------------------------------------------------------------
-;;;
 (defsubst ti::text-stack-clear ()
   "Clear undo stack."
   (put 'ti::text-:stack 'definition-stack nil)
   (setq ti::text-:stack-count  0
         ti::text-:stack        nil))
 
-;;; ----------------------------------------------------------------------
-;;;
 (defsubst ti::text-stack-length ()
   "Return undo stack length."
   (length (get 'ti::text-:stack 'definition-stack)))
 
-;;; ----------------------------------------------------------------------
-;;;
 (defsubst ti::text-stack-full-p ()
   "Check if stack is full."
   (eq (ti::text-stack-length) (1+ ti::text-:stack-size)))
 
-;;; ----------------------------------------------------------------------
-;;;
 (defsubst ti::text-stack-p ()
   "Check if there is data in undo stack. nil means that stack is empty."
   (or (get 'ti::text-:stack 'definition-stack)
       ;;  Make sure this is also zero because there is no data
       (progn (setq ti::text-:stack-count 0) nil)))
 
-;;; ----------------------------------------------------------------------
-;;;
 (defun ti::text-save-data (re level func mode beg)
   "Save search values RE LEVEL FUNC MODE BEG for undo.
 If the stack is full, then Clear the stack before pushing to it."
@@ -348,8 +331,6 @@ If the stack is full, then Clear the stack before pushing to it."
            mode))
     (setq ti::text-:stack-count (1+ ti::text-:stack-count))))
 
-;;; ----------------------------------------------------------------------
-;;;
 (defun ti::text-undo ()
   "Undo last highlighting.
 `ti::text-:stack-push-flag' is set to \\='undo-func while this function runs."
@@ -403,8 +384,6 @@ There is no such search point in the buffer any more? %s" beg))
       ;;  UNDO done; now get next undo information
       (ti::pop-definition 'ti::text-:stack))))
 
-;;; ----------------------------------------------------------------------
-;;;
 (defun ti::text-clear-buffer-properties (&optional  propl)
   "Remove all properties from buffer that match property list PROPL.
 
@@ -416,8 +395,6 @@ Input:
     (redraw-display)
     (message "Properties cleared")))
 
-;;; ----------------------------------------------------------------------
-;;;
 (defun ti::text-clear-region-properties (beg end &optional propl)
   "Remove properties from BEG END. Affects read only buffers too.
 
@@ -470,8 +447,6 @@ Input:
           ;;  Search again
           (setq beg (1+ point)))))))
 
-;;; ----------------------------------------------------------------------
-;;;
 (defun ti::text-get-mouse-property ()
   "Check if the point has \\='mouse-face text property.
 notice that if value read from point is nil,
@@ -485,8 +460,6 @@ Return:
     (if (setq prop (memq 'mouse-face prop))
         (cdr prop))))                   ;return value, may be nil
 
-;;; ----------------------------------------------------------------------
-;;;
 (defun ti::text-match-level (&optional level face-or-propl beg end)
   "Add to match LEVEL a FACE-OR-PROPL in region BEG END.
 If no match in that level, do nothing. Property `rear-nonsticky' is
@@ -517,8 +490,6 @@ Input:
         (if (eq end 1) (setq end 2))    ;(1- 1) = 0, invalid charpos
         (add-text-properties (1- end) end '(rear-nonsticky t))))))
 
-;;; ----------------------------------------------------------------------
-;;;
 ;;;###autoload
 (defun ti::text-re-search
   (re &optional direction level maxp face mode save-undo)
@@ -633,8 +604,6 @@ Return:
       ;; Return success status
       ret)))
 
-;;; ----------------------------------------------------------------------
-;;;
 (defun ti::text-property-search-and-modify
   (match-plist set-plist &optional beg end)
   "Search all characters forward, whose text properties match MATCH-PLIST.
@@ -676,10 +645,8 @@ Input:
       (if ok
           (set-text-properties (point) (1+ (point)) set-plist)))))
 
-;;; ----------------------------------------------------------------------
 ;;; Mon, 12 Feb 1996,  Tom Fontaine <fontaine@esd.ray.com>
 ;;; Sent this piece of code.  Thanks Tom!
-;;;
 (defun ti::text-read-regexp ()
   "Read regexp using `regexp-history'."
   (let*
@@ -695,8 +662,6 @@ Input:
         input
       (setcar regexp-history default))))
 
-;;; ----------------------------------------------------------------------
-;;;
 ;;;###autoload
 (defun ti::text-looking-at (re &optional level face-or-plist )
   "Highlight found RE at LEVEL with FACE-OR-PLIST.
@@ -712,8 +677,6 @@ The LEVEL is subexpression to highlight. PLIST means property list."
         (ti::text-save-data re level 'looking-at nil (point))
         (ti::text-match-level level face-or-plist)))))
 
-;;; ----------------------------------------------------------------------
-;;;
 ;;;###autoload
 (defun ti::text-buffer (re &optional level face mode save-undo)
   "Highlight RE and sub LEVEL in whole buffer, starting from `point-min'.
@@ -727,8 +690,6 @@ See `ti::text-re-search' for descriptions of FACE MODE and SAVE-UNDO."
     (goto-char (point-min))
     (ti::text-re-search re nil level nil face mode save-undo)))
 
-;;; ----------------------------------------------------------------------
-;;;
 ;;;###autoload
 (defun ti::text-re-search-forward (re &optional level face mode save-undo)
   "Search RE and highlight forward until `point-max'.
@@ -742,8 +703,6 @@ See `ti::text-re-search' for descriptions of FACE MODE SAVE-UNDO."
         (setq save-undo t))
     (ti::text-re-search re nil level nil face mode save-undo)))
 
-;;; ----------------------------------------------------------------------
-;;;
 ;;;###autoload
 (defun ti::text-re-search-backward (re &optional level face mode save-undo)
   "Search RE and highlight backward until `point-min'.
@@ -757,17 +716,13 @@ See `ti::text-re-search' for descriptions of FACE MODE SAVE-UNDO."
         (setq save-undo t))
     (ti::text-re-search re 'back level nil face mode save-undo)))
 
-;;; ----------------------------------------------------------------------
 ;;; - These are handy when you want to "mark" ceratin texts for quick ref.
-;;;
 ;;;###autoload
 (defun ti::text-mouse-mark-region (beg end event)
   "Highlight region BEG END. EVENT is mouse event."
   (interactive "r\ne")
   (ti::text-mark-region beg end))
 
-;;; ----------------------------------------------------------------------
-;;;
 ;;;###autoload
 (defun ti::text-mouse-unmark-region (beg end event)
   "Remove highlight from region BEG END. EVENT is mouse event."
@@ -775,15 +730,12 @@ See `ti::text-re-search' for descriptions of FACE MODE SAVE-UNDO."
   (ti::text-mark-region beg end 'remove))
 
 ;;; - This is for keyboard users
-;;;
 ;;;###autoload
 (defun ti::text-unmark-region (beg end)
   "Remove highlight from region BEG END."
   (interactive "r")
   (ti::text-mark-region beg end 'remove))
 
-;;; ----------------------------------------------------------------------
-;;;
 ;;;###autoload
 (defun ti::text-mark-region (beg end &optional remove face)
   "Highlight BEG END. With optional prefix arg REMOVE all matching FACE."
