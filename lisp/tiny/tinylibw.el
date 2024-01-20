@@ -40,7 +40,7 @@
 ;;  Preface, 1998
 ;;
 ;;      This is a lisp function library, package itself does nothing.
-;;      This library defines some w32-* functions.
+;;      This library defines some w32-* functions for Cygwin.
 ;;
 ;;  Notrs
 ;;
@@ -53,7 +53,7 @@
 (require 'tinyliba)
 (provide 'tinylibw)
 
-(defconst tinylibw-version-time "2024.0120.1559"
+(defconst tinylibw-version-time "2024.0120.1601"
   "Latest version number as last modified time.")
 
 ;;; Some of the functions were submitted for Emacs 21.2
