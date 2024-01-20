@@ -179,14 +179,10 @@ common beginning for all win cfg registers."
 ;;}}}
 ;;{{{ misc
 
-;;; ----------------------------------------------------------------------
-;;;
 (defun tinyxreg-event ()
   "Return fake event."
   (ti::compat-make-fake-event tinyxreg--x-coord tinyxreg--y-coord))
 
-;;; ----------------------------------------------------------------------
-;;;
 (defun tinyxreg-list ()
   "Return register list, point list + window list."
   (let ((ptr   tinyxreg--wreg)
@@ -196,8 +192,6 @@ common beginning for all win cfg registers."
       (push elt list))
     (nreverse list)))
 
-;;; ----------------------------------------------------------------------
-;;;
 (defun tinyxreg-install-default-key-bindings ()
   "Install default key bindings."
   (interactive)
@@ -212,8 +206,6 @@ common beginning for all win cfg registers."
   (when (called-interactively-p 'interactive)
     (message "TinyXreg: Register Keys bound ok.")))
 
-;;; ----------------------------------------------------------------------
-;;;
 ;;;###autoload
 (defun tinyxreg-remove-reg (char &optional arg)
   "Remove register CHAR from stored window and point lists.
@@ -228,8 +220,6 @@ ARG suggests looking in window list."
           (setq tinyxreg--wreg (delete elt tinyxreg--wreg))
         (setq tinyxreg--preg (delete elt tinyxreg--preg))))))
 
-;;; ----------------------------------------------------------------------
-;;;
 (defun tinyxreg-update ()
   "Kill all registers from lists that are not alive any more.
 Eg. marker dies if you revert the buffer; kill and load it again."
@@ -244,8 +234,6 @@ Eg. marker dies if you revert the buffer; kill and load it again."
     (setq tinyxreg--preg list)
     (setq ptr tinyxreg--wreg)))
 
-;;; ----------------------------------------------------------------------
-;;;
 ;;;###autoload
 (defun tinyxreg-trash ()
   "Empties both window and point caches."
@@ -254,15 +242,11 @@ Eg. marker dies if you revert the buffer; kill and load it again."
   (if (called-interactively-p 'interactive)
       (message "TinyXreg: Register lists trashed.")))
 
-;;; ----------------------------------------------------------------------
-;;;
 (defun tinyxreg-kill-reg (char)
   "Kill register CHAR from all lists."
   (tinyxreg-remove-reg char nil)
   (tinyxreg-remove-reg char 'window))
 
-;;; ----------------------------------------------------------------------
-;;;
 (defun tinyxreg-add-reg (char arg &optional desc)
   "Store register CHAR to window or point list.
 ARG tells to store to window list. DESC is string to use."
@@ -279,7 +263,6 @@ ARG tells to store to window list. DESC is string to use."
 
 ;; ----------------------------------------------------------------------
 ;;; So that you call this from mouse
-;;;
 (defun tinyxreg-description (register &optional arg)
   "Return description text for popup list.
 REGISTER is stored register and if ARG is non-nil the register
@@ -298,8 +281,6 @@ contains window configuration."
                (count-lines (point-min-marker) (line-beginning-position))))
             (char-to-string register))))
 
-;;; ----------------------------------------------------------------------
-;;;
 ;;;###autoload
 (defun tinyxreg-point-to-register-mouse (event)
   "Call `tinyxreg-point-to-register' using mouse EVENT."
@@ -310,9 +291,7 @@ contains window configuration."
       (mouse-set-point event))
   (call-interactively 'tinyxreg-point-to-register))
 
-;;; ----------------------------------------------------------------------
 ;;; based on register.el::point-to-register
-;;;
 ;;;###autoload
 (defun tinyxreg-point-to-register (char &optional arg)
   "Store point to CHAR and to X-popup list.
@@ -352,8 +331,6 @@ configuration."
 ;;}}}
 ;;{{{ jumping
 
-;;; ----------------------------------------------------------------------
-;;;
 ;;;###autoload
 (defun tinyxreg-remove-register ()
   "Remove register from popup list.
@@ -361,17 +338,13 @@ See `tinyxreg-jump-to-register-mouse' for more."
   (interactive)
   (tinyxreg-jump-to-register-mouse nil 'remove))
 
-;;; ----------------------------------------------------------------------
 ;;; - for calling from keybord
-;;;
 ;;;###autoload
 (defun tinyxreg-jump-to-register (&optional remove)
   "Call `tinyxreg-jump-to-register-mouse' with REMOVE."
   (interactive)
   (tinyxreg-jump-to-register-mouse nil remove))
 
-;;; ----------------------------------------------------------------------
-;;;
 ;;;###autoload
 (defun tinyxreg-jump-to-register-mouse (event &optional remove verb)
   "Displays list of registers using mouse EVENT.
