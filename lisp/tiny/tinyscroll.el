@@ -200,28 +200,20 @@ Format:
 
 (eval-and-compile (ti::macrof-debug-standard "tinyscroll" "--"))
 
-;;; ----------------------------------------------------------------------
-;;;
 (defsubst tinyscroll-active-buffer-p (buffer-name)
   "Check is BUFFER-NAME name is in `tinyscroll--list'."
   (assoc buffer-name tinyscroll--list))
 
-;;; ----------------------------------------------------------------------
-;;;
 (defsubst tinyscroll-add-1 (buffer-name position)
   "Add BUFFER-NAME and last POSITION to scroll list."
   (push (cons buffer-name position) tinyscroll--list ))
 
-;;; ----------------------------------------------------------------------
-;;;
 (defsubst tinyscroll-remove-1 (buffer-name)
   "Remove BUFFER-NAME from scroll list."
   (let ((elt (assoc buffer-name tinyscroll--list)))
     (when elt
       (setq tinyscroll--list (delq elt tinyscroll--list)))))
 
-;;; ----------------------------------------------------------------------
-;;;
 (defsubst tinyscroll-point-max-moved-p (buffer-name max)
   "Find BUFFER-NAME; return t if MAX is not stored `point-max' for BUFFER-NAME.
 Also updates new `point-max' if MAX is different.
@@ -232,22 +224,16 @@ If buffer does not exist, do nothing and return nil."
       (setcdr elt max)
       max )))
 
-;;; ----------------------------------------------------------------------
-;;;
 (defsubst tinyscroll-buffers ()
   "Return list of buffer that have auto scroll on."
   (mapcar 'car tinyscroll--list))
 
-;;; ----------------------------------------------------------------------
-;;;
 (defsubst tinyscroll-ti::temp-buffer ()
   "Set up temporary buffer and displays it."
   (ti::temp-buffer tinyscroll--tmp-buffer 'clear)
   (pop-to-buffer  tinyscroll--tmp-buffer) )
 
-;;; ----------------------------------------------------------------------
 ;;; if easier to trap "t" error condition.
-;;;
 (defun tinyscroll--list-add (buffer-name position &optional remove)
   "Check is BUFFER-NAME name is in `tinyscroll--list'.
 
@@ -273,8 +259,6 @@ Return:
       (tinyscroll-add-1 buffer-name position)))
     ret))
 
-;;; ----------------------------------------------------------------------
-;;;
 (defsubst tinyscroll-window-list ()
   "Return windows that have auto scroll enabled.
 Return:
@@ -287,8 +271,6 @@ Return:
             (push win win-list))))
     win-list))
 
-;;; ----------------------------------------------------------------------
-;;;
 (defun tinyscroll-process ()
   "Scroll all window buffers in `tinyscroll--list'.
 Activate This process activates itself only when the window, which
@@ -313,8 +295,6 @@ should be scrolled, is visible"
 ;;}}}
 ;;{{{ code: interactive
 
-;;; ----------------------------------------------------------------------
-;;;
 ;;;###autoload
 (defun tinyscroll-timer-process-control (&optional delete verb)
   "Keep the auto scroll process and timer process alive.
@@ -328,7 +308,6 @@ Optionally DELETE auto scroll process. VERB."
                                   verb)))
 
 ;;; ---------------------------------------------------7-------------------
-;;;
 ;;;###autoload
 (defun tinyscroll-list (&optional print)
   "Show list of active auto scroll buffers.
@@ -362,14 +341,11 @@ Return:
 ;;}}}
 ;;{{{ code: main
 
-;;; ----------------------------------------------------------------------
 ;;; - It's a bit slow to create buffer comletions this way.
 ;;;   Anybody has a better suggestion to amulate "bBuffer"
 ;;;   interactive tag? Mail me if you know...
-;;;
 ;;;   But I couldn't get the on/off information to the prompt
 ;;;   otherwise.
-;;;
 ;;;###autoload
 (defun tinyscroll-control (buffer-or-pointer &optional off verb)
   "Turn on auto scroll on/off for current buffer.
