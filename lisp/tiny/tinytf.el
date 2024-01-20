@@ -1104,7 +1104,6 @@ Format:
 ;;}}}
 ;;{{{ Experimental
 
-;;; ----------------------------------------------------------------------
 ;;; #todo: experimental
 (defun tinytf-code-p (&optional limit)
   "Determine if current text is code. LIMIT parameter is passed by font-lock."
@@ -1134,9 +1133,7 @@ Format:
                  ;;  Not a P-comma code in bullet?
                  (not (looking-at ".*[,o.]"))))))))))
 
-;;; ----------------------------------------------------------------------
 ;;; #todo:
-;;;
 (defun tinytf-tmp-swallow-empty-backwards ()
   (interactive)
   (forward-line 1)
@@ -1146,9 +1143,7 @@ Format:
        (looking-at "^$"))
     (forward-line 1)))
 
-;;; ----------------------------------------------------------------------
 ;;; #todo:
-;;;
 (defun tinytf-tmp-swallow-code-backwards ()
   (interactive)
   (let ((re         `,(concat "^" (make-string 12 ?\ )))
@@ -1171,9 +1166,7 @@ Format:
            (looking-at re)
            (tinytf-tmp-swallow-code-backwards))))))
 
-;;; ----------------------------------------------------------------------
 ;;; #todo:
-;;;
 (defun tinytf-tmp-dxc-code-p (&optional limit)
   (interactive)
   (let ((bullet    `,(concat (concat "^" (make-string 8 ?\ ) "[o.] ")))
@@ -1199,7 +1192,6 @@ Format:
             (not (or (looking-at b-cont-re)
                      (looking-at bullet)))))))))
 
-;;; ----------------------------------------------------------------------
 ;;; a simple one for testing only.
 ;;; #todo:
 
@@ -1545,8 +1537,6 @@ Mode description:
          (define-key map [(button3)]
            'tinytf-mouse-context-sensitive))))))
 
-;;; ----------------------------------------------------------------------
-;;;
 ;;;###autoload
 (defun tinytf-mode-define-f-keys ()
   "Define default function key to `tinytf--mode-map'."
@@ -1561,8 +1551,6 @@ Mode description:
     (define-key map [(f11)] 'tinytf-indent-paragraph-quote-and-fill)
     (define-key map [(f12)] 'tinytf-indent-paragraph-sample)))
 
-;;; ----------------------------------------------------------------------
-;;;
 (defun tinytf-mode-reload ()
   "Reload and activate greyed menus (if new programs available).
 If you have changed `exec-path' or added htmlize.el along
@@ -1575,13 +1563,9 @@ Calling this function re-eaxamines available utilities."
 ;;}}}
 ;;{{{ mode install
 
-;;; ----------------------------------------------------------------------
-;;;
 ;;;###autoload (autoload 'tinytf-install-files "tinytf" "" t)
 (ti::macrof-install-pgp-tar tinytf-install-files  "tinytf.el")
 
-;;; ----------------------------------------------------------------------
-;;;
 (defun tinytf-font-lock-mode ()
   "Install `font-lock' support. Activates only if `tinytf-mode' is on."
   (when (and tinytf-mode
@@ -1596,8 +1580,6 @@ Calling this function re-eaxamines available utilities."
       ;;  Do it now.
       (tinytf-fontify-current-buffer-window))))
 
-;;; ----------------------------------------------------------------------
-;;;
 (defun tinytf-install-eval-after-load (&optional uninstall)
   "Intall or UNINSTALL `eval-after-load' for add-log.el."
   (let ((form '(tinytf-install-add-log-all-buffers)))
@@ -1610,8 +1592,6 @@ Calling this function re-eaxamines available utilities."
      (t
       (eval-after-load "add-log" form)))))
 
-;;; ----------------------------------------------------------------------
-;;;
 (defun tinytf-install-add-log (&optional uninstall)
   "Install or UNINSTALL add-log.el support.
 Calling this function makes variable
@@ -1633,8 +1613,6 @@ References:
         (make-local-variable sym)
         (set sym tinytf--add-log-current-defun-header-regexp)))))
 
-;;; ----------------------------------------------------------------------
-;;;
 (defun tinytf-install-add-log-all-buffers ()
   "Install add-log.el support for all `tinytf-mode' buffers."
   (ti::dolist-buffer-list
@@ -1643,16 +1621,12 @@ References:
    nil
    (tinytf-install-add-log)))
 
-;;; ----------------------------------------------------------------------
-;;;
 (defun tinytf-install (&optional uninstall verb)
   "Install hook to mode or UNINSTALL. VERB allows verbose messages."
   (interactive "P")
   (ti::verb)
   (tinytf-install-eval-after-load uninstall))
 
-;;; ----------------------------------------------------------------------
-;;;
 (defun tinytf-text-format-not-p ()
   "This is backup to verify after running `tinytf-text-format-p'.
 Function `tinytf-text-format-p' may consider the file as TF format,
@@ -1664,8 +1638,6 @@ conclusion."
          "^[^ \t\r\n].*\\(\r\n\\|\r\\|\n\\)[^ \t\r\n]"
          nil nil 'read))))
 
-;;; ----------------------------------------------------------------------
-;;;
 (defun tinytf-text-format-ok-p-test-toc ()
   "Check if buffer content looks like technical format.
 This is low level check. Use `tinytf-text-format-ok-p' instead."
@@ -1674,8 +1646,6 @@ This is low level check. Use `tinytf-text-format-ok-p' instead."
    "^Table [Oo]f [Cc]ontents[ \t]*$"
    nil nil 'read))
 
-;;; ----------------------------------------------------------------------
-;;;
 (defun tinytf-text-format-ok-p-test-headings ()
   "Check if buffer content looks like technical format.
 This is low level check. Use `tinytf-text-format-ok-p' instead."
@@ -1694,8 +1664,6 @@ This is low level check. Use `tinytf-text-format-ok-p' instead."
     "    \\(\\([0-9]\\.[0-9.]*[0-9]\\) \\)?[A-Z][^ \t\f\r\n].*")
    nil nil 'read))
 
-;;; ----------------------------------------------------------------------
-;;;
 (defun tinytf-text-format-ok-p-test-heading-and-text ()
   "Check if buffer content looks like technical format.
 This is low level check. Use `tinytf-text-format-ok-p' instead."
@@ -1724,8 +1692,6 @@ This is low level check. Use `tinytf-text-format-ok-p' instead."
     "        ? ? ?[A-Z][A-Za-z].*")
    nil nil 'read))
 
-;;; ----------------------------------------------------------------------
-;;;
 (defun tinytf-text-format-ok-p ()
   "Check if buffer content looks like technical format."
   (interactive)
@@ -1743,15 +1709,11 @@ This is low level check. Use `tinytf-text-format-ok-p' instead."
           (message "Tinytf: Found TF format location [%s]" ret)))
     ret))
 
-;;; ----------------------------------------------------------------------
-;;;
 (defun tinytf-text-format-p ()
   "Check if buffer looks like TF format."
   (and (tinytf-text-format-ok-p)
        (not (tinytf-text-format-not-p))))
 
-;;; ----------------------------------------------------------------------
-;;;
 (defun tinytf-text-format-file-p ()
   "Test that file extension is .txt and `tinytf-text-format-p' returns t."
   (and (string-match
@@ -1759,8 +1721,6 @@ This is low level check. Use `tinytf-text-format-ok-p' instead."
         (or (buffer-file-name) ""))
        (tinytf-text-format-p)))
 
-;;; ----------------------------------------------------------------------
-;;;
 ;;;###autoload
 (defun turn-on-tinytf-mode-maybe ()
   "If buffer looks like technical format, turn on `tinytf-mode'.
@@ -1772,8 +1732,6 @@ References:
     ;;  Hook must return nil
     nil))
 
-;;; ----------------------------------------------------------------------
-;;;
 (defun turn-on-tinytf-mode-all-buffers ()
   "Call`tinytf-mode' on in all technical format buffers. Optionally OFF.
 The buffer is detected by using function strored in variable
@@ -1792,18 +1750,14 @@ The buffer is detected by using function strored in variable
 ;;{{{ macros, defsubst
 
 ;;; These macros create functions
-;;;
 ;;; For some unknown reason the ByteCompiler doesn't see thse
 ;;; function in the followed macros unless the functions are wrapped
 ;;; inside eval-and-compile FORM.
-;;;
 ;;; fmacro = function create macro
 
 (eval-and-compile
 
 ;; #todo FIXME `,func
-;;; ----------------------------------------------------------------------
-;;;
   (defun tinytf-fmacro-indent-region-1 (func doc col msg &rest body)
     "Use `tinytf-fmacro-indent-region' with FUNC DOC COL MSG BODY."
     (let ((sym (intern (symbol-name `,func))))
@@ -1819,8 +1773,6 @@ The buffer is detected by using function strored in variable
            ,@body))))
 
 ;; #todo FIME: `,func
-;;; ----------------------------------------------------------------------
-;;;
   (defun tinytf-fmacro-mark-word-1 (func doc char1 &optional char2)
     "Use `tinytf-fmacro-mark-word' with FUNC DOC CHAR1 CHAR2."
     (let ((sym (intern (symbol-name `,func))))
@@ -1834,8 +1786,6 @@ The buffer is detected by using function strored in variable
          (insert (char-to-string (or ,char2 ,char1)))
          (skip-chars-forward " ,\t\f\r\n"))))
 
-;;; ----------------------------------------------------------------------
-;;;
   (defun tinytf-paragraph-bounds ()
     "Return (beg . end) points of paragraph."
     (let ((empty-line (ti::nil-p (ti::read-current-line)))
@@ -1855,8 +1805,6 @@ The buffer is detected by using function strored in variable
           (cons beg end))))
 
 ;; #todo FIXME `,func
-;;; ----------------------------------------------------------------------
-;;;
   (defun tinytf-fmacro-indent-paragraph-1 (func doc col msg &rest body)
     "Use `tinytf-fmacro-indent-paragraph'."
     (let ((sym (intern (symbol-name `,func))))
@@ -1882,8 +1830,6 @@ The buffer is detected by using function strored in variable
 ;;; --++-- --++-- --++-- --++-- --++-- --++-- --++-- --++-- - eval end --
   ) ;; eval-end
 
-;;; ----------------------------------------------------------------------
-;;;
 (put 'tinytf-compile 'lisp-indent-function 3)
 (defmacro tinytf-compile (cmd mode &optional regexp)
   "Run compile command based on Emacs version."
@@ -1891,8 +1837,6 @@ The buffer is detected by using function strored in variable
       `(compilation-start ,cmd ,mode (not 'name-function) ,regexp)
     `(compile-internal ,cmd "No more lines." ,mode (not 'parser) ,regexp)))
 
-;;; ----------------------------------------------------------------------
-;;;
 (defmacro tinytf-fmacro-indent-region (func doc col msg &optional body)
   "Create indent function FUNC with DOC COL MSG BODY.
 Created function arguments: (beg end &optional verb)"
@@ -1903,16 +1847,12 @@ Created function arguments: (beg end &optional verb)"
      msg
      body))
 
-;;; ----------------------------------------------------------------------
-;;;
 (defmacro tinytf-fmacro-mark-word (func doc char1 &optional char2)
   "Create word marking function FUNC with DOC and CHAR.
 Created function arguments: ()"
   `,(tinytf-fmacro-mark-word-1
      func doc char1 char2))
 
-;;; ----------------------------------------------------------------------
-;;;
 (put 'tinytf-fmacro-indent-paragraph 'edebug-form-spec '(body))
 (defmacro tinytf-fmacro-indent-paragraph (func doc col msg &optional body)
   "Create word marking function FUNC with DOC and COL, MSG and BODY.
@@ -1922,8 +1862,6 @@ Created function arguments: ()"
 
 ;;; These are conventional macros
 
-;;; ----------------------------------------------------------------------
-;;;
 (put 'tinytf-paragraph-macro 'lisp-indent-function 0)
 (put 'tinytf-paragraph-macro 'edebug-form-spec '(body))
 (defmacro tinytf-paragraph-macro (&rest body)
@@ -1933,8 +1871,6 @@ Created function arguments: ()"
 	 (paragraph-separate   paragraph-start))
      ,@body))
 
-;;; ----------------------------------------------------------------------
-;;;
 (put 'tinytf-heading-macro  'lisp-indent-function 0)
 (put 'tinytf-heading-macro 'edebug-form-spec '(body))
 (defmacro tinytf-heading-macro (&rest body)
@@ -1954,8 +1890,6 @@ The BODY must move the point so that next heading can be found."
          (unless (string-match RE-no (ti::read-current-line))
            ,@body)))))
 
-;;; ----------------------------------------------------------------------
-;;;
 (put 'tinytf-level-macro 'lisp-indent-function 0)
 (put 'tinytf-level-macro 'edebug-form-spec '(body))
 (defmacro tinytf-level-macro (&rest body)
@@ -1974,15 +1908,11 @@ The point is at start of level."
      (goto-char beg)
      ,@body))
 
-;;; ----------------------------------------------------------------------
-;;;
 (defsubst tinytf-regexp (&optional level)
   "Return indent regexp string at LEVEL."
   ;;  control character are not counted, like ^L page mark
   (concat "^" (tinytf-indent level) tinytf--heading-regexp))
 
-;;; ----------------------------------------------------------------------
-;;;
 (defsubst tinytf-level-p (&optional level)
   "Check if line is LEVEL."
   (let (case-fold-search)              ;case sensitive match
@@ -1990,8 +1920,6 @@ The point is at start of level."
       (beginning-of-line)
       (looking-at (tinytf-regexp level)))))
 
-;;; ----------------------------------------------------------------------
-;;;
 (defsubst tinytf-level-number ()
   "Check current level on this line."
   (cond
@@ -1999,8 +1927,6 @@ The point is at start of level."
    ((tinytf-level-p 1) 1)
    ((tinytf-level-p 2) 2)))
 
-;;; ----------------------------------------------------------------------
-;;;
 (defsubst tinytf-block-end ()
   "Return text block end."
   (save-excursion
@@ -2009,8 +1935,6 @@ The point is at start of level."
       (beginning-of-line)
       (1- (point)))))
 
-;;; ----------------------------------------------------------------------
-;;;
 (defsubst tinytf-heading-number-regexp (&optional no-grouping)
   "Return heading number regexp: match \"N.n \" or \"N.n) \".
 If NO-GROUPING is non-nil, the regexp will not have regexp group operator."
@@ -2018,16 +1942,12 @@ If NO-GROUPING is non-nil, the regexp will not have regexp group operator."
       "[0-9]+\\.[0-9.]*[0-9])?[ \t]+"
     "\\([0-9]+\\.[0-9.]*[0-9])?[ \t]+\\)"))
 
-;;; ----------------------------------------------------------------------
-;;;
 (defsubst tinytf-headings-numbered-p ()
   "Check if first heading is numbered."
   (save-excursion
     (ti::pmin)
     (re-search-forward (tinytf-heading-number-regexp) nil t)))
 
-;;; ----------------------------------------------------------------------
-;;;
 (defsubst tinytf-heading-string (&rest levels)
   "Return heading string. \"MAJOR.MINOR \"."
   (let ((str (number-to-string (pop levels))))
@@ -2035,16 +1955,12 @@ If NO-GROUPING is non-nil, the regexp will not have regexp group operator."
       (setq str (concat str "." (number-to-string nbr))))
     (concat str " ")))
 
-;;; ----------------------------------------------------------------------
-;;;
 (defun tinytf-goto-non-space ()
   "Goto first non-whitespace of bol."
   (beginning-of-line)
   (if (re-search-forward "^[ \t]+" (line-end-position) t)
       (goto-char (match-end 0))))
 
-;;; ----------------------------------------------------------------------
-;;;
 (defsubst tinytf-heading-same-p (level heading-regexp)
   "Check if heading LEVEL is identical to HEADING-REGEXP.
 After the regexp there must be non whitespace, which starts the heading
@@ -2060,8 +1976,6 @@ name."
                    ;;  the heading name
                    "[^ \t]")))))
 
-;;; ----------------------------------------------------------------------
-;;;
 (defun tinytf-toc-goto ()
   "Goto Table of contents and return t or to `point-min'."
   (ti::pmin)
@@ -2072,16 +1986,12 @@ name."
 ;;}}}
 ;;{{{ Conversions
 
-;;; ----------------------------------------------------------------------
-;;;
 (defun tinytf-convert-preference-set ()
   "Set HTML conversion preferences."
   (interactive)
   (message "tinytf-convert-preference-set is not yet implemented.")
   (sleep-for 2))
 
-;;; ----------------------------------------------------------------------
-;;;
 (put 'tinytf-convert-view-macro 'lisp-indent-function 0)
 (put 'tinytf-convert-view-macro 'edebug-form-spec '(body))
 (defmacro tinytf-convert-view-macro (&rest body)
@@ -2093,8 +2003,6 @@ name."
               (prin1-to-string file)))
      ,@body))
 
-;;; ----------------------------------------------------------------------
-;;;
 (defun tinytf-convert-view-default ()
   "View last HTML with `browse-url'."
   (interactive)
@@ -2102,22 +2010,16 @@ name."
    ;; (browse-url file)
    (tinyurl-agent-funcall 'url file)))
 
-;;; ----------------------------------------------------------------------
-;;;
 (defun tinytf-convert-view-html-source ()
   "View last HTML with `find-file-other-window'."
   (interactive)
   (tinytf-convert-view-macro
    (find-file-other-window file)))
 
-;;; ----------------------------------------------------------------------
-;;;
 (defsubst tinytf-convert-file-name-html (file)
   "Make FILE.txt FILE.html"
   (concat (file-name-sans-extension file) ".html"))
 
-;;; ----------------------------------------------------------------------
-;;;
 (defun tinytf-convert-buffer-file-name-html-source (buffer)
   "Return filename from where to read plain text.
 For files this should be `buffer-file-name', but for buffer
@@ -2126,8 +2028,6 @@ generated using `ti::temp-file'."
   (or (buffer-file-name buffer)
       (ti::temp-file "tinytf-temp.html" 'temp-dir)))
 
-;;; ----------------------------------------------------------------------
-;;;
 (defun tinytf-convert-html-source (&optional buffer)
   "Return BUFFER's source file name. Default is `current-buffer'.
 See `tinytf--buffer-file-name-html-source-function'"
@@ -2137,8 +2037,6 @@ See `tinytf--buffer-file-name-html-source-function'"
            (current-buffer)))
       (error "TinyTf: HTML source function failed.")))
 
-;;; ----------------------------------------------------------------------
-;;;
 (defun tinytf-convert-html-destinaton (&optional buffer)
   "Return BUFFER's destination file name. Default is `current-buffer'.
 See `tinytf--buffer-file-name-html-destination-function'"
@@ -2152,20 +2050,14 @@ See `tinytf--buffer-file-name-html-destination-function'"
               tinytf--buffer-file-name-html-destination-function)))
     (setq tinytf--file-last-html-generated file)))
 
-;;; ----------------------------------------------------------------------
-;;;
 (defsubst tinytf-file-name-html (file)
   "Make FILE.txt => FILE.html"
   (concat (file-name-sans-extension file) ".html"))
 
-;;; ----------------------------------------------------------------------
-;;;
 (defun tinytf-convert-buffer-file-name-html-destination (buffer)
   "Make buffer's FILE.txt => FILE.html"
   (tinytf-file-name-html (buffer-file-name buffer)))
 
-;;; ----------------------------------------------------------------------
-;;;
 (defsubst tinyperl-convert-binary-t2html ()
   "Return t2html.el full path."
   (let ((bin (get 'tinytf-mode 't2html)))
@@ -2177,8 +2069,6 @@ No t2html.pl available. Run HTML=>Conversion menu re-evaluate\
  \\[tinytf-utility-programs-check-force]")))
     bin))
 
-;;; ----------------------------------------------------------------------
-;;;
 (put 'tinytf-convert-wrapper-macro 'lisp-indent-function 1)
 (put 'tinytf-convert-wrapper-macro 'edebug-form-spec '(body))
 (defmacro tinytf-convert-wrapper-macro (temp &rest body)
@@ -2203,8 +2093,6 @@ Input:
            (write-region (point-min) (point-max) file))))
      ,@body))
 
-;;; ----------------------------------------------------------------------
-;;;
 (defun tinytf-convert-call-process (&optional options process mode)
   "Convert buffer using Perl t2html.pl.
 In order to use this function, `tinytf-utility-programs-check' must
@@ -2301,23 +2189,17 @@ Return list:
 		 (ti::date-standard-date 'minutes)))
 	(list target status)))))
 
-;;; ----------------------------------------------------------------------
-;;;
 (defsubst tinytf-convert-extra-options ()
   "If there is #t2html-* tag, return list of additional options."
   (when (ti::re-search-check "#t2html-")
     '("--Auto-detect")))
 
-;;; ----------------------------------------------------------------------
-;;;
 (defun tinytf-convert-t2html-basic ()
   "Make 1-page HTML."
   (interactive)
   (tinytf-convert-call-process
    (tinytf-convert-extra-options)))
 
-;;; ----------------------------------------------------------------------
-;;;
 (defun tinytf-convert-t2html-frame ()
   "Make HTML with frames using t2html.pl"
   (interactive)
@@ -2326,15 +2208,11 @@ Return list:
     (tinytf-convert-extra-options)
     (list "--html-frame"))))
 
-;;; ----------------------------------------------------------------------
-;;;
 (defun tinytf-convert-t2html-as-is ()
   "Make HTML with frames using t2html.pl"
   (interactive)
   (tinytf-convert-call-process '("--as-is")))
 
-;;; ----------------------------------------------------------------------
-;;;
 (defun tinytf-convert-t2html-link-check (&optional options)
   "Call t2html.pl to check links with OPTIONS."
   (interactive)
@@ -2364,8 +2242,6 @@ Return list:
 	  tinytf--process-compile-html
 	  grep-regexp-alist))))
 
-;;; ----------------------------------------------------------------------
-;;;
 (defun tinytf-convert-t2html-link-check-cached ()
   "Call t2html.pl to check links by using `tinytf--t2html-link-cache-file'."
   (interactive)
@@ -2375,8 +2251,6 @@ Return list:
    (format "--link-check --quiet --Link-cache %s"
            tinytf--t2html-link-cache-file)))
 
-;;; ----------------------------------------------------------------------
-;;;
 (defun tinytf-compile-mode-settings ()
   "Install font lock and additional keybindings for Link check."
   ;; #todo: font-lock
@@ -2384,8 +2258,6 @@ Return list:
     nil ;; not implemented yet
     ))
 
-;;; ----------------------------------------------------------------------
-;;;
 (defun tinytf-convert-htmlize ()
   "Convert buffer using Perl htmlize.el"
   (interactive)
@@ -2416,8 +2288,6 @@ Return list:
 ;;}}}
 ;;{{{ misc:
 
-;;; ----------------------------------------------------------------------
-;;;
 (defun tinytf-utility-programs-check (&optional force verb)
   "Set or disable found utilities (HTML converters). FORCE check.
 The settings will affect the main drop-down menu. If you install
@@ -2466,8 +2336,6 @@ Reference:
      (get sym 'htmlize)
      (get sym 't2html))))
 
-;;; ----------------------------------------------------------------------
-;;;
 (defun tinytf-utility-programs-check-force ()
   "Re-evaluate menu and find new conversion programs.
 The menu items are greyed out if the conversion programs were no
@@ -2479,8 +2347,6 @@ This function calls `tinytf-utility-programs-check' with \\='force."
   (interactive)
   (tinytf-utility-programs-check 'force 'verb))
 
-;;; ----------------------------------------------------------------------
-;;;
 (defun tinytf-fontify-current-buffer-window ()
   "Fontify current buffer's window."
   (let* ((buffer (current-buffer))
@@ -2493,16 +2359,12 @@ This function calls `tinytf-utility-programs-check' with \\='force."
       (font-lock-fontify-region (window-start)
                                 (min (point-max) (window-end))))))
 
-;;; ----------------------------------------------------------------------
-;;;
 (defun tinytf-untabify-buffer ()
   "Untabify whole buffer."
   (interactive "*")
   (when tinytf-mode
     (untabify (point-min) (point-max))))
 
-;;; ----------------------------------------------------------------------
-;;;
 (defun tinytf-column-info ()
   "Return column intepretation."
   (interactive)
@@ -2526,8 +2388,6 @@ This function calls `tinytf-utility-programs-check' with \\='force."
             (throw 'break nil))))))
     ret))
 
-;;; ----------------------------------------------------------------------
-;;;
 (defun tinytf-column-info-display (&optional suppress)
   "Display column info.
 This function displays information about the column and the text
@@ -2554,8 +2414,6 @@ Input:
 ;;}}}
 ;;{{{ headings
 
-;;; ----------------------------------------------------------------------
-;;;
 (defun tinytf-heading-positions (&optional and-heading-names)
   "Read heading sections forward.
 
@@ -2590,8 +2448,6 @@ Return list or nil:
         (push (point-max) list))
     (nreverse list)))
 
-;;; ----------------------------------------------------------------------
-;;;
 (defun tinytf-heading-fix-case-all (&optional confirm verb)
   "Convert all headings to lowercase and capitalize first word.
 If CONFIRM is non-nil ask permission to fix for each heading. VERB."
@@ -2612,8 +2468,6 @@ If CONFIRM is non-nil ask permission to fix for each heading. VERB."
   (if verb
       (message "TinyTf: Case fix done.")))
 
-;;; ----------------------------------------------------------------------
-;;;
 (defun tinytf-heading-fix-case-p ()
   "Check if current heading need case fixing.
 Caller must ensure that current line is heading. Point is moved."
@@ -2629,8 +2483,6 @@ Caller must ensure that current line is heading. Point is moved."
         (let (case-fold-search)
           (looking-at ".*[A-Z]")))))
 
-;;; ----------------------------------------------------------------------
-;;;
 (defun tinytf-heading-fix-case ()
   "Write heading in lowercase and capitalize first word. Move heading forward.
 If current line is not a heading, do nothing.
@@ -2651,8 +2503,6 @@ Return:
         (setq ret t)))
     ret))
 
-;;; ----------------------------------------------------------------------
-;;;
 (defun tinytf-heading-fix-newlines (&optional verb)
   "Search all headings and remove extra newlines. VERB.
 
@@ -2711,8 +2561,6 @@ Return:
     (if (> fix 0)                       ;anything to return?
         fix)))
 
-;;; ----------------------------------------------------------------------
-;;;
 (defun tinytf-heading-fix (&optional verb)
   "Search all headings and convert first letter to uppercase if needed. VERB.
 This function will only chnage the first word in the heading, no
@@ -2737,8 +2585,6 @@ other case conversions are done."
     (if verb
         (message "%s: Fixed %d headings" tinytf--mode-name count))))
 
-;;; ----------------------------------------------------------------------
-;;;
 (defun tinytf-heading-numbering (&optional remove verb)
   "Number heading levels. Old numbering is replaced.
 Optionally REMOVE numbering. VERB."
@@ -2815,8 +2661,6 @@ Optionally REMOVE numbering. VERB."
       (message "%s: %d/%d headings numbered."
                tinytf--mode-name fix count))))
 
-;;; ----------------------------------------------------------------------
-;;;
 (defun tinytf-fix-all (&optional verb)
   "Fix headers, untabify buffer and do other things. VERB.
 
@@ -2869,8 +2713,6 @@ References:
 ;;}}}
 ;;{{{ text: formatting with codes
 
-;;; ----------------------------------------------------------------------
-;;;
 (defun tinytf-paragraph-first-line-indent-fix (col)
   "Make sure the first line in the paragraph start at column COL.
 point must be inside paragraph before calling function."
@@ -2888,8 +2730,6 @@ point must be inside paragraph before calling function."
       (delete-region (point) (line-beginning-position))
       (insert (make-string col ?\ )))))
 
-;;; ----------------------------------------------------------------------
-;;;
 (defun tinytf-move-paragraph-to-column (beg end col &optional msg noask)
   "If region BEG END is big, ask confirmation for COL move with MSG NOASK.
 Return
@@ -2926,8 +2766,6 @@ Return
                           (marker-position beg) (marker-position end))
       (cons beg end))))
 
-;;; ----------------------------------------------------------------------
-;;;
 (tinytf-fmacro-indent-region
  tinytf-indent-region-text
  "Move selected region to STRONG html code position."
@@ -2948,7 +2786,6 @@ Return
  "Move selected region to SAMPLE (example code) html code position."
  12 (format "TinyTf: Sample, column 12"))
 
-;;; ----------------------------------------------------------------------
 
 (tinytf-fmacro-indent-paragraph
  tinytf-indent-paragraph-zero
@@ -3035,8 +2872,6 @@ Return
  (progn
    (tinytf-forward-paragraph)))
 
-;;; ----------------------------------------------------------------------
-;;;
 (tinytf-fmacro-mark-word
  tinytf-mark-word-sample
  "Put `SAMP' code around word and move forward." ?` ?' )
@@ -3057,8 +2892,6 @@ Return
  tinytf-mark-word-small
  "Put `SMALL' code around word and move forward." ?= )
 
-;;; ----------------------------------------------------------------------
-;;;
 (defun tinytf-unmark-word ()
   "Remove `STRONG' and `EMP' mark from word and move forward."
   (interactive "*")
@@ -3094,8 +2927,6 @@ Return
           (skip-chars-forward word-skip))
         (skip-chars-forward " (){}<>,.;:!?\"\'\n\r\t\f")))))
 
-;;; ----------------------------------------------------------------------
-;;;
 (defun tinytf-mark-br-line (&optional unmark verb)
   "Mark current line with symbolic <BR>. Optionally UNMARK. VERB."
   (interactive "*P")
@@ -3121,8 +2952,6 @@ Return
     (forward-line 1)
     (skip-chars-forward " \t\r\n")))
 
-;;; ----------------------------------------------------------------------
-;;;
 (defun tinytf-mark-br-paragraph (&optional unmark)
   "Mark current paragraph with symbolic <BR> codes. Optionally UNMARK."
   (interactive "*P")
@@ -3141,8 +2970,6 @@ Return
 ;;}}}
 ;;{{{ Formatting, misc
 
-;;; ----------------------------------------------------------------------
-;;;
 (defun tinytf-bullet-format ()
   "Reformat following bullet into Technical text bullet.
 Point sits somewhere in current bullet. Bullets accepted are:
@@ -3205,8 +3032,6 @@ mark. In all other cases `o' is used."
 ;;}}}
 ;;{{{ movement
 
-;;; ----------------------------------------------------------------------
-;;;
 (defun tinytf-backward-paragraph ()
   "Like `tinytf-forward-paragraph' but go backward."
   (interactive)
@@ -3216,8 +3041,6 @@ mark. In all other cases `o' is used."
    (skip-chars-forward " \t\r\n")
    (tinytf-goto-non-space)))
 
-;;; ----------------------------------------------------------------------
-;;;
 (defun tinytf-forward-paragraph ()
   "Like `forward-paragraph' but keep cursor at the beginning of text."
   (interactive)
@@ -3226,16 +3049,12 @@ mark. In all other cases `o' is used."
    (skip-chars-forward " \t\r\n")
    (tinytf-goto-non-space)))
 
-;;; ----------------------------------------------------------------------
-;;;
 (defun tinytf-heading-start ()
   "Goto first heading, excluding TOC heading."
   (interactive)
   (when (tinytf-toc-goto)
     (tinytf-heading-forward-0)))
 
-;;; ----------------------------------------------------------------------
-;;;
 (defun tinytf-forward (level &optional back any)
   "Go to next heading. Optionally search LEVEL or BACK or ANY level.
 
@@ -3263,8 +3082,6 @@ Return:
         (when (re-search-forward re nil t)
           (backward-char 1) (point)))))))
 
-;;; ----------------------------------------------------------------------
-;;;
 (defun tinytf-heading-forward-0 ()
   "Forward."
   (interactive)
@@ -3298,8 +3115,6 @@ Return:
 ;;}}}
 ;;{{{ outline control: show/hide
 
-;;; ----------------------------------------------------------------------
-;;;
 (defun tinytf-hide-region (beg end &optional show)
   "Hide region BEG END with selective display. Optionally SHOW.
 Point is END after function finishes."
@@ -3310,8 +3125,6 @@ Point is END after function finishes."
     (set-buffer-modified-p nil)
     (goto-char (max beg end))))
 
-;;; ----------------------------------------------------------------------
-;;;
 (defun tinytf-mouse-context-sensitive (event)
   "If `mouse-point' points indent 0 or 1 line, then hide/show level. EVENT.
 In other places call original function."
@@ -3326,16 +3139,12 @@ In other places call original function."
    (t
     (ti::compat-mouse-call-original 'tinytf-mode event))))
 
-;;; ----------------------------------------------------------------------
-;;;
 (defun tinytf-show-buffer ()
   "Remove selective display codes from buffer."
   (interactive)
   (save-excursion
     (tinytf-hide-region (point-min) (point-max) 'show)))
 
-;;; ----------------------------------------------------------------------
-;;;
 (defun tinytf-hide-buffer ()
   "Hide whole buffer."
   (interactive)
@@ -3352,8 +3161,6 @@ In other places call original function."
     (goto-char point)
     (goto-char (line-beginning-position))))
 
-;;; ----------------------------------------------------------------------
-;;;
 (defun tinytf-show-toggle ()
   "Open/close level 1. Does't touch level 0."
   (interactive)
@@ -3364,15 +3171,11 @@ In other places call original function."
     (goto-char point)
     (tinytf-goto-non-space)))
 
-;;; ----------------------------------------------------------------------
-;;;
 (defun tinytf-show ()
   "Show current level."
   (interactive)
   (tinytf-hide 'show))
 
-;;; ----------------------------------------------------------------------
-;;;
 (defun tinytf-hide (&optional show)
   "Hide current level. Optionally SHOW."
   (interactive "P")
@@ -3404,8 +3207,6 @@ In other places call original function."
 ;;}}}
 ;;{{{ misc: toc, exit
 
-;;; ----------------------------------------------------------------------
-;;;
 (defun tinytf-toc-p ()
   "Check if there is heading \"Table of contents\".
 Return:
@@ -3433,15 +3234,11 @@ Return:
         (setq end (point))
         (cons beg end)))))
 
-;;; ----------------------------------------------------------------------
-;;;
 (defun tinytf-toc-mouse (event)
   "Create heading x-popup with mouse EVENT."
   (interactive "e")
   (tinytf-toc event))
 
-;;; ----------------------------------------------------------------------
-;;;
 (defun tinytf-toc-occur ()
   "Generate Heading  occur menu."
   (interactive)
@@ -3452,8 +3249,6 @@ Return:
           (goto-char (cdr toc))))
     (occur "^[^ \t\r\n<#]\\|^    [^ \t\r\n]")))
 
-;;; ----------------------------------------------------------------------
-;;;
 (defun tinytf-toc-insert-list (list)
   "Insert list of Table of Contents strings in LIST."
   (dolist (elt list)
@@ -3464,8 +3259,6 @@ Return:
   ;; Final newline
   (insert "\n"))
 
-;;; ----------------------------------------------------------------------
-;;;
 (defun tinytf-toc (&optional arg verb)
   "Create table of contents.
 If there is heading level 1 whose name is \"Table of Contents\",
@@ -3579,8 +3372,6 @@ VERB enables verbose messages."
     (if verb
         (message "TinyTf: TOC generated."))))
 
-;;; ----------------------------------------------------------------------
-;;;
 (defun tinytf-exit ()
   "Run `tinytf-fix-all' and exit mode."
   (interactive)
