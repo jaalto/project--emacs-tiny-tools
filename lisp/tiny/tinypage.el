@@ -2,14 +2,10 @@
 
 ;; This file is not part of Emacs
 
-;;{{{ Id
-
 ;; Copyright (C)    1996-2024 Jari Aalto
 ;; Keywords:        tools
 ;; Author:          Jari Aalto
 ;; Maintainer:      Jari Aalto
-;;
-;; Look at the code with folding.el.
 
 ;; COPYRIGHT NOTICE
 ;;
@@ -28,16 +24,14 @@
 ;;
 ;; Visit <http://www.gnu.org/copyleft/gpl.html> for more information
 
-;;}}}
-;;{{{ Install
+;;; Install
 
-;; ....................................................... &t-install ...
-;;  Put this file on your Emacs-Lisp `load-path', add following into your
+;;  Put this file on your Emacs-Lisp `load-path' and add following into your
 ;;  ~/.emacs startup file
 ;;
 ;;      (require 'tinypage)
 ;;
-;;  or use this; your .emacs loads quicker. Preferred.
+;;  or use this; your ~/.emacs loads quicker. Preferred.
 ;;
 ;;      (global-set-key "\C-cmp" 'tinypage-mode)   ;; "m" for minor modes
 ;;      (autoload 'tinypage-mode "tinypage" "" t)
@@ -51,11 +45,6 @@
 ;;      M-x tinypage-mode
 ;;      C-h m
 
-;;}}}
-
-;;{{{ Documentation
-
-;; ..................................................... &t-commentary ...
 ;;; Commentary:
 
 ;;  Preface, Jun 1996
@@ -197,13 +186,11 @@
 ;;      might take considerable time. If you improve the renumbering, plese
 ;;      send a patch.
 
-;;}}}
-
 ;;; Change Log:
 
 ;;; Code:
 
-;;{{{ setup: require
+;;; Setup: require
 
 (require 'tinylibm)
 (require 'easymenu)
@@ -229,16 +216,14 @@ tinypage: ** you need XEmacs overlay.el library.
         o   Shows popup in X to jump to headings
         o   Create table of contents.")
 
-;;}}}
-;;{{{ setup: private
+;;; Setup: private
 
 (defcustom tinypage--load-hook nil
   "*Hook that is run when package is loaded."
   :type 'hook
   :group 'TinyPage)
 
-;;}}}
-;;{{{ setup: private variables
+;;; Setup: private variables
 
 (defvar tinypage--post-command-wakeup-counter nil
   "Updated by program.")
@@ -248,15 +233,14 @@ tinypage: ** you need XEmacs overlay.el library.
 (defvar tinypage--buffer-toc "*toc*"
   "Where to create index.")
 
-;;}}}
-;;{{{ setup: public, user configurable
+;;; Setup: public, user configurable
 
 (defcustom tinypage--register ?p
   "*Register used for clipboard."
   :type  'character
   :group 'TinyPage)
 
-;;; This is _not_ one char "^L", it is two chars "^" + "L"
+;; This is not one char "^L", it is two chars "^" + "L"
 
 (defcustom tinypage--mode-name-string " ^L"
   "*Minor mode name. User variable."
@@ -320,8 +304,7 @@ section numbers won't do:
   :type 'integer
   :group 'TinyPage)
 
-;;}}}
-;;{{{ Minor Mode
+;;; Minor Mode
 
 ;;;###autoload (autoload 'tinypage-mode          "tinypage" "" t)
 ;;;###autoload (autoload 'turn-on-tinypage-mode  "tinypage" "" t)
@@ -335,11 +318,11 @@ section numbers won't do:
 
 (eval-and-compile
 
-;;; Prefix keys is "\" by default: this one
-;;; was nicely non-shifted and near HP-UX return key. You can Change it
-;;; prior loading the package with (setq tinypage--pref
+;; Prefix keys is "\" by default: this one
+;; was nicely non-shifted and near HP-UX return key. You can Change it
+;; prior loading the package with (setq tinypage--pref
 
-  (ti::macrof-minor-mode-wizard
+(ti::macrof-minor-mode-wizard
    "tinypage-" " ^L" "\\" "Tpage" 'TinyPage "tinypage--" ;1-6
 
    "Paged minor mode. This mode allows you to handle ^L delimited
@@ -458,8 +441,7 @@ Mode description:
      (define-key   map [(control prior)] 'scroll-down)
      (define-key   map [(control next)]   'scroll-up))))
 
-;;}}}
-;;{{{ misc, engine funcs
+;;; Misc, engine funcs
 
 (defun tinypage-modeline ()
   "Update modeline information."
@@ -604,8 +586,7 @@ Return:
       ;;  something done
       t))))
 
-;;}}}
-;;{{{ application functions
+;;; Application functions
 
 (defun tinypage-renumber-level-forward (&optional verb)
   "Renumber current level starting from current line. VERB.
@@ -777,8 +758,7 @@ Return:
   (interactive)
   (occur (nth 0 tinypage--renumber-format)))
 
-;;}}}
-;;{{{ interactive funcs
+;;; Interactive funcs
 
 ;;;###autoload
 (defun tinypage-region-action (act &optional verb)
@@ -873,7 +853,7 @@ Optionally BEFORE with MSG and VERB."
         (message "No more page marks."))
     ret))
 
-;;}}}
+;;; Provide
 
 (add-hook 'tinypage--mode-define-keys-hook 'tinypage-mode-define-keys)
 
