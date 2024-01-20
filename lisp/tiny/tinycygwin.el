@@ -1,5 +1,3 @@
-;; -*- enable-local-variables: :all;  -*-
-
 ;;; tinycygwin.el --- Cygwin utilities (bug reports, administrative tasks).
 
 ;;{{{ Id
