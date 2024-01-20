@@ -1,5 +1,3 @@
-;; -*- enable-local-variables: :all;  -*-
-
 ;;; tinydired.el --- Dired enchancements. Backgroud Ange ftp support
 
 ;; This file is not part of Emacs
