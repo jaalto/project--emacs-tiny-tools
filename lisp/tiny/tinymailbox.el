@@ -1,5 +1,3 @@
-;; -*- enable-local-variables: :all;  -*-
-
 ;;; tinymailbox.el --- Berkeley style aka std. mailbox browsing minor mode
 
 ;; This file is not part of Emacs
