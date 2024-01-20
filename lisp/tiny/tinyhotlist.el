@@ -53,7 +53,7 @@
 ;;      ;;  for windowed system. In XEmacs, use event `button3'.
 ;;      (global-set-key [(control shift mouse-3)] 'tinyhotlist-control)
 ;;
-;;      ;;  for non-windowed, close to C-x b , switch-to-buffer
+;;      ;;  for non-windowed, close to C-x b aka `switch-to-buffer'
 ;;      (global-set-key "\C-cb" 'tinyhotlist-control-kbd)
 ;;
 ;; Before you can use hot list, read the documentation of function
@@ -71,70 +71,80 @@
 
 ;;  Preface, may 1995
 ;;
-;;      There is excellent utility 'msb.el', but when it comes to having
-;;      most important files at hand, It needs some companion with it. An
-;;      emacs session can easily have 20 C++ files, user may start news
-;;      while the compile it going on and try some lisp code found from the
-;;      gnu.emacs.help articles, load couple of emacs configuration files
-;;      for editing and then realize that there is mail coming, because
-;;      some biff utility tells so. User switches to mail reader and starts
-;;      reading the latest messages... within short period of time emacs is
-;;      full of buffers and to use MSB to navigate through them all may be
-;;      get one frustrated: "Where was that buffer again, do I need to step
-;;      3 panes before I can see that file...?"
+;;      There was (at a time in 90's) an excellent utility called
+;;      `msb.el', but when it come to having the most important files
+;;      at hand, it needed some companionship. An Emacs session can
+;;      easily have multitude of C++ files. A user may start reading
+;;      the news while the compilation is ongoing, try some Lisp code
+;;      found in Internet discussion forums, load a couple of Emacs
+;;      configuration files, and then realize that there is mail
+;;      coming because some utility tells them so. The user switches
+;;      to the mail reader and starts reading the latest messages.
+;;      Within a short period, Emacs is full of buffers, and using
+;;      `msb.el' to navigate through panes may be frustrating: 'Where
+;;      was that buffer again? Do I need to step through three panes
+;;      before I can see that file?'
 ;;
-;;      The navigation is especially problem if user is working only with
-;;      handful of source files actively, while he may still have 40+ files
-;;      loaded.
+;;      Navigation was a little problematic if the user was working
+;;      only with a handful of source files actively, while they may
+;;      still have 40+ other bufers (the `msb.el' listed them all).
 ;;
-;;      What would help the situation? A simple hot list for my most used
-;;      files, where one can put and remove items very easily. No more
-;;      searching like in msb.el.
+;;      What would help the situation? A simple hot list for the
+;;      most-used files, where one can put and remove items very
+;;      easily. No more searching like in `msb.el'.
 ;;
-;;      This package does not intend to replace `msb', it's superb in class
-;;      of its own, but there may be also need for a hot list, because the
-;;      most used files page in `msb' changes dynamically whenever buffers
-;;      are changed. Hot list in the other hand stays the same from session
-;;      to session.
+;;      This package does not intend to replace 'msb.el'; it's very
+;;      good in its class, but there may also be a need for a hot list
+;;      because the most-used files page in 'msb.el' changes
+;;      dynamically whenever buffers are changed. The hot list, on the
+;;      other hand, stays the same from session to session.
 ;;
-;;  Overview of features
+;;  An overview of features
 ;;
-;;      o   Provides pop-up menu where you can add and remove current buffer:
-;;          "most important work file list". In non-windowed system,
-;;          standard completion feature is used instead of pop-up menu.
-;;      o   Any persistent files can be kept in hot list, even ange-ftp files or
-;;          dired buffers.
+;;      o   Provides a pop-up menu where you can add and remove the
+;;          current buffer, acting as the 'most important work file
+;;          list.' In a non-windowed system, the standard completion
+;;          feature is used instead of a pop-up menu.
+;;
+;;      o   The hot list can be saved and read on startup. Files persist
+;;          in in hot list.
+;;
 ;;      o   Hot list can be saved and read on startup.
-;;      o   This is not "last visited files" list, but persistent list of
-;;          files. When you select item from hot list, the file is displayed
-;;          (if it is in Emacs) or loaded (by using ange-ftp if necessary).
+;;
+;;      o   This is not a 'last visited files' list but a persistent
+;;          list of files. When you select an item from the hot list,
+;;          the file is displayed (if it is in Emacs) or loaded (using
+;;          ange-ftp if necessary).
 ;;
 ;;  How to use the hotlist
 ;;
-;;      When you load this package, it defines hot list cache to store the
-;;      items. The list will be empty at first, but after you
-;;      have added an entry to it, you can display the hot list. To add
-;;      or remove entries from hot list, is explained in function:
+;;      When you load this package, it defines a hot list cache to
+;;      store the items. The list will be empty at first, but after
+;;      you have added an entry to it, you can display the hot list.
+;;      The process of adding or removing entries from the hot list is
+;;      explained in the function:
 ;;
 ;;          C-h f tinyhotlist-control
 ;;
-;;      If you use add and remove commands often, it might be useful to
-;;      to define some custom key bindings. The alternative way is to use
-;;      prefix arguments to functions `tinyhotlist-control'
+;;      If you frequently use add and remove commands, it might be
+;;      useful to define some custom key bindings. An alternative
+;;      approach is to use prefix arguments with the
+;;      `tinyhotlist-control' functions.
 ;;
 ;;          (global-set-key [(shift f3)]   'tinyhotlist-add)
 ;;          (global-set-key [(control f3)] 'tinyhotlist-remove)
 ;;
-;;      In non-windowed environment hot list is is managed through completion menu.
-;;      Admittedly, this is not as nice as the pop-up menu.,
-;;      To use keyboard, use function:
+;;      In a non-windowed environment, the hot list is managed through
+;;      the completion menu. Admittedly, this is not as nice as the
+;;      pop-up menu. To use the keyboard, use the function:
 ;;
 ;;          tinyhotlist-control-kbd
 ;;
-;;      Here is an example of the displayed hot list in pop-up. The second
-;;      string to the right is abbreviation name of the directory, e.g. `~ftp1'
-;;      is a short name for /user@site.com:~user/project/this/. The `txt' is
-;;      short name for $HOME/doc/txt/
+;;      Here is an example of the displayed hot list in a pop-up. The
+;;      second string to the right is the abbreviation name of the
+;;      directory; for example, `~ftp1'' is a short name for
+;;      `/user@site.com:~user/project/this/'. The `txt' is a short name
+;;      for `$HOME/doc/txt/'.
 ;;
 ;;          +-------------------+
 ;;          |hotlist            |
@@ -151,37 +161,40 @@
 ;;          |remote.cc    ~ftp2 |
 ;;          +-------------------+
 ;;
-;;      Note about the pop-up display: The font used in pop-up may not be
-;;      proportionally spaced, like Courier, so the entries may therefore
-;;      show as ragged. That is, the directory names are not nicely lined
-;;      up.
+;;      Note about the pop-up display: The font used in the pop-up may
+;;      not be proportionally spaced, like Courier, so the entries may
+;;      appear ragged. That is, the directory names may not be nicely
+;;      lined up.
 ;;
 ;;  Shortening long filenames
 ;;
-;;      The typical menu item is quite long, because there is buffer name
-;;      and filename part. The default rule shortens the home directory
-;;      names to "" but if your file is elsewhere, you have to modify the
-;;      `tinyhotlist--abbreviate-file-name-table'. There is examples how to use it
-;;      at the end of source file. Like:
+;;      The typical menu item is quite long, as it includes both the
+;;      buffer name and filename. The default rule shortens home
+;;      directory names to "", but if your file is located elsewhere,
+;;      you have to modify the
+;;      `tinyhotlist--abbreviate-file-name-table'. Examples of how to
+;;      use it are provided at the end of the source file, like:
 ;;
 ;;          /user@site.com:~user/project/this/  --> ~ftp1
 ;;
-;;      If you make changes to this variable after the hot list has been
-;;      made, the new abbreviations will take effect on at creation of new
-;;      items. To rebuild everything from defaults (this destroys you
-;;      previous content), call function `tinyhotlist-build-default-hotlist'.
+;;      If you make changes to this variable after the hot list has
+;;      been created, the new abbreviations will take effect upon the
+;;      creation of new items. To rebuild everything from defaults
+;;      (this destroys your previous content), call the function
+;;      `tinyhotlist-build-default-hotlist'.
 ;;
 ;;  Hooks: saving hot list after each cache update
 ;;
-;;      The buffers are stored into variable `tinyhotlist--cache' and there
-;;      is two hooks that run after the entry is deleted or added to the
-;;      cache. The hooks are `tinyhotlist--add-hook' and
-;;      `tinyhotlist--remove-hook'. They contain default value
-;;      `tinyhotlist-save-hotlist' which updates the cache on disk after
-;;      each change. You can set these hooks to nil if you want to manually
-;;      control when to save cache. (Maybe you load BASE cache every time
-;;      and modify it during Emacs session, but you don't want to save
-;;      this "session" hot list).
+;;      The buffers are stored in the variable
+;;      `tinyhotlist--cache' and there are two hooks that run
+;;      after an entry is deleted or added to the cache. The hooks
+;;      are `tinyhotlist--add-hook' and `tinyhotlist--remove-hook'
+;;      containing the default value `tinyhotlist-save-hotlist'
+;;      which updates the cache on disk after each change. You can
+;;      set these hooks to nil if you want to manually control
+;;      when to save the cache. For instance, you may load the
+;;      base cache every time and modify it during an Emacs
+;;      session but don't want to save this "session" hot list.
 ;;
 ;;          (add-hook 'tinyhotlist--load-hook 'my-tinyhotlist-load-hook)
 ;;
@@ -206,58 +219,48 @@
 ;;
 ;;  An example
 ;;
-;;      Here is complete example setup how you could configure this package.
+;;      Here is a complete example setup of how you could configure this package:
 ;;
 ;;          (autoload  'tinyhotlist-control "tinyhotlist" "" t)
+;;
 ;;          (ti::add-hooks 'tinyhotlist--load-hook
-;;               '(tinyhotlist-load-hotlist my-tinyhotlist-init))
+;;           '(tinyhotlist-load-hotlist my-tinyhotlist-init))
 ;;
 ;;          (defun my-tinyhotlist-init ()
 ;;            "Sets defaults for hotlist"
-;;            (setq tinyhotlist--default-function       'my-tinyhotlist-defaults)
+;;            (setq tinyhotlist--default-function 'my-tinyhotlist-defaults)
 ;;            (global-set-key [(control shift mouse-3)] 'tinyhotlist-control))
 ;;
-;;            (defconst tinyhotlist--abbreviate-file-name-table
+;;           (defconst tinyhotlist--abbreviate-file-name-table
+;;             (list
+;;              ;; The substitution order must have the LONGEST
+;;              ;; substitution first.
+;;              ;;
+;;              ;; Shorten ange ftp references
 ;;              (list
-;;               ;;   Remember: the substitution order must be _BIGGEST_
-;;               ;;   substitution first.
-;;               ;;
-;;               ;;  Shorten ange ftp references
-;;               (list
-;;               "/foo@example.com:/home/foo"
-;;               "~foo")
-;;
-;;               (list txt    "~t")
-;;               (list wtxt   "~wt")
-;;               (list elisp  "")   ;; and wont show this either
-;;               (list h        ""))))   ;; don't display the home
+;;              "/foo@example.com:/home/foo"
+;;              "~foo")
+;;              (list txt "~t")
+;;              (list wtxt "~wt")
+;;              (list elisp "")   ;; and wont show this either
+;;              (list h "")))     ;; don't display the home
 ;;
 ;;          (defconst tinyhotlist--default-regexp
 ;;            (concat
 ;;             "^RMAIL$\\|scratc\\|diff\\|buffer menu\\|diff\\|Messages"
-;;
 ;;             ;; Procmail
 ;;             "\\|procmailrc\\|pm-.*\\(hdr\\|log\\|rc\\|txt\\)"
-;;
 ;;             ;; text
 ;;             "\\|elisp.txt\\|ssjaaa.txt"
-;;
 ;;             ;; perl
 ;;             "\\|\\.pls"
-;;
 ;;             "\\|.mak"
-;;
 ;;             ;; emacs project files
 ;;             "\\|emacrs\\|funcs.ja.el\\|tinylibm.el\\|tinylib.el"
-;;
 ;;             ;;  C++ project files
 ;;             "\\|wmpmea.*cc"
-;;
 ;;             ;; Gnus
 ;;             "\\|article\\|newsgroup\\|Summary\\|MIME-out"))
-;;
-;;            ;; ^^^ ^^^ ^^^ ^^^ ^^^ ^^^ ^^^ ^^^ ^^^ ^^^ ^^^ ^^^ ^^^ window-system ^ ^
-;;            )
 
 ;;}}}
 
@@ -439,9 +442,9 @@ Please look at the many examples that are in the end of tinyhotlist.el"
 The buffer is loaded from disk if it does not exist in Emacs.
 NO-CONFIRM suppresses confirm of loading ange-ftp files."
   (let (buffer
-	file
-	elt
-	ptr)
+        file
+        elt
+        ptr)
     (setq elt (assoc item tinyhotlist--cache))
     (setq buffer (car elt)
           file   (cdr elt))
@@ -449,15 +452,15 @@ NO-CONFIRM suppresses confirm of loading ange-ftp files."
      (file
       ;; Find ange-ftp dired buffer
       (when (string-match "@.*:" file)
-	(catch 'break
+        (catch 'break
           (dolist (buffer (buffer-list))
             (with-current-buffer buffer
               (when (and (eq major-mode 'dired-mode)
-			 (string=
+                         (string=
                           file
                           (symbol-value 'dired-directory)))
-		(setq ptr (current-buffer))
-		(throw 'break nil))))))
+                (setq ptr (current-buffer))
+                (throw 'break nil))))))
       (setq ptr
             (or ptr
                 (get-file-buffer file)
@@ -493,19 +496,19 @@ NO-CONFIRM suppresses confirm of loading ange-ftp files."
 If RESTORE is passed, the convert abbreviated FILE into absolute path
 using `tinyhotlist--abbreviate-file-name-table'."
   (let (case-fold-search
-	str
-	substitute
-	match
-	replace)
+        str
+        substitute
+        match
+        replace)
     (catch 'break
       (dolist (elt tinyhotlist--abbreviate-file-name-table)
-	(setq str (nth 0 elt)  substitute (nth 1 elt))
-	(setq match (if restore substitute str)
+        (setq str (nth 0 elt)  substitute (nth 1 elt))
+        (setq match (if restore substitute str)
               replace
               (if restore
                   (file-name-as-directory str)
-		substitute))
-	(when (string-match (concat "^" (regexp-quote match)) file)
+                substitute))
+        (when (string-match (concat "^" (regexp-quote match)) file)
           (setq file (ti::replace-match 0 replace file))
           (throw 'break nil))))
     file))
@@ -518,9 +521,9 @@ using `tinyhotlist--abbreviate-file-name-table'."
 Returns:
    t or nil if added."
   (let (buffer-file
-	ptr
-	exist
-	ret)
+        ptr
+        exist
+        ret)
     (dolist (buffer (ti::list-make buffer))
       ;;  We have to check if it exists already...
       ;;  this is a  bit inefficent way to check list, but because
@@ -587,8 +590,8 @@ Return:
 
  nil t   if removed."
   (let (list
-	func
-	ret)
+        func
+        ret)
     (cond
      ((eq type 'menu-item)
       (when (and (stringp arg)
@@ -672,8 +675,8 @@ Return:
  nil t"
   (interactive "P")
   (let ((file tinyhotlist--hotlist-file)
-	buffer
-	list)
+        buffer
+        list)
     (cond
      ;; ......................................................... load ...
      ((null save)
@@ -724,14 +727,14 @@ Return:
 Return:
  buffer or nil"
   (let ((menu (ti::list-to-assoc-menu list))
-	(def  (car-safe tinyhotlist--history))
-	ret)
+        (def  (car-safe tinyhotlist--history))
+        ret)
     (setq ret (completing-read "hot item: "
-			       menu
-			       nil
-			       t
-			       def
-			       'tinyhotlist--history))
+                               menu
+                               nil
+                               t
+                               def
+                               'tinyhotlist--history))
     (if (ti::nil-p ret)                 ;really selected ?
         nil
       ret)))
@@ -785,13 +788,13 @@ Optional ARG can be:
   3 x \\[universal-argument]       load hotlist."
   (interactive "e\nP")
   (let ((buffer (buffer-name))
-	(menu   (or tinyhotlist--cache
-		    ;;  See if there is any buffers matching user's
-		    ;;  regexp to make the initial hotlist.
-		    (and tinyhotlist--default-regexp
-			 (tinyhotlist-set-defaults)
-			 tinyhotlist--cache)))
-	ret)
+        (menu   (or tinyhotlist--cache
+                    ;;  See if there is any buffers matching user's
+                    ;;  regexp to make the initial hotlist.
+                    (and tinyhotlist--default-regexp
+                         (tinyhotlist-set-defaults)
+                         tinyhotlist--cache)))
+        ret)
     (cond
      ;; ...................................................... display ...
      ((null arg)
