@@ -1,5 +1,3 @@
-;; -*- enable-local-variables: :all;  -*-
-
 ;;; tinytf.el --- Document layout tool for (T)echnical text (F)ormat
 
 ;; This file is not part of Emacs
