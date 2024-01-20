@@ -1,5 +1,3 @@
-;; -*- enable-local-variables: :all;  -*-
-
 ;;; tiny-admin-util.el --- Tiny Tools administrative utilities for maintainer
 
 ;; This file is not part of Emacs
