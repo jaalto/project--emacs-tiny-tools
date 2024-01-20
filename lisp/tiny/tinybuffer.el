@@ -1,5 +1,3 @@
-;; -*- enable-local-variables: :all;  -*-
-
 ;;; tinybuffer.el --- Change buffers in current window.
 
 ;; Copyright (C) 1996-2024 Jari Aalto
