@@ -24,50 +24,51 @@
 
 ;;; Install
 
-;;  Put this file on your Emacs-Lisp `load-path', add following into your
-;;  ~/.emacs startup file. This must be the very first entry before
-;;  any keybindings take in effect.
+;;  Put this file on your Emacs-Lisp `load-path', add following into
+;;  your ~/.emacs startup file. This must be the very first entry
+;;  before any keybindings take in effect.
 ;;
 ;;      (require 'tinypad)
 ;;
 ;;  You can also use the preferred way: autoload
 ;;
 ;;      (autoload 'tinypad-mode "tinypad t t)
-;;      ;;  Put all minor mode activations below C-c m map
-;;      ;;  n)otepad emulation mode
-;;      ;;
 ;;      (global-set-key "\C-cmn"  'tinypad-mode)
 
 ;;; Commentary:
 
 ;;  Preface, Aug 1997
 ;;
-;;      In gnu newsgroup there was a request that a class had been used to
-;;      using Windows notepad and in order to make the transition to Emacs
-;;      smooth, Emacs should have some notepad emulation mode so that
-;;      pupils wouldnn't get lost completely in new envinronment. And here
-;;      is it, a small notepad emulation. It installs one new menu to Emacs
-;;      menu bar which is arranged exactly like the Windows notepad. I have
-;;      included only the commands that are directly available from inside
-;;      emacs and e.g. 'printer setup' is something that is not found there.
-;;      But in order to be complete emulation, all the choices as in normal
-;;      notepad are available.
+;;      In a newsgroup, there was a request from a class accustomed to
+;;      using Windows Notepad. To facilitate a smooth transition to
+;;      Emacs, it was suggested that Emacs should have a Notepad
+;;      emulation mode. This way, pupils wouldn't feel completely lost
+;;      in the new environment. And here it is—an emulation of
+;;      Notepad. It installs a new menu in the Emacs menu bar arranged
+;;      exactly like the one in Windows Notepad. I have included only
+;;      the commands that are directly available from inside Emacs;
+;;      for example, 'printer setup' is not found there. However, to
+;;      be a complete emulation, all the choices available in the
+;;      normal Notepad are implemented.
 ;;
 ;;  Overview of features
 ;;
-;;      o   Minor mode, but once turned on, occupies every emacs buffer
-;;          until turned off.
-;;      o   Adds menu 'TinyPad' which contains identical
-;;          menu definitions that are found from Winbdows notepad
-;;      o   The keybindings use `Meta' as the Alt key to access the
+;;      o   Provides a minor mode, once turned on, occupies every
+;;          Emacs buffer until turned off. It adds a menu called
+;;          'TinyPad,' which contains identical menu definitions as
+;;          those found in Windows Notepad.
+;;
+;;      o   The keybindings use `Meta' as the `Alt' key to access the
 ;;          menu items, so you may need to configure your keyboard
-;;          with 'xmodmap' in order to get 'Alt' key produce `Meta'
-;;      o   Windows specific commands are not emulated, like
-;;          `Print' 'Setup'.
-;;      o   Following famous windows shortcut keys are not
-;;          Emulated; I was lazy and didn't try to reorganize the
-;;          Emacs keys. Erm, for now you have to stick to Emacs
-;;          equivalents and live without these.
+;;          with `xmodmap' to get the `Alt' key to produce Meta.'
+;;
+;;      o   Windows-specific commands are not emulated, such as
+;;          `Print' and `Setup.'
+;;
+;;      o   The following famous Windows shortcut keys are not
+;;          emulated. I was lazy and didn't try to reorganize the
+;;          Emacs keys. For now, you have to stick to Emacs
+;;          basic shortcuts and live without these:
 ;;
 ;;          Undo   in   Control-z
 ;;          Cut    in   Control-x
@@ -76,16 +77,16 @@
 ;;
 ;;  Code note
 ;;
-;;      Why on earth I made this package to use "global" minor mode?
-;;      I can't remember the reason. A simple menubar entry may have
-;;      sufficed just fine. Oh, it was that remaping the bindings.
-;;      You see, when minor mode is turned on, it conquers the mappings
-;;      underneath.
+;;      Why on earth did I make this package use a 'global' minor
+;;      mode? I can't remember the reason. A simple menubar entry
+;;      might have sufficed just fine. Oh, it was that remapping of
+;;      the bindings. You see, when the minor mode is turned on, it
+;;      conquers the mappings underneath.
 ;;
-;;      [1997-10-23] Hey, I just saw pointer to package `Map-zxcv.el' which
-;;      takes care of mapping the missing zxcv, so I don't have to bother
-;;      with those here. Nice. You can ask it from Kim F. Storm
-;;      <storm@olicom.dk>
+;;      [1997-10-23] Hey, I just saw a pointer to the package
+;;      `Map-zxcv.el' which takes care of mapping the missing zxcv, so
+;;      I don't have to bother with those here. Nice. You can ask for
+;;      it from Kim F. Storm storm@olicom.dk.
 
 ;;; Change Log:
 
@@ -256,7 +257,7 @@ Mode description:
   (unless (get 'tinypad-mode 'self-call)
     (run-hooks 'tinypad--mode-define-keys-hook))
   (let ((i 0)
-	tinypad--mode-define-keys-hook)
+        tinypad--mode-define-keys-hook)
     (unwind-protect
         (progn
           ;;  Raise the flag to prevent calling us
