@@ -1,5 +1,3 @@
-;; -*- enable-local-variables: :all;  -*-
-
 ;;; tinypath.el --- Manage Emacs startup dynamically
 
 ;; This file is not part of Emacs
