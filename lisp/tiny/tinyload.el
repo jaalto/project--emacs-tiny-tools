@@ -633,7 +633,6 @@ This prevents invoking multiple load processes.")
 (eval-and-compile (ti::macrof-debug-standard "tinyload" "--"))
 
 ;;; --------------------------------------------------------- &install ---
-;;;
 ;;;###autoload
 (defun tinyload-install (&optional remove)
   "Install package or REMOVE.
@@ -681,16 +680,12 @@ the list pointer to 0."
   (setq tinyload--process-busy-p nil)
   tinyload--timer-elt)
 
-;;; ----------------------------------------------------------------------
-;;;
 (defun tinyload-cancel ()
   "Kill the loaded process and stop loading.
 To start loader process, call \\[tinyload-install]."
   (interactive)
   (tinyload-install 'remove))
 
-;;; ----------------------------------------------------------------------
-;;;
 (defun tinyload-start ()
   "Start loader process. This function is synonym to ´tinyload-install'"
   (interactive)
@@ -699,8 +694,6 @@ To start loader process, call \\[tinyload-install]."
 ;;}}}
 ;;{{{ support functions
 
-;;; ----------------------------------------------------------------------
-;;;
 ;;;###autoload
 (defun tinyload-autoload-function-load (&optional verb)
   "Load all autoloaded functions. VERB."
@@ -734,8 +727,6 @@ To start loader process, call \\[tinyload-install]."
                  count (length load) file)))
     load))
 
-;;; ----------------------------------------------------------------------
-;;;
 (defun tinyload-feature-p (pkg &optional feature)
   "Check if feature has been loaded.
 See PKG and FEATURE from `tinyload--load-list'"
@@ -775,8 +766,6 @@ See PKG and FEATURE from `tinyload--load-list'"
              (prin1-to-string status)))
     status))
 
-;;; ----------------------------------------------------------------------
-;;;
 (defun tinyload-message (msg)
   "Display MSG and put it to *Messages* Buffer."
   (if (string-match "%" msg)
@@ -789,8 +778,6 @@ See PKG and FEATURE from `tinyload--load-list'"
     (with-current-buffer (get-buffer-create "*Messages*")
       (ti::pmax) (insert msg "\n"))))
 
-;;; ----------------------------------------------------------------------
-;;;
 (defun tinyload-status ()
   "Print status. How many packages are left in load list."
   (interactive)
@@ -803,8 +790,6 @@ See PKG and FEATURE from `tinyload--load-list'"
 ;;}}}
 ;;{{{ Load list manipulation support functions
 
-;;; ----------------------------------------------------------------------
-;;;
 (defun tinyload-load-list-search-elt (search position)
   "SEARCH item in `tinyload--load-list' by checking POSITION.
 
@@ -820,20 +805,14 @@ The SEARCH item is checked with `equal' function."
 	(when (equal picked search)
           (throw 'break elt))))))
 
-;;; ----------------------------------------------------------------------
-;;;
 (defun tinyload-load-list-search-function (function)
   "Search FUNCTION in `tinyload--load-list'."
   (tinyload-load-list-search-elt function 4))
 
-;;; ----------------------------------------------------------------------
-;;;
 (defun tinyload-load-list-search-package (package)
   "Search PACKAGE in `tinyload--load-list'."
   (tinyload-load-list-search-elt package 0))
 
-;;; ----------------------------------------------------------------------
-;;;
 (defun tinyload-load-list-add-function (function)
   "Add FUNCTION to `tinyload--load-list'.
 This function places a null entry to the laod list, so that only the
@@ -843,8 +822,6 @@ load-before form is exected: it runs the FUNCTION."
     (unless entry
       (push elt tinyload--load-list))))
 
-;;; ----------------------------------------------------------------------
-;;;
 (defun tinyload-load-list-add-package (package &optional feature)
   "Add PACKAGE FEATURE with \\='noerr \\='nomsg to `tinyload--load-list'."
   (let ((elt   (list package feature 'noerr 'nomsg))
@@ -852,22 +829,16 @@ load-before form is exected: it runs the FUNCTION."
     (unless entry
       (push elt tinyload--load-list))))
 
-;;; ----------------------------------------------------------------------
-;;;
 (defun tinyload-load-list-delete-elt (elt)
   "Remove ELT from `tinyload--load-list'."
   (setq tinyload--load-list (delete elt tinyload--load-list)))
 
-;;; ----------------------------------------------------------------------
-;;;
 (defun tinyload-load-list-delete-function (function)
   "Remove FUNCTION from `tinyload--load-list'."
   (let ((entry (tinyload-load-list-search-function function)))
     (when entry
       (tinyload-load-list-delete-elt entry))))
 
-;;; ----------------------------------------------------------------------
-;;;
 (defun tinyload-load-list-delete-package (package)
   "Remove PACKAGE from `tinyload--load-list'."
   (let ((entry (tinyload-load-list-search-package package)))
@@ -877,8 +848,6 @@ load-before form is exected: it runs the FUNCTION."
 ;;}}}
 ;;{{{ Config file interface
 
-;;; ----------------------------------------------------------------------
-;;;
 (defun tinyload-config-file-emacs-type-ok-p (string)
   "Test STRING for xemacs, emacs and win32."
   (if (null string)
@@ -897,8 +866,6 @@ load-before form is exected: it runs the FUNCTION."
       (and emacs-ok
            os-ok))))
 
-;;; ----------------------------------------------------------------------
-;;;
 (defun tinyload-config-file-parse ()
   "Parse entries ein configuration file and ignore comments.
 File format is:
@@ -954,8 +921,6 @@ Return:
     (setq list (nreverse list))
     (tinyload-debug fid "RET" list)))
 
-;;; ----------------------------------------------------------------------
-;;;
 (defun tinyload-config-file-load-1 (file)
   "Load configuration file and return list in format `tinyload--load-list'."
   (interactive "fTinyLoad configuration file: ")
@@ -963,8 +928,6 @@ Return:
     (insert-file-contents file)
     (tinyload-config-file-parse)))
 
-;;; ----------------------------------------------------------------------
-;;;
 (defun tinyload-config-file-load-default ()
   "Load `tinyload--load-file' and return list in format `tinyload--load-list'."
   (let ((file tinyload--load-file))
@@ -984,16 +947,12 @@ Return:
 ;;}}}
 ;;{{{ main
 
-;;; ----------------------------------------------------------------------
-;;;
 (defun tinyload-minibuffer-active-p ()
   "check if minibuffer is active."
   (if (fboundp 'active-minibuffer-window)
       (ti::funcall 'active-minibuffer-window)
     (eq (selected-window) (minibuffer-window))))
 
-;;; ----------------------------------------------------------------------
-;;;
 (defun tinyload-no-action ()
   "Check that Emacs is still."
   (and
@@ -1002,8 +961,6 @@ Return:
    (not cursor-in-echo-area)
    (not (tinyload-minibuffer-active-p))))
 
-;;; ----------------------------------------------------------------------
-;;;
 (defun tinyload-process-continue (&optional force)
   "Check if process is clear to continue and Emacs is not busy.
 Return status. List of symbols:
@@ -1032,8 +989,6 @@ Return status. List of symbols:
 
     (list continue no-action no-input)))
 
-;;; ----------------------------------------------------------------------
-;;;
 (defun tinyload-eval (form type)
   "Eval FORM. TYPE is string AFTER or BEFORE."
   (condition-case err
@@ -1048,8 +1003,6 @@ Return status. List of symbols:
        (message str)
        (tinyload-debug str)))))
 
-;;; ----------------------------------------------------------------------
-;;;
 (defun tinyload-load (pkg noerr nomsg)
   "Load PKG with NOERR NOMSG. Return load status."
   (let (stat)
@@ -1066,8 +1019,6 @@ Return status. List of symbols:
       (setq stat (ignore-errors (load pkg noerr nomsg)))))
     stat))
 
-;;; ----------------------------------------------------------------------
-;;;
 (defun tinyload-load-failure (pkg elt)
   "Record PKG ELT failure to `tinyload--load-list'. Return failed-list."
   ;;  Record failed entries.
@@ -1086,8 +1037,6 @@ Return status. List of symbols:
     (ignore-errors (locate-library pkg))
     failed-list))
 
-;;; ----------------------------------------------------------------------
-;;;
 (defun tinyload-initialize ()
   "Initialise `tinyload--load-list'.
 Return list:
@@ -1106,8 +1055,6 @@ Return list:
       (put 'tinyload--load-list 'original tinyload--load-list)
       (put 'tinyload--load-list 'pos 0))))
 
-;;; ----------------------------------------------------------------------
-;;;
 (defun tinyload-terminate-process ()
   "Remove process."
   ;;  No more loading; do self kill so that this process is
@@ -1119,14 +1066,10 @@ Return list:
   (setq tinyload--process-busy-p nil)
   (tinyload-install 'remove))
 
-;;; ----------------------------------------------------------------------
-;;;
 (defun tinyload-busy-count ()
   "Return `tinyload--process-busy-p' busy count."
   (get 'tinyload--process-busy-p 'count))
 
-;;; ----------------------------------------------------------------------
-;;;
 (defun tinyload-busy-count-incf ()
   "Increase `tinyload--process-busy-p' busy count."
   ;;  - If counter keeps incrementing all the time,
@@ -1143,8 +1086,6 @@ Return list:
     (put 'tinyload--process-busy-p 'count  busy-count)
     (put 'tinyload--process-busy-p 'count2 busy-count)))
 
-;;; ----------------------------------------------------------------------
-;;;
 (defun tinyload-continue-check (&optional force)
   "Check if process can continue with FORCE.
 Return CONTINUE if there is no activity."
@@ -1161,8 +1102,6 @@ Return CONTINUE if there is no activity."
      (format "tinyload-continue-check: %s" (prin1-to-string continue)))
     continue))
 
-;;; ----------------------------------------------------------------------
-;;;
 (defun tinyload-failed-list-update (elt)
   "Update `tinyload--load-list' property \\='failed-list with ELT."
   (let ((fid         "tinyload-failed-list-update")
@@ -1175,8 +1114,6 @@ Return CONTINUE if there is no activity."
     (tinyload-debug
      (format "TinyLoad: [Debug] %s failed-list: "  fid) failed-list)))
 
-;;; ----------------------------------------------------------------------
-;;;
 (defun tinyload-library-info (pkg noerr)
   "Record PKG NOERR library info under debug."
   (when tinyload--debug
@@ -1186,8 +1123,6 @@ Return CONTINUE if there is no activity."
       (tinyload-debug (format "TinyLoad: [debug] locate %s %s"
                               pkg (or tmp ""))))))
 
-;;; ----------------------------------------------------------------------
-;;;
 (defun tinyload-load-ignore-message (pkg pos len)
   "Print PKG POS LEN status. Already in Emacs."
   (let ((str (format "\
@@ -1198,8 +1133,6 @@ TinyLoad: %-15s %s (%2d%% %2d/%2d) <ignored, feature already in emacs>"
 		     (1+ pos) (1+ len))))
     (tinyload-message str)))
 
-;;; ----------------------------------------------------------------------
-;;;
 (defun tinyload-load-ok-message (pkg pos len stat)
   "Print PKG POS LEN status. Loaded."
   (let ((str (format "TinyLoad: %-15s %s (%2d%% %2d/%2d)"
@@ -1211,8 +1144,6 @@ TinyLoad: %-15s %s (%2d%% %2d/%2d) <ignored, feature already in emacs>"
 		     (1+ pos) len)))
     (tinyload-message str)))
 
-;;; ----------------------------------------------------------------------
-;;;
 (defun tinyload-busy-count-controller ()
   "Handle busy checking and deadlocks.
 Return:
@@ -1243,9 +1174,7 @@ Return:
     (put  'tinyload--process-busy-p 'count busy-count)
     deadlock))
 
-;;; ----------------------------------------------------------------------
 ;;; (tinyload-loader-process 'force)
-;;;
 ;;;###autoload
 (defun tinyload-loader-process (&optional force)
   "Load packages defined in `tinyload--load-list'.
