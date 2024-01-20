@@ -1,5 +1,3 @@
-;; -*- enable-local-variables: :all;  -*-
-
 ;;; tinydiff.el --- Diff and patch minor mode. Browsing, patching.
 
 ;; This file is not part of Emacs
