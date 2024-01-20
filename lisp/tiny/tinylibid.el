@@ -495,8 +495,6 @@ contents. The comment-start and end fields are optional.")
 
 ;;; Misc
 
-;;; ----------------------------------------------------------------------
-;;;
 (defun ti::id-cnv-txt2mode (txt)
   "This is kinda fake function, it returns the original MODE based
 on the text that represents the buffer contents. This functions purpose
@@ -515,8 +513,6 @@ NOTE:
           (throw 'break ret))))
     ret))
 
-;;; ----------------------------------------------------------------------
-;;;
 (defun ti::id-cnv-txt2comment (txt)
   "Returns (COMMENT-START . COMMENT-END) variables for text representing
 the buffer contents. Notice that comment-end may be nil meaning it
@@ -539,8 +535,6 @@ is not needed for mode."
 
 ;;; Id
 
-;;; ----------------------------------------------------------------------
-;;;
 (defun ti::id-file-extension (file)
   "Return file extension.
 
@@ -553,8 +547,6 @@ References:
       (setq point (match-beginning 1))  ;dot position
       (substring file point))))
 
-;;; ----------------------------------------------------------------------
-;;;
 (defun ti::id-read-first-line ()
   "Return first ID line of the file. Empty lines are skipped."
   (let* ((comment-beg   (regexp-quote (or comment-start " ")))
@@ -568,8 +560,6 @@ References:
         (unless (eobp)
           (ti::read-current-line))))))
 
-;;; ----------------------------------------------------------------------
-;;;
 (defun ti::id-read-first-line-emacs-mode (str)
   "Emacs supports special first line syntax e.g. -*-Emacs-Lisp-*-,
 to turn on mode when file loads. Try to find function <text>-mode
@@ -598,8 +588,6 @@ Return:
             (setq ret sym)))))          ;it's valid mode
     ret))
 
-;;; ----------------------------------------------------------------------
-;;;
 (defun ti::id-match (string list)
   "Match STRING against LIST el 1, return LIST elt 2"
   (let (ret
@@ -612,8 +600,6 @@ Return:
           (throw 'break nil))))
     ret))
 
-;;; ----------------------------------------------------------------------
-;;;
 (defun ti::id-buffer-re-search (&optional point)
   "Search `ti::id--buffer-match-regexp-list' from buffer.
 Start searching from `point-min' or from optional POINT."
@@ -633,16 +619,12 @@ Start searching from `point-min' or from optional POINT."
 
 ;;; Study
 
-;;; ----------------------------------------------------------------------
-;;;
 (defun ti::id-global-variable-reset ()
   "Reset some globals."
   (setq ti::id--global-buffer-file-name  nil
         ti::id--global-buffer-extension  nil
         ti::id--global-buffer-first-line  nil))
 
-;;; ----------------------------------------------------------------------
-;;;
 (defun ti::id-global-variable-set ()
   "Set some globals, so that they can be used by all functions.
 This reduces overhead of getting these variables multiple times."
@@ -659,8 +641,6 @@ This reduces overhead of getting these variables multiple times."
     ;; so that can be hook
     nil))
 
-;;; ----------------------------------------------------------------------
-;;;
 (defun ti::id-study-buffer (type)
   "Chew buffer contents.
 Before call, run `ti::id-global-variable-set' to set global variables.
@@ -697,8 +677,6 @@ Return:
       (setq ret (ti::id-buffer-re-search))))
     ret))
 
-;;; ----------------------------------------------------------------------
-;;;
 (defun ti::id-test-buffer-content-special ()
   "Check special buffer content."
   (let ((text (memq major-mode '(fundamental-mode text-mode))))
@@ -708,7 +686,6 @@ Return:
            (ti::funcall 'tinytf-text-format-p))
       "text-white-paper"))))
 
-;;; ----------------------------------------------------------------------
 ;;; - testing/evaluation  functions
 
 (defun ti::id-test-extension ()
@@ -738,7 +715,6 @@ Return:
   (ti::id-study-buffer 'buffer-regexp))
 
 ;;; ------------------------------------------------------------ &Main ---
-;;;
 ;;;###autoload
 (defun ti::id-info (&optional mode variable-lookup verb)
   "Try to identify buffer type.
