@@ -1,5 +1,3 @@
-;; -*- enable-local-variables: :all;  -*-
-
 ;;; tinymy.el --- Collection of simple utilities
 
 ;; This file is not part of Emacs
