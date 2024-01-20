@@ -128,8 +128,6 @@ tinylibo: ** XEmacs needs overlay.el package; activated emulation may not work."
 
 ;;; .......................................................... &macros ...
 
-;;; ----------------------------------------------------------------------
-;;;
 (defsubst ti::overlay-make (level)
   "Make overlay according to match in buffer at LEVEL.
 The match is NOT checked. Returns new overlay."
@@ -137,8 +135,6 @@ The match is NOT checked. Returns new overlay."
    (match-beginning level)
    (match-end level)))
 
-;;; ----------------------------------------------------------------------
-;;;
 (defsubst ti::overlay-makec (level)
   "Make overlay according to match in buffer at LEVEL.
 The match is checked. Returns new overlay or nil."
@@ -150,8 +146,6 @@ The match is checked. Returns new overlay or nil."
 ;;}}}
 ;;{{{ funcs
 
-;;; ----------------------------------------------------------------------
-;;;
 (defun ti::overlay-make-match  (level plist)
   "Make overlay over the matched text portion. The match level is checked.
 
@@ -171,8 +165,6 @@ Return:
         (overlay-put ov prop propv)))
     ov))
 
-;;; ----------------------------------------------------------------------
-;;;
 (defsubst ti::overlay-buffer-substring (ov &optional no-properties)
   "Read `buffer-substring' underneath overlay OV.
 
@@ -192,8 +184,6 @@ Return:
       (buffer-substring  (overlay-start ov)
 			 (overlay-end ov)))))
 
-;;; ----------------------------------------------------------------------
-;;;
 (defun ti::overlay-mouse-on-p (ov)
   "Check if overlay OV has `mouse-face' on.
 If `mouse-face' contains \\='default, it's treated to mean same as nil.
@@ -211,8 +201,6 @@ Return:
         ;;  it had some property
         prop))))
 
-;;; ----------------------------------------------------------------------
-;;;
 (defun ti::overlay-get-mouse ()
   "Check if the point has \\='mouse-face overlay.
 
@@ -300,8 +288,6 @@ Input:
           (setq ovl (cdr ovl))))
       ov)))
 
-;;; ----------------------------------------------------------------------
-;;;
 (defun ti::overlay-re-search
   (re level list &optional max back reuse reuse-t no-prop-l)
   "Search for RE at LEVEL by creating overlay and its property LIST.
@@ -392,14 +378,10 @@ Return:
     (when (or ret-reused ret-created)
       (list ret-reused ret-created))))
 
-;;; ----------------------------------------------------------------------
 ;;; Try following example:
-;;;
 ;;; (setq OV (make-overlay (point) (point)))
 ;;; (overlay-put OV 'face 'highlight)
 ;;; (ti::overlay-re-search-move OV "ti::o")
-;;;
-;;;
 (defun ti::overlay-re-search-move (ov re &optional level back max)
   "Maove OV to Search forward for match RE at LEVEL.
 Default level is 0, full match. if BACK is given, search is done
@@ -435,8 +417,6 @@ Return:
                     (current-buffer))
       (match-end level))))
 
-;;; ----------------------------------------------------------------------
-;;;
 (defun ti::overlay-get-within-area (propl &optional propl-t beg end)
   "Return all overlays which match property list PROPL.
 If PROPL is t then returns all overlays. Default is to search from
@@ -469,10 +449,8 @@ Input:
         (setq p (next-overlay-change p))))
     list))
 
-;;; ----------------------------------------------------------------------
 ;;; If you're in trouble, call this function interactively
 ;;; and it wipes out all overlays.
-;;;
 (defun ti::overlay-remove-region (&optional beg end propl propl-t)
   "Remove all matched overlays within area.
 Default is from point forward. Ignores buffer read-only status.
