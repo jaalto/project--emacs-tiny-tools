@@ -2,14 +2,10 @@
 
 ;; This file is not part of Emacs
 
-;;{{{ Id
-
 ;; Copyright (C)    1997-2024 Jari Aalto
 ;; Keywords:        tools
 ;; Author:          Jari Aalto
 ;; Maintainer:      Jari Aalto
-;;
-;; Look at the code with folding.el.
 
 ;; This program is free software; you can redistribute it and/or modify it
 ;; under the terms of the GNU General Public License as published by the Free
@@ -26,8 +22,7 @@
 ;;
 ;; Visit <http://www.gnu.org/copyleft/gpl.html> for more information
 
-;;}}}
-;;{{{ Install
+;;; Install
 
 ;; ....................................................... &t-install ...
 ;;  Put this file on your Emacs-Lisp `load-path', add following into your
@@ -45,13 +40,9 @@
 ;;
 ;;       M-x tinynbr-submit-bug-report
 
-;;}}}
-;;{{{ Documentation
-
-;; ..................................................... &t-commentary ...
 ;;; Commentary:
-;;
-;;  Preface, aug 1997
+
+;;  Preface, Aug 1997
 ;;
 ;;      One day in a laboratory the developer once forgot his desk
 ;;      calculator in another building. He was examining binary (hex)
@@ -71,13 +62,11 @@
 ;;      o   Int         --> hex,oct,bin conversion at current point
 ;;      o   hex,oct,bin --> int         conversion at current point
 
-;;}}}
-
 ;;; Change Log:
 
 ;;; Code:
 
-;;{{{ setup: require
+;;; Setup: require
 
 (require 'tinylibm)
 
@@ -106,8 +95,7 @@
                      (tinynbr-read-number-at-point))))))
     nbr))
 
-;;}}}
-;;{{{ Minor Mode
+;;; Minor Mode
 
 ;;;###autoload (autoload 'tinynbr-mode          "tinynbr" "" t)
 ;;;###autoload (autoload 'turn-on-tinynbr-mode  "tinynbr" "" t)
@@ -136,8 +124,8 @@ Mode description:
     ["oct to int"  tinynbr-oct-to-int  t]
     ["bin to int"  tinynbr-bin-to-int  t]
     "----"
-    ["Package version"    tinynbr-version        t]
-    ["Package commentary" tinynbr-commentary     t]
+    ["Package version"    tinynbr-version     t]
+    ["Package commentary" tinynbr-commentary  t]
     ["Mode help"   tinynbr-mode-help   t]
     ["Mode off"    tinynbr-mode        t])
    (progn
@@ -153,25 +141,24 @@ Mode description:
      (define-key map "Hc" 'tinynbr-commentary)
      (define-key map "Hv" 'tinynbr-version))))
 
-;;}}}
-;;{{{ Code
+;;; Code
 
-;;; Create functions, and inform autoload generator.
+;; Create functions, and inform autoload generator.
 
-;;;###autoload (autoload 'tinynbr-int-to-hex    "tinynbr" "" t)
-;;;###autoload (autoload 'tinynbr-int-to-oct    "tinynbr" "" t)
-;;;###autoload (autoload 'tinynbr-int-to-bin    "tinynbr" "" t)
-;;;###autoload (autoload 'tinynbr-hex-to-int    "tinynbr" "" t)
-;;;###autoload (autoload 'tinynbr-oct-to-int    "tinynbr" "" t)
-;;;###autoload (autoload 'tinynbr-bin-to-int    "tinynbr" "" t)
+;;;###autoload (autoload 'tinynbr-int-to-hex "tinynbr" "" t)
+;;;###autoload (autoload 'tinynbr-int-to-oct "tinynbr" "" t)
+;;;###autoload (autoload 'tinynbr-int-to-bin "tinynbr" "" t)
+;;;###autoload (autoload 'tinynbr-hex-to-int "tinynbr" "" t)
+;;;###autoload (autoload 'tinynbr-oct-to-int "tinynbr" "" t)
+;;;###autoload (autoload 'tinynbr-bin-to-int "tinynbr" "" t)
 
-(dolist (x  '((hex 16)
-	      (oct 8)
-	      (bin 2)))
-    (let ((sym1  (intern (format "tinynbr-%s-to-int"  (car x))))
-          (sym2  (intern (format "tinynbr-int-to-%s"  (car x))))
-          (sym3  (intern (format "int-to-%s-string" (car x))))
-          (base  (nth 1 x))
+(dolist (x '((hex 16)
+	     (oct 8)
+	     (bin 2)))
+    (let ((sym1 (intern (format "tinynbr-%s-to-int" (car x))))
+          (sym2 (intern (format "tinynbr-int-to-%s" (car x))))
+          (sym3 (intern (format "int-to-%s-string" (car x))))
+          (base (nth 1 x))
           def)
       (setq def
             `(defun ,sym1 (&optional insert reverse)
@@ -207,7 +194,6 @@ Mode description:
                                          (number-to-string ret)
                                        ret)))))))))
       (eval def)
-
       (setq def
             `(defun ,sym2 (&optional insert)
                  "If prefix arg INSERT is non-nil, insert result to buffer."
@@ -215,7 +201,7 @@ Mode description:
                  (,sym1 insert 'reverse)))
       (eval def)))
 
-;;}}}
+;;; Provide
 
 (add-hook  'tinynbr--mode-hook 'tinynbr-mode-define-keys)
 (provide   'tinynbr)
