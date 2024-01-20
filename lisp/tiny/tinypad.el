@@ -233,8 +233,6 @@ Mode description:
 ;;}}}
 ;;{{{ Code
 
-;;; ----------------------------------------------------------------------
-;;;
 (defadvice switch-to-buffer  (after tipad act)
   "Turn on `tinypad-mode' if if global Pad mode is non-nil."
   (when (and (called-interactively-p 'interactive)
@@ -242,16 +240,12 @@ Mode description:
              (null tinypad-mode))
     (setq tinypad-mode 1)))
 
-;;; ----------------------------------------------------------------------
-;;;
 (defun tinypad-ignore  ()
   "Display that command does not exist."
   (interactive)
   (message "TinyPad: No eq WinNotepad emulation in Emacs for this command.")
   (sit-for 2))
 
-;;; ----------------------------------------------------------------------
-;;;
 (defun tinypad-erase-buffer  ()
   "Erase buffer with confirmation."
   (interactive "*")
@@ -263,8 +257,6 @@ Mode description:
                  (y-or-n-p "Buffer modified, continue erasing? ")))
     (erase-buffer)))
 
-;;; ----------------------------------------------------------------------
-;;;
 (defun tinypad-find-file-hook  ()
   "Turn on tipad mode if `tinypad--mode-global' is non-nil."
   (when (and (get 'tinypad-mode 'global)
@@ -272,7 +264,6 @@ Mode description:
     (setq tinypad-mode 1)))
 
 ;;; ------------------------------------------------------------ &main ---
-;;;
 (defun tinypad-mode-action ()
   "Activate `tinypad-mode' on or off everywhere, depending on var `tinypad-mode'."
   (unless (get 'tinypad-mode 'self-call)
