@@ -1,5 +1,3 @@
-;; -*- enable-local-variables: :all;  -*-
-
 ;;; tinydebian.el --- Debian, Ubuntu, Emacs, GNU Bug Tracking Utilities
 
 ;;{{{ Id
@@ -128,7 +126,7 @@
   (or (require 'cl-lib nil 'noerr) ;; Emacs 29.x
       (require 'cl)))
 
-(defconst tinydebian--version-time "2023.0919.0915"
+(defconst tinydebian--version-time "2024.0120.1310"
   "Last edited time.")
 
 (require 'tinylibm)
