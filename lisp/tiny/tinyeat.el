@@ -296,8 +296,6 @@ Normally word is terminated by whitespace or newlines."
 
 (eval-and-compile (ti::macrof-debug-standard "tinyeat" "--"))
 
-;;; ----------------------------------------------------------------------
-;;;
 (defun tinyeat-install-default-bindings-terminal ()
   "Install extra binding for dummy terminals."
   (let ((status (lookup-key global-map (kbd "ESC [ 3"))))
@@ -312,8 +310,6 @@ Normally word is terminated by whitespace or newlines."
       ;; C-S-delete
       (global-set-key (kbd "ESC [ 3 @") 'tinyeat-delete-paragraph))))
 
-;;; ----------------------------------------------------------------------
-;;;
 ;;;###autoload
 (defun tinyeat-install-default-bindings ()
   "Bind default keys to package\\='s functions."
@@ -361,8 +357,6 @@ Normally word is terminated by whitespace or newlines."
     (tinyeat-install-default-bindings-terminal))
   (message "TinyEat: [INSTALL] some existing keys were bound to TinyEat functions."))
 
-;;; ----------------------------------------------------------------------
-;;;
 ;;;###autoload
 (defun tinyeat-install (&optional arg)
   "Call `tinyeat-install-default-bindings' with ARG."
@@ -372,8 +366,6 @@ Normally word is terminated by whitespace or newlines."
 ;;}}}
 ;;{{{ misc
 
-;;; ----------------------------------------------------------------------
-;;;
 (put 'tinyeat-repeat-macro 'lisp-indent-function 1)
 (defmacro tinyeat-repeat-macro (end &rest body)
   "Loop using VAR from BEG to END and do BODY."
@@ -382,8 +374,6 @@ Normally word is terminated by whitespace or newlines."
 	    (progn
 	      ,@body)))
 
-;;; ----------------------------------------------------------------------
-;;;
 (put 'tinyeat-verbose-macro 'lisp-indent-function 0)
 (defmacro tinyeat-verbose-macro (&rest body)
   "Run BODY if tinyeat--verbose-flag' is set.
@@ -392,8 +382,6 @@ Minibuffer is excluded."
               tinyeat--verbose-flag)
      ,@body))
 
-;;; ----------------------------------------------------------------------
-;;;
 ;;;###autoload
 (defun tinyeat-erase-buffer  ()
   "Erase buffer. If read-only buffer, do nothing."
@@ -407,8 +395,6 @@ Minibuffer is excluded."
          (line-end-position))
       (erase-buffer))))
 
-;;; ----------------------------------------------------------------------
-;;;
 ;;;###autoload
 (defun tinyeat-zap-line (&optional count)
   "Kill COUNT times whole lines including the final newline."
@@ -419,8 +405,6 @@ Minibuffer is excluded."
                             (kill-line)
                           (kill-line 1))))
 
-;;; ----------------------------------------------------------------------
-;;;
 ;;;###autoload
 (defun tinyeat-backward (&optional count)
   "Eat backward COUNT times. See `tinyeat-eat'."
@@ -428,8 +412,6 @@ Minibuffer is excluded."
   (tinyeat-repeat-macro (or count 1)
                         (tinyeat-eat 'back)))
 
-;;; ----------------------------------------------------------------------
-;;;
 ;;;###autoload
 (defun tinyeat-backward-preserve (&optional count)
   "Eat forward, but handle spaces differently. See `tinyeat-eat'."
@@ -437,8 +419,6 @@ Minibuffer is excluded."
   (tinyeat-repeat-macro (or count 1)
                         (tinyeat-eat 'back 'preserve)))
 
-;;; ----------------------------------------------------------------------
-;;;
 ;;;###autoload
 (defun tinyeat-forward (&optional count)
   "Eat forward COUNT times. See `tinyeat-eat'."
@@ -446,8 +426,6 @@ Minibuffer is excluded."
   (tinyeat-repeat-macro (or count 1)
                         (tinyeat-eat)))
 
-;;; ----------------------------------------------------------------------
-;;;
 ;;;###autoload
 (defun tinyeat-forward-preserve (&optional count)
   "Eat forward COUNT times. See `tinyeat-eat'."
@@ -455,8 +433,6 @@ Minibuffer is excluded."
   (tinyeat-repeat-macro (or count 1)
                         (tinyeat-eat nil 'preserve)))
 
-;;; ----------------------------------------------------------------------
-;;;
 ;;;###autoload
 (defun tinyeat-join-lines (&optional count)
   "Join this and next line with one space, and go to the joint."
@@ -467,8 +443,6 @@ Minibuffer is excluded."
                           (kill-line)
                           (fixup-whitespace))))
 
-;;; ----------------------------------------------------------------------
-;;;
 (defun tinyeat-delete-whole-word-1-charset (charset)
   "Delete word based on CHARSET. See `skip-chars-backward' and *-forward."
   (let (beg
@@ -479,8 +453,6 @@ Minibuffer is excluded."
     (setq end (point))
     (delete-region beg end)))
 
-;;; ----------------------------------------------------------------------
-;;;
 (defun tinyeat-delete-whole-word-1-main  (&optional charset)
   "Delete one word at point. Optional CHARSET is for `skip-chars-backward'.
 References:
@@ -502,8 +474,6 @@ References:
 ;;;      (delete-region beg (point)))
     nil)))
 
-;;; ----------------------------------------------------------------------
-;;;
 ;;;###autoload
 (defun tinyeat-delete-whole-word (&optional count)
   "Delete COUNT words at point.
@@ -518,8 +488,6 @@ References:
   (tinyeat-repeat-macro (or count 1)
                         (tinyeat-delete-whole-word-1-main)))
 
-;;; ----------------------------------------------------------------------
-;;;
 ;;;###autoload
 (defun tinyeat-kill-line (&optional count)
   "Like `kill-line'; COUNT times. Killed text isn't put into cut buffer.
@@ -533,8 +501,6 @@ This way you can retain mouse selection in cut buffer."
                          (t
                           (delete-region (point) (line-end-position))))))
 
-;;; ----------------------------------------------------------------------
-;;;
 ;;;###autoload
 (defun tinyeat-kill-line-backward (&optional count)
   "Like `kill-line' back; COUNT times. Killed text isn't put into cut buffer."
@@ -546,8 +512,6 @@ This way you can retain mouse selection in cut buffer."
           (delete-char -1)
         (delete-region (point) (line-beginning-position))))))
 
-;;; ----------------------------------------------------------------------
-;;;
 ;;;###autoload
 (defun tinyeat-kill-buffer-lines-point-max (&optional back)
   "Kill to the `point-max' or if BACK, then to the `point-min'."
@@ -558,16 +522,12 @@ This way you can retain mouse selection in cut buffer."
    (t
     (delete-region (point) (point-max)))))
 
-;;; ----------------------------------------------------------------------
-;;;
 ;;;###autoload
 (defun tinyeat-kill-buffer-lines-point-min ()
   "Kill until `point-min'."
   (interactive "p")
   (tinyeat-kill-buffer-lines-point-max 'back))
 
-;;; ----------------------------------------------------------------------
-;;;
 ;;;###autoload
 (defun tinyeat-kill-buffer-lines-main (&optional backward)
   "Kill until `point-max' or if BACKWARD, until `point-min'."
@@ -579,8 +539,6 @@ This way you can retain mouse selection in cut buffer."
 ;;}}}
 ;;{{{ misc2
 
-;;; ----------------------------------------------------------------------
-;;;
 ;;;###autoload
 (defun  tinyeat-delete-paragraph ()
   "Delete current paragraph, separated by empty lines."
@@ -620,8 +578,6 @@ This way you can retain mouse selection in cut buffer."
       (unless (eq beg end)
         (kill-region beg end)))))
 
-;;; ----------------------------------------------------------------------
-;;;
 (defun tinyeat-space-delete-at-point (&optional back preserve)
   "Delete whitespace at point. Optionally BACK.
 If optional PRESERVE is given, then deletes towards the BACK only.
@@ -658,8 +614,6 @@ if BACK is non-nil the deletion is headed backward."
       (delete-horizontal-space)
       t))))
 
-;;; ----------------------------------------------------------------------
-;;;
 (defun tinyeat-word-move-point (&optional back)
   "Move to suitable word kill point. Mixed case words are special.
 Optionally BACK.
@@ -763,9 +717,7 @@ THISmixedWord   --> THISmixedWord
 ;;}}}
 ;;{{{ Yanking
 
-;;; ----------------------------------------------------------------------
 ;;; Having overwrite-mode on, does not support this kind of behavior?
-;;;
 (defun tinyeat-yank-overwrite ()
   "Yank text by overwriting previous content."
   (interactive)
@@ -791,8 +743,6 @@ THISmixedWord   --> THISmixedWord
 ;;}}}
 ;;{{{ engine
 
-;;; ----------------------------------------------------------------------
-;;;
 ;;;###autoload
 (defun tinyeat-eat (&optional back ti::space-preserve)
   "Eat *appropriate* text forward, if BACK then backward.
