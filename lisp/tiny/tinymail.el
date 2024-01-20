@@ -1,5 +1,3 @@
-;; -*- enable-local-variables: :all;  -*-
-
 ;;; tinymail.el --- Mail add-ons. Report incoming mail, passwd, BBDB complete.
 
 ;; This file is not part of Emacs
