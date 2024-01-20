@@ -1,5 +1,3 @@
-;; -*- enable-local-variables: :all;  -*-
-
 ;;; tinyliby.el --- Library of functions related to Emacs s(y)stem
 
 ;; This file is not part of Emacs
@@ -75,7 +73,7 @@
 
 ;;{{{ setup: -- variables
 
-(defconst tinyliby-version-time "2023.0919.0853"
+(defconst tinyliby-version-time "2024.0120.1311"
   "Latest version number as last modified time.")
 
 (defvar ti::system--describe-symbols-history nil
