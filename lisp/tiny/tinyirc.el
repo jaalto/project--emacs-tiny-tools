@@ -1,5 +1,3 @@
-;; -*- enable-local-variables: :all;  -*-
-
 ;;; tinyirc.el --- IRC related utilities for Emacs
 
 ;; This file is not part of Emacs
