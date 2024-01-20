@@ -1699,8 +1699,6 @@ Prefix key to access the minor mode is defined in `tinymail--mode-prefix-key'
      (define-key map  "Hc" 'tinymail-commentary)
      (define-key map  "Hv" 'tinymail-version))))
 
-;;; ----------------------------------------------------------------------
-;;;
 (defun tinymail-modeline-update (&rest plugged-status)
   "Udate `tinymail--mode-name' to show ! in plugged state."
   (let ((status (if (not (zerop (length plugged-status)))
@@ -1712,8 +1710,6 @@ Prefix key to access the minor mode is defined in `tinymail--mode-prefix-key'
       (when (string-match "^\\([^!]+\\)!" tinymail--mode-name )
         (setq tinymail--mode-name (match-string 1 tinymail--mode-name ))))))
 
-;;; ----------------------------------------------------------------------
-;;;
 (defun tinymail-gnus-agent-toggle-plugged (&optional mode)
   "Toggle Gnus plugged state if Gnus has been loaded."
   (interactive  "P")
@@ -1726,9 +1722,7 @@ Prefix key to access the minor mode is defined in `tinymail--mode-prefix-key'
         (ti::funcall 'gnus-agent-toggle-plugged nil))
       (tinymail-modeline-update (ti::mail-plugged-p)))))
 
-;;; ----------------------------------------------------------------------
 ;;; #todo: is this really needed
-;;;
 (defun tinymail-expand-abbrev (&optional arg)
   "Call `abbrev-expand' if cursor is inside header or `self-insert-command'.
 If Prefix argument is given, call `self-insert-command' with ARG.
@@ -1740,8 +1734,6 @@ This function should be bound to SPACE key."
                     (expand-abbrev))))
       (self-insert-command (prefix-numeric-value arg))))
 
-;;; ----------------------------------------------------------------------
-;;;
 (defun tinymail-install-hooks (&optional remove verb)
   "Install needed hooks, optionally REMOVE. VERB."
   (let ((list '(
@@ -1790,8 +1782,6 @@ This function should be bound to SPACE key."
           (message "TinyMail: hooks removed.")
         (message "TinyMail: hooks installed")))))
 
-;;; ----------------------------------------------------------------------
-;;;
 (defun tinymail-install-table-header-complete-gnus ()
   "Add Gnus Followup-To, Gcc, Newsgroups to `tinymail--table-header-complete'."
   ;;  Debian bug report header
@@ -1842,8 +1832,6 @@ This function should be bound to SPACE key."
 	      (gnus-read-active-file-p))))
 	tinymail--table-header-complete))
 
-;;; ----------------------------------------------------------------------
-;;;
 (defun tinymail-read-version (sym)
   "Read version number from variable SYM if variable exists.
 Otherwise return ''."
@@ -1851,10 +1839,8 @@ Otherwise return ''."
                         (if (boundp sym) (symbol-value sym) ""))
       ""))
 
-;;; ----------------------------------------------------------------------
 ;;; - This is the main controller "install" that calls all other
 ;;;   functions.
-;;;
 (defun tinymail-install-to-buffers (&optional remove verb)
   "Activate or REMOVE tinyamil from mail buffers."
   (dolist (buffer (buffer-list)) ;;  Activate in current Emacs
@@ -1867,10 +1853,8 @@ Otherwise return ''."
                  (buffer-name))
         (tinymail-mode (if remove -1 1) )))))
 
-;;; ----------------------------------------------------------------------
 ;;; - This is the main controller "install" that calls all other
 ;;;   functions.
-;;;
 (defun tinymail-install (&optional remove)
   "Install or REMOVE package."
   (interactive "P")
@@ -1907,8 +1891,6 @@ TinyMail: This Emacs does not support idle timers. Using regular timers."))
       (message
        "TinyMail: Installed. Read documentation with M-x tinymail-version"))))
 
-;;; ----------------------------------------------------------------------
-;;;
 (defun tinymail-install-citation ()
   "Install First line citation function for Mail user agents."
   (setq message-citation-line-function
@@ -1917,14 +1899,11 @@ TinyMail: This Emacs does not support idle timers. Using regular timers."))
 ;;}}}
 ;;{{{ code: misc
 
-;;; ----------------------------------------------------------------------
-;;;
 (defsubst tinymail-y-or-n-p-abort-p ()
   "Check if `tinymail-y-or-n-p' was abort."
   (ti::char-in-list-case tinymail--y-or-n-p '(?q ?Q)))
 
 ;;; ------------------------------------------------------------ &misc ---
-;;;
 (defsubst tinymail-field-off-p (header-name &optional header-value)
   "Check status of HEADER-NAME field which has optional HEADER-VALUE.
 If there is 2 or more leading spaces, then the field is
@@ -1934,15 +1913,11 @@ considered \"off\"."
     (not (memq (ti::mail-field-space-count header-name header-value)
                '(0 1)))))
 
-;;; ----------------------------------------------------------------------
-;;;
 (defmacro tinymail-mail-aliases ()
   "Return `tinymail--mail-aliases-alist' or build it if it is empty."
   `(or tinymail--mail-aliases-alist
        (tinymail-update-mail-abbrevs)))
 
-;;; ----------------------------------------------------------------------
-;;;
 (defun tinymail-y-or-n-p (message)
   "Ask confirmation for MESSAGE. Accept TAB as yes.
 Setq global variable `tinymail-y-or-n-p' to the result."
@@ -1963,8 +1938,6 @@ Setq global variable `tinymail-y-or-n-p' to the result."
   ;;  YES answers.
   (ti::char-in-list-case tinymail--y-or-n-p '(?y ?Y ?\ ?\t ?\n ?\r)))
 
-;;; ----------------------------------------------------------------------
-;;;
 (defun tinymail-write-file-hook ()
   "Rebuild aliases everytime .mailrc is saved."
   (tinymail-debug "tinymail-write-file-hook" "MODE" major-mode (buffer-name))
@@ -1978,8 +1951,6 @@ Setq global variable `tinymail-y-or-n-p' to the result."
     ;;  Hook return value
     nil))
 
-;;; ----------------------------------------------------------------------
-;;;
 (defun tinymail-update-mail-abbrevs (&optional force)
   "Build up all aliases to `tinymail--mail-aliases-alist' cache and return it.
 Optional FORCE builds the list in any case.
@@ -1991,8 +1962,6 @@ You need to run this function if you change your ~/.mailrc."
     (ti::funcall 'build-mail-abbrevs))
   (setq tinymail--mail-aliases-alist (ti::mail-abbrev-get-alist)))
 
-;;; ----------------------------------------------------------------------
-;;;
 ;;;###autoload
 (defun tinymail-deactivate-and-send-to-you ()
   "Deactivate TinyMail and change To field to point to your address.
@@ -2007,8 +1976,6 @@ documentation in the tinymail.el or call \\[tinymail-version]."
     (if (called-interactively-p 'interactive)
         (message "Address changed to point to you. TinyMail signs off."))))
 
-;;; ----------------------------------------------------------------------
-;;;
 (defun tinymail-buffer-email-address-scramble-area ()
   "Return area of email that can be scrambled.
 Exclude patches and attachments."
@@ -2035,8 +2002,6 @@ Exclude patches and attachments."
     (when beg
       (list beg end))))
 
-;;; ----------------------------------------------------------------------
-;;;
 (defun tinymail-buffer-email-address-scramble-1 ()
   "Spam protect email address words.
 Scramble Email addresses do that spammers cannot use them.
@@ -2058,8 +2023,6 @@ The end position is before text that looks like a patch or `point-max'"
           (while (re-search-forward regexp end t)
             (replace-match "\\1\\2 AT \\3\\4")))))))
 
-;;; ----------------------------------------------------------------------
-;;;
 (defun tinymail-buffer-email-address-scramble ()
   "If `tinymail--protect-email-addresses' is non-nil, scrable addresses."
   (if tinymail--protect-email-addresses
@@ -2067,14 +2030,10 @@ The end position is before text that looks like a patch or `point-max'"
   ;; Hook function. Return nil
   nil)
 
-;;; ----------------------------------------------------------------------
-;;;
 (defun tinymail-active-p ()
   "Check if TinyMail is active in current buffer."
   tinymail-mode)
 
-;;; ----------------------------------------------------------------------
-;;;
 ;;;###autoload
 (defun tinymail-mail (&optional disable verb)
   "Prepare mail mode.
@@ -2162,8 +2121,6 @@ References:
      (buffer-substring (point-min) (point-max))
      "]\n")))
 
-;;; ----------------------------------------------------------------------
-;;;
 (defun tinymail-mail-send-to-list ()
   "Check if message is being sent to mailing list and Fix CC/To.
 This function makes the To to point to mailing list and delete
@@ -2197,8 +2154,6 @@ in *Group* buffer):
         (ti::mail-kill-field "^CC")
         t))))
 
-;;; ----------------------------------------------------------------------
-;;;
 (defun tinymail-resolve-abbrevs (list)
   "Resolves LIST of mail abbrevs in format: (\"abbrav\" \"abbrev\" ..)
 
@@ -2221,8 +2176,6 @@ Return:
             (push hit exp-list))))
     exp-list))
 
-;;; ----------------------------------------------------------------------
-;;;
 (defun tinymail-password-save (&optional load verb)
   "Save passwd completions to file `tinymail--password-file'. Optionally LOAD.
 If that variable is nil, then do nothing. VERB."
@@ -2251,8 +2204,6 @@ Call `tinymail-password-define-variables' with argument FORCE.")
           (if verb
               (message "TinyMail: passwd completions saved."))))))))
 
-;;; ----------------------------------------------------------------------
-;;;
 (defun tinymail-password-define-variables (&optional force no-save)
   "Defines passwd variables.
 Read definitions from  `tinymail--password-file' if FORCE is nil.
@@ -2305,8 +2256,6 @@ References:
 ;;}}}
 ;;{{{ Completion
 
-;;; ----------------------------------------------------------------------
-;;;
 (defun tinymail-complete-password-mode (&optional mode)
   "Toggle `tinymail--password-mode'  on or off."
   (interactive "P")
@@ -2315,8 +2264,6 @@ References:
     (message "TinyMail: Password complete mode is now %s"
              (if tinymail--password-mode "on" "off"))))
 
-;;; ----------------------------------------------------------------------
-;;;
 (defun tinymail-complete-string-read ()
   "Return completion string from current point or nil.
 The String must be delimited by comma as in mail header are.
@@ -2384,8 +2331,6 @@ Return:
          end-marker
          string)))))
 
-;;; ----------------------------------------------------------------------
-;;;
 (defun tinymail-complete-list-mail-aliases (&optional mode data)
   "Return list: (match match ...) from mail aliases.
 
@@ -2443,8 +2388,6 @@ Input MODE:
         (tinymail-debug fid "after type" beg end str)
         (mapcar 'cdr elt)))))
 
-;;; ----------------------------------------------------------------------
-;;;
 (defun tinymail-complete-guess-1 (&optional mode verb)
   "Try to expand using underlying characters.
 Look completion from `mail-aliases'. If there is more than 1 match,
@@ -2576,8 +2519,6 @@ Return:
       (tinymail-debug fid "RET" ret)
       ret)))
 
-;;; ----------------------------------------------------------------------
-;;;
 (defun tinymail-complete-passwd (&optional force verb)
   "Complete names in passwd in header area, otw do nothing.
 
@@ -2632,8 +2573,6 @@ Return:
     (tinymail-debug fid "RET" ret word)
     ret))
 
-;;; ----------------------------------------------------------------------
-;;;
 (defun tinymail-complete-guess (&optional verb)
   "Complete using .mailrc and passwd.
 Optional VERB allows displaying messages.
@@ -2670,8 +2609,6 @@ Return:
     (tinymail-debug "tinymail-complete-guess" mode "PASS-MODE" pmode "RET" ret)
     ret))
 
-;;; ----------------------------------------------------------------------
-;;;
 (defun tinymail-complete-everything (&optional verb)
   "Gather list of possible completions and let user choose."
   (interactive)
@@ -2743,8 +2680,6 @@ Return:
         (tinymail-debug fid "RET" ret)
         ret))))
 
-;;; ----------------------------------------------------------------------
-;;;
 (defun tinymail-complete-guess-in-headers (&optional arg)
   "Like `tinymail-complete-guess', but complete only in headers. Ignore ARG."
   (interactive)
@@ -2754,8 +2689,6 @@ Return:
                      'ARG arg 'MODE major-mode 'POINT (point))
      (tinymail-complete-everything))))
 
-;;; ----------------------------------------------------------------------
-;;;
 (defun tinymail-complete-guess-in-body (&optional arg)
   "Like `tinymail-complete-guess', but complete only in body. Ignore ARG."
   (interactive)
@@ -2785,8 +2718,6 @@ Return:
             (throw 'break nil))))
       ret)))
 
-;;; ----------------------------------------------------------------------
-;;;
 (defun tinymail-complete-bbdb  (&rest args)
   "Call bbdb-complete-name' if is bbdb loaded and ignore ARGS."
   (when (and (fboundp 'bbdb-complete-name)
@@ -2798,8 +2729,6 @@ Return:
         ;; point moved, completed
         t))))
 
-;;; ----------------------------------------------------------------------
-;;;
 (defun tinymail-bbdb-parse-to-string ()
   "Parse BBDB to a fast search format."
   (let ((str "")
@@ -2822,8 +2751,6 @@ Return:
      bbdb-hashtable)
     str))
 
-;;; ----------------------------------------------------------------------
-;;;
 (defsubst tinymail-bbdb-record-fix (record)
   "Fix BBDB RECORD to pure vector.
 Upgrading from v3 to v5 BBDB database, the
@@ -2839,8 +2766,6 @@ leaves RECORD [ .. ]."
         tmp
       record)))
 
-;;; ----------------------------------------------------------------------
-;;;
 (defun  tinymail-bbdb-data-read ()
   "Read user information based on current line in `bbdb-file'."
   (let ((fid   "tinymail-bbdb-data-read:")
@@ -2877,8 +2802,6 @@ leaves RECORD [ .. ]."
         (tinymail-debug fid one two 'key key '=> record))
     record))
 
-;;; ----------------------------------------------------------------------
-;;;
 (defun tinymail-bbdb-record-net-completions (record)
   "Construct email completions for RECORD."
   (let ((fid "tinymail-bbdb-record-net-completions:")
@@ -2917,11 +2840,9 @@ leaves RECORD [ .. ]."
         (tinymail-debug fid "\n\t" 'RET list))
     list))
 
-;;; ----------------------------------------------------------------------
 ;;; Switched to another implementation (2). Read the matches
 ;;; directly from the BBDB data buffer, because it is faster than reading
 ;;; with `mapatoms' => obarray.
-;;;
 (defun tinymail-complete-list-bbdb-2 (regexp &optional check)
   "Return list of strings that match REGEXP in BBDB hash table.
 
@@ -3001,8 +2922,6 @@ Input:
         (tinymail-debug fid 'RET list))
     list))
 
-;;; ----------------------------------------------------------------------
-;;;
 (defun tinymail-complete-list-bbdb-1 (regexp &optional fields)
   "Return list of strings that match REGEXP and @ in BBDB hash table.
 
@@ -3125,8 +3044,6 @@ Input:
       (tinymail-debug fid 'RETURN-COMPLETIONS list)
       list)))
 
-;;; ----------------------------------------------------------------------
-;;;
 (defun tinymail-complete-list-bbdb (mode data)
   "Return list of matches from BBDB.
 
@@ -3141,8 +3058,6 @@ Input:
      data
      tinymail--complete-bbdb-fuzzy-method)))
 
-;;; ----------------------------------------------------------------------
-;;;
 (defun tinymail-complete-bbdb-fuzzy (&optional info force)
   "Scan through BBDB \\='net for partial matches and offer completion list.
 
@@ -3179,14 +3094,10 @@ Input:
             (tinymail-complete-insert-completion string info)
             t)))))))
 
-;;; ----------------------------------------------------------------------
-;;;
 (defun tinymail-complete-bbdb-fuzzy-at-point (info)
   "Call tinymail-complete-bbdb-fuzzy with INFO and `FORCE' argument."
   (tinymail-complete-bbdb-fuzzy info 'force))
 
-;;; ----------------------------------------------------------------------
-;;;
 (defun tinymail-complete-insert-completion (string info)
   "Replace the content with STRING by using the INFO.
 INFO contains list: (begin-point end-point text-between-points)."
@@ -3196,8 +3107,6 @@ INFO contains list: (begin-point end-point text-between-points)."
   (skip-chars-backward " ")
   t)
 
-;;; ----------------------------------------------------------------------
-;;;
 (defun tinymail-header-complete-choices (field)
   "Return completion choices for HEADER-FIELD."
   (let ((fid "tinymail-header-complete-choices:")
@@ -3213,8 +3122,6 @@ INFO contains list: (begin-point end-point text-between-points)."
     (tinymail-debug fid 'CHOICES-FINAL ret)
     ret))
 
-;;; ----------------------------------------------------------------------
-;;;
 (defun tinymail-complete-simple (&optional info)
   "Complete according to `tinymail--table-header-complete'.
 INFO is list (string beg end) of the completion word"
@@ -3318,8 +3225,6 @@ INFO is list (string beg end) of the completion word"
       (or ret
           tinymail--complete-key-return-value))))
 
-;;; ----------------------------------------------------------------------
-;;;
 (defun tinymail-complete-guest-packages (&optional arg)
   "Support minor modes like tinytab and tinyindent which also use TAB key.
 Ignore ARG."
@@ -3347,8 +3252,6 @@ Ignore ARG."
         (self-insert-command 1)
         t)))))
 
-;;; ----------------------------------------------------------------------
-;;;
 (defun tinymail-complete-list-passwd (&optional mode data force)
   "Return list of matches from password file.
 
@@ -3373,8 +3276,6 @@ Input:
     (tinymail-debug fid str "COMPLETIONS" completions)
     completions))
 
-;;; ----------------------------------------------------------------------
-;;;
 (defun tinymail-display-list (list &optional flash)
   "Display LIST or alist in `tinymail--temp-buffer' or FLASH in echo area."
   (when list
@@ -3389,8 +3290,6 @@ Input:
           (select-window (get-buffer-window buffer))
           (shrink-window-if-larger-than-buffer))))))
 
-;;; ----------------------------------------------------------------------
-;;;
 (defun tinymail-password-grep (match &optional verb)
   "Grep USER from passwd.
 
@@ -3415,8 +3314,6 @@ Input:
     (if verb (message "Grepping...done"))
     alist))
 
-;;; ----------------------------------------------------------------------
-;;;
 (defun tinymail-complete-headers-move-to-next-field (&rest ignore)
   "Move to next field if cursor is at the end of field in header."
   (interactive)
@@ -3428,8 +3325,6 @@ Input:
        (when (re-search-forward ":." max t)
          (end-of-line))))))
 
-;;; ----------------------------------------------------------------------
-;;;
 (defun tinymail-complete-headers-nothing-found (&rest ignore)
   "Display \"No completions found\" in header and return t. IGNORE arguments.
 Advance by 4 spaces if there is only spaces to the left."
@@ -3452,8 +3347,6 @@ Advance by 4 spaces if there is only spaces to the left."
      t)
     (nil))))
 
-;;; ----------------------------------------------------------------------
-;;;
 (defun tinymail-complete-abbrevs (&optional info)
   "Complete using abbrevs. INFO."
   ;; Actually we don't need this because SPACE already expands abbrevs
@@ -3461,8 +3354,6 @@ Advance by 4 spaces if there is only spaces to the left."
   ;; (expand-abbrev)
   nil)
 
-;;; ----------------------------------------------------------------------
-;;;
 (defun tinymail-complete-key-remove-itself ()
   "Remove calls from `tinytab--tab-insert-hook'. See
 Source code of `tinymail-complete-key' why. "
@@ -3476,14 +3367,10 @@ Source code of `tinymail-complete-key' why. "
             (push function clean-hook)))
       (setq tinytab--tab-insert-hook (nreverse clean-hook)))))
 
-;;; ----------------------------------------------------------------------
-;;;
 (defun tinymail-tab-to-tab-stop (&rest args)
   "Ignore ARGS and call `tab-to-tab-stop'."
   (tab-to-tab-stop))
 
-;;; ----------------------------------------------------------------------
-;;;
 (defun tinymail-complete-key (&optional header-check)
   "Run functions in `tinymail--complete-key-hook'.
 Te first function that return non-nil terminates calling the rest of the
@@ -3569,8 +3456,6 @@ functions. Each function is passed the word info at point: (BEG END STRING)."
       (tinymail-debug fid fid 'RET ret)
       ret)))
 
-;;; ----------------------------------------------------------------------
-;;;
 (defun tinymail-complete-key-interactive ()
   "See `tinymail-complete-key'. Comlete only in header."
   (interactive)
@@ -3608,8 +3493,6 @@ Replace function. Change the autosave name from *message* to #message# due to Wi
 ;;}}}
 ;;{{{ Extra
 
-;;; ----------------------------------------------------------------------
-;;;
 (defun tinymail-save-dead-mail-maybe ()
   "Call `tinymail-save-dead-mail' only if RMAIL is used as MUA.
 All other Agents have some sort of todo message save feature."
@@ -3621,8 +3504,6 @@ All other Agents have some sort of todo message save feature."
   (when (featurep 'rmail)
     (tinymail-save-dead-mail)))
 
-;;; ----------------------------------------------------------------------
-;;;
 (defun tinymail-save-dead-mail ()
   "Save mail buffers to `tinymail--dead-mail-file' on Emacs exit."
   (ti::dolist-buffer-list
@@ -3647,8 +3528,6 @@ All other Agents have some sort of todo message save feature."
 
 ;;; ...................................................... &reportmail ...
 
-;;; ----------------------------------------------------------------------
-;;;
 (defun tinymail-report-get-email-word (str)
   "Return first word, separated by space from STR."
   (let ((word str))                    ;set default
@@ -3656,8 +3535,6 @@ All other Agents have some sort of todo message save feature."
       (setq word (substring str (match-beginning 1)  (match-end 1))))
     word))
 
-;;; ----------------------------------------------------------------------
-;;;
 (defun tinymail-report-break-email (str)
   "Break email STR into two words.
 Return:
@@ -3683,8 +3560,6 @@ Return:
         (setq ret (list w1 w2)))))
     ret))
 
-;;; ----------------------------------------------------------------------
-;;;
 (defun tinymail-report-mail-info-1 (shell-call)
   "Run SHELL-CALL to get information about arrived mail.
 
@@ -3744,15 +3619,11 @@ Return:
         (kill-buffer buffer)))
     ret))
 
-;;; ----------------------------------------------------------------------
-;;;
 (defun tinymail-report-mail-info ()
   "Run `tinymail--report-mail-notify-program'."
   (and tinymail--report-mail-notify-program
        (tinymail-report-mail-info-1 tinymail--report-mail-notify-program)))
 
-;;; ----------------------------------------------------------------------
-;;;
 (defun tinymail-report-get-mail-info-string ()
   "Return mail string: last sender and mail count."
   (let ((list          (tinymail-report-mail-info))
@@ -3777,23 +3648,17 @@ Return:
       (message "TinyMail: *** tinymail-report-mail-info didn't return list")))
     ret))
 
-;;; ----------------------------------------------------------------------
-;;;
 (defun turn-on-tinymail-report-mail (&optional verb)
   "Call `tinymail-report-mail-install-maybe'."
   (ti::verb)
   (tinymail-report-mail-install-maybe verb))
 
-;;; ----------------------------------------------------------------------
-;;;
 (defun turn-off-tinymail-report-mail (&optional verb)
   "Call `tinymail-report-mail-install' with prefix argument."
   (interactive)
   (ti::verb)
   (tinymail-report-mail-install 'uninstall verb))
 
-;;; ----------------------------------------------------------------------
-;;;
 (defun tinymail-report-update (&rest args)
   "Update mail status information.
 Update the frame's status line, or in non-X show the message in echo area.
@@ -3860,8 +3725,6 @@ ARGS are ignored."
             (display-buffer buffer)))
       (setq tinymail--report-old-mail-info-string mail-info))))
 
-;;; ----------------------------------------------------------------------
-;;;
 (defun tinymail-report-mail-install (&optional uninstall verb)
   "Install or UNINSTALL mail watchdog (report mail).
 References:
@@ -3895,8 +3758,6 @@ TinyMail: tinymail-report-mail-install: 'reportmail feature found, install ignor
                    "OFF"
                  "ON")))))
 
-;;; ----------------------------------------------------------------------
-;;;
 (defun tinymail-report-mail-install-maybe (&optional uninstall verb)
   "Don't call `tinymail-report-mail-install' if there already exists reporter.
 E.g. in XEmacs you can use package reportmail.el."
@@ -3912,8 +3773,6 @@ E.g. in XEmacs you can use package reportmail.el."
 ;;}}}
 ;;{{{ From-address generator (sendmail PLUS emulation)
 
-;;; ----------------------------------------------------------------------
-;;;
 (defun tinymail-from-anti-ube-maybe ()
   "Return anti-ube address if `newsgroups' match `tinymail--from-anti-ube-regexp'"
   (when (and (stringp tinymail--from-anti-ube-regexp)
@@ -3933,8 +3792,6 @@ E.g. in XEmacs you can use package reportmail.el."
           (setq tinymail--user-mail-address addr)
           addr)))))
 
-;;; ----------------------------------------------------------------------
-;;;
 (defun tinymail-from-field-value-plus ()
   "Return special plus address emulation (RFC Comment)."
   (let* ((fid      "tinymail-from-field-value-plus:")
@@ -4006,8 +3863,6 @@ E.g. in XEmacs you can use package reportmail.el."
                     'prefix prefix 'postfix postfix )
     ret))
 
-;;; ----------------------------------------------------------------------
-;;;
 (defun tinymail-from-field-value ()
   "Make From Address.
 
@@ -4073,8 +3928,6 @@ References:
                     'RETURN ret)
     ret))
 
-;;; ----------------------------------------------------------------------
-;;;
 (defun tinymail-message-disable-sender ()
   "Disable Sender field generation permanently."
   ;; Gnus message-mode
@@ -4127,8 +3980,6 @@ References:
           ;;  we did something
           t)))))
 
-;;; ----------------------------------------------------------------------
-;;;
 (defun tinymail-field-in-to-cc-p ()
   "Check if point is at field To, Bcc, Cc."
   (and (< (point) (ti::mail-hmax))
@@ -4136,8 +3987,6 @@ References:
          (and (ti::mail-next-field-start 'move 'back)
               (looking-at "CC\\|BCC\\|To")))))
 
-;;; ----------------------------------------------------------------------
-;;;
 (defun tinymail-field-to-move-maybe ()
   "Move cursor to the end of TO field if it is empty."
   (when (save-excursion (beginning-of-line) (looking-at "To: *$"))
@@ -4149,8 +3998,6 @@ References:
 
 ;;; ......................................................... &fld-fcc ...
 
-;;; ----------------------------------------------------------------------
-;;;
 (defun tinymail-field-fcc-determine (&optional type hsize)
   "Look if default folder must be changed.
 Tries to find RE given in `tinymail--table-fcc' by looking at header area.
@@ -4208,8 +4055,6 @@ Return:
       (tinymail-debug  fid "SET hmax" hmax "ret" ret  "re" re))
     ret))
 
-;;; ----------------------------------------------------------------------
-;;;
 (defun tinymail-field-fcc (&optional type hsize)
   "Set right [GF]cc folder if there is match in `tinymail--table-[gf]cc'.
 
@@ -4252,8 +4097,6 @@ Input:
         (tinymail-debug fid "SET" folder (current-buffer))
         (ti::mail-kill-field (concat "^" fld) folder)))))
 
-;;; ----------------------------------------------------------------------
-;;;
 (defun tinymail-field-to-off (&optional count field)
   "Disable TinyMail by space COUNT for FIELD.
 2  spaces disables Cc tracking
@@ -4274,15 +4117,11 @@ Input:
         t))
     (tinymail-field-to-move-maybe)))
 
-;;; ----------------------------------------------------------------------
-;;;
 (defun tinymail-field-to-on ()
   "Keep activated by making sure the To: field has only one space."
   (tinymail-debug "tinymail-field-to-on")
   (tinymail-field-to-off 1))
 
-;;; ----------------------------------------------------------------------
-;;;
 ;;;###autoload
 (defun tinymail-on-off-toggle (&optional arg)
   "Toggle TinyMail mode on and off by Changing spacing of To field.
@@ -4310,8 +4149,6 @@ it toggless both Cc and X-Sender-Info tracking."
 ;;}}}
 ;;{{{ code: citation
 
-;;; ----------------------------------------------------------------------
-;;;
 (defun tinymail-iso8601-date-value ()
   "Read Date field and return ISO 8601 date: WEEKDAY YYYY-MM-DD."
   (let ((date "")
@@ -4336,8 +4173,6 @@ it toggless both Cc and X-Sender-Info tracking."
                     (if (and yyyy mm dd) (concat "-" dd) ""))))
     date))
 
-;;; ----------------------------------------------------------------------
-;;;
 (defun tinymail-citation-who-said (str)
   "Formats sender line reference. Input is From/To field.
 
@@ -4376,8 +4211,6 @@ Return:
         (setq ret (concat ret " " grp)))
     ret))
 
-;;; ----------------------------------------------------------------------
-;;;
 (defun tinymail-message-id-value ()
   "Return Google group url."
   (let ((id (mail-fetch-field "References")))
@@ -4386,8 +4219,6 @@ Return:
          (setq id  (car (nreverse (split-string id))))
          (ti::string-match "<\\([^ \t\n>]+\\)>" 1 id))))
 
-;;; ----------------------------------------------------------------------
-;;;
 (defun tinymail-url-reference-google-group ()
   "Return Google group url."
   (let* ((id     (tinymail-message-id-value))
@@ -4410,8 +4241,6 @@ Return:
        id
        ">"))))
 
-;;; ----------------------------------------------------------------------
-;;;
 (defun tinymail-url-reference-mailing-list ()
   "Return maling list URL refence."
   (when (or (ti::mail-to-list-p)
@@ -4421,8 +4250,6 @@ Return:
     (let ((id (tinymail-message-id-value)))
       (concat "Message-Id: " id))))
 
-;;; ----------------------------------------------------------------------
-;;;
 (defun tinymail-message-id ()
   "Return message id or empty.
 This function works best with Gnus:
@@ -4436,8 +4263,6 @@ This function works best with Gnus:
     (when (stringp url)
       (concat "* " url "\n"))))
 
-;;; ----------------------------------------------------------------------
-;;;
 (defun tinymail-message-citation-line-function ()
   "Generate citation line.
 
@@ -4464,8 +4289,6 @@ a handly way to refer to past articles."
       (when (stringp id)
         (insert id)))))
 
-;;; ----------------------------------------------------------------------
-;;;
 (defun tinymail-citation-generate ()
   "Write reference line."
   (if (eq major-mode 'message-mode)
@@ -4502,8 +4325,6 @@ a handly way to refer to past articles."
 ;;}}}
 ;;{{{ code: main
 
-;;; ----------------------------------------------------------------------
-;;;
 (defun tinymail-from-set-field (&optional from-field)
   "Check FROM-FIELD and set From: unless it has two spaces in front."
   (save-excursion
@@ -4525,8 +4346,6 @@ a handly way to refer to past articles."
         (mail-position-on-field "From")
         (ti::mail-kill-field "^From" str))))))
 
-;;; ----------------------------------------------------------------------
-;;;
 (defun tinymail-process-1 (&optional force)
   "See `tinymail-process'. If FORCE is non-nil, run immediately.
 This function should be called interactive only when debugging errors:
@@ -4591,8 +4410,6 @@ C-u M-x tinymail-process-1."
     ;;  User's things now
     (run-hooks 'tinymail--process-hook)))
 
-;;; ----------------------------------------------------------------------
-;;;
 (defun tinymail-process-run-p ()
   "Return t if `tinymail-process' is allowed to run."
   (and (get-buffer-window (current-buffer))
@@ -4601,8 +4418,6 @@ C-u M-x tinymail-process-1."
        (ti::mail-mail-p)
        tinymail-mode))
 
-;;; ----------------------------------------------------------------------
-;;;
 (defun tinymail-process (&optional force)
   "Expand mail aliases and inserts additional info.
 
