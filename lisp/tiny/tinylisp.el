@@ -275,7 +275,7 @@
 ;;      behaves in the same manner as text property display, just turn it on
 ;;      and it will constantly show char info.
 ;;
-;;          $ y     tli-syntax-show-mode
+;;          $ y     tinylisp-syntax-show-mode
 ;;
 ;;  Snooping interesting variables
 ;;
@@ -1122,20 +1122,20 @@ Format:
       (cons ?w  (list '(call-interactively 'widen)))
       (cons ?y  (list '(tinylisp-syntax-show-mode current-prefix-arg 'verb)))
       (cons ?Z  (list '(call-interactively 'tinylisp-emergency)))
-      (cons ?\C-c  (list '(call-interactively 'tinylisp-commentary)))
-      (cons ?\C-e  'tinylisp--menu-edebug)
-      (cons ?\C-v  (list '(call-interactively 'tinylisp-version)))
-      (cons ?a       'tinylisp--menu-autoload)
-      (cons ?i       'tinylisp--menu-info)
-      (cons ?e       'tinylisp--menu-elp)
-      (cons ?E       'tinylisp--menu-elint)
-      (cons ?H       'tinylisp--menu-help)
-      (cons ?b       'tinylisp--menu-buffers)
-      (cons ?c       'tinylisp--menu-checkdoc)
-      (cons ?C       'tinylisp--menu-compile)
-      (cons ?l       'tinylisp--menu-lisp-library)
-      (cons ?1       'tinylisp--menu-misc-1)
-      (cons ?X       'tinylisp--menu-lisp-mnt)
+      (cons ?\C-c (list '(call-interactively 'tinylisp-commentary)))
+      (cons ?\C-e 'tinylisp--menu-edebug)
+      (cons ?\C-v (list '(call-interactively 'tinylisp-version)))
+      (cons ?a  'tinylisp--menu-autoload)
+      (cons ?i  'tinylisp--menu-info)
+      (cons ?e  'tinylisp--menu-elp)
+      (cons ?E  'tinylisp--menu-elint)
+      (cons ?H  'tinylisp--menu-help)
+      (cons ?b  'tinylisp--menu-buffers)
+      (cons ?c  'tinylisp--menu-checkdoc)
+      (cons ?C  'tinylisp--menu-compile)
+      (cons ?l  'tinylisp--menu-lisp-library)
+      (cons ?1  'tinylisp--menu-misc-1)
+      (cons ?X  'tinylisp--menu-lisp-mnt)
       ;; Self insert command
       ;;     User may have defined multichararcter minor map entry
       ;;     like C-cE, we only do self insert if it is NOT
@@ -2247,6 +2247,25 @@ If you see this message when calling following, there is bug in TinyLisp.
         (when (y-or-n-p (format "Kill: %s " (prin1-to-string proc)))
           (delete-process proc))))))
 
+(defun tinylisp-face-find-real-foreground-color (face &optional background)
+  "Find the real background color for a given FACE.
+Traverse back all :inherit face definitions."
+  (let* ((type (if background
+		   :background
+		 :foreground))
+	 (color (face-attribute face type))
+	 face-val)
+    (if (and (eq color 'unspecified)
+             (setq face-val (face-attribute face :inherit)))
+	;; FIXME: The vaue can be list of (face ...)
+	;; Not handled. Take first.
+	(if (and (not (null face-val))
+		 (listp face-val)
+		 (setq face-val (car face-val)))
+            (tinylisp-face-find-real-foreground-color
+	     face-val background))
+      color)))
+
 (defun tinylisp-face-list-unique (face-list)
   "Return unique face list ((var face) ...) from FACE-LIST."
   (let ((getface 'get-face)
@@ -2268,8 +2287,8 @@ If you see this message when calling following, there is bug in TinyLisp.
         (push (list var face) list)))
     list))
 
-;; (load-library "flyspell")
-;; (tinylisp-face-print (current-buffer) '(flyspell-incorrect-face))
+;; (load-library "diff-mode")
+;; (tinylisp-face-print (current-buffer) '(diff-added))
 (defun tinylisp-face-print (buffer face-list &optional details)
   "Insert description to BUFFER for each symbol in FACE-LIST.
 If optional DETAILS is non-nil, display also \\='face-defface-spec properties."
@@ -2286,17 +2305,17 @@ If optional DETAILS is non-nil, display also \\='face-defface-spec properties."
                              (string<
                               (symbol-name (car a))
                               (symbol-name (car b))))))
-          (setq var    (car elt)
-                face   (nth 1 elt)
-                plist  (if details
-                           (format
-                            " %s\n"
-                            (plist-get
-                             (symbol-plist face)
-                             'face-defface-spec))
-                         ""))
+          (setq var (car elt)
+                face (nth 1 elt)
+                plist (if details
+                          (format
+                           " %s\n"
+                           (plist-get
+                            (symbol-plist face)
+                            'face-defface-spec))
+                        ""))
           (insert (format "%-35s" (symbol-name var)))
-          (setq beg  (point))
+          (setq beg (point))
           (insert "abcdef12345  ")
           (set-text-properties beg (point) (list 'face face))
           (if (ti::emacs-p)
@@ -2304,10 +2323,13 @@ If optional DETAILS is non-nil, display also \\='face-defface-spec properties."
                               (face-foreground face)
                               (face-background face)
                               plist))
-            (insert (format "\n  fg: %-15s\n  bg: %s%s"
-                            (face-foreground face)
-                            (face-background face)
-                            plist)))
+            (insert (format
+		     "\n  fg: %-15s\n  bg: %s%s"
+                     (tinylisp-face-find-real-foreground-color
+		      face)
+                     (tinylisp-face-find-real-foreground-color
+		      face 'background)
+                     plist)))
           (insert "\n")))
       buffer)))
 
@@ -5159,16 +5181,31 @@ User can't see string echoed otherwise. Optionally RESTORE."
 
 (defun tinylisp-property-info (&optional arg)
   "See `tinylisp-property-show' and ARG. Return string \"face-info ov-info\"."
-  (let ((count      0)
-        (face-str   "")
-        (ov-str     "")
+  (let ((count 0)
+        (face-str"")
+        (ov-str "")
+	(properties (text-properties-at (point)))
+	(face (get-text-property (point) 'face))
         prefix-ok
-        ovl)
-    (if (member arg '(1 (16) (64)))
-        (setq face-str
-              (format
-               "%s"
-               (prin1-to-string (text-properties-at (point))))))
+        ovl
+	(foreground-color "")
+	(background-color "")
+	(color-info ""))
+    (when face
+      (setq foreground-color
+	    (tinylisp-face-find-real-foreground-color face))
+      (setq background-color
+	    (tinylisp-face-find-real-foreground-color face 'background))
+      (setq color-info
+	    (format "fg: %s bg: %s "
+		    (or foreground-color "")
+		    (or background-color ""))))
+    (when (member arg '(1 (16) (64)))
+      (setq face-str
+            (format
+             "%s%s"
+	     color-info
+             (prin1-to-string properties))))
     (when (member arg '((4) (16) (64)))
       (setq ovl (ti::compat-overlays-at (point)))
       ;;  When there is only one verlay at point, the message should say
@@ -5192,7 +5229,7 @@ User can't see string echoed otherwise. Optionally RESTORE."
 This is post command."
   (when (tinylisp-post-command-run-p)
     (let ((record (equal '(64) tinylisp--property-show-mode))
-          (ch     (char-to-string (following-char)))
+          (ch (char-to-string (following-char)))
           str)
       (setq str
             (format
