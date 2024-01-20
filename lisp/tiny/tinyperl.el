@@ -1,5 +1,3 @@
-;; -*- enable-local-variables: :all;  -*-
-
 ;;; tinyperl.el --- Grab-bag of Perl related utilities. Pod documentation
 
 ;; This file is not part of Emacs
