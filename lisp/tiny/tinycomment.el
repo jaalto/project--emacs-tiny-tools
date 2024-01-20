@@ -1,5 +1,3 @@
-;; -*- enable-local-variables: :all;  -*-
-
 ;;; tinycomment.el --- Smart comment setting utility
 
 ;; This file is not part of Emacs
