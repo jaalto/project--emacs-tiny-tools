@@ -26,12 +26,12 @@
 
 ;;; Install
 
-;;  Put this file on your Emacs-Lisp `load-path' and add following into your
-;;  ~/.emacs startup file
+;;  Place this file on your Emacs-Lisp `load-path' and add the
+;;  following to your ~/.emacs startup file:
 ;;
 ;;      (require 'tinypage)
 ;;
-;;  or use this; your ~/.emacs loads quicker. Preferred.
+;;  Or use this; your ~/.emacs loads quicker:
 ;;
 ;;      (global-set-key "\C-cmp" 'tinypage-mode)   ;; "m" for minor modes
 ;;      (autoload 'tinypage-mode "tinypage" "" t)
@@ -40,7 +40,7 @@
 ;;
 ;;      M-x tinypage-mode-install
 ;;
-;;  to see what this mode offers, look at the mode description
+;;  To see what this mode offers, look at the mode description:
 ;;
 ;;      M-x tinypage-mode
 ;;      C-h m
@@ -49,14 +49,15 @@
 
 ;;  Preface, Jun 1996
 ;;
-;;      I had found paged.el by Michelangelo Grigni <mic@mathcs.emory.edu>
-;;      one year or so ago and had liked it very much. Unfortunately
-;;      it used narrowing and didn't offer easy page select, copy, cut
-;;      actions which belong to basic page editing.
+;;      I had found `paged.el' by Michelangelo Grigni
+;;      mic@mathcs.emory.edu about a year ago and had liked it very
+;;      much. Unfortunately, it used narrowing and didn't offer easy
+;;      page select, copy, cut actions that belong to basic page
+;;      editing.
 ;;
-;;      Paged.el has one nice feature: It can renumber pages and make summary
-;;      out of them. If I have time I will include those features to
-;;      package too.
+;;      The `paged.el' package had one nice feature: it can renumber
+;;      pages and make a summary out of them. If I have time, I will
+;;      include those features in this package too.
 ;;
 ;;  Overview of features
 ;;
@@ -70,15 +71,15 @@
 ;;  About making pages -- basics
 ;;
 ;;      The pages are made by adding the linefeed marker into the
-;;      text. The page markers are interpreted by printed to print
+;;      text. The page markers are interpreted when printed to print
 ;;      text on the following page. The page marker character is
 ;;      usually added on its own line just before the topics or
-;;      headings. In Emacs, you need two key strokes to produce
-;;	ASCII chacter Control-L:
+;;      headings. In Emacs, you need two keystrokes to produce the
+;;      ASCII character Control-L:
 ;;
 ;;          C-q C-l  --> ^L
 ;;
-;;	The layout of your document would look something like:
+;;      The layout of a typical document might look something like:
 ;;
 ;;         ^L
 ;;         1.0 Topic one
@@ -96,8 +97,8 @@
 ;;
 ;;  About renumbering
 ;;
-;;      The package offers simple renumbering features, but it has some
-;;      limitations. Let's see an example of renumbering:
+;;      This package offers simple renumbering features, but it has
+;;      some limitations. Let's see an example of renumbering:
 ;;
 ;;          1.1
 ;;          1.7.1.5             (1)
@@ -117,30 +118,30 @@
 ;;
 ;;      Notes:
 ;;
-;;      .   It can't know that the 1.7.1.5 belongs under previous 1.1,
-;;          because no back tracking is done.
+;;      o   The package can't know that the 1.7.1.5 belongs under the
+;;          previous 1.1 because no backtracking is done.
 ;;
-;;      .   Same goes here, it can't know that the 1.5.4.1 should actually
-;;          start from 1.5.1.1
+;;      o   It also can't know that the 1.5.4.1 should actually start
+;;          from 1.5.1.1.
 ;;
-;;      The thumb rule is, that you _go_ and make sure all the _first_
-;;      level headings (those that end to X.X.1.1) are right before doing
-;;      renumbering. In the above case, you should have done these before
-;;      calling M-x tinypage-renumber-forward.
+;;      The rule of thumb is that you go and make sure all the
+;;      first-level headings (those that end with X.X.1.1) are correct
+;;      before doing renumbering. In the above case, you should have
+;;      done this before calling `M-x' `tinypage-renumber-forward'.
 ;;
-;;      .   --> 1.1.1.1
-;;      .   --> 1.5.1.1  _AND_ do replace M-% 1.5.4 with 1.5.1
+;;      o   --> 1.1.1.1
+;;      o   --> 1.5.1.1  AND do replace M-% 1.5.4 with 1.5.1
 ;;
-;;      Then all the renumberin would have gone just fine. Little
-;;      handy work and this package helps you to number your doc
+;;      Then all the renumbering would have gone just fine. A little
+;;      handy work, and this package helps you to number your document
 ;;      easily.
 ;;
 ;;  Renumbering -- be cautious
 ;;
-;;      If you have index section in you file, there is a little
-;;      problem, because this package does not know anything about
-;;      such things. If the Table of Contents section is at the
-;;      beginning, go past it and use function:
+;;      If you have an index section in your file, there is a little
+;;      problem because this package does not know anything about such
+;;      things. If the Table of Contents section is at the beginning,
+;;      go past it and use the function:
 ;;
 ;;          M-x tinypage-renumber-forward
 ;;
@@ -152,17 +153,18 @@
 ;;
 ;;  Creating index
 ;;
-;;      After all headings are renumbered, the old TOC section needs
-;;      update:
+;;      After all headings are renumbered, the old Table of Contents
+;;      section needs an update:
 ;;
 ;;          M-x tinypage-toc
 ;;
-;;      Copy the shown buffer in place of the old TOC.
+;;      Copy the content of displayed buffer and replace old Table
+;;      of Contents.
 ;;
 ;;  Limitations
 ;;
-;;      Since the numbering is done according to regexp, there is
-;;      no way to avoid the following false hit:
+;;      Since the numbering is done according to a regexp, there is no
+;;      way to avoid the following false hit:
 ;;
 ;;          1.1 Overview
 ;;          This is highly technical document concerning the latest
@@ -174,17 +176,17 @@
 ;;          Where the Daddy-Cool portable sondium emission detector is
 ;;          described in full.
 ;;
-;;      The number 1.5 is unfortunately renumbered to 1.2, and
-;;      possibly causing headache in the NASA and in the spying
-;;      countries. If you know elegant way to prevent these false
-;;      hits, please drop me a mail.
+;;      The number 1.5 is unfortunately renumbered to 1.2, possibly
+;;      causing headaches in NASA and in the spying countries. If you
+;;      know an elegant way to prevent these false hits, please drop
+;;      me an email.
 ;;
 ;;  Code Note
 ;;
-;;      The renumbering used here uses brute force, so the execution time
-;;      is O(n2). If you have more that 30-40 sections, the renumbering
-;;      might take considerable time. If you improve the renumbering, plese
-;;      send a patch.
+;;      The renumbering used here employs brute force, so the
+;;      execution time is O(n^2). If you have more than 30-40
+;;      sections, the renumbering might take considerable time. If you
+;;      improve the renumbering, please send a patch
 
 ;;; Change Log:
 
@@ -452,8 +454,8 @@ Mode description:
   "Return region (BEG . END) of page. VERB."
   (interactive)
   (let (beg
-	end
-	ret)
+        end
+        ret)
     (save-excursion
       (beginning-of-line)
       (if (looking-at "^[ \t]*\C-l")
@@ -492,8 +494,8 @@ Mode description:
   "Current page."
   (interactive)
   (let ((re    "^[ \t]*\C-l")
-	(point (point))
-	(count 0))
+        (point (point))
+        (count 0))
     (save-excursion
       (ti::pmin)
       (while (re-search-forward re point t)
@@ -506,9 +508,9 @@ Mode description:
   "Update modeline info."
   (interactive)
   (let ((mode-string  tinypage--mode-name-string)
-	pages
-	now
-	lines)
+        pages
+        now
+        lines)
     (setq pages (tinypage-count-pages))
     (setq now   (tinypage-current-page))
     (setq lines (tinypage-count-lines-in-page))
@@ -521,7 +523,7 @@ Mode description:
     (if (not (integerp tinypage--post-command-wakeup-counter))
         (setq tinypage--post-command-wakeup-counter 0))
     (setq tinypage--post-command-wakeup-counter
-	  (1+ tinypage--post-command-wakeup-counter))
+          (1+ tinypage--post-command-wakeup-counter))
     (when (eq 0 (% tinypage--post-command-wakeup-counter
                    tinypage--post-command-wakeup-count))
       (tinypage-modeline))))
@@ -567,9 +569,9 @@ Return:
   t             if successfull
   nil"
   (let ((doit (if maybe
-		  (and beg end)
-		t))
-	(reg tinypage--register))
+                  (and beg end)
+                t))
+        (reg tinypage--register))
     (cond
      ((null doit)
       nil)
@@ -644,7 +646,7 @@ References:
   "Renumber all found headings forward. VERB."
   (interactive "P")
   (let* ((data tinypage--renumber-format)
-	 (re   (nth 0 data)))
+         (re   (nth 0 data)))
     (ti::verb)
     ;; Well, we do lot of extra work here, because the
     ;; tinypage-renumber-level-forward goes alway to the bottom,
@@ -670,7 +672,7 @@ References:
 (defsubst tinypage-get-index-list ()
   "Return list of strings."
   (let ((list (ti::buffer-grep-lines (nth 0 tinypage--renumber-format)))
-	ret)
+        ret)
     (dolist (elt list)
       (push (ti::string-remove-whitespace elt) ret))
     ret))
@@ -686,12 +688,12 @@ Return:
   buffer"
   (interactive "P")
   (let ((list (ti::buffer-grep-lines
-	       (nth 0 tinypage--renumber-format)))
-	(buffer (ti::temp-buffer tinypage--buffer-toc 'clear))
-	dots
-	padd
-	heading
-	text)
+               (nth 0 tinypage--renumber-format)))
+        (buffer (ti::temp-buffer tinypage--buffer-toc 'clear))
+        dots
+        padd
+        heading
+        text)
     (with-current-buffer buffer
       (dolist (elt list)
         (setq elt (ti::string-remove-whitespace elt))
@@ -729,10 +731,10 @@ Return:
   "Create index. Show it in X-popup with EVENT."
   (interactive "e")
   (let ((len    tinypage--x-popup-line-len)
-	(title  "Index")
-	list
-	val
-	point)
+        (title  "Index")
+        list
+        val
+        point)
     (cond
      ((null (ti::compat-window-system))
       (message "Sorry, Requires X to use X-popup"))
@@ -821,7 +823,7 @@ Optionally BEFORE with MSG and VERB."
       (insert-register tinypage--register)
       (tinypage-overlay 'hide)
       (if (and verb msg)
-	  (message msg)))))
+          (message msg)))))
 
 ;;;###autoload
 (defun tinypage-go-previous (&optional verb)
@@ -835,8 +837,8 @@ Optionally BEFORE with MSG and VERB."
   "Go to next page, optionally BACK. Return point if moved. VERB."
   (interactive)
   (let ((point (point))
-	func
-	ret)
+        func
+        ret)
     (ti::verb)
     (cond
      (back
