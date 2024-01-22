@@ -5194,7 +5194,7 @@ User can't see string echoed otherwise. Optionally RESTORE."
     (cond
      ((null face))
      ((listp face)
-      (setq foreground-color (or (plist-get face :foreground) ""))
+      (setq foreground-color (plist-get face :foreground))
       (setq background-color (plist-get face :background)))
      ((facep face)
       (setq foreground-color
