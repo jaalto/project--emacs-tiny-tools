@@ -5187,11 +5187,11 @@ Return string \"face-info ov-info\"."
         (ov-str "")
 	(properties (text-properties-at (point)))
 	(face (get-text-property (point) 'face))
+	(property-display-p (member arg '((4) (16) (64))))
         prefix-ok
         ovl
 	foreground-color
 	background-color
-	color-display-p
 	color-info)
     (cond
      ((null face))
@@ -5209,7 +5209,6 @@ Return string \"face-info ov-info\"."
 		    (if foreground-color
 			(concat foreground-color " ")
 		      "")
-		    foreground-color
 		    (if background-color
 			(concat background-color " ")
 		      ""))))
@@ -5218,7 +5217,7 @@ Return string \"face-info ov-info\"."
            "%s%s"
 	   (or color-info "")
            (prin1-to-string properties)))
-    (when (member arg '((4) (16) (64)))
+    (when property-display-p
       (setq ovl (ti::compat-overlays-at (point)))
       ;;  When there is only one verlay at point, the message should say
       ;;  "ov" and reserve "ov1" "ov2" for multiple overlays.
