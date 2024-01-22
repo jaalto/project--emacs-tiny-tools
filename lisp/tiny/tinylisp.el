@@ -5188,19 +5188,30 @@ User can't see string echoed otherwise. Optionally RESTORE."
 	(face (get-text-property (point) 'face))
         prefix-ok
         ovl
-	(foreground-color "")
-	(background-color "")
+	foreground-color
+	background-color
 	(color-info ""))
-    (when face
+    (cond
+     ((null face))
+     ((listp face)
+      (setq foreground-color (or (plist-get face :foreground) ""))
+      (setq background-color (plist-get face :background)))
+     ((facep face)
       (setq foreground-color
 	    (tinylisp-face-find-real-foreground-color face))
       (setq background-color
-	    (tinylisp-face-find-real-foreground-color face 'background))
-      (setq color-info
-	    (format "fg: %s bg: %s "
-		    (or foreground-color "")
-		    (or background-color ""))))
+	    (tinylisp-face-find-real-foreground-color face 'background))))
     (when (member arg '(1 (16) (64)))
+      (setq color-info
+	    (format "fg: %sbg: %s"
+		    (if foreground-color
+			(concat foreground-color " ")
+		      "")
+		    foreground-color
+		    (if background-color
+			(concat background-color " ")
+		      "")))
+
       (setq face-str
             (format
              "%s%s"
