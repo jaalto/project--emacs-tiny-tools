@@ -5180,7 +5180,8 @@ User can't see string echoed otherwise. Optionally RESTORE."
          "off"))))
 
 (defun tinylisp-property-info (&optional arg)
-  "See `tinylisp-property-show' and ARG. Return string \"face-info ov-info\"."
+  "See `tinylisp-property-show-mode' for ARG.
+Return string \"face-info ov-info\"."
   (let ((count 0)
         (face-str"")
         (ov-str "")
@@ -5190,7 +5191,8 @@ User can't see string echoed otherwise. Optionally RESTORE."
         ovl
 	foreground-color
 	background-color
-	(color-info ""))
+	color-display-p
+	color-info)
     (cond
      ((null face))
      ((listp face)
@@ -5210,13 +5212,12 @@ User can't see string echoed otherwise. Optionally RESTORE."
 		    foreground-color
 		    (if background-color
 			(concat background-color " ")
-		      "")))
-
-      (setq face-str
-            (format
-             "%s%s"
-	     color-info
-             (prin1-to-string properties))))
+		      ""))))
+    (setq face-str
+          (format
+           "%s%s"
+	   (or color-info "")
+           (prin1-to-string properties)))
     (when (member arg '((4) (16) (64)))
       (setq ovl (ti::compat-overlays-at (point)))
       ;;  When there is only one verlay at point, the message should say
@@ -5241,14 +5242,16 @@ This is post command."
   (when (tinylisp-post-command-run-p)
     (let ((record (equal '(64) tinylisp--property-show-mode))
           (ch (char-to-string (following-char)))
-          str)
-      (setq str
-            (format
-             "%s:%s"
-             (point)
-             (tinylisp-property-info tinylisp--property-show-mode)))
+          (str (format
+		"%s:%s"
+		(point)
+		(tinylisp-property-info tinylisp--property-show-mode))))
       (tinylisp-record-macro record (insert ch str "\n"))
-      (message "TinyLisp: %s%s" (if record "r" "") str))))
+      (message "TinyLisp: %s%s"
+	       (if record
+		   "r"
+		 "")
+	       str))))
 
 (defun tinylisp-property-show-mode (arg &optional verb)
   "Toggle permanent text property info mode with ARG. VERB.
