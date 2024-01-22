@@ -5264,15 +5264,18 @@ Lowercase \"r\" appears at the beginning if the record mode is selected.
    [r]POINT:FACE-PROPERTIES[ovN:OVERLAY-PROPERTIES]
    12:(face highlight)ov1(face region)ov2(owner my)
 
-Input ARG:
-   nil                  toggle between 0 and C - u C - u aka \\='(16)
-   0                    off
-   1                    show face properties
-   \\='(4)  C -u           show overlay properties.
-   \\='(16) C -u C -u      show both text properties and overlays.
-   \\='(64) C -u C -u C -u show both text properties and overlays AND
-                        record info in buffer `tinylisp--buffer-record'.
-VERB                    verbose flag"
+Input:
+
+  ARG                    `current-prefix-arg' in interactive call.
+    nil                  toggle between 0 and C - u C - u aka \\='(16)
+    0                    off
+    1                    show face properties
+    \\='(4)  C -u           show overlay properties.
+    \\='(16) C -u C -u      show both text properties and overlays.
+    \\='(64) C -u C -u C -u show both text properties and overlays AND
+			 record info in buffer `tinylisp--buffer-record'.
+
+  VERB                   verbose flag"
   (interactive "P")
   (ti::verb)
   (if tinylisp--syntax-show-mode
