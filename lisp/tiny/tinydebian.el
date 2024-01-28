@@ -128,7 +128,7 @@
   (or (require 'cl-lib nil 'noerr) ;; Emacs 29.x
       (require 'cl)))
 
-(defconst tinydebian--version-time "2023.0919.0915"
+(defconst tinydebian--version-time "2024.0128.1134"
   "Last edited time.")
 
 (require 'tinylibm)
@@ -5618,7 +5618,7 @@ Mode description:
 (defmacro tinydebian-bts-mail-type-macro (type pkg email subject &rest body)
   "Compose a TYPE request and run BODY.
 
-Variables bound during macro (can all be nil):
+Variables bound during macro (can be nil):
 
   bugnbr
   type-orig
@@ -5631,11 +5631,11 @@ Variables bound during macro (can all be nil):
        (if (stringp ,pkg) ;; Use input argument
            (setq package ,pkg))
        (let ((,subj (or ,subject
-                        (if ,type
+			(if ,type
                             (format "%s: %s%s"
                                     ,type
                                     (if package
-                                        (format "%s -- " package)
+					(format "%s -- " package)
                                       "")
                                     (or description ""))
                           ""))))
@@ -5959,49 +5959,51 @@ Severity: wishlist
 ;;; ----------------------------------------------------------------------
 ;;;
 (defun tinydebian-bts-mail-type-rfp
-  (package license homepage desc &optional itp)
+    (package license homepage desc &optional itp)
   "Send an RFP request.
 If optional `current-prefix-arg' is set, label post as an ITP.
 The default is to use RFP in Subject header."
   (interactive
-   (let* ((name    (read-string
-                    (format
-                     "%s package name [required; lowercase]: "
-                     (if current-prefix-arg
-                         "ITP"
-                       "RFP"))))
-          (desc    (read-string
-                    "Package description [required]: "))
+   (let* ((name (read-string
+                 (format
+                  "%s package name [required; lowercase]: "
+                  (if current-prefix-arg
+                      "ITP"
+                    "RFP"))))
+          (desc (read-string
+                 "Package description [required]: "))
           (license (completing-read
                     "License [required]: "
                     (mapcar (lambda (x)
                               (cons x 1))
                             tinydebian--wnpp-template-licenses-alist)))
-          (url     (read-string
-                    "Project homepage URL [required]: ")))
+          (url (read-string
+                "Project homepage URL [required]: ")))
      (list name
            license
            url
            desc
            (if current-prefix-arg
                'itp))))
+  (or (and package license homepage desc)
+      (error "Error: not all parameters are set."))
   (cl-flet ((replace-my (regexp str &optional point all)
-                  (when (and (stringp str)
-                             (not (string= "" str)))
-                    (goto-char (or point
-                                   (point-min)))
-                    (if all
-                        (while (re-search-forward regexp nil t)
-                          (replace-match str 'literal nil nil 1))
-                      (if (re-search-forward regexp nil t)
-                          (replace-match str 'literal nil nil 1))))))
+              (when (and (stringp str)
+                         (not (string= "" str)))
+                (goto-char (or point
+                               (point-min)))
+                (if all
+                    (while (re-search-forward regexp nil t)
+                      (replace-match str 'literal nil nil 1))
+                  (if (re-search-forward regexp nil t)
+                      (replace-match str 'literal nil nil 1))))))
     (let ((arg-pkg package)) ;; Due to macro which reserves var `package'.
       (tinydebian-bts-mail-type-macro "ITP"
           arg-pkg (tinydebian-bts-email-submit) nil
         (insert tinydebian--rfp-template)
-        (replace-my "\\(<package>.*\\)"    package nil 'all)
-        (replace-my "\\(<homepage:.*\\)"   homepage)
-        (replace-my "\\(<license:.*\\)"    license)
+        (replace-my "\\(<package>.*\\)" package nil 'all)
+        (replace-my "\\(<homepage:.*\\)" homepage)
+        (replace-my "\\(<license:.*\\)" license)
         (replace-my "\\(<short desc>.*\\)" desc)
         (mail-position-on-field "Subject")
         (beginning-of-line)
