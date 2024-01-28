@@ -111,8 +111,7 @@
 ;;  Todo
 ;;
 ;;      Ubuntu Launchpad.net BTS could also be controlled by email and
-;;      it has similarities to the Debian BTS. Support for Launchpad email
-;;      interface may appear in the future.
+;;      it has similarities to the Debian BTS.
 
 ;;}}}
 
