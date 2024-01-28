@@ -1,5 +1,3 @@
-;; -*- enable-local-variables: :all;  -*-
-
 ;;; tinyigrep.el --- Top level interface to igrep.el
 
 ;; This file is not part of Emacs
@@ -743,10 +741,8 @@ Format:
 ;;}}}
 ;;{{{ code: Cygwin support
 
-;;; ----------------------------------------------------------------------
 ;;; Some code does not treat Cygwin environment properly, so you should do
 ;;; use this macro.
-;;;
 (put 'ti::expand-file-name-cygwin-macro 'lisp-indent-function 1)
 (put 'ti::expand-file-name-cygwin-macro 'edebug-form-spec '(body))
 (defmacro ti::expand-file-name-cygwin-macro (check-form &rest body)
@@ -819,8 +815,6 @@ The path is not expanded, but returned as is."
                 (format "%s%s" arg1 arg0)
               arg0)))))
 
-;;; ----------------------------------------------------------------------
-;;;
 (defun tinyigrep-cygwin-binary-p (prg)
   "Fix `igrep' under Win32 Emacs and Cygwin."
   (and (ti::win32-p)
@@ -828,8 +822,6 @@ The path is not expanded, but returned as is."
        (ti::win32-cygwin-p)
        (string-match "grep\\|\\.sh$" prg)))
 
-;;; ----------------------------------------------------------------------
-;;;
 (defun tinyigrep-cygwin-fixes ()
   "Under Native Win32 Emacs, use Cygwin executables, not Windows versions."
   (when (and (ti::emacs-type-win32-p)
@@ -859,8 +851,6 @@ The path is not expanded, but returned as is."
 ;;}}}
 ;;{{{ code: low-level function and macros
 
-;;; ----------------------------------------------------------------------
-;;;
 (defun tinyigrep-expand-file-name-os (path)
   "Expand PATH to correct OS. Under Cygwin, use Cygwin paths."
   (unless (stringp path)
@@ -868,9 +858,7 @@ The path is not expanded, but returned as is."
   (ti::file-name-for-correct-system path (if (ti::win32-cygwin-p)
                                              'cygwin)))
 
-;;; ----------------------------------------------------------------------
 ;;; (tinyigrep-db-lazy-define-funcall (assoc "perl-pod" tinyigrep--database))
-;;;
 (defun tinyigrep-db-lazy-define-funcall (elt)
   "Examine database ELT and call embedded function to define database.
 This function activates only, if ELT is in format:
@@ -896,8 +884,6 @@ in `tinyigrep--database'."
       (error "TinyIgrep: Can't define database. No callable function [%s]"
              (prin1-to-string elt))))))
 
-;;; ----------------------------------------------------------------------
-;;;
 (defun tinyigrep-db-push-lazy-define (database function)
   "Add DATABASE name and FUNCTION to `tinyigrep--database'.
 The FUNCTION si called when user selects DATABASE and it
@@ -912,8 +898,6 @@ at the point of calling."
         (setq tinyigrep--database (delete member tinyigrep--database)))
     (push (list database (list function)) tinyigrep--database)))
 
-;;; ----------------------------------------------------------------------
-;;;
 (defun tinyigrep-db-push-elt (elt)
   "Replace existing ELT in the `tinyigrep--database' or add new one.
 If you want to denote a directory, make sure the last character is slash.
@@ -944,8 +928,6 @@ Examples:
           (setq tinyigrep--database (delete member tinyigrep--database)))
       (push elt tinyigrep--database))))
 
-;;; ----------------------------------------------------------------------
-;;;
 (defsubst tinyigrep-db-push-elt-lisp-package (name file &optional grep method)
   "Push NAME into `tinyigrep--database' if FILE found. Use GREP for search.
 This means, that if FILE exists, rthe directory where it was found
@@ -974,8 +956,6 @@ Examples:
     file name (or grep  "egrep")
     '(list (concat dir "*el")) method)))
 
-;;; ----------------------------------------------------------------------
-;;;
 (defun tinyigrep-db-push-elt-package (name package &optional recursive grep)
   "Find PACKAGE and create NAME entry to database for RECURSIVE \\='(nil).
 
@@ -1001,8 +981,6 @@ Example:
               (if recursive
                   '(nil))))))))
 
-;;; ----------------------------------------------------------------------
-;;;
 (defun tinyigrep-db-push-elt-package-texi
   (name package &optional recursive grep)
   "Find PACKAGE texi and create NAME entry to database. RECURSIVE \\='(nil).
@@ -1028,16 +1006,12 @@ Examples:
                (list name (list grep (list (concat dir "*.texi*") ))))
               (throw 'done dir))))))))
 
-;;; ----------------------------------------------------------------------
-;;;
 (defmacro tinyigrep-countdown (message count &optional msg)
   "Show (format MESSAGE COUNT MSG) and decrease COUNT."
   `(progn
      (setq ,count (1- ,count))
      (message (format ,message ,count (or ,msg "") ))))
 
-;;; ----------------------------------------------------------------------
-;;;
 (defun tinyigrep-activate-perl-support ()
   "Add support for Perl POD manual pages.
 The Perl support is consulted from package tinyperl.el.
@@ -1065,9 +1039,7 @@ Return:
 ;;}}}
 ;;{{{ code: lazy defined databases
 
-;;; ----------------------------------------------------------------------
 ;;; (assoc "perl-pod" tinyigrep--database)
-;;;
 (defun tinyigrep-install-database-setup-perl-pod (&optional grep)
   "Install Perl search databases."
   (or grep
@@ -1083,8 +1055,6 @@ Return:
                             "%s*pod"
                             (file-name-as-directory path))))))))))
 
-;;; ----------------------------------------------------------------------
-;;;
 (defun tinyigrep-install-database-setup-perl-modules (&optional grep)
   "Install Perl search databases."
   (or grep
@@ -1101,8 +1071,6 @@ Return:
                        (format "%s*pm" x)))
                     path)
                    '(nil)))))))
-;;; ----------------------------------------------------------------------
-;;;
 (defun tinyigrep-install-database-setup-lisp-rc-files (&optional grep)
   "Emacs Lisp *-rc-* file search database."
   (or grep
@@ -1122,8 +1090,6 @@ Return:
     (when list
       (tinyigrep-db-push-elt (list "lisp-rc-files" (list grep list))))))
 
-;;; ----------------------------------------------------------------------
-;;;
 (defun tinyigrep-install-database-setup-lisp-cl (&optional grep)
   "Install cl*.el search databases."
   (or grep
@@ -1151,8 +1117,6 @@ Return:
               (list (concat path-cl "cl*el"))
               '(nil)))))))
 
-;;; ----------------------------------------------------------------------
-;;;
 (defun tinyigrep-install-database-setup-lisp-load-path (&optional grep)
   "Install Emacs Lisp `load-path' search database."
   (or grep
@@ -1173,8 +1137,6 @@ Return:
                    '(nil))))
         (tinyigrep-db-push-elt (list "lisp-load-path" database))))))
 
-;;; ----------------------------------------------------------------------
-;;;
 (defun tinyigrep-install-database-lisp-packages-lazy (&optional grep)
   "Define lisp package databases. This utilizes deferred lazy loading.
 References:
@@ -1209,8 +1171,6 @@ References:
         (eval def)
         (tinyigrep-db-push-lazy-define db sym)))))
 
-;;; ----------------------------------------------------------------------
-;;;
 (defun tinyigrep-install-database-lisp-flag-files-lazy (&optional grep)
   "Define lisp search databases. This utilizes deferred lazy loading.
 References:
@@ -1245,8 +1205,6 @@ References:
         (eval def)
         (tinyigrep-db-push-lazy-define db sym)))))
 
-;;; ----------------------------------------------------------------------
-;;;
 (defun tinyigrep-install-database-lisp-texi-lazy (&optional grep)
   "Define lisp *.texi search databases. This utilizes deferred lazy loading.
 References:
@@ -1283,8 +1241,6 @@ References:
         (eval def)
         (tinyigrep-db-push-lazy-define db sym)))))
 
-;;; ----------------------------------------------------------------------
-;;;
 (defun tinyigrep-install-database-lazy ()
   "Install lazy defined databases in `tinyigrep--databases-lazy-defined'."
   (let* ((list tinyigrep--databases-lazy-defined)
@@ -1300,8 +1256,6 @@ References:
 ;;}}}
 ;;{{{ code: default database
 
-;;; ----------------------------------------------------------------------
-;;;
 (defun tinyigrep-install-default-databases (&optional grep)
   "Install default Emacs, Info, Perl: Man entries to `tinyigrep--database'.
 GREP is program to used for grepping. Default is `egrep'."
@@ -1613,16 +1567,12 @@ c = Toggle case sensitive option `-i' in grep searches.
 u = User option. Prompt for custom grep options.
 r = Toggle recursive option `igrep-find'.")
 
-;;; ----------------------------------------------------------------------
-;;;
 ;;;###autoload
 (defun tinyigrep-menu (&optional arg)
   "Igrep command menu."
   (interactive "P")
   (ti::menu-menu 'tinyigrep--menu arg))
 
-;;; ----------------------------------------------------------------------
-;;;
 (defsubst tinyigrep-check-files (files)
   "Check that FILES can be grepped."
   (when files
@@ -1630,8 +1580,6 @@ r = Toggle recursive option `igrep-find'.")
       (if (ti::file-name-remote-p elt)
           (error "TinyIgrep: Remote file name is not supported: %s" elt)))))
 
-;;; ----------------------------------------------------------------------
-;;;
 (defun tinyigrep-db-lisp-elt (file name prg list &optional method)
   "Return tigr entry if FILE was found.
 
@@ -1668,8 +1616,6 @@ If bbdb.el is not found, then this return valid `null' entry."
 ;;}}}
 ;;{{{ Igrep
 
-;;; ----------------------------------------------------------------------
-;;;
 (defun tinyigrep-fix-program-path (program)
   "Fix PROGRAM path according to environment.
 Under Win32, Emacs cannot call Cygwin shell scripts.
@@ -1693,8 +1639,6 @@ Find out the full path for PROGRAM."
           (put 'tinyigrep-fix-program-path bin program)))))
   program)
 
-;;; ----------------------------------------------------------------------
-;;;
 (defun tinyigrep-recursive-var ()
   "Return igrep variable name."
   (if (boundp 'igrep-recursively)
@@ -1702,8 +1646,6 @@ Find out the full path for PROGRAM."
     ;;  Newer, 2.55
     'igrep-find))
 
-;;; ----------------------------------------------------------------------
-;;;
 (defun tinyigrep-fix-word (word)
   "Set WORD to '' if it contain only repeated chars.
 Fix other things too."
@@ -1721,8 +1663,6 @@ Fix other things too."
     (setq word (replace-regexp-in-string "[?!`()'\"\r\n]" "" word)))
   (ti::remove-properties word))
 
-;;; ----------------------------------------------------------------------
-;;;
 (defun tinyigrep-igrep-call (prg pattern files &optional use-find)
   "Call igrep.el with PRG PATTERN and FILES and recursive USE-FIND."
   (let ((fid "tinyigrep-igrep-call:"))
@@ -1749,8 +1689,6 @@ Fix other things too."
              (igrep-find prg pattern files))
          (igrep prg pattern files))))))
 
-;;; ----------------------------------------------------------------------
-;;;
 (defun tinyigrep-as-last-time (pattern arg-list)
   "Call `igrep' like last time, with same args. Allow editing.
 The word to be grepped and the passed args can be changed.
@@ -1809,8 +1747,6 @@ PATTERN is new search patter and ARG-LIST is original argument list."
     ;; (ti::d!! 'dir default-directory 'args arg-list)
     (tinyigrep-igrep-call igrep-program pattern files use-find)))
 
-;;; ----------------------------------------------------------------------
-;;;
 (defun tinyigrep-determine-grep-program (file-list)
   "Guess proper grep program for FILE-LIST."
   (when file-list
@@ -1826,8 +1762,6 @@ PATTERN is new search patter and ARG-LIST is original argument list."
            (throw 'break nil)))))
       prg)))
 
-;;; ----------------------------------------------------------------------
-;;;
 (defun tinyigrep-main-read-args ()
   "Ask args to igrep.
 If you press RETURN when this function asks for database, then you
@@ -1986,8 +1920,6 @@ References:
      ret
      use-find)))
 
-;;; ----------------------------------------------------------------------
-;;;
 (defun tinyigrep-main (&optional prg pattern files do-it use-find)
   "Front-end to igrep.
 Try to guess what directories to search according to buffer content.

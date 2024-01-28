@@ -950,8 +950,6 @@ Defined keys:
        (define-key root-map [(button2)]          'tinyurl-mouse-binding)))
      (define-key root-map "\e\C-m" 'tinyurl-key-binding-default))))
 
-;;; ----------------------------------------------------------------------
-;;;
 (defun tinyurl-mode-turn-on-ok-p ()
   "Check if `tinyurl-mode-1' is allowed to be turned on for the buffer.
 The buffer is seached for basic URL references and checked against
@@ -964,8 +962,6 @@ The buffer is seached for basic URL references and checked against
                 "\\|<[^ \t\n]+@[^ \t\n]+>"
                 "\\|mailto:[^ \t\n]+@[^ \t\n]+"))))
 
-;;; ----------------------------------------------------------------------
-;;;
 ;;;###autoload
 (defun turn-on-turn-off-tinyurl-mode-1-maybe ()
   "Activate or deactivate `tinyurl-mode-1' in current buffer.
@@ -975,8 +971,6 @@ The value of `tinyurl--exclude-function' is consulted first."
       (turn-on-tinyurl-mode-1)
     (turn-off-tinyurl-mode-1)))
 
-;;; ----------------------------------------------------------------------
-;;;
 ;;;###autoload
 (defun turn-on-tinyurl-mode-1-maybe ()
   "Activate `tinyurl-mode-1' in current buffer if ftp, http or email is found.
@@ -989,8 +983,6 @@ References:
   (when (tinyurl-mode-turn-on-ok-p)
     (turn-on-tinyurl-mode-1)))
 
-;;; ----------------------------------------------------------------------
-;;;
 ;;;###autoload
 (defun turn-on-tinyurl-mode-mail ()
   "Turn on  `tinyurl-mode-1' and make `tinyurl--mouse-yank-at-point' local."
@@ -1001,8 +993,6 @@ References:
   (unless tinyurl-mode
     (turn-on-tinyurl-mode-1)))
 
-;;; ----------------------------------------------------------------------
-;;;
 (defun turn-on-tinyurl-mode-automatically ()
   "This function is called from idle timer process `tinyurl-mark-process'.
 If `tinyurl--mode-global-turned-off' is set, do nothing."
@@ -1013,8 +1003,6 @@ If `tinyurl--mode-global-turned-off' is set, do nothing."
     (turn-on-tinyurl-mode-1)
     t))
 
-;;; ----------------------------------------------------------------------
-;;;
 (defun turn-on-tinyurl-mode-1 ()
   "Turn URL mode on for this buffer only."
   (interactive)
@@ -1023,8 +1011,6 @@ If `tinyurl--mode-global-turned-off' is set, do nothing."
       (setq tinyurl--mode-manually-turned-off nil))
     (tinyurl-mode-1 1)))
 
-;;; ----------------------------------------------------------------------
-;;;
 (defun turn-off-tinyurl-mode-1 ()
   "Turn URL mode off for this buffer only."
   (interactive)
@@ -1033,8 +1019,6 @@ If `tinyurl--mode-global-turned-off' is set, do nothing."
       (setq tinyurl--mode-manually-turned-off t))
     (tinyurl-mode-1 0)))
 
-;;; ----------------------------------------------------------------------
-;;;
 (defun tinyurl-overlay-kill  ()
   "Kill used overlays.
 This function only kills overlays recoded to internal list.
@@ -1044,8 +1028,6 @@ TinyUrl overlays, use `tinyurl-overlay-kill-in-buffer'."
   (dolist (ov (get 'tinyurl-mark-line 'ov-list))
     (delete-overlay ov)))
 
-;;; ----------------------------------------------------------------------
-;;;
 (defun tinyurl-overlay-kill-in-buffer ()
   "Kill TinyUrl overlays from whole buffer. See also `tinyurl-overlay-kill'."
   (interactive)
@@ -1056,7 +1038,6 @@ TinyUrl overlays, use `tinyurl-overlay-kill-in-buffer'."
    '(owner tinyurl)
    'prop-val-list))
 
-;;; ----------------------------------------------------------------------
 ;;;###autoload
 (defun tinyurl-mode-1 (arg)
   "Turn mode on or off with mode ARG for current buffer only.
@@ -1073,8 +1054,6 @@ If you want to turn on or off globally, use function `tinyurl-mode'."
     (setq tinyurl--mode-manually-turned-off (not tinyurl-mode)))
   tinyurl-mode)
 
-;;; ----------------------------------------------------------------------
-;;;
 (defun tinyurl-mode-action (&optional mode verb)
   "Turn MODE `tinyurl-mode' on or off everywhere. See `tinyurl-mode'.
 This function must not be called directly, not even from Lisp. Use
@@ -1110,7 +1089,6 @@ function `tinyurl-mode' function instead. VERB."
         (sit-for 1))
       (put 'tinyurl-mode 'self-call nil))))
 
-;;; ----------------------------------------------------------------------
 ;;;###autoload
 (defun tinyurl-install (&optional uninstall)
   "Install or `UNINSTALL package."
@@ -1133,8 +1111,6 @@ function `tinyurl-mode' function instead. VERB."
       (add-hook 'post-command-hook
                 'tinyurl-mark-process-post-command))))
 
-;;; ----------------------------------------------------------------------
-;;;
 (defun tinyurl-install-to-packages (&optional restore-original)
   "Make TinyUrl default top level url handler: GNUS, TM, VM etc.
 Optionally RESTORE-ORIGINAL url handlers."
@@ -1202,16 +1178,12 @@ Optionally RESTORE-ORIGINAL url handlers."
       ;; VM
       (defconst vm-url-browser 'tinyurl-dispatcher-1))))
 
-;;; ----------------------------------------------------------------------
-;;;
 (defun tinyurl-find-file-hook ()
   "Turn on tinyurl mode if `tinyurl--mode-global' is non-nil."
   (when (and (get 'tinyurl-mode 'global)
              (null tinyurl-mode))
     (turn-on-tinyurl-mode-1)))
 
-;;; ----------------------------------------------------------------------
-;;;
 (defun tinyurl-set-handler (table)
   "Set active url handler command TABLE."
   (interactive
@@ -1223,28 +1195,20 @@ Optionally RESTORE-ORIGINAL url handlers."
 ;;}}}
 ;;{{{ misc
 
-;;; ----------------------------------------------------------------------
-;;;
 (defun tinyurl-plugged-p ()
   "Return plugged status."
   (or (get 'tinyurl-plugged-p 'mode)
       (ti::mail-plugged-p)))
 
-;;; ----------------------------------------------------------------------
-;;;
 (defun tinyurl-plugged-always-p ()
   "Return true plugged status."
   t)
 
-;;; ----------------------------------------------------------------------
 ;;; Called by the Line marker process to keep track of the Gnus mode changes
-;;;
 (defun tinyurl-plugged-update ()
   "Update plugged status."
   (put 'tinyurl-plugged-p 'mode (tinyurl-plugged-p)))
 
-;;; ----------------------------------------------------------------------
-;;;
 (defun tinyurl-plugged-mode-toggle (&optional arg verb)
   "Set plugged status according to ARG. 1 means plugged and 0 unplugged.
 When mode is nil, assume unplugged unless `ti::mail-plugged-p'
@@ -1264,8 +1228,6 @@ When mode is nil, assume unplugged unless `ti::mail-plugged-p'
     (tinyurl-modeline-update)
     (get 'tinyurl-plugged-p 'mode)))
 
-;;; ----------------------------------------------------------------------
-;;;
 (defun tinyurl-call-process-win32 (binary &rest args)
   "Call Win32 native BINARY with ARGS"
   (interactive)
@@ -1284,8 +1246,6 @@ When mode is nil, assume unplugged unless `ti::mail-plugged-p'
     (message
      "TinyUrl: `tinyurl--win32-shell-execute-helper' not configured."))))
 
-;;; ----------------------------------------------------------------------
-;;;
 (defun tinyurl-default-exclude  (buffer)
   "Default function for `tinyurl--exclude-function' to ignore BUFFER.
 Ignores VM, W3, DIRED, ARCHIVE, COMPILE, GREP buffers.
@@ -1313,8 +1273,6 @@ function ´tinyurl-default-exclude', which you can recall with:
                      name)
             stat))))))
 
-;;; ----------------------------------------------------------------------
-;;;
 (defun tinyurl-command-table-put (table key value)
   "Use command TABLE entry and change KEY's value to new VALUE."
   (let (elt
@@ -1329,8 +1287,6 @@ function ´tinyurl-default-exclude', which you can recall with:
         (error "TinyUrl: No key %s found" key))
     (nreverse new)))
 
-;;; ----------------------------------------------------------------------
-;;;
 (defun tinyurl-command-table-put-2nd (table key1 key2 value)
   "Use command TABLE, find KEY1, change 2nd level KEY2's value to new VALUE.
 The TABLE is modified in place."
@@ -1359,8 +1315,6 @@ The TABLE is modified in place."
     (setcdr elt (list new))            ; Change key1's right hand list
     table))
 
-;;; ----------------------------------------------------------------------
-;;;
 (defun tinyurl-browse-url-browser-function ()
   "Return default `browse-url-browser-function'."
   (when (and (boundp 'browse-url-browser-function)
@@ -1378,8 +1332,6 @@ The TABLE is modified in place."
           (when (string-match "netscape" (symbol-name (cdr-safe elt)))
             (throw 'break (cdr elt)))))))))
 
-;;; ----------------------------------------------------------------------
-;;;
 (defun tinyurl-user-default-browser-type ()
   "What kind of browser user used before? \"netscape\" or \"iexplore."
   (let* ((browse (tinyurl-browse-url-browser-function))
@@ -1395,8 +1347,6 @@ The TABLE is modified in place."
               'default)))))
     user-default))
 
-;;; ----------------------------------------------------------------------
-;;;
 (defun tinyurl-user-command-table-default ()
   "Return default command table choice.
 This might be \"netscape\" or \"iexplore\"."
@@ -1423,8 +1373,6 @@ This might be \"netscape\" or \"iexplore\"."
            (t
             "default"))))))))
 
-;;; ----------------------------------------------------------------------
-;;;
 (defun tinyurl-command-table-default-1 ()
   "Return default `tinyurl--command-table' entry.
 If you change this function\\='s source, run
@@ -1460,8 +1408,6 @@ References:
     'overlay-plist
     tinyurl--overlay-plist)))
 
-;;; ----------------------------------------------------------------------
-;;;
 (defmacro tinyurl-command-table-before-string (entry string)
   "Replace property \\='before-string in ENTRY with STRING."
   `(if (ti::emacs-p)
@@ -1476,7 +1422,6 @@ References:
       'begin-glyph
       (ti::funcall 'make-glyph ,string))))
 
-;;; ----------------------------------------------------------------------
 ;;; This is a copy from function `browse-url'.
 (defun tinyurl-command-browse-url-default-browser-function-1
     (&optional url)
@@ -1492,8 +1437,6 @@ URL defaults to http"
           (when (string-match (car elt) (or url "http"))
             (throw 'break (cdr elt))))))))
 
-;;; ----------------------------------------------------------------------
-;;;
 (defun tinyurl-command-browse-url-default-browser-function ()
   "Find brose-url.el function that would  call the default broser.
 If not found, signal error."
@@ -1501,8 +1444,6 @@ If not found, signal error."
       (error "TinyUrl: `browse-url-browser-function' is not set.
 Has brose-url.el been loaded?")))
 
-;;; ----------------------------------------------------------------------
-;;;
 (defun tinyurl-command-table-default ()
   "Return \"default\" entry."
   (let ((entry (tinyurl-command-table-default-1)))
@@ -1513,8 +1454,6 @@ Has brose-url.el been loaded?")))
     (tinyurl-command-table-before-string entry "!")
     entry))
 
-;;; ----------------------------------------------------------------------
-;;;
 (defun tinyurl-command-table-netscape ()
   "Return Netscape entry."
   (let ((entry (tinyurl-command-table-default-1)))
@@ -1524,8 +1463,6 @@ Has brose-url.el been loaded?")))
       (tinyurl-command-table-before-string entry "!")
       entry)))
 
-;;; ----------------------------------------------------------------------
-;;;
 (defun tinyurl-command-table-iexplore ()
   "Return Unix Iexplorer entry."
   (let ((entry (tinyurl-command-table-default-1)))
@@ -1535,8 +1472,6 @@ Has brose-url.el been loaded?")))
       (tinyurl-command-table-before-string entry "!")
       entry)))
 
-;;; ----------------------------------------------------------------------
-;;;
 (defun tinyurl-command-table-netscape-win32 ()
   "Return Netscape entry."
   (let ((entry (tinyurl-command-table-default-1)))
@@ -1545,8 +1480,6 @@ Has brose-url.el been loaded?")))
     (tinyurl-command-table-before-string entry "!")
     entry))
 
-;;; ----------------------------------------------------------------------
-;;;
 (defun tinyurl-command-table-iexplore-win32 ()
   "Return Netscape entry."
   (let ((entry (tinyurl-command-table-default-1)))
@@ -1555,8 +1488,6 @@ Has brose-url.el been loaded?")))
     (tinyurl-command-table-before-string entry "@")
     entry))
 
-;;; ----------------------------------------------------------------------
-;;;
 (defun tinyurl-command-table-lynx ()
   "Return Lynx entry."
   (let ((entry (tinyurl-command-table-default-1)))
@@ -1565,8 +1496,6 @@ Has brose-url.el been loaded?")))
     (tinyurl-command-table-before-string entry "*")
     entry))
 
-;;; ----------------------------------------------------------------------
-;;;
 (defun tinyurl-command-table-w3 ()
   "Return W3 entry."
   (let ((entry (tinyurl-command-table-default-1)))
@@ -1575,8 +1504,6 @@ Has brose-url.el been loaded?")))
     (tinyurl-command-table-before-string entry "?")
     entry))
 
-;;; ----------------------------------------------------------------------
-;;;
 (defun tinyurl-command-table-defaults ()
   "Return default value for `tinyurl--command-table'."
   (delq nil                             ;remove empty entries
@@ -1594,15 +1521,11 @@ Has brose-url.el been loaded?")))
            (list "lynx"  (tinyurl-command-table-lynx)))
          (list "w3"    (tinyurl-command-table-w3)))))
 
-;;; ----------------------------------------------------------------------
-;;;
 (defun tinyurl-command-table-defaults-set ()
   "Set `tinyurl--command-table' to defaults."
   (interactive)
   (setq tinyurl--command-table (tinyurl-command-table-defaults)))
 
-;;; ----------------------------------------------------------------------
-;;;
 (defun tinyurl-install-command-table (&optional force)
   "Set default values to `tinyurl--command-table'. FORCE reset."
   (if force
@@ -1617,8 +1540,6 @@ Has brose-url.el been loaded?")))
     (setq tinyurl--command-table-current
           (tinyurl-user-command-table-default))))
 
-;;; ----------------------------------------------------------------------
-;;;
 (defun tinyurl-modeline-update ()
   "Update modeline name."
   (tinyurl-install-command-table)
@@ -1630,24 +1551,18 @@ Has brose-url.el been loaded?")))
                     "!" "")))
   (ti::compat-modeline-update))
 
-;;; ----------------------------------------------------------------------
-;;;
 (defsubst tinyurl-set-mouse-maybe (event)
   "Set point to mouse EVENT and mark URLs in the line."
   (when (and event (null tinyurl--mouse-yank-at-point))
     (goto-char (ti::mouse-point event))
     (tinyurl-mark-line)))
 
-;;; ----------------------------------------------------------------------
-;;;
 (defsubst tinyurl-table (table)
   "Return command TABLE."
   (or (nth 1 (assoc table tinyurl--command-table))
       (prog1 nil)))
         ;; (message "TinyUrl: [ERROR] No such command table: [%s] " table)
 
-;;; ----------------------------------------------------------------------
-;;;
 (defun tinyurl-table-current (&optional table)
   "Return copy of active command table.
 References:
@@ -1669,14 +1584,10 @@ References:
                 (ti::funcall 'make-glyph ""))))
     table))
 
-;;; ----------------------------------------------------------------------
-;;;
 (defsubst tinyurl-overlay-plist (&optional table)
   "Return overlay plist of TABLE."
   (nth 1 (assq 'overlay-plist (tinyurl-table-current table))))
 
-;;; ----------------------------------------------------------------------
-;;;
 (defsubst tinyurl-agent-function (type)
   "Return agent function for TYPE. See `tinyurl--command-table'."
   (let ((elt (cdr (assq type (tinyurl-table-current)))))
@@ -1685,36 +1596,26 @@ References:
     (tinyurl-debug "tinyurl-agent-function" elt)
     elt))
 
-;;; ----------------------------------------------------------------------
-;;;
 (defsubst tinyurl-agent-funcall (type url)
   "Call correct function according to TYPE and pass it an URL."
   (funcall (tinyurl-agent-function type) url))
 
-;;; ----------------------------------------------------------------------
-;;;
 (defsubst tinyurl-types ()
   "Return known url types in `tinyurl--command-table-current'."
   (mapcar 'car (tinyurl-table-current)))
 
-;;; ----------------------------------------------------------------------
-;;;
 (defun tinyurl-mouse-binding (event)
   "Jump to URL at point or call original function with mouse EVENT."
   (interactive "e")
   (setq tinyurl--event event)
   (tinyurl-dispatcher event 'mouse))
 
-;;; ----------------------------------------------------------------------
-;;;
 (defun tinyurl-mouse-binding-down (event)
   "Jump to URL at point or call original function with mouse EVENT."
   (interactive "e")
   (setq tinyurl--event event)
   (put 'tinyurl--event 'down-event event))
 
-;;; ----------------------------------------------------------------------
-;;;
 (defun tinyurl-key-binding-default ()
   "Jump to URL at point or call original ESC RET key binding."
   (interactive)
@@ -1722,22 +1623,16 @@ References:
   (tinyurl-mark-line)
   (tinyurl-dispatcher "\e\C-m" 'key))
 
-;;; ----------------------------------------------------------------------
-;;;
 (defsubst tinyurl-overlay-get (&optional point)
   "Reeturn overlay from current POINT if there is any \\='(owner tinyurl)."
   (let ((list (overlays-at (or point (point)))))
     (if list
         (ti::overlay-get-prop list '(owner tinyurl)))))
 
-;;; ----------------------------------------------------------------------
-;;;
 (defsubst tinyurl-get-filter (url)
   "Return filter or any for URL."
   (cdr-safe (ti::list-find (delq nil tinyurl--file-filter-table) url)))
 
-;;; ----------------------------------------------------------------------
-;;;
 (defun tinyurl-filter-pod (url)
   "Handle Perl pod URL."
   (let ((pod   (or (get 'tinyurl-filter-pod 'pod2text)
@@ -1755,8 +1650,6 @@ References:
           (turn-on-tinyperl-pod-view-mode))
         (ti::pop-to-buffer-or-window buffer)))))
 
-;;; ----------------------------------------------------------------------
-;;;
 (defun tinyurl-dispatch-ignore-p  (&rest dummy)
   "Check if control is passed back to underlying mode. Ignore DUMMY."
   (memq major-mode '(archive-mode
@@ -1765,8 +1658,6 @@ References:
                      tar-mode
                      zip-mode)))
 
-;;; ----------------------------------------------------------------------
-;;;
 (defun tinyurl-dispatcher-1  (url)
   "Redirect URL to proper agent handler."
   (interactive)
@@ -1814,14 +1705,10 @@ References:
       (if (not (ti::nil-p url))
           (funcall tinyurl--url-handler-function url url-type))))))
 
-;;; ----------------------------------------------------------------------
-;;;
 (defun tinyurl-gnus-callback-at-point ()
   "Return gnus-callback text property at point."
   (get-text-property (point) 'gnus-callback))
 
-;;; ----------------------------------------------------------------------
-;;;
 (defun tinyurl-call-original-mouse (event)
   "Call original mouse-2 function, unless in compilation buffer."
   (let* ((mode (symbol-name major-mode))
@@ -1841,14 +1728,10 @@ References:
         (message "TinyUrl: Nothing to (yank) here.")
       (ti::compat-mouse-call-original 'tinyurl-mode event))))
 
-;;; ----------------------------------------------------------------------
-;;;
 (defun tinyurl-gnus-data-at-point ()
   "Return gnus-data text property at point."
   (get-text-property (point) 'gnus-data))
 
-;;; ----------------------------------------------------------------------
-;;;
 (defun tinyurl-dispatcher (&optional event type)
   "See if there is URL at point. Otherwise act like usual key/mouse call.
 
@@ -1910,8 +1793,6 @@ Input:
      (t
       (tinyurl-dispatcher-1 url)))))
 
-;;; ----------------------------------------------------------------------
-;;;
 (defun tinyurl-at-point (&optional verb)
   "Mark line for urls and go to the url at point if any. VERB."
   (interactive)
@@ -1927,8 +1808,6 @@ Input:
      (verb
       (message "TinyUrl: No url found.")))))
 
-;;; ----------------------------------------------------------------------
-;;;
 (defun tinyurl-validate-url-default (url)
   "Default URL validate.
 - Discard foo|bar|quux urls and character $, like in $THIS_DIR.
@@ -1995,8 +1874,6 @@ Return:
     (tinyurl-debug fid url ret)
     ret))
 
-;;; ----------------------------------------------------------------------
-;;;
 (defun tinyurl-validate-url-perl-method (url)
   "Check Perl Foo::Bar->new(...)."
   (cond
@@ -2005,8 +1882,6 @@ Return:
    (t
     t))) ;; accept
 
-;;; ----------------------------------------------------------------------
-;;;
 (defun tinyurl-validate-url-email (url)
   "Accept email url only if it doesn't overlap with http://.
 E.g. Following url would be targetted as email, because it has <.*@.*>
@@ -2024,8 +1899,6 @@ E.g. Following url would be targetted as email, because it has <.*@.*>
 ;;}}}
 ;;{{{ URL handler
 
-;;; ----------------------------------------------------------------------
-;;;
 (defun tinyurl-find-url-lisp (url)
   "Find Emacs Llisp package URL."
   (let ((file (ti::string-match "[\"']\\([^\"')]+\\)" 1 url)))
@@ -2040,8 +1913,6 @@ E.g. Following url would be targetted as email, because it has <.*@.*>
      (t
       (find-file file)))))
 
-;;; ----------------------------------------------------------------------
-;;;
 (defun tinyurl-find-debian-bts-bug (url)
   "Find Debian BTS bug URL."
   (let (bug)
@@ -2050,8 +1921,6 @@ E.g. Following url would be targetted as email, because it has <.*@.*>
           (tinydebian-bug-browse-url-by-bug bug)
         (message "TinyUrl: Incorrect bug number %s" bug)))))
 
-;;; ----------------------------------------------------------------------
-;;;
 (defun tinyurl-find-url-php-compile (url)
   "Find PHP compiler error URL."
   ;; <b>Parse error</b>:  parse error in <b>FILE.php</b> on line <b>161</b><br>
@@ -2071,8 +1940,6 @@ E.g. Following url would be targetted as email, because it has <.*@.*>
     (if file ;; This is no-op, quiet byte compiler for now.
         (setq file file))))
 
-;;; ----------------------------------------------------------------------
-;;;
 (defun tinyurl-find-url-perl-pod-manpage (url)
   "Find perl POD manpage URL."
   (setq url (ti::string-match "perl[^] ,.\n\t]+" 0 url))
@@ -2087,15 +1954,11 @@ E.g. Following url would be targetted as email, because it has <.*@.*>
         (goto-char point)
       (tinyperl-pod-by-manpage (tinyperl-pod-manpage-to-file url)))))
 
-;;; ----------------------------------------------------------------------
-;;;
 (defun tinyurl-find-url-perl-pod-module (url)
   "Find perl POD page: URL."
   (setq url (replace-regexp-in-string " +manpage" "" url))
   (tinyperl-pod-by-module (tinyperl-pod-manpage-to-file url)))
 
-;;; ----------------------------------------------------------------------
-;;;
 (defun tinyurl-find-url-perl-1 (file &optional method)
   "Go to Perl FILE and put point to optional METHOD."
   (let ((regexp (if method
@@ -2110,8 +1973,6 @@ E.g. Following url would be targetted as email, because it has <.*@.*>
         (unless (re-search-forward regexp nil t)
           (message "TinyUrl: Hm, can't find sub using [%s]" regexp))))))
 
-;;; ----------------------------------------------------------------------
-;;;
 (defun tinyurl-find-url-perl-method (url)
   "Find Perl Foo::Bar->new(...) URL."
   (let (file
@@ -2126,8 +1987,6 @@ E.g. Following url would be targetted as email, because it has <.*@.*>
      (t
       (tinyurl-find-url-perl-1 file method)))))
 
-;;; ----------------------------------------------------------------------
-;;;
 (defun tinyurl-find-url-perl (url)
   "Find Perl `require' and `use' URL."
   (let (file)
@@ -2144,8 +2003,6 @@ E.g. Following url would be targetted as email, because it has <.*@.*>
      (t
       (tinyurl-find-url-perl-1 file)))))
 
-;;; ----------------------------------------------------------------------
-;;;
 (defun tinyurl-find-url-perl-compile  (url &optional noerr)
   "Parse Perl compile output style URL.
 
@@ -2176,8 +2033,6 @@ If NOERR is non-nil, signal no error if file does not exist."
         (error "TinyUrl: Can't locate %s" file))
       nil))))
 
-;;; ----------------------------------------------------------------------
-;;;
 (defun tinyurl-file-name-filter  (url &optional line)
   "Check URL and LINE for filter in `tinyurl--file-filter-table'.
 Return:
@@ -2192,8 +2047,6 @@ Return:
            (fboundp filter))
       (funcall filter url)))))
 
-;;; ----------------------------------------------------------------------
-;;;
 (defun tinyurl-guess-line-number-at-point ()
   "Read current line and guess the line number."
   (let ()
@@ -2210,8 +2063,6 @@ Return:
         ;; test.pl:119:use integer;
         (string-to-number (match-string 1)))))))
 
-;;; ----------------------------------------------------------------------
-;;;
 (defun tinyurl-find-url-file (url &optional line)
   "Go to ULR and optional LINE.
 If LINE is not given, it is guessed freom the context.
@@ -2240,8 +2091,6 @@ Convert URL ftp:// to ange-ftp format and use `find-file'."
         (when info
           (ti::goto-line (cdr info))))))))
 
-;;; ----------------------------------------------------------------------
-;;;
 (defun tinyurl-find-url-mail-browse-url (url)
   "Call brose-url with argument URL"
   (unless (string-match "^mailto:" url)
@@ -2250,16 +2099,12 @@ Convert URL ftp:// to ange-ftp format and use `find-file'."
     (setq url (concat "mailto:"  url))
     (browse-url url)))
 
-;;; ----------------------------------------------------------------------
-;;;
 (defun tinyurl-find-url-mail (url)
   "Ignore URL and call \\='mail."
   (if (fboundp 'compose-mail)
       (call-interactively 'compose-mail) ;New Emacs
     (call-interactively 'mail-other-window)))
 
-;;; ----------------------------------------------------------------------
-;;;
 (defun tinyurl-find-url-man (url)
   "Manpage URL handler."
   ;; Url can have leading or trailing spaces: "   crontab  (5)   "
@@ -2276,10 +2121,8 @@ Convert URL ftp:// to ange-ftp format and use `find-file'."
                     program))))
     (man ref)))
 
-;;; ----------------------------------------------------------------------
 ;;; FIXME: What about various mailing list archives?
 ;;; FIXME: Perhaps Message-id query should be delegated to proper archives
-;;;
 (defun tinyurl-find-url-message-id (url)
   "Get URL by Message-id."
   (unless (setq url (ti::string-match "<\\([^ \t\n>]+\\)>" 1 url))
@@ -2292,8 +2135,6 @@ Convert URL ftp:// to ange-ftp format and use `find-file'."
          ""))
   (tinyurl-agent-funcall 'url url))
 
-;;; ----------------------------------------------------------------------
-;;;
 (defun tinyurl-find-url-http (url)
   "Simple \"www.*\" URL handler."
   (unless (string-match "://" url)
@@ -2301,20 +2142,14 @@ Convert URL ftp:// to ange-ftp format and use `find-file'."
   (tinyurl-debug "tinyurl-find-url-http" url)
   (tinyurl-agent-funcall 'url url))
 
-;;; ----------------------------------------------------------------------
-;;;
 (defun tinyurl-find-url-win32-netscape (url)
   "External URL handler."
   (tinyurl-call-process-win32 "netscape" url))
 
-;;; ----------------------------------------------------------------------
-;;;
 (defun tinyurl-find-url-win32-iexplore (url)
   "External URL handler."
   (tinyurl-call-process-win32 "iexplore" url))
 
-;;; ----------------------------------------------------------------------
-;;;
 (defun tinyurl-cache-url (url)
   "Add URL to the beginning of buffer `tinyurl--url-cache-buffer'."
   (let ((buffer (get-buffer-create tinyurl--url-cache-buffer)))
@@ -2329,8 +2164,6 @@ Convert URL ftp:// to ange-ftp format and use `find-file'."
           (insert url "\n")
           (message "TinyUrl: cached %s" url))))))
 
-;;; ----------------------------------------------------------------------
-;;;
 (defun tinyurl-url-clean (url type)
   "Clean URL if needed."
   (if (not (tinyurl-type-external-p url type))
@@ -2340,8 +2173,6 @@ Convert URL ftp:// to ange-ftp format and use `find-file'."
          tinyurl--cleaner-regexp "" url)
       url)))
 
-;;; ----------------------------------------------------------------------
-;;;
 (defun tinyurl-type (url)
   "Return type of URL. Or all types if TYPES id non-nil, URL is then ignored.
 Returned types (symbols) are:
@@ -2401,14 +2232,10 @@ Returned types (symbols) are:
    ((string-match "^[^ \t\n]+:[0-9]+:" url)     'file) ;; file.txt:line:
    ((string-match "[a-z.]+(.*)" url)            'man)))
 
-;;; ----------------------------------------------------------------------
-;;;
 (defun tinyurl-type-external-p (url type)
   "Check if TYPE is external. URL is unused."
   (string-match "url\\|ftp" (symbol-name type)))
 
-;;; ----------------------------------------------------------------------
-;;;
 (defun tinyurl-handler-mail-after (url &optional type)
   "Compose URL as mail. Optional TYPE can be given."
   (let ((fid "tinyurl-handler-mail-after")
@@ -2449,8 +2276,6 @@ Returned types (symbols) are:
          ((string-match "-request@" to)
           (insert "subscribe")))))))
 
-;;; ----------------------------------------------------------------------
-;;;
 (defun tinyurl-handler-main (url &optional type)
   "Handle URL and forward it to right agent function. TYPE of url can be given.
 References: `tinyurl--command-table'"
@@ -2488,8 +2313,6 @@ References: `tinyurl--command-table'"
 ;;}}}
 ;;{{{ Marking line
 
-;;; ----------------------------------------------------------------------
-;;;
 (defun tinyurl-mark-process-post-command  ()
   "Used in `post-command-hook'."
   (when tinyurl-mode
@@ -2503,8 +2326,6 @@ References: `tinyurl--command-table'"
         (put 'tinyurl-mode 'counter 0)
         (tinyurl-mark-process)))))
 
-;;; ----------------------------------------------------------------------
-;;;
 (defun tinyurl-mark-mouse ()
   "Mark URLs on current mouse line."
   (when (fboundp 'mouse-position)
@@ -2521,8 +2342,6 @@ References: `tinyurl--command-table'"
               (put 'tinyurl-mark-line 'mouse end)
               (tinyurl-mark-line))))))))
 
-;;; ----------------------------------------------------------------------
-;;;
 (defun tinyurl-mark-process ()
   "Mark URLs on current line and `mouse-position'."
   (when (and (or tinyurl-mode
@@ -2539,8 +2358,6 @@ References: `tinyurl--command-table'"
         (tinyurl-mark-line)))
     (tinyurl-mark-mouse)))
 
-;;; ----------------------------------------------------------------------
-;;;
 (defun tinyurl-default-mark-table ()
   "Return default table used by `tinyurl-mark-line'.
 Format:
@@ -2729,8 +2546,6 @@ VALIDATE-HANDLER    Function to discard and check marked url"
             'tinyurl-validate-url-default)))) ;; list of regexps end
     table))
 
-;;; ----------------------------------------------------------------------
-;;;
 (defun tinyurl-mark-line ()
   "Mark URLs with overlays on current line.
 Return:

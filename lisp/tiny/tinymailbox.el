@@ -1,17 +1,11 @@
-;; -*- enable-local-variables: :all;  -*-
-
 ;;; tinymailbox.el --- Berkeley style aka std. mailbox browsing minor mode
 
 ;; This file is not part of Emacs
-
-;;{{{ Id
 
 ;; Copyright (C)    1997-2024 Jari Aalto
 ;; Keywords:        tools
 ;; Author:          Jari Aalto
 ;; Maintainer:      Jari Aalto
-;;
-;; Look at the code with folding.el.
 
 ;; This program is free software; you can redistribute it and/or modify it
 ;; under the terms of the GNU General Public License as published by the Free
@@ -28,8 +22,7 @@
 ;;
 ;; Visit <http://www.gnu.org/copyleft/gpl.html> for more information
 
-;;}}}
-;;{{{ Install
+;;; Install:
 
 ;; ....................................................... &t-install ...
 ;;  Put this file on your Emacs-Lisp `load-path', add following into your
@@ -46,25 +39,23 @@
 ;;      (autoload 'turn-on-tinymailbox-mode  "tinymailbox "" t)
 ;;      (autoload 'turn-off-tinymailbox-mode "tinymailbox "" t)
 ;;
-;;  You can toggle the mode with `M-x' `tinymailbox-mode'. The default
-;;  mailbox type files are liested in `tinymailbox--auto-mode-alist'.
+;;  You can toggle the mode with M-x tinymailbox-mode. The default
+;;  mailbox type files are listed in tinymailbox--auto-mode-alist.
 ;;  To add more mailbox files for the mode, use code like:
 ;;
 ;;      (require 'cl)
+;;
 ;;      (cl-pushnew '("\\.spool\\'" . turn-on-tinymailbox-mode-maybe)
 ;;               auto-mode-alist
 ;;               :test 'equal)
+;;
 ;;      (cl-pushnew '("\\.mbo?x\\'" . turn-on-tinymailbox-mode-maybe)
 ;;               auto-mode-alist
 ;;               :test 'equal)
 
-;;}}}
-;;{{{ Documentation
-
-;; ..................................................... &t-commentary ...
 ;;; Commentary:
-;;
-;;  Preface, sep 1997
+
+;;  Preface, Sep 1997
 ;;
 ;;      It is possible to use Procmail <http://www.procmail.org/> to
 ;;      manage growing incoming mail. But sometimes your recipes go
@@ -150,13 +141,12 @@
 ;;          home    tinymailbox-forward (see tinymailbox--move-header-regexp)
 ;;          end     tinymailbox-backward
 ;;
-;;}}}
 
 ;;; Change Log:
 
 ;;; Code:
 
-;;{{{ setup: require
+;;; Setup: require
 
 (require 'tinylibm)
 
@@ -181,10 +171,7 @@
         o   Simple summaries can be done with `occur' command. Eg. to browse
             messages based on `From' or `Subject' Headers.")
 
-;;}}}
-;;{{{ setup: variables
-
-;;; ......................................................... &v-hooks ...
+;;; Setup: public variables
 
 (defcustom tinymailbox--load-hook nil
   "*Hook run when package has been loaded."
@@ -197,7 +184,7 @@ The point is at the beginning of message."
   :type  'hook
   :group 'TinyMailbox)
 
-;;; ......................................................... &private ...
+;;; Variables: private
 
 (defvar tinymailbox--last-file nil
   "Last file used by `tinymailbox-message-to-folder'.")
@@ -206,7 +193,7 @@ The point is at the beginning of message."
   "\n\n[A-Z][a-z]: +\\|^From "
   "Regexp of beginning of message headers")
 
-;;; ........................................................ &v-public ...
+;;; Variable: public
 
 (defcustom tinymailbox--font-lock-keywords
   '(("From:[ \t]*\\(.*\\)"
@@ -255,7 +242,7 @@ The point is at the beginning of message."
   :type  'boolean
   :group 'TinyMailbox)
 
-;;; .......................................................... &v-menu ...
+;;; Menu:
 
 (defcustom tinymailbox--menu-use-flag t
   "*Non-nil means to use echo-area menu."
@@ -311,8 +298,7 @@ Miscellaneous
     H    Help menu
     x    Exit mode")
 
-;;}}}
-;;{{{ minor mode
+;;; Minor mode
 
 ;;;###autoload (autoload 'tinymailbox-install-mode  "tinymailbox" "" t)
 ;;;###autoload (autoload 'tinymailbox-mode          "tinymailbox" "" t)
@@ -366,31 +352,31 @@ Prefix key to access the minor mode is defined in `tinymailbox--mode-prefix-key'
    (list                                ;arg 10
     tinymailbox--mode-easymenu-name
     "----"
-    ["Message forward"	    tinymailbox-forward			t]
-    ["Message backward"	    tinymailbox-backward		t]
-    ["Body forward"	    tinymailbox-forward-boby		t]
-    ["Body backward"	    tinymailbox-backward-body		t]
+    ["Message forward"      tinymailbox-forward                 t]
+    ["Message backward"     tinymailbox-backward                t]
+    ["Body forward"         tinymailbox-forward-boby            t]
+    ["Body backward"        tinymailbox-backward-body           t]
     "----"
-    ["Header Hide"	    tinymailbox-header-hide	        t]
-    ["Header Show"	    tinymailbox-header-show	        t]
+    ["Header Hide"          tinymailbox-header-hide             t]
+    ["Header Show"          tinymailbox-header-show             t]
     ["Header show/hide mode" tinymailbox-header-hide-mode        t]
     "----"
-    ["Copy message"	    tinymailbox-copy		        t]
-    ["Copy message body"	    tinymailbox-copy-body	        t]
-    ["Delete message"	    tinymailbox-delete		        t]
+    ["Copy message"         tinymailbox-copy                    t]
+    ["Copy message body"            tinymailbox-copy-body               t]
+    ["Delete message"       tinymailbox-delete                  t]
     "----"
-    ["Append to file"	    tinymailbox-message-to-folder       t]
-    ["Write to file"	    tinymailbox-message-write-file      t]
+    ["Append to file"       tinymailbox-message-to-folder       t]
+    ["Write to file"        tinymailbox-message-write-file      t]
     ["Send email at point"   tinymailbox-mail-send-at-point      t]
     "----"
-    ["Make Summary (occur)"  tinymailbox-occur			t]
-    ["Make Summary (occur subject)"  tinymailbox-occur-subject	t]
+    ["Make Summary (occur)"  tinymailbox-occur                  t]
+    ["Make Summary (occur subject)"  tinymailbox-occur-subject  t]
     "----"
-    ["Keyboard menu"	    tinymailbox-menu-main		t]
-    ["Package version"	    tinymailbox-version			t]
-    ["Package commentary"    tinymailbox-commentary		t]
-    ["Mode help"		    tinymailbox-mode-help		t]
-    ["Mode off"		    turn-off-tinymailbox-mode		t])
+    ["Keyboard menu"        tinymailbox-menu-main               t]
+    ["Package version"      tinymailbox-version                 t]
+    ["Package commentary"    tinymailbox-commentary             t]
+    ["Mode help"                    tinymailbox-mode-help               t]
+    ["Mode off"             turn-off-tinymailbox-mode           t])
    (progn
      (cond
       (tinymailbox--menu-use-flag
@@ -428,18 +414,13 @@ Prefix key to access the minor mode is defined in `tinymailbox--mode-prefix-key'
        (define-key   map  "x"     'turn-off-tinymailbox-mode)
        (message "TinyMailbox: Use home/end to move between messages."))))))
 
-;;; ----------------------------------------------------------------------
-;;;
 (defun tinymailbox-menu-main (&optional arg)
   "Show echo area menu and pass ARG to `ti::menu-menu'."
   (interactive "P")
   (ti::menu-menu 'tinymailbox--menu-main arg))
 
-;;}}}
-;;{{{ Install
+;;; Code: install
 
-;;; ----------------------------------------------------------------------
-;;;
 (defun tinymailbox-mode-candidate-p ()
   "Return non-nil if buffer is candidate for `tinymailbox-mode'."
   (and (not (or (memq major-mode
@@ -460,8 +441,6 @@ Prefix key to access the minor mode is defined in `tinymailbox--mode-prefix-key'
                  (or (buffer-name) ""))))
        (ti::mail-mailbox-p)))
 
-;;; ----------------------------------------------------------------------
-;;;
 (defun turn-on-tinymailbox-mode-maybe ()
   "Turn on `tinymailbox-mode' if buffer looks like a Berkeley mailbox.
 Ignore big mailboxes."
@@ -470,8 +449,6 @@ Ignore big mailboxes."
              (< (buffer-size) (* 2 1000 1000)))
     (turn-on-tinymailbox-mode)))
 
-;;; ----------------------------------------------------------------------
-;;;
 ;;;###autoload
 (defun tinymailbox-install (&optional uninstall verb)
   "Install mode, or optionally UNINSTALL and print messages with VERB."
@@ -492,20 +469,16 @@ Ignore big mailboxes."
                  "uninstalled"
                "installed"))))
 
-;;; ----------------------------------------------------------------------
-;;;
 ;;;###autoload
 (defun tinymailbox-uninstall ()
   "Uninstall mode."
   (tinymailbox-install 'uninstall (called-interactively-p 'interactive)))
 
-;;; ----------------------------------------------------------------------
-;;;
 (defun tinymailbox-font-lock ()
   "Add/remove font lock support if `font-lock-mode' exists."
   (interactive)
   (let ((sym 'font-lock-keywords)
-	orig)
+        orig)
     (when (and (boundp sym)
                (ti::colors-supported-p))
       (cond
@@ -532,24 +505,19 @@ Ignore big mailboxes."
            (point)
            (min (+ (point) (* 80 50)) (point-max))))))))
 
-;;}}}
-;;{{{ Macros
+;;; Macros
 
-;;; ----------------------------------------------------------------------
-;;;
 (defsubst tinymailbox-message-move-beginning ()
   "Move to message beginning."
   (re-search-backward tinymailbox--header-begin-regexp  nil t))
 
-;;; ----------------------------------------------------------------------
-;;;
 (put 'tinymailbox-message-macro 'lisp-indent-function 0)
 (put 'tinymailbox-message-macro 'edebug-form-spec '(body))
 (defmacro tinymailbox-message-macro (&rest body)
   "Do BODY on message. You can refer to `beg' and `end' for message region."
   `(let ((opoint  (point))
-	 beg
-	 end)
+         beg
+         end)
      ;; Just to make byteCompiler happy
      (if (null opoint)  (setq opoint nil))
      (if beg            (setq beg t))
@@ -567,13 +535,11 @@ Ignore big mailboxes."
      (setq end (point))
      ,@body))
 
-;;; ----------------------------------------------------------------------
-;;;
 (put 'tinymailbox-header-macro 'lisp-indent-function 0)
 (defmacro tinymailbox-header-macro (&rest body)
   "Do BODY on message. You can refer to `beg' and `end' for message region."
   `(let (beg
-	 end)
+         end)
      ;; Just to make byteCompiler happy
      (if beg
          (setq beg t))
@@ -585,8 +551,6 @@ Ignore big mailboxes."
      (setq end (point))
      ,@body))
 
-;;; ----------------------------------------------------------------------
-;;;
 (put 'tinymailbox-paragraph-macro 'lisp-indent-function 0)
 (defmacro tinymailbox-paragraph-macro (&rest body)
   "Set paragraph values locally while executing BODY."
@@ -595,11 +559,8 @@ Ignore big mailboxes."
           (paragraph-separate   paragraph-start))
      ,@body))
 
-;;}}}
-;;{{{ misc
+;;; Misc
 
-;;; ----------------------------------------------------------------------
-;;;
 (defun tinymailbox-header-p ()
   "Check if point is inside header."
   (interactive)
@@ -607,14 +568,12 @@ Ignore big mailboxes."
     (beginning-of-line)
     (looking-at "^[A-Z][^:]+: ")))
 
-;;; ----------------------------------------------------------------------
-;;;
 (defun tinymailbox-overlay (act &optional beg end)
   "If ACT is \\='hide, hide overlay, otherwise highlight BEG END."
   (let ((ov
-	 (if (boundp 'mouse-drag-overlay) ;Emacs, use this by default
-	     'mouse-drag-overlay
-	   'primary-selection-extent)))
+         (if (boundp 'mouse-drag-overlay) ;Emacs, use this by default
+             'mouse-drag-overlay
+           'primary-selection-extent)))
     (cond
      ((eq act 'hide)
       (ti::compat-overlay-move ov 1 1)
@@ -635,8 +594,6 @@ Ignore big mailboxes."
          t t)) ;; when
       (setq this-command 'set-mark)))))
 
-;;; ----------------------------------------------------------------------
-;;;
 (defun tinymailbox-header-next ()
   "Find next header forward."
   (if (looking-at "^[^ \t\n]")
@@ -644,23 +601,17 @@ Ignore big mailboxes."
   (while (and (not (eobp)) (looking-at "^[ \t]"))
     (forward-line 1)))
 
-;;; ----------------------------------------------------------------------
-;;;
 (defun tinymailbox-header-show-or-hide ()
   "Check `tinymailbox--header-hide-mode' and act according to it."
   (if tinymailbox--header-hide-mode
       (tinymailbox-header-hide)
     (tinymailbox-header-show)))
 
-;;; ----------------------------------------------------------------------
-;;;
 (defun tinymailbox-header-show ()
   "Call `tinymailbox-header-hide' with argument SHOW."
   (interactive)
   (tinymailbox-header-hide 'show))
 
-;;; ----------------------------------------------------------------------
-;;;
 (defun tinymailbox-header-hide (&optional show)
   "Hide or SHOW headers according to `tinymailbox--header-show-regexp'."
   (interactive "P")
@@ -716,11 +667,8 @@ Ignore big mailboxes."
        (put-text-property beg (1+ beg) prop-stat put-property)))
     (goto-char opoint)))
 
-;;}}}
-;;{{{ move
+;;; Mmove
 
-;;; ----------------------------------------------------------------------
-;;;
 (eval-and-compile
   (defun tinymailbox-fmacro-move-1 (func doc move-func re msg &rest body)
     "Use `tinymailbox-fmacro-move with FUNC DOC MOVE-FUNC RE MSG and BODY."
@@ -729,7 +677,7 @@ Ignore big mailboxes."
          ,doc
          (interactive "P")
          (let ((Opoint  (point))
-	       stat)
+               stat)
            (if (eq ,move-func 're-search-backward)
                (beginning-of-line)
              (end-of-line))
@@ -747,16 +695,12 @@ Ignore big mailboxes."
            stat))))
   ) ;; eval-and-compile
 
-;;; ----------------------------------------------------------------------
-;;;
 (defmacro tinymailbox-fmacro-move (func doc move-func re msg &optional body)
   "Create Move function FUNC DOC MOVE-FUNC RE MSG and BODY.
 Created function arguments: (&optional arg)"
   `,(tinymailbox-fmacro-move-1
      func doc move-func re msg body))
 
-;;; ----------------------------------------------------------------------
-;;;
 ;;;###autoload (autoload 'tinymailbox-forward "tinymailbox" "Go to next message." t)
 (tinymailbox-fmacro-move
  tinymailbox-forward
@@ -764,8 +708,6 @@ Created function arguments: (&optional arg)"
  're-search-forward tinymailbox--move-header-regexp
  "TinyMailbox: message forward stop.")
 
-;;; ----------------------------------------------------------------------
-;;;
 ;;;###autoload (autoload 'tinymailbox-backward "tinymailbox" "Go to previous message." t)
 (tinymailbox-fmacro-move
  tinymailbox-backward
@@ -773,8 +715,6 @@ Created function arguments: (&optional arg)"
  're-search-backward tinymailbox--move-header-regexp
  "TinyMailbox: message backward stop.")
 
-;;; ----------------------------------------------------------------------
-;;;
 (tinymailbox-fmacro-move
  tinymailbox-forward-body
  "Go to next message body."
@@ -783,13 +723,11 @@ Created function arguments: (&optional arg)"
  (and stat
       (setq stat (re-search-forward "^[ \t]*$" nil t))))
 
-;;; ----------------------------------------------------------------------
-;;;
 (defun tinymailbox-backward-body ()
   "Go to previous message body."
   (interactive)
   (let ((opoint (point))
-	stat)
+        stat)
     ;;  We must move to message beginning first.
     (tinymailbox-message-move-beginning)
     (forward-line -1)
@@ -805,8 +743,6 @@ Created function arguments: (&optional arg)"
       (message "TinyMailbox: body backward stop.")
       (goto-char opoint))))
 
-;;; ----------------------------------------------------------------------
-;;;
 (defun tinymailbox-header-hide-mode (arg &optional verb)
   "Toggle header hiding mode with ARG when moving between messages. VERB."
   (interactive "P")
@@ -817,17 +753,14 @@ Created function arguments: (&optional arg)"
              (if tinymailbox--header-hide-mode "on" "off")))
   (tinymailbox-header-show-or-hide))
 
-;;}}}
-;;{{{ copy; delete
+;;; Copy, delete
 
-;;; ----------------------------------------------------------------------
-;;;
 ;;;###autoload
 (defun tinymailbox-begin (&optional backward)
   "Move to next message begin. Optionally BACKWARD."
   (interactive "P")
   (let ((re tinymailbox--header-begin-regexp)
-	case-fold-search)
+        case-fold-search)
     (cond
      (backward
       (if (re-search-backward re nil t)
@@ -839,8 +772,6 @@ Created function arguments: (&optional arg)"
         (ti::pmax))))
     (beginning-of-line)))
 
-;;; ----------------------------------------------------------------------
-;;;
 ;;;###autoload
 (defun tinymailbox-delete ()
   "Delete current message. point must be inside message."
@@ -850,8 +781,6 @@ Created function arguments: (&optional arg)"
    (forward-line 2)
    (kill-region beg (point))))
 
-;;; ----------------------------------------------------------------------
-;;;
 ;;;###autoload
 (defun tinymailbox-copy ()
   "Copy current message. point must be inside message."
@@ -864,8 +793,6 @@ Created function arguments: (&optional arg)"
    (if (called-interactively-p 'interactive)
        (message "TinyMailbox: Message copied as kill."))))
 
-;;; ----------------------------------------------------------------------
-;;;
 ;;;###autoload
 (defun tinymailbox-copy-body ()
   "Copy body of current message. point must be inside message."
@@ -882,8 +809,6 @@ Created function arguments: (&optional arg)"
   (if (called-interactively-p 'interactive)
       (message "TinyMailbox: Message body copied.")))
 
-;;; ----------------------------------------------------------------------
-;;;
 ;;;###autoload
 (defun tinymailbox-message-to-folder (file)
   "File current message by appending it to FILE."
@@ -902,8 +827,6 @@ Created function arguments: (&optional arg)"
    (append-to-file beg (min (1+ end) (point-max)) file)
    (goto-char opoint)))
 
-;;; ----------------------------------------------------------------------
-;;;
 ;;;###autoload
 (defun tinymailbox-message-write-file (file)
   (interactive
@@ -921,8 +844,6 @@ Created function arguments: (&optional arg)"
    (write-region beg (min (1+ end) (point-max)) file)
    (goto-char opoint)))
 
-;;; ----------------------------------------------------------------------
-;;;
 (defun tinymailbox-occur (regexp)
   "Create Simple `Summary' buffer by running REGEXP `occur'.
 Try Subject: or From:"
@@ -936,15 +857,11 @@ Try Subject: or From:"
       (ti::pmin)
       (occur regexp)))))
 
-;;; ----------------------------------------------------------------------
-;;;
 (defun tinymailbox-occur-subject ()
   "Generate Subject summary."
   (interactive)
   (tinymailbox-occur "^Subject:.*"))
 
-;;; ----------------------------------------------------------------------
-;;;
 (defsubst tinymailbox-user-mail-address-regexp ()
   "Return regexp from `user-mail-address' and `user-full-name'."
   (concat
@@ -956,37 +873,33 @@ Try Subject: or From:"
        (concat user-login-name "@")
      "###none###")))
 
-;;; ----------------------------------------------------------------------
-;;;
 (defsubst tinymailbox-mail-send-filter (list &optional regexp)
   "Remove all strings from LIST that match current user or REGEXP."
   (let ((user (tinymailbox-user-mail-address-regexp)))
     (cl-remove-if (lambda (x)
-		    (or (string-match user x)
-			(and (stringp regexp)
-			     (string-match regexp x))))
-		  list)))
+                    (or (string-match user x)
+                        (and (stringp regexp)
+                             (string-match regexp x))))
+                  list)))
 
-;;; ----------------------------------------------------------------------
-;;;
 (defun tinymailbox-mail-send-at-point ()
   "Compose mail using current message.
 References:
   `mail-mode-hook'"
   (interactive)
   (let ((buffer (current-buffer))
-	from
-	from-email
-	to-dest
-	to
-	to-list
-	reply-to
-	cc
-	cc-list
-	references
-	subject
-	start
-	body)
+        from
+        from-email
+        to-dest
+        to
+        to-list
+        reply-to
+        cc
+        cc-list
+        references
+        subject
+        start
+        body)
     ;;  We must "require", because `mail-yank-prefix' is not otherwise
     ;;  defined.
     (if (not (boundp 'mail-yank-prefix))
@@ -1019,9 +932,9 @@ References:
      ;;  => Move them to CC
      (dolist (elt to-list)
        (unless (catch 'break
-		 (dolist (eltc cc-list)
+                 (dolist (eltc cc-list)
                    (if (string= elt eltc)
-		       (throw 'break t))))
+                       (throw 'break t))))
          (push elt cc-list)))
      (if cc-list
          (setq cc (mapconcat 'concat cc-list ", ")))
@@ -1047,8 +960,6 @@ References:
        "| "))
     (goto-char start)
     (run-hooks 'tinymailbox--mail-setup-hook)))
-
-;;}}}
 
 (add-hook  'tinymailbox--mode-define-keys-hook 'tinymailbox-mode-define-keys)
 (provide   'tinymailbox)

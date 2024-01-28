@@ -1,5 +1,3 @@
-;; -*- enable-local-variables: :all;  -*-
-
 ;;; tinyindent.el --- Like indented-text-mode, but minor-mode.
 
 ;; This file is not part of Emacs
@@ -226,8 +224,6 @@ REM        Oracle Sqlplus, SQL files in general"
 ;;}}}
 ;;{{{ code: misc
 
-;;; ----------------------------------------------------------------------
-;;;
 (defun tinyindent-mode-map-define-keys ()
   "Defines keybindings to `tinyindent--mode-map'."
 
@@ -240,8 +236,6 @@ REM        Oracle Sqlplus, SQL files in general"
 
   (define-key  tinyindent--mode-map "\177" 'delete-backward-char))
 
-;;; ----------------------------------------------------------------------
-;;;
 ;;;### (autoload 'tinyindent-install-mode "tinyindent" t t)
 (ti::macrof-minor-mode-install
  tinyindent-install-mode
@@ -251,8 +245,6 @@ REM        Oracle Sqlplus, SQL files in general"
  tinyindent--mode-name
  tinyindent--mode-define-keys-hook)
 
-;;; ----------------------------------------------------------------------
-;;;
 (defun tinyindent-confirm (msg)
   "Confirms action with MSG.
 RET/SPC = ok. The real character pressed is available
@@ -267,8 +259,6 @@ thru global variable `tinyindent--RET'."
 ;;}}}
 ;;{{{ engine
 
-;;; ----------------------------------------------------------------------
-;;;
 (defun tinyindent-special-handle ()
   "Handle some special lines -- like `gin-mode',  but simpler.
 Supposes that point is at the beginning of investigated line.
@@ -294,8 +284,6 @@ Returns:
               (substring line (match-beginning 0) (match-end 0)))))
     fill))
 
-;;; ----------------------------------------------------------------------
-;;;
 (defun tinyindent-tab-key  ()
   "Handle tab key.
 Check if TinyMail is present and call Header completions in header area,
@@ -307,8 +295,6 @@ in BODY use relative indent."
            (ti::funcall 'timi-complete-key))
       (tinyindent-relative)))
 
-;;; ----------------------------------------------------------------------
-;;;
 (defun tinyindent-relative ()
   "Almost like `indent-relative', but handles some special cases.
 - if the above line if NOT empty, then we indent relatively automatically
@@ -421,8 +407,6 @@ References:
 ;;}}}
 ;;{{{ modes
 
-;;; ----------------------------------------------------------------------
-;;;
 ;;;###autoload
 (defun tinyindent-tt-mode (&optional arg)
   "Toggle `tinyindent-tt-mode' with ARG. See description in `tinyindent-mode'."
@@ -438,8 +422,6 @@ References:
     (setq tinyindent--mode-name tinyindent--mode-str-orig)))
   (ti::compat-modeline-update))
 
-;;; ----------------------------------------------------------------------
-;;;
 ;;;###autoload
 (defun tinyindent-mode (&optional arg)
   "Toggle relative indentation mode with ARG.

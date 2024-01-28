@@ -410,8 +410,6 @@ font-lock.el"
 ;;}}}
 ;;{{{ code: function test
 
-;;; ----------------------------------------------------------------------
-;;;
 (defun ti::function-args-p (symbol)
   "Return function SYMBOL's argument list as string or nil.
 Works for byte compiled functions too.

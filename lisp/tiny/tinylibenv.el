@@ -69,8 +69,6 @@
 
 ;; These are from SEMI::APEL::poe.el
 
-;;; ----------------------------------------------------------------------
-;;;
 (put 'defun-maybe 'lisp-indent-function 'defun)
 (defmacro defun-maybe (name &rest everything-else)
   (when (or (not (fboundp name))
@@ -83,8 +81,6 @@
        (defun ,name ,@everything-else)
        (put (quote ,name) 'defun-maybe t))))
 
-;;; ----------------------------------------------------------------------
-;;;
 (put 'defsubst-maybe 'lisp-indent-function 'defun)
 (defmacro defsubst-maybe (name &rest everything-else)
   (when (or (not (fboundp name))
@@ -97,8 +93,6 @@
        (defsubst ,name ,@everything-else)
        (put (quote ,name) 'defsubst-maybe t))))
 
-;;; ----------------------------------------------------------------------
-;;;
 (put 'defmacro-maybe 'lisp-indent-function 'defun)
 (defmacro defmacro-maybe (name &rest everything-else)
   (when (or (not (fboundp name))
@@ -111,16 +105,12 @@
        (defmacro ,name ,@everything-else)
        (put (quote ,name) 'defmacro-maybe t))))
 
-;;; ----------------------------------------------------------------------
-;;;
 (defmacro defalias-maybe (sym newdef)
   "Make defalias SYM if it does not exist and NEWDEF exists."
   `(when (and (not (fboundp ,sym))
               (fboundp ,newdef))
      (defalias ,sym ,newdef)))
 
-;;; ----------------------------------------------------------------------
-;;;
 (defmacro defconst-maybe (name &rest everything-else)
   (or (and (boundp name)
            (not (get name 'defconst-maybe)))
@@ -132,8 +122,6 @@
 ;;}}}
 ;;{{{ Environment checks
 
-;;; ----------------------------------------------------------------------
-;;;
 (defsubst ti::xemacs-p (&optional version-string)
   "Check if running XEmacs. Optionally at least VERSION-STRING.
 Tested string is like  \"20.4\". Return version string if version
@@ -149,8 +137,6 @@ is equal or greater than VERSION-STRING."
            ((not (string< emacs-version version-string))
             emacs-version))))))
 
-;;; ----------------------------------------------------------------------
-;;;
 (defsubst ti::emacs-p (&optional version-string)
   "Check if running Emacs. Optionally at least VERSION-STRING.
 Tested string is like  \"20.4\". Value t is returned if version
@@ -163,29 +149,21 @@ is equal or greater than VERSION-STRING."
        ((not (string< emacs-version version-string))
         emacs-version)))))
 
-;;; ----------------------------------------------------------------------
-;;;
 (defsubst ti::emacs-type-cygwin-p ()
   "Check if running Win32 Cygwin version."
   (let ((case-fold-search t))
     (string-match "cygwin" (emacs-version))))
 
-;;; ----------------------------------------------------------------------
-;;;
 (defsubst ti::emacs-type-win32-p ()
   "Check if running native Win32 version of Emacs or XEmacs."
   (and (ti::win32-p)
        (not (ti::emacs-type-cygwin-p))))
 
-;;; ----------------------------------------------------------------------
-;;;
 (defsubst ti::emacs-type-unix-like-p ()
   "Check if running Unix Emacs or Cygwin Emacs."
   (or (not (ti::win32-p))
       (ti::emacs-type-cygwin-p)))
 
-;;; ----------------------------------------------------------------------
-;;;
 (defsubst ti::emacs-version-number-as-string ()
   "Emacs and XEmacs compatibility. Return plain version number string."
   ;;  Emacs: "19.34", XEmacs: "19.14 XEmacs Lucid".
@@ -195,8 +173,6 @@ is equal or greater than VERSION-STRING."
                   (match-beginning 1)
                   (match-end 1))))
 
-;;; ----------------------------------------------------------------------
-;;;
 (defsubst ti::emacs-version-number-as-string-major ()
   "Return major version number string. 20.4.1 --> 20.4"
   (and (string-match "^\\([0-9]+\\.[0-9]+\\)" emacs-version)
@@ -218,8 +194,6 @@ is equal or greater than VERSION-STRING."
 ;;  come with GNU Emacs. These are files intended for Emacs to use while
 ;;  it runs.
 
-;;; ----------------------------------------------------------------------
-;;;
 (defun ti::emacs-install-root ()
   "Return Emacs install ROOT by searching emacs version number from `load-path'."
   (let ((regexp
@@ -240,8 +214,6 @@ is equal or greater than VERSION-STRING."
           (throw 'break nil))))
     ret))
 
-;;; ----------------------------------------------------------------------
-;;;
 (defun ti::emacs-install-root-emacsen (binary)
   "Search `exec-path' to find BINARY (emacs, xemacs) install root."
   (let* ((bin (executable-find binary)))
@@ -249,8 +221,6 @@ is equal or greater than VERSION-STRING."
       (ti::directory-up
        (file-name-directory bin)))))
 
-;;; ----------------------------------------------------------------------
-;;;
 (defsubst ti::os-check-linux-p ()
   "Check if operating system is Linux."
   (or (string-match "linux" (emacs-version))
@@ -259,31 +229,23 @@ is equal or greater than VERSION-STRING."
       (or (file-exists-p "/boot/vmlinuz")
           (file-exists-p "/vmlinuz"))))
 
-;;; ----------------------------------------------------------------------
-;;;
 (defsubst ti::os-check-linux-like-p ()
   "Check Operating system is Linux or If running under Cygwin Emacs."
   (or (ti::os-check-linux-p)
       (ti::emacs-type-cygwin-p)))
 
-;;; ----------------------------------------------------------------------
-;;;
 (defsubst ti::os-check-sunos-p ()
   "Check Operating system is SunOS."
   (or (string-match "sparc\\|sun\\|sunos\\|solaris" (emacs-version))
       ;;  ... in case the above fails
       (file-directory-p "/vol/bin")))
 
-;;; ----------------------------------------------------------------------
-;;;
 (defsubst ti::os-check-hpux-p ()
   "Check Operating system is HP-UX Unix."
   (or (string-match "hpux\\|hppa" (emacs-version))))
       ;;  #todo: ... in case the above fails
       ;; (file-directory-p "/what/to/test/here?")))
 
-;;; ----------------------------------------------------------------------
-;;;
 (defun ti::win32-p ()
   "Check if running under Win32 system.
 NOTE: Running under Cygwin is not considered as Win32, use
@@ -299,16 +261,12 @@ functions `ti::os-check-linux-like-p' or `ti::win32-cygwin-p'."
           '(win32 w32 mswindows)))
    ((error "Internal alert, contact maintainer of TinyLib."))))
 
-;;; ----------------------------------------------------------------------
-;;;
 (defun ti::win32-shell-p ()
   "Check if shell filename is traditional win32 shell."
   ;;  Prevent loading w32-fns.el, which might cause trouble in Unix
   (and (ti::win32-p)
        (w32-system-shell-p (or shell-file-name ""))))
 
-;;; ----------------------------------------------------------------------
-;;;
 (defsubst ti::win32-nt-p ()
   "Check windows NT/W2K/XP."
   (when (ti::win32-p)
@@ -325,14 +283,10 @@ functions `ti::os-check-linux-like-p' or `ti::win32-cygwin-p'."
                      (file-name-as-directory nt-root)
                      "system32/cmd.exe"))))))))
 
-;;; ----------------------------------------------------------------------
-;;;
 (defsubst ti::win32-9x-p ()
   "Check windows 9x."
   (not (ti::win32-nt-p)))
 
-;;; ----------------------------------------------------------------------
-;;;
 (defun ti::win32-cygwin-p-1 (&optional use-no-cache)
   "Use `ti::win32-cygwin-p' instead. Optionally USE-NO-CACHE value."
   (let (ret)
@@ -381,24 +335,18 @@ functions `ti::os-check-linux-like-p' or `ti::win32-cygwin-p'."
               (throw 'break nil)))))))
     ret))
 
-;;; ----------------------------------------------------------------------
-;;;
 (defsubst ti::win32-cygwin-p (&optional use-cache)
   "Return path if cygwin1.dll is found from `exec-path'.
  USE-CACHE is non-nil, retrieve cached value which is faster."
   (and (ti::win32-p)
        (ti::win32-cygwin-p-1 use-cache)))
 
-;;; ----------------------------------------------------------------------
-;;;
 (defsubst ti::os-check-gnu-support-p ()
   "Check if GNU tools are available in this system.
 at is, Linux and Cygwin qualifies."
   (or (ti::os-check-linux-p)
       (ti::win32-cygwin-p)))
 
-;;; ----------------------------------------------------------------------
-;;;
 (defun ti::win32-cygwin-binary-p (bin &optional use-cache)
   "Check if program BIN is from Cygwin. The program must be an .exe
  USE-CACHE is non-nil, retrieve cached value."
@@ -409,8 +357,6 @@ at is, Linux and Cygwin qualifies."
                (string-match (regexp-quote cygwin) path))
       path)))
 
-;;; ----------------------------------------------------------------------
-;;;
 (defun ti::emacs-debug-mode (&optional mode)
   "Toggle XEmacs/Emacs debug on and off."
   (interactive "P")
@@ -452,15 +398,11 @@ at is, Linux and Cygwin qualifies."
         (set 'stack-trace-on-error nil))
     (message "TinyLib: Emacs debug is OFF"))))
 
-;;; ----------------------------------------------------------------------
-;;;
 (defun ti::turn-on-emacs-debug ()
   "Turn on Emacs or XEmacs debug."
   (interactive)
   (ti::emacs-debug-mode 1))
 
-;;; ----------------------------------------------------------------------
-;;;
 (defun ti::turn-off-emacs-debug ()
   "Turn off Emacs or XEmacs debug."
   (interactive)
@@ -469,8 +411,6 @@ at is, Linux and Cygwin qualifies."
 ;;}}}
 ;;{{{ Other
 
-;;; ----------------------------------------------------------------------
-;;;
 (defun ti::file-version (file)
   "Find 'Version:' tag from lisp FILE. Retun numric version string if any."
   (let* ((lib    (locate-library file))
@@ -488,8 +428,6 @@ at is, Linux and Cygwin qualifies."
       (kill-buffer buffer)
       version)))
 
-;;; ----------------------------------------------------------------------
-;;;
 (defun ti::executable-find (program &optional type)
   "Find PROGRAM, according to TYPE (default is \\='cygwin). For example
 Windows includes program `ftp', but also Cygwin distribution includes

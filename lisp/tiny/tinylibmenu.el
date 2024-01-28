@@ -234,7 +234,6 @@ Special keys
   (sleep-for 1))
 
 ;;; ------------------------------------------------------------- &add ---
-;;;
 ;;;###autoload
 (defun ti::menu-add (menu-symbol ch cell &optional delete)
   "Add to menu MENU-SYMBOL elt (CH . CELL). Optionally DELETE.
@@ -267,8 +266,6 @@ Return:
       (set menu-symbol (list doc list))))
     ret))
 
-;;; ----------------------------------------------------------------------
-;;;
 ;;;###autoload
 (defun ti::menu-set-doc-string (menu-symbol doc-string)
   "Use  MENU-SYMBOL and set its DOC-STRING.
@@ -286,8 +283,6 @@ Example:
     (setcar menu doc-string)
     (set menu-symbol menu)))
 
-;;; ----------------------------------------------------------------------
-;;;
 (defun ti::menu-help-output  (variable-symbol)
   "Write doctring, ie Menu help, to the *Help* buffer"
   (with-output-to-temp-buffer "*Help*"
@@ -296,8 +291,6 @@ Example:
       variable-symbol
       'variable-documentation))))
 
-;;; ----------------------------------------------------------------------
-;;;
 (defun ti::menu-help (menu-sym)
   "Show menu help of MENU-SYM.
 MENU-SYM can variable symbol, whose documentaion is displayed or
@@ -363,8 +356,6 @@ The help commands are:
       (message "")))
     (discard-input)))
 
-;;; ----------------------------------------------------------------------
-;;;
 ;;;###autoload
 (defun ti::menu-menu (menu-symbol &optional pfx-arg)
   "The menu navigation engine.
@@ -451,9 +442,7 @@ References:
       (when eval-form
         (eval eval-form)))))
 
-;;; ----------------------------------------------------------------------
 ;;; - This is user function
-;;;
 (defun ti::menu-menu-default (&optional arg)
   "Call echo area menu with prefix ARG.
 Please read the documentation of variable `ti::menu--menu-sample' to see

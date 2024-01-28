@@ -1,5 +1,3 @@
-;; -*- enable-local-variables: :all;  -*-
-
 ;;; tinysearch.el --- Grab and search word under cursor
 
 ;; This file is not part of Emacs
@@ -330,7 +328,6 @@ Default boundary is line limit."
 ;;; - FIXME: Newer emacs has nice functions that could shrink this code
 ;;    to 10 lines.
 ;;; - Never grab word function is already coded in tinylib.el
-;;;
 (defun tinysearch-search-word-main (&optional backward set)
   "Gets word under cursor and search next occurrence.
 If BACKWARD is non-nil, the search will be headed backward, the SET

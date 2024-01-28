@@ -2,14 +2,10 @@
 
 ;; This file is not part of Emacs
 
-;;{{{ Id
-
 ;; Copyright (C)    1996-2024 Jari Aalto
 ;; Keywords:        tools
 ;; Author:          Jari Aalto
 ;; Maintainer:      Jari Aalto
-;;
-;; Look at the code with folding.el.
 
 ;; COPYRIGHT NOTICE
 ;;
@@ -28,16 +24,14 @@
 ;;
 ;; Visit <http://www.gnu.org/copyleft/gpl.html> for more information
 
-;;}}}
-;;{{{ Install
+;;; Install
 
-;; ....................................................... &t-install ...
-;;  Put this file on your Emacs-Lisp `load-path', add following into your
-;;  ~/.emacs startup file
+;;  Place this file on your Emacs-Lisp `load-path' and add the
+;;  following to your ~/.emacs startup file:
 ;;
 ;;      (require 'tinypage)
 ;;
-;;  or use this; your .emacs loads quicker. Preferred.
+;;  Or use this; your ~/.emacs loads quicker:
 ;;
 ;;      (global-set-key "\C-cmp" 'tinypage-mode)   ;; "m" for minor modes
 ;;      (autoload 'tinypage-mode "tinypage" "" t)
@@ -46,28 +40,24 @@
 ;;
 ;;      M-x tinypage-mode-install
 ;;
-;;  to see what this mode offers, look at the mode description
+;;  To see what this mode offers, look at the mode description:
 ;;
 ;;      M-x tinypage-mode
 ;;      C-h m
 
-;;}}}
-
-;;{{{ Documentation
-
-;; ..................................................... &t-commentary ...
 ;;; Commentary:
 
 ;;  Preface, Jun 1996
 ;;
-;;      I had found paged.el by Michelangelo Grigni <mic@mathcs.emory.edu>
-;;      one year or so ago and had liked it very much. Unfortunately
-;;      it used narrowing and didn't offer easy page select, copy, cut
-;;      actions which belong to basic page editing.
+;;      I had found `paged.el' by Michelangelo Grigni
+;;      mic@mathcs.emory.edu about a year ago and had liked it very
+;;      much. Unfortunately, it used narrowing and didn't offer easy
+;;      page select, copy, cut actions that belong to basic page
+;;      editing.
 ;;
-;;      Paged.el has one nice feature: It can renumber pages and make summary
-;;      out of them. If I have time I will include those features to
-;;      package too.
+;;      The `paged.el' package had one nice feature: it can renumber
+;;      pages and make a summary out of them. If I have time, I will
+;;      include those features in this package too.
 ;;
 ;;  Overview of features
 ;;
@@ -81,15 +71,15 @@
 ;;  About making pages -- basics
 ;;
 ;;      The pages are made by adding the linefeed marker into the
-;;      text. The page markers are interpreted by printed to print
+;;      text. The page markers are interpreted when printed to print
 ;;      text on the following page. The page marker character is
 ;;      usually added on its own line just before the topics or
-;;      headings. In Emacs, you need two key strokes to produce
-;;	ASCII chacter Control-L:
+;;      headings. In Emacs, you need two keystrokes to produce the
+;;      ASCII character Control-L:
 ;;
 ;;          C-q C-l  --> ^L
 ;;
-;;	The layout of your document would look something like:
+;;      The layout of a typical document might look something like:
 ;;
 ;;         ^L
 ;;         1.0 Topic one
@@ -107,8 +97,8 @@
 ;;
 ;;  About renumbering
 ;;
-;;      The package offers simple renumbering features, but it has some
-;;      limitations. Let's see an example of renumbering:
+;;      This package offers simple renumbering features, but it has
+;;      some limitations. Let's see an example of renumbering:
 ;;
 ;;          1.1
 ;;          1.7.1.5             (1)
@@ -128,30 +118,30 @@
 ;;
 ;;      Notes:
 ;;
-;;      .   It can't know that the 1.7.1.5 belongs under previous 1.1,
-;;          because no back tracking is done.
+;;      o   The package can't know that the 1.7.1.5 belongs under the
+;;          previous 1.1 because no backtracking is done.
 ;;
-;;      .   Same goes here, it can't know that the 1.5.4.1 should actually
-;;          start from 1.5.1.1
+;;      o   It also can't know that the 1.5.4.1 should actually start
+;;          from 1.5.1.1.
 ;;
-;;      The thumb rule is, that you _go_ and make sure all the _first_
-;;      level headings (those that end to X.X.1.1) are right before doing
-;;      renumbering. In the above case, you should have done these before
-;;      calling M-x tinypage-renumber-forward.
+;;      The rule of thumb is that you go and make sure all the
+;;      first-level headings (those that end with X.X.1.1) are correct
+;;      before doing renumbering. In the above case, you should have
+;;      done this before calling `M-x' `tinypage-renumber-forward'.
 ;;
-;;      .   --> 1.1.1.1
-;;      .   --> 1.5.1.1  _AND_ do replace M-% 1.5.4 with 1.5.1
+;;      o   --> 1.1.1.1
+;;      o   --> 1.5.1.1  AND do replace M-% 1.5.4 with 1.5.1
 ;;
-;;      Then all the renumberin would have gone just fine. Little
-;;      handy work and this package helps you to number your doc
+;;      Then all the renumbering would have gone just fine. A little
+;;      handy work, and this package helps you to number your document
 ;;      easily.
 ;;
 ;;  Renumbering -- be cautious
 ;;
-;;      If you have index section in you file, there is a little
-;;      problem, because this package does not know anything about
-;;      such things. If the Table of Contents section is at the
-;;      beginning, go past it and use function:
+;;      If you have an index section in your file, there is a little
+;;      problem because this package does not know anything about such
+;;      things. If the Table of Contents section is at the beginning,
+;;      go past it and use the function:
 ;;
 ;;          M-x tinypage-renumber-forward
 ;;
@@ -163,17 +153,18 @@
 ;;
 ;;  Creating index
 ;;
-;;      After all headings are renumbered, the old TOC section needs
-;;      update:
+;;      After all headings are renumbered, the old Table of Contents
+;;      section needs an update:
 ;;
 ;;          M-x tinypage-toc
 ;;
-;;      Copy the shown buffer in place of the old TOC.
+;;      Copy the content of displayed buffer and replace old Table
+;;      of Contents.
 ;;
 ;;  Limitations
 ;;
-;;      Since the numbering is done according to regexp, there is
-;;      no way to avoid the following false hit:
+;;      Since the numbering is done according to a regexp, there is no
+;;      way to avoid the following false hit:
 ;;
 ;;          1.1 Overview
 ;;          This is highly technical document concerning the latest
@@ -185,25 +176,23 @@
 ;;          Where the Daddy-Cool portable sondium emission detector is
 ;;          described in full.
 ;;
-;;      The number 1.5 is unfortunately renumbered to 1.2, and
-;;      possibly causing headache in the NASA and in the spying
-;;      countries. If you know elegant way to prevent these false
-;;      hits, please drop me a mail.
+;;      The number 1.5 is unfortunately renumbered to 1.2, possibly
+;;      causing headaches in NASA and in the spying countries. If you
+;;      know an elegant way to prevent these false hits, please drop
+;;      me an email.
 ;;
 ;;  Code Note
 ;;
-;;      The renumbering used here uses brute force, so the execution time
-;;      is O(n2). If you have more that 30-40 sections, the renumbering
-;;      might take considerable time. If you improve the renumbering, plese
-;;      send a patch.
-
-;;}}}
+;;      The renumbering used here employs brute force, so the
+;;      execution time is O(n^2). If you have more than 30-40
+;;      sections, the renumbering might take considerable time. If you
+;;      improve the renumbering, please send a patch
 
 ;;; Change Log:
 
 ;;; Code:
 
-;;{{{ setup: require
+;;; Setup: require
 
 (require 'tinylibm)
 (require 'easymenu)
@@ -229,16 +218,14 @@ tinypage: ** you need XEmacs overlay.el library.
         o   Shows popup in X to jump to headings
         o   Create table of contents.")
 
-;;}}}
-;;{{{ setup: private
+;;; Setup: private
 
 (defcustom tinypage--load-hook nil
   "*Hook that is run when package is loaded."
   :type 'hook
   :group 'TinyPage)
 
-;;}}}
-;;{{{ setup: private variables
+;;; Setup: private variables
 
 (defvar tinypage--post-command-wakeup-counter nil
   "Updated by program.")
@@ -248,15 +235,14 @@ tinypage: ** you need XEmacs overlay.el library.
 (defvar tinypage--buffer-toc "*toc*"
   "Where to create index.")
 
-;;}}}
-;;{{{ setup: public, user configurable
+;;; Setup: public, user configurable
 
 (defcustom tinypage--register ?p
   "*Register used for clipboard."
   :type  'character
   :group 'TinyPage)
 
-;;; This is _not_ one char "^L", it is two chars "^" + "L"
+;; This is not one char "^L", it is two chars "^" + "L"
 
 (defcustom tinypage--mode-name-string " ^L"
   "*Minor mode name. User variable."
@@ -320,8 +306,7 @@ section numbers won't do:
   :type 'integer
   :group 'TinyPage)
 
-;;}}}
-;;{{{ Minor Mode
+;;; Minor Mode
 
 ;;;###autoload (autoload 'tinypage-mode          "tinypage" "" t)
 ;;;###autoload (autoload 'turn-on-tinypage-mode  "tinypage" "" t)
@@ -335,11 +320,11 @@ section numbers won't do:
 
 (eval-and-compile
 
-;;; Prefix keys is "\" by default: this one
-;;; was nicely non-shifted and near HP-UX return key. You can Change it
-;;; prior loading the package with (setq tinypage--pref
+;; Prefix keys is "\" by default: this one
+;; was nicely non-shifted and near HP-UX return key. You can Change it
+;; prior loading the package with (setq tinypage--pref
 
-  (ti::macrof-minor-mode-wizard
+(ti::macrof-minor-mode-wizard
    "tinypage-" " ^L" "\\" "Tpage" 'TinyPage "tinypage--" ;1-6
 
    "Paged minor mode. This mode allows you to handle ^L delimited
@@ -458,24 +443,19 @@ Mode description:
      (define-key   map [(control prior)] 'scroll-down)
      (define-key   map [(control next)]   'scroll-up))))
 
-;;}}}
-;;{{{ misc, engine funcs
+;;; Misc, engine funcs
 
-;;; ----------------------------------------------------------------------
-;;;
 (defun tinypage-modeline ()
   "Update modeline information."
   (interactive)
   (funcall tinypage--modeline-function))
 
-;;; ----------------------------------------------------------------------
-;;;
 (defun tinypage-page-region (&optional verb)
   "Return region (BEG . END) of page. VERB."
   (interactive)
   (let (beg
-	end
-	ret)
+        end
+        ret)
     (save-excursion
       (beginning-of-line)
       (if (looking-at "^[ \t]*\C-l")
@@ -491,8 +471,6 @@ Mode description:
           (message "Couldn't find region")))
     ret))
 
-;;; ----------------------------------------------------------------------
-;;;
 (defun tinypage-count-pages ()
   "Count page characters ^L."
   (let ((count 0))
@@ -502,8 +480,6 @@ Mode description:
         (setq count (1+ count))))
     count))
 
-;;; ----------------------------------------------------------------------
-;;;
 (defun tinypage-count-lines-in-page ()
   "Count lines."
   (let* ((elt (tinypage-page-region))
@@ -514,14 +490,12 @@ Mode description:
       (setq ret (count-lines beg end)))
     ret))
 
-;;; ----------------------------------------------------------------------
-;;;
 (defun tinypage-current-page ()
   "Current page."
   (interactive)
   (let ((re    "^[ \t]*\C-l")
-	(point (point))
-	(count 0))
+        (point (point))
+        (count 0))
     (save-excursion
       (ti::pmin)
       (while (re-search-forward re point t)
@@ -530,36 +504,30 @@ Mode description:
         (setq count (1+ count)))
     count))
 
-;;; ----------------------------------------------------------------------
-;;;
 (defun tinypage-update-mode-line ()
   "Update modeline info."
   (interactive)
   (let ((mode-string  tinypage--mode-name-string)
-	pages
-	now
-	lines)
+        pages
+        now
+        lines)
     (setq pages (tinypage-count-pages))
     (setq now   (tinypage-current-page))
     (setq lines (tinypage-count-lines-in-page))
     (setq tinypage--mode-name
           (format  " %s %s/%s/%s" mode-string now pages (or lines "-")))))
 
-;;; ----------------------------------------------------------------------
-;;;
 (defun tinypage-post-command ()
   "Keep page info in modeline up to date."
   (when tinypage-mode                   ;only now!
     (if (not (integerp tinypage--post-command-wakeup-counter))
         (setq tinypage--post-command-wakeup-counter 0))
     (setq tinypage--post-command-wakeup-counter
-	  (1+ tinypage--post-command-wakeup-counter))
+          (1+ tinypage--post-command-wakeup-counter))
     (when (eq 0 (% tinypage--post-command-wakeup-counter
                    tinypage--post-command-wakeup-count))
       (tinypage-modeline))))
 
-;;; ----------------------------------------------------------------------
-;;;
 (defun tinypage-overlay (act &optional beg end)
   "If ACT is \\='hide, hide overlay, otherwise highlight BEG END."
   (let ((ov (ti::compat-overlay-some)))
@@ -581,8 +549,6 @@ Mode description:
        t t)
       (setq this-command 'set-mark)))))
 
-;;; ----------------------------------------------------------------------
-;;;
 (defun tinypage-page-mark-region (beg end &optional act maybe)
   "Mark region and do some command act.
 
@@ -603,9 +569,9 @@ Return:
   t             if successfull
   nil"
   (let ((doit (if maybe
-		  (and beg end)
-		t))
-	(reg tinypage--register))
+                  (and beg end)
+                t))
+        (reg tinypage--register))
     (cond
      ((null doit)
       nil)
@@ -622,11 +588,8 @@ Return:
       ;;  something done
       t))))
 
-;;}}}
-;;{{{ application functions
+;;; Application functions
 
-;;; ----------------------------------------------------------------------
-;;;
 (defun tinypage-renumber-level-forward (&optional verb)
   "Renumber current level starting from current line. VERB.
 Only the last level number is incremented. Put cursor line above
@@ -679,13 +642,11 @@ References:
         (message "Last heading was %s%s" orig-level-string counter))))
     counter))
 
-;;; ----------------------------------------------------------------------
-;;;
 (defun tinypage-renumber-forward (&optional verb)
   "Renumber all found headings forward. VERB."
   (interactive "P")
   (let* ((data tinypage--renumber-format)
-	 (re   (nth 0 data)))
+         (re   (nth 0 data)))
     (ti::verb)
     ;; Well, we do lot of extra work here, because the
     ;; tinypage-renumber-level-forward goes alway to the bottom,
@@ -701,8 +662,6 @@ References:
     (if verb
         (message "Renumbering...done"))))
 
-;;; ----------------------------------------------------------------------
-;;;
 (defun tinypage-renumber-buffer ()
   "Renumber all headings in buffer starting from `point-min'."
   (interactive)
@@ -710,18 +669,14 @@ References:
     (ti::pmin)
     (tinypage-renumber-forward 'verb)))
 
-;;; ----------------------------------------------------------------------
-;;;
 (defsubst tinypage-get-index-list ()
   "Return list of strings."
   (let ((list (ti::buffer-grep-lines (nth 0 tinypage--renumber-format)))
-	ret)
+        ret)
     (dolist (elt list)
       (push (ti::string-remove-whitespace elt) ret))
     ret))
 
-;;; ----------------------------------------------------------------------
-;;;
 (defun tinypage-toc (&optional ragged no-show)
   "Create toc to temporary buffer.
 Optional argument RAGGED makes the heading to \"hang\".
@@ -733,12 +688,12 @@ Return:
   buffer"
   (interactive "P")
   (let ((list (ti::buffer-grep-lines
-	       (nth 0 tinypage--renumber-format)))
-	(buffer (ti::temp-buffer tinypage--buffer-toc 'clear))
-	dots
-	padd
-	heading
-	text)
+               (nth 0 tinypage--renumber-format)))
+        (buffer (ti::temp-buffer tinypage--buffer-toc 'clear))
+        dots
+        padd
+        heading
+        text)
     (with-current-buffer buffer
       (dolist (elt list)
         (setq elt (ti::string-remove-whitespace elt))
@@ -766,24 +721,20 @@ Return:
         (shrink-window-if-larger-than-buffer)))
     buffer))
 
-;;; ----------------------------------------------------------------------
-;;;
 (defun tinypage-toc-x-popup-keyboard ()
   "Create index. Show it in X-popup."
   (interactive)
   (tinypage-toc-x-popup
    (ti::compat-make-fake-event tinypage--x-coord tinypage--y-coord)))
 
-;;; ----------------------------------------------------------------------
-;;;
 (defun tinypage-toc-x-popup (event)
   "Create index. Show it in X-popup with EVENT."
   (interactive "e")
   (let ((len    tinypage--x-popup-line-len)
-	(title  "Index")
-	list
-	val
-	point)
+        (title  "Index")
+        list
+        val
+        point)
     (cond
      ((null (ti::compat-window-system))
       (message "Sorry, Requires X to use X-popup"))
@@ -804,18 +755,13 @@ Return:
       (if point
           (goto-char point))))))
 
-;;; ----------------------------------------------------------------------
-;;;
 (defun tinypage-toc-occur ()
   "Create occur buffer for jumpig to Headings easily."
   (interactive)
   (occur (nth 0 tinypage--renumber-format)))
 
-;;}}}
-;;{{{ interactive funcs
+;;; Interactive funcs
 
-;;; ----------------------------------------------------------------------
-;;;
 ;;;###autoload
 (defun tinypage-region-action (act &optional verb)
   "Execute action ACT. Return t or nil. VERB."
@@ -825,8 +771,6 @@ Return:
     (ti::verb)
     (tinypage-page-mark-region beg end act 'maybe)))
 
-;;; ----------------------------------------------------------------------
-;;;
 ;;;###autoload
 (defun tinypage-select (&optional verb)
   "Select page. If sitting on page Marker, use page below. VERB."
@@ -836,8 +780,6 @@ Return:
        (if verb
            (message "Page selected."))))
 
-;;; ----------------------------------------------------------------------
-;;;
 ;;;###autoload
 (defun tinypage-copy (&optional verb)
   "Select page. If sitting on page Marker, use page below. VERB."
@@ -847,8 +789,6 @@ Return:
        (if verb
            (message "Page copied."))))
 
-;;; ----------------------------------------------------------------------
-;;;
 ;;;###autoload
 (defun tinypage-cut (&optional verb)
   "Select page. If sitting on page Marker, use page below. VERB."
@@ -856,8 +796,6 @@ Return:
   (ti::verb)
   (tinypage-region-action 'cut verb))
 
-;;; ----------------------------------------------------------------------
-;;;
 ;;;###autoload
 (defun tinypage-yank (&optional verb)
   "Yank page from register. VERB."
@@ -865,8 +803,6 @@ Return:
   (insert-register tinypage--register)
   (tinypage-overlay 'hide))
 
-;;; ----------------------------------------------------------------------
-;;;
 ;;;###autoload
 (defun tinypage-yank-before (&optional verb)
   "Yank page from register, but _before_ current page. VERB."
@@ -874,8 +810,6 @@ Return:
   (ti::verb)
   (tinypage-yank-after 'before "Yanked before this page." verb))
 
-;;; ----------------------------------------------------------------------
-;;;
 ;;;###autoload
 (defun tinypage-yank-after (&optional before msg verb)
   "Yank page from register, but _after_ current page.
@@ -889,10 +823,8 @@ Optionally BEFORE with MSG and VERB."
       (insert-register tinypage--register)
       (tinypage-overlay 'hide)
       (if (and verb msg)
-	  (message msg)))))
+          (message msg)))))
 
-;;; ----------------------------------------------------------------------
-;;;
 ;;;###autoload
 (defun tinypage-go-previous (&optional verb)
   "Go to previous page. VERB."
@@ -900,15 +832,13 @@ Optionally BEFORE with MSG and VERB."
   (ti::verb)
   (tinypage-go-next  'back verb))
 
-;;; ----------------------------------------------------------------------
-;;;
 ;;;###autoload
 (defun tinypage-go-next (&optional back verb)
   "Go to next page, optionally BACK. Return point if moved. VERB."
   (interactive)
   (let ((point (point))
-	func
-	ret)
+        func
+        ret)
     (ti::verb)
     (cond
      (back
@@ -925,7 +855,7 @@ Optionally BEFORE with MSG and VERB."
         (message "No more page marks."))
     ret))
 
-;;}}}
+;;; Provide
 
 (add-hook 'tinypage--mode-define-keys-hook 'tinypage-mode-define-keys)
 

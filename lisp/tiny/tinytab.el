@@ -562,7 +562,6 @@ Return:
 
 ;;; Replaces the RET key
 ;;; The arg is just due to: (newline &optional ARG1)
-;;;
 (defun tinytab-auto-indent (&optional arg)
   "Automatically indent according to previous line.
 If optional ARG is given, behave exactly like the `newline' function."

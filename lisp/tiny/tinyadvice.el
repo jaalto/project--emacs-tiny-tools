@@ -1,5 +1,3 @@
-;; -*- enable-local-variables: :all;  -*-
-
 ;;; tinyadvice.el --- Collection of adviced functions
 
 ;; This file is not part of Emacs
@@ -406,8 +404,6 @@ The FLAG is optional and values can be:
 
 ;;; ########################################################### &Funcs ###
 
-;;; ----------------------------------------------------------------------
-;;;
 (defmacro tinyadvice-elts (elt func re type)
   "Decode ELT to variables FUNC RE TYPE."
   `(setq ,func (nth 0 ,elt)
@@ -416,8 +412,6 @@ The FLAG is optional and values can be:
                       (nth 0 ,elt)
                     nil)))
 
-;;; ----------------------------------------------------------------------
-;;;
 (defun tinyadvice-match (re &optional type)
   "Check if RE match emacs version according to TYPE.
 TYPE :
@@ -441,9 +435,7 @@ TYPE :
         (setq ret 3)))
       ret)))
 
-;;; ----------------------------------------------------------------------
 ;;; Testing... (tinyadvice-activate-p 'compile-internal)
-;;;
 (defun tinyadvice-activate-p (func-sym)
   "Determine if we can advice FUNC-SYM."
   (let* ((elt   (assoc func-sym tinyadvice-:advice-table))
@@ -458,8 +450,6 @@ TYPE :
           (setq func 'ignore))
       (tinyadvice-match re type))))
 
-;;; ----------------------------------------------------------------------
-;;;
 (defun tinyadvice-ad-function-list  (&optional string-format)
   "Return list of tinyadvice ad-functions for current emacs.
 Notice: all functions may not be adviced; this merely
@@ -483,22 +473,15 @@ Return list:
           (push func list))))
     list))
 
-;;; ----------------------------------------------------------------------
-;;;
 (defun tinyadvice-install  ()
   "Activates advices that are listed in `tinyadvice-:advice-table'."
   (interactive)
   (tinyadvice-advice nil (tinyadvice-ad-function-list)))
 
-;;; ----------------------------------------------------------------------
-;;;
 ;;; This is slow, but returns only tinyadvice adviced functions...
-;;;
 ;;; (ad-do-advised-functions (func)
 ;;;  (if (ad-find-some-advice func 'any tinyadvice-:advice-re)
 ;;;      (push func list)))
-;;;
-;;;
 (defun tinyadvice-advice (&optional disable func-or-list)
   "Activate or optionally DISABLE tinyadvice advice for FUNC-OR-LIST."
   (interactive
@@ -528,8 +511,6 @@ TinyAdvice: Sorry, the function is not advice controlled by TinyAdvice.")))
   (ti::advice-control
    func-or-list tinyadvice-:advice-re disable (called-interactively-p 'interactive)))
 
-;;; ----------------------------------------------------------------------
-;;;
 (defun tinyadvice-advice-control  (&optional disable verb)
   "Acivate all TinyAdvice advices. Use extra argument to DISABLE all. VERB."
   (interactive "P")
@@ -557,8 +538,6 @@ TinyAdvice: Sorry, the function is not advice controlled by TinyAdvice.")))
       (if verb
           (message msg)))))
 
-;;; ----------------------------------------------------------------------
-;;;
 (defun tinyadvice-convert-filename  (file &optional cautious)
   "Return normal or compressed filename.
 
@@ -590,8 +569,6 @@ Return:
 
 ;;; ........................................................ &built-in ...
 
-;;; ----------------------------------------------------------------------
-;;;
 (when (tinyadvice-activate-p 'rename-buffer)
   (defadvice rename-buffer (around tinyadvice dis)
     "Gives old buffer name for editing."
@@ -605,16 +582,12 @@ Return:
 
 ;;; ......................................................... &compile ...
 
-;;; ----------------------------------------------------------------------
 ;;; (ad-disable-advice 'compilation-find-file 'before 'tinyadvice)
 ;;; (ad-activate       'compilation-find-file)
-;;;
 (defadvice compilation-find-file  (before tinyadvice act)
   "Move to some non dedicated frame."
   (ti::select-frame-non-dedicated))
 
-;;; ----------------------------------------------------------------------
-;;;
 (defadvice shell (around tinyadvice dis)
   "If there is *shell* buffer, ask user to give new name for new shell.
 If new buffer name is given, a new shell is created. pressing RET
@@ -640,8 +613,6 @@ does not create new buffer, but jumps to existing *shell* buffer."
       (with-current-buffer prev-name
         (rename-buffer "*shell*")))))
 
-;;; ----------------------------------------------------------------------
-;;;
 (defun tinyadvice-compile-save-buffers ()
   "Check what buffers for current compilation target should be saved."
   (interactive)
@@ -657,8 +628,6 @@ does not create new buffer, but jumps to existing *shell* buffer."
                             (buffer-name)))
           (save-buffer)))))
 
-;;; ----------------------------------------------------------------------
-;;;
 (defadvice igrep-read-expression (around tinyadvice dis)
   "Replace function: TAB key completes file names."
   (setq
@@ -671,8 +640,6 @@ does not create new buffer, but jumps to existing *shell* buffer."
                              default-expression map nil
                              'igrep-expression-history)))))
 
-;;; ----------------------------------------------------------------------
-;;;
 (defadvice igrep-read-options (around tinyadvice act)
   "Replace function: TAB key completes file names."
   (setq
@@ -689,8 +656,6 @@ does not create new buffer, but jumps to existing *shell* buffer."
             map)))
      igrep-options)))
 
-;;; ----------------------------------------------------------------------
-;;;
 (defun tinyadvice-grep-default (arg)
   "Set default value. This function use dynamically bound variables.
 See `grep' advice."
@@ -713,8 +678,6 @@ See `grep' advice."
         (setq grep-default (replace-match (or tag-default "")
                                           t t grep-default 2))))))
 
-;;; ----------------------------------------------------------------------
-;;;
 (defadvice grep (around tinyadvice act)
   "Modify interactive spec: TAB key completes file names."
   (interactive
@@ -727,9 +690,7 @@ See `grep' advice."
                                    map nil 'grep-history)))))
   ad-do-it)
 
-;;; ----------------------------------------------------------------------
 ;;; - More smarter buffer saving.
-;;;
 (defadvice compile (around tinyadvice dis)
   "Replace original function. More smarter buffer saving.
 See function `tinyadvice-compile-save-buffers'.
@@ -749,9 +710,7 @@ In addition, TAB key completes file names."
 
   (compile-internal compile-command "No more errors"))
 
-;;; ----------------------------------------------------------------------
 ;;; Run compile with the default command line
-;;;
 (defadvice recompile (around tinyadvice dis)
   "Replace original function.
 More smarter buffer saving, seefunction `tinyadvice-compile-save-buffers'."
@@ -764,16 +723,12 @@ More smarter buffer saving, seefunction `tinyadvice-compile-save-buffers'."
 
 ;;; ...................................................... &completion ...
 
-;;; ----------------------------------------------------------------------
-;;;
 (defadvice call-last-kbd-macro (before tinyadvice dis)
   "If still defining a macro, end it before attempting to call-last.
   This prevents whacking the current definition."
   (if defining-kbd-macro
       (end-kbd-macro)))
 
-;;; ----------------------------------------------------------------------
-;;;
 (defadvice PC-complete  (around tinyadvice dis)
   "In file name prompt, use case sensitive completion.
 Set `completion-ignore-case' locally to nil."
@@ -785,8 +740,6 @@ Set `completion-ignore-case' locally to nil."
         (setq completion-ignore-case nil))
     ad-do-it))
 
-;;; ----------------------------------------------------------------------
-;;;
 (defadvice debugger-eval-expression (around tinyadvice dis)
   "Chnage interactive so that it offer word from buffer."
   (interactive
@@ -801,16 +754,12 @@ Set `completion-ignore-case' locally to nil."
 
 ;;; ........................................................... &dired ...
 
-;;; ----------------------------------------------------------------------
-;;;
 (defadvice dired-mark-read-file-name (around tinyadvice dis)
   "Instead of asking directory, offer full filename for editing."
   (if (and dir (string-match "/" dir))
       (setq dir (dired-get-filename)))
   ad-do-it)
 
-;;; ----------------------------------------------------------------------
-;;;
 (defadvice dired-do-rename  (around tinyadvice act)
   "Offer editing the current filename.
 Without this advice you don't get the old filename for editing.
@@ -822,8 +771,6 @@ Activates advice 'dired-mark-read-file-name during call."
     (ad-disable-advice ADVICE 'around 'tinyadvice)
     (ad-activate ADVICE)))
 
-;;; ----------------------------------------------------------------------
-;;;
 (defadvice dired-man (before tinyadvice dis)
   "Make sure man variables are initialized."
   (require 'man)
@@ -831,8 +778,6 @@ Activates advice 'dired-mark-read-file-name during call."
 
 ;;; ............................................................. &env ...
 
-;;; ----------------------------------------------------------------------
-;;;
 (defun tinyadvice-read-envvar (prompt &optional require-match)
   "Read an environment variable name from the minibuffer.
 Prompt with PROMPT and complete from `process-environment'.
@@ -848,12 +793,9 @@ names are allowed."
    nil
    require-match))
 
-;;; ----------------------------------------------------------------------
-;;;
 ;;; Hangs sometimes, don't know why..
 ;;; Currently owned by "my" and disabled. Enable this manyally in load-hook
 ;;; if you want to try it.
-;;;
 (defadvice getenv (around my dis)
   "Offer completion."
   (interactive (list (tinyadvice-read-envvar "Get environment variable: " t)))
@@ -863,8 +805,6 @@ names are allowed."
       (message "%s" ad-return-value)
     ad-return-value))
 
-;;; ----------------------------------------------------------------------
-;;;
 (defadvice setenv (around tinyadvice dis)
   "Add interactive completion."
   (interactive
@@ -881,7 +821,6 @@ names are allowed."
     value))
 
 ;;; ------------------------------------------------------------ &grep ---
-;;;
 (defadvice grep  (around tinyadvice  dis)
   "Complete filenames with TAB.
 Read word from the current pointand put it into grep prompt."
@@ -896,20 +835,14 @@ Read word from the current pointand put it into grep prompt."
        'grep-history))))
   ad-do-it)
 
-;;; ----------------------------------------------------------------------
-;;;
 (defadvice find-tag (after tinyadvice-reposition-window act)
   "Call reposition-window after finding a tag."
   (reposition-window))
 
 ;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;
-;;;
 ;;;                         files.el
-;;;
 ;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;
 
-;;; ----------------------------------------------------------------------
-;;;
 (defadvice find-file-literally
   (around  tinyadvice-disable-write-file-functions dis)
   "Disable `write-file-functions' so that file can edited and saved in pure manner."
@@ -919,9 +852,7 @@ Read word from the current pointand put it into grep prompt."
   ;; (setq indent-tabs-mode t)
   (message "TinyAdvice: write-file-hooks is now nil in %s" (buffer-name)))
 
-;;; ----------------------------------------------------------------------
 ;;; 19.30 doesn't offer the filename, so enable this in all emacs versions
-;;;
 (defadvice find-alternate-file  (around tinyadvice dis)
   "Interactive change: offer buffer filename as default.
 Reference:
@@ -940,8 +871,6 @@ Reference:
            (buffer-name) "")))))
   ad-do-it)
 
-;;; ----------------------------------------------------------------------
-;;;
 (defadvice recover-file  (around tinyadvice dis)
   "Offer current buffer's filename in prompt."
   (interactive
@@ -958,8 +887,6 @@ Reference:
            (buffer-name) "")))))
   ad-do-it)
 
-;;; ----------------------------------------------------------------------
-;;;
 (defadvice write-file (around tinyadvice-file dis)
   "File handling additions.
 
@@ -997,8 +924,6 @@ Confirm overwrite:
         ad-do-it
       (message "Aborted"))))
 
-;;; ----------------------------------------------------------------------
-;;;
 (defadvice write-region (around tinyadvice-file dis)
   "See `write-file' which explains the advice behavior."
   (interactive "r\nFwrite region: ")
@@ -1015,8 +940,6 @@ Confirm overwrite:
         ad-do-it
       (message "Aborted"))))
 
-;;; ----------------------------------------------------------------------
-;;;
 (defadvice save-some-buffers (before tinyadvice dis)
   "Always save changed abbrevs without questions if `save-abbrevs' is set."
   (when (and save-abbrevs abbrevs-changed)
@@ -1025,9 +948,7 @@ Confirm overwrite:
 
 ;;; ............................................................. &gud ...
 
-;;; ----------------------------------------------------------------------
 ;;; See gud.el
-;;;
 (defadvice gud-display-line (after tinyadvice dis)
   "Highlight current line."
   (when (and tinyadvice-:gud-overlay
@@ -1044,9 +965,7 @@ Confirm overwrite:
 
 ;;; ............................................................ &mail ...
 
-;;; ----------------------------------------------------------------------
 ;;; See mailabbrev.el
-;;;
 (defadvice sendmail-pre-abbrev-expand-hook
   (around tinyadvice-no-abbrevs-in-body dis)
   "Do not expand any abbrevs in the message body through `self-insert-command'."
@@ -1093,8 +1012,6 @@ Confirm overwrite:
 
 ;;; ........................................................... &mouse ...
 
-;;; ----------------------------------------------------------------------
-;;;
 (defadvice mouse-wheel-scroll-screen (around tinyadvice act)
   "Use tinymy.el scrolling if possible."
   (if (and (fboundp 'tinymy-scroll-down)
@@ -1106,16 +1023,12 @@ Confirm overwrite:
             (tinymy-scroll-up))))
     ad-do-it))
 
-;;; ----------------------------------------------------------------------
-;;;
 (defadvice mouse-delete-other-windows  (around tinyadvice dis)
   "Confirm window delete."
   (if (y-or-n-p "Really delete _all_ windows ")
       ad-do-it
     (message "")))
 
-;;; ----------------------------------------------------------------------
-;;;
 (defadvice mouse-delete-window  (around tinyadvice dis)
   "Confirms window delete."
   (if (y-or-n-p "Really delete _this_ window ")
@@ -1142,9 +1055,7 @@ also Possibly unfold/un-outline the code."
 
 ;;; .......................................................... &simple ...
 
-;;; ----------------------------------------------------------------------
 ;;; See simple.el
-;;;
 (defadvice exchange-point-and-mark (around tinyadvice-pop-if-prefix dis)
   "If given prefix, call `set-mark-command' to pop previous mark positions."
   (if (and current-prefix-arg
@@ -1152,8 +1063,6 @@ also Possibly unfold/un-outline the code."
       (call-interactively 'set-mark-command))
   ad-do-it)
 
-;;; ----------------------------------------------------------------------
-;;;
 (defadvice goto-line (around tinyadvice dis)
   "Widen the buffer before and after `goto-line' command."
   (widen)
@@ -1163,17 +1072,13 @@ also Possibly unfold/un-outline the code."
   ;;  #todo: should we check featurep 'folding?
   (widen))
 
-;;; ----------------------------------------------------------------------
-;;;
 (defadvice indent-for-comment (around tinyadvice dis)
   "Kill the comment with negative prefix."
   (if (eq current-prefix-arg '-)
       (kill-comment nil)
     ad-do-it))
 
-;;; ----------------------------------------------------------------------
 ;;; Redefine insert-buffer to insert a visible buffer, if there's one.
-;;;
 (defadvice insert-buffer (before tinyadvice dis)
   "Use a more reasonable default, the other window's content."
   (interactive
@@ -1187,9 +1092,7 @@ also Possibly unfold/un-outline the code."
                      (window-buffer (next-window (selected-window))))
                    t)))))
 
-;;; ----------------------------------------------------------------------
 ;;; avoid deactivation of region when buffer end or beginning is reached
-;;;
 (defadvice line-move (around tinyadvice dis)
   "Avoid deactivation of region. in `beginning-of-buffer' or `end-of-buffer'."
   (condition-case ()
@@ -1199,16 +1102,12 @@ also Possibly unfold/un-outline the code."
          (message "Beginning of buffer.")
        (message "End of buffer.")))))
 
-;;; ----------------------------------------------------------------------
-;;;
 (defadvice set-mark-command (around tinyadvice-global-if-negative dis)
   "If the argument is negative, call `pop-global-mark'."
   (if (< (prefix-numeric-value current-prefix-arg) 0)
       (pop-global-mark)
     ad-do-it))
 
-;;; ----------------------------------------------------------------------
-;;;
 (defadvice what-cursor-position (around tinyadvice dis)
   "Displays line number info too."
   ad-do-it
@@ -1219,8 +1118,6 @@ also Possibly unfold/un-outline the code."
           ad-return-value
           (number-to-string (ti::widen-safe (ti::current-line-number))))))
 
-;;; ----------------------------------------------------------------------
-;;;
 (defadvice switch-to-buffer (around tinyadvice dis)
   "When called interactively: Confirm switch to non-existing buffer.
 
@@ -1245,8 +1142,6 @@ References:
                                    buffer-name)))))
     (message "")))                      ;clear the echo area
 
-;;; ----------------------------------------------------------------------
-;;;
 (defadvice switch-to-buffer-other-frame  (around tinyadvice dis)
   "Replace function. Don't ever create new frame; reuse some existing frame."
   (let ((free-frames (ti::window-frame-list nil 'exclude-current))
@@ -1265,10 +1160,8 @@ References:
         (select-frame (car free-frames))
         (switch-to-buffer buffer))))))
 
-;;; ----------------------------------------------------------------------
 ;;; - This puts cursor to generated list. Propably what we
 ;;;   want 99% of the time.
-;;;
 (defadvice list-buffers  (after tinyadvice dis)
   "Select buffer list after display."
   (if (called-interactively-p 'interactive)
@@ -1276,8 +1169,6 @@ References:
 
 ;;; ........................................................... &other ...
 
-;;; ----------------------------------------------------------------------
-;;;
 (mapc
  (function
   (lambda (x)
@@ -1293,9 +1184,7 @@ References:
    term-send-input
    term-send-raw-string))
 
-;;; ----------------------------------------------------------------------
 ;;; hyberbole package
-;;;
 (defadvice hkey-help-show (around tinyadvice-shrink-window act)
   "Shrink auxiliary windows to buffer size.
 For `help-mode',switch `view-mode' off."

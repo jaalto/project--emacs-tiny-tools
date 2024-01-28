@@ -113,8 +113,6 @@
 ;;
 ;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;
 
-;;; ----------------------------------------------------------------------
-;;;
 (defun tiny-tmp-load-path-print (&optional function eval)
   "Print `load-path' using `function'.
 Default is `message'. Eval optional EVAL."

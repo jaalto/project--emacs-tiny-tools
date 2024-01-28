@@ -1,5 +1,3 @@
-;; -*- enable-local-variables: :all;  -*-
-
 ;;; tinyirc.el --- IRC related utilities for Emacs
 
 ;; This file is not part of Emacs
@@ -626,8 +624,6 @@ See also `tinyirc--pastebot-config-directory'.")
 
 ;;{{{ General functions
 
-;;; ----------------------------------------------------------------------
-;;;
 (defsubst tinyirc-pastebot-program-name ()
   "Verify that `tinyirc--pastebot-program' is string."
   (if (stringp tinyirc--pastebot-program)
@@ -635,14 +631,10 @@ See also `tinyirc--pastebot-config-directory'.")
     (error
      "TinyIrc: [ERROR] `tinyirc--pastebot-program' not defined.")))
 
-;;; ----------------------------------------------------------------------
-;;;
 (defsubst tinyirc-time-string ()
   "Return ISO 8601 time YYYY-MM-DD HH:MM."
   (format-time-string "%Y-%m-%d %H:%M"))
 
-;;; ----------------------------------------------------------------------
-;;;
 (defun tinyirc-word-at-point ()
   "Return word separated by whitespace."
   (save-excursion
@@ -653,8 +645,6 @@ See also `tinyirc--pastebot-config-directory'.")
         (skip-chars-forward "^ \t\r\n")
         (buffer-substring point (point))))))
 
-;;; ----------------------------------------------------------------------
-;;;
 (defun tinyirc-append-to-buffer (string)
   "Add STRING to the end of current buffer."
   ;;  Make room for new message if point is ar wrong place.
@@ -666,8 +656,6 @@ See also `tinyirc--pastebot-config-directory'.")
     (forward-line 1))
   (insert string))
 
-;;; ----------------------------------------------------------------------
-;;;
 (defsubst tinyirc-line-number-p ()
   "Return non-nil if line contains a line number.
 Match 1 contains line numer, 2 contains rest of the line."
@@ -675,8 +663,6 @@ Match 1 contains line numer, 2 contains rest of the line."
     (beginning-of-line)
     (looking-at "^\\([0-9][0-9][0-9]: \\)\\(.*\\)")))
 
-;;; ----------------------------------------------------------------------
-;;;
 (defun tinyird-line-number-add-region (beg end)
   "Add line numbers to region BEG END. Point is moved."
   (let ((i 1))
@@ -692,8 +678,6 @@ Match 1 contains line numer, 2 contains rest of the line."
         (forward-line 1)
         (setq i (1+ i))))))
 
-;;; ----------------------------------------------------------------------
-;;;
 (defun tinyird-line-number-delete-region (beg end)
   "Delete line numbers to region BEG END. Point is moved."
   (goto-char beg)
@@ -708,8 +692,6 @@ Match 1 contains line numer, 2 contains rest of the line."
         (insert line))
       (forward-line 1))))
 
-;;; ----------------------------------------------------------------------
-;;;
 (defun tinyirc-path (path)
   "Return path using forward slashes and without using trailing slash."
   (setq path (file-name-as-directory
@@ -721,8 +703,6 @@ Match 1 contains line numer, 2 contains rest of the line."
 ;;}}}
 ;;{{{ Pastebot: Library
 
-;;; ----------------------------------------------------------------------
-;;;
 (defun tinyirc-pastebot-font-lock-mode-select (mode &optional off)
   "MODE is \\='sent or \\='received. Turn on or OFF font lock."
   (let ((kwds (if (eq mode 'sent)
@@ -736,20 +716,14 @@ Match 1 contains line numer, 2 contains rest of the line."
       (font-lock-mode 1)
       (setq font-lock-keywords kwds)))))
 
-;;; ----------------------------------------------------------------------
-;;;
 (defun tinyirc-pastebot-font-lock-mode-sent (&optional off)
   "Turn on or OFF font lock."
   (tinyirc-pastebot-font-lock-mode-select 'sent off))
 
-;;; ----------------------------------------------------------------------
-;;;
 (defun tinyirc-pastebot-font-lock-mode-received (&optional off)
   "Turn on or OFF font lock."
   (tinyirc-pastebot-font-lock-mode-select 'received off))
 
-;;; ----------------------------------------------------------------------
-;;;
 (defun tinyirc-pastebot-message-record (msg)
   "Record sent MSG to `tinyirc--pastebot-buffer-name-sent'.
 Buffer is saved if `tinyirc--pastebot-buffer-file-name' is set.
@@ -781,8 +755,6 @@ References:
           (save-buffer))
         (run-hooks 'tinyirc--pastebot-hook-sent)))))
 
-;;; ----------------------------------------------------------------------
-;;;
 (defun tinyirc-pastebot-message-format (service user msg url)
   "Format message using SERVICE USER MSG URL with timestamp."
   (let ((time (tinyirc-time-string))
@@ -791,8 +763,6 @@ References:
 		"\n")))
     (format "%s %s %s %s %s%s" time service user url msg eol)))
 
-;;; ----------------------------------------------------------------------
-;;;
 (defun tinyirc-pastebot-program-1 ()
   "Return location of `tinyirc--pastebot-program'."
   (let*  ((prg        (tinyirc-pastebot-program-name))
@@ -814,8 +784,6 @@ References:
     (put 'tinyirc-pastebot-program 'absolute path)
     path))
 
-;;; ----------------------------------------------------------------------
-;;;
 (defun tinyirc-pastebot-program ()
   "Return location of `tinyirc--pastebot-program' or signal an error."
   (let ((path (tinyirc-pastebot-program-1)))
@@ -831,8 +799,6 @@ References:
              tinyirc--pastebot-program))
     path))
 
-;;; ----------------------------------------------------------------------
-;;;
 (defun tinyirc-pastebot-service-file-name ()
   "Return configuration filename."
   (let* ((dir  tinyirc--pastebot-config-directory)
@@ -843,8 +809,6 @@ References:
              tinyirc--pastebot-config-directory))
     file))
 
-;;; ----------------------------------------------------------------------
-;;;
 (defun tinyirc-pastebot-service-file-name-changed-p ()
   "Check if configuration file has chnages since last reading."
   (let ((time tinyirc--pastebot-service-list-time-stamp))
@@ -855,8 +819,6 @@ References:
                        (nth 5 (file-attributes file)))))
         (string< time modtime)))))
 
-;;; ----------------------------------------------------------------------
-;;;
 (defun tinyirc-pastebot-service-list-from-file ()
   "Read `tinyirc--pastebot-config-directory' and parse `servers' file."
   (let ((file (tinyirc-pastebot-service-file-name))
@@ -870,8 +832,6 @@ References:
         (push (match-string 1) list)))
     list))
 
-;;; ----------------------------------------------------------------------
-;;;
 (defun tinyirc-pastebot-service-list-set ()
   "Set `tinyirc--pastebot-service-list' from file.
 See `tinyirc--pastebot-config-directory'."
@@ -880,8 +840,6 @@ See `tinyirc--pastebot-config-directory'."
         tinyirc--pastebot-service-list
         (tinyirc-pastebot-service-list-from-file)))
 
-;;; ----------------------------------------------------------------------
-;;;
 (defun tinyirc-pastebot-service-list ()
   "Return `tinyirc--pastebot-service-list' or read configuration."
   (if (tinyirc-pastebot-service-file-name-changed-p)
@@ -891,8 +849,6 @@ See `tinyirc--pastebot-config-directory'."
     (or tinyirc--pastebot-service-list
         (tinyirc-pastebot-service-list-set))))
 
-;;; ----------------------------------------------------------------------
-;;;
 (defun tinyirc-pastebot-receive-call-process-id (service id)
   "Receive message from pastebot SERVICE by ID number. Return content.
 Valid SERVICE is one that is defined in dire$ctory
@@ -915,8 +871,6 @@ Valid SERVICE is one that is defined in dire$ctory
       ;;  Drop trailing newline from URL.
       (buffer-string))))
 
-;;; ----------------------------------------------------------------------
-;;;
 (defun tinyirc-pastebot-receive-call-process-url (url)
   "Receive message from pastebot by URL . Return content."
   (let ((prg (tinyirc-pastebot-program)))
@@ -933,8 +887,6 @@ Valid SERVICE is one that is defined in dire$ctory
       ;;  Drop trailing newline from URL.
       (buffer-string))))
 
-;;; ----------------------------------------------------------------------
-;;;
 (defun tinyirc-pastebot-send-call-process (file service user msg)
   "Call `tinyirc--pastebot-program' with perl and send argumens.
 See program for definition of FILE SERVICE USER MSG.
@@ -965,8 +917,6 @@ return value is program's error message."
                         (max (point-min)
                              (1- (point-max)))))))
 
-;;; ----------------------------------------------------------------------
-;;;
 (defun tinyirc-pastebot-send-main (file service &optional msg user)
   "Send FILE to SERVICE using optional MSG and USER.
 USER defaults to variable `user-login-name', environment variable USER
@@ -988,8 +938,6 @@ or string `anon'."
             (tinyirc-pastebot-message-format service user msg url)))
     (tinyirc-pastebot-message-record msg)))
 
-;;; ----------------------------------------------------------------------
-;;;
 (defun tinyirc-pastebot-receive-message (url msg)
   "Write URL's MSG to `tinyirc--pastebot-buffer-name-received'."
   (let ((time   (tinyirc-time-string))
@@ -1007,14 +955,10 @@ or string `anon'."
 ;;}}}
 ;;{{{ Pastebot: Mode
 
-;;; ----------------------------------------------------------------------
-;;;
 (defsubst tinyirc-pastebot-message-timestamp-regexp ()
   "Return timestamp regexp."
   "^[0-9][0-9][0-9][0-9]-[0-9][0-9]-[0-9][0-9] +[0-9][0-9]:[0-9][0-9] +")
 
-;;; ----------------------------------------------------------------------
-;;;
 (defsubst tinyirc-pastebot-message-timestamp-p ()
   "Return t if line contains a timestamp."
   (string-match
@@ -1022,24 +966,18 @@ or string `anon'."
    (buffer-substring (line-beginning-position)
                      (line-end-position))))
 
-;;; ----------------------------------------------------------------------
-;;;
 (defsubst tinyirc-pastebot-message-timestamp-backward ()
   "Move to previous timestamp.  Return nin-nil if moved.
 Point is after timestamp."
   (re-search-backward
    (tinyirc-pastebot-message-timestamp-regexp) nil t))
 
-;;; ----------------------------------------------------------------------
-;;;
 (defsubst tinyirc-pastebot-message-timestamp-forward ()
   "Move to previous timestamp.  Return nin-nil if moved.
 Point is at the beginning of line."
   (re-search-forward
    (tinyirc-pastebot-message-timestamp-regexp) nil t))
 
-;;; ----------------------------------------------------------------------
-;;;
 (defun tinyirc-pastebot-message-timestamp-move-to-url ()
   "At timestap line, go to URL at line. Return non-nl if moved."
   (let (point)
@@ -1050,8 +988,6 @@ Point is at the beginning of line."
     (when point
       (goto-char point))))
 
-;;; ----------------------------------------------------------------------
-;;;
 (defun tinyirc-pastebot-url-at-point ()
   "Return HTTP url at point if any."
   (let ((word (tinyirc-word-at-point)))
@@ -1059,8 +995,6 @@ Point is at the beginning of line."
                (string-match "http://" word))
       word)))
 
-;;; ----------------------------------------------------------------------
-;;;
 (defun tinyirc-pastebot-message-region ()
   "Determine retrieved message's region. Return list: (beg end).
 The region searched starts with a time stamp and ends in another timestamp
@@ -1085,8 +1019,6 @@ or `eobp'."
           (goto-char (point-max))))
         (list point (point))))))
 
-;;; ----------------------------------------------------------------------
-;;;
 (defun tinyirc-pastebot-message-string ()
   "Return received message at point."
   (cl-multiple-value-bind (beg end)
@@ -1094,8 +1026,6 @@ or `eobp'."
     (when (and beg end)
       (buffer-substring beg end))))
 
-;;; ----------------------------------------------------------------------
-;;;
 (defun tinyirc-pastebot-mode-command-write-file (beg end file)
   "Write message at BEG END to a FILE."
   (interactive
@@ -1117,8 +1047,6 @@ or `eobp'."
              (not (string-match "--abort-this" file)))
     (write-region beg end file)))
 
-;;; ----------------------------------------------------------------------
-;;;
 (defun tinyirc-pastebot-mode-command-receive (url &optional arg)
   "Receive messages.
 In buffer tinyirc--pastebot-buffer-name-sent', receive
@@ -1157,8 +1085,6 @@ automatically asks what URL to receive."
   (when url
     (tinyirc-pastebot-receive-url url)))
 
-;;; ----------------------------------------------------------------------
-;;;
 (defun tinyirc-pastebot-mode-command-line-number-toggle ()
   "Add or remove line numbers to the message at point (or forward)."
   (interactive)
@@ -1176,8 +1102,6 @@ automatically asks what URL to receive."
                 (tinyird-line-number-delete-region beg end)
               (tinyird-line-number-add-region beg end))))))))
 
-;;; ----------------------------------------------------------------------
-;;;
 (defun tinyirc-pastebot-default-mode-bindings ()
   "Define default key bindings to `tinyirc-pastebot-mode-map'."
 
@@ -1208,14 +1132,10 @@ automatically asks what URL to receive."
   (define-key tinyirc-pastebot-mode-map "\C-c\C-l"
     'tinyirc-pastebot-mode-command-line-numbers-toggle))
 
-;;; ----------------------------------------------------------------------
-;;;
 (defsubst tinyirc-mode-map-activate ()
   "Use local \\{tinyirc-pastebot-mode-map} on this buffer."
   (use-local-map tinyirc-pastebot-mode-map))
 
-;;; ----------------------------------------------------------------------
-;;;
 (defsubst tinyirc-mode-map-define-keys ()
   "Run `tinyirc--pastebot-mode-define-keys-hook'.
 But only if `tinyirc-pastebot-mode-map' is nil."
@@ -1223,8 +1143,6 @@ But only if `tinyirc-pastebot-mode-map' is nil."
     (setq tinyirc-pastebot-mode-map (make-sparse-keymap))
     (run-hooks 'tinyirc--pastebot-mode-define-keys-hook)))
 
-;;; ----------------------------------------------------------------------
-;;;
 ;;;###autolaod
 (defun tinyirc-pastebot-mode ()
   "Major mode for handlling PasteBot server messages: sending, receiving and
@@ -1251,8 +1169,6 @@ Mode description:
 ;;}}}
 ;;{{{ Pastebot: User functions
 
-;;; ----------------------------------------------------------------------
-;;;
 (defun tinyirc-http-get (url buffer &optional verbose timeout)
   "Send URL and output result to BUFFER with VERBOSE optional TIMEOUT."
   (let ((port    80)
@@ -1299,8 +1215,6 @@ Mode description:
         (delete-process connection))
     buffer))
 
-;;; ----------------------------------------------------------------------
-;;;
 ;;;###autoload
 (defun tinyirc-pastebot-install-perl-util-pastebot ()
   "Install `tinyirc--pastebot-program-url'."
@@ -1364,8 +1278,6 @@ INSTALL PROBLEM: Perl
 	      (set-file-modes saveto run-mode))
             (message "TinyIrc: saved %s" saveto)))))))
 
-;;; ----------------------------------------------------------------------
-;;;
 ;;;###autoload
 (defun tinyirc-pastebot-install-example-servers ()
   "Install the Pastebot `servers' example configuration file. This function
@@ -1427,8 +1339,6 @@ and create real directory instead."
         "This function did not check its content. ")
        config))))
 
-;;; ----------------------------------------------------------------------
-;;;
 ;;;###autoload
 (defun tinyirc-pastebot-receive-url (url)
   "Retrieve URL from PasteBot service."
@@ -1443,8 +1353,6 @@ and create real directory instead."
    url
    (tinyirc-pastebot-receive-call-process-url url)))
 
-;;; ----------------------------------------------------------------------
-;;;
 ;;;###autoload
 (defun tinyirc-pastebot-send-region (service user msg beg end)
   "Send code to SERVICE using Perl script pastebot.pl.
@@ -1494,8 +1402,6 @@ References:
 
 ;;}}}
 
-;;; ----------------------------------------------------------------------
-;;;
 (defun tinyirc-install (&optional uninstall)
   "Install or UNINSTALL package."
   ;; (interactive "p")

@@ -1,5 +1,3 @@
-;; -*- enable-local-variables: :all;  -*-
-
 ;;; tinyliby.el --- Library of functions related to Emacs s(y)stem
 
 ;; This file is not part of Emacs
@@ -75,7 +73,7 @@
 
 ;;{{{ setup: -- variables
 
-(defconst tinyliby-version-time "2023.0919.0853"
+(defconst tinyliby-version-time "2024.0120.1311"
   "Latest version number as last modified time.")
 
 (defvar ti::system--describe-symbols-history nil
@@ -90,8 +88,6 @@
 ;;}}}
 ;;{{{ features, load list
 
-;;; ----------------------------------------------------------------------
-;;;
 (defun ti::system-package-where-is-source (package)
   "Try to locate PACKAGE as string. the one used in `load` command.
 nil parameter is also accepted."
@@ -104,8 +100,6 @@ nil parameter is also accepted."
    (t
     (locate-library (ti::string-verify-ends package ".el$" ".el")))))
 
-;;; ----------------------------------------------------------------------
-;;;
 (defun ti::system-load-cleanup (element)
   "Remove ELEMENT from `after-load-alist' by replacing entry with nil."
   (let (forms)
@@ -116,8 +110,6 @@ nil parameter is also accepted."
         (if (equal frm element)
             (setcar forms nil))))))
 
-;;; ----------------------------------------------------------------------
-;;;
 (defun ti::system-load-history-emacs-lisp-files ()
   "Return lisp of known Emacs lisp files in `load-history'."
   (let (list)
@@ -125,8 +117,6 @@ nil parameter is also accepted."
       (push (car entry) list))
     list))
 
-;;; ----------------------------------------------------------------------
-;;;
 (defun ti::system-load-history-where-exactly (sym load-history-elt)
   "Return the elt where entry is. Shecks `require'.
 Call `ti::system-load-history-where' first.
@@ -174,8 +164,6 @@ Example of LOAD-HISTORY-ELT:
         (setq ret provide)))
     ret))
 
-;;; ----------------------------------------------------------------------
-;;;
 (defun ti::system-load-history-where-1 (sym)
   "Look `load-history' to find SYM. The SYM may be function or variable name.
 
@@ -189,8 +177,6 @@ Return:
       (when (memq sym entry)
 	(throw 'break entry)))))
 
-;;; ----------------------------------------------------------------------
-;;;
 (defun ti::system-doc-where-is-source (sym)
   "Check documentation string of SYM to determine location of definition."
   (let* ( ;;  Defined in `textmodes/fill'.
@@ -218,9 +204,7 @@ Return:
 	    nil ;; TODO: not implemented yet
 	    )))))
 
-;;; ----------------------------------------------------------------------
 ;;; Emacs doc string say: Defined in `frame'.
-;;;
 (defun ti::system-load-history-where-is-source (sym)
   "Check documentation or `load-history' to find SYM.
 The SYM may be function or variable name.
@@ -245,10 +229,8 @@ Return:
                (ti::system-package-where-is-source  file))
           file))))
 
-;;; ----------------------------------------------------------------------
 ;;; - Does little garbage collect...but what the heck!
 ;;; - lh = load-history
-;;;
 (defun ti::system-load-history-get (sym)
   "Return variables and functions defined by feature SYM.
 The symbols are tested to be [f]boundp, so the list consists of
@@ -282,8 +264,6 @@ Return:
         (list vl fl)
       nil)))
 
-;;; ----------------------------------------------------------------------
-;;;
 (defun ti::system-enable-disabled-options (&optional verb)
   "Map all variable symbols and enable options.
 by default, Emacs comes with few presetting disabled. You
@@ -311,9 +291,7 @@ INPUT:
             (message "Tinyliby: Enabling variable `%s'" (symbol-name sym)))
           (put sym 'disabled nil)))))))
 
-;;; ----------------------------------------------------------------------
 ;;;  - Be sure what your're doing if using this...
-;;;
 (defun ti::system-feature-kill (sym)
   "Kill feature SYM and its `load-history' information permanently."
   (let ((name (symbol-name sym))
@@ -325,8 +303,6 @@ INPUT:
     (if (featurep sym)
         (setq features (delete sym features)))))
 
-;;; ----------------------------------------------------------------------
-;;;
 (defun ti::system-unload-symbols (list)
   "Unload all variables and functions in LIST of symbols."
   (dolist (x list)
@@ -336,8 +312,6 @@ INPUT:
      ((boundp x)
       (makunbound x)))))
 
-;;; ----------------------------------------------------------------------
-;;;
 (defun ti::system-unload (mode list)
   "According to MODE, unload all variables/features/functions in LIST.
 
@@ -387,8 +361,6 @@ References:
          (t
           (funcall kill-func var)))))))
 
-;;; ----------------------------------------------------------------------
-;;;
 (defun ti::system-unload-feature (sym &optional verb)
   "Unload feature SYM, by cleaning `load-history' for all SYM symbols. VERB.
 This is far more extensive wipeout than `unload-feature': All variables,
@@ -416,16 +388,12 @@ Return:
     (if verb
         (message "Feature now completely unloaded."))))
 
-;;; ----------------------------------------------------------------------
-;;;
 (defun ti::system-unload-feature-list (list)
   "Remove feature LIST, their variables and functions.
 Input is list of features. Does not check any dependencies between features."
   (dolist (feature list)
     (ti::system-unload-feature feature)))
 
-;;; ----------------------------------------------------------------------
-;;;
 (put 'ti::system-symbol-dolist-macro 'lisp-indent-function 1)
 (defmacro ti::system-symbol-dolist-macro (symlist &rest body)
   "Map throught SYMLIST and execute BODY for each hook function.
@@ -444,8 +412,6 @@ You can refer to variables `hook' and `function' in BODY."
                         (symbolp function))
                ,@body)))))))
 
-;;; ----------------------------------------------------------------------
-;;;
 (defun ti::system-remove-from-hooks (symlist re)
   "Look hook SYMLIST and remove all symbols matching RE.
 
@@ -468,8 +434,6 @@ remove lambda functions from hook, because match is done against
 	(if (string-match re (symbol-name hook))
 	    (set hook nil)))))))
 
-;;; ----------------------------------------------------------------------
-;;;
 (defun ti::system-match-in-hooks  (regexp &optional buffer)
   "Search SYMLIST for every hook functions that match REGEXP.
 Write results i temporary buffer or BUFFER."
@@ -491,8 +455,6 @@ Write results i temporary buffer or BUFFER."
 ;;}}}
 ;;{{{ internal Symbols
 
-;;; ----------------------------------------------------------------------
-;;;
 (defun ti::system-get-symbols (re &optional test-form)
   "Return list of symbols that match RE.
 
@@ -513,8 +475,6 @@ Eg. test-form = \\='(or (fboundp sym) (boundp sym))"
             (push sym list)))))
     list))
 
-;;; ----------------------------------------------------------------------
-;;;
 (defun ti::system-autoload-function-list ()
   "Return list of autoload function."
   (let (list)
@@ -525,8 +485,6 @@ Eg. test-form = \\='(or (fboundp sym) (boundp sym))"
           (cl-pushnew sym list :test 'equal)))))
     list))
 
-;;; ----------------------------------------------------------------------
-;;;
 (defun ti::system-autoload-function-file-list (function-list)
   "Return unique filenames of autoload functions."
   (let (list
@@ -538,11 +496,9 @@ Eg. test-form = \\='(or (fboundp sym) (boundp sym))"
 		    :test 'string-equal)))
     list))
 
-;;; ----------------------------------------------------------------------
 ;;; - There is another possibility, step through `load-history', but
 ;;;   since it's not in all emacs and it's buggy (at least in 19.28)
 ;;;   we don't use it here...
-;;;
 (defun ti::system-get-file-documentation (file &optional verb)
   "Gather all documentation from symbols in FILE.
 You have to load the file into emacs first (eval it), because this
@@ -660,8 +616,6 @@ No '%s feature found, are you absolutely sure you have loaded the file? "
         (message ""))                   ;clear the echo area
     tmp-buffer))
 
-;;; ----------------------------------------------------------------------
-;;;
 (defun ti::system-describe-symbols-i-args (&optional arg)
   "Ask interactive arguments for `ti::system-describe-symbols'. ARG is prefix arg."
   (let (prompt
@@ -708,7 +662,6 @@ No '%s feature found, are you absolutely sure you have loaded the file? "
          (y-or-n-p "Try to find key binding info too (takes longer)? "))
      nil)))                             ;ARG 5
 
-;;; ----------------------------------------------------------------------
 ;; - This originates from the elisp manual pages somewhere,
 ;;   but I have made major additions and modifications to it.
 ;; - Actually this is massive add-on to the original one e.g.  it can look
@@ -895,8 +848,6 @@ References:
         (mapc describe-func (sort sym-list 'string<))
         (help-print-return-message)))))
 
-;;; ----------------------------------------------------------------------
-;;;
 (defun ti::system-describe-symbol-summary (re &optional verb)
   "Make elisp script out of variables and functions that match RE. VERB.
 Supposes that point is on buffer that is produced by

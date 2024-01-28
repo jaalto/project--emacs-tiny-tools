@@ -259,16 +259,12 @@ this in you ~/.emacs")
 ;;}}}
 ;;{{{ code: misc funcs
 
-;;; ----------------------------------------------------------------------
-;;;
 (defun tinylock-auto-lock-set-interval (minutes)
   "Set new MINUTES interval by stopping and restarting timer process."
   (interactive "Nminutes: ")
   (tinylock-install-lock-timer nil minutes)
   nil)
 
-;;; ----------------------------------------------------------------------
-;;;
 (defun tinylock-auto-lock-set-password ()
   "Set auto lock password."
   (interactive)
@@ -279,14 +275,10 @@ this in you ~/.emacs")
       (setq tinylock--auto-lock-password pass))
     nil))
 
-;;; ----------------------------------------------------------------------
-;;;
 (defun tinylock-process-on ()
   "Start auto lock process."
   (tinylock-install-lock-timer nil tinylock--auto-lock-interval))
 
-;;; ----------------------------------------------------------------------
-;;;
 (defun tinylock-install-lock-timer (&optional uninstall interval)
   "Install process that locks Emacs when there is no activity.
 
@@ -326,8 +318,6 @@ Input:
                    "deleted"
                  "started"))))
 
-;;; ----------------------------------------------------------------------
-;;;
 (defun tinylock-user-activity ()
   "Tell to timer process that the has bee user activity."
   (or
@@ -335,8 +325,6 @@ Input:
    ;;  Hmm, data is corrupted... reset it.
    (tinylock-process-data-set)))
 
-;;; ----------------------------------------------------------------------
-;;;
 (defun tinylock-process-data-set ()
   "Update timer process data."
   (setq tinylock--auto-lock-data
@@ -351,9 +339,7 @@ Input:
           (buffer-list))))
   nil)
 
-;;; ----------------------------------------------------------------------
 ;;; Just testing... (tinylock-process-data-set) (tinylock-process-data-unchanged-p)
-;;;
 (defun tinylock-process-data-unchanged-p ()
   "Return t if timer data has not changed = No activity in."
   (let* ((data          tinylock--auto-lock-data)
@@ -390,8 +376,6 @@ Input:
          (tinylock-process-data-set)))
       unchanged)))
 
-;;; ----------------------------------------------------------------------
-;;;
 (defun tinylock-process ()
   "Lock up Emacs if it there has not been any user activity."
   (when (tinylock-process-data-unchanged-p)
@@ -399,8 +383,6 @@ Input:
     (tinylock-lock-now))
   (tinylock-process-data-set))
 
-;;; ----------------------------------------------------------------------
-;;;
 (defun tinylock-add-history (passwd)
   "Add login attempt to `tinylock--history'.PASSWD is the attempted login password."
   (let ((d (current-time-string)))
@@ -408,8 +390,6 @@ Input:
           (append  tinylock--history
                    (list (list d passwd))))))
 
-;;; ----------------------------------------------------------------------
-;;;
 (defun tinylock-kill-process-control (&optional kill)
   "Return all processes in string format, or KILL all processes (not timer)."
   (let ((list (process-list))
@@ -425,8 +405,6 @@ Input:
 	    (delete-process x)))))
     ret))
 
-;;; ----------------------------------------------------------------------
-;;;
 ;;;###autoload
 (defun tinylock-history ()
   "Displays login history. Optionally to given buffer BUFFER."
@@ -439,8 +417,6 @@ Input:
       (insert (format "%2d: %-27s %s\n" i (nth 0 elt) (or (nth 1 elt) "<nil>") ))
       (setq i (1+ i)))))
 
-;;; ----------------------------------------------------------------------
-;;;
 (defun tinylock-blank-control (&optional unblank)
   "Blank display or UNBLANK."
   (let ((blank (get-buffer-create tinylock--buffer-blank)))
@@ -460,14 +436,11 @@ Input:
 ;;}}}
 ;;{{{ code: main
 
-;;; ----------------------------------------------------------------------
-;;;
 (defun tinylock-lock-now ()
   "Lock up Emac."
   (tinylock-lock tinylock--auto-lock-password "Autolocking.. emacs " 'doit ))
 
 ;;; ------------------------------------------------------------ &main ---
-;;;
 ;;;###autoload
 (defun tinylock-lock (psw &optional msg lock-now)
   "Lock Emacs with PSW password and MSG.
@@ -538,8 +511,6 @@ If LOCK-NOW is non-nil emacs is immediately locked with PSW."
 ;;}}}
 ;;{{{ Default: hook functions.
 
-;;; ----------------------------------------------------------------------
-;;;
 (defun tinylock-before-lock-function ()
   "Saves emacs state, so that you can recover from accidental crash."
   (when (fboundp 'tid-save-state)
@@ -547,8 +518,6 @@ If LOCK-NOW is non-nil emacs is immediately locked with PSW."
     (ti::funcall 'tid-save-state "~/emacs.lock-state.saved")
     (message "TinyLock: wait, using TinyDesk to save emacs state...done.")))
 
-;;; ----------------------------------------------------------------------
-;;;
 (defun tinylock-after-lock-function ()
   "Restores Emacs state after lock"
   (display-time)                        ;re-enable process

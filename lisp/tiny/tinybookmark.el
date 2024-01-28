@@ -1,10 +1,6 @@
-;; -*- enable-local-variables: :all;  -*-
-
-;;; tinybookmark.el --- Keep file in organized sections
+;;; tinybookmark.el --- Maintain files in organized sections
 
 ;; This file is not part of Emacs
-
-;;{{{ Id
 
 ;; Copyright (C)    1995-2024 Jari Aalto
 ;; Keywords:        tools
@@ -30,9 +26,6 @@
 ;;
 ;; Visit <http://www.gnu.org/copyleft/gpl.html> for more information
 
-;;}}}
-;;{{{ Installation
-
 ;;; Install:
 
 ;; ........................................................ &t-install ...
@@ -57,92 +50,92 @@
 ;;
 ;; Ideas for keybindings
 ;;
-;;      M-x tinybookmark-insert  to add bookmark
+;;      M-x tinybookmark-insert  to insert a bookmark
 ;;
-;;      ;;  This is for windowed Emacs. It brings up nice pop up menu
-;;      ;;  In XEmacs, use different mouse event: `mouse1down'
+;;      ;; This is for windowed Emacs, which brings up a menu.
+;;      ;; In XEmacs, instead of `mouse-1', use event `mouse1down'.
 ;;
 ;;      (global-set-key [(?\e) (control mouse-1)]        'tinybookmark-mouse)
 ;;      (global-set-key [(?\e) (control shift mouse-1)]  'tinybookmark-mouse-parse)
 ;;
-;;      ;;  To use keyboard to navigate between bookmarks
+;;      ;; To use the keyboard for navigating between bookmarks:
 ;;
 ;;      (global-set-key [(shift left)]  'tinybookmark-backward)
 ;;      (global-set-key [(shift right)] 'tinybookmark-forward)
 ;;
-;;      ;; To navigate with completion menu
+;;      ;; To navigate with menu completion:
 ;;
 ;;      (global-set-key [(control shift right)] 'tinybookmark-keyboard)
 ;;
-;; BE SURE THAT
+;; NOTES
 ;;
-;;      Variables `comment-start' and `comment-end' are defined,
-;;      otherwise the inserted text won't have proper prefix abd ending.
+;;      The variables comment-start' and comment-end' must be defined;
+;;      otherwise, the inserted text won't have the proper prefix and
+;;      ending.
 
-;;}}}
-;;{{{ Documentation
-
-;;; .................................................... &t-commentary ...
+;; .................................................... &t-commentary ...
 
 ;;; Commentary:
 
-;;  Preface, feb 1995
+;;  Preface, Feb 1995
 ;;
-;;      Long ago I used a little function I wrote that inserted section
-;;      breaks, those that I call `book' `marks'. There was also
-;;      `folding.el' to keep the code in separate sections. Findings things
-;;      was easy when you just searched either book marks or jumped between
-;;      folds. Next *imenu.el* was announced which provided X-pop up for
-;;      book marks and adding support to it was the start of this package.
+;;      Long ago, I used a small function I wrote to insert section
+;;      breaks, what I call 'book' 'marks.' Additionally, I used
+;;      `folding.el' to organize code into separate sections, making
+;;      it easy to find things by searching either bookmarks or
+;;      jumping between folds. Later, `imenu.el' was introduced,
+;;      providing a convenient X-pop-up for bookmarks, and adding
+;;      support for it marked the beginning of this package.
 ;;
-;;  Overview of features
+;;  An overview of features
 ;;
-;;      o   Provide 'setting book marks' functions: Add
-;;          repeated characters and sequences up till end of line with
-;;          named identifier.
-;;      o   Automatically parse book marks from file, if it contains
-;;          identifier `bookMarkRegexp' which defines book mark syntax for
-;;          the file. Uses X-popup [imenu] to show those book marks and
-;;          moving between them.
+;;      o   Provides inserting bookmarks by adding repeated characters
+;;          and sequences up until the end of the line, identified by
+;;          a specified name.
+;;
+;;      o   Automatically parses bookmarks from files containing the
+;;          identifier `bookMarkRegexp.' This defines the bookmark
+;;          syntax for the file and utilizes `imenu' to display and
+;;          navigate between these bookmarks.
 ;;
 ;;  How to keep files organized
 ;;
-;;      There are several tools to keep your code organized and they are at
-;;      their best if you think how they can co-operate. There is
-;;      *folding.el* and *tinybookmark.el*, which might seem to do double
-;;      job, since they both divide code into more easily manageable
-;;      sections. The key point is that when folding is used, one works
-;;      _within_ some special section and possibly want to hide all the
-;;      rest of the code. But when jumping easily back and forth on the
-;;      buffer, it us *unfolded* and TinyBookmark is used. Now, to confuse
-;;      you more, there is also *imenu.el* which can be used to jump inside
-;;      code. It can be configured so that it will pick all function names
-;;      inside list, and when you want to go to specific function, just
-;;      pick one from imenu.
+;;      There are several tools to keep your code organized, and they
+;;      work best when you consider how they can cooperate. Tools like
+;;      `folding.el' and `tinybookmark.el' may seem to perform a
+;;      similar task, dividing the code into more manageable sections.
+;;      The crucial distinction is that when folding is used, one
+;;      works within a specific section and may want to hide the rest
+;;      of the code. On the other hand, when easily navigating back
+;;      and forth in the buffer, it is unfolded, and TinyBookmark
+;;      comes into play. To add a bit more confusion, there's also
+;;      `imenu.el', which can be used to jump inside code. It can be
+;;      configured to pick up all function names inside a list,
+;;      allowing you to easily navigate to a specific function by
+;;      selecting it from imenu.
 ;;
 ;;      To summarize:
 ;;
-;;      o   folding.el      - For hide unneeded code,
-;;                            clear view on the structure
-;;      o   tinybookmark.el - Jump between/finding  _large_ code sections
-;;      o   imenu.el        - Finding specific function, more detailed control.
-;;      o   tinyhotlist.el  - Add/remove files from permanent X-popup list
+;;      o   folding.el      - For organizing sections in file.
+;;                            Provides a clear view of the structure.
+;;      o   tinybookmark.el - Jump between/finding  large  sections
+;;      o   imenu.el        - Finding specific functions
+;;      o   tinyhotlist.el  - Add or remove files from permanent list
 ;;
 ;;  How to use this package
 ;;
-;;      There is following function that inserts book mark on the current line
+;;      The following function inserts book mark on the current line
 ;;
 ;;          M-x tinybookmark-insert
 ;;
-;;      There is also normal repeat function, that fills line with your
-;;      pattern:
+;;     The following function inserts repeated pattern:
 ;;
 ;;          M-x tinybookmark-repeat
 ;;
-;;      Normally the usual book mark separator is the "." <dot> , which
-;;      isn't so "noisy" as continuous '-' line. Normally you add some
-;;      unused ID character, like '&' at front of real book mark, like
-;;      this:
+;;      The default bookmark character is the dot (.), which isn't as
+;;      'noisy' as a continuous '-' line. Normally, you add some
+;;      unused ID character, like '&' at the front of the real
+;;      bookmark, like this:
 ;;
 ;;          ;;; .................................. &How-to-use ...
 ;;          (defun test ()
@@ -151,49 +144,51 @@
 ;;            (goto-char ..
 ;;            ;; ^^^^^^^^^^^^^^^^^^^^^^^^^^ sepratorInsideCode ^^^
 ;;
-;;      The `How-to-use' is book mark, because it has `&' on it, whilst the
-;;      latter isn't -- it is used inside code to make it more readable and
-;;      The latter on is not included in *imenu*.
+;;      The 'How-to-use' is a bookmark because it has '&' on it, while
+;;      the latter isn't. Only bookmarks with '&' are included in
+;;      `imenu'.
 ;;
 ;;  About the book mark identifier naming
 ;;
-;;      When you name the breaks, keep in mind that when identifiers are
-;;      sorted, the ones that start with big letters A-Z show up first, a-z
-;;      come next. Allthougt it would be convenient to have all subwords in
-;;      capital, it is usually better to start with lowercase letter,
-;;      because it's easily unintentionally mix up/down case letters.
-;;      Besides you have to reah out for shift to have uppercase.
+;;      When you name the breaks, keep in mind that when identifiers
+;;      are sorted, those starting with big letters `A-Z' show up first,
+;;      while those starting with a-z come next. Although it might be
+;;      convenient to have all subwords in capital letters, it is
+;;      usually better to start with a lowercase letter to avoid
+;;      unintentional mix-ups with case sensitivity. Besides, you have
+;;      to reach out for the shift key to use uppercase.
 ;;
 ;;          ............. breakName ...         ;prefered, starting low
 ;;          ............. BreakName ...         ;watch out for mixed case!
 ;;
-;;      It is also adviced that you choose some common beginning for the
-;;      identifier, so that they get sorted nicely. If you define variables
-;;      at the beginning of file it might be good idea to attach beginning
-;;      letter like `v-' for variables before the real identifier name
-;;      begins, like:
+;;      It is also advised that you choose a common beginning for the
+;;      identifier so that they get sorted nicely. For example, if you
+;;      define variables at the beginning of a file, it might be a
+;;      good idea to attach a prefix like 'v-' for variables before
+;;      the real identifier name begins, like:
 ;;
 ;;          ............. v-globals ...
 ;;          ............... v-hooks ...
 ;;
-;;      Of course, we can now use the uppercase letter trick to have them
-;;      sorted first in the list, just change `v-' to `V-'. Generally
-;;      you should think which ones do you use most, do you leave the
-;;      variables alone when you have defined them and mostly work with new
-;;      functions? Then the variables can stay at the end of list and
-;;      there is no need for `V-' trick. but if you need to access
-;;      variables often, then you might want to see variables first in the
-;;      list. It's up to your decision how you name the variables and how
-;;      you want to see them listed.
+;;      Of course, we can now use the uppercase letter trick to have
+;;      them sorted first in the list—just change v-' to V-'.
+;;      Generally, you should consider which ones you use most. Do you
+;;      leave the variables alone once defined and mostly work with
+;;      new functions? In that case, the variables can stay at the end
+;;      of the list, and there is no need for the `V-' trick. However,
+;;      if you need to access variables often, you might want to see
+;;      variables listed first. It's up to your decision how you name
+;;      the variables and how you want to see them listed.
 ;;
-;;  Breaks and sub-break naming
+;;  Break and sub-break naming
 ;;
-;;      If you have very large file, you'll probably need major breaks,
-;;      level one breaks and possibly level 2 breaks too. To keep the list
-;;      well sorted, put the functions into bigger groups and name the
-;;      sub-level breaks so that they have some common beginning in respect
-;;      to the major break they belong to. Let's see an example where
-;;      you're dealing with mail handling. Notice the CAPITAL letter.
+;;      If you have a very large file, you'll probably need major
+;;      breaks, level one breaks, and possibly level two breaks too.
+;;      To keep the list well-sorted, put the functions into bigger
+;;      groups and name the sub-level breaks so that they have some
+;;      common beginning in respect to the major break they belong to.
+;;      Let's see an example where you're dealing with mail handling.
+;;      Notice the CAPITAL letter.
 ;;
 ;;          ;; ################################# &h-Header ###
 ;;          ;;  this is beginning block of header handling
@@ -207,26 +202,28 @@
 ;;          ;;  More detailed functions under h-cc, Not
 ;;          ;;  named, because there is only 2 function
 ;;
-;;      Again there are couple of points to follow here. All the tricks are
-;;      discussed already: the `Big' letter trick put's major break to the
-;;      top of imenu list, common beginning keeps the subsections together.
+;;      There are a couple of points to follow here. All the tricks
+;;      have been discussed already: the 'Capital' letter trick puts
+;;      major breaks at the top of the imenu list, and having a common
+;;      beginning keeps the subsections together.
 ;;
-;;  Example breaks
+;;  Break examples
 ;;
-;;      Some book mark breaks are proposed here, but you can use whatever you
-;;      like. Thumb of rule: be consistent, always use same convention in
-;;      your files and consider the "level of noisiness" of your breaks, so that
-;;      they build up nicely and the code is easy to read. Too many
-;;      _different_ breaks is not good idea, because they clutter the view
-;;      fast, instead use variations on a theme: same break character but
-;;      varying spaces and continuous character lengths.
+;;      Some bookmark breaks are proposed here, but you can use
+;;      whatever you like. A rule of thumb: be consistent, always use
+;;      the same convention in your files, and consider the 'level of
+;;      noisiness' of your breaks so that they build up nicely and the
+;;      code is easy to read. Having too many different breaks is not
+;;      a good idea, as they clutter the view quickly. Instead, use
+;;      variations on a theme—use the same break character but vary
+;;      spaces and continuous character lengths.
 ;;
-;;      Thumb rule: select 1-3 break chars, and never change them in you
-;;      files; your files look alike. Vary the spacing, not the break
-;;      characters.
+;;      Thumb rule: select 1-3 break characters and never change them
+;;      in your files; this ensures your files look alike. Vary the
+;;      spacing, not the break characters.
 ;;
-;;      These are 'noisy breaks' , Major section separators, pick only one
-;;      and use it in your files, do not use all three!
+;;      These are 'noisy breaks,' major section separators. Pick only
+;;      one and use it in your files; do not use all three.
 ;;
 ;;          ##############################################################
 ;;          %%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%
@@ -241,13 +238,11 @@
 ;;          .:.:.:.:.:.:.:.:.:.:.:.:.:.:.:.:.:.:.:.:.:.:.:.:.:.:.:.:.:.:.:
 ;;          .~.~.~.~.~.~.~.~.~.~.~.~.~.~.~.~.~.~.~.~.~.~.~.~.~.~.~.~.~.~.~
 ;;
-;;
-;;      This is sub section break
+;;      This could be a sub section break
 ;;
 ;;          ................................................................
 ;;
-;;
-;;      This is even lighter subsection break (varying spacing)
+;;      This is an even lighter subsection break (varying spacing)
 ;;
 ;;          ...  ...  ...  ...  ...  ...  ...  ...  ...  ...  ...  ...  ...
 ;;
@@ -262,121 +257,129 @@
 ;;
 ;;      Internal break 2, to separate long case elements etc.
 ;;
-;;
 ;;          ^^^  ^^^  ^^^  ^^^  ^^^  ^^^  ^^^  ^^^  ^^^  ^^^  ^^^  ^^^  ^^^
 ;;
 ;;     Book Mark Cache
 ;;
-;;      So that imenu works fast, it is not desirable that the breaks are
-;;      always parsed from scratch, because it takes time to scan the file
-;;      for possible book marks. That's why the information is cached. If
-;;      the break cache is empty, the breaks are gathered from buffer and
-;;      stored to the cache and when you call the imenu, the cache is
-;;      offered to it --> fast response time. When you add new breaks to
-;;      the buffer [especially at the beginning of code development], you
-;;      may want to call function `tinybookmark-parse' which will empty the
-;;      cache and re-read all book marks. If you write lot of code the
-;;      points that were cached do no longer represent exact points of book
-;;      marks, because they have been sliding off their places. If you want
-;;      *always* have updated book mark points, there is variable
-;;      `tinybookmark-cache-update' which you can set to 'always, if you
-;;      want the cache to be updated always prior showing X-menu. In large
-;;      buffer this remarkably slows down the menu appering. See variable
-;;      for more choices.
+;;      So that imenu works fast, it is not desirable for the breaks
+;;      to be parsed from scratch every time, as it takes time to scan
+;;      the file for possible bookmarks. That's why the information is
+;;      cached. If the break cache is empty, the breaks are gathered
+;;      from the buffer and stored in the cache. When you call imenu,
+;;      the cache is offered to it, resulting in a fast response time.
+;;      If you add new breaks to the buffer, especially at the
+;;      beginning of code development, you may want to call the
+;;      function `tinybookmark-parse,' which will empty the cache and
+;;      re-read all bookmarks. As you write a lot of code, the points
+;;      that were cached no longer represent the exact positions of
+;;      bookmarks, as they have been sliding off their places. If you
+;;      want to *always* have updated bookmark points, there is the
+;;      variable `tinybookmark-cache-update,' which you can set to
+;;      'always' if you want the cache to be updated always prior to
+;;      showing the X-menu. Note that in large buffers, this
+;;      noticeably slows down the appearance of the menu. See the
+;;      variable for more choices.
 ;;
 ;;  Automatic book mark detection
 ;;
-;;      In order book marks to be detected in file, you may define following
-;;      RCS identifier [see ident(1)] preferably at the beginning of your
-;;      file:
+;;      In order for bookmarks to be detected in a file, you may
+;;      define the following Version Control software rcs(1)'s RCS
+;;      identifier. See the manual page of ident(1) for more
+;;      information. The following would preferably be at the
+;;      beginning of the file:
 ;;
 ;;          $BookMarkRegexp:<space>'REGEXP'<space>$
 ;;
-;;      Be careful so that the identifier is _exactly_ in this form: pay
-;;      attention to spaces and (') around the REGEXP. The regular
-;;      expression tells what line can be considered as book mark and the
-;;      book mark name is indicated in subexpression 1 [\\(.*\\)] , look at
-;;      this file, how it is constructed. In order to find all book marks
-;;      and build up the cache, it needs to widen the buffer in case the
-;;      file is narrowed with some folding or outline editor. When the
-;;      cache has been built the buffer's narrowing is restored, so you
-;;      shouldn't even notice this. Of course you don't want to find book
-;;      marks from your RMAIL file.
+;;      Be careful that the identifier is in this form; pay attention
+;;      to spaces and (') around the REGEXP. The regular expression
+;;      tells what line can be considered a bookmark, and the bookmark
+;;      name is indicated in subexpression 1 [\(.*\)]. Look at this
+;;      file to see how it is constructed. In order to find all
+;;      bookmarks and build up the cache, it needs to widen the buffer
+;;      in case the file is narrowed with some folding or outline
+;;      editor. Once the cache has been built, the buffer's narrowing
+;;      is restored, so you shouldn't even notice this. Of course, you
+;;      don't want to find bookmarks from your Emacs RMAIL file.
 ;;
-;;      One word about the regexp construction, let's see regexp that
-;;      matches the identifier:
+;;      A brief note about the regexp construction: let's examine the
+;;      regexp that matches the identifier:
 ;;
 ;;          &+\\([^ ]+\\)
 ;;
-;;      Pay attention to using exclusive regexp, not just '.*'
-;;      construction. When you use folding or outline editor the '.*' form
-;;      is very ill behaving, because if the line being scanned is
-;;      currently folded, IT WILL MATCH WHOLE folded section --> your
-;;      identifier surely isn't that one. We can't unfold the sections
-;;      during scanning, because if there are subfolds, what editor is on
-;;      use .. it's too complex/slow to handle such situations. But using
-;;      the exclusive list [^ ] will surely match the identifier, because
-;;      it stops when it can find first space. This means that you can't
-;;      use _spaces_ inside the identifiers. Cat the words together.
+;;      Pay attention to using an exclusive regexp, not just the '.'
+;;      construction. When you use folding or an outline editor, the
+;;      '.' form behaves poorly. If the line being scanned is
+;;      currently folded, it will match the whole folded section, and
+;;      your identifier surely isn't that one. We can't unfold the
+;;      sections during scanning, because if there are subfolds,
+;;      determining which editor is in use becomes too complex/slow to
+;;      handle such situations. However, using the exclusive list [^ ]
+;;      will surely match the identifier because it stops when it
+;;      encounters the first space. This means that you can't use
+;;      spaces inside the identifiers; instead, concatenate the words
+;;      together.
 ;;
 ;;  If the BookMarkRegexp isn't defined in file
 ;;
-;;      Then the programs tries to search for the default book marks.
+;;      Program tries to search for the default book marks.
 ;;      See function `tinybookmark-regexp-default' for more.
 ;;
 ;; Message: Empty cache. Building...
 ;;
-;;      Do you wonder why you get this message displayed, while you were
-;;      sure that you the buffer had cache already? Don't be surprised. This
-;;      is totally normal behavior: whenever you switch mode for the
-;;      buffer the new mode _kills_ all local variables, including cache
-;;      information. Obviously the information must be restored when you
-;;      call the hot list again. The cache could have been programmed to be
-;;      buffer local, but in the present format only one cache s active at
-;;      the time. This was simpler to implement and manage in the code.
+;;      Do you wonder why you get this message displayed when you were
+;;      sure that the buffer had a cache already? Don't be surprised;
+;;      this is totally normal behavior. Whenever you switch modes for
+;;      the buffer, the new mode kills all local variables, including
+;;      cache information. Obviously, the information must be restored
+;;      when you call the hot list again. The cache could have been
+;;      programmed to be buffer local, but in the present format, only
+;;      one cache is active at a time. This was simpler to implement
+;;      and manage in the code.
 ;;
 ;;  About imenu
 ;;
-;;      You definitely want to look at the documentation of imenu to find
-;;      many more usages for it. It makes your day shine in X-display. You
-;;      should also configure few variables for it, like:
+;;      Take a look at the documentation of `imenu.el' to find more
+;;      usages for it. It makes your day shine on an X-display.
+;;      Additionally, you should configure a few variables for it,
+;;      like:
 ;;
 ;;          (setq imenu-max-items 20)
 ;;
 ;;  Test run
 ;;
-;;      Load this file and set those key bindings mentioned. Hit the mouse
-;;      bindings and you're running book mark package. Since the break
-;;      marks are used in commentary also, the list of book marks are not
-;;      in their most informative form, I use following convention to name
-;;      book marks;
+;;      Load this file and set the mentioned key bindings. Activate
+;;      the mouse bindings, and you're ready to use the bookmark
+;;      package. Since the break marks are used in commentary as well,
+;;      the list of bookmarks may not be in its most informative form.
+;;      I use the following convention to name bookmarks:
 ;;
 ;;          'v-'     variable topic
 ;;          't-'     text topic
 ;;
 ;;  Design thoughts
 ;;
-;;      Sooner or later someone wonders: "Can't we have sub-breaks listed
-;;      nicely with indentation in front lines in X-popup?" Present answer
-;;      "No", since it would require keeping track of the 'Main break' and
-;;      then seeing if there exist sub-breaks. Immediately this leads to
-;;      question "What is the main break?", and if we say main breaks start
-;;      with "#|/%" character set we limit the use of breaks. Besides deciding
-;;      what are sub-breaks, main-breaks with regexp may be too slow.
-;;      The breaks are intended to to give an *overview* of the buffer.
-;;      Please use imenu to find single functions if you don't feel like
-;;      tapping couple of pgUp/pgDown after the point is positioned in the break
-;;      section.
-
-;;}}}
+;;      Let's ponder: 'Can't we have sub-breaks listed nicely
+;;      with indentation in front lines in the menu?'
+;;
+;;      The present answer is `No', since it would require keeping
+;;      track of the main break and then checking if there exist
+;;      sub-breaks. Immediately, this leads to the question 'What is
+;;      the main break?' If we say main breaks start with the '#|/%'
+;;      character set, we limit the use of breaks. Besides deciding
+;;      what are sub-breaks, main breaks with regexp may be too slow.
+;;
+;;      The breaks are intended to give an overview of the buffer.
+;;      Please use `imenu.el' to find single functions if you don't
+;;      feel like tapping a couple of pgUp/pgDown keys after the point
+;;      is positioned in the break section.
 
 ;;; Change Log:
 
 ;;; Code:
 
-;;{{{ setup: require
+;;;; Setup: require
 
-;;; ......................................................... &require ...
+;; ......................................................... &require ...
 
 (require 'tinylibm)
 
@@ -396,13 +399,12 @@
             the file. Uses X-popup [imenu] for showing those book marks and
             moving between them.")
 
-(defvar tinybookmark--version-time "2023.0917.1119"
+(defvar tinybookmark--version-time "2024.0120.1309"
   "Last modified time.")
 
-;;}}}
-;;{{{ setup: -- hooks
+;;; Setup: hooks
 
-;;; ......................................................... &v-hooks ...
+;; ......................................................... &v-hooks ...
 
 (defcustom tinybookmark--parse-before-hook nil
   "*Hook that is run just before the buffer is scanned for book marks."
@@ -414,10 +416,9 @@
   :type  'hook
   :group 'TinyBookmark)
 
-;;}}}
-;;{{{ setup: user configuration
+;;; Setup: user configuration
 
-;;; ........................................................ &v-public ...
+;; ........................................................ &v-public ...
 
 (defcustom tinybookmark--cache-update 'threshold
   "*Method when to update cache.
@@ -495,10 +496,9 @@ See `tinybookmark-insert'"
   :type  'boolean
   :group 'TinyBookmark)
 
-;;}}}
-;;{{{ setup: -- private vars
+;;; Setup: -- private vars
 
-;;; ....................................................... &v-private ...
+;; ....................................................... &v-private ...
 
 (defvar tinybookmark--cache nil
   "Private.
@@ -516,11 +516,8 @@ Cache where book marks are stored in alist \(bookMarkName . point\)")
   "Private. Hold buffers book mark regexp.")
 (make-variable-buffer-local 'tinybookmark--bookmark-regexp)
 
-;;}}}
-;;{{{ Macros
+;;; Macros
 
-;;; ----------------------------------------------------------------------
-;;;
 (defsubst tinybookmark-regexp-read-from-buffer ()
   "Return buffer's book mark regexp.
 If the local value where the regexp is stored is nil, the rescan buffer.
@@ -531,10 +528,8 @@ References:
       (setq tinybookmark--bookmark-regexp
             (tinybookmark-search-bm-re))))
 
-;;; ----------------------------------------------------------------------
-;;; Default book mark syntax that is used if file does not contain
-;;; it's own definition of book mark syntax.
-;;;
+;; Default book mark syntax that is used if file does not contain
+;; it's own definition of book mark syntax.
 (defsubst tinybookmark-regexp-default  ()
   "Return default book mark regexp.
 References:
@@ -545,71 +540,54 @@ References:
    " &+\\([^ \t]+\\) "
    tinybookmark--re-default-chars "+"))
 
-;;}}}
-;;{{{ movement functions
+;;; Movement functions
 
-;;; ........................................................ &movement ...
+;; ........................................................ &movement ...
 
-;;; ----------------------------------------------------------------------
-;;;
 (defun tinybookmark-search-regexp ()
   "Return book mark search regexp."
   (concat "^[ \t]*" (or comment-start "") "+ *"
           (tinybookmark-regexp-read-from-buffer)))
 
-;;; ----------------------------------------------------------------------
-;;;
 ;;;###autoload
 (defun tinybookmark-backward ()
   "Search book mark line backward."
   (interactive)
   (re-search-backward (tinybookmark-search-regexp) nil t))
 
-;;; ----------------------------------------------------------------------
-;;;
 ;;;###autoload
 (defun tinybookmark-forward (&optional back)
   "Search book mark line forward or optionally BACK."
   (interactive)
   (re-search-forward (tinybookmark-search-regexp) nil t))
 
-;;}}}
+;;; Miscellaneous functions
 
-;;{{{ miscellaneous functions
+;; ............................................................ &misc ...
 
-;;; ............................................................ &misc ...
-
-;;; ----------------------------------------------------------------------
-;;; LISP column
-;;;  - I can hear you saying: "Why 74? why not 70 or 75 ?..."
-;;;  - Well, I usually add book mark section to my elisp code and while
-;;;    I did them by hand I added ';;; ' comment at the beginning of
-;;;    line and fed 70  continuous characters with ESC 70 '-'after
-;;;    comment this becomes total of 4 + 70 characters.
-;;;
-;;;  - The idea of this calculation is that when you hit separator,
-;;;    like this: COMMENT-SPACE-70_CHAR_SEPARATOR, this will calculate
-;;;    the column so, that when tinybookmark-insert is called, the last
-;;;    char lines up with yours.
-;;;
-;;;    E.g. in shell mode:
-;;;
-;;;             # ---------------, 70 chars long sep, last col is 2 + 70
-;;;             # ..............., tinybookmark-insert lines up to col 72
-;;;
-;;;    But in lisp
-;;;
-;;;             ;;; -------------, again 70 chars long sep, 4 + 70
-;;;             ;;; ............., tinybookmark-insert lines up to col 74
-;;;
-;;;    Now you can hit 70 line separator in any mode and to be sure the
-;;;    tinybookmark-insert lines up with you.
-;;;
+;; LISP column
+;;  - I can hear you saying: "Why 74? why not 70 or 75 ?..."
+;;  - Well, I usually add book mark section to my elisp code and while
+;;    I did them by hand I added ';;; ' comment at the beginning of
+;;    line and fed 70  continuous characters with ESC 70 '-'after
+;;    comment this becomes total of 4 + 70 characters.
+;;  - The idea of this calculation is that when you hit separator,
+;;    like this: COMMENT-SPACE-70_CHAR_SEPARATOR, this will calculate
+;;    the column so, that when tinybookmark-insert is called, the last
+;;    char lines up with yours.
+;;    E.g. in shell mode:
+;;             # ---------------, 70 chars long sep, last col is 2 + 70
+;;             # ..............., tinybookmark-insert lines up to col 72
+;;    But in lisp
+;;             ;;; -------------, again 70 chars long sep, 4 + 70
+;;             ;;; ............., tinybookmark-insert lines up to col 74
+;;    Now you can hit 70 line separator in any mode and to be sure the
+;;    tinybookmark-insert lines up with you.
 (defun tinybookmark-calc-max-col ()
   "Calculates column for mode."
   (let ((mode (symbol-name major-mode))
-	(cs   (or comment-start ""))
-	(len  70))            ; like "# " + 70 chars
+        (cs   (or comment-start ""))
+        (len  70))            ; like "# " + 70 chars
     (cond
      ((string-match "lisp" mode)
       74)
@@ -618,8 +596,6 @@ References:
           (+ len (length cs))         ;; no it does not "#", add room for it.
         (1+ (+ len (length cs))))))))
 
-;;; ----------------------------------------------------------------------
-;;;
 (defun tinybookmark-goto (point)
   "Go to the selected POINT."
   (let ((re ".*{{{"))
@@ -634,16 +610,12 @@ References:
      (t
       (goto-char point)))))
 
-;;; ----------------------------------------------------------------------
-;;; - include all lines
-;;;
+;; Include all lines
 (defun tinybookmark-scan-filter (full-line pos id)
   "Return always t, so all matched lines are cached.
 Ignore FULL-LINE POS ID."
   t)
 
-;;; ----------------------------------------------------------------------
-;;;
 (defun tinybookmark-comment-end ()
   "Return appropriate comment end, according to mode."
   (let ((str (or comment-end "")))
@@ -651,8 +623,6 @@ Ignore FULL-LINE POS ID."
       (setq str (ti::string-add-space str)))
     str))
 
-;;; ----------------------------------------------------------------------
-;;;
 (defun tinybookmark-comment-start ()
   "Return appropriate comment, according to mode."
   (let ((str (or comment-start "")))   ;comment
@@ -665,15 +635,13 @@ Ignore FULL-LINE POS ID."
       (setq str (ti::string-add-space str t)))
     str))
 
-;;; ----------------------------------------------------------------------
-;;;
 (defun tinybookmark-cache-update ()
   "Determines when and how to update cache.
 References: `tinybookmark-cache-update'"
   (let* ((mode       tinybookmark--cache-update)
          (end        (marker-position (point-max-marker)))
          (cache-end  (or tinybookmark--cache-char-count
-			 end))
+                         end))
          (limit      tinybookmark--cache-threshold-val)
          diff)
     (cond
@@ -688,11 +656,8 @@ References: `tinybookmark-cache-update'"
         ;; Let's be transparent this time: no messages.
         (tinybookmark-parse))))))
 
-;;}}}
-;;{{{ book mark line insert
+;;; Book mark line insert
 
-;;; ----------------------------------------------------------------------
-;;;
 ;;;###autoload
 (defun tinybookmark-repeat (str count &optional col strict)
   "Repeats character or string sequence STR COUNT times.
@@ -718,57 +683,55 @@ STRICT has effect only if COL is given:
          len
          p)
     (unless (or (not (stringp str))         ;it's not string
-		(eq 0 (length str)))        ;string is empty
+                (eq 0 (length str)))        ;string is empty
       (cond
        ((stringp count)
-	(if (equal "" count)
-	    (setq c -1)                   ;interactive
-	  (setq c (string-to-number count))))
+        (if (equal "" count)
+            (setq c -1)                   ;interactive
+          (setq c (string-to-number count))))
        ((numberp count)
-	(setq c count))
+        (setq c count))
        (t
-	(error "Invalid count arg %s" count)))
+        (error "Invalid count arg %s" count)))
       ;; ... ... ... ... ... ... ... ... ... ... ... ... ... ... ... ... ...
       (cond
        ((eq c -1)                        ;ask confirmation every time...
-	(while ok
-	  (message "insert? <spc,enter> ")
-	  (setq ch (read-char))
-	  (cond
-	   ((or (char-equal ch ?\C-m )
-		(char-equal ch ?\ ))
-	    (insert str))
-	   (t (setq ok nil))))
-	(message ""))
+        (while ok
+          (message "insert? <spc,enter> ")
+          (setq ch (read-char))
+          (cond
+           ((or (char-equal ch ?\C-m )
+                (char-equal ch ?\ ))
+            (insert str))
+           (t (setq ok nil))))
+        (message ""))
        ;; ... ... ... ... ... ... ... ... ... ... ... ... ... ... ... ... ...
        ((eq c 0)
-	(setq len         (length str)
-	      p           (current-column))
-	;; we have to remove tabs from this line to get count right
-	(untabify (line-beginning-position) (line-end-position))
-	(move-to-column p)                ;restore position
-	;; the added str must not move point further than COL
-	(while (<= (+ len (current-column)) swide)
-	  (insert str))
-	;;   Check if it was multicharacter and we didn't get to last position
-	;;   Insert the last string and cut after COL
-	(if (null strict)
-	    nil
-	  (if (= (current-column) swide)
-	      nil
-	    (insert str)
-	    (ti::buffer-move-to-col swide)
-	    (delete-region (point)
-			   (progn
-			     (end-of-line)
-			     (point))))))
+        (setq len         (length str)
+              p           (current-column))
+        ;; we have to remove tabs from this line to get count right
+        (untabify (line-beginning-position) (line-end-position))
+        (move-to-column p)                ;restore position
+        ;; the added str must not move point further than COL
+        (while (<= (+ len (current-column)) swide)
+          (insert str))
+        ;;   Check if it was multicharacter and we didn't get to last position
+        ;;   Insert the last string and cut after COL
+        (if (null strict)
+            nil
+          (if (= (current-column) swide)
+              nil
+            (insert str)
+            (ti::buffer-move-to-col swide)
+            (delete-region (point)
+                           (progn
+                             (end-of-line)
+                             (point))))))
        ;; ... ... ... ... ... ... ... ... ... ... ... ... ... ... ... ... ...
        (t                                 ;straight number !
-	(while (< i c)
-	  (insert str) (setq i (1+ i))))))))
+        (while (< i c)
+          (insert str) (setq i (1+ i))))))))
 
-;;; ----------------------------------------------------------------------
-;;;
 ;;;###autoload
 (defun tinybookmark-insert (txt sep &optional strict)
   "Add book mark until the end of line.
@@ -841,11 +804,8 @@ References:
     (insert cs)
     (goto-char orig-point)))
 
-;;}}}
-;;{{{ Book Mark find, caching
+;;; Book Mark find, caching
 
-;;; ----------------------------------------------------------------------
-;;;
 (defun tinybookmark-scan (re)
   "Gather all book marks from current point forward using RE.
 Return list: (id . beginning-of-line-point).
@@ -853,9 +813,9 @@ Return list: (id . beginning-of-line-point).
 References:
   `tinybookmark--scan-filter-func'"
   (let ((func tinybookmark--scan-filter-func) ;should we filter something ?
-	id
-	point
-	list)
+        id
+        point
+        list)
     (while (re-search-forward re nil t)
       (when (setq id (match-string 1))
         (setq point (line-beginning-position))
@@ -866,17 +826,15 @@ References:
             (ti::nconc list (cons id point)))))
     list))
 
-;;; ----------------------------------------------------------------------
-;;;
 (defun tinybookmark-search-bm-re ()
   "Search buffer for automatic book mark identifier `BookMarkRegexp'.
 Returns regexp defined in it. if is does not exist returns default
 book mark regexp."
   (let ((id          "BookMarkRegexp")
-	(re-default  (tinybookmark-regexp-default))
-	id-val
-	fixed-val
-	ret)
+        (re-default  (tinybookmark-regexp-default))
+        id-val
+        fixed-val
+        ret)
     (setq id-val (ti::vc-rcs-str-find-buffer id t))
     ;;  while reading from buffer the \ doubles, convert it back to \
     (setq fixed-val (ti::string-plain-string-to-regexp id-val))
@@ -887,8 +845,6 @@ book mark regexp."
       (setq ret (match-string 1 fixed-val)))
     ret))
 
-;;; ----------------------------------------------------------------------
-;;;
 ;;;###autoload
 (defun tinybookmark-parse ()
   "Build book mark list and save it to cache.
@@ -899,14 +855,14 @@ Return:
   nil   book marks not found or error happened. Cache untouched."
   (interactive)
   (let ((op             (point))       ;user's original point
-	(beg            (point-min-marker))
-	(end            (point-max-marker))
-	(end-pos        (marker-position (point-max-marker)))
-	(end-max        (point-max))
-	end-wmax
-	re
-	ret
-	list)
+        (beg            (point-min-marker))
+        (end            (point-max-marker))
+        (end-pos        (marker-position (point-max-marker)))
+        (end-max        (point-max))
+        end-wmax
+        re
+        ret
+        list)
     (run-hooks 'tinybookmark--parse-before-hook)
     (setq tinybookmark--cache-char-count end-pos) ;Set GLOBAL
     (if (null (setq re (tinybookmark-regexp-read-from-buffer)))
@@ -923,25 +879,20 @@ Return:
               (setq tinybookmark--cache list)))
         (save-excursion
           (with-current-buffer (marker-buffer beg)
-	    ;; what about after widen ? Were we in narrow mode ?
-	    (unless (= end-wmax end-max)
-	      (narrow-to-region beg end))))))
+            ;; what about after widen ? Were we in narrow mode ?
+            (unless (= end-wmax end-max)
+              (narrow-to-region beg end))))))
     ;; only reasonable way to return to current point
     (goto-char op)
     ret))
 
-;;}}}
-;;{{{ mouse
+;;; Mouse
 
-;;; ----------------------------------------------------------------------
-;;;
 ;;;###autoload
 (defun tinybookmark-keyboard-parse ()
   "Reparse book marks."
   (tinybookmark-mouse-parse nil (called-interactively-p 'interactive)))
 
-;;; ----------------------------------------------------------------------
-;;;
 ;;;###autoload
 (defun tinybookmark-mouse-parse (&optional event verb)
   "Reparse book mark list. This function is called from mouse binding.
@@ -951,14 +902,12 @@ Called with mouse EVENT. VERB displays message."
   (if (and verb (tinybookmark-parse))
       (message "TinyBookmark: Book Marks cached.")))
 
-;;; ----------------------------------------------------------------------
-;;;
 (defun tinybookmark-selection (event)
   "Display cache menu. Called with mouse EVENT."
   (interactive "e")
   (let ((go-func   tinybookmark--goto-func)
-	cache
-	data)
+        cache
+        data)
     (tinybookmark-cache-update)
     (setq cache     tinybookmark--cache)
     (if (null cache)
@@ -972,8 +921,6 @@ Called with mouse EVENT. VERB displays message."
       (if data
           (funcall go-func (cdr data))))))
 
-;;; ----------------------------------------------------------------------
-;;;
 (defun tinybookmark-cache-regenerate (&optional force)
   "Regenerate cache if needed. Optional FORCE."
   (let ((cache-ok tinybookmark--cache))
@@ -984,8 +931,6 @@ Called with mouse EVENT. VERB displays message."
       (message "")
       (tinybookmark-parse))))
 
-;;; ----------------------------------------------------------------------
-;;;
 ;;;###autoload
 (defun tinybookmark-keyboard (bookmark &optional arg)
   "Complete and jump to bookmarks.
@@ -1009,8 +954,6 @@ Optional ARG rebuilds cache."
            "\\[universal-argument] \\[tinybookmark-keyboard]")))
       (goto-char (cdr elt)))))
 
-;;; ----------------------------------------------------------------------
-;;;
 ;;;###autoload
 (defun tinybookmark-mouse (event &optional arg)
   "Display book mark pop up menu. Use mouse EVENT.
@@ -1019,7 +962,7 @@ Optional ARG rebuilds cache."
   (tinybookmark-cache-regenerate arg)
   (tinybookmark-selection event))
 
-;;}}}
+;;; Provide
 
 (provide   'tinybookmark)
 (run-hooks 'tinybookmark--load-hook)

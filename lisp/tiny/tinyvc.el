@@ -290,15 +290,11 @@ r  = Reload Rlog buffer (it may be old if you have deposited new versions)
 s  = Status. Show some of the file\\='s status information.
 uU = Cancel Checkout with co(1) command.")
 
-;;; ----------------------------------------------------------------------
-;;;
 (defun tinyvc-mode-menu (&optional arg)
   "Call Echo area mode menu with ARG."
   (interactive "P")
   (ti::menu-menu 'tinyvc--mode-menu-main arg))
 
-;;; ----------------------------------------------------------------------
-;;;
 (defun tinyvc-install-to-emacs (&optional off)
   "Turn on `tinyvc-mode' in appropriate buffers."
   (interactive "P")
@@ -327,8 +323,6 @@ uU = Cancel Checkout with co(1) command.")
 ;;}}}
 ;;{{{ Macros
 
-;;; ----------------------------------------------------------------------
-;;;
 (put 'tinyvc-do-macro 'lisp-indent-function 0)
 (defmacro tinyvc-do-macro (&rest body)
   "Store info to variables `ver' and `file'. Variable VERB must e also bound.
@@ -350,8 +344,6 @@ If `ver' of `file' cannot be set, print message and do nothing with BODY."
            (error "Can't find absolute filename %s" file)))))
      ,@body))
 
-;;; ----------------------------------------------------------------------
-;;;
 (put 'tinyvc-file-confirm-macro 'lisp-indent-function 2)
 (defmacro tinyvc-file-confirm-macro (file verb &rest body)
   "Make sure FILE is read-only before continuing.
@@ -365,8 +357,6 @@ executing BODY."
                                (file-name-nondirectory ,file))))))
      ,@body))
 
-;;; ----------------------------------------------------------------------
-;;;
 (defsubst tinyvc-lock-listed-p ()
   "See if there is locks in listing."
   (save-excursion
@@ -377,8 +367,6 @@ executing BODY."
     (forward-line 1)
     (looking-at "^[ \t]+")))
 
-;;; ----------------------------------------------------------------------
-;;;
 (defsubst tinyvc-get-tmp-list (file)
   "Return used temporary buffers matching FILE."
   (when file
@@ -387,8 +375,6 @@ executing BODY."
      (string-match (format "\\*%s.*[0-9]+\\*" file) (buffer-name))
      'map-temporary-buffers-too)))
 
-;;; ----------------------------------------------------------------------
-;;;
 (put 'tinyvc-do-over-locks-macro 'lisp-indent-function 2)
 (defmacro tinyvc-do-over-locks-macro (user ver &rest body)
   "USER and VER is currently unused. Execute BODY over \"locks:\" keyword.
@@ -405,16 +391,12 @@ lock lines: e.g. by (goto-char (point-min)))."
 ;;}}}
 ;;{{{ Rcs interface
 
-;;; ----------------------------------------------------------------------
-;;;
 (defsubst tinyvc-cmd-cd-template (file &optional options)
   "Create `cd' command template: \"cd DIR; %s FILE OPTIONS\"."
   (interactive)
   (concat  "cd " (file-name-directory file) "; "
            "%s " (or options "") " " (file-name-nondirectory file)))
 
-;;; ----------------------------------------------------------------------
-;;;
 (defun tinyvc-cmd-get-cvs (sym)
   "Return RCS executable according to SYM."
   ;; This is default function. User may return "my-co" for 'co
@@ -432,8 +414,6 @@ lock lines: e.g. by (goto-char (point-min)))."
    (t
     (error "No cmd %s " sym))))
 
-;;; ----------------------------------------------------------------------
-;;;
 (defun tinyvc-cmd-get-rcs (sym)
   "Return RCS executable according to SYM."
   ;; This is default function. User may return "my-co" for 'co
@@ -447,8 +427,6 @@ lock lines: e.g. by (goto-char (point-min)))."
    (t
     (error "No cmd %s " sym))))
 
-;;; ----------------------------------------------------------------------
-;;;
 (defun tinyvc-cmd-exec (sym shell-cmd &optional buffer noerr)
   "Execute shell command. If error, show result buffer.
 
@@ -471,8 +449,6 @@ References:
          (out   (or buffer (ti::temp-buffer tinyvc--shell-buffer 'clear))))
     (shell-command send out)))
 
-;;; ----------------------------------------------------------------------
-;;;
 (defun tinyvc-cmd-diff-p (file &optional options)
   "Return t if there is diff for FILE with diff OPTIONS."
   (if (zerop
@@ -484,8 +460,6 @@ References:
       nil
     t))
 
-;;; ----------------------------------------------------------------------
-;;;
 (defun tinyvc-cmd-rcs (file &optional options)
   "Run rcs command on FILE with OPTIONS."
   (tinyvc-cmd-exec 'rcs (tinyvc-cmd-cd-template file options)))
@@ -493,8 +467,6 @@ References:
 ;;}}}
 ;;{{{ Misc
 
-;;; ----------------------------------------------------------------------
-;;;
 (defun tinyvc-lock-list ()
   "Return lock list: ((USER . LOCK-VER) ...)."
   (let (list
@@ -504,8 +476,6 @@ References:
                                 (push (cons user ver) list))
     (nreverse list)))
 
-;;; ----------------------------------------------------------------------
-;;;
 (defun tinyvc-load-to-buffer (dest &optional noerr)
   "Examine `tinyvc--shell-buffer' and copy the output to DEST buffer.
 If DEST does not exist, it is created. NOERR ignores errors."
@@ -534,8 +504,6 @@ If DEST does not exist, it is created. NOERR ignores errors."
     ;; return success status
     point))
 
-;;; ----------------------------------------------------------------------
-;;;
 (defun tinyvc-reload (&optional verb)
   "Replace buffer with current log. VERB."
   (interactive)
@@ -548,8 +516,6 @@ If DEST does not exist, it is created. NOERR ignores errors."
     (if verb
         (message "Updated."))))
 
-;;; ----------------------------------------------------------------------
-;;;
 (defun tinyvc-status ()
   "Show file status."
   (interactive)
@@ -565,8 +531,6 @@ If DEST does not exist, it is created. NOERR ignores errors."
                (file-modes file)))
     (message "%s%s has modes %s " (if ver (concat ver " "))  fn str)))
 
-;;; ----------------------------------------------------------------------
-;;;
 (defun tinyvc-chmod-toggle (&optional verb)
   "Toggle between =r and +w. VERB."
   (interactive)
@@ -579,8 +543,6 @@ If DEST does not exist, it is created. NOERR ignores errors."
     (if verb
         (tinyvc-status))))
 
-;;; ----------------------------------------------------------------------
-;;;
 (defun tinyvc-select-backend ()
   "Select RCS or CVS command for the log buffer: set `tinyvc--cmd-function'."
   (interactive)
@@ -603,8 +565,6 @@ If DEST does not exist, it is created. NOERR ignores errors."
        ((equal type 'CVS)
         (setq tinyvc--cmd-function 'tinyvc-cmd-get-rcs))))))
 
-;;; ----------------------------------------------------------------------
-;;;
 (defun tinyvc-rename-buffer ()
   "Rename buffer to *Rlog* if the the previous buffer name was *vc*.
 Other vc commands normally destroy the log buffer, so renaming
@@ -615,16 +575,12 @@ it keeps it alive until next rlog command."
       (if buffer (kill-buffer buffer)) ;  Remove old log buffer if it exists.
       (rename-buffer "*Rlog*"))))
 
-;;; ----------------------------------------------------------------------
-;;;
 (defsubst tinyvc-char-mark-p (&optional remove)
   "Check if there is marker character at the beginning of line.
 Move point. Optionally REMOVE marker."
   (beginning-of-line)
   (char-equal (following-char) ?>))
 
-;;; ----------------------------------------------------------------------
-;;;
 (defun tinyvc-char-mark (&optional unmark)
   "Mark the line, or UNMARK."
   (interactive)
@@ -636,15 +592,11 @@ Move point. Optionally REMOVE marker."
    ((null unmark)
     (insert ">"))))
 
-;;; ----------------------------------------------------------------------
-;;;
 (defun tinyvc-buffer-version (file)
   "If FILE is in emacs, return version number."
   (if (get-file-buffer file)            ;Loaded into emacs already
       (ti::vc-rcs-buffer-version (get-file-buffer file))))
 
-;;; ----------------------------------------------------------------------
-;;;
 (defun tinyvc-get-filename ()
   "Return filename or nil."
   (save-excursion
@@ -655,8 +607,6 @@ Move point. Optionally REMOVE marker."
      ((re-search-forward "Working file:[ \t]+\\([^ \n\t]+\\)")
       (ti::remove-properties (match-string 1))))))
 
-;;; ----------------------------------------------------------------------
-;;;
 (defun tinyvc-get-version ()
   "Return version on current line."
   (let* ((line  (ti::read-current-line))
@@ -669,8 +619,6 @@ Move point. Optionally REMOVE marker."
         (setq ver nil))                 ;cancel
     ver))
 
-;;; ----------------------------------------------------------------------
-;;;
 (defun tinyvc-file-untouched-p (file)
   "Check if buffer is in emacs and that FILE is not modified.
 If the file is not in emacs, run rcsdiff.
@@ -699,8 +647,6 @@ Return:
 ;;}}}
 ;;{{{ interactive
 
-;;; ----------------------------------------------------------------------
-;;;
 (defun tinyvc-mark (&optional unmark verb)
   "Mark revisions that were loaded by \\[tinyvc-find-file-tmp].
 Optionally UNMARK. VERB."
@@ -731,8 +677,6 @@ Optionally UNMARK. VERB."
             (message "No temporary files.")
           (message "%smarked %d items" (if unmark "un" "") len)))))
 
-;;; ----------------------------------------------------------------------
-;;;
 (defun tinyvc-kill-tmp ()
   "Kill all tmp buffers that were loaded from call \\[tinyvc-find-file-tmp]."
   (interactive)
@@ -742,8 +686,6 @@ Optionally UNMARK. VERB."
       (dolist (file (tinyvc-get-tmp-list file))
         (kill-buffer file)))))
 
-;;; ----------------------------------------------------------------------
-;;;
 (defun tinyvc-pop-to-buffer ()
   "Pop to buffer accordig to this rlog."
   (interactive)
@@ -755,8 +697,6 @@ Optionally UNMARK. VERB."
                             (file-name-nondirectory file)))
           (find-file file)))))
 
-;;; ----------------------------------------------------------------------
-;;;
 (defun tinyvc-find-file-tmp (&optional no-pop verb)
   "Find the current version into Emacs.
 The file will be Checked Out by using pipes and the created
@@ -786,8 +726,6 @@ Input:
     (if (and verb no-pop)
         (message "Loaded %s" ver))))
 
-;;; ----------------------------------------------------------------------
-;;;
 (defun tinyvc-unlock-unsafely (&optional all verb)
   "Read \"locks:\" keyword and unlock first locked version in the list.
 If there is no locks, then do nothing. ALL unlocks all locks.
@@ -835,8 +773,6 @@ Notes:
       (if verb
           (message "done.")))))
 
-;;; ----------------------------------------------------------------------
-;;;
 (defun tinyvc-cancel-co (&optional verb)
   "Cancel Checkout for current revision, so that file is no more locked.
 Notice that the lock status is based on the buffer content. Do
@@ -867,8 +803,6 @@ Chmod undelying file to read-only."
          (if verb
              (message "Revision %s unlocked." ver)))))))
 
-;;; ----------------------------------------------------------------------
-;;;
 (defun tinyvc-do-co-l ()
   "Do co and lock the version number on the line."
   (interactive)
@@ -890,8 +824,6 @@ Chmod undelying file to read-only."
          (call-interactively 'revert-buffer)
          (message ""))))))
 
-;;; ----------------------------------------------------------------------
-;;;
 (defun tinyvc-do-co-head ()
   "CheckOut the HEAD revision."
   (interactive)
@@ -900,8 +832,6 @@ Chmod undelying file to read-only."
       (call-interactively 'tinyvc-do-co)
     (message "Hm, Can't find the 'head:' tag anywhere? ")))
 
-;;; ----------------------------------------------------------------------
-;;;
 (defun tinyvc-do-co (&optional replace verb)
   "Checkout specific revision around current point.
 REPLACE current emacs buffer with this version if the existing file in emacs

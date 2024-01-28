@@ -177,11 +177,8 @@
 
 ;;; .......................................................... &v-vars ...
 ;;; *** important ***
-;;;
 ;;;     These are just examples. Copy the variables into your ~/.emacs
 ;;;     and make changes to reflect your system.
-;;;
-;;;
 
 (defcustom tinylpr--set-ps-lpr-switches  t
   "If non-nil, set also ps-lpr-switches from ps-print.el when
@@ -338,8 +335,6 @@ TinyLpr: %s(ps) rR)egion bB)uffer sS)Spool d)espool "
 
 ;;{{{ code: funcs
 
-;;; ----------------------------------------------------------------------
-;;;
 (defun tinylpr-install-lpr-command ()
   "Set correct shell for `lpr-command'."
   (interactive)
@@ -359,8 +354,6 @@ TinyLpr: %s(ps) rR)egion bB)uffer sS)Spool d)espool "
         (error "\
 TinyLpr: sh, bash or cmd.exe not available. Can't set lpr-command." ))))))
 
-;;; ----------------------------------------------------------------------
-;;;
 (defun tinylpr-set-command (template printer)
   "Substitutes possible # n TEMPLATE with PRINTER name in."
   (if (string-match "\\(#\\)" template)
@@ -375,8 +368,6 @@ TinyLpr: sh, bash or cmd.exe not available. Can't set lpr-command." ))))))
    ((string-match "\\(command\\|cmd\\)\\.exe$" lpr-command) ;Win32
     (setq lpr-switches (list "/c" template)))))
 
-;;; ----------------------------------------------------------------------
-;;;
 (defun tinylpr-print-with-line-numbers  ()
   "Adds line numbers to buffer and prints it. After printing,
 removes line numbers."
@@ -399,8 +390,6 @@ removes line numbers."
            (point-max)
            "^[0-9]+: " 0))))))
 
-;;; ----------------------------------------------------------------------
-;;;
 (defun tinylpr-print-style-completions ()
   "Build up the completion array."
   (let ((i 0)
@@ -410,8 +399,6 @@ removes line numbers."
       (setq completions (cons  (cons (car x) i) completions)))
     completions))
 
-;;; ----------------------------------------------------------------------
-;;;
 (defun tinylpr-setting-status ()
   "Return current settings."
   (interactive)
@@ -420,8 +407,6 @@ removes line numbers."
         (message stat))
     stat))
 
-;;; ----------------------------------------------------------------------
-;;;
 (defun tinylpr-queue ()
   "Return queue status."
   (interactive)
@@ -430,8 +415,6 @@ removes line numbers."
     (display-buffer buffer)
     (shell-command cmd buffer)))
 
-;;; ----------------------------------------------------------------------
-;;;
 (defun tinylpr-select-printer (printer)
   "Select PRINTER printer."
   (interactive
@@ -448,8 +431,6 @@ removes line numbers."
         (setq ps-lpr-switches (list (concat "-P" printer))))
     (tinylpr-print-style-select tinylpr--current-print-style)))
 
-;;; ----------------------------------------------------------------------
-;;;
 (defun tinylpr-print-style-select (arg)
   "Select print output style with ARG."
   (interactive

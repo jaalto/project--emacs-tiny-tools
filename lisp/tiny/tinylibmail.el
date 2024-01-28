@@ -1,5 +1,3 @@
-;; -*- enable-local-variables: :all;  -*-
-
 ;;; tinylibmail.el --- Library of mail related functions
 
 ;; This file is not part of Emacs
@@ -157,14 +155,10 @@ If ANCHOR-LEFT is non-nil; the regexp will contains left ^ anchor."
    (if anchor-left "^" "")
    "-----\\(BEGIN\\|END\\) PGP.*-----"))
 
-;;; ----------------------------------------------------------------------
-;;;
 (defsubst ti::mail-ip-raw-p (ip)
   "Check raw nnn.nnn.nnn.nnn IP."
   (string-match "^[0-9]+\\.[0-9]+\\.[0-9]+\\.[0-9]+$" ip))
 
-;;; ----------------------------------------------------------------------
-;;;
 (defsubst ti::mail-ip-top-level-domain (host)
   "Convert HOST a.b.c  => b.c domain.
 If HOST is raw numeric IP, do nothing."
@@ -175,15 +169,11 @@ If HOST is raw numeric IP, do nothing."
         (string-match "^\\([^.]+\\.[^.]+\\)$" host))
     (match-string 1 host))))
 
-;;; ----------------------------------------------------------------------
-;;;
 (defsubst ti::mail-ip-3-level-domain (host)
   "Convert HOST a.b.c.d  => b.c.d domain."
   (when (string-match "\\.\\([^.]+\\.[^.]+\\.[^.]+\\)$" host)
     (match-string 1 host)))
 
-;;; ----------------------------------------------------------------------
-;;;
 (defsubst ti::mail-ip-cleanup (word)
   "Clean WORD to format \"aa.bb.cc\". Remove offending characters.
 Remove all characters up till @: this@email.com => email.com
@@ -201,8 +191,6 @@ All of the above will become:
         "[^a-z0-9-.]" ""
         (replace-regexp-in-string "^.*@" "" word))))
 
-;;; ----------------------------------------------------------------------
-;;;
 (defun ti::mail-ip-at-point-1 ()
   "Read only word containing characters [-.a-zA-z0-9]."
   (let (beg
@@ -218,8 +206,6 @@ All of the above will become:
       (unless (eq beg (point))
         (buffer-substring beg (point))))))
 
-;;; ----------------------------------------------------------------------
-;;;
 (defun ti::mail-ip-at-point ()
   "Read domain ip IP name at point."
   (let* ((word (ti::mail-ip-at-point-1)))
@@ -230,8 +216,6 @@ All of the above will become:
           word
         (ti::mail-ip-top-level-domain word)))))
 
-;;; ----------------------------------------------------------------------
-;;;
 (defsubst ti::mail-news-group ()        ;ding & gnus compatible
   "Return newsgroup name if group exists."
   (if (boundp 'gnus-newsgroup-name)
@@ -281,15 +265,11 @@ See `ti::mail-parse-name'")
   "$Id: tinylibmail.el,v 2.68 2007/05/07 10:50:08 jaalto Exp $"
   "Latest modification time and version number.")
 
-;;; ----------------------------------------------------------------------
-;;;
 (defun tinylibmail-version (&optional arg)
   "Show version information. ARG tell to print message in echo area only."
   (interactive "P")
   (ti::package-version-info "tinylibmail.el" arg))
 
-;;; ----------------------------------------------------------------------
-;;;
 (defun tinylibmail-submit-feedback ()
   "Submit suggestions, error corrections, impressions, anything..."
   (interactive)
@@ -298,8 +278,6 @@ See `ti::mail-parse-name'")
 ;;}}}
 ;;{{{ misc
 
-;;; ----------------------------------------------------------------------
-;;;
 (defun ti::mail-signature-p  ()
   "Return beginning of line point if \\n-- *\\n is found.
 The de facto, while not standardized by any RFC signature separator
@@ -313,23 +291,17 @@ This function accepts trailing spaces or just n\\--\\n"
                (1+ (match-beginning 0)))
       (goto-char point))))
 
-;;; ----------------------------------------------------------------------
-;;;
 (defun ti::mail-body-empty-p ()
   "Check if there is nothing in the body or if whole buffer is empty."
   (save-excursion
     (ti::mail-text-start 'move)
     (eq (point) (point-max))))
 
-;;; ----------------------------------------------------------------------
-;;;
 (defun ti::mail-body-clear ()
   "Delete message body."
   (ti::mail-text-start 'move)
   (delete-region (point) (point-max)))
 
-;;; ----------------------------------------------------------------------
-;;;
 (put 'ti::mail-set-region 'lisp-indent-function 1)
 (put 'ti::mail-set-region 'edebug-form-spec '(body))
 (defmacro  ti::mail-set-region (beg end)
@@ -340,8 +312,6 @@ This function accepts trailing spaces or just n\\--\\n"
      (or ,end
          (setq , end (point-max)))))
 
-;;; ----------------------------------------------------------------------
-;;;
 (put 'ti::mail-point-in-header-macro 'lisp-indent-function 0)
 (put 'ti::mail-point-in-header-macro 'edebug-form-spec '(body))
 (defmacro ti::mail-point-in-header-macro (&rest body)
@@ -349,8 +319,6 @@ This function accepts trailing spaces or just n\\--\\n"
   `(when (< (point) (ti::mail-text-start))
      ,@body))
 
-;;; ----------------------------------------------------------------------
-;;;
 (defun ti::mail-message-length ()
   "Return message's body length, not including the headers.
 The message length is measured be counting character between the
@@ -411,9 +379,7 @@ Exceptions:
           (skip-chars-backward " \t\n") (setq end (point))
           (- (point) beg)))))))
 
-;;; ----------------------------------------------------------------------
 ;;;FIXME: this is old function and should be removed.
-;;;
 (defun ti::mail-get-2re (re str)
   "Use RE and return submatches 1 and 2 from STR.
 Return list of empty strings if no matches."
@@ -429,8 +395,6 @@ Return list of empty strings if no matches."
                               (match-end 2)))))
     (list m1 m2)))
 
-;;; ----------------------------------------------------------------------
-;;;
 (defun ti::mail-required-headers ()
   "Return standard RFC header required when posting.
 
@@ -451,16 +415,12 @@ Return:
    (t
     nil)))
 
-;;; ----------------------------------------------------------------------
-;;;
 (defun ti::mail-mail-mode-p ()
   "Check if some mail MUA mode is tuned on this buffer: RMAIL, VM, MH ..."
   (string-match
    "^\\(vm-\\|rmail-\\|mh-\\|gnus-article-\\|message\\).*mode"
    (symbol-name major-mode)))
 
-;;; ----------------------------------------------------------------------
-;;;
 (defun ti::mail-mailbox-p ()
   "Check if two first lines look like Berkeley mailbox format."
   (save-excursion
@@ -472,8 +432,6 @@ Return:
          (not (eobp))
          (looking-at "^[a-zA-Z-]+:[ \t]+[^ \r\r\n]"))))
 
-;;; ----------------------------------------------------------------------
-;;;
 (defun ti::mail-mail-p ()
   "Check if first line contain left flushed header \"Header:\".
 This is a sign that current buffer is in mail-like.
@@ -483,8 +441,6 @@ You should also check the mode name to get more reliable results."
         (ti::pmin)
         (looking-at "^[-A-Za-z0-9][-A-Za-z0-9]+:"))))
 
-;;; ----------------------------------------------------------------------
-;;;
 (defun ti::mail-header-area-size ()
   "Count size of header area.
 This function can only be called from a buffer that has
@@ -501,10 +457,8 @@ Return:
     (when (re-search-forward (regexp-quote mail-header-separator) nil t)
       (- (point) (point-min)))))
 
-;;; ----------------------------------------------------------------------
 ;;; - This is suitable for RMAIL, GNUS and for individual buffers
 ;;;   holding mail or news messages.
-;;;
 (defun ti::mail-hmax (&optional move noerr)
   "Search max point of header, optionally MOVE and NOERR.
 Order is: `mail-header-separator' or find all \"Headers:\" and then
@@ -540,8 +494,6 @@ If no point can be found, return `point-min'."
         (goto-char point))
     point))
 
-;;; ----------------------------------------------------------------------
-;;;
 (defun ti::mail-text-start (&optional move)
   "Return starting point or text in BODY. Optionally MOVE to it.
 If buffer is not mail-like, then return `point-min'.
@@ -570,31 +522,23 @@ References:
         (goto-char point))
     point))
 
-;;; ----------------------------------------------------------------------
-;;;
 (defun ti::mail-point-at-header-p ()
   "Return non-nil if point is at HEADER area of mail."
   (< (point) (ti::mail-text-start)))
 
-;;; ----------------------------------------------------------------------
-;;;
 (defun ti::mail-point-at-body-p ()
   "Return non-nil if point is at BODY of mail."
   (not (ti::mail-point-at-header-p)))
 
-;;; ----------------------------------------------------------------------
 ;;; - Many std emacs dist. functions work so that you have to narrow
 ;;;   to headers before you can call the functions.
-;;;
 (defun ti::mail-narrow (&optional text)
   "Narrows to the headers only. Optionally to TEXT portion."
   (if text
       (narrow-to-region (ti::mail-text-start 'move) (point-max))
     (narrow-to-region (point-min) (ti::mail-hmax))))
 
-;;; ----------------------------------------------------------------------
 ;;; - This is for both GNUS and RMAIL
-;;;
 (defun ti::mail-mail-buffer-name ()
   "Find original mail buffer whether in GNUS or in RMAIL.
 
@@ -615,8 +559,6 @@ Return:
      (t
       nil))))
 
-;;; ----------------------------------------------------------------------
-;;;
 (defun ti::mail-generate-buffer-name (&rest ignore)
   "Rename the *mail* buffer to \"*mail* SENDER\". IGNORE args.
 You can install this function e.g. into
@@ -642,13 +584,11 @@ You can install this function e.g. into
              str)))
     str))
 
-;;; ----------------------------------------------------------------------
 ;;; - The idea is to find three fields and see what they contain,
 ;;;   and do they exist?
 ;;; - What's the use of this function? Well, when you post an article
 ;;;   or mail it, you can call this function from some of those
 ;;;   posting hooks to determine what to do with the buffer.
-;;;
 ;;; - code lines disabled now so that it buffer can be checked any time
 
 (defun ti::mail-mail-simple-p ()
@@ -672,8 +612,6 @@ You can call this only once, just after the buffer is initially created"
            (ti::nil-p to))
       t))))
 
-;;; ----------------------------------------------------------------------
-;;;
 (defun ti::mail-to-list-p ()
   "Check if message is meant to be sent to a mailing list.
 In GNUS you need to add Group parameter `to-list' containing address
@@ -686,8 +624,6 @@ to mailing list or otherwise Group is not considered mailing list."
 ;;}}}
 ;;{{{ PGP general, tests
 
-;;; ----------------------------------------------------------------------
-;;;
 (defun ti::mail-pgp-v3xx-p ()
   "Check if X-Pgp v3.xx header signing is in use.
 It should have VALUE = KEYWORD; statement."
@@ -699,8 +635,6 @@ It should have VALUE = KEYWORD; statement."
       ;; KEYWORD=VALUE;
       (looking-at "^[ \t]+.*=.*;"))))
 
-;;; ----------------------------------------------------------------------
-;;;
 (defun ti::mail-pgp-p ()
   "Check if buffer contain PGP. It must have left flushed regexp:
 \"^-----BEGIN.*PGP +\\(SIGNATURE\\|SIGNED\\\\|MESSAGE)\", otherwise this
@@ -723,14 +657,10 @@ If there is X-pgp-sig.*: header, then it's also considered PGP message."
             ;;  The New PGP in headers standard.
             (re-search-forward "^X-Pgp-Sig.*:" max t))))))
 
-;;; ----------------------------------------------------------------------
-;;;
 (defun ti::mail-pgp-signed-conventional-p ()
   "Return t if message is conventionally signed."
   (save-excursion (ti::pmin) (ti::mail-pgp-re-search 'sig)))
 
-;;; ----------------------------------------------------------------------
-;;;
 (defun ti::mail-pgp-signature-detached-p  ()
   "Return (beg . end) if there is detached signature."
   (let* ((point  (point))
@@ -744,8 +674,6 @@ If there is X-pgp-sig.*: header, then it's also considered PGP message."
                     (cons beg end))))
       (goto-char point))))
 
-;;; ----------------------------------------------------------------------
-;;;
 (defun ti::mail-pgp-signed-conventional-multi-p ()
   "Return t if message is signed conventionally multiple times."
   (save-excursion
@@ -754,8 +682,6 @@ If there is X-pgp-sig.*: header, then it's also considered PGP message."
     (forward-line 1)
     (ti::mail-pgp-re-search 'sig 'move)))
 
-;;; ----------------------------------------------------------------------
-;;;
 (defun ti::mail-pgp-signed-xpgp-p ()
   "Return t if message is X-pgp signed.
 There may be X-Pgp headers, but if the message is already
@@ -772,31 +698,23 @@ but in encrypted format."
                 (concat "^" (ti::mail-pgp-msg-begin-line))
                 nil t)))))
 
-;;; ----------------------------------------------------------------------
-;;;
 (defun ti::mail-pgp-signed-p ()
   "Return t is message is conventionally or X-pgp signed."
   (or (ti::mail-pgp-signed-xpgp-p)
       (ti::mail-pgp-signed-conventional-p)))
 
-;;; ----------------------------------------------------------------------
-;;;
 (defun ti::mail-pgp-public-key-p (&optional point)
   "Find public key delimiter from current point forward or using POINT."
   (save-excursion
     (goto-char (or point (point)))
     (re-search-forward (ti::mail-pgp-pkey-begin-line) nil t)))
 
-;;; ----------------------------------------------------------------------
-;;;
 (defun ti::mail-pgp-remail-p ()
   "Check if This is remailer message."
   (save-excursion
     (ti::pmin)
     (re-search-forward "[:#][:#]+\nReply-To" nil t)))
 
-;;; ----------------------------------------------------------------------
-;;;
 (defun ti::mail-pgp-comment-file-p (&optional point)
   "You can send binary files with base64 signing.
 This function checks if comment block has have words \"File: FILE \".
@@ -820,8 +738,6 @@ Return:
     (when (re-search-forward "^Comment:.*File:? +\\([^ \t,]+\\)" nil t)
       (match-string 1))))
 
-;;; ----------------------------------------------------------------------
-;;;
 (defun ti::mail-pgp-encrypted-p (&optional check-pgp-dash-line)
   "Check if there is encrypted PGP message.
 It must have left flushed tag. The start point of match is returned.
@@ -845,8 +761,6 @@ Input:
         (ti::pmin)
         (car-safe (ti::mail-pgp-block-area 'msg))))))
 
-;;; ----------------------------------------------------------------------
-;;;
 (defun ti::mail-pgp-normal-p (&optional point)
   "Check if there is any PGP in current buffer from POINT forward.
 The beginning point of PGP is returned."
@@ -861,8 +775,6 @@ The beginning point of PGP is returned."
             (setq ret nil)))
       ret)))
 
-;;; ----------------------------------------------------------------------
-;;;
 (defun ti::mail-pgp-headers-p ()
   "Return t if PGP information is in headers.
 Searches string \"X-Pgp-Signed:\" and return end of match or nil."
@@ -872,15 +784,11 @@ Searches string \"X-Pgp-Signed:\" and return end of match or nil."
       (ti::pmin)
       (re-search-forward psig hmax t))))
 
-;;; ----------------------------------------------------------------------
-;;;
 (defun ti::mail-pgp-re (str)
   "Add possible beginning anchor if STR does not have one."
   (if (not (char-equal (aref str 0) ?^))
       (concat "^" str)))
 
-;;; ----------------------------------------------------------------------
-;;;
 (defun ti::mail-pgp-block-area-kill-forward (mode &optional move)
   "Search PGP block forward and kill it. If no block found, do nothing.
 
@@ -892,8 +800,6 @@ Input:
       (delete-region (car reg) (cdr reg))
       (when move (goto-char (car reg))))))
 
-;;; ----------------------------------------------------------------------
-;;;
 (defun ti::mail-pgp-block-area (mode &optional inside max nstrict)
   "Return (beg . end) of PGP block from current point forward.
 
@@ -968,8 +874,6 @@ Return:
             (setq ret (cons beg end)))))))
     ret))
 
-;;; ----------------------------------------------------------------------
-;;;
 (defun ti::mail-pgp-re-search (&optional mode move end no-anchor)
   "Re-search-forward to find -----BEGIN.*SIGNED.
 
@@ -1023,8 +927,6 @@ Return:
 ;;}}}
 ;;{{{ PGP misc
 
-;;; ----------------------------------------------------------------------
-;;;
 (defun ti::mail-pgp-exe-version-string (&optional exe-file-location)
   "Call pgp/gpg executable to find out its version number.
 EXE-FILE-LOCATION defaults to \"pgp\" but can also be absolute path."
@@ -1044,8 +946,6 @@ EXE-FILE-LOCATION defaults to \"pgp\" but can also be absolute path."
                "gpg (GnuPG) +\\([^\r\n ]+\\)" nil t))
       (match-string 1))))
 
-;;; ----------------------------------------------------------------------
-;;;
 (defun ti::mail-pgp-data-type ()
   "Examine pgp data packet type by searching _forward_.
 Return:
@@ -1072,8 +972,6 @@ Return:
          ((char-equal char ?h) 'pgp)
          ((char-equal char ?o) 'base64))))))
 
-;;; ----------------------------------------------------------------------
-;;;
 (defun ti::mail-pgp-trim-buffer ()
   "Trim buffer: pgp blocks are left flushed and junk around them is removed."
   (let ((stat  t)
@@ -1086,10 +984,8 @@ Return:
         (when (setq stat (ti::mail-pgp-chop-region (car region) (cdr region)))
           (goto-char (cdr stat)))))))
 
-;;; ----------------------------------------------------------------------
 ;;; - This is needed after finger or http call to clean up all unnecessary
 ;;;   tags around the PGP key.
-;;;
 (defun ti::mail-pgp-chop-region (beg end)
   "Delete junk around BEG END from pgp public key block.
 Area BEG END that correspond to pgp begin and end
@@ -1155,8 +1051,6 @@ LmNvbT6JAFUDBRAxs0O+wLrt1UcUHTUBAbMhAf9Qgh6EznEcY2OUOIPg
 
 ;;; ...................................................... &pgp-header ...
 
-;;; ----------------------------------------------------------------------
-;;;
 (defun ti::mail-pgp-header-kill-in-body ()
   "Kill headers that are inserted into the body of message.
 If there is no headers, this function does nothing.
@@ -1180,8 +1074,6 @@ BODY"
 
 ;;; ....................................................... &pgp-armor ...
 
-;;; ----------------------------------------------------------------------
-;;;
 (defun ti::mail-pgp-data-char-to-int (char)
   "Process PGP ascii armor data.
 Input is ASCII armor CHAR (as one string). Function return respective int."
@@ -1194,8 +1086,6 @@ Input is ASCII armor CHAR (as one string). Function return respective int."
         (error "Armor char is invalid %s " char)
       (1- (length str)))))
 
-;;; ----------------------------------------------------------------------
-;;;
 (defun ti::mail-pgp-data-string-to-bin-string (string)
   "Process PGP ascii armor data.
 Convert quoted printable ASCII armor STRING into binary string."
@@ -1213,8 +1103,6 @@ Convert quoted printable ASCII armor STRING into binary string."
       (setq i (1+ i)))
     ret))
 
-;;; ----------------------------------------------------------------------
-;;;
 (defun ti::mail-pgp-data-bin-string-to-int-list(string)
   "Process PGP ascii armor data.
 Convert 8bit binary byte string \"000001...\" into list of ints."
@@ -1230,15 +1118,11 @@ Convert 8bit binary byte string \"000001...\" into list of ints."
       (push int ret))
     (nreverse ret)))
 
-;;; ----------------------------------------------------------------------
-;;;
 (defsubst ti::mail-pgp-data-ascii-armor-convert (string)
   "Convert PGP ascii armor STRING(quoted printable) into list of ints."
   (ti::mail-pgp-data-bin-string-to-int-list
    (ti::mail-pgp-data-string-to-bin-string string)))
 
-;;; ----------------------------------------------------------------------
-;;;
 (defun ti::mail-pgp-data-study-ctb-byte (int)
   "From single INT, examine the PGP CTB structure.
 Return
@@ -1291,8 +1175,6 @@ Return
       (setq ret (cons type val)))
     ret))
 
-;;; ----------------------------------------------------------------------
-;;;
 (defsubst ti::mail-pgp-stream-study-1-ver (int)
   "Return pgp version string from stream INT."
   (cond
@@ -1300,8 +1182,6 @@ Return
    ((eq 3 int) "2.6")
    (t          (error "Invalid Data format."))))
 
-;;; ----------------------------------------------------------------------
-;;;
 (put 'ti::mail-pgp-stream-study-1-key-id 'lisp-indent-function 1)
 (put 'ti::mail-pgp-stream-study-1-key-id 'edebug-form-spec '(body))
 (defmacro ti::mail-pgp-stream-study-1-key-id (stream result)
@@ -1315,8 +1195,6 @@ STREAM will be advanced during read."
              i          (1+ i)))
      (setq ,result (upcase ,result))))
 
-;;; ----------------------------------------------------------------------
-;;;
 (defun ti::mail-pgp-stream-study-1-time (stream)
   "Read TIME from STREAM to RESULT."
   (let* (val1
@@ -1339,8 +1217,6 @@ STREAM will be advanced during read."
                   (int-to-hex-string (car (cdr stream))))))
     (ti::date-standard-date nil (list val1 val2))))
 
-;;; ----------------------------------------------------------------------
-;;;
 (defun ti::mail-pgp-stream-study-enc (length stream)
   "Study the \\='enc packet, which has known LENGTH.
 STREAM is list of ints, minimum 11 integers, 13 is the full \\='enc packet.
@@ -1370,8 +1246,6 @@ Return list:
           rsa-int (cadr stream))
     (list ver msb lsb rsa-alg rsa-int)))
 
-;;; ----------------------------------------------------------------------
-;;;
 (defun ti::mail-pgp-stream-study-signed (length stream)
   "Study the \\='sign packet, which has known LENGTH. STREAM is list of ints.
 
@@ -1420,8 +1294,6 @@ Return list:
     (list ver md-length sig-class timestamp msb lsb
           alg-rsa alg-md5 digest)))
 
-;;; ----------------------------------------------------------------------
-;;;
 (defun ti::mail-pgp-stream-study-pring (length stream)
   "Study the \\='pring packet, which has known LENGTH. STREAM is list of ints.
 
@@ -1452,8 +1324,6 @@ Return list:
 ;;;    (ti::mail-pgp-stream-study-1-key-id stream lsb)
     (list ver timestamp validity msb lsb)))
 
-;;; ----------------------------------------------------------------------
-;;;
 (defun ti::mail-pgp-stream-study (ctb stream)
   "Study PGP data.
 
@@ -1483,8 +1353,6 @@ Return:
      ((eq type 'pring)
       (ti::mail-pgp-stream-study-pring len stream)))))
 
-;;; ----------------------------------------------------------------------
-;;;
 (defun ti::mail-pgp-stream-forward-xpgp ()
   "If there is X-Pgp-Signed field, goto signature stream."
   (let* ((point (ti::mail-pgp-headers-p)))
@@ -1493,8 +1361,6 @@ Return:
       ;;  must exist, this call dies if not found
       (re-search-forward "Signature[ \t]*=[ \t\n\"]+"))))
 
-;;; ----------------------------------------------------------------------
-;;;
 (defun ti::mail-pgp-stream-forward (&optional any)
   "Find PGP data stream block start forward. PGP block must be left flushed.
 
@@ -1564,8 +1430,6 @@ Return:
       (goto-char point))
     ret))
 
-;;; ----------------------------------------------------------------------
-;;;
 (defun ti::mail-pgp-stream-forward-and-study (&optional search any)
   "Find PGP data stream forward and study it.
 
@@ -1603,8 +1467,6 @@ Return:
     (unless ret (goto-char point))     ;Nothing found, return to point
     ret))
 
-;;; ----------------------------------------------------------------------
-;;;
 (defun ti::mail-pgp-stream-forward-info (&optional search any)
   "Find PGP data stream and read some information. Return string.
 
@@ -1636,8 +1498,6 @@ Input:
         (setq ret (format "Public key %s [v%s.x]" time ver)))))
     ret))
 
-;;; ----------------------------------------------------------------------
-;;;
 (defun ti::mail-pgp-stream-data-elt (data elt)
   "Study DATA and Return packet ELT.
 Values:
@@ -1676,8 +1536,6 @@ Values:
 ;;}}}
 ;;{{{ PGP key info
 
-;;; ----------------------------------------------------------------------
-;;;
 (defun ti::mail-pgpk-id-lines-in-region (beg end)
   "Search all lines in BEG END matching pgp -kvc and -kx lines.
 
@@ -1700,8 +1558,6 @@ And return list of those lines."
      (l1 l1)
      (l2 l2))))
 
-;;; ----------------------------------------------------------------------
-;;;
 (defun ti::mail-pgpk-id-0x-lines-in-region (beg end)
   "Call `ti::mail-pgpk-id-lines-in-region' on BEG END, return only Key HEX ids."
   (let* (ret)
@@ -1714,8 +1570,6 @@ And return list of those lines."
          ret)))
     ret))
 
-;;; ----------------------------------------------------------------------
-;;;
 (defun ti::mail-pgpk-public-get-region (&optional beg end buffer relax)
   "Get all keys in BEG END from BUFFER and build list of key data.
 The blocks searched are in following format.
@@ -1795,8 +1649,6 @@ Return list:
 
 ;;; ................................................... &pgp-signature ...
 
-;;; ----------------------------------------------------------------------
-;;;
 (defun ti::mail-pgp-signature-remove (&optional add no-cnv)
   "Remove PGP signature (and headers that have included in there).
 Below, only lines 7 and 8 are left in buffer.
@@ -1859,8 +1711,6 @@ With NO-CNV
           (forward-line 1)
           (delete-region beg (point))))))))
 
-;;; ----------------------------------------------------------------------
-;;;
 (put 'ti::mail-pgp-signature-normal-do-region 'lisp-indent-function 0)
 (put 'ti::mail-pgp-signature-normal-do-region 'edebug-form-spec '(body))
 (defmacro ti::mail-pgp-signature-normal-do-region (&rest body)
@@ -1885,15 +1735,11 @@ This macro does nothing if there is no normal PGP signature."
        (if (null area-end)  (setq area-end nil))
        ,@body)))
 
-;;; ----------------------------------------------------------------------
-;;;
 (defsubst ti::mail-get-article-buffer ()
   "Do `set-buffer' to *Article* if it exists. Return nil if no buffer."
   (if (boundp 'gnus-article-buffer)
       (symbol-value 'gnus-article-buffer)))
 
-;;; ----------------------------------------------------------------------
-;;;
 (put 'ti::mail-with-article-buffer 'lisp-indent-function 0)
 (put 'ti::mail-with-article-buffer 'edebug-form-spec '(body))
 (defmacro ti::mail-with-article-buffer (&rest body)
@@ -1903,8 +1749,6 @@ This macro does nothing if there is no normal PGP signature."
        (with-current-buffer buffer
          ,@body))))
 
-;;; ----------------------------------------------------------------------
-;;;
 (defun ti::mail-pgp-signature-normal-info ()
   "Return signature information from normal PGP format.
 Return:
@@ -1928,8 +1772,6 @@ Return:
        (setq ret (list limits info-list sig-list))))
     ret))
 
-;;; ----------------------------------------------------------------------
-;;;
 (defun ti::mail-pgp-sig-header-info-v2xx ()
   "Return signature information from X-pgp v2.xx headers.
 
@@ -1994,8 +1836,6 @@ Return:
 
     ret))
 
-;;; ----------------------------------------------------------------------
-;;;
 (defun ti::mail-pgp-signature-header-info-v3xx ()
   "Return signature information from X-pgp v3.xx headers.
 
@@ -2022,16 +1862,12 @@ Return list:
       (if info-list
           (list (cons nil nil) info-list sig-list)))))
 
-;;; ----------------------------------------------------------------------
-;;;
 (defun ti::mail-pgp-signature-header-info ()
   "Return X-pgp header info if X-Pgp header exist."
   (if (ti::mail-pgp-v3xx-p)
       (ti::mail-pgp-signature-header-info-v3xx)
     (ti::mail-pgp-sig-header-info-v2xx)))
 
-;;; ----------------------------------------------------------------------
-;;;
 (defun ti::mail-mime-parse-header (header-string &optional downcase)
   "Parse Variable=value HEADER-STRING like and optionally DOWNCASE keywords.
 
@@ -2085,8 +1921,6 @@ Return list:
 
 ;;; ........................................................ &pgp-pkey ...
 
-;;; ----------------------------------------------------------------------
-;;;
 (defun ti::mail-pgp-pkey-read (&optional raw kill-file)
   "Read public key block from current point forward. Point is moved.
 
@@ -2133,8 +1967,6 @@ Input:
 ;;}}}
 ;;{{{ PGP remail
 
-;;; ----------------------------------------------------------------------
-;;;
 (defun ti::mail-pgpr-close ()
   "Close reply block by adding '**' to the end.
 If there already is '**', do nothing."
@@ -2144,8 +1976,6 @@ If there already is '**', do nothing."
     (if (not (re-search-backward "^\\*\\*" nil t))
         (insert "\n**\n"))))
 
-;;; ----------------------------------------------------------------------
-;;;
 (defun ti::mail-pgpr-anonymize-headers (mode &optional no-ins arg1 arg2 hash)
   "Destroy header information according to mode and move it to message body.
 This function does nothing if first line is not header.
@@ -2224,8 +2054,6 @@ Return:
           (error "Invalid mode [%s]" mode)))))
     ret))
 
-;;; ----------------------------------------------------------------------
-;;;
 (defun ti::mail-pgpr-reply-type (property-string)
   "Return remailer reply block type from PROPERTY-STRING.
 The ´post' type is not checked, because it relates to Usenet
@@ -2233,10 +2061,8 @@ and can be mixed with other types."
   (if (string-match "cpunk\\|eric\\|penet" property-string)
       (match-string 0 property-string)))
 
-;;; ----------------------------------------------------------------------
 ;;; used to be: cpunk   Request-Remailing-To
 ;;; but nowadays instructions say "Anon-To"
-;;;
 (defun ti::mail-pgpr-block (mode &optional type email key latent)
   "Return remailer header string defined by mode.
 be sure to have <> in the email, which defaults to `user-mail-address'.
@@ -2286,15 +2112,11 @@ Input:
      (t
       (error "Wrong args '%s' '%s'" mode type )))))
 
-;;; ----------------------------------------------------------------------
-;;;
 (defun ti::mail-pgpr-reply-block (pgp-email)
   "Return reply block header.
 Should be inserted just before PGP crypted message to PGP-EMAIL."
   (format "Reply-Block:\n::\nAnon-To: %s\n\n" pgp-email))
 
-;;; ----------------------------------------------------------------------
-;;;
 (defun ti::mail-pgpr-parse-levien-list (&optional buffer control-list)
   "Parse remailer list finger <remailer-list@kiwi.cs.berkeley.edu>.
 The parsing starts from current point forward.
@@ -2359,8 +2181,6 @@ Return list:
 
 ;;{{{ email addresses
 
-;;; ----------------------------------------------------------------------
-;;;
 (defun ti::mail-email-make-anti-spam-address (email)
   "Make an anti-spam address from EMAIL."
   (let* ((add [ "uce"
@@ -2424,8 +2244,6 @@ Return list:
                (concat "@" this "."))
              domain)))
 
-;;; ----------------------------------------------------------------------
-;;;
 (defun ti::mail-email-domain (string)
   "Return only the top level domain name from email STRING.
 xx.yy..domain.com --> domain.com
@@ -2445,8 +2263,6 @@ xx.domain.co.uk   --> domain.co.uk"
    ((string-match "[^@]+$" string)
     (match-string 0 string))))
 
-;;; ----------------------------------------------------------------------
-;;;
 (defun ti::mail-email-domain-canonilize (list)
   "Canonilize list of addresses to top level domain names only
 E.g.: \\='(\"aa.foo.com\" \"bb.foo.com\") --> \\='(\"foo.com\")"
@@ -2457,8 +2273,6 @@ E.g.: \\='(\"aa.foo.com\" \"bb.foo.com\") --> \\='(\"foo.com\")"
       (add-to-list 'ret domain))
     ret))
 
-;;; ----------------------------------------------------------------------
-;;;
 (defun ti::mail-email-find-region (&optional beg end no-dupes)
   "Find all email addresses within region BEG END (defaults to buffer).
 The email addresses must contain @. Surrounding <> characters are removed.
@@ -2499,8 +2313,6 @@ Input:
             (push elt list)))
       list)))
 
-;;; ----------------------------------------------------------------------
-;;;
 (defun ti::mail-email-from-string (string)
   "Return list of email addresses from STRING.
 The addresses must have @ character. Surrounding <> characters are removed.
@@ -2516,9 +2328,7 @@ If STRING is nil this function does nothing."
 
 ;;; ......................................................... &parsing ...
 
-;;; ----------------------------------------------------------------------
 ;;;   (ti::mail-test-parse-name)
-;;;
 (defun ti::mail-test-parse-name ()
   "This is a test function, do not call from programs.
 
@@ -2563,7 +2373,6 @@ that the old functionality is preserved in spite of changes."
       (setq e1 (nth 0 stat)) (setq e2 (nth 1 stat))
       (read-from-minibuffer (concat "TEST>>" e1 "," e2 "<")))))
 
-;;; ----------------------------------------------------------------------
 ;;; ( ti::mail-parse-name "\"Dr. Volker Zell\" <dr.volker.zell-QHcLZuEGTsvQT0dZR+AlfA@public.gmane.org>")
 (defun ti::mail-parse-name (line)
   "Try to parse various formats of \"From:\" fields.
@@ -2731,8 +2540,6 @@ Return:
         nil
       list)))
 
-;;; ----------------------------------------------------------------------
-;;;
 (defun ti::mail-parse-email (line)
   "Try to parse various formats of \"From:\" field from LINE.
 Input is full LINE, possibly containing \"From:\" keyword.
@@ -2801,8 +2608,6 @@ Return:
         (setq em nil))
     em))
 
-;;; ----------------------------------------------------------------------
-;;;
 (defun ti::mail-parse-received-regexp-list ()
   "Return list of regexps that match \"Received:\" header content.
 The Return list content:
@@ -2905,8 +2710,6 @@ Where the number indicated how many submatches can be read. E.g. Number
      (list 1 (list re-word11
                    re-word12)))))
 
-;;; ----------------------------------------------------------------------
-;;;
 (defun ti::mail-parse-received-line (regexp-list)
   "Parse all \"Received:\" IPs from current line with REGEXP-LIST.
 The point must be placed just after the colon in header:
@@ -2927,8 +2730,6 @@ The -!- indicates the location of point."
               (throw 'done t))))))
     (nreverse candidates)))
 
-;;; ----------------------------------------------------------------------
-;;;
 (defun ti::mail-parse-received-string-smtp (string)
   "Parse SMTP field from \"Received:\" STRING."
   ;; from 111.npgco.com (HELO NAZ-AZPIRE1) (24.121.15.77)
@@ -2951,29 +2752,21 @@ The -!- indicates the location of point."
               ret))
       (nreverse ret))))
 
-;;; ----------------------------------------------------------------------
-;;;
 (defsubst ti::mail-parse-received-string-clean (string)
   "Remove () and newlines from STRING."
   (replace-regexp-in-string "[()\r\n]" "" string))
 
-;;; ----------------------------------------------------------------------
-;;;
 (defsubst ti::mail-parse-received-string-from (string)
   "Parse \"from\" field from \"Received:\" STRING."
   (when (string-match "\\<from[ \t\r\n]+\\([^ \t\r\n]+\\)" string)
     ;;  from cm-24-121-15-77.flagstaff.az.npgco.com (HELO NAZ-AZPIRE1)
     (match-string 1 string)))
 
-;;; ----------------------------------------------------------------------
-;;;
 (defsubst ti::mail-parse-received-string-by (string)
   "Parse \"from\" field from \"Received:\" STRING."
   (when (string-match "\\<by[ \t\r\n]+\\([^ \t\r\n]+\\)" string)
     (match-string 1 string)))
 
-;;; ----------------------------------------------------------------------
-;;;
 (defsubst ti::mail-parse-received-string-smtp-id (string)
   "Parse \"from\" field from \"Received:\" STRING."
   (cond
@@ -2981,22 +2774,17 @@ The -!- indicates the location of point."
      "[ \t\r\n]+id[ \t\r\n]+\\([^ ;\t\r\n]+\\)" string)
     (match-string 1 string))))
 
-;;; ----------------------------------------------------------------------
-;;;
 (defsubst ti::mail-parse-received-string-for (string)
   "Parse \"from\" field from \"Received:\" STRING."
   (when (string-match "\\<for[ \t\r\n]+\\([^ ;\t\r\n]+\\)" string)
     (match-string 1 string)))
 
-;;; ----------------------------------------------------------------------
-;;;
 (defsubst ti::mail-parse-received-string-date (string)
   "Parse \from\" field from \"Received:\" STRING."
   (when (string-match
          "^.+;[ \t\r\n]+\\(.+[^ \t\r\n]\\)" string)
     (match-string 1 string)))
 
-;;; ----------------------------------------------------------------------
 ;;; (ti::mail-parse-date-string "Thu, 18 Jul 1996 12:18:06 -0600")
 ;;; (ti::mail-parse-date-string "21 Aug 2003 20:41:15 -0000")
 (defun ti::mail-parse-date-string (date)
@@ -3065,7 +2853,6 @@ Returns list;
      (match-string 6 date)
      (match-string 7 date)))))
 
-;;; ----------------------------------------------------------------------
 ;;; (ti::mail-parse-date-string-iso8601 "Thu, 18 Jul 1996 12:18:06 -0600")
 (defun ti::mail-parse-date-string-iso8601 (date &optional tz)
   "Parse DATE. See supported values in `ti::mail-parse-date-string'.
@@ -3089,8 +2876,6 @@ If TZ is non-nil, add timezone information to the end."
                                     (or tz "")
                                   ""))))
 
-;;; ----------------------------------------------------------------------
-;;;
 (defun ti::mail-parse-received-string (string)
   "Parse \"Received:\" Header STRING.
 From this STRING
@@ -3120,8 +2905,6 @@ References:
    (cons 'for     (ti::mail-parse-received-string-for  string))
    (cons 'date    (ti::mail-parse-received-string-date string))))
 
-;;; ----------------------------------------------------------------------
-;;;
 (defun ti::mail-parse-received (&optional not-matching no-dupes)
   "Search all \"Received:\" lines. Read domains by \"from\" and \"by\".
 Duplicate entries are not added.
@@ -3199,8 +2982,6 @@ Received: from mail.msss.v.com [atl.asd.com [234.454.54]]
           (push ip-elt ret)))
     (nreverse ret)))
 
-;;; ----------------------------------------------------------------------
-;;;
 (put 'ti::with-mail-received-header 'edebug-form-spec '(body))
 (put 'ti::with-mail-received-header 'lisp-indent-function 1)
 (defmacro ti::with-mail-received-header (string &rest body)
@@ -3237,8 +3018,6 @@ References:
 			  (date     (cdr (assq 'date received-header-data))))
        ,@body)))
 
-;;; ----------------------------------------------------------------------
-;;;
 (defun ti::mail-whois-parse-cleanup (string)
   "Remove indentation and extra whitescape from STRING."
   ;;  Remove indentation
@@ -3247,8 +3026,6 @@ References:
     "[\r\n][ \t]+" "\n"
     (replace-regexp-in-string "[ \t][ \t]+" " " string))))
 
-;;; ----------------------------------------------------------------------
-;;;
 (defun ti::mail-whois-parse-paragraph (regexp &optional end-regexp)
   "Whois: Parse pragraph for the first REGEXP to END-REGEXP.
 See `ti::mail-whois-parse'."
@@ -3261,8 +3038,6 @@ See `ti::mail-whois-parse'."
       (ti::mail-whois-parse-cleanup
        (buffer-substring beg (1- (point)))))))
 
-;;; ----------------------------------------------------------------------
-;;;
 (defun ti::mail-whois-parse-referral ()
   "Parse referral if any. See `ti::mail-whois-parse'."
   (let ((point (point)))
@@ -3280,8 +3055,6 @@ See `ti::mail-whois-parse'."
             nil 'noerr))
       (match-string 1)))))
 
-;;; ----------------------------------------------------------------------
-;;;
 (defun ti::mail-whois-parse-email ()
   "Whois: Parse unique email addresses from buffer.
 See `ti::mail-whois-parse'."
@@ -3337,8 +3110,6 @@ See `ti::mail-whois-parse'."
     ;; preserve order
     (nreverse ret)))
 
-;;; ----------------------------------------------------------------------
-;;;
 (defsubst ti::mail-whois-parse-paragraph-end-condition ()
   "Whois parse. See `ti::mail-whois-parse'."
   (concat
@@ -3346,24 +3117,18 @@ See `ti::mail-whois-parse'."
    "\\|.*last update"
    "\\|.*servers in listed order\\)"))
 
-;;; ----------------------------------------------------------------------
-;;;
 (defun ti::mail-whois-parse-registrant-1 ()
   "See `ti::mail-whois-parse-registrant'."
   (ti::mail-whois-parse-paragraph
    "^[ \t]*Registra\\(r\\|nt\\):.*[\r\n]+[ \t]*"
    (ti::mail-whois-parse-paragraph-end-condition)))
 
-;;; ----------------------------------------------------------------------
-;;;
 (defun ti::mail-whois-parse-registrant-organization ()
   "See `ti::mail-whois-parse-registrant'."
   (ti::mail-whois-parse-paragraph
    "^[ \t]*Organi[zs]ation:[ \t]*[\r\n]+[ \t]*"
    (ti::mail-whois-parse-paragraph-end-condition)))
 
-;;; ----------------------------------------------------------------------
-;;;
 (defun ti::mail-whois-parse-registrant-organization-2 ()
   "See `ti::mail-whois-parse-registrant'."
   ;; OrgName:    AT&T WorldNet Services
@@ -3382,8 +3147,6 @@ See `ti::mail-whois-parse'."
    "^OrgName:.*[\r\n]OrgID:"
    "^[ \t]*$"))
 
-;;; ----------------------------------------------------------------------
-;;;
 (defun ti::mail-whois-parse-registrant-domain ()
   "See `ti::mail-whois-parse-registrant'."
   ;; domain:  AHA.RU
@@ -3406,8 +3169,6 @@ See `ti::mail-whois-parse'."
     "\\|^Licensee:[ \t]*$")
    "^[ \t]*$"))
 
-;;; ----------------------------------------------------------------------
-;;;
 (defun ti::mail-whois-parse-registrant ()
   "Whois: Parse registrant from buffer. See `ti::mail-whois-parse'."
   (let ((point (point))
@@ -3423,8 +3184,6 @@ See `ti::mail-whois-parse'."
           (when (setq ret (search-my func))
             (throw 'break ret)))))))
 
-;;; ----------------------------------------------------------------------
-;;;
 (defun ti::mail-whois-parse-tech ()
   "Whois: Parse tech from buffer. See `ti::mail-whois-parse'."
   (let ((point (point)))
@@ -3437,8 +3196,6 @@ See `ti::mail-whois-parse'."
           (ti::mail-whois-parse-cleanup
            (match-string 1)))))))
 
-;;; ----------------------------------------------------------------------
-;;;
 (defun ti::mail-whois-parse-zone ()
   "Whois: Parse zone from buffer. See `ti::mail-whois-parse'."
   (let ((point (point)))
@@ -3451,14 +3208,10 @@ See `ti::mail-whois-parse'."
           (ti::mail-whois-parse-cleanup
            (match-string 1)))))))
 
-;;; ----------------------------------------------------------------------
-;;;
 ;;; It the response is like this, there is no information
 ;;; about the created, expires
-;;;
 ;;;     # ARIN WHOIS database, last updated 2003-08-25 19:15
 ;;;     # Enter ? for additional hints on searching ARIN's WHOIS database.
-;;;
 (defun ti::mail-whois-parse-records ()
   "Whois: Parse records from buffer. See `ti::mail-whois-parse'.
 Values examined are: expires, created and updated.
@@ -3584,8 +3337,6 @@ Note: this function relies on dynamically bound values."
 	      (throw 'break nil))))))
     ret))
 
-;;; ----------------------------------------------------------------------
-;;;
 (defun ti::mail-whois-parse-servers ()
   "Whois: Parse servers from buffer. See `ti::mail-whois-parse'."
   (when (re-search-forward "^[ \t]*Domain servers" nil t)
@@ -3628,8 +3379,6 @@ Note: this function relies on dynamically bound values."
                   ret)))
         ret))))
 
-;;; ----------------------------------------------------------------------
-;;;
 (defun ti::mail-whois-parse-admin ()
   "Whois: Parse Administrative Contact from buffer.
 See `ti::mail-whois-parse'."
@@ -3649,8 +3398,6 @@ See `ti::mail-whois-parse'."
       (ti::mail-whois-parse-cleanup
        (match-string 1))))))
 
-;;; ----------------------------------------------------------------------
-;;;
 (defun ti::mail-whois-error-p (string)
   "Check if Whois call failed by examining STRING"
   (not (string-match
@@ -3679,8 +3426,6 @@ See `ti::mail-whois-parse'."
          "\\|^# ARIN WHOIS database")
         string)))
 
-;;; ----------------------------------------------------------------------
-;;;
 (defun ti::mail-whois-parse (string)
   "Parse whois output STRING.
 
@@ -3741,8 +3486,6 @@ References:
        (cons 'records     records)
        (cons 'servers     servers)))))
 
-;;; ----------------------------------------------------------------------
-;;;
 (put 'ti::with-mail-whois 'edebug-form-spec '(body))
 (put 'ti::with-mail-whois 'lisp-indent-function 1)
 (defmacro ti::with-mail-whois (string &rest body)
@@ -3772,16 +3515,12 @@ References:
 			  (servers    (cdr (assq 'servers    whois-data))))
        ,@body)))
 
-;;; ----------------------------------------------------------------------
-;;;
 ;;; Registrant:
 ;;; David L. Dahl (DDAHL-DOM)
 ;;;    PO BOX
 ;;;    Chicago, IL 60657
 ;;;    US
-;;;
 ;;;    Domain Name: DDAHL.COM
-;;;
 ;;;    Administrative Contact:
 ;;;       Dahl, David  (DD4553)              ddahl@DDAHL.COM
 ;;;       3450 N. Lakeshore Dr. #2605
@@ -3794,18 +3533,13 @@ References:
 ;;;       Dulles, VA 20166
 ;;;       US
 ;;;       1-888-642-9675 fax: 123 123 1234
-;;;
 ;;;    Record expires on 31-Mar-2005.
 ;;;    Record created on 18-Sep-2002.
 ;;;    Database last updated on 23-Aug-2003 04:47:44 EDT.
-;;;
 ;;;    Domain servers in listed order:
-;;;
 ;;;    NS1.GALLERYHOSTING.NET       209.19.90.117
 ;;;    GHZ.DDAHL.COM                209.19.90.118
 ;;;    WWW.CONDOSYSTEMS.COM         64.202.114.20
-;;;
-;;;
 (defun ti::mail-whois (site &optional options verb bin)
   "Call `whois' and return results.
 Web interface is at http://www.internic.net/whois.html
@@ -3842,8 +3576,6 @@ Input:
             (message "TinylibMail: whois %s ...done." site))
         (buffer-string)))))
 
-;;; ----------------------------------------------------------------------
-;;;
 (defun ti::mail-nslookup-parse ()
   "Parse nslookup output in current buffer forward.
 
@@ -3881,28 +3613,19 @@ Return list:
     (if ip-list
         (list name ip-list))))
 
-;;; ----------------------------------------------------------------------
-;;;
 ;;;  % nslookup 204.253.213.3
 ;;;  Name Server:  example.com
 ;;;  Address:  131.228.134.50
-;;;
 ;;;  Name:    librum.sourcery.com
 ;;;  Address:  204.253.213.3
-;;;
 ;;;  Can also have string:
-;;;
 ;;;  *** No address information is available for "mktg@inet.com"
-;;;
 ;;;  NOTE: There may be "Addresses:"
 ;;;  =========================================================
-;;;
 ;;;  Server:  ns3.tpo.fi
 ;;;  Address:  212.63.10.250
-;;;
 ;;;  Name:    yahoo.com
 ;;;  Addresses:  216.115.109.6, 216.115.109.7
-;;;
 (defun ti::mail-nslookup (ip &optional options verb bin)
   "Run `nslookup' for IP.
 
@@ -3954,8 +3677,6 @@ If nslookup fails, the return value is list: (ORIG-IP nil)"
         (ti::pmin)
         (ti::mail-nslookup-parse)))))
 
-;;; ----------------------------------------------------------------------
-;;;
 (put 'ti::with-mail-nslookup 'edebug-form-spec '(body))
 (put 'ti::with-mail-nslookup 'lisp-indent-function 1)
 (defmacro ti::with-mail-nslookup (data &rest body)
@@ -3970,8 +3691,6 @@ The following variables are available during looping within BODY:
      (dolist (ip-found ip-list)
        ,@body)))
 
-;;; ----------------------------------------------------------------------
-;;;
 (defun ti::mail-dig (ip &optional options verb bin)
   "Run `dig' for IP.
 
@@ -4026,8 +3745,6 @@ If nslookup fails, the return value is (ORIG-IP . nil)"
 
 ;;; ............................................................ &misc ...
 
-;;; ----------------------------------------------------------------------
-;;;
 (defun ti::mail-get-buffer  (&optional mode-list)
   "Return open mail buffer if one exists.
 MODE-LIST is the search order precedence. It can take values
@@ -4064,8 +3781,6 @@ Example:
           (throw 'break nil))))
     buffer))
 
-;;; ----------------------------------------------------------------------
-;;;
 (defun ti::mail-signature-insert-break (&optional point)
   "Insert RFC signature break to current point or POINT if no sig break exist.
 According to RFC there must be \"-- \\n\" before signature. The extra space
@@ -4077,8 +3792,6 @@ We try to find this string forward and it is not there we add one."
     (if (null (re-search-forward "^-- \n" nil t))
         (insert "-- \n"))))
 
-;;; ----------------------------------------------------------------------
-;;;
 (defun ti::mail-yank (&optional prefix)
   "Yank message to current point and add optional PREFIX. GNUS/RMAIL."
   (let* (p
@@ -4109,8 +3822,6 @@ We try to find this string forward and it is not there we add one."
       (if prefix
           (string-rectangle p (point-max)  prefix)))))
 
-;;; ----------------------------------------------------------------------
-;;;
 (defun ti::mail-trim-buffer ()
   "Trim email message so that there are no trailing white spaces.
 - at the beginning of message
@@ -4172,8 +3883,6 @@ Return
   (and field-value
        (length (ti::string-match "^[^ ]*\\( +\\)" 1 field-value))))
 
-;;; ----------------------------------------------------------------------
-;;;
 (defun ti::mail-field-start (field-re &optional move max)
   "Return starting point of FIELD-RE or nil. Optionally MOVE to it.
 
@@ -4198,8 +3907,6 @@ Input:
         (goto-char ret))
     ret))
 
-;;; ----------------------------------------------------------------------
-;;;
 (defun ti::mail-next-field-start (&optional move back max)
   "Return starting point of next field or nil. Optionally move to field.
 
@@ -4273,8 +3980,6 @@ Return:
 
     ret))
 
-;;; ----------------------------------------------------------------------
-;;;
 (defsubst ti::mail-field-string-wrap (string)
   "Wrap i.e. delete embedded newlines in string.
 
@@ -4287,14 +3992,11 @@ X-My: one line
 X-My: one line two line three line."
   (replace-regexp-in-string "[\r\n][ \t]+" " " string))
 
-;;; ----------------------------------------------------------------------
-;;;
 (defsubst ti::mail-field-string-p (string)
   "Check if string starts with Field:
 Subexpression 1 contains field name and 2 contains rest."
   (string-match "^\\([A-Z][^:]+\\):\\(.*\\)" string))
 
-;;; ----------------------------------------------------------------------
 ;;;FIXME:
 (defun ti::mail-field-line-p ()
   "Return `field' name if the bginning of line contains \"NNNN:\"."
@@ -4304,8 +4006,6 @@ Subexpression 1 contains field name and 2 contains rest."
     (when (ti::mail-field-string-p str)
       (match-string 1 str))))
 
-;;; ----------------------------------------------------------------------
-;;;
 (defun ti::mail-field-read-line-at-point (&optional wrap)
   "Read whole header field at point. Field may continue in separate line.
 Point -!- must be at the beginning line of field.
@@ -4323,8 +4023,6 @@ If WRAP is non-nil, call `ti::mail-field-string-wrap'."
             (ti::mail-field-string-wrap line)
           line)))))
 
-;;; ----------------------------------------------------------------------
-;;;
 (defun ti::mail-field-read-fuzzy (&optional wrap)
   "Read whole header field at point.
 The point can be anywhere in the field.
@@ -4335,7 +4033,6 @@ If WRAP is non-nil, call `ti::mail-field-string-wrap'."
       (ti::mail-next-field-start 'move 'back))
     (ti::mail-field-read-line-at-point wrap)))
 
-;;; ----------------------------------------------------------------------
 ;;;FIXME:
 (defun ti::mail-current-field-name  ()
   "Return name of field at current point or nil."
@@ -4347,8 +4044,6 @@ If WRAP is non-nil, call `ti::mail-field-string-wrap'."
       (ti::mail-next-field-start 'move 'back))
     (ti::mail-field-line-p)))
 
-;;; ----------------------------------------------------------------------
-;;;
 (defun ti::mail-field-email-send-p (&optional header-regexp)
   "Check if point is at field To, Cc or Bcc"
   (let ((field (ti::mail-current-field-name)))
@@ -4359,23 +4054,17 @@ If WRAP is non-nil, call `ti::mail-field-string-wrap'."
                 field))
       field)))
 
-;;; ----------------------------------------------------------------------
-;;;
 (defun ti::mail-field-email-address-p ()
   "Check if point is at field To, Cc, Bcc, From, Sender."
   (ti::mail-field-email-send-p
    "^\\(to\\|cc\\|bcc\\|from\\|sender\\)$"))
 
-;;; ----------------------------------------------------------------------
-;;;
 (defun ti::mail-kill-field-in-body (list)
   "Kill LIST of field that are inserted into body of message."
   (ti::narrow-safe (ti::mail-text-start) (point-max)
     (dolist (header list)
       (ti::mail-kill-field header))))
 
-;;; ----------------------------------------------------------------------
-;;;
 (defun ti::mail-kill-field (field-re &optional replace-str)
   "Delete header field. Remember to supply Anchor '^' in FIELD-RE.
 
@@ -4409,8 +4098,6 @@ Return:
             (delete-region (point) end)
             t))))))
 
-;;; ----------------------------------------------------------------------
-;;;
 (defun ti::mail-get-field-1 (field)
   "Read FIELD by finding regexp matching '^FIELD:'.
 Starting searching from the beginning of buffer. You are encouraged to call
@@ -4430,13 +4117,11 @@ you can use this function safely."
                      end (ti::mail-next-field-start)))
           (buffer-substring beg (1- end))))))
 
-;;; ----------------------------------------------------------------------
 ;;; - This is almost the same as mail-utils.el/mail-fetch-field,
 ;;;   but offers more control. It can get citated fields too, if
 ;;;   ANY parameter is non-nil.
 ;;; - And it returns _strict_ content of the field, fetch-field strips
 ;;;   spaces away.
-;;;
 (defun ti::mail-get-field (field &optional any mode)
   "Return field content.
 
@@ -4476,15 +4161,12 @@ Return:
       (setq ret nil))
     ret))
 
-;;; ----------------------------------------------------------------------
 ;;; - If you want simple filed adding to your mail, then have a look
 ;;;   at this instead:
-;;;
 ;;;     (defconst my-mail-info-string "Emacs RMAIL in 19.28")
 ;;;     (setq mail-default-headers
 ;;;           (concat
 ;;;            "X-info: " my-mail-info-string "\n"))
-;;;
 (defun ti::mail-add-field (field text &optional look-field mode replace)
   "Add FIELD and puts TEXT into it.
 If field already exist, replaces field text.
@@ -4529,8 +4211,6 @@ Return:
           (insert text))
         t)))))
 
-;;; ----------------------------------------------------------------------
-;;;
 (defun ti::mail-add-to-field-string (field string &optional look-field sep )
   "Find FIELD and add STRING to the. Field is created if it does not exist.
 
@@ -4554,8 +4234,6 @@ Input:
         (skip-chars-backward " \n\t")
         (insert sep string)))))
 
-;;; ----------------------------------------------------------------------
-;;;
 (defun ti::mail-kill-field-elt (re &optional field)
   "Kill all elts matching RE from FIELD, which defaults to cc.
 Elements are supposed to be separated by commas.
@@ -4614,10 +4292,8 @@ Example:
         ;;
         (ti::mail-kill-field (concat "^" field))))))
 
-;;; ----------------------------------------------------------------------
 ;;; - This is mainly for converting your mail to anon post by
 ;;;   removing any headers you might have added.
-;;;
 (defun ti::mail-kill-non-rfc-fields (&optional list)
   "Kill all non RFC fields unless LIST (HEADER-NAME-SYMBOL .. ) list is given.
 
@@ -4641,8 +4317,6 @@ References
     (dolist (elt ptr)
       (insert elt "\n"))))
 
-;;; ----------------------------------------------------------------------
-;;;
 (defun ti::mail-get-all-email-addresses
   (&optional field-list abbrev-alist no-expand)
   "Return all email addresses from FIELD-LIST.
@@ -4699,8 +4373,6 @@ Return list:
           (kill-buffer buffer)))
     (nreverse ret)))
 
-;;; ----------------------------------------------------------------------
-;;;
 (defun ti::mail-set-recipients (to-list &optional cc-list cc-flag)
   "Compose current mail message to TO-LIST and add info about CC-LIST.
 
@@ -4734,8 +4406,6 @@ Input:
 
 ;;; ............................................................ &News ...
 
-;;; ----------------------------------------------------------------------
-;;;
 (defun ti::mail-news-buffer-p ()
   "Check if current buffer is news post, followup or the like."
   (interactive)
@@ -4751,8 +4421,6 @@ Input:
       (ti::pmin)
       (re-search-forward "Newsgroups\\|References:\\|Gcc:" nil t)))))
 
-;;; ----------------------------------------------------------------------
-;;;
 (defun ti::mail-article-regexp-read-line (re &optional level)
   "Switch to article buffer; match RE at LEVEL and return match."
   (let (line)
@@ -4764,13 +4432,11 @@ Input:
          (setq line (match-string level))))
     line))
 
-;;; ----------------------------------------------------------------------
 ;;; - This is useful if you use same hook for both
 ;;;   regular mail posting AND for gnuis posting.
 ;;; - It makes it possible to decicede inside hook, which post
 ;;;   type this is. Eg. setting extra headers for NEWS and not
 ;;;   different for regular Mail
-;;;
 (defun ti::mail-news-reply-p ()
   "Return type of message being composed.
 This function is meaningful only when you use it inside
@@ -4810,14 +4476,10 @@ Return:
 
 ;;; ............................................................ &anon ...
 
-;;; ----------------------------------------------------------------------
-;;;
 (defun ti::mail-anon-penet-p (email)
   "Check if EMAIL is penet anon address."
   (string-match "[an][an][0-9]+@.*penet.fi" email))
 
-;;; ----------------------------------------------------------------------
-;;;
 (defun ti::mail-anon-penet-to-p ()
   "Check if the TO: field contain anon.penet.fi address.
 
@@ -4828,8 +4490,6 @@ Return:
     (if (and to (ti::mail-anon-penet-p to))
         to nil)))
 
-;;; ----------------------------------------------------------------------
-;;;
 (defun ti::mail-nymserver-email-convert (email &optional na-mode)
   "Convert penet EMAIL address.
 
@@ -4864,42 +4524,30 @@ If NA-MODE is non-nil:
 
 ;;; ............................................................ &mime ...
 
-;;; ----------------------------------------------------------------------
-;;;
 (defsubst ti::mail-mime-tm-featurep-p  ()
   "TM. Check if MIME is loaded."
   (and (featurep 'mime-setup)
        (not (featurep 'semi-setup))))
 
-;;; ----------------------------------------------------------------------
-;;;
 (defsubst ti::mail-mime-semi-featurep-p  ()
   "SEMI. Check if MIME is loaded."
   (featurep 'semi-setup))
 
-;;; ----------------------------------------------------------------------
-;;;
 (defsubst ti::mail-mime-feature-p  ()
   "MIME. Check if TM/ or SEMI is available."
   (or (ti::mail-mime-tm-featurep-p)
       (ti::mail-mime-semi-featurep-p)))
 
-;;; ----------------------------------------------------------------------
-;;;
 (defsubst ti::mail-mime-tm-edit-p ()
   "TM. Check if mime edit is active."
   (and (boundp 'mime/editor-mode-flag)
        (symbol-value 'mime/editor-mode-flag)))
 
-;;; ----------------------------------------------------------------------
-;;;
 (defsubst ti::mail-mime-semi-edit-p ()
   "SEMI. Check if mime edit is active."
   (and (boundp 'mime-edit-mode-flag)
        (symbol-value 'mime-edit-mode-flag)))
 
-;;; ----------------------------------------------------------------------
-;;;
 (put 'ti::mail-mime-tm-edit-mode-macro 'lisp-indent-function 0)
 (put 'ti::mail-mime-tm-edit-mode-macro 'edebug-form-spec '(body))
 (defmacro ti::mail-mime-tm-edit-mode-macro  (&rest body)
@@ -4907,8 +4555,6 @@ If NA-MODE is non-nil:
   `(when (and (ti::mail-mime-tm-featurep-p) (ti::mail-mime-tm-edit-p))
      ,@body))
 
-;;; ----------------------------------------------------------------------
-;;;
 (put 'ti::mail-mime-semi-edit-mode-macro 'lisp-indent-function 0)
 (put 'ti::mail-mime-semi-edit-mode-macro 'edebug-form-spec '(body))
 (defmacro ti::mail-mime-semi-edit-mode-macro  (&rest body)
@@ -4916,8 +4562,6 @@ If NA-MODE is non-nil:
   `(when (and (ti::mail-mime-semi-featurep-p) (ti::mail-mime-semi-edit-p))
      ,@body))
 
-;;; ----------------------------------------------------------------------
-;;;
 (put 'ti::mail-mime-funcall-0-macro 'lisp-indent-function 1)
 (put 'ti::mail-mime-funcall-0-macro 'edebug-form-spec '(body))
 (defmacro ti::mail-mime-funcall-0-macro (func-tm func-semi)
@@ -4929,8 +4573,6 @@ If NA-MODE is non-nil:
     ((and (ti::mail-mime-semi-featurep-p) (ti::mail-mime-semi-edit-p))
      (ti::funcall ,func-semi))))
 
-;;; ----------------------------------------------------------------------
-;;;
 (put 'ti::mail-mime-funcall-2-macro 'lisp-indent-function 3)
 (put 'ti::mail-mime-funcall-2-macro 'edebug-form-spec '(body))
 (defmacro ti::mail-mime-funcall-2-macro (func-tm func-semi arg1 arg2)
@@ -4943,8 +4585,6 @@ If NA-MODE is non-nil:
      (ti::funcall ,func-semi ,arg1 ,arg2)
      t)))
 
-;;; ----------------------------------------------------------------------
-;;;
 (defun ti::mail-mime-turn-on-mode ()
   "Turn on MIME mode. Do nothing if mime is not available.
 Return t if mime was supported."
@@ -4959,8 +4599,6 @@ Return t if mime was supported."
       (ti::funcall 'mime-edit-mode))
     t)))
 
-;;; ----------------------------------------------------------------------
-;;;
 (defun ti::mail-mime-turn-off-mode ()
   "Turn off MIME mode. Do nothing if mime is not available.
 Return t if mime was supported."
@@ -4975,8 +4613,6 @@ Return t if mime was supported."
       (ti::funcall 'mime-edit-exit))
     t)))
 
-;;; ----------------------------------------------------------------------
-;;;
 (defun ti::mail-mime-sign-region (&optional beg end)
   "MIME. Enclose region BEG END as signed.
 Input:
@@ -4996,8 +4632,6 @@ nil  if mime is not available.
    beg
    end))
 
-;;; ----------------------------------------------------------------------
-;;;
 (defun ti::mail-mime-encrypt-region (&optional beg end)
   "MIME. Enclose region BEG END as encrypted
 Input:
@@ -5017,8 +4651,6 @@ nil  if mime is not available.
    beg
    end))
 
-;;; ----------------------------------------------------------------------
-;;;
 (put 'ti::mail-mime-tm-split-macro 'lisp-indent-function 0)
 (put 'ti::mail-mime-tm-split-macro 'edebug-form-spec '(body))
 (defmacro ti::mail-mime-tm-split-macro (&rest body)
@@ -5033,8 +4665,6 @@ You have to use variables `max' and `parts' otherwise you don't need this macro.
            (setq split nil))            ; No-op Bytecomp silencer
        ,@body)))
 
-;;; ----------------------------------------------------------------------
-;;;
 (defun ti::mail-mime-maybe-p ()
   "Check if buffer possibly contain MIME sections.
 if there is boundary string in header or if the TM -mime tags
@@ -5049,8 +4679,6 @@ if there is boundary string in header or if the TM -mime tags
           ;;   MIME (ti::mail-mime-p).
           (ti::re-search-check (concat "^" (regexp-quote "--[["))))))))
 
-;;; ----------------------------------------------------------------------
-;;;
 (defun ti::mail-mime-p ()
   "Check if buffer has mime message. You probably want `ti::mail-mime-maybe-p'.
 It must contain boundary field in the headers and the boundary
@@ -5077,9 +4705,7 @@ satisfied."
         (forward-line 1)
         (re-search-forward re nil t)))))
 
-;;; ----------------------------------------------------------------------
 ;;;FIXME: not tested
-;;;
 (defun ti::mail-mime-qp-decode(from to)
   "Mime. Decode quoted-printable from region between FROM and TO."
   (save-excursion
@@ -5095,9 +4721,7 @@ satisfied."
              (delete-char 2))
             ((message "Malformed MIME quoted-printable message"))))))
 
-;;; ----------------------------------------------------------------------
 ;;; (add-hook 'vm-select-message-hook 'ti::mail-mime-prepare-qp)
-;;;
 (defun ti::mail-qp-mime-prepare ()
   "Mime. Unquote quoted-printable from mail buffers.
 Searches for tag:
@@ -5124,15 +4748,11 @@ content-transfer-encoding: quoted-printable"
 
 ;;; .................................................... &mail-sending ...
 
-;;; ----------------------------------------------------------------------
-;;;
 (defun ti::mail-plugged-p ()
   "Check if computer is on-line. This function relies on Gnus."
   (when (boundp 'gnus-plugged)
     (symbol-value 'gnus-plugged)))
 
-;;; ----------------------------------------------------------------------
-;;;
 (defun ti::mail-sendmail-reset-send-hooks ()
   "Make `mail-send-hook' et al. buffer local and set to nil."
   (dolist (sym '(mail-send-hook
@@ -5142,8 +4762,6 @@ content-transfer-encoding: quoted-printable"
       (add-hook sym 'ignore nil 'local)
       (set sym nil))))
 
-;;; ----------------------------------------------------------------------
-;;;
 (put 'ti::mail-sendmail-pure-env-macro 'lisp-indent-function 0)
 (put 'ti::mail-sendmail-pure-env-macro 'edebug-form-spec '(body))
 (defmacro ti::mail-sendmail-pure-env-macro (&rest body)
@@ -5163,8 +4781,6 @@ content-transfer-encoding: quoted-printable"
      (if mail-default-reply-to  (setq mail-default-reply-to     nil))
      ,@body))
 
-;;; ----------------------------------------------------------------------
-;;;
 (put 'ti::mail-sendmail-macro-1 'lisp-indent-function 3)
 (put 'ti::mail-sendmail-macro-1 'edebug-form-spec '(body))
 (defmacro ti::mail-sendmail-macro-1 (to subject send &rest body)
@@ -5183,8 +4799,6 @@ content-transfer-encoding: quoted-printable"
       (when ,send
         (mail-send-and-exit nil)))))
 
-;;; ----------------------------------------------------------------------
-;;;
 (put 'ti::mail-sendmail-macro 'lisp-indent-function 3)
 (put 'ti::mail-sendmail-macro 'edebug-form-spec '(body))
 (defmacro ti::mail-sendmail-macro (to subject send &rest body)
@@ -5219,8 +4833,6 @@ Note:
 
 ;;; ......................................................... &abbrevs ...
 
-;;; ----------------------------------------------------------------------
-;;;
 (defun ti::mail-abbrev-table  ()
   "XEmacs and Emacs Compatibility, Return mail abbrev hash table."
   (ti::package-require-mail-abbrevs)
@@ -5246,8 +4858,6 @@ Note:
              (error err)))
           mail-aliases)))))
 
-;;; ----------------------------------------------------------------------
-;;;
 (defun ti::mail-abbrev-expand-mail-aliases  (beg end &optional alias-alist)
   "Expand aliases in region BEG END.
 Please Cache results from `ti::mail-abbrev-get-alist' and
@@ -5290,9 +4900,7 @@ reuild from scratch."
                   (insert "\n\t")
                   (beginning-of-line)))))))))))
 
-;;; ----------------------------------------------------------------------
 ;;; See mailabbrev.el how to build your abbrevs.
-;;;
 (defun ti::mail-abbrev-get-alist  (&optional expand-until)
   "Return alist of all `mail-abbrevs'.
 Build the abbrev table from your ~/.mailrc with command
@@ -5353,8 +4961,6 @@ Return alist:
           (kill-buffer tmp))))) ;; cond
     exp-list))
 
-;;; ----------------------------------------------------------------------
-;;;
 (defun ti::mail-mail-abbrevs-email-list  (&optional abbrev-alist)
   "Build email list of abbrevs; optionally use ABBREV-ALIST.
 Only entries in this format in ~/.mailrc are returned. There must be

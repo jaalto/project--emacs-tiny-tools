@@ -1,5 +1,3 @@
-;; -*- enable-local-variables: :all;  -*-
-
 ;;; tiny-admin-util.el --- Tiny Tools administrative utilities for maintainer
 
 ;; This file is not part of Emacs
@@ -122,8 +120,6 @@ This variable is list of REGEXPS.")
   "\\(\\.\\(bzr\\|hg\\|git\\|svn\\|mtn\\)\\|CVS\\|RCS\\|_MTN\\|\\.\\.?\\)$"
   "Regexp to ignore directories.")
 
-;;; ----------------------------------------------------------------------
-;;;
 (defun tiny-setup-directory-list (dir)
   "Return all directories under DIR."
   (let (list)
@@ -133,8 +129,6 @@ This variable is list of REGEXPS.")
         (push elt list)))
     list))
 
-;;; ----------------------------------------------------------------------
-;;;
 (put 'tiny-setup-directory-recursive-macro 'lisp-indent-function 1)
 (put 'tiny-setup-directory-recursive-macro 'edebug-form-spec '(body))
 (defmacro tiny-setup-directory-recursive-macro (directory &rest body)
@@ -163,8 +157,6 @@ Following variables are set during BODY:
 ;;
 ;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;
 
-;;; ----------------------------------------------------------------------
-;;;
 (defun tiny-setup-time-difference (a b)
   "Calculate difference between times A and B.
 The input must be in form of `(current-time)'
@@ -179,8 +171,6 @@ E.g. if you want to calculate days; you'd do
                (float s1) (* 0.0000001 s2))))
   (- a b))
 
-;;; ----------------------------------------------------------------------
-;;;
 (defvar tiny-setup-:time nil)
 (put 'tiny-setup-time-this 'lisp-indent-function 0)
 (put 'tiny-setup-time-this 'edebug-form-spec '(body))
@@ -193,8 +183,6 @@ E.g. if you want to calculate days; you'd do
      (setq tiny-setup-:time
            (tiny-setup-time-difference tmp-time-B tmp-time-A))))
 
-;;; ----------------------------------------------------------------------
-;;;
 (put 'tiny-setup-with-file-env-macro 'lisp-indent-function 0)
 (put 'tiny-setup-with-file-env-macro 'edebug-form-spec '(body))
 (defmacro tiny-setup-with-file-env-macro (&rest body)
@@ -229,8 +217,6 @@ E.g. if you want to calculate days; you'd do
          (setq backup-inhibited t))
      ,@body))
 
-;;; ----------------------------------------------------------------------
-;;;
 (defun tiny-setup-time-load-file (file)
   "Time lisp FILE loading."
   (interactive "fload file and time it: ")
@@ -238,8 +224,6 @@ E.g. if you want to calculate days; you'd do
    (load file))
   (message "Tiny: Timing %-15s took %12f secs" file tiny-setup-:time))
 
-;;; ----------------------------------------------------------------------
-;;;
 (defun tiny-setup-test-load-time-libraries ()
   "Time package load times."
   (interactive)
@@ -259,8 +243,6 @@ E.g. if you want to calculate days; you'd do
                (tiny-setup-time-difference time-b time-a))
       (display-buffer "*Messages*"))))
 
-;;; ----------------------------------------------------------------------
-;;;
 (defun tiny-setup-test-load-all ()
   "Load each package to check against errors."
   (interactive)
@@ -281,16 +263,12 @@ E.g. if you want to calculate days; you'd do
 ;;
 ;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;
 
-;;; ----------------------------------------------------------------------
-;;;
 (defun tiny-setup-directory-last (dir)
   "Return last directory name in DIR. /dir1/dir2/ -> dir2."
   (if (string-match "[/\\]\\([^/\\]+\\)[/\\]?$" dir)
       (match-string 1 dir)
     ""))
 
-;;; ----------------------------------------------------------------------
-;;;
 (defun tiny-setup-directory-to-file-name (dir template)
   "Make file name from NAME and TEMPLATE. <template>-<last-dir>.el."
   (concat
@@ -299,8 +277,6 @@ E.g. if you want to calculate days; you'd do
    (tiny-setup-directory-last dir)
    ".el"))
 
-;;; ----------------------------------------------------------------------
-;;;
 (defun tinypath-tmp-autoload-file-footer (file &optional end)
   "Return `provide' statement and optional END of the file marker."
   (concat
@@ -312,8 +288,6 @@ E.g. if you want to calculate days; you'd do
                (file-name-nondirectory (file-name-nondirectory file)))
      "")))
 
-;;; ----------------------------------------------------------------------
-;;;
 (defun tiny-setup-directories (list)
   "Return only directories from LIST."
   (let (ret)
@@ -326,8 +300,6 @@ E.g. if you want to calculate days; you'd do
         (push elt ret)))
     ret))
 
-;;; ----------------------------------------------------------------------
-;;;
 (defun tiny-setup-generate-file-autoloads-1 (file dest)
   "Generate ###autoload from FILE to DEST."
   (let ((generated-autoload-file dest))
@@ -346,8 +318,6 @@ E.g. if you want to calculate days; you'd do
               (save-buffer))
             (kill-buffer (current-buffer))))))))
 
-;;; ----------------------------------------------------------------------
-;;;
 (defun tiny-setup-generate-file-autoloads (file)
   "Generate ###autoload from FILE to FILE-loaddefs.el"
   (interactive "fGenerate ###autoload from lisp file: ")
@@ -355,15 +325,11 @@ E.g. if you want to calculate days; you'd do
                        (file-name-sans-extension file))))
     (tiny-setup-generate-file-autoloads-1 file dest)))
 
-;;; ----------------------------------------------------------------------
-;;;
 (defun tiny-setup-generate-loaddefs-file-list (list)
   "Generate ###autoload from every file in LIST."
   (dolist (file list)
     (tiny-setup-generate-file-autoloads file)))
 
-;;; ----------------------------------------------------------------------
-;;;
 (defun tiny-setup-generate-loaddefs-dir (dir &optional regexp)
   "Generate ###autoload from DIR excluding optional REGEXP."
   (interactive "DGenerate ###autoload loaddefs in dir\nsIgnore regexp: ")
@@ -377,8 +343,6 @@ E.g. if you want to calculate days; you'd do
         (push file list)))
     (tiny-setup-generate-loaddefs-file-list list)))
 
-;;; ----------------------------------------------------------------------
-;;;
 (defun tiny-setup-generate-loaddefs-recursive (dir)
   "Generate ###autoload recursively starting from DIR."
   (interactive "DGenerate ###autoload recursive from dir: ")
@@ -386,8 +350,6 @@ E.g. if you want to calculate days; you'd do
       dir
     (tiny-setup-generate-loaddefs-dir dir)))
 
-;;; ----------------------------------------------------------------------
-;;;
 (defun tiny-setup-update-update-file-autoloads-1 (file dest)
   "Update ###autoload from FILE to DEST."
     (ti::package-autoload-loaddefs-create-maybe dest)
@@ -395,8 +357,6 @@ E.g. if you want to calculate days; you'd do
       (tiny-setup-with-file-env-macro
         (update-file-autoloads file))))
 
-;;; ----------------------------------------------------------------------
-;;;
 (defun tiny-setup-update-file-autoloads (file)
   "Update ###autoload from FILE to FILE-loaddefs.el"
   (interactive "fUpdate ###autoload from lisp file: ")
@@ -404,8 +364,6 @@ E.g. if you want to calculate days; you'd do
                        (file-name-sans-extension file))))
     (tiny-setup-update-update-file-autoloads-1 file dest)))
 
-;;; ----------------------------------------------------------------------
-;;;
 (defun tiny-setup-autoload-build-for-file-1 (file dest)
   "Generate autoload from FILE to DEST."
   (with-temp-buffer
@@ -420,8 +378,6 @@ E.g. if you want to calculate days; you'd do
      (write-region (point-min) (point-max) dest))
     dest))
 
-;;; ----------------------------------------------------------------------
-;;;
 (defun tiny-setup-autoload-build-for-file (file)
   "Generate autoload from FILE to FILE-autoload.el"
   (interactive "fGenerate autoload from lisp file: ")
@@ -429,8 +385,6 @@ E.g. if you want to calculate days; you'd do
                        (file-name-sans-extension file))))
     (tiny-setup-autoload-build-for-file-1 file dest)))
 
-;;; ----------------------------------------------------------------------
-;;;
 (defun tiny-setup-autoload-build-for-dir (dir &optional include exclude)
   "Generate all autoloads from DIR.
 Obey optional INCLUDE and EXCLUDE regexps."
@@ -453,8 +407,6 @@ Obey optional INCLUDE and EXCLUDE regexps."
 		 (string-match include file)))
         (tiny-setup-autoload-build-for-file file))))))
 
-;;; ----------------------------------------------------------------------
-;;;
 (defun tiny-setup-autoload-build-recursive (dir &optional include exclude)
   "Generate all autoloads recursively starting from DIR."
   (interactive
@@ -463,11 +415,9 @@ Obey optional INCLUDE and EXCLUDE regexps."
       dir
     (tiny-setup-autoload-build-for-dir dir include exclude)))
 
-;;; ----------------------------------------------------------------------
 ;;; FIXME: remove
 ;;; (tiny-setup-autoload-build-functions "~/elisp/tiny/lisp/tiny")
 ;;; (tiny-setup-autoload-build-functions "~/elisp/tiny/lisp/other")
-;;;
 (defun tiny-setup-autoload-build-functions (dir &optional regexp)
   "Build all autoloads form DIR, except for files matching REGEXP.
 Store the autoloads to tiny-DIR-autoload.el"
@@ -503,13 +453,10 @@ Store the autoloads to tiny-DIR-autoload.el"
         to-file))
     (message "TinySetup: Updated ALL autoloads in dir %s" dir)))
 
-;;; ----------------------------------------------------------------------
 ;;;     This is autoload generator will generate ALL, that means ALL,
 ;;;     autoloads from EVERY function and macro.
 ;;;     The implementation is in tinylib.el
-;;;
 ;;; (tiny-setup-autoload-build-functions-all "~/elisp/tiny/lisp/")
-;;;
 (defun tiny-setup-autoload-build-functions-all (dir)
   "Build all autoloads recursively below DIR."
   (interactive "Dautoload build root dir: ")
@@ -526,10 +473,8 @@ Store the autoloads to tiny-DIR-autoload.el"
      (t
       (tiny-setup-autoload-build-functions dir regexp)))))
 
-;;; ----------------------------------------------------------------------
 ;;; (tiny-setup-autoload-build-loaddefs-tiny-tools "~/elisp/tiny/lisp/" t)
 ;;; (tiny-setup-autoload-build-loaddefs-tiny-tools "~/elisp/tiny/lisp/other" t)
-;;;
 (defun tiny-setup-autoload-build-loaddefs-tiny-tools (dir &optional force)
   "Build Tiny Tools autoloads below DIR. FORCE recreates everything."
   (interactive "DAutoload root: \nP")
@@ -544,20 +489,14 @@ Store the autoloads to tiny-DIR-autoload.el"
            (error "TinySetup: No DIR"))
        "tiny-autoload-loaddefs-")))))
 
-;;; ----------------------------------------------------------------------
 ;;;     This is autoload generator will generate ONLY functions marked
 ;;;     with special ### autoload tag. The implementation used is in
 ;;;     core Emacs package autoload.el
-;;;
 ;;; (tiny-setup-autoload-batch-update "~/elisp/tiny/lisp/" 'force)
-;;;
 ;;; This function is invoked from the perl makefile.pl with the
 ;;; ROOT directory as sole argument in Emacs command line.
-;;;
 ;;; The build command from prompt is
-;;;
 ;;;    $ perl makefile.pl --verbose 2 --binary emacs  autoload
-;;;
 (defun tiny-setup-autoload-batch-update (&optional dir force)
   "Update autoloads in batch mode. Argument in command line is DIR. FORCE."
   (interactive "DAutoload dir to update: ")
@@ -592,20 +531,14 @@ Store the autoloads to tiny-DIR-autoload.el"
 ;;
 ;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;
 
-;;; ----------------------------------------------------------------------
-;;;
 (defsubst tiny-setup-file-list-lisp (dir)
   "Return all lisp files under DIR."
   (directory-files dir 'full "\\.el$"))
 
-;;; ----------------------------------------------------------------------
-;;;
 (defsubst tiny-setup-file-list-lisp-compiled (dir)
   "Return all compiled lisp files under DIR."
   (directory-files dir 'full "\\.elc$"))
 
-;;; ----------------------------------------------------------------------
-;;;
 (defun tiny-setup-compile-directory (dir &optional function)
   "Compile all isp files in DIRECTORY.
 Optional FUNCTION is passed one argument FILE, and it should return
@@ -615,8 +548,6 @@ t or nil if file is to be compiled."
               (funcall function file))
       (byte-compile-file file))))
 
-;;; ----------------------------------------------------------------------
-;;;
 (defun tiny-setup-compile-directory-recursive (root &optional function)
   "Compile all files under ROOT directory.
 Optional FUNCTION is passed one argument FILE, and it should return
@@ -629,8 +560,6 @@ t or nil if file is to be compiled."
 
 ;; (tiny-setup-compile-directory-recursive "~/vc/project/sforge/emacs-tiny-tools.git/lisp/tiny")
 
-;;; ----------------------------------------------------------------------
-;;;
 (defun tiny-setup-compile-directory-delete-recursive (root)
   "Delete all compiled files under ROOT directory recursively."
   (tiny-setup-directory-recursive-macro
@@ -639,8 +568,6 @@ t or nil if file is to be compiled."
      (message "TinySetup: deleting compiled file %s" file)
      (delete-file file))))
 
-;;; ----------------------------------------------------------------------
-;;;
 (defun tiny-setup-compile-kit-libraries (dir)
   "Compile tiny tools libraries"
   (tiny-setup-directory-recursive-macro
@@ -670,8 +597,6 @@ t or nil if file is to be compiled."
 	    (t
 	     (byte-compile-file file)))))))))
 
-;;; ----------------------------------------------------------------------
-;;;
 (defun tiny-setup-compile-kit-all (&optional dir)
   "Compile tiny tools under DIR.
 This function can be called from shell command line, where the

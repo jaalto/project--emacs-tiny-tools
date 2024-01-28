@@ -2,14 +2,10 @@
 
 ;; This file is not part of Emacs
 
-;;{{{ Id
-
 ;; Copyright (C) 1997-2024 Jari Aalto
 ;; Keywords:     emulations
 ;; Author:       Jari Aalto
 ;; Maintainer:   Jari Aalto
-;;
-;; Look at the code with folding.el.
 
 ;; This program is free software; you can redistribute it and/or modify it
 ;; under the terms of the GNU General Public License as published by the Free
@@ -26,58 +22,53 @@
 ;;
 ;; Visit <http://www.gnu.org/copyleft/gpl.html> for more information
 
-;;}}}
-;;{{{ Install
+;;; Install
 
-;; ....................................................... &t-install ...
-;;  Put this file on your Emacs-Lisp `load-path', add following into your
-;;  ~/.emacs startup file. This must be the very first entry before
-;;  any keybindings take in effect.
+;;  Put this file on your Emacs-Lisp `load-path', add following into
+;;  your ~/.emacs startup file. This must be the very first entry
+;;  before any keybindings take in effect.
 ;;
 ;;      (require 'tinypad)
 ;;
 ;;  You can also use the preferred way: autoload
 ;;
 ;;      (autoload 'tinypad-mode "tinypad t t)
-;;      ;;  Put all minor mode activations below C-c m map
-;;      ;;  n)otepad emulation mode
-;;      ;;
 ;;      (global-set-key "\C-cmn"  'tinypad-mode)
 
-;;}}}
-;;{{{ Documentation
-
-;; ..................................................... &t-commentary ...
 ;;; Commentary:
+
+;;  Preface, Aug 1997
 ;;
-;;  Preface, aug 1997
-;;
-;;      In gnu newsgroup there was a request that a class had been used to
-;;      using Windows notepad and in order to make the transition to Emacs
-;;      smooth, Emacs should have some notepad emulation mode so that
-;;      pupils wouldnn't get lost completely in new envinronment. And here
-;;      is it, a small notepad emulation. It installs one new menu to Emacs
-;;      menu bar which is arranged exactly like the Windows notepad. I have
-;;      included only the commands that are directly available from inside
-;;      emacs and e.g. 'printer setup' is something that is not found there.
-;;      But in order to be complete emulation, all the choices as in normal
-;;      notepad are available.
+;;      In a newsgroup, there was a request from a class accustomed to
+;;      using Windows Notepad. To facilitate a smooth transition to
+;;      Emacs, it was suggested that Emacs should have a Notepad
+;;      emulation mode. This way, pupils wouldn't feel completely lost
+;;      in the new environment. And here it is—an emulation of
+;;      Notepad. It installs a new menu in the Emacs menu bar arranged
+;;      exactly like the one in Windows Notepad. I have included only
+;;      the commands that are directly available from inside Emacs;
+;;      for example, 'printer setup' is not found there. However, to
+;;      be a complete emulation, all the choices available in the
+;;      normal Notepad are implemented.
 ;;
 ;;  Overview of features
 ;;
-;;      o   Minor mode, but once turned on, occupies every emacs buffer
-;;          until turned off.
-;;      o   Adds menu 'TinyPad' which contains identical
-;;          menu definitions that are found from Winbdows notepad
-;;      o   The keybindings use `Meta' as the Alt key to access the
+;;      o   Provides a minor mode, once turned on, occupies every
+;;          Emacs buffer until turned off. It adds a menu called
+;;          'TinyPad,' which contains identical menu definitions as
+;;          those found in Windows Notepad.
+;;
+;;      o   The keybindings use `Meta' as the `Alt' key to access the
 ;;          menu items, so you may need to configure your keyboard
-;;          with 'xmodmap' in order to get 'Alt' key produce `Meta'
-;;      o   Windows specific commands are not emulated, like
-;;          `Print' 'Setup'.
-;;      o   Following famous windows shortcut keys are _not_
-;;          Emulated; I was lazy and didn't try to reorganize the
-;;          Emacs keys. Erm... for now you have to stick to emacs
-;;          equivalents and live without these.
+;;          with `xmodmap' to get the `Alt' key to produce Meta.'
+;;
+;;      o   Windows-specific commands are not emulated, such as
+;;          `Print' and `Setup.'
+;;
+;;      o   The following famous Windows shortcut keys are not
+;;          emulated. I was lazy and didn't try to reorganize the
+;;          Emacs keys. For now, you have to stick to Emacs
+;;          basic shortcuts and live without these:
 ;;
 ;;          Undo   in   Control-z
 ;;          Cut    in   Control-x
@@ -86,24 +77,22 @@
 ;;
 ;;  Code note
 ;;
-;;      Why on earth I made this package to use "global" minor mode?
-;;      I can't remember the reason. A simple menubar entry may have
-;;      sufficed just fine.... Oh, it was that remaping the bindings.
-;;      You see, when minor mode is turned on, it conquers the mappings
-;;      underneath.
+;;      Why on earth did I make this package use a 'global' minor
+;;      mode? I can't remember the reason. A simple menubar entry
+;;      might have sufficed just fine. Oh, it was that remapping of
+;;      the bindings. You see, when the minor mode is turned on, it
+;;      conquers the mappings underneath.
 ;;
-;;      [1997-10-23] Hey, I just saw pointer to package Map-zxcv.el which
-;;      takes care oc mapping the missing zxcv, so I don't have to bother
-;;      with those here. Nice. You can ask it from Kim F. Storm
-;;      <storm@olicom.dk>
-
-;;}}}
+;;      [1997-10-23] Hey, I just saw a pointer to the package
+;;      `Map-zxcv.el' which takes care of mapping the missing zxcv, so
+;;      I don't have to bother with those here. Nice. You can ask for
+;;      it from Kim F. Storm storm@olicom.dk.
 
 ;;; Change Log:
 
 ;;; Code:
 
-;;{{{ setup: require
+;;; Setup: require
 
 (require 'tinylibm)
 
@@ -120,8 +109,7 @@
   :type  'hook
   :group 'TinyPad)
 
-;;}}}
-;;{{{ minor mode
+;;; Minor mode
 
 ;;;###autoload (autoload 'tinypad-mode          "tinypad" "" t)
 ;;;###autoload (autoload 'turn-on-tinypad-mode  "tinypad" "" t)
@@ -194,7 +182,7 @@ Mode description:
      ["A)bout Tinypad"       tinypad-version             t]
      ["V)ersion, mode desc." tinypad-mode-help           t]))
    (progn
-;;;    (set map (setq tinypad--mode-map (make-keymap)))
+;;    (set map (setq tinypad--mode-map (make-keymap)))
      (define-key   root-map [(meta f) (n)]  'tinypad-erase-buffer)
      (define-key   root-map [(meta f) (o)]  'find-file)
      (define-key   root-map [(meta f) (s)]  'save-buffer)
@@ -222,19 +210,16 @@ Mode description:
      ;; Bad idea beacuse C-x/C-x are the crucial prefix keys in
      ;; emacs and occupying it causes havoc and grief
      ;;
-;;;    (define-key   root-map [(control z)]  'undo)
-;;;    (define-key   root-map [(control x)]  'kill-region)
-;;;    (define-key   root-map [(control c)]  'copy-region-as-kill)
-;;;    (define-key   root-map [(control v)]  'yank)
+;;    (define-key   root-map [(control z)]  'undo)
+;;    (define-key   root-map [(control x)]  'kill-region)
+;;    (define-key   root-map [(control c)]  'copy-region-as-kill)
+;;    (define-key   root-map [(control v)]  'yank)
      ;;
      (define-key   root-map [(f5)]            'tinypad-insert-time)
      (define-key   root-map [(f3)]            'isearch-forward))))
 
-;;}}}
-;;{{{ Code
+;;; Code
 
-;;; ----------------------------------------------------------------------
-;;;
 (defadvice switch-to-buffer  (after tipad act)
   "Turn on `tinypad-mode' if if global Pad mode is non-nil."
   (when (and (called-interactively-p 'interactive)
@@ -242,16 +227,12 @@ Mode description:
              (null tinypad-mode))
     (setq tinypad-mode 1)))
 
-;;; ----------------------------------------------------------------------
-;;;
 (defun tinypad-ignore  ()
   "Display that command does not exist."
   (interactive)
   (message "TinyPad: No eq WinNotepad emulation in Emacs for this command.")
   (sit-for 2))
 
-;;; ----------------------------------------------------------------------
-;;;
 (defun tinypad-erase-buffer  ()
   "Erase buffer with confirmation."
   (interactive "*")
@@ -263,22 +244,20 @@ Mode description:
                  (y-or-n-p "Buffer modified, continue erasing? ")))
     (erase-buffer)))
 
-;;; ----------------------------------------------------------------------
-;;;
 (defun tinypad-find-file-hook  ()
   "Turn on tipad mode if `tinypad--mode-global' is non-nil."
   (when (and (get 'tinypad-mode 'global)
              (null tinypad-mode))
     (setq tinypad-mode 1)))
 
-;;; ------------------------------------------------------------ &main ---
-;;;
+;;; Main
+
 (defun tinypad-mode-action ()
   "Activate `tinypad-mode' on or off everywhere, depending on var `tinypad-mode'."
   (unless (get 'tinypad-mode 'self-call)
     (run-hooks 'tinypad--mode-define-keys-hook))
   (let ((i 0)
-	tinypad--mode-define-keys-hook)
+        tinypad--mode-define-keys-hook)
     (unwind-protect
         (progn
           ;;  Raise the flag to prevent calling us
@@ -296,7 +275,7 @@ Mode description:
       (sit-for 1)
       (put 'tinypad-mode 'self-call nil))))
 
-;;}}}
+;;; Provide
 
 (add-hook 'tinypad--mode-define-keys-hook 'tinypad-mode-define-keys)
 
