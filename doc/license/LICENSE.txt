@@ -1,6 +1,6 @@
 Licensing information
 
-        Copyright (C) 1995-2023 Jari Aalto
+        Copyright (C) 1995-2024 Jari Aalto
 
         This program (referring to all files, including documentation,
         distributed in project "Emacs Tiny Tools") is free software;
@@ -40,7 +40,7 @@ Licensing information
         distributed files; that notice can also be outside of the
         original files.
 
-            Copyright (C) 1995-2023 Jari Aalto
+            Copyright (C) 1995-2024 Jari Aalto
 
             Permission is granted to copy, distribute and/or modify
             this document under the terms of the GNU Free
