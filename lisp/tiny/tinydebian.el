@@ -125,7 +125,7 @@
   (or (require 'cl-lib nil 'noerr) ;; Emacs 29.x
       (require 'cl)))
 
-(deffconst tinydebian--version-time "2024.0128.1134"
+(defconst tinydebian--version-time "2024.0418.1238"
   "Last edited time.")
 
 (require 'tinylibm)
