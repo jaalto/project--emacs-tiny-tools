@@ -780,7 +780,8 @@
   (or (require 'cl-lib nil 'noerr) ;; Emacs 29.x
       (require 'cl))
   (locate-library "bbdb") ;; Display during compilation
-  (require 'bbdb nil 'noerr))
+  ;; ignore-errors is there only if user has old BBDB library
+  (ignore-errors (require 'bbdb nil 'noerr)))
 
 (eval-and-compile
   (ti::package-require-mail-abbrevs)
