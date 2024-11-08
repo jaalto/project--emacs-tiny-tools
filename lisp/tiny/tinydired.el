@@ -125,7 +125,7 @@
 ;;      o   Shorten the symlink references, so that they don't spread
 ;;          multiple lines and ruin your view.
 ;;
-;;      It also changes one dired function with `defadvice', so that you
+;;      It also changes one dired function with `define-advice', so that you
 ;;      can control if you want to have only one dired buffer when
 ;;      ascending to another directory. See variable:
 ;;
@@ -703,7 +703,7 @@ local to current buffer."
    'verbose
    "TinyDired advices "))
 
-(defadvice ange-ftp-set-binary-mode (before tinydired-error-prevent-fix dis)
+(define-advice ange-ftp-set-binary-mode (before tinydired-error-prevent-fix dis)
   "Sometimes you can get error:
 ash(nil -4)
 
@@ -1816,7 +1816,7 @@ Bugs:
 ;;; - Until someone fixes dired to honor the  backup-file-name-p
 ;;;   this stays replaced...
 ;;; - This is copy from 19.30 dired.el
-(defadvice dired-flag-backup-files (around tinydired-use-backup-file-name-p dis)
+(define-advice dired-flag-backup-files (around tinydired-use-backup-file-name-p dis)
   "Replace original function.
 This function honours the `backup-file-name-p' function and
 additionally flag files that match regexp `tinydired--backup-file-regexp'."
@@ -1834,7 +1834,7 @@ additionally flag files that match regexp `tinydired--backup-file-regexp'."
                       (string-match re file))))))
      "backup file")))
 
-(defadvice vc-finish-logentry (after tinydired-recursive-edit dis)
+(define-advice vc-finish-logentry (after tinydired-recursive-edit dis)
   "When this advice is enabled, it call `exit-recursive-edit'.
 Only if f recursive edit is in effect.
 
@@ -1844,7 +1844,7 @@ enabled outside of that function."
 
 ;;; - When using "f" it loads directory to same buffer.
 ;;; - only kills the Dired buffer if a prefix arg is given
-(defadvice dired-find-file (around tinydired-kill-dired-buffer last dis)
+(define-advice dired-find-file (around tinydired-kill-dired-buffer last dis)
   "If a prefix argument is given, kill the Dired buffer.
 
 If you have loaded dired-x and it contains variable
