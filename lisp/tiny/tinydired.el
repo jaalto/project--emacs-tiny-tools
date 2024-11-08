@@ -1816,7 +1816,7 @@ Bugs:
 ;;; - Until someone fixes dired to honor the  backup-file-name-p
 ;;;   this stays replaced...
 ;;; - This is copy from 19.30 dired.el
-(defadvice dired-flag-backup-files (around tdd dis)
+(defadvice dired-flag-backup-files (around tinydired-use-backup-file-name-p dis)
   "Replace original function.
 This function honours the `backup-file-name-p' function and
 additionally flag files that match regexp `tinydired--backup-file-regexp'."
