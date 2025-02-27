@@ -1,3 +1,8 @@
+2025-02-27 Thu  Jari Aalto  <jari.aalto@tuni.fi>
+
+	* tiny/tinysearch.el (tinysearch-charset-control):
+	Add sh-mode check.
+
 2023-09-19 Tue  Jari Aalto  <jari.aalto@tuni.fi>
 
 	* tiny/tinyeat.el (tinyeat-repeat-macro):

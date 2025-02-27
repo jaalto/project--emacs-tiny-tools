@@ -4,7 +4,7 @@
 
 ;;{{{ Id
 
-;; Copyright (C)    1997-2024 Jari Aalto
+;; Copyright (C)    1997-2025 Jari Aalto
 ;; Keywords:        wp
 ;; Author:          Jari Aalto
 ;; Maintainer:      Jari Aalto
@@ -757,13 +757,13 @@ at the beginning of first word."
 
    (list
     (concat (concat "^" (make-string 8 ?\ ) "[o.]   "))
-    0 'font-lock-reference-face)
+    0 'font-lock-function-name-face)
 
    ;; bullet continue comma
 
    (list
     (concat (concat "^" (make-string 12 ?\ ) "[,]"))
-    0 'font-lock-reference-face)
+    0 'font-lock-function-name-face)
 
    ;;  #REF and other user defined markers. See perl script
    ;;  for option --reference REF=value  that lets you define
@@ -894,7 +894,7 @@ at the beginning of first word."
 
    ;; `this-string'
 
-   '("`\\([^ '\t\r\n]+\\)'" 1 font-lock-reference-face prepend)
+   '("`\\([^ '\t\r\n]+\\)'" 1 font-lock-function-name-face prepend)
 
    ;; ........................................................... urls ...
 
@@ -916,13 +916,13 @@ at the beginning of first word."
 
             "\\|\\<[a-zA-Z]:[\\][^ \t\r\n]+" ;; c:\windows\file.txt
             "\\|\\<\\([a-zA-Z]:\\)?/[^ \t\r\n]+") ;; c:/windows/file.txt
-    0 'font-lock-reference-face t)
+    0 'font-lock-function-name-face t)
    ;;   <foo@site.com> Email URLs.
-   '("\\(<[^ \t\r\n]+@[^ \t\r\n]+>\\)" 1 font-lock-reference-face t)
+   '("\\(<[^ \t\r\n]+@[^ \t\r\n]+>\\)" 1 font-lock-function-name-face t)
 
 ;;;   (list
 ;;;    (concat "^" (make-string 12 ?\ ) "\\(.*\\)$")
-;;;    '(1 font-lock-reference-face))
+;;;    '(1 font-lock-function-name-face))
 
 ;;; #todo: Hmm, font-lock doesn't allow calling functions?
 
@@ -931,7 +931,7 @@ at the beginning of first word."
 ;;; But if called directly via M-x tinytf-code-p, it works ok. Don't
 ;;; know what is the problem,
 
-;;;   '(tinytf-code-p . font-lock-reference-face)
+;;;   '(tinytf-code-p . font-lock-function-name-face)
 
    ;; ........................................................ heading ...
    ;;  Headings 1 and 2
@@ -957,7 +957,7 @@ at the beginning of first word."
         'tinytf-level-2-face
       'font-lock-keyword-face)
     t))
-  ;;    font-lock-reference-face    font-lock-keyword-face
+  ;;    font-lock-function-name-face    font-lock-keyword-face
   ;;    font-lock-type-face         font-lock-function-name-face
   ;;    font-lock-string-face       font-lock-comment-face
   ;;    font-lock-variable-name-face
