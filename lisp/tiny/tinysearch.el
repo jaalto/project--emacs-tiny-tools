@@ -4,7 +4,7 @@
 
 ;;{{{ Id
 
-;; Copyright (C)    1994-2024 Jari Aalto
+;; Copyright (C)    1994-2025 Jari Aalto
 ;; Keywords:        tools
 ;; Author:          Jari Aalto
 ;; Maintainer:      Jari Aalto
@@ -329,7 +329,7 @@ Default boundary is line limit."
 ;;    to 10 lines.
 ;;; - Never grab word function is already coded in tinylib.el
 (defun tinysearch-search-word-main (&optional backward set)
-  "Gets word under cursor and search next occurrence.
+  "Read word at point and search next occurrence.
 If BACKWARD is non-nil, the search will be headed backward, the SET
 corresponds to `tinysearch--word-boundary-set'.
 
@@ -339,18 +339,19 @@ the chars belonging to word. By setting `tinysearch--word-boundary-set' you
 can set different sets for text and Lisp.  [In Lisp the '-' is part of
 word while in text it normally isn't].
 
-NOTE:
+BUGS:
 
-   You cannot search 1 char words with this due to internal
-   behaviour of search method and cursor positioning."
+   One characher words cannot be searched due to internal
+   search behaviour and cursor positioning."
   (interactive "P")
-  (let ((wrap   tinysearch--wrap-flag)
-        (loop   0)
+  (let ((wrap tinysearch--wrap-flag)
+        (loop 0)
         (accept t)
         charset
         re-charset
         word found
-        re-word-boundary  re-word
+        re-word-boundary
+	re-word
         prev-point
         no-msg
         mb
@@ -450,7 +451,7 @@ NOTE:
   (let ((type (symbol-name major-mode))
         set)
     (cond
-     ((string-match  "^c-\\|^cc-\\|c[+]+|perl|python|ruby" type)
+     ((string-match  "^c-\\|^cc-\\|c[+]+|perl|python|ruby|^sh-" type)
       (setq set "A-Za-z0-9_"))
      ((string-match "lisp" type)
       ;;  Add ':'
