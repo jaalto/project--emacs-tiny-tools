@@ -197,6 +197,12 @@ Created and killed during program execution.")
   :type  'hook
   :group 'TinySearch)
 
+(defcustom tinysearch--case-fold-search nil
+  "During searches, respect or ignore case.
+Sets the value `case-fold-search' locally."
+  :type  'boolean
+  :group 'TinySearch)
+
 (defcustom tinysearch--word-boundary-function 'tinysearch-charset-control
   "Funnction to return `tinysearch--word-boundary-set'.
 Different modes have different needs and it may be desireable to
@@ -333,7 +339,7 @@ Default boundary is line limit."
 If BACKWARD is non-nil, the search will be headed backward, the SET
 corresponds to `tinysearch--word-boundary-set'.
 
-Before searching is done the tinysearch-hooks is thrown. This is useful
+Before searching is done the tinysearch-hooks is called. This is useful
 is you want someone to dynamically change the search-word's idea of
 the chars belonging to word. By setting `tinysearch--word-boundary-set' you
 can set different sets for text and Lisp.  [In Lisp the '-' is part of
@@ -462,19 +468,21 @@ BUGS:
 (defun tinysearch-search-word-forward ()
   "Search word at point forward."
   (interactive)
-  (tinysearch-search-word-main
-   nil
-   (if (functionp tinysearch--word-boundary-function)
-       (funcall tinysearch--word-boundary-function))))
+  (let ((case-fold-search tinysearch--case-fold-search))
+    (tinysearch-search-word-main
+     nil
+     (if (functionp tinysearch--word-boundary-function)
+	 (funcall tinysearch--word-boundary-function)))))
 
 ;;;###autoload
 (defun tinysearch-search-word-backward ()
   "Search word at point backward."
   (interactive)
-  (tinysearch-search-word-main
-   'back
-   (if (functionp tinysearch--word-boundary-function)
-       (funcall tinysearch--word-boundary-function))))
+  (let ((case-fold-search tinysearch--case-fold-search))
+    (tinysearch-search-word-main
+     'back
+     (if (functionp tinysearch--word-boundary-function)
+	 (funcall tinysearch--word-boundary-function)))))
 
 (defun tinysearch-function-ours-p (function)
   "Check if FUNCTION if defined in the package."
