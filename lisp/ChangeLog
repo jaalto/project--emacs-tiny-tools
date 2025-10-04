@@ -1,3 +1,12 @@
+2025-10-04 Sat  Jari Aalto  <jari.aalto.fi@gmail.com>
+
+	* tiny/tinysearch.el
+	(tinysearch--case-fold-search): new.
+	(tinysearch-search-word-forward): Use
+	`tinysearch--case-fold-search'
+	(tinysearch-search-word-backward): Use
+	`tinysearch--case-fold-search'
+
 2025-02-27 Thu  Jari Aalto  <jari.aalto@tuni.fi>
 
 	* tiny/tinysearch.el (tinysearch-charset-control):
