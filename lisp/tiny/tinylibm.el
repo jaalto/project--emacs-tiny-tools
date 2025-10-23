@@ -78,12 +78,12 @@
     (set (make-local-variable 'byte-compile-warnings) '(not cl-functions))))
 
 (eval-and-compile
-  (autoload 'gensym  "cl-macs")
-  (autoload 'member* "cl-seq"))
+  (autoload 'cl-gensym  "cl-macs")
+  (autoload 'cl-member* "cl-seq"))
 
 (require 'tinylibb)                     ;Backward compatible functions
 
-(defconst tinylibm-version-time "2023.0919.0851"
+(defconst tinylibm-version-time "2025.1023.1213"
   "Latest version number.")
 
 ;;{{{ function tests
@@ -274,7 +274,7 @@ This FORM preserves restriction and excursion with one command."
 (put 'ti::narrow-to-paragraph 'edebug-form-spec '(body))
 (defmacro ti::narrow-to-paragraph (&rest body)
   "Narrow to paragraph. Point must be already inside a paragraph."
-  (let ((beg (gensym "beg-")))
+  (let ((beg (cl-gensym "beg-")))
     `(let (,beg)
        (when (re-search-backward "^[ \t]*$" nil t)
 	 (forward-line 1)
@@ -339,9 +339,9 @@ Float time value in seconds is sent to FUNCTION.
 
   (ti::with-time-this \\='(lambda (time) (message \"Secs %f\" time))
      (sit-for 4))."
-  (let ((time-a    (gensym "time-a-"))
-	(time-b    (gensym "time-b-"))
-	(time-diff (gensym "time-diff-")))
+  (let ((time-a    (cl-gensym "time-a-"))
+	(time-b    (cl-gensym "time-b-"))
+	(time-diff (cl-gensym "time-diff-")))
     `(let ((,time-a (current-time))
 	   ,time-b
 	   ,time-diff)
@@ -716,7 +716,7 @@ Examples:
       \\='((1 2)(3 4)))
 
   -->  ((2 1) (4 3))"
-  (let ((spec-name (gensym "spec-name-")))
+  (let ((spec-name (cl-gensym "spec-name-")))
     `(mapcar (lambda (,spec-name)
                  (apply ,function-form ,spec-name))
                ,list-form)))
@@ -1218,8 +1218,8 @@ Example:
 
   -->
   \\='((1 . (a b x)) (2 . (c d))))"
-  (let ((elt (gensym "elt-"))
-	(list (gensym "list-")))
+  (let ((elt (cl-gensym "elt-"))
+	(list (cl-gensym "list-")))
     `(let (,elt
 	   ,list)
        (if (not (setq ,elt (funcall ,func ,key ,list)))
@@ -1895,8 +1895,8 @@ Default is to convert all tabs in STRING with spaces."
 
 (defmacro ti::keep-lower-order (var1 var2)
   "Keep VAR1 < VAR2."
-  (let ((min (gensym "min-"))
-	(max (gensym "max-")))
+  (let ((min (cl-gensym "min-"))
+	(max (cl-gensym "max-")))
     `(let ((,min (min ,var1 ,var2))
 	   (,max (max ,var1 ,var2)))
        (setq ,var1 ,min)
@@ -1925,7 +1925,7 @@ VAR is set to following values when ARG is:
   ;;  The message from XEmacs 21.5 would say:
   ;;  ** evaluating (< nil 1): (wrong-type-argument number-char-or-marker-p nil)
   ;;
-  (let ((toggle (gensym "toggle-")))
+  (let ((toggle (cl-gensym "toggle-")))
     `(let ((,toggle ,arg))
        (setq ,var
 	     (cond
@@ -2042,9 +2042,9 @@ Examples:
 
   ;;  Get all buffers in `dired-mode'
   (ti::dolist-buffer-list \\='(eq major-mode \\='dired-mode))"
-  (let ((ok (gensym "ok-"))
-	(buffer-name (gensym "buffer-name-"))
-	(return-list (gensym "return-list-")))
+  (let ((ok (cl-gensym "ok-"))
+	(buffer-name (cl-gensym "buffer-name-"))
+	(return-list (cl-gensym "return-list-")))
     `(let (,ok
 	   ,buffer-name
 	   ,return-list)
@@ -2895,8 +2895,8 @@ No other values are preserved. Also the `select-window'
 is executed if the original buffer had `window-live-p'. (ie. it was visible)
 
 Use this if you want to e.g. scroll some buffer."
-  (let ((original-buffer (gensym "original-buffer-"))
-	(original-window (gensym "original-window-")))
+  (let ((original-buffer (cl-gensym "original-buffer-"))
+	(original-window (cl-gensym "original-window-")))
     `(let* ((,original-buffer (current-buffer))
 	    (,original-window (get-buffer-window ,original-buffer)))
        (prog1
@@ -2920,7 +2920,7 @@ Notes:
 
   Make sure you don't insert to immediate marker position, because
   markers moves along with the text!"
-  (let ((mark (gensym "mark-")))
+  (let ((mark (cl-gensym "mark-")))
     `(let ((,mark (point-marker)))
        (prog1
 	   (progn ,@body)
@@ -2965,8 +2965,8 @@ Example:
 Return:
 
   Last value returned by BODY"
-  (let ((current-column (gensym "current-column-"))
-	(current-line (gensym "current-line-")))
+  (let ((current-column (cl-gensym "current-column-"))
+	(current-line (cl-gensym "current-line-")))
     `(let ((,current-column (current-column)) ;prevent variable suicide
 	   (,current-line (ti::current-line-number)))
        (prog1
@@ -2991,10 +2991,10 @@ The BODY is not protected against errors or surrounded by `save-excursion'
 Return:
 
   last value of BODY"
-  (let ((beg		(gensym "beg-"))
-	(end		(gensym "end-"))
-	(end-max	(gensym "end-max-"))
-	(end-wmax	(gensym "end-wmax-")))
+  (let ((beg		(cl-gensym "beg-"))
+	(end		(cl-gensym "end-"))
+	(end-max	(cl-gensym "end-max-"))
+	(end-wmax	(cl-gensym "end-wmax-")))
     `(let ((,beg     (point-min-marker))
 	   (,end     (point-max-marker))
 	   (,end-max (point-max))
