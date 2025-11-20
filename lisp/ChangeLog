@@ -1,6 +1,9 @@
 2025-11-20 Thu  Jari Aalto  <jari.aalto.fi@gmail.com>
 
         Byte compilation cleanup (Emacs 30.2).
+        Add `-*- lexical-binding: t -*-' in other
+        but `tinylib.el' which uses mnor mode creation
+        macro and dynamic variables.
 
         * tiny/tinylibmail.el (ti::mail-ip-cleanup): Use
         `stringp'.
