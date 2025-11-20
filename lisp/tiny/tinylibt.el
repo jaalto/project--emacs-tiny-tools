@@ -1,4 +1,4 @@
-;;; tinylibt.el --- Library for handling text properties.
+;;; tinylibt.el --- Library for handling text properties. -*- lexical-binding: t -*-
 
 ;; This file is not part of Emacs
 
@@ -721,12 +721,14 @@ See `ti::text-re-search' for descriptions of FACE MODE SAVE-UNDO."
 (defun ti::text-mouse-mark-region (beg end event)
   "Highlight region BEG END. EVENT is mouse event."
   (interactive "r\ne")
+  (setq event event) ;; quiet byte compiler
   (ti::text-mark-region beg end))
 
 ;;;###autoload
 (defun ti::text-mouse-unmark-region (beg end event)
   "Remove highlight from region BEG END. EVENT is mouse event."
   (interactive "r\ne")
+  (setq event event) ;; quiet byte compiler
   (ti::text-mark-region beg end 'remove))
 
 ;;; - This is for keyboard users

@@ -1,147 +1,205 @@
-2025-10-23 Thu  Jari Aalto  <jari.aalto@tuni.fi>
+2025-11-20 Thu  Jari Aalto  <jari.aalto.fi@gmail.com>
 
-	* tiny/tinylibmail.el: (ti::mail-sendmail-macro-1):
-	correct call to `mail-setup'
+        Byte compilation cleanup (Emacs 30.2).
 
-	* tiny/tinylibm.el:
-	(ti::directory-recursive-macro): correct indent.
+        * tiny/tinylibmail.el (ti::mail-ip-cleanup): Use
+        `stringp'.
+        (ti::mail-hmax): Use `noerr'.
+        (ti::mail-generate-buffer-name): quiet byte compiler.
+        (ti::mail-pgp-normal-p): use `point'.
+        (ti::mail-pgp-data-study-ctb-byte): rm `tmp'.
+        (ti::mail-email-domain-canonicalize): Rename. Was
+        `ti::mail-email-domain-canonilize'.
+        (ti::mail-email-domain-canonicalize): replace `add-to-list'
+        with `push'.
+        (ti::mail-whois-parse-email): Rm extra char `<': fatal
+        error in `let'.
+        (ti::mail-ip-at-point-1): rm `word'.
+        (ti::mail-parse-received-string-date): docstring.
+
+        * tiny/tinylib.el (ti::vc-rcs-files-in-dir): adjust
+        variable `fn'.
+        (ti::date-month-to-number): correct conversion error.
+        (ti::keymap-bind-control): docstring.
+        (ti::buffer-defun-function-name): use arg `point'.
+        (ti::file-ange-completed-message): quiet byte compiler.
+        (ti::process-perl-process-environment-macro): quiet byte
+        compiler.
+        (ti::process-tar-view-command): use arg `test'.
+        (ti::compat-activate-region): quiet byte compiler:
+        zmacs-regions.
+
+        * tiny/tinyliby.el (ti::system-enable-disabled-options):
+        correct 'sym to plain `sym'
+
+        * tiny/tinylibt.el (ti::text-mouse-mark-region): quiet byte
+        compiler.
+        (ti::text-mouse-unmark-region): quiet byte
+        compiler.
+
+        * tiny/tinylibid.el (ti::id-cnv-txt2mode): rm
+        unused var `loop'.
+
+        * tiny/tinylibenv.el (ti::win32-cygwin-binary-p):
+        quiet byte compiler.
+        (ti::file-version): docstring.
+
+        * tiny/tinylibm.el (ti::funcall): docstring.
+        (ti::color-lighter): Update `x-color-values'
+        to `color-values'.
+        (ti::package-tiny-defgroup-mail): quiet byte
+        compiler.
+
+        * tiny/tinylibb.el (called-interactively-p):
+        Silence byte compiler.
+        (color-values): new alias.
+
+2025-10-20 Thu  Jari Aalto  <jari.aalto@tuni.fi>
+
+        * tiny/tinylibb.el (int-to-hex-string): rm arg `pad'
+
+        * tiny/tinylibmail.el: (ti::mail-sendmail-macro-1):
+        correct call to `mail-setup'
+
+        * tiny/tinylibm.el:
+        (ti::directory-recursive-macro): correct indent.
 
 2025-10-04 Sat  Jari Aalto  <jari.aalto.fi@gmail.com>
 
-	* tiny/tinysearch.el
-	(tinysearch--case-fold-search): new.
-	(tinysearch-search-word-forward): Use
-	`tinysearch--case-fold-search'
-	(tinysearch-search-word-backward): Use
-	`tinysearch--case-fold-search'
+        * tiny/tinysearch.el
+        (tinysearch--case-fold-search): new.
+        (tinysearch-search-word-forward): Use
+        `tinysearch--case-fold-search'
+        (tinysearch-search-word-backward): Use
+        `tinysearch--case-fold-search'
 
 2025-02-27 Thu  Jari Aalto  <jari.aalto@tuni.fi>
 
-	* tiny/tinysearch.el (tinysearch-charset-control):
-	Add sh-mode check.
+        * tiny/tinysearch.el (tinysearch-charset-control):
+        Add sh-mode check.
 
 2023-09-19 Tue  Jari Aalto  <jari.aalto@tuni.fi>
 
-	* tiny/tinyeat.el (tinyeat-repeat-macro):
-	Update `loop' to `cl-loop'.
+        * tiny/tinyeat.el (tinyeat-repeat-macro):
+        Update `loop' to `cl-loop'.
 
-	* other/expect.el: Remove `cl' and XEmacs `run-at-time' check.
+        * other/expect.el: Remove `cl' and XEmacs `run-at-time' check.
 
-	* other/fnexpand.el (all) docstrng. Correct Emacs 30.0.50
-	byte compile errors.
-	(fnexpand-complete): rm unused 	`unwind-protect'.
+        * other/fnexpand.el (all) docstrng. Correct Emacs 30.0.50
+        byte compile errors.
+        (fnexpand-complete): rm unused  `unwind-protect'.
 
-	* other/dired-sort.el (dired-sort-line-property-table):
-	docstrng. Correct Emacs 30.0.50 correct byte compile error.
+        * other/dired-sort.el (dired-sort-line-property-table):
+        docstrng. Correct Emacs 30.0.50 correct byte compile error.
         Update to cl-lib.
 
-	* tiny/tinypath.el (tinypath-ti::win32-cygwin-p):
-	in dolist, correct 'cl-return' to catch..throw.
-	(tinypath-executable-find):
-	in dolist, correct 'cl-return' to catch..throw.
-	(tinypath-emacs-root-by-load-path):
-	in dolist, correct 'cl-return' to catch..throw.
-	(tinypath-load-path-string-match):
-	in dolist, correct 'cl-return' to catch..throw.
-	(tinypath-directory-search):
-	in dolist, correct 'cl-return' to catch..throw.
-	(tinypath-tmp-find-root-home):
-	in dolist, correct 'cl-return' to catch..throw.
-	(tinypath-tmp-find-writable-dir):
-	in dolist, correct 'cl-return' to catch..throw.
-	(tinypath-cygwin-p):
-	in dolist, correct 'cl-return' to catch..throw.
-	(tinypath-ti::dired-buffer):
-	in dolist, correct 'cl-return' to catch..throw.
-	(tinypath-ti::compat-timer-elt):
-	in dolist, correct 'cl-return' to catch..throw.
-	(tinypath-cache-warn-if-not-exist):
-	in dolist, correct 'cl-return' to catch..throw.
-	(tinypath-find-dir):
-	in dolist, correct 'cl-return' to catch..throw.
-	(tinypath-directory-lisp-p):
-	in dolist, correct 'cl-return' to catch..throw.
-	(tinypath-self-location-load-history):
-	in dolist, correct 'cl-return' to catch..throw.
-	(tinypath-self-location):
-	in dolist, correct 'cl-return' to catch..throw.
-	(tinypath-external-setup-parse-data):
-	in dolist, correct 'cl-return' to catch..throw.
-	(tinypath-cache-p-1-new-cache-lookup):
-	in dolist, correct 'cl-return' to catch..throw.
-	(tinypath-cache-p-2):
-	in dolist, correct 'cl-return' to catch..throw.
-	(tinypath-cache-file-load):
-	in dolist, correct 'cl-return' to catch..throw.
-	(tinypath-load-path-search):
-	in dolist, correct 'cl-return' to catch..throw.
-	(tinypath-load-path-not-in-synch-p):
-	in dolist, correct 'cl-return' to catch..throw.
-	(tinypath-cache-duplicate-different-size-p):
-	in dolist, correct 'cl-return' to catch..throw.
-	(tinypath-cache-duplicate-report):
-	in dolist, correct 'cl-return' to catch..throw.
-	(tinypath-manpage-handler):
-	in dolist, correct 'cl-return' to catch..throw.
+        * tiny/tinypath.el (tinypath-ti::win32-cygwin-p):
+        in dolist, correct 'cl-return' to catch..throw.
+        (tinypath-executable-find):
+        in dolist, correct 'cl-return' to catch..throw.
+        (tinypath-emacs-root-by-load-path):
+        in dolist, correct 'cl-return' to catch..throw.
+        (tinypath-load-path-string-match):
+        in dolist, correct 'cl-return' to catch..throw.
+        (tinypath-directory-search):
+        in dolist, correct 'cl-return' to catch..throw.
+        (tinypath-tmp-find-root-home):
+        in dolist, correct 'cl-return' to catch..throw.
+        (tinypath-tmp-find-writable-dir):
+        in dolist, correct 'cl-return' to catch..throw.
+        (tinypath-cygwin-p):
+        in dolist, correct 'cl-return' to catch..throw.
+        (tinypath-ti::dired-buffer):
+        in dolist, correct 'cl-return' to catch..throw.
+        (tinypath-ti::compat-timer-elt):
+        in dolist, correct 'cl-return' to catch..throw.
+        (tinypath-cache-warn-if-not-exist):
+        in dolist, correct 'cl-return' to catch..throw.
+        (tinypath-find-dir):
+        in dolist, correct 'cl-return' to catch..throw.
+        (tinypath-directory-lisp-p):
+        in dolist, correct 'cl-return' to catch..throw.
+        (tinypath-self-location-load-history):
+        in dolist, correct 'cl-return' to catch..throw.
+        (tinypath-self-location):
+        in dolist, correct 'cl-return' to catch..throw.
+        (tinypath-external-setup-parse-data):
+        in dolist, correct 'cl-return' to catch..throw.
+        (tinypath-cache-p-1-new-cache-lookup):
+        in dolist, correct 'cl-return' to catch..throw.
+        (tinypath-cache-p-2):
+        in dolist, correct 'cl-return' to catch..throw.
+        (tinypath-cache-file-load):
+        in dolist, correct 'cl-return' to catch..throw.
+        (tinypath-load-path-search):
+        in dolist, correct 'cl-return' to catch..throw.
+        (tinypath-load-path-not-in-synch-p):
+        in dolist, correct 'cl-return' to catch..throw.
+        (tinypath-cache-duplicate-different-size-p):
+        in dolist, correct 'cl-return' to catch..throw.
+        (tinypath-cache-duplicate-report):
+        in dolist, correct 'cl-return' to catch..throw.
+        (tinypath-manpage-handler):
+        in dolist, correct 'cl-return' to catch..throw.
 
-	* tiny/tinyurl.el (tinyurl-browse-url-browser-function):
-	in dolist, correct 'cl-return' to catch..throw.
-	(tinyurl-command-browse-url-default-browser-function-1):
-	in dolist, correct 'cl-return' to catch..throw.
+        * tiny/tinyurl.el (tinyurl-browse-url-browser-function):
+        in dolist, correct 'cl-return' to catch..throw.
+        (tinyurl-command-browse-url-default-browser-function-1):
+        in dolist, correct 'cl-return' to catch..throw.
 
-	* tiny/tinytf.el (tinytf-column-info):
-	in dolist, correct 'cl-return' to catch..throw.
-	(tinytf-unmark-word):
-	in dolist, correct 'cl-return' to catch..throw.
+        * tiny/tinytf.el (tinytf-column-info):
+        in dolist, correct 'cl-return' to catch..throw.
+        (tinytf-unmark-word):
+        in dolist, correct 'cl-return' to catch..throw.
 
-	* tiny/tinytag.el (tinytag-do-search):
-	in dolist, correct 'cl-return' to catch..throw.
+        * tiny/tinytag.el (tinytag-do-search):
+        in dolist, correct 'cl-return' to catch..throw.
 
-	* tiny/tinytab.el (tinytab-tab-key-insert):
-	in dolist, correct 'cl-return' to catch..throw.
+        * tiny/tinytab.el (tinytab-tab-key-insert):
+        in dolist, correct 'cl-return' to catch..throw.
 
-	* tiny/tinyperl.el (tinyperl-pod-path):
-	in dolist, correct 'cl-return' to catch..throw.
-	(tinyperl-pod-by-module):
-	in dolist, correct 'cl-return' to catch..throw.
+        * tiny/tinyperl.el (tinyperl-pod-path):
+        in dolist, correct 'cl-return' to catch..throw.
+        (tinyperl-pod-by-module):
+        in dolist, correct 'cl-return' to catch..throw.
 
-	* tiny/tinymy.el (tinymy-package-save-get-file-name):
-	in dolist, correct 'cl-return' to catch..throw.
-	(tinymy-compile-command-search):
-	in dolist, correct 'cl-return' to catch..throw.
-	(tinymy-compile-xml-command):
-	in dolist, correct 'cl-return' to catch..throw.
+        * tiny/tinymy.el (tinymy-package-save-get-file-name):
+        in dolist, correct 'cl-return' to catch..throw.
+        (tinymy-compile-command-search):
+        in dolist, correct 'cl-return' to catch..throw.
+        (tinymy-compile-xml-command):
+        in dolist, correct 'cl-return' to catch..throw.
 
-	* tiny/tinymailbox.el (tinymailbox-mail-send-at-point):
-	in dolist, correct 'cl-return' to catch..throw.
+        * tiny/tinymailbox.el (tinymailbox-mail-send-at-point):
+        in dolist, correct 'cl-return' to catch..throw.
 
-	* tiny/tinymail.el (tinymail-complete-guess-in-body):
-	in dolist, correct 'cl-return' to catch..throw.
-	(tinymail-complete-list-bbdb-2):
-	in dolist, correct 'cl-return' to catch..throw.
-	(tinymail-complete-list-bbdb-1):
-	in dolist, correct 'cl-return' to catch..throw.
-	(tinymail-complete-simple):
-	in dolist, correct 'cl-return' to catch..throw.
-	(tinymail-complete-key):
-	in dolist, correct 'cl-return' to catch..throw.
-	(tinymail-from-field-value-plus):
-	in dolist, correct 'cl-return' to catch..throw.
-	(tinymail-field-fcc-determine):
-	in dolist, correct 'cl-return' to catch..throw.
+        * tiny/tinymail.el (tinymail-complete-guess-in-body):
+        in dolist, correct 'cl-return' to catch..throw.
+        (tinymail-complete-list-bbdb-2):
+        in dolist, correct 'cl-return' to catch..throw.
+        (tinymail-complete-list-bbdb-1):
+        in dolist, correct 'cl-return' to catch..throw.
+        (tinymail-complete-simple):
+        in dolist, correct 'cl-return' to catch..throw.
+        (tinymail-complete-key):
+        in dolist, correct 'cl-return' to catch..throw.
+        (tinymail-from-field-value-plus):
+        in dolist, correct 'cl-return' to catch..throw.
+        (tinymail-field-fcc-determine):
+        in dolist, correct 'cl-return' to catch..throw.
 
-	* tiny/tinyload.el (tinyload-load-list-search-elt):
-	in dolist, correct 'cl-return' to catch..throw.
+        * tiny/tinyload.el (tinyload-load-list-search-elt):
+        in dolist, correct 'cl-return' to catch..throw.
 
-	* tiny/tinylisp.el (tinylisp-jump-to-definition):
-	in dolist, correct 'cl-return' to catch..throw.
-	(tinylisp-autoload-generate-library):
-	in dolist, correct 'cl-return' to catch..throw.
+        * tiny/tinylisp.el (tinylisp-jump-to-definition):
+        in dolist, correct 'cl-return' to catch..throw.
+        (tinylisp-autoload-generate-library):
+        in dolist, correct 'cl-return' to catch..throw.
 
-	* tiny/tinyliby.el (ti::system-load-history-where-exactly):
-	in dolist, correct 'cl-return' to catch..throw.
-	(ti::system-load-history-where-1):
-	in dolist, correct 'cl-return' to catch..throw.
+        * tiny/tinyliby.el (ti::system-load-history-where-exactly):
+        in dolist, correct 'cl-return' to catch..throw.
+        (ti::system-load-history-where-1):
+        in dolist, correct 'cl-return' to catch..throw.
 
         * tiny/tinylibw.el (w32-cygwin-dos-path-to-cygwin):
         in dolist, correct 'cl-return' to catch..throw.
@@ -150,7 +208,7 @@
         (w32-cygwin-mount-table-dolist): Add `catch'.
         (w32-cygwin-mount-table): Use `system-type'.
         (w32-cygwin-mount-table-set): Use `system-type'.
-	(w32-expand-file-name-for-cygwin): Use `system-type'.
+        (w32-expand-file-name-for-cygwin): Use `system-type'.
 
         * tiny/tinylibmail.el (ti::mail-whois-parse-registrant):
         in dolist, correct 'cl-return' to catch..throw.
@@ -163,7 +221,7 @@
         in dolist, correct 'cl-return' to catch..throw.
         (ti::package-config-file-directory-default):
         in dolist, correct 'cl-return' to catch..throw.
-	(ti::dotimes): change ´loop' to `cl-loop'.
+        (ti::dotimes): change ´loop' to `cl-loop'.
 
         * tiny/tinylibid.el (ti::id-cnv-txt2comment):
         in dolist, correct 'cl-return' to catch..throw.
@@ -199,8 +257,8 @@
         in dolist, correct 'cl-return' to catch..throw.
         (ti::compat-timer-elt):
         in dolist, correct 'cl-return' to catch..throw.
-	(ti::string-mangle): User `let*'.
-	(ti::compat-key-local-map): correct indent.
+        (ti::string-mangle): User `let*'.
+        (ti::compat-key-local-map): correct indent.
 
         * tiny/tinyirc.el (tinyirc--pastebot-send-file):
         in dolist, correct 'cl-return' to catch..throw.

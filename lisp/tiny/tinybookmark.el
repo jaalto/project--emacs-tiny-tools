@@ -399,7 +399,7 @@
             the file. Uses X-popup [imenu] for showing those book marks and
             moving between them.")
 
-(defvar tinybookmark--version-time "2024.0120.1309"
+(defvar tinybookmark--version-time "2025.1120.1036"
   "Last modified time.")
 
 ;;; Setup: hooks

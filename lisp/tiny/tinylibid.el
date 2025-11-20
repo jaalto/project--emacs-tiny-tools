@@ -1,4 +1,4 @@
-;;; tinylibid.el --- Library for (Id)entifying buffer, regardless of mode
+;;; tinylibid.el --- Library for (Id)entifying buffer, regardless of mode -*- lexical-binding: t -*-
 
 ;; This file is not part of Emacs
 
@@ -167,7 +167,7 @@
 
 (require 'tinylibm)
 
-(defconst tinylibid-version-time "2023.0919.0837"
+(defconst tinylibid-version-time "2025.1120.0947"
   "Latest version number.")
 
 ;;; setup: hooks
@@ -504,8 +504,7 @@ the string representing a mode.
 NOTE:
  Symbol returned does not necessary representy any mode you can turn on.
  Use `fboundp' test to be sure the symbol is callable function."
-  (let ((loop t)
-	ret)
+  (let (ret)
     (catch 'break
       (dolist (elt ti::id--type2mode)
 	(when (string-match (nth 0 elt) txt)
