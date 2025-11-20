@@ -4,7 +4,7 @@
 
 ;;{{{ Id
 
-;; Copyright (C)    1994-2024 Jari Aalto
+;; Copyright (C)    1994-2025 Jari Aalto
 ;; Keywords:        tools
 ;; Author:          Jari Aalto
 ;; Maintainer:      Jari Aalto
@@ -197,6 +197,12 @@ Created and killed during program execution.")
   :type  'hook
   :group 'TinySearch)
 
+(defcustom tinysearch--case-fold-search nil
+  "During searches, respect or ignore case.
+Sets the value `case-fold-search' locally."
+  :type  'boolean
+  :group 'TinySearch)
+
 (defcustom tinysearch--word-boundary-function 'tinysearch-charset-control
   "Funnction to return `tinysearch--word-boundary-set'.
 Different modes have different needs and it may be desireable to
@@ -329,28 +335,29 @@ Default boundary is line limit."
 ;;    to 10 lines.
 ;;; - Never grab word function is already coded in tinylib.el
 (defun tinysearch-search-word-main (&optional backward set)
-  "Gets word under cursor and search next occurrence.
+  "Read word at point and search next occurrence.
 If BACKWARD is non-nil, the search will be headed backward, the SET
 corresponds to `tinysearch--word-boundary-set'.
 
-Before searching is done the tinysearch-hooks is thrown. This is useful
+Before searching is done the tinysearch-hooks is called. This is useful
 is you want someone to dynamically change the search-word's idea of
 the chars belonging to word. By setting `tinysearch--word-boundary-set' you
 can set different sets for text and Lisp.  [In Lisp the '-' is part of
 word while in text it normally isn't].
 
-NOTE:
+BUGS:
 
-   You cannot search 1 char words with this due to internal
-   behaviour of search method and cursor positioning."
+   One characher words cannot be searched due to internal
+   search behaviour and cursor positioning."
   (interactive "P")
-  (let ((wrap   tinysearch--wrap-flag)
-        (loop   0)
+  (let ((wrap tinysearch--wrap-flag)
+        (loop 0)
         (accept t)
         charset
         re-charset
         word found
-        re-word-boundary  re-word
+        re-word-boundary
+	re-word
         prev-point
         no-msg
         mb
@@ -450,7 +457,7 @@ NOTE:
   (let ((type (symbol-name major-mode))
         set)
     (cond
-     ((string-match  "^c-\\|^cc-\\|c[+]+|perl|python|ruby" type)
+     ((string-match  "^c-\\|^cc-\\|c[+]+|perl|python|ruby|^sh-" type)
       (setq set "A-Za-z0-9_"))
      ((string-match "lisp" type)
       ;;  Add ':'
@@ -461,19 +468,21 @@ NOTE:
 (defun tinysearch-search-word-forward ()
   "Search word at point forward."
   (interactive)
-  (tinysearch-search-word-main
-   nil
-   (if (functionp tinysearch--word-boundary-function)
-       (funcall tinysearch--word-boundary-function))))
+  (let ((case-fold-search tinysearch--case-fold-search))
+    (tinysearch-search-word-main
+     nil
+     (if (functionp tinysearch--word-boundary-function)
+	 (funcall tinysearch--word-boundary-function)))))
 
 ;;;###autoload
 (defun tinysearch-search-word-backward ()
   "Search word at point backward."
   (interactive)
-  (tinysearch-search-word-main
-   'back
-   (if (functionp tinysearch--word-boundary-function)
-       (funcall tinysearch--word-boundary-function))))
+  (let ((case-fold-search tinysearch--case-fold-search))
+    (tinysearch-search-word-main
+     'back
+     (if (functionp tinysearch--word-boundary-function)
+	 (funcall tinysearch--word-boundary-function)))))
 
 (defun tinysearch-function-ours-p (function)
   "Check if FUNCTION if defined in the package."

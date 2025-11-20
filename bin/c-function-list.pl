@@ -6,7 +6,7 @@
 #
 #   Copyright
 #
-#       Copyright (C) 2000-2024 Jari Aalto
+#       Copyright (C) 2000-2025 Jari Aalto
 #
 #   License
 #

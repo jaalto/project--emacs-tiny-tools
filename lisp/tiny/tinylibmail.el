@@ -4,7 +4,7 @@
 
 ;;{{{ Id
 
-;; Copyright (C)    1995-2024 Jari Aalto
+;; Copyright (C)    1995-2025 Jari Aalto
 ;; Keywords:        extensions
 ;; Author:          Jari Aalto
 ;; Maintainer:      Jari Aalto
@@ -4789,7 +4789,12 @@ content-transfer-encoding: quoted-printable"
      (ti::mail-sendmail-pure-env-macro
       ;;   to subject in-reply-to cc replybuffer actions
       ;;
-      (mail-setup ,to ,subject nil nil nil nil)
+      (mail-setup ,to ,subject
+		  (not 'in-reply)
+		  (not 'cc)
+		  (not 'replybuffer)
+		  (not 'actions)
+		  (not 'return-actions))
       (mail-mode)
       (ti::mail-kill-field "^fcc")
       (ti::mail-text-start 'move)

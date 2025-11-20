@@ -1,3 +1,25 @@
+2025-10-23 Thu  Jari Aalto  <jari.aalto@tuni.fi>
+
+	* tiny/tinylibmail.el: (ti::mail-sendmail-macro-1):
+	correct call to `mail-setup'
+
+	* tiny/tinylibm.el:
+	(ti::directory-recursive-macro): correct indent.
+
+2025-10-04 Sat  Jari Aalto  <jari.aalto.fi@gmail.com>
+
+	* tiny/tinysearch.el
+	(tinysearch--case-fold-search): new.
+	(tinysearch-search-word-forward): Use
+	`tinysearch--case-fold-search'
+	(tinysearch-search-word-backward): Use
+	`tinysearch--case-fold-search'
+
+2025-02-27 Thu  Jari Aalto  <jari.aalto@tuni.fi>
+
+	* tiny/tinysearch.el (tinysearch-charset-control):
+	Add sh-mode check.
+
 2023-09-19 Tue  Jari Aalto  <jari.aalto@tuni.fi>
 
 	* tiny/tinyeat.el (tinyeat-repeat-macro):
