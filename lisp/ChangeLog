@@ -49,6 +49,10 @@
         to `color-values'.
         (ti::package-tiny-defgroup-mail): quiet byte
         compiler.
+        (ti::funcall): rewrite. Hide better from
+        byte compiler.
+        (ti::assoc-append-inside): Correct. Did not
+        use arg `list'.
 
         * tiny/tinylibb.el (called-interactively-p):
         Silence byte compiler.
