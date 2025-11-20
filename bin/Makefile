@@ -39,11 +39,11 @@ MAKEFILE    = Makefile
 
 # ########################################################### &basic ###
 
-SHELL	    =	sh
-EMACS	    =	emacs
-# EMACSVER    =	`${EMACS} -batch -version`
-PERL	    =	perl
-LIB	    =	load-path.el
+SHELL	    = sh
+EMACS	    = emacs
+# EMACSVER  =`$(EMACS) -batch -version`
+PERL	    = perl
+LIB	    = load-path.el
 
 FILE_DOC_MAKE =	perl ripdoc.pl
 README	    = ../doc/html/install/index.txt
