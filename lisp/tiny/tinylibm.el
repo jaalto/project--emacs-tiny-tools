@@ -83,7 +83,7 @@
 
 (require 'tinylibb)                     ;Backward compatible functions
 
-(defconst tinylibm-version-time "2025.1120.1040"
+(defconst tinylibm-version-time "2025.1120.1125"
   "Latest version number.")
 
 ;;{{{ function tests
@@ -443,8 +443,11 @@ Warning:
   to call. Rearrange code so that you do (require \\='package)
   or `(ti::autoload-p func)' test before using `ti::funcall'."
   `(let ((func ,func-sym))
-     (when (fboundp ,func-sym)
-       (apply func ,@args nil))))
+     (when (fboundp func)
+       ;; The acrobatics are need to hide any traces
+       ;; from the byte compiler
+       (let ((fsym (intern (symbol-name func))))
+	 (apply fsym ,@args nil)))))
 
 (defun ti::string-value (x)
   "Return a string with some reasonable print-representation of X.
@@ -825,8 +828,9 @@ Return:
   ;;  We can't read frame information when we have no visible window.
   (frame-parameter (selected-frame) 'background-mode))
 
-;;; Emacs 21.3+ includes this, but is it not the same as here
-;;; (color-supported-p COLOR FRAME &optional BACKGROUND-P)
+;;; Emacs 21.3+ includes:
+;;;    (color-supported-p COLOR FRAME &optional BACKGROUND-P)
+;;; But it is not the same as here
 (defun ti::colors-supported-p ()
   "Check if colours can be used (that thay can be displayed)."
   (cond
@@ -1195,7 +1199,7 @@ Input:
 
 ;;{{{ Special lists, assoc
 
-;;; Many times you want to have data structure with some KEY
+
 (defmacro ti::assoc-append-inside (func key list add)
   "Add to the assoc list new element.
 List must be in format, K = key, E = element.
@@ -1216,14 +1220,13 @@ Example:
   -->
   \\='((1 . (a b x)) (2 . (c d))))"
   (let ((elt (cl-gensym "elt-"))
-	(list (cl-gensym "list-")))
+	(elt-list (cl-gensym "elt-list-")))
     `(let (,elt
-	   ,list)
+	   ,elt-list)
        (if (not (setq ,elt (funcall ,func ,key ,list)))
 	   (push (cons ,key (list ,add)) ,list)
-	 (setq ,list (cdr ,elt))
-	 (push ,add ,list)
-	 (setcdr ,elt ,list)))))
+	 (setq ,elt-list (cdr ,elt))
+	 (nconc ,elt-list (list ,add))))))
 
 (defun ti::assoc-replace-maybe-add (target-list-sym list &optional remove)
   "Set TARGET-LIST-SYM entry to LIST of pairs (STRING . CDR-ELT).
