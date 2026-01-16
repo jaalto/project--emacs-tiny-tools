@@ -2,6 +2,8 @@
 
 	* tiny/tinytf.el (tinytf-toc): rename `toc'
 	to toc-alist.
+	(tinytf-toc-insert-list): Remove extra
+	newline inserts.
 
 	* tiny/tinysearch.el (tinysearch-search-word-main):
 	docstring.
