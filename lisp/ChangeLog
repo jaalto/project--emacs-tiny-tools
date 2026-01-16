@@ -2,6 +2,8 @@
 
 	* tiny/tinysearch.el (tinysearch-search-word-main):
 	docstring.
+	(tinysearch-charset-control): Correct ':' and
+	add '/' for Emacs isp mode words.
 
 2025-11-20 Thu  Jari Aalto  <jari.aalto.fi@gmail.com>
 

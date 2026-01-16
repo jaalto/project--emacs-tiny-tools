@@ -460,8 +460,8 @@ BUGS:
      ((string-match  "^c-\\|^cc-\\|c[+]+|perl|python|ruby|^sh-" type)
       (setq set "A-Za-z0-9_"))
      ((string-match "lisp" type)
-      ;;  Add ':'
-      (setq set "--A-Za-z0-9_")))
+      ;;  Add ':' and '/'
+      (setq set "-A-Za-z0-9_:/")))
     set))
 
 ;;;###autoload
