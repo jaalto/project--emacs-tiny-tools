@@ -3322,7 +3322,9 @@ VERB enables verbose messages."
           (ti::save-with-marker-macro
             ;;  Leave one empty line
             (goto-char (car toc-alist))
-            (insert-buffer-substring buffer)))
+	    (insert "\n")
+            (insert-buffer-substring buffer)
+	    (insert "\n")))
          (t                             ;No previous toc
           (when verb
             (pop-to-buffer buffer)
