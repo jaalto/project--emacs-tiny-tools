@@ -339,15 +339,15 @@ Default boundary is line limit."
 If BACKWARD is non-nil, the search will be headed backward, the SET
 corresponds to `tinysearch--word-boundary-set'.
 
-Before searching is done the tinysearch-hooks is called. This is useful
-is you want someone to dynamically change the search-word's idea of
-the chars belonging to word. By setting `tinysearch--word-boundary-set' you
-can set different sets for text and Lisp.  [In Lisp the '-' is part of
-word while in text it normally isn't].
+Before searching is done the `tinysearch-hooks' is called. This is
+useful is you want to dynamically change the search-word's idea of what
+characters constitute a word. By setting `tinysearch--word-boundary-set'
+you can set different sets for text and Lisp. E.g. In Emacs Lisp mode
+the '-' is part of word whereas in text mode it isn't.
 
 BUGS:
 
-   One characher words cannot be searched due to internal
+   One character words cannot be searched due to internal
    search behaviour and cursor positioning."
   (interactive "P")
   (let ((wrap tinysearch--wrap-flag)
@@ -370,15 +370,15 @@ BUGS:
           re-word-boundary  (concat  "[^" charset "]")
           re-word           (concat  "[" charset "]") ;considered single word
           re-charset        re-word)
-    ;;   Let the user set the word criteria
+    ;; Let the user set the word criteria
     (if tinysearch--before-hook
         (run-hooks 'tinysearch--before-hook))
     ;; ...................................................... set word ...
     (setq word (tinysearch-grab-word charset))
     (if (null word)
         (message "TinySearch: Word not grabbed.")
-      ;;   enable C-s and C-r to use the word, look isearch.el
-      ;;   NOTE: this doesn't put the WORD regexp there...
+      ;; enable C-s and C-r to use the word, look isearch.el
+      ;; NOTE: this doesn't put the WORD regexp there...
       (tinysearch-add-to-isearch-search-ring word)
       ;; post a message saying what we're looking for
       (message "searching for \`%s\`" word)
@@ -389,7 +389,7 @@ BUGS:
              re-word-boundary word "\\)" re-word-boundary))
       ;; ................................................... do search ...
       (while loop
-        ;;  Record the point only if the word is accepted.
+        ;; Record the point only if the word is accepted.
         (if accept
             (setq prev-point (point)))
         (if backward                    ;choose backward
@@ -401,22 +401,22 @@ BUGS:
                   (unless (looking-at re-charset)
                     (re-search-forward re-charset) ;Goto first char
                     (backward-char 1)))))
-          ;;  - This a little hard to explain: the search
-          ;;    does not succeed, if the variable 'a' is at
-          ;;    the beginning of line due to backward-char 2 correction
+          ;; This a little hard to explain: the search
+          ;; does not succeed, if the variable 'a' is at
+          ;; the beginning of line due to backward-char 2 correction
           (if (eq (current-column) 0)
               (ignore-errors (forward-char 1)))
           (setq found (re-search-forward re-word nil t))
           (if found
               (backward-char 2)))
         (if found
-            ;;  - So that NEXT word will be grabbed, that's why 1 char words
-            ;;    can't be found
+            ;; So that NEXT word will be grabbed, that's why 1 char words
+            ;; can't be found
             (setq mb (match-beginning 0)   me (match-end 0) )
           (message no-msg))
         ;; ........................................................ done ...
         (setq tinysearch--search-status found) ;save status
-        ;;  Should we continue searching ?
+        ;; Should we continue searching?
         (cond
          ((and (null found)
                wrap)
@@ -427,18 +427,18 @@ BUGS:
               (ti::pmin))))
          ((and (null found)
                (> loop 0))
-          ;;  Word accept function caused loop to run again, but
-          ;;  there were no more hits. Back to prev position
+          ;; Word accept function caused loop to run again, but
+          ;; there were no more hits. Back to prev position
           (goto-char prev-point)
           (setq loop nil))
          ((or (null found)
               (not (fboundp tinysearch--accept-word-function)))
           (setq loop nil))
          ((and found
-               ;;  Is this found word accepted in the context
-               ;;  surrounding the text ?
+               ;; Is this found word accepted in the context
+               ;; surrounding the text ?
                (setq accept (funcall tinysearch--accept-word-function word)))
-          ;;  Restore previous search point
+          ;; Restore previous search point
           (setq loop nil)))
         ;; .................................................... do hilit ...
         (if (and tinysearch--overlay found (null loop))

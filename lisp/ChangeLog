@@ -1,3 +1,8 @@
+2026-01-16 Fri  Jari Aalto  <jari.aalto@tuni.fi>
+
+	* tiny/tinysearch.el (tinysearch-search-word-main):
+	docstring.
+
 2025-11-20 Thu  Jari Aalto  <jari.aalto.fi@gmail.com>
 
         Byte compilation cleanup (Emacs 30.2).
