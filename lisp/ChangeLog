@@ -1,5 +1,8 @@
 2026-01-16 Fri  Jari Aalto  <jari.aalto@tuni.fi>
 
+	* tiny/tinytf.el (tinytf-toc): rename `toc'
+	to toc-alist.
+
 	* tiny/tinysearch.el (tinysearch-search-word-main):
 	docstring.
 	(tinysearch-charset-control): Correct ':' and

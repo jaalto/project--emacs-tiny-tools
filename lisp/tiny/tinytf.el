@@ -3256,9 +3256,7 @@ Return:
     (setq elt (car elt))
     (if (string-match "^[ \t]+" elt)
 	(insert elt "\n")       ;sub heading...
-      (insert "\n" elt "\n")))
-  ;; Final newline
-  (insert "\n"))
+      (insert elt "\n"))))
 
 (defun tinytf-toc (&optional arg verb)
   "Create table of contents.
@@ -3274,9 +3272,9 @@ Input ARG can be:
 
 VERB enables verbose messages."
   (interactive "P")
-  (let ((hlist     (tinytf-heading-positions 'strings))
-	(toc       (tinytf-toc-p))
-	(buffer    tinytf--buffer-heading)
+  (let ((hlist (tinytf-heading-positions 'strings))
+	(toc-alist (tinytf-toc-p))
+	(buffer tinytf--buffer-heading)
 	elt)
     (ti::verb)
     (if (null hlist)
@@ -3307,7 +3305,7 @@ VERB enables verbose messages."
           ;;  2.0
           ;;    2.1
           ;;
-          (when (and toc nil)
+          (when (and toc-alist nil)
             ;;  Convert heading 2 level to heading  1
             (ti::pmin)
 	    (let ((str (tinytf-indent 1)))
@@ -3321,19 +3319,19 @@ VERB enables verbose messages."
                  (point)
                (1- (point)))))
           ;; Make indentation to text column
-          (when toc
+          (when toc-alist
             (string-rectangle
              (point-min)
              (point-max)
              (tinytf-indent 2))) ;; with-current
 	  (ti::buffer-trim-blanks (point-min) (point-max)))
         (cond
-         (toc                           ;Update existing toc
+         (toc-alist                         ;Update existing toc
           (barf-if-buffer-read-only)
-          (delete-region (car toc) (cdr toc))
+          (delete-region (car toc-alist) (cdr toc-alist))
           (ti::save-with-marker-macro
             ;;  Leave one empty line
-            (goto-char (car toc))
+            (goto-char (car toc-alist))
             (insert-buffer-substring buffer)))
          (t                             ;No previous toc
           (when verb
