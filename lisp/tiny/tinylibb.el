@@ -207,6 +207,9 @@ PAD says to padd hex string with leading zeroes."
   "Return t if currently byte-compiling files."
   (string= (buffer-name) " *Compiler Input*"))
 
+(defmacro-maybe define-advice (&rest args) ;; Emacs 25.x
+  `(defadvice ,@args))
+
 (defmacro-maybe cl-flet (&rest args)
   `(cl-flet ,@args))
 
