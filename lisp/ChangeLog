@@ -1,3 +1,8 @@
+2026-02-04 Wed  Jari Aalto  <jari.aalto@tuni.fi>
+
+	* tiny/tinyliby.el (ti::system-get-symbols): Correct
+	lexical scope in `eval'.
+
 2026-01-16 Fri  Jari Aalto  <jari.aalto@tuni.fi>
 
 	* tiny/tinytf.el (tinytf-toc): rename `toc'
