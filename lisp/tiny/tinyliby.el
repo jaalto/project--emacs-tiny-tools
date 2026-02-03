@@ -73,7 +73,7 @@
 
 ;;{{{ setup: -- variables
 
-(defconst tinyliby-version-time "2026.0203.2202"
+(defconst tinyliby-version-time "2026.0203.2208"
   "Latest version number as last modified time.")
 
 (defvar ti::system--describe-symbols-history nil
@@ -468,14 +468,14 @@ Eg. test-form = \\='(or (fboundp sym) (boundp sym))"
   (let (list)
     (mapatoms
      (function
-      (lambda (s)
-        (if (and (string-match re (symbol-name sym))
-                 (or (null test-form)
-                     ;; Bind 's' to 'sym' so eval'd
-		     ;; code can see it
-                     (let ((sym s))
-                       (eval test-form))))
-            (push sym list)))))
+     (lambda (s) ; Changed to 's' to avoid confusion
+       (if (and (string-match re (symbol-name s))
+                (or (null test-form)
+		        ;; We 'wrap' the test-form in a let that defines
+		        ;; sym. This creates a code block: (let ((sym
+		        ;; 'some-atom)) (boundp sym))
+                    (eval `(let ((sym ',s)) ,test-form) t)))
+           (push s list)))))
     list))
 
 (defun ti::system-autoload-function-list ()
