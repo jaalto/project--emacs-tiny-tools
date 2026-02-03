@@ -73,7 +73,7 @@
 
 ;;{{{ setup: -- variables
 
-(defconst tinyliby-version-time "2025.1120.0949"
+(defconst tinyliby-version-time "2026.0203.2202"
   "Latest version number as last modified time.")
 
 (defvar ti::system--describe-symbols-history nil
@@ -468,10 +468,13 @@ Eg. test-form = \\='(or (fboundp sym) (boundp sym))"
   (let (list)
     (mapatoms
      (function
-      (lambda (sym)
+      (lambda (s)
         (if (and (string-match re (symbol-name sym))
                  (or (null test-form)
-                     (eval test-form)))
+                     ;; Bind 's' to 'sym' so eval'd
+		     ;; code can see it
+                     (let ((sym s))
+                       (eval test-form))))
             (push sym list)))))
     list))
 
