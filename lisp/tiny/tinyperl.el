@@ -751,7 +751,7 @@ Example : \\='(\"-I\" \"/path/path\"."
    ;;
    ;;     dirname - extract just the directory from a path
    '("^    \\([^ \t\r\n]+\\)[ \t]+-[ \t]+"
-     1 font-lock-reference-face)
+     1 font-lock-type-face)
 
    '("^    [^ \t\r\n]+[ \t]+-[ \t]+\\(.*\\)"
      1 font-lock-constant-face) ;; font-lock-string-face
@@ -820,7 +820,7 @@ Example : \\='(\"-I\" \"/path/path\"."
      ;; PerlIO::via::QuotedPrint
      "\\|\\<[A-Z][a-zA-Z]+\\(::[A-Za-z]+\\)+\\>"
      "\\|[^ \t\r\n]+[\\/][^ \t\r\n]+") ;; CPAN/modules/by-module
-    0 'font-lock-reference-face)
+    0 'font-lock-type-face)
    ;;  [Wall]
    (list
     (concat
@@ -841,7 +841,7 @@ Example : \\='(\"-I\" \"/path/path\"."
      "\\|\\*[^ \r\n*]+\\*")
     0  'font-lock-keyword-face)
 ;;;    ;; like chdir() function ...
-;;;    '("[a-z][^ \t\n\r(]+()" 0 font-lock-reference-face)
+;;;    '("[a-z][^ \t\n\r(]+()" 0 font-lock-type-face)
    ;;  Perl Keywords
    (list
     (concat
@@ -866,7 +866,7 @@ Example : \\='(\"-I\" \"/path/path\"."
    '("^=\\(head[0-9]\\|pod\\|begin\\|end\\|cut\\|item\\)"
      0 font-lock-function-name-face t)
    '("^=\\(head[0-9]\\|pod\\|begin\\|end\\|cut\\|item\\)[ \t]+\\(.*\\)"
-     2 font-lock-reference-face t)
+     2 font-lock-type-face t)
    '("^=item[ \t]+\\(.*\\)"
      1 font-lock-keyword-face t)
    '("^=.*"
