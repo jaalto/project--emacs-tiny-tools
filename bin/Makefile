@@ -39,18 +39,18 @@ MAKEFILE    = Makefile
 
 # ########################################################### &basic ###
 
-SHELL	    =	sh
-EMACS	    =	emacs
-# EMACSVER    =	`${EMACS} -batch -version`
-PERL	    =	perl
-LIB	    =	load-path.el
+SHELL	    = sh
+EMACS	    = emacs
+# EMACSVER  =`$(EMACS) -batch -version`
+PERL	    = perl
+LIB	    = load-path.el
 
 FILE_DOC_MAKE =	perl ripdoc.pl
 README	    = ../doc/html/install/index.txt
 
 # ############################################################ &rules ###
 
-.SUFFIXES: .el .txt .pl .mak   .elc .html .doc .prn .std .htmlx
+.SUFFIXES: .el .txt .pl .mak .elc .html .doc .prn .std .htmlx
 
 # Rule: suffix .txt => .prn - Print file to stdout
 .txt.prn:

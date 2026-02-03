@@ -3252,13 +3252,17 @@ Return:
 
 (defun tinytf-toc-insert-list (list)
   "Insert list of Table of Contents strings in LIST."
-  (dolist (elt list)
-    (setq elt (car elt))
-    (if (string-match "^[ \t]+" elt)
-	(insert elt "\n")       ;sub heading...
-      (insert "\n" elt "\n")))
-  ;; Final newline
-  (insert "\n"))
+  (let (top-heading-done)
+    (dolist (elt list)
+      (setq elt (car elt))
+      (if (string-match "^[ \t]+" elt)
+	  (insert elt "\n")       ;sub heading...
+	(if top-heading-done
+	    ;; Add paragraph break between heading
+	    ;; groups
+	    (insert "\n" elt "\n")
+	  (insert elt "\n"))
+	(setq top-heading-done t)))))
 
 (defun tinytf-toc (&optional arg verb)
   "Create table of contents.
@@ -3274,9 +3278,9 @@ Input ARG can be:
 
 VERB enables verbose messages."
   (interactive "P")
-  (let ((hlist     (tinytf-heading-positions 'strings))
-	(toc       (tinytf-toc-p))
-	(buffer    tinytf--buffer-heading)
+  (let ((hlist (tinytf-heading-positions 'strings))
+	(toc-alist (tinytf-toc-p))
+	(buffer tinytf--buffer-heading)
 	elt)
     (ti::verb)
     (if (null hlist)
@@ -3291,23 +3295,7 @@ VERB enables verbose messages."
           (ti::pmin)
           (if (stringp tinytf--heading-ignore-regexp-form)
               (flush-lines tinytf--heading-ignore-regexp-form))
-          ;; Make sure there are two newlines at the end so that
-          ;; inserted TOC is positioned nicely
-          ;; (ti::pmax)
-          ;; (when (and (looking-at "^$")
-          ;;            (save-excursion
-          ;;              (forward-line -1)
-          ;;              (not (looking-at "^$"))))
-          ;;   (insert "\n"))
-          ;;  Delete leading whitespace
-          ;;  1997-08 Disabled for now and now makes:
-          ;;
-          ;;  1.1
-          ;;    1.2
-          ;;  2.0
-          ;;    2.1
-          ;;
-          (when (and toc nil)
+          (when (and toc-alist nil)
             ;;  Convert heading 2 level to heading  1
             (ti::pmin)
 	    (let ((str (tinytf-indent 1)))
@@ -3321,20 +3309,22 @@ VERB enables verbose messages."
                  (point)
                (1- (point)))))
           ;; Make indentation to text column
-          (when toc
+          (when toc-alist
             (string-rectangle
              (point-min)
              (point-max)
              (tinytf-indent 2))) ;; with-current
 	  (ti::buffer-trim-blanks (point-min) (point-max)))
         (cond
-         (toc                           ;Update existing toc
+         (toc-alist                         ;Update existing toc
           (barf-if-buffer-read-only)
-          (delete-region (car toc) (cdr toc))
+          (delete-region (car toc-alist) (cdr toc-alist))
           (ti::save-with-marker-macro
             ;;  Leave one empty line
-            (goto-char (car toc))
-            (insert-buffer-substring buffer)))
+            (goto-char (car toc-alist))
+	    (insert "\n")
+            (insert-buffer-substring buffer)
+	    (insert "\n")))
          (t                             ;No previous toc
           (when verb
             (pop-to-buffer buffer)

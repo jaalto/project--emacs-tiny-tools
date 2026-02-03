@@ -1,4 +1,4 @@
-;;; tinylibm.el --- Library of s(m)all macros or functions
+;;; tinylibm.el --- Library of s(m)all macros or functions -*- lexical-binding: t -*-
 
 ;;{{{ Id
 
@@ -83,7 +83,7 @@
 
 (require 'tinylibb)                     ;Backward compatible functions
 
-(defconst tinylibm-version-time "2025.1120.0758"
+(defconst tinylibm-version-time "2025.1120.1125"
   "Latest version number.")
 
 ;;{{{ function tests
@@ -421,33 +421,33 @@ Example:
 	      ,@body)))
 
 (defmacro ti::funcall (func-sym &rest args)
-  "Call FUNC-SYM with ARGS. Like funcall, but quiet byte compiler.
+  "Call FUNC-SYM with ARGS only if FUNC-SYM match `fbound'.
 
-The full story:
+Case:
 
-  Byte Compiler is not very smart when it comes to knowing if
-  symbols exist or not. If you have following statement in your function,
-  it still complaints that the function \"is not known\"
+  In case of unknown functions, the byte the compiler still display
+  message that function is not known.
 
-  (if (fboundp \\='some-non-existing-func)
-      (some-non-existing-func arg1 arg2 ...))
+  (if (fboundp \\='my-exmaple)
+      (my-exmaple arg1 arg2 ...))
 
-  instead use:
+To hide the message:
 
-  (if (fboundp \\='some-non-existing-func)
-      (ti::funcall \\='some-non-existing-func arg1 arg2 ...)
-
-  to get rid of the unnecessary warning.
+  (if (fboundp \\='my-exmaple)
+      (ti::funcall \\='my-exmaple arg1 arg2 ...)
 
 Warning:
 
-  You _cannot_ use ti::funcall if the function is in autoload
-  state, because `symbol-function' does not return a function to
-  call. Rearrange code so that you do (require \\='package)
-  or (ti::autoload-p func) test before using ti::funcall."
+  It is not possible tpo use `ti::funcall' if the function is in
+  autoload state, because `symbol-function' does not return a function
+  to call. Rearrange code so that you do (require \\='package)
+  or `(ti::autoload-p func)' test before using `ti::funcall'."
   `(let ((func ,func-sym))
-     (when (fboundp ,func-sym)
-       (apply func ,@args nil))))
+     (when (fboundp func)
+       ;; The acrobatics are need to hide any traces
+       ;; from the byte compiler
+       (let ((fsym (intern (symbol-name func))))
+	 (apply fsym ,@args nil)))))
 
 (defun ti::string-value (x)
   "Return a string with some reasonable print-representation of X.
@@ -828,8 +828,9 @@ Return:
   ;;  We can't read frame information when we have no visible window.
   (frame-parameter (selected-frame) 'background-mode))
 
-;;; Emacs 21.3+ includes this, but is it not the same as here
-;;; (color-supported-p COLOR FRAME &optional BACKGROUND-P)
+;;; Emacs 21.3+ includes:
+;;;    (color-supported-p COLOR FRAME &optional BACKGROUND-P)
+;;; But it is not the same as here
 (defun ti::colors-supported-p ()
   "Check if colours can be used (that thay can be displayed)."
   (cond
@@ -841,7 +842,7 @@ Return:
    ((ti::xemacs-p)
     (or (and (fboundp 'device-class)
              ;; x-display-color-p can only be called in X, otw gives error
-             (eq 'color (ti::funcall 'device-class)))
+             (ti::funcall 'device-class))
         ;; #todo:  Can I consider font-lock support for TTY as
         ;; color support? Here I assume yes.
         (> emacs-major-version 19)       ;XEmacs 20+ does tty
@@ -852,7 +853,7 @@ Return:
   "From base COLOR, make it integer PERCENTAGE, default 5, lighter."
   (or percentage
       (setq percentage 5))
-  (let* ((components (x-color-values color))
+  (let* ((components (color-values color))
          (new-components
           (mapcar (lambda (comp)
                     (setq comp (/ comp 256))
@@ -1198,9 +1199,9 @@ Input:
 
 ;;{{{ Special lists, assoc
 
-;;; Many times you want to have data structure with some KEY
+
 (defmacro ti::assoc-append-inside (func key list add)
-  "Add to the ASSOC list new ELT.
+  "Add to the assoc list new element.
 List must be in format, K = key, E = element.
   ((K . (E E) (K . (E E)) ...)
 
@@ -1219,14 +1220,13 @@ Example:
   -->
   \\='((1 . (a b x)) (2 . (c d))))"
   (let ((elt (cl-gensym "elt-"))
-	(list (cl-gensym "list-")))
+	(elt-list (cl-gensym "elt-list-")))
     `(let (,elt
-	   ,list)
+	   ,elt-list)
        (if (not (setq ,elt (funcall ,func ,key ,list)))
 	   (push (cons ,key (list ,add)) ,list)
-	 (setq ,list (cdr ,elt))
-	 (push ,add ,list)
-	 (setcdr ,elt ,list)))))
+	 (setq ,elt-list (cdr ,elt))
+	 (nconc ,elt-list (list ,add))))))
 
 (defun ti::assoc-replace-maybe-add (target-list-sym list &optional remove)
   "Set TARGET-LIST-SYM entry to LIST of pairs (STRING . CDR-ELT).
@@ -2169,6 +2169,7 @@ Return:
 This should clear memory location contents."
   (maphash
    (lambda (k v)
+     (setq k k) ;; quiet byte compiler
      (fillarray v ?\0)) ;; propably faster
 ;;;     (cl-loop for i from 0 to (1- (length v))
 ;;;              do (aset v i ?\0))
@@ -2770,6 +2771,7 @@ which should hold elements
 
 The PACKAGE-PREFIX is in format \"xxx-:\" where a contact function
 name `PACKAGE-PREFIX-submit-bug-report' is derived."
+  (setq ignore ignore) ;; quiet byte compiler
   ;; Due to ti::funcall, functions must not be in autoload state.
   (require 'wid-edit)
   (let* ((args (ti::funcall 'widget-get widget ':func-args)) ;; #TODO

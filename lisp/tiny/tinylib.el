@@ -1,4 +1,6 @@
 ;;; tinylib.el --- Library of general functions
+;;;
+;;; Not using: -*- lexical-binding: t -*-
 
 ;; This file is not part of Emacs
 
@@ -1290,7 +1292,6 @@ Return:
  list           (file file ..)"
   (let ((re (or re "."))               ;default to match all
         d
-        fn
         fnn
         list
         ret)
@@ -1303,9 +1304,10 @@ Return:
     (cond
      ((ti::string-match-case "RCS/?" d)
       (setq list (directory-files d nil re))
-      (dolist (elt list)
-        (set fn (replace-regexp-in-string ",v$" "" elt))
-        (push fn ret)))
+      (let (fn)
+        (dolist (elt list)
+          (setq fn (replace-regexp-in-string ",v$" "" elt))
+          (push fn ret))))
      (t
       (setq list (directory-files d nil re))
       (dolist (fn list)
@@ -1459,7 +1461,7 @@ Return:
       (setq list branch-list)
       (setq tmp nil)
       (catch 'break
-	(dolist (elt list)
+        (dolist (elt list)
           (if (not (string= elt version))
               (setq tmp elt)
             (setq ret tmp)
@@ -1704,23 +1706,33 @@ When MODE is non-nil
   Accepts nbr or str-nbr                   --> return str or nil"
   ;; (interactive)
   (let ((alist
-         '(("jan" . 1)    ("feb" . 2)     ("mar" . 3)     ("apr" . 4)
-           ("may" . 5)     ("jun" . 6)     ("jul" . 7)     ("aug" . 8)
-           ("sep" . 9)     ("oct" . 10)    ("nov" . 11)    ("dec" . 12)))
+         '(("jan" . 1)
+           ("feb" . 2)
+           ("mar" . 3)
+           ("apr" . 4)
+           ("may" . 5)
+           ("jun" . 6)
+           ("jul" . 7)
+           ("aug" . 8)
+           ("sep" . 9)
+           ("oct" . 10)
+           ("nov" . 11)
+           ("dec" . 12)))
         len
         idx
         el
-        ret
-        str)
+        ret)
     (cond
      ((eq nil mode)
       (setq len (length arg))
-      (if (> len 3) (setq arg (substring str 0 3))) ; cut to 3 chars
+      (if (> len 3)
+          (setq arg (substring arg 0 3))) ; cut to 3 chars
       (setq idx (downcase arg))
       (if (setq el (assoc idx alist))
           (setq ret (cdr el))))
      (t
-      (if (stringp arg) (setq arg (string-to-number arg)))
+      (if (stringp arg)
+          (setq arg (string-to-number arg)))
       (setq idx arg)
       (if (setq el (rassq idx alist))
           (setq ret (car el)))))
@@ -1927,8 +1939,8 @@ Return list:
         str)
     (catch 'break
       (dolist (level level-list)
-	(setq str (match-string level string))
-	(if (and terminate (null str))
+        (setq str (match-string level string))
+        (if (and terminate (null str))
             (progn
               (setq ret nil)              ;that's it then...
               (throw 'break nil))
@@ -2174,7 +2186,7 @@ Return:
       (when (with-current-buffer buffer
               (and (eq major-mode 'dired-mode)
                    (string= dired-directory dir)))
-	(throw 'break buffer)))))
+        (throw 'break buffer)))))
 
 (defsubst ti::buffer-get-ange-buffer-list (&optional regexp)
   "Return list of ange-ftp buffers matching optional REGEXP."
@@ -3888,8 +3900,8 @@ in some other frame window than in the current frame."
     (catch 'break
       (dolist (frame
                (delete (selected-frame) (frame-list)))
-	;;  maybe in other frame...
-	(when (setq win (get-buffer-window buffer frame))
+        ;;  maybe in other frame...
+        (when (setq win (get-buffer-window buffer frame))
           (setq ret (cons frame win))
           (throw 'break nil))))
     ret))
@@ -4164,40 +4176,40 @@ Input:
 
   MAP-SYMBOL    map name
   GET-SET       operation.
-                \\='get  = return previous property value (key definition)
-                \\='set  = copy definition once.
-                \\='sett = (force) copy definition even if already copied.
-                The \\='set copies the key definition behind the propert
-                PROP only if there is no previous value. Value \\='sett
+                \='get  = return previous property value (key definition)
+                \='set  = copy definition once.
+                \='sett = (force) copy definition even if already copied.
+                The \='set copies the key definition behind the propert
+                PROP only if there is no previous value. Value \='sett
                 replaces the content of PROPERTY.
   PROP          property name
   KEY           string -- key binding.
 
 Examples:
 
-  (ti::keymap-bind-control \\='mail-mode-map \\='set \\='my \"\\C-c\\C-c\")
-  --> mail-send-and-exit, saved to property \\='my
+  (ti::keymap-bind-control \='mail-mode-map \='set \='my \"\\C-c\\C-c\")
+  --> mail-send-and-exit, saved to property \='my
 
-  (ti::keymap-bind-control \\='mail-mode-map \\='set \\='my \"\\C-c\\C-c\")
-  --> nil, property \\='my Was already set
+  (ti::keymap-bind-control \='mail-mode-map \='set \='my \"\\C-c\\C-c\")
+  --> nil, property \='my Was already set
 
-  (ti::keymap-bind-control \\='mail-mode-map \\='get \\='my \"\\C-c\\C-c\")
-  --> mail-send-and-exit, get the saved property \\='my.
+  (ti::keymap-bind-control \='mail-mode-map \='get \='my \"\\C-c\\C-c\")
+  --> mail-send-and-exit, get the saved property \='my.
 
 Live example:
 
   ;; - first save original, then use our function. Use property
-  ;;   \\='my, because The C-c C-c can already be occupied by
+  ;;   \='my, because The C-c C-c can already be occupied by
   ;;   some other package...
   ;; - it calls the original afterwards
 
-  (ti::keymap-bind-control \\='mail-mode-map \\='set \\='my \"\\C-c\\C-c\")
-  (define-key mail-mode-map \"\\C-c\\C-c\" \\='my-mail-func-CcCc)
+  (ti::keymap-bind-control \='mail-mode-map \='set \='my \"\\C-c\\C-c\")
+  (define-key mail-mode-map \"\\C-c\\C-c\" \='my-mail-func-CcCc)
 
   (defun my-mail-func-CcCc (arg)
     ...
     (funcall  ;; Call the original.
-      (ti::keymap-bind-control \\='mail-mode-map \\='get \\='my \"\C-c\C-c\")
+      (ti::keymap-bind-control \='mail-mode-map \='get \='my \"\\C-c\\C-c\")
       arg)
     ;; Function ends here.)"
   (let (map
@@ -4356,7 +4368,7 @@ Return:
         (setq attribute 'fg))
     (catch 'break
       (dolist (color (ti::list-make list))
-	(when (condition-case nil
+        (when (condition-case nil
                   (progn
                     (cond
                      ((eq attribute 'fg)
@@ -4365,9 +4377,9 @@ Return:
                       (set-face-background face color)))
                     (setq status color)
                     t)
-		(error
-		 ;; cannot set
-		 nil))
+                (error
+                 ;; cannot set
+                 nil))
           ;; Success, stop the loop
           (throw 'break nil))))
     status))
@@ -4833,6 +4845,8 @@ Return:
                     "[ \t]+\\([^ \t]+\\)"))
         line
         ret)
+    (if point
+	(goto-char point))
     (setq line (ti::read-current-line))
     (save-excursion
       (ignore-errors
@@ -4900,6 +4914,7 @@ filename is understood by shell and does not contain meta characters."
 
 (defun ti::file-ange-completed-message (&rest args)
   "Default message after file has been loaded. Ignore ARGS."
+  (setq args args) ;; quiet byte compiler
   (message "Ange-ftp bg completed"))
 
 ;;; #todo:  Not quite what I want...
@@ -5278,8 +5293,8 @@ Unix path handling:
       (if (ti::win32-cygwin-p)
           (setq try (w32-cygwin-path-to-dos try)))
       (when (and try
-		 (file-directory-p try))
-	(throw 'break try)))))
+                 (file-directory-p try))
+        (throw 'break try)))))
 
 (defun ti::directory-files (dir re &optional absolute form not-re-form)
   "Return files from DIR.
@@ -5441,12 +5456,12 @@ Return:
     (ti::verb)
     (catch 'break
       (dolist (elt paths)
-	(when (stringp elt)           ;you never know what's in there...
+        (when (stringp elt)           ;you never know what's in there...
           (setq file (ti::file-make-path elt fn))
           (when (and (file-exists-p file)
                      (not (file-directory-p file)))
             (if all-paths
-		(push file found)
+                (push file found)
               (setq  found file)
               (throw 'break nil))))))
     (if (and found all-paths)           ;preserve order
@@ -5923,6 +5938,7 @@ Input:
 
   PERL-TYPE   \\='perl \\='win32-cygwin \\='win32-activestate
   BODY        Code to run."
+  (setq perl-type perl-type) ;; unused. TODO
   `(let ((process-environment process-environment) ;; Make a local copy
          new)
      (dolist (elt process-environment)
@@ -6092,9 +6108,15 @@ Can't guess tar command, try using default %s ? " def))))
              (setq cmd def)))
       (if nice
           (insert "file " (file-name-nondirectory file) ":\n"))
-      (call-process cmd nil (or buffer (current-buffer)) nil
-                    (expand-file-name file))
-      (if nice (insert "\n")))))
+      (if test
+	  (message (format "call process: %s %s %s"
+			   cmd
+			   (current-buffer)
+			   (expand-file-name file)))
+	(call-process cmd nil (or buffer (current-buffer)) nil
+                      (expand-file-name file)))
+      (if nice
+	  (insert "\n")))))
 
 (defun ti::process-tar-read-listing-forward  ()
   "Read all tar filenames from current line forward.
@@ -7255,14 +7277,14 @@ otherwise `load-path' is conculted."
          ret)
     (catch 'break
       (dolist (path (if xemacs
-			load-path
+                        load-path
                       exec-path))
-	;;  When we find the version from the path, ve know the root
-	;;  directory
-	;;
-	;;  /opt/local/lib/xemacs-19.14/lisp/vms -->
-	;;  /opt/local/lib/xemacs-19.14/lisp/
-	(when (and (stringp path)
+        ;;  When we find the version from the path, ve know the root
+        ;;  directory
+        ;;
+        ;;  /opt/local/lib/xemacs-19.14/lisp/vms -->
+        ;;  /opt/local/lib/xemacs-19.14/lisp/
+        (when (and (stringp path)
                    (string-match "xemacs" path)
                    (if ver
                        ;; running under XEmacs, we know what to look for.
@@ -7311,7 +7333,9 @@ Return:
     (let (list)
       (ti::funcall
        'map-extents
-       (function (lambda (ov maparg) (push ov list)))
+       (function (lambda (ov maparg)
+		   (setq maparg maparg) ;; quiet byte compiler
+		   (push ov list)))
        (current-buffer) point point)
       list))))
 
@@ -7361,9 +7385,9 @@ then FACE is assigned to it (default \\='highlight)"
       (transient-mark-mode (if off 0 1)) ;From Simple.el
     (if off
         (ti::funcall 'zmacs-deactivate-region)
-      (let ((var 'zmacs-regions)) ;Avoid bute compile mesage in Emacs
-        (set var t)
-        (ti::funcall 'activate-region)))))
+      (defvar zmacs-regions)
+      (setq zmacs-regions t)
+      (ti::funcall 'activate-region))))
 
 (defun ti::compat-read-password  (&optional prompt)
   "Read password with PROMPT which defaults to \"Password: \"."
@@ -7461,11 +7485,11 @@ If mouse is not supported, return nil."
         (let ((win (get-buffer-window (current-buffer)))
               (count 0))
           (save-window-excursion
-	    (catch 'break
+            (catch 'break
               (dolist (elt (window-list)) ;; TODO: why the code?
-		(when (eq elt win)
+                (when (eq elt win)
                   (throw 'break win))
-		(select-window win)
+                (select-window win)
               ;;  Modeline is not counted as +1
               (setq count (+ count (window-height))))))
           ;; (ti::d! count x y)
@@ -7669,12 +7693,12 @@ Return:
         (if (ti::funcall 'misc-user-event-p ret)
             (setq ret (car-safe (ti::funcall 'event-object  ret))))
         (when (and ret mode)            ;find position in list
-	  (catch 'break
+          (catch 'break
             (dolist (arg menu)
               (when (and (vectorp arg)
-			 (string= ret (elt arg 0)))
-		(setq ret  (1- count))
-		(throw 'break nil)))
+                         (string= ret (elt arg 0)))
+                (setq ret  (1- count))
+                (throw 'break nil)))
             (setq count (1+ count)))))))
     ret))
 
@@ -7918,19 +7942,19 @@ Return list:
           (if (and (ti::emacs-p)
                    (vectorp (car list)))
               (setq pos 5))
-	  (catch 'break
+          (catch 'break
             (dolist (elt list)
               (setq item (get-elt elt pos))
               (when (or (and (symbolp item)
                              (eq item function))
-			;;  It may be lambda expression
-			(and (functionp item)
+                        ;;  It may be lambda expression
+                        (and (functionp item)
                              (string-match
-			      (regexp-quote (symbol-name function))
+                              (regexp-quote (symbol-name function))
                               (prin1-to-string
                                (get-elt elt (1+ pos))))))
-		(setq ret (list elt (car timer)))
-		(throw 'break nil)))))))
+                (setq ret (list elt (car timer)))
+                (throw 'break nil)))))))
     ret))
 
 (defun ti::compat-timer-process-status ()
@@ -7944,10 +7968,11 @@ Return list:
     ;; it is built in in XEmacs
     t)))
 
-(defun ti::compat-timer-cancel  (key &optional cancel-function)
+(defun ti::compat-timer-cancel (key &optional cancel-function)
   "Delete timer KEY entry, where KEY is full element in (i)`timer-alist'.
-Function `ti::compat-timer-cancel-function' may be more what you want
-if you know the function in timer list."
+Function `ti::compat-timer-cancel-function' is easier to call
+when you know the function name in timer list."
+  (setq cancel-function cancel-function) ;; unused. TODO
   (let (var)
     (if (null key)
         nil                             ;Do nothing
@@ -8165,18 +8190,15 @@ EASYMENU-NAME CUSTOM-GROUP PREFIX-STYLE"
     (nreverse ret)))
 
 (defmacro ti::macrof-minor-mode
-  (func-min-sym
+  (func-min-sym				;1
    doc-str
-
    install-func                         ;3
    mode-var
    mode-Name                            ;5
    prefix-var
    menu-var                             ;7
-
    no-mode-msg
    mode-desc                            ;9
-
    hook
    &optional body)
   "Create standard functions for minor mode.
@@ -8263,16 +8285,13 @@ Example how to call created functions:
 (defun ti::macrof-minor-mode-1
   (func-min-sym
    doc-str                              ;1
-
    install-func                         ;2
    mode-var                             ;3
    mode-Name                            ;4
    prefix-var                           ;5
    menu-var                             ;6
-
    no-mode-msg                          ;7
    mode-desc                            ;8
-
    hook                                 ;9
    &rest body)                          ;10
   "Use macro `ti::macrof-minor-mode'. And see arguments there.

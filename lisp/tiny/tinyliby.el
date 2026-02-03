@@ -1,4 +1,4 @@
-;;; tinyliby.el --- Library of functions related to Emacs s(y)stem
+;;; tinyliby.el --- Library of functions related to Emacs s(y)stem -*- lexical-binding: t -*-
 
 ;; This file is not part of Emacs
 
@@ -73,7 +73,7 @@
 
 ;;{{{ setup: -- variables
 
-(defconst tinyliby-version-time "2024.0120.1311"
+(defconst tinyliby-version-time "2025.1120.0949"
   "Latest version number as last modified time.")
 
 (defvar ti::system--describe-symbols-history nil
@@ -283,7 +283,7 @@ INPUT:
    (function
     (lambda (sym)
       (let (arg)
-        (when (and (boundp 'sym)
+        (when (and (boundp sym)
                    (setq arg (memq 'disabled (symbol-plist sym)))
                    ;;  ARG = '(disabled t ..)
                    (nth 1 arg))

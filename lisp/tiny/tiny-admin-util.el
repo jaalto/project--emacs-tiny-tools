@@ -612,7 +612,7 @@ Usage from command line:
 To compile libraries:
 
   emacs -batch -l load-path.el -l tiny-setup.el -f \\
-    -eval \\='(tiny-setup-compile-kit-libraries \".\")
+    -eval \='(tiny-setup-compile-kit-libraries \".\")
 
 To compile other than libraries:
 

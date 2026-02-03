@@ -1,4 +1,4 @@
-;;; tinylibenv.el --- Library for environment check functions
+;;; tinylibenv.el --- Library for environment check functions -*- lexical-binding: t -*-
 
 ;; This file is not part of Emacs
 
@@ -349,7 +349,8 @@ at is, Linux and Cygwin qualifies."
 
 (defun ti::win32-cygwin-binary-p (bin &optional use-cache)
   "Check if program BIN is from Cygwin. The program must be an .exe
- USE-CACHE is non-nil, retrieve cached value."
+If USE-CACHE is non-nil, retrieve cached value (not implemented)."
+  (setq use-cache use-cache)
   (let ((cygwin (ti::win32-cygwin-p))
         path)
     (when (and cygwin
@@ -412,7 +413,7 @@ at is, Linux and Cygwin qualifies."
 ;;{{{ Other
 
 (defun ti::file-version (file)
-  "Find 'Version:' tag from lisp FILE. Retun numric version string if any."
+  "Find \"Version:\" tag from lisp FILE. Retun numric version string if any."
   (let* ((lib    (locate-library file))
          (buffer (and lib (find-file-noselect lib)))
          find-file-hook

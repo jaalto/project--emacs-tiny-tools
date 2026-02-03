@@ -1,4 +1,4 @@
-;;; tinylisp.el --- Emacs lisp programming help grab-bag
+;;; tinylisp.el --- Emacs lisp programming help grab-bag -*- lexical-binding: t -*-
 
 ;; This file is not part of Emacs
 

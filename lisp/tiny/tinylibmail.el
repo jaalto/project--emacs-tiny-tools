@@ -1,4 +1,4 @@
-;;; tinylibmail.el --- Library of mail related functions
+;;; tinylibmail.el --- Library of mail related functions -*- lexical-binding: t -*-
 
 ;; This file is not part of Emacs
 
@@ -73,10 +73,10 @@
     (autoload 'mail-abbrevs-setup "mailabbrev")
     (autoload 'build-mail-aliases "mailalias")
     (autoload 'build-mail-abbrevs "mailabbrev")))
-  (autoload 'mail-fetch-field		"mail-utils")
-  (autoload 'rmail-msgbeg		"rmail")
-  (autoload 'rmail-msgend		"rmail")
-  (autoload 'gnus-group-get-parameter	"gnus"))
+  (autoload 'mail-fetch-field           "mail-utils")
+  (autoload 'rmail-msgbeg               "rmail")
+  (autoload 'rmail-msgend               "rmail")
+  (autoload 'gnus-group-get-parameter   "gnus"))
 
 (eval-when-compile
   (or (require 'cl-lib nil 'noerr) ;; Emacs 29.x
@@ -186,15 +186,14 @@ For example a word at point may include anything:
 All of the above will become:
 
   bb.com"
-  (and word
+  (and (stringp word)
        (replace-regexp-in-string
         "[^a-z0-9-.]" ""
         (replace-regexp-in-string "^.*@" "" word))))
 
 (defun ti::mail-ip-at-point-1 ()
   "Read only word containing characters [-.a-zA-z0-9]."
-  (let (beg
-        word)
+  (let (beg)
     ;;  depending where the point is, from this word different part
     ;;  is read: foo.com[1.2.3.4]
     ;;             |       |
@@ -239,7 +238,7 @@ Make sure symbol names are all in lowercase.")
    "\\|^[-]$"                           ;single '-' word
    "\\|[.0-9]"                          ;maybe phone number
    "\\|com\\|org\\|edu"
-   "\\|Dr")				;Titles
+   "\\|Dr")                             ;Titles
   "*Regexp to exclude non-valid people names.
 We can't be sure that the names are really good names when we parse the
 senders From field. Let's see an example
@@ -405,7 +404,7 @@ References:
 
 Return:
 
-  list          \\='(header-name-symbol ...)
+  list          \='(header-name-symbol ...)
   nil           Gnus not loaded?"
   (cond
    ((listp ti:mail-required-headers)
@@ -476,7 +475,10 @@ If no point can be found, return `point-min'."
             (forward-line 1))
         ;;  GNUS 4 sets the mail-header-separator to "" ??
         (if (and (not (ti::nil-p mail-header-separator))
-                 (re-search-forward (regexp-quote mail-header-separator) nil t))
+                 (re-search-forward
+                  (regexp-quote mail-header-separator)
+                  nil
+                  noerr))
             (setq point (match-beginning 0))
           ;;  Header:
           ;;    Continuing line here
@@ -564,6 +566,7 @@ Return:
 You can install this function e.g. into
 `my-message-generate-new-buffers' or `mail-setup-hook'"
   (interactive "Pbuffer name: ")
+  (setq ignore ignore) ;; quiet byte compiler
   (let ((to  (if (string= (buffer-name) " *gnus article copy*") ;; See gnus-msg.el
                  (mail-fetch-field "From")
                (mail-fetch-field "To")))
@@ -595,9 +598,9 @@ You can install this function e.g. into
   "Check if buffer contain headers belonging to simple \\[mail].
 You can call this only once, just after the buffer is initially created"
   (let ((sub (mail-fetch-field "Subject"))
-	;;   mail-fetch-field doesn't return nil if field is empty.
-	(to  (mail-fetch-field "to"))
-	(news (mail-fetch-field "Newsgroups")))
+        ;;   mail-fetch-field doesn't return nil if field is empty.
+        (to  (mail-fetch-field "to"))
+        (news (mail-fetch-field "Newsgroups")))
     ;;  When you're replying to message in NEWS, RMAIL, the SUBJ and
     ;;  TO fields are already filled.
     ;;
@@ -762,13 +765,13 @@ Input:
         (car-safe (ti::mail-pgp-block-area 'msg))))))
 
 (defun ti::mail-pgp-normal-p (&optional point)
-  "Check if there is any PGP in current buffer from POINT forward.
+  "Check if there is any PGP in current buffer or from POINT forward.
 The beginning point of PGP is returned."
   ;; Must find at least two lines, maybe BEG and END
-  (let ((re   (ti::mail-pgp-any-pgp-line-regexp 'acnhor))
+  (let ((re (ti::mail-pgp-any-pgp-line-regexp 'acnhor))
         ret)
     (save-excursion
-      (ti::pmin)
+      (goto-char (or point (point-min)))
       (when (re-search-forward re nil t)
         (setq ret (match-beginning 0))
         (if (null (re-search-forward re nil t))
@@ -805,11 +808,11 @@ Input:
 
 Input:
   MODE      nil   search signed start line..
-            \\='sig  search signature start instead.
-            \\='signed  search signed message area
-            \\='pkey search public key block start instead.
-            \\='msg  search for pgp base64 signed \"message\"
-            \\='any  go to `point-min' and search beginning of any
+            \='sig  search signature start instead.
+            \='signed  search signed message area
+            \='pkey search public key block start instead.
+            \='msg  search for pgp base64 signed \"message\"
+            \='any  go to `point-min' and search beginning of any
                   PGP line, then go to the end of buffer and search
                   backward any PGP line.  The lines must not be at
                   same position.  This gives you the whole PGP
@@ -879,14 +882,14 @@ Return:
 
 Input:
   MODE          nil     search signed start line.
-                \\='sig    search signature start.
-                \\='sige   search signature block end.
-                \\='pkey   search public key block start.
-                \\='pkeye  search public key block end.
-                \\='msg    search for pgp base64 signed \"message\"
+                \='sig    search signature start.
+                \='sige   search signature block end.
+                \='pkey   search public key block start.
+                \='pkeye  search public key block end.
+                \='msg    search for pgp base64 signed \"message\"
                         This also finds conventionally crypted tag.
-                \\='kid    search for \"Key for user ID: \"
-                \\='kpub   search for \"pub   512/47141D35 1996/06/03 ...\"
+                \='kid    search for \"Key for user ID: \"
+                \='kpub   search for \"pub   512/47141D35 1996/06/03 ...\"
                         note: match level 1 matches 0x code 47141D35
   MOVE          flag    non-nil moves point to found point
   END           flag    use `match-end' instead of math-beginning.
@@ -949,9 +952,9 @@ EXE-FILE-LOCATION defaults to \"pgp\" but can also be absolute path."
 (defun ti::mail-pgp-data-type ()
   "Examine pgp data packet type by searching _forward_.
 Return:
-  \\='base64
-  \\='pgp
-  \\='conventional
+  \='base64
+  \='pgp
+  \='conventional
   nil"
   (let ((re  (ti::mail-pgp-any-pgp-line-regexp 'anchor))
         char)
@@ -989,7 +992,7 @@ Return:
 (defun ti::mail-pgp-chop-region (beg end)
   "Delete junk around BEG END from pgp public key block.
 Area BEG END that correspond to pgp begin and end
-lines (call `ti::mail-pgp-block-area' with argument \\='any),
+lines (call `ti::mail-pgp-block-area' with argument \='any),
 then we chop the public key region so that only the pgp area
 is left without additional garbage.
 
@@ -1125,21 +1128,21 @@ Convert 8bit binary byte string \"000001...\" into list of ints."
 
 (defun ti::mail-pgp-data-study-ctb-byte (int)
   "From single INT, examine the PGP CTB structure.
-Return
+Return:
  nil    ,input was not CTB byte
- \\='(ctb-type length-field)
-        ctb-type  is
-        \\='enc      (pgp encrypted message)
-        \\='signed   (signed message)
-        \\='secring  (secret keyring)
-        \\='pring    (public keyring)
-        \\='base64   (base 64 signed)
-        \\='crypt    (conventionally crypted)
-        \\='raw      (raw literal plaintext)
-        \\='trust    (keyring trust packet)
-        \\='uid      (user id packet)
-        \\='comment  (comment packet)
-        \\='unknown  (none of the above...)
+ \='(ctb-type length-field)
+        ctb-type is
+        \='enc      (pgp encrypted message)
+        \='signed   (signed message)
+        \='secring  (secret keyring)
+        \='pring    (public keyring)
+        \='base64   (base 64 signed)
+        \='crypt    (conventionally crypted)
+        \='raw      (raw literal plaintext)
+        \='trust    (keyring trust packet)
+        \='uid      (user id packet)
+        \='comment  (comment packet)
+        \='unknown  (none of the above...)
 
         length is
         nil       no length, unknown length
@@ -1163,24 +1166,32 @@ Return
 	 tmp
          ret)
     (when (setq tmp (logand int ctb-mask))
+      (setq tmp tmp) ;; quiet byte compiler
       ;; shift to the right 2 bits
       (when (setq val (assq (ash (logand int type-mask) -2) table))
         (setq type (cdr val)))
       (setq val (logand int length-mask))
       (cond
-       ((eq 0 val)  (setq val 1))
-       ((eq 1 val)  (setq val 2))
-       ((eq 1 val)  (setq val 4))
-       ((eq 3 val)  (setq val nil)))
+       ((eq 0 val)
+        (setq val 1))
+       ((eq 1 val)
+        (setq val 2))
+       ((eq 1 val)
+        (setq val 4))
+       ((eq 3 val)
+        (setq val nil)))
       (setq ret (cons type val)))
     ret))
 
 (defsubst ti::mail-pgp-stream-study-1-ver (int)
   "Return pgp version string from stream INT."
   (cond
-   ((eq 2 int) "2.5")
-   ((eq 3 int) "2.6")
-   (t          (error "Invalid Data format."))))
+   ((eq 2 int)
+    "2.5")
+   ((eq 3 int)
+    "2.6")
+   (t
+    (error "Invalid Data format."))))
 
 (put 'ti::mail-pgp-stream-study-1-key-id 'lisp-indent-function 1)
 (put 'ti::mail-pgp-stream-study-1-key-id 'edebug-form-spec '(body))
@@ -1218,8 +1229,8 @@ STREAM will be advanced during read."
     (ti::date-standard-date nil (list val1 val2))))
 
 (defun ti::mail-pgp-stream-study-enc (length stream)
-  "Study the \\='enc packet, which has known LENGTH.
-STREAM is list of ints, minimum 11 integers, 13 is the full \\='enc packet.
+  "Study the \='enc packet, which has known LENGTH.
+STREAM is list of ints, minimum 11 integers, 13 is the full \='enc packet.
 
 Return list:
   (version-string
@@ -1247,7 +1258,7 @@ Return list:
     (list ver msb lsb rsa-alg rsa-int)))
 
 (defun ti::mail-pgp-stream-study-signed (length stream)
-  "Study the \\='sign packet, which has known LENGTH. STREAM is list of ints.
+  "Study the \='sign packet, which has known LENGTH. STREAM is list of ints.
 
 Return list:
   (version-string
@@ -1258,7 +1269,7 @@ Return list:
    key-lsb-hex-string
    alg-rsa                  ;; nil if stream is not long enough
    alg-md5                  ;; nil if ...
-   digest                   \\='(int int);; nil if ...
+   digest                   \='(int int);; nil if ...
    rsa-algorithm                 ;; nil if stream is not long enough
    rsa-int (encrypted integer)   ;; nil if stream is not long enough)"
   (let* ((msb "")
@@ -1295,7 +1306,7 @@ Return list:
           alg-rsa alg-md5 digest)))
 
 (defun ti::mail-pgp-stream-study-pring (length stream)
-  "Study the \\='pring packet, which has known LENGTH. STREAM is list of ints.
+  "Study the \='pring packet, which has known LENGTH. STREAM is list of ints.
 
 Return list:
   (version-string
@@ -1444,7 +1455,7 @@ Input:
 
 Return:
 
-  \\='(CTB . (INFO-LIST))  the CTB type and data for CTB
+  \='(CTB . (INFO-LIST))  the CTB type and data for CTB
   nil                   no stream found forward."
   (interactive)
   (let* ((point (point))
@@ -1502,7 +1513,7 @@ Input:
   "Study DATA and Return packet ELT.
 Values:
   DATA   must be in the format of `ti::mail-pgp-stream-forward-and-study'
-  ELT    can be \\='ver \\='time \\='key-id"
+  ELT    can be \='ver \='time \='key-id"
   (let* ((type (car data))
          (pos  (assq
                 elt
@@ -1878,7 +1889,7 @@ The VAL returned is different for continued string. It is a list of
 individual parts in the parsed. In this case the whole returned value
 would be:
 
-\\='((var1 . (val1))
+\='((var1 . (val1))
   (var2 . (val2))
   (var3 . (\"starts here \" \" continues here\"))
   (var4 . (\" v1,v2,v3\")))
@@ -1982,8 +1993,8 @@ This function does nothing if first line is not header.
 
 Input:
 
-  MODE       \\='move-to-body moves, all headers to body
-             \\='move-to-body-maybe, all headers to body only if
+  MODE       \='move-to-body moves, all headers to body
+             \='move-to-body-maybe, all headers to body only if
              there is not already hash marks.
              arg1 is used for subject       defaults to \"dummy\"
              arg2 is used for organisation  defaults to \"dummy\"
@@ -2069,11 +2080,11 @@ be sure to have <> in the email, which defaults to `user-mail-address'.
 
 Input:
 
-  MODE      \\='epgp -- return encrypted pgp tag.
-            \\='post -- return simple Newsgroup post block. `email'
+  MODE      \='epgp -- return encrypted pgp tag.
+            \='post -- return simple Newsgroup post block. `email'
             contains the address of post remailer.
             If there is not enough
-            parameters, say for \\='tk, the previous one is used: \\='t
+            parameters, say for \='tk, the previous one is used: \='t
 
   TYPE      cpunk   Anon-To
             eric    Anon-Send-To
@@ -2124,7 +2135,7 @@ The parsing starts from current point forward.
 Input:
 
   BUFFER            defaults to current buffer
-  CONTROL-LIST      \\='(remailer-alias (prop-no-list) [(prop-add-list)])
+  CONTROL-LIST      \='(remailer-alias (prop-no-list) [(prop-add-list)])
                     This control list says: if REGEXP matches the
                     email address, remove all properties listed in
                     prop-no-list and add all properties listed in
@@ -2136,7 +2147,7 @@ Input:
                     your control-list is like this. The ek property
                     is removed even if the list says otherwise.
 
-                    \\='(\"replay\" \\='(\"ek\"))
+                    \='(\"replay\" \='(\"ek\"))
 
 Return list:
 
@@ -2263,14 +2274,14 @@ xx.domain.co.uk   --> domain.co.uk"
    ((string-match "[^@]+$" string)
     (match-string 0 string))))
 
-(defun ti::mail-email-domain-canonilize (list)
+(defun ti::mail-email-domain-canonicalize (list)
   "Canonilize list of addresses to top level domain names only
-E.g.: \\='(\"aa.foo.com\" \"bb.foo.com\") --> \\='(\"foo.com\")"
+E.g.: \='(\"aa.foo.com\" \"bb.foo.com\") --> \='(\"foo.com\")"
   (let* (ret
          domain)
     (dolist (elt list)
       (setq domain (ti::mail-email-domain elt))
-      (add-to-list 'ret domain))
+      (push domain ret))
     ret))
 
 (defun ti::mail-email-find-region (&optional beg end no-dupes)
@@ -2342,7 +2353,7 @@ that the old functionality is preserved in spite of changes."
         ptr)
     (setq list
           '("Dr. Foo Bar <foo@bar.com>"
-	    "<jdoe@examole.com> (Finland, pgp id 512/47141D35)"
+            "<jdoe@examole.com> (Finland, pgp id 512/47141D35)"
             "(Rune Juntti[FRONTEC Pajala]) <jdoe@example.se>"
             "shahramn@wv.mentorg.com (jdoe@example.com)"
             "(jdoe@example.com)"
@@ -2379,10 +2390,10 @@ that the old functionality is preserved in spite of changes."
 Supposes that the \"From:\" keyword is removed from the LINE.
 
 Return:
-  list          \\='(firstname surname)
+  list          \='(firstname surname)
   nil           if cannot parse both"
   (let* ((re-ignore "\\(?:Dr. +\\|Mr. +\\)?")
-	 (re-A          "[-a-zA-Z0-9.{|]")
+         (re-A          "[-a-zA-Z0-9.{|]")
          (re-AG         (concat "\\("  re-A "+\\)"))
          ;;  'From: Mr-CEO John Doe <jdoe@example.com'
          (fs-re2  (concat re-ignore re-AG " +" re-AG))
@@ -2463,7 +2474,7 @@ Return:
       ;;  If this is a full email string Joe@foo.com
       ;;  then get only the first part.
       (when (and (setq tmp
-		       (ti::string-match "^\\([^ \t]+\\)[@%][^ \t]+$" 1 line))
+                       (ti::string-match "^\\([^ \t]+\\)[@%][^ \t]+$" 1 line))
                  (setq tmp (ti::string-match re-AG 1 tmp)))
         (setq D "email")
         (setq list (list tmp ""))
@@ -2546,7 +2557,7 @@ Input is full LINE, possibly containing \"From:\" keyword.
 
 Return:
 
-  list          \\='(usrname site)
+  list          \='(usrname site)
   nil           if cannot parse."
   (let* (account
          site
@@ -2780,7 +2791,7 @@ The -!- indicates the location of point."
     (match-string 1 string)))
 
 (defsubst ti::mail-parse-received-string-date (string)
-  "Parse \from\" field from \"Received:\" STRING."
+  "Parse \"from address\" from \"Received:\" STRING."
   (when (string-match
          "^.+;[ \t\r\n]+\\(.+[^ \t\r\n]\\)" string)
     (match-string 1 string)))
@@ -2995,7 +3006,7 @@ The following access variables are available within BODY:
 
   received-header-data
   from              => host1
-  smtp              => \\='(host2 ww.xx.yy.zz)
+  smtp              => \='(host2 ww.xx.yy.zz)
   smtp-id           => MAA04298
   by                => host3
   for               => host1
@@ -3011,11 +3022,11 @@ References:
   and `ti::mail-parse-received-string'."
   `(let ((received-header-data (ti::mail-parse-received-string ,string)))
      (cl-symbol-macrolet ((from     (cdr (assq 'from received-header-data)))
-			  (smtp     (cdr (assq 'smtp received-header-data)))
-			  (by       (cdr (assq 'by received-header-data)))
-			  (smtp-id  (cdr (assq 'smtp-id received-header-data)))
-			  (for      (cdr (assq 'for received-header-data)))
-			  (date     (cdr (assq 'date received-header-data))))
+                          (smtp     (cdr (assq 'smtp received-header-data)))
+                          (by       (cdr (assq 'by received-header-data)))
+                          (smtp-id  (cdr (assq 'smtp-id received-header-data)))
+                          (for      (cdr (assq 'for received-header-data)))
+                          (date     (cdr (assq 'date received-header-data))))
        ,@body)))
 
 (defun ti::mail-whois-parse-cleanup (string)
@@ -3065,7 +3076,7 @@ See `ti::mail-whois-parse'."
          (concat
           "E?-?mail:[ \t]*"
           "\\|\\(mailto\\|changed\\|updated\\):"
-          "\\|\\<[0-9]+\\>"))<
+          "\\|\\<[0-9]+\\>"))
           line
           email
           desc
@@ -3174,13 +3185,13 @@ See `ti::mail-whois-parse'."
   (let ((point (point))
         ret)
     (cl-flet ((search-my (func)
-		(goto-char point)
-		(funcall func)))
+                (goto-char point)
+                (funcall func)))
       (catch 'break
-	(dolist (func '(ti::mail-whois-parse-registrant-1
-			ti::mail-whois-parse-registrant-domain
-			ti::mail-whois-parse-registrant-organization
-			ti::mail-whois-parse-registrant-organization-2))
+        (dolist (func '(ti::mail-whois-parse-registrant-1
+                        ti::mail-whois-parse-registrant-domain
+                        ti::mail-whois-parse-registrant-organization
+                        ti::mail-whois-parse-registrant-organization-2))
           (when (setq ret (search-my func))
             (throw 'break ret)))))))
 
@@ -3217,124 +3228,124 @@ See `ti::mail-whois-parse'."
 Values examined are: expires, created and updated.
 Note: this function relies on dynamically bound values."
   (let* ((date-info
-	  (list
-	   ;;  10-Aug-1998
-	   (list
-	    `,(concat
-	       "\\("
-	       "\\([0-9][0-9]?\\)"
-	       "-\\([A-Z][a-z][a-z]\\)"
-	       "-\\([0-9][0-9][0-9][0-9]\\)"
-	       "\\)")
-	    ;; day month year
-	    '(3 4 5))
-	   ;;  10-08-1998
-	   (list
-	    `,(concat
-	       "\\("
-	       "\\([0-9][0-9]?\\)"
-	       "-\\([0-9][0-9]?\\)"
-	       "-\\([0-9][0-9][0-9][0-9]\\)"
-	       "\\)")
-	    '(3 4 5))
-	   ;;  Mon, Aug 10, 1998
-	   (list
-	    `,(concat
-	       "\\("
-	       "[A-Z][a-z][a-z],[ \t]*"
-	       "\\([A-Z][a-z][a-z]\\)[ \t]+" ;; Mon
-	       "\\([0-9]+\\)[ \t]*,[ \t]*"   ;; day
-	       "\\([0-9][0-9][0-9][0-9]\\)"  ;; year
-	       "\\)")
-	    '(4 3 5))
-	   (list
-	    `,(concat
-	       ;; 2003-08-25 19:15
-	       "\\("
-	       "\\([0-9][0-9][0-9][0-9]\\)"
-	       "-\\([0-9][0-9]\\)"
-	       "-\\([0-9][0-9]\\)"
-	       "[ \t]+[0-9][0-9]:[0-9][0-9]"
-	       "\\)")
-	    '(5 4 3))
-	   (list
-	    `,(concat
-	       ;; 1998.08.11
-	       "\\("
-	       "\\([0-9][0-9][0-9][0-9]\\)"
-	       "[.]\\([0-9][0-9]\\)"
-	       "[.]\\([0-9][0-9]\\)"
-	       "\\)")
-	    '(5 4 3))
-	   (list
-	    `,(concat
-	       ;; changed:  20001107 15:03:09
-	       ;; changed:     registdom@tin.it 20030403
-	       ;;
-	       "\\(\\([0-9][0-9][0-9][0-9]\\)"
-	       "\\([0-9][0-9]\\)"
-	       "\\([0-9][0-9]\\)"
-	       "\\)")
-	    '(5 4 3))))
-	 (search (list
-		  (list
-		   'expires
-		   `,(concat
-		      "\\("
-		      "^[ \t]*Record[ \t]+expires[ \t]+on[ \t]+"
-		      "\\|^[ \t]*Expires[ \t]+on"
-		      "\\|^expire:[^\r\n0-9]+"
-		      "\\|^[ \t]*expiration date:[ \t]+"
-		      "\\)"))
-		  (list
-		   'created
-		   `,(concat
-		      "\\("
-		      "^[ \t]*Record[ \t]+created[ \t]+on[ \t]+"
-		      "\\|^[ \t]*Created[ \t]+on.*[ \t]+"
-		      "\\|^created:[^\r\n0-9]+"
-		      "\\|^[ \t]*creation date:[ \t]+"
-		      "\\)"))
-		  (list
-		   'updated
-		   `,(concat
-		      "\\("
-		      "^.*last.*updated?[ \t]+on[ \t]+"
-		      "\\|^[ \t]*updated date:[ \t]+"
-		      "\\|^changed:[^\r\n0-9]+"
-		      "\\)"))))
-	 (beg (point))
-	 raw
-	 day
-	 month
-	 year
-	 ret)
+          (list
+           ;;  10-Aug-1998
+           (list
+            `,(concat
+               "\\("
+               "\\([0-9][0-9]?\\)"
+               "-\\([A-Z][a-z][a-z]\\)"
+               "-\\([0-9][0-9][0-9][0-9]\\)"
+               "\\)")
+            ;; day month year
+            '(3 4 5))
+           ;;  10-08-1998
+           (list
+            `,(concat
+               "\\("
+               "\\([0-9][0-9]?\\)"
+               "-\\([0-9][0-9]?\\)"
+               "-\\([0-9][0-9][0-9][0-9]\\)"
+               "\\)")
+            '(3 4 5))
+           ;;  Mon, Aug 10, 1998
+           (list
+            `,(concat
+               "\\("
+               "[A-Z][a-z][a-z],[ \t]*"
+               "\\([A-Z][a-z][a-z]\\)[ \t]+" ;; Mon
+               "\\([0-9]+\\)[ \t]*,[ \t]*"   ;; day
+               "\\([0-9][0-9][0-9][0-9]\\)"  ;; year
+               "\\)")
+            '(4 3 5))
+           (list
+            `,(concat
+               ;; 2003-08-25 19:15
+               "\\("
+               "\\([0-9][0-9][0-9][0-9]\\)"
+               "-\\([0-9][0-9]\\)"
+               "-\\([0-9][0-9]\\)"
+               "[ \t]+[0-9][0-9]:[0-9][0-9]"
+               "\\)")
+            '(5 4 3))
+           (list
+            `,(concat
+               ;; 1998.08.11
+               "\\("
+               "\\([0-9][0-9][0-9][0-9]\\)"
+               "[.]\\([0-9][0-9]\\)"
+               "[.]\\([0-9][0-9]\\)"
+               "\\)")
+            '(5 4 3))
+           (list
+            `,(concat
+               ;; changed:  20001107 15:03:09
+               ;; changed:     registdom@tin.it 20030403
+               ;;
+               "\\(\\([0-9][0-9][0-9][0-9]\\)"
+               "\\([0-9][0-9]\\)"
+               "\\([0-9][0-9]\\)"
+               "\\)")
+            '(5 4 3))))
+         (search (list
+                  (list
+                   'expires
+                   `,(concat
+                      "\\("
+                      "^[ \t]*Record[ \t]+expires[ \t]+on[ \t]+"
+                      "\\|^[ \t]*Expires[ \t]+on"
+                      "\\|^expire:[^\r\n0-9]+"
+                      "\\|^[ \t]*expiration date:[ \t]+"
+                      "\\)"))
+                  (list
+                   'created
+                   `,(concat
+                      "\\("
+                      "^[ \t]*Record[ \t]+created[ \t]+on[ \t]+"
+                      "\\|^[ \t]*Created[ \t]+on.*[ \t]+"
+                      "\\|^created:[^\r\n0-9]+"
+                      "\\|^[ \t]*creation date:[ \t]+"
+                      "\\)"))
+                  (list
+                   'updated
+                   `,(concat
+                      "\\("
+                      "^.*last.*updated?[ \t]+on[ \t]+"
+                      "\\|^[ \t]*updated date:[ \t]+"
+                      "\\|^changed:[^\r\n0-9]+"
+                      "\\)"))))
+         (beg (point))
+         raw
+         day
+         month
+         year
+         ret)
     (catch 'break
       (dolist (elt search)
-	(cl-multiple-value-bind (type line)
-	    elt
-	  (dolist (date-data date-info)
-	    (cl-multiple-value-bind (regexp pos-list)
-		date-data
-	      (setq regexp (concat line regexp))
-	      ;;  The order of the fields can be anything, start over
-	      ;;  every time from the same point
-	      (goto-char beg)
-	      (when (re-search-forward regexp nil t)
-		(setq raw (match-string 2))
-		(setq day (match-string (nth 0 pos-list)))
-		(setq month (match-string (nth 1 pos-list)))
-		(setq year (match-string (nth 2 pos-list)))
-		(if (eq 3 (length month))
-		    (setq month (ti::month-to-number
-				 (capitalize month)
-				 'zero)))
-		(push (list
-		       type
-		       (list (format "%s-%s-%s" year month day)
-			     raw))
-		      ret))
-	      (throw 'break nil))))))
+        (cl-multiple-value-bind (type line)
+            elt
+          (dolist (date-data date-info)
+            (cl-multiple-value-bind (regexp pos-list)
+                date-data
+              (setq regexp (concat line regexp))
+              ;;  The order of the fields can be anything, start over
+              ;;  every time from the same point
+              (goto-char beg)
+              (when (re-search-forward regexp nil t)
+                (setq raw (match-string 2))
+                (setq day (match-string (nth 0 pos-list)))
+                (setq month (match-string (nth 1 pos-list)))
+                (setq year (match-string (nth 2 pos-list)))
+                (if (eq 3 (length month))
+                    (setq month (ti::month-to-number
+                                 (capitalize month)
+                                 'zero)))
+                (push (list
+                       type
+                       (list (format "%s-%s-%s" year month day)
+                             raw))
+                      ret))
+              (throw 'break nil))))))
     ret))
 
 (defun ti::mail-whois-parse-servers ()
@@ -3506,13 +3517,13 @@ References:
   `ti::mail-whois-parse'."
   `(let ((whois-data (ti::mail-whois-parse ,string)))
      (cl-symbol-macrolet ((referral   (cdr (assq 'referral   whois-data)))
-			  (registrant (cdr (assq 'registrant whois-data)))
-			  (email      (cdr (assq 'email      whois-data)))
-			  (admin      (cdr (assq 'admin      whois-data)))
-			  (tech       (cdr (assq 'tech       whois-data)))
-			  (zone       (cdr (assq 'zone       whois-data)))
-			  (records    (cdr (assq 'records    whois-data)))
-			  (servers    (cdr (assq 'servers    whois-data))))
+                          (registrant (cdr (assq 'registrant whois-data)))
+                          (email      (cdr (assq 'email      whois-data)))
+                          (admin      (cdr (assq 'admin      whois-data)))
+                          (tech       (cdr (assq 'tech       whois-data)))
+                          (zone       (cdr (assq 'zone       whois-data)))
+                          (records    (cdr (assq 'records    whois-data)))
+                          (servers    (cdr (assq 'servers    whois-data))))
        ,@body)))
 
 ;;; Registrant:
@@ -3680,7 +3691,7 @@ If nslookup fails, the return value is list: (ORIG-IP nil)"
 (put 'ti::with-mail-nslookup 'edebug-form-spec '(body))
 (put 'ti::with-mail-nslookup 'lisp-indent-function 1)
 (defmacro ti::with-mail-nslookup (data &rest body)
-  "with resault of `ti::mail-nslookup' DATA \\='(ip (ip ...)) run BODY.
+  "with resault of `ti::mail-nslookup' DATA \='(ip (ip ...)) run BODY.
 The following variables are available during looping within BODY:
 
   ip-name  ip-found."
@@ -3748,14 +3759,14 @@ If nslookup fails, the return value is (ORIG-IP . nil)"
 (defun ti::mail-get-buffer  (&optional mode-list)
   "Return open mail buffer if one exists.
 MODE-LIST is the search order precedence. It can take values
-\\='mail-mode \\='message-mode and any other valid mail like modes.
+\='mail-mode \='message-mode and any other valid mail like modes.
 
 Example:
 
   ;; Return some mail-mode buffer. If there is none, then
   ;; return some message-mode buffer.
 
-  (ti::mail-get-buffer \\='(mail-mode message-mode))"
+  (ti::mail-get-buffer \='(mail-mode message-mode))"
   (let (list
         buffer)
     (or mode-list
@@ -3777,7 +3788,7 @@ Example:
     ;;  Step through mode lists and return first buffer
     (catch 'break
       (dolist (mode mode-list)
-	(when (setq buffer (car-safe (get 'list mode)))
+        (when (setq buffer (car-safe (get 'list mode)))
           (throw 'break nil))))
     buffer))
 
@@ -3815,7 +3826,7 @@ We try to find this string forward and it is not there we add one."
           (progn                        ; normal mail
             (mail-yank-original '(4)))
         (with-current-buffer yb
-	  (widen))
+          (widen))
         (insert-buffer-substring yb))
       (ti::pmax)
       (delete-blank-lines)
@@ -4133,7 +4144,7 @@ Input:
    MODE          nil    read the field as is, returning all chars
                         after the \":\"
                  t      If field has only spaces, Return nil
-                 \\='pure  Include header name as well as content.
+                 \='pure  Include header name as well as content.
 
 Return:
 
@@ -4323,7 +4334,7 @@ References
 
 Input:
 
- FIELD-LIST     Eg. \\='(\"To\" \"CC\"). Default is To CC and BCC.
+ FIELD-LIST     Eg. \='(\"To\" \"CC\"). Default is To CC and BCC.
  ABBREV-ALIST   see function `ti::mail-abbrev-expand-mail-aliases'
  NO-EXPAND      if non-nil, Do not expand addresses on current buffer.
 
@@ -4443,7 +4454,7 @@ This function is meaningful only when you use it inside
 some GNUS or mail hook.  The buffer must be current mail buffer.
 
 Return:
-  \\='news
+  \='news
   nil"
   (let* ((mode          (symbol-name major-mode))
 
@@ -4790,11 +4801,11 @@ content-transfer-encoding: quoted-printable"
       ;;   to subject in-reply-to cc replybuffer actions
       ;;
       (mail-setup ,to ,subject
-		  (not 'in-reply)
-		  (not 'cc)
-		  (not 'replybuffer)
-		  (not 'actions)
-		  (not 'return-actions))
+                  (not 'in-reply)
+                  (not 'cc)
+                  (not 'replybuffer)
+                  (not 'actions)
+                  (not 'return-actions))
       (mail-mode)
       (ti::mail-kill-field "^fcc")
       (ti::mail-text-start 'move)
@@ -4916,11 +4927,12 @@ Input:
 
 Return alist:
   ((ABBREV-STRING . EXPANDED-STRING) ...)"
+  (setq expand-until expand-until) ; not implemented. TODO
   (let ((abbrev-expand-function nil) ;; prevent recursion
-	(mail-abbrev-aliases-need-to-be-resolved t)
-	table
-	exp-list
-	elt)
+        (mail-abbrev-aliases-need-to-be-resolved t)
+        table
+        exp-list
+        elt)
     ;; XEmacs 19.14 no-op for ByteCompiler
     (unless mail-abbrev-aliases-need-to-be-resolved
       (setq mail-abbrev-aliases-need-to-be-resolved nil))

@@ -1,4 +1,4 @@
-;;; tinyliba.el --- Library for (a)utoload definitions
+;;; tinyliba.el --- Library for (a)utoload definitions -*- lexical-binding: t -*-
 
 ;; This file is not part of Emacs
 
@@ -74,7 +74,7 @@
 
 (provide 'tinyliba)
 
-(defconst tinyliba-version-time "2023.1121.1559"
+(defconst tinyliba-version-time "2025.1120.1024"
   "Latest version number as last modified time.")
 
 (autoload 'with-timeout      "timer"        "" nil 'macro)
@@ -983,7 +983,7 @@ This function is run only once at tinynyliba.el load."
   (autoload 'ti::mail-pgpr-parse-levien-list      "tinylibmail" "" nil)
   (autoload 'ti::mail-email-make-anti-spam-address "tinylibmail" "" nil)
   (autoload 'ti::mail-email-domain                "tinylibmail" "" nil)
-  (autoload 'ti::mail-email-domain-canonilize     "tinylibmail" "" nil)
+  (autoload 'ti::mail-email-domain-canonicalize   "tinylibmail" "" nil)
   (autoload 'ti::mail-email-find-region           "tinylibmail" "" nil)
   (autoload 'ti::mail-email-from-string           "tinylibmail" "" nil)
   (autoload 'ti::mail-test-parse-name             "tinylibmail" "" nil)

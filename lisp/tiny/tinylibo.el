@@ -1,4 +1,4 @@
-;;; tinylibo.el --- Library for handling (o)verlays
+;;; tinylibo.el --- Library for handling (o)verlays -*- lexical-binding: t -*-
 
 ;; This file is not part of Emacs
 
@@ -69,7 +69,7 @@
 
 (require 'tinylibm)
 
-(defconst tinylibo-version-time "2023.0918.1901"
+(defconst tinylibo-version-time "2025.1120.0913"
   "Latest version number as last modified time.")
 
 (eval-and-compile

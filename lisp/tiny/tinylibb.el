@@ -1,4 +1,4 @@
-;;; tinylibb.el --- Library of (b)ackward compatible functions.
+;;; tinylibb.el --- Library of (b)ackward compatible functions. -*- lexical-binding: t -*-
 
 ;; This file is not part of Emacs
 
@@ -81,7 +81,7 @@
 (eval-and-compile
   (autoload 'ti::replace-match "tinylibm"))
 
-(defconst tinylibb-version-time "2024.1108.1035"
+(defconst tinylibb-version-time "2025.1120.0937"
   "Latest version number as last modified time.")
 
 ;;; ....................................................... &emulation ...
@@ -89,6 +89,8 @@
 (defun-maybe subst-char-in-string (old new string)
   "Search OLD character with NEW in STRING. Changes STRING."
   (cl-nsubstitute new old string))
+
+(defalias-maybe 'color-values 'x-color-values)
 
 (defun-maybe bin-string-to-int (8bit-string)
   "Convert 8BIT-STRING  string to integer."
@@ -112,7 +114,7 @@
       (setq i (1+ i)))
     s))
 
-(defun-maybe int-to-hex-string (n &optional separator pad)
+(defun-maybe int-to-hex-string (n &optional separator)
   "Convert integer N to hex string. SEPARATOR between hunks is \"\".
 PAD says to padd hex string with leading zeroes."
   (or separator
@@ -327,6 +329,7 @@ Default is to convert all tabs in STRING with spaces."
 
 (unless (fboundp 'called-interactively-p) ;23.2
   (defmacro called-interactively-p (&rest args)
+    (setq args args)
     `(called-interactively-p 'interactive)))
 
 (unless (fboundp 'with-buffer-modified)

@@ -1,4 +1,4 @@
-;;; tinylibw.el --- Library for (w)indows Cygwin OS specific functions
+;;; tinylibw.el --- Library for (w)indows Cygwin OS specific functions -*- lexical-binding: t -*-
 
 ;; This file is not part of Emacs
 
@@ -51,7 +51,7 @@
 (require 'tinyliba)
 (provide 'tinylibw)
 
-(defconst tinylibw-version-time "2024.0120.1601"
+(defconst tinylibw-version-time "2025.1120.0913"
   "Latest version number as last modified time.")
 
 ;;; Some of the functions were submitted for Emacs 21.2

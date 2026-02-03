@@ -1,4 +1,4 @@
-;;; tinylibmenu.el --- Library for echo-area menu
+;;; tinylibmenu.el --- Library for echo-area menu -*- lexical-binding: t -*-
 
 ;; This file is not part of Emacs
 
@@ -123,7 +123,7 @@
 (eval-when-compile
   (autoload 'ignore-errors "cl-macs" nil 'macro))
 
-(defconst tinylibmenu-version-time "2023.0917.1743"
+(defconst tinylibmenu-version-time "2025.1120.0913"
   "Latest version number.")
 
 (defvar ti::menu--load-hook nil
