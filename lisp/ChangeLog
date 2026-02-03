@@ -1,5 +1,8 @@
 2026-02-04 Wed  Jari Aalto  <jari.aalto@tuni.fi>
 
+	* tiny/tinyperl.el (tinyperl--pod-font-lock-keywords): Replace
+	`font-lock-reference-face' (N/A) with `font-lock-type-face'.
+
 	* tiny/tinyliby.el (ti::system-get-symbols): Correct
 	lexical scope in `eval'.
 
