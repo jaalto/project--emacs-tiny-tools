@@ -4,7 +4,7 @@
 
 ;;{{{ Id
 
-;; Copyright (C)    1997-2025 Jari Aalto
+;; Copyright (C)    1997-2026 Jari Aalto
 ;; Keywords:        wp
 ;; Author:          Jari Aalto
 ;; Maintainer:      Jari Aalto
