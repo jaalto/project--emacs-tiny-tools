@@ -1,3 +1,8 @@
+2026-02-05 Thu  Jari Aalto  <jari.aalto@tuni.fi>
+
+	* tiny/tinytf.el (tinytf--font-lock-keywords): Add
+	column 12, code, `font-lock-function-name-face'.
+
 2026-02-04 Wed  Jari Aalto  <jari.aalto@tuni.fi>
 
 	* tiny/tinyperl.el (tinyperl--pod-font-lock-keywords): Replace
