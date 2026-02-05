@@ -1,9 +1,14 @@
 2026-02-05 Thu  Jari Aalto  <jari.aalto@tuni.fi>
 
+	* tiny/tinylibm.el (ti::copy-key-definition): Rewrite.
+	Add `numberp' safeguard for partial `lookup-key' results.
+
 	* tiny/tinylisp.el (tinylisp-eval): Add arg `pre-eval'.
 
 	* tiny/tinytf.el (tinytf--font-lock-keywords): Add
 	column 12, code, `font-lock-function-name-face'.
+	(ti::macrof-minor-mode-wizard): Modernize vector key
+	bindings.
 
 2026-02-04 Wed  Jari Aalto  <jari.aalto@tuni.fi>
 
