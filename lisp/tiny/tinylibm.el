@@ -83,7 +83,7 @@
 
 (require 'tinylibb)                     ;Backward compatible functions
 
-(defconst tinylibm-version-time "2025.1120.1125"
+(defconst tinylibm-version-time "2026.0205.2007"
   "Latest version number.")
 
 ;;{{{ function tests
@@ -1802,10 +1802,12 @@ Example:
     ;; Now occupy  minor map definition
 
     (define-key [prior] \\='minor-mode-function)"
-  `(define-key ,map ,to-key
-     (or (and (current-local-map)
-              (lookup-key (current-local-map) ,from-key))
-         (lookup-key global-map ,from-key) )))
+  `(let ((def (or (lookup-key (current-local-map) ,from-key)
+                  (lookup-key global-map ,from-key))))
+     ;; Return may an integer. Use numberp check to revent
+     ;; accidentally binding a key to a random integer.
+     (when (and def (not (numberp def)))
+       (define-key ,map ,to-key def))))
 
 (defsubst ti::beginning-of-defun-point (&optional end)
   "Search function beginning or END. Point is preserved. No errors.
