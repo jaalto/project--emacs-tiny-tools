@@ -2468,14 +2468,17 @@ Return:
     (if (re-search-forward "^(defun[ \t]+\\([^ \t]+-\\)" nil t)
         (match-string 1))))
 
-(defun tinylisp-eval (str1 str2 type &optional arg1 arg2 arg3)
+(defun tinylisp-eval (str1 str2 type &optional arg1 arg2 arg3 pre-eval)
   "Substitute STR1 with STR2 in string and eval all in temporary buffer..
 
 If TYPE is nil
-  Read string from buffer ARG1, position ARG2 and ARG3.
+  Read string from buffer ARG1, positions at beg ARG2 and end ARG3.
 
 If TYPE is non-nil
   ARG1 contains string
+
+If PRE-EVAL is non-nil
+  Evaluate expressions before anything else.
 
 References:
  `tinylisp--buffer-eval'"
@@ -2490,6 +2493,8 @@ References:
    (while (search-forward str1 nil 'noerr)
      (replace-match str2 nil t))
    (tinylisp-eval-fix-defconst)
+   (if pre-eval
+       (eval pre-eval))
    (tinylisp-eval-current-buffer)
 ;;    (erase-buffer)                   ;May be big
    nil))
@@ -3711,17 +3716,28 @@ defcustom note:
   Call \\[tinylisp-emergency] NOW! After that things are back to normal.
   and you can continue as usual."
   (interactive)
-  (let ((debug-on-error t))            ;Make sure this is on!
+  (let ((debug-on-error t)            ;Make sure this is on!
+	done)
     (tinylisp-defun-macro
      ;;  We handle defvar as defconst so that new value takes in
      ;;  effect.
      (cond
       ((string-match "defcustom" str)
+       (setq done 'defcustom)
        (tinylisp-defcustom-macro
         (tinylisp-eval "defcustom" "defconst" nil buffer beg end)))
-      ((string-match "defvar" str)
+      ((string-match "defvar " str)
+       (setq done 'defvar)
        (tinylisp-eval "defvar" "defconst" nil buffer beg end))
+      ((string-match "defvar-keymap[ \t]+\\([^ \t\r\n]+\\)" str)
+       (setq done 'defvar-keymap)
+       (let ((keymap (match-string-no-properties 1 str)))
+	 (tinylisp-eval "defvar" "defvar"
+			nil buffer beg end
+			`(progn
+			   (makunbound ',(intern keymap))))))
       (t
+       (setq done 'sexp)
        (eval-last-sexp nil)))
      (message (concat "TinyLisp: evaled " (or str "<nothing>"))))))
 
