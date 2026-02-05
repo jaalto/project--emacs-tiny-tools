@@ -744,8 +744,6 @@ at the beginning of first word."
 ;; Order of these rexeps is very important; because there are many
 ;; "override" flags set to 't.
 ;;
-;; 1999-11-23 `font-lock-other-type-face' doesn't exist in XEmacs 21.1.6
-;;
 ;; Please COPY this variable settign to your $HOME/.emacs if you
 ;; want to change the colors. substitute `defcustom' with `setq'
 ;; and delete the variable comments at the end.
@@ -791,12 +789,12 @@ at the beginning of first word."
    ;; Column 5 and 6
 
    (list
-    (concat "^     \\([^ \t].*\\)$")
+    (concat "^" (make-string 5 ?\ ) "\\([^ \t].*\\)$")
     1
     'font-lock-type-face)
 
    (list
-    (concat "^      \\([^ \t].*\\)$")
+    (concat "^" (make-string 6 ?\ ) "\\([^ \t].*\\)$")
     1
     (if (or (and (fboundp 'get-face) ;;  XEmacs
                  (get-face 'tinytf-quote-face))
@@ -841,6 +839,12 @@ at the beginning of first word."
    (list
     (concat "^" (make-string 11 ?\ ) "\\([^ \t].*\\)$")
     1 'font-lock-constant-face)
+
+   ;; Code or "as is"
+
+   (list
+    (concat "^" (make-string 12 ?\ ) "\\([^ \t].*\\)$")
+    1 'font-lock-function-name-face )
 
    ;; ..................................................... emphasisis ...
 
