@@ -70,6 +70,7 @@
 ;;; .......................................................... provide ...
 
 (eval-when-compile
+  (require 'cl-macs nil 'noerr)
   (or (require 'cl-lib nil 'noerr) ;; Emacs 29.x
       (require 'cl)))
 
@@ -208,7 +209,7 @@ PAD says to padd hex string with leading zeroes."
   (string= (buffer-name) " *Compiler Input*"))
 
 (defmacro-maybe cl-flet (&rest args)
-  `(cl-flet ,@args))
+  `(flet ,@args))
 
 (defmacro-maybe with-output-to-file (file &rest body)
   "Open FILE and run BODY.
