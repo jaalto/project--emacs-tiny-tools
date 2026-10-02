@@ -9,6 +9,26 @@
 	* tiny/tinylibb.el (require):
 	Require `cl-macs' which defines `cl-flet'.
 
+2026-02-05 Thu  Jari Aalto  <jari.aalto@tuni.fi>
+
+	* tiny/tinylibm.el (ti::copy-key-definition): Rewrite.
+	Add `numberp' safeguard for partial `lookup-key' results.
+
+	* tiny/tinylisp.el (tinylisp-eval): Add arg `pre-eval'.
+
+	* tiny/tinytf.el (tinytf--font-lock-keywords): Add
+	column 12, code, `font-lock-function-name-face'.
+	(ti::macrof-minor-mode-wizard): Modernize vector key
+	bindings.
+
+2026-02-04 Wed  Jari Aalto  <jari.aalto@tuni.fi>
+
+	* tiny/tinyperl.el (tinyperl--pod-font-lock-keywords): Replace
+	`font-lock-reference-face' (N/A) with `font-lock-type-face'.
+
+	* tiny/tinyliby.el (ti::system-get-symbols): Correct
+	lexical scope in `eval'.
+
 2026-01-16 Fri  Jari Aalto  <jari.aalto@tuni.fi>
 
 	* tiny/tinytf.el (tinytf-toc): rename `toc'

@@ -4,7 +4,7 @@
 
 ;;{{{ Id
 
-;; Copyright (C)    1997-2025 Jari Aalto
+;; Copyright (C)    1997-2026 Jari Aalto
 ;; Keywords:        wp
 ;; Author:          Jari Aalto
 ;; Maintainer:      Jari Aalto
@@ -744,8 +744,6 @@ at the beginning of first word."
 ;; Order of these rexeps is very important; because there are many
 ;; "override" flags set to 't.
 ;;
-;; 1999-11-23 `font-lock-other-type-face' doesn't exist in XEmacs 21.1.6
-;;
 ;; Please COPY this variable settign to your $HOME/.emacs if you
 ;; want to change the colors. substitute `defcustom' with `setq'
 ;; and delete the variable comments at the end.
@@ -791,12 +789,12 @@ at the beginning of first word."
    ;; Column 5 and 6
 
    (list
-    (concat "^     \\([^ \t].*\\)$")
+    (concat "^" (make-string 5 ?\ ) "\\([^ \t].*\\)$")
     1
     'font-lock-type-face)
 
    (list
-    (concat "^      \\([^ \t].*\\)$")
+    (concat "^" (make-string 6 ?\ ) "\\([^ \t].*\\)$")
     1
     (if (or (and (fboundp 'get-face) ;;  XEmacs
                  (get-face 'tinytf-quote-face))
@@ -841,6 +839,12 @@ at the beginning of first word."
    (list
     (concat "^" (make-string 11 ?\ ) "\\([^ \t].*\\)$")
     1 'font-lock-constant-face)
+
+   ;; Code or "as is"
+
+   (list
+    (concat "^" (make-string 12 ?\ ) "\\([^ \t].*\\)$")
+    1 'font-lock-function-name-face )
 
    ;; ..................................................... emphasisis ...
 
@@ -1233,11 +1237,8 @@ up to date description.
 
 Mode description:
 
-\\{tinytf--mode-prefix-map}
-"
-
+\\{tinytf--mode-prefix-map}"
    "Technical text format"
-
    (progn
      ;;  reinstall is done every time, because some key definitions
      ;;  are built dynamically from current/global map
@@ -1275,7 +1276,7 @@ Mode description:
          ;;  past the right side. The tags must all be in one line, not
          ;;  broken to multiple lines:
          ;;
-         ;;      #PIC pic/this-picture.jpg # Explanation which is long .....  ###
+         ;;      #PIC pic/this-picture.jpg # long Explanation .....  ###
          ;;
          ;;  Also, do not break long headings.
          ;;
@@ -1328,9 +1329,7 @@ Mode description:
                (set-buffer-modified-p nil)
                (set-text-properties (point-min) (point-max) nil)
                (tinytf-fontify-current-buffer-window))))))))
-
    "Technical text writing menu."
-
    (list
     tinytf--mode-easymenu-name
     "Markup"
@@ -1515,23 +1514,23 @@ Mode description:
        (define-key map  "xX"   'tinytf-exit)
        (define-key map  "xx"   'turn-off-tinytf-mode)
        ;;  Original PgUp and down keys --> move under Control key
-       (ti::copy-key-definition root-map [(control prior)]  [(prior)])
-       (ti::copy-key-definition root-map [(control next)]   [(next)])
-       (define-key root-map [(prior)]         'tinytf-heading-backward-any)
-       (define-key root-map [(next)]          'tinytf-heading-forward-any)
-       (define-key root-map [(shift prior)]   'tinytf-heading-backward-0)
-       (define-key root-map [(shift next)]    'tinytf-heading-forward-0)
+       (ti::copy-key-definition root-map [C-prior] [prior])
+       (ti::copy-key-definition root-map [C-next] [next])
+       (define-key root-map [prior]   'tinytf-heading-backward-any)
+       (define-key root-map [next]    'tinytf-heading-forward-any)
+       (define-key root-map [S-prior] 'tinytf-heading-backward-0)
+       (define-key root-map [S-next]  'tinytf-heading-forward-0)
        ;;  The Shift-prior do not always show in non-window system, so define
        ;;  these:
        (define-key map  "\C-p" 'tinytf-heading-backward-0)
        (define-key map  "\C-n" 'tinytf-heading-forward-0)
        ;;  The 'home' and 'end' keys
-       (ti::copy-key-definition root-map [(control end)]      [(end)])
-       (ti::copy-key-definition root-map [(control home)]     [(home)])
-       (ti::copy-key-definition root-map [(control select)]   [(select)])
-       (define-key root-map [(home)]          'tinytf-backward-paragraph)
-       (define-key root-map [(select)]        'tinytf-forward-paragraph)
-       (define-key root-map [(end)]           'tinytf-forward-paragraph)
+       (ti::copy-key-definition root-map [C-end] [end])
+       (ti::copy-key-definition root-map [C-home] [home])
+       (ti::copy-key-definition root-map [C-select] [select])
+       (define-key root-map [home]     'tinytf-backward-paragraph)
+       (define-key root-map [select]   'tinytf-forward-paragraph)
+       (define-key root-map [end]      'tinytf-forward-paragraph)
        (if (ti::emacs-p)
            (define-key map [(mouse-3)]
              'tinytf-mouse-context-sensitive)

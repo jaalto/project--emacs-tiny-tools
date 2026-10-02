@@ -2,7 +2,7 @@
 
 ;; This file is not part of Emacs
 
-;; Copyright (C)    1995-2025 Jari Aalto
+;; Copyright (C)    1995-2026 Jari Aalto
 ;; Keywords:        tools
 ;; Author:          Jari Aalto
 ;; Maintainer:      Jari Aalto
