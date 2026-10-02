@@ -5325,55 +5325,63 @@ Input:
       'match-it)
      tinylisp--table-snoop-variables))))
 
+(defun tinylisp--sort-pairs (lst)
+  "Sort alist by symbol name of car safely."
+  (sort (copy-sequence lst)
+        (lambda (a b)
+          (string< (symbol-name (car a))
+                   (symbol-name (car b))))))
+
+(defun tinylisp--sort-symbols (lst)
+  "Sort symbol list by name safely."
+  (sort (copy-sequence lst)
+        (lambda (a b)
+          (string< (symbol-name a)
+                   (symbol-name b)))))
+
 (defun tinylisp-find-buffer-local-variables (&optional buffer)
   "Print buffer local variables to BUFFER."
   (interactive)
-  (cl-flet ((my-sort2
-              (list)
-              (sort list
-                    (lambda (a b)
-                      (string< (symbol-name (car a))
-			       (symbol-name (car b))))))
-            (my-sort1
-              (list)
-              (sort list
-                    (lambda (a b)
-                      (string< (symbol-name a)
-			       (symbol-name b))))))
-    (let (var
-          val)
-      (or buffer
-          (setq buffer (current-buffer)))
-      (pop-to-buffer (tinylisp-get-buffer-create tinylisp--buffer-variables))
-      (ti::pmax)
-      (insert "\nbuffer-local-variables: " (buffer-name buffer) "\n\n" )
-      (dolist (elt (my-sort2 (buffer-local-variables buffer)))
+  (let ((print-circle t)
+        (print-level 5)
+        (print-length 50)
+        var val)
+    (setq buffer (or buffer (current-buffer)))
+    (pop-to-buffer (tinylisp-get-buffer-create
+		    tinylisp--buffer-variables))
+    (ti::pmax)
+    (insert "\nbuffer-local-variables: "
+	    (buffer-name buffer)
+	    "\n\n")
+    (dolist (elt (tinylisp--sort-pairs
+		  (buffer-local-variables buffer)))
+      (when (consp elt)
         (setq var (car elt))
-        (when (and (symbolp var)        ;skip markers etc.
+        (when (and (symbolp var)	;skip markers etc.
                    (not (memq var '(buffer-undo-list
-                                    font-lock-syntax-table))))
+				    font-lock-syntax-table))))
           (insert (format "%-30s => %s\n"
                           (symbol-name var)
-                          (pp (cdr elt))))))
-      (insert "\nframe-parameters: " (buffer-name buffer) "\n\n" )
-      (dolist (elt (my-sort2 (frame-parameters)))
+                          (prin1-to-string (cdr elt)))))))
+    (insert "\nframe-parameters: " (buffer-name buffer) "\n\n")
+    (dolist (elt (tinylisp--sort-pairs (frame-parameters)))
+      (when (consp elt)
         (insert (format "%-30s => %s\n"
                         (symbol-name (car elt))
-                        (pp (cdr elt)))))
-      (insert "\ncoding variables: " (buffer-name buffer) "\n\n" )
-      (dolist (elt (my-sort1
-                    (ti::system-get-symbols "coding" '(boundp sym))))
-        (unless (memq elt '(coding-system-alist
-                            coding-category-list
-                            coding-system-list
-                            set-coding-system-map))
+                        (prin1-to-string (cdr elt)))))))
+    (insert "\ncoding variables: " (buffer-name buffer) "\n\n")
+    (dolist (elt (tinylisp--sort-symbols
+		  (ti::system-get-symbols "coding" '(boundp sym))))
+      (unless (memq elt '(coding-system-alist
+                          coding-category-list
+                          coding-system-list
+                          set-coding-system-map))
+        (when (boundp elt)
           (setq val (symbol-value elt))
-          (insert (format "%-30s => %s%s\n"
-                          (if (ti::listp val) ;; Start separate line
-                              "\n"
-                            "")
+          (insert (format "%s%-30s => %s\n"
+                          (if (ti::listp val) "\n" "")
                           (symbol-name elt)
-                          (pp val))))))))
+                          (prin1-to-string val)))))))
 
 (defun tinylisp-find-autoload-functions (&optional buffer)
   "Display all autoload functions."
