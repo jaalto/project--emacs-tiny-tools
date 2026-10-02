@@ -1,3 +1,14 @@
+2026-10-02 Fri  Jari Aalto  <jari.aalto@cante.net>
+
+	* tiny/tinylisp.el
+	(tinylisp--sort-pairs): new.
+	(tinylisp-find-buffer-local-variables): correct
+	`cl-flet` and local fucntions. Define `print-*'
+	variables to control levels.
+
+	* tiny/tinylibb.el (require):
+	Require `cl-macs' which defines `cl-flet'.
+
 2026-01-16 Fri  Jari Aalto  <jari.aalto@tuni.fi>
 
 	* tiny/tinytf.el (tinytf-toc): rename `toc'
