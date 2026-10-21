@@ -1,4 +1,4 @@
-;;; tinycompile.el --- Compile buffer extras. Minor mode.
+;;; tinycompile.el --- Compile buffer extras. Minor mode. -*- lexical-binding: t; -*-
 
 ;; This file is not part of Emacs
 

@@ -1,4 +1,4 @@
-;;; tinylibb.el --- Library of (b)ackward compatible functions. -*- lexical-binding: t -*-
+;;; tinylibb.el --- Library of (b)ackward compatible functions. -*- lexical-binding: t; -*-
 
 ;; This file is not part of Emacs
 

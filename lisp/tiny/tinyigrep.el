@@ -1,4 +1,4 @@
-;;; tinyigrep.el --- Top level interface to igrep.el
+;;; tinyigrep.el --- Top level interface to igrep.el. -*- lexical-binding: t; -*-
 
 ;; This file is not part of Emacs
 

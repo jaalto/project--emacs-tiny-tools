@@ -1,4 +1,4 @@
-;;; tinybuffer.el --- Change buffers in current window.
+;;; tinybuffer.el --- Change buffers in current window. -*- lexical-binding: t; -*-
 
 ;; Copyright (C) 1996-2026 Jari Aalto
 

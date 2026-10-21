@@ -1,4 +1,4 @@
-;;; tinyliba.el --- Library for (a)utoload definitions -*- lexical-binding: t -*-
+;;; tinyliba.el --- Library for (a)utoload definitions -*- lexical-binding: t; -*-
 
 ;; This file is not part of Emacs
 

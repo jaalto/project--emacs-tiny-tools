@@ -1,4 +1,4 @@
-;;; load-path.el --- Developer only. Used for compiling Emacs lisp files
+;;; load-path.el --- Developer only. Used for compiling Emacs lisp files -*- lexical-binding: t; -*-
 
 ;; DO NOT TOUCH - THIS IS NOT A USER CONFIGURATION FILE
 ;; Instead write your won and use:

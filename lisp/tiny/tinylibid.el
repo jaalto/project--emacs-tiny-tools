@@ -1,4 +1,4 @@
-;;; tinylibid.el --- Library for (Id)entifying buffer, regardless of mode -*- lexical-binding: t -*-
+;;; tinylibid.el --- Library for (Id)entifying buffer, regardless of mode -*- lexical-binding: t; -*-
 
 ;; This file is not part of Emacs
 

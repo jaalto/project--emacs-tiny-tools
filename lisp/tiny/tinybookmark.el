@@ -1,4 +1,4 @@
-;;; tinybookmark.el --- Maintain files in organized sections
+;;; tinybookmark.el --- Maintain files in organized sections -*- lexical-binding: t; -*-
 
 ;; This file is not part of Emacs
 

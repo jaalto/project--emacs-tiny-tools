@@ -1,4 +1,4 @@
-;;; tinylibt.el --- Library for handling text properties. -*- lexical-binding: t -*-
+;;; tinylibt.el --- Library for handling text properties. -*- lexical-binding: t; -*-
 
 ;; This file is not part of Emacs
 

@@ -1,4 +1,4 @@
-;;; tinycomment.el --- Smart comment setting utility
+;;; tinycomment.el --- Smart comment setting utility -*- lexical-binding: t; -*-
 
 ;; This file is not part of Emacs
 

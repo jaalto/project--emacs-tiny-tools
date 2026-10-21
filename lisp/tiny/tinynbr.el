@@ -1,4 +1,4 @@
-;;; tinynbr.el --- Number conversion minor mode oct/bin/hex
+;;; tinynbr.el --- Number conversion minor mode oct/bin/hex. -*- lexical-binding: t; -*-
 
 ;; This file is not part of Emacs
 

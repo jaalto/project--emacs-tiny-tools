@@ -1,4 +1,4 @@
-;;; tinytab.el --- Programmers TAB minor mode. Very flexible.
+;;; tinytab.el --- Programmers TAB minor mode. Very flexible. -*- lexical-binding: t; -*-
 
 ;; This file is not part of Emacs
 

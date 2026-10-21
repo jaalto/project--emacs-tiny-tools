@@ -1,4 +1,4 @@
-;;; tinymy.el --- Collection of simple utilities
+;;; tinymy.el --- Collection of simple utilities. -*- lexical-binding: t; -*-
 
 ;; This file is not part of Emacs
 

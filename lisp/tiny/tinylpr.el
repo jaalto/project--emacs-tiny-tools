@@ -1,4 +1,4 @@
-;;; tinylpr.el --- Easy Emacs lpr command handling, pop-up, completions
+;;; tinylpr.el --- Easy Emacs lpr command handling, pop-up, completions. -*- lexical-binding: t; -*-
 
 ;; This file is not part of Emacs
 

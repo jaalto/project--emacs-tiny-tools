@@ -1,4 +1,4 @@
-;;; tinydired.el --- Dired enchancements. Backgroud Ange ftp support
+;;; tinydired.el --- Dired enchancements. Backgroud Ange ftp support. -*- lexical-binding: t; -*-
 
 ;; This file is not part of Emacs
 

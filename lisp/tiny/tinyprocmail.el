@@ -1,4 +1,4 @@
-;;; tinyprocmail.el --- Emacs procmail minor mode. Lint code checker.
+;;; tinyprocmail.el --- Emacs procmail minor mode. Lint code checker. -*- lexical-binding: t; -*-
 
 ;; This file is not part of Emacs
 

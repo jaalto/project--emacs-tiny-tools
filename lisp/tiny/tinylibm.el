@@ -1,4 +1,4 @@
-;;; tinylibm.el --- Library of s(m)all macros or functions -*- lexical-binding: t -*-
+;;; tinylibm.el --- Library of s(m)all macros or functions -*- lexical-binding: t; -*-
 
 ;;{{{ Id
 

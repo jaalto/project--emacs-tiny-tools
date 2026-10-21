@@ -1,4 +1,4 @@
-;;; tinylock.el --- Simple emacs locking utility
+;;; tinylock.el --- Simple emacs locking utility. -*- lexical-binding: t; -*-
 
 ;; This file is not part of Emacs
 

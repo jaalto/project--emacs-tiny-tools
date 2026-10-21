@@ -1,4 +1,4 @@
-;;; tinylibo.el --- Library for handling (o)verlays -*- lexical-binding: t -*-
+;;; tinylibo.el --- Library for handling (o)verlays -*- lexical-binding: t; -*-
 
 ;; This file is not part of Emacs
 

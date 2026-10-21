@@ -1,4 +1,4 @@
-;;; tinyirc.el --- IRC related utilities for Emacs
+;;; tinyirc.el --- IRC related utilities for Emacs. -*- lexical-binding: t; -*-
 
 ;; This file is not part of Emacs
 

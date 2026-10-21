@@ -1,4 +1,4 @@
-;;; tinycache.el --- Maintain a cache of visited files [compile,dired]
+;;; tinycache.el --- Maintain a cache of visited files [compile,dired] -*- lexical-binding: t; -*-
 
 ;; This file is not part of Emacs
 

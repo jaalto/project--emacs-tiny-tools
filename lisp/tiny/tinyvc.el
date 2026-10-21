@@ -1,4 +1,4 @@
-;;; tinyvc.el --- CVS and RCS log minor mode. Checkout, Check-in...
+;;; tinyvc.el --- CVS and RCS log minor mode. Checkout, Check-in. -*- lexical-binding: t; -*-
 
 ;; This file is not part of Emacs
 

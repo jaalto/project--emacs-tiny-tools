@@ -1,4 +1,4 @@
-;;; tinyef.el --- (E)lectric (f)ile minor mode. Easy C-x C-f filename composing
+;;; tinyef.el --- (E)lectric (f)ile minor mode. Easy C-x C-f filename composing. -*- lexical-binding: t; -*-
 
 ;; This file is not part of Emacs
 

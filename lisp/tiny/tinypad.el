@@ -1,4 +1,4 @@
-;;; tinypad.el --- Emulate Windows notepad with extra menu
+;;; tinypad.el --- Emulate Windows notepad with extra menu. -*- lexical-binding: t; -*-
 
 ;; This file is not part of Emacs
 

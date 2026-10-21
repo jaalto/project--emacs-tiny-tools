@@ -1,4 +1,4 @@
-;;; tinysearch.el --- Grab and search word under cursor
+;;; tinysearch.el --- Grab and search word under cursor. -*- lexical-binding: t; -*-
 
 ;; This file is not part of Emacs
 

@@ -1,4 +1,4 @@
-;;; tinylibmenu.el --- Library for echo-area menu -*- lexical-binding: t -*-
+;;; tinylibmenu.el --- Library for echo-area menu -*- lexical-binding: t; -*-
 
 ;; This file is not part of Emacs
 

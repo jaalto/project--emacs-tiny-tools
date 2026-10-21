@@ -1,4 +1,4 @@
-;;; tinydiff.el --- Diff and patch minor mode. Browsing, patching.
+;;; tinydiff.el --- Diff and patch minor mode. Browsing, patching. -*- lexical-binding: t; -*-
 
 ;; This file is not part of Emacs
 

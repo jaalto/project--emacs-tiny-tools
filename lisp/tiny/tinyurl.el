@@ -1,4 +1,4 @@
-;;; tinyurl.el --- Mark and jump to any URL on current line.
+;;; tinyurl.el --- Mark and jump to any URL on current line. -*- lexical-binding: t; -*-
 
 ;; This file is not part of Emacs
 

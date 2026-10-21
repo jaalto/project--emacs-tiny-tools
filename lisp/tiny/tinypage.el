@@ -1,4 +1,4 @@
-;;; tinypage.el --- Handling ^L pages, select, cut, copy, head renumber.
+;;; tinypage.el --- Handling ^L pages, select, cut, copy, head renumber. -*- lexical-binding: t; -*-
 
 ;; This file is not part of Emacs
 

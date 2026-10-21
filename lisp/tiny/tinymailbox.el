@@ -1,4 +1,4 @@
-;;; tinymailbox.el --- Berkeley style aka std. mailbox browsing minor mode
+;;; tinymailbox.el --- Berkeley style aka std. mailbox browsing minor mode. -*- lexical-binding: t; -*-
 
 ;; This file is not part of Emacs
 

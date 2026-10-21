@@ -1,4 +1,4 @@
-;;; tinydebian.el --- Debian, Ubuntu, Emacs, GNU Bug Tracking Utilities
+;;; tinydebian.el --- Debian, Ubuntu, Emacs, GNU Bug Tracking Utilities. -*- lexical-binding: t; -*-
 
 ;;{{{ Id
 

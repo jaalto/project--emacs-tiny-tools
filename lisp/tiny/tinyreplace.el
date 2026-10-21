@@ -1,4 +1,4 @@
-;;; tinyreplace.el --- Handy query-replace, area, case preserve, words
+;;; tinyreplace.el --- Handy query-replace, area, case preserve, words. -*- lexical-binding: t; -*-
 
 ;; This file is not part of Emacs
 

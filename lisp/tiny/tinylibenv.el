@@ -1,4 +1,4 @@
-;;; tinylibenv.el --- Library for environment check functions -*- lexical-binding: t -*-
+;;; tinylibenv.el --- Library for environment check functions -*- lexical-binding: t; -*-
 
 ;; This file is not part of Emacs
 

@@ -1,4 +1,4 @@
-;;; tinyindent.el --- Like indented-text-mode, but minor-mode.
+;;; tinyindent.el --- Like indented-text-mode, but minor-mode. -*- lexical-binding: t; -*-
 
 ;; This file is not part of Emacs
 

@@ -1,4 +1,4 @@
-;;; tinypair.el --- Self insert character pairs like parens quotes etc.
+;;; tinypair.el --- Self insert character pairs like parens quotes etc. -*- lexical-binding: t; -*-
 
 ;; This file is not part of Emacs
 

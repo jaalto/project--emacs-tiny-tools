@@ -1,4 +1,4 @@
-;;; tinyxreg.el --- Restore points and window configuration with X-popup
+;;; tinyxreg.el --- Restore points and window configuration with X-popup. -*- lexical-binding: t; -*-
 
 ;; This file is not part of Emacs
 

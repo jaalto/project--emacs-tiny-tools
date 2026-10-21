@@ -1,4 +1,4 @@
-;;; tinymail.el --- Mail add-ons. Report incoming mail, passwd, BBDB complete.
+;;; tinymail.el --- Mail add-ons. Report incoming mail, passwd, BBDB complete. -*- lexical-binding: t; -*-
 
 ;; This file is not part of Emacs
 

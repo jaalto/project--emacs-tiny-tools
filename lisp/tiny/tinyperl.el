@@ -1,4 +1,4 @@
-;;; tinyperl.el --- Grab-bag of Perl related utilities. Pod documentation
+;;; tinyperl.el --- Grab-bag of Perl related utilities. Pod documentation. -*- lexical-binding: t; -*-
 
 ;; This file is not part of Emacs
 

@@ -1,4 +1,4 @@
-;;; tinyadvice.el --- Collection of adviced functions
+;;; tinyadvice.el --- Collection of adviced functions -*- lexical-binding: t; -*-
 
 ;; This file is not part of Emacs
 

@@ -1,4 +1,4 @@
-;;; tinylibmail.el --- Library of mail related functions -*- lexical-binding: t -*-
+;;; tinylibmail.el --- Library of mail related functions -*- lexical-binding: t; -*-
 
 ;; This file is not part of Emacs
 

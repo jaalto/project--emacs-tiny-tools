@@ -1,4 +1,4 @@
-;;; tinypath.el --- Manage Emacs startup dynamically
+;;; tinypath.el --- Manage Emacs startup dynamically. -*- lexical-binding: t; -*-
 
 ;; This file is not part of Emacs
 

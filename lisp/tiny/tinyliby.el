@@ -1,4 +1,4 @@
-;;; tinyliby.el --- Library of functions related to Emacs s(y)stem -*- lexical-binding: t -*-
+;;; tinyliby.el --- Library of functions related to Emacs s(y)stem -*- lexical-binding: t; -*-
 
 ;; This file is not part of Emacs
 

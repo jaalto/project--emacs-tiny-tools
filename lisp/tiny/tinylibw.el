@@ -1,4 +1,4 @@
-;;; tinylibw.el --- Library for (w)indows Cygwin OS specific functions -*- lexical-binding: t -*-
+;;; tinylibw.el --- Library for (w)indows Cygwin OS specific functions -*- lexical-binding: t; -*-
 
 ;; This file is not part of Emacs
 

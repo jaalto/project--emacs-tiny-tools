@@ -1,4 +1,4 @@
-;;; tinygnus.el --- Gnus Plug-in. Additional functions. UBE fight etc.
+;;; tinygnus.el --- Gnus Plug-in. Additional functions. UBE fight etc. -*- lexical-binding: t; -*-
 
 ;; This file is not part of Emacs
 

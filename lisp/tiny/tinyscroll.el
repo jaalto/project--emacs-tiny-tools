@@ -1,4 +1,4 @@
-;;; tinyscroll.el --- Enable or disable auto-scroll for any buffer.
+;;; tinyscroll.el --- Enable or disable auto-scroll for any buffer. -*- lexical-binding: t; -*-
 
 ;; This file is not part of Emacs
 

@@ -1,6 +1,6 @@
-;;; tinylib.el --- Library of general functions
+;;; tinylib.el --- Library of general functions. -*- lexical-binding: t; -*-
 ;;;
-;;; Not using: -*- lexical-binding: t -*-
+;;; Not using: -*- lexical-binding: t; -*-
 
 ;; This file is not part of Emacs
 

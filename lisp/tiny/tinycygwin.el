@@ -1,4 +1,4 @@
-;;; tinycygwin.el --- Cygwin utilities (bug reports, administrative tasks).
+;;; tinycygwin.el --- Cygwin utilities (bug reports, administrative tasks). -*- lexical-binding: t; -*-
 
 ;;{{{ Id
 

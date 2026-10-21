@@ -1,4 +1,4 @@
-;;; tinytf.el --- Document layout tool for (T)echnical text (F)ormat
+;;; tinytf.el --- Document layout tool for (T)echnical text (F)ormat. -*- lexical-binding: t; -*-
 
 ;; This file is not part of Emacs
 

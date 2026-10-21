@@ -1,4 +1,4 @@
-;;; tinytag.el --- Grep tags: show C++/Java/etc. syntax call while coding
+;;; tinytag.el --- Grep tags: show C++/Java/etc. syntax call while coding. -*- lexical-binding: t; -*-
 
 ;; This file is not part of Emacs.
 
