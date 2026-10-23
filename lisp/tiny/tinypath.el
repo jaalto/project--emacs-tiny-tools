@@ -3199,7 +3199,7 @@ Input:
 	 (crypt-auto-write-buffer  t))
      (unless crypt-auto-write-buffer    ;Bytecomp silencer
        (setq crypt-auto-write-buffer nil))
-     (insert ";; " file " -- " desc "\n"
+     (insert ";; " file " --- " desc " -*- lexical-binding: t; -*-\n"
 	     ";; Date: "
 	     (tinypath-time-string)
 	     "\n\n")
