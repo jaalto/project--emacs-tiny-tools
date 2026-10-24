@@ -2,7 +2,7 @@
 
 ;; This file is not part of Emacs
 
-;;{{{ Id
+;;; Id
 
 ;; Copyright (C)    1997-2026 Jari Aalto
 ;; Keywords:        tools
@@ -930,8 +930,7 @@ Format:
            (repeat (symbol :tag "Var"))))
   :group 'TinyLisp)
 
-;;}}}
-;;{{{ setup: private variables
+;;; Setup: private variables
 
 (defvar tinylisp--harness-flag nil
   "Described in function `tinylisp-elp-harness'.
@@ -1048,8 +1047,7 @@ Format:
     (function buffer-pointer buffer-file-name)
     ...)")
 
-;;}}}
-;;{{{ setup: private, mode
+;;; setup: private, mode
 
 ;; These must not be made buffer local.
 
@@ -1059,8 +1057,7 @@ Format:
 (defvar tinylisp--syntax-show-mode nil
   "Property show mode (flag).")
 
-;;}}}
-;;{{{ setup: menu
+;;; Setup: menu
 
 (defvar tinylisp--menu-main) ;;  Just a forward declaration
 
@@ -1852,8 +1849,7 @@ Spell checking doc-strings:
     running.  Use `Ispell-kill-Ispell' to make checkdoc restart it with
     these words enabled.")
 
-;;}}}
-;;{{{ macros
+;;; Macros
 
 (put 'tinylisp-with-current-buffer 'lisp-indent-function 1)
 (defmacro tinylisp-with-current-buffer (buffer &rest body)
@@ -2103,8 +2099,7 @@ Same as `tinylisp-defun-macro' But define `name' and `sym' for function name."
      ;;  Make sure this is always executed.
      (tinylisp-emergency)))
 
-;;}}}
-;;{{{ Install
+;;; Install
 
 (defun tinylisp-menu-main (&optional arg)
   "Show echo area menu and pass ARG to `ti::menu-menu'."
@@ -2175,8 +2170,7 @@ To turn on mode on by buffer basis, call `tinylisp-mode'."
   (interactive)
   (tinylisp-install 'uninsall))
 
-;;}}}
-;;{{{ advice
+;;; Advice
 
 ;; byte-compile-file (filename &optional load)
 (defadvice byte-compile-file (around tinylisp act)
@@ -2234,8 +2228,7 @@ If you see this message when calling following, there is bug in TinyLisp.
     ;;
     (eval `(defconst ,sym ,val ,doc))))
 
-;;}}}
-;;{{{ misc
+;;; Misc
 
 (defun tinylisp-insert-lexical-binding-header ()
   "Add `lexical-binding: t' unless already."
@@ -2525,8 +2518,7 @@ References:
 ;;    (erase-buffer)                   ;May be big
    nil))
 
-;;}}}
-;;{{{ Internally used buffers
+;;; Internally used buffers
 
 ;; --------------------------------------------------------- &buffers ---
 (defun tinylisp-b-display (buffer point-min)
@@ -2589,8 +2581,7 @@ Shrink and print message if not exist."
     (if verb
         (message "TinyLisp: No Elp Profiling results buffer."))))
 
-;;}}}
-;;{{{ advice, elp
+;;; Advice, elp
 
 (defun tinylisp-ad-match-1 (regexp)
   "Return advice list ((function class name) ...) matching NAME REGEXP."
@@ -2624,8 +2615,7 @@ Shrink and print message if not exist."
       (pop-to-buffer tinylisp--buffer-data)
       (ti::pmin))))
 
-;;}}}
-;;{{{ elp
+;;; Elp
 
 (defun tinylisp-elp-function-list-partial (&optional arg verb)
   "Call `tinylisp-elp-function-list'. See ARG and VERB parameters there."
@@ -3022,8 +3012,7 @@ harness run is over."
           (tinylisp-b-record 'pmin))
       (setq tinylisp--harness-flag nil))))
 
-;;}}}
-;;{{{ elp results
+;;; Elp results
 
 (dolist (x '(1 2 3 4 5 6 7 8 9)) ;; Can't use dotimes which starts from 0
   (let ((sym (intern (format "tinylisp-elp-summary-sort-column-%d" x)))
@@ -3049,8 +3038,7 @@ harness run is over."
      (t
       (sort-fields nbr (point) (point-max))))))
 
-;;}}}
-;;{{{ code help: debug, find-error
+;;; code help: debug, find-error
 
 (defun tinylisp-error-debug-add-tags (&optional remove verb)
   "Add simple debug code before every left flushed parenthesis. REMOVE. VERB.
@@ -3197,8 +3185,7 @@ DebugTag: 22-56 file.el
       (backward-sexp))
   (point))
 
-;;}}}
-;;{{{ code help: jump, eval
+;;; code help: jump, eval
 
 (defun tinylisp-symbol-file-location (symbol)
   "Search SYMBOL from Emacs obarrays and try to find file location."
@@ -3877,8 +3864,7 @@ See variable `tinylisp--table-reverse-eval-alist'"
     (setq ret (eval (read (read-from-minibuffer "tinylisp-Eval: " line))))
     (message "TinyLisp: returned: %s" (prin1-to-string ret))))
 
-;;}}}
-;;{{{ code help: functions and variables
+;;; code help: functions and variables
 
 (defun tinylisp-find-function-list-occur ()
   "Run occur to find functions from whole buffer."
@@ -4494,8 +4480,7 @@ Can't find _defined_ variable or function on the line (eval buffer first).")
                  (symbol-name sym))
                msg))))
 
-;;}}}
-;;{{{ code help: misc
+;;; code help: misc
 
 ;; ;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;
 ;;
@@ -5150,8 +5135,7 @@ references:
         (message "TinyLisp: macroexpand, skipped: %s"
                  (or str "<can't read>")))))))
 
-;;}}}
-;;{{{ properties display
+;;; properties display
 
 (defun tinylisp-post-command-config (&optional restore)
   "Disable modes that echo something to the echo-ares.
@@ -5348,8 +5332,7 @@ Input:
       (if verb
           (message "TinyLisp: Property show mode is off"))))))
 
-;;}}}
-;;{{{ Snooping
+;;; Snooping
 
 (defun tinylisp-snoop-variables-i-args ()
   "Ask arguments to `tinylisp-snoop-variables'."
@@ -5547,8 +5530,7 @@ Flags when viewing, editing echo-area:
      (kill  (message "TinyLisp: Killed saved value copies %s" msg))
      (kill  (message "TinyLisp: Set to nil %s" msg)))))
 
-;;}}}
-;;{{{ Occur
+;;; Occur
 
 (defun tinylisp-occur-i-args ()
   "Ask arg1 to `tinylisp-occur'."
@@ -5624,8 +5606,7 @@ Optionally goes BACK."
         (ti::goto-line line)
         (message str)))))
 
-;;}}}
-;;{{{ debugger: std Emacs
+;;; debugger: std Emacs
 
 (defun tinylisp-debugger-setup ()
   "Define new commands to *Backtrace*."
@@ -5655,8 +5636,7 @@ Optionally goes BACK."
                                     (forward-line -1)
                                     (message (ti::read-current-line))))))
 
-;;}}}
-;;{{{ Additional support functions
+;;; Additional support functions
 
 (defun tinylisp-emergency (&optional verb)
   "Restore any dangerously advised functions.
@@ -5937,8 +5917,7 @@ valid layout format:
   (require 'lisp-mnt)
   (call-interactively 'lm-verify))
 
-;;}}}
-;;{{{ lisp-mnt.el
+;;; lisp-mnt.el
 
 ;;#todo: Sent patch to FSF to include these in lisp-mnt.el
 
@@ -6019,8 +5998,6 @@ Return list:
           (push (list file stat) list)))
     list))
 
-;;}}}
-
 (provide 'tinylisp)
 
 ;;  These must be set, otherwise the mode setup will not activate
@@ -6028,6 +6005,7 @@ Return list:
 
 (add-hook 'tinylisp--mode-define-keys-hook
           'tinylisp-mode-define-keys)
+
 (add-hook 'tinylisp--elp-summary-mode-define-keys-hook
           'tinylisp-elp-summary-mode-define-keys)
 
