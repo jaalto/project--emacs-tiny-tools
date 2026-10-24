@@ -1,3 +1,10 @@
+2026-10-24 Sat  Jari Aalto  <jari.aalto.tamk@gmail.com>
+
+	* tiny/tinylisp.el
+	(tinylisp-insert-lexical-binding-header): new.
+	(tinylisp-autoload-write-loaddefs-file):
+	call `tinylisp-insert-lexical-binding-header'.
+
 2026-10-23 Fri  Jari Aalto  <jari.aalto.tamk@gmail.com>
 
 	* tiny/tinypath.el (tinypath-ti::write-file-variable-state):
