@@ -1,4 +1,4 @@
-;; tinyeat.el --- Eat blocks of text at point, forward and backward
+;; tinyeat.el --- Eat blocks of text at point, forward and backward -*- lexical-binding: t; -*-
 
 ; This file is not part of Emacs
 
