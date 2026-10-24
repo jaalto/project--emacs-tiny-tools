@@ -2237,6 +2237,30 @@ If you see this message when calling following, there is bug in TinyLisp.
 ;;}}}
 ;;{{{ misc
 
+(defun tinylisp-insert-lexical-binding-header ()
+  "Add `lexical-binding: t' unless already."
+  (let* ((tag "-*-")
+	 (tag-re (regexp-quote tag))
+	 (str "lexical-binding: t;")
+	 (full-str (format "%s %s %s" tag str tag))
+	 (end (line-end-position))
+	 delim)
+  (save-excursion
+    (goto-char (point-min))
+    (unless (looking-at "^.*lexical-binding:")
+      (cond
+       ((looking-at "^;")
+	(cond
+	 ((re-search-forward (format "%s\\(\\(.+[^; ]\\);? *\\)%s" tag-re tag-re) end 'noerr)
+	  (replace-match (format "%s; %s " (match-string 2) str) nil nil nil 1))
+	 (t
+	  (goto-char end)
+	  (unless (eq (char-syntax (char-before)) ?\s)
+	    (insert " "))
+	  (insert full-str))))
+       (t
+	(insert (format ";;; %s\n" full-str))))))))
+
 (defun tinylisp-process-kill ()
   "Kill running processes with y-n-p."
   (let ((list (process-list)))
@@ -4679,23 +4703,22 @@ Input:
   "Write ###autoload from FILE to DEST. VERB."
   (let ((generated-autoload-file dest))
     (ti::file-delete-safe dest)
- ;;    (ti::package-autoload-loaddefs-create-maybe dest)
+;;    (ti::package-autoload-loaddefs-create-maybe dest)
     (tinylisp-with-file-env-macro
       (with-current-buffer (tinylisp-find-file-noselect dest)
         (goto-char (point-max))
-        ;;  line added by `ti::package-autoload-loaddefs-create-maybe'
+        ;; line added by `ti::package-autoload-loaddefs-create-maybe'
 ;;        (re-search-backward "\n.*provide")
         (let ((point (point)))
-          ;;  FIXME: This call generates ^L lines. Are they important?
+          ;; FIXME: This call adds ^L characters. Are they important?
           (generate-file-autoloads file)
-          ;;  was something inserted?
           (cond
            ((eq (point) point)
             (if verb
                 (message "No autoload definitions in %s" file)))
            (t
-            ;;  DVCS git does not EOL whitespace
             (ti::buffer-remove-whitespace-eol)
+	    (tinylisp-insert-lexical-binding-header)
             (let ((backup-inhibited t))
               (save-buffer))
             (kill-buffer (current-buffer)))))))))
