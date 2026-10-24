@@ -2241,17 +2241,19 @@ If you see this message when calling following, there is bug in TinyLisp.
   "Add `lexical-binding: t' unless already."
   (let* ((tag "-*-")
 	 (tag-re (regexp-quote tag))
+	 (header-re (format "%s\\(\\(.+[^; ]\\);? *\\)%s" tag-re tag-re))
 	 (str "lexical-binding: t;")
 	 (full-str (format "%s %s %s" tag str tag))
-	 (end (line-end-position))
+	 end
 	 delim)
   (save-excursion
     (goto-char (point-min))
+    (setq end (line-end-position))
     (unless (looking-at "^.*lexical-binding:")
       (cond
        ((looking-at "^;")
 	(cond
-	 ((re-search-forward (format "%s\\(\\(.+[^; ]\\);? *\\)%s" tag-re tag-re) end 'noerr)
+	 ((re-search-forward header-re end 'noerr)
 	  (replace-match (format "%s; %s " (match-string 2) str) nil nil nil 1))
 	 (t
 	  (goto-char end)
@@ -2259,7 +2261,7 @@ If you see this message when calling following, there is bug in TinyLisp.
 	    (insert " "))
 	  (insert full-str))))
        (t
-	(insert (format ";;; %s\n" full-str))))))))
+	(insert (format ";;; %s\n" full-str)))))))))
 
 (defun tinylisp-process-kill ()
   "Kill running processes with y-n-p."
