@@ -1,4 +1,4 @@
-;;; tinyload.el --- Load set of packages when Emacs is idle (lazy load)
+;;; tinyload.el --- Load set of packages when Emacs is idle (lazy load) -*- lexical-binding: t; -*-
 
 ;; This file is not part of Emacs
 
