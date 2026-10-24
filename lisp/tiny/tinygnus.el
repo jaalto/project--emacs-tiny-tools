@@ -41,7 +41,7 @@
 ;;  Alternatively you can add this autoload code to integrate the package
 ;;  with Gnus startup:
 ;;
-;;      (add-hook 'gnus-startup-hook '(lambda () (require 'tinygnus)))
+;;      (add-hook 'gnus-startup-hook #'(lambda () (require 'tinygnus)))
 
 ;;}}}
 ;;{{{ Documentation
@@ -283,7 +283,7 @@
 ;;
 ;;          (setq gnus-topic-line-format "%i%(%{%n%}%) %A -- %g %v\n")
 ;;
-;;          (add-hook 'gnus-select-group-hook   'gnus-group-set-timestamp)
+;;          (add-hook 'gnus-select-group-hook   #'gnus-group-set-timestamp)
 ;;
 ;;          (setq gnus-group-line-format
 ;;              "%M%S%p%3uZ[%L]%-4uE%uT %5y: %-40,40g %7,7~(cut 6)d %uC\n")
@@ -370,7 +370,7 @@
 ;;                'tinygnus-gnus-summary-search-article-backward)))
 ;;
 ;;          (add-hook 'tinygnus-summary-mode-hook
-;;                    'my-tinygnus-summary-mode-hook)
+;;                    #'my-tinygnus-summary-mode-hook)
 
 ;;}}}
 
@@ -2155,8 +2155,8 @@ Input:
 ;;;     So, you only have to hit SPACE to read the group and leave the
 ;;;     details to the rest of the code.
 
-(add-hook 'gnus-summary-prepare-exit-hook 'tinygnus-summary-prepare-exit-hook)
-(add-hook 'gnus-select-group-hook         'tinygnus-select-group-hook)
+(add-hook 'gnus-summary-prepare-exit-hook #'tinygnus-summary-prepare-exit-hook)
+(add-hook 'gnus-select-group-hook         #'tinygnus-select-group-hook)
 
 (defun tinygnus-summary-prepare-exit-hook ()
   "Save the group data before exit."

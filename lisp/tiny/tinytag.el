@@ -48,9 +48,9 @@
 ;;  is called. Here, if you program mostly with Java and C,
 ;;  then either one will activate tinytag for all buffers.
 ;;
-;;      (add-hook 'c++-mode-hook      'tinytag-install)
-;;      (add-hook 'c-mode-hook        'tinytag-install)
-;;      (add-hook 'java-mode-hook     'tinytag-install)
+;;      (add-hook 'c++-mode-hook      #'tinytag-install)
+;;      (add-hook 'c-mode-hook        #'tinytag-install)
+;;      (add-hook 'java-mode-hook     #'tinytag-install)
 ;;
 ;;   ********************************************************************
 ;;

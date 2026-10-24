@@ -123,10 +123,10 @@
 ;;          (setq xxx-mode-name "xxx")
 ;;
 ;;          ;;  When mode runs, I want to do this.
-;;          (add-hook 'xxx-mode-hook 'my-xxx-settings)
+;;          (add-hook 'xxx-mode-hook #'my-xxx-settings)
 ;;
 ;;          ;;  I want to add additional keys
-;;          (add-hook 'xxx-mode-define-keys-hook 'my-xxx-keys)
+;;          (add-hook 'xxx-mode-define-keys-hook #'my-xxx-keys)
 ;;
 ;;      _[2]_ Next we need installation function, which installs our minor
 ;;      mode so that emacs is aware of it. The minor mode functions,
@@ -172,7 +172,7 @@
 ;;      start from the function that defines keys and menus. Here is ready
 ;;      macro for that too.
 ;;
-;;          (add-hook' xxx-mode-define-keys-hook 'xxx-mode-define-keys)
+;;          (add-hook' xxx-mode-define-keys-hook #'xxx-mode-define-keys)
 ;;
 ;;          (ti::macrof-define-keys
 ;;           "xxx-mode-define-keys"

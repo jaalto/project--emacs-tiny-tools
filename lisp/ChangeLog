@@ -1,9 +1,15 @@
 2026-10-24 Sat  Jari Aalto  <jari.aalto.tamk@gmail.com>
 
+	* ALL: Add '#' bytecompile hint to `add-hook'
+	and `remove-hook'.
+
 	* tiny/tinylisp.el
+	(top level): delete folding marks. Add '#' byte
+	compile hint to `add-hook'.
 	(tinylisp-insert-lexical-binding-header): new.
 	(tinylisp-autoload-write-loaddefs-file):
 	call `tinylisp-insert-lexical-binding-header'.
+	(tinylisp--load-hook): Correct docstring format.
 
 2026-10-23 Fri  Jari Aalto  <jari.aalto.tamk@gmail.com>
 

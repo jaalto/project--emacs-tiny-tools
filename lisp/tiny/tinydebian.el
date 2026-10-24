@@ -35,7 +35,7 @@
 ;;   $HOME/.emacs startup file
 ;;
 ;;      (setq tinydebian--novice-mode t)  ;; or nil
-;;      (add-hook 'tinydebian--load-hook 'tinydebian-install)
+;;      (add-hook 'tinydebian--load-hook #'tinydebian-install)
 ;;      (require 'tinydebian)
 ;;
 ;;   If you have any questions about this Emacs package:
@@ -125,7 +125,7 @@
   (or (require 'cl-lib nil 'noerr) ;; Emacs 29.x
       (require 'cl)))
 
-(defconst tinydebian--version-time "2024.0418.1238"
+(defconst tinydebian--version-time "2026.1024.1505"
   "Last edited time.")
 
 (require 'tinylibm)
@@ -1334,28 +1334,28 @@ See variables:
    (uninstall
     (tinydebian-install-font-lock-keywords 'uninstall)
     (remove-hook 'message-mode-hook
-                 'turn-on-tinydebian-mail-mode)
+                 #'turn-on-tinydebian-mail-mode)
     (remove-hook 'mail-mode-hook
-                 'turn-on-tinydebian-mail-mode)
+                 #'turn-on-tinydebian-mail-mode)
     (remove-hook 'find-file-hook
-                 'tinydebian-find-file-hook)
+                 #'tinydebian-find-file-hook)
     (remove-hook 'gnus-summary-prepare-hook
-                 'tinydebian-bts-mode-gnus-summary-maybe-turn-on)
+                 #'tinydebian-bts-mode-gnus-summary-maybe-turn-on)
     (remove-hook 'gnus-article-prepare-hook
-                 'tinydebian-bts-mode-maybe-turn-on)
+                 #'tinydebian-bts-mode-maybe-turn-on)
     (tinydebian-install-in-buffers 'uninstall))
    (t
     (tinydebian-install-font-lock-keywords)
     (add-hook 'message-mode-hook
-              'turn-on-tinydebian-mail-mode)
+              #'turn-on-tinydebian-mail-mode)
     (add-hook 'mail-mode-hook
-              'turn-on-tinydebian-mail-mode)
+              #'turn-on-tinydebian-mail-mode)
     (add-hook 'find-file-hook
-              'tinydebian-find-file-hook)
+              #'tinydebian-find-file-hook)
     (add-hook 'gnus-summary-prepare-hook
-              'tinydebian-bts-mode-gnus-summary-maybe-turn-on)
+              #'tinydebian-bts-mode-gnus-summary-maybe-turn-on)
     (add-hook 'gnus-article-prepare-hook
-              'tinydebian-bts-mode-maybe-turn-on)
+              #'tinydebian-bts-mode-maybe-turn-on)
     (tinydebian-install-in-buffers)))
   nil)
 
@@ -7066,10 +7066,10 @@ You can select region and these commands to shell `sh' with command
 (tinydebian-install-severity-functions) ;; Auto-created functions
 
 (add-hook 'tinydebian--bts-mode-define-keys-hook
-          'tinydebian-bts-mode-define-keys)
+          #'tinydebian-bts-mode-define-keys)
 
 (add-hook 'tinydebian--mail-mode-define-keys-hook
-          'tinydebian-mail-mode-define-keys)
+          #'tinydebian-mail-mode-define-keys)
 
 (defalias 'tinydebian-reportbug 'tinydebian-bug-report-generic-bts-mail)
 

@@ -137,10 +137,10 @@ Mode description:
      (cond
       (tinypad-mode
        (put 'tinypad-mode 'global t)
-       (add-hook (ti::compat-find-file-hook) 'tinypad-find-file-hook ))
+       (add-hook (ti::compat-find-file-hook) #'tinypad-find-file-hook ))
       (t
        (put 'tinypad-mode 'global nil)
-       (remove-hook (ti::compat-find-file-hook) 'tinypad-find-file-hook )))
+       (remove-hook (ti::compat-find-file-hook) #'tinypad-find-file-hook )))
      (when (null (get 'tinypad-mode 'self-call))
        (tinypad-mode-action)))
    "Tiny Notepad mode"
@@ -277,7 +277,7 @@ Mode description:
 
 ;;; Provide
 
-(add-hook 'tinypad--mode-define-keys-hook 'tinypad-mode-define-keys)
+(add-hook 'tinypad--mode-define-keys-hook #'tinypad-mode-define-keys)
 
 (provide   'tinypad)
 (run-hooks 'tinypad--load-hook)

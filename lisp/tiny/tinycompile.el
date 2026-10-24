@@ -36,15 +36,15 @@
 ;;  ~/.emacs startup file.
 ;;
 ;;      ;; You could also call M-x tinycompile-install / tinycompile-uninstall
-;;      (add-hook tinycompile--load-hook 'tinycompile-install)
+;;      (add-hook tinycompile--load-hook #'tinycompile-install)
 ;;      (require 'tinycompile)
 ;;
 ;;  or use this autoload; your ~/.emacs loads quicker
 ;;
 ;;       (autoload 'tinycompile-mode            "tinycompile" "" t)
 ;;       (autoload 'turn-on-tinycompile-mode    "tinycompile" "" t)
-;;       (add-hook 'compilation-mode-hook 'turn-on-tinycompile-mode 'append)
-;;       (add-hook 'grep-mode-hook 'turn-on-tinycompile-mode 'append)
+;;       (add-hook 'compilation-mode-hook #'turn-on-tinycompile-mode 'append)
+;;       (add-hook 'grep-mode-hook #'turn-on-tinycompile-mode 'append)
 ;;
 ;; If you find any incorrect behavior, please immediately
 ;;
@@ -264,12 +264,12 @@ Format of list:
   (cond
    (uninstall
     (if (boundp 'grep-mode-hook)
-        (add-hook 'grep-mode-hook 'turn-on-tinycompile-mode 'append))
-    (add-hook 'compilation-mode-hook 'turn-on-tinycompile-mode 'append))
+        (add-hook 'grep-mode-hook #'turn-on-tinycompile-mode 'append))
+    (add-hook 'compilation-mode-hook #'turn-on-tinycompile-mode 'append))
    (t
     (if (boundp 'grep-mode-hook)
-        (remove-hook 'grep-mode-hook 'turn-on-tinycompile-mode))
-    (remove-hook 'compilation-mode-hook 'turn-on-tinycompile-mode))))
+        (remove-hook 'grep-mode-hook #'turn-on-tinycompile-mode))
+    (remove-hook 'compilation-mode-hook #'turn-on-tinycompile-mode))))
 
 (defun tinycompile-uninstall ()
   "Uninstall package."
@@ -571,7 +571,7 @@ See `tinycompile-hide-by-regexp' and `tinycompile-hide-by-regexp-whole-line'."
 (if (default-value 'tinycompile-mode)
     (setq-default tinycompile-mode nil))
 
-(add-hook 'tinycompile--mode-define-keys-hook  'tinycompile-mode-define-keys)
+(add-hook 'tinycompile--mode-define-keys-hook  #'tinycompile-mode-define-keys)
 
 (provide   'tinycompile)
 (run-hooks 'tinycompile--load-hook)

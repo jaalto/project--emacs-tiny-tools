@@ -144,7 +144,7 @@
 ;;             '(tinylock-timer-control tinylock-auto-lock-set-password)
 ;;
 ;;          ;; add function to the end
-;;          (add-hook 'tinylock--load-hook 'my-tinylock-auto-lock-set-interval 'append)
+;;          (add-hook 'tinylock--load-hook #'my-tinylock-auto-lock-set-interval 'append)
 ;;
 ;;
 ;;          (defun my-tinylock-auto-lock-set-interval ()
@@ -524,16 +524,16 @@ If LOCK-NOW is non-nil emacs is immediately locked with PSW."
   (when (fboundp 'timi-report-install-maybe)
     (ti::funcall 'timi-report-install-maybe)))
 
-(add-hook 'tinylock--load-hook 'tinylock-process-on)
+(add-hook 'tinylock--load-hook #'tinylock-process-on)
 
 ;; Ask lock password at startup
 
 (if tinylock--auto-lock-password
-    (remove-hook 'tinylock--load-hook 'tinylock-auto-lock-set-password)
-  (add-hook 'tinylock--load-hook 'tinylock-auto-lock-set-password))
+    (remove-hook 'tinylock--load-hook #'tinylock-auto-lock-set-password)
+  (add-hook 'tinylock--load-hook #'tinylock-auto-lock-set-password))
 
-(add-hook 'tinylock--before-lock-hook 'tinylock-before-lock-function)
-(add-hook 'tinylock--after-lock-hook  'tinylock-after-lock-function)
+(add-hook 'tinylock--before-lock-hook #'tinylock-before-lock-function)
+(add-hook 'tinylock--after-lock-hook  #'tinylock-after-lock-function)
 
 ;;}}}
 

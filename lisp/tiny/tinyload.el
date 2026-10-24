@@ -212,7 +212,7 @@
 ;;          (load "emacs-rc-pkg-std")
 ;;          (load "emacs-rc-pkg-misc")
 ;;          (load "emacs-rc-tips")
-;;          (add-hook 'mail-mode-hook '(lambda () (require 'emacs-rc-mail)))
+;;          (add-hook 'mail-mode-hook #'(lambda () (require 'emacs-rc-mail)))
 ;;
 ;;          ;; End of file $HOME/.emacs
 ;;
@@ -248,7 +248,7 @@
 ;;
 ;;          ;;  Load this setup only when mail composing is started
 ;;
-;;          (add-hook 'mail-mode-hook '(lambda () (require 'emacs-rc-mail)))
+;;          (add-hook 'mail-mode-hook #'(lambda () (require 'emacs-rc-mail)))
 ;;
 ;;          ;;  ........................................... lazy loading ....
 ;;          ;;  We can afford to load these later
@@ -417,7 +417,7 @@
 ;;      definitions and load those packages as well.
 ;;
 ;;          (add-hook 'tinyload--process-uninstall-hook
-;;                    'tinyload-autoload-function-load)
+;;                    #'tinyload-autoload-function-load)
 ;;
 ;;  Restart and cancel
 ;;

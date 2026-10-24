@@ -4732,7 +4732,7 @@ satisfied."
              (delete-char 2))
             ((message "Malformed MIME quoted-printable message"))))))
 
-;;; (add-hook 'vm-select-message-hook 'ti::mail-mime-prepare-qp)
+;;; (add-hook 'vm-select-message-hook #'ti::mail-mime-prepare-qp)
 (defun ti::mail-qp-mime-prepare ()
   "Mime. Unquote quoted-printable from mail buffers.
 Searches for tag:

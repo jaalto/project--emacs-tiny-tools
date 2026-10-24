@@ -39,7 +39,7 @@
 ;;      ;; OPTIONAL: If you want fast minor mode key binding
 ;;      (setq tinytf--mode-prefix-key "z")   ;; faster than default C-c C-z
 ;;
-;;      (add-hook 'tinytf--load-hook 'turn-on-tinytf-mode-all-buffers)
+;;      (add-hook 'tinytf--load-hook #'turn-on-tinytf-mode-all-buffers)
 ;;      (require 'tinytf)
 ;;
 ;; or autoload and your Emacs starts faster, preferred method:
@@ -54,14 +54,14 @@
 ;; To use additional function keys, add these lines:
 ;;
 ;;      ;; Required
-;;      (add-hook 'tinytf--mode-define-keys-hook 'tinytf-mode-define-keys)
+;;      (add-hook 'tinytf--mode-define-keys-hook #'tinytf-mode-define-keys)
 ;;      ;; OPTIONAL
-;;      (add-hook 'tinytf--mode-define-keys-hook 'tinytf-mode-define-f-keys)
+;;      (add-hook 'tinytf--mode-define-keys-hook #'tinytf-mode-define-f-keys)
 ;;
 ;; Additional hooks to detect and format buffer (optional):
 ;;
-;;       (add-hook 'write-file-functions 'tinytf-untabify-buffer)
-;;       (add-hook 'find-file-hook 'turn-on-tinytf-mode-maybe)
+;;       (add-hook 'write-file-functions #'tinytf-untabify-buffer)
+;;       (add-hook 'find-file-hook #'turn-on-tinytf-mode-maybe)
 ;;
 ;; If you need to redefine some binding to suit your keyboard better,
 ;; add setup like this to your ~/.emacs file:

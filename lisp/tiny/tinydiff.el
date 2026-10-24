@@ -385,7 +385,7 @@
 ;;      This hook setup turns on the view mode for easy scrolling
 ;;      of buffer.
 ;;
-;;          (add-hook 'tinydiff--diff-hook  'my-tinydiff-diff-hook)
+;;          (add-hook 'tinydiff--diff-hook  #'my-tinydiff-diff-hook)
 ;;
 ;;          (defun my-tinydiff-diff-hook ()
 ;;            "Turn on view-mode in diff buffer."
@@ -2788,11 +2788,11 @@ E.g. to apply revese diff, you may want to set the option to: -R"
       (unless (fboundp 'diff-mode)
         (turn-on-tinydiff-mode)))))
 
-(add-hook 'tinydiff--mode-define-keys-hook  'tinydiff-mode-define-keys)
-(add-hook 'tinydiff--parse-buffer-hook      'turn-on-font-lock-mode)
+(add-hook 'tinydiff--mode-define-keys-hook  #'tinydiff-mode-define-keys)
+(add-hook 'tinydiff--parse-buffer-hook      #'turn-on-font-lock-mode)
 
 ;; These have to be here, because when someone says
-;;   (add-hook 'tinydiff--diff-hook 'my-tinydiff--diff-hook)
+;;   (add-hook 'tinydiff--diff-hook #'my-tinydiff--diff-hook)
 ;;
 ;; The variable gets defined immediately. --> following does nothing...
 ;;   (defvar tinydiff--diff-hook '(tinydiff-parse-buffer tinydiff-mode))

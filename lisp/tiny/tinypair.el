@@ -41,7 +41,7 @@
 ;; Or use autoload and your Emacs starts faster:
 ;;
 ;;      (autoload 'turn-on-tinypair-mode "tinypair")
-;;      (add-hook <your-favourite-mode-hook> 'turn-on-tinypair-mode)
+;;      (add-hook <your-favourite-mode-hook> #'turn-on-tinypair-mode)
 ;;
 ;; If you want to turn the pairing off, use this:
 ;;
@@ -800,7 +800,7 @@ Input:
 
 ;;; Provide
 
-(add-hook 'tinypair--mode-define-keys-hook 'tinypair-mode-define-keys)
+(add-hook 'tinypair--mode-define-keys-hook #'tinypair-mode-define-keys)
 
 (ti::add-hooks '(minibuffer-setup-hook
                  dired-mode-hook

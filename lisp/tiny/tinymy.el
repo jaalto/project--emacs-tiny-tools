@@ -88,8 +88,8 @@
 ;;      ;;  Redefine hook so that it doesn't
 ;;      ;;  override Emacs keys.  Define them somewhere else.
 ;;
-;;      (add-hook 'tinymy--load-hook 'tinymy-install)
-;;      (add-hook 'tinymy--load-hook 'tinymy-alias)
+;;      (add-hook 'tinymy--load-hook #'tinymy-install)
+;;      (add-hook 'tinymy--load-hook #'tinymy-alias)
 ;;
 ;;   If you have any questions, use 'submit' function. In case of error
 ;;   or misbehavior, turn on the debug too and send the debug result and
@@ -271,16 +271,16 @@
 ;;      When you load this package, you can also install global
 ;;      key-bindings that if you set the load hook:
 ;;
-;;          (add-hook 'tinymy--load-hook 'tinymy-install)
-;;          (add-hook 'tinymy--load-hook 'tinymy-define-keys)
-;;          (add-hook 'tinymy--load-hook 'tinymy-define-key-extra)
-;;          (add-hook 'tinymy--load-hook 'tinymy-alias)
+;;          (add-hook 'tinymy--load-hook #'tinymy-install)
+;;          (add-hook 'tinymy--load-hook #'tinymy-define-keys)
+;;          (add-hook 'tinymy--load-hook #'tinymy-define-key-extra)
+;;          (add-hook 'tinymy--load-hook #'tinymy-alias)
 ;;
 ;;      If you want to use your own bindings, use it like this:
 ;;
-;;          (add-hook 'tinymy--load-hook 'tinymy-install
-;;          (add-hook 'tinymy--load-hook 'tinymy-alias)
-;;          (add-hook 'tinymy--load-hook 'my-tinymy-keys)
+;;          (add-hook 'tinymy--load-hook #'tinymy-install
+;;          (add-hook 'tinymy--load-hook #'tinymy-alias)
+;;          (add-hook 'tinymy--load-hook #'my-tinymy-keys)
 ;;
 ;;          (defun my-tinymy-keys ()
 ;;            <define my own global key mappings>)
@@ -601,7 +601,7 @@ Example:
      determines the perl command according to file name. Function
      `ti::buffer-shebang' reads the command interpreter from the first line.
 
-    (add-hook \\='tinymy-load-hook \\='my-tinymy-compile-customisations)
+    (add-hook \\='tinymy-load-hook \\=#'my-tinymy-compile-customisations)
 
     (defun my-tinymy-compile-customisations ()
       (push \\='(\"perl\" .
@@ -613,7 +613,7 @@ Example:
   If you always want to use the shebang command interpreter, then you
   would simply write
 
-   (add-hook \\='tinymy-load-hook \\='my-tinymy-compile-customisations)
+   (add-hook \\='tinymy-load-hook \\=#'my-tinymy-compile-customisations)
 
    (defun my-tinymy-compile-customisations ()
      (push \\='(\"perl\" .
@@ -674,7 +674,7 @@ Format:
 			      (car x)
 			      (cdr x)
 			      'tinymy-define-key-error)))
-  (add-hook 'makefile-mode-hook 'tinymy-makefile-mode-hook))
+  (add-hook 'makefile-mode-hook #'tinymy-makefile-mode-hook))
 
 (defun tinymy-makefile-mode-hook ()
   "Define key C-c/ to adjust \\ continuing lines."
@@ -940,7 +940,7 @@ Important, If file is vc controlled:
      (get 'tinymy-cursor-overwrite-mode 'saved-cursor-type)))))
 
 (if (fboundp 'overwrite-mode-hook)
-    (add-hook 'overwrite-mode-hook 'tinymy-cursor-overwrite-mode-hook)
+    (add-hook 'overwrite-mode-hook #'tinymy-cursor-overwrite-mode-hook)
   (defadvice overwrite-mode (around tinymy act)
     "Change cursor to 'block or 'bar according to `overwrite-mode'."
     ad-do-it
@@ -2372,7 +2372,7 @@ Otherwise call `tinymy-word-move-1'."
 ;;;### (autoload 'tinymy-sort-mode          "tinymy" "" t)
 
 (add-hook 'tinymy-sort--mode-define-keys-hook ;To be sure
-          'tinymy-sort-mode-define-keys)
+          #'tinymy-sort-mode-define-keys)
 
 (eval-and-compile
 

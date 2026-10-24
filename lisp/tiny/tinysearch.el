@@ -40,7 +40,7 @@
 ;;
 ;;      ;;  Install default keybindings: M-s (forward search), M-r
 ;;      ;;  (bbackward), M-Mouse-1 (forward), C-M-Mouse-1 (backward)
-;;      (add-hook 'tinysearch--load-hook 'tinysearch-install)
+;;      (add-hook 'tinysearch--load-hook #'tinysearch-install)
 
 ;;}}}
 ;;{{{ Documentation

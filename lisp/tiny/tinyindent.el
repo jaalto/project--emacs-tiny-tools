@@ -463,7 +463,7 @@ TAB x       indents relative and inserting character x
 
 ;;}}}
 
-(add-hook 'tinyindent--mode-define-keys-hook 'tinyindent-mode-map-define-keys)
+(add-hook 'tinyindent--mode-define-keys-hook #'tinyindent-mode-map-define-keys)
 
 (provide   'tinyindent)
 

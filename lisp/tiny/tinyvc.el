@@ -897,7 +897,7 @@ is read-only. VERB."
       (setq tinyvc--invoked-buffer BuffeR)
       (run-hooks 'tinyvc--vc-print-log-hook))))
 
-(add-hook 'tinyvc--mode-define-keys-hook 'tinyvc-mode-define-keys)
+(add-hook 'tinyvc--mode-define-keys-hook #'tinyvc-mode-define-keys)
 
 (provide   'tinyvc)
 

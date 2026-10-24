@@ -539,7 +539,7 @@
 ;;      /emacs-NN.NN/, that's why added "-".
 ;;
 ;;          (add-hook 'tinypath--load-path-ignore-regexp-hook
-;;                    'my-tinypath--load-path-ignore-regexp-hook)
+;;                    #'my-tinypath--load-path-ignore-regexp-hook)
 ;;
 ;;          (defun my-tinypath--load-path-ignore-regexp-hook ()
 ;;            ;;  Do this only once

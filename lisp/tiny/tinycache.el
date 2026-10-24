@@ -32,13 +32,13 @@
 ;;   Put this file on your Emacs-Lisp `load-path', add following into
 ;;   ~/.emacs startup file:
 ;;
-;;       (add-hook tinycache--load-hook 'tinycache-install)
-;;       (add-hook tinycache--load-hook 'tinycache-install-msb)
+;;       (add-hook tinycache--load-hook #'tinycache-install)
+;;       (add-hook tinycache--load-hook #'tinycache-install-msb)
 ;;       (require 'tinycache)
 ;;
 ;;   Or use quicker autoload:
 ;;
-;;       (add-hook tinycache--load-hook 'tinycache-install-msb)
+;;       (add-hook tinycache--load-hook #'tinycache-install-msb)
 ;;       (eval-after-load "compile" '(progn (require 'tinycache)))
 ;;       (eval-after-load "dired"   '(progn (require 'tinycache)))
 ;;
@@ -301,15 +301,15 @@ Format: (BUFFER-POINTER BP ..)")
   (interactive)
   (cond
    (uninstall
-    (remove-hook 'buffer-menu-mode-hook 'tinycache-buffer-list-bindings-on)
-    (remove-hook 'compilation-mode-hook 'tinycache-define-default-keys)
-    (remove-hook 'dired-mode-hook       'tinycache-add-local-hook)
-    (remove-hook 'dired-mode-hook       'tinycache-define-default-keys))
+    (remove-hook 'buffer-menu-mode-hook #'tinycache-buffer-list-bindings-on)
+    (remove-hook 'compilation-mode-hook #'tinycache-define-default-keys)
+    (remove-hook 'dired-mode-hook       #'tinycache-add-local-hook)
+    (remove-hook 'dired-mode-hook       #'tinycache-define-default-keys))
    (t
-    (add-hook 'buffer-menu-mode-hook 'tinycache-buffer-list-bindings-on)
-    (add-hook 'compilation-mode-hook 'tinycache-define-default-keys)
-    (add-hook 'dired-mode-hook       'tinycache-add-local-hook)
-    (add-hook 'dired-mode-hook       'tinycache-define-default-keys))))
+    (add-hook #'buffer-menu-mode-hook 'tinycache-buffer-list-bindings-on)
+    (add-hook 'compilation-mode-hook #'tinycache-define-default-keys)
+    (add-hook 'dired-mode-hook       #'tinycache-add-local-hook)
+    (add-hook 'dired-mode-hook       #'tinycache-define-default-keys))))
 
 (defun tinycache-install-msb ()
   "Install new cache menu to msb.el if it is loaded."
@@ -365,7 +365,7 @@ Format: (BUFFER-POINTER BP ..)")
   (ti::define-key-if-free Buffer-menu-mode-map "\C-ccf"
                           'tinycache-buffer-list-mark-cache-off)
   ;;  Bye, bye. No need to call us again. Installation already done.
-  (remove-hook 'buffer-menu-mode-hook 'tinycache-define-default-keys))
+  (remove-hook 'buffer-menu-mode-hook #'tinycache-define-default-keys))
 
 ;;;  - The following says that "Load view-(minor)mode in Emacs 19.30, but
 ;;;    for other (X)Emacs load mview-mode if it exists."
@@ -526,7 +526,7 @@ buffer are also killed."
   (let (buffer)
     ;; Make sure this hook does not contain tinycache-flush outside
     ;; the compilation buffer
-    (remove-hook 'kill-buffer-hook 'tinycache-flush)
+    (remove-hook 'kill-buffer-hook #'tinycache-flush)
     (save-excursion
       ;;   Select right buffer where to localize the hook
       (cond
@@ -538,7 +538,7 @@ buffer are also killed."
        (t
         (error "improper use of tinycache-add-local-hook: no dired/compilation")))
       ;;  force the hook local to buffer
-      (add-hook 'kill-buffer-hook 'tinycache-flush nil 'local)
+      (add-hook 'kill-buffer-hook #'tinycache-flush nil 'local)
       ;;  Make sure there are no constants in the hook.
       (setq kill-buffer-hook (delq nil (delq t kill-buffer-hook))))))
 
@@ -687,7 +687,7 @@ buffer and kill compilation cached files."
               ;;  kill-buffer-hook is local to each buffer.
               ;;  prevent alias loop
               (let ((kill-buffer-hook kill-buffer-hook))
-                (remove-hook 'kill-buffer-hook 'tinycache-flush)
+                (remove-hook 'kill-buffer-hook #'tinycache-flush)
                 (when (tinycache--mode-on-string-p) ;it's allowed to kill
                   (kill-buffer buffer)
                   (setq do-it t)))))

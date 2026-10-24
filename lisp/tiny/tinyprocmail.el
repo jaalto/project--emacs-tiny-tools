@@ -42,7 +42,7 @@
 ;;      ;;    to find out the procmail version. (slower)
 ;;
 ;;      (setq tinyprocmail--procmail-version "v3.11pre7")
-;;      (add-hook 'tinyprocmail--load-hook 'tinyprocmail-install)
+;;      (add-hook 'tinyprocmail--load-hook #'tinyprocmail-install)
 ;;      (require 'tinyprocmail)
 ;;
 ;; You can also use the preferred way: autoload
@@ -50,7 +50,7 @@
 ;;      (autoload 'turn-on-tinyprocmail-mode  "tinyprocmail" "" t)
 ;;      (autoload 'turn-off-tinyprocmail-mode "tinyprocmail" "" t)
 ;;      (autoload 'tinyprocmail-mode          "tinyprocmail" "" t)
-;;      (add-hook 'tinyprocmail--load-hook 'tinyprocmail-install)
+;;      (add-hook 'tinyprocmail--load-hook #'tinyprocmail-install)
 ;;
 ;;      ;;  Procmail files usually end to suffix "*.rc", like pm-file.rc
 ;;      ;;  Some older procmail files start with "rc.*", like rc.file-name
@@ -459,7 +459,7 @@
   (or (require 'cl-lib nil 'noerr) ;; Emacs 29.x
       (require 'cl)))
 
-(defconst tinyprocmail--version-time "2023.0918.1913"
+(defconst tinyprocmail--version-time "2026.1024.1502"
   "*Version of last edit.")
 
 (eval-and-compile
@@ -3295,10 +3295,10 @@ Input:
 ;;}}}
 
 (add-hook 'tinyprocmail--mode-define-keys-hook
-          'tinyprocmail-mode-define-keys)
+          #'tinyprocmail-mode-define-keys)
 
 (add-hook 'tinyprocmail-output--mode-define-keys-hook
-          'tinyprocmail-output-mode-define-keys)
+          #'tinyprocmail-output-mode-define-keys)
 
 (provide 'tinyprocmail)
 (run-hooks 'tinyprocmail--load-hook)

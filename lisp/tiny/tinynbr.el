@@ -202,7 +202,7 @@ Mode description:
 
 ;;; Provide
 
-(add-hook  'tinynbr--mode-hook 'tinynbr-mode-define-keys)
+(add-hook  #'tinynbr--mode-hook 'tinynbr-mode-define-keys)
 (provide   'tinynbr)
 (run-hooks 'tinynbr--load-hook)
 

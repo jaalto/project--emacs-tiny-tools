@@ -41,19 +41,19 @@
 ;;  Other setting you may wish to add:
 ;;
 ;;      ;;  Activate nice citation
-;;      (add-hook 'tinymail--load-hook 'tinymail-install-citation)
+;;      (add-hook 'tinymail--load-hook #'tinymail-install-citation)
 ;;
 ;;      ;;  If you want nice TAB to indent for your messages,
 ;;      ;;  add this. You TAB advances 4 spaces in the body of message.
 ;;      (autoload 'turn-on-tinytab-mode  "tinytab" "" t)
-;;      (add-hook 'tinymail--mode-hook   'turn-on-tinytab-mode)
+;;      (add-hook 'tinymail--mode-hook #'turn-on-tinytab-mode)
 ;;
 ;;      ;;  If you use NIS, use "ypcat passwd"
 ;;      (setq tinymail--password-cat-cmd "cat /etc/passwd")
 ;;
 ;;      ;;  Protect plain text email addresses in the body
-;;      (add-hook 'mail-send-hook    'tinymail-buffer-email-address-scramble)
-;;      (add-hook 'message-send-hook 'tinymail-buffer-email-address-scramble)
+;;      (add-hook 'mail-send-hook    #'tinymail-buffer-email-address-scramble)
+;;      (add-hook 'message-send-hook #'tinymail-buffer-email-address-scramble)
 ;;
 ;;   If you have any questions, use 'submit' function. In case of error
 ;;   or misbehavior, turn on the debug and send the debug result and
@@ -483,9 +483,9 @@
 ;;      If you don't want to use this feature, add following code to your
 ;;      $HOME/.emacs
 ;;
-;;          (add-hook 'tinymail--load-hook 'my-tinymail--load-hook)
+;;          (add-hook 'tinymail--load-hook #'my-tinymail--load-hook)
 ;;          (defun my-tinymail--load-hook  ()
-;;            (remove-hook 'kill-emacs-hook 'tinymail-save-dead-mail))
+;;            (remove-hook 'kill-emacs-hook #'tinymail-save-dead-mail))
 ;;
 ;;      _Note_: VM and Gnus can keep the sent mail buffer around. This
 ;;      package won't install `tinymail-save-dead-mail-maybe' the dead mail
@@ -623,7 +623,7 @@
 ;;      gets a trusted status. If you still want to generate the *Sender*
 ;;      field, then add this after package has been loaded.
 ;;
-;;          (remove-hook 'tinymail-message-disable-sender 'message-mode-hook)
+;;          (remove-hook 'tinymail-message-disable-sender #'message-mode-hook)
 ;;
 ;;     Non-Newsgroup posting
 ;;
@@ -715,7 +715,7 @@
 ;;      To activate this citation reference function with your Mail User
 ;;      Agent (Gnus, RMAIL ..), call:
 ;;
-;;          (add-hook 'tinymail--load-hook 'tinymail-install-citation)
+;;          (add-hook 'tinymail--load-hook #'tinymail-install-citation)
 ;;
 ;;      For supercite, install this function to the handlers and select
 ;;      it with index 0:
@@ -2063,9 +2063,9 @@ References:
       ;;  - Remove and add make sure the function is at the beginning and
       ;;    runs first.
       (remove-hook 'tinytab--tab-insert-hook
-                   'tinymail-complete-key-interactive)
+                   #'tinymail-complete-key-interactive)
       (add-hook    'tinytab--tab-insert-hook
-                   'tinymail-complete-key-interactive))
+                   #'tinymail-complete-key-interactive))
     (unless disable
       ;;  If you're replying to someone else's message, the TO field
       ;;  must have two spaces to turn off TinyMail so that the remaining
@@ -3424,10 +3424,10 @@ functions. Each function is passed the word info at point: (BEG END STRING)."
                tinytab-mode
                (fboundp 'tinytab-indent-by-tab-width))
           (add-hook 'tinymail--complete-key-hook
-                    'tinytab-indent-by-tab-width))
+                    #'tinytab-indent-by-tab-width))
          (t
           (add-hook 'tinymail--complete-key-hook
-                    'tinymail-tab-to-tab-stop)))
+                    #'tinymail-tab-to-tab-stop)))
         (tinymail-debug fid 'BODY-AREA tinymail--complete-key-hook))
        (t
         (tinymail-debug 'tinymail-complete-key 'POINT-INSIDE-HEADER)
@@ -3440,7 +3440,7 @@ functions. Each function is passed the word info at point: (BEG END STRING)."
           (tinymail-debug fid 'header-check 'REMOVED
                           'tinymail-complete-everything)
           (remove-hook 'tinymail--complete-key-hook
-                       'tinymail-complete-everything))))
+                       #'tinymail-complete-everything))))
       ;; .................................................... cond-end ...
       (tinymail-debug fid 'LOOPING-LIST tinymail--complete-key-hook)
       (catch 'break

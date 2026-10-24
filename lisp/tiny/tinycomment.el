@@ -805,7 +805,7 @@ Version info is on \\[tinycomment-version]."
 ;;     ;;   very important to restore this !! See simple.el
 ;;         comment-indent-hook '(lambda () comment-column)))
 ;;
-;; (add-hook 'c++-mode-hook  'my-c++-mode-hook)
+;; (add-hook 'c++-mode-hook  #'my-c++-mode-hook)
 ;;
 ;; (defun my-c++-mode-hook ()
 ;;   (setq comment-column nil   ;; When set to nil, tinycomment.el takes over.

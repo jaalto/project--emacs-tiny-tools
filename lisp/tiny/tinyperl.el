@@ -43,11 +43,11 @@
 ;;  features are turned on only when `perl-mode' runs.
 ;;
 ;;      (autoload 'turn-on-tinyperl-mode  "tinyperl" "" t)
-;;      (add-hook 'perl-mode-hook  'turn-on-tinyperl-mode)
-;;      (add-hook 'cperl-mode-hook 'turn-on-tinyperl-mode)
+;;      (add-hook #'perl-mode-hook  'turn-on-tinyperl-mode)
+;;      (add-hook 'cperl-mode-hook #'turn-on-tinyperl-mode)
 ;;
 ;;      ;; optional
-;;      (add-hook 'write-file-functions 'tinyperl-version-stamp)
+;;      (add-hook 'write-file-functions #'tinyperl-version-stamp)
 ;;
 ;;  The package will keep the configuration information in a cache.
 ;;  If for some reason the cache becomes invalid, the cache can be
@@ -217,12 +217,12 @@
 ;;      references or URLs found are marked. If you do not want to use
 ;;      TinyUrl package, add this setup:
 ;;
-;;          (add-hook tinyperl--load-hook 'my-tinyperl--load-hook)
+;;          (add-hook 'tinyperl--load-hook #'my-tinyperl--load-hook)
 ;;
 ;;          (defun my-tinyperl--load-hook ()
 ;;            "My TinyPerl customisations."
 ;;            (remove-hook 'tinyperl--pod2text-after-hook
-;;                         'turn-on-tinyurl-mode-1))
+;;                         #'turn-on-tinyurl-mode-1))
 ;;
 ;;      In *pod* buffer where the pod documentation is displayed, an
 ;;      additional browsing mode, `tinyperl-pod-view-mode', is turned on to
@@ -1243,7 +1243,7 @@ Input:
   (unless uninstall
     (tinyperl-install-1 force 'verb))
   (turn-on-tinyperl-mode-all-buffers uninstall)
-  (ti::add-hooks '(perl-mode-hook
+  (ti::add-hooks #'(perl-mode-hook
                    cperl-mode-hook)
                  'turn-on-tinyperl-mode
                  uninstall))

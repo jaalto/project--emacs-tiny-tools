@@ -33,13 +33,13 @@
 ;;   Put this file on your Emacs-Lisp `load-path', add following into your
 ;;   $HOME/.emacs startup file
 ;;
-;;   (add-hook 'tinycygwin--load-hook 'tinycygwin-install)
+;;   (add-hook 'tinycygwin--load-hook #'tinycygwin-install)
 ;;   (autoload 'tinycygwin-reportbug "tinycygwin" nil t)
 ;;   (autoload 'tinycygwin-package-info-port-maintainer-list "tinycygwin" nil t)
 ;;
 ;;   To get extra cygwin bindings in `message-mode', add this
 ;;
-;;   (add-hook 'tinycygwin--load-hook 'tinycygwin-install-message-mode)
+;;   (add-hook 'tinycygwin--load-hook #'tinycygwin-install-message-mode)
 
 ;;}}}
 ;;{{{ Documentation
@@ -857,8 +857,8 @@ followed by indented two space explanation. An example:
 (defun tinycygwin-install-message-mode (&optional uninstall)
   "Install extra Cygwin specific keybindings to `message-mode'."
   (if uninstall
-      (remove-hook 'message-mode-hook 'tinycygwin-message-mode-hook)
-    (add-hook 'message-mode-hook 'tinycygwin-message-mode-hook)))
+      (remove-hook 'message-mode-hook #'tinycygwin-message-mode-hook)
+    (add-hook 'message-mode-hook #'tinycygwin-message-mode-hook)))
 
 ;;;###autoload
 (defun tinycygwin-install (&optional uninstall)
@@ -868,11 +868,11 @@ followed by indented two space explanation. An example:
     (cond
      (uninstall
       (tinycygwin-install-font-lock-keywords 'uninstall)
-      (remove-hook 'find-file-hook 'tinycygwin-find-file-hook)
+      (remove-hook 'find-file-hook #'tinycygwin-find-file-hook)
       nil)
      (t
       (tinycygwin-install-font-lock-keywords)
-      (add-hook 'find-file-hook  'tinycygwin-find-file-hook)
+      (add-hook 'find-file-hook  #'tinycygwin-find-file-hook)
       nil))))
 
 ;;}}}
@@ -3293,7 +3293,7 @@ the setting include e.g.
   (setq search-highlight          t)
   (setq track-eol                 t)
   (setq-default indent-tabs-mode  nil) ;; Always spaces, more secure in email
-  (add-hook 'debugger-mode-hook 'toggle-truncate-lines)
+  (add-hook 'debugger-mode-hook #'toggle-truncate-lines)
   (when (fboundp 'minibuffer-electric-default-mode)
     (minibuffer-electric-default-mode  1)))
 

@@ -46,9 +46,9 @@
 ;;
 ;; Or you can load this file directly:
 ;;
-;;      (add-hook 'tinyreplace-load-hook 'tinyreplace-install)
+;;      (add-hook 'tinyreplace-load-hook #'tinyreplace-install)
 ;;      ;; M-& key calls replace
-;;      (add-hook 'tinyreplace-load-hook 'tinyreplace-install-default-keybings)
+;;      (add-hook 'tinyreplace-load-hook #'tinyreplace-install-default-keybings)
 ;;      (require 'tinyreplace)
 ;;
 ;; Check that you have colors on, otherwise the replaced region may
@@ -508,13 +508,13 @@ See:
   (interactive "P")
   (cond
    (uninstall
-    (add-hook 'compilation-mode-hook 'tinyreplace-define-keys-local-map)
-    (add-hook 'compilation-minor-mode-hook 'tinyreplace-define-keys-local-map)
-    (add-hook 'grep-mode-hook 'tinyreplace-define-keys-local-map))
+    (add-hook 'compilation-mode-hook #'tinyreplace-define-keys-local-map)
+    (add-hook 'compilation-minor-mode-hook #'tinyreplace-define-keys-local-map)
+    (add-hook 'grep-mode-hook #'tinyreplace-define-keys-local-map))
    (t
-    (remove-hook 'compilation-mode-hook 'tinyreplace-define-keys-local-map)
-    (remove-hook 'compilation-minor-mode-hook 'tinyreplace-define-keys-local-map)
-    (remove-hook 'grep-mode-hook 'tinyreplace-define-keys-local-map))))
+    (remove-hook 'compilation-mode-hook #'tinyreplace-define-keys-local-map)
+    (remove-hook 'compilation-minor-mode-hook #'tinyreplace-define-keys-local-map)
+    (remove-hook 'grep-mode-hook #'tinyreplace-define-keys-local-map))))
 
 ;;;###autoload
 (defun tinyreplace-install ()

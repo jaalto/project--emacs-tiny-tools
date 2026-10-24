@@ -49,7 +49,7 @@
 ;;      (setq tinyurl--plugged-function 'tinyurl-plugged-p)
 ;;
 ;;      ;; OPTIONAL: Attach to VM, RMAIL, Gnus etc.
-;;      ;; (add-hook 'tinyurl--load-hook 'tinyurl-install-to-packages)
+;;      ;; (add-hook 'tinyurl--load-hook #'tinyurl-install-to-packages)
 ;;
 ;; You can also use the preferred way: autoload. Only when you call the
 ;; `M-x' `tinyurl-mode', this package loads. The following setup is
@@ -63,7 +63,7 @@
 ;;      (autoload 'turn-off-tinyurl-mode-1    "tinyurl" "" t)
 ;;
 ;;      ;; OPTIONAL: Attach to VM, RMAIL, Gnus etc.
-;;      ;; (add-hook 'tinyurl--load-hook 'tinyurl-install-to-packages)
+;;      ;; (add-hook 'tinyurl--load-hook #'tinyurl-install-to-packages)
 ;;
 ;;      ;;  Keybinding suggestions
 ;;
@@ -207,7 +207,7 @@
 ;;
 ;;      If you called `M-x' `tinyurl-install-to-packages' or had installation:
 ;;
-;;          (add-hook 'tinyurl--load-hook  'tinyurl-install-to-packages)
+;;          (add-hook 'tinyurl--load-hook  #'tinyurl-install-to-packages)
 ;;
 ;;      then GNUS, VM, TM, and other packages redirect urls to TinyUrl.
 ;;      This way you don't have to setup each package to your taste.
@@ -917,10 +917,10 @@ Defined keys:
      (cond
       (tinyurl-mode
        (put 'tinyurl-mode 'global t)
-       (add-hook (ti::compat-find-file-hook) 'tinyurl-find-file-hook))
+       (add-hook (ti::compat-find-file-hook) #'tinyurl-find-file-hook))
       (t
        (put 'tinyurl-mode 'global nil)
-       (remove-hook (ti::compat-find-file-hook) 'tinyurl-find-file-hook)))
+       (remove-hook (ti::compat-find-file-hook) #'tinyurl-find-file-hook)))
      (when (null (get 'tinyurl-mode 'self-call))
        (tinyurl-mode-action tinyurl-mode verb)))
    ;;  The Menubar item takes space and is not useful at least not
@@ -1100,7 +1100,7 @@ function `tinyurl-mode' function instead. VERB."
                    compilation-mode-hook)
                  'turn-on-tinyurl-mode-1
                  uninstall)
-  (remove-hook 'post-command-hook 'tinyurl-mark-process-post-command)
+  (remove-hook 'post-command-hook #'tinyurl-mark-process-post-command)
   (tinyurl-install-command-table)
   ;;  If the idle timer is available, use it. Otherwise we would have
   ;;  no other option but occupy post command hook
@@ -1109,7 +1109,7 @@ function `tinyurl-mode' function instead. VERB."
         (setq tinyurl--timer-elt
               (ti::funcall 'run-with-idle-timer 2 t 'tinyurl-mark-process))
       (add-hook 'post-command-hook
-                'tinyurl-mark-process-post-command))))
+                #'tinyurl-mark-process-post-command))))
 
 (defun tinyurl-install-to-packages (&optional restore-original)
   "Make TinyUrl default top level url handler: GNUS, TM, VM etc.
@@ -2647,7 +2647,7 @@ Return:
 
 ;;}}}
 
-(add-hook 'tinyurl--mode-define-keys-hook 'tinyurl-mode-define-keys)
+(add-hook 'tinyurl--mode-define-keys-hook #'tinyurl-mode-define-keys)
 
 (tinyurl-install)
 

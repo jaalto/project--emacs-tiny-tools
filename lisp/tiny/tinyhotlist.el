@@ -34,7 +34,7 @@
 ;; Put this file on your Emacs-Lisp `load-path', add following into your
 ;; ~/.emacs startup file. Rip code with tinylib.el/ti::package-rip-magic
 ;;
-;;      (add-hook 'tinyhotlist--load-hook 'tinyhotlist-load-hotlist)
+;;      (add-hook 'tinyhotlist--load-hook #'tinyhotlist-load-hotlist)
 ;;      (require 'tinyhotlist)
 ;;
 ;; or use autoload, preferred because your emacs starts up faster
@@ -183,7 +183,7 @@
 ;;      base cache every time and modify it during an Emacs
 ;;      session but don't want to save this "session" hot list.
 ;;
-;;          (add-hook 'tinyhotlist--load-hook 'my-tinyhotlist-load-hook)
+;;          (add-hook 'tinyhotlist--load-hook #'my-tinyhotlist-load-hook)
 ;;
 ;;          (defun my-tinyhotlist-load-hook ()
 ;;            "My hotlist settings"
@@ -198,11 +198,11 @@
 ;;
 ;;      To automatically restore the hot list when package loads:
 ;;
-;;          (add-hook 'tinyhotlist--load-hook 'tinyhotlist-load-hotlist)
+;;          (add-hook 'tinyhotlist--load-hook #'tinyhotlist-load-hotlist)
 ;;
 ;;      To save the _current_ hot list automatically when Emacs exists:
 ;;
-;;          (add-hook 'kill-emacs-hook 'tinyhotlist-save-hotlist)
+;;          (add-hook 'kill-emacs-hook #'tinyhotlist-save-hotlist)
 ;;
 ;;  An example
 ;;

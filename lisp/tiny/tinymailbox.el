@@ -29,12 +29,12 @@
 ;;  ~/.emacs startup file. Code can be extracted with function
 ;;  tinylib.el/ti::package-rip-magic
 ;;
-;;      (add-hook 'tinymailbox--load-hook 'tinymailbox-install)
+;;      (add-hook 'tinymailbox--load-hook #'tinymailbox-install)
 ;;      (require 'tinymailbox)
 ;;
 ;;  Or you can also use the preferred way: autoload
 ;;
-;;      (add-hook 'tinymailbox--load-hook 'tinymailbox-install)
+;;      (add-hook 'tinymailbox--load-hook #'tinymailbox-install)
 ;;      (autoload 'tinymailbox-mode          "tinymailbox "" t)
 ;;      (autoload 'turn-on-tinymailbox-mode  "tinymailbox "" t)
 ;;      (autoload 'turn-off-tinymailbox-mode "tinymailbox "" t)
@@ -961,7 +961,7 @@ References:
     (goto-char start)
     (run-hooks 'tinymailbox--mail-setup-hook)))
 
-(add-hook  'tinymailbox--mode-define-keys-hook 'tinymailbox-mode-define-keys)
+(add-hook  'tinymailbox--mode-define-keys-hook #'tinymailbox-mode-define-keys)
 (provide   'tinymailbox)
 
 (run-hooks 'tinymailbox--load-hook)

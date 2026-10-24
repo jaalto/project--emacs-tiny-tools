@@ -347,7 +347,7 @@ Mode description:
    (progn
      ;; Make sure it's there...
      (or (assq 'tinypage-post-command post-command-hook)
-         (add-hook 'post-command-hook 'tinypage-post-command))
+         (add-hook 'post-command-hook #'tinypage-post-command))
      ;;  - We could leave the hook there because it's no-op if
      ;;    the mode variable is nil.
      ;;  - But i think if user looks at post-command-hook's contents
@@ -355,10 +355,10 @@ Mode description:
      ;;    functions in the hook -- only those that need to active
      ;;    in the current buffer/modes.
      (if (null tinypage-mode)
-         (remove-hook 'post-command-hook 'tinypage-post-command)
+         (remove-hook 'post-command-hook #'tinypage-post-command)
        ;; Make sure it's there...
        (or (assq 'tinypage-post-command post-command-hook)
-           (add-hook 'post-command-hook 'tinypage-post-command)))
+           (add-hook 'post-command-hook #'tinypage-post-command)))
      (tinypage-modeline)
      (ti::compat-modeline-update))
    "TinyPage menu"
@@ -857,7 +857,7 @@ Optionally BEFORE with MSG and VERB."
 
 ;;; Provide
 
-(add-hook 'tinypage--mode-define-keys-hook 'tinypage-mode-define-keys)
+(add-hook 'tinypage--mode-define-keys-hook #'tinypage-mode-define-keys)
 
 (provide   'tinypage)
 (run-hooks 'tinypage--load-hook)

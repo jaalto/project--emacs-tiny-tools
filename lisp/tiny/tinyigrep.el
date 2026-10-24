@@ -55,7 +55,7 @@
 ;;        ;;  Load your additional databases from separate file
 ;;        (require 'emacs-rc-tinygrep))
 ;;
-;;      (add-hook 'tinyigrep--load-hook 'my-tinyigrep-load-hook)
+;;      (add-hook 'tinyigrep--load-hook #'my-tinyigrep-load-hook)
 ;;
 ;; If you find any incorrect behavior, please immediately
 ;;

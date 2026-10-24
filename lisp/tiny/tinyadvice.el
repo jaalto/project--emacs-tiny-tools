@@ -80,7 +80,7 @@
 ;;      Here is one example how to to fontify automatically, whenever
 ;;      compilation buffer runs:
 ;;
-;;          (add-hook 'tinyadvice-:compile-internal-hook 'my-compile-font-lock)
+;;          (add-hook 'tinyadvice-:compile-internal-hook #'my-compile-font-lock)
 ;;
 ;;          (defun my-compile-font-lock  ()
 ;;            "Compile buffer fontifying immediately."
@@ -847,7 +847,7 @@ Read word from the current pointand put it into grep prompt."
   (around  tinyadvice-disable-write-file-functions dis)
   "Disable `write-file-functions' so that file can edited and saved in pure manner."
   ad-do-it
-  (add-hook 'write-file-functions 'ignore nil 'local)
+  (add-hook 'write-file-functions #'ignore nil 'local)
   (setq write-file-functions nil)
   ;; (setq indent-tabs-mode t)
   (message "TinyAdvice: write-file-hooks is now nil in %s" (buffer-name)))

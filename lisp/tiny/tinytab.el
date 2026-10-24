@@ -43,7 +43,7 @@
 ;;
 ;;  For more customisation, do this:
 ;;
-;;       (add-hook 'tinytab-mode-define-keys-hook 'my-tinytab-keys)
+;;       (add-hook 'tinytab-mode-define-keys-hook #'my-tinytab-keys)
 ;;
 ;;      (defun my-tinytab-keys ()
 ;;        "My tinytab key additions, override settings."
@@ -274,7 +274,7 @@ Mode description:
   :type  'hook
   :group 'TinyTab)
 
-(add-hook 'tinytab--load-hook 'tinytab-install-mode)
+(add-hook 'tinytab--load-hook #'tinytab-install-mode)
 
 (defcustom tinytab--tab-insert-hook
   '(tinytab-tab-mode-control
@@ -812,11 +812,11 @@ If region is active and BEG and END are nil, then call function
       ;; No-op: byte compiler silencer
       (if (null tinymail--complete-key-hook)
           (setq tinymail--complete-key-hook nil))
-      (remove-hook sym 'tinymail-complete-guest-packages)
+      (remove-hook sym #'tinymail-complete-guest-packages)
       ;; keep this at the end
       (when (memq 'tab-to-tab-stop tinytab--tab-insert-hook)
-        (remove-hook 'tinytab--tab-insert-hook 'tab-to-tab-stop)
-        (add-hook    'tinytab--tab-insert-hook 'tab-to-tab-stop 'append))
+        (remove-hook 'tinytab--tab-insert-hook #'tab-to-tab-stop)
+        (add-hook 'tinytab--tab-insert-hook #'tab-to-tab-stop 'append))
       (tinytab-tab-key-insert)))))
 
 ;;;###autoload
@@ -916,7 +916,7 @@ LEFT   RIGHT
       (if count
           (indent-rigidly (region-beginning) (region-end) count)))))
 
-(add-hook 'tinytab--mode-define-keys-hook 'tinytab-mode-define-keys)
+(add-hook 'tinytab--mode-define-keys-hook #'tinytab-mode-define-keys)
 
 (provide   'tinytab)
 (run-hooks 'tinytab--load-hook)

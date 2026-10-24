@@ -35,15 +35,15 @@
 ;; Put this file on your emacs-lisp load path, add following into your
 ;; ~/.emacs startup file
 ;;
-;;      (add-hook 'tinyef-load-hook 'tinyef-minibuffer-define-key-extras)
+;;      (add-hook 'tinyef-load-hook #'tinyef-minibuffer-define-key-extras)
 ;;      (require 'tinyef)
 ;;
 ;; Or use this autoload choice and your ~/.emacs will load quicker.
 ;; This is the preferred method:
 ;;
-;;      (add-hook 'tinyef-load-hook 'tinyef-minibuffer-define-key-extras)
+;;      (add-hook 'tinyef-load-hook #'tinyef-minibuffer-define-key-extras)
 ;;      (autoload 'turn-on-tinyef-mode "tinyef" "" t)
-;;      (add-hook 'minibuffer-setup-hook 'turn-on-tinyef-mode)
+;;      (add-hook 'minibuffer-setup-hook #'turn-on-tinyef-mode)
 
 ;;}}}
 
@@ -133,7 +133,7 @@
 ;;
 ;;      Other minibuffer keys that you can activate with:
 ;;
-;;          (add-hook 'tinyef-load-hook 'tinyef-minibuffer-define-key-extras)
+;;          (add-hook 'tinyef-load-hook #'tinyef-minibuffer-define-key-extras)
 ;;
 ;;      o  `C-c' `C-b'  Insert most recent buffer name to prompt
 ;;      o  `C-c' `C-d'  Insert date: ISO8601 YY-MM-DD--HH-MM into prompt
@@ -388,13 +388,13 @@ Always clears the keymap first and reinstalls the minor mode."
   (tinyef-install-mouse arg)
   (cond
    (arg
-    (remove-hook        'minibuffer-setup-hook  'tinyef-minibuffer-setup)
-    (remove-hook        'minibuffer-exit-hook   'turn-off-tinyef-mode)
+    (remove-hook        'minibuffer-setup-hook  #'tinyef-minibuffer-setup)
+    (remove-hook        'minibuffer-exit-hook   #'turn-off-tinyef-mode)
     (ti::keymap-add-minor-mode 'tinyef-mode nil nil     'remove)
     (tinyef-install-maps  'remove))
    (t
-    (add-hook           'minibuffer-setup-hook  'tinyef-minibuffer-setup 'end)
-    (add-hook           'minibuffer-exit-hook   'turn-off-tinyef-mode    'end)
+    (add-hook           'minibuffer-setup-hook  #'tinyef-minibuffer-setup 'end)
+    (add-hook           'minibuffer-exit-hook   #'turn-off-tinyef-mode    'end)
     (tinyef-mode-map-define-keys)       ;installs also minor-mode
     (tinyef-install-maps))))
 

@@ -5321,13 +5321,13 @@ Input:
              "(RECORDING)"
            "")))
       (add-hook 'post-command-hook
-                'tinylisp-property-post-command
+                #'tinylisp-property-post-command
                 nil
                 'local))
      (t
       (tinylisp-post-command-config 'restore)
       (remove-hook 'post-command-hook
-                   'tinylisp-property-post-command
+                   #'tinylisp-property-post-command
                    'local)
       (if verb
           (message "TinyLisp: Property show mode is off"))))))
