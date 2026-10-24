@@ -54,8 +54,8 @@
 ;;
 ;;      (autoload 'tinylisp-mode                "tinylisp" "" t)
 ;;      (autoload 'turn-on-tinylisp-mode        "tinylisp" "" t)
-;;      (add-hook 'emacs-lisp-mode-hook         'turn-on-tinylisp-mode)
-;;      (add-hook 'lisp-interaction-mode-hook   'turn-on-tinylisp-mode)
+;;      (add-hook 'emacs-lisp-mode-hook         #'turn-on-tinylisp-mode)
+;;      (add-hook 'lisp-interaction-mode-hook   #'turn-on-tinylisp-mode)
 ;;
 ;;      (setq tinylisp--load-hook 'tinylisp-install)
 ;;      (global-set-key "\C-ce" 'tinylisp-mode)  ; mode on/off
@@ -842,7 +842,7 @@ Defined keys:
   "*Hook that is run when package is loaded.
 The following value activates the minor mode in every Emac slisp
 buffer:
- (add-hook \\='tinylisp--load-hook \\=='turn-on-tinylisp-mode-all-buffers)"
+ (add-hook \\='tinylisp--load-hook \\=#'turn-on-tinylisp-mode-all-buffers)"
   :type  'hook
   :group 'TinyLisp)
 
@@ -5192,10 +5192,10 @@ User can't see string echoed otherwise. Optionally RESTORE."
     (ti::bool-toggle tinylisp--syntax-show-mode arg)
     (cond
      (tinylisp--syntax-show-mode
-      (add-hook 'post-command-hook 'tinylisp-syntax-post-command nil 'local)
+      (add-hook 'post-command-hook #'tinylisp-syntax-post-command nil 'local)
       (tinylisp-post-command-config))
      (t
-      (remove-hook 'post-command-hook 'tinylisp-syntax-post-command 'local)
+      (remove-hook 'post-command-hook #'tinylisp-syntax-post-command 'local)
       (tinylisp-post-command-config 'restore)))))
   (if verb
       (message
@@ -6004,10 +6004,10 @@ Return list:
 ;;  correctly when user calls M-x tinylisp-mode.
 
 (add-hook 'tinylisp--mode-define-keys-hook
-          'tinylisp-mode-define-keys)
+          #'tinylisp-mode-define-keys)
 
 (add-hook 'tinylisp--elp-summary-mode-define-keys-hook
-          'tinylisp-elp-summary-mode-define-keys)
+          #'tinylisp-elp-summary-mode-define-keys)
 
 (tinylisp-install-menu)
 (run-hooks 'tinylisp--load-hook)
